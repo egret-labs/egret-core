@@ -7184,7 +7184,7 @@ var egret;
              */
             WebGLRenderer.prototype.drawWithFilter = function (displayObject, buffer, dirtyList, matrix, clipRegion, root) {
                 var drawCalls = 0;
-                if (displayObject.$children && displayObject.$children.length == 0) {
+                if (displayObject.$children && displayObject.$children.length == 0 && (!displayObject.$renderNode || displayObject.$renderNode.$getRenderCount() == 0)) {
                     return;
                 }
                 var filters = displayObject.$getFilters();

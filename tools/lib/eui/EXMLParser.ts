@@ -329,6 +329,9 @@ export class EXMLParser {
                     if (id.match(e) == null) {
                         egretbridge.$warn(2022, id);
                     }
+                    if(id.match(new RegExp(/ /g)) != null) {
+                        egretbridge.$warn(2022, id);
+                    }
                     if (this.skinParts.indexOf(id) == -1) {
                         this.skinParts.push(id);
                     }

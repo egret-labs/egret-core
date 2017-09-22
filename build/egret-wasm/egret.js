@@ -4593,6 +4593,7 @@ var egret;
                 textureHeight = offsetY + bitmapHeight;
             }
             var texture = new egret.Texture();
+            texture.disposeBitmapData = false;
             texture._bitmapData = this.$texture._bitmapData;
             texture.$initData(this._bitmapX + bitmapX, this._bitmapY + bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, this.$texture._sourceWidth, this.$texture._sourceHeight);
             this._textureMap[name] = texture;
@@ -6365,7 +6366,7 @@ var egret;
              * @language zh_CN
              */
             get: function () {
-                return "5.0.7";
+                return "5.0.8";
             },
             enumerable: true,
             configurable: true
@@ -6599,6 +6600,19 @@ var egret;
          */
         function Texture() {
             var _this = _super.call(this) || this;
+            /**
+             * Whether to destroy the corresponding BitmapData when the texture is destroyed
+             * @version Egret 5.0.8
+             * @platform Web,Native
+             * @language en_US
+             */
+            /**
+             * 销毁纹理时是否销毁对应BitmapData
+             * @version Egret 5.0.8
+             * @platform Web,Native
+             * @language zh_CN
+             */
+            _this.disposeBitmapData = true;
             /**
              * @private
              * 表示这个纹理在 bitmapData 上的 x 起始位置
@@ -6883,9 +6897,12 @@ var egret;
          */
         Texture.prototype.dispose = function () {
             if (this._bitmapData) {
-                this._bitmapData.$dispose();
+                if (this.disposeBitmapData) {
+                    this._bitmapData.$dispose();
+                }
                 this._bitmapData = null;
             }
+            egret.WebAssemblyNode.disposeTexture(this);
         };
         return Texture;
     }(egret.HashObject));
@@ -17406,7 +17423,7 @@ var egret;
                 var locList = dirtyGraphicsList;
                 dirtyGraphicsList = [];
                 for (var i = 0; i < length; i++) {
-                    var graphics = WebAssembly.dirtyGraphics[i];
+                    var graphics = locList[i];
                     var node = graphics.$renderNode;
                     var width = node.width;
                     var height = node.height;
@@ -17890,11 +17907,6 @@ var egret;
             drawTextureElementsWithFilter(buffer.rootRenderTarget.texture, count, offset, filter, filter.type, buffer.width, buffer.height);
             return count * 3;
         };
-        WebAssembly.deleteTexture = function (bitmapData) {
-            if (bitmapData["bitmapDataId"]) {
-                delete bitmapDataMap[bitmapData["bitmapDataId"]];
-            }
-        };
         WebAssembly.getCurrentBuffer = function () {
             if (isWebGLRenderer) {
                 return WebAssembly.currentWebGLBuffer;
@@ -18338,19 +18350,19 @@ var egret;
             displayCmdBufferSize = displayCmdBuffer[0];
             displayCmdBufferIndex = displayCmdBuffer[1];
             var bitmapData = value.bitmapData;
-            if (!bitmapData["bitmapDataId"]) {
-                bitmapData["bitmapDataId"] = bitmapDataId;
+            if (!bitmapData.$bitmapDataId) {
+                bitmapData.$bitmapDataId = bitmapDataId;
                 bitmapDataMap[bitmapDataId] = bitmapData;
                 bitmapDataId++;
             }
-            if (!value["textureId"]) {
-                value["textureId"] = bitmapDataId;
+            if (!value.$textureId) {
+                value.$textureId = bitmapDataId;
                 displayCmdBuffer[displayCmdBufferIndex++] = 0 /* CREATE_OBJECT */;
                 displayCmdBuffer[displayCmdBufferIndex++] = bitmapDataId;
                 displayCmdBuffer[displayCmdBufferIndex++] = 2 /* BITMAP_DATA */;
                 displayCmdBufferSize++;
                 displayCmdBuffer[displayCmdBufferIndex++] = 122 /* SET_VALUES_TO_BITMAP_DATA */;
-                displayCmdBuffer[displayCmdBufferIndex++] = value["textureId"];
+                displayCmdBuffer[displayCmdBufferIndex++] = value.$textureId;
                 displayCmdBuffer[displayCmdBufferIndex++] = value._bitmapX;
                 displayCmdBuffer[displayCmdBufferIndex++] = value._bitmapY;
                 displayCmdBuffer[displayCmdBufferIndex++] = value._bitmapWidth;
@@ -18363,8 +18375,8 @@ var egret;
                 displayCmdBuffer[displayCmdBufferIndex++] = value._sourceHeight;
                 displayCmdBufferSize++;
                 displayCmdBuffer[displayCmdBufferIndex++] = 123 /* SET_IMAGE_ID_TO_BITMAP_DATA */;
-                displayCmdBuffer[displayCmdBufferIndex++] = value["textureId"];
-                displayCmdBuffer[displayCmdBufferIndex++] = bitmapData["bitmapDataId"];
+                displayCmdBuffer[displayCmdBufferIndex++] = value.$textureId;
+                displayCmdBuffer[displayCmdBufferIndex++] = bitmapData.$bitmapDataId;
                 displayCmdBufferSize++;
                 bitmapDataId++;
             }
@@ -18392,22 +18404,22 @@ var egret;
                 else {
                     texture = value.$renderBuffer.surface;
                 }
-                if (!texture["bitmapDataId"]) {
+                if (!texture.$bitmapDataId) {
                     texture["isTexture"] = true;
-                    texture["bitmapDataId"] = bitmapDataId;
+                    texture.$bitmapDataId = bitmapDataId;
                     bitmapDataMap[bitmapDataId] = texture;
                     displayCmdBuffer[displayCmdBufferIndex++] = 0 /* CREATE_OBJECT */;
-                    displayCmdBuffer[displayCmdBufferIndex++] = texture["bitmapDataId"];
+                    displayCmdBuffer[displayCmdBufferIndex++] = texture.$bitmapDataId;
                     displayCmdBuffer[displayCmdBufferIndex++] = 2;
                     displayCmdBufferSize++;
                     displayCmdBuffer[displayCmdBufferIndex++] = 123 /* SET_IMAGE_ID_TO_BITMAP_DATA */;
-                    displayCmdBuffer[displayCmdBufferIndex++] = texture["bitmapDataId"];
-                    displayCmdBuffer[displayCmdBufferIndex++] = texture["bitmapDataId"];
+                    displayCmdBuffer[displayCmdBufferIndex++] = texture.$bitmapDataId;
+                    displayCmdBuffer[displayCmdBufferIndex++] = texture.$bitmapDataId;
                     displayCmdBufferSize++;
                     bitmapDataId++;
                 }
                 displayCmdBuffer[displayCmdBufferIndex++] = 122 /* SET_VALUES_TO_BITMAP_DATA */;
-                displayCmdBuffer[displayCmdBufferIndex++] = texture["bitmapDataId"];
+                displayCmdBuffer[displayCmdBufferIndex++] = texture.$bitmapDataId;
                 displayCmdBuffer[displayCmdBufferIndex++] = value._bitmapX;
                 displayCmdBuffer[displayCmdBufferIndex++] = value._bitmapY;
                 displayCmdBuffer[displayCmdBufferIndex++] = value._bitmapWidth;
@@ -18421,14 +18433,14 @@ var egret;
                 displayCmdBufferSize++;
                 displayCmdBuffer[displayCmdBufferIndex++] = 121 /* SET_BITMAP_DATA */;
                 displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-                displayCmdBuffer[displayCmdBufferIndex++] = texture["bitmapDataId"];
+                displayCmdBuffer[displayCmdBufferIndex++] = texture.$bitmapDataId;
                 displayCmdBufferSize++;
             }
             else {
                 WebAssemblyNode.setValuesToBitmapData(value);
                 displayCmdBuffer[displayCmdBufferIndex++] = 121 /* SET_BITMAP_DATA */;
                 displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-                displayCmdBuffer[displayCmdBufferIndex++] = value["textureId"];
+                displayCmdBuffer[displayCmdBufferIndex++] = value.$textureId;
                 displayCmdBufferSize++;
             }
             displayCmdBuffer[0] = displayCmdBufferSize;
@@ -18440,7 +18452,7 @@ var egret;
             WebAssemblyNode.setValuesToBitmapData(value);
             displayCmdBuffer[displayCmdBufferIndex++] = 902 /* SET_PARTICLE_BITMAP_DATA */;
             displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value["textureId"];
+            displayCmdBuffer[displayCmdBufferIndex++] = value.$textureId;
             displayCmdBufferSize++;
             displayCmdBuffer[0] = displayCmdBufferSize;
             displayCmdBuffer[1] = displayCmdBufferIndex;
@@ -18574,7 +18586,7 @@ var egret;
             WebAssemblyNode.setValuesToBitmapData(texture);
             displayCmdBuffer[displayCmdBufferIndex++] = 1001 /* SET_DATA_TO_BITMAP_NODE */;
             displayCmdBuffer[displayCmdBufferIndex++] = id;
-            displayCmdBuffer[displayCmdBufferIndex++] = texture._bitmapData["bitmapDataId"];
+            displayCmdBuffer[displayCmdBufferIndex++] = texture._bitmapData.$bitmapDataId;
             var length = arr.length;
             displayCmdBuffer[displayCmdBufferIndex++] = length / 10;
             for (var i = 0; i < length; i++) {
@@ -18593,16 +18605,19 @@ var egret;
             displayCmdBuffer[0] = displayCmdBufferSize;
             displayCmdBuffer[1] = displayCmdBufferIndex;
         };
-        WebAssemblyNode.disposeBitmapData = function (bitmapData) {
+        WebAssemblyNode.disposeTexture = function (texture) {
             displayCmdBufferSize = displayCmdBuffer[0];
             displayCmdBufferIndex = displayCmdBuffer[1];
             displayCmdBuffer[displayCmdBufferIndex++] = 141 /* DISPOSE_BITMAP_DATA */;
-            displayCmdBuffer[displayCmdBufferIndex++] = bitmapData["bitmapDataId"];
+            displayCmdBuffer[displayCmdBufferIndex++] = texture.$textureId;
             displayCmdBufferSize++;
             displayCmdBuffer[0] = displayCmdBufferSize;
             displayCmdBuffer[1] = displayCmdBufferIndex;
-            delete bitmapDataMap[bitmapData["bitmapDataId"]];
-            egret.WebAssembly.deleteTexture(bitmapData);
+        };
+        WebAssemblyNode.disposeBitmapData = function (bitmapData) {
+            if (bitmapData.$bitmapDataId) {
+                delete bitmapDataMap[bitmapData.$bitmapDataId];
+            }
         };
         WebAssemblyNode.disposeFilter = function (filter) {
             displayCmdBufferSize = displayCmdBuffer[0];

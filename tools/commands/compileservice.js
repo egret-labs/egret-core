@@ -69,9 +69,6 @@ var AutoCompileCommand = (function () {
         if (!EgretProject.data.useTemplate) {
             EgretProject.manager.modifyIndex(manifestPath, indexPath);
         }
-        else {
-            FileUtil.copy(FileUtil.joinPath(options.templateDir, "debug", "index.html"), indexPath);
-        }
         exmlActions.afterBuild();
         //拷贝项目到native工程中
         if (egret.args.runtime == "native") {
@@ -135,9 +132,6 @@ var AutoCompileCommand = (function () {
                     EgretProject.manager.generateManifest(this._scripts, manifestPath);
                     if (!EgretProject.data.useTemplate) {
                         EgretProject.manager.modifyIndex(manifestPath, indexPath);
-                    }
-                    else {
-                        FileUtil.copy(FileUtil.joinPath(egret.args.templateDir, "debug", "index.html"), indexPath);
                     }
                     this.compileProject.compileProject(egret.args);
                     this.messages[2] = egret.args.tsconfigError;
@@ -240,9 +234,6 @@ var AutoCompileCommand = (function () {
         EgretProject.manager.generateManifest(this._scripts, manifestPath);
         if (!EgretProject.data.useTemplate) {
             EgretProject.manager.modifyIndex(manifestPath, indexPath);
-        }
-        else {
-            FileUtil.copy(FileUtil.joinPath(egret.args.templateDir, "debug", "index.html"), indexPath);
         }
         EgretProject.manager.modifyNativeRequire(manifestPath);
         return 0;

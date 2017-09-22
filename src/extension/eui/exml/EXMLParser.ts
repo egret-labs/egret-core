@@ -387,6 +387,9 @@ namespace eui.sys {
                         if(id.match(e) == null) {
                             egret.$warn(2022, id);
                         }
+                        if(id.match(new RegExp(/ /g)) != null) {
+                            egret.$warn(2022, id);
+                        }
                         if (this.skinParts.indexOf(id) == -1) {
                             this.skinParts.push(id);
                         }
