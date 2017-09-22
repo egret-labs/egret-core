@@ -158,7 +158,7 @@ namespace egret {
 		/**
          * 激活一个对象，对其添加 Tween 动画
          * @param target {any} 要激活 Tween 的对象
-         * @param props {any} 参数，支持loop(循环播放) onChange(变化函数) onChangeObj(变化函数作用域)
+         * @param props {any} 参数，支持loop(循环播放) onChange(变化函数) onCancel(取消函数) onPause(暂停函数) onResume(恢复函数) onChangeObj(变化函数作用域)
          * @param pluginData {any} 暂未实现
          * @param override {boolean} 是否移除对象之前添加的tween，默认值false。
          * 不建议使用，可使用 Tween.removeTweens(target) 代替。
@@ -166,7 +166,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
 		 */
-        public static get(target: any, props?: { loop?: boolean, onChange?: Function, onChangeObj?: any }, pluginData: any = null, override: boolean = false): Tween {
+        public static get(target: any, props?: { loop?: boolean, onChange?: Function, onCancel?: Function, onPause?: Function, onResume?: Function, onChangeObj?: any }, pluginData: any = null, override: boolean = false): Tween {
             if (override) {
                 Tween.removeTweens(target);
             }
@@ -195,6 +195,7 @@ namespace egret {
             for (let i = tweens.length - 1; i >= 0; i--) {
                 if (tweens[i]._target == target) {
                     tweens[i].paused = true;
+                    tweens[i].dispatchEventWith('cancel');
                     tweens.splice(i, 1);
                 }
             }
@@ -223,6 +224,7 @@ namespace egret {
             for (let i = tweens.length - 1; i >= 0; i--) {
                 if (tweens[i]._target == target) {
                     tweens[i].paused = true;
+                    tweens[i].dispatchEventWith('pause');
                 }
             }
         }
@@ -249,6 +251,7 @@ namespace egret {
             for (let i = tweens.length - 1; i >= 0; i--) {
                 if (tweens[i]._target == target) {
                     tweens[i].paused = false;
+                    tweens[i].dispatchEventWith('resume');
                 }
             }
         }
@@ -326,6 +329,7 @@ namespace egret {
             for (let i = 0, l = tweens.length; i < l; i++) {
                 let tween: Tween = tweens[i];
                 tween.paused = true;
+                tween.dispatchEventWith('cancel');
                 tween._target.tweenjs_count = 0;
             }
             tweens.length = 0;
@@ -356,6 +360,9 @@ namespace egret {
                 this.ignoreGlobalPause = props.ignoreGlobalPause;
                 this.loop = props.loop;
                 props.onChange && this.addEventListener("change", props.onChange, props.onChangeObj);
+                props.onCancel && this.addEventListener("cancel", props.onCancel, props.onChangeObj);
+                props.onPause && this.addEventListener("pause", props.onPause, props.onChangeObj);
+                props.onResume && this.addEventListener("resume", props.onResume, props.onChangeObj);
                 if (props.override) {
                     Tween.removeTweens(target);
                 }
