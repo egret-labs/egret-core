@@ -8,6 +8,7 @@ var CompileProject = require("../actions/CompileProject");
 var parser = require("../parser/Parser");
 var EgretProject = require("../project/EgretProject");
 var copyNative = require("../actions/CopyNativeFiles");
+var EngineData_1 = require("../EngineData");
 var AutoCompileCommand = (function () {
     function AutoCompileCommand() {
         this.exitCode = [0, 0];
@@ -264,8 +265,9 @@ var AutoCompileCommand = (function () {
     };
     AutoCompileCommand.prototype.exitAfter60Minutes = function () {
         var now = Date.now();
+        var autoExitTime = EngineData_1.data.getAutoExitTime();
         var timespan = (now - this._lastBuildTime) / 1000 / 60;
-        if (timespan > 60)
+        if (timespan > autoExitTime)
             process.exit(0);
     };
     AutoCompileCommand.prototype.shouldSkip = function (file) {

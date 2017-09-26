@@ -12,6 +12,7 @@ import CompileProject = require('../actions/CompileProject');
 import parser = require('../parser/Parser');
 import EgretProject = require('../project/EgretProject');
 import copyNative = require("../actions/CopyNativeFiles");
+import { data as engineData } from "../EngineData";
 
 class AutoCompileCommand implements egret.Command {
     private compileProject: CompileProject;
@@ -331,8 +332,9 @@ class AutoCompileCommand implements egret.Command {
 
     private exitAfter60Minutes() {
         var now = Date.now();
+        let autoExitTime = engineData.getAutoExitTime();
         var timespan = (now - this._lastBuildTime) / 1000 / 60;
-        if (timespan > 60)
+        if (timespan > autoExitTime)
             process.exit(0);
     }
 

@@ -11,8 +11,7 @@ import file = require('../lib/FileUtil');
 import childProcess = require('child_process');
 import parser = require('../parser/Parser');
 import os = require("os");
-
-
+import {data as engineData} from "../EngineData";
 
 var COMPILE_SERVICE_PORT = 51545;
 //egret version, use to shutdown if the version is different to the value passed by the build command
@@ -90,8 +89,15 @@ export namespace server {
             heapTotal = heapTotal / 1024 / 1024;
             heapTotal = heapTotal | 0;
             console.log(`内存占用: ${heapTotal}M ${proj.path}`);
-            //取系统最大内存的四分之一，最低500M
-            let maxHeap = Math.max(require("os").totalmem() / 1024 / 1024 / 4, 500);
+            let totalmem = engineData.getTotalMem();
+            let maxHeap;
+            if(totalmem == -1) {
+                //取系统最大内存的四分之一，最低500M
+                maxHeap = Math.max(require("os").totalmem() / 1024 / 1024 / 4, 500);
+            }
+            else {
+                maxHeap = totalmem;
+            }
             if (heapTotal > maxHeap) {
                 console.log("内存占用过高,关闭进程:" + proj.path);
                 proj.shutdown();

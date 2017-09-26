@@ -5,6 +5,7 @@ var file = require("../lib/FileUtil");
 var CompileOptions = require("./CompileOptions");
 var project = require("../project/EgretProject");
 var path = require("path");
+var EngineData_1 = require("../EngineData");
 exports.optionDeclarations = [
     {
         name: "action",
@@ -223,6 +224,7 @@ function parseCommandLine(commandLine) {
             options.projectDir = file.joinPath(options.projectDir, "/");
             project.data.init(options.projectDir);
         }
+        EngineData_1.data.init();
         var packagePath = file.joinPath(egret.root, "package.json");
         var content = file.read(packagePath);
         var manifest;
