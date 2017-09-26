@@ -34,10 +34,16 @@ var EngineData = (function () {
     EngineData.prototype.init = function () {
         var execPath = process.execPath;
         var dataPath = FileUtil.joinPath(execPath, "../../../", "config/egret_config.json");
-        console.log(dataPath);
         if (FileUtil.exists(dataPath)) {
-            console.log("nice");
-            this.data = JSON.parse(FileUtil.read(dataPath)).engine;
+            try {
+                this.data = JSON.parse(FileUtil.read(dataPath)).engine;
+            }
+            catch (e) {
+                this.data = {
+                    totalmem: -1,
+                    autoExitTime: 60
+                };
+            }
         }
         else {
             this.data = {
@@ -47,10 +53,10 @@ var EngineData = (function () {
         }
     };
     EngineData.prototype.getTotalMem = function () {
-        return this.data.totalmem;
+        return this.data.totalmem || -1;
     };
     EngineData.prototype.getAutoExitTime = function () {
-        return this.data.autoExitTime;
+        return this.data.autoExitTime || 60;
     };
     return EngineData;
 }());

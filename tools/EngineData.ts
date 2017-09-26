@@ -43,9 +43,7 @@ export class EngineData {
     init() {
         let execPath = process.execPath;
         let dataPath = FileUtil.joinPath(execPath, "../../../", "config/egret_config.json");
-        console.log(dataPath);
         if (FileUtil.exists(dataPath)) {
-            console.log("nice");
             try {
                 this.data = JSON.parse(FileUtil.read(dataPath)).engine;
             }
