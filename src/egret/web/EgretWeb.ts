@@ -33,7 +33,7 @@ namespace egret.web {
 
     let context: EgretContext = {
 
-        setAutoClear: function(value:boolean):void {
+        setAutoClear: function (value: boolean): void {
             WebGLRenderBuffer.autoClear = value;
         },
 
@@ -67,7 +67,7 @@ namespace egret.web {
      * 刷新所有Egret播放器的显示区域尺寸。仅当使用外部JavaScript代码动态修改了Egret容器大小时，需要手动调用此方法刷新显示区域。
      * 当网页尺寸发生改变时此方法会自动被调用。
      */
-    function updateAllScreens():void {
+    function updateAllScreens(): void {
         if (!isRunning) {
             return;
         }
@@ -80,19 +80,19 @@ namespace egret.web {
         }
     }
 
-    let isRunning:boolean = false;
+    let isRunning: boolean = false;
 
     /**
      * @private
      * 网页加载完成，实例化页面中定义的Egret标签
      */
-    function runEgret(options?:{
-        renderMode?:string;
-        audioType?:number;
-        screenAdapter?:sys.IScreenAdapter;
-        antialias?:boolean;
-        retina?:boolean
-    }):void {
+    function runEgret(options?: {
+        renderMode?: string;
+        audioType?: number;
+        screenAdapter?: sys.IScreenAdapter;
+        antialias?: boolean,
+        canvasScaleFactor?: number
+    }): void {
         if (isRunning) {
             return;
         }
@@ -104,7 +104,7 @@ namespace egret.web {
         Html5Capatibility.$init();
 
         // WebGL上下文参数自定义
-        if(options.renderMode == "webgl") {
+        if (options.renderMode == "webgl") {
             // WebGL抗锯齿默认关闭，提升PC及某些平台性能
             let antialias = options.antialias;
             WebGLRenderContext.antialias = !!antialias;
@@ -114,8 +114,11 @@ namespace egret.web {
         sys.CanvasRenderBuffer = web.CanvasRenderBuffer;
         setRenderMode(options.renderMode);
 
-
-        if(options.retina) {
+        let canvasScaleFactor;
+        if (options.canvasScaleFactor) {
+            canvasScaleFactor = options.canvasScaleFactor;
+        }
+        else {
             //based on : https://github.com/jondavidjohn/hidpi-canvas-polyfill
             let context = sys.canvasHitTestBuffer.context;
             let backingStore = context.backingStorePixelRatio ||
@@ -124,9 +127,14 @@ namespace egret.web {
                 context.msBackingStorePixelRatio ||
                 context.oBackingStorePixelRatio ||
                 context.backingStorePixelRatio || 1;
-
-            sys.DisplayList.$setDevicePixelRatio((window.devicePixelRatio || 1) / backingStore);
+            canvasScaleFactor = (window.devicePixelRatio || 1) / backingStore;
+            //特殊处理PC缩放2倍
+            if (canvasScaleFactor == 1 && (egret.Capabilities.os == "Mac OS" || egret.Capabilities.os == "Windows PC")) {
+                canvasScaleFactor = 2;
+            }
         }
+        canvasScaleFactor = Math.max(1, Math.ceil(canvasScaleFactor));
+        sys.DisplayList.$setDevicePixelRatio(canvasScaleFactor);
 
         let ticker = egret.ticker;
         startTicker(ticker);
@@ -135,7 +143,7 @@ namespace egret.web {
         }
         else if (!egret.sys.screenAdapter) {
             egret.sys.screenAdapter = new egret.sys.DefaultScreenAdapter();
-        }        
+        }
 
         let list = document.querySelectorAll(".egret-player");
         let length = list.length;
@@ -144,12 +152,12 @@ namespace egret.web {
             let player = new WebPlayer(container, options);
             container["egret-player"] = player;
             //webgl模式关闭脏矩形
-            if(Capabilities.$renderMode == "webgl") {
-               player.stage.dirtyRegionPolicy = DirtyRegionPolicy.OFF;
+            if (Capabilities.$renderMode == "webgl") {
+                player.stage.dirtyRegionPolicy = DirtyRegionPolicy.OFF;
             }
         }
-        if(Capabilities.$renderMode == "webgl") {
-            egret.sys.DisplayList.prototype.setDirtyRegionPolicy = function () {};
+        if (Capabilities.$renderMode == "webgl") {
+            egret.sys.DisplayList.prototype.setDirtyRegionPolicy = function () { };
         }
 
         window.addEventListener("resize", function () {
@@ -163,7 +171,7 @@ namespace egret.web {
      * 设置渲染模式。"auto","webgl","canvas"
      * @param renderMode
      */
-    function setRenderMode(renderMode:string):void {
+    function setRenderMode(renderMode: string): void {
         if (renderMode == "webgl" && WebGLUtils.checkCanUseWebGL()) {
             sys.RenderBuffer = web.WebGLRenderBuffer;
             sys.systemRenderer = new WebGLRenderer();
@@ -186,7 +194,7 @@ namespace egret.web {
      * @private
      * 启动心跳计时器。
      */
-    function startTicker(ticker:egret.sys.SystemTicker):void {
+    function startTicker(ticker: egret.sys.SystemTicker): void {
         let requestAnimationFrame =
             window["requestAnimationFrame"] ||
             window["webkitRequestAnimationFrame"] ||
@@ -201,9 +209,9 @@ namespace egret.web {
         }
 
         requestAnimationFrame(onTick);
-        function onTick():void {
+        function onTick(): void {
 
-            if(customContext) {
+            if (customContext) {
                 customContext.onRender(context);
             }
 
@@ -213,7 +221,7 @@ namespace egret.web {
     }
 
     //覆盖原生的isNaN()方法实现，在不同浏览器上有2~10倍性能提升。
-    window["isNaN"] = function (value:number):boolean {
+    window["isNaN"] = function (value: number): boolean {
         value = +value;
         return value !== value;
     };
@@ -221,14 +229,14 @@ namespace egret.web {
     egret.runEgret = runEgret;
     egret.updateAllScreens = updateAllScreens;
 
-    let resizeTimer:number = NaN;
+    let resizeTimer: number = NaN;
 
     function doResize() {
         resizeTimer = NaN;
 
         egret.updateAllScreens();
 
-        if(customContext) {
+        if (customContext) {
             customContext.onResize(context);
         }
     }
