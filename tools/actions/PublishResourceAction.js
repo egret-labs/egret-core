@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 //import globals = require("../globals");
+var utils = require("../lib/utils");
 var FileUtil = require("../lib/FileUtil");
 var fs = require("fs");
 var path = require("path");
@@ -43,6 +44,7 @@ var CopyFilesCommand = require("../commands/copyfile");
 var EgretProject = require("../project/EgretProject");
 var ZipCommand = require("./ZipCommand");
 var copyNative = require("./CopyNativeFiles");
+var CompileProject = require("./CompileProject");
 var exml = require("./exml");
 function publishResourceOrigin(projectDir, releaseDir) {
     var config = EgretProject.data;
@@ -129,6 +131,27 @@ function publishWithResourceManager(projectDir, releaseDir) {
                     publishResourceOrigin(projectDir, releaseDir);
                     res = require('../lib/res/res.js');
                     command = "publish";
+                    res.createPlugin({
+                        "name": "compile",
+                        "onFile": function (file) { return __awaiter(_this, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                return [2 /*return*/, file];
+                            });
+                        }); },
+                        onFinish: function () { return __awaiter(_this, void 0, void 0, function () {
+                            var options, compileProject, result, outfile;
+                            return __generator(this, function (_a) {
+                                options = egret.args;
+                                options.minify = true;
+                                options.publish = true;
+                                compileProject = new CompileProject();
+                                result = compileProject.compile(options);
+                                outfile = FileUtil.joinPath(releaseDir, 'main.min.js');
+                                utils.minify(outfile, outfile);
+                                return [2 /*return*/];
+                            });
+                        }); }
+                    });
                     res.createPlugin({
                         "name": "test",
                         onFile: function (file) { return __awaiter(_this, void 0, void 0, function () {

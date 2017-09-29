@@ -36,7 +36,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var utils = require("../lib/utils");
 var FileUtil = require("../lib/FileUtil");
-var CompileProject = require("../actions/CompileProject");
 var PublishResourceAction_1 = require("../actions/PublishResourceAction");
 var EgretProject = require("../project/EgretProject");
 var Publish = (function () {
@@ -59,7 +58,7 @@ var Publish = (function () {
     };
     Publish.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var options, config, versionFile, runtime, compileProject, result, outfile;
+            var options, config, versionFile, runtime;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -70,13 +69,6 @@ var Publish = (function () {
                         runtime = egret.args.runtime == 'native' ? 'native' : "web";
                         options.releaseDir = FileUtil.joinPath(config.getReleaseRoot(), runtime, versionFile);
                         globals.log(1402, runtime, versionFile);
-                        utils.clean(options.releaseDir);
-                        options.minify = true;
-                        options.publish = true;
-                        compileProject = new CompileProject();
-                        result = compileProject.compile(options);
-                        outfile = FileUtil.joinPath(options.releaseDir, 'main.min.js');
-                        utils.minify(outfile, outfile);
                         return [4 /*yield*/, PublishResourceAction_1.publishResource(versionFile, runtime)];
                     case 1:
                         _a.sent();

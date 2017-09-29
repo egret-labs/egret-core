@@ -1,6 +1,8 @@
 /// <reference path="../lib/types.d.ts" />
 
 //import globals = require("../globals");
+
+import * as utils from '../lib/utils';
 import FileUtil = require('../lib/FileUtil');
 import * as fs from 'fs';
 import * as path from 'path';
@@ -8,6 +10,7 @@ import CopyFilesCommand = require("../commands/copyfile");
 import EgretProject = require('../project/EgretProject');
 import ZipCommand = require("./ZipCommand");
 import copyNative = require("./CopyNativeFiles");
+import CompileProject = require('./CompileProject');
 import exml = require("./exml");
 
 function publishResourceOrigin(projectDir: string, releaseDir: string) {
@@ -101,8 +104,29 @@ function publishResourceWithVersion(projectDir: string, releaseDir: string) {
 
 async function publishWithResourceManager(projectDir: string, releaseDir: string): Promise<number> {
     publishResourceOrigin(projectDir, releaseDir);
-    let res = require('../lib/res/res.js');
-    let command = "publish";
+    const res = require('../lib/res/res.js');
+    const command = "publish";
+
+
+    res.createPlugin({
+        "name": "compile",
+        "onFile": async (file) => {
+            return file;
+        },
+        onFinish: async () => {
+            const options = egret.args;
+
+            options.minify = true;
+            options.publish = true;
+
+            const compileProject = new CompileProject();
+            const result = compileProject.compile(options);
+            const outfile = FileUtil.joinPath(releaseDir, 'main.min.js');
+            utils.minify(outfile, outfile);
+
+        }
+    })
+
     res.createPlugin({
         "name": "test",
         onFile: async (file) => {
@@ -155,8 +179,8 @@ function publishResource_2(runtime: "web" | "native") {
 
 
 export function legacyPublishNative(versionFile: string) {
-    let options = egret.args;
-    let manifestPath = FileUtil.joinPath(options.releaseDir, "ziptemp", "manifest.json");
+    const options = egret.args;
+    const manifestPath = FileUtil.joinPath(options.releaseDir, "ziptemp", "manifest.json");
     EgretProject.manager.generateManifest(null, manifestPath, false, "native");
     EgretProject.manager.modifyNativeRequire(manifestPath);
     var allMainfestPath = FileUtil.joinPath(options.releaseDir, "all.manifest");
@@ -174,16 +198,16 @@ export function legacyPublishNative(versionFile: string) {
     EgretProject.manager.copyLibsForPublish(manifestPath, FileUtil.joinPath(options.releaseDir, "ziptemp"), "native");
 
     //runtime  打包所有js文件以及all.manifest
-    var zip = new ZipCommand(versionFile);
+    const zip = new ZipCommand(versionFile);
     zip.execute(function (code) {
         copyNative.refreshNative(false, versionFile);
     });
 }
 
 export function legacyPublishHTML5() {
-    let options = egret.args;
-    let manifestPath = FileUtil.joinPath(egret.args.releaseDir, "manifest.json");
-    let indexPath = FileUtil.joinPath(egret.args.releaseDir, "index.html");
+    const options = egret.args;
+    const manifestPath = FileUtil.joinPath(egret.args.releaseDir, "manifest.json");
+    const indexPath = FileUtil.joinPath(egret.args.releaseDir, "index.html");
     EgretProject.manager.generateManifest(null, manifestPath, false, "web");
     if (!EgretProject.data.useTemplate) {
         FileUtil.copy(FileUtil.joinPath(options.projectDir, "index.html"), indexPath);
@@ -194,7 +218,7 @@ export function legacyPublishHTML5() {
         EgretProject.manager.modifyIndex(manifestPath, indexPath);
     }
 
-    let copyAction = new CopyAction(options.projectDir, options.releaseDir);
+    const copyAction = new CopyAction(options.projectDir, options.releaseDir);
     copyAction.copy("favicon.ico");
 
     EgretProject.manager.copyLibsForPublish(manifestPath, options.releaseDir, "web");

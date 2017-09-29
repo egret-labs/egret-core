@@ -50,15 +50,6 @@ class Publish implements egret.Command {
         options.releaseDir = FileUtil.joinPath(config.getReleaseRoot(), runtime, versionFile);
         globals.log(1402, runtime, versionFile);
 
-        utils.clean(options.releaseDir);
-        options.minify = true;
-        options.publish = true;
-
-        var compileProject = new CompileProject();
-        var result = compileProject.compile(options);
-        var outfile = FileUtil.joinPath(options.releaseDir, 'main.min.js');
-        utils.minify(outfile, outfile);
-
         await publishResource(versionFile, runtime);
 
 
