@@ -9,7 +9,6 @@ import * as Compiler from './Compiler';
 
 class CompileProject {
     compile(options: egret.ToolArgs) {
-        exmlActions.generateExmlDTS();
         exmlActions.build();
         const result = this.compileProject(options);
         exmlActions.afterBuild();

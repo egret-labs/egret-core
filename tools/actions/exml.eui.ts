@@ -10,6 +10,8 @@ var parser = new exmlParser.EXMLParser();
 
 
 export function build(exmls?: string[]): egret.TaskResult {
+
+    generateExmlDTS();
     if (!exmls) {
         exmls = searchEXML();
     }
@@ -195,7 +197,7 @@ function getExmlDtsPath() {
     return file.joinPath(egret.args.projectDir, "libs", "exml.e.d.ts");
 }
 
-export function generateExmlDTS(): string {
+function generateExmlDTS(): string {
     //去掉重复定义
     var classDefinations = {};
     var sourceList = searchEXML();

@@ -53,7 +53,6 @@ var AutoCompileCommand = (function () {
         var _scripts = this._scripts || [];
         //预处理
         utils.clean(options.debugDir);
-        exmlActions.generateExmlDTS();
         //第一次运行，拷贝项目文件
         this.copyLibs();
         //编译
@@ -144,9 +143,6 @@ var AutoCompileCommand = (function () {
                 }
             }
         }
-        if (exmls.length) {
-            exmlActions.generateExmlDTS(); //;(exmls);
-        }
         var exmlTS = this.buildChangedEXML(exmls);
         this.buildChangedRes(others);
         codes = codes.concat(exmlTS);
@@ -185,14 +181,14 @@ var AutoCompileCommand = (function () {
         //console.log("changed ts:", filesChanged);
         return this.compileProject.compileProject(egret.args, filesChanged);
     };
-    AutoCompileCommand.prototype.buildChangedEXML = function (filesChanges) {
-        if (!filesChanges || filesChanges.length == 0)
+    AutoCompileCommand.prototype.buildChangedEXML = function (exmls) {
+        if (!exmls || exmls.length == 0)
             return [];
-        var result = exmlActions.build(filesChanges.map(function (f) { return f.fileName; }));
+        var result = exmlActions.build(exmls.map(function (f) { return f.fileName; }));
         this.exitCode[0] = result.exitCode;
         this.messages[0] = result.messages;
         var exmlTS = [];
-        filesChanges.forEach(function (exml) {
+        exmls.forEach(function (exml) {
             var ts = exml.fileName.replace(/\.exml$/, ".g.ts");
             if (FileUtil.exists(ts))
                 exmlTS.push({
@@ -248,15 +244,18 @@ var AutoCompileCommand = (function () {
         return 0;
     };
     AutoCompileCommand.prototype.onServiceMessage = function (msg) {
-        //console.log("onServiceMessage:",msg)
-        if (msg.command == 'build' && msg.option) {
-            this.sourceMapStateChanged = msg.option.sourceMap != egret.args.sourceMap;
-            egret.args = parser.parseJSON(msg.option);
+        switch (msg.command) {
+            case "build":
+                if (msg.option) {
+                    this.sourceMapStateChanged = msg.option.sourceMap != egret.args.sourceMap;
+                    egret.args = parser.parseJSON(msg.option);
+                }
+                this.buildChanges(msg.changes);
+                break;
+            case "shutdown":
+                utils.exit(0);
+                break;
         }
-        if (msg.command == 'build')
-            this.buildChanges(msg.changes);
-        if (msg.command == 'shutdown')
-            utils.exit(0);
     };
     AutoCompileCommand.prototype.sendCommand = function (cmd) {
         if (!cmd) {

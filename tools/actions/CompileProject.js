@@ -8,7 +8,6 @@ var CompileProject = (function () {
     function CompileProject() {
     }
     CompileProject.prototype.compile = function (options) {
-        exmlActions.generateExmlDTS();
         exmlActions.build();
         var result = this.compileProject(options);
         exmlActions.afterBuild();

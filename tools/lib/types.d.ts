@@ -102,13 +102,13 @@ declare module egret {
 
     export type EgretProperty = {
         "modules": EgretPropertyModule[],
-        "template"?:{
-            
+        "template"?: {
+
         },
-        "wasm"?:{
-            
+        "wasm"?: {
+
         },
-        "eui"?:{
+        "eui"?: {
             "exmlRoot"?: string | string[];
             "themes"?: string[];
             "exmlPublishPolicy"?: string;
@@ -161,7 +161,7 @@ declare module egret {
     }
 
     export interface ServiceCommand {
-        command: string;
+        command: "build" | "shutdown" | "buildResult" | "status" | "buildResult" | "init";
         path?: string;
         version?: string;
         option: ToolArgs;

@@ -76,8 +76,6 @@ class AutoCompileCommand implements egret.Command {
 
         //预处理
         utils.clean(options.debugDir);
-        exmlActions.generateExmlDTS();
-
 
         //第一次运行，拷贝项目文件
         this.copyLibs();
@@ -184,10 +182,6 @@ class AutoCompileCommand implements egret.Command {
             }
         }
 
-        if (exmls.length) {
-            exmlActions.generateExmlDTS()//;(exmls);
-        }
-
         var exmlTS = this.buildChangedEXML(exmls);
         this.buildChangedRes(others);
         codes = codes.concat(exmlTS);
@@ -234,16 +228,16 @@ class AutoCompileCommand implements egret.Command {
         return this.compileProject.compileProject(egret.args, filesChanged);
     }
 
-    private buildChangedEXML(filesChanges: egret.FileChanges): egret.FileChanges {
-        if (!filesChanges || filesChanges.length == 0)
+    private buildChangedEXML(exmls: egret.FileChanges): egret.FileChanges {
+        if (!exmls || exmls.length == 0)
             return [];
 
-        var result = exmlActions.build(filesChanges.map(f => f.fileName));
+        var result = exmlActions.build(exmls.map(f => f.fileName));
         this.exitCode[0] = result.exitCode;
         this.messages[0] = result.messages;
 
         var exmlTS: egret.FileChanges = [];
-        filesChanges.forEach(exml => {
+        exmls.forEach(exml => {
             var ts = exml.fileName.replace(/\.exml$/, ".g.ts");
             if (FileUtil.exists(ts))
                 exmlTS.push({
@@ -312,15 +306,18 @@ class AutoCompileCommand implements egret.Command {
     }
 
     private onServiceMessage(msg: egret.ServiceBuildCommand) {
-        //console.log("onServiceMessage:",msg)
-        if (msg.command == 'build' && msg.option) {
-            this.sourceMapStateChanged = msg.option.sourceMap != egret.args.sourceMap;
-            egret.args = parser.parseJSON(msg.option);
+        switch (msg.command) {
+            case "build":
+                if (msg.option) {
+                    this.sourceMapStateChanged = msg.option.sourceMap != egret.args.sourceMap;
+                    egret.args = parser.parseJSON(msg.option);
+                }
+                this.buildChanges(msg.changes);
+                break;
+            case "shutdown":
+                utils.exit(0);
+                break;
         }
-        if (msg.command == 'build')
-            this.buildChanges(msg.changes);
-        if (msg.command == 'shutdown')
-            utils.exit(0);
     }
 
     private sendCommand(cmd?: egret.ServiceCommand) {
