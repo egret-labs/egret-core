@@ -4,16 +4,16 @@
 import utils = require('../lib/utils');
 import service = require('../service/index');
 import FileUtil = require('../lib/FileUtil');
-import exml = require("../actions/exml");
+
 import CompileProject = require('../actions/CompileProject');
-import { publishResource } from '../actions/PublishResourceAction';
+import { publishResource, legacyPublishHTML5, legacyPublishNative } from '../actions/PublishResourceAction';
 import ZipCommand = require("../actions/ZipCommand");
 import ChangeEntranceCMD = require("../actions/ChangeEntranceCommand");
 
 import project = require("../actions/Project");
 import EgretProject = require("../project/EgretProject");
 
-import copyNative = require("../actions/CopyNativeFiles");
+
 
 import Clean = require("../commands/clean");
 
@@ -59,81 +59,14 @@ class Publish implements egret.Command {
         var outfile = FileUtil.joinPath(options.releaseDir, 'main.min.js');
         utils.minify(outfile, outfile);
 
-        await publishResource(runtime);
+        await publishResource(versionFile, runtime);
 
-        //拷贝资源后还原default.thm.json bug修复 by yanjiaqi
-        if (exml.updateSetting) {
-            exml.updateSetting();
-        }
-        let manifestPath;
-        if (runtime == "native") {
-            manifestPath = FileUtil.joinPath(options.releaseDir, "ziptemp", "manifest.json");
-            EgretProject.manager.generateManifest(null, manifestPath, false, "native");
-            EgretProject.manager.modifyNativeRequire(manifestPath);
-            var allMainfestPath = FileUtil.joinPath(options.releaseDir, "all.manifest");
-            if (FileUtil.exists(allMainfestPath)) {
-                FileUtil.copy(allMainfestPath, FileUtil.joinPath(options.releaseDir, "ziptemp", "all.manifest"));
-            }
-            FileUtil.remove(allMainfestPath);
 
-            //先拷贝 launcher
-            FileUtil.copy(FileUtil.joinPath(options.templateDir, "runtime"), FileUtil.joinPath(options.releaseDir, "ziptemp", "launcher"));
-
-            FileUtil.copy(FileUtil.joinPath(options.releaseDir, "main.min.js"), FileUtil.joinPath(options.releaseDir, "ziptemp", "main.min.js"));
-            FileUtil.remove(FileUtil.joinPath(options.releaseDir, "main.min.js"));
-
-            EgretProject.manager.copyLibsForPublish(manifestPath, FileUtil.joinPath(options.releaseDir, "ziptemp"), "native");
-
-            //runtime  打包所有js文件以及all.manifest
-            var zip = new ZipCommand(versionFile);
-            zip.execute(function (code) {
-                copyNative.refreshNative(false, versionFile);
-            });
-        }
-        else {
-            manifestPath = FileUtil.joinPath(egret.args.releaseDir, "manifest.json");
-            let indexPath = FileUtil.joinPath(egret.args.releaseDir, "index.html");
-            EgretProject.manager.generateManifest(null, manifestPath, false, "web");
-            if (!EgretProject.data.useTemplate) {
-                FileUtil.copy(FileUtil.joinPath(options.projectDir, "index.html"), indexPath);
-                EgretProject.manager.modifyIndex(manifestPath, indexPath);
-            }
-            else {
-                FileUtil.copy(FileUtil.joinPath(options.templateDir, "web", "index.html"), indexPath);
-                EgretProject.manager.modifyIndex(manifestPath, indexPath);
-            }
-
-            let copyAction = new CopyAction(options.projectDir, options.releaseDir);
-            copyAction.copy("favicon.ico");
-
-            EgretProject.manager.copyLibsForPublish(manifestPath, options.releaseDir, "web");
-        }
-
-        // await publishResource(runtime);
         return DontExitCode;
     }
 
 }
 
-class CopyAction {
 
-    constructor(private from, private to) {
-    }
-
-    public copy(resourcePath: string | string[]) {
-        if (typeof resourcePath == 'string') {
-            let fromPath = path.resolve(this.from, resourcePath);
-            let toPath = path.resolve(this.to, resourcePath)
-            if (FileUtil.exists(fromPath)) {
-                FileUtil.copy(fromPath, toPath);
-            }
-        }
-        else {
-            resourcePath.forEach(this.copy.bind(this));
-        }
-
-    }
-
-}
 
 export = Publish;

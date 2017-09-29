@@ -238,7 +238,7 @@ class AutoCompileCommand implements egret.Command {
         if (!filesChanges || filesChanges.length == 0)
             return [];
 
-        var result = exmlActions.buildChanges(filesChanges.map(f => f.fileName));
+        var result = exmlActions.build(filesChanges.map(f => f.fileName));
         this.exitCode[0] = result.exitCode;
         this.messages[0] = result.messages;
 

@@ -38,8 +38,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 //import globals = require("../globals");
 var FileUtil = require("../lib/FileUtil");
 var fs = require("fs");
+var path = require("path");
 var CopyFilesCommand = require("../commands/copyfile");
 var EgretProject = require("../project/EgretProject");
+var ZipCommand = require("./ZipCommand");
+var copyNative = require("./CopyNativeFiles");
+var exml = require("./exml");
 function publishResourceOrigin(projectDir, releaseDir) {
     var config = EgretProject.data;
     var cpFiles = new CopyFilesCommand();
@@ -117,6 +121,7 @@ function publishResourceWithVersion(projectDir, releaseDir) {
 }
 function publishWithResourceManager(projectDir, releaseDir) {
     return __awaiter(this, void 0, void 0, function () {
+        var _this = this;
         var res, command;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -124,14 +129,53 @@ function publishWithResourceManager(projectDir, releaseDir) {
                     publishResourceOrigin(projectDir, releaseDir);
                     res = require('../lib/res/res.js');
                     command = "publish";
-                    temp();
+                    res.createPlugin({
+                        "name": "test",
+                        onFile: function (file) { return __awaiter(_this, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                return [2 /*return*/, file];
+                            });
+                        }); },
+                        onFinish: function () {
+                            legacyPublishHTML5();
+                        }
+                    });
+                    res.createPlugin({
+                        "name": "cleanEXML",
+                        onFile: function (file) { return __awaiter(_this, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                return [2 /*return*/, file];
+                            });
+                        }); },
+                        onFinish: function () {
+                            if (exml.updateSetting) {
+                                exml.updateSetting();
+                            }
+                        }
+                    });
                     return [4 /*yield*/, res.build({ projectRoot: releaseDir, debug: true, command: command })];
                 case 1: return [2 /*return*/, _a.sent()];
             }
         });
     });
 }
-function publishResource(runtime) {
+function publishResource(version, runtime) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: 
+                //拷贝资源后还原default.thm.json bug修复 by yanjiaqi
+                return [4 /*yield*/, publishResource_2(runtime)];
+                case 1:
+                    //拷贝资源后还原default.thm.json bug修复 by yanjiaqi
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.publishResource = publishResource;
+function publishResource_2(runtime) {
     var _a = egret.args, releaseDir = _a.releaseDir, projectDir = _a.projectDir;
     var publishType = EgretProject.data.getPublishType(runtime);
     switch (publishType) {
@@ -148,8 +192,29 @@ function publishResource(runtime) {
             return 1;
     }
 }
-exports.publishResource = publishResource;
-function temp() {
+function legacyPublishNative(versionFile) {
+    var options = egret.args;
+    var manifestPath = FileUtil.joinPath(options.releaseDir, "ziptemp", "manifest.json");
+    EgretProject.manager.generateManifest(null, manifestPath, false, "native");
+    EgretProject.manager.modifyNativeRequire(manifestPath);
+    var allMainfestPath = FileUtil.joinPath(options.releaseDir, "all.manifest");
+    if (FileUtil.exists(allMainfestPath)) {
+        FileUtil.copy(allMainfestPath, FileUtil.joinPath(options.releaseDir, "ziptemp", "all.manifest"));
+    }
+    FileUtil.remove(allMainfestPath);
+    //先拷贝 launcher
+    FileUtil.copy(FileUtil.joinPath(options.templateDir, "runtime"), FileUtil.joinPath(options.releaseDir, "ziptemp", "launcher"));
+    FileUtil.copy(FileUtil.joinPath(options.releaseDir, "main.min.js"), FileUtil.joinPath(options.releaseDir, "ziptemp", "main.min.js"));
+    FileUtil.remove(FileUtil.joinPath(options.releaseDir, "main.min.js"));
+    EgretProject.manager.copyLibsForPublish(manifestPath, FileUtil.joinPath(options.releaseDir, "ziptemp"), "native");
+    //runtime  打包所有js文件以及all.manifest
+    var zip = new ZipCommand(versionFile);
+    zip.execute(function (code) {
+        copyNative.refreshNative(false, versionFile);
+    });
+}
+exports.legacyPublishNative = legacyPublishNative;
+function legacyPublishHTML5() {
     var options = egret.args;
     var manifestPath = FileUtil.joinPath(egret.args.releaseDir, "manifest.json");
     var indexPath = FileUtil.joinPath(egret.args.releaseDir, "index.html");
@@ -162,7 +227,27 @@ function temp() {
         FileUtil.copy(FileUtil.joinPath(options.templateDir, "web", "index.html"), indexPath);
         EgretProject.manager.modifyIndex(manifestPath, indexPath);
     }
-    // let copyAction = new CopyAction(options.projectDir, options.releaseDir);
-    // copyAction.copy("favicon.ico");
+    var copyAction = new CopyAction(options.projectDir, options.releaseDir);
+    copyAction.copy("favicon.ico");
     EgretProject.manager.copyLibsForPublish(manifestPath, options.releaseDir, "web");
 }
+exports.legacyPublishHTML5 = legacyPublishHTML5;
+var CopyAction = (function () {
+    function CopyAction(from, to) {
+        this.from = from;
+        this.to = to;
+    }
+    CopyAction.prototype.copy = function (resourcePath) {
+        if (typeof resourcePath == 'string') {
+            var fromPath = path.resolve(this.from, resourcePath);
+            var toPath = path.resolve(this.to, resourcePath);
+            if (FileUtil.exists(fromPath)) {
+                FileUtil.copy(fromPath, toPath);
+            }
+        }
+        else {
+            resourcePath.forEach(this.copy.bind(this));
+        }
+    };
+    return CopyAction;
+}());

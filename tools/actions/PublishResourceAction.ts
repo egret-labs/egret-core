@@ -6,7 +6,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 import CopyFilesCommand = require("../commands/copyfile");
 import EgretProject = require('../project/EgretProject');
-
+import ZipCommand = require("./ZipCommand");
+import copyNative = require("./CopyNativeFiles");
+import exml = require("./exml");
 
 function publishResourceOrigin(projectDir: string, releaseDir: string) {
     var config = EgretProject.data;
@@ -101,11 +103,36 @@ async function publishWithResourceManager(projectDir: string, releaseDir: string
     publishResourceOrigin(projectDir, releaseDir);
     let res = require('../lib/res/res.js');
     let command = "publish";
-    temp();
+    res.createPlugin({
+        "name": "test",
+        onFile: async (file) => {
+            return file;
+        },
+        onFinish: () => {
+            legacyPublishHTML5();
+        }
+    });
+    res.createPlugin({
+        "name": "cleanEXML",
+        onFile: async (file) => {
+            return file;
+        },
+        onFinish: () => {
+            if (exml.updateSetting) {
+                exml.updateSetting();
+            }
+        }
+    })
     return await res.build({ projectRoot: releaseDir, debug: true, command });
 }
 
-export function publishResource(runtime: "web" | "native") {
+export async function publishResource(version: string, runtime: "web" | "native") {
+    //拷贝资源后还原default.thm.json bug修复 by yanjiaqi
+    await publishResource_2(runtime);
+
+}
+
+function publishResource_2(runtime: "web" | "native") {
 
     let { releaseDir, projectDir } = egret.args;
 
@@ -128,8 +155,35 @@ export function publishResource(runtime: "web" | "native") {
 
 }
 
-function temp() {
-    var options = egret.args;
+
+export function legacyPublishNative(versionFile: string) {
+    let options = egret.args;
+    let manifestPath = FileUtil.joinPath(options.releaseDir, "ziptemp", "manifest.json");
+    EgretProject.manager.generateManifest(null, manifestPath, false, "native");
+    EgretProject.manager.modifyNativeRequire(manifestPath);
+    var allMainfestPath = FileUtil.joinPath(options.releaseDir, "all.manifest");
+    if (FileUtil.exists(allMainfestPath)) {
+        FileUtil.copy(allMainfestPath, FileUtil.joinPath(options.releaseDir, "ziptemp", "all.manifest"));
+    }
+    FileUtil.remove(allMainfestPath);
+
+    //先拷贝 launcher
+    FileUtil.copy(FileUtil.joinPath(options.templateDir, "runtime"), FileUtil.joinPath(options.releaseDir, "ziptemp", "launcher"));
+
+    FileUtil.copy(FileUtil.joinPath(options.releaseDir, "main.min.js"), FileUtil.joinPath(options.releaseDir, "ziptemp", "main.min.js"));
+    FileUtil.remove(FileUtil.joinPath(options.releaseDir, "main.min.js"));
+
+    EgretProject.manager.copyLibsForPublish(manifestPath, FileUtil.joinPath(options.releaseDir, "ziptemp"), "native");
+
+    //runtime  打包所有js文件以及all.manifest
+    var zip = new ZipCommand(versionFile);
+    zip.execute(function (code) {
+        copyNative.refreshNative(false, versionFile);
+    });
+}
+
+export function legacyPublishHTML5() {
+    let options = egret.args;
     let manifestPath = FileUtil.joinPath(egret.args.releaseDir, "manifest.json");
     let indexPath = FileUtil.joinPath(egret.args.releaseDir, "index.html");
     EgretProject.manager.generateManifest(null, manifestPath, false, "web");
@@ -142,8 +196,29 @@ function temp() {
         EgretProject.manager.modifyIndex(manifestPath, indexPath);
     }
 
-    // let copyAction = new CopyAction(options.projectDir, options.releaseDir);
-    // copyAction.copy("favicon.ico");
+    let copyAction = new CopyAction(options.projectDir, options.releaseDir);
+    copyAction.copy("favicon.ico");
 
     EgretProject.manager.copyLibsForPublish(manifestPath, options.releaseDir, "web");
+}
+
+class CopyAction {
+
+    constructor(private from, private to) {
+    }
+
+    public copy(resourcePath: string | string[]) {
+        if (typeof resourcePath == 'string') {
+            let fromPath = path.resolve(this.from, resourcePath);
+            let toPath = path.resolve(this.to, resourcePath)
+            if (FileUtil.exists(fromPath)) {
+                FileUtil.copy(fromPath, toPath);
+            }
+        }
+        else {
+            resourcePath.forEach(this.copy.bind(this));
+        }
+
+    }
+
 }

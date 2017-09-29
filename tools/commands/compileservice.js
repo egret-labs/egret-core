@@ -188,7 +188,7 @@ var AutoCompileCommand = (function () {
     AutoCompileCommand.prototype.buildChangedEXML = function (filesChanges) {
         if (!filesChanges || filesChanges.length == 0)
             return [];
-        var result = exmlActions.buildChanges(filesChanges.map(function (f) { return f.fileName; }));
+        var result = exmlActions.build(filesChanges.map(function (f) { return f.fileName; }));
         this.exitCode[0] = result.exitCode;
         this.messages[0] = result.messages;
         var exmlTS = [];

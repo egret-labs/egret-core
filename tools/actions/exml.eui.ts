@@ -9,12 +9,14 @@ import exmlParser = require("../lib/eui/EXMLParser");
 var parser = new exmlParser.EXMLParser();
 
 
-export function build(): egret.TaskResult {
-    const exmls = searchEXML();
+export function build(exmls?: string[]): egret.TaskResult {
+    if (!exmls) {
+        exmls = searchEXML();
+    }
     return buildChanges(exmls);
 }
 
-export function buildChanges(exmls: string[]): egret.TaskResult {
+function buildChanges(exmls: string[]): egret.TaskResult {
 
     var state: egret.TaskResult = {
         exitCode: 0,

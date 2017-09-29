@@ -5,8 +5,10 @@ var exml = require("../lib/eui/EXML");
 var EgretProject = require("../project/EgretProject");
 var exmlParser = require("../lib/eui/EXMLParser");
 var parser = new exmlParser.EXMLParser();
-function build() {
-    var exmls = searchEXML();
+function build(exmls) {
+    if (!exmls) {
+        exmls = searchEXML();
+    }
     return buildChanges(exmls);
 }
 exports.build = build;
@@ -19,7 +21,6 @@ function buildChanges(exmls) {
         return state;
     return state;
 }
-exports.buildChanges = buildChanges;
 function afterBuild() {
     updateSetting(egret.args.publish);
 }
