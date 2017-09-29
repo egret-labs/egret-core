@@ -71,7 +71,7 @@ var AutoCompileCommand = (function () {
         else {
             FileUtil.copy(FileUtil.joinPath(options.templateDir, "debug", "index.html"), indexPath);
         }
-        exmlActions.afterBuild();
+        exmlActions.updateSetting(egret.args.publish);
         //拷贝项目到native工程中
         if (egret.args.runtime == "native") {
             console.log("----native build-----");
@@ -159,7 +159,7 @@ var AutoCompileCommand = (function () {
             this.messages[1] = result.messages;
         }
         if (exmls.length) {
-            exmlActions.afterBuildChanges(exmls);
+            exmlActions.updateSetting(egret.args.publish);
         }
         //拷贝项目到native工程中
         if (egret.args.runtime == "native") {

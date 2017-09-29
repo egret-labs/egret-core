@@ -11,7 +11,7 @@ class CompileProject {
     compile(options: egret.ToolArgs) {
         exmlActions.build();
         const result = this.compileProject(options);
-        exmlActions.afterBuild();
+        exmlActions.updateSetting(false);
         if (result.exitStatus)
             return null;
 

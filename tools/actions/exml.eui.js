@@ -22,14 +22,6 @@ function buildChanges(exmls) {
         return state;
     return state;
 }
-function afterBuild() {
-    updateSetting(egret.args.publish);
-}
-exports.afterBuild = afterBuild;
-function afterBuildChanges(exmlsChanged) {
-    afterBuild();
-}
-exports.afterBuildChanges = afterBuildChanges;
 function getSortedEXML() {
     var files = searchEXML();
     var exmls = files.map(function (path) { return ({
@@ -41,7 +33,6 @@ function getSortedEXML() {
     return exmls;
 }
 function updateSetting(merge) {
-    if (merge === void 0) { merge = false; }
     var themeDatas = [];
     //1.找到项目内后缀名为'.thm.json'的主题文件并返回列表
     var themes = searchTheme();

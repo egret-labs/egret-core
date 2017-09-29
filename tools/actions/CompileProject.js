@@ -10,7 +10,7 @@ var CompileProject = (function () {
     CompileProject.prototype.compile = function (options) {
         exmlActions.build();
         var result = this.compileProject(options);
-        exmlActions.afterBuild();
+        exmlActions.updateSetting(false);
         if (result.exitStatus)
             return null;
         return result;

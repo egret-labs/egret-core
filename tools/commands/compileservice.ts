@@ -99,7 +99,7 @@ class AutoCompileCommand implements egret.Command {
             FileUtil.copy(FileUtil.joinPath(options.templateDir, "debug", "index.html"), indexPath);
         }
 
-        exmlActions.afterBuild();
+        exmlActions.updateSetting(egret.args.publish);
 
 
         //拷贝项目到native工程中
@@ -200,7 +200,7 @@ class AutoCompileCommand implements egret.Command {
         }
 
         if (exmls.length) {
-            exmlActions.afterBuildChanges(exmls);
+            exmlActions.updateSetting(egret.args.publish)
         }
 
         //拷贝项目到native工程中

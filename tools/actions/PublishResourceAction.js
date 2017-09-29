@@ -148,9 +148,7 @@ function publishWithResourceManager(projectDir, releaseDir) {
                             });
                         }); },
                         onFinish: function () {
-                            if (exml.updateSetting) {
-                                exml.updateSetting();
-                            }
+                            exml.updateSetting(false);
                         }
                     });
                     return [4 /*yield*/, res.build({ projectRoot: releaseDir, debug: true, command: command })];

@@ -28,14 +28,6 @@ function buildChanges(exmls: string[]): egret.TaskResult {
         return state;
     return state;
 }
-
-export function afterBuild() {
-    updateSetting(egret.args.publish);
-}
-export function afterBuildChanges(exmlsChanged: egret.FileChanges) {
-    afterBuild();
-}
-
 function getSortedEXML(): exml.EXMLFile[] {
 
     var files = searchEXML();
@@ -49,7 +41,7 @@ function getSortedEXML(): exml.EXMLFile[] {
 }
 
 
-export function updateSetting(merge = false) {
+export function updateSetting(merge: boolean) {
 
     var themeDatas: egret.EgretEUIThemeConfig[] = [];
     //1.找到项目内后缀名为'.thm.json'的主题文件并返回列表

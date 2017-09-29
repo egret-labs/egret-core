@@ -118,9 +118,7 @@ async function publishWithResourceManager(projectDir: string, releaseDir: string
             return file;
         },
         onFinish: () => {
-            if (exml.updateSetting) {
-                exml.updateSetting();
-            }
+            exml.updateSetting(false);
         }
     })
     return await res.build({ projectRoot: releaseDir, debug: true, command });
