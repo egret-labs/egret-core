@@ -1,12 +1,6 @@
-/**
- * Created by yanjiaqi on 15/8/31.
- */
 /// <reference path="../lib/types.d.ts" />
-//import globals = require("../globals");
-//import params = require("../ParamsParser");
 var file = require("../lib/FileUtil");
 var EgretProject = require("../project/EgretProject");
-//import config = require('../ProjectConfig');
 var config = EgretProject.data;
 var CopyFilesCommand = (function () {
     function CopyFilesCommand() {

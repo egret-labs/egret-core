@@ -1,17 +1,12 @@
-/**
- * Created by yanjiaqi on 15/8/31.
- */
 /// <reference path="../lib/types.d.ts" />
 
-//import globals = require("../globals");
-//import params = require("../ParamsParser");
-import file = require('../lib/FileUtil');
-import EgretProject = require('../project/EgretProject');
-//import config = require('../ProjectConfig');
-var config = EgretProject.data;
+import * as file from '../lib/FileUtil';
+import * as EgretProject from '../project/EgretProject';
+
+const config = EgretProject.data;
 class CopyFilesCommand implements egret.Command {
     outputPath: string;
-    ignorePathList: Array<any>;
+    ignorePathList: any[]
     execute(): number {
         this.copyFilesToNative(egret.args.projectDir, this.outputPath, this.ignorePathList);
         return 0;
@@ -41,7 +36,7 @@ class CopyFilesCommand implements egret.Command {
         }
     }
 
-    private copyFilesWithIgnore(sourceRootPath, desRootPath, ignorePathList) {
+    private copyFilesWithIgnore(sourceRootPath: string, desRootPath: string, ignorePathList: any[]) {
         ignorePathList = ignorePathList.map(function (item) {
             var reg = new RegExp(item);
             return reg;
