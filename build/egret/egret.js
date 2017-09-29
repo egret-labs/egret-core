@@ -10593,6 +10593,7 @@ var egret;
          * @param caps Specifies the value of the CapsStyle class of the endpoint type at the end of the line. (default = CapsStyle.ROUND)
          * @param joints Specifies the type of joint appearance of corner.  (default = JointStyle.ROUND)
          * @param miterLimit Indicates the limit number of cut miter.
+         * @param lineDash set the line dash.
          * @version Egret 2.4
          * @platform Web,Native
          * @language en_US
@@ -10607,6 +10608,7 @@ var egret;
          * @param caps 用于指定线条末端处端点类型的 CapsStyle 类的值。默认值：CapsStyle.ROUND
          * @param joints 指定用于拐角的连接外观的类型。默认值：JointStyle.ROUND
          * @param miterLimit 用于表示剪切斜接的极限值的数字。
+         * @param lineDash 设置虚线样式。
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN

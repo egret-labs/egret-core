@@ -3775,7 +3775,11 @@ var egret;
             }
             egret.sys.CanvasRenderBuffer = web.CanvasRenderBuffer;
             setRenderMode(options.renderMode);
-            if (options.retina) {
+            var canvasScaleFactor;
+            if (options.canvasScaleFactor) {
+                canvasScaleFactor = options.canvasScaleFactor;
+            }
+            else {
                 //based on : https://github.com/jondavidjohn/hidpi-canvas-polyfill
                 var context_1 = egret.sys.canvasHitTestBuffer.context;
                 var backingStore = context_1.backingStorePixelRatio ||
@@ -3784,8 +3788,14 @@ var egret;
                     context_1.msBackingStorePixelRatio ||
                     context_1.oBackingStorePixelRatio ||
                     context_1.backingStorePixelRatio || 1;
-                egret.sys.DisplayList.$setDevicePixelRatio((window.devicePixelRatio || 1) / backingStore);
+                canvasScaleFactor = (window.devicePixelRatio || 1) / backingStore;
+                //特殊处理PC缩放2倍
+                if (canvasScaleFactor == 1 && (egret.Capabilities.os == "Mac OS" || egret.Capabilities.os == "Windows PC")) {
+                    canvasScaleFactor = 2;
+                }
             }
+            canvasScaleFactor = Math.max(1, Math.ceil(canvasScaleFactor));
+            egret.sys.DisplayList.$setDevicePixelRatio(canvasScaleFactor);
             var ticker = egret.ticker;
             startTicker(ticker);
             if (options.screenAdapter) {
