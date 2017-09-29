@@ -41,21 +41,6 @@ var EgretProject = require("../project/EgretProject");
 var Publish = (function () {
     function Publish() {
     }
-    Publish.prototype.getVersionInfo = function () {
-        if (egret.args.version) {
-            return egret.args.version;
-        }
-        var date = new Date();
-        var year = date.getFullYear() % 100;
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var hour = date.getHours();
-        var min = date.getMinutes();
-        var second = date.getSeconds();
-        var timeStr = year * 10000000000 + month * 100000000 + day * 1000000 + hour * 10000 + min * 100 + second;
-        return timeStr.toString();
-        //return (Math.round(Date.now() / 1000)).toString();
-    };
     Publish.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
             var options, config, versionFile, runtime;
@@ -65,7 +50,7 @@ var Publish = (function () {
                         utils.checkEgret();
                         options = egret.args;
                         config = EgretProject.data;
-                        versionFile = this.getVersionInfo();
+                        versionFile = getVersionInfo();
                         runtime = egret.args.runtime == 'native' ? 'native' : "web";
                         options.releaseDir = FileUtil.joinPath(config.getReleaseRoot(), runtime, versionFile);
                         globals.log(1402, runtime, versionFile);
@@ -79,4 +64,18 @@ var Publish = (function () {
     };
     return Publish;
 }());
+function getVersionInfo() {
+    if (egret.args.version) {
+        return egret.args.version;
+    }
+    var date = new Date();
+    var year = date.getFullYear() % 100;
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    var hour = date.getHours();
+    var min = date.getMinutes();
+    var second = date.getSeconds();
+    var timeStr = year * 10000000000 + month * 100000000 + day * 1000000 + hour * 10000 + min * 100 + second;
+    return timeStr.toString();
+}
 module.exports = Publish;

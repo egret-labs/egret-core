@@ -17,7 +17,6 @@ import * as path from 'path';
 
 
 class Publish implements egret.Command {
-    private
 
     async execute(): Promise<number> {
         utils.checkEgret();

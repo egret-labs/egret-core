@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 //import globals = require("../globals");
+var Compiler = require("./Compiler");
 var utils = require("../lib/utils");
 var FileUtil = require("../lib/FileUtil");
 var fs = require("fs");
@@ -44,7 +45,6 @@ var CopyFilesCommand = require("../commands/copyfile");
 var EgretProject = require("../project/EgretProject");
 var ZipCommand = require("./ZipCommand");
 var copyNative = require("./CopyNativeFiles");
-var CompileProject = require("./CompileProject");
 var exml = require("./exml");
 function publishResourceOrigin(projectDir, releaseDir) {
     var config = EgretProject.data;
@@ -128,26 +128,23 @@ function publishWithResourceManager(projectDir, releaseDir) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    publishResourceOrigin(projectDir, releaseDir);
-                    res = require('../lib/res/res.js');
+                    res = require('../lib/resourcemanager');
                     command = "publish";
                     res.createPlugin({
-                        "name": "compile",
-                        "onFile": function (file) { return __awaiter(_this, void 0, void 0, function () {
+                        name: "compile",
+                        onFile: function (file) { return __awaiter(_this, void 0, void 0, function () {
                             return __generator(this, function (_a) {
                                 return [2 /*return*/, file];
                             });
                         }); },
-                        onFinish: function () { return __awaiter(_this, void 0, void 0, function () {
-                            var options, compileProject, result, outfile;
+                        onFinish: function (pluginContext) { return __awaiter(_this, void 0, void 0, function () {
+                            var options, jscode;
                             return __generator(this, function (_a) {
                                 options = egret.args;
                                 options.minify = true;
                                 options.publish = true;
-                                compileProject = new CompileProject();
-                                result = compileProject.compile(options);
-                                outfile = FileUtil.joinPath(releaseDir, 'main.min.js');
-                                utils.minify(outfile, outfile);
+                                jscode = tinyCompiler();
+                                pluginContext.createFile("main.min.js", new Buffer(jscode));
                                 return [2 /*return*/];
                             });
                         }); }
@@ -174,7 +171,7 @@ function publishWithResourceManager(projectDir, releaseDir) {
                             exml.updateSetting(false);
                         }
                     });
-                    return [4 /*yield*/, res.build({ projectRoot: releaseDir, debug: true, command: command })];
+                    return [4 /*yield*/, res.build({ projectRoot: projectDir, debug: true, command: command })];
                 case 1: return [2 /*return*/, _a.sent()];
             }
         });
@@ -184,11 +181,8 @@ function publishResource(version, runtime) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: 
-                //拷贝资源后还原default.thm.json bug修复 by yanjiaqi
-                return [4 /*yield*/, publishResource_2(runtime)];
+                case 0: return [4 /*yield*/, publishResource_2(runtime)];
                 case 1:
-                    //拷贝资源后还原default.thm.json bug修复 by yanjiaqi
                     _a.sent();
                     return [2 /*return*/];
             }
@@ -212,6 +206,20 @@ function publishResource_2(runtime) {
         default:
             return 1;
     }
+}
+function tinyCompiler() {
+    var os = require('os');
+    var outfile = FileUtil.joinPath(os.tmpdir(), 'main.min.js');
+    var compiler = new Compiler.Compiler();
+    var configParsedResult = compiler.parseTsconfig(egret.args.projectDir, egret.args.publish);
+    var compilerOptions = configParsedResult.options;
+    var fileNames = configParsedResult.fileNames;
+    var tsconfigError = configParsedResult.errors.map(function (d) { return d.messageText.toString(); });
+    compilerOptions.outFile = outfile;
+    compilerOptions.allowUnreachableCode = true;
+    compilerOptions.emitReflection = true;
+    this.compilerHost = compiler.compile(compilerOptions, fileNames);
+    return utils.minify(outfile);
 }
 function legacyPublishNative(versionFile) {
     var options = egret.args;

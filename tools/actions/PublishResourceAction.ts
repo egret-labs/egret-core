@@ -2,6 +2,8 @@
 
 //import globals = require("../globals");
 
+import * as Compiler from './Compiler';
+
 import * as utils from '../lib/utils';
 import FileUtil = require('../lib/FileUtil');
 import * as fs from 'fs';
@@ -103,26 +105,24 @@ function publishResourceWithVersion(projectDir: string, releaseDir: string) {
 }
 
 async function publishWithResourceManager(projectDir: string, releaseDir: string): Promise<number> {
-    publishResourceOrigin(projectDir, releaseDir);
-    const res = require('../lib/res/res.js');
+    // publishResourceOrigin(projectDir, releaseDir);
+    const res = require('../lib/resourcemanager');
     const command = "publish";
 
 
     res.createPlugin({
-        "name": "compile",
-        "onFile": async (file) => {
+        name: "compile",
+        onFile: async (file) => {
             return file;
         },
-        onFinish: async () => {
+        onFinish: async (pluginContext) => {
             const options = egret.args;
 
             options.minify = true;
             options.publish = true;
 
-            const compileProject = new CompileProject();
-            const result = compileProject.compile(options);
-            const outfile = FileUtil.joinPath(releaseDir, 'main.min.js');
-            utils.minify(outfile, outfile);
+            const jscode = tinyCompiler();
+            pluginContext.createFile("main.min.js", new Buffer(jscode));
 
         }
     })
@@ -145,11 +145,10 @@ async function publishWithResourceManager(projectDir: string, releaseDir: string
             exml.updateSetting(false);
         }
     })
-    return await res.build({ projectRoot: releaseDir, debug: true, command });
+    return await res.build({ projectRoot: projectDir, debug: true, command });
 }
 
 export async function publishResource(version: string, runtime: "web" | "native") {
-    //拷贝资源后还原default.thm.json bug修复 by yanjiaqi
     await publishResource_2(runtime);
 
 }
@@ -177,6 +176,22 @@ function publishResource_2(runtime: "web" | "native") {
 
 }
 
+
+function tinyCompiler() {
+
+    const os = require('os');
+    const outfile = FileUtil.joinPath(os.tmpdir(), 'main.min.js');
+    const compiler = new Compiler.Compiler();
+    const configParsedResult = compiler.parseTsconfig(egret.args.projectDir, egret.args.publish);
+    const compilerOptions = configParsedResult.options;
+    const fileNames = configParsedResult.fileNames;
+    const tsconfigError = configParsedResult.errors.map(d => d.messageText.toString());
+    compilerOptions.outFile = outfile;
+    compilerOptions.allowUnreachableCode = true;
+    compilerOptions.emitReflection = true;
+    this.compilerHost = compiler.compile(compilerOptions, fileNames);
+    return utils.minify(outfile);
+}
 
 export function legacyPublishNative(versionFile: string) {
     const options = egret.args;

@@ -258,7 +258,13 @@ function minify(sourceFile, output) {
     };
     //UglifyJS参数参考这个页面：https://github.com/mishoo/UglifyJS2
     var result = UglifyJS.minify(sourceFile, { compress: { global_defs: defines }, output: { beautify: false } });
-    file.save(output, result.code);
+    var code = result.code;
+    if (output) {
+        file.save(output, code);
+    }
+    else {
+        return code;
+    }
 }
 exports.minify = minify;
 function clean(path, excludes) {

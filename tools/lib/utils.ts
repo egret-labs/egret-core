@@ -204,17 +204,23 @@ export function endWith(text: string, match: string) {
 function escape(s) {
     return s.replace(/"/, '\\\"');
 }
-
-export function minify(sourceFile: string, output: string) {
-
-
-    var defines = {
+export function minify(sourceFile: string): string
+export function minify(sourceFile: string, output: string): void
+export function minify(sourceFile: string, output?: string) {
+    const defines = {
         DEBUG: false,
         RELEASE: true
     }
     //UglifyJS参数参考这个页面：https://github.com/mishoo/UglifyJS2
-    var result = UglifyJS.minify(sourceFile, { compress: { global_defs: defines }, output: { beautify: false } });
-    file.save(output, result.code);
+    const result = UglifyJS.minify(sourceFile, { compress: { global_defs: defines }, output: { beautify: false } });
+    const code = result.code;
+    if (output) {
+        file.save(output, code);
+    }
+    else {
+        return code;
+    }
+
 }
 
 export function clean(path: string, excludes?: string[]) {
