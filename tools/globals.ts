@@ -44,53 +44,12 @@ module globals {
         return true;
     }
 
-    export function getCrc32() {
+    export function getCrc32(): (text: any) => string {
         return require("./lib/core/crc32");
     }
 
     export function addQuotes(str) {
         return "\"" + str + "\"";
-    }
-
-    var CodeUtil = require("./lib/exml/code_util.js");
-
-    /**
-     * 这个文件是否只含有接口
-     */
-    export function isInterface(path) {
-        var text = file.read(path);
-        text = CodeUtil.removeComment(text, path);
-        text = removeInterface(text);
-
-        if (!CodeUtil.containsVariable("class", text) && !CodeUtil.containsVariable("var", text) && !CodeUtil.containsVariable("function", text)) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * 移除代码中的接口定义
-     */
-    function removeInterface(text) {
-        var tsText = "";
-
-        while (text.length > 0) {
-            var index = CodeUtil.getFirstVariableIndex("interface", text);
-            if (index == -1) {
-                tsText += text;
-                break;
-            }
-            tsText += text.substring(0, index);
-            text = text.substring(index);
-            index = CodeUtil.getBracketEndIndex(text);
-            if (index == -1) {
-                text = text.substring(9);
-            }
-            else {
-                text = text.substring(index + 1);
-            }
-        }
-        return tsText;
     }
 
     export function compressVersion(v1, v2): number {

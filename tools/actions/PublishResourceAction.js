@@ -147,6 +147,29 @@ function publishWithResourceManager(projectDir, releaseDir) {
                         }); }
                     });
                     res.createPlugin({
+                        name: "manifest",
+                        onFile: function (file) { return __awaiter(_this, void 0, void 0, function () {
+                            var filename, extname, crc32, crc32_file_path, origin_path, new_file_path;
+                            return __generator(this, function (_a) {
+                                filename = file.original_relative;
+                                extname = path.extname(filename);
+                                if (extname == ".js" && !file.isExistedInResourceFolder) {
+                                    crc32 = globals.getCrc32();
+                                    crc32_file_path = crc32(file.contents);
+                                    origin_path = file.original_relative;
+                                    new_file_path = origin_path.substr(0, origin_path.length - file.extname.length) + "_" + crc32_file_path + file.extname;
+                                    file.path = path.join(file.base, new_file_path);
+                                }
+                                return [2 /*return*/, file];
+                            });
+                        }); },
+                        onFinish: function () { return __awaiter(_this, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                return [2 /*return*/];
+                            });
+                        }); }
+                    });
+                    res.createPlugin({
                         "name": "test",
                         onFile: function (file) { return __awaiter(_this, void 0, void 0, function () {
                             return __generator(this, function (_a) {
