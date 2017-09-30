@@ -3,7 +3,7 @@
 //import globals = require("../globals");
 
 import * as Compiler from './Compiler';
-
+import * as tasks from '../tasks';
 import * as utils from '../lib/utils';
 import FileUtil = require('../lib/FileUtil');
 import * as fs from 'fs';
@@ -108,55 +108,11 @@ async function publishWithResourceManager(projectDir: string, releaseDir: string
     // publishResourceOrigin(projectDir, releaseDir);
     const res = require('../lib/resourcemanager');
     const command = "publish";
+    tasks.run();
 
 
-    res.createPlugin({
-        name: "compile",
-        onFile: async (file) => {
-            return file;
-        },
-        onFinish: async (pluginContext) => {
 
 
-            const jscode = tinyCompiler();
-            pluginContext.createFile("main.min.js", new Buffer(jscode));
-
-        }
-    })
-
-    res.createPlugin({
-        name: "manifest",
-        onFile: async (file) => {
-            const filename = file.original_relative;
-            const extname = path.extname(filename);
-            if (extname == ".js" && !file.isExistedInResourceFolder) {
-                const crc32 = globals.getCrc32();
-                const crc32_file_path = crc32(file.contents);
-                const origin_path = file.original_relative;
-                const new_file_path = origin_path.substr(0, origin_path.length - file.extname.length) + "_" + crc32_file_path + file.extname;
-                file.path = path.join(file.base, new_file_path);
-            }
-            return file;
-
-        },
-        onFinish: async () => {
-
-        }
-    })
-
-    res.createPlugin({
-        "name": "test",
-        onFile: async (file) => {
-            return file;
-        },
-        onFinish: (pluginContext) => {
-            const scripts = EgretProject.manager.copyLibsForPublish("web");
-            scripts.forEach((script) => {
-                pluginContext.createFile(script, fs.readFileSync(script));
-            })
-            console.log(scripts)
-        }
-    });
     res.createPlugin({
         "name": "cleanEXML",
         onFile: async (file) => {
@@ -176,24 +132,6 @@ export async function publishResource(version: string, runtime: "web" | "native"
 }
 
 
-function tinyCompiler() {
-
-    const os = require('os');
-    const outfile = FileUtil.joinPath(os.tmpdir(), 'main.min.js');
-    const options = egret.args;
-    options.minify = true;
-    options.publish = true;
-    const compiler = new Compiler.Compiler();
-    const configParsedResult = compiler.parseTsconfig(options.projectDir, options.publish);
-    const compilerOptions = configParsedResult.options;
-    const fileNames = configParsedResult.fileNames;
-    const tsconfigError = configParsedResult.errors.map(d => d.messageText.toString());
-    compilerOptions.outFile = outfile;
-    compilerOptions.allowUnreachableCode = true;
-    compilerOptions.emitReflection = true;
-    this.compilerHost = compiler.compile(compilerOptions, fileNames);
-    return utils.minify(outfile);
-}
 
 export function legacyPublishNative(versionFile: string) {
     const options = egret.args;

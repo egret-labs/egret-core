@@ -35,9 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-//import globals = require("../globals");
-var Compiler = require("./Compiler");
-var utils = require("../lib/utils");
+var tasks = require("../tasks");
 var FileUtil = require("../lib/FileUtil");
 var fs = require("fs");
 var path = require("path");
@@ -130,60 +128,7 @@ function publishWithResourceManager(projectDir, releaseDir) {
                 case 0:
                     res = require('../lib/resourcemanager');
                     command = "publish";
-                    res.createPlugin({
-                        name: "compile",
-                        onFile: function (file) { return __awaiter(_this, void 0, void 0, function () {
-                            return __generator(this, function (_a) {
-                                return [2 /*return*/, file];
-                            });
-                        }); },
-                        onFinish: function (pluginContext) { return __awaiter(_this, void 0, void 0, function () {
-                            var jscode;
-                            return __generator(this, function (_a) {
-                                jscode = tinyCompiler();
-                                pluginContext.createFile("main.min.js", new Buffer(jscode));
-                                return [2 /*return*/];
-                            });
-                        }); }
-                    });
-                    res.createPlugin({
-                        name: "manifest",
-                        onFile: function (file) { return __awaiter(_this, void 0, void 0, function () {
-                            var filename, extname, crc32, crc32_file_path, origin_path, new_file_path;
-                            return __generator(this, function (_a) {
-                                filename = file.original_relative;
-                                extname = path.extname(filename);
-                                if (extname == ".js" && !file.isExistedInResourceFolder) {
-                                    crc32 = globals.getCrc32();
-                                    crc32_file_path = crc32(file.contents);
-                                    origin_path = file.original_relative;
-                                    new_file_path = origin_path.substr(0, origin_path.length - file.extname.length) + "_" + crc32_file_path + file.extname;
-                                    file.path = path.join(file.base, new_file_path);
-                                }
-                                return [2 /*return*/, file];
-                            });
-                        }); },
-                        onFinish: function () { return __awaiter(_this, void 0, void 0, function () {
-                            return __generator(this, function (_a) {
-                                return [2 /*return*/];
-                            });
-                        }); }
-                    });
-                    res.createPlugin({
-                        "name": "test",
-                        onFile: function (file) { return __awaiter(_this, void 0, void 0, function () {
-                            return __generator(this, function (_a) {
-                                return [2 /*return*/, file];
-                            });
-                        }); },
-                        onFinish: function (pluginContext) {
-                            var scripts = EgretProject.manager.copyLibsForPublish("web");
-                            scripts.forEach(function (script) {
-                                pluginContext.createFile(script, fs.readFileSync(script));
-                            });
-                            console.log(scripts);
-                        }
-                    });
+                    tasks.run();
                     res.createPlugin({
                         "name": "cleanEXML",
                         onFile: function (file) { return __awaiter(_this, void 0, void 0, function () {
@@ -211,23 +156,6 @@ function publishResource(version, runtime) {
     });
 }
 exports.publishResource = publishResource;
-function tinyCompiler() {
-    var os = require('os');
-    var outfile = FileUtil.joinPath(os.tmpdir(), 'main.min.js');
-    var options = egret.args;
-    options.minify = true;
-    options.publish = true;
-    var compiler = new Compiler.Compiler();
-    var configParsedResult = compiler.parseTsconfig(options.projectDir, options.publish);
-    var compilerOptions = configParsedResult.options;
-    var fileNames = configParsedResult.fileNames;
-    var tsconfigError = configParsedResult.errors.map(function (d) { return d.messageText.toString(); });
-    compilerOptions.outFile = outfile;
-    compilerOptions.allowUnreachableCode = true;
-    compilerOptions.emitReflection = true;
-    this.compilerHost = compiler.compile(compilerOptions, fileNames);
-    return utils.minify(outfile);
-}
 function legacyPublishNative(versionFile) {
     var options = egret.args;
     var manifestPath = FileUtil.joinPath(options.releaseDir, "ziptemp", "manifest.json");
