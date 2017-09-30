@@ -116,10 +116,7 @@ async function publishWithResourceManager(projectDir: string, releaseDir: string
             return file;
         },
         onFinish: async (pluginContext) => {
-            const options = egret.args;
 
-            options.minify = true;
-            options.publish = true;
 
             const jscode = tinyCompiler();
             pluginContext.createFile("main.min.js", new Buffer(jscode));
@@ -181,8 +178,11 @@ function tinyCompiler() {
 
     const os = require('os');
     const outfile = FileUtil.joinPath(os.tmpdir(), 'main.min.js');
+    const options = egret.args;
+    options.minify = true;
+    options.publish = true;
     const compiler = new Compiler.Compiler();
-    const configParsedResult = compiler.parseTsconfig(egret.args.projectDir, egret.args.publish);
+    const configParsedResult = compiler.parseTsconfig(options.projectDir, options.publish);
     const compilerOptions = configParsedResult.options;
     const fileNames = configParsedResult.fileNames;
     const tsconfigError = configParsedResult.errors.map(d => d.messageText.toString());
@@ -196,7 +196,7 @@ function tinyCompiler() {
 export function legacyPublishNative(versionFile: string) {
     const options = egret.args;
     const manifestPath = FileUtil.joinPath(options.releaseDir, "ziptemp", "manifest.json");
-    EgretProject.manager.generateManifest(null, manifestPath, false, "native");
+    EgretProject.manager.generateManifest(null, { debug: false, platform: 'native' }, manifestPath);
     EgretProject.manager.modifyNativeRequire(manifestPath);
     var allMainfestPath = FileUtil.joinPath(options.releaseDir, "all.manifest");
     if (FileUtil.exists(allMainfestPath)) {
@@ -223,7 +223,7 @@ export function legacyPublishHTML5() {
     const options = egret.args;
     const manifestPath = FileUtil.joinPath(egret.args.releaseDir, "manifest.json");
     const indexPath = FileUtil.joinPath(egret.args.releaseDir, "index.html");
-    EgretProject.manager.generateManifest(null, manifestPath, false, "web");
+    EgretProject.manager.generateManifest(null, { debug: false, platform: "web" }, manifestPath);
     if (!EgretProject.data.useTemplate) {
         FileUtil.copy(FileUtil.joinPath(options.projectDir, "index.html"), indexPath);
         EgretProject.manager.modifyIndex(manifestPath, indexPath);

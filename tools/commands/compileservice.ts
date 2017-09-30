@@ -91,7 +91,7 @@ class AutoCompileCommand implements egret.Command {
 
         let manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
         let indexPath = FileUtil.joinPath(egret.args.projectDir, "index.html");
-        EgretProject.manager.generateManifest(_scripts, manifestPath);
+        EgretProject.manager.generateManifest(_scripts, { debug: true, platform: 'web' }, manifestPath);
         if (!EgretProject.data.useTemplate) {
             EgretProject.manager.modifyIndex(manifestPath, indexPath);
         }
@@ -169,7 +169,7 @@ class AutoCompileCommand implements egret.Command {
                     //修改 html 中 modules 块
                     let manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
                     let indexPath = FileUtil.joinPath(egret.args.projectDir, "index.html");
-                    EgretProject.manager.generateManifest(this._scripts, manifestPath);
+                    EgretProject.manager.generateManifest(this._scripts, { debug: true, platform: 'web' }, manifestPath);
                     if (!EgretProject.data.useTemplate) {
                         EgretProject.manager.modifyIndex(manifestPath, indexPath);
                     }
@@ -292,7 +292,7 @@ class AutoCompileCommand implements egret.Command {
 
         let manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
         let indexPath = FileUtil.joinPath(egret.args.projectDir, "index.html");
-        EgretProject.manager.generateManifest(this._scripts, manifestPath);
+        EgretProject.manager.generateManifest(this._scripts, { debug: true, platform: 'web' }, manifestPath);
         if (!EgretProject.data.useTemplate) {
             EgretProject.manager.modifyIndex(manifestPath, indexPath);
         }

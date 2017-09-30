@@ -138,11 +138,8 @@ function publishWithResourceManager(projectDir, releaseDir) {
                             });
                         }); },
                         onFinish: function (pluginContext) { return __awaiter(_this, void 0, void 0, function () {
-                            var options, jscode;
+                            var jscode;
                             return __generator(this, function (_a) {
-                                options = egret.args;
-                                options.minify = true;
-                                options.publish = true;
                                 jscode = tinyCompiler();
                                 pluginContext.createFile("main.min.js", new Buffer(jscode));
                                 return [2 /*return*/];
@@ -210,8 +207,11 @@ function publishResource_2(runtime) {
 function tinyCompiler() {
     var os = require('os');
     var outfile = FileUtil.joinPath(os.tmpdir(), 'main.min.js');
+    var options = egret.args;
+    options.minify = true;
+    options.publish = true;
     var compiler = new Compiler.Compiler();
-    var configParsedResult = compiler.parseTsconfig(egret.args.projectDir, egret.args.publish);
+    var configParsedResult = compiler.parseTsconfig(options.projectDir, options.publish);
     var compilerOptions = configParsedResult.options;
     var fileNames = configParsedResult.fileNames;
     var tsconfigError = configParsedResult.errors.map(function (d) { return d.messageText.toString(); });
@@ -224,7 +224,7 @@ function tinyCompiler() {
 function legacyPublishNative(versionFile) {
     var options = egret.args;
     var manifestPath = FileUtil.joinPath(options.releaseDir, "ziptemp", "manifest.json");
-    EgretProject.manager.generateManifest(null, manifestPath, false, "native");
+    EgretProject.manager.generateManifest(null, { debug: false, platform: 'native' }, manifestPath);
     EgretProject.manager.modifyNativeRequire(manifestPath);
     var allMainfestPath = FileUtil.joinPath(options.releaseDir, "all.manifest");
     if (FileUtil.exists(allMainfestPath)) {
@@ -247,7 +247,7 @@ function legacyPublishHTML5() {
     var options = egret.args;
     var manifestPath = FileUtil.joinPath(egret.args.releaseDir, "manifest.json");
     var indexPath = FileUtil.joinPath(egret.args.releaseDir, "index.html");
-    EgretProject.manager.generateManifest(null, manifestPath, false, "web");
+    EgretProject.manager.generateManifest(null, { debug: false, platform: "web" }, manifestPath);
     if (!EgretProject.data.useTemplate) {
         FileUtil.copy(FileUtil.joinPath(options.projectDir, "index.html"), indexPath);
         EgretProject.manager.modifyIndex(manifestPath, indexPath);

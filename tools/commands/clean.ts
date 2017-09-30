@@ -29,7 +29,7 @@ class Clean implements egret.Command {
         }
         let manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
         let indexPath = FileUtil.joinPath(egret.args.projectDir, "index.html");
-        EgretProject.manager.generateManifest(result.files, manifestPath);
+        EgretProject.manager.generateManifest(result.files, { debug: true, platform: 'web' }, manifestPath);
         if (!EgretProject.data.useTemplate) {
             EgretProject.manager.modifyIndex(manifestPath, indexPath);
         }

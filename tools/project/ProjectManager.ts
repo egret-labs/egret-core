@@ -11,16 +11,17 @@ export namespace manager {
             FileUtil.copy(m.sourceDir, data.getFilePath(m.targetDir));
         })
     }
-
-    export function generateManifest(gameFileList: string[], manifestPath?: string, isDebug: boolean = true, platform: "web" | "native" = "web") {
-        let initial = [];
-        let game = [];
-        data.getModulesConfig(platform).forEach(m => {
+    export function generateManifest(gameFileList: string[], options: { debug: boolean, platform: "web" | "native" }): { initial: string[], game: string[] }
+    export function generateManifest(gameFileList: string[], options: { debug: boolean, platform: "web" | "native" }, manifestPath?: string): void
+    export function generateManifest(gameFileList: string[], options: { debug: boolean, platform: "web" | "native" }, manifestPath?: string) {
+        let initial: string[] = [];
+        let game: string[] = [];
+        data.getModulesConfig(options.platform).forEach(m => {
             m.target.forEach(m => {
-                initial.push(isDebug ? m.debug : m.release);
+                initial.push(options.debug ? m.debug : m.release);
             });
         });
-        if (isDebug) {
+        if (options.debug) {
             gameFileList.forEach(m => {
                 game.push("bin-debug/" + m);
             });
@@ -30,10 +31,13 @@ export namespace manager {
         }
 
         let manifest = { initial, game };
-        if (!manifestPath) {
-            manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
+        if (manifestPath) {
+            FileUtil.save(manifestPath, JSON.stringify(manifest, undefined, "\t"));
         }
-        FileUtil.save(manifestPath, JSON.stringify(manifest, undefined, "\t"));
+        else {
+            return manifest;
+        }
+
     }
 
     export function modifyNativeRequire(manifestPath: string) {

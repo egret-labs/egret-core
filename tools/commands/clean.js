@@ -62,7 +62,7 @@ var Clean = (function () {
                 }
                 manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
                 indexPath = FileUtil.joinPath(egret.args.projectDir, "index.html");
-                EgretProject.manager.generateManifest(result.files, manifestPath);
+                EgretProject.manager.generateManifest(result.files, { debug: true, platform: 'web' }, manifestPath);
                 if (!EgretProject.data.useTemplate) {
                     EgretProject.manager.modifyIndex(manifestPath, indexPath);
                 }

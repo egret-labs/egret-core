@@ -64,7 +64,7 @@ var AutoCompileCommand = (function () {
         _scripts = result.files.length > 0 ? result.files : _scripts;
         var manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
         var indexPath = FileUtil.joinPath(egret.args.projectDir, "index.html");
-        EgretProject.manager.generateManifest(_scripts, manifestPath);
+        EgretProject.manager.generateManifest(_scripts, { debug: true, platform: 'web' }, manifestPath);
         if (!EgretProject.data.useTemplate) {
             EgretProject.manager.modifyIndex(manifestPath, indexPath);
         }
@@ -131,7 +131,7 @@ var AutoCompileCommand = (function () {
                     //修改 html 中 modules 块
                     var manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
                     var indexPath = FileUtil.joinPath(egret.args.projectDir, "index.html");
-                    EgretProject.manager.generateManifest(this._scripts, manifestPath);
+                    EgretProject.manager.generateManifest(this._scripts, { debug: true, platform: 'web' }, manifestPath);
                     if (!EgretProject.data.useTemplate) {
                         EgretProject.manager.modifyIndex(manifestPath, indexPath);
                     }
@@ -233,7 +233,7 @@ var AutoCompileCommand = (function () {
         console.log('Compile Template: ' + index);
         var manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
         var indexPath = FileUtil.joinPath(egret.args.projectDir, "index.html");
-        EgretProject.manager.generateManifest(this._scripts, manifestPath);
+        EgretProject.manager.generateManifest(this._scripts, { debug: true, platform: 'web' }, manifestPath);
         if (!EgretProject.data.useTemplate) {
             EgretProject.manager.modifyIndex(manifestPath, indexPath);
         }
