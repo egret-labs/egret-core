@@ -17,6 +17,9 @@ export default {
         })
         const jscode = tinyCompiler();
         pluginContext.createFile("main.min.js", new Buffer(jscode));
+        const filepath = FileUtil.joinPath(pluginContext.projectRoot, 'template/web/index.html')
+        const htmlContent = fs.readFileSync(filepath);
+        pluginContext.createFile("index.html", htmlContent);
 
     }
 }

@@ -48,7 +48,7 @@ exports.default = {
         });
     }); },
     onFinish: function (pluginContext) { return __awaiter(_this, void 0, void 0, function () {
-        var scripts, jscode;
+        var scripts, jscode, filepath, htmlContent;
         return __generator(this, function (_a) {
             scripts = EgretProject.manager.copyLibsForPublish("web");
             scripts.forEach(function (script) {
@@ -56,6 +56,9 @@ exports.default = {
             });
             jscode = tinyCompiler();
             pluginContext.createFile("main.min.js", new Buffer(jscode));
+            filepath = FileUtil.joinPath(pluginContext.projectRoot, 'template/web/index.html');
+            htmlContent = fs.readFileSync(filepath);
+            pluginContext.createFile("index.html", htmlContent);
             return [2 /*return*/];
         });
     }); }
