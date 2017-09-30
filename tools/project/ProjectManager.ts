@@ -67,13 +67,12 @@ export namespace manager {
         FileUtil.save(requirePath, requireContent);
     }
 
-    export function copyLibsForPublish(manifestPath: string, toPath: string, platform: "web" | "native"): void {
-        let options = egret.args;
-        let manifest = JSON.parse(FileUtil.read(manifestPath));
+    export function copyLibsForPublish(platform: "web" | "native"): string[] {
+        const result: string[] = [];
+        const options = egret.args;
         data.getModulesConfig(platform).forEach(m => {
             m.target.forEach(m => {
-                FileUtil.copy(FileUtil.joinPath(options.projectDir, m.release),
-                    FileUtil.joinPath(toPath, m.release));
+                result.push(m.release);
             });
         });
         if (data.isWasmProject()) {
@@ -84,10 +83,10 @@ export namespace manager {
                 "egret.webassembly.wasm"
             ];
             arr.forEach(function (item) {
-                FileUtil.copy(FileUtil.joinPath(options.projectDir, "libs", item),
-                    FileUtil.joinPath(toPath, "libs", item));
+                result.push(FileUtil.joinPath("libs", item));
             });
         }
+        return result;
     }
 
     export function copyManifestForNative(toPath: string): void {

@@ -129,8 +129,12 @@ async function publishWithResourceManager(projectDir: string, releaseDir: string
         onFile: async (file) => {
             return file;
         },
-        onFinish: () => {
-            legacyPublishHTML5();
+        onFinish: (pluginContext) => {
+            const scripts = EgretProject.manager.copyLibsForPublish("web");
+            scripts.forEach((script) => {
+                pluginContext.createFile(script, fs.readFileSync(script));
+            })
+            console.log(scripts)
         }
     });
     res.createPlugin({
@@ -146,30 +150,8 @@ async function publishWithResourceManager(projectDir: string, releaseDir: string
 }
 
 export async function publishResource(version: string, runtime: "web" | "native") {
-    await publishResource_2(runtime);
-
-}
-
-function publishResource_2(runtime: "web" | "native") {
-
     let { releaseDir, projectDir } = egret.args;
-
-    let publishType = EgretProject.data.getPublishType(runtime);
-    switch (publishType) {
-        case 0:
-            return publishResourceOrigin(projectDir, releaseDir);
-            break;
-        case 1:
-            return publishResourceWithVersion(projectDir, releaseDir);
-            break;
-        case 2:
-            return publishWithResourceManager(projectDir, releaseDir);
-            break;
-        default:
-            return 1;
-    }
-
-
+    return publishWithResourceManager(projectDir, releaseDir);
 
 }
 
@@ -210,7 +192,7 @@ export function legacyPublishNative(versionFile: string) {
     FileUtil.copy(FileUtil.joinPath(options.releaseDir, "main.min.js"), FileUtil.joinPath(options.releaseDir, "ziptemp", "main.min.js"));
     FileUtil.remove(FileUtil.joinPath(options.releaseDir, "main.min.js"));
 
-    EgretProject.manager.copyLibsForPublish(manifestPath, FileUtil.joinPath(options.releaseDir, "ziptemp"), "native");
+    // EgretProject.manager.copyLibsForPublish(FileUtil.joinPath(options.releaseDir, "ziptemp"), "native");
 
     //runtime  打包所有js文件以及all.manifest
     const zip = new ZipCommand(versionFile);
@@ -236,7 +218,7 @@ export function legacyPublishHTML5() {
     const copyAction = new CopyAction(options.projectDir, options.releaseDir);
     copyAction.copy("favicon.ico");
 
-    EgretProject.manager.copyLibsForPublish(manifestPath, options.releaseDir, "web");
+    // EgretProject.manager.copyLibsForPublish(options.releaseDir, "web");
 }
 
 class CopyAction {

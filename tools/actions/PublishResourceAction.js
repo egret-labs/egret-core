@@ -153,8 +153,12 @@ function publishWithResourceManager(projectDir, releaseDir) {
                                 return [2 /*return*/, file];
                             });
                         }); },
-                        onFinish: function () {
-                            legacyPublishHTML5();
+                        onFinish: function (pluginContext) {
+                            var scripts = EgretProject.manager.copyLibsForPublish("web");
+                            scripts.forEach(function (script) {
+                                pluginContext.createFile(script, fs.readFileSync(script));
+                            });
+                            console.log(scripts);
                         }
                     });
                     res.createPlugin({
@@ -176,34 +180,14 @@ function publishWithResourceManager(projectDir, releaseDir) {
 }
 function publishResource(version, runtime) {
     return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, publishResource_2(runtime)];
-                case 1:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
+        var _a, releaseDir, projectDir;
+        return __generator(this, function (_b) {
+            _a = egret.args, releaseDir = _a.releaseDir, projectDir = _a.projectDir;
+            return [2 /*return*/, publishWithResourceManager(projectDir, releaseDir)];
         });
     });
 }
 exports.publishResource = publishResource;
-function publishResource_2(runtime) {
-    var _a = egret.args, releaseDir = _a.releaseDir, projectDir = _a.projectDir;
-    var publishType = EgretProject.data.getPublishType(runtime);
-    switch (publishType) {
-        case 0:
-            return publishResourceOrigin(projectDir, releaseDir);
-            break;
-        case 1:
-            return publishResourceWithVersion(projectDir, releaseDir);
-            break;
-        case 2:
-            return publishWithResourceManager(projectDir, releaseDir);
-            break;
-        default:
-            return 1;
-    }
-}
 function tinyCompiler() {
     var os = require('os');
     var outfile = FileUtil.joinPath(os.tmpdir(), 'main.min.js');
@@ -235,7 +219,7 @@ function legacyPublishNative(versionFile) {
     FileUtil.copy(FileUtil.joinPath(options.templateDir, "runtime"), FileUtil.joinPath(options.releaseDir, "ziptemp", "launcher"));
     FileUtil.copy(FileUtil.joinPath(options.releaseDir, "main.min.js"), FileUtil.joinPath(options.releaseDir, "ziptemp", "main.min.js"));
     FileUtil.remove(FileUtil.joinPath(options.releaseDir, "main.min.js"));
-    EgretProject.manager.copyLibsForPublish(manifestPath, FileUtil.joinPath(options.releaseDir, "ziptemp"), "native");
+    // EgretProject.manager.copyLibsForPublish(FileUtil.joinPath(options.releaseDir, "ziptemp"), "native");
     //runtime  打包所有js文件以及all.manifest
     var zip = new ZipCommand(versionFile);
     zip.execute(function (code) {
@@ -258,7 +242,7 @@ function legacyPublishHTML5() {
     }
     var copyAction = new CopyAction(options.projectDir, options.releaseDir);
     copyAction.copy("favicon.ico");
-    EgretProject.manager.copyLibsForPublish(manifestPath, options.releaseDir, "web");
+    // EgretProject.manager.copyLibsForPublish(options.releaseDir, "web");
 }
 exports.legacyPublishHTML5 = legacyPublishHTML5;
 var CopyAction = (function () {
