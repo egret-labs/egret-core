@@ -17,6 +17,7 @@
       {
         "name": "egret",
         "description": "egret 核心库",
+        "description_en": "egret core lib",
         "files": [
           {
             "path": "../Defines.debug.ts",
@@ -350,7 +351,7 @@
       {
         "name": "dragonBones",
         "description": "dragonbones 龙骨动画库",
-        "description_en": "dragonbones skeleton animation lib",
+        "description_en": "dragonbones animation lib",
         "files": [],
         "root": "",
         "dependencies": []
