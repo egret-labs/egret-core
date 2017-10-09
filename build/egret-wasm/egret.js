@@ -2576,7 +2576,8 @@ var egret;
                 }
                 this.setBitmapData(null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
                 this.$renderDirty = true;
-                this.$waNode.setBitmapData(null);
+                // this.$waNode.setBitmapData(null);
+                this.setBitmapDataToWasm(null);
                 return true;
             }
             if (this.$stage) {
@@ -2597,16 +2598,24 @@ var egret;
         /**
          * @private
          */
+        Bitmap.prototype.setBitmapDataToWasm = function (data) {
+            this.$waNode.setBitmapData(data);
+        };
+        /**
+         * @private
+         */
         Bitmap.prototype.$refreshImageData = function () {
             var bitmapData = this.$texture;
             if (bitmapData) {
                 if (this.$waNode) {
-                    this.$waNode.setBitmapData(bitmapData);
+                    // this.$waNode.setBitmapData(bitmapData);
+                    this.setBitmapDataToWasm(bitmapData);
                 }
                 this.setBitmapData(bitmapData._bitmapData, bitmapData._bitmapX, bitmapData._bitmapY, bitmapData._bitmapWidth, bitmapData._bitmapHeight, bitmapData._offsetX, bitmapData._offsetY, bitmapData.$getTextureWidth(), bitmapData.$getTextureHeight(), bitmapData._sourceWidth, bitmapData._sourceHeight);
             }
             else {
-                this.$waNode.setBitmapData(null);
+                // this.$waNode.setBitmapData(null);
+                this.setBitmapDataToWasm(null);
             }
         };
         /**
@@ -6366,7 +6375,7 @@ var egret;
              * @language zh_CN
              */
             get: function () {
-                return "5.0.8";
+                return "5.0.9";
             },
             enumerable: true,
             configurable: true
@@ -12665,6 +12674,12 @@ var egret;
         /**
          * @private
          */
+        Mesh.prototype.setBitmapDataToWasm = function (data) {
+            this.$waNode.setBitmapDataToMesh(data);
+        };
+        /**
+         * @private
+         */
         Mesh.prototype.$updateRenderNode = function () {
             var image = this.$bitmapData;
             if (!image) {
@@ -12690,6 +12705,8 @@ var egret;
         Mesh.prototype.$updateVertices = function () {
             this._verticesDirty = true;
             this.$renderDirty = true;
+            var renderNode = (this.$renderNode);
+            this.$waNode.setDataToMesh(renderNode.vertices, renderNode.indices, renderNode.uvs);
         };
         /**
          * @private
@@ -18446,6 +18463,26 @@ var egret;
             displayCmdBuffer[0] = displayCmdBufferSize;
             displayCmdBuffer[1] = displayCmdBufferIndex;
         };
+        WebAssemblyNode.prototype.setBitmapDataToMesh = function (value) {
+            displayCmdBufferSize = displayCmdBuffer[0];
+            displayCmdBufferIndex = displayCmdBuffer[1];
+            if (!value) {
+                displayCmdBuffer[displayCmdBufferIndex++] = 147 /* SET_MESH_BITMAP_DATA */;
+                displayCmdBuffer[displayCmdBufferIndex++] = this.id;
+                displayCmdBuffer[displayCmdBufferIndex++] = -1;
+                displayCmdBufferSize++;
+                displayCmdBuffer[0] = displayCmdBufferSize;
+                displayCmdBuffer[1] = displayCmdBufferIndex;
+                return;
+            }
+            WebAssemblyNode.setValuesToBitmapData(value);
+            displayCmdBuffer[displayCmdBufferIndex++] = 147 /* SET_MESH_BITMAP_DATA */;
+            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
+            displayCmdBuffer[displayCmdBufferIndex++] = value.$textureId;
+            displayCmdBufferSize++;
+            displayCmdBuffer[0] = displayCmdBufferSize;
+            displayCmdBuffer[1] = displayCmdBufferIndex;
+        };
         WebAssemblyNode.prototype.setBitmapDataToParticle = function (value) {
             displayCmdBufferSize = displayCmdBuffer[0];
             displayCmdBufferIndex = displayCmdBuffer[1];
@@ -18593,6 +18630,34 @@ var egret;
                 displayCmdBuffer[displayCmdBufferIndex++] = arr[i];
             }
             displayCmdBufferSize++;
+            displayCmdBuffer[0] = displayCmdBufferSize;
+            displayCmdBuffer[1] = displayCmdBufferIndex;
+        };
+        WebAssemblyNode.prototype.setDataToMesh = function (vertexArr, indiceArr, uvArr) {
+            displayCmdBufferSize = displayCmdBuffer[0];
+            displayCmdBufferIndex = displayCmdBuffer[1];
+            displayCmdBuffer[displayCmdBufferIndex++] = 144 /* SET_MESH_VERTICE_DATA */;
+            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
+            var length = vertexArr.length;
+            displayCmdBuffer[displayCmdBufferIndex++] = length;
+            for (var i = 0; i < length; i++) {
+                displayCmdBuffer[displayCmdBufferIndex++] = vertexArr[i];
+            }
+            displayCmdBuffer[displayCmdBufferIndex++] = 146 /* SET_MESH_INDICES_DATA */;
+            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
+            length = indiceArr.length;
+            displayCmdBuffer[displayCmdBufferIndex++] = length;
+            for (var i = 0; i < length; i++) {
+                displayCmdBuffer[displayCmdBufferIndex++] = indiceArr[i];
+            }
+            displayCmdBuffer[displayCmdBufferIndex++] = 145 /* SET_MESH_UVS_DATA */;
+            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
+            length = uvArr.length;
+            displayCmdBuffer[displayCmdBufferIndex++] = length;
+            for (var i = 0; i < length; i++) {
+                displayCmdBuffer[displayCmdBufferIndex++] = uvArr[i];
+            }
+            displayCmdBufferSize += 3;
             displayCmdBuffer[0] = displayCmdBufferSize;
             displayCmdBuffer[1] = displayCmdBufferIndex;
         };

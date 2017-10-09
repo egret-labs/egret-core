@@ -1459,6 +1459,10 @@ declare namespace egret {
         /**
          * @private
          */
+        protected setBitmapDataToWasm(data?: Texture): void;
+        /**
+         * @private
+         */
         $refreshImageData(): void;
         /**
          * @private
@@ -7476,6 +7480,10 @@ declare namespace egret {
         /**
          * @private
          */
+        protected setBitmapDataToWasm(data?: Texture): void;
+        /**
+         * @private
+         */
         $updateRenderNode(): void;
         /**
          * @private
@@ -9774,6 +9782,7 @@ declare namespace egret {
         setMask(value: number): void;
         static setValuesToBitmapData(value: Texture): void;
         setBitmapData(value: Texture): void;
+        setBitmapDataToMesh(value: Texture): void;
         setBitmapDataToParticle(value: Texture): void;
         setStopToParticle(value: boolean): void;
         setCustomData(config: any): void;
@@ -9786,6 +9795,7 @@ declare namespace egret {
         setTextRect(x: number, y: number, w: number, h: number): void;
         setGraphicsRect(x: number, y: number, w: number, h: number, isSprite: boolean): void;
         setDataToBitmapNode(id: number, texture: Texture, arr: number[]): void;
+        setDataToMesh(vertexArr: number[], indiceArr: number[], uvArr: number[]): void;
         disposeDisplayObject(): void;
         static disposeTexture(texture: Texture): void;
         static disposeBitmapData(bitmapData: BitmapData): void;
