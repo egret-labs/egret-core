@@ -4181,7 +4181,7 @@ var dragonBones;
                 }
                 else if (this._textureData !== null) {
                     var imageDisplayData = this._displayData;
-                    var scale = this._armature.armatureData.scale;
+                    var scale = this._textureData.parent.scale;
                     var frame = this._textureData.frame;
                     this._pivotX = imageDisplayData.pivot.x;
                     this._pivotY = imageDisplayData.pivot.y;
@@ -8418,18 +8418,18 @@ var dragonBones;
                     canvas.hasBackground = false;
                 }
                 canvas.color = ObjectDataParser._getNumber(rawCanvas, ObjectDataParser.COLOR, 0);
-                canvas.x = ObjectDataParser._getNumber(rawCanvas, ObjectDataParser.X, 0);
-                canvas.y = ObjectDataParser._getNumber(rawCanvas, ObjectDataParser.Y, 0);
-                canvas.width = ObjectDataParser._getNumber(rawCanvas, ObjectDataParser.WIDTH, 0);
-                canvas.height = ObjectDataParser._getNumber(rawCanvas, ObjectDataParser.HEIGHT, 0);
+                canvas.x = ObjectDataParser._getNumber(rawCanvas, ObjectDataParser.X, 0) * armature.scale;
+                canvas.y = ObjectDataParser._getNumber(rawCanvas, ObjectDataParser.Y, 0) * armature.scale;
+                canvas.width = ObjectDataParser._getNumber(rawCanvas, ObjectDataParser.WIDTH, 0) * armature.scale;
+                canvas.height = ObjectDataParser._getNumber(rawCanvas, ObjectDataParser.HEIGHT, 0) * armature.scale;
                 armature.canvas = canvas;
             }
             if (ObjectDataParser.AABB in rawData) {
                 var rawAABB = rawData[ObjectDataParser.AABB];
-                armature.aabb.x = ObjectDataParser._getNumber(rawAABB, ObjectDataParser.X, 0.0);
-                armature.aabb.y = ObjectDataParser._getNumber(rawAABB, ObjectDataParser.Y, 0.0);
-                armature.aabb.width = ObjectDataParser._getNumber(rawAABB, ObjectDataParser.WIDTH, 0.0);
-                armature.aabb.height = ObjectDataParser._getNumber(rawAABB, ObjectDataParser.HEIGHT, 0.0);
+                armature.aabb.x = ObjectDataParser._getNumber(rawAABB, ObjectDataParser.X, 0.0) * armature.scale;
+                armature.aabb.y = ObjectDataParser._getNumber(rawAABB, ObjectDataParser.Y, 0.0) * armature.scale;
+                armature.aabb.width = ObjectDataParser._getNumber(rawAABB, ObjectDataParser.WIDTH, 0.0) * armature.scale;
+                armature.aabb.height = ObjectDataParser._getNumber(rawAABB, ObjectDataParser.HEIGHT, 0.0) * armature.scale;
             }
             if (ObjectDataParser.BONE in rawData) {
                 var rawBones = rawData[ObjectDataParser.BONE];
@@ -9754,9 +9754,8 @@ var dragonBones;
                 textureAtlasData.scale = scale;
             }
             else {
-                scale = textureAtlasData.scale = ObjectDataParser._getNumber(rawData, ObjectDataParser.SCALE, textureAtlasData.scale);
+                textureAtlasData.scale = 1.0 / ObjectDataParser._getNumber(rawData, ObjectDataParser.SCALE, 1.0);
             }
-            scale = 1.0 / scale; //
             if (ObjectDataParser.SUB_TEXTURE in rawData) {
                 var rawTextures = rawData[ObjectDataParser.SUB_TEXTURE];
                 for (var i = 0, l = rawTextures.length; i < l; ++i) {
@@ -9764,18 +9763,18 @@ var dragonBones;
                     var textureData = textureAtlasData.createTexture();
                     textureData.rotated = ObjectDataParser._getBoolean(rawTexture, ObjectDataParser.ROTATED, false);
                     textureData.name = ObjectDataParser._getString(rawTexture, ObjectDataParser.NAME, "");
-                    textureData.region.x = ObjectDataParser._getNumber(rawTexture, ObjectDataParser.X, 0.0) * scale;
-                    textureData.region.y = ObjectDataParser._getNumber(rawTexture, ObjectDataParser.Y, 0.0) * scale;
-                    textureData.region.width = ObjectDataParser._getNumber(rawTexture, ObjectDataParser.WIDTH, 0.0) * scale;
-                    textureData.region.height = ObjectDataParser._getNumber(rawTexture, ObjectDataParser.HEIGHT, 0.0) * scale;
+                    textureData.region.x = ObjectDataParser._getNumber(rawTexture, ObjectDataParser.X, 0.0);
+                    textureData.region.y = ObjectDataParser._getNumber(rawTexture, ObjectDataParser.Y, 0.0);
+                    textureData.region.width = ObjectDataParser._getNumber(rawTexture, ObjectDataParser.WIDTH, 0.0);
+                    textureData.region.height = ObjectDataParser._getNumber(rawTexture, ObjectDataParser.HEIGHT, 0.0);
                     var frameWidth = ObjectDataParser._getNumber(rawTexture, ObjectDataParser.FRAME_WIDTH, -1.0);
                     var frameHeight = ObjectDataParser._getNumber(rawTexture, ObjectDataParser.FRAME_HEIGHT, -1.0);
                     if (frameWidth > 0.0 && frameHeight > 0.0) {
                         textureData.frame = dragonBones.TextureData.createRectangle();
-                        textureData.frame.x = ObjectDataParser._getNumber(rawTexture, ObjectDataParser.FRAME_X, 0.0) * scale;
-                        textureData.frame.y = ObjectDataParser._getNumber(rawTexture, ObjectDataParser.FRAME_Y, 0.0) * scale;
-                        textureData.frame.width = frameWidth * scale;
-                        textureData.frame.height = frameHeight * scale;
+                        textureData.frame.x = ObjectDataParser._getNumber(rawTexture, ObjectDataParser.FRAME_X, 0.0);
+                        textureData.frame.y = ObjectDataParser._getNumber(rawTexture, ObjectDataParser.FRAME_Y, 0.0);
+                        textureData.frame.width = frameWidth;
+                        textureData.frame.height = frameHeight;
                     }
                     textureAtlasData.addTexture(textureData);
                 }
@@ -10501,7 +10500,7 @@ var dragonBones;
             dragonBonesData = dataParser.parseDragonBonesData(rawData, scale);
             while (true) {
                 var textureAtlasData = this._buildTextureAtlasData(null, null);
-                if (dataParser.parseTextureAtlasData(null, textureAtlasData, scale)) {
+                if (dataParser.parseTextureAtlasData(null, textureAtlasData, 1.0 / scale)) {
                     this.addTextureAtlasData(textureAtlasData, name);
                 }
                 else {
@@ -10967,10 +10966,10 @@ var dragonBones;
                         }
                         textureData.renderTexture._bitmapData = bitmapData;
                         if (textureData.rotated) {
-                            textureData.renderTexture.$initData(textureData.region.x, textureData.region.y, subTextureHeight, subTextureWidth, 0, 0, subTextureHeight, subTextureWidth, textureAtlasWidth, textureAtlasHeight, textureData.rotated);
+                            textureData.renderTexture.$initData(textureData.region.x, textureData.region.y, subTextureHeight, subTextureWidth, 0, 0, subTextureHeight * this.scale, subTextureWidth * this.scale, textureAtlasWidth, textureAtlasHeight, textureData.rotated);
                         }
                         else {
-                            textureData.renderTexture.$initData(textureData.region.x, textureData.region.y, subTextureWidth, subTextureHeight, 0, 0, subTextureWidth, subTextureHeight, textureAtlasWidth, textureAtlasHeight);
+                            textureData.renderTexture.$initData(textureData.region.x, textureData.region.y, subTextureWidth, subTextureHeight, 0, 0, subTextureWidth * this.scale, subTextureHeight * this.scale, textureAtlasWidth, textureAtlasHeight);
                         }
                     }
                 }

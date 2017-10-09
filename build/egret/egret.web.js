@@ -5346,11 +5346,14 @@ var egret;
                 var originalD = locWorldTransform.d;
                 var originalTx = locWorldTransform.tx;
                 var originalTy = locWorldTransform.ty;
-                if (destX != 0 || destY != 0) {
-                    locWorldTransform.append(1, 0, 0, 1, destX, destY);
-                }
-                if (sourceWidth / destWidth != 1 || sourceHeight / destHeight != 1) {
-                    locWorldTransform.append(destWidth / sourceWidth, 0, 0, destHeight / sourceHeight, 0, 0);
+                // Only scale unmeshed texture.
+                if (!meshVertices) {
+                    if (destX != 0 || destY != 0) {
+                        locWorldTransform.append(1, 0, 0, 1, destX, destY);
+                    }
+                    if (sourceWidth / destWidth != 1 || sourceHeight / destHeight != 1) {
+                        locWorldTransform.append(destWidth / sourceWidth, 0, 0, destHeight / sourceHeight, 0, 0);
+                    }
                 }
                 var a = locWorldTransform.a;
                 var b = locWorldTransform.b;
