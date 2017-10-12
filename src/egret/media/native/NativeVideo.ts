@@ -262,7 +262,6 @@ namespace egret.native {
             loader.addEventListener(egret.Event.COMPLETE, ()=> {
                 this.posterData = loader.data;
                 this.markDirty();
-                this.$invalidateContentBounds();
             }, this);
         }
 
@@ -365,8 +364,6 @@ namespace egret.native {
             if (this.originVideo) {
                 this.originVideo["setVideoVisible"](true);
             }
-            this.$invalidate();
-            this.$invalidateContentBounds();
             super.$onAddToStage(stage, nestLevel);
         }
 
@@ -422,12 +419,10 @@ namespace egret.native {
         /**
          * @private
          */
-        $setHeight(value:number):boolean {
+        $setHeight(value:number):void {
             this.heightSet = +value || 0;
             this.setVideoSize();
-            this.$invalidate();
-            this.$invalidateContentBounds();
-            return super.$setHeight(value);
+            super.$setHeight(value);
         }
 
         /**
@@ -438,30 +433,26 @@ namespace egret.native {
         /**
          * @private
          */
-        $setWidth(value:number):boolean {
+        $setWidth(value:number):void {
             this.widthSet = +value || 0;
             this.setVideoSize();
-            this.$invalidate();
-            this.$invalidateContentBounds();
-            return super.$setWidth(value);
+            super.$setWidth(value);
         }
 
         /**
          * @inheritDoc
          */
-        $setX(value:number):boolean {
-            let result = super.$setX(value);
+        $setX(value:number):void {
+            super.$setX(value);
             this.setVideoSize();
-            return result;
         }
 
         /**
          * @inheritDoc
          */
-        $setY(value:number):boolean {
-            let result = super.$setY(value);
+        $setY(value:number):void {
+            super.$setY(value);
             this.setVideoSize();
-            return result;
         }
 
         /**
@@ -494,7 +485,7 @@ namespace egret.native {
         /**
          * @private
          */
-        $render():void {
+        $updateRenderNode():void {
             let node = <sys.BitmapNode>this.$renderNode;
             let posterData = this.posterData;
             let width = this.getPlayWidth();
@@ -511,7 +502,7 @@ namespace egret.native {
         }
 
         private markDirty():boolean {
-            this.$invalidate();
+            this.$renderDirty = true;
             return true;
         }
     }

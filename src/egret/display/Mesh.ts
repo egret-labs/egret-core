@@ -33,7 +33,7 @@ namespace egret {
      */
     export class Mesh extends Bitmap {
 
-        public constructor(value?: BitmapData | Texture) {
+        public constructor(value?: Texture) {
             super(value);
             this.$renderNode = new sys.MeshNode();
         }
@@ -41,31 +41,30 @@ namespace egret {
         /**
          * @private
          */
-        $render(): void {
-            let values = this.$Bitmap;
-            let image = values[sys.BitmapKeys.image];
+        $updateRenderNode(): void {
+            let image = this.$bitmapData;
             if (!image) {
                 return;
             }
 
             let scale = $TextureScaleFactor;
             let node = <sys.MeshNode>this.$renderNode;
-            node.smoothing = values[sys.BitmapKeys.smoothing];
+            node.smoothing = this.$smoothing;
             node.image = image;
-            node.imageWidth = values[sys.BitmapKeys.sourceWidth];
-            node.imageHeight = values[sys.BitmapKeys.sourceHeight];
+            node.imageWidth = this.$sourceWidth;
+            node.imageHeight = this.$sourceHeight;
 
-            let destW: number = !isNaN(values[sys.BitmapKeys.explicitBitmapWidth]) ? values[sys.BitmapKeys.explicitBitmapWidth] : values[sys.BitmapKeys.textureWidth];
-            let destH: number = !isNaN(values[sys.BitmapKeys.explicitBitmapHeight]) ? values[sys.BitmapKeys.explicitBitmapHeight] : values[sys.BitmapKeys.textureHeight];
-            let tsX: number = destW / values[sys.BitmapKeys.textureWidth];
-            let tsY: number = destH / values[sys.BitmapKeys.textureHeight];
-            let bitmapWidth: number = values[sys.BitmapKeys.bitmapWidth];
-            let bitmapHeight: number = values[sys.BitmapKeys.bitmapHeight];
+            let destW: number = !isNaN(this.$explicitBitmapWidth) ? this.$explicitBitmapWidth : this.$textureWidth;
+            let destH: number = !isNaN(this.$explicitBitmapHeight) ? this.$explicitBitmapHeight : this.$textureHeight;
+            let tsX: number = destW / this.$textureWidth;
+            let tsY: number = destH / this.$textureHeight;
+            let bitmapWidth: number = this.$bitmapWidth;
+            let bitmapHeight: number = this.$bitmapHeight;
 
             node.drawMesh(
-                values[sys.BitmapKeys.bitmapX], values[sys.BitmapKeys.bitmapY],
+                this.$bitmapX, this.$bitmapY,
                 bitmapWidth, bitmapHeight,
-                values[sys.BitmapKeys.offsetX] * tsX, values[sys.BitmapKeys.offsetY] * tsY,
+                this.$offsetX * tsX, this.$offsetY * tsY,
                 tsX * bitmapWidth, tsY * bitmapHeight
             );
         }
@@ -80,7 +79,7 @@ namespace egret {
          */
         $updateVertices(): void {
             this._verticesDirty = true;
-            this.$invalidateContentBounds();
+            this.$renderDirty = true;
         }
 
         /**

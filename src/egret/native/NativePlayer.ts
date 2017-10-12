@@ -51,8 +51,6 @@ namespace egret.native {
         }
 
         private init(option: PlayerOption): void {
-            //暂时无法显示重绘区域
-            option.showPaintRect = false;
             let stage = new egret.Stage();
             stage.$screen = this;
             stage.$scaleMode = option.scaleMode;
@@ -70,7 +68,6 @@ namespace egret.native {
             lifecycle.stage = stage;
             lifecycle.addLifecycleListener(NativeLifeCycleHandler);
 
-            player.showPaintRect(option.showPaintRect);
             if (option.showFPS || option.showLog) {
                 let styleStr: string = <string>option.fpsStyles || "";
                 let stylesArr: string[] = styleStr.split(",");

@@ -141,7 +141,7 @@ namespace egret {
         constructor(movieClipData?: MovieClipData) {
             super();
             this.$smoothing = Bitmap.defaultSmoothing;
-            this.$renderNode = new sys.BitmapNode();
+            this.$renderNode = new sys.NormalBitmapNode();
 
             this.setMovieClipData(movieClipData);
         }
@@ -172,7 +172,6 @@ namespace egret {
                 return;
             }
             this.$smoothing = value;
-            this.$invalidate();
         }
 
         /**
@@ -224,22 +223,22 @@ namespace egret {
         /**
          * @private
          */
-        $render(): void {
+        $updateRenderNode(): void {
             let texture = this.$bitmapData;
             if (texture) {
                 let offsetX: number = Math.round(this.offsetPoint.x);
                 let offsetY: number = Math.round(this.offsetPoint.y);
-                let bitmapWidth: number = texture._bitmapWidth;
-                let bitmapHeight: number = texture._bitmapHeight;
+                let bitmapWidth: number = texture.$bitmapWidth;
+                let bitmapHeight: number = texture.$bitmapHeight;
                 let textureWidth: number = texture.$getTextureWidth();
                 let textureHeight: number = texture.$getTextureHeight();
                 let destW: number = Math.round(texture.$getScaleBitmapWidth());
                 let destH: number = Math.round(texture.$getScaleBitmapHeight());
-                let sourceWidth: number = texture._sourceWidth;
-                let sourceHeight: number = texture._sourceHeight;
+                let sourceWidth: number = texture.$sourceWidth;
+                let sourceHeight: number = texture.$sourceHeight;
 
-                sys.BitmapNode.$updateTextureData(<sys.BitmapNode>this.$renderNode, texture._bitmapData, texture._bitmapX, texture._bitmapY,
-                    bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH, sourceWidth, sourceHeight, null, egret.BitmapFillMode.SCALE, this.$smoothing);
+                sys.BitmapNode.$updateTextureData(<sys.NormalBitmapNode>this.$renderNode, texture.$bitmapData, texture.$bitmapX, texture.$bitmapY,
+                    bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH, sourceWidth, sourceHeight, egret.BitmapFillMode.SCALE, this.$smoothing);
             }
         }
 
@@ -564,9 +563,8 @@ namespace egret {
             this.$bitmapData = this.$movieClipData.getTextureByFrame(currentFrameNum);
             this.$movieClipData.$getOffsetByFrame(currentFrameNum, this.offsetPoint);
 
-            this.$invalidateContentBounds();
-
             this.displayedKeyFrameNum = currentFrameNum;
+            this.$renderDirty = true;
         }
 
         /**
@@ -575,7 +573,7 @@ namespace egret {
          */
         public $renderFrame(): void {
             this.$bitmapData = this.$movieClipData.getTextureByFrame(this.$currentFrameNum);
-            this.$invalidateContentBounds();
+            this.$renderDirty = true;
         }
 
         /**

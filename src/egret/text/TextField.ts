@@ -340,14 +340,12 @@ namespace egret {
 
         $inputEnabled: boolean = false;
 
-        $setTouchEnabled(value: boolean): boolean {
-            let result: boolean = super.$setTouchEnabled(value);
+        $setTouchEnabled(value: boolean): void {
+            super.$setTouchEnabled(value);
 
             if (this.isInput()) {
                 this.$inputEnabled = true;
             }
-
-            return result;
         }
 
         /**
@@ -627,8 +625,6 @@ namespace egret {
             if (this.inputUtils) {
                 this.inputUtils._setColor(this.$TextField[sys.TextKeys.textColor]);
             }
-            this.$invalidate();
-
             return true;
         }
 
@@ -1343,7 +1339,6 @@ namespace egret {
          */
         $setBorder(value: boolean): void {
             this.$TextField[sys.TextKeys.border] = !!value;
-            this.$invalidate();
         }
 
         /**
@@ -1375,7 +1370,6 @@ namespace egret {
          */
         $setBorderColor(value: number): void {
             this.$TextField[sys.TextKeys.borderColor] = +value || 0;
-            this.$invalidate();
         }
 
         /**
@@ -1409,7 +1403,6 @@ namespace egret {
          */
         $setBackground(value: boolean): void {
             this.$TextField[sys.TextKeys.background] = value;
-            this.$invalidate();
         }
 
         /**
@@ -1441,7 +1434,6 @@ namespace egret {
          */
         $setBackgroundColor(value: number): void {
             this.$TextField[sys.TextKeys.backgroundColor] = value;
-            this.$invalidate();
         }
 
         /**
@@ -1564,19 +1556,9 @@ namespace egret {
             }
         }
 
-        /**
-         * 不能重写$invalidateContentBounds，因为内部graphics调用clear时会触发$invalidateContentBounds这个方法，从而导致死循环。
-         */
         $invalidateTextField(): void {
-            this.$invalidateContentBounds();
+            this.$renderDirty = true;
             this.$TextField[sys.TextKeys.textLinesChanged] = true;
-        }
-
-        $update(dirtyRegionPolicy: string, bounds?: Rectangle): boolean {
-            let tmpBounds = this.$getRenderBounds();
-            let result = super.$update(dirtyRegionPolicy, tmpBounds);
-            Rectangle.release(tmpBounds);
-            return result;
         }
 
         $getRenderBounds(): Rectangle {
@@ -1592,10 +1574,10 @@ namespace egret {
                 tmpBounds.width += _strokeDouble * 2;
                 tmpBounds.height += _strokeDouble * 2;
             }
-            tmpBounds.x -= _strokeDouble + 2;//+2和+4 是为了解决脏区域的问题
-            tmpBounds.y -= _strokeDouble + 2;
-            tmpBounds.width = Math.ceil(tmpBounds.width) + 4;
-            tmpBounds.height = Math.ceil(tmpBounds.height) + 4;
+            tmpBounds.x -= _strokeDouble;
+            tmpBounds.y -= _strokeDouble;
+            tmpBounds.width = Math.ceil(tmpBounds.width);
+            tmpBounds.height = Math.ceil(tmpBounds.height);
             return tmpBounds;
         }
 
@@ -1609,17 +1591,10 @@ namespace egret {
             let h: number = !isNaN(this.$TextField[sys.TextKeys.textFieldHeight]) ? this.$TextField[sys.TextKeys.textFieldHeight] : TextFieldUtils.$getTextHeight(this);
             bounds.setTo(0, 0, w, h);
         }
-
-        /**
-         * @private
-         * @see egret.DisplayObject._render
-         * @param renderContext
-         */
-        $render(): void {
+        
+        $updateRenderNode(): void {
             if (this.$TextField[sys.TextKeys.type] == TextFieldType.INPUT) {
-                if (this.$hasAnyFlags(sys.DisplayObjectFlags.InitFlags) || this.$hasAnyFlags(sys.DisplayObjectFlags.DownOnAddedOrRemoved)) {
-                    this.inputUtils._updateProperties();
-                }
+                this.inputUtils._updateProperties();
                 if (this.$isTyping) {
                     this.fillBackground();
                     return;

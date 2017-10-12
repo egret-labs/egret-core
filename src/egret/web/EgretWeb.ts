@@ -151,13 +151,6 @@ namespace egret.web {
             let container = <HTMLDivElement>list[i];
             let player = new WebPlayer(container, options);
             container["egret-player"] = player;
-            //webgl模式关闭脏矩形
-            if (Capabilities.$renderMode == "webgl") {
-                player.stage.dirtyRegionPolicy = DirtyRegionPolicy.OFF;
-            }
-        }
-        if (Capabilities.$renderMode == "webgl") {
-            egret.sys.DisplayList.prototype.setDirtyRegionPolicy = function () { };
         }
 
         window.addEventListener("resize", function () {

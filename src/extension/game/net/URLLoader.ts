@@ -291,7 +291,7 @@ namespace egret {
                 }
 
                 let texture: Texture = new Texture();
-                texture._setBitmapData(bitmapData);
+                texture.$setBitmapData(bitmapData);
 
                 loader.data = texture;
 

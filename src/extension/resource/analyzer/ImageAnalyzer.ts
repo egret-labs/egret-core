@@ -93,7 +93,7 @@ namespace RES {
             resItem.loaded = (event.$type == egret.Event.COMPLETE);
             if (resItem.loaded) {
                 let texture:egret.Texture = new egret.Texture();
-                texture._setBitmapData(request.data);
+                texture.$setBitmapData(request.data);
 
                 this.analyzeData(resItem, texture)
             }

@@ -103,7 +103,7 @@ namespace eui {
             let data:egret.Texture;
             if (event.$type == egret.Event.COMPLETE) {
                 data = new egret.Texture();
-                data._setBitmapData(loader.data);
+                data.$setBitmapData(loader.data);
                 loader.data = null;
             }
             loaderPool.push(loader);

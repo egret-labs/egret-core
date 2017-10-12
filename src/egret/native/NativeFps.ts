@@ -109,10 +109,9 @@ namespace egret.native {
             this.textFps.textFlow=[
                 {text: `${datas.fps} FPS ${egret.Capabilities.renderMode}\n`},
                 {text: `min${fpsMin} max${fpsMax} avg${Math.floor(fpsTotal / lenFps)}\n`},
-                {text: `Draw: ${datas.draw}\nDirty: ${datas.dirty}%\n`},
+                {text: `Draw: ${datas.draw}\n`},
                 {text: "Cost: "},
                 {text: `${datas.costTicker} `, style: {"textColor": 0x18fefe}},
-                {text: `${datas.costDirty} `, style: {"textColor": 0xffff00}},
                 {text: `${datas.costRender} `, style: {"textColor": 0xff0000}}
             ]
             this.updateLayout();

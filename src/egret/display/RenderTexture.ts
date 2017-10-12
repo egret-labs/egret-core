@@ -52,7 +52,7 @@ namespace egret {
             this.$renderBuffer = new sys.RenderBuffer();
             let bitmapData = new egret.BitmapData(this.$renderBuffer.surface);
             bitmapData.$deleteSource = false;
-            this._setBitmapData(bitmapData);
+            this.$setBitmapData(bitmapData);
         }
 
         public $renderBuffer:sys.RenderBuffer;
@@ -97,8 +97,8 @@ namespace egret {
                 return false;
             }
             renderBuffer.resize(width, height);
-            this._bitmapData.width = width;
-            this._bitmapData.height = height;
+            this.$bitmapData.width = width;
+            this.$bitmapData.height = height;
 
             let matrix = Matrix.create();
             matrix.identity();
@@ -107,7 +107,7 @@ namespace egret {
                 matrix.translate(-clipBounds.x, -clipBounds.y);
             }
             matrix.scale(scale, scale);
-            sys.systemRenderer.render(displayObject, renderBuffer, matrix, null, true);
+            sys.systemRenderer.render(displayObject, renderBuffer, matrix, true);
             Matrix.release(matrix);
 
             //设置纹理参数

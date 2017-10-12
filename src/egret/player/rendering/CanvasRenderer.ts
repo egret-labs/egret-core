@@ -33,6 +33,8 @@
 interface CanvasRenderingContext2D {
     imageSmoothingEnabled: boolean;
     $imageSmoothingEnabled: boolean;
+    $offsetX: number;
+    $offsetY: number;
 }
 
 namespace egret {
@@ -43,32 +45,21 @@ namespace egret {
     let CAPS_STYLES = { none: 'butt', square: 'square', round: 'round' };
     let renderBufferPool: sys.RenderBuffer[] = [];//渲染缓冲区对象池
     let renderBufferPool_Filters: sys.RenderBuffer[] = [];//滤镜缓冲区对象池
-    /**
-     * @private
-     * Canvas渲染器
-     */
-    export class CanvasRenderer implements sys.SystemRenderer {
-
-        public constructor() {
-
-        }
+    export class CanvasRenderer {
 
         private nestLevel: number = 0;//渲染的嵌套层次，0表示在调用堆栈的最外层。
-        /**
-         * 渲染一个显示对象
-         * @param displayObject 要渲染的显示对象
-         * @param buffer 渲染缓冲
-         * @param matrix 要对显示对象整体叠加的变换矩阵
-         * @param dirtyList 脏矩形列表
-         * @param forRenderTexture 绘制目标是RenderTexture的标志
-         * @returns drawCall触发绘制的次数
-         */
-        public render(displayObject: DisplayObject, buffer: sys.RenderBuffer, matrix: Matrix, dirtyList?: egret.sys.Region[], forRenderTexture?: boolean): number {
+
+        public render(displayObject: DisplayObject, buffer: sys.RenderBuffer, matrix: Matrix, forRenderTexture?: boolean): number {
             this.nestLevel++;
-            let context = buffer.context;
+            let context: CanvasRenderingContext2D = buffer.context;
             let root: DisplayObject = forRenderTexture ? displayObject : null;
             //绘制显示对象
-            let drawCall = this.drawDisplayObject(displayObject, context, dirtyList, matrix, null, null, root);
+            context.transform(matrix.a, matrix.b, matrix.c, matrix.d, 0, 0);
+            let drawCall = this.drawDisplayObject(displayObject, context, matrix.tx, matrix.ty, true);
+            let invert = Matrix.create();
+            matrix.$invertInto(invert);
+            context.transform(invert.a, invert.b, invert.c, invert.d, 0, 0);
+            Matrix.release(invert);
             this.nestLevel--;
             if (this.nestLevel === 0) {
                 //最大缓存6个渲染缓冲
@@ -79,10 +70,6 @@ namespace egret {
                 for (let i = 0; i < length; i++) {
                     renderBufferPool[i].resize(0, 0);
                 }
-                if (renderBufferPool_Filters.length > 1) {
-                    renderBufferPool_Filters.length = 1;
-                    renderBufferPool_Filters[0].resize(0, 0);
-                }
             }
             return drawCall;
         }
@@ -91,60 +78,53 @@ namespace egret {
          * @private
          * 绘制一个显示对象
          */
-        private drawDisplayObject(displayObject: DisplayObject, context: CanvasRenderingContext2D, dirtyList: egret.sys.Region[],
-            matrix: Matrix, displayList: sys.DisplayList, clipRegion: sys.Region, root: DisplayObject): number {
+        private drawDisplayObject(displayObject: DisplayObject, context: CanvasRenderingContext2D, offsetX: number, offsetY: number, isStage?: boolean): number {
             let drawCalls = 0;
             let node: sys.RenderNode;
-            if (displayList && !root) {
-                if (displayList.isDirty) {
+            let displayList = displayObject.$displayList;
+            if (displayList && !isStage) {
+                if (displayObject.$cacheDirty) {
                     drawCalls += displayList.drawToSurface();
                 }
                 node = displayList.$renderNode;
             }
             else {
-                node = displayObject.$getRenderNode();
-            }
-
-            if (node) {
-                if (dirtyList) {
-                    let renderRegion = node.renderRegion;
-                    if (clipRegion && !clipRegion.intersects(renderRegion)) {
-                        node.needRedraw = false;
-                    }
-                    else if (!node.needRedraw) {
-                        let l = dirtyList.length;
-                        for (let j = 0; j < l; j++) {
-                            if (renderRegion.intersects(dirtyList[j])) {
-                                node.needRedraw = true;
-                                break;
-                            }
-                        }
-                    }
+                if (displayObject.$renderDirty) {
+                    node = displayObject.$getRenderNode();
                 }
                 else {
-                    node.needRedraw = true;
-                }
-                if (node.needRedraw) {
-                    let renderAlpha: number;
-                    let m: Matrix;
-                    if (root) {
-                        renderAlpha = displayObject.$getConcatenatedAlphaAt(root, displayObject.$getConcatenatedAlpha());
-                        m = Matrix.create().copyFrom(displayObject.$getConcatenatedMatrix());
-                        displayObject.$getConcatenatedMatrixAt(root, m);
-                    }
-                    else {
-                        renderAlpha = node.renderAlpha;
-                        m = Matrix.create().copyFrom(node.renderMatrix);
-                    }
-                    matrix.$preMultiplyInto(m, m);
-                    context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-                    Matrix.release(m);
-                    context.globalAlpha = renderAlpha;
-                    drawCalls += this.renderNode(node, context);
-                    node.needRedraw = false;
+                    node = displayObject.$renderNode;
                 }
             }
-            if (displayList && !root) {
+            displayObject.$cacheDirty = false;
+            if (node) {
+                drawCalls++;
+                context.$offsetX = offsetX;
+                context.$offsetY = offsetY;
+                switch (node.type) {
+                    case sys.RenderNodeType.BitmapNode:
+                        this.renderBitmap(<sys.BitmapNode>node, context);
+                        break;
+                    case sys.RenderNodeType.TextNode:
+                        this.renderText(<sys.TextNode>node, context);
+                        break;
+                    case sys.RenderNodeType.GraphicsNode:
+                        this.renderGraphics(<sys.GraphicsNode>node, context);
+                        break;
+                    case sys.RenderNodeType.GroupNode:
+                        this.renderGroup(<sys.GroupNode>node, context);
+                        break;
+                    case sys.RenderNodeType.MeshNode:
+                        this.renderMesh(<sys.MeshNode>node, context);
+                        break;
+                    case sys.RenderNodeType.NormalBitmapNode:
+                        this.renderNormalBitmap(<sys.NormalBitmapNode>node, context);
+                        break;
+                }
+                context.$offsetX = 0;
+                context.$offsetY = 0;
+            }
+            if (displayList && !isStage) {
                 return drawCalls;
             }
             let children = displayObject.$children;
@@ -152,143 +132,59 @@ namespace egret {
                 let length = children.length;
                 for (let i = 0; i < length; i++) {
                     let child = children[i];
-                    if (!child.$visible || child.$alpha <= 0 || child.$maskedObject) {
-                        continue;
-                    }
-                    let filters = child.$getFilters();
-                    if (filters && filters.length > 0) {
-                        drawCalls += this.drawWithFilter(child, context, dirtyList, matrix, clipRegion, root);
-                    }
-                    else if ((child.$blendMode !== 0 ||
-                        (child.$mask && (child.$mask.$parentDisplayList || root)))) {//若遮罩不在显示列表中，放弃绘制遮罩。
-                        drawCalls += this.drawWithClip(child, context, dirtyList, matrix, clipRegion, root);
-                    }
-                    else if (child.$scrollRect || child.$maskRect) {
-                        drawCalls += this.drawWithScrollRect(child, context, dirtyList, matrix, clipRegion, root);
+                    let offsetX2;
+                    let offsetY2;
+                    if (child.$useTranslate) {
+                        let m = child.$getMatrix();
+                        offsetX2 = offsetX + child.$x;
+                        offsetY2 = offsetY + child.$y;
+                        context.save();
+                        context.transform(m.a, m.b, m.c, m.d, offsetX2, offsetY2);
+                        offsetX2 = -child.$anchorOffsetX;
+                        offsetY2 = -child.$anchorOffsetY;
                     }
                     else {
-                        if (child["isFPS"]) {
-                            this.drawDisplayObject(child, context, dirtyList, matrix, child.$displayList, clipRegion, root);
-                        }
-                        else {
-                            drawCalls += this.drawDisplayObject(child, context, dirtyList, matrix,
-                                child.$displayList, clipRegion, root);
-                        }
+                        offsetX2 = offsetX + child.$x - child.$anchorOffsetX;
+                        offsetY2 = offsetY + child.$y - child.$anchorOffsetY;
+                    }
+                    let tempAlpha;
+                    if (child.$alpha != 1) {
+                        tempAlpha = context.globalAlpha;
+                        context.globalAlpha *= child.$alpha;
+                    }
+                    switch (child.$renderMode) {
+                        case RenderMode.NONE:
+                            break;
+                        case RenderMode.FILTER:
+                            drawCalls += this.drawWithFilter(child, context, offsetX2, offsetY2);
+                            break;
+                        case RenderMode.CLIP:
+                            drawCalls += this.drawWithClip(child, context, offsetX2, offsetY2);
+                            break;
+                        case RenderMode.SCROLLRECT:
+                            drawCalls += this.drawWithScrollRect(child, context, offsetX2, offsetY2);
+                            break;
+                        default:
+                            drawCalls += this.drawDisplayObject(child, context, offsetX2, offsetY2);
+                            break;
+                    }
+                    if (child.$useTranslate) {
+                        context.restore();
+                    }
+                    else if (tempAlpha) {
+                        context.globalAlpha = tempAlpha;
                     }
                 }
             }
             return drawCalls;
         }
 
-        /**
-         * @private
-         */
-        private drawWithFilter(displayObject: DisplayObject, context: CanvasRenderingContext2D, dirtyList: egret.sys.Region[],
-            matrix: Matrix, clipRegion: sys.Region, root: DisplayObject): number {
-
-            if (Capabilities.runtimeType == RuntimeType.NATIVE) { // for native
-                let drawCalls = 0;
-                let filters = displayObject.$getFilters();
-                let hasBlendMode = (displayObject.$blendMode !== 0);
-                let compositeOp: string;
-                if (hasBlendMode) {
-                    compositeOp = blendModes[displayObject.$blendMode];
-                    if (!compositeOp) {
-                        compositeOp = defaultCompositeOp;
-                    }
-                }
-
-                let bounds = displayObject.$getOriginalBounds();
-                if(bounds.width <= 0 || bounds.height <= 0) {
-                    return drawCalls;
-                }
-
-                if (filters.length == 1 && filters[0].type == "colorTransform" && !displayObject.$children) {
-                    if (hasBlendMode) {
-                        context.globalCompositeOperation = compositeOp;
-                    }
-
-                    (<any>context).setGlobalShader(filters[0]);
-
-                    if (displayObject.$mask && (displayObject.$mask.$parentDisplayList || root)) {
-                        drawCalls += this.drawWithClip(displayObject, context, dirtyList, matrix, clipRegion, root);
-                    }
-                    else if (displayObject.$scrollRect || displayObject.$maskRect) {
-                        drawCalls += this.drawWithScrollRect(displayObject, context, dirtyList, matrix, clipRegion, root);
-                    }
-                    else {
-                        drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, matrix, displayObject.$displayList, clipRegion, root);
-                    }
-
-                    (<any>context).setGlobalShader(null);
-
-                    if (hasBlendMode) {
-                        context.globalCompositeOperation = defaultCompositeOp;
-                    }
-
-                    return drawCalls;
-                }
-
-                // 获取显示对象的链接矩阵
-                let displayMatrix = Matrix.create();
-                displayMatrix.copyFrom(displayObject.$getConcatenatedMatrix());
-                if (root) {
-                    displayObject.$getConcatenatedMatrixAt(root, displayMatrix);
-                }
-
-                // 获取显示对象的矩形区域
-                let region: sys.Region;
-                region = sys.Region.create();
-                region.updateRegion(bounds, displayMatrix);
-
-                // 为显示对象创建一个新的buffer
-                // todo 这里应该计算 region.x region.y
-                let displayBuffer = this.createRenderBuffer(region.width, region.height);
-                displayBuffer.context.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
-                let offsetM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
-
-                if (displayObject.$mask && (displayObject.$mask.$parentDisplayList || root)) {
-                    drawCalls += this.drawWithClip(displayObject, displayBuffer.context, dirtyList, offsetM, region, root);
-                }
-                else if (displayObject.$scrollRect || displayObject.$maskRect) {
-                    drawCalls += this.drawWithScrollRect(displayObject, displayBuffer.context, dirtyList, offsetM, region, root);
-                }
-                else {
-                    drawCalls += this.drawDisplayObject(displayObject, displayBuffer.context, dirtyList, offsetM, displayObject.$displayList, region, root);
-                }
-
-                Matrix.release(offsetM);
-
-                //绘制结果到屏幕
-                if (drawCalls > 0) {
-
-                    if (hasBlendMode) {
-                        context.globalCompositeOperation = compositeOp;
-                    }
-
-                    drawCalls++;
-                    context.globalAlpha = 1;
-                    context.setTransform(1, 0, 0, 1, region.minX + matrix.tx, region.minY + matrix.ty);
-                    // 绘制结果的时候，应用滤镜
-                    (<any>context).setGlobalShader(filters[0]);
-                    context.drawImage(displayBuffer.surface, 0, 0, displayBuffer.width, displayBuffer.height, 0, 0, displayBuffer.width, displayBuffer.height);
-                    (<any>context).setGlobalShader(null);
-
-                    if (hasBlendMode) {
-                        context.globalCompositeOperation = defaultCompositeOp;
-                    }
-
-                }
-
-                renderBufferPool.push(displayBuffer);
-                sys.Region.release(region);
-                Matrix.release(displayMatrix);
-
-                return drawCalls;
+        private drawWithFilter(displayObject: DisplayObject, context: CanvasRenderingContext2D, offsetX: number, offsetY: number): number {
+            if (Capabilities.runtimeType == RuntimeType.NATIVE) {
+                return this.drawWithFilterNative(displayObject, context, offsetX, offsetY);
             }
-
             let drawCalls = 0;
-            let filters = displayObject.$getFilters();
+            let filters = displayObject.$filters;
             let filtersLen: number = filters.length;
             let hasBlendMode = (displayObject.$blendMode !== 0);
             let compositeOp: string;
@@ -298,53 +194,29 @@ namespace egret {
                     compositeOp = defaultCompositeOp;
                 }
             }
-
-            let bounds = displayObject.$getOriginalBounds();
-            if(bounds.width <= 0 || bounds.height <= 0) {
+            let displayBounds = displayObject.$getOriginalBounds();
+            if (displayBounds.width <= 0 || displayBounds.height <= 0) {
                 return drawCalls;
             }
-
-            // 获取显示对象的链接矩阵
-            let displayMatrix = Matrix.create();
-            displayMatrix.copyFrom(displayObject.$getConcatenatedMatrix());
-            if (root) {
-                displayObject.$getConcatenatedMatrixAt(root, displayMatrix);
-            }
-
-            // 获取显示对象的矩形区域
-            let region: sys.Region;
-            region = sys.Region.create();
-            region.updateRegion(bounds, displayMatrix);
-
             // 为显示对象创建一个新的buffer
-            // todo 这里应该计算 region.x region.y
-            let displayBuffer = this.createRenderBuffer(region.width * matrix.a, region.height * matrix.d, true);
+            let displayBuffer = this.createRenderBuffer(displayBounds.width, displayBounds.height, true);
             let displayContext = displayBuffer.context;
-            displayContext.setTransform(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
-            let offsetM = Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
-
-            //todo 可以优化减少draw次数
-            if (displayObject.$mask && (displayObject.$mask.$parentDisplayList || root)) {
-                drawCalls += this.drawWithClip(displayObject, displayContext, dirtyList, offsetM, region, root);
+            if (displayObject.$mask) {
+                drawCalls += this.drawWithClip(displayObject, context, offsetX, offsetY);
             }
             else if (displayObject.$scrollRect || displayObject.$maskRect) {
-                drawCalls += this.drawWithScrollRect(displayObject, displayContext, dirtyList, offsetM, region, root);
+                drawCalls += this.drawWithScrollRect(displayObject, context, offsetX, offsetY);
             }
             else {
-                drawCalls += this.drawDisplayObject(displayObject, displayContext, dirtyList, offsetM, displayObject.$displayList, region, root);
+                drawCalls += this.drawDisplayObject(displayObject, context, offsetX, offsetY);
             }
-
-            Matrix.release(offsetM);
 
             //绘制结果到屏幕
             if (drawCalls > 0) {
-
                 if (hasBlendMode) {
                     context.globalCompositeOperation = compositeOp;
                 }
-
                 drawCalls++;
-
                 // 应用滤镜
                 let imageData = displayContext.getImageData(0, 0, displayBuffer.surface.width, displayBuffer.surface.height);
                 for (let i = 0; i < filtersLen; i++) {
@@ -371,32 +243,89 @@ namespace egret {
                     }
                 }
                 displayContext.putImageData(imageData, 0, 0);
-
                 context.globalAlpha = 1;
-                context.setTransform(1, 0, 0, 1, (region.minX + matrix.tx) * matrix.a, (region.minY + matrix.ty) * matrix.d);
                 // 绘制结果的时候，应用滤镜
-                context.drawImage(<any>displayBuffer.surface, 0, 0);
+                context.drawImage(displayBuffer.surface, offsetX + displayBounds.x, offsetY + displayBounds.y);
+                if (hasBlendMode) {
+                    context.globalCompositeOperation = defaultCompositeOp;
+                }
 
+            }
+            renderBufferPool_Filters.push(displayBuffer);
+            return drawCalls;
+        }
+
+        private drawWithFilterNative(displayObject: DisplayObject, context: CanvasRenderingContext2D, offsetX: number, offsetY: number): number {
+            let drawCalls = 0;
+            let filters = displayObject.$filters;
+            let hasBlendMode = (displayObject.$blendMode !== 0);
+            let compositeOp: string;
+            if (hasBlendMode) {
+                compositeOp = blendModes[displayObject.$blendMode];
+                if (!compositeOp) {
+                    compositeOp = defaultCompositeOp;
+                }
+            }
+
+            let displayBounds = displayObject.$getOriginalBounds();
+            if (displayBounds.width <= 0 || displayBounds.height <= 0) {
+                return drawCalls;
+            }
+
+            if (filters.length == 1 && filters[0].type == "colorTransform" && !displayObject.$children) {
+                if (hasBlendMode) {
+                    context.globalCompositeOperation = compositeOp;
+                }
+                (<any>context).setGlobalShader(filters[0]);
+                if (displayObject.$mask) {
+                    drawCalls += this.drawWithClip(displayObject, context, offsetX, offsetY);
+                }
+                else if (displayObject.$scrollRect || displayObject.$maskRect) {
+                    drawCalls += this.drawWithScrollRect(displayObject, context, offsetX, offsetY);
+                }
+                else {
+                    drawCalls += this.drawDisplayObject(displayObject, context, offsetX, offsetY);
+                }
+                (<any>context).setGlobalShader(null);
+                if (hasBlendMode) {
+                    context.globalCompositeOperation = defaultCompositeOp;
+                }
+                return drawCalls;
+            }
+
+            let displayBuffer = this.createRenderBuffer(displayBounds.width, displayBounds.height);
+            if (displayObject.$mask) {
+                drawCalls += this.drawWithClip(displayObject, context, offsetX, offsetY);
+            }
+            else if (displayObject.$scrollRect || displayObject.$maskRect) {
+                drawCalls += this.drawWithScrollRect(displayObject, context, offsetX, offsetY);
+            }
+            else {
+                drawCalls += this.drawDisplayObject(displayObject, context, offsetX, offsetY);
+            }
+
+            //绘制结果到屏幕
+            if (drawCalls > 0) {
+                if (hasBlendMode) {
+                    context.globalCompositeOperation = compositeOp;
+                }
+                drawCalls++;
+                context.globalAlpha = 1;
+                // 绘制结果的时候，应用滤镜
+                (<any>context).setGlobalShader(filters[0]);
+                context.drawImage(displayBuffer.surface, 0, 0, displayBuffer.width, displayBuffer.height, offsetX + displayBounds.x, offsetY + displayBounds.y, displayBuffer.width, displayBuffer.height);
+                (<any>context).setGlobalShader(null);
                 if (hasBlendMode) {
                     context.globalCompositeOperation = defaultCompositeOp;
                 }
 
             }
 
-            renderBufferPool_Filters.push(displayBuffer);
-            sys.Region.release(region);
-            Matrix.release(displayMatrix);
-
+            renderBufferPool.push(displayBuffer);
             return drawCalls;
         }
 
-        private renderingMask = false;
-
-        /**
-         * @private
-         */
-        private drawWithClip(displayObject: DisplayObject, context: CanvasRenderingContext2D, dirtyList: egret.sys.Region[],
-            matrix: Matrix, clipRegion: sys.Region, root: DisplayObject): number {
+        private drawWithClip(displayObject: DisplayObject, context: CanvasRenderingContext2D, offsetX: number, offsetY: number): number {
             let drawCalls = 0;
             let hasBlendMode = (displayObject.$blendMode !== 0);
             let compositeOp: string;
@@ -420,112 +349,30 @@ namespace egret {
                     }
                 }
             }
-            //if (mask && !mask.$parentDisplayList) {
-            //    mask = null; //如果遮罩不在显示列表中，放弃绘制遮罩。
-            //}
-
-            //计算scrollRect和mask的clip区域是否需要绘制，不需要就直接返回，跳过所有子项的遍历。
-            let maskRegion: sys.Region;
-            let displayMatrix = Matrix.create();
-            displayMatrix.copyFrom(displayObject.$getConcatenatedMatrix());
-            if (root) {
-                displayObject.$getConcatenatedMatrixAt(root, displayMatrix);
-            }
-            else if (displayObject.$parentDisplayList) {
-                let displayRoot = displayObject.$parentDisplayList.root;
-                if (displayRoot !== displayObject.$stage) {
-                    displayObject.$getConcatenatedMatrixAt(displayRoot, displayMatrix);
-                }
-            }
-
-            let bounds: Rectangle;
-            if (mask) {
-                bounds = mask.$getOriginalBounds();
-                maskRegion = sys.Region.create();
-                let m = Matrix.create();
-                m.copyFrom(mask.$getConcatenatedMatrix());
-                if (root) {
-                    mask.$getConcatenatedMatrixAt(root, m);
-                }
-                maskRegion.updateRegion(bounds, m);
-                Matrix.release(m);
-            }
-            let region: sys.Region;
-            if (scrollRect) {
-                region = sys.Region.create();
-                region.updateRegion(scrollRect, displayMatrix);
-            }
-            if (region && maskRegion) {
-                region.intersect(maskRegion);
-                sys.Region.release(maskRegion);
-            }
-            else if (!region && maskRegion) {
-                region = maskRegion;
-            }
-            if (region) {
-                if (region.isEmpty() || (clipRegion && !clipRegion.intersects(region))) {
-                    sys.Region.release(region);
-                    Matrix.release(displayMatrix);
-                    return drawCalls;
-                }
-            }
-            else {
-                region = sys.Region.create();
-                bounds = displayObject.$getOriginalBounds();
-                region.updateRegion(bounds, displayMatrix);
-            }
-            if(region.width <= 0 || region.height <= 0) {
-                return drawCalls;
-            }
-            let found = false;
-            if (!dirtyList) {//forRenderTexture
-                found = true;
-            }
-            else {
-                let l = dirtyList.length;
-                for (let j = 0; j < l; j++) {
-                    if (region.intersects(dirtyList[j])) {
-                        found = true;
-                        break;
-                    }
-                }
-            }
-            if (!found) {
-                sys.Region.release(region);
-                Matrix.release(displayMatrix);
-                return drawCalls;
-            }
 
             //没有遮罩,同时显示对象没有子项
             if (!mask && (!displayObject.$children || displayObject.$children.length == 0)) {
                 if (scrollRect) {
-                    let m = displayMatrix;
                     context.save();
-                    matrix.$preMultiplyInto(m, m);
-                    context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
                     context.beginPath();
-                    context.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
+                    context.rect(scrollRect.x + offsetX, scrollRect.y + offsetY, scrollRect.width, scrollRect.height);
                     context.clip();
                 }
 
                 if (hasBlendMode) {
                     context.globalCompositeOperation = compositeOp;
                 }
-                drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, matrix,
-                    displayObject.$displayList, clipRegion, root);
+                drawCalls += this.drawDisplayObject(displayObject, context, offsetX, offsetY);
                 if (hasBlendMode) {
                     context.globalCompositeOperation = defaultCompositeOp;
                 }
                 if (scrollRect) {
                     context.restore();
                 }
-                sys.Region.release(region);
-                Matrix.release(displayMatrix);
                 return drawCalls;
             }
 
             //遮罩是单纯的填充图形,且alpha为1,性能优化
-            //todo 平台差异
             if (mask && Capabilities.$runtimeType == RuntimeType.WEB && (!mask.$children || mask.$children.length == 0) &&
                 maskRenderNode && maskRenderNode.type == sys.RenderNodeType.GraphicsNode &&
                 maskRenderNode.drawData.length == 1 &&
@@ -533,73 +380,60 @@ namespace egret {
                 (<sys.FillPath>maskRenderNode.drawData[0]).fillAlpha == 1) {
                 this.renderingMask = true;
                 context.save();
-                let calls = this.drawDisplayObject(mask, context, dirtyList, matrix,
-                    mask.$displayList, clipRegion, root);
+                let maskMatrix = Matrix.create();
+                maskMatrix.copyFrom(mask.$getConcatenatedMatrix());
+                mask.$getConcatenatedMatrixAt(displayObject, maskMatrix);
+                context.transform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
+                let calls = this.drawDisplayObject(mask, context, offsetX, offsetY);
                 this.renderingMask = false;
+                maskMatrix.$invertInto(maskMatrix);
+                context.transform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
+                Matrix.release(maskMatrix);
                 if (scrollRect) {
-                    let m = displayMatrix;
-                    matrix.$preMultiplyInto(m, m);
-                    context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
                     context.beginPath();
-                    context.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
+                    context.rect(scrollRect.x + offsetX, scrollRect.y + offsetY, scrollRect.width, scrollRect.height);
                     context.clip();
                 }
-                calls += this.drawDisplayObject(displayObject, context, dirtyList, matrix,
-                    displayObject.$displayList, clipRegion, root);
+                calls += this.drawDisplayObject(displayObject, context, offsetX, offsetY);
                 context.restore();
-                sys.Region.release(region);
-                Matrix.release(displayMatrix);
                 return calls;
             }
 
             //todo 若显示对象是容器，同时子项有混合模式，则需要先绘制背景到displayBuffer并清除背景区域
 
             //绘制显示对象自身，若有scrollRect，应用clip
-            let displayBuffer = this.createRenderBuffer(region.width * matrix.a, region.height * matrix.d);
-            let displayContext = displayBuffer.context;
+            let displayBounds = displayObject.$getOriginalBounds();
+            let displayBuffer = this.createRenderBuffer(displayBounds.width, displayBounds.height);
+            let displayContext: CanvasRenderingContext2D = displayBuffer.context;
             if (!displayContext) {//RenderContext创建失败，放弃绘制遮罩。
-                drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, matrix,
-                    displayObject.$displayList, clipRegion, root);
-                sys.Region.release(region);
-                Matrix.release(displayMatrix);
+                drawCalls += this.drawDisplayObject(displayObject, context, offsetX, offsetY);
                 return drawCalls;
             }
-            displayContext.setTransform(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
-            let offsetM = Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
 
-            drawCalls += this.drawDisplayObject(displayObject, displayContext, dirtyList, offsetM,
-                displayObject.$displayList, region, root);
+            drawCalls += this.drawDisplayObject(displayObject, displayContext, 0, 0);
             //绘制遮罩
             if (mask) {
                 //如果只有一次绘制或是已经被cache直接绘制到displayContext
                 if (Capabilities.$runtimeType == RuntimeType.WEB && maskRenderNode && maskRenderNode.$getRenderCount() == 1 || mask.$displayList) {
                     displayContext.globalCompositeOperation = "destination-in";
-                    drawCalls += this.drawDisplayObject(mask, displayContext, dirtyList, offsetM,
-                        mask.$displayList, region, root);
+                    drawCalls += this.drawDisplayObject(mask, displayContext, 0, 0);
                 }
                 else {
-                    let maskBuffer = this.createRenderBuffer(region.width * matrix.a, region.height * matrix.d);
+                    let maskBuffer = this.createRenderBuffer(displayBounds.width, displayBounds.height);
                     let maskContext = maskBuffer.context;
-                    if (!maskContext) {//RenderContext创建失败，放弃绘制遮罩。
-                        drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, matrix,
-                            displayObject.$displayList, clipRegion, root);
-                        renderBufferPool.push(displayBuffer);
-                        sys.Region.release(region);
-                        Matrix.release(displayMatrix);
-                        return drawCalls;
-                    }
-                    maskContext.setTransform(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
-                    offsetM = Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
-                    drawCalls += this.drawDisplayObject(mask, maskContext, dirtyList, offsetM,
-                        mask.$displayList, region, root);
+                    let maskMatrix = Matrix.create();
+                    maskMatrix.copyFrom(mask.$getConcatenatedMatrix());
+                    mask.$getConcatenatedMatrixAt(displayObject, maskMatrix);
+                    maskContext.setTransform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
+                    Matrix.release(maskMatrix);
+                    drawCalls += this.drawDisplayObject(mask, maskContext, -displayBounds.x, -displayBounds.y);
                     displayContext.globalCompositeOperation = "destination-in";
-                    displayContext.setTransform(1, 0, 0, 1, 0, 0);
+                    displayContext.setTransform(1, 0, 0, -1, 0, maskBuffer.height);
                     displayContext.globalAlpha = 1;
-                    displayContext.drawImage(<any>maskBuffer.surface, 0, 0);
+                    displayContext.drawImage(maskBuffer.surface, 0, 0);
                     renderBufferPool.push(maskBuffer);
                 }
             }
-            Matrix.release(offsetM);
 
             //绘制结果到屏幕
             if (drawCalls > 0) {
@@ -608,17 +442,13 @@ namespace egret {
                     context.globalCompositeOperation = compositeOp;
                 }
                 if (scrollRect) {
-                    let m = displayMatrix;
                     context.save();
-                    matrix.$preMultiplyInto(m, m);
-                    context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
                     context.beginPath();
-                    context.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
+                    context.rect(scrollRect.x + offsetX, scrollRect.y + offsetY, scrollRect.width, scrollRect.height);
                     context.clip();
                 }
                 context.globalAlpha = 1;
-                context.setTransform(1, 0, 0, 1, (region.minX + matrix.tx) * matrix.a, (region.minY + matrix.ty) * matrix.d);
-                context.drawImage(<any>displayBuffer.surface, 0, 0);
+                context.drawImage(<any>displayBuffer.surface, offsetX + displayBounds.x, offsetY + displayBounds.y);
                 if (scrollRect) {
                     context.restore();
                 }
@@ -627,90 +457,104 @@ namespace egret {
                 }
             }
             renderBufferPool.push(displayBuffer);
-            sys.Region.release(region);
-            Matrix.release(displayMatrix);
             return drawCalls;
         }
 
-        /**
-         * @private
-         */
-        private drawWithScrollRect(displayObject: DisplayObject, context: CanvasRenderingContext2D, dirtyList: egret.sys.Region[],
-            matrix: Matrix, clipRegion: sys.Region, root: DisplayObject): number {
+        private drawWithScrollRect(displayObject: DisplayObject, context: CanvasRenderingContext2D, offsetX: number, offsetY: number): number {
             let drawCalls = 0;
             let scrollRect = displayObject.$scrollRect ? displayObject.$scrollRect : displayObject.$maskRect;
             if (scrollRect.isEmpty()) {
                 return drawCalls;
             }
-            let m = Matrix.create();
-            m.copyFrom(displayObject.$getConcatenatedMatrix());
-            if (root) {
-                displayObject.$getConcatenatedMatrixAt(root, m);
+            if (displayObject.$scrollRect) {
+                offsetX -= scrollRect.x;
+                offsetY -= scrollRect.y;
             }
-            else if (displayObject.$parentDisplayList) {
-                let displayRoot = displayObject.$parentDisplayList.root;
-                if (displayRoot !== displayObject.$stage) {
-                    displayObject.$getConcatenatedMatrixAt(displayRoot, m);
-                }
-            }
-            let region: sys.Region = sys.Region.create();
-            region.updateRegion(scrollRect, m);
-            if (region.isEmpty() || (clipRegion && !clipRegion.intersects(region))) {
-                sys.Region.release(region);
-                Matrix.release(m);
-                return drawCalls;
-            }
-            let found = false;
-            if (!dirtyList) {//forRenderTexture
-                found = true;
-            }
-            else {
-                let l = dirtyList.length;
-                for (let j = 0; j < l; j++) {
-                    if (region.intersects(dirtyList[j])) {
-                        found = true;
-                        break;
-                    }
-                }
-            }
-            if (!found) {
-                sys.Region.release(region);
-                Matrix.release(m);
-                return drawCalls;
-            }
-
             //绘制显示对象自身
             context.save();
-            matrix.$preMultiplyInto(m, m);
-            context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             context.beginPath();
-            context.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
+            context.rect(scrollRect.x + offsetX, scrollRect.y + offsetY, scrollRect.width, scrollRect.height);
             context.clip();
-            drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, matrix, displayObject.$displayList, region, root);
+            drawCalls += this.drawDisplayObject(displayObject, context, offsetX, offsetY);
             context.restore();
-
-            sys.Region.release(region);
-            Matrix.release(m);
             return drawCalls;
         }
 
-        /**
-         * 将一个RenderNode对象绘制到渲染缓冲
-         * @param node 要绘制的节点
-         * @param buffer 渲染缓冲
-         * @param matrix 要叠加的矩阵
-         * @param forHitTest 绘制结果是用于碰撞检测。若为true，当渲染GraphicsNode时，会忽略透明度样式设置，全都绘制为不透明的。
-         */
         public drawNodeToBuffer(node: sys.RenderNode, buffer: sys.RenderBuffer, matrix: Matrix, forHitTest?: boolean): void {
-            let context = buffer.context;
+            let context: CanvasRenderingContext2D = buffer.context;
             context.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
             this.renderNode(node, context, forHitTest);
         }
 
         /**
-         * @private
+         * 将一个DisplayObject绘制到渲染缓冲，用于RenderTexture绘制
+         * @param displayObject 要绘制的显示对象
+         * @param buffer 渲染缓冲
+         * @param matrix 要叠加的矩阵
          */
-        private renderNode(node: sys.RenderNode, context: any, forHitTest?: boolean): number {
+        public drawDisplayToBuffer(displayObject: DisplayObject, buffer: sys.RenderBuffer, matrix: Matrix): number {
+            let context: CanvasRenderingContext2D = buffer.context;
+            if (matrix) {
+                context.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
+            }
+            let node: sys.RenderNode;
+            if (displayObject.$renderDirty) {
+                node = displayObject.$getRenderNode();
+            }
+            else {
+                node = displayObject.$renderNode;
+            }
+            let drawCalls = 0;
+            if (node) {
+                drawCalls++;
+                switch (node.type) {
+                    case sys.RenderNodeType.BitmapNode:
+                        this.renderBitmap(<sys.BitmapNode>node, context);
+                        break;
+                    case sys.RenderNodeType.TextNode:
+                        this.renderText(<sys.TextNode>node, context);
+                        break;
+                    case sys.RenderNodeType.GraphicsNode:
+                        this.renderGraphics(<sys.GraphicsNode>node, context);
+                        break;
+                    case sys.RenderNodeType.GroupNode:
+                        this.renderGroup(<sys.GroupNode>node, context);
+                        break;
+                    case sys.RenderNodeType.MeshNode:
+                        this.renderMesh(<sys.MeshNode>node, context);
+                        break;
+                    case sys.RenderNodeType.NormalBitmapNode:
+                        this.renderNormalBitmap(<sys.NormalBitmapNode>node, context);
+                        break;
+                }
+            }
+            let children = displayObject.$children;
+            if (children) {
+                let length = children.length;
+                for (let i = 0; i < length; i++) {
+                    let child = children[i];
+                    switch (child.$renderMode) {
+                        case RenderMode.NONE:
+                            break;
+                        case RenderMode.FILTER:
+                            drawCalls += this.drawWithFilter(child, context, 0, 0);
+                            break;
+                        case RenderMode.CLIP:
+                            drawCalls += this.drawWithClip(child, context, 0, 0);
+                            break;
+                        case RenderMode.SCROLLRECT:
+                            drawCalls += this.drawWithScrollRect(child, context, 0, 0);
+                            break;
+                        default:
+                            drawCalls += this.drawDisplayObject(child, context, 0, 0);
+                            break;
+                    }
+                }
+            }
+            return drawCalls;
+        }
+
+        private renderNode(node: sys.RenderNode, context: CanvasRenderingContext2D, forHitTest?: boolean): number {
             let drawCalls = 0;
             switch (node.type) {
                 case sys.RenderNodeType.BitmapNode:
@@ -726,78 +570,58 @@ namespace egret {
                 case sys.RenderNodeType.GroupNode:
                     drawCalls = this.renderGroup(<sys.GroupNode>node, context);
                     break;
-                case sys.RenderNodeType.SetAlphaNode:
-                    context.globalAlpha = node.drawData[0];
-                    break;
                 case sys.RenderNodeType.MeshNode:
                     drawCalls = this.renderMesh(<sys.MeshNode>node, context);
+                    break;
+                case sys.RenderNodeType.NormalBitmapNode:
+                    drawCalls += this.renderNormalBitmap(<sys.NormalBitmapNode>node, context);
                     break;
             }
             return drawCalls;
         }
 
-        /** 
-         * render mesh 
-         */
-        private renderMesh(node: sys.MeshNode, context: any): number {
-            if (Capabilities.runtimeType != RuntimeType.NATIVE) {
+        private renderNormalBitmap(node: sys.NormalBitmapNode, context: CanvasRenderingContext2D): number {
+            let image = node.image;
+            if (!image || !image.source) {
                 return 0;
             }
-            let image = node.image;
-            let data = node.drawData;
-            let length = data.length;
-            let pos = 0;
-            let m = node.matrix;
-            let blendMode = node.blendMode;
-            let alpha = node.alpha;
-            let saved = false;
-            if (m) {
-                context.saveTransform();
-                context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-            }
-            if (blendMode) {
-                context.globalCompositeOperation = blendModes[blendMode];
-            }
-            let originAlpha: number;
-            if (alpha == alpha) {
-                originAlpha = context.globalAlpha;
-                context.globalAlpha *= alpha;
+            if (context.$imageSmoothingEnabled != node.smoothing) {
+                context.imageSmoothingEnabled = node.smoothing;
+                context.$imageSmoothingEnabled = node.smoothing;
             }
 
-            let drawCalls: number = 0;
-            let filter = node.filter;
-            if (filter) {
-                egret_native.Graphics.setGlobalShader(filter);
-                while (pos < length) {
-                    drawCalls++;
-                    context.drawMesh(image.source, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++],
-                        data[pos++], node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds);
+
+            if (node.rotated) {
+                let sourceX = node.sourceX;
+                let sourceY = node.sourceY;
+                let sourceHeight = node.sourceW;
+                let sourceWidth = node.sourceH;
+                let offsetX = node.drawX;
+                let offsetY = node.drawY;
+                let destHeight = node.drawW;
+                let destWidth = node.drawH;
+                if ((<any>context).saveTransform) {//for native
+                    (<any>context).saveTransform();
                 }
-                egret_native.Graphics.setGlobalShader(null);
+                else {
+                    context.save();
+                }
+                context.transform(0, -1, 1, 0, 0, destWidth);
+                context.drawImage(image.source, sourceX, sourceY, sourceWidth, sourceHeight, offsetX + context.$offsetX, offsetY + context.$offsetY, destWidth, destHeight);
+                if ((<any>context).restoreTransform) {//for native
+                    (<any>context).restoreTransform();
+                }
+                else {
+                    context.restore();
+                }
             }
             else {
-                while (pos < length) {
-                    drawCalls++;
-                    context.drawMesh(image.source, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++],
-                        data[pos++], node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds);
-                }
-            }
-            if (m) {
-                context.restoreTransform();
-            }
-            if (blendMode) {
-                context.globalCompositeOperation = defaultCompositeOp;
-            }
-            if (alpha == alpha) {
-                context.globalAlpha = originAlpha;
+                context.drawImage(image.source, node.sourceX, node.sourceY, node.sourceW, node.sourceH,
+                    node.drawX + context.$offsetX, node.drawY + context.$offsetY, node.drawW, node.drawH);
             }
             return 1;
         }
 
-
-        /**
-         * @private
-         */
         private renderBitmap(node: sys.BitmapNode, context: CanvasRenderingContext2D): number {
             let image = node.image;
             if (!image || !image.source) {
@@ -813,8 +637,9 @@ namespace egret {
             let m = node.matrix;
             let blendMode = node.blendMode;
             let alpha = node.alpha;
-
             let saved = false;
+            let offsetX;
+            let offsetY;
             if (m) {
                 if ((<any>context).saveTransform) {//for native
                     (<any>context).saveTransform();
@@ -823,6 +648,12 @@ namespace egret {
                     context.save();
                 }
                 saved = true;
+                if (context.$offsetX != 0 || context.$offsetY != 0) {
+                    context.translate(context.$offsetX, context.$offsetY);
+                    offsetX = context.$offsetX;
+                    offsetY = context.$offsetY;
+                    context.$offsetX = context.$offsetY = 0;
+                }
                 context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             }
             //这里不考虑嵌套
@@ -857,7 +688,8 @@ namespace egret {
                             context.save();
                         }
                         context.transform(0, -1, 1, 0, 0, destWidth);
-                        context.drawImage(image.source, sourceX, sourceY, sourceWidth, sourceHeight, offsetX, offsetY, destWidth, destHeight);
+                        context.drawImage(image.source, sourceX, sourceY, sourceWidth, sourceHeight,
+                            offsetX + context.$offsetX, offsetY + context.$offsetY, destWidth, destHeight);
                         if ((<any>context).restoreTransform) {//for native
                             (<any>context).restoreTransform();
                         }
@@ -866,7 +698,8 @@ namespace egret {
                         }
                     }
                     else {
-                        context.drawImage(image.source, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7]);
+                        context.drawImage(image.source, data[0], data[1], data[2], data[3],
+                            data[4] + context.$offsetX, data[5] + context.$offsetY, data[6], data[7]);
                     }
                     egret_native.Graphics.setGlobalShader(null);
                 }
@@ -879,7 +712,7 @@ namespace egret {
                     let offsetY = data[5];
                     let destWidth = data[6];
                     let destHeight = data[7];
-                    if(node.rotated) {
+                    if (node.rotated) {
                         sourceWidth = data[3];
                         sourceHeight = data[2];
                         destWidth = data[7];
@@ -888,7 +721,7 @@ namespace egret {
                     let displayBuffer = this.createRenderBuffer(destWidth, destHeight);
                     let displayContext = displayBuffer.context;
                     drawCalls++;
-                    if(node.rotated) {
+                    if (node.rotated) {
                         context.transform(0, -1, 1, 0, 0, destWidth);
                     }
                     displayContext.drawImage(image.source, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, destWidth, destHeight);
@@ -899,7 +732,8 @@ namespace egret {
                     colorFilter(imageData.data, destWidth, destHeight, (<ColorMatrixFilter>filter).$matrix);
                     displayContext.putImageData(imageData, 0, 0);
                     // 绘制结果的时候，应用滤镜
-                    context.drawImage(<any>displayBuffer.surface, 0, 0, destWidth, destHeight, offsetX, offsetY, destWidth, destHeight);
+                    context.drawImage(displayBuffer.surface, 0, 0, destWidth, destHeight,
+                        offsetX + context.$offsetX, offsetY + context.$offsetY, destWidth, destHeight);
                     renderBufferPool.push(displayBuffer);
                 }
             }
@@ -922,7 +756,8 @@ namespace egret {
                             context.save();
                         }
                         context.transform(0, -1, 1, 0, 0, destWidth);
-                        context.drawImage(image.source, sourceX, sourceY, sourceWidth, sourceHeight, offsetX, offsetY, destWidth, destHeight);
+                        context.drawImage(image.source, sourceX, sourceY, sourceWidth, sourceHeight,
+                            offsetX + context.$offsetX, offsetY + context.$offsetY, destWidth, destHeight);
                         if ((<any>context).restoreTransform) {//for native
                             (<any>context).restoreTransform();
                         }
@@ -931,7 +766,8 @@ namespace egret {
                         }
                     }
                     else {
-                        context.drawImage(image.source, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
+                        context.drawImage(image.source, data[pos++], data[pos++], data[pos++], data[pos++],
+                            data[pos++] + context.$offsetX, data[pos++] + context.$offsetY, data[pos++], data[pos++]);
                     }
                 }
             }
@@ -957,12 +793,85 @@ namespace egret {
                     context.globalAlpha = originAlpha;
                 }
             }
+            if (offsetX) {
+                context.$offsetX = offsetX;
+            }
+            if (offsetY) {
+                context.$offsetY = offsetY;
+            }
             return drawCalls;
         }
 
-        /**
-         * @private
-         */
+        private renderMesh(node: sys.MeshNode, context: any): number {
+            if (Capabilities.runtimeType != RuntimeType.NATIVE) {
+                return 0;
+            }
+            let image = node.image;
+            let data = node.drawData;
+            let length = data.length;
+            let pos = 0;
+            let m = node.matrix;
+            let blendMode = node.blendMode;
+            let alpha = node.alpha;
+            let offsetX;
+            let offsetY;
+            if (m) {
+                context.saveTransform();
+                if (context.$offsetX != 0 || context.$offsetY != 0) {
+                    context.translate(context.$offsetX, context.$offsetY);
+                    offsetX = context.$offsetX;
+                    offsetY = context.$offsetY;
+                    context.$offsetX = context.$offsetY = 0;
+                }
+                context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            }
+            if (blendMode) {
+                context.globalCompositeOperation = blendModes[blendMode];
+            }
+            let originAlpha: number;
+            if (alpha == alpha) {
+                originAlpha = context.globalAlpha;
+                context.globalAlpha *= alpha;
+            }
+
+            let drawCalls: number = 0;
+            let filter = node.filter;
+            if (filter) {
+                egret_native.Graphics.setGlobalShader(filter);
+                while (pos < length) {
+                    drawCalls++;
+                    context.drawMesh(image.source, data[pos++], data[pos++], data[pos++], data[pos++],
+                        data[pos++] + context.$offsetX, data[pos++] + context.$offsetY, data[pos++], data[pos++],
+                        node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds);
+                }
+                egret_native.Graphics.setGlobalShader(null);
+            }
+            else {
+                while (pos < length) {
+                    drawCalls++;
+                    context.drawMesh(image.source, data[pos++], data[pos++], data[pos++], data[pos++],
+                        data[pos++] + context.$offsetX, data[pos++] + context.$offsetY, data[pos++], data[pos++],
+                        node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds);
+                }
+            }
+            if (m) {
+                context.restoreTransform();
+            }
+            if (blendMode) {
+                context.globalCompositeOperation = defaultCompositeOp;
+            }
+            if (alpha == alpha) {
+                context.globalAlpha = originAlpha;
+            }
+            if (offsetX) {
+                context.$offsetX = offsetX;
+            }
+            if (offsetY) {
+                context.$offsetY = offsetY;
+            }
+            return 1;
+        }
+
         public renderText(node: sys.TextNode, context: CanvasRenderingContext2D): void {
             context.textAlign = "left";
             context.textBaseline = "middle";
@@ -983,11 +892,13 @@ namespace egret {
                 context.strokeStyle = toColorString(strokeColor);
                 if (stroke) {
                     context.lineWidth = stroke * 2;
-                    context.strokeText(text, x, y);
+                    context.strokeText(text, x + context.$offsetX, y + context.$offsetY);
                 }
-                context.fillText(text, x, y);
+                context.fillText(text, x + context.$offsetX, y + context.$offsetY);
             }
         }
+
+        private renderingMask = false;
 
         /**
          * @private
@@ -1054,16 +965,16 @@ namespace egret {
                 let command = commands[commandIndex];
                 switch (command) {
                     case sys.PathCommand.CubicCurveTo:
-                        context.bezierCurveTo(data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
+                        context.bezierCurveTo(data[pos++] + context.$offsetX, data[pos++] + context.$offsetY, data[pos++] + context.$offsetX, data[pos++] + context.$offsetY, data[pos++] + context.$offsetX, data[pos++] + context.$offsetY);
                         break;
                     case sys.PathCommand.CurveTo:
-                        context.quadraticCurveTo(data[pos++], data[pos++], data[pos++], data[pos++]);
+                        context.quadraticCurveTo(data[pos++] + context.$offsetX, data[pos++] + context.$offsetY, data[pos++] + context.$offsetX, data[pos++] + context.$offsetY);
                         break;
                     case sys.PathCommand.LineTo:
-                        context.lineTo(data[pos++], data[pos++]);
+                        context.lineTo(data[pos++] + context.$offsetX, data[pos++] + context.$offsetY);
                         break;
                     case sys.PathCommand.MoveTo:
-                        context.moveTo(data[pos++], data[pos++]);
+                        context.moveTo(data[pos++] + context.$offsetX, data[pos++] + context.$offsetY);
                         break;
                     case sys.PathCommand.SetLineDash:
                         context.setLineDash(data[pos++]);
@@ -1072,10 +983,11 @@ namespace egret {
             }
         }
 
-
         private renderGroup(groupNode: sys.GroupNode, context: CanvasRenderingContext2D): number {
             let m = groupNode.matrix;
             let saved = false;
+            let offsetX;
+            let offsetY;
             if (m) {
                 if ((<any>context).saveTransform) {//for native
                     (<any>context).saveTransform();
@@ -1084,6 +996,12 @@ namespace egret {
                     context.save();
                 }
                 saved = true;
+                if (context.$offsetX != 0 || context.$offsetY != 0) {
+                    context.translate(context.$offsetX, context.$offsetY);
+                    offsetX = context.$offsetX;
+                    offsetY = context.$offsetY;
+                    context.$offsetX = context.$offsetY = 0;
+                }
                 context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             }
 
@@ -1103,12 +1021,15 @@ namespace egret {
                     context.restore();
                 }
             }
+            if (offsetX) {
+                context.$offsetX = offsetX;
+            }
+            if (offsetY) {
+                context.$offsetY = offsetY;
+            }
             return drawCalls;
         }
 
-        /**
-         * @private
-         */
         private createRenderBuffer(width: number, height: number, useForFilters?: boolean): sys.RenderBuffer {
             let buffer = useForFilters ? renderBufferPool_Filters.pop() : renderBufferPool.pop();
             if (buffer) {
@@ -1589,8 +1510,5 @@ namespace egret {
         } else {
             setArray(buffer, plane);
         }
-
     }
-
-
 }

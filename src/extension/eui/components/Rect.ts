@@ -281,7 +281,6 @@ namespace eui {
                 g.drawRoundRect(this.$strokeWeight, this.$strokeWeight, unscaledWidth - this.$strokeWeight * 2, unscaledHeight - this.$strokeWeight * 2, this.$ellipseWidth, this.$ellipseHeight);
             }
             g.endFill();
-            this.$invalidateContentBounds();
         }
     }
 }

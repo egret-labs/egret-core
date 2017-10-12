@@ -103,7 +103,6 @@ namespace egret {
 
         public set matrix(value:number[]) {
             this.setMatrix(value);
-            this.invalidate();
         }
 
         /**

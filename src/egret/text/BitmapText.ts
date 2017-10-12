@@ -161,7 +161,6 @@ namespace egret {
                 return;
             }
             values[sys.BitmapTextKeys.smoothing] = value;
-            this.$invalidate();
         }
 
         /**
@@ -201,7 +200,7 @@ namespace egret {
             if (value == values[sys.BitmapTextKeys.text])
                 return false;
             values[sys.BitmapTextKeys.text] = value;
-            this.$invalidateContentBounds();
+            this.$invalidateBitmapText();
 
             return true;
         }
@@ -224,7 +223,7 @@ namespace egret {
                 return false;
             }
             values[sys.BitmapTextKeys.textFieldWidth] = value;
-            this.$invalidateContentBounds();
+            this.$invalidateBitmapText();
 
             return true;
         }
@@ -232,8 +231,8 @@ namespace egret {
         /**
          * @private
          */
-        $invalidateContentBounds(): void {
-            super.$invalidateContentBounds();
+        $invalidateBitmapText(): void {
+            this.$renderDirty = true;
             this.$BitmapText[sys.BitmapTextKeys.textLinesChanged] = true;
         }
 
@@ -255,7 +254,7 @@ namespace egret {
                 return false;
             }
             values[sys.BitmapTextKeys.textFieldHeight] = value;
-            this.$invalidateContentBounds();
+            this.$invalidateBitmapText();
             return true;
         }
 
@@ -289,7 +288,7 @@ namespace egret {
             values[sys.BitmapTextKeys.font] = value;
 
             this.$BitmapText[sys.BitmapTextKeys.fontStringChanged] = true;
-            this.$invalidateContentBounds();
+            this.$invalidateBitmapText();
 
             return true;
         }
@@ -323,7 +322,7 @@ namespace egret {
             if (values[sys.BitmapTextKeys.lineSpacing] == value)
                 return false;
             values[sys.BitmapTextKeys.lineSpacing] = value;
-            this.$invalidateContentBounds();
+            this.$invalidateBitmapText();
             return true;
         }
 
@@ -355,7 +354,7 @@ namespace egret {
             if (values[sys.BitmapTextKeys.letterSpacing] == value)
                 return false;
             values[sys.BitmapTextKeys.letterSpacing] = value;
-            this.$invalidateContentBounds();
+            this.$invalidateBitmapText();
 
             return true;
         }
@@ -387,7 +386,7 @@ namespace egret {
             if (values[sys.BitmapTextKeys.textAlign] == value)
                 return false;
             values[sys.BitmapTextKeys.textAlign] = value;
-            this.$invalidateContentBounds();
+            this.$invalidateBitmapText();
             return true;
         }
 
@@ -418,7 +417,7 @@ namespace egret {
             if (values[sys.BitmapTextKeys.verticalAlign] == value)
                 return false;
             values[sys.BitmapTextKeys.verticalAlign] = value;
-            this.$invalidateContentBounds();
+            this.$invalidateBitmapText();
             return true;
         }
 
@@ -441,7 +440,7 @@ namespace egret {
         /**
          * @private
          */
-        $render(): void {
+        $updateRenderNode(): void {
             let values = this.$BitmapText;
             let textLines: string[] = this.$getTextLines();
             let length: number = textLines.length;
@@ -452,7 +451,7 @@ namespace egret {
             let bitmapFont: BitmapFont = values[sys.BitmapTextKeys.font];
             let node = <sys.BitmapNode>this.$renderNode;
             if (bitmapFont.$texture) {
-                node.image = bitmapFont.$texture._bitmapData;
+                node.image = bitmapFont.$texture.$bitmapData;
             }
             node.smoothing = values[sys.BitmapTextKeys.smoothing];
             let emptyHeight: number = bitmapFont._getFirstCharHeight();
@@ -493,12 +492,12 @@ namespace egret {
                         }
                         continue;
                     }
-                    let bitmapWidth = texture._bitmapWidth;
-                    let bitmapHeight = texture._bitmapHeight;
-                    node.imageWidth = texture._sourceWidth;
-                    node.imageHeight = texture._sourceHeight;
-                    node.drawImage(texture._bitmapX, texture._bitmapY,
-                        bitmapWidth, bitmapHeight, xPos + texture._offsetX, yPos + texture._offsetY,
+                    let bitmapWidth = texture.$bitmapWidth;
+                    let bitmapHeight = texture.$bitmapHeight;
+                    node.imageWidth = texture.$sourceWidth;
+                    node.imageHeight = texture.$sourceHeight;
+                    node.drawImage(texture.$bitmapX, texture.$bitmapY,
+                        bitmapWidth, bitmapHeight, xPos + texture.$offsetX, yPos + texture.$offsetY,
                         texture.$getScaleBitmapWidth(), texture.$getScaleBitmapHeight());
 
                     xPos += (bitmapFont.getConfig(character, "xadvance") || texture.$getTextureWidth()) + values[sys.BitmapTextKeys.letterSpacing];
@@ -658,8 +657,8 @@ namespace egret {
                     else {
                         texureWidth = texture.$getTextureWidth();
                         textureHeight = texture.$getTextureHeight();
-                        offsetX = texture._offsetX;
-                        offsetY = texture._offsetY;
+                        offsetX = texture.$offsetX;
+                        offsetY = texture.$offsetY;
                     }
 
                     if (isFirstChar) {

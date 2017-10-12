@@ -45,38 +45,9 @@ namespace egret {
          */
         public $uniforms:any;
         
-        private $targets:DisplayObject[] = [];
-
         constructor() {
             super();
             this.$uniforms = {};
-        }
-        
-        public $addTarget(target:DisplayObject):void {
-            let length:number = this.$targets.length;
-            for(let i:number = 0 ; i < length ; i++) {
-                if(this.$targets[i].$hashCode == target.$hashCode) {
-                    return;
-                }
-            }
-            this.$targets.push(target);
-        }
-        
-        public $removeTarget(target:DisplayObject):void {
-            let length:number = this.$targets.length;
-            for(let i:number = 0 ; i < length ; i++) {
-                if(this.$targets[i].$hashCode == target.$hashCode) {
-                    this.$targets.splice(i, 1);
-                    return;
-                }
-            }
-        }
-        
-        protected invalidate():void {
-            let length:number = this.$targets.length;
-            for(let i:number = 0 ; i < length ; i++) {
-                this.$targets[i].$invalidateContentBounds();
-            }
         }
 
         /**
