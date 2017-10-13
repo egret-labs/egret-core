@@ -3789,10 +3789,6 @@ var egret;
                     context_1.oBackingStorePixelRatio ||
                     context_1.backingStorePixelRatio || 1;
                 canvasScaleFactor = (window.devicePixelRatio || 1) / backingStore;
-                //特殊处理PC缩放2倍
-                if (canvasScaleFactor == 1 && (egret.Capabilities.os == "Mac OS" || egret.Capabilities.os == "Windows PC")) {
-                    canvasScaleFactor = 2;
-                }
             }
             canvasScaleFactor = Math.max(1, Math.ceil(canvasScaleFactor));
             egret.sys.DisplayList.$setDevicePixelRatio(canvasScaleFactor);
