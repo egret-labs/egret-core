@@ -306,6 +306,16 @@
         ]
       },
       {
+        "name": "resourcemanager",
+        "description": "ResourceManager 资源加载库",
+        "files": [],
+        "root": null,
+        "dependencies": [
+          "egret",
+          "game"
+        ]
+      },
+      {
         "name": "eui",
         "description": "eui 界面制作库",
         "files": [],
@@ -396,7 +406,7 @@
           "egret",
           "game",
           "tween",
-          "res"
+          "resourcemanager"
         ]
       },
       {
