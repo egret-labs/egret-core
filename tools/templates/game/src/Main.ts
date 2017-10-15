@@ -79,8 +79,9 @@ class Main extends egret.DisplayObjectContainer {
             await RES.loadGroup("preload", 0, loadingView);
         }
         catch (e) {
-
+            console.log(e);
         }
+        this.stage.removeChild(loadingView);
 
     }
 

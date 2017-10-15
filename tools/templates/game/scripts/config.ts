@@ -23,11 +23,12 @@ const config: ResourceManagerConfig = {
             outputDir: "bin-release",
 
             plugin: [
+                "compile",
                 "zip",
                 "spritesheet",
                 "convertFileName",
                 "emitConfigFile",
-                "html"
+                "manifest"
             ]
         }
     },
