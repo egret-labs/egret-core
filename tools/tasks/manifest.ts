@@ -24,6 +24,6 @@ export default {
     },
     onFinish: async (context) => {
         const content = JSON.stringify(manifest, null, '\t');
-        context.createFile("js/manifest.json", new Buffer(content));
+        context.createFile("manifest.json", new Buffer(content));
     }
 }

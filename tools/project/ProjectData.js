@@ -263,11 +263,11 @@ var EgretProjectData = (function () {
         });
         return result;
     };
-    __decorate([
-        _utils.cache
-    ], EgretProjectData.prototype, "getModulesConfig", null);
     return EgretProjectData;
 }());
+__decorate([
+    _utils.cache
+], EgretProjectData.prototype, "getModulesConfig", null);
 exports.EgretProjectData = EgretProjectData;
 exports.data = new EgretProjectData();
 function getAppDataEnginesRootPath() {

@@ -61,7 +61,7 @@ exports.default = {
         var content;
         return __generator(this, function (_a) {
             content = JSON.stringify(manifest, null, '\t');
-            context.createFile("js/manifest.json", new Buffer(content));
+            context.createFile("manifest.json", new Buffer(content));
             return [2 /*return*/];
         });
     }); }
