@@ -87,7 +87,7 @@ class Main extends eui.UILayer {
      */
     private loadTheme(): void {
 
-        let theme = new eui.Theme("resource/default.thm.json", this.stage);
+        let theme = new eui.Theme("default.thm.json", this.stage);
         theme.addEventListener(eui.UIEvent.COMPLETE, this.startCreateScene, this);
 
     }
