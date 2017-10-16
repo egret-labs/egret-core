@@ -67,6 +67,7 @@
         xhr.addEventListener("load", function () {
             var manifest = JSON.parse(xhr.response);
             loadScript(manifest.initial, function () {
+                RES.setConfigURL(manifest.configURL);
                 /**
                 * {
                 * "renderMode":, //Engine rendering mode, "canvas" or "webgl"
