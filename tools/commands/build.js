@@ -34,10 +34,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 var utils = require("../lib/utils");
-var service = require("../service/index");
 var FileUtil = require("../lib/FileUtil");
 var project = require("../project/EgretProject");
 var Compiler = require("../actions/Compiler");
+var tasks = require("../tasks");
 var path = require("path");
 console.log(utils.tr(1004, 0));
 var Build = (function () {
@@ -45,21 +45,7 @@ var Build = (function () {
     }
     Build.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            function executeBuildCommand() {
-                return new Promise(function (resolve, reject) {
-                    service.client.execCommand({
-                        path: egret.args.projectDir,
-                        command: "build",
-                        option: egret.args
-                    }, function (cmd) { return onGotBuildCommandResult(cmd, function () {
-                        var timeBuildEnd = (new Date()).getTime();
-                        var timeBuildUsed = (timeBuildEnd - timeBuildStart) / 1000;
-                        console.log(utils.tr(1108, timeBuildUsed));
-                        resolve();
-                    }); }, true);
-                });
-            }
-            var timeBuildStart, options, packageJsonContent, packageJson, res, command, projectRoot;
+            var timeBuildStart, options, packageJsonContent, packageJson, res, command, projectRoot, timeBuildEnd, timeBuildUsed;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -87,12 +73,13 @@ var Build = (function () {
                         res = require('../lib/resourcemanager');
                         command = "build";
                         projectRoot = egret.args.projectDir;
+                        tasks.run();
                         return [4 /*yield*/, res.build({ projectRoot: projectRoot, debug: true, command: command })];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, executeBuildCommand()];
-                    case 2:
-                        _a.sent();
+                        timeBuildEnd = (new Date()).getTime();
+                        timeBuildUsed = (timeBuildEnd - timeBuildStart) / 1000;
+                        console.log(utils.tr(1108, timeBuildUsed));
                         return [2 /*return*/, 0];
                 }
             });
@@ -178,14 +165,4 @@ var Build = (function () {
     };
     return Build;
 }());
-function onGotBuildCommandResult(cmd, callback) {
-    if (cmd.messages) {
-        cmd.messages.forEach(function (m) { return console.log(m); });
-    }
-    if (!cmd.exitCode && egret.args.platform) {
-        setTimeout(function () { return callback(0); }, 500);
-    }
-    else
-        callback(cmd.exitCode || 0);
-}
 module.exports = Build;

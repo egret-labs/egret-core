@@ -3,6 +3,7 @@ import * as  service from '../service/index';
 import * as FileUtil from '../lib/FileUtil';
 import * as project from '../project/EgretProject';
 import * as Compiler from '../actions/Compiler';
+import * as tasks from '../tasks';
 import * as path from 'path';
 
 console.log(utils.tr(1004, 0));
@@ -35,28 +36,16 @@ class Build implements egret.Command {
         }
 
 
-        function executeBuildCommand() {
-
-            return new Promise((resolve, reject) => {
-
-                service.client.execCommand({
-                    path: egret.args.projectDir,
-                    command: "build",
-                    option: egret.args
-                }, cmd => onGotBuildCommandResult(cmd, () => {
-                    const timeBuildEnd: number = (new Date()).getTime();
-                    const timeBuildUsed = (timeBuildEnd - timeBuildStart) / 1000;
-                    console.log(utils.tr(1108, timeBuildUsed));
-                    resolve();
-                }), true);
-            });
-        }
 
         const res = require('../lib/resourcemanager');
         const command = "build";
         const projectRoot = egret.args.projectDir;
+        tasks.run();
         await res.build({ projectRoot, debug: true, command });
-        await executeBuildCommand();
+
+        const timeBuildEnd: number = (new Date()).getTime();
+        const timeBuildUsed = (timeBuildEnd - timeBuildStart) / 1000;
+        console.log(utils.tr(1108, timeBuildUsed));
         return 0;
     }
 
@@ -145,15 +134,5 @@ class Build implements egret.Command {
     }
 }
 
-function onGotBuildCommandResult(cmd: egret.ServiceCommandResult, callback: (exitCode: number) => void) {
-    if (cmd.messages) {
-        cmd.messages.forEach(m => console.log(m));
-    }
 
-    if (!cmd.exitCode && egret.args.platform) {
-        setTimeout(() => callback(0), 500);
-    }
-    else
-        callback(cmd.exitCode || 0);
-}
 export = Build;
