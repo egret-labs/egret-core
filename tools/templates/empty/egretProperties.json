@@ -1,11 +1,5 @@
 {
     "native": {
-        "path_ignore": [
-        ]
-    },
-    "publish": {
-        "web": 0,
-        "native": 1,
-        "path": "bin-release"
+        "path_ignore": []
     }
 }
