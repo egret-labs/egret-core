@@ -252,6 +252,23 @@ export function getNetworkAddress(): string[] {
     return ips;
 }
 
+
+export function measure(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<any>) {
+
+    const method = descriptor.value;
+    descriptor.value = function (...arg) {
+        const timeBuildStart = (new Date()).getTime();
+        let promise = method.apply(this, arg);
+
+        return promise.then((result) => {
+            const timeBuildEnd = (new Date()).getTime();
+            const timeBuildUsed = (timeBuildEnd - timeBuildStart) / 1000;
+            console.log(tr(1108, timeBuildUsed));
+            return result;
+        })
+    }
+}
+
 export function getAvailablePort() {
     return new Promise<number>((resolve, reject) => {
         let port = 0;

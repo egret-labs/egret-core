@@ -10,8 +10,9 @@ import copyNative = require("../actions/CopyNativeFiles");
 import * as EgretProject from '../project/EgretProject';
 
 console.log(utils.tr(1106, 0));
-var timeBuildStart: number = (new Date()).getTime();
 class Clean implements egret.Command {
+
+    @utils.measure
     async execute() {
         utils.checkEgret();
 
@@ -59,10 +60,6 @@ class Clean implements egret.Command {
                     FileUtil.joinPath(options.projectDir, "libs", item));
             });
         }
-
-        var timeBuildEnd = new Date().getTime();
-        var timeBuildUsed = (timeBuildEnd - timeBuildStart) / 1000;
-        console.log(utils.tr(1108, timeBuildUsed));
         //Wait for 'shutdown' command, node will exit when there are no tasks.
         return DontExitCode;
     }

@@ -8,25 +8,11 @@ import * as path from 'path';
 
 console.log(utils.tr(1004, 0));
 
-function measure(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<any>) {
 
-    const method = descriptor.value;
-    descriptor.value = function (...arg) {
-        const timeBuildStart = (new Date()).getTime();
-        let promise = method.apply(this, arg);
-
-        return promise.then((result) => {
-            const timeBuildEnd = (new Date()).getTime();
-            const timeBuildUsed = (timeBuildEnd - timeBuildStart) / 1000;
-            console.log(utils.tr(1108, timeBuildUsed));
-            return result;
-        })
-    }
-}
 
 
 class Build implements egret.Command {
-    @measure
+    @utils.measure
     async execute() {
 
         const options = egret.args;

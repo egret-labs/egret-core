@@ -46,23 +46,6 @@ var Compiler = require("../actions/Compiler");
 var tasks = require("../tasks");
 var path = require("path");
 console.log(utils.tr(1004, 0));
-function measure(target, propertyKey, descriptor) {
-    var method = descriptor.value;
-    descriptor.value = function () {
-        var arg = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            arg[_i] = arguments[_i];
-        }
-        var timeBuildStart = (new Date()).getTime();
-        var promise = method.apply(this, arg);
-        return promise.then(function (result) {
-            var timeBuildEnd = (new Date()).getTime();
-            var timeBuildUsed = (timeBuildEnd - timeBuildStart) / 1000;
-            console.log(utils.tr(1108, timeBuildUsed));
-            return result;
-        });
-    };
-}
 var Build = (function () {
     function Build() {
     }
@@ -185,6 +168,6 @@ var Build = (function () {
     return Build;
 }());
 __decorate([
-    measure
+    utils.measure
 ], Build.prototype, "execute", null);
 module.exports = Build;

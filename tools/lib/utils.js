@@ -295,6 +295,24 @@ function getNetworkAddress() {
     return ips;
 }
 exports.getNetworkAddress = getNetworkAddress;
+function measure(target, propertyKey, descriptor) {
+    var method = descriptor.value;
+    descriptor.value = function () {
+        var arg = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            arg[_i] = arguments[_i];
+        }
+        var timeBuildStart = (new Date()).getTime();
+        var promise = method.apply(this, arg);
+        return promise.then(function (result) {
+            var timeBuildEnd = (new Date()).getTime();
+            var timeBuildUsed = (timeBuildEnd - timeBuildStart) / 1000;
+            console.log(tr(1108, timeBuildUsed));
+            return result;
+        });
+    };
+}
+exports.measure = measure;
 function getAvailablePort() {
     return new Promise(function (resolve, reject) {
         var port = 0;
