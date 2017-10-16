@@ -8,9 +8,26 @@ import * as path from 'path';
 
 console.log(utils.tr(1004, 0));
 
+function measure(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<any>) {
+
+    const method = descriptor.value;
+    descriptor.value = function (...arg) {
+        const timeBuildStart = (new Date()).getTime();
+        let promise = method.apply(this, arg);
+
+        return promise.then(() => {
+            const timeBuildEnd = (new Date()).getTime();
+            const timeBuildUsed = (timeBuildEnd - timeBuildStart) / 1000;
+            console.log(utils.tr(1108, timeBuildUsed));
+        })
+    }
+}
+
+
 class Build implements egret.Command {
+    @measure
     async execute() {
-        const timeBuildStart: number = (new Date()).getTime();
+
         const options = egret.args;
         let packageJsonContent
         if (packageJsonContent = FileUtil.read(project.data.getFilePath("package.json"))) {
@@ -43,9 +60,7 @@ class Build implements egret.Command {
         tasks.run();
         await res.build({ projectRoot, debug: true, command });
 
-        const timeBuildEnd: number = (new Date()).getTime();
-        const timeBuildUsed = (timeBuildEnd - timeBuildStart) / 1000;
-        console.log(utils.tr(1108, timeBuildUsed));
+
         return 0;
     }
 

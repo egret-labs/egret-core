@@ -1,3 +1,9 @@
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -40,16 +46,31 @@ var Compiler = require("../actions/Compiler");
 var tasks = require("../tasks");
 var path = require("path");
 console.log(utils.tr(1004, 0));
+function measure(target, propertyKey, descriptor) {
+    var method = descriptor.value;
+    descriptor.value = function () {
+        var arg = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            arg[_i] = arguments[_i];
+        }
+        var timeBuildStart = (new Date()).getTime();
+        var promise = method.apply(this, arg);
+        return promise.then(function () {
+            var timeBuildEnd = (new Date()).getTime();
+            var timeBuildUsed = (timeBuildEnd - timeBuildStart) / 1000;
+            console.log(utils.tr(1108, timeBuildUsed));
+        });
+    };
+}
 var Build = (function () {
     function Build() {
     }
     Build.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var timeBuildStart, options, packageJsonContent, packageJson, res, command, projectRoot, timeBuildEnd, timeBuildUsed;
+            var options, packageJsonContent, packageJson, res, command, projectRoot;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        timeBuildStart = (new Date()).getTime();
                         options = egret.args;
                         if (packageJsonContent = FileUtil.read(project.data.getFilePath("package.json"))) {
                             packageJson = JSON.parse(packageJsonContent);
@@ -77,9 +98,6 @@ var Build = (function () {
                         return [4 /*yield*/, res.build({ projectRoot: projectRoot, debug: true, command: command })];
                     case 1:
                         _a.sent();
-                        timeBuildEnd = (new Date()).getTime();
-                        timeBuildUsed = (timeBuildEnd - timeBuildStart) / 1000;
-                        console.log(utils.tr(1108, timeBuildUsed));
                         return [2 /*return*/, 0];
                 }
             });
@@ -165,4 +183,7 @@ var Build = (function () {
     };
     return Build;
 }());
+__decorate([
+    measure
+], Build.prototype, "execute", null);
 module.exports = Build;

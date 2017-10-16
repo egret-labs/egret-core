@@ -14,7 +14,8 @@ const config: ResourceManagerConfig = {
             outputDir: "resource",
 
             plugin: [
-                "emitConfigFile"
+                "emitConfigFile",
+                "incrementCompile"
             ]
         },
 
