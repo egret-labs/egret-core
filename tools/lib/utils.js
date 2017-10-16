@@ -295,24 +295,26 @@ function getNetworkAddress() {
     return ips;
 }
 exports.getNetworkAddress = getNetworkAddress;
-function getAvailablePort(callback, port) {
-    if (port === void 0) { port = 0; }
-    function getPort() {
-        var server = net.createServer();
-        server.on('listening', function () {
-            port = server.address().port;
-            server.close();
-        });
-        server.on('close', function () {
-            callback(port);
-        });
-        server.on('error', function (err) {
-            port++;
-            getPort();
-        });
-        server.listen(port, '0.0.0.0');
-    }
-    getPort();
+function getAvailablePort() {
+    return new Promise(function (resolve, reject) {
+        var port = 0;
+        function getPort() {
+            var server = net.createServer();
+            server.on('listening', function () {
+                port = server.address().port;
+                server.close();
+            });
+            server.on('close', function () {
+                resolve(port);
+            });
+            server.on('error', function (err) {
+                port++;
+                getPort();
+            });
+            server.listen(port, '0.0.0.0');
+        }
+        getPort();
+    });
 }
 exports.getAvailablePort = getAvailablePort;
 function checkEgret() {

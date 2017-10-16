@@ -106,7 +106,7 @@ locale_strings[1417] = "Successful detection ";
 locale_strings[1418] = "WebP format fail : {0}";
 locale_strings[1419] = "Format WebP : {0} / {1}";
 locale_strings[1420] = "Zip package failed, there may be special characters in the path";
-//startserver
+//run
 locale_strings[1501] = "Unable to start the server, please check the authority or whether the port is occupied";
 //create_app
 locale_strings[1601] = "Please enter a h5 game project name, and mobile platform support library.Example: {color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal} \n If you do not install the latest mobile platform support library,please download from the following address：\nAndroid: http://www.egret-labs.org/download/egret-android-packager-download.html, \niOS:http://www.egret-labs.org/download/egret-ios-packager-download.html";
@@ -279,14 +279,13 @@ module helpModule {
         "create": "Create a new project",
         "build": "Compile the TypeScript files in project",
         "publish": "Publish the project, ues GoogleClosureCompiler to compress the code",
-        "startserver": "Start HttpServer, run the project in you browser",
+        "run": "Start HttpServer, run the project in you browser",
         "clean": "Reset the Egret engin code in the project",
         "create_lib": "Create a new third part library",
         "create_app": "Create a native app form Html5",
         "upgrade": "Upgrade the project code",
         "make": "Rebuild the Egret engine source code",
-        "info": "Get information of the Egret engine",
-        "apitest": "Check the api was replaced or not after upgrade engine. Only for the 2.4(or before) upgrade to 2.5(or later).Use this command in 2.5(or later) project"
+        "info": "Get information of the Egret engine"
     };
 
     global["helpModule"] = global["helpModule"] || helpModule;

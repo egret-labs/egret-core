@@ -252,25 +252,29 @@ export function getNetworkAddress(): string[] {
     return ips;
 }
 
-export function getAvailablePort(callback: (port: number) => void, port = 0) {
+export function getAvailablePort() {
+    return new Promise<number>((resolve, reject) => {
+        let port = 0;
 
-    function getPort() {
-        var server = net.createServer();
-        server.on('listening', function () {
-            port = server.address().port
-            server.close()
-        })
-        server.on('close', function () {
-            callback(port)
-        })
-        server.on('error', function (err) {
-            port++;
-            getPort();
-        })
-        server.listen(port, '0.0.0.0')
-    }
+        function getPort() {
+            var server = net.createServer();
+            server.on('listening', function () {
+                port = server.address().port
+                server.close()
+            })
+            server.on('close', function () {
+                resolve(port)
+            })
+            server.on('error', function (err) {
+                port++;
+                getPort();
+            })
+            server.listen(port, '0.0.0.0')
+        }
+        getPort();
+    })
 
-    getPort();
+
 }
 
 export function checkEgret() {

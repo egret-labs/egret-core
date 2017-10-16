@@ -15,10 +15,11 @@ function measure(target: any, propertyKey: string, descriptor: TypedPropertyDesc
         const timeBuildStart = (new Date()).getTime();
         let promise = method.apply(this, arg);
 
-        return promise.then(() => {
+        return promise.then((result) => {
             const timeBuildEnd = (new Date()).getTime();
             const timeBuildUsed = (timeBuildEnd - timeBuildStart) / 1000;
             console.log(utils.tr(1108, timeBuildUsed));
+            return result;
         })
     }
 }
@@ -59,7 +60,6 @@ class Build implements egret.Command {
         const projectRoot = egret.args.projectDir;
         tasks.run();
         await res.build({ projectRoot, debug: true, command });
-
 
         return 0;
     }

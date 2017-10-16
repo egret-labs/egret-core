@@ -97,7 +97,7 @@ Egret 项目使用 TypeScirpt 语言来开发。TypeScript 是 JavaScript 的超
 
 然后使用如下命令行来运行项目：
 
-    egret startserver
+    egret run
 
 ![](./docs/img/console.png)
 

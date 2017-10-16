@@ -97,7 +97,7 @@ We use the following command to build the project:
 
 Then use the following command line to run the project:
 
-    egret startserver
+    egret run
 
 ![](./docs/img/console.png)
 

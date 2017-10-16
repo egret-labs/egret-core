@@ -55,10 +55,11 @@ function measure(target, propertyKey, descriptor) {
         }
         var timeBuildStart = (new Date()).getTime();
         var promise = method.apply(this, arg);
-        return promise.then(function () {
+        return promise.then(function (result) {
             var timeBuildEnd = (new Date()).getTime();
             var timeBuildUsed = (timeBuildEnd - timeBuildStart) / 1000;
             console.log(utils.tr(1108, timeBuildUsed));
+            return result;
         });
     };
 }

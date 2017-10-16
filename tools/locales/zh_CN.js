@@ -103,7 +103,7 @@ var egret;
     locale_strings[1419] = "转换WebP格式 : {0} / {1}";
     locale_strings[1420] = "打包失败，请检查路径中是否有中文或特殊的字符";
     locale_strings[1421] = "打zip包出现异常！";
-    //startserver
+    //run
     locale_strings[1501] = "无法启动服务器，请检查权限或端口是否被占用";
     //create_app
     locale_strings[1601] = "请输入h5游戏目录以及手机平台支持库。例: {color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal} \n如没有安装最新手机平台支持库，请从以下地址下载：\nAndroid: https://www.egret.com/downloads/android.html, \niOS:https://www.egret.com/downloads/ios.html";
@@ -212,7 +212,7 @@ var egret;
         "\n\t\t--egretProperties.json\t//项目配置文件" +
         "\n\t\t--index.html\t\t//启动文件";
     locale_strings[10016] = "如果浏览器没有启动，请手动打开URL: {0}";
-    locale_strings[10017] = "项目创建成功，您可以执行 egret startserver 来运行刚刚创建的应用";
+    locale_strings[10017] = "项目创建成功，您可以执行 egret run 来运行刚刚创建的应用";
     locale_strings[10018] = "试图进行文件加载顺序排序时发现循环依赖，比如类的 static 属性直接实例化了一个继承自当前类的类，"
         + "或者当前文件中有立即执行的代码使用了依赖于当前文件的类。";
     locale_strings[10019] = "没有找到打包 App 所需要的项目文件，这些文件没有包含在 Github 中，请前往 http://www.egret.com 下载 Egret 安装包，如果您已经安装 Egret 安装包，请联系我们的工作人员";
@@ -267,14 +267,13 @@ var helpModule;
         "create": "创建新项目",
         "build": "构建指定项目,编译指定项目的 TypeScript 文件",
         "publish": "发布项目，使用GoogleClosureCompiler压缩代码",
-        "startserver": "启动HttpServer,并在默认浏览器中打开指定项目",
+        "run": "启动HttpServer,并在默认浏览器中打开指定项目",
         "clean": "重置项目中的引擎代码",
         "create_lib": "创建新第三方库项目",
         "create_app": "从h5游戏生成app",
         "upgrade": "升级项目代码",
         "make": "编译引擎源码",
-        "info": "获得Egret信息",
-        "apitest": "版本升级后检测api是否已经替换完成。限于2.4之前版本升级到2.5（及以上）版本的检测，需要在2.5（及以上）版本项目中输入"
+        "info": "获得Egret信息"
     };
     global["helpModule"] = global["helpModule"] || helpModule;
     //global["helpModule"]["help_dict"] = help_dict;
