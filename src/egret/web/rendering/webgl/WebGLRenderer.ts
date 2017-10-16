@@ -328,13 +328,10 @@ namespace egret.web {
             let scrollRect = displayObject.$scrollRect ? displayObject.$scrollRect : displayObject.$maskRect;
             let mask = displayObject.$mask;
             if (mask) {
-                let maskRenderNode = mask.$getRenderNode();
-                if (maskRenderNode) {
-                    let maskRenderMatrix = maskRenderNode.renderMatrix;
-                    //遮罩scaleX或scaleY为0，放弃绘制
-                    if ((maskRenderMatrix.a == 0 && maskRenderMatrix.b == 0) || (maskRenderMatrix.c == 0 && maskRenderMatrix.d == 0)) {
-                        return drawCalls;
-                    }
+                let maskRenderMatrix = mask.$getMatrix();
+                //遮罩scaleX或scaleY为0，放弃绘制
+                if ((maskRenderMatrix.a == 0 && maskRenderMatrix.b == 0) || (maskRenderMatrix.c == 0 && maskRenderMatrix.d == 0)) {
+                    return drawCalls;
                 }
             }
 

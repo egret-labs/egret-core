@@ -338,15 +338,11 @@ namespace egret {
 
             let scrollRect = displayObject.$scrollRect ? displayObject.$scrollRect : displayObject.$maskRect;
             let mask = displayObject.$mask;
-            let maskRenderNode: sys.RenderNode;
             if (mask) {
-                maskRenderNode = mask.$getRenderNode();
-                if (maskRenderNode) {
-                    let maskRenderMatrix = maskRenderNode.renderMatrix;
-                    //遮罩scaleX或scaleY为0，放弃绘制
-                    if ((maskRenderMatrix.a == 0 && maskRenderMatrix.b == 0) || (maskRenderMatrix.c == 0 && maskRenderMatrix.d == 0)) {
-                        return drawCalls;
-                    }
+                let maskRenderMatrix = mask.$getMatrix();
+                //遮罩scaleX或scaleY为0，放弃绘制
+                if ((maskRenderMatrix.a == 0 && maskRenderMatrix.b == 0) || (maskRenderMatrix.c == 0 && maskRenderMatrix.d == 0)) {
+                    return drawCalls;
                 }
             }
 
@@ -371,7 +367,7 @@ namespace egret {
                 }
                 return drawCalls;
             }
-
+            let maskRenderNode = mask.$getRenderNode();
             //遮罩是单纯的填充图形,且alpha为1,性能优化
             if (mask && Capabilities.$runtimeType == RuntimeType.WEB && (!mask.$children || mask.$children.length == 0) &&
                 maskRenderNode && maskRenderNode.type == sys.RenderNodeType.GraphicsNode &&

@@ -3540,22 +3540,6 @@ declare namespace egret.sys {
          */
         type: number;
         /**
-         * 这个对象在舞台上的整体透明度
-         */
-        renderAlpha: number;
-        /**
-         * 这个对象在舞台上的透明度
-         */
-        renderVisible: boolean;
-        /**
-         * 相对于显示列表根节点或位图缓存根节点上的矩阵对象
-         */
-        renderMatrix: Matrix;
-        /**
-         * 此显示对象自身（不包括子项）在显示列表根节点或位图缓存根节点上的显示尺寸。
-         */
-        renderRegion: sys.Region;
-        /**
          * 绘制数据
          */
         drawData: any[];
@@ -9208,59 +9192,6 @@ declare namespace egret.sys {
      * @private
      */
     let $logToFPS: (info: string) => void;
-}
-/**
- * @private
- */
-interface PlayerOption {
-    /**
-     * 入口类完整类名
-     */
-    entryClassName?: string;
-    /**
-     * 默认帧率
-     */
-    frameRate?: number;
-    /**
-     * 屏幕适配模式
-     */
-    scaleMode?: string;
-    /**
-     * 初始内容宽度
-     */
-    contentWidth?: number;
-    /**
-     * 初始内容高度
-     */
-    contentHeight?: number;
-    /**
-     * 屏幕方向
-     */
-    orientation?: string;
-    /**
-     * 显示FPS
-     */
-    showFPS?: boolean;
-    /**
-     *
-     */
-    fpsStyles?: Object;
-    /**
-     * 显示日志
-     */
-    showLog?: boolean;
-    /**
-     * 过滤日志的正则表达式
-     */
-    logFilter?: string;
-    /**
-     *
-     */
-    maxTouches?: number;
-    /**
-     *
-     */
-    textureScaleFactor?: number;
 }
 declare namespace egret {
     /**
@@ -15076,95 +15007,56 @@ declare namespace egret {
      */
     function toColorString(value: number): string;
 }
-declare namespace egret.sys {
+/**
+ * @private
+ */
+interface PlayerOption {
     /**
-     * @private
+     * 入口类完整类名
      */
-    class Region {
-        /**
-         * @private
-         * 释放一个Region实例到对象池
-         */
-        static release(region: Region): void;
-        /**
-         * @private
-         * 从对象池中取出或创建一个新的Region对象。
-         * 建议对于一次性使用的对象，均使用此方法创建，而不是直接new一个。
-         * 使用完后调用对应的release()静态方法回收对象，能有效减少对象创建数量造成的性能开销。
-         */
-        static create(): Region;
-        /**
-         * @private
-         */
-        minX: number;
-        /**
-         * @private
-         */
-        minY: number;
-        /**
-         * @private
-         */
-        maxX: number;
-        /**
-         * @private
-         */
-        maxY: number;
-        /**
-         * @private
-         */
-        width: number;
-        /**
-         * @private
-         */
-        height: number;
-        /**
-         * @private
-         */
-        area: number;
-        /**
-         * @private
-         * 是否发生移动
-         */
-        moved: boolean;
-        /**
-         * @private
-         */
-        setTo(minX: number, minY: number, maxX: number, maxY: number): Region;
-        /**
-         * @private
-         * 把所有值都取整
-         */
-        intValues(): void;
-        /**
-         * @private
-         */
-        updateArea(): void;
-        /**
-         * @private
-         * 注意！由于性能优化，此方法不判断自身是否为空，必须在外部确认自身和目标区域都不为空再调用合并。否则结果始终从0，0点开始。
-         */
-        union(target: Region): void;
-        /**
-         * @private
-         * 注意！由于性能优化，此方法不判断自身是否为空，必须在外部确认自身和目标区域都不为空再调用合并。否则结果始终从0，0点开始。
-         */
-        intersect(target: Region): void;
-        /**
-         * @private
-         */
-        private setEmpty();
-        /**
-         * @private
-         * 确定此 Region 对象是否为空。
-         */
-        isEmpty(): boolean;
-        /**
-         * @private
-         */
-        intersects(target: Region): boolean;
-        /**
-         * @private
-         */
-        updateRegion(bounds: Rectangle, matrix: Matrix): void;
-    }
+    entryClassName?: string;
+    /**
+     * 默认帧率
+     */
+    frameRate?: number;
+    /**
+     * 屏幕适配模式
+     */
+    scaleMode?: string;
+    /**
+     * 初始内容宽度
+     */
+    contentWidth?: number;
+    /**
+     * 初始内容高度
+     */
+    contentHeight?: number;
+    /**
+     * 屏幕方向
+     */
+    orientation?: string;
+    /**
+     * 显示FPS
+     */
+    showFPS?: boolean;
+    /**
+     *
+     */
+    fpsStyles?: Object;
+    /**
+     * 显示日志
+     */
+    showLog?: boolean;
+    /**
+     * 过滤日志的正则表达式
+     */
+    logFilter?: string;
+    /**
+     *
+     */
+    maxTouches?: number;
+    /**
+     *
+     */
+    textureScaleFactor?: number;
 }

@@ -7095,13 +7095,10 @@ var egret;
                 var scrollRect = displayObject.$scrollRect ? displayObject.$scrollRect : displayObject.$maskRect;
                 var mask = displayObject.$mask;
                 if (mask) {
-                    var maskRenderNode = mask.$getRenderNode();
-                    if (maskRenderNode) {
-                        var maskRenderMatrix = maskRenderNode.renderMatrix;
-                        //遮罩scaleX或scaleY为0，放弃绘制
-                        if ((maskRenderMatrix.a == 0 && maskRenderMatrix.b == 0) || (maskRenderMatrix.c == 0 && maskRenderMatrix.d == 0)) {
-                            return drawCalls;
-                        }
+                    var maskRenderMatrix = mask.$getMatrix();
+                    //遮罩scaleX或scaleY为0，放弃绘制
+                    if ((maskRenderMatrix.a == 0 && maskRenderMatrix.b == 0) || (maskRenderMatrix.c == 0 && maskRenderMatrix.d == 0)) {
+                        return drawCalls;
                     }
                 }
                 //没有遮罩,同时显示对象没有子项

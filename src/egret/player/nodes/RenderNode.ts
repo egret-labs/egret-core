@@ -70,22 +70,6 @@ namespace egret.sys {
          */
         public type:number = 0;
         /**
-         * 这个对象在舞台上的整体透明度
-         */
-        public renderAlpha:number = 1;
-        /**
-         * 这个对象在舞台上的透明度
-         */
-        public renderVisible:boolean = true;
-        /**
-         * 相对于显示列表根节点或位图缓存根节点上的矩阵对象
-         */
-        public renderMatrix:Matrix = new Matrix();
-        /**
-         * 此显示对象自身（不包括子项）在显示列表根节点或位图缓存根节点上的显示尺寸。
-         */
-        public renderRegion:sys.Region = new sys.Region();
-        /**
          * 绘制数据
          */
         public drawData:any[] = [];
