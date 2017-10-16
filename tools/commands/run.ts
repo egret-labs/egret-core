@@ -17,7 +17,7 @@ class Run implements egret.Command {
     private initVersion = "";//初始化的 egret 版本，如果版本变化了，关掉当前的进程
     execute(): number {
         var build = new Build();
-        build.execute(this.onBuildFinish);
+        build.execute().then(this.onBuildFinish)
         return DontExitCode;
     }
 

@@ -81,7 +81,7 @@ var EgretResourceManager = (function () {
             }
             var res, handleException, ResourceManagerUserConfig, command, projectRoot;
             return __generator(this, function (_a) {
-                res = require('../lib/res/res.js');
+                res = require('../lib/resourcemanager');
                 handleException = res.handleException;
                 ResourceManagerUserConfig = res.ResourceManagerUserConfig;
                 command = process.argv[3];

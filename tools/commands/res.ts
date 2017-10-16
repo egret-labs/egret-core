@@ -2,7 +2,7 @@ class EgretResourceManager implements egret.Command {
 
     async execute() {
 
-        let res = require('../lib/res/res.js');
+        let res = require('../lib/resourcemanager');
         let handleException = res.handleException;
         let ResourceManagerUserConfig = res.ResourceManagerUserConfig;
 

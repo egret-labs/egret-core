@@ -28,7 +28,7 @@ var Run = (function () {
     }
     Run.prototype.execute = function () {
         var build = new Build();
-        build.execute(this.onBuildFinish);
+        build.execute().then(this.onBuildFinish);
         return DontExitCode;
     };
     Run.prototype.onGotPort = function (port) {
