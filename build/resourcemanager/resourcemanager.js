@@ -12,7 +12,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
+    var _ = { label: 0, sent: function () { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
     return { next: verb(0), "throw": verb(1), "return": verb(2) };
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
@@ -144,6 +144,9 @@ var RES;
     RES.getResourceInfo = getResourceInfo;
     var configItem;
     function setConfigURL(url) {
+        if (configItem) {
+            return;
+        }
         var type;
         if (url.indexOf(".json") >= 0) {
             type = "legacyResourceConfig";
@@ -467,13 +470,13 @@ var RES;
             var mapper = function (r) {
                 return _this.loadResource(r)
                     .then(function (response) {
-                    RES.host.save(r, response);
-                    current++;
-                    if (reporter && reporter.onProgress) {
-                        reporter.onProgress(current, total);
-                    }
-                    return response;
-                });
+                        RES.host.save(r, response);
+                        current++;
+                        if (reporter && reporter.onProgress) {
+                            reporter.onProgress(current, total);
+                        }
+                        return response;
+                    });
             };
             total = list.length;
             return Promise.all(list.map(mapper));
@@ -628,17 +631,17 @@ var RES;
                 var _this = this;
                 return __generator(this, function (_a) {
                     return [2 /*return*/, new Promise(function (reslove, reject) {
-                            var onSuccess = function () {
-                                var texture = loader['data'] ? loader['data'] : loader['response'];
-                                reslove(texture);
-                            };
-                            var onError = function () {
-                                var e = new RES.ResourceManagerError(1001, resource.url);
-                                reject(e);
-                            };
-                            loader.addEventListener(egret.Event.COMPLETE, onSuccess, _this);
-                            loader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, _this);
-                        })];
+                        var onSuccess = function () {
+                            var texture = loader['data'] ? loader['data'] : loader['response'];
+                            reslove(texture);
+                        };
+                        var onError = function () {
+                            var e = new RES.ResourceManagerError(1001, resource.url);
+                            reject(e);
+                        };
+                        loader.addEventListener(egret.Event.COMPLETE, onSuccess, _this);
+                        loader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, _this);
+                    })];
                 });
             });
         }
@@ -938,20 +941,20 @@ var RES;
                 var imageResource;
                 return host.load(resource, processor_1.JsonProcessor)
                     .then(function (value) {
-                    mcData = value;
-                    var jsonPath = resource.name;
-                    var imagePath = jsonPath.substring(0, jsonPath.lastIndexOf(".")) + ".png";
-                    imageResource = host.resourceConfig.getResource(imagePath, true);
-                    if (!imageResource) {
-                        throw new RES.ResourceManagerError(1001, imagePath);
-                    }
-                    return host.load(imageResource);
-                }).then(function (value) {
-                    host.save(imageResource, value);
-                    var mcTexture = value;
-                    var mcDataFactory = new egret.MovieClipDataFactory(mcData, mcTexture);
-                    return mcDataFactory;
-                });
+                        mcData = value;
+                        var jsonPath = resource.name;
+                        var imagePath = jsonPath.substring(0, jsonPath.lastIndexOf(".")) + ".png";
+                        imageResource = host.resourceConfig.getResource(imagePath, true);
+                        if (!imageResource) {
+                            throw new RES.ResourceManagerError(1001, imagePath);
+                        }
+                        return host.load(imageResource);
+                    }).then(function (value) {
+                        host.save(imageResource, value);
+                        var mcTexture = value;
+                        var mcDataFactory = new egret.MovieClipDataFactory(mcData, mcTexture);
+                        return mcDataFactory;
+                    });
             },
             onRemoveStart: function (host, resource) {
                 var mcFactory = host.get(resource);
@@ -1074,9 +1077,11 @@ var RES;
                 });
             },
             onRemoveStart: function () {
-                return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
-                    return [2 /*return*/];
-                }); });
+                return __awaiter(this, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        return [2 /*return*/];
+                    });
+                });
             }
         };
         var PVRParser = (function () {

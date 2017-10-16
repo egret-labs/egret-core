@@ -11,9 +11,15 @@
     <meta name="x5-fullscreen" content="true" />
     <meta name="360-fullscreen" content="true" />
     <style>
-        html, body {
+        html,
+        body {
             -ms-touch-action: none;
-            background: {{=it.background}};
+            background: {
+                    {
+                    =it.background
+                }
+            }
+            ;
             padding: 0;
             border: 0;
             margin: 0;
@@ -23,66 +29,57 @@
 </head>
 
 <body>
-    <div style="margin: auto;width: 100%;height: 100%;" class="egret-player"
-         data-entry-class="Main"
-         data-orientation="{{=it.orientationMode}}"
-         data-scale-mode="{{=it.scaleMode}}"
-         data-frame-rate="{{=it.frameRate}}"
-         data-content-width="{{=it.contentWidth}}"
-         data-content-height="{{=it.contentHeight}}"
-         data-show-paint-rect="false"
-         data-multi-fingered="2"
-         data-show-fps="false" data-show-log="false"
-         data-show-fps-style="x:0,y:0,size:12,textColor:0xffffff,bgAlpha:0.9">
+    <div style="margin: auto;width: 100%;height: 100%;" class="egret-player" data-entry-class="Main" data-orientation="{{=it.orientationMode}}"
+        data-scale-mode="{{=it.scaleMode}}" data-frame-rate="{{=it.frameRate}}" data-content-width="{{=it.contentWidth}}" data-content-height="{{=it.contentHeight}}"
+        data-show-paint-rect="false" data-multi-fingered="2" data-show-fps="false" data-show-log="false" data-show-fps-style="x:0,y:0,size:12,textColor:0xffffff,bgAlpha:0.9">
     </div>
-<script>
-    var loadScript = function (list, callback) {
-        var loaded = 0;
-        var loadNext = function () {
-            loadSingleScript(list[loaded], function () {
-                loaded++;
-                if (loaded >= list.length) {
-                    callback();
-                }
-                else {
-                    loadNext();
-                }
-            })
+    <script>
+        var loadScript = function (list, callback) {
+            var loaded = 0;
+            var loadNext = function () {
+                loadSingleScript(list[loaded], function () {
+                    loaded++;
+                    if (loaded >= list.length) {
+                        callback();
+                    }
+                    else {
+                        loadNext();
+                    }
+                })
+            };
+            loadNext();
         };
-        loadNext();
-    };
 
-    var loadSingleScript = function (src, callback) {
-        var s = document.createElement('script');
-        s.async = false;
-        s.src = src;
-        s.addEventListener('load', function () {
-            s.parentNode.removeChild(s);
-            s.removeEventListener('load', arguments.callee, false);
-            callback();
-        }, false);
-        document.body.appendChild(s);
-    };
+        var loadSingleScript = function (src, callback) {
+            var s = document.createElement('script');
+            s.async = false;
+            s.src = src;
+            s.addEventListener('load', function () {
+                s.parentNode.removeChild(s);
+                s.removeEventListener('load', arguments.callee, false);
+                callback();
+            }, false);
+            document.body.appendChild(s);
+        };
 
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', './manifest.json?v=' + Math.random(), true);
-    xhr.addEventListener("load", function () {
-        var manifest = JSON.parse(xhr.response);
-        var list = manifest.initial.concat(manifest.game);
-        loadScript(list, function () {
-             /**
-             * {
-             * "renderMode":, //Engine rendering mode, "canvas" or "webgl"
-             * "audioType": 0 //Use the audio type, 0: default, 2: web audio, 3: audio
-             * "antialias": //Whether the anti-aliasing is enabled in WebGL mode, true: on, false: off, defaults to false
-             * "retina": //Whether the canvas is based on the devicePixelRatio
-             * }
-             **/
-            egret.runEgret({ renderMode: "webgl", audioType: 0 });
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', './manifest.json?v=' + Math.random(), true);
+        xhr.addEventListener("load", function () {
+            var manifest = JSON.parse(xhr.response);
+            loadScript(manifest.initial, function () {
+                /**
+                * {
+                * "renderMode":, //Engine rendering mode, "canvas" or "webgl"
+                * "audioType": 0 //Use the audio type, 0: default, 2: web audio, 3: audio
+                * "antialias": //Whether the anti-aliasing is enabled in WebGL mode, true: on, false: off, defaults to false
+                * "retina": //Whether the canvas is based on the devicePixelRatio
+                * }
+                **/
+                egret.runEgret({ renderMode: "webgl", audioType: 0 });
+            });
         });
-    });
-    xhr.send(null);
-</script>
+        xhr.send(null);
+    </script>
 </body>
 
 </html>
