@@ -1,4 +1,3 @@
-/// <reference path="../lib/types.d.ts" />
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -38,9 +37,8 @@ var utils = require("../lib/utils");
 var service = require("../service/index");
 var FileUtil = require("../lib/FileUtil");
 var project = require("../project/EgretProject");
-var ts = require("../lib/typescript-plus/lib/typescript");
-var path = require("path");
 var Compiler = require("../actions/Compiler");
+var path = require("path");
 console.log(utils.tr(1004, 0));
 var Build = (function () {
     function Build() {
@@ -57,7 +55,6 @@ var Build = (function () {
                         var timeBuildEnd = (new Date()).getTime();
                         var timeBuildUsed = (timeBuildEnd - timeBuildStart) / 1000;
                         console.log(utils.tr(1108, timeBuildUsed));
-                        console.log(2);
                         resolve();
                     }); }, true);
                 });
