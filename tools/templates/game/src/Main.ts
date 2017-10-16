@@ -38,9 +38,7 @@ class Main extends egret.DisplayObjectContainer {
 
         egret.lifecycle.addLifecycleListener((context) => {
             // custom lifecycle plugin
-
             context.onUpdate = () => {
-                console.log('hello,world')
             }
         })
 
@@ -54,8 +52,9 @@ class Main extends egret.DisplayObjectContainer {
 
 
 
-        this.loadGame().then(() => {
+        this.loadGame().then(async () => {
             this.createGameScene();
+            this.startAnimation();
         }).catch(() => {
 
         })
@@ -93,7 +92,7 @@ class Main extends egret.DisplayObjectContainer {
      * Create a game scene
      */
     private createGameScene() {
-        let sky = this.createBitmapByName("bg_jpg");
+        let sky = this.createBitmapByName("assets/bg.jpg");
         this.addChild(sky);
         let stageW = this.stage.stageWidth;
         let stageH = this.stage.stageHeight;
@@ -106,8 +105,7 @@ class Main extends egret.DisplayObjectContainer {
         topMask.graphics.endFill();
         topMask.y = 33;
         this.addChild(topMask);
-
-        let icon = this.createBitmapByName("egret_icon_png");
+        let icon = this.createBitmapByName("assets/egret_icon.png");
         this.addChild(icon);
         icon.x = 26;
         icon.y = 33;
@@ -143,9 +141,7 @@ class Main extends egret.DisplayObjectContainer {
         textfield.y = 135;
         this.textfield = textfield;
 
-        //根据name关键字，异步获取一个json配置文件，name属性请参考resources/resource.json配置文件的内容。
-        // Get asynchronously a json configuration file according to name keyword. As for the property of name please refer to the configuration file of resources/resource.json.
-        RES.getResAsync("description_json", this.startAnimation, this)
+
     }
 
     /**
@@ -159,13 +155,10 @@ class Main extends egret.DisplayObjectContainer {
         return result;
     }
 
-    /**
-     * 描述文件加载成功，开始播放动画
-     * Description file loading is successful, start to play the animation
-     */
-    private startAnimation(result: string[]) {
-        let parser = new egret.HtmlTextParser();
+    private async startAnimation() {
 
+        const result: string[] = await RES.getResAsync("config/description.json");
+        let parser = new egret.HtmlTextParser();
         let textflowArr = result.map(text => parser.parse(text));
         let textfield = this.textfield;
         let count = -1;
