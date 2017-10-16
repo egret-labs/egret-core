@@ -37,16 +37,25 @@ var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var path = require("path");
 var manifest = {
-    initial: []
+    initial: [],
+    configURL: ""
 };
 exports.default = {
     name: "manifest",
     onFile: function (file) { return __awaiter(_this, void 0, void 0, function () {
-        var filename, extname, crc32, crc32_file_path, origin_path, new_file_path;
+        var filename, extname, crc32, crc32_file_path, origin_path, new_file_path, crc32, crc32_file_path, origin_path, new_file_path;
         return __generator(this, function (_a) {
             filename = file.original_relative;
             extname = path.extname(filename);
-            if (extname == ".js" && !file.isExistedInResourceFolder) {
+            if (filename === "config.res.js") {
+                crc32 = globals.getCrc32();
+                crc32_file_path = crc32(file.contents);
+                origin_path = file.original_relative;
+                new_file_path = "js/" + origin_path.substr(0, origin_path.length - file.extname.length) + "_" + crc32_file_path + file.extname;
+                file.path = path.join(file.base, new_file_path);
+                manifest.configURL = new_file_path;
+            }
+            else if (extname == ".js" && !file.isExistedInResourceFolder) {
                 crc32 = globals.getCrc32();
                 crc32_file_path = crc32(file.contents);
                 origin_path = file.original_relative;
