@@ -419,8 +419,9 @@
         "defaultHeight": 1136,
         "modules": [
           "egret",
+          "game",
           "eui",
-          "res",
+          "resourcemanager",
           "tween"
         ]
       },
