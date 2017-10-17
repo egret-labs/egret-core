@@ -1574,10 +1574,10 @@ namespace egret {
                 tmpBounds.width += _strokeDouble * 2;
                 tmpBounds.height += _strokeDouble * 2;
             }
-            tmpBounds.x -= _strokeDouble;
-            tmpBounds.y -= _strokeDouble;
-            tmpBounds.width = Math.ceil(tmpBounds.width);
-            tmpBounds.height = Math.ceil(tmpBounds.height);
+            tmpBounds.x -= _strokeDouble + 2;//+2和+4 是为了webgl纹理太小导致裁切问题
+            tmpBounds.y -= _strokeDouble + 2;
+            tmpBounds.width = Math.ceil(tmpBounds.width) + 4;
+            tmpBounds.height = Math.ceil(tmpBounds.height) + 4;
             return tmpBounds;
         }
 
