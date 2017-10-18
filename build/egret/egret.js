@@ -5704,6 +5704,9 @@ var egret;
             // this.$uniforms.quality = quality;
             _this.$uniforms.inner = inner ? 1 : 0;
             _this.$uniforms.knockout = knockout ? 0 : 1;
+            _this.$uniforms.dist = 0;
+            _this.$uniforms.angle = 0;
+            _this.$uniforms.hideObject = 0;
             return _this;
         }
         Object.defineProperty(GlowFilter.prototype, "color", {
