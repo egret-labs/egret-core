@@ -226,6 +226,9 @@ namespace egret {
 
         private static _displayList = egret.createMap<DisplayObject[]>();
         static $addDisplayObject(displayObject: DisplayObject, bitmapData: BitmapData): void {
+            if(!bitmapData) {
+                return;
+            }
             let hashCode: number = bitmapData.hashCode;
             if (!hashCode) {
                 return;
@@ -241,6 +244,9 @@ namespace egret {
         }
 
         static $removeDisplayObject(displayObject: DisplayObject, bitmapData: BitmapData): void {
+            if(!bitmapData) {
+                return;
+            }
             let hashCode: number = bitmapData.hashCode;
             if (!hashCode) {
                 return;
@@ -256,6 +262,9 @@ namespace egret {
         }
 
         static $invalidate(bitmapData: BitmapData): void {
+            if(!bitmapData) {
+                return;
+            }
             let hashCode: number = bitmapData.hashCode;
             if (!hashCode) {
                 return;
@@ -273,6 +282,9 @@ namespace egret {
         }
 
         static $dispose(bitmapData: BitmapData): void {
+            if(!bitmapData) {
+                return;
+            }
             let hashCode: number = bitmapData.hashCode;
             if (!hashCode) {
                 return;

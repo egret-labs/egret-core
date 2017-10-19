@@ -8287,6 +8287,9 @@ var egret;
             BitmapData.$dispose(this);
         };
         BitmapData.$addDisplayObject = function (displayObject, bitmapData) {
+            if (!bitmapData) {
+                return;
+            }
             var hashCode = bitmapData.hashCode;
             if (!hashCode) {
                 return;
@@ -8301,6 +8304,9 @@ var egret;
             }
         };
         BitmapData.$removeDisplayObject = function (displayObject, bitmapData) {
+            if (!bitmapData) {
+                return;
+            }
             var hashCode = bitmapData.hashCode;
             if (!hashCode) {
                 return;
@@ -8315,6 +8321,9 @@ var egret;
             }
         };
         BitmapData.$invalidate = function (bitmapData) {
+            if (!bitmapData) {
+                return;
+            }
             var hashCode = bitmapData.hashCode;
             if (!hashCode) {
                 return;
@@ -8331,6 +8340,9 @@ var egret;
             }
         };
         BitmapData.$dispose = function (bitmapData) {
+            if (!bitmapData) {
+                return;
+            }
             var hashCode = bitmapData.hashCode;
             if (!hashCode) {
                 return;
