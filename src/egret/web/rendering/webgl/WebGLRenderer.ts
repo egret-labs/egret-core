@@ -204,7 +204,7 @@ namespace egret.web {
             }
 
             let bounds = displayObject.$getOriginalBounds();
-            if(bounds.width <= 0 || bounds.height <= 0) {
+            if (bounds.width <= 0 || bounds.height <= 0) {
                 return drawCalls;
             }
 
@@ -291,15 +291,15 @@ namespace egret.web {
             return drawCalls;
         }
 
-        private getRenderCount(displayObject:DisplayObject): number {
+        private getRenderCount(displayObject: DisplayObject): number {
             let childrenDrawCount = 0;
             if (displayObject.$children) {
                 for (let child of displayObject.$children) {
                     let node = child.$getRenderNode();
-                    if(node) {
+                    if (node) {
                         childrenDrawCount += node.$getRenderCount();
                     }
-                    if(child.$children) {
+                    if (child.$children) {
                         childrenDrawCount += this.getRenderCount(child);
                     }
                 }
@@ -342,7 +342,7 @@ namespace egret.web {
             let maskRegion: sys.Region;
             let displayMatrix = Matrix.create();
             displayMatrix.copyFrom(displayObject.$getConcatenatedMatrix());
-            if(root) {
+            if (root) {
                 displayObject.$getConcatenatedMatrixAt(root, displayMatrix);
             }
             else if (displayObject.$parentDisplayList) {
@@ -358,7 +358,7 @@ namespace egret.web {
                 maskRegion = sys.Region.create();
                 let m = Matrix.create();
                 m.copyFrom(mask.$getConcatenatedMatrix());
-                if(root) {
+                if (root) {
                     mask.$getConcatenatedMatrixAt(root, m);
                 }
                 maskRegion.updateRegion(bounds, m);
@@ -388,7 +388,7 @@ namespace egret.web {
                 bounds = displayObject.$getOriginalBounds();
                 region.updateRegion(bounds, displayMatrix);
             }
-            if(region.width <= 0 || region.height <= 0) {
+            if (region.width <= 0 || region.height <= 0) {
                 return drawCalls;
             }
             let found = false;
@@ -771,14 +771,14 @@ namespace egret.web {
                 buffer.context.$filter = node.filter;
                 while (pos < length) {
                     buffer.context.drawMesh(image, data[pos++], data[pos++], data[pos++], data[pos++],
-                    data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds, node.smoothing);
+                        data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds, node.rotated, node.smoothing);
                 }
                 buffer.context.$filter = null;
             }
             else {
                 while (pos < length) {
                     buffer.context.drawMesh(image, data[pos++], data[pos++], data[pos++], data[pos++],
-                    data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds, node.smoothing);
+                        data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds, node.rotated, node.smoothing);
                 }
             }
             if (blendMode) {

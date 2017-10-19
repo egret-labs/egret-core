@@ -91,6 +91,10 @@ namespace egret.sys {
          */
         public filter: ColorMatrixFilter = null;
         /**
+         * 翻转
+         */
+        public rotated: boolean = false;
+        /**
          * 绘制一次位图
          */
         public drawMesh(sourceX:number, sourceY:number, sourceW:number, sourceH:number,

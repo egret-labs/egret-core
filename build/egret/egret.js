@@ -5704,6 +5704,9 @@ var egret;
             // this.$uniforms.quality = quality;
             _this.$uniforms.inner = inner ? 1 : 0;
             _this.$uniforms.knockout = knockout ? 0 : 1;
+            _this.$uniforms.dist = 0;
+            _this.$uniforms.angle = 0;
+            _this.$uniforms.hideObject = 0;
             return _this;
         }
         Object.defineProperty(GlowFilter.prototype, "color", {
@@ -15733,6 +15736,10 @@ var egret;
                  * 颜色变换滤镜
                  */
                 _this.filter = null;
+                /**
+                 * 翻转
+                 */
+                _this.rotated = false;
                 _this.type = 7 /* MeshNode */;
                 _this.vertices = [];
                 _this.uvs = [];
@@ -18084,7 +18091,7 @@ var egret;
              * @language zh_CN
              */
             get: function () {
-                return "5.0.8";
+                return "5.0.9";
             },
             enumerable: true,
             configurable: true

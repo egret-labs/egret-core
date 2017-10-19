@@ -141,12 +141,16 @@ namespace egret.web {
             let originalD = locWorldTransform.d;
             let originalTx = locWorldTransform.tx;
             let originalTy = locWorldTransform.ty;
-            if (destX != 0 || destY != 0) {
-                locWorldTransform.append(1, 0, 0, 1, destX, destY);
+            // Only scale unmeshed texture.
+            if (!meshVertices) {
+                if (destX != 0 || destY != 0) {
+                    locWorldTransform.append(1, 0, 0, 1, destX, destY);
+                }
+                if (sourceWidth / destWidth != 1 || sourceHeight / destHeight != 1) {
+                    locWorldTransform.append(destWidth / sourceWidth, 0, 0, destHeight / sourceHeight, 0, 0);
+                }
             }
-            if (sourceWidth / destWidth != 1 || sourceHeight / destHeight != 1) {
-                locWorldTransform.append(destWidth / sourceWidth, 0, 0, destHeight / sourceHeight, 0, 0);
-            }
+
             let a = locWorldTransform.a;
             let b = locWorldTransform.b;
             let c = locWorldTransform.c;
@@ -168,19 +172,25 @@ namespace egret.web {
                 let i = 0, iD = 0, l = 0;
                 let u = 0, v = 0, x = 0, y = 0;
                 for (i = 0, l = meshUVs.length; i < l; i += 2) {
-                    iD = i * 5 / 2;
+                    iD = index + i * 5 / 2;
                     x = meshVertices[i];
                     y = meshVertices[i + 1];
                     u = meshUVs[i];
                     v = meshUVs[i + 1];
                     // xy
-                    vertices[index + iD + 0] = a * x + c * y + tx;
-                    vertices[index + iD + 1] = b * x + d * y + ty;
+                    vertices[iD + 0] = a * x + c * y + tx;
+                    vertices[iD + 1] = b * x + d * y + ty;
                     // uv
-                    vertices[index + iD + 2] = (sourceX + u * sourceWidth) / textureSourceWidth;
-                    vertices[index + iD + 3] = (sourceY + v * sourceHeight) / textureSourceHeight;
+                    if (rotated) {
+                        vertices[iD + 2] = (sourceX + (1.0 - v) * sourceHeight) / textureSourceWidth;
+                        vertices[iD + 3] = (sourceY + u * sourceWidth) / textureSourceHeight;
+                    }
+                    else {
+                        vertices[iD + 2] = (sourceX + u * sourceWidth) / textureSourceWidth;
+                        vertices[iD + 3] = (sourceY + v * sourceHeight) / textureSourceHeight;
+                    }
                     // alpha
-                    vertices[index + iD + 4] = alpha;
+                    vertices[iD + 4] = alpha;
                 }
                 // 缓存索引数组
                 if (this.hasMesh) {

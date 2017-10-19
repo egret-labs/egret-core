@@ -16,7 +16,7 @@
     "modules": [
       {
         "name": "egret",
-        "description": "egret 核心库",
+        "description": "egret core lib",
         "description_en": "egret core lib",
         "files": [
           {
@@ -289,7 +289,7 @@
       },
       {
         "name": "game",
-        "description": "game 游戏库",
+        "description": "game lib",
         "description_en": "game lib",
         "files": [],
         "root": "src/extension/game",
@@ -299,7 +299,7 @@
       },
       {
         "name": "res",
-        "description": "res 资源加载库",
+        "description": "resource lib",
         "description_en": "resource lib",
         "files": [],
         "root": "src/extension/resource",
@@ -310,7 +310,7 @@
       },
       {
         "name": "eui",
-        "description": "eui 界面制作库",
+        "description": "UI lib",
         "description_en": "UI lib",
         "files": [],
         "root": "src/extension/eui",
@@ -320,7 +320,7 @@
       },
       {
         "name": "experimental",
-        "description": "egret实验功能库",
+        "description": "egret experimental function lib",
         "description_en": "egret experimental function lib",
         "files": [],
         "root": "src/extension/experimental",
@@ -330,7 +330,7 @@
       },
       {
         "name": "tween",
-        "description": "tween 缓动动画库",
+        "description": "tween slow motion animation lib",
         "description_en": "tween slow motion animation lib",
         "files": [],
         "root": "src/extension/tween",
@@ -340,7 +340,7 @@
       },
       {
         "name": "socket",
-        "description": "socket 网络通讯库",
+        "description": "socket network communication lib",
         "description_en": "socket network communication lib",
         "files": [],
         "root": "src/extension/socket",
@@ -350,7 +350,7 @@
       },
       {
         "name": "dragonBones",
-        "description": "dragonbones 龙骨动画库",
+        "description": "dragonbones animation lib",
         "description_en": "dragonbones animation lib",
         "files": [],
         "root": "",
@@ -358,7 +358,7 @@
       },
       {
         "name": "egret3d",
-        "description": "egret 3D引擎库",
+        "description": "egret 3D engine lib",
         "description_en": "egret 3D engine lib",
         "files": [],
         "root": "",
@@ -383,11 +383,11 @@
     "templates": [
       {
         "name": "empty",
-        "displayName": "空 Egret 项目",
+        "displayName": "Empty Egret project",
         "displayName_en": "Empty Egret project",
         "language": "TypeScript",
         "tag": "game,app,TypeScript",
-        "description": "创建一个空项目,仅添加 Egret 相关模块引用",
+        "description": "Create an empty project, add only reference to Egret related modules",
         "description_en": "Create an empty project, add only reference to Egret related modules",
         "defaultWidth": 640,
         "defaultHeight": 1136,
@@ -397,11 +397,11 @@
       },
       {
         "name": "game",
-        "displayName": "Egret 游戏项目",
+        "displayName": "Egret game project",
         "displayName_en": "Egret game project",
         "language": "TypeScript",
         "tag": "game,TypeScript",
-        "description": "创建一个 Egret 游戏项目",
+        "description": "Create an Egret game project",
         "description_en": "Create an Egret game project",
         "defaultWidth": 640,
         "defaultHeight": 1136,
@@ -414,11 +414,11 @@
       },
       {
         "name": "eui",
-        "displayName": "Egret EUI 项目",
+        "displayName": "Egret EUI project",
         "displayName_en": "Egret EUI project",
         "language": "TypeScript",
         "tag": "game,app,TypeScript",
-        "description": "使用 eui 扩展库创建友好的交互界面",
+        "description": "Create friendly interactive UI with eui extensions",
         "description_en": "Create friendly interactive UI with eui extensions",
         "defaultWidth": 640,
         "defaultHeight": 1136,
@@ -431,11 +431,11 @@
       },
       {
         "name": "egret3d",
-        "displayName": "Egret 3D 项目",
+        "displayName": "Egret 3D project",
         "displayName_en": "Egret 3D project",
         "language": "TypeScript",
         "tag": "game,app,TypeScript",
-        "description": "创建一个 Egret 3D 项目",
+        "description": "Create an Egret 3D project",
         "description_en": "Create an Egret 3D project",
         "defaultWidth": 640,
         "defaultHeight": 960,
@@ -446,11 +446,11 @@
       },
       {
         "name": "facebook-instant-demo",
-        "displayName": "Facebook Instant Game Demo 项目",
+        "displayName": "Facebook Instant Game Demo project",
         "displayName_en": "Facebook Instant Game Demo project",
         "language": "TypeScript",
         "tag": "game,app,TypeScript",
-        "description": "Facebook 推出的一种游戏类型",
+        "description": "A Facebook game type",
         "description_en": "A Facebook game type",
         "defaultWidth": 640,
         "defaultHeight": 1136,
@@ -464,11 +464,11 @@
       },
       {
         "name": "res-examples",
-        "displayName": "ResourceManager 示例项目",
+        "displayName": "ResourceManager sample project",
         "displayName_en": "ResourceManager sample project",
         "language": "TypeScript",
         "tag": "game,app,TypeScript",
-        "description": "ResourceManager 示例项目",
+        "description": "ResourceManager sample project",
         "description_en": "ResourceManager sample project",
         "defaultWidth": 640,
         "defaultHeight": 1136,
@@ -482,11 +482,11 @@
       },
       {
         "name": "wasm",
-        "displayName": "WebAssembly 示例项目",
+        "displayName": "WebAssembly sample project",
         "displayName_en": "WebAssembly sample project",
         "language": "TypeScript",
         "tag": "game,app,TypeScript,WebAssembly",
-        "description": "WebAssembly 示例项目",
+        "description": "WebAssembly sample project",
         "description_en": "WebAssembly sample project",
         "defaultWidth": 640,
         "defaultHeight": 1136,
@@ -500,64 +500,64 @@
     "scaleModes": [
       {
         "name": "showAll",
-        "description": "保持原始宽高比缩放应用程序内容，缩放后应用程序内容的较宽方向填满播放器视口，另一个方向的两侧可能会不够宽而留有黑边。在此模式下，舞台尺寸(Stage.stageWidth,Stage.stageHeight)始终等于初始化时外部传入的应用程序内容尺寸。",
+        "description": "Scale app content with original aspect ratio. The wider direction of the scaled app content fills the player window while the other direction may not be wide enough and leave some black bars. In this mode, stage size (Stage.stageWidth,Stage.stageHeight) stays the same as app content size passed externally upon initiation.",
         "description_en": "Scale app content with original aspect ratio. The wider direction of the scaled app content fills the player window while the other direction may not be wide enough and leave some black bars. In this mode, stage size (Stage.stageWidth,Stage.stageHeight) stays the same as app content size passed externally upon initiation."
       },
       {
         "name": "noScale",
-        "description": "不缩放应用程序内容。即使在更改播放器视口大小时，它仍然保持不变。如果播放器视口比内容小，则可能进行一些裁切。在此模式下，舞台尺寸（Stage.stageWidth,Stage.stageHeight）始终跟播放器视口大小保持一致。",
+        "description": "Don't scale app content. Content size stay intact even when player window is changed. If player window is smaller than the content, crop may be applied. In this mode, stage size (Stage.stageWidth,Stage.stageHeight）stay the same as player window.",
         "description_en": "Don't scale app content. Content size stay intact even when player window is changed. If player window is smaller than the content, crop may be applied. In this mode, stage size (Stage.stageWidth,Stage.stageHeight）stay the same as player window."
       },
       {
         "name": "noBorder",
-        "description": "保持原始宽高比缩放应用程序内容，缩放后应用程序内容的较窄方向填满播放器视口，另一个方向的两侧可能会超出播放器视口而被裁切。在此模式下，舞台尺寸(Stage.stageWidth,Stage.stageHeight)始终等于初始化时外部传入的应用程序内容尺寸。",
+        "description": "Scale app content with original aspect ratio. The narrower direction of scaled content fills player window while the other direction may overflow player window and be cropped. In this mode, stage size (Stage.stageWidth,Stage.stageHeight) stays the same as app content size passed externally upon initiation.",
         "description_en": "Scale app content with original aspect ratio. The narrower direction of scaled content fills player window while the other direction may overflow player window and be cropped. In this mode, stage size (Stage.stageWidth,Stage.stageHeight) stays the same as app content size passed externally upon initiation."
       },
       {
         "name": "exactFit",
-        "description": "不保持原始宽高比缩放应用程序内容，缩放后应用程序内容正好填满播放器视口。在此模式下，舞台尺寸(Stage.stageWidth,Stage.stageHeight)始终等于初始化时外部传入的应用程序内容尺寸。",
+        "description": "Scale app content without keeping original aspect ratio and the scaled content fits well in the player window. In this mode, stage size (Stage.stageWidth,Stage.stageHeight) stays the same as app content size passed externally during initiation.",
         "description_en": "Scale app content without keeping original aspect ratio and the scaled content fits well in the player window. In this mode, stage size (Stage.stageWidth,Stage.stageHeight) stays the same as app content size passed externally during initiation."
       },
       {
         "name": "fixedWidth",
-        "description": "保持原始宽高比缩放应用程序内容，缩放后应用程序内容在水平和垂直方向都填满播放器视口，但只保持应用程序内容的原始宽度不变，高度可能会改变。在此模式下，舞台宽度(Stage.stageWidth)始终等于初始化时外部传入的应用程序内容宽度。舞台高度(Stage.stageHeight)由当前的缩放比例与播放器视口高度决定。",
+        "description": "Scale app content with original aspect ratio and scaled content fills player window both horizontally and vertically，but only the content's original width will not change while its height may change. In this mode, stage width (Stage.stageWidth) stays the same as the app content width passed externally upon initiation. Stage height (Stage.stageHeight) is determined by current scale ratio and the height of player window.",
         "description_en": "Scale app content with original aspect ratio and scaled content fills player window both horizontally and vertically，but only the content's original width will not change while its height may change. In this mode, stage width (Stage.stageWidth) stays the same as the app content width passed externally upon initiation. Stage height (Stage.stageHeight) is determined by current scale ratio and the height of player window."
       },
       {
         "name": "fixedHeight",
-        "description": "保持原始宽高比缩放应用程序内容，缩放后应用程序内容在水平和垂直方向都填满播放器视口，但只保持应用程序内容的原始高度不变，宽度可能会改变。在此模式下，舞台高度(Stage.stageHeight)始终等于初始化时外部传入的应用程序内容高度。舞台宽度(Stage.stageWidth)由当前的缩放比例与播放器视口宽度决定。",
+        "description": "Scale app content with original aspect ratio and scaled content fills player window both horizontally and vertically，but only the content's original height will not change while its width may change. In this mode, stage height (Stage.stageHeight) stays the same as the app content height passed externally upon initiation. Stage width (Stage.stageWidth) is determined by current scale ratio and the width of player window.",
         "description_en": "Scale app content with original aspect ratio and scaled content fills player window both horizontally and vertically，but only the content's original height will not change while its width may change. In this mode, stage height (Stage.stageHeight) stays the same as the app content height passed externally upon initiation. Stage width (Stage.stageWidth) is determined by current scale ratio and the width of player window."
       },
       {
         "name": "fixedNarrow",
-        "description": "保持原始宽高比缩放应用程序内容，缩放后应用程序内容在水平和垂直方向都填满播放器视口，应用程序内容的较窄方向可能会不够宽而填充。在此模式下，舞台高度(Stage.stageHeight)和舞台宽度(Stage.stageWidth)由当前的缩放比例与播放器视口宽高决定。",
+        "description": "Scale app content with original aspect ratio and scaled content fills player window both horizontally and vertically. The narrower direction of the content may not be wide enough and padded up. In this mode, stage height (Stage.stageHeight) and stage width (Stage.stageWidth) will be determined by current scale ratio and player window size。",
         "description_en": "Scale app content with original aspect ratio and scaled content fills player window both horizontally and vertically. The narrower direction of the content may not be wide enough and padded up. In this mode, stage height (Stage.stageHeight) and stage width (Stage.stageWidth) will be determined by current scale ratio and player window size。"
       },
       {
         "name": "fixedWide",
-        "description": "保持原始宽高比缩放应用程序内容，缩放后应用程序内容在水平和垂直方向都填满播放器视口，应用程序内容的较宽方向的两侧可能会超出播放器视口而被裁切。在此模式下，舞台高度(Stage.stageHeight)和舞台宽度(Stage.stageWidth)由当前的缩放比例与播放器视口宽高决定。",
+        "description": "Scale app content with original aspect ratio and scaled content fills player window both horizontally and vertically. The wider direction of app content may outgrow player window and be cropped. In this mode, stage height (Stage.stageHeight) and stage width (Stage.stageWidth) will be determined by current scale ratio and player window's width and height",
         "description_en": "Scale app content with original aspect ratio and scaled content fills player window both horizontally and vertically. The wider direction of app content may outgrow player window and be cropped. In this mode, stage height (Stage.stageHeight) and stage width (Stage.stageWidth) will be determined by current scale ratio and player window's width and height"
       }
     ],
     "orientationModes": [
       {
         "name": "auto",
-        "description": "不强制旋转应用程序。应用程序随设备旋转而旋转",
+        "description": "Don't force app to rotate. App rotates with device",
         "description_en": "Don't force app to rotate. App rotates with device"
       },
       {
         "name": "portrait",
-        "description": "强制旋转应用程序至竖屏状态。此模式下，当屏幕宽度大于屏幕高度时，会自动将应用程序逆时针旋转90°。",
+        "description": "Force app to rotate to portrait mode. In this mode, when screen width is greater than screen height, app will be automatically rotated 90° counterclockwise.",
         "description_en": "Force app to rotate to portrait mode. In this mode, when screen width is greater than screen height, app will be automatically rotated 90° counterclockwise."
       },
       {
         "name": "landscape",
-        "description": "强制旋转应用程序至横屏状态。此模式下，当屏幕高度大于屏幕宽度时，会自动将应用程序顺时针旋转90°。",
+        "description": "Force app to rotate to landscape mode. In this mode, when screen height is greater than screen width, the app will be automatically rotated 90° clockwise.",
         "description_en": "Force app to rotate to landscape mode. In this mode, when screen height is greater than screen width, the app will be automatically rotated 90° clockwise."
       },
       {
         "name": "landscapeFlipped",
-        "description": "强制旋转应用程序至横屏状态。此模式下，当屏幕高度大于屏幕宽度时，会自动将应用程序逆时针旋转90°。",
+        "description": "Force app to rotate to landscape mode. In this mode, when screen height is greater than screen width, the app will be automatically rotated 90° counterclockwise.",
         "description_en": "Force app to rotate to landscape mode. In this mode, when screen height is greater than screen width, the app will be automatically rotated 90° counterclockwise."
       }
     ]
