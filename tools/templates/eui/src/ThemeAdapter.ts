@@ -38,6 +38,7 @@ class ThemeAdapter implements eui.IThemeAdapter {
      * @param thisObject 回调的this引用
      */
     public getTheme(url: string, compFunc: Function, errorFunc: Function, thisObject: any): void {
+        url = url.replace("resource/", "");
         RES.getResAsync(url).then((data: string) => {
             compFunc(data)
         }).catch((error) => {

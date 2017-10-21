@@ -54,8 +54,8 @@ const config: ResourceManagerConfig = {
             "pvr": "pvr",
             "mp3": "sound",
             "zip": "zip",
-            "mergeJson": "mergeJson",
-            "sheet": "sheet"
+            "sheet": "sheet",
+            "exml": "text"
         }
         let type = typeMap[ext];
         if (type == "json") {

@@ -129,6 +129,7 @@ function publishWithResourceManager(projectDir, releaseDir) {
                     res = require('../lib/resourcemanager');
                     command = "publish";
                     tasks.run();
+                    exml.updateSetting(false);
                     res.createPlugin({
                         "name": "cleanEXML",
                         onFile: function (file) { return __awaiter(_this, void 0, void 0, function () {

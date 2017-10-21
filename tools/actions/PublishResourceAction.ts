@@ -110,8 +110,7 @@ async function publishWithResourceManager(projectDir: string, releaseDir: string
     const command = "publish";
     tasks.run();
 
-
-
+    exml.updateSetting(false);
 
     res.createPlugin({
         "name": "cleanEXML",
