@@ -9150,6 +9150,8 @@ declare namespace egret.sys {
          * 更新节点属性并返回脏矩形列表。
          */
         updateDirtyRegions(): Region[];
+        $canvasScaleX: number;
+        $canvasScaleY: number;
         /**
          * @private
          * 绘制根节点显示对象到目标画布，返回draw的次数。
@@ -9167,18 +9169,27 @@ declare namespace egret.sys {
         changeSurfaceSize(): void;
         private $dirtyRegionPolicy;
         setDirtyRegionPolicy(policy: string): void;
+        static $canvasScaleFactor: number;
         /**
          * @private
          */
-        static $pixelRatio: number;
+        static $canvasScaleX: number;
+        static $canvasScaleY: number;
         /**
          * @private
          */
-        static $setDevicePixelRatio(ratio: number): void;
-        private static $preMultiplyInto(other);
+        static $setCanvasScale(x: number, y: number): void;
     }
 }
 declare namespace egret {
+    type runEgretOptions = {
+        renderMode?: string;
+        audioType?: number;
+        screenAdapter?: sys.IScreenAdapter;
+        antialias?: boolean;
+        canvasScaleFactor?: number;
+        calculateCanvasScaleFactor?: (context: CanvasRenderingContext2D) => number;
+    };
     /**
      * egret project entry function
      * @param options An object containing the initialization properties for egret engine.
@@ -9189,13 +9200,7 @@ declare namespace egret {
      * @param options 一个可选对象，包含初始化Egret引擎需要的参数。
      * @language zh_CN
      */
-    function runEgret(options?: {
-        renderMode?: string;
-        audioType?: number;
-        screenAdapter?: sys.IScreenAdapter;
-        antialias?: boolean;
-        canvasScaleFactor?: number;
-    }): void;
+    function runEgret(options?: runEgretOptions): void;
     /**
      * Refresh the screen display
      * @language en_US
@@ -10222,9 +10227,9 @@ declare namespace egret.sys {
          * 暂时调用lineStyle,beginFill,beginGradientFill标记,实际应该draw时候标记在Path2D
          */
         dirtyRender: boolean;
-        $texture: any;
-        $textureWidth: any;
-        $textureHeight: any;
+        $texture: WebGLTexture;
+        $textureWidth: number;
+        $textureHeight: number;
         /**
          * 清除非绘制的缓存数据
          */
@@ -10481,9 +10486,11 @@ declare namespace egret.sys {
          * 脏渲染标记
          */
         dirtyRender: boolean;
-        $texture: any;
-        $textureWidth: any;
-        $textureHeight: any;
+        $texture: WebGLTexture;
+        $textureWidth: number;
+        $textureHeight: number;
+        $canvasScaleX: number;
+        $canvasScaleY: number;
         /**
          * 清除非绘制的缓存数据
          */

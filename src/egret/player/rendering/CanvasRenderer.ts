@@ -96,7 +96,9 @@ namespace egret {
             let drawCalls = 0;
             let node: sys.RenderNode;
             if (displayList && !root) {
-                if (displayList.isDirty) {
+                if (displayList.isDirty ||
+                    displayList.$canvasScaleX != sys.DisplayList.$canvasScaleX ||
+                    displayList.$canvasScaleY != sys.DisplayList.$canvasScaleY) {
                     drawCalls += displayList.drawToSurface();
                 }
                 node = displayList.$renderNode;
@@ -199,7 +201,7 @@ namespace egret {
                 }
 
                 let bounds = displayObject.$getOriginalBounds();
-                if(bounds.width <= 0 || bounds.height <= 0) {
+                if (bounds.width <= 0 || bounds.height <= 0) {
                     return drawCalls;
                 }
 
@@ -300,7 +302,7 @@ namespace egret {
             }
 
             let bounds = displayObject.$getOriginalBounds();
-            if(bounds.width <= 0 || bounds.height <= 0) {
+            if (bounds.width <= 0 || bounds.height <= 0) {
                 return drawCalls;
             }
 
@@ -474,7 +476,7 @@ namespace egret {
                 bounds = displayObject.$getOriginalBounds();
                 region.updateRegion(bounds, displayMatrix);
             }
-            if(region.width <= 0 || region.height <= 0) {
+            if (region.width <= 0 || region.height <= 0) {
                 return drawCalls;
             }
             let found = false;
@@ -879,7 +881,7 @@ namespace egret {
                     let offsetY = data[5];
                     let destWidth = data[6];
                     let destHeight = data[7];
-                    if(node.rotated) {
+                    if (node.rotated) {
                         sourceWidth = data[3];
                         sourceHeight = data[2];
                         destWidth = data[7];
@@ -888,7 +890,7 @@ namespace egret {
                     let displayBuffer = this.createRenderBuffer(destWidth, destHeight);
                     let displayContext = displayBuffer.context;
                     drawCalls++;
-                    if(node.rotated) {
+                    if (node.rotated) {
                         context.transform(0, -1, 1, 0, 0, destWidth);
                     }
                     displayContext.drawImage(image.source, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, destWidth, destHeight);

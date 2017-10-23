@@ -86,13 +86,7 @@ namespace egret.web {
      * @private
      * 网页加载完成，实例化页面中定义的Egret标签
      */
-    function runEgret(options?: {
-        renderMode?: string;
-        audioType?: number;
-        screenAdapter?: sys.IScreenAdapter;
-        antialias?: boolean,
-        canvasScaleFactor?: number
-    }): void {
+    function runEgret(options?: runEgretOptions): void {
         if (isRunning) {
             return;
         }
@@ -118,6 +112,9 @@ namespace egret.web {
         if (options.canvasScaleFactor) {
             canvasScaleFactor = options.canvasScaleFactor;
         }
+        else if(options.calculateCanvasScaleFactor) {
+            canvasScaleFactor = options.calculateCanvasScaleFactor(sys.canvasHitTestBuffer.context);
+        }
         else {
             //based on : https://github.com/jondavidjohn/hidpi-canvas-polyfill
             let context = sys.canvasHitTestBuffer.context;
@@ -129,8 +126,7 @@ namespace egret.web {
                 context.backingStorePixelRatio || 1;
             canvasScaleFactor = (window.devicePixelRatio || 1) / backingStore;
         }
-        canvasScaleFactor = Math.max(1, Math.ceil(canvasScaleFactor));
-        sys.DisplayList.$setDevicePixelRatio(canvasScaleFactor);
+        sys.DisplayList.$canvasScaleFactor = canvasScaleFactor;
 
         let ticker = egret.ticker;
         startTicker(ticker);

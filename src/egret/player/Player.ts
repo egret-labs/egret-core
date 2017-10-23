@@ -385,9 +385,10 @@ namespace egret.sys {
         length = dirtyList.length;
         for (let i = 0; i < length; i++) {
             let region = dirtyList[i];
-            let pixelRatio = DisplayList.$pixelRatio;
-            context.clearRect(region.minX * pixelRatio, region.minY * pixelRatio, region.width * pixelRatio, region.height * pixelRatio);
-            context.rect(region.minX * pixelRatio, region.minY * pixelRatio, region.width * pixelRatio, region.height * pixelRatio);
+            let canvasScaleX = DisplayList.$canvasScaleX;
+            let canvasScaleY = DisplayList.$canvasScaleY;
+            context.clearRect(region.minX * canvasScaleX, region.minY * canvasScaleY, region.width * canvasScaleX, region.height * canvasScaleY);
+            context.rect(region.minX * canvasScaleX, region.minY * canvasScaleY, region.width * canvasScaleX, region.height * canvasScaleY);
         }
         context.clip();
         context.drawImage(this.stageDisplayList.renderBuffer.surface, 0, 0);
@@ -400,8 +401,9 @@ namespace egret.sys {
     function drawDirtyRect(x: number, y: number, width: number, height: number, context: any): void {
         context.strokeStyle = 'rgb(255,0,0)';
         context.lineWidth = 5;
-        let pixelRatio = DisplayList.$pixelRatio;
-        context.strokeRect(x * pixelRatio - 0.5, y * pixelRatio - 0.5, width * pixelRatio, height * pixelRatio);
+        let canvasScaleX = DisplayList.$canvasScaleX;
+        let canvasScaleY = DisplayList.$canvasScaleY;
+        context.strokeRect(x * canvasScaleX - 0.5, y * canvasScaleY - 0.5, width * canvasScaleX, height * canvasScaleY);
     }
 
     /**

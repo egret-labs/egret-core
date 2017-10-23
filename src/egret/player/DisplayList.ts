@@ -73,7 +73,6 @@ namespace egret.sys {
             this.dirtyRegion = new DirtyRegion(root);
             this.isStage = (root instanceof Stage);
             this.dirtyNodes = egret.createMap<boolean>();
-            this.offsetMatrix.a = this.offsetMatrix.d = DisplayList.$pixelRatio;
         }
 
         private isStage: boolean = false;
@@ -183,8 +182,8 @@ namespace egret.sys {
          */
         public setClipRect(width: number, height: number): void {
             this.dirtyRegion.setClipRect(width, height);
-            width *= DisplayList.$pixelRatio;
-            height *= DisplayList.$pixelRatio;
+            width *= DisplayList.$canvasScaleX;
+            height *= DisplayList.$canvasScaleY;
             this.renderBuffer.resize(width, height);
         }
 
@@ -277,6 +276,9 @@ namespace egret.sys {
             return this.dirtyList;
         }
 
+        public $canvasScaleX: number = 1;
+        public $canvasScaleY: number = 1;
+
         /**
          * @private
          * 绘制根节点显示对象到目标画布，返回draw的次数。
@@ -285,6 +287,8 @@ namespace egret.sys {
             let drawCalls = 0;
             let dirtyList = this.dirtyList;
             if (dirtyList && dirtyList.length > 0) {
+                this.$canvasScaleX = this.offsetMatrix.a = DisplayList.$canvasScaleX;
+                this.$canvasScaleY = this.offsetMatrix.d = DisplayList.$canvasScaleY;
                 if (!this.isStage) {//对非舞台画布要根据目标显示对象尺寸改变而改变。
                     this.changeSurfaceSize();
                 }
@@ -311,7 +315,7 @@ namespace egret.sys {
                     renderNode.image = this.bitmapData;
                     renderNode.imageWidth = width;
                     renderNode.imageHeight = height;
-                    renderNode.drawImage(0, 0, width, height, -this.offsetX / DisplayList.$pixelRatio , -this.offsetY / DisplayList.$pixelRatio , width / DisplayList.$pixelRatio, height / DisplayList.$pixelRatio);
+                    renderNode.drawImage(0, 0, width, height, -this.offsetX / this.$canvasScaleX, -this.offsetY / this.$canvasScaleY, width / this.$canvasScaleX, height / this.$canvasScaleY);
                 }
             }
 
@@ -338,10 +342,10 @@ namespace egret.sys {
             let oldOffsetX = this.offsetX;
             let oldOffsetY = this.offsetY;
             let bounds = this.root.$getOriginalBounds();
-            var scaleX = DisplayList.$pixelRatio;
-            var scaleY = DisplayList.$pixelRatio;
-            this.offsetX = -bounds.x * DisplayList.$pixelRatio;
-            this.offsetY = -bounds.y * DisplayList.$pixelRatio;
+            var scaleX = this.$canvasScaleX;
+            var scaleY = this.$canvasScaleY;
+            this.offsetX = -bounds.x * scaleX;
+            this.offsetY = -bounds.y * scaleY;
             this.offsetMatrix.setTo(this.offsetMatrix.a, 0, 0, this.offsetMatrix.d, this.offsetX, this.offsetY);
             let buffer = this.renderBuffer;
             //在chrome里，小等于256*256的canvas会不启用GPU加速。
@@ -371,41 +375,20 @@ namespace egret.sys {
             this.renderBuffer.setDirtyRegionPolicy(policy);
         }
 
-        /**
-         * @private
-         */
-        public static $pixelRatio: number = 1;
+        public static $canvasScaleFactor: number = 1;
 
         /**
          * @private
          */
-        public static $setDevicePixelRatio(ratio: number): void {
-            if (DisplayList.$pixelRatio == ratio) {
-                return;
-            }
-            DisplayList.$pixelRatio = ratio;
-        }
+        public static $canvasScaleX: number = 1;
+        public static $canvasScaleY: number = 1;
 
-        private static $preMultiplyInto(other:Matrix):void {
-            let pixelRatio = DisplayList.$pixelRatio;
-            let a =  other.a * pixelRatio;
-            let b =  0.0;
-            let c =  0.0;
-            let d =  other.d * pixelRatio;
-            let tx = other.tx * pixelRatio;
-            let ty = other.ty * pixelRatio;
-
-            if (other.b !== 0.0 || other.c !== 0.0) {
-                b  += other.b * pixelRatio;
-                c  += other.c * pixelRatio;
-            }
-
-            other.a = a;
-            other.b = b;
-            other.c = c;
-            other.d = d;
-            other.tx = tx;
-            other.ty = ty;
+        /**
+         * @private
+         */
+        public static $setCanvasScale(x: number, y: number): void {
+            DisplayList.$canvasScaleX = x;
+            DisplayList.$canvasScaleY = y;
         }
     }
 }

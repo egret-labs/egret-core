@@ -169,9 +169,9 @@ namespace egret.sys {
          * 暂时调用lineStyle,beginFill,beginGradientFill标记,实际应该draw时候标记在Path2D
          */
         public dirtyRender:boolean = true;
-        public $texture;
-        public $textureWidth;
-        public $textureHeight;
+        public $texture:WebGLTexture;
+        public $textureWidth:number;
+        public $textureHeight:number;
 
         /**
          * 清除非绘制的缓存数据

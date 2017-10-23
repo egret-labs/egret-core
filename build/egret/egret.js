@@ -13151,6 +13151,8 @@ var egret;
                  * @private
                  */
                 _this.dirtyList = null;
+                _this.$canvasScaleX = 1;
+                _this.$canvasScaleY = 1;
                 /**
                  * @private
                  */
@@ -13160,7 +13162,6 @@ var egret;
                 _this.dirtyRegion = new sys.DirtyRegion(root);
                 _this.isStage = (root instanceof egret.Stage);
                 _this.dirtyNodes = egret.createMap();
-                _this.offsetMatrix.a = _this.offsetMatrix.d = DisplayList.$pixelRatio;
                 return _this;
             }
             /**
@@ -13253,8 +13254,8 @@ var egret;
              */
             DisplayList.prototype.setClipRect = function (width, height) {
                 this.dirtyRegion.setClipRect(width, height);
-                width *= DisplayList.$pixelRatio;
-                height *= DisplayList.$pixelRatio;
+                width *= DisplayList.$canvasScaleX;
+                height *= DisplayList.$canvasScaleY;
                 this.renderBuffer.resize(width, height);
             };
             /**
@@ -13331,6 +13332,8 @@ var egret;
                 var drawCalls = 0;
                 var dirtyList = this.dirtyList;
                 if (dirtyList && dirtyList.length > 0) {
+                    this.$canvasScaleX = this.offsetMatrix.a = DisplayList.$canvasScaleX;
+                    this.$canvasScaleY = this.offsetMatrix.d = DisplayList.$canvasScaleY;
                     if (!this.isStage) {
                         this.changeSurfaceSize();
                     }
@@ -13356,7 +13359,7 @@ var egret;
                         renderNode.image = this.bitmapData;
                         renderNode.imageWidth = width;
                         renderNode.imageHeight = height;
-                        renderNode.drawImage(0, 0, width, height, -this.offsetX / DisplayList.$pixelRatio, -this.offsetY / DisplayList.$pixelRatio, width / DisplayList.$pixelRatio, height / DisplayList.$pixelRatio);
+                        renderNode.drawImage(0, 0, width, height, -this.offsetX / this.$canvasScaleX, -this.offsetY / this.$canvasScaleY, width / this.$canvasScaleX, height / this.$canvasScaleY);
                     }
                 }
                 this.dirtyList = null;
@@ -13373,10 +13376,10 @@ var egret;
                 var oldOffsetX = this.offsetX;
                 var oldOffsetY = this.offsetY;
                 var bounds = this.root.$getOriginalBounds();
-                var scaleX = DisplayList.$pixelRatio;
-                var scaleY = DisplayList.$pixelRatio;
-                this.offsetX = -bounds.x * DisplayList.$pixelRatio;
-                this.offsetY = -bounds.y * DisplayList.$pixelRatio;
+                var scaleX = this.$canvasScaleX;
+                var scaleY = this.$canvasScaleY;
+                this.offsetX = -bounds.x * scaleX;
+                this.offsetY = -bounds.y * scaleY;
                 this.offsetMatrix.setTo(this.offsetMatrix.a, 0, 0, this.offsetMatrix.d, this.offsetX, this.offsetY);
                 var buffer = this.renderBuffer;
                 //在chrome里，小等于256*256的canvas会不启用GPU加速。
@@ -13405,35 +13408,16 @@ var egret;
             /**
              * @private
              */
-            DisplayList.$setDevicePixelRatio = function (ratio) {
-                if (DisplayList.$pixelRatio == ratio) {
-                    return;
-                }
-                DisplayList.$pixelRatio = ratio;
+            DisplayList.$setCanvasScale = function (x, y) {
+                DisplayList.$canvasScaleX = x;
+                DisplayList.$canvasScaleY = y;
             };
-            DisplayList.$preMultiplyInto = function (other) {
-                var pixelRatio = DisplayList.$pixelRatio;
-                var a = other.a * pixelRatio;
-                var b = 0.0;
-                var c = 0.0;
-                var d = other.d * pixelRatio;
-                var tx = other.tx * pixelRatio;
-                var ty = other.ty * pixelRatio;
-                if (other.b !== 0.0 || other.c !== 0.0) {
-                    b += other.b * pixelRatio;
-                    c += other.c * pixelRatio;
-                }
-                other.a = a;
-                other.b = b;
-                other.c = c;
-                other.d = d;
-                other.tx = tx;
-                other.ty = ty;
-            };
+            DisplayList.$canvasScaleFactor = 1;
             /**
              * @private
              */
-            DisplayList.$pixelRatio = 1;
+            DisplayList.$canvasScaleX = 1;
+            DisplayList.$canvasScaleY = 1;
             return DisplayList;
         }(egret.HashObject));
         sys.DisplayList = DisplayList;
@@ -13776,9 +13760,10 @@ var egret;
             length = dirtyList.length;
             for (var i = 0; i < length; i++) {
                 var region = dirtyList[i];
-                var pixelRatio = sys.DisplayList.$pixelRatio;
-                context.clearRect(region.minX * pixelRatio, region.minY * pixelRatio, region.width * pixelRatio, region.height * pixelRatio);
-                context.rect(region.minX * pixelRatio, region.minY * pixelRatio, region.width * pixelRatio, region.height * pixelRatio);
+                var canvasScaleX = sys.DisplayList.$canvasScaleX;
+                var canvasScaleY = sys.DisplayList.$canvasScaleY;
+                context.clearRect(region.minX * canvasScaleX, region.minY * canvasScaleY, region.width * canvasScaleX, region.height * canvasScaleY);
+                context.rect(region.minX * canvasScaleX, region.minY * canvasScaleY, region.width * canvasScaleX, region.height * canvasScaleY);
             }
             context.clip();
             context.drawImage(this.stageDisplayList.renderBuffer.surface, 0, 0);
@@ -13790,8 +13775,9 @@ var egret;
         function drawDirtyRect(x, y, width, height, context) {
             context.strokeStyle = 'rgb(255,0,0)';
             context.lineWidth = 5;
-            var pixelRatio = sys.DisplayList.$pixelRatio;
-            context.strokeRect(x * pixelRatio - 0.5, y * pixelRatio - 0.5, width * pixelRatio, height * pixelRatio);
+            var canvasScaleX = sys.DisplayList.$canvasScaleX;
+            var canvasScaleY = sys.DisplayList.$canvasScaleY;
+            context.strokeRect(x * canvasScaleX - 0.5, y * canvasScaleY - 0.5, width * canvasScaleX, height * canvasScaleY);
         }
         /**
          * FPS显示对象
@@ -16432,7 +16418,9 @@ var egret;
             var drawCalls = 0;
             var node;
             if (displayList && !root) {
-                if (displayList.isDirty) {
+                if (displayList.isDirty ||
+                    displayList.$canvasScaleX != egret.sys.DisplayList.$canvasScaleX ||
+                    displayList.$canvasScaleY != egret.sys.DisplayList.$canvasScaleY) {
                     drawCalls += displayList.drawToSurface();
                 }
                 node = displayList.$renderNode;
