@@ -16,15 +16,15 @@
 
 * 2D 渲染 - JavaScript
     * 取消在 PC 上 canvasScaleFactor 默认是2的设置
-    * 修复 Tween.removeAllTweens 后内部计数器没有重置的bug
-    * 修复投影和发光滤镜同时使用导致发光滤镜异常问题
+    * 修复 Tween.removeAllTweens 后内部计数器没有重置的bug (感谢论坛开发者 derek6616)
+    * 修复投影和发光滤镜同时使用导致发光滤镜异常问题 (感谢论坛开发者 zyy)
     * 重构 canvasScaleFactor 实现机制，不再创建过大的 canvas
     * 入口文件引入 calculateCanvasScaleFactor 函数，开发者可以自行计算 canvasScaleFactor
 
 * DragonBones - JavaScript
     * 修复贴图单独缩放和全局缩放的错位的错误
-    * 修复一处数组遍历可能导致扩展数组报错的错误
-    * 修复 mesh 矩形区域可能没有正确更新的错误
+    * 修复一处数组遍历可能导致扩展数组报错的错误 (感谢论坛开发者 gepan)
+    * 修复 mesh 矩形区域可能没有正确更新的错误 (感谢 游心互动 开发者)
     * 修复共享贴图同名可能造成动画显示不正确的错误
 
 ## 已知问题

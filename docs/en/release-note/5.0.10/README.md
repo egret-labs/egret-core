@@ -16,15 +16,15 @@ In this update, in addition to engine running code, the egret engine provides a 
 
 * 2D rendering - JavaScript
 	* Cancel on the PC canvasScaleFactor defaults to 2 settings
-	* Fix Tween.removeAllTweens after the internal counter does not have to reset the bug
-	* Repair the projection and lighting filters at the same time using the cause of the light filter exception
+	* Fix Tween.removeAllTweens after the internal counter does not have to reset the bug (Thanks to the bbs developer derek6616)
+	* Repair the projection and lighting filters at the same time using the cause of the light filter exception (Thanks to the bbs developer zyy)
 	* Reconstruct the canvasScaleFactor implementation mechanism, no longer create too large canvas
 	* Import file introduces calculateCanvasScaleFactor function, developers can calculate their own canvasScaleFactor
 
 * DragonBones - JavaScript
 	* Fixed bug where the map was individually scaled and the global zoom was misaligned
-	* Repairing an array of traverses may cause an error in the array error
-	* Repair the mesh rectangle area may not be updated correctly
+	* Repairing an array of traverses may cause an error in the array error (Thanks to the bbs developer gepan)
+	* Repair the mesh rectangle area may not be updated correctly (Thanks to the 游心互动 developer)
 	* Fixing shared maps with the same name may cause animations to display incorrect errors
 
 ## Known Issues
