@@ -1052,6 +1052,10 @@ declare namespace dragonBones {
         /**
          * @private
          */
+        parent: ArmatureData;
+        /**
+         * @private
+         */
         protected _onClear(): void;
         /**
          * @private
@@ -1099,7 +1103,7 @@ declare namespace dragonBones {
         name: string;
         path: string;
         readonly transform: Transform;
-        parent: ArmatureData;
+        parent: SkinData;
         protected _onClear(): void;
     }
     /**
@@ -3971,7 +3975,6 @@ declare namespace dragonBones {
         private readonly _frameArray;
         private readonly _timelineArray;
         private readonly _actionFrames;
-        private readonly _meshs;
         private readonly _weightSlotPose;
         private readonly _weightBonePoses;
         private readonly _cacheBones;
@@ -3985,7 +3988,6 @@ declare namespace dragonBones {
          * @private
          */
         private _samplingEasingCurve(curve, samples);
-        private _sortActionFrame(a, b);
         private _parseActionDataInFrame(rawData, frameStart, bone, slot);
         private _mergeActionFrame(rawData, frameStart, type, bone, slot);
         protected _parseArmature(rawData: any, scale: number): ArmatureData;
@@ -4032,7 +4034,7 @@ declare namespace dragonBones {
         /**
          * @private
          */
-        protected _parseTimeline(rawData: any, framesKey: string, type: TimelineType, addIntOffset: boolean, addFloatOffset: boolean, frameValueCount: number, frameParser: (rawData: any, frameStart: number, frameCount: number) => number): TimelineData | null;
+        protected _parseTimeline(rawData: any, rawFrames: Array<any> | null, framesKey: string, type: TimelineType, addIntOffset: boolean, addFloatOffset: boolean, frameValueCount: number, frameParser: (rawData: any, frameStart: number, frameCount: number) => number): TimelineData | null;
         /**
          * @private
          */
@@ -4662,7 +4664,7 @@ declare namespace dragonBones {
          * @internal
          * @private
          */
-        _childTransformDirty: boolean;
+        _childDirty: boolean;
         private _debugDraw;
         private _disposeProxy;
         private _armature;
@@ -4922,6 +4924,7 @@ declare namespace dragonBones {
         private static _dragonBonesInstance;
         private static _factory;
         private static _clockHandler(time);
+        private static _createDragonBOnes();
         /**
          * 一个可以直接使用的全局 WorldClock 实例。(由引擎驱动)
          * @version DragonBones 5.0
