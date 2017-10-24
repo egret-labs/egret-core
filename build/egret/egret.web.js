@@ -4341,6 +4341,12 @@ var egret;
                 canvas.style[egret.web.getPrefixStyleName("transformOrigin")] = "0% 0% 0px";
                 canvas.style.width = displayWidth + "px";
                 canvas.style.height = displayHeight + "px";
+                if (canvas.width != stageWidth) {
+                    canvas.width = stageWidth;
+                }
+                if (canvas.height != stageHeight) {
+                    canvas.height = stageHeight;
+                }
                 var rotation = 0;
                 if (shouldRotate) {
                     if (orientation == egret.OrientationMode.LANDSCAPE) {
