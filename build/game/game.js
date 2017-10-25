@@ -2853,7 +2853,7 @@ var egret;
                     bitmapData.source.setAttribute("bitmapSrc", virtualUrl);
                 }
                 var texture = new egret.Texture();
-                texture.$setBitmapData(bitmapData);
+                texture._setBitmapData(bitmapData);
                 loader.data = texture;
                 window.setTimeout(function () {
                     loader.dispatchEventWith(egret.Event.COMPLETE);

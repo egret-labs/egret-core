@@ -1820,7 +1820,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        $setBitmapData(value: BitmapData): void;
+        _setBitmapData(value: BitmapData): void;
         /**
          * @private
          * 设置Texture数据

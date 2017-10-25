@@ -52,7 +52,7 @@ namespace egret {
             this.$renderBuffer = new sys.RenderBuffer();
             let bitmapData = new egret.BitmapData(this.$renderBuffer.surface);
             bitmapData.$deleteSource = false;
-            this.$setBitmapData(bitmapData);
+            this._setBitmapData(bitmapData);
         }
 
         public $renderBuffer:sys.RenderBuffer;

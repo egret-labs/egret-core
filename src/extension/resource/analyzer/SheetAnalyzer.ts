@@ -79,7 +79,7 @@ namespace RES {
                 }
                 else {
                     let texture:egret.Texture = new egret.Texture();
-                    texture.$setBitmapData(request.data);
+                    texture._setBitmapData(request.data);
                     this.analyzeBitmap(resItem, texture);
                 }
             }

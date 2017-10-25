@@ -3415,7 +3415,7 @@ var egret;
                 return this.$bitmapData;
             },
             set: function (value) {
-                this.$setBitmapData(value);
+                this._setBitmapData(value);
             },
             enumerable: true,
             configurable: true
@@ -3432,7 +3432,7 @@ var egret;
          * @platform Web,Native
          * @language zh_CN
          */
-        Texture.prototype.$setBitmapData = function (value) {
+        Texture.prototype._setBitmapData = function (value) {
             this.$bitmapData = value;
             var scale = egret.$TextureScaleFactor;
             var w = value.width * scale;
@@ -15176,7 +15176,7 @@ var egret;
             _this.$renderBuffer = new egret.sys.RenderBuffer();
             var bitmapData = new egret.BitmapData(_this.$renderBuffer.surface);
             bitmapData.$deleteSource = false;
-            _this.$setBitmapData(bitmapData);
+            _this._setBitmapData(bitmapData);
             return _this;
         }
         /**

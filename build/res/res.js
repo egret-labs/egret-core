@@ -579,7 +579,7 @@ var RES;
                 }
                 else {
                     var texture = new egret.Texture();
-                    texture.$setBitmapData(request.data);
+                    texture._setBitmapData(request.data);
                     this.analyzeBitmap(resItem, texture);
                 }
             }
@@ -833,7 +833,7 @@ var RES;
             resItem.loaded = (event.$type == egret.Event.COMPLETE);
             if (resItem.loaded) {
                 var texture = new egret.Texture();
-                texture.$setBitmapData(request.data);
+                texture._setBitmapData(request.data);
                 this.analyzeData(resItem, texture);
             }
             this.recycler.push(request);

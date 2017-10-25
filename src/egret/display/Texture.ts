@@ -202,7 +202,7 @@ namespace egret {
         }
 
         public set bitmapData(value: BitmapData) {
-            this.$setBitmapData(value);
+            this._setBitmapData(value);
         }
 
         /**
@@ -217,7 +217,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public $setBitmapData(value: BitmapData) {
+        public _setBitmapData(value: BitmapData) {
             this.$bitmapData = value;
             let scale = $TextureScaleFactor;
             let w = value.width * scale;
