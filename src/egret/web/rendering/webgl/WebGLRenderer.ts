@@ -137,7 +137,26 @@ namespace egret.web {
                         renderAlpha = node.renderAlpha;
                         m = Matrix.create().copyFrom(node.renderMatrix);
                     }
-                    matrix.$preMultiplyInto(m, m);
+                    let a =  m.a * matrix.a;
+                    let b =  0.0;
+                    let c =  0.0;
+                    let d =  m.d * matrix.d;
+                    let tx = m.tx * matrix.a + matrix.tx  * matrix.a;
+                    let ty = m.ty * matrix.d + matrix.ty  * matrix.d;
+                    if (m.b !== 0.0 || m.c !== 0.0 || matrix.b !== 0.0 || matrix.c !== 0.0) {
+                        a  += m.b * matrix.c;
+                        d  += m.c * matrix.b;
+                        b  += m.a * matrix.b + m.b * matrix.d;
+                        c  += m.c * matrix.a + m.d * matrix.c;
+                        tx += m.ty * matrix.c;
+                        ty += m.tx * matrix.b;
+                    }
+                    m.a = a;
+                    m.b = b;
+                    m.c = c;
+                    m.d = d;
+                    m.tx = tx;
+                    m.ty = ty;
                     buffer.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
                     Matrix.release(m);
                     buffer.globalAlpha = renderAlpha;
@@ -247,11 +266,10 @@ namespace egret.web {
             region.updateRegion(bounds, displayMatrix);
 
             // 为显示对象创建一个新的buffer
-            // todo 这里应该计算 region.x region.y
             let displayBuffer = this.createRenderBuffer(region.width * matrix.a, region.height * matrix.d);
             displayBuffer.context.pushBuffer(displayBuffer);
-            displayBuffer.setTransform(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
-            let offsetM = Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
+            displayBuffer.setTransform(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
+            let offsetM = Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
 
             //todo 可以优化减少draw次数
             if ((displayObject.$mask && (displayObject.$mask.$parentDisplayList || root))) {
@@ -440,8 +458,8 @@ namespace egret.web {
                 let displayBuffer = this.createRenderBuffer(region.width * matrix.a, region.height * matrix.d);
                 // let displayContext = displayBuffer.context;
                 displayBuffer.context.pushBuffer(displayBuffer);
-                displayBuffer.setTransform(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
-                let offsetM = Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
+                displayBuffer.setTransform(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
+                let offsetM = Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
 
                 drawCalls += this.drawDisplayObject(displayObject, displayBuffer, dirtyList, offsetM,
                     displayObject.$displayList, region, root);
@@ -458,8 +476,8 @@ namespace egret.web {
                     //else {
                     let maskBuffer = this.createRenderBuffer(region.width * matrix.a, region.height * matrix.d);
                     maskBuffer.context.pushBuffer(maskBuffer);
-                    maskBuffer.setTransform(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
-                    offsetM = Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
+                    maskBuffer.setTransform(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
+                    offsetM = Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
                     drawCalls += this.drawDisplayObject(mask, maskBuffer, dirtyList, offsetM,
                         mask.$displayList, region, root);
                     maskBuffer.context.popBuffer();

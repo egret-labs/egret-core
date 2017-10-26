@@ -16459,7 +16459,26 @@ var egret;
                         renderAlpha = node.renderAlpha;
                         m = egret.Matrix.create().copyFrom(node.renderMatrix);
                     }
-                    matrix.$preMultiplyInto(m, m);
+                    var a = m.a * matrix.a;
+                    var b = 0.0;
+                    var c = 0.0;
+                    var d = m.d * matrix.d;
+                    var tx = m.tx * matrix.a + matrix.tx * matrix.a;
+                    var ty = m.ty * matrix.d + matrix.ty * matrix.d;
+                    if (m.b !== 0.0 || m.c !== 0.0 || matrix.b !== 0.0 || matrix.c !== 0.0) {
+                        a += m.b * matrix.c;
+                        d += m.c * matrix.b;
+                        b += m.a * matrix.b + m.b * matrix.d;
+                        c += m.c * matrix.a + m.d * matrix.c;
+                        tx += m.ty * matrix.c;
+                        ty += m.tx * matrix.b;
+                    }
+                    m.a = a;
+                    m.b = b;
+                    m.c = c;
+                    m.d = d;
+                    m.tx = tx;
+                    m.ty = ty;
                     context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
                     egret.Matrix.release(m);
                     context.globalAlpha = renderAlpha;
@@ -16551,10 +16570,9 @@ var egret;
                 region_1 = egret.sys.Region.create();
                 region_1.updateRegion(bounds_1, displayMatrix_1);
                 // 为显示对象创建一个新的buffer
-                // todo 这里应该计算 region.x region.y
                 var displayBuffer_1 = this.createRenderBuffer(region_1.width, region_1.height);
-                displayBuffer_1.context.setTransform(1, 0, 0, 1, -region_1.minX, -region_1.minY);
-                var offsetM_1 = egret.Matrix.create().setTo(1, 0, 0, 1, -region_1.minX, -region_1.minY);
+                displayBuffer_1.context.setTransform(matrix.a, 0, 0, matrix.d, -region_1.minX, -region_1.minY);
+                var offsetM_1 = egret.Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region_1.minX, -region_1.minY);
                 if (displayObject.$mask && (displayObject.$mask.$parentDisplayList || root)) {
                     drawCalls_1 += this.drawWithClip(displayObject, displayBuffer_1.context, dirtyList, offsetM_1, region_1, root);
                 }
@@ -16615,8 +16633,8 @@ var egret;
             // todo 这里应该计算 region.x region.y
             var displayBuffer = this.createRenderBuffer(region.width * matrix.a, region.height * matrix.d, true);
             var displayContext = displayBuffer.context;
-            displayContext.setTransform(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
-            var offsetM = egret.Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
+            displayContext.setTransform(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
+            var offsetM = egret.Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
             //todo 可以优化减少draw次数
             if (displayObject.$mask && (displayObject.$mask.$parentDisplayList || root)) {
                 drawCalls += this.drawWithClip(displayObject, displayContext, dirtyList, offsetM, region, root);
@@ -16834,8 +16852,8 @@ var egret;
                 egret.Matrix.release(displayMatrix);
                 return drawCalls;
             }
-            displayContext.setTransform(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
-            var offsetM = egret.Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
+            displayContext.setTransform(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
+            var offsetM = egret.Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
             drawCalls += this.drawDisplayObject(displayObject, displayContext, dirtyList, offsetM, displayObject.$displayList, region, root);
             //绘制遮罩
             if (mask) {
@@ -16854,8 +16872,8 @@ var egret;
                         egret.Matrix.release(displayMatrix);
                         return drawCalls;
                     }
-                    maskContext.setTransform(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
-                    offsetM = egret.Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
+                    maskContext.setTransform(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
+                    offsetM = egret.Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
                     drawCalls += this.drawDisplayObject(mask, maskContext, dirtyList, offsetM, mask.$displayList, region, root);
                     displayContext.globalCompositeOperation = "destination-in";
                     displayContext.setTransform(1, 0, 0, 1, 0, 0);

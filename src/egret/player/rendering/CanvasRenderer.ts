@@ -138,7 +138,26 @@ namespace egret {
                         renderAlpha = node.renderAlpha;
                         m = Matrix.create().copyFrom(node.renderMatrix);
                     }
-                    matrix.$preMultiplyInto(m, m);
+                    let a =  m.a * matrix.a;
+                    let b =  0.0;
+                    let c =  0.0;
+                    let d =  m.d * matrix.d;
+                    let tx = m.tx * matrix.a + matrix.tx  * matrix.a;
+                    let ty = m.ty * matrix.d + matrix.ty  * matrix.d;
+                    if (m.b !== 0.0 || m.c !== 0.0 || matrix.b !== 0.0 || matrix.c !== 0.0) {
+                        a  += m.b * matrix.c;
+                        d  += m.c * matrix.b;
+                        b  += m.a * matrix.b + m.b * matrix.d;
+                        c  += m.c * matrix.a + m.d * matrix.c;
+                        tx += m.ty * matrix.c;
+                        ty += m.tx * matrix.b;
+                    }
+                    m.a = a;
+                    m.b = b;
+                    m.c = c;
+                    m.d = d;
+                    m.tx = tx;
+                    m.ty = ty;
                     context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
                     Matrix.release(m);
                     context.globalAlpha = renderAlpha;
@@ -244,10 +263,9 @@ namespace egret {
                 region.updateRegion(bounds, displayMatrix);
 
                 // 为显示对象创建一个新的buffer
-                // todo 这里应该计算 region.x region.y
                 let displayBuffer = this.createRenderBuffer(region.width, region.height);
-                displayBuffer.context.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
-                let offsetM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
+                displayBuffer.context.setTransform(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
+                let offsetM = Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
 
                 if (displayObject.$mask && (displayObject.$mask.$parentDisplayList || root)) {
                     drawCalls += this.drawWithClip(displayObject, displayBuffer.context, dirtyList, offsetM, region, root);
@@ -322,8 +340,8 @@ namespace egret {
             // todo 这里应该计算 region.x region.y
             let displayBuffer = this.createRenderBuffer(region.width * matrix.a, region.height * matrix.d, true);
             let displayContext = displayBuffer.context;
-            displayContext.setTransform(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
-            let offsetM = Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
+            displayContext.setTransform(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
+            let offsetM = Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
 
             //todo 可以优化减少draw次数
             if (displayObject.$mask && (displayObject.$mask.$parentDisplayList || root)) {
@@ -566,8 +584,8 @@ namespace egret {
                 Matrix.release(displayMatrix);
                 return drawCalls;
             }
-            displayContext.setTransform(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
-            let offsetM = Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
+            displayContext.setTransform(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
+            let offsetM = Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
 
             drawCalls += this.drawDisplayObject(displayObject, displayContext, dirtyList, offsetM,
                 displayObject.$displayList, region, root);
@@ -590,8 +608,8 @@ namespace egret {
                         Matrix.release(displayMatrix);
                         return drawCalls;
                     }
-                    maskContext.setTransform(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
-                    offsetM = Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
+                    maskContext.setTransform(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
+                    offsetM = Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
                     drawCalls += this.drawDisplayObject(mask, maskContext, dirtyList, offsetM,
                         mask.$displayList, region, root);
                     displayContext.globalCompositeOperation = "destination-in";
