@@ -21239,7 +21239,9 @@ var EXML;
             }
         }
         if (url) {
-            parsedClasses[url] = clazz;
+            if (clazz) {
+                parsedClasses[url] = clazz;
+            }
             var list = callBackMap[url];
             delete callBackMap[url];
             var length_31 = list ? list.length : 0;
