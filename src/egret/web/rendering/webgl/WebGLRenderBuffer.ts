@@ -304,7 +304,9 @@ namespace egret.web {
          * 清空缓冲区数据
          */
         public clear(): void {
+            this.context.pushBuffer(this);
             this.context.clear();
+            this.context.popBuffer();
         }
 
         public $drawCalls: number = 0;

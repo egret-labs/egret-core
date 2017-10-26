@@ -399,6 +399,7 @@ namespace egret {
          */
         $doRemoveChild(index: number, notifyListeners: boolean = true): DisplayObject {
             index = +index | 0;
+            let self = this;
             let children = this.$children;
             let child: DisplayObject = children[index];
             this.$childRemoved(child, index);
@@ -423,6 +424,19 @@ namespace egret {
             let indexNow = children.indexOf(child);
             if (indexNow != -1) {
                 children.splice(indexNow, 1);
+            }
+            if(!self.$cacheDirty) {
+                self.$cacheDirty = true;
+                let p = self.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                let maskedObject = self.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
             }
             return child;
         }
@@ -459,6 +473,7 @@ namespace egret {
          * @private
          */
         private doSetChildIndex(child: DisplayObject, index: number): void {
+            let self = this;
             let lastIndex = this.$children.indexOf(child);
             if (lastIndex < 0) {
                 DEBUG && $error(1006);
@@ -472,6 +487,19 @@ namespace egret {
             //放到新的位置
             this.$children.splice(index, 0, child);
             this.$childAdded(child, index);
+            if(!self.$cacheDirty) {
+                self.$cacheDirty = true;
+                let p = self.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                let maskedObject = self.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
+            }
         }
 
         /**
@@ -539,6 +567,7 @@ namespace egret {
          * @private
          */
         private doSwapChildrenAt(index1: number, index2: number): void {
+            let self = this;
             if (index1 > index2) {
                 let temp = index2;
                 index2 = index1;
@@ -556,6 +585,19 @@ namespace egret {
             list[index2] = child1;
             this.$childAdded(child2, index1);
             this.$childAdded(child1, index2);
+            if(!self.$cacheDirty) {
+                self.$cacheDirty = true;
+                let p = self.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                let maskedObject = self.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
+            }
         }
 
         /**

@@ -76,6 +76,10 @@ namespace egret.web {
         public constructor(width?:number, height?:number, root?:boolean) {
             this.surface = createCanvas(width, height);
             this.context = this.surface.getContext("2d");
+            if (this.context) {
+                this.context.$offsetX = 0;
+                this.context.$offsetY = 0;
+            }
         }
 
         /**

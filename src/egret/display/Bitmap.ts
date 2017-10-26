@@ -190,6 +190,10 @@ namespace egret {
             return true;
         }
 
+        $setBitmapData(value):void {
+            this.$setTexture(value);
+        }
+
         /**
          * @private
          */

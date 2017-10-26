@@ -98,7 +98,7 @@ namespace egret.web {
             let node: sys.RenderNode;
             let displayList = displayObject.$displayList;
             if (displayList && !isStage) {
-                if (displayObject.$cacheDirty) {
+                if (displayObject.$cacheDirty || displayObject.$renderDirty) {
                     drawCalls += displayList.drawToSurface();
                 }
                 node = displayList.$renderNode;
@@ -824,10 +824,6 @@ namespace egret.web {
             if (!this.canvasRenderBuffer || !this.canvasRenderBuffer.context) {
                 this.canvasRenderer = new CanvasRenderer();
                 this.canvasRenderBuffer = new CanvasRenderBuffer(width, height);
-                if (this.canvasRenderBuffer.context) {
-                    this.canvasRenderBuffer.context.$offsetX = 0;
-                    this.canvasRenderBuffer.context.$offsetY = 0;
-                }
             }
             else if (node.dirtyRender) {
                 this.canvasRenderBuffer.resize(width, height);
@@ -889,23 +885,15 @@ namespace egret.web {
             if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) {
                 return;
             }
-            let pixelRatio = sys.DisplayList.$pixelRatio;
             if (!this.canvasRenderBuffer || !this.canvasRenderBuffer.context) {
                 this.canvasRenderer = new CanvasRenderer();
                 this.canvasRenderBuffer = new CanvasRenderBuffer(width, height);
-                if (this.canvasRenderBuffer.context) {
-                    this.canvasRenderBuffer.context.$offsetX = 0;
-                    this.canvasRenderBuffer.context.$offsetY = 0;
-                }
             }
             else if (node.dirtyRender || forHitTest) {
                 this.canvasRenderBuffer.resize(width, height);
             }
             if (!this.canvasRenderBuffer.context) {
                 return;
-            }
-            if (pixelRatio != 1) {
-                this.canvasRenderBuffer.context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
             }
             if (node.x || node.y) {
                 if (node.dirtyRender || forHitTest) {

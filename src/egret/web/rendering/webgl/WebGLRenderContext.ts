@@ -466,10 +466,15 @@ namespace egret.web {
             }
 
             let texture: WebGLTexture;
+            let offsetX;
+            let offsetY;
             if (image["texture"] || (image.source && image.source["texture"])) {
                 // 如果是render target
                 texture = image["texture"] || image.source["texture"];
                 buffer.saveTransform();
+                offsetX = buffer.$offsetX;
+                offsetY = buffer.$offsetY;
+                buffer.useOffset();
                 buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2);// 翻转
             } else if (!image.source && !image.webGLTexture) {
                 return;
@@ -488,6 +493,8 @@ namespace egret.web {
                 undefined, undefined, undefined, undefined, rotated, smoothing);
 
             if (image.source && image.source["texture"]) {
+                buffer.$offsetX = offsetX;
+                buffer.$offsetY = offsetY;
                 buffer.restoreTransform();
             }
         }
@@ -507,10 +514,15 @@ namespace egret.web {
             }
 
             let texture: WebGLTexture;
+            let offsetX;
+            let offsetY;
             if (image["texture"] || (image.source && image.source["texture"])) {
                 // 如果是render target
                 texture = image["texture"] || image.source["texture"];
                 buffer.saveTransform();
+                offsetX = buffer.$offsetX;
+                offsetY = buffer.$offsetY;
+                buffer.useOffset();
                 buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2);// 翻转
             } else if (!image.source && !image.webGLTexture) {
                 return;
@@ -528,6 +540,8 @@ namespace egret.web {
                 imageSourceWidth, imageSourceHeight, meshUVs, meshVertices, meshIndices, bounds, smoothing);
 
             if (image["texture"] || (image.source && image.source["texture"])) {
+                buffer.$offsetX = offsetX;
+                buffer.$offsetY = offsetY;
                 buffer.restoreTransform();
             }
         }

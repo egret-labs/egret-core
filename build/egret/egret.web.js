@@ -2955,6 +2955,8 @@ var egret;
             function CanvasRenderBuffer(width, height, root) {
                 this.surface = createCanvas(width, height);
                 this.context = this.surface.getContext("2d");
+                this.context.$offsetX = 0;
+                this.context.$offsetY = 0;
             }
             Object.defineProperty(CanvasRenderBuffer.prototype, "width", {
                 /**
