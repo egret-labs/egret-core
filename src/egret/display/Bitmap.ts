@@ -78,7 +78,7 @@ namespace egret {
             super();
             this.$renderNode = new sys.NormalBitmapNode();
             this.$setTexture(value);
-            if(value) {
+            if (value) {
                 (<sys.NormalBitmapNode>this.$renderNode).rotated = value.$rotated;
             }
         }
@@ -156,41 +156,72 @@ namespace egret {
          * @private
          */
         $setTexture(value: Texture): boolean {
-            let oldBitmapData = this.$texture;
+            let self = this;
+            let oldBitmapData = self.$texture;
             if (value == oldBitmapData) {
                 return false;
             }
-            this.$texture = value;
+            self.$texture = value;
             if (value) {
-                this.$refreshImageData();
+                self.$refreshImageData();
             }
             else {
                 if (oldBitmapData) {
-                    BitmapData.$removeDisplayObject(this, oldBitmapData.$bitmapData);
+                    BitmapData.$removeDisplayObject(self, oldBitmapData.$bitmapData);
                 }
-                this.setImageData(null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-                this.$renderDirty = true;
+                self.setImageData(null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+                self.$renderDirty = true;
+                let p = self.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                let maskedObject = self.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
                 return true;
             }
 
-            if (this.$stage) {
+            if (self.$stage) {
                 if (oldBitmapData) {
                     let oldHashCode: number = oldBitmapData.$bitmapData.hashCode;
                     let newHashCode: number = value.$bitmapData.hashCode;
                     if (oldHashCode == newHashCode) {
-                        this.$renderDirty = true;
+                        self.$renderDirty = true;
+                        let p = self.$parent;
+                        if (p && !p.$cacheDirty) {
+                            p.$cacheDirty = true;
+                            p.$cacheDirtyUp();
+                        }
+                        let maskedObject = self.$maskedObject;
+                        if (maskedObject && !maskedObject.$cacheDirty) {
+                            maskedObject.$cacheDirty = true;
+                            maskedObject.$cacheDirtyUp();
+                        }
                         return true;
                     }
-                    BitmapData.$removeDisplayObject(this, oldBitmapData.$bitmapData);
+                    BitmapData.$removeDisplayObject(self, oldBitmapData.$bitmapData);
                 }
-                BitmapData.$addDisplayObject(this, value.$bitmapData);
+                BitmapData.$addDisplayObject(self, value.$bitmapData);
             }
 
-            this.$renderDirty = true;
+            self.$renderDirty = true;
+            let p = self.$parent;
+            if (p && !p.$cacheDirty) {
+                p.$cacheDirty = true;
+                p.$cacheDirtyUp();
+            }
+            let maskedObject = self.$maskedObject;
+            if (maskedObject && !maskedObject.$cacheDirty) {
+                maskedObject.$cacheDirty = true;
+                maskedObject.$cacheDirtyUp();
+            }
             return true;
         }
 
-        $setBitmapData(value):void {
+        $setBitmapData(value): void {
             this.$setTexture(value);
         }
 
@@ -254,8 +285,19 @@ namespace egret {
         }
 
         public set scale9Grid(value: egret.Rectangle) {
-            this.$scale9Grid = value;
-            this.$renderDirty = true;
+            let self = this;
+            self.$scale9Grid = value;
+            self.$renderDirty = true;
+            let p = self.$parent;
+            if (p && !p.$cacheDirty) {
+                p.$cacheDirty = true;
+                p.$cacheDirtyUp();
+            }
+            let maskedObject = self.$maskedObject;
+            if (maskedObject && !maskedObject.$cacheDirty) {
+                maskedObject.$cacheDirty = true;
+                maskedObject.$cacheDirtyUp();
+            }
         }
 
         /**
@@ -354,12 +396,24 @@ namespace egret {
          * @param value
          */
         $setWidth(value: number): boolean {
-            if (value < 0 || value == this.$explicitBitmapWidth) {
+            let self = this;
+            if (value < 0 || value == self.$explicitBitmapWidth) {
                 return false;
             }
-            this.$explicitBitmapWidth = value;
+            self.$explicitBitmapWidth = value;
 
-            this.$renderDirty = true;
+            self.$renderDirty = true;
+
+            let p = self.$parent;
+            if (p && !p.$cacheDirty) {
+                p.$cacheDirty = true;
+                p.$cacheDirtyUp();
+            }
+            let maskedObject = self.$maskedObject;
+            if (maskedObject && !maskedObject.$cacheDirty) {
+                maskedObject.$cacheDirty = true;
+                maskedObject.$cacheDirtyUp();
+            }
 
             return true;
         }
@@ -370,12 +424,24 @@ namespace egret {
          * @param value
          */
         $setHeight(value: number): boolean {
-            if (value < 0 || value == this.$explicitBitmapHeight) {
+            let self = this;
+            if (value < 0 || value == self.$explicitBitmapHeight) {
                 return false;
             }
-            this.$explicitBitmapHeight = value;
+            self.$explicitBitmapHeight = value;
 
-            this.$renderDirty = true;
+            self.$renderDirty = true;
+
+            let p = self.$parent;
+            if (p && !p.$cacheDirty) {
+                p.$cacheDirty = true;
+                p.$cacheDirtyUp();
+            }
+            let maskedObject = self.$maskedObject;
+            if (maskedObject && !maskedObject.$cacheDirty) {
+                maskedObject.$cacheDirty = true;
+                maskedObject.$cacheDirtyUp();
+            }
 
             return true;
         }

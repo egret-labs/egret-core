@@ -555,16 +555,27 @@ namespace egret {
          *
          */
         private constructFrame() {
-            let currentFrameNum: number = this.$currentFrameNum;
-            if (this.displayedKeyFrameNum == currentFrameNum) {
+            let self = this;
+            let currentFrameNum: number = self.$currentFrameNum;
+            if (self.displayedKeyFrameNum == currentFrameNum) {
                 return;
             }
 
-            this.$bitmapData = this.$movieClipData.getTextureByFrame(currentFrameNum);
-            this.$movieClipData.$getOffsetByFrame(currentFrameNum, this.offsetPoint);
+            self.$bitmapData = self.$movieClipData.getTextureByFrame(currentFrameNum);
+            self.$movieClipData.$getOffsetByFrame(currentFrameNum, self.offsetPoint);
 
-            this.displayedKeyFrameNum = currentFrameNum;
-            this.$renderDirty = true;
+            self.displayedKeyFrameNum = currentFrameNum;
+            self.$renderDirty = true;
+            let p = self.$parent;
+            if (p && !p.$cacheDirty) {
+                p.$cacheDirty = true;
+                p.$cacheDirtyUp();
+            }
+            let maskedObject = self.$maskedObject;
+            if (maskedObject && !maskedObject.$cacheDirty) {
+                maskedObject.$cacheDirty = true;
+                maskedObject.$cacheDirtyUp();
+            }
         }
 
         /**
@@ -572,8 +583,19 @@ namespace egret {
          *
          */
         public $renderFrame(): void {
-            this.$bitmapData = this.$movieClipData.getTextureByFrame(this.$currentFrameNum);
-            this.$renderDirty = true;
+            let self = this;
+            self.$bitmapData = self.$movieClipData.getTextureByFrame(self.$currentFrameNum);
+            self.$renderDirty = true;
+            let p = self.$parent;
+            if (p && !p.$cacheDirty) {
+                p.$cacheDirty = true;
+                p.$cacheDirtyUp();
+            }
+            let maskedObject = self.$maskedObject;
+            if (maskedObject && !maskedObject.$cacheDirty) {
+                maskedObject.$cacheDirty = true;
+                maskedObject.$cacheDirtyUp();
+            }
         }
 
         /**

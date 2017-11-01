@@ -2955,8 +2955,10 @@ var egret;
             function CanvasRenderBuffer(width, height, root) {
                 this.surface = createCanvas(width, height);
                 this.context = this.surface.getContext("2d");
-                this.context.$offsetX = 0;
-                this.context.$offsetY = 0;
+                if (this.context) {
+                    this.context.$offsetX = 0;
+                    this.context.$offsetY = 0;
+                }
             }
             Object.defineProperty(CanvasRenderBuffer.prototype, "width", {
                 /**
@@ -5924,10 +5926,15 @@ var egret;
                     return;
                 }
                 var texture;
+                var offsetX;
+                var offsetY;
                 if (image["texture"] || (image.source && image.source["texture"])) {
                     // 如果是render target
                     texture = image["texture"] || image.source["texture"];
                     buffer.saveTransform();
+                    offsetX = buffer.$offsetX;
+                    offsetY = buffer.$offsetY;
+                    buffer.useOffset();
                     buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2); // 翻转
                 }
                 else if (!image.source && !image.webGLTexture) {
@@ -5941,6 +5948,8 @@ var egret;
                 }
                 this.drawTexture(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, imageSourceWidth, imageSourceHeight, undefined, undefined, undefined, undefined, rotated, smoothing);
                 if (image.source && image.source["texture"]) {
+                    buffer.$offsetX = offsetX;
+                    buffer.$offsetY = offsetY;
                     buffer.restoreTransform();
                 }
             };
@@ -5953,10 +5962,15 @@ var egret;
                     return;
                 }
                 var texture;
+                var offsetX;
+                var offsetY;
                 if (image["texture"] || (image.source && image.source["texture"])) {
                     // 如果是render target
                     texture = image["texture"] || image.source["texture"];
                     buffer.saveTransform();
+                    offsetX = buffer.$offsetX;
+                    offsetY = buffer.$offsetY;
+                    buffer.useOffset();
                     buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2); // 翻转
                 }
                 else if (!image.source && !image.webGLTexture) {
@@ -5970,6 +5984,8 @@ var egret;
                 }
                 this.drawTexture(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, imageSourceWidth, imageSourceHeight, meshUVs, meshVertices, meshIndices, bounds, smoothing);
                 if (image["texture"] || (image.source && image.source["texture"])) {
+                    buffer.$offsetX = offsetX;
+                    buffer.$offsetY = offsetY;
                     buffer.restoreTransform();
                 }
             };
@@ -6688,7 +6704,9 @@ var egret;
              * 清空缓冲区数据
              */
             WebGLRenderBuffer.prototype.clear = function () {
+                this.context.pushBuffer(this);
                 this.context.clear();
+                this.context.popBuffer();
             };
             WebGLRenderBuffer.prototype.setTransform = function (a, b, c, d, tx, ty) {
                 // this.globalMatrix.setTo(a, b, c, d, tx, ty);
@@ -6880,7 +6898,7 @@ var egret;
                 var node;
                 var displayList = displayObject.$displayList;
                 if (displayList && !isStage) {
-                    if (displayObject.$cacheDirty) {
+                    if (displayObject.$cacheDirty || displayObject.$renderDirty) {
                         drawCalls += displayList.drawToSurface();
                     }
                     node = displayList.$renderNode;
@@ -7563,10 +7581,6 @@ var egret;
                 if (!this.canvasRenderBuffer || !this.canvasRenderBuffer.context) {
                     this.canvasRenderer = new egret.CanvasRenderer();
                     this.canvasRenderBuffer = new web.CanvasRenderBuffer(width, height);
-                    if (this.canvasRenderBuffer.context) {
-                        this.canvasRenderBuffer.context.$offsetX = 0;
-                        this.canvasRenderBuffer.context.$offsetY = 0;
-                    }
                 }
                 else if (node.dirtyRender) {
                     this.canvasRenderBuffer.resize(width, height);
@@ -7620,23 +7634,15 @@ var egret;
                 if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) {
                     return;
                 }
-                var pixelRatio = egret.sys.DisplayList.$pixelRatio;
                 if (!this.canvasRenderBuffer || !this.canvasRenderBuffer.context) {
                     this.canvasRenderer = new egret.CanvasRenderer();
                     this.canvasRenderBuffer = new web.CanvasRenderBuffer(width, height);
-                    if (this.canvasRenderBuffer.context) {
-                        this.canvasRenderBuffer.context.$offsetX = 0;
-                        this.canvasRenderBuffer.context.$offsetY = 0;
-                    }
                 }
                 else if (node.dirtyRender || forHitTest) {
                     this.canvasRenderBuffer.resize(width, height);
                 }
                 if (!this.canvasRenderBuffer.context) {
                     return;
-                }
-                if (pixelRatio != 1) {
-                    this.canvasRenderBuffer.context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
                 }
                 if (node.x || node.y) {
                     if (node.dirtyRender || forHitTest) {

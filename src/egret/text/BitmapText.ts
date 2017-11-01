@@ -232,8 +232,20 @@ namespace egret {
          * @private
          */
         $invalidateBitmapText(): void {
-            this.$renderDirty = true;
-            this.$BitmapText[sys.BitmapTextKeys.textLinesChanged] = true;
+            let self = this;
+            self.$renderDirty = true;
+            self.$BitmapText[sys.BitmapTextKeys.textLinesChanged] = true;
+
+            let p = self.$parent;
+            if (p && !p.$cacheDirty) {
+                p.$cacheDirty = true;
+                p.$cacheDirtyUp();
+            }
+            let maskedObject = self.$maskedObject;
+            if (maskedObject && !maskedObject.$cacheDirty) {
+                maskedObject.$cacheDirty = true;
+                maskedObject.$cacheDirtyUp();
+            }
         }
 
         /**

@@ -1557,8 +1557,20 @@ namespace egret {
         }
 
         $invalidateTextField(): void {
-            this.$renderDirty = true;
-            this.$TextField[sys.TextKeys.textLinesChanged] = true;
+            let self = this;
+            self.$renderDirty = true;
+            self.$TextField[sys.TextKeys.textLinesChanged] = true;
+
+            let p = self.$parent;
+            if (p && !p.$cacheDirty) {
+                p.$cacheDirty = true;
+                p.$cacheDirtyUp();
+            }
+            let maskedObject = self.$maskedObject;
+            if (maskedObject && !maskedObject.$cacheDirty) {
+                maskedObject.$cacheDirty = true;
+                maskedObject.$cacheDirtyUp();
+            }
         }
 
         $getRenderBounds(): Rectangle {

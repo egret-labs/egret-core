@@ -3350,6 +3350,7 @@ declare namespace egret {
          * @private
          */
         $setTexture(value: Texture): boolean;
+        $setBitmapData(value: any): void;
         /**
          * @private
          */

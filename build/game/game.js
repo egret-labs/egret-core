@@ -3394,22 +3394,44 @@ var egret;
          *
          */
         MovieClip.prototype.constructFrame = function () {
-            var currentFrameNum = this.$currentFrameNum;
-            if (this.displayedKeyFrameNum == currentFrameNum) {
+            var self = this;
+            var currentFrameNum = self.$currentFrameNum;
+            if (self.displayedKeyFrameNum == currentFrameNum) {
                 return;
             }
-            this.$bitmapData = this.$movieClipData.getTextureByFrame(currentFrameNum);
-            this.$movieClipData.$getOffsetByFrame(currentFrameNum, this.offsetPoint);
-            this.displayedKeyFrameNum = currentFrameNum;
-            this.$renderDirty = true;
+            self.$bitmapData = self.$movieClipData.getTextureByFrame(currentFrameNum);
+            self.$movieClipData.$getOffsetByFrame(currentFrameNum, self.offsetPoint);
+            self.displayedKeyFrameNum = currentFrameNum;
+            self.$renderDirty = true;
+            var p = self.$parent;
+            if (p && !p.$cacheDirty) {
+                p.$cacheDirty = true;
+                p.$cacheDirtyUp();
+            }
+            var maskedObject = self.$maskedObject;
+            if (maskedObject && !maskedObject.$cacheDirty) {
+                maskedObject.$cacheDirty = true;
+                maskedObject.$cacheDirtyUp();
+            }
         };
         /**
          * @private
          *
          */
         MovieClip.prototype.$renderFrame = function () {
-            this.$bitmapData = this.$movieClipData.getTextureByFrame(this.$currentFrameNum);
-            this.$renderDirty = true;
+            var self = this;
+            self.$bitmapData = self.$movieClipData.getTextureByFrame(self.$currentFrameNum);
+            self.$renderDirty = true;
+            var p = self.$parent;
+            if (p && !p.$cacheDirty) {
+                p.$cacheDirty = true;
+                p.$cacheDirtyUp();
+            }
+            var maskedObject = self.$maskedObject;
+            if (maskedObject && !maskedObject.$cacheDirty) {
+                maskedObject.$cacheDirty = true;
+                maskedObject.$cacheDirtyUp();
+            }
         };
         /**
          * @private

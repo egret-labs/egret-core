@@ -2800,6 +2800,7 @@ var egret;
         DisplayObjectContainer.prototype.$doRemoveChild = function (index, notifyListeners) {
             if (notifyListeners === void 0) { notifyListeners = true; }
             index = +index | 0;
+            var self = this;
             var children = this.$children;
             var child = children[index];
             this.$childRemoved(child, index);
@@ -2824,6 +2825,19 @@ var egret;
             var indexNow = children.indexOf(child);
             if (indexNow != -1) {
                 children.splice(indexNow, 1);
+            }
+            if (!self.$cacheDirty) {
+                self.$cacheDirty = true;
+                var p = self.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                var maskedObject = self.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
             }
             return child;
         };
@@ -2858,6 +2872,7 @@ var egret;
          * @private
          */
         DisplayObjectContainer.prototype.doSetChildIndex = function (child, index) {
+            var self = this;
             var lastIndex = this.$children.indexOf(child);
             if (lastIndex < 0) {
                 true && egret.$error(1006);
@@ -2871,6 +2886,19 @@ var egret;
             //放到新的位置
             this.$children.splice(index, 0, child);
             this.$childAdded(child, index);
+            if (!self.$cacheDirty) {
+                self.$cacheDirty = true;
+                var p = self.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                var maskedObject = self.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
+            }
         };
         /**
          * Swaps the z-order (front-to-back order) of the child objects at the two specified index positions in the child
@@ -2934,6 +2962,7 @@ var egret;
          * @private
          */
         DisplayObjectContainer.prototype.doSwapChildrenAt = function (index1, index2) {
+            var self = this;
             if (index1 > index2) {
                 var temp = index2;
                 index2 = index1;
@@ -2951,6 +2980,19 @@ var egret;
             list[index2] = child1;
             this.$childAdded(child2, index1);
             this.$childAdded(child1, index2);
+            if (!self.$cacheDirty) {
+                self.$cacheDirty = true;
+                var p = self.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                var maskedObject = self.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
+            }
         };
         /**
          * Removes all child DisplayObject instances from the child list of the DisplayObjectContainer instance. The parent
@@ -5515,36 +5557,70 @@ var egret;
          * @private
          */
         Bitmap.prototype.$setTexture = function (value) {
-            var oldBitmapData = this.$texture;
+            var self = this;
+            var oldBitmapData = self.$texture;
             if (value == oldBitmapData) {
                 return false;
             }
-            this.$texture = value;
+            self.$texture = value;
             if (value) {
-                this.$refreshImageData();
+                self.$refreshImageData();
             }
             else {
                 if (oldBitmapData) {
-                    egret.BitmapData.$removeDisplayObject(this, oldBitmapData.$bitmapData);
+                    egret.BitmapData.$removeDisplayObject(self, oldBitmapData.$bitmapData);
                 }
-                this.setImageData(null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-                this.$renderDirty = true;
+                self.setImageData(null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+                self.$renderDirty = true;
+                var p_1 = self.$parent;
+                if (p_1 && !p_1.$cacheDirty) {
+                    p_1.$cacheDirty = true;
+                    p_1.$cacheDirtyUp();
+                }
+                var maskedObject_1 = self.$maskedObject;
+                if (maskedObject_1 && !maskedObject_1.$cacheDirty) {
+                    maskedObject_1.$cacheDirty = true;
+                    maskedObject_1.$cacheDirtyUp();
+                }
                 return true;
             }
-            if (this.$stage) {
+            if (self.$stage) {
                 if (oldBitmapData) {
                     var oldHashCode = oldBitmapData.$bitmapData.hashCode;
                     var newHashCode = value.$bitmapData.hashCode;
                     if (oldHashCode == newHashCode) {
-                        this.$renderDirty = true;
+                        self.$renderDirty = true;
+                        var p_2 = self.$parent;
+                        if (p_2 && !p_2.$cacheDirty) {
+                            p_2.$cacheDirty = true;
+                            p_2.$cacheDirtyUp();
+                        }
+                        var maskedObject_2 = self.$maskedObject;
+                        if (maskedObject_2 && !maskedObject_2.$cacheDirty) {
+                            maskedObject_2.$cacheDirty = true;
+                            maskedObject_2.$cacheDirtyUp();
+                        }
                         return true;
                     }
-                    egret.BitmapData.$removeDisplayObject(this, oldBitmapData.$bitmapData);
+                    egret.BitmapData.$removeDisplayObject(self, oldBitmapData.$bitmapData);
                 }
-                egret.BitmapData.$addDisplayObject(this, value.$bitmapData);
+                egret.BitmapData.$addDisplayObject(self, value.$bitmapData);
             }
-            this.$renderDirty = true;
+            self.$renderDirty = true;
+            var p = self.$parent;
+            if (p && !p.$cacheDirty) {
+                p.$cacheDirty = true;
+                p.$cacheDirtyUp();
+            }
+            var maskedObject = self.$maskedObject;
+            if (maskedObject && !maskedObject.$cacheDirty) {
+                maskedObject.$cacheDirty = true;
+                maskedObject.$cacheDirtyUp();
+            }
             return true;
+        };
+        Bitmap.prototype.$setBitmapData = function (value) {
+            this.$setTexture(value);
         };
         /**
          * @private
@@ -5593,8 +5669,19 @@ var egret;
                 return this.$scale9Grid;
             },
             set: function (value) {
-                this.$scale9Grid = value;
-                this.$renderDirty = true;
+                var self = this;
+                self.$scale9Grid = value;
+                self.$renderDirty = true;
+                var p = self.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                var maskedObject = self.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
             },
             enumerable: true,
             configurable: true
@@ -5675,11 +5762,22 @@ var egret;
          * @param value
          */
         Bitmap.prototype.$setWidth = function (value) {
-            if (value < 0 || value == this.$explicitBitmapWidth) {
+            var self = this;
+            if (value < 0 || value == self.$explicitBitmapWidth) {
                 return false;
             }
-            this.$explicitBitmapWidth = value;
-            this.$renderDirty = true;
+            self.$explicitBitmapWidth = value;
+            self.$renderDirty = true;
+            var p = self.$parent;
+            if (p && !p.$cacheDirty) {
+                p.$cacheDirty = true;
+                p.$cacheDirtyUp();
+            }
+            var maskedObject = self.$maskedObject;
+            if (maskedObject && !maskedObject.$cacheDirty) {
+                maskedObject.$cacheDirty = true;
+                maskedObject.$cacheDirtyUp();
+            }
             return true;
         };
         /**
@@ -5688,11 +5786,22 @@ var egret;
          * @param value
          */
         Bitmap.prototype.$setHeight = function (value) {
-            if (value < 0 || value == this.$explicitBitmapHeight) {
+            var self = this;
+            if (value < 0 || value == self.$explicitBitmapHeight) {
                 return false;
             }
-            this.$explicitBitmapHeight = value;
-            this.$renderDirty = true;
+            self.$explicitBitmapHeight = value;
+            self.$renderDirty = true;
+            var p = self.$parent;
+            if (p && !p.$cacheDirty) {
+                p.$cacheDirty = true;
+                p.$cacheDirtyUp();
+            }
+            var maskedObject = self.$maskedObject;
+            if (maskedObject && !maskedObject.$cacheDirty) {
+                maskedObject.$cacheDirty = true;
+                maskedObject.$cacheDirtyUp();
+            }
             return true;
         };
         /**
@@ -8336,7 +8445,18 @@ var egret;
                 if (tempList[i] instanceof egret.Bitmap) {
                     tempList[i].$refreshImageData();
                 }
-                tempList[i].$renderDirty = true;
+                var bitmap = tempList[i];
+                bitmap.$renderDirty = true;
+                var p = bitmap.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                var maskedObject = bitmap.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
             }
         };
         BitmapData.$dispose = function (bitmapData) {
@@ -8357,6 +8477,16 @@ var egret;
                     node.$bitmapData = null;
                 }
                 node.$renderDirty = true;
+                var p = node.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                var maskedObject = node.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
             }
             delete BitmapData._displayList[hashCode];
         };
@@ -13202,8 +13332,19 @@ var egret;
          * @private
          */
         Mesh.prototype.$updateVertices = function () {
-            this._verticesDirty = true;
-            this.$renderDirty = true;
+            var self = this;
+            self._verticesDirty = true;
+            self.$renderDirty = true;
+            var p = self.$parent;
+            if (p && !p.$cacheDirty) {
+                p.$cacheDirty = true;
+                p.$cacheDirtyUp();
+            }
+            var maskedObject = self.$maskedObject;
+            if (maskedObject && !maskedObject.$cacheDirty) {
+                maskedObject.$cacheDirty = true;
+                maskedObject.$cacheDirtyUp();
+            }
         };
         /**
          * @private
@@ -15388,7 +15529,7 @@ var egret;
             var node;
             var displayList = displayObject.$displayList;
             if (displayList && !isStage) {
-                if (displayObject.$cacheDirty) {
+                if (displayObject.$cacheDirty || displayObject.$renderDirty) {
                     drawCalls += displayList.drawToSurface();
                 }
                 node = displayList.$renderNode;
@@ -17662,8 +17803,19 @@ var egret;
          * @private
          */
         BitmapText.prototype.$invalidateBitmapText = function () {
-            this.$renderDirty = true;
-            this.$BitmapText[7 /* textLinesChanged */] = true;
+            var self = this;
+            self.$renderDirty = true;
+            self.$BitmapText[7 /* textLinesChanged */] = true;
+            var p = self.$parent;
+            if (p && !p.$cacheDirty) {
+                p.$cacheDirty = true;
+                p.$cacheDirtyUp();
+            }
+            var maskedObject = self.$maskedObject;
+            if (maskedObject && !maskedObject.$cacheDirty) {
+                maskedObject.$cacheDirty = true;
+                maskedObject.$cacheDirtyUp();
+            }
         };
         /**
          * @private
@@ -20219,8 +20371,19 @@ var egret;
             }
         };
         TextField.prototype.$invalidateTextField = function () {
-            this.$renderDirty = true;
-            this.$TextField[18 /* textLinesChanged */] = true;
+            var self = this;
+            self.$renderDirty = true;
+            self.$TextField[18 /* textLinesChanged */] = true;
+            var p = self.$parent;
+            if (p && !p.$cacheDirty) {
+                p.$cacheDirty = true;
+                p.$cacheDirtyUp();
+            }
+            var maskedObject = self.$maskedObject;
+            if (maskedObject && !maskedObject.$cacheDirty) {
+                maskedObject.$cacheDirty = true;
+                maskedObject.$cacheDirtyUp();
+            }
         };
         TextField.prototype.$getRenderBounds = function () {
             var bounds = this.$getContentBounds();

@@ -277,7 +277,18 @@ namespace egret {
                 if (tempList[i] instanceof egret.Bitmap) {
                     (<egret.Bitmap>tempList[i]).$refreshImageData();
                 }
-                tempList[i].$renderDirty = true;
+                let bitmap = tempList[i];
+                bitmap.$renderDirty = true;
+                let p = bitmap.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                let maskedObject = bitmap.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
             }
         }
 
@@ -298,6 +309,16 @@ namespace egret {
                     node.$bitmapData = null;
                 }
                 node.$renderDirty = true;
+                let p = node.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                let maskedObject = node.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
             }
             delete BitmapData._displayList[hashCode];
         }

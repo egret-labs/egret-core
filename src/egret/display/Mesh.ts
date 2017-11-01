@@ -78,8 +78,20 @@ namespace egret {
          * @private
          */
         $updateVertices(): void {
-            this._verticesDirty = true;
-            this.$renderDirty = true;
+            let self = this;
+            self._verticesDirty = true;
+            self.$renderDirty = true;
+
+            let p = self.$parent;
+            if (p && !p.$cacheDirty) {
+                p.$cacheDirty = true;
+                p.$cacheDirtyUp();
+            }
+            let maskedObject = self.$maskedObject;
+            if (maskedObject && !maskedObject.$cacheDirty) {
+                maskedObject.$cacheDirty = true;
+                maskedObject.$cacheDirtyUp();
+            }
         }
 
         /**
