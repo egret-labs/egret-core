@@ -65,7 +65,6 @@ namespace egret.sys {
             super();
             this.root = root;
             this.isStage = (root instanceof Stage);
-            this.offsetMatrix.a = this.offsetMatrix.d = DisplayList.$pixelRatio;
         }
 
         private isStage: boolean = false;
@@ -111,10 +110,13 @@ namespace egret.sys {
          * 设置剪裁边界，不再绘制完整目标对象，画布尺寸由外部决定，超过边界的节点将跳过绘制。
          */
         public setClipRect(width: number, height: number): void {
-            width *= DisplayList.$pixelRatio;
-            height *= DisplayList.$pixelRatio;
+            width *= DisplayList.$canvasScaleX;
+            height *= DisplayList.$canvasScaleY;
             this.renderBuffer.resize(width, height);
         }
+
+        public $canvasScaleX: number = 1;
+        public $canvasScaleY: number = 1;
 
         /**
          * @private
@@ -122,6 +124,8 @@ namespace egret.sys {
          */
         public drawToSurface(): number {
             let drawCalls = 0;
+            this.$canvasScaleX = this.offsetMatrix.a = DisplayList.$canvasScaleX;
+            this.$canvasScaleY = this.offsetMatrix.d = DisplayList.$canvasScaleY;
             if (!this.isStage) {//对非舞台画布要根据目标显示对象尺寸改变而改变。
                 this.changeSurfaceSize();
             }
@@ -146,7 +150,7 @@ namespace egret.sys {
                 renderNode.image = this.bitmapData;
                 renderNode.imageWidth = width;
                 renderNode.imageHeight = height;
-                renderNode.drawImage(0, 0, width, height, -this.offsetX / DisplayList.$pixelRatio, -this.offsetY / DisplayList.$pixelRatio, width / DisplayList.$pixelRatio, height / DisplayList.$pixelRatio);
+                renderNode.drawImage(0, 0, width, height, -this.offsetX / this.$canvasScaleX, -this.offsetY / this.$canvasScaleY, width / this.$canvasScaleX, height / this.$canvasScaleY);
             }
 
             return drawCalls;
@@ -163,10 +167,10 @@ namespace egret.sys {
             let oldOffsetX = this.offsetX;
             let oldOffsetY = this.offsetY;
             let bounds = this.root.$getOriginalBounds();
-            var scaleX = DisplayList.$pixelRatio;
-            var scaleY = DisplayList.$pixelRatio;
-            this.offsetX = -bounds.x * DisplayList.$pixelRatio;
-            this.offsetY = -bounds.y * DisplayList.$pixelRatio;
+            var scaleX = this.$canvasScaleX;
+            var scaleY = this.$canvasScaleY;
+            this.offsetX = -bounds.x * scaleX;
+            this.offsetY = -bounds.y * scaleY;
             this.offsetMatrix.setTo(this.offsetMatrix.a, 0, 0, this.offsetMatrix.d, this.offsetX, this.offsetY);
             let buffer = this.renderBuffer;
             //在chrome里，小等于256*256的canvas会不启用GPU加速。
@@ -181,19 +185,20 @@ namespace egret.sys {
             buffer.resize(width, height);
         }
 
-        /**
-         * @private
-         */
-        public static $pixelRatio: number = 1;
+        public static $canvasScaleFactor: number = 1;
 
         /**
          * @private
          */
-        public static $setDevicePixelRatio(ratio: number): void {
-            if (DisplayList.$pixelRatio == ratio) {
-                return;
-            }
-            DisplayList.$pixelRatio = ratio;
+        public static $canvasScaleX: number = 1;
+        public static $canvasScaleY: number = 1;
+
+        /**
+         * @private
+         */
+        public static $setCanvasScale(x: number, y: number): void {
+            DisplayList.$canvasScaleX = x;
+            DisplayList.$canvasScaleY = y;
         }
     }
 }

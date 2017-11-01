@@ -116,7 +116,6 @@ namespace egret.sys {
 
         /**
          * @private
-         *
          */
         private initialize(): void {
             let rootClass;

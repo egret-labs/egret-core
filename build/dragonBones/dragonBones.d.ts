@@ -622,6 +622,10 @@ declare namespace dragonBones {
         /**
          * @private
          */
+        stage: ArmatureData | null;
+        /**
+         * @private
+         */
         readonly frameIndices: Array<number>;
         /**
          * @private
@@ -1048,6 +1052,10 @@ declare namespace dragonBones {
         /**
          * @private
          */
+        parent: ArmatureData;
+        /**
+         * @private
+         */
         protected _onClear(): void;
         /**
          * @private
@@ -1095,7 +1103,7 @@ declare namespace dragonBones {
         name: string;
         path: string;
         readonly transform: Transform;
-        parent: ArmatureData;
+        parent: SkinData;
         protected _onClear(): void;
     }
     /**
@@ -3844,6 +3852,7 @@ declare namespace dragonBones {
         protected static readonly NAME: string;
         protected static readonly PARENT: string;
         protected static readonly TARGET: string;
+        protected static readonly STAGE: string;
         protected static readonly SHARE: string;
         protected static readonly PATH: string;
         protected static readonly LENGTH: string;
@@ -3950,7 +3959,7 @@ declare namespace dragonBones {
         protected _animation: AnimationData;
         protected _timeline: TimelineData;
         protected _rawTextureAtlases: Array<any> | null;
-        private _defalultColorOffset;
+        private _defaultColorOffset;
         private _prevClockwise;
         private _prevRotation;
         private readonly _helpMatrixA;
@@ -3969,8 +3978,7 @@ declare namespace dragonBones {
         private readonly _weightSlotPose;
         private readonly _weightBonePoses;
         private readonly _cacheBones;
-        private readonly _meshs;
-        private readonly _shareMeshs;
+        private readonly _cacheMeshs;
         private readonly _slotChildActions;
         /**
          * @private
@@ -3980,13 +3988,8 @@ declare namespace dragonBones {
          * @private
          */
         private _samplingEasingCurve(curve, samples);
-        private _sortActionFrame(a, b);
         private _parseActionDataInFrame(rawData, frameStart, bone, slot);
         private _mergeActionFrame(rawData, frameStart, type, bone, slot);
-        private _parseCacheActionFrame(frame);
-        /**
-         * @private
-         */
         protected _parseArmature(rawData: any, scale: number): ArmatureData;
         /**
          * @private
@@ -4031,7 +4034,7 @@ declare namespace dragonBones {
         /**
          * @private
          */
-        protected _parseTimeline(rawData: any, framesKey: string, type: TimelineType, addIntOffset: boolean, addFloatOffset: boolean, frameValueCount: number, frameParser: (rawData: any, frameStart: number, frameCount: number) => number): TimelineData | null;
+        protected _parseTimeline(rawData: any, rawFrames: Array<any> | null, framesKey: string, type: TimelineType, addIntOffset: boolean, addFloatOffset: boolean, frameValueCount: number, frameParser: (rawData: any, frameStart: number, frameCount: number) => number): TimelineData | null;
         /**
          * @private
          */
@@ -4048,9 +4051,7 @@ declare namespace dragonBones {
          * @private
          */
         protected _parseTweenFrame(rawData: any, frameStart: number, frameCount: number): number;
-        /**
-         * @private
-         */
+        private _parseActionFrame(frame, frameStart, frameCount);
         protected _parseZOrderFrame(rawData: any, frameStart: number, frameCount: number): number;
         /**
          * @private
@@ -4465,6 +4466,7 @@ declare namespace dragonBones {
      */
     class EgretTextureAtlasData extends TextureAtlasData {
         static toString(): string;
+        disposeEnabled: boolean;
         private _renderTexture;
         /**
          * @private
@@ -4662,7 +4664,7 @@ declare namespace dragonBones {
          * @internal
          * @private
          */
-        _childTransformDirty: boolean;
+        _childDirty: boolean;
         private _debugDraw;
         private _disposeProxy;
         private _armature;
@@ -4713,18 +4715,6 @@ declare namespace dragonBones {
          * @inheritDoc
          */
         readonly animation: Animation;
-        /**
-         * @inheritDoc
-         */
-        $getWidth(): number;
-        /**
-         * @inheritDoc
-         */
-        $getHeight(): number;
-        /**
-         * @inheritDoc
-         */
-        $hitTest(stageX: number, stageY: number): egret.DisplayObject;
         /**
          * @inheritDoc
          */
@@ -4934,6 +4924,7 @@ declare namespace dragonBones {
         private static _dragonBonesInstance;
         private static _factory;
         private static _clockHandler(time);
+        private static _createDragonBOnes();
         /**
          * 一个可以直接使用的全局 WorldClock 实例。(由引擎驱动)
          * @version DragonBones 5.0
@@ -4957,7 +4948,7 @@ declare namespace dragonBones {
         /**
          * @private
          */
-        protected _buildTextureAtlasData(textureAtlasData: EgretTextureAtlasData | null, textureAtlas: egret.Texture | null): EgretTextureAtlasData;
+        protected _buildTextureAtlasData(textureAtlasData: EgretTextureAtlasData | null, textureAtlas: egret.Texture | HTMLImageElement | null): EgretTextureAtlasData;
         /**
          * @private
          */

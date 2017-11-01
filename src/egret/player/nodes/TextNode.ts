@@ -99,9 +99,11 @@ namespace egret.sys {
          * 脏渲染标记
          */
         public dirtyRender:boolean = true;
-        public $texture;
-        public $textureWidth;
-        public $textureHeight;
+        public $texture:WebGLTexture;
+        public $textureWidth:number;
+        public $textureHeight:number;
+        public $canvasScaleX:number;
+        public $canvasScaleY:number;
 
         /**
          * 清除非绘制的缓存数据

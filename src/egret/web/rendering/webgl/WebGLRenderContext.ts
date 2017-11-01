@@ -506,7 +506,7 @@ namespace egret.web {
             sourceX: number, sourceY: number, sourceWidth: number, sourceHeight: number,
             destX: number, destY: number, destWidth: number, destHeight: number,
             imageSourceWidth: number, imageSourceHeight: number,
-            meshUVs: number[], meshVertices: number[], meshIndices: number[], bounds: Rectangle, smoothing: boolean
+            meshUVs: number[], meshVertices: number[], meshIndices: number[], bounds: Rectangle, rotated: boolean, smoothing: boolean
         ): void {
             let buffer = this.currentBuffer;
             if (this.contextLost || !image || !buffer) {
@@ -537,7 +537,7 @@ namespace egret.web {
             this.drawTexture(texture,
                 sourceX, sourceY, sourceWidth, sourceHeight,
                 destX, destY, destWidth, destHeight,
-                imageSourceWidth, imageSourceHeight, meshUVs, meshVertices, meshIndices, bounds, smoothing);
+                imageSourceWidth, imageSourceHeight, meshUVs, meshVertices, meshIndices, bounds, rotated, smoothing);
 
             if (image["texture"] || (image.source && image.source["texture"])) {
                 buffer.$offsetX = offsetX;

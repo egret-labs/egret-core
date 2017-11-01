@@ -231,7 +231,9 @@ namespace EXML {
             }
         }
         if (url) {
-            parsedClasses[url] = clazz;
+            if(clazz) {
+                parsedClasses[url] = clazz;
+            }
             let list: any[] = callBackMap[url];
             delete callBackMap[url];
             let length = list ? list.length : 0;

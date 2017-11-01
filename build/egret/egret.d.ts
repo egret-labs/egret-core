@@ -8989,6 +8989,8 @@ declare namespace egret.sys {
          * 设置剪裁边界，不再绘制完整目标对象，画布尺寸由外部决定，超过边界的节点将跳过绘制。
          */
         setClipRect(width: number, height: number): void;
+        $canvasScaleX: number;
+        $canvasScaleY: number;
         /**
          * @private
          * 绘制根节点显示对象到目标画布，返回draw的次数。
@@ -9000,17 +9002,27 @@ declare namespace egret.sys {
          * 改变画布的尺寸，由于画布尺寸修改会清空原始画布。所以这里将原始画布绘制到一个新画布上，再与原始画布交换。
          */
         changeSurfaceSize(): void;
+        static $canvasScaleFactor: number;
         /**
          * @private
          */
-        static $pixelRatio: number;
+        static $canvasScaleX: number;
+        static $canvasScaleY: number;
         /**
          * @private
          */
-        static $setDevicePixelRatio(ratio: number): void;
+        static $setCanvasScale(x: number, y: number): void;
     }
 }
 declare namespace egret {
+    type runEgretOptions = {
+        renderMode?: string;
+        audioType?: number;
+        screenAdapter?: sys.IScreenAdapter;
+        antialias?: boolean;
+        canvasScaleFactor?: number;
+        calculateCanvasScaleFactor?: (context: CanvasRenderingContext2D) => number;
+    };
     /**
      * egret project entry function
      * @param options An object containing the initialization properties for egret engine.
@@ -9021,13 +9033,7 @@ declare namespace egret {
      * @param options 一个可选对象，包含初始化Egret引擎需要的参数。
      * @language zh_CN
      */
-    function runEgret(options?: {
-        renderMode?: string;
-        audioType?: number;
-        screenAdapter?: sys.IScreenAdapter;
-        antialias?: boolean;
-        canvasScaleFactor?: number;
-    }): void;
+    function runEgret(options?: runEgretOptions): void;
     /**
      * Refresh the screen display
      * @language en_US
@@ -9923,9 +9929,9 @@ declare namespace egret.sys {
          * 暂时调用lineStyle,beginFill,beginGradientFill标记,实际应该draw时候标记在Path2D
          */
         dirtyRender: boolean;
-        $texture: any;
-        $textureWidth: any;
-        $textureHeight: any;
+        $texture: WebGLTexture;
+        $textureWidth: number;
+        $textureHeight: number;
         /**
          * 清除非绘制的缓存数据
          */
@@ -10007,6 +10013,10 @@ declare namespace egret.sys {
          * 颜色变换滤镜
          */
         filter: ColorMatrixFilter;
+        /**
+         * 翻转
+         */
+        rotated: boolean;
         /**
          * 绘制一次位图
          */
@@ -10168,9 +10178,11 @@ declare namespace egret.sys {
          * 脏渲染标记
          */
         dirtyRender: boolean;
-        $texture: any;
-        $textureWidth: any;
-        $textureHeight: any;
+        $texture: WebGLTexture;
+        $textureWidth: number;
+        $textureHeight: number;
+        $canvasScaleX: number;
+        $canvasScaleY: number;
         /**
          * 清除非绘制的缓存数据
          */

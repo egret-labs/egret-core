@@ -63,7 +63,8 @@ var UpgradeCommand = (function () {
                             { "v": "4.1.0", command: Upgrade_4_1_0 },
                             { "v": "5.0.0" },
                             { "v": "5.0.1", command: Upgrade_5_0_1 },
-                            { "v": "5.0.8", command: Upgrade_5_0_8 }
+                            { "v": "5.0.8", command: Upgrade_5_0_8 },
+                            { "v": "5.0.11" }
                         ];
                         _a.label = 1;
                     case 1:

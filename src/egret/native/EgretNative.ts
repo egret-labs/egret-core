@@ -634,7 +634,7 @@ namespace egret.native {
     let isRunning:boolean = false;
     let playerList:Array<NativePlayer> = [];
 
-    function runEgret(options?:{renderMode?:string;audioType?:number;screenAdapter?:sys.IScreenAdapter}) {
+    function runEgret(options?:runEgretOptions) {
         if (isRunning) {
             return;
         }

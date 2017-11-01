@@ -4421,6 +4421,9 @@ var egret;
             // this.$uniforms.quality = quality;
             _this.$uniforms.inner = inner ? 1 : 0;
             _this.$uniforms.knockout = knockout ? 0 : 1;
+            _this.$uniforms.dist = 0;
+            _this.$uniforms.angle = 0;
+            _this.$uniforms.hideObject = 0;
             return _this;
         }
         Object.defineProperty(GlowFilter.prototype, "color", {
@@ -12782,9 +12785,10 @@ var egret;
                  */
                 _this.offsetMatrix = new egret.Matrix();
                 _this.needUpdateRegions = false;
+                _this.$canvasScaleX = 1;
+                _this.$canvasScaleY = 1;
                 _this.root = root;
                 _this.isStage = (root instanceof egret.Stage);
-                _this.offsetMatrix.a = _this.offsetMatrix.d = DisplayList.$pixelRatio;
                 return _this;
             }
             /**
@@ -12814,8 +12818,8 @@ var egret;
              * 设置剪裁边界，不再绘制完整目标对象，画布尺寸由外部决定，超过边界的节点将跳过绘制。
              */
             DisplayList.prototype.setClipRect = function (width, height) {
-                width *= DisplayList.$pixelRatio;
-                height *= DisplayList.$pixelRatio;
+                width *= DisplayList.$canvasScaleX;
+                height *= DisplayList.$canvasScaleY;
                 this.renderBuffer.resize(width, height);
             };
             /**
@@ -12824,6 +12828,8 @@ var egret;
              */
             DisplayList.prototype.drawToSurface = function () {
                 var drawCalls = 0;
+                this.$canvasScaleX = this.offsetMatrix.a = DisplayList.$canvasScaleX;
+                this.$canvasScaleY = this.offsetMatrix.d = DisplayList.$canvasScaleY;
                 if (!this.isStage) {
                     this.changeSurfaceSize();
                 }
@@ -12847,7 +12853,7 @@ var egret;
                     renderNode.image = this.bitmapData;
                     renderNode.imageWidth = width;
                     renderNode.imageHeight = height;
-                    renderNode.drawImage(0, 0, width, height, -this.offsetX / DisplayList.$pixelRatio, -this.offsetY / DisplayList.$pixelRatio, width / DisplayList.$pixelRatio, height / DisplayList.$pixelRatio);
+                    renderNode.drawImage(0, 0, width, height, -this.offsetX / this.$canvasScaleX, -this.offsetY / this.$canvasScaleY, width / this.$canvasScaleX, height / this.$canvasScaleY);
                 }
                 return drawCalls;
             };
@@ -12860,10 +12866,10 @@ var egret;
                 var oldOffsetX = this.offsetX;
                 var oldOffsetY = this.offsetY;
                 var bounds = this.root.$getOriginalBounds();
-                var scaleX = DisplayList.$pixelRatio;
-                var scaleY = DisplayList.$pixelRatio;
-                this.offsetX = -bounds.x * DisplayList.$pixelRatio;
-                this.offsetY = -bounds.y * DisplayList.$pixelRatio;
+                var scaleX = this.$canvasScaleX;
+                var scaleY = this.$canvasScaleY;
+                this.offsetX = -bounds.x * scaleX;
+                this.offsetY = -bounds.y * scaleY;
                 this.offsetMatrix.setTo(this.offsetMatrix.a, 0, 0, this.offsetMatrix.d, this.offsetX, this.offsetY);
                 var buffer = this.renderBuffer;
                 //在chrome里，小等于256*256的canvas会不启用GPU加速。
@@ -12880,16 +12886,16 @@ var egret;
             /**
              * @private
              */
-            DisplayList.$setDevicePixelRatio = function (ratio) {
-                if (DisplayList.$pixelRatio == ratio) {
-                    return;
-                }
-                DisplayList.$pixelRatio = ratio;
+            DisplayList.$setCanvasScale = function (x, y) {
+                DisplayList.$canvasScaleX = x;
+                DisplayList.$canvasScaleY = y;
             };
+            DisplayList.$canvasScaleFactor = 1;
             /**
              * @private
              */
-            DisplayList.$pixelRatio = 1;
+            DisplayList.$canvasScaleX = 1;
+            DisplayList.$canvasScaleY = 1;
             return DisplayList;
         }(egret.HashObject));
         sys.DisplayList = DisplayList;
@@ -14879,6 +14885,10 @@ var egret;
                  * 颜色变换滤镜
                  */
                 _this.filter = null;
+                /**
+                 * 翻转
+                 */
+                _this.rotated = false;
                 _this.type = 5 /* MeshNode */;
                 _this.vertices = [];
                 _this.uvs = [];
@@ -15529,7 +15539,9 @@ var egret;
             var node;
             var displayList = displayObject.$displayList;
             if (displayList && !isStage) {
-                if (displayObject.$cacheDirty || displayObject.$renderDirty) {
+                if (displayObject.$cacheDirty || displayObject.$renderDirty ||
+                    displayList.$canvasScaleX != egret.sys.DisplayList.$canvasScaleX ||
+                    displayList.$canvasScaleY != egret.sys.DisplayList.$canvasScaleY) {
                     drawCalls += displayList.drawToSurface();
                 }
                 node = displayList.$renderNode;
@@ -17140,7 +17152,7 @@ var egret;
              * @language zh_CN
              */
             get: function () {
-                return "5.0.8";
+                return "5.0.11";
             },
             enumerable: true,
             configurable: true

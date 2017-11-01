@@ -131,7 +131,7 @@ namespace egret.web {
          */
         public cacheArrays(buffer: WebGLRenderBuffer, sourceX: number, sourceY: number, sourceWidth: number, sourceHeight: number,
             destX: number, destY: number, destWidth: number, destHeight: number, textureSourceWidth: number, textureSourceHeight: number,
-            meshUVs?: number[], meshVertices?: number[], meshIndices?: number[], rotated?:boolean): void {
+            meshUVs?: number[], meshVertices?: number[], meshIndices?: number[], rotated?: boolean): void {
             let alpha = buffer.globalAlpha;
             //计算出绘制矩阵，之后把矩阵还原回之前的
             let locWorldTransform = buffer.globalMatrix;
@@ -150,20 +150,22 @@ namespace egret.web {
                 ty = offsetX * b + offsetY * d + ty;
             }
 
-            if (destX != 0 || destY != 0) {
-                tx = destX * a + destY * c + tx;
-                ty = destX * b + destY * d + ty;
-            }
-            
-            let a1 = destWidth / sourceWidth;
-            if (a1 != 1) {
-                a = a1 * a;
-                b = a1 * b;
-            }
-            let d1 = destHeight / sourceHeight;
-            if (d1 != 1) {
-                c = d1 * c;
-                d = d1 * d;
+            if (!meshVertices) {
+                if (destX != 0 || destY != 0) {
+                    tx = destX * a + destY * c + tx;
+                    ty = destX * b + destY * d + ty;
+                }
+
+                let a1 = destWidth / sourceWidth;
+                if (a1 != 1) {
+                    a = a1 * a;
+                    b = a1 * b;
+                }
+                let d1 = destHeight / sourceHeight;
+                if (d1 != 1) {
+                    c = d1 * c;
+                    d = d1 * d;
+                }
             }
 
             if (meshVertices) {

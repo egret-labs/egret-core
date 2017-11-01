@@ -103,6 +103,10 @@ namespace egret {
             // this.$uniforms.quality = quality;
             this.$uniforms.inner = inner ? 1 : 0;
             this.$uniforms.knockout = knockout ? 0 : 1;
+
+            this.$uniforms.dist = 0;
+            this.$uniforms.angle = 0;
+            this.$uniforms.hideObject = 0;
         }
 
         /**

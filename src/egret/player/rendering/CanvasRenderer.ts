@@ -83,7 +83,9 @@ namespace egret {
             let node: sys.RenderNode;
             let displayList = displayObject.$displayList;
             if (displayList && !isStage) {
-                if (displayObject.$cacheDirty || displayObject.$renderDirty) {
+                if (displayObject.$cacheDirty || displayObject.$renderDirty ||
+                    displayList.$canvasScaleX != sys.DisplayList.$canvasScaleX ||
+                    displayList.$canvasScaleY != sys.DisplayList.$canvasScaleY) {
                     drawCalls += displayList.drawToSurface();
                 }
                 node = displayList.$renderNode;
