@@ -159,7 +159,8 @@ namespace eui.sys {
         public $parseCode(codeText:string, classStr:string):{new():any} {
             //传入的是编译后的js字符串
             let className = classStr ? classStr : "$exmlClass" + innerClassCount++;
-            let clazz = eval(codeText);
+            let geval = eval;
+            let clazz = geval(codeText);
             let hasClass = true;
 
             if (hasClass && clazz) {
@@ -224,16 +225,17 @@ namespace eui.sys {
             let code = exClass.toCode();
 
             let clazz:any = null;
+            let geval = eval;
             if (DEBUG) {
                 try {
-                    clazz = eval(code);
+                    clazz = geval(code);
                 }
                 catch (e) {
                     egret.log(code);
                     return null;
                 }
             } else {
-                clazz = eval(code);
+                clazz = geval(code);
             }
 
             if (hasClass && clazz) {

@@ -473,6 +473,7 @@ var egret;
             var self = this;
             self.updatePadding();
             egret.WebAssemblyNode.setFilterPadding(self.$id, self.paddingTop, self.paddingBottom, self.paddingLeft, self.paddingRight);
+            egret.WebAssemblyNode.setDataToFilter(self.$id);
         };
         /**
          * @private
@@ -2096,14 +2097,15 @@ var egret;
                 egret.WebAssembly.update();
                 egret.WebAssembly.renderDisplayObjectWithOffset(self.$waNode.id, 1 - localX, 1 - localY);
                 egret.WebAssembly.executeRenderCommand();
-                egret.WebAssembly.activateBuffer(savedBuffer);
-                egret.WebAssembly.forHitTest = false;
                 try {
-                    data = buffer.getPixels(1, 1);
+                    // data = buffer.getPixels(1, 1);
+                    data = egret.WebAssembly.getPixels(1, 1);
                 }
                 catch (e) {
                     throw new Error(egret.sys.tr(1039));
                 }
+                egret.WebAssembly.activateBuffer(savedBuffer);
+                egret.WebAssembly.forHitTest = false;
                 if (data[3] === 0) {
                     return false;
                 }
@@ -4106,6 +4108,9 @@ var egret;
             // this.$uniforms.quality = quality;
             self.$uniforms.inner = inner ? 1 : 0;
             self.$uniforms.knockout = knockout ? 0 : 1;
+            self.$uniforms.dist = 0;
+            self.$uniforms.angle = 0;
+            self.$uniforms.hideObject = 0;
             self.onPropertyChange();
             return _this;
         }
@@ -5054,7 +5059,7 @@ var egret;
 (function (egret) {
     var blendModes = ["source-over", "lighter", "destination-out"];
     var defaultCompositeOp = "source-over";
-    var BLACK_COLOR = "#000000";
+    egret.BLACK_COLOR = "#000000";
     var CAPS_STYLES = { none: 'butt', square: 'square', round: 'round' };
     var renderBufferPool = []; //渲染缓冲区对象池
     var renderBufferPool_Filters = []; //滤镜缓冲区对象池
@@ -5610,7 +5615,7 @@ var egret;
                 switch (path.type) {
                     case 1 /* Fill */:
                         var fillPath = path;
-                        context.fillStyle = forHitTest ? BLACK_COLOR : getRGBAString(fillPath.fillColor, fillPath.fillAlpha);
+                        context.fillStyle = forHitTest ? egret.BLACK_COLOR : getRGBAString(fillPath.fillColor, fillPath.fillAlpha);
                         this.renderPath(path, context);
                         if (this.renderingMask) {
                             context.clip();
@@ -5621,7 +5626,7 @@ var egret;
                         break;
                     case 2 /* GradientFill */:
                         var g = path;
-                        context.fillStyle = forHitTest ? BLACK_COLOR : getGradient(context, g.gradientType, g.colors, g.alphas, g.ratios, g.matrix);
+                        context.fillStyle = forHitTest ? egret.BLACK_COLOR : getGradient(context, g.gradientType, g.colors, g.alphas, g.ratios, g.matrix);
                         context.save();
                         var m = g.matrix;
                         this.renderPath(path, context);
@@ -5633,7 +5638,7 @@ var egret;
                         var strokeFill = path;
                         var lineWidth = strokeFill.lineWidth;
                         context.lineWidth = lineWidth;
-                        context.strokeStyle = forHitTest ? BLACK_COLOR : getRGBAString(strokeFill.lineColor, strokeFill.lineAlpha);
+                        context.strokeStyle = forHitTest ? egret.BLACK_COLOR : getRGBAString(strokeFill.lineColor, strokeFill.lineAlpha);
                         context.lineCap = CAPS_STYLES[strokeFill.caps];
                         context.lineJoin = strokeFill.joints;
                         context.miterLimit = strokeFill.miterLimit;
@@ -5707,6 +5712,7 @@ var egret;
         font += size + "px " + fontFamily;
         return font;
     }
+    egret.getFontString = getFontString;
     /**
      * @private
      * 获取RGBA字符串
@@ -5717,6 +5723,7 @@ var egret;
         var blue = color & 0xFF;
         return "rgba(" + red + "," + green + "," + blue + "," + alpha + ")";
     }
+    egret.getRGBAString = getRGBAString;
     /**
      * @private
      * 获取渐变填充样式对象
@@ -6375,7 +6382,7 @@ var egret;
              * @language zh_CN
              */
             get: function () {
-                return "5.0.9";
+                return "5.0.11";
             },
             enumerable: true,
             configurable: true
@@ -9630,6 +9637,7 @@ var egret;
             self.updatePadding();
             egret.WebAssemblyNode.setFilterPadding(self.blurXFilter.$id, 0, 0, self.paddingLeft, self.paddingRight);
             egret.WebAssemblyNode.setFilterPadding(self.blurYFilter.$id, self.paddingTop, self.paddingBottom, 0, 0);
+            egret.WebAssemblyNode.setDataToFilter(self.$id);
         };
         return BlurFilter;
     }(egret.Filter));
@@ -9642,6 +9650,7 @@ var egret;
             var _this = _super.call(this) || this;
             _this.type = "blur";
             _this.$uniforms.blur = { x: blurX, y: 0 };
+            _this.onPropertyChange();
             return _this;
         }
         Object.defineProperty(BlurXFilter.prototype, "blurX", {
@@ -9664,6 +9673,7 @@ var egret;
             var _this = _super.call(this) || this;
             _this.type = "blur";
             _this.$uniforms.blur = { x: 0, y: blurY };
+            _this.onPropertyChange();
             return _this;
         }
         Object.defineProperty(BlurYFilter.prototype, "blurY", {
@@ -9760,6 +9770,7 @@ var egret;
             ];
             _this.$uniforms.colorAdd = { x: 0, y: 0, z: 0, w: 0 };
             _this.setMatrix(matrix);
+            _this.onPropertyChange();
             return _this;
         }
         Object.defineProperty(ColorMatrixFilter.prototype, "matrix", {
@@ -9965,6 +9976,7 @@ var egret;
         CustomFilter.prototype.onPropertyChange = function () {
             var self = this;
             egret.WebAssemblyNode.setFilterPadding(self.$id, self.$padding, self.$padding, self.$padding, self.$padding);
+            egret.WebAssemblyNode.setDataToFilter(self.$id);
         };
         return CustomFilter;
     }(egret.Filter));
@@ -14305,7 +14317,13 @@ var egret;
                 var stage = this.stage;
                 stage.$stageWidth = stageWidth;
                 stage.$stageHeight = stageHeight;
-                this.renderBuffer.resize(stageWidth, stageHeight);
+                // for native
+                if (Module.isNative) {
+                    egret.WebAssembly.resize(stageWidth, stageHeight);
+                }
+                else {
+                    this.renderBuffer.resize(stageWidth, stageHeight);
+                }
                 stage.dispatchEventWith(egret.Event.RESIZE);
             };
             Player.prototype.displayFPS = function (showFPS, showLog, logFilter, fpsStyles) {
@@ -17252,6 +17270,8 @@ var egret;
         var renderDisplayObject2Fun;
         var localToGlobalFun;
         var globalToLocalFun;
+        var getPixelsFun;
+        var activateBufferFun;
         var gl;
         var context;
         var rootWebGLBuffer;
@@ -17271,7 +17291,7 @@ var egret;
             _callBackList.push(callback);
             _thisObjectList.push(thisObj);
         };
-        // isWasm: 1: wasm, 2: use asm release, 3: use asm debug, almost asm
+        // isWasm: 1: wasm, 2: use asm release, 3: use asm debug, almost asm, 4: use native
         WebAssembly.init = function (wasmSize, isWasm) {
             if (wasmSize === void 0) { wasmSize = (128 * 1024 * 1024); }
             if (isWasm === void 0) { isWasm = 1; }
@@ -17290,46 +17310,57 @@ var egret;
             }
             isInit = true;
             var that = this;
-            Module = {
-                postRun: []
-            };
+            if (__global.egret_native) {
+                isWasm = 4;
+            }
             function initImpl() {
                 var script = document.createElement('script');
                 script.src = isWasm == 1 ? "./libs/egret.webassembly.js" : "./libs/egret.asm.js";
                 document.body.appendChild(script);
+                Module = {};
                 Module.wasmBinary = (isWasm == 1) ? _xhr.response : null;
-                Module.postRun.push(function () {
-                    Module.customInit();
-                    Module.downloadBuffers(function (buffer, buffer1, buffer2, buffer3) {
-                        renderCmdBuffer = buffer;
-                        vertexCmdBuffer = buffer1;
-                        indexCmdBuffer = buffer2;
-                        egret.WebAssemblyNode.init(buffer3, bitmapDataMap, filterMap);
-                        updateFun = Module.update;
-                        renderFun = Module.render;
-                        resizeFun = Module.resize;
-                        setRenderModeFun = Module.setRenderMode;
-                        updateCallbackListFun = Module.updateCallbackList;
-                        renderDisplayObjectFun = Module.renderDisplayObject;
-                        renderDisplayObject2Fun = Module.renderDisplayObject2;
-                        localToGlobalFun = Module.localToGlobal;
-                        globalToLocalFun = Module.globalToLocal;
-                        timeStamp = egret.getTimer();
-                        if (_callBackList.length > 0) {
-                            var locCallAsyncFunctionList = _callBackList;
-                            var locCallAsyncThisList = _thisObjectList;
-                            for (var i = 0; i < locCallAsyncFunctionList.length; i++) {
-                                var func = locCallAsyncFunctionList[i];
-                                if (func != null) {
-                                    func.apply(locCallAsyncThisList[i]);
-                                }
-                            }
-                        }
-                        egret.startTick(that.updatePreCallback, that);
-                    });
-                });
+                Module.postRun = [];
+                Module.postRun.push(initImpl2);
             }
             ;
+            function initImpl2() {
+                Module.isNative = isWasm === 4;
+                if (Module.isNative) {
+                    Module["__bitmapDataMap"] = bitmapDataMap;
+                    Module["__textFieldDataMap"] = textFieldDataMap;
+                    Module["__customFilterDataMap"] = customFilterDataMap;
+                    getPixelsFun = Module.getPixels;
+                }
+                Module.customInit();
+                Module.downloadBuffers(function (buffer, buffer1, buffer2, buffer3) {
+                    renderCmdBuffer = buffer;
+                    vertexCmdBuffer = buffer1;
+                    indexCmdBuffer = buffer2;
+                    egret.WebAssemblyNode.init(buffer3, Module.isNative, bitmapDataMap, filterMap, customFilterDataMap);
+                    updateFun = Module.update;
+                    renderFun = Module.render;
+                    resizeFun = Module.resize;
+                    setRenderModeFun = Module.setRenderMode;
+                    updateCallbackListFun = Module.updateCallbackList;
+                    renderDisplayObjectFun = Module.renderDisplayObject;
+                    renderDisplayObject2Fun = Module.renderDisplayObject2;
+                    localToGlobalFun = Module.localToGlobal;
+                    globalToLocalFun = Module.globalToLocal;
+                    activateBufferFun = Module.activateBuffer;
+                    timeStamp = egret.getTimer();
+                    if (_callBackList.length > 0) {
+                        var locCallAsyncFunctionList = _callBackList;
+                        var locCallAsyncThisList = _thisObjectList;
+                        for (var i = 0; i < locCallAsyncFunctionList.length; i++) {
+                            var func = locCallAsyncFunctionList[i];
+                            if (func != null) {
+                                func.apply(locCallAsyncThisList[i]);
+                            }
+                        }
+                    }
+                    egret.startTick(that.updatePreCallback, that);
+                });
+            }
             var _xhr;
             switch (isWasm) {
                 case 1:
@@ -17346,6 +17377,9 @@ var egret;
                 case 3:
                     initImpl();
                     break;
+                case 4:
+                    // for native 
+                    initImpl2();
                 default:
                     break;
             }
@@ -17380,14 +17414,20 @@ var egret;
         };
         WebAssembly.setRenderMode = function (mode) {
             isWebGLRenderer = mode == "webgl";
-            setRenderModeFun(isWebGLRenderer ? 1 : 0);
+            // TODO for native
+            if (Module.isNative) {
+                setRenderModeFun(2);
+            }
+            else {
+                setRenderModeFun(isWebGLRenderer ? 1 : 0);
+            }
             WebAssembly.initBlendMode();
         };
         WebAssembly.renderDisplayObject = function (id, scale, useClip, clipX, clipY, clipW, clipH) {
             renderDisplayObjectFun(id, scale, useClip, clipX, clipY, clipW, clipH);
         };
         WebAssembly.renderDisplayObjectWithOffset = function (id, offsetX, offsetY) {
-            renderDisplayObject2Fun(id, offsetX, offsetY);
+            renderDisplayObject2Fun(id, offsetX, offsetY, WebAssembly.forHitTest);
         };
         WebAssembly.localToGlobal = function (id, localX, localY) {
             return localToGlobalFun(id, localX, localY);
@@ -17415,6 +17455,7 @@ var egret;
             graphicsMap[graphics.$targetDisplay.$waNode.id] = graphics;
         };
         var validateDirtyTextField = function () {
+            var isNative = Module.isNative;
             var length = dirtyTextFieldList.length;
             if (length > 0) {
                 var locList = dirtyTextFieldList;
@@ -17431,10 +17472,14 @@ var egret;
                     else {
                         textField.$waNode.setTextRect(node.x, node.y, width, height);
                     }
+                    if (isNative) {
+                        bufferTextData(textField.$waNode.id);
+                    }
                 }
             }
         };
         var validateDirtyGraphics = function () {
+            var isNative = Module.isNative;
             var length = dirtyGraphicsList.length;
             if (length > 0) {
                 var locList = dirtyGraphicsList;
@@ -17450,6 +17495,9 @@ var egret;
                     else {
                         graphics.$targetDisplay.$waNode.setGraphicsRect(node.x, node.y, node.width, node.height, graphics.$targetIsSprite);
                     }
+                    if (isNative) {
+                        bufferGraphicsData(graphics.$targetDisplay.$waNode.id, node);
+                    }
                 }
             }
         };
@@ -17464,7 +17512,8 @@ var egret;
         };
         var bindDefaultIndex = false;
         WebAssembly.render = function () {
-            if (!context && isWebGLRenderer) {
+            // TODO for native
+            if (!context && isWebGLRenderer && !Module.isNative) {
                 context = egret.WebGLRenderContext.getInstance(3, 3);
                 gl = context.context;
                 context.uploadIndicesArray(context.vao.getIndices());
@@ -17479,6 +17528,9 @@ var egret;
             }
         };
         WebAssembly.executeRenderCommand = function () {
+            // for native
+            if (Module.isNative)
+                return 0;
             var drawCalls = 0;
             var offset = 0;
             var cmds = renderCmdBuffer;
@@ -17545,7 +17597,7 @@ var egret;
                         idx += 2;
                         break;
                     case 11 /* DRAW_POP_MASK */:
-                        drawPushMask(cmds[idx + 1], offset);
+                        drawPopMask(cmds[idx + 1], offset);
                         offset += 6;
                         idx += 2;
                         break;
@@ -17765,6 +17817,300 @@ var egret;
             }
             node.dirtyRender = false;
         };
+        var parseColorString = function (colorStr, colorVal) {
+            if (colorStr.indexOf("r") == -1) {
+                colorStr = colorStr.replace(/#/, "");
+                colorVal.color = parseInt(colorStr, 16);
+            }
+            else {
+                colorStr = colorStr.replace(/rgba\(/, "");
+                colorStr = colorStr.replace(/\)/, "");
+                var colorArr = colorStr.split(",");
+                colorVal.color = (Number(colorArr[0]) << 16) | (Number(colorArr[1]) << 8) | Number(colorArr[2]);
+                colorVal.alpha = Number(colorArr[3]);
+            }
+        };
+        var bufferRenderPath = function (path, currCmds) {
+            // 1023 beginPath
+            currCmds.push(1023);
+            var data = path.$data;
+            var commands = path.$commands;
+            var commandCount = commands.length;
+            var pos = 0;
+            for (var commandIndex = 0; commandIndex < commandCount; commandIndex++) {
+                var command = commands[commandIndex];
+                switch (command) {
+                    case 4 /* CubicCurveTo */:
+                        // context.bezierCurveTo(data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
+                        currCmds.push(1024);
+                        currCmds.push(data[pos++]);
+                        currCmds.push(data[pos++]);
+                        currCmds.push(data[pos++]);
+                        currCmds.push(data[pos++]);
+                        currCmds.push(data[pos++]);
+                        currCmds.push(data[pos++]);
+                        break;
+                    case 3 /* CurveTo */:
+                        // context.quadraticCurveTo(data[pos++], data[pos++], data[pos++], data[pos++]);
+                        currCmds.push(1025);
+                        currCmds.push(data[pos++]);
+                        currCmds.push(data[pos++]);
+                        currCmds.push(data[pos++]);
+                        currCmds.push(data[pos++]);
+                        break;
+                    case 2 /* LineTo */:
+                        // context.lineTo(data[pos++], data[pos++]);
+                        currCmds.push(1026);
+                        currCmds.push(data[pos++]);
+                        currCmds.push(data[pos++]);
+                        break;
+                    case 1 /* MoveTo */:
+                        // context.moveTo(data[pos++], data[pos++]);
+                        currCmds.push(1027);
+                        currCmds.push(data[pos++]);
+                        currCmds.push(data[pos++]);
+                        break;
+                }
+            }
+        };
+        var bufferTextData = function (textFieldId) {
+            var textField = textFieldMap[textFieldId];
+            var node = textField.$renderNode;
+            var width = node.width - node.x;
+            var height = node.height - node.y;
+            if (!textFieldDataMap[textFieldId]) {
+                var textData = { x: node.x, y: node.y, width: node.width, height: node.height, renderCmds: [], renderParms: "" };
+                textFieldDataMap[textFieldId] = textData;
+            }
+            var offsetX = -node.x;
+            var offsetY = -node.y;
+            var currTextData = textFieldDataMap[textFieldId];
+            var renderCmds = currTextData.renderCmds;
+            if (node.dirtyRender) {
+                renderCmds.length = 0;
+                currTextData.renderParms = "";
+                renderCmds.push(1010);
+                renderCmds.push(1);
+                currTextData.x = node.x;
+                currTextData.y = node.y;
+                currTextData.width = node.width;
+                currTextData.height = node.height;
+                // 1011: resize
+                renderCmds.push(1011);
+                renderCmds.push(width);
+                renderCmds.push(height);
+                if (textField.$graphicsNode) {
+                    renderCmds.push(1020);
+                    renderCmds.push(-node.x);
+                    renderCmds.push(-node.y);
+                    renderCmds.push(1015);
+                    bufferGraphicsData(textFieldId, textField.$graphicsNode, renderCmds);
+                    renderCmds.push(1016);
+                    renderCmds.push(1020);
+                    renderCmds.push(node.x);
+                    renderCmds.push(node.y);
+                }
+                var drawData = node.drawData;
+                var length_8 = drawData.length;
+                var pos = 0;
+                while (pos < length_8) {
+                    var x = drawData[pos++];
+                    var y = drawData[pos++];
+                    var text = drawData[pos++];
+                    var format = drawData[pos++];
+                    var textColor = format.textColor == null ? node.textColor : format.textColor;
+                    var strokeColor = format.strokeColor == null ? node.strokeColor : format.strokeColor;
+                    var stroke = format.stroke == null ? node.stroke : format.stroke;
+                    // 1012: setFontFormat 
+                    renderCmds.push(1012);
+                    var fontStr = egret.getFontString(node, format);
+                    var fontPath = "";
+                    var fontSize = -1;
+                    var strArray = fontStr.split(",");
+                    if (strArray.length > 0) {
+                        var arr = strArray[0].split(" ");
+                        for (var i = 0; i < arr.length; i++) {
+                            if (arr[i].indexOf("px") != -1) {
+                                fontSize = Number(arr[i].replace(/px/, ""));
+                                fontPath = fontStr.substring(fontStr.indexOf(arr[i]) + arr[i].length + 1);
+                                break;
+                            }
+                        }
+                        renderCmds.push(fontSize);
+                        //TODO
+                        // if (fontPath != this.currentFont) {
+                        currTextData.renderParms += fontPath;
+                        // }
+                        if (fontStr.indexOf("bold") == -1) {
+                            renderCmds.push(0);
+                        }
+                        else {
+                            renderCmds.push(1);
+                        }
+                        if (fontStr.indexOf("italic") == -1) {
+                            renderCmds.push(0);
+                        }
+                        else {
+                            renderCmds.push(1);
+                        }
+                        currTextData.renderParms += ";";
+                        //  setFillStyle
+                        var fontColor = 0; //black
+                        var fillColor = void 0;
+                        var fillAlpha = void 0;
+                        var fillStr = egret.toColorString(textColor);
+                        if (fillStr.indexOf("r") == -1) {
+                            fillStr = fillStr.replace(/#/, "");
+                            fontColor = parseInt(fillStr, 16);
+                        }
+                        else {
+                            fillStr = fillStr.replace(/rgba\(/, "");
+                            fillStr = fillStr.replace(/\)/, "");
+                            var colorArr = fillStr.split(",");
+                            fillColor = (Number(colorArr[0]) << 16) | (Number(colorArr[1]) << 8) | Number(colorArr[2]);
+                            fillAlpha = Number(arr[3]);
+                        }
+                        // console.log("font color = " + fontColor);
+                        renderCmds.push(fontColor);
+                        // native fillColor fillAlph no implement
+                        // renderCmds.push(fillColor);
+                        // renderCmds.push(fillAlpha);
+                        // setStrokeStype
+                        var strokeStr = egret.toColorString(strokeColor);
+                        var strokeColorInt = 0; // black
+                        var strokeAlpha = void 0;
+                        if (strokeStr.indexOf("r") == -1) {
+                            strokeStr = strokeStr.replace(/#/, "");
+                            strokeColorInt = parseInt(strokeStr, 16);
+                        }
+                        else {
+                            strokeStr = strokeStr.replace(/rgba\(/, "");
+                            strokeStr = strokeStr.replace(/\)/, "");
+                            var coloarArr2 = strokeStr.split(",");
+                            strokeColorInt = (Number(coloarArr2[0]) << 16) | (Number(coloarArr2[1]) << 8) | Number(coloarArr2[2]);
+                            strokeAlpha = Number(arr[3]);
+                        }
+                        renderCmds.push(strokeColorInt);
+                        // renderCmds.push(strokeAlpha);
+                        currTextData.renderParms += text;
+                        currTextData.renderParms += ";";
+                        // 1013: strokeText
+                        if (stroke) {
+                            renderCmds.push(1013);
+                            renderCmds.push(stroke * 2);
+                        }
+                        //1014: fillText
+                        renderCmds.push(1014);
+                        renderCmds.push(x + offsetX);
+                        renderCmds.push(y + offsetY);
+                    }
+                }
+                textField.$waNode.setDataToTextField(textFieldId, renderCmds);
+                node.dirtyRender = false;
+            }
+        };
+        var bufferGraphicsData = function (graphicsId, node, renderCmds) {
+            if (renderCmds === void 0) { renderCmds = null; }
+            var width = node.width;
+            var height = node.height;
+            var isGraphics = false;
+            if (renderCmds === null) {
+                if (!graphicsDataMap[graphicsId]) {
+                    var graphicData = { x: node.x, y: node.y, width: node.width, height: node.height, renderCmds: [] };
+                    graphicsDataMap[graphicsId] = graphicData;
+                }
+                var currGraphicData = graphicsDataMap[graphicsId];
+                currGraphicData.x = node.x;
+                currGraphicData.y = node.y;
+                currGraphicData.width = node.width;
+                currGraphicData.height = node.height;
+                currGraphicData.renderCmds.length = 0;
+                renderCmds = currGraphicData.renderCmds;
+                isGraphics = true;
+            }
+            if (node.dirtyRender || WebAssembly.forHitTest) {
+                renderCmds.push(1010);
+                renderCmds.push(1);
+                // 1011: resize
+                renderCmds.push(1011);
+                renderCmds.push(width);
+                renderCmds.push(height);
+                if (node.x || node.y) {
+                    renderCmds.push(1020);
+                    renderCmds.push(-node.x);
+                    renderCmds.push(-node.y);
+                }
+                var drawData = node.drawData;
+                var length_9 = drawData.length;
+                var colorVal = { color: 0, alpha: 1 };
+                for (var i = 0; i < length_9; i++) {
+                    var path = drawData[i];
+                    colorVal.color = 0;
+                    colorVal.alpha = 1;
+                    switch (path.type) {
+                        case 1 /* Fill */:
+                            var fillPath = path;
+                            parseColorString(WebAssembly.forHitTest ? egret.BLACK_COLOR : egret.getRGBAString(fillPath.fillColor, fillPath.fillAlpha), colorVal);
+                            renderCmds.push(1021);
+                            renderCmds.push(colorVal.color);
+                            renderCmds.push(colorVal.alpha);
+                            bufferRenderPath(path, renderCmds);
+                            // if (this.renderingMask) {
+                            //     context.clip();
+                            // }
+                            // else {
+                            // 1028 context.fill();
+                            renderCmds.push(1028);
+                            // }
+                            break;
+                        case 2 /* GradientFill */:
+                            // native no implement
+                            break;
+                        case 3 /* Stroke */:
+                            var strokeFill = path;
+                            var lineWidth = strokeFill.lineWidth;
+                            parseColorString(WebAssembly.forHitTest ? egret.BLACK_COLOR : egret.getRGBAString(strokeFill.lineColor, strokeFill.lineAlpha), colorVal);
+                            // native no implement
+                            // context.lineCap = CAPS_STYLES[strokeFill.caps];
+                            // context.lineJoin = strokeFill.joints;
+                            // context.miterLimit = strokeFill.miterLimit;
+                            renderCmds.push(1022);
+                            renderCmds.push(colorVal.color);
+                            renderCmds.push(colorVal.alpha);
+                            renderCmds.push(lineWidth);
+                            //对1像素和3像素特殊处理，向右下角偏移0.5像素，以显示清晰锐利的线条。
+                            var isSpecialCaseWidth = lineWidth === 1 || lineWidth === 3;
+                            if (isSpecialCaseWidth) {
+                                // 1020 translate context.translate(0.5, 0.5);
+                                renderCmds.push(1020);
+                                renderCmds.push(0.5);
+                                renderCmds.push(0.5);
+                            }
+                            bufferRenderPath(path, renderCmds);
+                            // 1029 stroke
+                            renderCmds.push(1029);
+                            if (isSpecialCaseWidth) {
+                                // 1020 translate context.translate(-0.5, -0.5);
+                                renderCmds.push(1020);
+                                renderCmds.push(-0.5);
+                                renderCmds.push(-0.5);
+                            }
+                            break;
+                    }
+                }
+                if (node.x || node.y) {
+                    renderCmds.push(1020);
+                    renderCmds.push(node.x);
+                    renderCmds.push(node.y);
+                }
+                if (isGraphics) {
+                    graphicsMap[graphicsId].$targetDisplay.$waNode.setGraphicsRenderData(renderCmds);
+                }
+                if (!WebAssembly.forHitTest) {
+                    node.dirtyRender = false;
+                }
+            }
+        };
         var drawGraphicsWithFilterWebGL = function (graphicsId, count, offset, filterId) {
             var node = graphicsMap[graphicsId].$renderNode;
             var width = node.width;
@@ -17881,6 +18227,10 @@ var egret;
             if (!buffer) {
                 buffer = rootWebGLBuffer;
             }
+            if (Module.isNative) {
+                activateBufferFun(buffer.bufferIdForWasm, buffer.width, buffer.height);
+                return;
+            }
             WebAssembly.currentWebGLBuffer = buffer;
             buffer.rootRenderTarget.activate();
             context.onResize(buffer.width, buffer.height);
@@ -17930,6 +18280,18 @@ var egret;
             }
             else {
                 return WebAssembly.currentCanvasBuffer;
+            }
+        };
+        WebAssembly.getPixels = function (x, y, width, height) {
+            if (width === void 0) { width = 1; }
+            if (height === void 0) { height = 1; }
+            if (Module.isNative) {
+                var pixels = new Uint8Array(4 * width * height);
+                getPixelsFun(x, y, width, height, pixels);
+                return pixels;
+            }
+            else {
+                return WebAssembly.getCurrentBuffer().getPixels(x, y, width, height);
             }
         };
         WebAssembly.activateBuffer = function (buffer) {
@@ -18024,7 +18386,11 @@ var egret;
         var renderBufferMap = {};
         var textFieldMap = egret.createMap();
         var graphicsMap = egret.createMap();
+        // for native
         var bitmapDataMap = {};
+        var textFieldDataMap = {};
+        var customFilterDataMap = {};
+        var graphicsDataMap = {}; //key: graphicsId or textFieldId(has graphics node)
         var filterMap = egret.createMap();
         var canvasRenderer = new egret.CanvasRenderer();
         var canvasRenderBuffer;
@@ -18069,11 +18435,14 @@ var egret;
     var bitmapDataId = 1;
     var filterMap;
     var filterId = 1;
+    var customFilterDataMap = {};
+    var customFilterUniformMap = {};
     var dirtyTextField;
     var dirtyGraphics;
     var displayCmdBufferIndex = 2;
     var displayCmdBufferSize = 0;
     var displayCmdBuffer;
+    var isForNative = false;
     /**
      * @private
      */
@@ -18090,12 +18459,14 @@ var egret;
             displayCmdBuffer[1] = displayCmdBufferIndex;
             displayObjectId++;
         }
-        WebAssemblyNode.init = function (buffer, map1, map2) {
+        WebAssemblyNode.init = function (buffer, isNative, map1, map2, map3) {
             displayCmdBuffer = buffer;
+            isForNative = isNative;
             displayCmdBuffer[0] = 0;
             displayCmdBuffer[1] = 2;
             bitmapDataMap = map1;
             filterMap = map2;
+            customFilterDataMap = map3;
         };
         WebAssemblyNode.update = function () {
             // // TODO lsc check
@@ -18400,6 +18771,43 @@ var egret;
             displayCmdBuffer[0] = displayCmdBufferSize;
             displayCmdBuffer[1] = displayCmdBufferIndex;
         };
+        /**
+         * for wasm native
+         * @param private
+         */
+        WebAssemblyNode.setValuesToRenderBuffer = function (value) {
+            displayCmdBufferSize = displayCmdBuffer[0];
+            displayCmdBufferIndex = displayCmdBuffer[1];
+            var texture;
+            if (value.rootRenderTarget) {
+                texture = value.rootRenderTarget.texture;
+            }
+            else if (value["texture"]) {
+                texture = value["texture"];
+            }
+            else {
+                texture = {};
+                value["texture"] = texture;
+            }
+            if (!texture.$bitmapDataId) {
+                texture["isTexture"] = true;
+                texture.$bitmapDataId = bitmapDataId;
+                bitmapDataMap[bitmapDataId] = texture;
+                displayCmdBuffer[displayCmdBufferIndex++] = 0 /* CREATE_OBJECT */;
+                displayCmdBuffer[displayCmdBufferIndex++] = texture.$bitmapDataId;
+                displayCmdBuffer[displayCmdBufferIndex++] = 2;
+                displayCmdBufferSize++;
+                displayCmdBuffer[displayCmdBufferIndex++] = 123 /* SET_IMAGE_ID_TO_BITMAP_DATA */;
+                displayCmdBuffer[displayCmdBufferIndex++] = texture.$bitmapDataId;
+                displayCmdBuffer[displayCmdBufferIndex++] = texture.$bitmapDataId;
+                displayCmdBufferSize++;
+                bitmapDataId++;
+                value.bufferIdForWasm = bitmapDataId;
+            }
+            displayCmdBuffer[0] = displayCmdBufferSize;
+            displayCmdBuffer[1] = displayCmdBufferIndex;
+            return texture.$bitmapDataId;
+        };
         WebAssemblyNode.prototype.setBitmapData = function (value) {
             displayCmdBufferSize = displayCmdBuffer[0];
             displayCmdBufferIndex = displayCmdBuffer[1];
@@ -18417,6 +18825,9 @@ var egret;
                 var texture = void 0;
                 if (value.$renderBuffer.rootRenderTarget) {
                     texture = value.$renderBuffer.rootRenderTarget.texture;
+                }
+                else if (value.$renderBuffer["texture"]) {
+                    texture = value.$renderBuffer["texture"];
                 }
                 else {
                     texture = value.$renderBuffer.surface;
@@ -18617,6 +19028,20 @@ var egret;
             displayCmdBuffer[0] = displayCmdBufferSize;
             displayCmdBuffer[1] = displayCmdBufferIndex;
         };
+        WebAssemblyNode.prototype.setGraphicsRenderData = function (arr) {
+            displayCmdBufferSize = displayCmdBuffer[0];
+            displayCmdBufferIndex = displayCmdBuffer[1];
+            displayCmdBuffer[displayCmdBufferIndex++] = 1003 /* SET_GRAPHICS_RENDERDATA */;
+            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
+            var length = arr.length;
+            displayCmdBuffer[displayCmdBufferIndex++] = length;
+            for (var i = 0; i < length; i++) {
+                displayCmdBuffer[displayCmdBufferIndex++] = arr[i];
+            }
+            displayCmdBufferSize++;
+            displayCmdBuffer[0] = displayCmdBufferSize;
+            displayCmdBuffer[1] = displayCmdBufferIndex;
+        };
         WebAssemblyNode.prototype.setDataToBitmapNode = function (id, texture, arr) {
             displayCmdBufferSize = displayCmdBuffer[0];
             displayCmdBufferIndex = displayCmdBuffer[1];
@@ -18658,6 +19083,109 @@ var egret;
                 displayCmdBuffer[displayCmdBufferIndex++] = uvArr[i];
             }
             displayCmdBufferSize += 3;
+            displayCmdBuffer[0] = displayCmdBufferSize;
+            displayCmdBuffer[1] = displayCmdBufferIndex;
+        };
+        WebAssemblyNode.setDataToFilter = function (id) {
+            if (isForNative === false) {
+                return;
+            }
+            displayCmdBufferSize = displayCmdBuffer[0];
+            displayCmdBufferIndex = displayCmdBuffer[1];
+            var currFilter = filterMap[id];
+            var customArr = [];
+            var filterType;
+            if (!customFilterUniformMap[currFilter.$id]) {
+                customFilterUniformMap[currFilter.$id] = [];
+            }
+            var currUniformArray = customFilterUniformMap[currFilter.$id];
+            var vertexSrcStr = "";
+            var fragmentSrcStr = "";
+            if (currFilter.type == "custom") {
+                vertexSrcStr = currFilter.$vertexSrc;
+                fragmentSrcStr = currFilter.$fragmentSrc;
+                filterType = 4 /* custom */;
+            }
+            else if (currFilter.type == "colorTransform") {
+                filterType = 1 /* colorTransform */;
+            }
+            else if (currFilter.type == "blur") {
+                filterType = 2 /* blur */;
+            }
+            else if (currFilter.type == "glow") {
+                filterType = 3 /* glow */;
+            }
+            var uniformsStrVal = "";
+            var uniformCustomId = 0;
+            var uniforms = currFilter.$uniforms;
+            for (var key in uniforms) {
+                uniformsStrVal += key;
+                uniformsStrVal += " ";
+                currUniformArray[uniformCustomId] = key;
+                uniformCustomId++;
+            }
+            customFilterDataMap[currFilter.$id] = { vertexSrc: vertexSrcStr,
+                fragmentSrc: fragmentSrcStr,
+                uniformsSrc: uniformsStrVal };
+            for (var i = 0; i < currUniformArray.length; i++) {
+                var uniformdata = uniforms[currUniformArray[i]];
+                var tempType = typeof uniformdata;
+                if (tempType == "number") {
+                    customArr.push(1);
+                    customArr.push(uniformdata);
+                }
+                else if (uniformdata instanceof (Array)) {
+                    customArr.push(uniformdata.length);
+                    for (var j = 0; j < uniformdata.length; j++) {
+                        customArr.push(uniformdata[j]);
+                    }
+                }
+                else if (tempType == "object") {
+                    customArr.push(1);
+                    var objectNum = 1;
+                    if (uniformdata.x !== null && uniformdata.x !== undefined) {
+                        //  || uniformdata.x !== uniformdata.x) {
+                        objectNum++;
+                        customArr.push(uniformdata.x);
+                    }
+                    if (uniformdata.y !== null && uniformdata.y !== undefined) {
+                        objectNum++;
+                        customArr.push(uniformdata.y);
+                    }
+                    if (uniformdata.z !== null && uniformdata.z !== undefined) {
+                        objectNum++;
+                        customArr.push(uniformdata.z);
+                    }
+                    if (uniformdata.w !== null && uniformdata.w !== undefined) {
+                        objectNum++;
+                        customArr.push(uniformdata.w);
+                    }
+                    customArr[customArr.length - objectNum] = objectNum - 1;
+                }
+            }
+            displayCmdBuffer[displayCmdBufferIndex++] = 1004 /* SET_DATA_TO_FILTER */;
+            displayCmdBuffer[displayCmdBufferIndex++] = id;
+            displayCmdBuffer[displayCmdBufferIndex++] = filterType;
+            var length = customArr.length;
+            displayCmdBuffer[displayCmdBufferIndex++] = length;
+            for (var i = 0; i < length; i++) {
+                displayCmdBuffer[displayCmdBufferIndex++] = customArr[i];
+            }
+            displayCmdBufferSize++;
+            displayCmdBuffer[0] = displayCmdBufferSize;
+            displayCmdBuffer[1] = displayCmdBufferIndex;
+        };
+        WebAssemblyNode.prototype.setDataToTextField = function (id, arr) {
+            displayCmdBufferSize = displayCmdBuffer[0];
+            displayCmdBufferIndex = displayCmdBuffer[1];
+            displayCmdBuffer[displayCmdBufferIndex++] = 1002 /* SET_DATA_TO_TEXTFIELD */;
+            displayCmdBuffer[displayCmdBufferIndex++] = id;
+            var length = arr.length;
+            displayCmdBuffer[displayCmdBufferIndex++] = length;
+            for (var i = 0; i < length; i++) {
+                displayCmdBuffer[displayCmdBufferIndex++] = arr[i];
+            }
+            displayCmdBufferSize++;
             displayCmdBuffer[0] = displayCmdBufferSize;
             displayCmdBuffer[1] = displayCmdBufferIndex;
         };
@@ -18921,7 +19449,7 @@ var egret;
          */
         BitmapFont.prototype.getConfigByKey = function (configText, key) {
             var itemConfigTextList = configText.split(" ");
-            for (var i = 0, length_8 = itemConfigTextList.length; i < length_8; i++) {
+            for (var i = 0, length_10 = itemConfigTextList.length; i < length_10; i++) {
                 var itemConfigText = itemConfigTextList[i];
                 if (key == itemConfigText.substring(0, key.length)) {
                     var value = itemConfigText.substring(key.length + 1);
@@ -21600,8 +22128,8 @@ var egret;
                 if (lines && lines.length > 0) {
                     var textColor = values[2 /* textColor */];
                     var lastColor = -1;
-                    var length_9 = lines.length;
-                    for (var i = 0; i < length_9; i += 4) {
+                    var length_11 = lines.length;
+                    for (var i = 0; i < length_11; i += 4) {
                         var x = lines[i];
                         var y = lines[i + 1];
                         var w = lines[i + 2];
@@ -24288,14 +24816,14 @@ var egret;
             if (writeLength > 0) {
                 this.validateBuffer(writeLength);
                 var tmp_data = new DataView(bytes.buffer);
-                var length_10 = writeLength;
+                var length_12 = writeLength;
                 var BYTES_OF_UINT32 = 4;
-                for (; length_10 > BYTES_OF_UINT32; length_10 -= BYTES_OF_UINT32) {
+                for (; length_12 > BYTES_OF_UINT32; length_12 -= BYTES_OF_UINT32) {
                     this.data.setUint32(this._position, tmp_data.getUint32(offset));
                     this.position += BYTES_OF_UINT32;
                     offset += BYTES_OF_UINT32;
                 }
-                for (; length_10 > 0; length_10--) {
+                for (; length_12 > 0; length_12--) {
                     this.data.setUint8(this.position++, tmp_data.getUint8(offset++));
                 }
             }
@@ -24507,8 +25035,8 @@ var egret;
             len += this._position;
             if (this.data.byteLength < len || needReplace) {
                 var tmp = new Uint8Array(new ArrayBuffer(len + this.BUFFER_EXT_SIZE));
-                var length_11 = Math.min(this.data.buffer.byteLength, len + this.BUFFER_EXT_SIZE);
-                tmp.set(new Uint8Array(this.data.buffer, 0, length_11));
+                var length_13 = Math.min(this.data.buffer.byteLength, len + this.BUFFER_EXT_SIZE);
+                tmp.set(new Uint8Array(this.data.buffer, 0, length_13));
                 this.buffer = tmp.buffer;
             }
         };
@@ -25281,8 +25809,8 @@ var egret;
             }
             search = search.slice(1);
             var searchArr = search.split("&");
-            var length_12 = searchArr.length;
-            for (var i = 0; i < length_12; i++) {
+            var length_14 = searchArr.length;
+            for (var i = 0; i < length_14; i++) {
                 var str = searchArr[i];
                 var arr = str.split("=");
                 if (arr[0] == key) {
@@ -27108,6 +27636,9 @@ var egret;
             if (!winURL) {
                 Html5Capatibility._canUseBlob = false;
             }
+            // for native
+            if (Module.isNative)
+                Html5Capatibility._canUseBlob = true;
         };
         /**
          * @private
@@ -28794,6 +29325,20 @@ var egret;
             var _this = _super.call(this) || this;
             // 获取webglRenderContext
             _this.context = egret.WebGLRenderContext.getInstance(width, height);
+            // TODO for native
+            if (Module.isNative) {
+                _this.$width = width;
+                _this.$height = height;
+                _this.surface = _this.context.surface;
+                _this.rootRenderTarget = null;
+                if (root) {
+                    _this.bufferIdForWasm = 0;
+                }
+                else {
+                    _this.bufferIdForWasm = egret.WebAssemblyNode.setValuesToRenderBuffer(_this);
+                }
+                return _this;
+            }
             // buffer 对应的 render target
             _this.rootRenderTarget = new egret.WebGLRenderTarget(_this.context.context, 3, 3);
             if (width && height) {
@@ -28823,7 +29368,8 @@ var egret;
              * @readOnly
              */
             get: function () {
-                return this.rootRenderTarget.width;
+                return this.$width;
+                // return this.rootRenderTarget.width;
             },
             enumerable: true,
             configurable: true
@@ -28834,7 +29380,8 @@ var egret;
              * @readOnly
              */
             get: function () {
-                return this.rootRenderTarget.height;
+                return this.$height;
+                // return this.rootRenderTarget.height;
             },
             enumerable: true,
             configurable: true
@@ -28848,6 +29395,11 @@ var egret;
         WebGLRenderBuffer.prototype.resize = function (width, height, useMaxSize) {
             width = width || 1;
             height = height || 1;
+            this.$width = width;
+            this.$height = height;
+            if (this.rootRenderTarget === null) {
+                return;
+            }
             // // render target 尺寸重置
             if (width != this.rootRenderTarget.width || height != this.rootRenderTarget.height) {
                 this.rootRenderTarget.resize(width, height);
@@ -28956,6 +29508,10 @@ var egret;
             this.projectionY = NaN;
             this.contextLost = false;
             this.surface = createCanvas(width, height);
+            // TODO for native
+            if (Module.isNative) {
+                return;
+            }
             this.initWebGL();
             var gl = this.context;
             this.indexBuffer = gl.createBuffer();

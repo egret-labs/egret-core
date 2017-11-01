@@ -75,10 +75,18 @@
              * "renderMode":, //Engine rendering mode, "canvas" or "webgl"
              * "audioType": 0 //Use the audio type, 0: default, 2: web audio, 3: audio
              * "antialias": //Whether the anti-aliasing is enabled in WebGL mode, true: on, false: off, defaults to false
-             * "canvasScaleFactor": //canvas scale factor
+             * "calculateCanvasScaleFactor": //a function return canvas scale factor
              * }
              **/
-            egret.runEgret({ renderMode: "webgl", audioType: 0 });
+            egret.runEgret({ renderMode: "webgl", audioType: 0, calculateCanvasScaleFactor:function(context) {
+                var backingStore = context.backingStorePixelRatio ||
+                    context.webkitBackingStorePixelRatio ||
+                    context.mozBackingStorePixelRatio ||
+                    context.msBackingStorePixelRatio ||
+                    context.oBackingStorePixelRatio ||
+                    context.backingStorePixelRatio || 1;
+                return (window.devicePixelRatio || 1) / backingStore;
+            }});
         });
     });
     xhr.send(null);
