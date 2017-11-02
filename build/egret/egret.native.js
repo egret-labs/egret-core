@@ -4320,15 +4320,17 @@ var egret;
              * @inheritDoc
              */
             NativeVideo.prototype.$setX = function (value) {
-                _super.prototype.$setX.call(this, value);
+                var result = _super.prototype.$setX.call(this, value);
                 this.setVideoSize();
+                return result;
             };
             /**
              * @inheritDoc
              */
             NativeVideo.prototype.$setY = function (value) {
-                _super.prototype.$setY.call(this, value);
+                var result = _super.prototype.$setY.call(this, value);
                 this.setVideoSize();
+                return result;
             };
             /**
              * @private

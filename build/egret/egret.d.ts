@@ -508,7 +508,7 @@ declare namespace egret {
          * @private
          * 设置x坐标
          */
-        $setX(value: number): void;
+        $setX(value: number): boolean;
         $y: number;
         /**
          * Indicates the y coordinate of the DisplayObject instance relative to the local coordinates of the parent
@@ -541,7 +541,7 @@ declare namespace egret {
          * @private
          * 设置y坐标
          */
-        $setY(value: number): void;
+        $setY(value: number): boolean;
         private $scaleX;
         /**
          * Indicates the horizontal scale (percentage) of the object as applied from the registration point. <br/>
@@ -9148,7 +9148,6 @@ declare namespace egret.sys {
         start(): void;
         /**
          * @private
-         *
          */
         private initialize();
         /**

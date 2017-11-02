@@ -442,9 +442,12 @@ namespace egret {
          * @private
          * 设置x坐标
          */
-        $setX(value: number): void {
+        $setX(value: number): boolean {
             value = +value || 0;
             let self = this;
+            if(self.$x == value) {
+                return false;
+            }
             self.$x = value;
 
             let p = self.$parent;
@@ -457,6 +460,7 @@ namespace egret {
                 maskedObject.$cacheDirty = true;
                 maskedObject.$cacheDirtyUp();
             }
+            return true;
         }
 
         $y: number = 0;
@@ -502,9 +506,12 @@ namespace egret {
          * @private
          * 设置y坐标
          */
-        $setY(value: number): void {
+        $setY(value: number): boolean {
             value = +value || 0;
             let self = this;
+            if(self.$y == value) {
+                return false;
+            }
             self.$y = value;
 
             let p = self.$parent;
@@ -517,6 +524,7 @@ namespace egret {
                 maskedObject.$cacheDirty = true;
                 maskedObject.$cacheDirtyUp();
             }
+            return true;
         }
 
         private $scaleX: number = 1;

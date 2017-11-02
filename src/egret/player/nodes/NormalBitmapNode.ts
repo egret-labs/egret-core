@@ -92,7 +92,8 @@ namespace egret.sys {
          * 在显示对象的$updateRenderNode()方法被调用前，自动清空自身的drawData数据。
          */
         public cleanBeforeRender(): void {
-
+            super.cleanBeforeRender();
+            this.image = null;
         }
     }
 }

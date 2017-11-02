@@ -442,17 +442,19 @@ namespace egret.native {
         /**
          * @inheritDoc
          */
-        $setX(value:number):void {
-            super.$setX(value);
+        $setX(value:number):boolean {
+            let result = super.$setX(value);
             this.setVideoSize();
+            return result;
         }
 
         /**
          * @inheritDoc
          */
-        $setY(value:number):void {
-            super.$setY(value);
+        $setY(value:number):boolean {
+            let result = super.$setY(value);
             this.setVideoSize();
+            return result;
         }
 
         /**

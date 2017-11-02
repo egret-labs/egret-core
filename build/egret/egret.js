@@ -885,6 +885,9 @@ var egret;
         DisplayObject.prototype.$setX = function (value) {
             value = +value || 0;
             var self = this;
+            if (self.$x == value) {
+                return false;
+            }
             self.$x = value;
             var p = self.$parent;
             if (p && !p.$cacheDirty) {
@@ -896,6 +899,7 @@ var egret;
                 maskedObject.$cacheDirty = true;
                 maskedObject.$cacheDirtyUp();
             }
+            return true;
         };
         Object.defineProperty(DisplayObject.prototype, "y", {
             /**
@@ -942,6 +946,9 @@ var egret;
         DisplayObject.prototype.$setY = function (value) {
             value = +value || 0;
             var self = this;
+            if (self.$y == value) {
+                return false;
+            }
             self.$y = value;
             var p = self.$parent;
             if (p && !p.$cacheDirty) {
@@ -953,6 +960,7 @@ var egret;
                 maskedObject.$cacheDirty = true;
                 maskedObject.$cacheDirtyUp();
             }
+            return true;
         };
         Object.defineProperty(DisplayObject.prototype, "scaleX", {
             /**
@@ -13052,7 +13060,6 @@ var egret;
             };
             /**
              * @private
-             *
              */
             Player.prototype.initialize = function () {
                 var rootClass;
@@ -14990,6 +14997,8 @@ var egret;
              * 在显示对象的$updateRenderNode()方法被调用前，自动清空自身的drawData数据。
              */
             NormalBitmapNode.prototype.cleanBeforeRender = function () {
+                _super.prototype.cleanBeforeRender.call(this);
+                this.image = null;
             };
             return NormalBitmapNode;
         }(sys.RenderNode));
