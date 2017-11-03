@@ -12392,7 +12392,7 @@ var dragonBones;
             this._armatureDisplay = this._armature.display;
             this._renderDisplay = (this._display !== null ? this._display : this._rawDisplay);
             if (dragonBones.EgretFactory.isV5) {
-                if (this._renderDisplay instanceof egret.Bitmap && !(this._renderDisplay.$renderNode instanceof egret.sys.BitmapNode)) {
+                if (this._renderDisplay === this._rawDisplay && !(this._renderDisplay.$renderNode instanceof egret.sys.BitmapNode)) {
                     this._renderDisplay.$renderNode = new egret.sys.BitmapNode();
                 }
             }
