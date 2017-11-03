@@ -111,7 +111,6 @@ namespace egret {
             }
             this.$blurX = value;
             this.blurXFilter.blurX = value;
-            this.invalidate();
         }
         
         /**
@@ -141,7 +140,6 @@ namespace egret {
             }
             this.$blurY = value;
             this.blurYFilter.blurY = value;
-            this.invalidate();
         }
         
         /**

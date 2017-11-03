@@ -141,7 +141,7 @@ namespace egret {
         constructor(movieClipData?: MovieClipData) {
             super();
             this.$smoothing = Bitmap.defaultSmoothing;
-            this.$renderNode = new sys.BitmapNode();
+            this.$renderNode = new sys.NormalBitmapNode();
 
             this.setMovieClipData(movieClipData);
         }
@@ -172,7 +172,6 @@ namespace egret {
                 return;
             }
             this.$smoothing = value;
-            this.$invalidate();
         }
 
         /**
@@ -224,22 +223,22 @@ namespace egret {
         /**
          * @private
          */
-        $render(): void {
+        $updateRenderNode(): void {
             let texture = this.$bitmapData;
             if (texture) {
                 let offsetX: number = Math.round(this.offsetPoint.x);
                 let offsetY: number = Math.round(this.offsetPoint.y);
-                let bitmapWidth: number = texture._bitmapWidth;
-                let bitmapHeight: number = texture._bitmapHeight;
+                let bitmapWidth: number = texture.$bitmapWidth;
+                let bitmapHeight: number = texture.$bitmapHeight;
                 let textureWidth: number = texture.$getTextureWidth();
                 let textureHeight: number = texture.$getTextureHeight();
                 let destW: number = Math.round(texture.$getScaleBitmapWidth());
                 let destH: number = Math.round(texture.$getScaleBitmapHeight());
-                let sourceWidth: number = texture._sourceWidth;
-                let sourceHeight: number = texture._sourceHeight;
+                let sourceWidth: number = texture.$sourceWidth;
+                let sourceHeight: number = texture.$sourceHeight;
 
-                sys.BitmapNode.$updateTextureData(<sys.BitmapNode>this.$renderNode, texture._bitmapData, texture._bitmapX, texture._bitmapY,
-                    bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH, sourceWidth, sourceHeight, null, egret.BitmapFillMode.SCALE, this.$smoothing);
+                sys.BitmapNode.$updateTextureData(<sys.NormalBitmapNode>this.$renderNode, texture.$bitmapData, texture.$bitmapX, texture.$bitmapY,
+                    bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH, sourceWidth, sourceHeight, egret.BitmapFillMode.SCALE, this.$smoothing);
             }
         }
 
@@ -556,17 +555,27 @@ namespace egret {
          *
          */
         private constructFrame() {
-            let currentFrameNum: number = this.$currentFrameNum;
-            if (this.displayedKeyFrameNum == currentFrameNum) {
+            let self = this;
+            let currentFrameNum: number = self.$currentFrameNum;
+            if (self.displayedKeyFrameNum == currentFrameNum) {
                 return;
             }
 
-            this.$bitmapData = this.$movieClipData.getTextureByFrame(currentFrameNum);
-            this.$movieClipData.$getOffsetByFrame(currentFrameNum, this.offsetPoint);
+            self.$bitmapData = self.$movieClipData.getTextureByFrame(currentFrameNum);
+            self.$movieClipData.$getOffsetByFrame(currentFrameNum, self.offsetPoint);
 
-            this.$invalidateContentBounds();
-
-            this.displayedKeyFrameNum = currentFrameNum;
+            self.displayedKeyFrameNum = currentFrameNum;
+            self.$renderDirty = true;
+            let p = self.$parent;
+            if (p && !p.$cacheDirty) {
+                p.$cacheDirty = true;
+                p.$cacheDirtyUp();
+            }
+            let maskedObject = self.$maskedObject;
+            if (maskedObject && !maskedObject.$cacheDirty) {
+                maskedObject.$cacheDirty = true;
+                maskedObject.$cacheDirtyUp();
+            }
         }
 
         /**
@@ -574,8 +583,19 @@ namespace egret {
          *
          */
         public $renderFrame(): void {
-            this.$bitmapData = this.$movieClipData.getTextureByFrame(this.$currentFrameNum);
-            this.$invalidateContentBounds();
+            let self = this;
+            self.$bitmapData = self.$movieClipData.getTextureByFrame(self.$currentFrameNum);
+            self.$renderDirty = true;
+            let p = self.$parent;
+            if (p && !p.$cacheDirty) {
+                p.$cacheDirty = true;
+                p.$cacheDirtyUp();
+            }
+            let maskedObject = self.$maskedObject;
+            if (maskedObject && !maskedObject.$cacheDirty) {
+                maskedObject.$cacheDirty = true;
+                maskedObject.$cacheDirtyUp();
+            }
         }
 
         /**

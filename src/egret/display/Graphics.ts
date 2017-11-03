@@ -770,7 +770,6 @@ namespace egret {
             this.lastX = x;
             this.lastY = y;
             this.extendBoundsByPoint(x, y);
-            this.targetDisplay.$invalidateContentBounds();
         }
 
 

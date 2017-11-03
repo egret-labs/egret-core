@@ -977,12 +977,12 @@ declare namespace egret {
          * @private
          * @inheritDoc
          */
-        $setWidth(value: number): boolean;
+        $setWidth(value: number): void;
         /**
          * @private
          * @inheritDoc
          */
-        $setHeight(value: number): boolean;
+        $setHeight(value: number): void;
         /**
          * @private
          *
@@ -1620,7 +1620,7 @@ declare namespace egret {
         /**
          * @private
          */
-        $render(): void;
+        $updateRenderNode(): void;
         /**
          * @private
          */

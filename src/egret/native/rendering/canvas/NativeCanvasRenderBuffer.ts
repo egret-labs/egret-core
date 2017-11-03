@@ -98,69 +98,6 @@ namespace egret.native {
         }
 
         /**
-         * 改变渲染缓冲为指定大小，但保留原始图像数据
-         * @param width 改变后的宽
-         * @param height 改变后的高
-         * @param offsetX 原始图像数据在改变后缓冲区的绘制起始位置x
-         * @param offsetY 原始图像数据在改变后缓冲区的绘制起始位置y
-         */
-        public resizeTo(width:number, height:number, offsetX:number, offsetY:number):void {
-            //resize 之前要提交下绘制命令
-            if($supportCmdBatch) {
-                $cmdManager.flush();
-            }
-            if(!sharedCanvas) {
-                sharedCanvas = createCanvas();
-            }
-            let oldContext = this.context;
-            let oldSurface = this.surface;
-            let newSurface = sharedCanvas;
-            let newContext = newSurface.getContext("2d");
-            sharedCanvas = oldSurface;
-            this.context = newContext;
-            this.surface = newSurface;
-            newSurface.width = Math.max(width, 1);
-            newSurface.height = Math.max(height, 1);
-            newContext.setTransform(1, 0, 0, 1, 0, 0);
-            newContext.drawImage(oldSurface, offsetX, offsetY);
-            oldSurface.height = 1;
-            oldSurface.width = 1;
-        }
-
-        public setDirtyRegionPolicy(state:string):void {
-
-        }
-
-        /**
-         * 清空并设置裁切
-         * @param regions 矩形列表
-         * @param offsetX 矩形要加上的偏移量x
-         * @param offsetY 矩形要加上的偏移量y
-         */
-        public beginClip(regions:sys.Region[], offsetX?:number, offsetY?:number):void {
-            offsetX = +offsetX || 0;
-            offsetY = +offsetY || 0;
-            let context = this.context;
-            context.save();
-            context.beginPath();
-            context.setTransform(1, 0, 0, 1, offsetX, offsetY);
-            let length = regions.length;
-            for (let i = 0; i < length; i++) {
-                let region = regions[i];
-                context.clearRect(region.minX, region.minY, region.width, region.height);
-                context.rect(region.minX, region.minY, region.width, region.height);
-            }
-            context.clip();
-        }
-
-        /**
-         * 取消上一次设置的clip。
-         */
-        public endClip():void {
-            this.context.restore();
-        }
-
-        /**
          * 获取指定区域的像素
          */
         public getPixels(x:number, y:number, width:number = 1, height:number = 1):number[] {

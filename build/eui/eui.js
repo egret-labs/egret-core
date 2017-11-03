@@ -3301,10 +3301,7 @@ var eui;
             var values = this.$Component;
             values[7 /* explicitTouchEnabled */] = value;
             if (values[3 /* enabled */]) {
-                return _super.prototype.$setTouchEnabled.call(this, value);
-            }
-            else {
-                return true;
+                _super.prototype.$setTouchEnabled.call(this, value);
             }
         };
         Object.defineProperty(Component.prototype, "enabled", {
@@ -10423,7 +10420,6 @@ var eui;
             },
             set: function (value) {
                 this.$scale9Grid = value;
-                this.$invalidateContentBounds();
                 this.invalidateDisplayList();
             },
             enumerable: true,
@@ -10515,11 +10511,11 @@ var eui;
             enumerable: true,
             configurable: true
         });
-        Image.prototype.$setBitmapData = function (value) {
-            if (value == this.$Bitmap[0 /* bitmapData */]) {
+        Image.prototype.$setTexture = function (value) {
+            if (value == this.$texture) {
                 return false;
             }
-            var result = _super.prototype.$setBitmapData.call(this, value);
+            var result = _super.prototype.$setTexture.call(this, value);
             this.sourceChanged = false;
             this.invalidateSize();
             this.invalidateDisplayList();
@@ -10540,7 +10536,7 @@ var eui;
                     if (!egret.is(data, "egret.Texture")) {
                         return;
                     }
-                    _this.$setBitmapData(data);
+                    _this.$setTexture(data);
                     if (data) {
                         _this.dispatchEventWith(egret.Event.COMPLETE);
                     }
@@ -10550,12 +10546,11 @@ var eui;
                 });
             }
             else {
-                this.$setBitmapData(source);
+                this.$setTexture(source);
             }
         };
         Image.prototype.$measureContentBounds = function (bounds) {
-            var values = this.$Bitmap;
-            var image = this.$Bitmap[0 /* bitmapData */];
+            var image = this.$texture;
             if (image) {
                 var uiValues = this.$UIComponent;
                 var width = uiValues[10 /* width */];
@@ -10583,8 +10578,8 @@ var eui;
          *
          * @param context
          */
-        Image.prototype.$render = function () {
-            var image = this.$Bitmap[0 /* bitmapData */];
+        Image.prototype.$updateRenderNode = function () {
+            var image = this.$bitmapData;
             if (!image) {
                 return;
             }
@@ -10594,8 +10589,16 @@ var eui;
             if (width === 0 || height === 0) {
                 return;
             }
-            var values = this.$Bitmap;
-            egret.sys.BitmapNode.$updateTextureData(this.$renderNode, values[1 /* image */], values[2 /* bitmapX */], values[3 /* bitmapY */], values[4 /* bitmapWidth */], values[5 /* bitmapHeight */], values[6 /* offsetX */], values[7 /* offsetY */], values[8 /* textureWidth */], values[9 /* textureHeight */], width, height, values[13 /* sourceWidth */], values[14 /* sourceHeight */], this.scale9Grid || values[0 /* bitmapData */]["scale9Grid"], this.$fillMode, values[10 /* smoothing */]);
+            var scale9Grid = this.scale9Grid || this.$texture["scale9Grid"];
+            if (scale9Grid) {
+                if (this.$renderNode instanceof egret.sys.NormalBitmapNode) {
+                    this.$renderNode = new egret.sys.BitmapNode();
+                }
+                egret.sys.BitmapNode.$updateTextureDataWithScale9Grid(this.$renderNode, this.$bitmapData, scale9Grid, this.$bitmapX, this.$bitmapY, this.$bitmapWidth, this.$bitmapHeight, this.$offsetX, this.$offsetY, this.$textureWidth, this.$textureHeight, width, height, this.$sourceWidth, this.$sourceHeight, this.$smoothing);
+            }
+            else {
+                egret.sys.BitmapNode.$updateTextureData(this.$renderNode, this.$bitmapData, this.$bitmapX, this.$bitmapY, this.$bitmapWidth, this.$bitmapHeight, this.$offsetX, this.$offsetY, this.$textureWidth, this.$textureHeight, width, height, this.$sourceWidth, this.$sourceHeight, this.$fillMode, this.$smoothing);
+            }
         };
         /**
          * @copy eui.UIComponent#createChildren
@@ -10639,9 +10642,9 @@ var eui;
          * @platform Web,Native
          */
         Image.prototype.measure = function () {
-            var bitmapData = this.$Bitmap[0 /* bitmapData */];
-            if (bitmapData) {
-                this.setMeasuredSize(bitmapData.$getTextureWidth(), bitmapData.$getTextureHeight());
+            var texture = this.$texture;
+            if (texture) {
+                this.setMeasuredSize(texture.$getTextureWidth(), texture.$getTextureHeight());
             }
             else {
                 this.setMeasuredSize(0, 0);
@@ -10655,7 +10658,6 @@ var eui;
          * @platform Web,Native
          */
         Image.prototype.updateDisplayList = function (unscaledWidth, unscaledHeight) {
-            this.$invalidateContentBounds();
         };
         /**
          * @copy eui.UIComponent#invalidateParentLayout
@@ -11369,8 +11371,8 @@ var eui;
          * @private
          *
          */
-        Label.prototype.$invalidateContentBounds = function () {
-            _super.prototype.$invalidateContentBounds.call(this);
+        Label.prototype.$invalidateTextField = function () {
+            _super.prototype.$invalidateTextField.call(this);
             this.invalidateSize();
         };
         /**
@@ -13907,7 +13909,6 @@ var eui;
                 g.drawRoundRect(this.$strokeWeight, this.$strokeWeight, unscaledWidth - this.$strokeWeight * 2, unscaledHeight - this.$strokeWeight * 2, this.$ellipseWidth, this.$ellipseHeight);
             }
             g.endFill();
-            this.$invalidateContentBounds();
         };
         return Rect;
     }(eui.Component));
@@ -17747,8 +17748,8 @@ var eui;
          * @private
          *
          */
-        EditableText.prototype.$invalidateContentBounds = function () {
-            _super.prototype.$invalidateContentBounds.call(this);
+        EditableText.prototype.$invalidateTextField = function () {
+            _super.prototype.$invalidateTextField.call(this);
             this.invalidateSize();
         };
         /**
@@ -20744,10 +20745,9 @@ var eui;
         }
         /**
          * @private
-         *
          */
-        BitmapLabel.prototype.$invalidateContentBounds = function () {
-            _super.prototype.$invalidateContentBounds.call(this);
+        BitmapLabel.prototype.$invalidateBitmapText = function () {
+            _super.prototype.$invalidateBitmapText.call(this);
             this.invalidateSize();
         };
         /**
@@ -20816,7 +20816,7 @@ var eui;
                 return false;
             }
             this.$BitmapText[5 /* font */] = value;
-            this.$invalidateContentBounds();
+            this.$invalidateBitmapText();
             return true;
         };
         /**

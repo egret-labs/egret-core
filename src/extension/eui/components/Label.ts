@@ -329,8 +329,8 @@ namespace eui {
          * @private
          *
          */
-        $invalidateContentBounds():void {
-            super.$invalidateContentBounds();
+        $invalidateTextField():void {
+            super.$invalidateTextField();
             this.invalidateSize();
         }
 
