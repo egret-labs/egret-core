@@ -12391,8 +12391,19 @@ var dragonBones;
         EgretSlot.prototype._onUpdateDisplay = function () {
             this._armatureDisplay = this._armature.display;
             this._renderDisplay = (this._display !== null ? this._display : this._rawDisplay);
-            if (this._armatureDisplay._batchEnabled && this._renderDisplay !== this._rawDisplay && this._renderDisplay !== this._meshDisplay) {
-                this._armatureDisplay.disableBatch();
+            if (dragonBones.EgretFactory.isV5) {
+                if (this._renderDisplay instanceof egret.Bitmap && !(this._renderDisplay.$renderNode instanceof egret.sys.BitmapNode)) {
+                    this._renderDisplay.$renderNode = new egret.sys.BitmapNode();
+                }
+            }
+            if (this._armatureDisplay._batchEnabled) {
+                var node = this._renderDisplay.$renderNode;
+                if (!node.matrix) {
+                    node.matrix = new egret.Matrix();
+                }
+                if (this._renderDisplay !== this._rawDisplay && this._renderDisplay !== this._meshDisplay) {
+                    this._armatureDisplay.disableBatch();
+                }
             }
         };
         /**
@@ -12400,15 +12411,6 @@ var dragonBones;
          */
         EgretSlot.prototype._addDisplay = function () {
             if (this._armatureDisplay._batchEnabled) {
-                if (dragonBones.EgretFactory.isV5) {
-                    if (this._renderDisplay instanceof egret.Bitmap) {
-                        this._renderDisplay.$renderNode = new egret.sys.BitmapNode();
-                    }
-                    var node = this._renderDisplay.$renderNode;
-                    if (!node.matrix) {
-                        node.matrix = new egret.Matrix();
-                    }
-                }
                 this._armatureDisplay.$renderNode.addNode(this._renderDisplay.$renderNode);
             }
             else {
