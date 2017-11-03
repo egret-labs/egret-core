@@ -12767,7 +12767,19 @@ var dragonBones;
             }
             else {
                 var globalTransformMatrix = this.globalTransformMatrix;
-                this._renderDisplay.$setMatrix(globalTransformMatrix, this.transformUpdateEnabled);
+                if (this._armatureDisplay._batchEnabled) {
+                    this._armatureDisplay._childDirty = true;
+                    var displayMatrix = this._renderDisplay.$renderNode.matrix;
+                    displayMatrix.a = globalTransformMatrix.a;
+                    displayMatrix.b = globalTransformMatrix.b;
+                    displayMatrix.c = globalTransformMatrix.c;
+                    displayMatrix.d = globalTransformMatrix.d;
+                    displayMatrix.tx = this.globalTransformMatrix.tx - (this.globalTransformMatrix.a * this._pivotX + this.globalTransformMatrix.c * this._pivotY);
+                    displayMatrix.ty = this.globalTransformMatrix.ty - (this.globalTransformMatrix.b * this._pivotX + this.globalTransformMatrix.d * this._pivotY);
+                }
+                else if (this.transformUpdateEnabled) {
+                    this._renderDisplay.$setMatrix(globalTransformMatrix, this.transformUpdateEnabled);
+                }
             }
         };
         return EgretSlot;
