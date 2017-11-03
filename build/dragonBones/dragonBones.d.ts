@@ -57,6 +57,11 @@ declare namespace dragonBones {
         BoundingBox = 3,
     }
     /**
+     * Bounding box type。
+     * @version DragonBones 5.0
+     * @language en_US
+     */
+    /**
      * 包围盒类型。
      * @version DragonBones 5.0
      * @language zh_CN
@@ -117,11 +122,19 @@ declare namespace dragonBones {
         SlotDisplay = 20,
         SlotColor = 21,
         SlotFFD = 22,
+        IKConstraint = 30,
         AnimationTime = 40,
         AnimationWeight = 41,
     }
     /**
-     * @private
+     * Offset mode.
+     * @version DragonBones 5.5
+     * @language en_US
+     */
+    /**
+     * 偏移方式。
+     * @version DragonBones 5.5
+     * @language zh_CN
      */
     const enum OffsetMode {
         None = 0,
@@ -129,7 +142,12 @@ declare namespace dragonBones {
         Override = 2,
     }
     /**
-     * 动画混合的淡出方式。
+     * Animation fade out mode.
+     * @version DragonBones 4.5
+     * @language en_US
+     */
+    /**
+     * 动画淡出方式。
      * @version DragonBones 4.5
      * @language zh_CN
      */
@@ -200,7 +218,14 @@ declare namespace dragonBones {
 }
 declare namespace dragonBones {
     /**
-     * 基础对象。
+     * The BaseObject is the base class for all objects in the DragonBones framework.
+     * All BaseObject instances are cached to the object pool to reduce the performance consumption of frequent requests for memory or memory recovery.
+     * @version DragonBones 4.5
+     * @language en_US
+     */
+    /**
+     * 基础对象，通常 DragonBones 的对象都继承自该类。
+     * 所有基础对象的实例都会缓存到对象池，以减少频繁申请内存或内存回收的性能消耗。
      * @version DragonBones 4.5
      * @language zh_CN
      */
@@ -210,28 +235,44 @@ declare namespace dragonBones {
         private static readonly _maxCountMap;
         private static readonly _poolsMap;
         private static _returnObject(object);
-        /**
-         * @private
-         */
         static toString(): string;
         /**
-         * 设置每种对象池的最大缓存数量。
-         * @param objectConstructor 对象类。
-         * @param maxCount 最大缓存数量。 (设置为 0 则不缓存)
+         * Set the maximum cache count of the specify object pool.
+         * @param objectConstructor Specify class (Set all object pools max cache count if not set)
+         * @param maxCount Max count
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
+         * 设置指定的对象池的最大缓存数量。
+         * @param objectConstructor 指定的类 (不设置则设置所有对象池的最大缓存数量)
+         * @param maxCount 最大缓存数量
          * @version DragonBones 4.5
          * @language zh_CN
          */
         static setMaxCount(objectConstructor: (typeof BaseObject) | null, maxCount: number): void;
         /**
-         * 清除对象池缓存的对象。
-         * @param objectConstructor 对象类。 (不设置则清除所有缓存)
+         * Clear the cached instances of the specify object pool。
+         * @param objectConstructor Specify class (Clear all cached instances if not set)
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
+         * 清除指定对象池的缓存实例。
+         * @param objectConstructor 指定的类 (不设置则清除所有缓存的实例)
          * @version DragonBones 4.5
          * @language zh_CN
          */
         static clearPool(objectConstructor?: (typeof BaseObject) | null): void;
         /**
-         * 从对象池中创建指定对象。
-         * @param objectConstructor 对象类。
+         * Get an instance of the specify class from object pool。
+         * @param objectConstructor Specify class
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
+         * 从对象池中获取指定类的实例。
+         * @param objectConstructor 指定的类
          * @version DragonBones 4.5
          * @language zh_CN
          */
@@ -239,7 +280,12 @@ declare namespace dragonBones {
             new (): T;
         }): T;
         /**
-         * 对象的唯一标识。
+         * A unique identification number assigned to the object.
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
+         * 分配给此对象的唯一标识号。
          * @version DragonBones 4.5
          * @language zh_CN
          */
@@ -250,7 +296,12 @@ declare namespace dragonBones {
          */
         protected abstract _onClear(): void;
         /**
-         * 清除数据并返还对象池。
+         * Clear the object and return it back to object pool。
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
+         * 清除该对象的所有数据并将其返还对象池。
          * @version DragonBones 4.5
          * @language zh_CN
          */
@@ -797,6 +848,10 @@ declare namespace dragonBones {
          */
         readonly slots: Map<SlotData>;
         /**
+         * @private
+         */
+        readonly constraints: Map<ConstraintData>;
+        /**
          * 所有皮肤数据。
          * @see dragonBones.SkinData
          * @version DragonBones 3.0
@@ -870,6 +925,10 @@ declare namespace dragonBones {
         /**
          * @private
          */
+        addConstraint(value: ConstraintData): void;
+        /**
+         * @private
+         */
         addSkin(value: SkinData): void;
         /**
          * @private
@@ -895,6 +954,10 @@ declare namespace dragonBones {
          * @language zh_CN
          */
         getSlot(name: string): SlotData | null;
+        /**
+         * @private
+         */
+        getConstraint(name: string): ConstraintData | null;
         /**
          * 获取皮肤数据。
          * @param name 数据名称。
@@ -955,10 +1018,6 @@ declare namespace dragonBones {
         /**
          * @private
          */
-        readonly constraints: Array<ConstraintData>;
-        /**
-         * @private
-         */
         userData: UserData | null;
         /**
          * 所属的父骨骼数据。
@@ -970,10 +1029,6 @@ declare namespace dragonBones {
          * @private
          */
         protected _onClear(): void;
-        /**
-         * @private
-         */
-        addConstraint(value: ConstraintData): void;
     }
     /**
      * 插槽数据。
@@ -1088,8 +1143,8 @@ declare namespace dragonBones {
      */
     class IKConstraintData extends ConstraintData {
         static toString(): string;
-        bendPositive: boolean;
         scaleEnabled: boolean;
+        bendPositive: boolean;
         weight: number;
         protected _onClear(): void;
     }
@@ -1453,6 +1508,10 @@ declare namespace dragonBones {
         /**
          * @private
          */
+        readonly constraintTimelines: Map<Array<TimelineData>>;
+        /**
+         * @private
+         */
         readonly boneCachedFrameIndices: Map<Array<number>>;
         /**
          * @private
@@ -1489,11 +1548,19 @@ declare namespace dragonBones {
         /**
          * @private
          */
+        addConstraintTimeline(constraint: ConstraintData, timeline: TimelineData): void;
+        /**
+         * @private
+         */
         getBoneTimelines(name: string): Array<TimelineData> | null;
         /**
          * @private
          */
         getSlotTimeline(name: string): Array<TimelineData> | null;
+        /**
+         * @private
+         */
+        getConstraintTimeline(name: string): Array<TimelineData> | null;
         /**
          * @private
          */
@@ -1829,14 +1896,6 @@ declare namespace dragonBones {
          */
         inheritAnimation: boolean;
         /**
-         * 获取骨架数据。
-         * @see dragonBones.ArmatureData
-         * @version DragonBones 4.5
-         * @readonly
-         * @language zh_CN
-         */
-        armatureData: ArmatureData;
-        /**
          * 用于存储临时数据。
          * @version DragonBones 3.0
          * @language zh_CN
@@ -1855,7 +1914,17 @@ declare namespace dragonBones {
         _cacheFrameIndex: number;
         private readonly _bones;
         private readonly _slots;
+        /**
+         * @internal
+         * @private
+         */
+        readonly _constraints: Array<Constraint>;
         private readonly _actions;
+        /**
+         * @internal
+         * @private
+         */
+        _armatureData: ArmatureData;
         private _animation;
         private _proxy;
         private _display;
@@ -2024,6 +2093,10 @@ declare namespace dragonBones {
          */
         removeSlot(value: Slot): void;
         /**
+         * @private
+         */
+        addConstraint(value: Constraint): void;
+        /**
          * 获取所有骨骼。
          * @see dragonBones.Bone
          * @version DragonBones 3.0
@@ -2057,6 +2130,13 @@ declare namespace dragonBones {
          * @language zh_CN
          */
         readonly name: string;
+        /**
+         * 获取骨架数据。
+         * @see dragonBones.ArmatureData
+         * @version DragonBones 4.5
+         * @language zh_CN
+         */
+        readonly armatureData: ArmatureData;
         /**
          * 获得动画控制器。
          * @see dragonBones.Animation
@@ -2152,12 +2232,6 @@ declare namespace dragonBones {
          * @private
          */
         protected static readonly _helpPoint: Point;
-        /**
-         * 对象的名称。
-         * @version DragonBones 3.0
-         * @language zh_CN
-         */
-        name: string;
         /**
          * 相对于骨架坐标系的矩阵。
          * @version DragonBones 3.0
@@ -2265,15 +2339,6 @@ declare namespace dragonBones {
          * @internal
          * @private
          */
-        readonly constraints: Array<Constraint>;
-        /**
-         * @readonly
-         */
-        boneData: BoneData;
-        /**
-         * @internal
-         * @private
-         */
         _transformDirty: boolean;
         /**
          * @internal
@@ -2286,6 +2351,11 @@ declare namespace dragonBones {
          */
         _blendDirty: boolean;
         private _localDirty;
+        /**
+         * @internal
+         * @private
+         */
+        _hasConstraint: boolean;
         private _visible;
         private _cachedFrameIndex;
         /**
@@ -2303,8 +2373,11 @@ declare namespace dragonBones {
          * @private
          */
         _blendLayerWeight: number;
-        private readonly _bones;
-        private readonly _slots;
+        /**
+         * @internal
+         * @private
+         */
+        _boneData: BoneData;
         /**
          * @internal
          * @private
@@ -2324,71 +2397,119 @@ declare namespace dragonBones {
          */
         _setArmature(value: Armature | null): void;
         /**
-         * @internal
          * @private
          */
         init(boneData: BoneData): void;
         /**
-         * @internal
          * @private
          */
         update(cacheFrameIndex: number): void;
         /**
-         * @internal
          * @private
          */
         updateByConstraint(): void;
         /**
-         * @internal
-         * @private
-         */
-        addConstraint(constraint: Constraint): void;
-        /**
-         * 下一帧更新变换。 (当骨骼没有动画状态或动画状态播放完成时，骨骼将不在更新)
+         * 强制骨骼在下一帧更新变换。
+         * 当该骨骼没有动画状态或其动画状态播放完成时，骨骼将不在继续更新，而此时由于某些原因必须更新骨骼是，则需要显式调用该方法。（比如设置骨骼的 offset 属性，或更改一个已经播放完成了的动画状态的 weight 属性等）
          * @version DragonBones 3.0
          * @language zh_CN
          */
         invalidUpdate(): void;
         /**
-         * 是否包含骨骼或插槽。
-         * @returns
+         * Check to see if a specific skeleton or slot is included.
          * @see dragonBones.TransformObject
+         * @see dragonBones.Bone
+         * @see dragonBones.Slot
          * @version DragonBones 3.0
-         * @language zh_CN
+         * @language en_US
          */
-        contains(child: TransformObject): boolean;
         /**
-         * 所有的子骨骼。
-         * @version DragonBones 3.0
-         * @language zh_CN
-         */
-        getBones(): Array<Bone>;
-        /**
-         * 所有的插槽。
+         * 检查是否包含特定的骨骼或插槽。
+         * @see dragonBones.TransformObject
+         * @see dragonBones.Bone
          * @see dragonBones.Slot
          * @version DragonBones 3.0
          * @language zh_CN
          */
-        getSlots(): Array<Slot>;
+        contains(value: TransformObject): boolean;
+        /**
+         * Bone data.
+         * @see dragonBones.BoneData
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
+         * 骨骼数据。
+         * @see dragonBones.BoneData
+         * @version DragonBones 4.5
+         * @language zh_CN
+         */
+        readonly boneData: BoneData;
+        /**
+         * Controls the visibility of all slots in this bone.
+         * @default true
+         * @see dragonBones.Slot#visible
+         * @version DragonBones 3.0
+         * @language en_US
+         */
         /**
          * 控制此骨骼所有插槽的可见。
          * @default true
-         * @see dragonBones.Slot
+         * @see dragonBones.Slot#visible
          * @version DragonBones 3.0
          * @language zh_CN
          */
         visible: boolean;
         /**
-         * @deprecated
-         * 已废弃，请参考 @see
-         * @see #boneData
-         * @see #dragonBones.BoneData#length
+         * Bone name.
+         * @see dragonBones.BoneData#name
+         * @version DragonBones 3.0
+         * @language en_US
          */
-        readonly length: number;
         /**
+         * 骨骼名称。
+         * @see dragonBones.BoneData#name
+         * @version DragonBones 3.0
+         * @language zh_CN
+         */
+        readonly name: string;
+        /**
+         * Deprecated.
+         * @see dragonBones.Armature#getBones()
+         * @language en_US
          * @deprecated
-         * 已废弃，请参考 @see
+         */
+        /**
+         * 已废弃。
+         * @see dragonBones.Armature#getBones()
+         * @language zh_CN
+         * @deprecated
+         */
+        getBones(): Array<Bone>;
+        /**
+         * Deprecated.
+         * @see dragonBones.Armature#getSlots()
+         * @language en_US
+         * @deprecated
+         */
+        /**
+         * 已废弃。
+         * @see dragonBones.Armature#getSlots()
+         * @language zh_CN
+         * @deprecated
+         */
+        getSlots(): Array<Slot>;
+        /**
+         * Deprecated.
          * @see dragonBones.Armature#getSlot()
+         * @language en_US
+         * @deprecated
+         */
+        /**
+         * 已废弃。
+         * @see dragonBones.Armature#getSlot()
+         * @language zh_CN
+         * @deprecated
          */
         readonly slot: Slot | null;
     }
@@ -2416,10 +2537,6 @@ declare namespace dragonBones {
          * @language zh_CN
          */
         displayController: string | null;
-        /**
-         * @readonly
-         */
-        slotData: SlotData;
         /**
          * @private
          */
@@ -2509,6 +2626,11 @@ declare namespace dragonBones {
          * @private
          */
         protected readonly _meshBones: Array<Bone | null>;
+        /**
+         * @internal
+         * @private
+         */
+        _slotData: SlotData;
         /**
          * @private
          */
@@ -2704,17 +2826,38 @@ declare namespace dragonBones {
          */
         invalidUpdate(): void;
         /**
+         * 控制此插槽的可见。
+         * @default true
+         * @version DragonBones 5.6
+         * @language zh_CN
+         */
+        visible: boolean;
+        /**
          * 此时显示的显示对象在显示列表中的索引。
          * @version DragonBones 4.5
          * @language zh_CN
          */
         displayIndex: number;
         /**
+         * 插槽名称。
+         * @see dragonBones.SlotData#name
+         * @version DragonBones 3.0
+         * @language zh_CN
+         */
+        readonly name: string;
+        /**
          * 包含显示对象或子骨架的显示列表。
          * @version DragonBones 3.0
          * @language zh_CN
          */
         displayList: Array<any>;
+        /**
+         * 获取插槽数据。
+         * @see dragonBones.SlotData
+         * @version DragonBones 4.5
+         * @language zh_CN
+         */
+        readonly slotData: SlotData;
         /**
          * @private
          */
@@ -2770,11 +2913,28 @@ declare namespace dragonBones {
         protected static readonly _helpMatrix: Matrix;
         protected static readonly _helpTransform: Transform;
         protected static readonly _helpPoint: Point;
-        target: Bone;
-        bone: Bone;
-        root: Bone | null;
+        /**
+         * For timeline state.
+         * @internal
+         */
+        _constraintData: ConstraintData;
+        protected _armature: Armature;
+        /**
+         * For sort bones.
+         * @internal
+         */
+        _target: Bone;
+        /**
+         * For sort bones.
+         * @internal
+         */
+        _bone: Bone;
+        protected _root: Bone | null;
         protected _onClear(): void;
+        abstract init(data: ConstraintData, armature: Armature): void;
         abstract update(): void;
+        abstract invalidUpdate(): void;
+        readonly name: string;
     }
     /**
      * @private
@@ -2782,19 +2942,37 @@ declare namespace dragonBones {
      */
     class IKConstraint extends Constraint {
         static toString(): string;
-        bendPositive: boolean;
-        scaleEnabled: boolean;
-        weight: number;
+        private _scaleEnabled;
+        /**
+         * For timeline state.
+         * @internal
+         */
+        _bendPositive: boolean;
+        /**
+         * For timeline state.
+         * @internal
+         */
+        _weight: number;
         protected _onClear(): void;
         private _computeA();
         private _computeB();
+        init(constraintData: ConstraintData, armature: Armature): void;
         update(): void;
+        invalidUpdate(): void;
     }
 }
 declare namespace dragonBones {
     /**
+     * Play animation interface. (Both Armature and Wordclock implement the interface)
+     * Any instance that implements the interface can be added to the Worldclock instance and advance time by Worldclock instance uniformly.
+     * @see dragonBones.WorldClock
+     * @see dragonBones.Armature
+     * @version DragonBones 3.0
+     * @language en_US
+     */
+    /**
      * 播放动画接口。 (Armature 和 WordClock 都实现了该接口)
-     * 任何实现了此接口的实例都可以加到 WorldClock 实例中，由 WorldClock 统一更新时间。
+     * 任何实现了此接口的实例都可以添加到 WorldClock 实例中，由 WorldClock 实例统一更新时间。
      * @see dragonBones.WorldClock
      * @see dragonBones.Armature
      * @version DragonBones 3.0
@@ -2802,12 +2980,23 @@ declare namespace dragonBones {
      */
     interface IAnimatable {
         /**
+         * Advance time.
+         * @param passedTime Passed time (In seconds)
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
          * 更新时间。
-         * @param passedTime 前进的时间。 (以秒为单位)
+         * @param passedTime 前进的时间 （以秒为单位）
          * @version DragonBones 3.0
          * @language zh_CN
          */
         advanceTime(passedTime: number): void;
+        /**
+         * The Wordclock instance to which the current belongs.
+         * @version DragonBones 5.0
+         * @language en_US
+         */
         /**
          * 当前所属的 WordClock 实例。
          * @version DragonBones 5.0
@@ -2818,7 +3007,14 @@ declare namespace dragonBones {
 }
 declare namespace dragonBones {
     /**
-     * WorldClock 提供时钟支持，为每个加入到时钟的 IAnimatable 对象更新时间。
+     * Worldclock provides clock support for animations, advance time for each IAnimatable object added to the clock.
+     * @see dragonBones.IAnimateble
+     * @see dragonBones.Armature
+     * @version DragonBones 3.0
+     * @language en_US
+     */
+    /**
+     * WorldClock 对动画提供时钟支持，为每个加入到时钟的 IAnimatable 对象更新时间。
      * @see dragonBones.IAnimateble
      * @see dragonBones.Armature
      * @version DragonBones 3.0
@@ -2826,19 +3022,26 @@ declare namespace dragonBones {
      */
     class WorldClock implements IAnimatable {
         /**
-         * 一个可以直接使用的全局 WorldClock 实例.
+         * Current time. (In seconds)
          * @version DragonBones 3.0
-         * @language zh_CN
+         * @language en_US
          */
-        static readonly clock: WorldClock;
         /**
-         * 当前时间。 (以秒为单位)
+         * 当前的时间。 (以秒为单位)
          * @version DragonBones 3.0
          * @language zh_CN
          */
         time: number;
         /**
-         * 时间流逝速度，用于控制动画变速播放。 [0: 停止播放, (0~1): 慢速播放, 1: 正常播放, (1~N): 快速播放]
+         * Time elapsed speed, used to control animation speed-shift play.
+         * [0: Stop play, (0~1): Slow play, 1: Normal play, (1~N): Fast play]
+         * @default 1.0
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * 时间流逝速度，用于控制动画变速播放。
+         * [0: 停止播放, (0~1): 慢速播放, 1: 正常播放, (1~N): 快速播放]
          * @default 1.0
          * @version DragonBones 3.0
          * @language zh_CN
@@ -2847,41 +3050,75 @@ declare namespace dragonBones {
         private readonly _animatebles;
         private _clock;
         /**
-         * 创建一个新的 WorldClock 实例。
-         * 通常并不需要单独创建 WorldClock 实例，可以直接使用 WorldClock.clock 静态实例。
-         * (创建更多独立的 WorldClock 实例可以更灵活的为需要更新的 IAnimateble 实例分组，用于控制不同组不同的播放速度)
+         * Creating a Worldclock instance. Typically, you do not need to create Worldclock instance.
+         * When multiple Worldclock instances are running at different speeds, can achieving some specific animation effects, such as bullet time.
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * 创建一个 WorldClock 实例。通常并不需要创建 WorldClock 实例。
+         * 当多个 WorldClock 实例使用不同的速度运行时，可以实现一些特殊的动画效果，比如子弹时间等。
          * @version DragonBones 3.0
          * @language zh_CN
          */
         constructor(time?: number);
         /**
+         * Advance time for all IAnimatable instances.
+         * @param passedTime Passed time [-1: Automatically calculates the time difference between the current frame and the previous frame, [0~N): Passed time] (In seconds)
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
          * 为所有的 IAnimatable 实例更新时间。
-         * @param passedTime 前进的时间。 (以秒为单位，当设置为 -1 时将自动计算当前帧与上一帧的时间差)
+         * @param passedTime 前进的时间 [-1: 自动计算当前帧与上一帧的时间差, [0~N): 前进的时间] (以秒为单位)
          * @version DragonBones 3.0
          * @language zh_CN
          */
         advanceTime(passedTime: number): void;
         /**
-         * 是否包含 IAnimatable 实例
-         * @param value IAnimatable 实例。
+         * Check whether contains a specific instance of IAnimatable.
+         * @param value The IAnimatable instance
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * 检查是否包含特定的 IAnimatable 实例。
+         * @param value IAnimatable 实例
          * @version DragonBones 3.0
          * @language zh_CN
          */
         contains(value: IAnimatable): boolean;
         /**
+         * Add IAnimatable instance.
+         * @param value The IAnimatable instance
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
          * 添加 IAnimatable 实例。
-         * @param value IAnimatable 实例。
+         * @param value IAnimatable 实例
          * @version DragonBones 3.0
          * @language zh_CN
          */
         add(value: IAnimatable): void;
         /**
-         * 移除 IAnimatable 实例。
-         * @param value IAnimatable 实例。
+         * Removes a specified IAnimatable instance.
+         * @param value The IAnimatable instance
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * 移除特定的 IAnimatable 实例。
+         * @param value IAnimatable 实例
          * @version DragonBones 3.0
          * @language zh_CN
          */
         remove(value: IAnimatable): void;
+        /**
+         * Clear all IAnimatable instances.
+         * @version DragonBones 3.0
+         * @language en_US
+         */
         /**
          * 清除所有的 IAnimatable 实例。
          * @version DragonBones 3.0
@@ -2892,6 +3129,19 @@ declare namespace dragonBones {
          * @inheritDoc
          */
         clock: WorldClock | null;
+        /**
+         * Deprecated.
+         * @see dragonBones.BaseFactory#clock
+         * @language en_US
+         * @deprecated
+         */
+        /**
+         * 已废弃。
+         * @see dragonBones.BaseFactory#clock
+         * @language zh_CN
+         * @deprecated
+         */
+        static readonly clock: WorldClock;
     }
 }
 declare namespace dragonBones {
@@ -3269,7 +3519,11 @@ declare namespace dragonBones {
          * @language zh_CN
          */
         animationData: AnimationData;
-        private _timelineDirty;
+        /**
+         * @internal
+         * @private
+         */
+        _timelineDirty: boolean;
         /**
          * @internal
          * @private
@@ -3309,6 +3563,8 @@ declare namespace dragonBones {
         private readonly _boneMask;
         private readonly _boneTimelines;
         private readonly _slotTimelines;
+        private readonly _constraintTimelines;
+        private readonly _poseTimelines;
         private readonly _bonePoses;
         private _armature;
         /**
@@ -3321,7 +3577,7 @@ declare namespace dragonBones {
          * @private
          */
         protected _onClear(): void;
-        private _isDisabled(slot);
+        private _updateTimelines();
         private _advanceFadeTime(passedTime);
         private _blendBoneTimline(timeline);
         /**
@@ -3329,11 +3585,6 @@ declare namespace dragonBones {
          * @internal
          */
         init(armature: Armature, animationData: AnimationData, animationConfig: AnimationConfig): void;
-        /**
-         * @private
-         * @internal
-         */
-        updateTimelines(): void;
         /**
          * @private
          * @internal
@@ -3436,12 +3687,6 @@ declare namespace dragonBones {
          * @language zh_CN
          */
         currentTime: number;
-        /**
-         * @deprecated
-         * 已废弃，请参考 @see
-         * @see #animationData
-         */
-        readonly clip: AnimationData;
     }
 }
 declare namespace dragonBones {
@@ -3526,6 +3771,14 @@ declare namespace dragonBones {
         slot: Slot;
         protected _onClear(): void;
     }
+    /**
+     * @internal
+     * @private
+     */
+    abstract class ConstraintTimelineState extends TweenTimelineState {
+        constraint: Constraint;
+        protected _onClear(): void;
+    }
 }
 declare namespace dragonBones {
     /**
@@ -3591,7 +3844,7 @@ declare namespace dragonBones {
      * @internal
      * @private
      */
-    class SlotDislayIndexTimelineState extends SlotTimelineState {
+    class SlotDislayTimelineState extends SlotTimelineState {
         static toString(): string;
         protected _onArriveAtFrame(): void;
     }
@@ -3633,26 +3886,63 @@ declare namespace dragonBones {
         fadeOut(): void;
         update(passedTime: number): void;
     }
+    /**
+     * @internal
+     * @private
+     */
+    class IKConstraintTimelineState extends ConstraintTimelineState {
+        static toString(): string;
+        private _dirty;
+        private _current;
+        private _delta;
+        private _result;
+        protected _onClear(): void;
+        protected _onArriveAtFrame(): void;
+        protected _onUpdateFrame(): void;
+        fadeOut(): void;
+        update(passedTime: number): void;
+    }
 }
 declare namespace dragonBones {
     /**
-     * 事件数据。
+     * The properties of the object carry basic information about an event,
+     * which are passed as parameter or parameter's parameter to event listeners when an event occurs.
+     * @version DragonBones 4.5
+     * @language en_US
+     */
+    /**
+     * 事件对象，包含有关事件的基本信息，当发生事件时，该实例将作为参数或参数的参数传递给事件侦听器。
      * @version DragonBones 4.5
      * @language zh_CN
      */
     class EventObject extends BaseObject {
         /**
-         * 动画开始。
+         * Animation start play.
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
+         * 动画开始播放。
          * @version DragonBones 4.5
          * @language zh_CN
          */
         static readonly START: string;
         /**
-         * 动画循环播放一次完成。
+         * Animation loop play complete once.
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
+         * 动画循环播放完成一次。
          * @version DragonBones 4.5
          * @language zh_CN
          */
         static readonly LOOP_COMPLETE: string;
+        /**
+         * Animation play complete.
+         * @version DragonBones 4.5
+         * @language en_US
+         */
         /**
          * 动画播放完成。
          * @version DragonBones 4.5
@@ -3660,11 +3950,21 @@ declare namespace dragonBones {
          */
         static readonly COMPLETE: string;
         /**
+         * Animation fade in start.
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
          * 动画淡入开始。
          * @version DragonBones 4.5
          * @language zh_CN
          */
         static readonly FADE_IN: string;
+        /**
+         * Animation fade in complete.
+         * @version DragonBones 4.5
+         * @language en_US
+         */
         /**
          * 动画淡入完成。
          * @version DragonBones 4.5
@@ -3672,11 +3972,21 @@ declare namespace dragonBones {
          */
         static readonly FADE_IN_COMPLETE: string;
         /**
+         * Animation fade out start.
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
          * 动画淡出开始。
          * @version DragonBones 4.5
          * @language zh_CN
          */
         static readonly FADE_OUT: string;
+        /**
+         * Animation fade out complete.
+         * @version DragonBones 4.5
+         * @language en_US
+         */
         /**
          * 动画淡出完成。
          * @version DragonBones 4.5
@@ -3684,25 +3994,44 @@ declare namespace dragonBones {
          */
         static readonly FADE_OUT_COMPLETE: string;
         /**
+         * Animation frame event.
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
          * 动画帧事件。
          * @version DragonBones 4.5
          * @language zh_CN
          */
         static readonly FRAME_EVENT: string;
         /**
-         * 动画声音事件。
+         * Animation frame sound event.
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
+         * 动画帧声音事件。
          * @version DragonBones 4.5
          * @language zh_CN
          */
         static readonly SOUND_EVENT: string;
-        /**
-         * @private
-         */
         static toString(): string;
         /**
-         * @private
+         * If is a frame event, the value is used to describe the time that the event was in the animation timeline. (In seconds)
+         * @version DragonBones 4.5
+         * @language zh_CN
+         */
+        /**
+         * 如果是帧事件，此值用来描述该事件在动画时间轴中所处的时间。（以秒为单位）
+         * @version DragonBones 4.5
+         * @language zh_CN
          */
         time: number;
+        /**
+         * Event type。
+         * @version DragonBones 4.5
+         * @language en_US
+         */
         /**
          * 事件类型。
          * @version DragonBones 4.5
@@ -3710,37 +4039,76 @@ declare namespace dragonBones {
          */
         type: EventStringType;
         /**
-         * 事件名称。 (帧标签的名称或声音的名称)
+         * Event name. (Frame event name or Frame sound name)
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
+         * 事件名称。 (帧事件的名称或帧声音的名称)
          * @version DragonBones 4.5
          * @language zh_CN
          */
         name: string;
         /**
-         * 发出事件的骨架。
+         * The armature that dispatch the event.
+         * @see dragonBones.Armature
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
+         * 发出该事件的骨架。
+         * @see dragonBones.Armature
          * @version DragonBones 4.5
          * @language zh_CN
          */
         armature: Armature;
         /**
-         * 发出事件的骨骼。
+         * The bone that dispatch the event.
+         * @see dragonBones.Bone
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
+         * 发出该事件的骨骼。
+         * @see dragonBones.Bone
          * @version DragonBones 4.5
          * @language zh_CN
          */
         bone: Bone | null;
         /**
-         * 发出事件的插槽。
+         * The slot that dispatch the event.
+         * @see dragonBones.Slot
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
+         * 发出该事件的插槽。
+         * @see dragonBones.Slot
          * @version DragonBones 4.5
          * @language zh_CN
          */
         slot: Slot | null;
         /**
-         * 发出事件的动画状态。
+         * The animation state that dispatch the event.
+         * @see dragonBones.AnimationState
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
+         * 发出该事件的动画状态。
+         * @see dragonBones.AnimationState
          * @version DragonBones 4.5
          * @language zh_CN
          */
         animationState: AnimationState;
         /**
-         * 自定义数据
+         * The custom data.
+         * @see dragonBones.CustomData
+         * @version DragonBones 5.0
+         * @language en_US
+         */
+        /**
+         * 自定义数据。
          * @see dragonBones.CustomData
          * @version DragonBones 5.0
          * @language zh_CN
@@ -3758,38 +4126,82 @@ declare namespace dragonBones {
      */
     type EventStringType = string | "start" | "loopComplete" | "complete" | "fadeIn" | "fadeInComplete" | "fadeOut" | "fadeOutComplete" | "frameEvent" | "soundEvent";
     /**
-     * 事件接口。
+     * The event dispatcher interface.
+     * Dragonbones event dispatch usually relies on docking engine to implement, which defines the event method to be implemented when docking the engine.
+     * @version DragonBones 4.5
+     * @language en_US
+     */
+    /**
+     * 事件派发接口。
+     * DragonBones 的事件派发通常依赖于对接的引擎来实现，该接口定义了对接引擎时需要实现的事件方法。
      * @version DragonBones 4.5
      * @language zh_CN
      */
     interface IEventDispatcher {
         /**
-         * @private
+         * Checks whether the object has any listeners registered for a specific type of event。
+         * @param type Event type
+         * @version DragonBones 4.5
+         * @language en_US
          */
-        _dispatchEvent(type: EventStringType, eventObject: EventObject): void;
         /**
-         * 是否包含指定类型的事件。
-         * @param type 事件类型。
+         * 检查是否为特定事件类型注册了任何侦听器。
+         * @param type 事件类型
          * @version DragonBones 4.5
          * @language zh_CN
          */
-        hasEvent(type: EventStringType): boolean;
+        hasDBEventListener(type: EventStringType): boolean;
         /**
-         * 添加事件。
-         * @param type 事件类型。
-         * @param listener 事件回调。
+         * Dispatches an event into the event flow.
+         * @param type Event type
+         * @param eventObject Event object
+         * @see dragonBones.EventObject
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
+         * 分派特定事件到事件流中。
+         * @param type 事件类型
+         * @param eventObject 事件数据
+         * @see dragonBones.EventObject
          * @version DragonBones 4.5
          * @language zh_CN
          */
-        addEvent(type: EventStringType, listener: Function, target: any): void;
+        dispatchDBEvent(type: EventStringType, eventObject: EventObject): void;
         /**
-         * 移除事件。
-         * @param type 事件类型。
-         * @param listener 事件回调。
+         * Add an event listener object so that the listener receives notification of an event.
+         * @param type Event type
+         * @param listener Event listener
+         * @param thisObject The listener function's "this"
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
+         * 添加特定事件类型事件侦听器，以使侦听器能够接收事件通知。
+         * @param type 事件类型
+         * @param listener 事件侦听器
+         * @param thisObject 侦听函数绑定的this对象
          * @version DragonBones 4.5
          * @language zh_CN
          */
-        removeEvent(type: EventStringType, listener: Function, target: any): void;
+        addDBEventListener(type: EventStringType, listener: Function, thisObject: any): void;
+        /**
+         * Removes a listener from the object.
+         * @param type Event type
+         * @param listener Event listener
+         * @param thisObject The listener function's "this"
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
+         * 删除特定事件类型的侦听器。
+         * @param type 事件类型
+         * @param listener 事件侦听器
+         * @param thisObject 侦听函数绑定的this对象
+         * @version DragonBones 4.5
+         * @language zh_CN
+         */
+        removeDBEventListener(type: EventStringType, listener: Function, thisObject: any): void;
     }
 }
 declare namespace dragonBones {
@@ -3820,8 +4232,9 @@ declare namespace dragonBones {
         protected static readonly USER_DATA: string;
         protected static readonly ARMATURE: string;
         protected static readonly BONE: string;
-        protected static readonly IK: string;
         protected static readonly SLOT: string;
+        protected static readonly CONSTRAINT: string;
+        protected static readonly IK: string;
         protected static readonly SKIN: string;
         protected static readonly DISPLAY: string;
         protected static readonly ANIMATION: string;
@@ -3998,7 +4411,7 @@ declare namespace dragonBones {
         /**
          * @private
          */
-        protected _parseIKConstraint(rawData: any): void;
+        protected _parseIKConstraint(rawData: any): ConstraintData | null;
         /**
          * @private
          */
@@ -4072,7 +4485,7 @@ declare namespace dragonBones {
         /**
          * @private
          */
-        protected _parseSlotDisplayIndexFrame(rawData: any, frameStart: number, frameCount: number): number;
+        protected _parseSlotDisplayFrame(rawData: any, frameStart: number, frameCount: number): number;
         /**
          * @private
          */
@@ -4081,6 +4494,10 @@ declare namespace dragonBones {
          * @private
          */
         protected _parseSlotFFDFrame(rawData: any, frameStart: number, frameCount: number): number;
+        /**
+         * @private
+         */
+        protected _parseIKConstraintFrame(rawData: any, frameStart: number, frameCount: number): number;
         /**
          * @private
          */
@@ -4456,6 +4873,12 @@ declare namespace dragonBones {
          * @private
          */
         getAllTextureAtlasData(): Map<Array<TextureAtlasData>>;
+        /**
+         * 由引擎驱动的 WorldClock 实例。
+         * @version DragonBones 5.7
+         * @language zh_CN
+         */
+        readonly clock: WorldClock;
     }
 }
 declare namespace dragonBones {
@@ -4688,19 +5111,19 @@ declare namespace dragonBones {
         /**
          * @inheritDoc
          */
-        _dispatchEvent(type: EventStringType, eventObject: EventObject): void;
+        dispatchDBEvent(type: EventStringType, eventObject: EventObject): void;
         /**
          * @inheritDoc
          */
-        hasEvent(type: EventStringType): boolean;
+        hasDBEventListener(type: EventStringType): boolean;
         /**
          * @inheritDoc
          */
-        addEvent(type: EventStringType, listener: (event: EgretEvent) => void, target: any): void;
+        addDBEventListener(type: EventStringType, listener: (event: EgretEvent) => void, target: any): void;
         /**
          * @inheritDoc
          */
-        removeEvent(type: EventStringType, listener: (event: EgretEvent) => void, target: any): void;
+        removeDBEventListener(type: EventStringType, listener: (event: EgretEvent) => void, target: any): void;
         /**
          * 关闭批次渲染。（批次渲染出于性能考虑，不会更新渲染对象的边界属性，这样将无法正确获得渲染对象的宽高属性以及其内部显示对象的变换属性，如果需要使用这些属性，可以关闭批次渲染）
          * @version DragonBones 5.1
@@ -4720,12 +5143,24 @@ declare namespace dragonBones {
          */
         $measureContentBounds(bounds: egret.Rectangle): void;
         /**
+         * @see #hasDBEventListener()
          * @deprecated
-         * 已废弃，请参考 @see
+         */
+        hasEvent(type: EventStringType): boolean;
+        /**
+         * @see #addDBEventListener()
+         * @deprecated
+         */
+        addEvent(type: EventStringType, listener: (event: EgretEvent) => void, target: any): void;
+        /**
+         * @see #removeDBEventListener()
+         * @deprecated
+         */
+        removeEvent(type: EventStringType, listener: (event: EgretEvent) => void, target: any): void;
+        /**
          * @see dragonBones.Armature#clock
-         * @see dragonBones.EgretFactory#clock
-         * @see dragonBones.Animation#timescale
-         * @see dragonBones.Animation#stop()
+         * @see dragonBones.BaseFactory#clock
+         * @deprecated
          */
         advanceTimeBySelf(on: boolean): void;
     }
@@ -4858,6 +5293,10 @@ declare namespace dragonBones {
         /**
          * @private
          */
+        init(slotData: SlotData, displayDatas: Array<DisplayData | null> | null, rawDisplay: any, meshDisplay: any): void;
+        /**
+         * @private
+         */
         protected _onClear(): void;
         /**
          * @private
@@ -4912,6 +5351,8 @@ declare namespace dragonBones {
          * @private
          */
         protected _updateTransform(isSkinnedMesh: boolean): void;
+        private _updateTransformV4(isSkinnedMesh);
+        private _updateTransformV5(isSkinnedMesh);
     }
 }
 declare namespace dragonBones {
@@ -4924,13 +5365,6 @@ declare namespace dragonBones {
         private static _dragonBonesInstance;
         private static _factory;
         private static _clockHandler(time);
-        private static _createDragonBOnes();
-        /**
-         * 一个可以直接使用的全局 WorldClock 实例。(由引擎驱动)
-         * @version DragonBones 5.0
-         * @language zh_CN
-         */
-        static readonly clock: WorldClock;
         /**
          * 一个可以直接使用的全局工厂实例。
          * @version DragonBones 4.7
@@ -4983,6 +5417,12 @@ declare namespace dragonBones {
          * @language zh_CN
          */
         readonly soundEventManager: EgretArmatureDisplay;
+        /**
+         * 已废弃，请参考 @see
+         * @see dragonBones.BaseFactory#clock
+         * @deprecated
+         */
+        static readonly clock: WorldClock;
         /**
          * @deprecated
          * 已废弃，请参考 @see
