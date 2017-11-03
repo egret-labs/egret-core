@@ -12394,18 +12394,21 @@ var dragonBones;
             if (this._armatureDisplay._batchEnabled && this._renderDisplay !== this._rawDisplay && this._renderDisplay !== this._meshDisplay) {
                 this._armatureDisplay.disableBatch();
             }
-            if (this._armatureDisplay._batchEnabled) {
-                var node = this._renderDisplay.$renderNode;
-                if (!node.matrix) {
-                    node.matrix = new egret.Matrix();
-                }
-            }
         };
         /**
          * @private
          */
         EgretSlot.prototype._addDisplay = function () {
             if (this._armatureDisplay._batchEnabled) {
+                if (dragonBones.EgretFactory.isV5) {
+                    if (this._renderDisplay instanceof egret.Bitmap) {
+                        this._renderDisplay.$renderNode = new egret.sys.BitmapNode();
+                    }
+                    var node = this._renderDisplay.$renderNode;
+                    if (!node.matrix) {
+                        node.matrix = new egret.Matrix();
+                    }
+                }
                 this._armatureDisplay.$renderNode.addNode(this._renderDisplay.$renderNode);
             }
             else {
