@@ -6839,6 +6839,10 @@ var dragonBones;
                                 var index = this._slotTimelines.indexOf(timeline);
                                 this._slotTimelines.splice(index, 1);
                             }
+                            else if (timeline instanceof dragonBones.ConstraintTimelineState) {
+                                var index = this._constraintTimelines.indexOf(timeline);
+                                this._constraintTimelines.splice(index, 1);
+                            }
                             timeline.returnToPool();
                         }
                         this._poseTimelines.length = 0;
