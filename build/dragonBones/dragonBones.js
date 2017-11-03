@@ -5180,11 +5180,11 @@ var dragonBones;
                 }
                 radianA = Math.atan2(global.y - parentGlobal.y, global.x - parentGlobal.x);
             }
-            var dPR = dragonBones.Transform.normalizeRadian(radianA - rawRadianA);
-            parentGlobal.rotation = rawParentRadian + dPR * this._weight;
+            var dR = dragonBones.Transform.normalizeRadian(radianA - rawRadianA);
+            parentGlobal.rotation = rawParentRadian + dR * this._weight;
             parentGlobal.toMatrix(parent.globalTransformMatrix);
             //
-            var currentRadianA = rawRadianA + dPR * this._weight;
+            var currentRadianA = rawRadianA + dR * this._weight;
             global.x = parentGlobal.x + Math.cos(currentRadianA) * lP;
             global.y = parentGlobal.y + Math.sin(currentRadianA) * lP;
             //
@@ -5192,7 +5192,6 @@ var dragonBones;
             if (global.scaleX < 0.0) {
                 radianB += Math.PI;
             }
-            // const dR = Transform.normalizeRadian(radianB - rawRadian);
             global.rotation = parentGlobal.rotation + dragonBones.Transform.normalizeRadian(radianB - parentGlobal.rotation - rawRadian + rawParentRadian) * this._weight;
             global.toMatrix(globalTransformMatrix);
         };
@@ -11870,7 +11869,7 @@ var dragonBones;
              * @internal
              * @private
              */
-            _this._batchEnabled = __global["useNativeDisplayList"];
+            _this._batchEnabled = !__global["useNativeDisplayList"];
             /**
              * @internal
              * @private
@@ -11978,7 +11977,7 @@ var dragonBones;
                     this.removeChild(this._debugDrawer);
                 }
             }
-            if (this._batchEnabled && this._childDirty) {
+            if (!dragonBones.EgretFactory.isV5 && this._batchEnabled && this._childDirty) {
                 this.$invalidateContentBounds();
             }
         };
@@ -12358,11 +12357,11 @@ var dragonBones;
          */
         EgretSlot.prototype.init = function (slotData, displayDatas, rawDisplay, meshDisplay) {
             _super.prototype.init.call(this, slotData, displayDatas, rawDisplay, meshDisplay);
-            if (Number(egret.Capabilities.engineVersion.substr(0, 3)) < 5.1) {
-                this._updateTransform = this._updateTransformV4;
+            if (dragonBones.EgretFactory.isV5) {
+                this._updateTransform = this._updateTransformV5;
             }
             else {
-                this._updateTransform = this._updateTransformV5;
+                this._updateTransform = this._updateTransformV4;
             }
         };
         /**
@@ -12599,7 +12598,9 @@ var dragonBones;
                         meshDisplay.$setAnchorOffsetX(this._pivotX);
                         meshDisplay.$setAnchorOffsetY(this._pivotY);
                         meshDisplay.$updateVertices();
-                        meshDisplay.$invalidateTransform();
+                        if (!dragonBones.EgretFactory.isV5) {
+                            meshDisplay.$invalidateTransform();
+                        }
                     }
                     else {
                         var scale = currentTextureData.parent.scale * this._armature._armatureData.scale;
@@ -12679,7 +12680,9 @@ var dragonBones;
                     meshNode.vertices[iD++] = yG;
                 }
                 meshDisplay.$updateVertices();
-                meshDisplay.$invalidateTransform();
+                if (!dragonBones.EgretFactory.isV5) {
+                    meshDisplay.$invalidateTransform();
+                }
             }
             else if (hasFFD) {
                 var data = meshData.parent.parent.parent;
@@ -12694,7 +12697,9 @@ var dragonBones;
                     meshNode.vertices[i] = floatArray[vertexOffset + i] * scale + this._ffdVertices[i];
                 }
                 meshDisplay.$updateVertices();
-                meshDisplay.$invalidateTransform();
+                if (!dragonBones.EgretFactory.isV5) {
+                    meshDisplay.$invalidateTransform();
+                }
             }
             if (this._armatureDisplay._batchEnabled) {
                 this._armatureDisplay._childDirty = true;
@@ -12785,6 +12790,8 @@ var dragonBones;
             if (dataParser === void 0) { dataParser = null; }
             var _this = _super.call(this, dataParser) || this;
             if (EgretFactory._dragonBonesInstance === null) {
+                EgretFactory.isV5 = Number(egret.Capabilities.engineVersion.substr(0, 3)) >= 5.1;
+                //
                 var eventManager = new dragonBones.EgretArmatureDisplay();
                 EgretFactory._dragonBonesInstance = new dragonBones.DragonBones(eventManager);
                 EgretFactory._dragonBonesInstance.clock.time = egret.getTimer() * 0.001;
@@ -13008,6 +13015,10 @@ var dragonBones;
         };
         EgretFactory._dragonBonesInstance = null;
         EgretFactory._factory = null;
+        /**
+         * @private
+         */
+        EgretFactory.isV5 = false;
         return EgretFactory;
     }(dragonBones.BaseFactory));
     dragonBones.EgretFactory = EgretFactory;

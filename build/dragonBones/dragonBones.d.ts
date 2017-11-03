@@ -5366,6 +5366,10 @@ declare namespace dragonBones {
         private static _factory;
         private static _clockHandler(time);
         /**
+         * @private
+         */
+        static isV5: boolean;
+        /**
          * 一个可以直接使用的全局工厂实例。
          * @version DragonBones 4.7
          * @language zh_CN
