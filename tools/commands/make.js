@@ -32,14 +32,16 @@ var CompileEgretEngine = (function () {
             FileUtil.escapePath(path.join(outputDir, "dragonBones"))
         ];
         utils.clean(outputDir, excludeList);
-        for (var i = 0; i < manifest.modules.length; i++) {
-            var m = manifest.modules[i];
+        for (var _i = 0, _a = manifest.modules; _i < _a.length; _i++) {
+            var m = _a[_i];
             preduceSwanModule(m);
             listModuleFiles(m);
-            for (var j = 0; j < configurations.length; j++) {
-                var config = configurations[j];
-                for (var k = 0; k < manifest.platforms.length; k++) {
-                    var platform = manifest.platforms[k];
+            for (var _b = 0, configurations_1 = configurations; _b < configurations_1.length; _b++) {
+                var config = configurations_1[_b];
+                console.log(config);
+                for (var _c = 0, _d = manifest.platforms; _c < _d.length; _c++) {
+                    var platform = _d[_c];
+                    console.log(platform);
                     code = this.buildModule(m, platform, config);
                     if (code != 0) {
                         delSwanTemp(m);
@@ -47,6 +49,7 @@ var CompileEgretEngine = (function () {
                     }
                 }
             }
+            break;
             delSwanTemp(m);
         }
         // this.hideInternalMethods();

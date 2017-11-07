@@ -388,6 +388,10 @@
       {
         "name": "native",
         "description": "Native"
+      },
+      {
+        "name": "app",
+        "description": "app"
       }
     ],
     "templates": [

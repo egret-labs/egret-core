@@ -4,7 +4,7 @@ import FileUtil = require('../lib/FileUtil');
 import path = require('path');
 import ts = require("../lib/typescript-plus/lib/typescript");
 
-var ANY = 'any';
+const ANY = 'any';
 declare var global: any;
 
 class CompileEgretEngine implements egret.Command {
@@ -38,15 +38,13 @@ class CompileEgretEngine implements egret.Command {
             FileUtil.escapePath(path.join(outputDir, "dragonBones"))
         ];
         utils.clean(outputDir, excludeList);
-
-        for (var i = 0; i < manifest.modules.length; i++) {
-            var m = manifest.modules[i];
+        for (let m of manifest.modules) {
             preduceSwanModule(m);
             listModuleFiles(m);
-            for (var j = 0; j < configurations.length; j++) {
-                var config = configurations[j];
-                for (var k = 0; k < manifest.platforms.length; k++) {
-                    var platform = manifest.platforms[k];
+            for (let config of configurations) {
+                console.log(config)
+                for (let platform of manifest.platforms) {
+                    console.log(platform)
                     code = this.buildModule(m, platform, config);
                     if (code != 0) {
                         delSwanTemp(m);
@@ -54,6 +52,7 @@ class CompileEgretEngine implements egret.Command {
                     }
                 }
             }
+            break;
             delSwanTemp(m);
         }
 
@@ -87,7 +86,7 @@ class CompileEgretEngine implements egret.Command {
             return 0;
         }
         var tss: string[] = [];
-        m.files.forEach((file:any) => {
+        m.files.forEach((file) => {
             var path: string = null;
             var sourcePlatform: string = null, sourceConfig: string = null;
             if (typeof (file) == 'string') {
