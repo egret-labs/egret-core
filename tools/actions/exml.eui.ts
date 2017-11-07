@@ -4,7 +4,7 @@
 import utils = require('../lib/utils');
 import file = require('../lib/FileUtil');
 import exml = require("../lib/eui/EXML");
-import EgretProject = require('../project/EgretProject');
+import * as EgretProject from '../project';
 import exmlParser = require("../lib/eui/EXMLParser");
 var parser = new exmlParser.EXMLParser();
 

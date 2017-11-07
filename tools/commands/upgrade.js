@@ -35,7 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var file = require("../lib/FileUtil");
 var service = require("../service/index");
-var Project = require("../project/EgretProject");
+var Project = require("../project");
 var path = require("path");
 var utils = require("../lib/utils");
 var modify = require("./upgrade/ModifyProperties");

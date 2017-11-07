@@ -35,7 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
-var EgretProject = require("../project/EgretProject");
+var EgretProject = require("../project");
 var fs = require("fs");
 var FileUtil = require("../lib/FileUtil");
 var Compiler = require("../actions/Compiler");

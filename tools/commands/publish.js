@@ -37,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var utils = require("../lib/utils");
 var FileUtil = require("../lib/FileUtil");
 var PublishResourceAction_1 = require("../actions/PublishResourceAction");
-var EgretProject = require("../project/EgretProject");
+var EgretProject = require("../project");
 var Publish = (function () {
     function Publish() {
     }

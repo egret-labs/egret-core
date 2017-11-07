@@ -6,7 +6,7 @@ var exmlActions = require("../actions/exml");
 var state = require("../lib/DirectoryState");
 var CompileProject = require("../actions/CompileProject");
 var parser = require("../parser/Parser");
-var EgretProject = require("../project/EgretProject");
+var EgretProject = require("../project");
 var copyNative = require("../actions/CopyNativeFiles");
 var AutoCompileCommand = (function () {
     function AutoCompileCommand() {

@@ -4,8 +4,7 @@
 //import params = require("../ParamsParser");
 import file = require('../lib/FileUtil');
 import BuildCommand = require("./build");
-//import config = require("../ProjectConfig");
-import EgretProject = require('../project/EgretProject');
+import * as EgretProject from '../project';
 
 import CopyFilesCommand = require("./copyfile");
 import ParseConfigCommand = require("../actions/ParseConfig");

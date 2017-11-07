@@ -7,7 +7,7 @@ import service = require('../service/index');
 import FileUtil = require('../lib/FileUtil');
 import CompileProject = require('../actions/CompileProject');
 import copyNative = require("../actions/CopyNativeFiles");
-import * as EgretProject from '../project/EgretProject';
+import * as EgretProject from '../project';
 
 console.log(utils.tr(1106, 0));
 class Clean implements egret.Command {

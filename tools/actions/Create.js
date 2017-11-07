@@ -38,9 +38,9 @@ var utils = require("../lib/utils");
 var projectAction = require("../actions/Project");
 var FileUtil = require("../lib/FileUtil");
 var doT = require("../lib/doT");
-var EgretProject = require("../project/EgretProject");
-var TemplatesRoot = "tools/templates/";
+var EgretProject = require("../project");
 var Clean = require("../commands/clean");
+var TemplatesRoot = "tools/templates/";
 var Create = (function () {
     function Create() {
     }

@@ -35,7 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var utils = require("../lib/utils");
 var FileUtil = require("../lib/FileUtil");
-var EgretProject = require("../project/EgretProject");
+var EgretProject = require("../project");
 var CreateLib = (function () {
     function CreateLib() {
     }

@@ -1,6 +1,6 @@
 /// <reference path="../lib/types.d.ts" />
 var file = require("../lib/FileUtil");
-var EgretProject = require("../project/EgretProject");
+var EgretProject = require("../project");
 var config = EgretProject.data;
 var CopyFilesCommand = (function () {
     function CopyFilesCommand() {

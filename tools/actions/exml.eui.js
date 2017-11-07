@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var file = require("../lib/FileUtil");
 var exml = require("../lib/eui/EXML");
-var EgretProject = require("../project/EgretProject");
+var EgretProject = require("../project");
 var exmlParser = require("../lib/eui/EXMLParser");
 var parser = new exmlParser.EXMLParser();
 function build(exmls) {

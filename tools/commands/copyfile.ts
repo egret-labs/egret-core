@@ -1,7 +1,7 @@
 /// <reference path="../lib/types.d.ts" />
 
 import * as file from '../lib/FileUtil';
-import * as EgretProject from '../project/EgretProject';
+import * as EgretProject from '../project';
 
 const config = EgretProject.data;
 class CopyFilesCommand implements egret.Command {

@@ -1,10 +1,9 @@
-import * as EgretProject from '../project/EgretProject';
+import * as EgretProject from '../project';
 import * as fs from 'fs';
 import * as FileUtil from '../lib/FileUtil';
 import * as Compiler from '../actions/Compiler';
 import * as utils from '../lib/utils';
 import * as  service from '../service/index';
-import * as project from '../project/EgretProject';
 import * as path from 'path';
 
 export default {

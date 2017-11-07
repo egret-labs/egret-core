@@ -9,7 +9,7 @@ import FileUtil = require('../lib/FileUtil');
 import * as fs from 'fs';
 import * as path from 'path';
 import CopyFilesCommand = require("../commands/copyfile");
-import EgretProject = require('../project/EgretProject');
+import * as EgretProject from '../project';
 import ZipCommand = require("./ZipCommand");
 import copyNative = require("./CopyNativeFiles");
 import CompileProject = require('./CompileProject');

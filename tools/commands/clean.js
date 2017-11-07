@@ -45,7 +45,7 @@ var service = require("../service/index");
 var FileUtil = require("../lib/FileUtil");
 var CompileProject = require("../actions/CompileProject");
 var copyNative = require("../actions/CopyNativeFiles");
-var EgretProject = require("../project/EgretProject");
+var EgretProject = require("../project");
 console.log(utils.tr(1106, 0));
 var Clean = (function () {
     function Clean() {

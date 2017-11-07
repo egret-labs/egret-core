@@ -3,7 +3,7 @@
 import utils = require('../lib/utils');
 import file = require('../lib/FileUtil');
 import CompileOptions = require("./CompileOptions");
-import * as project from "../project/EgretProject";
+import * as project from "../project";
 import path = require("path");
 
 

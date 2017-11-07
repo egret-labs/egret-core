@@ -41,7 +41,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var utils = require("../lib/utils");
 var FileUtil = require("../lib/FileUtil");
-var project = require("../project/EgretProject");
+var project = require("../project");
 var Compiler = require("../actions/Compiler");
 var tasks = require("../tasks");
 var path = require("path");

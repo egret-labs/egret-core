@@ -1,4 +1,4 @@
-import * as EgretProject from '../project/EgretProject';
+import * as EgretProject from '../project';
 import * as fs from 'fs';
 import * as FileUtil from '../lib/FileUtil';
 import * as Compiler from '../actions/Compiler';

@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var utils = require("../lib/utils");
 var file = require("../lib/FileUtil");
 var CompileOptions = require("./CompileOptions");
-var project = require("../project/EgretProject");
+var project = require("../project");
 var path = require("path");
 exports.optionDeclarations = [
     {

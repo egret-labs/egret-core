@@ -10,7 +10,7 @@ import exmlActions = require('../actions/exml');
 import state = require('../lib/DirectoryState');
 import CompileProject = require('../actions/CompileProject');
 import parser = require('../parser/Parser');
-import EgretProject = require('../project/EgretProject');
+import * as EgretProject from '../project';
 import copyNative = require("../actions/CopyNativeFiles");
 
 class AutoCompileCommand implements egret.Command {

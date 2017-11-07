@@ -1,7 +1,7 @@
 ﻿import * as utils from '../lib/utils';
 import * as  service from '../service/index';
 import * as FileUtil from '../lib/FileUtil';
-import * as project from '../project/EgretProject';
+import * as project from '../project';
 import * as Compiler from '../actions/Compiler';
 import * as tasks from '../tasks';
 import * as path from 'path';

@@ -8,10 +8,7 @@ import FileUtil = require('../lib/FileUtil');
 import CompileProject = require('../actions/CompileProject');
 import { publishResource, legacyPublishHTML5, legacyPublishNative } from '../actions/PublishResourceAction';
 import ZipCommand = require("../actions/ZipCommand");
-
-import project = require("../actions/Project");
-import EgretProject = require("../project/EgretProject");
-
+import * as EgretProject from '../project';
 import * as path from 'path';
 
 
