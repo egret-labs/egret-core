@@ -7853,9 +7853,16 @@ var egret;
                 if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) {
                     return;
                 }
+                var canvasScaleX = egret.sys.DisplayList.$canvasScaleX;
+                var canvasScaleY = egret.sys.DisplayList.$canvasScaleY;
+                width *= canvasScaleX;
+                height *= canvasScaleY;
                 if (!this.canvasRenderBuffer || !this.canvasRenderBuffer.context) {
                     this.canvasRenderer = new egret.CanvasRenderer();
                     this.canvasRenderBuffer = new web.CanvasRenderBuffer(width, height);
+                    if (canvasScaleX != 1 || canvasScaleY != 1) {
+                        this.canvasRenderBuffer.context.setTransform(canvasScaleX, 0, 0, canvasScaleY, 0, 0);
+                    }
                 }
                 else if (node.dirtyRender || forHitTest) {
                     this.canvasRenderBuffer.resize(width, height);
@@ -7867,7 +7874,7 @@ var egret;
                     if (node.dirtyRender || forHitTest) {
                         this.canvasRenderBuffer.context.translate(-node.x, -node.y);
                     }
-                    buffer.transform(1, 0, 0, 1, node.x, node.y);
+                    buffer.transform(1, 0, 0, 1, node.x / canvasScaleX, node.y / canvasScaleY);
                 }
                 var surface = this.canvasRenderBuffer.surface;
                 if (forHitTest) {
@@ -7895,13 +7902,13 @@ var egret;
                     }
                     var textureWidth = node.$textureWidth;
                     var textureHeight = node.$textureHeight;
-                    buffer.context.drawTexture(node.$texture, 0, 0, textureWidth, textureHeight, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight);
+                    buffer.context.drawTexture(node.$texture, 0, 0, textureWidth, textureHeight, 0, 0, textureWidth / canvasScaleX, textureHeight / canvasScaleY, textureWidth, textureHeight);
                 }
                 if (node.x || node.y) {
                     if (node.dirtyRender || forHitTest) {
                         this.canvasRenderBuffer.context.translate(node.x, node.y);
                     }
-                    buffer.transform(1, 0, 0, 1, -node.x, -node.y);
+                    buffer.transform(1, 0, 0, 1, -node.x / canvasScaleX, -node.y / canvasScaleY);
                 }
                 if (!forHitTest) {
                     node.dirtyRender = false;
