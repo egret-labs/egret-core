@@ -16687,7 +16687,7 @@ var eui;
                 if (isEnded && this.endFunction) {
                     this.endFunction.call(this.thisObject, this);
                 }
-                return true;
+                return false;
             };
             return Animation;
         }());
