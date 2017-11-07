@@ -586,6 +586,9 @@ var egret;
             OldNativeCanvasRenderContext.prototype.moveTo = function (x, y) {
                 this.$nativeContext.moveTo(x, y);
             };
+            OldNativeCanvasRenderContext.prototype.setLineDash = function (segments) {
+                // this.$nativeContext.setLineDash(segments);
+            };
             /**
              * @private
              * 绘制一个填充矩形。矩形的起点在 (x, y) 位置，矩形的尺寸是 width 和 height ，fillStyle 属性决定矩形的样式。
@@ -1337,64 +1340,6 @@ var egret;
                 this.clear();
             };
             /**
-             * 改变渲染缓冲为指定大小，但保留原始图像数据
-             * @param width 改变后的宽
-             * @param height 改变后的高
-             * @param offsetX 原始图像数据在改变后缓冲区的绘制起始位置x
-             * @param offsetY 原始图像数据在改变后缓冲区的绘制起始位置y
-             */
-            NativeCanvasRenderBuffer.prototype.resizeTo = function (width, height, offsetX, offsetY) {
-                //resize 之前要提交下绘制命令
-                if (native.$supportCmdBatch) {
-                    native.$cmdManager.flush();
-                }
-                if (!sharedCanvas) {
-                    sharedCanvas = createCanvas();
-                }
-                var oldContext = this.context;
-                var oldSurface = this.surface;
-                var newSurface = sharedCanvas;
-                var newContext = newSurface.getContext("2d");
-                sharedCanvas = oldSurface;
-                this.context = newContext;
-                this.surface = newSurface;
-                newSurface.width = Math.max(width, 1);
-                newSurface.height = Math.max(height, 1);
-                newContext.setTransform(1, 0, 0, 1, 0, 0);
-                newContext.drawImage(oldSurface, offsetX, offsetY);
-                oldSurface.height = 1;
-                oldSurface.width = 1;
-            };
-            NativeCanvasRenderBuffer.prototype.setDirtyRegionPolicy = function (state) {
-            };
-            /**
-             * 清空并设置裁切
-             * @param regions 矩形列表
-             * @param offsetX 矩形要加上的偏移量x
-             * @param offsetY 矩形要加上的偏移量y
-             */
-            NativeCanvasRenderBuffer.prototype.beginClip = function (regions, offsetX, offsetY) {
-                offsetX = +offsetX || 0;
-                offsetY = +offsetY || 0;
-                var context = this.context;
-                context.save();
-                context.beginPath();
-                context.setTransform(1, 0, 0, 1, offsetX, offsetY);
-                var length = regions.length;
-                for (var i = 0; i < length; i++) {
-                    var region = regions[i];
-                    context.clearRect(region.minX, region.minY, region.width, region.height);
-                    context.rect(region.minX, region.minY, region.width, region.height);
-                }
-                context.clip();
-            };
-            /**
-             * 取消上一次设置的clip。
-             */
-            NativeCanvasRenderBuffer.prototype.endClip = function () {
-                this.context.restore();
-            };
-            /**
              * 获取指定区域的像素
              */
             NativeCanvasRenderBuffer.prototype.getPixels = function (x, y, width, height) {
@@ -1487,11 +1432,11 @@ var egret;
             var surface = buffer.surface;
             buffer.resize(iWidth, iHeight);
             var bitmapData = texture;
-            var offsetX = Math.round(bitmapData._offsetX);
-            var offsetY = Math.round(bitmapData._offsetY);
-            var bitmapWidth = bitmapData._bitmapWidth;
-            var bitmapHeight = bitmapData._bitmapHeight;
-            buffer.context.drawImage(bitmapData._bitmapData.source, bitmapData._bitmapX + rect.x / egret.$TextureScaleFactor, bitmapData._bitmapY + rect.y / egret.$TextureScaleFactor, bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
+            var offsetX = Math.round(bitmapData.$offsetX);
+            var offsetY = Math.round(bitmapData.$offsetY);
+            var bitmapWidth = bitmapData.$bitmapWidth;
+            var bitmapHeight = bitmapData.$bitmapHeight;
+            buffer.context.drawImage(bitmapData.$bitmapData.source, bitmapData.$bitmapX + rect.x / egret.$TextureScaleFactor, bitmapData.$bitmapY + rect.y / egret.$TextureScaleFactor, bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
             return buffer;
         }
         /**
@@ -1588,8 +1533,6 @@ var egret;
                 return _this;
             }
             NativePlayer.prototype.init = function (option) {
-                //暂时无法显示重绘区域
-                option.showPaintRect = false;
                 var stage = new egret.Stage();
                 stage.$screen = this;
                 stage.$scaleMode = option.scaleMode;
@@ -1604,7 +1547,6 @@ var egret;
                 var player = new egret.sys.Player(buffer, stage, option.entryClassName);
                 egret.lifecycle.stage = stage;
                 egret.lifecycle.addLifecycleListener(native.NativeLifeCycleHandler);
-                player.showPaintRect(option.showPaintRect);
                 if (option.showFPS || option.showLog) {
                     var styleStr = option.fpsStyles || "";
                     var stylesArr = styleStr.split(",");
@@ -2355,10 +2297,9 @@ var egret;
                 this.textFps.textFlow = [
                     { text: datas.fps + " FPS " + egret.Capabilities.renderMode + "\n" },
                     { text: "min" + fpsMin + " max" + fpsMax + " avg" + Math.floor(fpsTotal / lenFps) + "\n" },
-                    { text: "Draw: " + datas.draw + "\nDirty: " + datas.dirty + "%\n" },
+                    { text: "Draw: " + datas.draw + "\n" },
                     { text: "Cost: " },
                     { text: datas.costTicker + " ", style: { "textColor": 0x18fefe } },
-                    { text: datas.costDirty + " ", style: { "textColor": 0xffff00 } },
                     { text: datas.costRender + " ", style: { "textColor": 0xff0000 } }
                 ];
                 this.updateLayout();
@@ -3092,6 +3033,9 @@ var egret;
             NativeCanvasRenderContext.prototype.moveTo = function (x, y) {
                 native.$cmdManager.setContext(this.$nativeContext);
                 native.$cmdManager.moveTo(x, y);
+            };
+            NativeCanvasRenderContext.prototype.setLineDash = function (segments) {
+                // $cmdManager.setLineDash(segments);
             };
             /**
              * @private
@@ -4210,7 +4154,6 @@ var egret;
                     loader.addEventListener(egret.Event.COMPLETE, function () {
                         _this.posterData = loader.data;
                         _this.markDirty();
-                        _this.$invalidateContentBounds();
                     }, this);
                 },
                 enumerable: true,
@@ -4314,8 +4257,6 @@ var egret;
                 if (this.originVideo) {
                     this.originVideo["setVideoVisible"](true);
                 }
-                this.$invalidate();
-                this.$invalidateContentBounds();
                 _super.prototype.$onAddToStage.call(this, stage, nestLevel);
             };
             /**
@@ -4365,9 +4306,7 @@ var egret;
             NativeVideo.prototype.$setHeight = function (value) {
                 this.heightSet = +value || 0;
                 this.setVideoSize();
-                this.$invalidate();
-                this.$invalidateContentBounds();
-                return _super.prototype.$setHeight.call(this, value);
+                _super.prototype.$setHeight.call(this, value);
             };
             /**
              * @private
@@ -4375,9 +4314,7 @@ var egret;
             NativeVideo.prototype.$setWidth = function (value) {
                 this.widthSet = +value || 0;
                 this.setVideoSize();
-                this.$invalidate();
-                this.$invalidateContentBounds();
-                return _super.prototype.$setWidth.call(this, value);
+                _super.prototype.$setWidth.call(this, value);
             };
             /**
              * @inheritDoc
@@ -4424,7 +4361,7 @@ var egret;
             /**
              * @private
              */
-            NativeVideo.prototype.$render = function () {
+            NativeVideo.prototype.$updateRenderNode = function () {
                 var node = this.$renderNode;
                 var posterData = this.posterData;
                 var width = this.getPlayWidth();
@@ -4441,7 +4378,7 @@ var egret;
                 }
             };
             NativeVideo.prototype.markDirty = function () {
-                this.$invalidate();
+                this.$renderDirty = true;
                 return true;
             };
             return NativeVideo;

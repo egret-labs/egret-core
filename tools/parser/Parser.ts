@@ -5,7 +5,7 @@ import file = require('../lib/FileUtil');
 import CompileOptions = require("./CompileOptions");
 import * as project from "../project";
 import path = require("path");
-
+import { data as engineData } from "../EngineData";
 
 
 
@@ -227,7 +227,7 @@ export function parseCommandLine(commandLine: string[]) {
             options.projectDir = file.joinPath(options.projectDir, "/");
             project.data.init(options.projectDir);
         }
-
+        engineData.init();
         var packagePath = file.joinPath(egret.root, "package.json");
 
         var content = file.read(packagePath);

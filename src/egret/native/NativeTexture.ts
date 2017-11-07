@@ -56,11 +56,11 @@ namespace egret.native {
         buffer.resize(iWidth, iHeight);
 
         let bitmapData = texture;
-        let offsetX: number = Math.round(bitmapData._offsetX);
-        let offsetY: number = Math.round(bitmapData._offsetY);
-        let bitmapWidth: number = bitmapData._bitmapWidth;
-        let bitmapHeight: number = bitmapData._bitmapHeight;
-        buffer.context.drawImage(bitmapData._bitmapData.source, bitmapData._bitmapX + rect.x / $TextureScaleFactor, bitmapData._bitmapY + rect.y / $TextureScaleFactor,
+        let offsetX: number = Math.round(bitmapData.$offsetX);
+        let offsetY: number = Math.round(bitmapData.$offsetY);
+        let bitmapWidth: number = bitmapData.$bitmapWidth;
+        let bitmapHeight: number = bitmapData.$bitmapHeight;
+        buffer.context.drawImage(bitmapData.$bitmapData.source, bitmapData.$bitmapX + rect.x / $TextureScaleFactor, bitmapData.$bitmapY + rect.y / $TextureScaleFactor,
             bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
 
         return buffer;

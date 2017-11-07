@@ -55,13 +55,8 @@ namespace egret.sys {
 
             this.showFPS = false;
             this.showLog = false;
-            this._showPaintRect = false;
             this.stageDisplayList = null;
-            this.paintList = [];
             this.displayFPS = displayFPS;
-            this.showPaintRect = showPaintRect;
-            this.drawPaintRect = drawPaintRect;
-            this.drawDirtyRect = drawDirtyRect;
         }
 
         /**
@@ -121,7 +116,6 @@ namespace egret.sys {
 
         /**
          * @private
-         *
          */
         private initialize(): void {
             let rootClass;
@@ -173,28 +167,11 @@ namespace egret.sys {
                 this.stage.addChild(this.fps);
             }
             let stage = this.stage;
-            let t = egret.getTimer();
-            let dirtyList = stage.$displayList.updateDirtyRegions();
-
             let t1 = egret.getTimer();
-            dirtyList = dirtyList.concat();
             let drawCalls = stage.$displayList.drawToSurface();
-
-            if (this._showPaintRect) {
-                this.drawPaintRect(dirtyList);
-            }
             let t2 = egret.getTimer();
             if (triggerByFrame && this.showFPS) {
-                let dirtyRatio = 0;
-                if (drawCalls > 0) {
-                    let length = dirtyList.length;
-                    let dirtyArea = 0;
-                    for (let i = 0; i < length; i++) {
-                        dirtyArea += dirtyList[i].area;
-                    }
-                    dirtyRatio = Math.ceil(dirtyArea * 1000 / (stage.stageWidth * stage.stageHeight)) / 10;
-                }
-                this.fps.update(drawCalls, dirtyRatio, t1 - t, t2 - t1, costTicker);
+                this.fps.update(drawCalls, t2 - t1, costTicker);
             }
         }
 
@@ -214,7 +191,6 @@ namespace egret.sys {
                 this.stageDisplayList.setClipRect(stageWidth, stageHeight);
             }
             stage.dispatchEventWith(Event.RESIZE);
-            stage.$invalidate(true);
             //}
         }
 
@@ -236,33 +212,10 @@ namespace egret.sys {
          * @private
          */
         private fps: FPS;
-
-        /**
-         * @private
-         * 是否显示脏矩形重绘区。
-         */
-        public showPaintRect: (value: boolean) => void;
-        /**
-         * @private
-         */
-        private drawDirtyRect: (x: number, y: number, width: number, height: number, context: any) => void;
-        /**
-         * @private
-         */
-        private _showPaintRect: boolean;
         /**
          * @private
          */
         private stageDisplayList: DisplayList;
-        /**
-         * @private
-         */
-        private paintList: any[];
-        /**
-         * @private
-         */
-        private drawPaintRect: (dirtyList: Region[]) => void;
-
     }
 
 
@@ -275,7 +228,7 @@ namespace egret.sys {
         /**
          * 更新FPS信息
          */
-        update(drawCalls: number, dirtyRatio: number, ...args): void;
+        update(drawCalls: number, costRender, costTicker): void;
 
         /**
          * 插入一条日志信息
@@ -334,76 +287,6 @@ namespace egret.sys {
         }
     }
 
-
-    function showPaintRect(value: boolean): void {
-        value = !!value;
-        if (this._showPaintRect == value) {
-            return;
-        }
-        this._showPaintRect = value;
-        if (value) {
-            if (!this.stageDisplayList) {
-                this.stageDisplayList = sys.DisplayList.create(this.stage);
-            }
-            this.stage.$displayList = this.stageDisplayList;
-        }
-        else {
-            this.stage.$displayList = this.screenDisplayList;
-        }
-    }
-
-
-    function drawPaintRect(dirtyList: Region[]): void {
-        let length = dirtyList.length;
-        let list = [];
-        for (let i = 0; i < length; i++) {
-            let region: Region = dirtyList[i];
-            list[i] = [region.minX, region.minY, region.width, region.height];
-            region.width -= 1;
-            region.height -= 1;
-        }
-        let repaintList = this.paintList;
-        repaintList.push(list);
-        if (repaintList.length > 1) {
-            repaintList.shift();
-        }
-        let renderBuffer = this.screenDisplayList.renderBuffer;
-        let context = renderBuffer.context;
-        context.setTransform(1, 0, 0, 1, 0, 0);
-        context.clearRect(0, 0, renderBuffer.surface.width, renderBuffer.surface.height);
-        context.drawImage(this.stageDisplayList.renderBuffer.surface, 0, 0);
-        length = repaintList.length;
-        for (let i = 0; i < length; i++) {
-            list = repaintList[i];
-            for (let j = list.length - 1; j >= 0; j--) {
-                let r: number[] = list[j];
-                this.drawDirtyRect(r[0], r[1], r[2], r[3], context);
-            }
-        }
-        context.save();
-        context.beginPath();
-        length = dirtyList.length;
-        for (let i = 0; i < length; i++) {
-            let region = dirtyList[i];
-            let pixelRatio = DisplayList.$pixelRatio;
-            context.clearRect(region.minX * pixelRatio, region.minY * pixelRatio, region.width * pixelRatio, region.height * pixelRatio);
-            context.rect(region.minX * pixelRatio, region.minY * pixelRatio, region.width * pixelRatio, region.height * pixelRatio);
-        }
-        context.clip();
-        context.drawImage(this.stageDisplayList.renderBuffer.surface, 0, 0);
-        context.restore();
-    }
-
-    /**
-     * 绘制一个脏矩形显示区域，在显示重绘区功能开启时调用。
-     */
-    function drawDirtyRect(x: number, y: number, width: number, height: number, context: any): void {
-        context.strokeStyle = 'rgb(255,0,0)';
-        context.lineWidth = 5;
-        let pixelRatio = DisplayList.$pixelRatio;
-        context.strokeRect(x * pixelRatio - 0.5, y * pixelRatio - 0.5, width * pixelRatio, height * pixelRatio);
-    }
-
     /**
      * FPS显示对象
      */
@@ -417,8 +300,6 @@ namespace egret.sys {
             this.totalTick = 0;
             this.lastTime = 0;
             this.drawCalls = 0;
-            this.dirtyRatio = 0;
-            this.costDirty = 0;
             this.costRender = 0;
             this.costTicker = 0;
             this._stage = stage;
@@ -445,39 +326,31 @@ namespace egret.sys {
                 return !logFilter || message.indexOf(logFilter) == 0;
             }
         }
-        FPSImpl.prototype.update = function (drawCalls, dirtyRatio, costDirty, costRender, costTicker) {
+        FPSImpl.prototype.update = function (drawCalls, costRender, costTicker) {
             let current = egret.getTimer();
             this.totalTime += current - this.lastTime;
             this.lastTime = current;
             this.totalTick++;
             this.drawCalls += drawCalls;
-            this.dirtyRatio += dirtyRatio;
-            this.costDirty += costDirty;
             this.costRender += costRender;
             this.costTicker += costTicker;
             if (this.totalTime >= 1000) {
 
                 let lastFPS = Math.min(Math.ceil(this.totalTick * 1000 / this.totalTime), ticker.$frameRate);
                 let lastDrawCalls = Math.round(this.drawCalls / this.totalTick);
-                let lastDirtyRatio = Math.round(this.dirtyRatio / this.totalTick);
-                let lastCostDirty = Math.round(this.costDirty / this.totalTick);
                 let lastCostRender = Math.round(this.costRender / this.totalTick);
                 let lastCostTicker = Math.round(this.costTicker / this.totalTick);
                 this.fpsDisplay.update(
                     {
                         fps: lastFPS,
                         draw: lastDrawCalls,
-                        dirty: lastDirtyRatio,
                         costTicker: lastCostTicker,
-                        costDirty: lastCostDirty,
                         costRender: lastCostRender
                     }
                 )
                 this.totalTick = 0;
                 this.totalTime = this.totalTime % 1000;
                 this.drawCalls = 0;
-                this.dirtyRatio = 0;
-                this.costDirty = 0;
                 this.costRender = 0;
                 this.costTicker = 0;
             }

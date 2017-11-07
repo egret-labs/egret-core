@@ -63,7 +63,8 @@ var UpgradeCommand = (function () {
                             { "v": "4.1.0", command: Upgrade_4_1_0 },
                             { "v": "5.0.0" },
                             { "v": "5.0.1", command: Upgrade_5_0_1 },
-                            { "v": "5.0.7" }
+                            { "v": "5.0.8", command: Upgrade_5_0_8 },
+                            { "v": "5.1.0" }
                         ];
                         _a.label = 1;
                     case 1:
@@ -217,5 +218,23 @@ var Upgrade_5_0_1 = (function () {
         });
     };
     return Upgrade_5_0_1;
+}());
+var Upgrade_5_0_8 = (function () {
+    function Upgrade_5_0_8() {
+    }
+    Upgrade_5_0_8.prototype.execute = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var options;
+            return __generator(this, function (_a) {
+                options = egret.args;
+                if (file.exists(file.joinPath(options.projectDir, "template", "debug"))) {
+                    globals.log(1718);
+                    file.remove(file.joinPath(options.projectDir, "template", "debug"));
+                }
+                return [2 /*return*/, 0];
+            });
+        });
+    };
+    return Upgrade_5_0_8;
 }());
 module.exports = UpgradeCommand;

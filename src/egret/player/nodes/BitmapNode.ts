@@ -87,7 +87,7 @@ namespace egret.sys {
         }
 
         /**
-         * 在显示对象的$render()方法被调用前，自动清空自身的drawData数据。
+         * 在显示对象的$updateRenderNode()方法被调用前，自动清空自身的drawData数据。
          */
         public cleanBeforeRender(): void {
             super.cleanBeforeRender();
@@ -98,11 +98,10 @@ namespace egret.sys {
             this.filter = null;
         }
 
-
-        static $updateTextureData(node: sys.BitmapNode, image: any,
+        static $updateTextureData(node: sys.NormalBitmapNode, image: BitmapData,
             bitmapX: number, bitmapY: number, bitmapWidth: number, bitmapHeight: number, offsetX: number, offsetY: number,
             textureWidth: number, textureHeight: number, destW: number, destH: number, sourceWidth: number, sourceHeight: number,
-            scale9Grid: egret.Rectangle, fillMode: string, smoothing: boolean): void {
+            fillMode: string, smoothing: boolean): void {
             if (!image) {
                 return;
             }
@@ -111,12 +110,7 @@ namespace egret.sys {
             node.image = image;
             node.imageWidth = sourceWidth;
             node.imageHeight = sourceHeight;
-            if (scale9Grid) {
-                BitmapNode.$updateTextureDataWithScale9Grid(node, scale9Grid,
-                    bitmapX, bitmapY, bitmapWidth,
-                    bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH);
-            }
-            else if (fillMode == egret.BitmapFillMode.SCALE) {
+            if (fillMode == egret.BitmapFillMode.SCALE) {
                 let tsX: number = destW / textureWidth * scale;
                 let tsY: number = destH / textureHeight * scale;
                 node.drawImage(bitmapX, bitmapY,
@@ -145,14 +139,17 @@ namespace egret.sys {
             }
         }
 
-
         /**
          * @private
          * 绘制九宫格位图
          */
-        private static $updateTextureDataWithScale9Grid(node: sys.BitmapNode, scale9Grid: egret.Rectangle, bitmapX: number, bitmapY: number,
+        static $updateTextureDataWithScale9Grid(node: sys.NormalBitmapNode, image: BitmapData, scale9Grid: egret.Rectangle, bitmapX: number, bitmapY: number,
             bitmapWidth: number, bitmapHeight: number, offsetX: number, offsetY: number,
-            textureWidth: number, textureHeight: number, destW: number, destH: number): void {
+            textureWidth: number, textureHeight: number, destW: number, destH: number, sourceWidth: number, sourceHeight: number, smoothing: boolean): void {
+            node.smoothing = smoothing;
+            node.image = image;
+            node.imageWidth = sourceWidth;
+            node.imageHeight = sourceHeight;
             let imageWidth: number = bitmapWidth;
             let imageHeight: number = bitmapHeight;
 
@@ -241,11 +238,10 @@ namespace egret.sys {
             }
         }
 
-
         /**
-  * @private
-  */
-        private static drawClipImage(node: sys.BitmapNode, scale: number, bitmapX: number, bitmapY: number, scaledBitmapW: number,
+         * @private
+         */
+        private static drawClipImage(node: sys.NormalBitmapNode, scale: number, bitmapX: number, bitmapY: number, scaledBitmapW: number,
             scaledBitmapH: number, offsetX: number, offsetY: number, destW: number, destH: number,
             startX: number = 0, startY: number = 0): void {
             let offset = offsetX + scaledBitmapW - destW;

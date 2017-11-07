@@ -1,0 +1,566 @@
+{
+  "name": "egret",
+  "version": "5.1.0",
+  "private": true,
+  "author": "egret-labs",
+  "scripts": {
+    "start": "node app"
+  },
+  "bin": {
+    "egret": "./tools/bin/egret"
+  },
+  "i18n": "cn",
+  "egret": {
+    "registerClass": "egret",
+    "typeScriptVersion": "1.8",
+    "modules": [
+      {
+        "name": "egret",
+        "description": "egret core lib",
+        "description_en": "egret core lib",
+        "files": [
+          {
+            "path": "../Defines.debug.ts",
+            "debug": true
+          },
+          {
+            "path": "../Defines.release.ts",
+            "debug": false
+          },
+          {
+            "path": "text/native/NativeTextMeasurer.ts",
+            "platform": "native"
+          },
+          {
+            "path": "native/rendering/canvas/NativeCanvasRenderContext.ts",
+            "platform": "native"
+          },
+          {
+            "path": "native/rendering/canvas/OldNativeCanvasRenderContext.ts",
+            "platform": "native"
+          },
+          {
+            "path": "native/rendering/canvas/NativeCanvas.ts",
+            "platform": "native"
+          },
+          {
+            "path": "native/rendering/canvas/NativeCanvasRenderBuffer.ts",
+            "platform": "native"
+          },
+          {
+            "path": "native/NativeTexture.ts",
+            "platform": "native"
+          },
+          {
+            "path": "native/NativePlayer.ts",
+            "platform": "native"
+          },
+          {
+            "path": "native/EgretNative.ts",
+            "platform": "native"
+          },
+          {
+            "path": "native/NativeFps.ts",
+            "platform": "native"
+          },
+          {
+            "path": "native/NativeGetOption.ts",
+            "platform": "native"
+          },
+          {
+            "path": "external/native/NativeExternalInterface.ts",
+            "platform": "native"
+          },
+          {
+            "path": "media/native/NativeSound.ts",
+            "platform": "native"
+          },
+          {
+            "path": "media/native/NativeSoundChannel.ts",
+            "platform": "native"
+          },
+          {
+            "path": "media/native/NaSound.ts",
+            "platform": "native"
+          },
+          {
+            "path": "media/native/NaSoundChannel.ts",
+            "platform": "native"
+          },
+          {
+            "path": "media/native/NativeVideo.ts",
+            "platform": "native"
+          },
+          {
+            "path": "native/NativeGetOption.ts",
+            "platform": "native"
+          },
+          {
+            "path": "external/native/NativeExternalInterface.ts",
+            "platform": "native"
+          },
+          {
+            "path": "localStorage/native/NativeLocalStorage.ts",
+            "platform": "native"
+          },
+          {
+            "path": "native/NativeHideHandler.ts",
+            "platform": "native"
+          },
+          {
+            "path": "native/NativeResourceLoader.ts",
+            "platform": "native"
+          },
+          {
+            "path": "native/NativeTouchHandler.ts",
+            "platform": "native"
+          },
+          {
+            "path": "net/native/NativeHttpRequest.ts",
+            "platform": "native"
+          },
+          {
+            "path": "net/native/NativeImageLoader.ts",
+            "platform": "native"
+          },
+          {
+            "path": "text/native/NativeStageText.ts",
+            "platform": "native"
+          },
+          {
+            "path": "native/NativeXML.ts",
+            "platform": "native"
+          },
+          {
+            "path": "web/WebBitmapData.ts",
+            "platform": "web"
+          },
+          {
+            "path": "external/web/WebExternalInterface.ts",
+            "platform": "web"
+          },
+          {
+            "path": "localStorage/web/WebLocalStorage.ts",
+            "platform": "web"
+          },
+          {
+            "path": "media/web/HtmlSound.ts",
+            "platform": "web"
+          },
+          {
+            "path": "media/web/HtmlSoundChannel.ts",
+            "platform": "web"
+          },
+          {
+            "path": "media/web/WebAudioSound.ts",
+            "platform": "web"
+          },
+          {
+            "path": "media/web/WebAudioSoundChannel.ts",
+            "platform": "web"
+          },
+          {
+            "path": "media/web/WebVideo.ts",
+            "platform": "web"
+          },
+          {
+            "path": "net/web/WebHttpRequest.ts",
+            "platform": "web"
+          },
+          {
+            "path": "net/web/WebImageLoader.ts",
+            "platform": "web"
+          },
+          {
+            "path": "text/web/HTML5StageText.ts",
+            "platform": "web"
+          },
+          {
+            "path": "text/web/WebTextMeasurer.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/CanvasRenderBuffer.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/WebTouchHandler.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/WebHideHandler.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/Html5Capatibility.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/EgretWeb.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/WebCapability.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/WebFps.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/WebGetOption.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/WebPlayer.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/WebTexture.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/WebXML.ts",
+            "platform": "web"
+          },
+          {
+            "path": "sensor/web/WebDeviceOrientation.ts",
+            "platform": "web"
+          },
+          {
+            "path": "sensor/web/WebGeolocation.ts",
+            "platform": "web"
+          },
+          {
+            "path": "sensor/web/WebMotion.ts",
+            "platform": "web"
+          },
+          {
+            "path": "utils/native/NativeLogger.ts",
+            "platform": "native"
+          },
+          {
+            "path": "utils/web/WebLogger.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/WebGLDrawCmdManager.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/WebGLVertexArrayObject.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/WebGLRenderTarget.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/WebGLRenderContext.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/WebGLRenderBuffer.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/WebGLRenderer.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/EgretWebGLAttribute.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/EgretWebGLProgram.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/EgretWebGLUniform.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/shaders/EgretShaderLib.ts",
+            "platform": "web"
+          }
+        ],
+        "root": "src/egret",
+        "dependencies": []
+      },
+      {
+        "name": "game",
+        "description": "game lib",
+        "description_en": "game lib",
+        "files": [],
+        "root": "src/extension/game",
+        "dependencies": [
+          "egret"
+        ]
+      },
+      {
+        "name": "res",
+        "description": "resource lib",
+        "description_en": "resource lib",
+        "files": [],
+        "root": "src/extension/resource",
+        "dependencies": [
+          "egret",
+          "game"
+        ]
+      },
+      {
+        "name": "eui",
+        "description": "UI lib",
+        "description_en": "UI lib",
+        "files": [],
+        "root": "src/extension/eui",
+        "dependencies": [
+          "egret"
+        ]
+      },
+      {
+        "name": "experimental",
+        "description": "egret experimental function lib",
+        "description_en": "egret experimental function lib",
+        "files": [],
+        "root": "src/extension/experimental",
+        "dependencies": [
+          "egret"
+        ]
+      },
+      {
+        "name": "tween",
+        "description": "tween slow motion animation lib",
+        "description_en": "tween slow motion animation lib",
+        "files": [],
+        "root": "src/extension/tween",
+        "dependencies": [
+          "egret"
+        ]
+      },
+      {
+        "name": "socket",
+        "description": "socket network communication lib",
+        "description_en": "socket network communication lib",
+        "files": [],
+        "root": "src/extension/socket",
+        "dependencies": [
+          "egret"
+        ]
+      },
+      {
+        "name": "dragonBones",
+        "description": "dragonbones animation lib",
+        "description_en": "dragonbones animation lib",
+        "files": [],
+        "root": "",
+        "dependencies": []
+      },
+      {
+        "name": "egret3d",
+        "description": "egret 3D engine lib",
+        "description_en": "egret 3D engine lib",
+        "files": [],
+        "root": "",
+        "dependencies": []
+      }
+    ],
+    "platforms": [
+      {
+        "name": "any",
+        "declaration": true,
+        "hidden": true
+      },
+      {
+        "name": "web",
+        "description": "Web"
+      },
+      {
+        "name": "native",
+        "description": "Native"
+      }
+    ],
+    "templates": [
+      {
+        "name": "empty",
+        "displayName": "Empty Egret project",
+        "displayName_en": "Empty Egret project",
+        "language": "TypeScript",
+        "tag": "game,app,TypeScript",
+        "description": "Create an empty project, add only reference to Egret related modules",
+        "description_en": "Create an empty project, add only reference to Egret related modules",
+        "defaultWidth": 640,
+        "defaultHeight": 1136,
+        "modules": [
+          "egret"
+        ]
+      },
+      {
+        "name": "game",
+        "displayName": "Egret game project",
+        "displayName_en": "Egret game project",
+        "language": "TypeScript",
+        "tag": "game,TypeScript",
+        "description": "Create an Egret game project",
+        "description_en": "Create an Egret game project",
+        "defaultWidth": 640,
+        "defaultHeight": 1136,
+        "modules": [
+          "egret",
+          "game",
+          "tween",
+          "res"
+        ]
+      },
+      {
+        "name": "eui",
+        "displayName": "Egret EUI project",
+        "displayName_en": "Egret EUI project",
+        "language": "TypeScript",
+        "tag": "game,app,TypeScript",
+        "description": "Create friendly interactive UI with eui extensions",
+        "description_en": "Create friendly interactive UI with eui extensions",
+        "defaultWidth": 640,
+        "defaultHeight": 1136,
+        "modules": [
+          "egret",
+          "eui",
+          "res",
+          "tween"
+        ]
+      },
+      {
+        "name": "egret3d",
+        "displayName": "Egret 3D project",
+        "displayName_en": "Egret 3D project",
+        "language": "TypeScript",
+        "tag": "game,app,TypeScript",
+        "description": "Create an Egret 3D project",
+        "description_en": "Create an Egret 3D project",
+        "defaultWidth": 640,
+        "defaultHeight": 960,
+        "modules": [
+          "egret",
+          "egret3d"
+        ]
+      },
+      {
+        "name": "facebook-instant-demo",
+        "displayName": "Facebook Instant Game Demo project",
+        "displayName_en": "Facebook Instant Game Demo project",
+        "language": "TypeScript",
+        "tag": "game,app,TypeScript",
+        "description": "A Facebook game type",
+        "description_en": "A Facebook game type",
+        "defaultWidth": 640,
+        "defaultHeight": 1136,
+        "modules": [
+          "egret",
+          "game",
+          "res",
+          "eui",
+          "tween"
+        ]
+      },
+      {
+        "name": "res-examples",
+        "displayName": "ResourceManager sample project",
+        "displayName_en": "ResourceManager sample project",
+        "language": "TypeScript",
+        "tag": "game,app,TypeScript",
+        "description": "ResourceManager sample project",
+        "description_en": "ResourceManager sample project",
+        "defaultWidth": 640,
+        "defaultHeight": 1136,
+        "modules": [
+          "egret",
+          "game",
+          "res",
+          "eui",
+          "tween"
+        ]
+      },
+      {
+        "name": "wasm",
+        "displayName": "WebAssembly sample project",
+        "displayName_en": "WebAssembly sample project",
+        "language": "TypeScript",
+        "tag": "game,app,TypeScript,WebAssembly",
+        "description": "WebAssembly sample project",
+        "description_en": "WebAssembly sample project",
+        "defaultWidth": 640,
+        "defaultHeight": 1136,
+        "modules": [
+          "egret",
+          "media",
+          "res"
+        ]
+      }
+    ],
+    "scaleModes": [
+      {
+        "name": "showAll",
+        "description": "Scale app content with original aspect ratio. The wider direction of the scaled app content fills the player window while the other direction may not be wide enough and leave some black bars. In this mode, stage size (Stage.stageWidth,Stage.stageHeight) stays the same as app content size passed externally upon initiation.",
+        "description_en": "Scale app content with original aspect ratio. The wider direction of the scaled app content fills the player window while the other direction may not be wide enough and leave some black bars. In this mode, stage size (Stage.stageWidth,Stage.stageHeight) stays the same as app content size passed externally upon initiation."
+      },
+      {
+        "name": "noScale",
+        "description": "Don't scale app content. Content size stay intact even when player window is changed. If player window is smaller than the content, crop may be applied. In this mode, stage size (Stage.stageWidth,Stage.stageHeight）stay the same as player window.",
+        "description_en": "Don't scale app content. Content size stay intact even when player window is changed. If player window is smaller than the content, crop may be applied. In this mode, stage size (Stage.stageWidth,Stage.stageHeight）stay the same as player window."
+      },
+      {
+        "name": "noBorder",
+        "description": "Scale app content with original aspect ratio. The narrower direction of scaled content fills player window while the other direction may overflow player window and be cropped. In this mode, stage size (Stage.stageWidth,Stage.stageHeight) stays the same as app content size passed externally upon initiation.",
+        "description_en": "Scale app content with original aspect ratio. The narrower direction of scaled content fills player window while the other direction may overflow player window and be cropped. In this mode, stage size (Stage.stageWidth,Stage.stageHeight) stays the same as app content size passed externally upon initiation."
+      },
+      {
+        "name": "exactFit",
+        "description": "Scale app content without keeping original aspect ratio and the scaled content fits well in the player window. In this mode, stage size (Stage.stageWidth,Stage.stageHeight) stays the same as app content size passed externally during initiation.",
+        "description_en": "Scale app content without keeping original aspect ratio and the scaled content fits well in the player window. In this mode, stage size (Stage.stageWidth,Stage.stageHeight) stays the same as app content size passed externally during initiation."
+      },
+      {
+        "name": "fixedWidth",
+        "description": "Scale app content with original aspect ratio and scaled content fills player window both horizontally and vertically，but only the content's original width will not change while its height may change. In this mode, stage width (Stage.stageWidth) stays the same as the app content width passed externally upon initiation. Stage height (Stage.stageHeight) is determined by current scale ratio and the height of player window.",
+        "description_en": "Scale app content with original aspect ratio and scaled content fills player window both horizontally and vertically，but only the content's original width will not change while its height may change. In this mode, stage width (Stage.stageWidth) stays the same as the app content width passed externally upon initiation. Stage height (Stage.stageHeight) is determined by current scale ratio and the height of player window."
+      },
+      {
+        "name": "fixedHeight",
+        "description": "Scale app content with original aspect ratio and scaled content fills player window both horizontally and vertically，but only the content's original height will not change while its width may change. In this mode, stage height (Stage.stageHeight) stays the same as the app content height passed externally upon initiation. Stage width (Stage.stageWidth) is determined by current scale ratio and the width of player window.",
+        "description_en": "Scale app content with original aspect ratio and scaled content fills player window both horizontally and vertically，but only the content's original height will not change while its width may change. In this mode, stage height (Stage.stageHeight) stays the same as the app content height passed externally upon initiation. Stage width (Stage.stageWidth) is determined by current scale ratio and the width of player window."
+      },
+      {
+        "name": "fixedNarrow",
+        "description": "Scale app content with original aspect ratio and scaled content fills player window both horizontally and vertically. The narrower direction of the content may not be wide enough and padded up. In this mode, stage height (Stage.stageHeight) and stage width (Stage.stageWidth) will be determined by current scale ratio and player window size。",
+        "description_en": "Scale app content with original aspect ratio and scaled content fills player window both horizontally and vertically. The narrower direction of the content may not be wide enough and padded up. In this mode, stage height (Stage.stageHeight) and stage width (Stage.stageWidth) will be determined by current scale ratio and player window size。"
+      },
+      {
+        "name": "fixedWide",
+        "description": "Scale app content with original aspect ratio and scaled content fills player window both horizontally and vertically. The wider direction of app content may outgrow player window and be cropped. In this mode, stage height (Stage.stageHeight) and stage width (Stage.stageWidth) will be determined by current scale ratio and player window's width and height",
+        "description_en": "Scale app content with original aspect ratio and scaled content fills player window both horizontally and vertically. The wider direction of app content may outgrow player window and be cropped. In this mode, stage height (Stage.stageHeight) and stage width (Stage.stageWidth) will be determined by current scale ratio and player window's width and height"
+      }
+    ],
+    "orientationModes": [
+      {
+        "name": "auto",
+        "description": "Don't force app to rotate. App rotates with device",
+        "description_en": "Don't force app to rotate. App rotates with device"
+      },
+      {
+        "name": "portrait",
+        "description": "Force app to rotate to portrait mode. In this mode, when screen width is greater than screen height, app will be automatically rotated 90° counterclockwise.",
+        "description_en": "Force app to rotate to portrait mode. In this mode, when screen width is greater than screen height, app will be automatically rotated 90° counterclockwise."
+      },
+      {
+        "name": "landscape",
+        "description": "Force app to rotate to landscape mode. In this mode, when screen height is greater than screen width, the app will be automatically rotated 90° clockwise.",
+        "description_en": "Force app to rotate to landscape mode. In this mode, when screen height is greater than screen width, the app will be automatically rotated 90° clockwise."
+      },
+      {
+        "name": "landscapeFlipped",
+        "description": "Force app to rotate to landscape mode. In this mode, when screen height is greater than screen width, the app will be automatically rotated 90° counterclockwise.",
+        "description_en": "Force app to rotate to landscape mode. In this mode, when screen height is greater than screen width, the app will be automatically rotated 90° counterclockwise."
+      }
+    ]
+  },
+  "dependencies": {}
+}

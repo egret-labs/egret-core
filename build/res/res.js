@@ -3464,7 +3464,7 @@ var RES;
             for (var i = 0; i < len; i++) {
                 config = data.res[list[i].res];
                 var texture = new egret.Texture();
-                texture._bitmapData = bitmapData;
+                texture.$bitmapData = bitmapData;
                 texture.$initData(config.x, config.y, config.w, config.h, list[i].x, list[i].y, list[i].sourceW, list[i].sourceH, bitmapData.width, bitmapData.height);
             }
             return animationFrames;

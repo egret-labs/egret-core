@@ -940,7 +940,7 @@ var egret;
             for (var i = 0, l = tweens.length; i < l; i++) {
                 var tween_2 = tweens[i];
                 tween_2.paused = true;
-                tween_2._target.tweenjs_count = 0;
+                tween_2._target.tween_count = 0;
             }
             tweens.length = 0;
         };

@@ -37,11 +37,5 @@ namespace egret.sys {
          * 获取渲染节点
          */
         $getRenderNode():RenderNode;
-        /**
-         * @private
-         * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。
-         * 注意：此方法必须在$getRenderNode()被调用之后执行。
-         */
-        $update(dirtyRegionPolicy:string, bounds?:Rectangle):boolean;
     }
 }

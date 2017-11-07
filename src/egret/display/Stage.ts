@@ -289,29 +289,14 @@ namespace egret {
             this.$maxTouches = value;
             this.$screen.updateMaxTouches();
         }
-        private $dirtyRegionPolicy:string = DirtyRegionPolicy.ON;
         /**
-         * Set dirty region policy
-         * One of the constants defined by egret.DirtyRegionPolicy
-         * @version Egret 2.5.5
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 设置脏矩形策略
-         * egret.DirtyRegionPolicy 定义的常量之一
-         * @version Egret 2.5.5
-         * @platform Web,Native
-         * @language zh_CN
+         * @private
          */
         public set dirtyRegionPolicy(policy:string) {
-            if(this.$dirtyRegionPolicy != policy){
-                this.$dirtyRegionPolicy = policy;
-                this.$displayList.setDirtyRegionPolicy(policy);
-            }
+            
         }
         public get dirtyRegionPolicy():string{
-            return this.$dirtyRegionPolicy;
+            return null;
         }
 
         /**

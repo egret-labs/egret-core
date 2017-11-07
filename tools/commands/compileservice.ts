@@ -12,6 +12,7 @@ import CompileProject = require('../actions/CompileProject');
 import parser = require('../parser/Parser');
 import * as EgretProject from '../project';
 import copyNative = require("../actions/CopyNativeFiles");
+import { data as engineData } from "../EngineData";
 
 class AutoCompileCommand implements egret.Command {
     private compileProject: CompileProject;
@@ -95,9 +96,6 @@ class AutoCompileCommand implements egret.Command {
         if (!EgretProject.data.useTemplate) {
             EgretProject.manager.modifyIndex(manifestPath, indexPath);
         }
-        else {
-            FileUtil.copy(FileUtil.joinPath(options.templateDir, "debug", "index.html"), indexPath);
-        }
 
         exmlActions.updateSetting(egret.args.publish);
 
@@ -172,9 +170,6 @@ class AutoCompileCommand implements egret.Command {
                     EgretProject.manager.generateManifest(this._scripts, { debug: true, platform: 'web' }, manifestPath);
                     if (!EgretProject.data.useTemplate) {
                         EgretProject.manager.modifyIndex(manifestPath, indexPath);
-                    }
-                    else {
-                        FileUtil.copy(FileUtil.joinPath(egret.args.templateDir, "debug", "index.html"), indexPath);
                     }
                     this.compileProject.compileProject(egret.args);
                     this.messages[2] = egret.args.tsconfigError;
@@ -296,9 +291,6 @@ class AutoCompileCommand implements egret.Command {
         if (!EgretProject.data.useTemplate) {
             EgretProject.manager.modifyIndex(manifestPath, indexPath);
         }
-        else {
-            FileUtil.copy(FileUtil.joinPath(egret.args.templateDir, "debug", "index.html"), indexPath);
-        }
 
         EgretProject.manager.modifyNativeRequire(manifestPath);
 
@@ -337,8 +329,9 @@ class AutoCompileCommand implements egret.Command {
 
     private exitAfter60Minutes() {
         var now = Date.now();
+        let autoExitTime = engineData.getAutoExitTime();
         var timespan = (now - this._lastBuildTime) / 1000 / 60;
-        if (timespan > 60)
+        if (timespan > autoExitTime)
             process.exit(0);
     }
 

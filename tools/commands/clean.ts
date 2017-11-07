@@ -34,9 +34,6 @@ class Clean implements egret.Command {
         if (!EgretProject.data.useTemplate) {
             EgretProject.manager.modifyIndex(manifestPath, indexPath);
         }
-        else {
-            FileUtil.copy(FileUtil.joinPath(options.templateDir, "debug", "index.html"), indexPath);
-        }
 
         //拷贝项目到native工程中
         if (egret.args.runtime == "native") {

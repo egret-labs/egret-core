@@ -1459,6 +1459,10 @@ declare namespace egret {
         /**
          * @private
          */
+        protected setBitmapDataToWasm(data?: Texture): void;
+        /**
+         * @private
+         */
         $refreshImageData(): void;
         /**
          * @private
@@ -2967,6 +2971,7 @@ interface CanvasRenderingContext2D {
     $imageSmoothingEnabled: boolean;
 }
 declare namespace egret {
+    let BLACK_COLOR: string;
     /**
      * @private
      * Canvas渲染器
@@ -3039,6 +3044,16 @@ declare namespace egret {
          */
         private createRenderBuffer(width, height, useForFilters?);
     }
+    /**
+     * @private
+     * 获取字体字符串
+     */
+    function getFontString(node: sys.TextNode, format: sys.TextFormat): string;
+    /**
+     * @private
+     * 获取RGBA字符串
+     */
+    function getRGBAString(color: number, alpha: number): string;
 }
 declare namespace egret {
     /**
@@ -3400,6 +3415,24 @@ declare namespace egret {
          * @language zh_CN
          */
         constructor();
+        /**
+         * @private
+         * 纹理id
+         */
+        $textureId: number;
+        /**
+         * Whether to destroy the corresponding BitmapData when the texture is destroyed
+         * @version Egret 5.0.8
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 销毁纹理时是否销毁对应BitmapData
+         * @version Egret 5.0.8
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        disposeBitmapData: boolean;
         /**
          * @private
          * 表示这个纹理在 bitmapData 上的 x 起始位置
@@ -7458,6 +7491,10 @@ declare namespace egret {
         /**
          * @private
          */
+        protected setBitmapDataToWasm(data?: Texture): void;
+        /**
+         * @private
+         */
         $updateRenderNode(): void;
         /**
          * @private
@@ -9093,6 +9130,11 @@ declare namespace egret {
          * webgl纹理生成后，是否删掉原始图像数据
          */
         $deleteSource: boolean;
+        /**
+         * @private
+         * id
+         */
+        $bitmapDataId: number;
         constructor(source: any);
         $dispose(): void;
         private static _bitmapList;
@@ -9716,8 +9758,8 @@ declare namespace egret.WebAssembly {
     let render: () => void;
     let executeRenderCommand: () => number;
     let activateWebGLBuffer: (buffer: WebGLRenderBuffer) => void;
-    let deleteTexture: (bitmapData: BitmapData) => void;
     let getCurrentBuffer: () => sys.RenderBuffer;
+    let getPixels: (x: number, y: number, width?: number, height?: number) => number[];
     let activateBuffer: (buffer: sys.RenderBuffer) => void;
 }
 declare namespace egret {
@@ -9725,7 +9767,7 @@ declare namespace egret {
      * @private
      */
     class WebAssemblyNode {
-        static init(buffer: Float32Array, map1: any, map2: any): void;
+        static init(buffer: Float32Array, isNative: any, map1: any, map2: any, map3: any): void;
         static update(): void;
         id: number;
         constructor(type: number);
@@ -9751,7 +9793,13 @@ declare namespace egret {
         static setFilterPadding(filterId: number, paddingTop: number, paddingBottom: number, paddingLeft: number, paddingRight: number): void;
         setMask(value: number): void;
         static setValuesToBitmapData(value: Texture): void;
+        /**
+         * for wasm native
+         * @param private
+         */
+        static setValuesToRenderBuffer(value: sys.RenderBuffer): number;
         setBitmapData(value: Texture): void;
+        setBitmapDataToMesh(value: Texture): void;
         setBitmapDataToParticle(value: Texture): void;
         setStopToParticle(value: boolean): void;
         setCustomData(config: any): void;
@@ -9763,8 +9811,13 @@ declare namespace egret {
         setIsTyping(value: boolean): void;
         setTextRect(x: number, y: number, w: number, h: number): void;
         setGraphicsRect(x: number, y: number, w: number, h: number, isSprite: boolean): void;
+        setGraphicsRenderData(arr: Array<number>): void;
         setDataToBitmapNode(id: number, texture: Texture, arr: number[]): void;
+        setDataToMesh(vertexArr: number[], indiceArr: number[], uvArr: number[]): void;
+        static setDataToFilter(id: number): void;
+        setDataToTextField(id: number, arr: number[]): void;
         disposeDisplayObject(): void;
+        static disposeTexture(texture: Texture): void;
         static disposeBitmapData(bitmapData: BitmapData): void;
         static disposeFilter(filter: Filter): void;
     }
@@ -14808,9 +14861,15 @@ declare namespace egret {
          */
         rootRenderTarget: WebGLRenderTarget;
         /**
+         * render buffer id for wasm
+         */
+        bufferIdForWasm: number;
+        /**
          * 是否为舞台buffer
          */
         private root;
+        private $width;
+        private $height;
         constructor(width?: number, height?: number, root?: boolean);
         /**
          * 渲染缓冲的宽度，以像素为单位。

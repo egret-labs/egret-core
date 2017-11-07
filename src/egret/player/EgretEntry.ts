@@ -28,6 +28,16 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 namespace egret {
+
+    export type runEgretOptions = {
+        renderMode?: string;
+        audioType?: number;
+        screenAdapter?: sys.IScreenAdapter;
+        antialias?: boolean,
+        canvasScaleFactor?: number,
+        calculateCanvasScaleFactor?: (context:CanvasRenderingContext2D)=>number
+    };
+
     /**
      * egret project entry function
      * @param options An object containing the initialization properties for egret engine.
@@ -38,13 +48,7 @@ namespace egret {
      * @param options 一个可选对象，包含初始化Egret引擎需要的参数。
      * @language zh_CN
      */
-    export declare function runEgret(options?:{
-        renderMode?:string;
-        audioType?:number;
-        screenAdapter?:sys.IScreenAdapter;
-        antialias?:boolean,
-        retina?:boolean
-    }):void;
+    export declare function runEgret(options?: runEgretOptions): void;
     /**
      * Refresh the screen display
      * @language en_US
@@ -53,8 +57,7 @@ namespace egret {
      * 刷新屏幕显示
      * @language zh_CN
      */
-    export declare function updateAllScreens():void;
-
+    export declare function updateAllScreens(): void;
 
     /**
      * @private
@@ -75,7 +78,7 @@ namespace egret {
      */
     export type EgretContext = {
 
-        setAutoClear: (value:boolean) => void;
+        setAutoClear: (value: boolean) => void;
 
         save: () => void;
 
@@ -93,6 +96,6 @@ namespace egret {
      * @private
      * @language zh_CN
      */
-    export declare function setRendererContext(custom: CustomContext):void;
+    export declare function setRendererContext(custom: CustomContext): void;
 
 }

@@ -27,28 +27,48 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-namespace egret.sys {
+import FileUtil = require('./lib/FileUtil');
 
-    /**
-     * @private
-     * 位图渲染节点
-     */
-    export class SetAlphaNode extends RenderNode {
+interface EgretConfig {
+    //以兆为单位
+    totalmem: number;
+    //以分钟为单位
+    autoExitTime: number;
+}
 
-        public constructor() {
-            super();
-            this.type = RenderNodeType.SetAlphaNode;
-        }
+export class EngineData {
 
-        /**
-         * 绘制一次位图
-         */
-        public setAlpha(alpha:number):void {
-            if(this.drawData.length != 0) {
-                this.drawData.length = 0;
+    private data: EgretConfig;
+
+    init() {
+        let execPath = process.execPath;
+        let dataPath = FileUtil.joinPath(execPath, "../../../", "config/egret_config.json");
+        if (FileUtil.exists(dataPath)) {
+            try {
+                this.data = JSON.parse(FileUtil.read(dataPath)).engine;
             }
-            this.drawData.push(alpha);
-            this.renderCount++;
+            catch (e) {
+                this.data = {
+                    totalmem: -1,
+                    autoExitTime: 60
+                }
+            }
+        }
+        else {
+            this.data = {
+                totalmem: -1,
+                autoExitTime: 60
+            }
         }
     }
+
+    getTotalMem() {
+        return this.data.totalmem || -1;
+    }
+
+    getAutoExitTime() {
+        return this.data.autoExitTime || 60;
+    }
 }
+
+export var data = new EngineData();

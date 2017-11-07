@@ -52,10 +52,9 @@ namespace eui {
         }
         /**
          * @private
-         *
          */
-        $invalidateContentBounds(): void {
-            super.$invalidateContentBounds();
+        $invalidateBitmapText(): void {
+            super.$invalidateBitmapText();
             this.invalidateSize();
         }
         /**
@@ -125,7 +124,7 @@ namespace eui {
                 return false;
             }
             this.$BitmapText[egret.sys.BitmapTextKeys.font] = value;
-            this.$invalidateContentBounds();
+            this.$invalidateBitmapText();
             return true;
         }
         /**

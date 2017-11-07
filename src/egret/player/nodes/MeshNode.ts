@@ -91,6 +91,10 @@ namespace egret.sys {
          */
         public filter: ColorMatrixFilter = null;
         /**
+         * 翻转
+         */
+        public rotated: boolean = false;
+        /**
          * 绘制一次位图
          */
         public drawMesh(sourceX:number, sourceY:number, sourceW:number, sourceH:number,
@@ -100,7 +104,7 @@ namespace egret.sys {
         }
 
         /**
-         * 在显示对象的$render()方法被调用前，自动清空自身的drawData数据。
+         * 在显示对象的$updateRenderNode()方法被调用前，自动清空自身的drawData数据。
          */
         public cleanBeforeRender():void{
             super.cleanBeforeRender();

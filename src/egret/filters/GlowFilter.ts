@@ -103,6 +103,10 @@ namespace egret {
             // this.$uniforms.quality = quality;
             this.$uniforms.inner = inner ? 1 : 0;
             this.$uniforms.knockout = knockout ? 0 : 1;
+
+            this.$uniforms.dist = 0;
+            this.$uniforms.angle = 0;
+            this.$uniforms.hideObject = 0;
         }
 
         /**
@@ -137,7 +141,6 @@ namespace egret {
             this.$uniforms.color.x = this.$red / 255;
             this.$uniforms.color.y = this.$green / 255;
             this.$uniforms.color.z = this.$blue / 255;
-            this.invalidate();
         }
 
         /**
@@ -167,7 +170,6 @@ namespace egret {
             }
             this.$alpha = value;
             this.$uniforms.alpha = value;
-            this.invalidate();
         }
 
         /**
@@ -197,7 +199,6 @@ namespace egret {
             }
             this.$blurX = value;
             this.$uniforms.blurX = value;
-            this.invalidate();
         }
 
         /**
@@ -227,7 +228,6 @@ namespace egret {
             }
             this.$blurY = value;
             this.$uniforms.blurY = value;
-            this.invalidate();
         }
 
         /**
@@ -257,7 +257,6 @@ namespace egret {
             }
             this.$strength = value;
             this.$uniforms.strength = value;
-            this.invalidate();
         }
 
         /**
@@ -286,7 +285,6 @@ namespace egret {
                 return;
             }
             this.$quality = value;
-            this.invalidate();
         }
 
         /**
@@ -316,7 +314,6 @@ namespace egret {
             }
             this.$inner = value;
             this.$uniforms.inner = value ? 1 : 0;
-            this.invalidate();
         }
 
         /**
@@ -346,7 +343,6 @@ namespace egret {
             }
             this.$knockout = value;
             this.$uniforms.knockout = value ? 0 : 1;
-            this.invalidate();
         }
 
         /**

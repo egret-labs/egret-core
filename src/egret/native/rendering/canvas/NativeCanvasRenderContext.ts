@@ -444,6 +444,10 @@ namespace egret.native {
             $cmdManager.moveTo(x, y);
         }
 
+        public setLineDash(segments: number[]):void {
+            // $cmdManager.setLineDash(segments);
+        }
+
         /**
          * @private
          * 绘制一个填充矩形。矩形的起点在 (x, y) 位置，矩形的尺寸是 width 和 height ，fillStyle 属性决定矩形的样式。

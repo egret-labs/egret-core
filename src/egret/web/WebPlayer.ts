@@ -61,7 +61,6 @@ namespace egret.web {
 
             let webInput = new HTMLInput();
 
-            player.showPaintRect(option.showPaintRect);
             if (option.showFPS || option.showLog) {
                 player.displayFPS(option.showFPS, option.showLog, option.logFilter, option.fpsStyles);
             }
@@ -103,12 +102,6 @@ namespace egret.web {
             option.maxTouches = +container.getAttribute("data-multi-fingered") || 2;
             option.textureScaleFactor = +container.getAttribute("texture-scale-factor") || 1;
 
-            if (options.renderMode == "webgl") {
-                option.showPaintRect = false;
-            }
-            else {
-                option.showPaintRect = container.getAttribute("data-show-paint-rect") == "true";
-            }
             option.showFPS = container.getAttribute("data-show-fps") == "true";
 
             let styleStr = container.getAttribute("data-show-fps-style") || "";
@@ -201,15 +194,15 @@ namespace egret.web {
             let stageHeight = stageSize.stageHeight;
             let displayWidth = stageSize.displayWidth;
             let displayHeight = stageSize.displayHeight;
-            if (canvas.width !== stageWidth) {
-                canvas.width = stageWidth;
-            }
-            if (canvas.height !== stageHeight) {
-                canvas.height = stageHeight;
-            }
             canvas.style[egret.web.getPrefixStyleName("transformOrigin")] = "0% 0% 0px";
             canvas.style.width = displayWidth + "px";
             canvas.style.height = displayHeight + "px";
+            if (canvas.width != stageWidth) {
+                canvas.width = stageWidth;
+            }
+            if (canvas.height != stageHeight) {
+                canvas.height = stageHeight;
+            }
             let rotation = 0;
             if (shouldRotate) {
                 if (orientation == OrientationMode.LANDSCAPE) {//
@@ -233,10 +226,10 @@ namespace egret.web {
             let scalex = displayWidth / stageWidth,
                 scaley = displayHeight / stageHeight;
 
+            sys.DisplayList.$setCanvasScale(scalex * sys.DisplayList.$canvasScaleFactor, scaley * sys.DisplayList.$canvasScaleFactor);
             this.webTouchHandler.updateScaleMode(scalex, scaley, rotation);
             this.webInput.$updateSize();
             this.player.updateStageSize(stageWidth, stageHeight);//不要在这个方法后面修改属性
-
         }
 
         public setContentSize(width: number, height: number): void {

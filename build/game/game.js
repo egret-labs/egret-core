@@ -1845,23 +1845,22 @@ var egret;
          * @inheritDoc
          */
         ScrollView.prototype.$setWidth = function (value) {
-            if (this.$getExplicitWidth() == value) {
-                return false;
+            if (this.$explicitWidth == value) {
+                return;
             }
-            var result = _super.prototype.$setWidth.call(this, value);
+            _super.prototype.$setWidth.call(this, value);
             this._updateContentPosition();
-            return result;
         };
         /**
          * @private
          * @inheritDoc
          */
         ScrollView.prototype.$setHeight = function (value) {
-            if (this.$getExplicitHeight() == value)
-                return false;
-            var result = _super.prototype.$setHeight.call(this, value);
+            if (this.$explicitHeight == value) {
+                return;
+            }
+            _super.prototype.$setHeight.call(this, value);
             this._updateContentPosition();
-            return true;
         };
         /**
          * @private
@@ -2141,7 +2140,7 @@ var egret;
          * @returns
          */
         ScrollView.prototype._getContentWidth = function () {
-            return this._content.$getExplicitWidth() || this._content.width;
+            return this._content.$explicitWidth || this._content.width;
         };
         /**
          * @private
@@ -2149,7 +2148,7 @@ var egret;
          * @returns
          */
         ScrollView.prototype._getContentHeight = function () {
-            return this._content.$getExplicitHeight() || this._content.height;
+            return this._content.$explicitHeight || this._content.height;
         };
         /**
          * The left side of the maximum distance
@@ -3014,7 +3013,7 @@ var egret;
              */
             _this.lastTime = 0;
             _this.$smoothing = egret.Bitmap.defaultSmoothing;
-            _this.$renderNode = new egret.sys.BitmapNode();
+            _this.$renderNode = new egret.sys.NormalBitmapNode();
             _this.setMovieClipData(movieClipData);
             return _this;
         }
@@ -3040,7 +3039,6 @@ var egret;
                     return;
                 }
                 this.$smoothing = value;
-                this.$invalidate();
             },
             enumerable: true,
             configurable: true
@@ -3090,20 +3088,20 @@ var egret;
         /**
          * @private
          */
-        MovieClip.prototype.$render = function () {
+        MovieClip.prototype.$updateRenderNode = function () {
             var texture = this.$bitmapData;
             if (texture) {
                 var offsetX = Math.round(this.offsetPoint.x);
                 var offsetY = Math.round(this.offsetPoint.y);
-                var bitmapWidth = texture._bitmapWidth;
-                var bitmapHeight = texture._bitmapHeight;
+                var bitmapWidth = texture.$bitmapWidth;
+                var bitmapHeight = texture.$bitmapHeight;
                 var textureWidth = texture.$getTextureWidth();
                 var textureHeight = texture.$getTextureHeight();
                 var destW = Math.round(texture.$getScaleBitmapWidth());
                 var destH = Math.round(texture.$getScaleBitmapHeight());
-                var sourceWidth = texture._sourceWidth;
-                var sourceHeight = texture._sourceHeight;
-                egret.sys.BitmapNode.$updateTextureData(this.$renderNode, texture._bitmapData, texture._bitmapX, texture._bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH, sourceWidth, sourceHeight, null, egret.BitmapFillMode.SCALE, this.$smoothing);
+                var sourceWidth = texture.$sourceWidth;
+                var sourceHeight = texture.$sourceHeight;
+                egret.sys.BitmapNode.$updateTextureData(this.$renderNode, texture.$bitmapData, texture.$bitmapX, texture.$bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH, sourceWidth, sourceHeight, egret.BitmapFillMode.SCALE, this.$smoothing);
             }
         };
         /**
@@ -3396,22 +3394,44 @@ var egret;
          *
          */
         MovieClip.prototype.constructFrame = function () {
-            var currentFrameNum = this.$currentFrameNum;
-            if (this.displayedKeyFrameNum == currentFrameNum) {
+            var self = this;
+            var currentFrameNum = self.$currentFrameNum;
+            if (self.displayedKeyFrameNum == currentFrameNum) {
                 return;
             }
-            this.$bitmapData = this.$movieClipData.getTextureByFrame(currentFrameNum);
-            this.$movieClipData.$getOffsetByFrame(currentFrameNum, this.offsetPoint);
-            this.$invalidateContentBounds();
-            this.displayedKeyFrameNum = currentFrameNum;
+            self.$bitmapData = self.$movieClipData.getTextureByFrame(currentFrameNum);
+            self.$movieClipData.$getOffsetByFrame(currentFrameNum, self.offsetPoint);
+            self.displayedKeyFrameNum = currentFrameNum;
+            self.$renderDirty = true;
+            var p = self.$parent;
+            if (p && !p.$cacheDirty) {
+                p.$cacheDirty = true;
+                p.$cacheDirtyUp();
+            }
+            var maskedObject = self.$maskedObject;
+            if (maskedObject && !maskedObject.$cacheDirty) {
+                maskedObject.$cacheDirty = true;
+                maskedObject.$cacheDirtyUp();
+            }
         };
         /**
          * @private
          *
          */
         MovieClip.prototype.$renderFrame = function () {
-            this.$bitmapData = this.$movieClipData.getTextureByFrame(this.$currentFrameNum);
-            this.$invalidateContentBounds();
+            var self = this;
+            self.$bitmapData = self.$movieClipData.getTextureByFrame(self.$currentFrameNum);
+            self.$renderDirty = true;
+            var p = self.$parent;
+            if (p && !p.$cacheDirty) {
+                p.$cacheDirty = true;
+                p.$cacheDirtyUp();
+            }
+            var maskedObject = self.$maskedObject;
+            if (maskedObject && !maskedObject.$cacheDirty) {
+                maskedObject.$cacheDirty = true;
+                maskedObject.$cacheDirtyUp();
+            }
         };
         /**
          * @private
