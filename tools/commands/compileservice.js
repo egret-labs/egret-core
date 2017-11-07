@@ -69,9 +69,6 @@ var AutoCompileCommand = (function () {
         if (!EgretProject.data.useTemplate) {
             EgretProject.manager.modifyIndex(manifestPath, indexPath);
         }
-        else {
-            FileUtil.copy(FileUtil.joinPath(options.templateDir, "debug", "index.html"), indexPath);
-        }
         exmlActions.updateSetting(egret.args.publish);
         //拷贝项目到native工程中
         if (egret.args.runtime == "native") {
