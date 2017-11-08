@@ -233,8 +233,12 @@ namespace egret.web {
             let scalex = displayWidth / stageWidth,
                 scaley = displayHeight / stageHeight;
 
-            let canvasScaleX = Math.ceil(scalex * sys.DisplayList.$canvasScaleFactor);
-            let canvasScaleY = Math.ceil(scaley * sys.DisplayList.$canvasScaleFactor);
+            let canvasScaleX = scalex * sys.DisplayList.$canvasScaleFactor;
+            let canvasScaleY = scaley * sys.DisplayList.$canvasScaleFactor;
+            if (egret.Capabilities.$renderMode == "canvas") {
+                canvasScaleX = Math.ceil(canvasScaleX);
+                canvasScaleY = Math.ceil(canvasScaleY);
+            }
             sys.DisplayList.$setCanvasScale(canvasScaleX, canvasScaleY);
             this.webTouchHandler.updateScaleMode(scalex, scaley, rotation);
             this.webInput.$updateSize();

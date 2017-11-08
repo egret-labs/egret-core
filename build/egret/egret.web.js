@@ -4402,8 +4402,12 @@ var egret;
                 var transform = "rotate(" + rotation + "deg)";
                 canvas.style[egret.web.getPrefixStyleName("transform")] = transform;
                 var scalex = displayWidth / stageWidth, scaley = displayHeight / stageHeight;
-                var canvasScaleX = Math.ceil(scalex * egret.sys.DisplayList.$canvasScaleFactor);
-                var canvasScaleY = Math.ceil(scaley * egret.sys.DisplayList.$canvasScaleFactor);
+                var canvasScaleX = scalex * egret.sys.DisplayList.$canvasScaleFactor;
+                var canvasScaleY = scaley * egret.sys.DisplayList.$canvasScaleFactor;
+                if (egret.Capabilities.$renderMode == "canvas") {
+                    canvasScaleX = Math.ceil(canvasScaleX);
+                    canvasScaleY = Math.ceil(canvasScaleY);
+                }
                 egret.sys.DisplayList.$setCanvasScale(canvasScaleX, canvasScaleY);
                 this.webTouchHandler.updateScaleMode(scalex, scaley, rotation);
                 this.webInput.$updateSize();
