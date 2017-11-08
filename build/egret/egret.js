@@ -13359,7 +13359,7 @@ var egret;
                         renderNode.image = this.bitmapData;
                         renderNode.imageWidth = width;
                         renderNode.imageHeight = height;
-                        renderNode.drawImage(0, 0, width, height, -this.offsetX / this.$canvasScaleX, -this.offsetY / this.$canvasScaleY, width / this.$canvasScaleX, height / this.$canvasScaleY);
+                        renderNode.drawImage(0, 0, width, height, -this.offsetX, -this.offsetY, width / this.$canvasScaleX, height / this.$canvasScaleY);
                     }
                 }
                 this.dirtyList = null;
@@ -13378,8 +13378,8 @@ var egret;
                 var bounds = this.root.$getOriginalBounds();
                 var scaleX = this.$canvasScaleX;
                 var scaleY = this.$canvasScaleY;
-                this.offsetX = -bounds.x * scaleX;
-                this.offsetY = -bounds.y * scaleY;
+                this.offsetX = -bounds.x;
+                this.offsetY = -bounds.y;
                 this.offsetMatrix.setTo(this.offsetMatrix.a, 0, 0, this.offsetMatrix.d, this.offsetX, this.offsetY);
                 var buffer = this.renderBuffer;
                 //在chrome里，小等于256*256的canvas会不启用GPU加速。

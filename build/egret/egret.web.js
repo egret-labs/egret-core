@@ -3074,12 +3074,12 @@ var egret;
                 var context = this.context;
                 context.save();
                 context.beginPath();
-                context.setTransform(1, 0, 0, 1, offsetX, offsetY);
+                context.setTransform(canvasScaleX, 0, 0, canvasScaleY, offsetX * canvasScaleX, offsetY * canvasScaleY);
                 var length = regions.length;
                 for (var i = 0; i < length; i++) {
                     var region = regions[i];
-                    context.clearRect(region.minX * canvasScaleX, region.minY * canvasScaleY, region.width * canvasScaleX, region.height * canvasScaleY);
-                    context.rect(region.minX * canvasScaleX, region.minY * canvasScaleY, region.width * canvasScaleX, region.height * canvasScaleY);
+                    context.clearRect(region.minX, region.minY, region.width, region.height);
+                    context.rect(region.minX, region.minY, region.width, region.height);
                 }
                 context.clip();
             };

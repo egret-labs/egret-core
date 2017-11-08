@@ -183,12 +183,12 @@ namespace egret.web {
             let context = this.context;
             context.save();
             context.beginPath();
-            context.setTransform(1, 0, 0, 1, offsetX, offsetY);
+            context.setTransform(canvasScaleX, 0, 0, canvasScaleY, offsetX * canvasScaleX, offsetY * canvasScaleY);
             let length = regions.length;
             for (let i = 0; i < length; i++) {
                 let region = regions[i];
-                context.clearRect(region.minX * canvasScaleX, region.minY * canvasScaleY, region.width * canvasScaleX, region.height * canvasScaleY);
-                context.rect(region.minX * canvasScaleX, region.minY * canvasScaleY, region.width * canvasScaleX, region.height * canvasScaleY);
+                context.clearRect(region.minX, region.minY, region.width, region.height);
+                context.rect(region.minX, region.minY, region.width, region.height);
             }
             context.clip();
         }
