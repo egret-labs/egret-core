@@ -137,17 +137,17 @@ namespace egret.web {
                         renderAlpha = node.renderAlpha;
                         m = Matrix.create().copyFrom(node.renderMatrix);
                     }
-                    let a =  m.a * matrix.a;
-                    let b =  0.0;
-                    let c =  0.0;
-                    let d =  m.d * matrix.d;
-                    let tx = m.tx * matrix.a + matrix.tx  * matrix.a;
-                    let ty = m.ty * matrix.d + matrix.ty  * matrix.d;
+                    let a = m.a * matrix.a;
+                    let b = 0.0;
+                    let c = 0.0;
+                    let d = m.d * matrix.d;
+                    let tx = m.tx * matrix.a + matrix.tx * matrix.a;
+                    let ty = m.ty * matrix.d + matrix.ty * matrix.d;
                     if (m.b !== 0.0 || m.c !== 0.0 || matrix.b !== 0.0 || matrix.c !== 0.0) {
-                        a  += m.b * matrix.c;
-                        d  += m.c * matrix.b;
-                        b  += m.a * matrix.b + m.b * matrix.d;
-                        c  += m.c * matrix.a + m.d * matrix.c;
+                        a += m.b * matrix.c;
+                        d += m.c * matrix.b;
+                        b += m.a * matrix.b + m.b * matrix.d;
+                        c += m.c * matrix.a + m.d * matrix.c;
                         tx += m.ty * matrix.c;
                         ty += m.tx * matrix.b;
                     }
@@ -845,9 +845,6 @@ namespace egret.web {
             if (!this.canvasRenderBuffer || !this.canvasRenderBuffer.context) {
                 this.canvasRenderer = new CanvasRenderer();
                 this.canvasRenderBuffer = new CanvasRenderBuffer(width, height);
-                if (canvasScaleX != 1 || canvasScaleY != 1) {
-                    this.canvasRenderBuffer.context.setTransform(canvasScaleX, 0, 0, canvasScaleY, 0, 0);
-                }
             }
             else if (node.dirtyRender) {
                 this.canvasRenderBuffer.resize(width, height);
@@ -863,7 +860,9 @@ namespace egret.web {
                 }
                 buffer.transform(1, 0, 0, 1, x / canvasScaleX, y / canvasScaleY);
             }
-
+            else if (canvasScaleX != 1 || canvasScaleY != 1) {
+                this.canvasRenderBuffer.context.setTransform(canvasScaleX, 0, 0, canvasScaleY, 0, 0);
+            }
 
             if (node.dirtyRender) {
                 let surface = this.canvasRenderBuffer.surface;
@@ -912,15 +911,15 @@ namespace egret.web {
             if (!this.canvasRenderBuffer || !this.canvasRenderBuffer.context) {
                 this.canvasRenderer = new CanvasRenderer();
                 this.canvasRenderBuffer = new CanvasRenderBuffer(width, height);
-                if (canvasScaleX != 1 || canvasScaleY != 1) {
-                    this.canvasRenderBuffer.context.setTransform(canvasScaleX, 0, 0, canvasScaleY, 0, 0);
-                }
             }
             else if (node.dirtyRender || forHitTest) {
                 this.canvasRenderBuffer.resize(width, height);
             }
             if (!this.canvasRenderBuffer.context) {
                 return;
+            }
+            if (canvasScaleX != 1 || canvasScaleY != 1) {
+                this.canvasRenderBuffer.context.setTransform(canvasScaleX, 0, 0, canvasScaleY, 0, 0);
             }
             if (node.x || node.y) {
                 if (node.dirtyRender || forHitTest) {
