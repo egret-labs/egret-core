@@ -1681,6 +1681,7 @@ var egret;
                 var self = this;
                 var mode = egret.sys.blendModeToNumber(value);
                 self.$blendMode = mode;
+                self.updateRenderMode();
                 var p = self.$parent;
                 if (p && !p.$cacheDirty) {
                     p.$cacheDirty = true;

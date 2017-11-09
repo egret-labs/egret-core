@@ -1314,7 +1314,7 @@ namespace egret {
             let self = this;
             let mode = sys.blendModeToNumber(value);
             self.$blendMode = mode;
-
+            self.updateRenderMode();
             let p = self.$parent;
             if (p && !p.$cacheDirty) {
                 p.$cacheDirty = true;
