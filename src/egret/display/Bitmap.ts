@@ -498,6 +498,9 @@ namespace egret {
                         destW, destH, this.$sourceWidth, this.$sourceHeight, this.$smoothing);
                 }
                 else {
+                    if (this.fillMode == egret.BitmapFillMode.REPEAT && this.$renderNode instanceof sys.NormalBitmapNode) {
+                        this.$renderNode = new sys.BitmapNode();
+                    }
                     sys.BitmapNode.$updateTextureData(<sys.NormalBitmapNode>this.$renderNode, this.$bitmapData,
                         this.$bitmapX, this.$bitmapY, this.$bitmapWidth, this.$bitmapHeight,
                         this.$offsetX, this.$offsetY, this.$textureWidth, this.$textureHeight,
