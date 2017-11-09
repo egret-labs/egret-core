@@ -906,6 +906,14 @@ namespace egret.web {
             }
             let canvasScaleX = sys.DisplayList.$canvasScaleX;
             let canvasScaleY = sys.DisplayList.$canvasScaleY;
+            if (width * canvasScaleX < 1 || height * canvasScaleY < 1) {
+                canvasScaleX = canvasScaleY = 1;
+            }
+            if (node.$canvasScaleX != canvasScaleX || node.$canvasScaleY != canvasScaleY) {
+                node.$canvasScaleX = canvasScaleX;
+                node.$canvasScaleY = canvasScaleY;
+                node.dirtyRender = true;
+            }
             width *= canvasScaleX;
             height *= canvasScaleY;
             if (!this.canvasRenderBuffer || !this.canvasRenderBuffer.context) {

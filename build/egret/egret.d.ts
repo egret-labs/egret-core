@@ -10230,6 +10230,8 @@ declare namespace egret.sys {
         $texture: WebGLTexture;
         $textureWidth: number;
         $textureHeight: number;
+        $canvasScaleX: number;
+        $canvasScaleY: number;
         /**
          * 清除非绘制的缓存数据
          */
