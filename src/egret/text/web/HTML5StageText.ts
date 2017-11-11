@@ -165,15 +165,32 @@ namespace egret.web {
             this._isNeedShow = true;
 
             this._initElement();
+            let elem = <HTMLInputElement>this.inputElement;
+            HTML5StageText.rawEvents.forEach(type => {
+                elem.addEventListener(type, this.evHandler);
+            });
         }
 
         /**
          * @private
          * 
          */
-        private onBlurHandler():void {
+        private onBlurHandler(): void {            
+            let elem = <HTMLInputElement>this.inputElement;
+            HTML5StageText.rawEvents.forEach(type => {
+                elem.removeEventListener(type, this.evHandler);
+            });
             this.htmlInput.clearInputElement();
             window.scrollTo(0, 0);
+        }
+
+        /**
+        * 用于兼听文本框的原始事件
+        **/
+        public static rawEvents = [];//可在项目中重写此值，如 ["keyup", "keydown", "keypress"];
+
+        private evHandler = ev => {
+            this.$textfield.dispatchEventWith(ev.type, ev.bubbles, ev, ev.cancelable);
         }
 
         /**
