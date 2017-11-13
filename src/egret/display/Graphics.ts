@@ -268,9 +268,6 @@ namespace egret {
                 if(lineDash) {
                     this.strokePath.setLineDash(lineDash);
                 }
-                else {
-                    this.strokePath.setLineDash([]);
-                }
                 if (this.$renderNode.drawData.length > 1) {
                     this.strokePath.moveTo(this.lastX, this.lastY);
                 }
