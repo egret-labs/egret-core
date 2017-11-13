@@ -7923,7 +7923,7 @@ var egret;
                     if (node.dirtyRender || forHitTest) {
                         this.canvasRenderBuffer.context.translate(-node.x, -node.y);
                     }
-                    buffer.transform(1, 0, 0, 1, node.x / canvasScaleX, node.y / canvasScaleY);
+                    buffer.transform(1, 0, 0, 1, node.x, node.y);
                 }
                 var surface = this.canvasRenderBuffer.surface;
                 if (forHitTest) {
@@ -7957,7 +7957,7 @@ var egret;
                     if (node.dirtyRender || forHitTest) {
                         this.canvasRenderBuffer.context.translate(node.x, node.y);
                     }
-                    buffer.transform(1, 0, 0, 1, -node.x / canvasScaleX, -node.y / canvasScaleY);
+                    buffer.transform(1, 0, 0, 1, -node.x, -node.y);
                 }
                 if (!forHitTest) {
                     node.dirtyRender = false;
