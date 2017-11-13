@@ -2610,12 +2610,8 @@ var egret;
                 if (!this.canvas) {
                     return;
                 }
-                var stageW = this.canvas.width;
-                var stageH = this.canvas.height;
-                var screenW = this.canvas.style.width.split("px")[0];
-                var screenH = this.canvas.style.height.split("px")[0];
-                this.$scaleX = screenW / stageW;
-                this.$scaleY = screenH / stageH;
+                this.$scaleX = egret.sys.DisplayList.$canvasScaleX;
+                this.$scaleY = egret.sys.DisplayList.$canvasScaleY;
                 this.StageDelegateDiv.style.left = this.canvas.style.left;
                 this.StageDelegateDiv.style.top = this.canvas.style.top;
                 var transformKey = egret.web.getPrefixStyleName("transform");
@@ -4374,8 +4370,6 @@ var egret;
                 var displayWidth = stageSize.displayWidth;
                 var displayHeight = stageSize.displayHeight;
                 canvas.style[egret.web.getPrefixStyleName("transformOrigin")] = "0% 0% 0px";
-                canvas.style.width = displayWidth + "px";
-                canvas.style.height = displayHeight + "px";
                 if (canvas.width != stageWidth) {
                     canvas.width = stageWidth;
                 }
@@ -4399,8 +4393,6 @@ var egret;
                     canvas.style.top = top + (boundingClientHeight - displayHeight) / 2 + "px";
                     canvas.style.left = (boundingClientWidth - displayWidth) / 2 + "px";
                 }
-                var transform = "rotate(" + rotation + "deg)";
-                canvas.style[egret.web.getPrefixStyleName("transform")] = transform;
                 var scalex = displayWidth / stageWidth, scaley = displayHeight / stageHeight;
                 var canvasScaleX = scalex * egret.sys.DisplayList.$canvasScaleFactor;
                 var canvasScaleY = scaley * egret.sys.DisplayList.$canvasScaleFactor;
@@ -4408,6 +4400,11 @@ var egret;
                     canvasScaleX = Math.ceil(canvasScaleX);
                     canvasScaleY = Math.ceil(canvasScaleY);
                 }
+                var m = new egret.Matrix();
+                m.scale(scalex / canvasScaleX, scaley / canvasScaleY);
+                m.rotate(rotation * Math.PI / 180);
+                var transform = "matrix(" + m.a + "," + m.b + "," + m.c + "," + m.d + "," + m.tx + "," + m.ty + ")";
+                canvas.style[egret.web.getPrefixStyleName("transform")] = transform;
                 egret.sys.DisplayList.$setCanvasScale(canvasScaleX, canvasScaleY);
                 this.webTouchHandler.updateScaleMode(scalex, scaley, rotation);
                 this.webInput.$updateSize();

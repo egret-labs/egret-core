@@ -202,8 +202,6 @@ namespace egret.web {
             let displayWidth = stageSize.displayWidth;
             let displayHeight = stageSize.displayHeight;
             canvas.style[egret.web.getPrefixStyleName("transformOrigin")] = "0% 0% 0px";
-            canvas.style.width = displayWidth + "px";
-            canvas.style.height = displayHeight + "px";
             if (canvas.width != stageWidth) {
                 canvas.width = stageWidth;
             }
@@ -227,18 +225,20 @@ namespace egret.web {
                 canvas.style.top = top + (boundingClientHeight - displayHeight) / 2 + "px";
                 canvas.style.left = (boundingClientWidth - displayWidth) / 2 + "px";
             }
-
-            let transform = `rotate(${rotation}deg)`;
-            canvas.style[egret.web.getPrefixStyleName("transform")] = transform;
             let scalex = displayWidth / stageWidth,
                 scaley = displayHeight / stageHeight;
-
             let canvasScaleX = scalex * sys.DisplayList.$canvasScaleFactor;
             let canvasScaleY = scaley * sys.DisplayList.$canvasScaleFactor;
             if (egret.Capabilities.$renderMode == "canvas") {
                 canvasScaleX = Math.ceil(canvasScaleX);
                 canvasScaleY = Math.ceil(canvasScaleY);
             }
+
+            let m = new egret.Matrix();
+            m.scale(scalex / canvasScaleX, scaley / canvasScaleY);
+            m.rotate(rotation * Math.PI / 180);
+            let transform = `matrix(${m.a},${m.b},${m.c},${m.d},${m.tx},${m.ty})`;
+            canvas.style[egret.web.getPrefixStyleName("transform")] = transform;
             sys.DisplayList.$setCanvasScale(canvasScaleX, canvasScaleY);
             this.webTouchHandler.updateScaleMode(scalex, scaley, rotation);
             this.webInput.$updateSize();
