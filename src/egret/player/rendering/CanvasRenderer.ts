@@ -411,26 +411,28 @@ namespace egret {
             drawCalls += this.drawDisplayObject(displayObject, displayContext, 0, 0);
             //绘制遮罩
             if (mask) {
+                let maskMatrix = Matrix.create();
+                maskMatrix.copyFrom(mask.$getConcatenatedMatrix());
+                mask.$getConcatenatedMatrixAt(displayObject, maskMatrix);
                 //如果只有一次绘制或是已经被cache直接绘制到displayContext
                 if (Capabilities.$runtimeType == RuntimeType.WEB && maskRenderNode && maskRenderNode.$getRenderCount() == 1 || mask.$displayList) {
                     displayContext.globalCompositeOperation = "destination-in";
+                    displayContext.save();
+                    displayContext.setTransform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
                     drawCalls += this.drawDisplayObject(mask, displayContext, 0, 0);
+                    displayContext.restore();
                 }
                 else {
                     let maskBuffer = this.createRenderBuffer(displayBounds.width, displayBounds.height);
                     let maskContext = maskBuffer.context;
-                    let maskMatrix = Matrix.create();
-                    maskMatrix.copyFrom(mask.$getConcatenatedMatrix());
-                    mask.$getConcatenatedMatrixAt(displayObject, maskMatrix);
                     maskContext.setTransform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
-                    Matrix.release(maskMatrix);
                     drawCalls += this.drawDisplayObject(mask, maskContext, -displayBounds.x, -displayBounds.y);
                     displayContext.globalCompositeOperation = "destination-in";
-                    displayContext.setTransform(1, 0, 0, -1, 0, maskBuffer.height);
                     displayContext.globalAlpha = 1;
                     displayContext.drawImage(maskBuffer.surface, 0, 0);
                     renderBufferPool.push(maskBuffer);
                 }
+                Matrix.release(maskMatrix);
             }
 
             //绘制结果到屏幕

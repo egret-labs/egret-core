@@ -15862,26 +15862,28 @@ var egret;
             drawCalls += this.drawDisplayObject(displayObject, displayContext, 0, 0);
             //绘制遮罩
             if (mask) {
+                var maskMatrix = egret.Matrix.create();
+                maskMatrix.copyFrom(mask.$getConcatenatedMatrix());
+                mask.$getConcatenatedMatrixAt(displayObject, maskMatrix);
                 //如果只有一次绘制或是已经被cache直接绘制到displayContext
                 if (egret.Capabilities.$runtimeType == egret.RuntimeType.WEB && maskRenderNode && maskRenderNode.$getRenderCount() == 1 || mask.$displayList) {
                     displayContext.globalCompositeOperation = "destination-in";
+                    displayContext.save();
+                    displayContext.setTransform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
                     drawCalls += this.drawDisplayObject(mask, displayContext, 0, 0);
+                    displayContext.restore();
                 }
                 else {
                     var maskBuffer = this.createRenderBuffer(displayBounds.width, displayBounds.height);
                     var maskContext = maskBuffer.context;
-                    var maskMatrix = egret.Matrix.create();
-                    maskMatrix.copyFrom(mask.$getConcatenatedMatrix());
-                    mask.$getConcatenatedMatrixAt(displayObject, maskMatrix);
                     maskContext.setTransform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
-                    egret.Matrix.release(maskMatrix);
                     drawCalls += this.drawDisplayObject(mask, maskContext, -displayBounds.x, -displayBounds.y);
                     displayContext.globalCompositeOperation = "destination-in";
-                    displayContext.setTransform(1, 0, 0, -1, 0, maskBuffer.height);
                     displayContext.globalAlpha = 1;
                     displayContext.drawImage(maskBuffer.surface, 0, 0);
                     renderBufferPool.push(maskBuffer);
                 }
+                egret.Matrix.release(maskMatrix);
             }
             //绘制结果到屏幕
             if (drawCalls > 0) {
