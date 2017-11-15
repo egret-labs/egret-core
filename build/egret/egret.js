@@ -19490,6 +19490,7 @@ var egret;
             if (this.inputUtils) {
                 this.inputUtils._setColor(this.$TextField[2 /* textColor */]);
             }
+            this.$invalidateTextField();
             return true;
         };
         Object.defineProperty(TextField.prototype, "wordWrap", {

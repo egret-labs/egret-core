@@ -625,6 +625,7 @@ namespace egret {
             if (this.inputUtils) {
                 this.inputUtils._setColor(this.$TextField[sys.TextKeys.textColor]);
             }
+            this.$invalidateTextField();
             return true;
         }
 
