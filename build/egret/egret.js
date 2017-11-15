@@ -11070,10 +11070,10 @@ var egret;
          */
         Graphics.prototype.updateNodeBounds = function () {
             var node = this.$renderNode;
-            node.x = this.minX;
-            node.y = this.minY;
-            node.width = Math.ceil(this.maxX - this.minX);
-            node.height = Math.ceil(this.maxY - this.minY);
+            node.x = this.minX - 2;
+            node.y = this.minY - 2;
+            node.width = Math.ceil(this.maxX - this.minX) + 4;
+            node.height = Math.ceil(this.maxY - this.minY) + 4;
         };
         /**
          * 更新当前的lineX和lineY值，并标记尺寸失效。
