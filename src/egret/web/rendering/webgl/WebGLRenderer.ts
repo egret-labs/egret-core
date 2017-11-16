@@ -379,6 +379,7 @@ namespace egret.web {
                     let maskBufferHeight = maskBuffer.rootRenderTarget.height;
                     displayBuffer.context.drawTexture(maskBuffer.rootRenderTarget.texture, 0, 0, maskBufferWidth, maskBufferHeight,
                         0, 0, maskBufferWidth, maskBufferHeight, maskBufferWidth, maskBufferHeight);
+                    displayBuffer.setTransform(1, 0, 0, 1, 0, 0);
                     displayBuffer.context.setGlobalCompositeOperation("source-over");
                     renderBufferPool.push(maskBuffer);
                 }
