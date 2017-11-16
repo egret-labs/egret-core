@@ -832,7 +832,6 @@ namespace egret.web {
             if (!this.canvasRenderBuffer || !this.canvasRenderBuffer.context) {
                 this.canvasRenderer = new CanvasRenderer();
                 this.canvasRenderBuffer = new CanvasRenderBuffer(width, height);
-
             }
             else if (node.dirtyRender) {
                 this.canvasRenderBuffer.resize(width, height);
@@ -852,7 +851,9 @@ namespace egret.web {
                 }
                 buffer.transform(1, 0, 0, 1, x / canvasScaleX, y / canvasScaleY);
             }
-
+            else if (canvasScaleX != 1 || canvasScaleY != 1) {
+                this.canvasRenderBuffer.context.setTransform(canvasScaleX, 0, 0, canvasScaleY, 0, 0);
+            }
 
             if (node.dirtyRender) {
                 let surface = this.canvasRenderBuffer.surface;
@@ -894,6 +895,18 @@ namespace egret.web {
             if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) {
                 return;
             }
+            let canvasScaleX = sys.DisplayList.$canvasScaleX;
+            let canvasScaleY = sys.DisplayList.$canvasScaleY;
+            if (width * canvasScaleX < 1 || height * canvasScaleY < 1) {
+                canvasScaleX = canvasScaleY = 1;
+            }
+            if (node.$canvasScaleX != canvasScaleX || node.$canvasScaleY != canvasScaleY) {
+                node.$canvasScaleX = canvasScaleX;
+                node.$canvasScaleY = canvasScaleY;
+                node.dirtyRender = true;
+            }
+            width *= canvasScaleX;
+            height *= canvasScaleY;
             if (!this.canvasRenderBuffer || !this.canvasRenderBuffer.context) {
                 this.canvasRenderer = new CanvasRenderer();
                 this.canvasRenderBuffer = new CanvasRenderBuffer(width, height);
@@ -903,6 +916,9 @@ namespace egret.web {
             }
             if (!this.canvasRenderBuffer.context) {
                 return;
+            }
+            if (canvasScaleX != 1 || canvasScaleY != 1) {
+                this.canvasRenderBuffer.context.setTransform(canvasScaleX, 0, 0, canvasScaleY, 0, 0);
             }
             if (node.x || node.y) {
                 if (node.dirtyRender || forHitTest) {
@@ -935,7 +951,7 @@ namespace egret.web {
                 }
                 let textureWidth = node.$textureWidth;
                 let textureHeight = node.$textureHeight;
-                buffer.context.drawTexture(node.$texture, 0, 0, textureWidth, textureHeight, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight);
+                buffer.context.drawTexture(node.$texture, 0, 0, textureWidth, textureHeight, 0, 0, textureWidth / canvasScaleX, textureHeight / canvasScaleY, textureWidth, textureHeight);
             }
 
             if (node.x || node.y) {

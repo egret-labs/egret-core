@@ -33,8 +33,8 @@ namespace egret {
         renderMode?: string;
         audioType?: number;
         screenAdapter?: sys.IScreenAdapter;
-        antialias?: boolean,
-        canvasScaleFactor?: number,
+        antialias?: boolean;
+        canvasScaleFactor?: number;
         calculateCanvasScaleFactor?: (context:CanvasRenderingContext2D)=>number
     };
 

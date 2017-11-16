@@ -172,6 +172,8 @@ namespace egret.sys {
         public $texture:WebGLTexture;
         public $textureWidth:number;
         public $textureHeight:number;
+        public $canvasScaleX:number;
+        public $canvasScaleY:number;
 
         /**
          * 清除非绘制的缓存数据

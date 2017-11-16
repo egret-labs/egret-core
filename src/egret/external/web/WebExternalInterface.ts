@@ -100,3 +100,37 @@ namespace egret.web {
         egret_native.receivedPluginInfo = onReceivedPluginInfo;
     }
 }
+
+namespace egret.web {
+    let callBackDic = {};
+
+    /**
+     * @private
+     */
+    export class WebViewExternalInterface implements ExternalInterface {
+
+        static call(functionName:string, value:string):void {
+            __global.ExternalInterface.call(functionName, value);
+        }
+
+        static addCallback(functionName:string, listener:(value)=>void):void {
+            callBackDic[functionName] = listener;
+        }
+
+        static invokeCallback(functionName:string, value:string):void {
+            let listener = callBackDic[functionName];
+            if (listener) {
+                listener.call(null, value);
+            }
+            else {
+                egret.$warn(1050, functionName);
+            }
+        }        
+    }
+
+    let ua:string = navigator.userAgent.toLowerCase();
+
+    if (ua.indexOf("egretwebview") >= 0) {
+        ExternalInterface = WebViewExternalInterface;
+    }
+}

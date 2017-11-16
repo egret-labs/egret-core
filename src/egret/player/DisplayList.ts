@@ -150,7 +150,7 @@ namespace egret.sys {
                 renderNode.image = this.bitmapData;
                 renderNode.imageWidth = width;
                 renderNode.imageHeight = height;
-                renderNode.drawImage(0, 0, width, height, -this.offsetX / this.$canvasScaleX, -this.offsetY / this.$canvasScaleY, width / this.$canvasScaleX, height / this.$canvasScaleY);
+                renderNode.drawImage(0, 0, width, height, -this.offsetX, -this.offsetY, width / this.$canvasScaleX, height / this.$canvasScaleY);
             }
 
             return drawCalls;
@@ -169,8 +169,8 @@ namespace egret.sys {
             let bounds = this.root.$getOriginalBounds();
             var scaleX = this.$canvasScaleX;
             var scaleY = this.$canvasScaleY;
-            this.offsetX = -bounds.x * scaleX;
-            this.offsetY = -bounds.y * scaleY;
+            this.offsetX = -bounds.x;
+            this.offsetY = -bounds.y;
             this.offsetMatrix.setTo(this.offsetMatrix.a, 0, 0, this.offsetMatrix.d, this.offsetX, this.offsetY);
             let buffer = this.renderBuffer;
             //在chrome里，小等于256*256的canvas会不启用GPU加速。

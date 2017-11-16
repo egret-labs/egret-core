@@ -2640,10 +2640,10 @@ var egret;
          * @language en_US
          */
         /**
-         * 确定指定显示对象是 DisplayObjectContainer 实例的子项还是该实例本身。搜索包括整个显示列表（其中包括此 DisplayObjectContainer 实例）。
+         * 确定指定显示对象是 DisplayObjectContainer 实例的子项或该实例本身。搜索包括整个显示列表（其中包括此 DisplayObjectContainer 实例）。
          * 孙项、曾孙项等，每项都返回 true。
          * @param child 要测试的子对象。
-         * @returns 如果指定的显示对象为 DisplayObjectContainer 该实例本身，则返回true，如果指定的显示对象为当前实例子项，则返回false。
+         * @returns 如果 child 对象是 DisplayObjectContainer 的子项或容器本身，则为 true；否则为 false。
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
@@ -10369,10 +10369,10 @@ var egret;
          */
         Graphics.prototype.updateNodeBounds = function () {
             var node = this.$renderNode;
-            node.x = this.minX;
-            node.y = this.minY;
-            node.width = Math.ceil(this.maxX - this.minX);
-            node.height = Math.ceil(this.maxY - this.minY);
+            node.x = this.minX - 2;
+            node.y = this.minY - 2;
+            node.width = Math.ceil(this.maxX - this.minX) + 4;
+            node.height = Math.ceil(this.maxY - this.minY) + 4;
         };
         /**
          * 更新当前的lineX和lineY值，并标记尺寸失效。
@@ -12862,7 +12862,7 @@ var egret;
                     renderNode.image = this.bitmapData;
                     renderNode.imageWidth = width;
                     renderNode.imageHeight = height;
-                    renderNode.drawImage(0, 0, width, height, -this.offsetX / this.$canvasScaleX, -this.offsetY / this.$canvasScaleY, width / this.$canvasScaleX, height / this.$canvasScaleY);
+                    renderNode.drawImage(0, 0, width, height, -this.offsetX, -this.offsetY, width / this.$canvasScaleX, height / this.$canvasScaleY);
                 }
                 return drawCalls;
             };
@@ -12877,8 +12877,8 @@ var egret;
                 var bounds = this.root.$getOriginalBounds();
                 var scaleX = this.$canvasScaleX;
                 var scaleY = this.$canvasScaleY;
-                this.offsetX = -bounds.x * scaleX;
-                this.offsetY = -bounds.y * scaleY;
+                this.offsetX = -bounds.x;
+                this.offsetY = -bounds.y;
                 this.offsetMatrix.setTo(this.offsetMatrix.a, 0, 0, this.offsetMatrix.d, this.offsetX, this.offsetY);
                 var buffer = this.renderBuffer;
                 //在chrome里，小等于256*256的canvas会不启用GPU加速。
