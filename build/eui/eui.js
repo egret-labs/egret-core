@@ -10420,6 +10420,7 @@ var eui;
             },
             set: function (value) {
                 this.$scale9Grid = value;
+                this.$renderDirty = true;
                 this.invalidateDisplayList();
             },
             enumerable: true,
@@ -10658,6 +10659,7 @@ var eui;
          * @platform Web,Native
          */
         Image.prototype.updateDisplayList = function (unscaledWidth, unscaledHeight) {
+            this.$renderDirty = true;
         };
         /**
          * @copy eui.UIComponent#invalidateParentLayout

@@ -112,6 +112,7 @@ namespace eui {
 
         public set scale9Grid(value: egret.Rectangle) {
             this.$scale9Grid = value;
+            this.$renderDirty = true;
             this.invalidateDisplayList();
         }
 
@@ -380,6 +381,7 @@ namespace eui {
          * @platform Web,Native
          */
         protected updateDisplayList(unscaledWidth: number, unscaledHeight: number): void {
+            this.$renderDirty = true;
         }
 
         /**
