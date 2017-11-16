@@ -12,6 +12,28 @@ var __extends = (this && this.__extends) || (function () {
 var dragonBones;
 (function (dragonBones) {
 })(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 var dragonBones;
 (function (dragonBones) {
     /**
@@ -39,7 +61,7 @@ var dragonBones;
                 for (var i = 0; i < this._events.length; ++i) {
                     var eventObject = this._events[i];
                     var armature = eventObject.armature;
-                    if (armature.armatureData !== null) {
+                    if (armature._armatureData !== null) {
                         armature.eventDispatcher.dispatchDBEvent(eventObject.type, eventObject);
                         if (eventObject.type === dragonBones.EventObject.SOUND_EVENT) {
                             this._eventManager.dispatchDBEvent(eventObject.type, eventObject);
@@ -74,11 +96,11 @@ var dragonBones;
             enumerable: true,
             configurable: true
         });
+        DragonBones.VERSION = "5.6.0";
         DragonBones.yDown = true;
         DragonBones.debug = false;
         DragonBones.debugDraw = false;
         DragonBones.webAssembly = false;
-        DragonBones.VERSION = "5.6.0";
         return DragonBones;
     }());
     dragonBones.DragonBones = DragonBones;
@@ -89,16 +111,38 @@ var dragonBones;
         console.assert = function () { };
     }
 })(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 var dragonBones;
 (function (dragonBones) {
     /**
-     * The BaseObject is the base class for all objects in the DragonBones framework.
+     * - The BaseObject is the base class for all objects in the DragonBones framework.
      * All BaseObject instances are cached to the object pool to reduce the performance consumption of frequent requests for memory or memory recovery.
      * @version DragonBones 4.5
      * @language en_US
      */
     /**
-     * 基础对象，通常 DragonBones 的对象都继承自该类。
+     * - 基础对象，通常 DragonBones 的对象都继承自该类。
      * 所有基础对象的实例都会缓存到对象池，以减少频繁申请内存或内存回收的性能消耗。
      * @version DragonBones 4.5
      * @language zh_CN
@@ -106,12 +150,12 @@ var dragonBones;
     var BaseObject = (function () {
         function BaseObject() {
             /**
-             * A unique identification number assigned to the object.
+             * - A unique identification number assigned to the object.
              * @version DragonBones 4.5
              * @language en_US
              */
             /**
-             * 分配给此对象的唯一标识号。
+             * - 分配给此实例的唯一标识号。
              * @version DragonBones 4.5
              * @language zh_CN
              */
@@ -138,16 +182,16 @@ var dragonBones;
             throw new Error();
         };
         /**
-         * Set the maximum cache count of the specify object pool.
-         * @param objectConstructor Specify class (Set all object pools max cache count if not set)
-         * @param maxCount Max count
+         * - Set the maximum cache count of the specify object pool.
+         * @param objectConstructor - The specify class. (Set all object pools max cache count if not set)
+         * @param maxCount - Max count
          * @version DragonBones 4.5
          * @language en_US
          */
         /**
-         * 设置指定的对象池的最大缓存数量。
-         * @param objectConstructor 指定的类 (不设置则设置所有对象池的最大缓存数量)
-         * @param maxCount 最大缓存数量
+         * - 设置特定对象池的最大缓存数量。
+         * @param objectConstructor - 特定的类。 (不设置则设置所有对象池的最大缓存数量)
+         * @param maxCount - 最大缓存数量
          * @version DragonBones 4.5
          * @language zh_CN
          */
@@ -177,14 +221,14 @@ var dragonBones;
             }
         };
         /**
-         * Clear the cached instances of the specify object pool。
-         * @param objectConstructor Specify class (Clear all cached instances if not set)
+         * - Clear the cached instances of a specify object pool.
+         * @param objectConstructor - Specify class. (Clear all cached instances if not set)
          * @version DragonBones 4.5
          * @language en_US
          */
         /**
-         * 清除指定对象池的缓存实例。
-         * @param objectConstructor 指定的类 (不设置则清除所有缓存的实例)
+         * - 清除特定对象池的缓存实例。
+         * @param objectConstructor - 特定的类。 (不设置则清除所有缓存的实例)
          * @version DragonBones 4.5
          * @language zh_CN
          */
@@ -205,14 +249,14 @@ var dragonBones;
             }
         };
         /**
-         * Get an instance of the specify class from object pool。
-         * @param objectConstructor Specify class
+         * - Get an instance of the specify class from object pool.
+         * @param objectConstructor - The specify class
          * @version DragonBones 4.5
          * @language en_US
          */
         /**
-         * 从对象池中获取指定类的实例。
-         * @param objectConstructor 指定的类
+         * - 从对象池中获取特定类的实例。
+         * @param objectConstructor - 特定的类
          * @version DragonBones 4.5
          * @language zh_CN
          */
@@ -229,12 +273,12 @@ var dragonBones;
             return object;
         };
         /**
-         * Clear the object and return it back to object pool。
+         * - Clear the object and return it back to object pool。
          * @version DragonBones 4.5
          * @language en_US
          */
         /**
-         * 清除该对象的所有数据并将其返还对象池。
+         * - 清除该实例的所有数据并将其返还对象池。
          * @version DragonBones 4.5
          * @language zh_CN
          */
@@ -243,21 +287,51 @@ var dragonBones;
             BaseObject._returnObject(this);
         };
         BaseObject._hashCode = 0;
-        BaseObject._defaultMaxCount = 1000;
+        BaseObject._defaultMaxCount = 3000;
         BaseObject._maxCountMap = {};
         BaseObject._poolsMap = {};
         return BaseObject;
     }());
     dragonBones.BaseObject = BaseObject;
 })(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 var dragonBones;
 (function (dragonBones) {
     /**
-     * 2D 矩阵。
+     * - 2D Transform matrix.
+     * @version DragonBones 3.0
+     * @language en_US
+     */
+    /**
+     * - 2D 转换矩阵。
      * @version DragonBones 3.0
      * @language zh_CN
      */
     var Matrix = (function () {
+        /**
+         * @private
+         */
         function Matrix(a, b, c, d, tx, ty) {
             if (a === void 0) { a = 1.0; }
             if (b === void 0) { b = 0.0; }
@@ -272,9 +346,6 @@ var dragonBones;
             this.tx = tx;
             this.ty = ty;
         }
-        /**
-         * @private
-         */
         Matrix.prototype.toString = function () {
             return "[object dragonBones.Matrix] a:" + this.a + " b:" + this.b + " c:" + this.c + " d:" + this.d + " tx:" + this.tx + " ty:" + this.ty;
         };
@@ -304,7 +375,14 @@ var dragonBones;
             return this;
         };
         /**
-         * 转换为单位矩阵。
+         * - Convert to unit matrix.
+         * The resulting matrix has the following properties: a=1, b=0, c=0, d=1, tx=0, ty=0.
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 转换为单位矩阵。
+         * 该矩阵具有以下属性：a=1、b=0、c=0、d=1、tx=0、ty=0。
          * @version DragonBones 3.0
          * @language zh_CN
          */
@@ -315,8 +393,14 @@ var dragonBones;
             return this;
         };
         /**
-         * 将当前矩阵与另一个矩阵相乘。
-         * @param value 需要相乘的矩阵。
+         * - Multiplies the current matrix with another matrix.
+         * @param value - The matrix that needs to be multiplied.
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 将当前矩阵与另一个矩阵相乘。
+         * @param value - 需要相乘的矩阵
          * @version DragonBones 3.0
          * @language zh_CN
          */
@@ -348,7 +432,12 @@ var dragonBones;
             return this;
         };
         /**
-         * 转换为逆矩阵。
+         * - Convert to inverse matrix.
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 转换为逆矩阵。
          * @version DragonBones 3.0
          * @language zh_CN
          */
@@ -389,11 +478,20 @@ var dragonBones;
             return this;
         };
         /**
-         * 将矩阵转换应用于指定点。
-         * @param x 横坐标。
-         * @param y 纵坐标。
-         * @param result 应用转换之后的坐标。
-         * @params delta 是否忽略 tx，ty 对坐标的转换。
+         * - Apply a matrix transformation to a specific point.
+         * @param x - X coordinate
+         * @param y - Y coordinate
+         * @param result - The point after the transformation is applied
+         * @param delta - Whether to ignore tx, ty's conversion to point
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 将矩阵转换应用于特定点。
+         * @param x - 横坐标
+         * @param y - 纵坐标
+         * @param result - 应用转换之后的点
+         * @param delta - 是否忽略 tx，ty 对点的转换
          * @version DragonBones 3.0
          * @language zh_CN
          */
@@ -459,51 +557,45 @@ var dragonBones;
     }());
     dragonBones.Matrix = Matrix;
 })(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 var dragonBones;
 (function (dragonBones) {
     /**
-     * 2D 变换。
+     * - 2D Transform.
+     * @version DragonBones 3.0
+     * @language en_US
+     */
+    /**
+     * - 2D 变换。
      * @version DragonBones 3.0
      * @language zh_CN
      */
     var Transform = (function () {
-        function Transform(
-            /**
-             * 水平位移。
-             * @version DragonBones 3.0
-             * @language zh_CN
-             */
-            x, 
-            /**
-             * 垂直位移。
-             * @version DragonBones 3.0
-             * @language zh_CN
-             */
-            y, 
-            /**
-             * 倾斜。 (以弧度为单位)
-             * @version DragonBones 3.0
-             * @language zh_CN
-             */
-            skew, 
-            /**
-             * 旋转。 (以弧度为单位)
-             * @version DragonBones 3.0
-             * @language zh_CN
-             */
-            rotation, 
-            /**
-             * 水平缩放。
-             * @version DragonBones 3.0
-             * @language zh_CN
-             */
-            scaleX, 
-            /**
-             * 垂直缩放。
-             * @version DragonBones 3.0
-             * @language zh_CN
-             */
-            scaleY) {
+        /**
+         * @private
+         */
+        function Transform(x, y, skew, rotation, scaleX, scaleY) {
             if (x === void 0) { x = 0.0; }
             if (y === void 0) { y = 0.0; }
             if (skew === void 0) { skew = 0.0; }
@@ -525,9 +617,6 @@ var dragonBones;
             value += value > 0.0 ? -Math.PI : Math.PI;
             return value;
         };
-        /**
-         * @private
-         */
         Transform.prototype.toString = function () {
             return "[object dragonBones.Transform] x:" + this.x + " y:" + this.y + " skewX:" + this.skew * 180.0 / Math.PI + " skewY:" + this.rotation * 180.0 / Math.PI + " scaleX:" + this.scaleX + " scaleY:" + this.scaleY;
         };
@@ -577,10 +666,7 @@ var dragonBones;
             return this;
         };
         /**
-         * 矩阵转换为变换。
-         * @param matrix 矩阵。
-         * @version DragonBones 3.0
-         * @language zh_CN
+         * @private
          */
         Transform.prototype.fromMatrix = function (matrix) {
             var backupScaleX = this.scaleX, backupScaleY = this.scaleY;
@@ -603,10 +689,7 @@ var dragonBones;
             return this;
         };
         /**
-         * 转换为矩阵。
-         * @param matrix 矩阵。
-         * @version DragonBones 3.0
-         * @language zh_CN
+         * @private
          */
         Transform.prototype.toMatrix = function (matrix) {
             if (this.skew !== 0.0 || this.rotation !== 0.0) {
@@ -663,9 +746,32 @@ var dragonBones;
     }());
     dragonBones.Transform = Transform;
 })(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 var dragonBones;
 (function (dragonBones) {
     /**
+     * @internal
      * @private
      */
     var ColorTransform = (function () {
@@ -705,19 +811,71 @@ var dragonBones;
     }());
     dragonBones.ColorTransform = ColorTransform;
 })(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 var dragonBones;
 (function (dragonBones) {
+    /**
+     * - The Point object represents a location in a two-dimensional coordinate system.
+     * @version DragonBones 3.0
+     * @language en_US
+     */
+    /**
+     * - Point 对象表示二维坐标系统中的某个位置。
+     * @version DragonBones 3.0
+     * @language zh_CN
+     */
     var Point = (function () {
+        /**
+         * - Creates a new point. If you pass no parameters to this method, a point is created at (0,0).
+         * @param x - The horizontal coordinate
+         * @param y - The vertical coordinate
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 创建一个 egret.Point 对象.若不传入任何参数，将会创建一个位于（0，0）位置的点。
+         * @param x - 该对象的x属性值，默认为 0.0
+         * @param y - 该对象的y属性值，默认为 0.0
+         * @version DragonBones 3.0
+         * @language zh_CN
+         */
         function Point(x, y) {
             if (x === void 0) { x = 0.0; }
             if (y === void 0) { y = 0.0; }
             this.x = x;
             this.y = y;
         }
+        /**
+         * @private
+         */
         Point.prototype.copyFrom = function (value) {
             this.x = value.x;
             this.y = value.y;
         };
+        /**
+         * @private
+         */
         Point.prototype.clear = function () {
             this.x = this.y = 0.0;
         };
@@ -725,9 +883,52 @@ var dragonBones;
     }());
     dragonBones.Point = Point;
 })(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 var dragonBones;
 (function (dragonBones) {
+    /**
+     * - A Rectangle object is an area defined by its position, as indicated by its top-left corner point (x, y) and by its
+     * width and its height.<br/>
+     * The x, y, width, and height properties of the Rectangle class are independent of each other; changing the value of
+     * one property has no effect on the others. However, the right and bottom properties are integrally related to those
+     * four properties. For example, if you change the value of the right property, the value of the width property changes;
+     * if you change the bottom property, the value of the height property changes.
+     * @version DragonBones 3.0
+     * @language en_US
+     */
+    /**
+     * - Rectangle 对象是按其位置（由它左上角的点 (x, y) 确定）以及宽度和高度定义的区域。<br/>
+     * Rectangle 类的 x、y、width 和 height 属性相互独立；更改一个属性的值不会影响其他属性。
+     * 但是，right 和 bottom 属性与这四个属性是整体相关的。例如，如果更改 right 属性的值，则 width
+     * 属性的值将发生变化；如果更改 bottom 属性，则 height 属性的值将发生变化。
+     * @version DragonBones 3.0
+     * @language zh_CN
+     */
     var Rectangle = (function () {
+        /**
+         * @private
+         */
         function Rectangle(x, y, width, height) {
             if (x === void 0) { x = 0.0; }
             if (y === void 0) { y = 0.0; }
@@ -738,12 +939,18 @@ var dragonBones;
             this.width = width;
             this.height = height;
         }
+        /**
+         * @private
+         */
         Rectangle.prototype.copyFrom = function (value) {
             this.x = value.x;
             this.y = value.y;
             this.width = value.width;
             this.height = value.height;
         };
+        /**
+         * @private
+         */
         Rectangle.prototype.clear = function () {
             this.x = this.y = 0.0;
             this.width = this.height = 0.0;
@@ -752,10 +959,37 @@ var dragonBones;
     }());
     dragonBones.Rectangle = Rectangle;
 })(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 var dragonBones;
 (function (dragonBones) {
     /**
-     * 自定义数据。
+     * - The user custom data.
+     * @version DragonBones 5.0
+     * @language en_US
+     */
+    /**
+     * - 用户自定义数据。
      * @version DragonBones 5.0
      * @language zh_CN
      */
@@ -764,33 +998,45 @@ var dragonBones;
         function UserData() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
             /**
-             * 自定义整数。
+             * - The custom int numbers.
+             * @version DragonBones 5.0
+             * @language en_US
+             */
+            /**
+             * - 自定义整数。
              * @version DragonBones 5.0
              * @language zh_CN
              */
             _this.ints = [];
             /**
-             * 自定义浮点数。
+             * - The custom float numbers.
+             * @version DragonBones 5.0
+             * @language en_US
+             */
+            /**
+             * - 自定义浮点数。
              * @version DragonBones 5.0
              * @language zh_CN
              */
             _this.floats = [];
             /**
-             * 自定义字符串。
+             * - The custom strings.
+             * @version DragonBones 5.0
+             * @language en_US
+             */
+            /**
+             * - 自定义字符串。
              * @version DragonBones 5.0
              * @language zh_CN
              */
             _this.strings = [];
             return _this;
         }
-        /**
-         * @private
-         */
         UserData.toString = function () {
             return "[class dragonBones.UserData]";
         };
         /**
-         * @private
+         * @inheritDoc
          */
         UserData.prototype._onClear = function () {
             this.ints.length = 0;
@@ -798,25 +1044,33 @@ var dragonBones;
             this.strings.length = 0;
         };
         /**
+         * @internal
          * @private
          */
         UserData.prototype.addInt = function (value) {
             this.ints.push(value);
         };
         /**
+         * @internal
          * @private
          */
         UserData.prototype.addFloat = function (value) {
             this.floats.push(value);
         };
         /**
+         * @internal
          * @private
          */
         UserData.prototype.addString = function (value) {
             this.strings.push(value);
         };
         /**
-         * 获取自定义整数。
+         * - Get the custom int number.
+         * @version DragonBones 5.0
+         * @language en_US
+         */
+        /**
+         * - 获取自定义整数。
          * @version DragonBones 5.0
          * @language zh_CN
          */
@@ -825,7 +1079,12 @@ var dragonBones;
             return index >= 0 && index < this.ints.length ? this.ints[index] : 0;
         };
         /**
-         * 获取自定义浮点数。
+         * - Get the custom float number.
+         * @version DragonBones 5.0
+         * @language en_US
+         */
+        /**
+         * - 获取自定义浮点数。
          * @version DragonBones 5.0
          * @language zh_CN
          */
@@ -834,7 +1093,12 @@ var dragonBones;
             return index >= 0 && index < this.floats.length ? this.floats[index] : 0.0;
         };
         /**
-         * 获取自定义字符串。
+         * - Get the custom string.
+         * @version DragonBones 5.0
+         * @language en_US
+         */
+        /**
+         * - 获取自定义字符串。
          * @version DragonBones 5.0
          * @language zh_CN
          */
@@ -846,6 +1110,7 @@ var dragonBones;
     }(dragonBones.BaseObject));
     dragonBones.UserData = UserData;
     /**
+     * @internal
      * @private
      */
     var ActionData = (function (_super) {
@@ -872,10 +1137,39 @@ var dragonBones;
     }(dragonBones.BaseObject));
     dragonBones.ActionData = ActionData;
 })(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 var dragonBones;
 (function (dragonBones) {
     /**
-     * 龙骨数据。
+     * - The DragonBones data.
+     * A DragonBones data contains multiple armature data.
+     * @see dragonBones.ArmatureData
+     * @version DragonBones 3.0
+     * @language en_US
+     */
+    /**
+     * - 龙骨数据。
      * 一个龙骨数据包含多个骨架数据。
      * @see dragonBones.ArmatureData
      * @version DragonBones 3.0
@@ -886,25 +1180,28 @@ var dragonBones;
         function DragonBonesData() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
             /**
+             * @internal
              * @private
              */
             _this.frameIndices = [];
             /**
+             * @internal
              * @private
              */
             _this.cachedFrames = [];
             /**
-             * 所有骨架数据名称。
-             * @see #armatures
+             * - All armature data names.
+             * @version DragonBones 3.0
+             * @language en_US
+             */
+            /**
+             * - 所有的骨架数据名称。
              * @version DragonBones 3.0
              * @language zh_CN
              */
             _this.armatureNames = [];
             /**
-             * 所有骨架数据。
-             * @see dragonBones.ArmatureData
-             * @version DragonBones 3.0
-             * @language zh_CN
+             * @private
              */
             _this.armatures = {};
             /**
@@ -913,14 +1210,11 @@ var dragonBones;
             _this.userData = null; // Initial value.
             return _this;
         }
-        /**
-         * @private
-         */
         DragonBonesData.toString = function () {
             return "[class dragonBones.DragonBonesData]";
         };
         /**
-         * @private
+         * @inheritDoc
          */
         DragonBonesData.prototype._onClear = function () {
             for (var k in this.armatures) {
@@ -949,21 +1243,27 @@ var dragonBones;
             this.userData = null;
         };
         /**
+         * @internal
          * @private
          */
         DragonBonesData.prototype.addArmature = function (value) {
             if (value.name in this.armatures) {
-                console.warn("Replace armature: " + value.name);
-                this.armatures[value.name].returnToPool();
+                console.warn("Same armature: " + value.name);
+                return;
             }
             value.parent = this;
             this.armatures[value.name] = value;
             this.armatureNames.push(value.name);
         };
         /**
-         * 获取骨架数据。
-         * @param name 骨架数据名称。
-         * @see dragonBones.ArmatureData
+         * - Get a specific armature data.
+         * @param name - The armature data name
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 获取特定的骨架数据。
+         * @param name - 骨架数据名称
          * @version DragonBones 3.0
          * @language zh_CN
          */
@@ -971,50 +1271,54 @@ var dragonBones;
             return name in this.armatures ? this.armatures[name] : null;
         };
         /**
+         * - Deprecated, please refer to {@link #dragonBones.BaseFactory#removeDragonBonesData()}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.BaseFactory#removeDragonBonesData()
+         * @language en_US
+         */
+        /**
+         * - 已废弃，请参考 {@link #dragonBones.BaseFactory#removeDragonBonesData()}。
+         * @deprecated
+         * @language zh_CN
          */
         DragonBonesData.prototype.dispose = function () {
-            console.warn("已废弃，请参考 @see");
+            console.warn("已废弃");
             this.returnToPool();
         };
         return DragonBonesData;
     }(dragonBones.BaseObject));
     dragonBones.DragonBonesData = DragonBonesData;
 })(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 var dragonBones;
 (function (dragonBones) {
     /**
-     * @private
+     * - The armature data.
+     * @version DragonBones 3.0
+     * @language en_US
      */
-    var CanvasData = (function (_super) {
-        __extends(CanvasData, _super);
-        function CanvasData() {
-            return _super !== null && _super.apply(this, arguments) || this;
-        }
-        /**
-         * @private
-         */
-        CanvasData.toString = function () {
-            return "[class dragonBones.CanvasData]";
-        };
-        /**
-         * @private
-         */
-        CanvasData.prototype._onClear = function () {
-            this.hasBackground = false;
-            this.color = 0x000000;
-            this.x = 0;
-            this.y = 0;
-            this.width = 0;
-            this.height = 0;
-        };
-        return CanvasData;
-    }(dragonBones.BaseObject));
-    dragonBones.CanvasData = CanvasData;
     /**
-     * 骨架数据。
+     * - 骨架数据。
      * @version DragonBones 3.0
      * @language zh_CN
      */
@@ -1027,8 +1331,12 @@ var dragonBones;
              */
             _this.aabb = new dragonBones.Rectangle();
             /**
-             * 所有动画数据名称。
-             * @see #armatures
+             * - The names of all the animation data.
+             * @version DragonBones 3.0
+             * @language en_US
+             */
+            /**
+             * - 所有的动画数据名称。
              * @version DragonBones 3.0
              * @language zh_CN
              */
@@ -1050,17 +1358,11 @@ var dragonBones;
              */
             _this.actions = [];
             /**
-             * 所有骨骼数据。
-             * @see dragonBones.BoneData
-             * @version DragonBones 3.0
-             * @language zh_CN
+             * @private
              */
             _this.bones = {};
             /**
-             * 所有插槽数据。
-             * @see dragonBones.SlotData
-             * @version DragonBones 3.0
-             * @language zh_CN
+             * @private
              */
             _this.slots = {};
             /**
@@ -1068,17 +1370,11 @@ var dragonBones;
              */
             _this.constraints = {};
             /**
-             * 所有皮肤数据。
-             * @see dragonBones.SkinData
-             * @version DragonBones 3.0
-             * @language zh_CN
+             * @private
              */
             _this.skins = {};
             /**
-             * 所有动画数据。
-             * @see dragonBones.AnimationData
-             * @version DragonBones 3.0
-             * @language zh_CN
+             * @private
              */
             _this.animations = {};
             /**
@@ -1091,14 +1387,11 @@ var dragonBones;
             _this.userData = null; // Initial value.
             return _this;
         }
-        /**
-         * @private
-         */
         ArmatureData.toString = function () {
             return "[class dragonBones.ArmatureData]";
         };
         /**
-         * @private
+         * @inheritDoc
          */
         ArmatureData.prototype._onClear = function () {
             for (var _i = 0, _a = this.defaultActions; _i < _a.length; _i++) {
@@ -1158,6 +1451,7 @@ var dragonBones;
             this.parent = null; //
         };
         /**
+         * @internal
          * @private
          */
         ArmatureData.prototype.sortBones = function () {
@@ -1196,6 +1490,7 @@ var dragonBones;
             }
         };
         /**
+         * @internal
          * @private
          */
         ArmatureData.prototype.cacheFrames = function (frameRate) {
@@ -1208,6 +1503,7 @@ var dragonBones;
             }
         };
         /**
+         * @internal
          * @private
          */
         ArmatureData.prototype.setCacheFrame = function (globalTransformMatrix, transform) {
@@ -1227,6 +1523,7 @@ var dragonBones;
             return arrayOffset;
         };
         /**
+         * @internal
          * @private
          */
         ArmatureData.prototype.getCacheFrame = function (globalTransformMatrix, transform, arrayOffset) {
@@ -1245,44 +1542,48 @@ var dragonBones;
             transform.y = globalTransformMatrix.ty;
         };
         /**
+         * @internal
          * @private
          */
         ArmatureData.prototype.addBone = function (value) {
             if (value.name in this.bones) {
-                console.warn("Replace bone: " + value.name);
-                this.bones[value.name].returnToPool();
+                console.warn("Same bone: " + value.name);
+                return;
             }
             this.bones[value.name] = value;
             this.sortedBones.push(value);
         };
         /**
+         * @internal
          * @private
          */
         ArmatureData.prototype.addSlot = function (value) {
             if (value.name in this.slots) {
-                console.warn("Replace slot: " + value.name);
-                this.slots[value.name].returnToPool();
+                console.warn("Same slot: " + value.name);
+                return;
             }
             this.slots[value.name] = value;
             this.sortedSlots.push(value);
         };
         /**
+         * @internal
          * @private
          */
         ArmatureData.prototype.addConstraint = function (value) {
             if (value.name in this.constraints) {
-                console.warn("Replace constraint: " + value.name);
-                this.constraints[value.name].returnToPool();
+                console.warn("Same constraint: " + value.name);
+                return;
             }
             this.constraints[value.name] = value;
         };
         /**
+         * @internal
          * @private
          */
         ArmatureData.prototype.addSkin = function (value) {
             if (value.name in this.skins) {
-                console.warn("Replace skin: " + value.name);
-                this.skins[value.name].returnToPool();
+                console.warn("Same skin: " + value.name);
+                return;
             }
             value.parent = this;
             this.skins[value.name] = value;
@@ -1291,12 +1592,13 @@ var dragonBones;
             }
         };
         /**
+         * @internal
          * @private
          */
         ArmatureData.prototype.addAnimation = function (value) {
             if (value.name in this.animations) {
-                console.warn("Replace animation: " + value.name);
-                this.animations[value.name].returnToPool();
+                console.warn("Same animation: " + value.name);
+                return;
             }
             value.parent = this;
             this.animations[value.name] = value;
@@ -1306,6 +1608,7 @@ var dragonBones;
             }
         };
         /**
+         * @internal
          * @private
          */
         ArmatureData.prototype.addAction = function (value, isDefault) {
@@ -1317,20 +1620,30 @@ var dragonBones;
             }
         };
         /**
-         * 获取骨骼数据。
-         * @param name 数据名称。
+         * - Get a specific done data.
+         * @param name - The bone name
          * @version DragonBones 3.0
-         * @see dragonBones.BoneData
+         * @language en_US
+         */
+        /**
+         * - 获取特定的骨骼数据。
+         * @param name - 骨骼名称。
+         * @version DragonBones 3.0
          * @language zh_CN
          */
         ArmatureData.prototype.getBone = function (name) {
             return name in this.bones ? this.bones[name] : null;
         };
         /**
-         * 获取插槽数据。
-         * @param name 数据名称。
+         * - Get a specific slot data.
+         * @param name - The slot name
          * @version DragonBones 3.0
-         * @see dragonBones.SlotData
+         * @language en_US
+         */
+        /**
+         * - 获取特定的插槽数据。
+         * @param name - 插槽名称。
+         * @version DragonBones 3.0
          * @language zh_CN
          */
         ArmatureData.prototype.getSlot = function (name) {
@@ -1343,20 +1656,30 @@ var dragonBones;
             return name in this.constraints ? this.constraints[name] : null;
         };
         /**
-         * 获取皮肤数据。
-         * @param name 数据名称。
+         * - Get a specific skin data.
+         * @param name - The skin name
          * @version DragonBones 3.0
-         * @see dragonBones.SkinData
+         * @language en_US
+         */
+        /**
+         * - 获取特定皮肤数据。
+         * @param name - 皮肤名称。
+         * @version DragonBones 3.0
          * @language zh_CN
          */
         ArmatureData.prototype.getSkin = function (name) {
             return name in this.skins ? this.skins[name] : null;
         };
         /**
-         * 获取动画数据。
-         * @param name 数据名称。
+         * - Get a specific animation data.
+         * @param name - The animation name
          * @version DragonBones 3.0
-         * @see dragonBones.AnimationData
+         * @language en_US
+         */
+        /**
+         * - 获取特定的动画数据。
+         * @param name - 动画名称。
+         * @version DragonBones 3.0
          * @language zh_CN
          */
         ArmatureData.prototype.getAnimation = function (name) {
@@ -1366,7 +1689,12 @@ var dragonBones;
     }(dragonBones.BaseObject));
     dragonBones.ArmatureData = ArmatureData;
     /**
-     * 骨骼数据。
+     * - The bone data.
+     * @version DragonBones 3.0
+     * @language en_US
+     */
+    /**
+     * - 骨骼数据。
      * @version DragonBones 3.0
      * @language zh_CN
      */
@@ -1384,14 +1712,11 @@ var dragonBones;
             _this.userData = null; // Initial value.
             return _this;
         }
-        /**
-         * @private
-         */
         BoneData.toString = function () {
             return "[class dragonBones.BoneData]";
         };
         /**
-         * @private
+         * @inheritDoc
          */
         BoneData.prototype._onClear = function () {
             if (this.userData !== null) {
@@ -1411,8 +1736,12 @@ var dragonBones;
     }(dragonBones.BaseObject));
     dragonBones.BoneData = BoneData;
     /**
-     * 插槽数据。
-     * @see dragonBones.Slot
+     * - The slot data.
+     * @version DragonBones 3.0
+     * @language en_US
+     */
+    /**
+     * - 插槽数据。
      * @version DragonBones 3.0
      * @language zh_CN
      */
@@ -1431,19 +1760,17 @@ var dragonBones;
             return _this;
         }
         /**
+         * @internal
          * @private
          */
         SlotData.createColor = function () {
             return new dragonBones.ColorTransform();
         };
-        /**
-         * @private
-         */
         SlotData.toString = function () {
             return "[class dragonBones.SlotData]";
         };
         /**
-         * @private
+         * @inheritDoc
          */
         SlotData.prototype._onClear = function () {
             if (this.userData !== null) {
@@ -1458,14 +1785,93 @@ var dragonBones;
             this.parent = null; //
         };
         /**
+         * @internal
          * @private
          */
         SlotData.DEFAULT_COLOR = new dragonBones.ColorTransform();
         return SlotData;
     }(dragonBones.BaseObject));
     dragonBones.SlotData = SlotData;
+})(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+var dragonBones;
+(function (dragonBones) {
     /**
-     * 皮肤数据。（通常一个骨架数据至少包含一个皮肤数据）
+     * @internal
+     * @private
+     */
+    var CanvasData = (function (_super) {
+        __extends(CanvasData, _super);
+        function CanvasData() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        CanvasData.toString = function () {
+            return "[class dragonBones.CanvasData]";
+        };
+        CanvasData.prototype._onClear = function () {
+            this.hasBackground = false;
+            this.color = 0x000000;
+            this.x = 0;
+            this.y = 0;
+            this.width = 0;
+            this.height = 0;
+        };
+        return CanvasData;
+    }(dragonBones.BaseObject));
+    dragonBones.CanvasData = CanvasData;
+})(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+var dragonBones;
+(function (dragonBones) {
+    /**
+     * - The skin data, typically a armature data instance contains at least one skinData.
+     * @version DragonBones 3.0
+     * @language en_US
+     */
+    /**
+     * - 皮肤数据，通常一个骨架数据至少包含一个皮肤数据。
      * @version DragonBones 3.0
      * @language zh_CN
      */
@@ -1483,7 +1889,7 @@ var dragonBones;
             return "[class dragonBones.SkinData]";
         };
         /**
-         * @private
+         * @inheritDoc
          */
         SkinData.prototype._onClear = function () {
             for (var k in this.displays) {
@@ -1501,6 +1907,7 @@ var dragonBones;
             this.parent = null; //
         };
         /**
+         * @internal
          * @private
          */
         SkinData.prototype.addDisplay = function (slotName, value) {
@@ -1541,9 +1948,32 @@ var dragonBones;
     }(dragonBones.BaseObject));
     dragonBones.SkinData = SkinData;
 })(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 var dragonBones;
 (function (dragonBones) {
     /**
+     * @internal
      * @private
      */
     var ConstraintData = (function (_super) {
@@ -1562,6 +1992,7 @@ var dragonBones;
     }(dragonBones.BaseObject));
     dragonBones.ConstraintData = ConstraintData;
     /**
+     * @internal
      * @private
      */
     var IKConstraintData = (function (_super) {
@@ -1582,9 +2013,32 @@ var dragonBones;
     }(ConstraintData));
     dragonBones.IKConstraintData = IKConstraintData;
 })(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 var dragonBones;
 (function (dragonBones) {
     /**
+     * @internal
      * @private
      */
     var DisplayData = (function (_super) {
@@ -1604,6 +2058,7 @@ var dragonBones;
     }(dragonBones.BaseObject));
     dragonBones.DisplayData = DisplayData;
     /**
+     * @internal
      * @private
      */
     var ImageDisplayData = (function (_super) {
@@ -1626,6 +2081,7 @@ var dragonBones;
     }(DisplayData));
     dragonBones.ImageDisplayData = ImageDisplayData;
     /**
+     * @internal
      * @private
      */
     var ArmatureDisplayData = (function (_super) {
@@ -1659,6 +2115,7 @@ var dragonBones;
     }(DisplayData));
     dragonBones.ArmatureDisplayData = ArmatureDisplayData;
     /**
+     * @internal
      * @private
      */
     var MeshDisplayData = (function (_super) {
@@ -1685,6 +2142,7 @@ var dragonBones;
     }(ImageDisplayData));
     dragonBones.MeshDisplayData = MeshDisplayData;
     /**
+     * @internal
      * @private
      */
     var BoundingBoxDisplayData = (function (_super) {
@@ -1709,6 +2167,7 @@ var dragonBones;
     }(DisplayData));
     dragonBones.BoundingBoxDisplayData = BoundingBoxDisplayData;
     /**
+     * @internal
      * @private
      */
     var WeightData = (function (_super) {
@@ -1733,10 +2192,40 @@ var dragonBones;
     }(dragonBones.BaseObject));
     dragonBones.WeightData = WeightData;
 })(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 var dragonBones;
 (function (dragonBones) {
     /**
-     * 边界框数据基类。
+     * - The base class of bounding box data.
+     * @see dragonBones.RectangleData
+     * @see dragonBones.EllipseData
+     * @see dragonBones.PolygonData
+     * @version DragonBones 5.0
+     * @language en_US
+     */
+    /**
+     * - 边界框数据基类。
      * @see dragonBones.RectangleData
      * @see dragonBones.EllipseData
      * @see dragonBones.PolygonData
@@ -1760,7 +2249,12 @@ var dragonBones;
     }(dragonBones.BaseObject));
     dragonBones.BoundingBoxData = BoundingBoxData;
     /**
-     * 矩形边界框。
+     * - The rectangle bounding box data.
+     * @version DragonBones 5.1
+     * @language en_US
+     */
+    /**
+     * - 矩形边界框数据。
      * @version DragonBones 5.1
      * @language zh_CN
      */
@@ -1769,14 +2263,11 @@ var dragonBones;
         function RectangleBoundingBoxData() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
-        /**
-         * @private
-         */
         RectangleBoundingBoxData.toString = function () {
             return "[class dragonBones.RectangleBoundingBoxData]";
         };
         /**
-         * Compute the bit code for a point (x, y) using the clip rectangle
+         * - Compute the bit code for a point (x, y) using the clip rectangle
          */
         RectangleBoundingBoxData._computeOutCode = function (x, y, xMin, yMin, xMax, yMax) {
             var code = 0 /* InSide */; // initialised as being inside of [[clip window]]
@@ -1916,6 +2407,7 @@ var dragonBones;
             return intersectionCount;
         };
         /**
+         * @inheritDoc
          * @private
          */
         RectangleBoundingBoxData.prototype._onClear = function () {
@@ -1923,7 +2415,7 @@ var dragonBones;
             this.type = 0 /* Rectangle */;
         };
         /**
-         * @inherDoc
+         * @inheritDoc
          */
         RectangleBoundingBoxData.prototype.containsPoint = function (pX, pY) {
             var widthH = this.width * 0.5;
@@ -1936,7 +2428,7 @@ var dragonBones;
             return false;
         };
         /**
-         * @inherDoc
+         * @inheritDoc
          */
         RectangleBoundingBoxData.prototype.intersectsSegment = function (xA, yA, xB, yB, intersectionPointA, intersectionPointB, normalRadians) {
             if (intersectionPointA === void 0) { intersectionPointA = null; }
@@ -1951,7 +2443,12 @@ var dragonBones;
     }(BoundingBoxData));
     dragonBones.RectangleBoundingBoxData = RectangleBoundingBoxData;
     /**
-     * 椭圆边界框。
+     * - The ellipse bounding box data.
+     * @version DragonBones 5.1
+     * @language en_US
+     */
+    /**
+     * - 椭圆边界框数据。
      * @version DragonBones 5.1
      * @language zh_CN
      */
@@ -1960,9 +2457,6 @@ var dragonBones;
         function EllipseBoundingBoxData() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
-        /**
-         * @private
-         */
         EllipseBoundingBoxData.toString = function () {
             return "[class dragonBones.EllipseData]";
         };
@@ -2055,6 +2549,7 @@ var dragonBones;
             return intersectionCount;
         };
         /**
+         * @inheritDoc
          * @private
          */
         EllipseBoundingBoxData.prototype._onClear = function () {
@@ -2062,7 +2557,7 @@ var dragonBones;
             this.type = 1 /* Ellipse */;
         };
         /**
-         * @inherDoc
+         * @inheritDoc
          */
         EllipseBoundingBoxData.prototype.containsPoint = function (pX, pY) {
             var widthH = this.width * 0.5;
@@ -2076,7 +2571,7 @@ var dragonBones;
             return false;
         };
         /**
-         * @inherDoc
+         * @inheritDoc
          */
         EllipseBoundingBoxData.prototype.intersectsSegment = function (xA, yA, xB, yB, intersectionPointA, intersectionPointB, normalRadians) {
             if (intersectionPointA === void 0) { intersectionPointA = null; }
@@ -2089,7 +2584,12 @@ var dragonBones;
     }(BoundingBoxData));
     dragonBones.EllipseBoundingBoxData = EllipseBoundingBoxData;
     /**
-     * 多边形边界框。
+     * - The polygon bounding box data.
+     * @version DragonBones 5.1
+     * @language en_US
+     */
+    /**
+     * - 多边形边界框数据。
      * @version DragonBones 5.1
      * @language zh_CN
      */
@@ -2098,7 +2598,12 @@ var dragonBones;
         function PolygonBoundingBoxData() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
             /**
-             * 多边形顶点。
+             * - The polygon vertices.
+             * @version DragonBones 5.1
+             * @language en_US
+             */
+            /**
+             * - 多边形顶点。
              * @version DragonBones 5.1
              * @language zh_CN
              */
@@ -2109,9 +2614,6 @@ var dragonBones;
             _this.weight = null; // Initial value.
             return _this;
         }
-        /**
-         * @private
-         */
         PolygonBoundingBoxData.toString = function () {
             return "[class dragonBones.PolygonBoundingBoxData]";
         };
@@ -2239,6 +2741,7 @@ var dragonBones;
             return intersectionCount;
         };
         /**
+         * @inheritDoc
          * @private
          */
         PolygonBoundingBoxData.prototype._onClear = function () {
@@ -2253,7 +2756,7 @@ var dragonBones;
             this.weight = null;
         };
         /**
-         * @inherDoc
+         * @inheritDoc
          */
         PolygonBoundingBoxData.prototype.containsPoint = function (pX, pY) {
             var isInSide = false;
@@ -2274,7 +2777,7 @@ var dragonBones;
             return isInSide;
         };
         /**
-         * @inherDoc
+         * @inheritDoc
          */
         PolygonBoundingBoxData.prototype.intersectsSegment = function (xA, yA, xB, yB, intersectionPointA, intersectionPointB, normalRadians) {
             if (intersectionPointA === void 0) { intersectionPointA = null; }
@@ -2290,10 +2793,37 @@ var dragonBones;
     }(BoundingBoxData));
     dragonBones.PolygonBoundingBoxData = PolygonBoundingBoxData;
 })(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 var dragonBones;
 (function (dragonBones) {
     /**
-     * 动画数据。
+     * - The animation data.
+     * @version DragonBones 3.0
+     * @language en_US
+     */
+    /**
+     * - 动画数据。
      * @version DragonBones 3.0
      * @language zh_CN
      */
@@ -2335,14 +2865,11 @@ var dragonBones;
             _this.zOrderTimeline = null; // Initial value.
             return _this;
         }
-        /**
-         * @private
-         */
         AnimationData.toString = function () {
             return "[class dragonBones.AnimationData]";
         };
         /**
-         * @private
+         * @inheritDoc
          */
         AnimationData.prototype._onClear = function () {
             for (var k in this.boneTimelines) {
@@ -2399,6 +2926,7 @@ var dragonBones;
             this.parent = null; //
         };
         /**
+         * @internal
          * @private
          */
         AnimationData.prototype.cacheFrames = function (frameRate) {
@@ -2464,13 +2992,13 @@ var dragonBones;
         /**
          * @private
          */
-        AnimationData.prototype.getSlotTimeline = function (name) {
+        AnimationData.prototype.getSlotTimelines = function (name) {
             return name in this.slotTimelines ? this.slotTimelines[name] : null;
         };
         /**
          * @private
          */
-        AnimationData.prototype.getConstraintTimeline = function (name) {
+        AnimationData.prototype.getConstraintTimelines = function (name) {
             return name in this.constraintTimelines ? this.constraintTimelines[name] : null;
         };
         /**
@@ -2489,6 +3017,7 @@ var dragonBones;
     }(dragonBones.BaseObject));
     dragonBones.AnimationData = AnimationData;
     /**
+     * @internal
      * @private
      */
     var TimelineData = (function (_super) {
@@ -2508,13 +3037,44 @@ var dragonBones;
     }(dragonBones.BaseObject));
     dragonBones.TimelineData = TimelineData;
 })(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 var dragonBones;
 (function (dragonBones) {
     /**
-     * 动画配置，描述播放一个动画所需要的全部信息。
+     * - The animation config is used to describe all the information needed to play an animation state.
+     * The API is still in the experimental phase and may encounter bugs or stability or compatibility issues when used.
      * @see dragonBones.AnimationState
-     * @version DragonBones 5.0
      * @beta
+     * @version DragonBones 5.0
+     * @language en_US
+     */
+    /**
+     * - 动画配置用来描述播放一个动画状态所需要的全部信息。
+     * 该 API 仍在实验阶段，使用时可能遭遇 bug 或稳定性或兼容性问题。
+     * @see dragonBones.AnimationState
+     * @beta
+     * @version DragonBones 5.0
      * @language zh_CN
      */
     var AnimationConfig = (function (_super) {
@@ -2522,9 +3082,7 @@ var dragonBones;
         function AnimationConfig() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
             /**
-             * 骨骼遮罩。
-             * @version DragonBones 5.0
-             * @language zh_CN
+             * @private
              */
             _this.boneMask = [];
             return _this;
@@ -2551,17 +3109,23 @@ var dragonBones;
             this.position = 0.0;
             this.duration = -1.0;
             this.timeScale = -100.0;
+            this.weight = 1.0;
             this.fadeInTime = -1.0;
             this.autoFadeOutTime = -1.0;
-            this.weight = 1.0;
             this.name = "";
             this.animation = "";
             this.group = "";
             this.boneMask.length = 0;
         };
+        /**
+         * @private
+         */
         AnimationConfig.prototype.clear = function () {
             this._onClear();
         };
+        /**
+         * @private
+         */
         AnimationConfig.prototype.copyFrom = function (value) {
             this.pauseFadeOut = value.pauseFadeOut;
             this.fadeOutMode = value.fadeOutMode;
@@ -2589,9 +3153,15 @@ var dragonBones;
                 this.boneMask[i] = value.boneMask[i];
             }
         };
+        /**
+         * @private
+         */
         AnimationConfig.prototype.containsBoneMask = function (name) {
             return this.boneMask.length === 0 || this.boneMask.indexOf(name) >= 0;
         };
+        /**
+         * @private
+         */
         AnimationConfig.prototype.addBoneMask = function (armature, name, recursive) {
             if (recursive === void 0) { recursive = true; }
             var currentBone = armature.getBone(name);
@@ -2610,6 +3180,9 @@ var dragonBones;
                 }
             }
         };
+        /**
+         * @private
+         */
         AnimationConfig.prototype.removeBoneMask = function (armature, name, recursive) {
             if (recursive === void 0) { recursive = true; }
             var index = this.boneMask.indexOf(name);
@@ -2646,10 +3219,37 @@ var dragonBones;
     }(dragonBones.BaseObject));
     dragonBones.AnimationConfig = AnimationConfig;
 })(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 var dragonBones;
 (function (dragonBones) {
     /**
-     * 贴图集数据。
+     * - The texture atlas data.
+     * @version DragonBones 3.0
+     * @language en_US
+     */
+    /**
+     * - 贴图集数据。
      * @version DragonBones 3.0
      * @language zh_CN
      */
@@ -2664,7 +3264,7 @@ var dragonBones;
             return _this;
         }
         /**
-         * @private
+         * @inheritDoc
          */
         TextureAtlasData.prototype._onClear = function () {
             for (var k in this.textures) {
@@ -2701,12 +3301,13 @@ var dragonBones;
             }
         };
         /**
+         * @internal
          * @private
          */
         TextureAtlasData.prototype.addTexture = function (value) {
             if (value.name in this.textures) {
-                console.warn("Replace texture: " + value.name);
-                this.textures[value.name].returnToPool();
+                console.warn("Same texture: " + value.name);
+                return;
             }
             value.parent = this;
             this.textures[value.name] = value;
@@ -2721,6 +3322,7 @@ var dragonBones;
     }(dragonBones.BaseObject));
     dragonBones.TextureAtlasData = TextureAtlasData;
     /**
+     * @internal
      * @private
      */
     var TextureData = (function (_super) {
@@ -2760,10 +3362,41 @@ var dragonBones;
     }(dragonBones.BaseObject));
     dragonBones.TextureData = TextureData;
 })(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 var dragonBones;
 (function (dragonBones_1) {
     /**
-     * 骨架，是骨骼动画系统的核心，由显示容器、骨骼、插槽、动画、事件系统构成。
+     * - Armature is the core of the skeleton animation system.
+     * @see dragonBones.ArmatureData
+     * @see dragonBones.Bone
+     * @see dragonBones.Slot
+     * @see dragonBones.Animation
+     * @version DragonBones 3.0
+     * @language en_US
+     */
+    /**
+     * - 骨架是骨骼动画系统的核心。
      * @see dragonBones.ArmatureData
      * @see dragonBones.Bone
      * @see dragonBones.Slot
@@ -2786,6 +3419,7 @@ var dragonBones;
             _this._animation = null; // Initial value.
             _this._proxy = null; // Initial value.
             /**
+             * @internal
              * @private
              */
             _this._replaceTextureAtlasData = null; // Initial value.
@@ -2920,7 +3554,6 @@ var dragonBones;
             if (this._bones.indexOf(value) < 0) {
                 this._bonesDirty = true;
                 this._bones.push(value);
-                this._animation._timelineDirty = true;
             }
         };
         /**
@@ -2931,7 +3564,6 @@ var dragonBones;
             var index = this._bones.indexOf(value);
             if (index >= 0) {
                 this._bones.splice(index, 1);
-                this._animation._timelineDirty = true;
             }
         };
         /**
@@ -2942,7 +3574,6 @@ var dragonBones;
             if (this._slots.indexOf(value) < 0) {
                 this._slotsDirty = true;
                 this._slots.push(value);
-                this._animation._timelineDirty = true;
             }
         };
         /**
@@ -2953,7 +3584,6 @@ var dragonBones;
             var index = this._slots.indexOf(value);
             if (index >= 0) {
                 this._slots.splice(index, 1);
-                this._animation._timelineDirty = true;
             }
         };
         /**
@@ -2971,7 +3601,22 @@ var dragonBones;
             }
         };
         /**
-         * 释放骨架。 (回收到对象池)
+         * - Dispose the armature. (Return to the object pool)
+         * @example
+         * <pre>
+         *     removeChild(armature.display);
+         *     armature.dispose();
+         * </pre>
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 释放骨架。 （回收到对象池）
+         * @example
+         * <pre>
+         *     removeChild(armature.display);
+         *     armature.dispose();
+         * </pre>
          * @version DragonBones 3.0
          * @language zh_CN
          */
@@ -2982,6 +3627,7 @@ var dragonBones;
             }
         };
         /**
+         * @internal
          * @private
          */
         Armature.prototype.init = function (armatureData, proxy, display, dragonBones) {
@@ -2998,27 +3644,22 @@ var dragonBones;
             this._animation.animations = this._armatureData.animations;
         };
         /**
-         * 更新骨架和动画。
-         * @param passedTime 两帧之间的时间间隔。 (以秒为单位)
-         * @see dragonBones.IAnimateble
-         * @see dragonBones.WorldClock
-         * @version DragonBones 3.0
-         * @language zh_CN
+         * @inheritDoc
          */
         Armature.prototype.advanceTime = function (passedTime) {
             if (this._lockUpdate) {
                 return;
             }
             if (this._armatureData === null) {
-                console.assert(false, "The armature has been disposed.");
+                console.warn("The armature has been disposed.");
                 return;
             }
             else if (this._armatureData.parent === null) {
-                console.assert(false, "The armature data has been disposed.\nPlease make sure dispose armature before call factory.clear().");
+                console.warn("The armature data has been disposed.\nPlease make sure dispose armature before call factory.clear().");
                 return;
             }
             var prevCacheFrameIndex = this._cacheFrameIndex;
-            // Update nimation.
+            // Update animation.
             this._animation.advanceTime(passedTime);
             // Sort bones and slots.
             if (this._bonesDirty) {
@@ -3039,6 +3680,7 @@ var dragonBones;
                     this._slots[i].update(this._cacheFrameIndex);
                 }
             }
+            // Do actions.
             if (this._actions.length > 0) {
                 this._lockUpdate = true;
                 for (var _i = 0, _a = this._actions; _i < _a.length; _i++) {
@@ -3053,22 +3695,31 @@ var dragonBones;
             this._proxy.dbUpdate();
         };
         /**
-         * 更新骨骼和插槽。 (当骨骼没有动画状态或动画状态播放完成时，骨骼将不在更新)
-         * @param boneName 指定的骨骼名称，如果未设置，将更新所有骨骼。
-         * @param updateSlotDisplay 是否更新插槽的显示对象。
-         * @see dragonBones.Bone
-         * @see dragonBones.Slot
+         * - Forces a specific bone or its owning slot to update the transform or display property in the next frame.
+         * @param boneName - The bone name. (If not set, all bones will be update)
+         * @param updateSlot - Whether to update the bone's slots
+         * @see dragonBones.Bone#invalidUpdate()
+         * @see dragonBones.Slot#invalidUpdate()
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 强制特定骨骼或其拥有的插槽在下一帧更新变换或显示属性。
+         * @param boneName - 骨骼名称。 （如果未设置，将更新所有骨骼）
+         * @param updateSlot - 是否更新骨骼的插槽
+         * @see dragonBones.Bone#invalidUpdate()
+         * @see dragonBones.Slot#invalidUpdate()
          * @version DragonBones 3.0
          * @language zh_CN
          */
-        Armature.prototype.invalidUpdate = function (boneName, updateSlotDisplay) {
+        Armature.prototype.invalidUpdate = function (boneName, updateSlot) {
             if (boneName === void 0) { boneName = null; }
-            if (updateSlotDisplay === void 0) { updateSlotDisplay = false; }
+            if (updateSlot === void 0) { updateSlot = false; }
             if (boneName !== null && boneName.length > 0) {
                 var bone = this.getBone(boneName);
                 if (bone !== null) {
                     bone.invalidUpdate();
-                    if (updateSlotDisplay) {
+                    if (updateSlot) {
                         for (var _i = 0, _a = this._slots; _i < _a.length; _i++) {
                             var slot = _a[_i];
                             if (slot.parent === bone) {
@@ -3083,7 +3734,7 @@ var dragonBones;
                     var bone = _c[_b];
                     bone.invalidUpdate();
                 }
-                if (updateSlotDisplay) {
+                if (updateSlot) {
                     for (var _d = 0, _e = this._slots; _d < _e.length; _d++) {
                         var slot = _e[_d];
                         slot.invalidUpdate();
@@ -3092,9 +3743,20 @@ var dragonBones;
             }
         };
         /**
-         * 判断点是否在所有插槽的自定义包围盒内。
-         * @param x 点的水平坐标。（骨架内坐标系）
-         * @param y 点的垂直坐标。（骨架内坐标系）
+         * - Check whether a specific point is inside a custom bounding box in a slot.
+         * The coordinate system of the point is the inner coordinate system of the armature.
+         * Custom bounding boxes need to be customized in Dragonbones Pro.
+         * @param x - The horizontal coordinate of the point
+         * @param y - The vertical coordinate of the point.
+         * @version DragonBones 5.0
+         * @language en_US
+         */
+        /**
+         * - 检查特定点是否在某个插槽的自定义边界框内。
+         * 点的坐标系为骨架内坐标系。
+         * 自定义边界框需要在 DragonBones Pro 中自定义。
+         * @param x - 点的水平坐标
+         * @param y - 点的垂直坐标
          * @version DragonBones 5.0
          * @language zh_CN
          */
@@ -3108,15 +3770,32 @@ var dragonBones;
             return null;
         };
         /**
-         * 判断线段是否与骨架的所有插槽的自定义包围盒相交。
-         * @param xA 线段起点的水平坐标。（骨架内坐标系）
-         * @param yA 线段起点的垂直坐标。（骨架内坐标系）
-         * @param xB 线段终点的水平坐标。（骨架内坐标系）
-         * @param yB 线段终点的垂直坐标。（骨架内坐标系）
-         * @param intersectionPointA 线段从起点到终点与包围盒相交的第一个交点。（骨架内坐标系）
-         * @param intersectionPointB 线段从终点到起点与包围盒相交的第一个交点。（骨架内坐标系）
-         * @param normalRadians 碰撞点处包围盒切线的法线弧度。 [x: 第一个碰撞点处切线的法线弧度, y: 第二个碰撞点处切线的法线弧度]
-         * @returns 线段从起点到终点相交的第一个自定义包围盒的插槽。
+         * - Check whether a specific segment intersects a custom bounding box for a slot in the armature.
+         * The coordinate system of the segment and intersection is the inner coordinate system of the armature.
+         * Custom bounding boxes need to be customized in Dragonbones Pro.
+         * @param xA - The horizontal coordinate of the beginning of the segment.
+         * @param yA - The vertical coordinate of the beginning of the segment.
+         * @param xB - The horizontal coordinate of the end point of the segment.
+         * @param yB - The vertical coordinate of the end point of the segment.
+         * @param intersectionPointA - The first intersection at which a line segment intersects the bounding box from the beginning to the end.
+         * @param intersectionPointB - The first intersection at which a line segment intersects the bounding box from the end to the beginning.
+         * @param normalRadians - The normal radians of the tangent of the intersection boundary box. [x: Normal radian of the first intersection tangent, y: Normal radian of the second intersection tangent]
+         * @returns The slot of the first custom bounding box where the segment intersects from the start point to the end point.
+         * @version DragonBones 5.0
+         * @language en_US
+         */
+        /**
+         * - 检查特定线段是否与骨架的某个插槽的自定义边界框相交。
+         * 线段和交点的坐标系均为骨架内坐标系。
+         * 自定义边界框需要在 DragonBones Pro 中自定义。
+         * @param xA - 线段起点的水平坐标
+         * @param yA - 线段起点的垂直坐标
+         * @param xB - 线段终点的水平坐标
+         * @param yB - 线段终点的垂直坐标
+         * @param intersectionPointA - 线段从起点到终点与边界框相交的第一个交点
+         * @param intersectionPointB - 线段从终点到起点与边界框相交的第一个交点
+         * @param normalRadians - 交点边界框切线的法线弧度。 [x: 第一个交点切线的法线弧度, y: 第二个交点切线的法线弧度]
+         * @returns 线段从起点到终点相交的第一个自定义边界框的插槽。
          * @version DragonBones 5.0
          * @language zh_CN
          */
@@ -3194,9 +3873,15 @@ var dragonBones;
             return intSlotA;
         };
         /**
-         * 获取指定名称的骨骼。
-         * @param name 骨骼的名称。
-         * @returns 骨骼。
+         * - Get a specific bone.
+         * @param name - The bone name
+         * @see dragonBones.Bone
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 获取特定的骨骼。
+         * @param name - 骨骼名称。
          * @see dragonBones.Bone
          * @version DragonBones 3.0
          * @language zh_CN
@@ -3211,9 +3896,15 @@ var dragonBones;
             return null;
         };
         /**
-         * 通过显示对象获取骨骼。
-         * @param display 显示对象。
-         * @returns 包含这个显示对象的骨骼。
+         * - Get a specific bone by the display.
+         * @param display - The display object
+         * @see dragonBones.Bone
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 通过显示对象获取特定的骨骼。
+         * @param display - 显示对象
          * @see dragonBones.Bone
          * @version DragonBones 3.0
          * @language zh_CN
@@ -3223,9 +3914,15 @@ var dragonBones;
             return slot !== null ? slot.parent : null;
         };
         /**
-         * 获取插槽。
-         * @param name 插槽的名称。
-         * @returns 插槽。
+         * - Get a specific slot.
+         * @param name - The slot name
+         * @see dragonBones.Slot
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 获取特定的插槽。
+         * @param name - 插槽名称。
          * @see dragonBones.Slot
          * @version DragonBones 3.0
          * @language zh_CN
@@ -3240,9 +3937,15 @@ var dragonBones;
             return null;
         };
         /**
-         * 通过显示对象获取插槽。
-         * @param display 显示对象。
-         * @returns 包含这个显示对象的插槽。
+         * - Get a specific slot by the display.
+         * @param display - The display object
+         * @see dragonBones.Slot
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 通过显示对象获取特定的插槽。
+         * @param display - 显示对象
          * @see dragonBones.Slot
          * @version DragonBones 3.0
          * @language zh_CN
@@ -3269,27 +3972,11 @@ var dragonBones;
         /**
          * @deprecated
          */
-        Armature.prototype.removeBone = function (value) {
-            console.assert(value !== null && value.armature === this);
-            value._setParent(null);
-            value._setArmature(null);
-        };
-        /**
-         * @deprecated
-         */
         Armature.prototype.addSlot = function (value, parentName) {
             var bone = this.getBone(parentName);
             console.assert(value !== null && bone !== null);
             value._setArmature(this);
             value._setParent(bone);
-        };
-        /**
-         * @deprecated
-         */
-        Armature.prototype.removeSlot = function (value) {
-            console.assert(value !== null && value.armature === this);
-            value._setParent(null);
-            value._setArmature(null);
         };
         /**
          * @private
@@ -3300,7 +3987,29 @@ var dragonBones;
             }
         };
         /**
-         * 获取所有骨骼。
+         * @deprecated
+         */
+        Armature.prototype.removeBone = function (value) {
+            console.assert(value !== null && value.armature === this);
+            value._setParent(null);
+            value._setArmature(null);
+        };
+        /**
+         * @deprecated
+         */
+        Armature.prototype.removeSlot = function (value) {
+            console.assert(value !== null && value.armature === this);
+            value._setParent(null);
+            value._setArmature(null);
+        };
+        /**
+         * - Get all bones.
+         * @see dragonBones.Bone
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 获取所有的骨骼。
          * @see dragonBones.Bone
          * @version DragonBones 3.0
          * @language zh_CN
@@ -3309,7 +4018,13 @@ var dragonBones;
             return this._bones;
         };
         /**
-         * 获取所有插槽。
+         * - Get all slots.
+         * @see dragonBones.Slot
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 获取所有的插槽。
          * @see dragonBones.Slot
          * @version DragonBones 3.0
          * @language zh_CN
@@ -3318,6 +4033,16 @@ var dragonBones;
             return this._slots;
         };
         Object.defineProperty(Armature.prototype, "flipX", {
+            /**
+             * - Whether to flip the armature horizontally.
+             * @version DragonBones 5.5
+             * @language en_US
+             */
+            /**
+             * - 是否将骨架水平翻转。
+             * @version DragonBones 5.5
+             * @language zh_CN
+             */
             get: function () {
                 return this._flipX;
             },
@@ -3332,6 +4057,16 @@ var dragonBones;
             configurable: true
         });
         Object.defineProperty(Armature.prototype, "flipY", {
+            /**
+             * - Whether to flip the armature vertically.
+             * @version DragonBones 5.5
+             * @language en_US
+             */
+            /**
+             * - 是否将骨架垂直翻转。
+             * @version DragonBones 5.5
+             * @language zh_CN
+             */
             get: function () {
                 return this._flipY;
             },
@@ -3347,10 +4082,28 @@ var dragonBones;
         });
         Object.defineProperty(Armature.prototype, "cacheFrameRate", {
             /**
-             * 动画缓存帧率，当设置的值大于 0 的时，将会开启动画缓存。
+             * - The animation cache frame rate, which turns on the animation cache when the set value is greater than 0.
+             * There is a certain amount of memory overhead to improve performance by caching animation data in memory.
+             * The frame rate should not be set too high, usually with the frame rate of the animation is similar and lower than the program running frame rate.
+             * When the animation cache is turned on, some features will fail, such as the offset property of bone.
+             * @example
+             * <pre>
+             *     armature.cacheFrameRate = 24;
+             * </pre>
+             * @see dragonBones.DragonBonesData#frameRate
+             * @see dragonBones.ArmatureData#frameRate
+             * @version DragonBones 4.5
+             * @language en_US
+             */
+            /**
+             * - 动画缓存帧率，当设置的值大于 0 的时，将会开启动画缓存。
              * 通过将动画数据缓存在内存中来提高运行性能，会有一定的内存开销。
              * 帧率不宜设置的过高，通常跟动画的帧率相当且低于程序运行的帧率。
-             * 开启动画缓存后，某些功能将会失效，比如 Bone 和 Slot 的 offset 属性等。
+             * 开启动画缓存后，某些功能将会失效，比如骨骼的 offset 属性等。
+             * @example
+             * <pre>
+             *     armature.cacheFrameRate = 24;
+             * </pre>
              * @see dragonBones.DragonBonesData#frameRate
              * @see dragonBones.ArmatureData#frameRate
              * @version DragonBones 4.5
@@ -3377,8 +4130,12 @@ var dragonBones;
         });
         Object.defineProperty(Armature.prototype, "name", {
             /**
-             * 骨架名称。
-             * @see dragonBones.ArmatureData#name
+             * - The armature name.
+             * @version DragonBones 3.0
+             * @language en_US
+             */
+            /**
+             * - 骨架名称。
              * @version DragonBones 3.0
              * @language zh_CN
              */
@@ -3390,7 +4147,13 @@ var dragonBones;
         });
         Object.defineProperty(Armature.prototype, "armatureData", {
             /**
-             * 获取骨架数据。
+             * - The armature data.
+             * @see dragonBones.ArmatureData
+             * @version DragonBones 4.5
+             * @language en_US
+             */
+            /**
+             * - 骨架数据。
              * @see dragonBones.ArmatureData
              * @version DragonBones 4.5
              * @language zh_CN
@@ -3403,7 +4166,13 @@ var dragonBones;
         });
         Object.defineProperty(Armature.prototype, "animation", {
             /**
-             * 获得动画控制器。
+             * - The animation player.
+             * @see dragonBones.Animation
+             * @version DragonBones 3.0
+             * @language en_US
+             */
+            /**
+             * - 动画播放器。
              * @see dragonBones.Animation
              * @version DragonBones 3.0
              * @language zh_CN
@@ -3426,7 +4195,14 @@ var dragonBones;
         });
         Object.defineProperty(Armature.prototype, "eventDispatcher", {
             /**
-             * @pivate
+             * - The EventDispatcher instance of the armature.
+             * @version DragonBones 4.5
+             * @language en_US
+             */
+            /**
+             * - 该骨架的 EventDispatcher 实例。
+             * @version DragonBones 4.5
+             * @language zh_CN
              */
             get: function () {
                 return this._proxy;
@@ -3436,7 +4212,16 @@ var dragonBones;
         });
         Object.defineProperty(Armature.prototype, "display", {
             /**
-             * 获取显示容器，插槽的显示对象都会以此显示容器为父级，根据渲染平台的不同，类型会不同，通常是 DisplayObjectContainer 类型。
+             * - The display container.
+             * The display of the slot is displayed as the parent.
+             * Depending on the rendering engine, the type will be different, usually the DisplayObjectContainer type.
+             * @version DragonBones 3.0
+             * @language en_US
+             */
+            /**
+             * - 显示容器实例。
+             * 插槽的显示对象都会以此显示容器为父级。
+             * 根据渲染引擎的不同，类型会不同，通常是 DisplayObjectContainer 类型。
              * @version DragonBones 3.0
              * @language zh_CN
              */
@@ -3448,9 +4233,7 @@ var dragonBones;
         });
         Object.defineProperty(Armature.prototype, "replacedTexture", {
             /**
-             * @language zh_CN
-             * 替换骨架的主贴图，根据渲染引擎的不同，提供不同的贴图数据。
-             * @version DragonBones 4.5
+             * @private
              */
             get: function () {
                 return this._replacedTexture;
@@ -3505,7 +4288,13 @@ var dragonBones;
         });
         Object.defineProperty(Armature.prototype, "parent", {
             /**
-             * 获取父插槽。 (当此骨架是某个骨架的子骨架时，可以通过此属性向上查找从属关系)
+             * - Get the parent slot which the armature belongs to.
+             * @see dragonBones.Slot
+             * @version DragonBones 4.5
+             * @language en_US
+             */
+            /**
+             * - 该骨架所属的父插槽。
              * @see dragonBones.Slot
              * @version DragonBones 4.5
              * @language zh_CN
@@ -3518,48 +4307,72 @@ var dragonBones;
         });
         /**
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.Armature#replacedTexture
+         * @private
          */
         Armature.prototype.replaceTexture = function (texture) {
             this.replacedTexture = texture;
         };
         /**
+         * - Deprecated, please refer to {@link #eventDispatcher}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.Armature#eventDispatcher
+         * @language en_US
+         */
+        /**
+         * - 已废弃，请参考 {@link #eventDispatcher}。
+         * @deprecated
+         * @language zh_CN
          */
         Armature.prototype.hasEventListener = function (type) {
             return this._proxy.hasDBEventListener(type);
         };
         /**
+         * - Deprecated, please refer to {@link #eventDispatcher}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.Armature#eventDispatcher
+         * @language en_US
+         */
+        /**
+         * - 已废弃，请参考 {@link #eventDispatcher}。
+         * @deprecated
+         * @language zh_CN
          */
         Armature.prototype.addEventListener = function (type, listener, target) {
             this._proxy.addDBEventListener(type, listener, target);
         };
         /**
+         * - Deprecated, please refer to {@link #eventDispatcher}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.Armature#eventDispatcher
+         * @language en_US
+         */
+        /**
+         * - 已废弃，请参考 {@link #eventDispatcher}。
+         * @deprecated
+         * @language zh_CN
          */
         Armature.prototype.removeEventListener = function (type, listener, target) {
             this._proxy.removeDBEventListener(type, listener, target);
         };
         /**
+         * - Deprecated, please refer to {@link #cacheFrameRate}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see #cacheFrameRate
+         * @language en_US
+         */
+        /**
+         * - 已废弃，请参考 {@link #cacheFrameRate}。
+         * @deprecated
+         * @language zh_CN
          */
         Armature.prototype.enableAnimationCache = function (frameRate) {
             this.cacheFrameRate = frameRate;
         };
         /**
+         * - Deprecated, please refer to {@link #display}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see #display
+         * @language en_US
+         */
+        /**
+         * - 已废弃，请参考 {@link #display}。
+         * @deprecated
+         * @language zh_CN
          */
         Armature.prototype.getDisplay = function () {
             return this._display;
@@ -3568,10 +4381,39 @@ var dragonBones;
     }(dragonBones_1.BaseObject));
     dragonBones_1.Armature = Armature;
 })(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 var dragonBones;
 (function (dragonBones) {
     /**
-     * 基础变换对象。
+     * - The base class of the transform object.
+     * @see dragonBones.Transform
+     * @version DragonBones 4.5
+     * @language en_US
+     */
+    /**
+     * - 变换对象的基类。
+     * @see dragonBones.Transform
      * @version DragonBones 4.5
      * @language zh_CN
      */
@@ -3580,21 +4422,34 @@ var dragonBones;
         function TransformObject() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
             /**
-             * 相对于骨架坐标系的矩阵。
+             * - A matrix relative to the armature coordinate system.
+             * @version DragonBones 3.0
+             * @language en_US
+             */
+            /**
+             * - 相对于骨架坐标系的矩阵。
              * @version DragonBones 3.0
              * @language zh_CN
              */
             _this.globalTransformMatrix = new dragonBones.Matrix();
             /**
-             * 相对于骨架坐标系的变换。
-             * @see dragonBones.Transform
+             * - A transform relative to the armature coordinate system.
+             * @version DragonBones 3.0
+             * @language en_US
+             */
+            /**
+             * - 相对于骨架坐标系的变换。
              * @version DragonBones 3.0
              * @language zh_CN
              */
             _this.global = new dragonBones.Transform();
             /**
-             * 相对于骨架或父骨骼坐标系的偏移变换。
-             * @see dragonBones.Transform
+             * - The offset transform relative to the armature or the parent bone coordinate system.
+             * @version DragonBones 3.0
+             * @language en_US
+             */
+            /**
+             * - 相对于骨架或父骨骼坐标系的偏移变换。
              * @version DragonBones 3.0
              * @language zh_CN
              */
@@ -3639,8 +4494,12 @@ var dragonBones;
         };
         Object.defineProperty(TransformObject.prototype, "armature", {
             /**
-             * 所属的骨架。
-             * @see dragonBones.Armature
+             * - The armature to which it belongs.
+             * @version DragonBones 3.0
+             * @language en_US
+             */
+            /**
+             * - 所属的骨架。
              * @version DragonBones 3.0
              * @language zh_CN
              */
@@ -3652,8 +4511,12 @@ var dragonBones;
         });
         Object.defineProperty(TransformObject.prototype, "parent", {
             /**
-             * 所属的父骨骼。
-             * @see dragonBones.Bone
+             * - The parent bone to which it belongs.
+             * @version DragonBones 3.0
+             * @language en_US
+             */
+            /**
+             * - 所属的父骨骼。
              * @version DragonBones 3.0
              * @language zh_CN
              */
@@ -3679,11 +4542,43 @@ var dragonBones;
     }(dragonBones.BaseObject));
     dragonBones.TransformObject = TransformObject;
 })(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 var dragonBones;
 (function (dragonBones) {
     /**
-     * 骨骼，一个骨架中可以包含多个骨骼，骨骼以树状结构组成骨架。
-     * 骨骼在骨骼动画体系中是最重要的逻辑单元之一，负责动画中的平移旋转缩放的实现。
+     * - Bone is one of the most important logical units in the armature animation system,
+     * and is responsible for the realization of translate, rotation, scaling in the animations.
+     * A armature can contain multiple bones.
+     * @see dragonBones.BoneData
+     * @see dragonBones.Armature
+     * @see dragonBones.Slot
+     * @version DragonBones 3.0
+     * @language en_US
+     */
+    /**
+     * - 骨骼在骨骼动画体系中是最重要的逻辑单元之一，负责动画中的平移、旋转、缩放的实现。
+     * 一个骨架中可以包含多个骨骼。
      * @see dragonBones.BoneData
      * @see dragonBones.Armature
      * @see dragonBones.Slot
@@ -3705,7 +4600,7 @@ var dragonBones;
             return "[class dragonBones.Bone]";
         };
         /**
-         * @private
+         * @inheritDoc
          */
         Bone.prototype._onClear = function () {
             _super.prototype._onClear.call(this);
@@ -3861,8 +4756,7 @@ var dragonBones;
             }
         };
         /**
-         * @internal
-         * @private
+         * @inheritDoc
          */
         Bone.prototype._setArmature = function (value) {
             if (this._armature === value) {
@@ -3897,6 +4791,7 @@ var dragonBones;
             }
         };
         /**
+         * @internal
          * @private
          */
         Bone.prototype.init = function (boneData) {
@@ -3908,6 +4803,7 @@ var dragonBones;
             this.origin = this._boneData.transform;
         };
         /**
+         * @internal
          * @private
          */
         Bone.prototype.update = function (cacheFrameIndex) {
@@ -3982,6 +4878,7 @@ var dragonBones;
             this._localDirty = true;
         };
         /**
+         * @internal
          * @private
          */
         Bone.prototype.updateByConstraint = function () {
@@ -3994,8 +4891,27 @@ var dragonBones;
             }
         };
         /**
-         * 强制骨骼在下一帧更新变换。
-         * 当该骨骼没有动画状态或其动画状态播放完成时，骨骼将不在继续更新，而此时由于某些原因必须更新骨骼是，则需要显式调用该方法。（比如设置骨骼的 offset 属性，或更改一个已经播放完成了的动画状态的 weight 属性等）
+         * - Forces the bone to update the transform in the next frame.
+         * When the bone is not animated or its animation state is finished, the bone will not continue to update,
+         * and when the skeleton must be updated for some reason, the method needs to be called explicitly.
+         * @example
+         * <pre>
+         *     let bone = armature.getBone("arm");
+         *     bone.offset.scaleX = 2.0;
+         *     bone.invalidUpdate();
+         * </pre>
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 强制骨骼在下一帧更新变换。
+         * 当该骨骼没有动画状态或其动画状态播放完成时，骨骼将不在继续更新，而此时由于某些原因必须更新骨骼时，则需要显式调用该方法。
+         * @example
+         * <pre>
+         *     let bone = armature.getBone("arm");
+         *     bone.offset.scaleX = 2.0;
+         *     bone.invalidUpdate();
+         * </pre>
          * @version DragonBones 3.0
          * @language zh_CN
          */
@@ -4003,16 +4919,14 @@ var dragonBones;
             this._transformDirty = true;
         };
         /**
-         * Check to see if a specific skeleton or slot is included.
-         * @see dragonBones.TransformObject
+         * - Check whether the bone contains a specific bone or slot.
          * @see dragonBones.Bone
          * @see dragonBones.Slot
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
-         * 检查是否包含特定的骨骼或插槽。
-         * @see dragonBones.TransformObject
+         * - 检查该骨骼是否包含特定的骨骼或插槽。
          * @see dragonBones.Bone
          * @see dragonBones.Slot
          * @version DragonBones 3.0
@@ -4030,14 +4944,12 @@ var dragonBones;
         };
         Object.defineProperty(Bone.prototype, "boneData", {
             /**
-             * Bone data.
-             * @see dragonBones.BoneData
+             * - The bone data.
              * @version DragonBones 4.5
              * @language en_US
              */
             /**
-             * 骨骼数据。
-             * @see dragonBones.BoneData
+             * - 骨骼数据。
              * @version DragonBones 4.5
              * @language zh_CN
              */
@@ -4049,14 +4961,14 @@ var dragonBones;
         });
         Object.defineProperty(Bone.prototype, "visible", {
             /**
-             * Controls the visibility of all slots in this bone.
+             * - The visible of all slots in the bone.
              * @default true
              * @see dragonBones.Slot#visible
              * @version DragonBones 3.0
              * @language en_US
              */
             /**
-             * 控制此骨骼所有插槽的可见。
+             * - 此骨骼所有插槽的可见。
              * @default true
              * @see dragonBones.Slot#visible
              * @version DragonBones 3.0
@@ -4082,14 +4994,12 @@ var dragonBones;
         });
         Object.defineProperty(Bone.prototype, "name", {
             /**
-             * Bone name.
-             * @see dragonBones.BoneData#name
+             * - The bone name.
              * @version DragonBones 3.0
              * @language en_US
              */
             /**
-             * 骨骼名称。
-             * @see dragonBones.BoneData#name
+             * - 骨骼名称。
              * @version DragonBones 3.0
              * @language zh_CN
              */
@@ -4100,16 +5010,14 @@ var dragonBones;
             configurable: true
         });
         /**
-         * Deprecated.
-         * @see dragonBones.Armature#getBones()
-         * @language en_US
+         * - Deprecated, please refer to {@link dragonBones.Armature#getBones()}.
          * @deprecated
+         * @language en_US
          */
         /**
-         * 已废弃。
-         * @see dragonBones.Armature#getBones()
-         * @language zh_CN
+         * - 已废弃，请参考 {@link dragonBones.Armature#getBones()}。
          * @deprecated
+         * @language zh_CN
          */
         Bone.prototype.getBones = function () {
             var bones = new Array();
@@ -4122,16 +5030,14 @@ var dragonBones;
             return bones;
         };
         /**
-         * Deprecated.
-         * @see dragonBones.Armature#getSlots()
-         * @language en_US
+         * - Deprecated, please refer to {@link dragonBones.Armature#getSlots()}.
          * @deprecated
+         * @language en_US
          */
         /**
-         * 已废弃。
-         * @see dragonBones.Armature#getSlots()
-         * @language zh_CN
+         * - 已废弃，请参考 {@link dragonBones.Armature#getSlots()}。
          * @deprecated
+         * @language zh_CN
          */
         Bone.prototype.getSlots = function () {
             var slots = new Array();
@@ -4145,16 +5051,14 @@ var dragonBones;
         };
         Object.defineProperty(Bone.prototype, "slot", {
             /**
-             * Deprecated.
-             * @see dragonBones.Armature#getSlot()
-             * @language en_US
+             * - Deprecated, please refer to {@link dragonBones.Armature#getSlot()}.
              * @deprecated
+             * @language en_US
              */
             /**
-             * 已废弃。
-             * @see dragonBones.Armature#getSlot()
-             * @language zh_CN
+             * - 已废弃，请参考 {@link dragonBones.Armature#getSlot()}。
              * @deprecated
+             * @language zh_CN
              */
             get: function () {
                 for (var _i = 0, _a = this._armature.getSlots(); _i < _a.length; _i++) {
@@ -4172,10 +5076,45 @@ var dragonBones;
     }(dragonBones.TransformObject));
     dragonBones.Bone = Bone;
 })(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 var dragonBones;
 (function (dragonBones) {
     /**
-     * 插槽，附着在骨骼上，控制显示对象的显示状态和属性。
+     * - The slot attached to the armature, controls the display status and properties of the display object.
+     * A bone can contain multiple slots.
+     * A slot can contain multiple display objects, displaying only one of the display objects at a time,
+     * but you can toggle the display object into frame animation while the animation is playing.
+     * The display object can be a normal texture, or it can be a display of a child armature, a grid display object,
+     * and a custom other display object.
+     * @see dragonBones.Armature
+     * @see dragonBones.Bone
+     * @see dragonBones.SlotData
+     * @version DragonBones 3.0
+     * @language en_US
+     */
+    /**
+     * - 插槽附着在骨骼上，控制显示对象的显示状态和属性。
      * 一个骨骼上可以包含多个插槽。
      * 一个插槽中可以包含多个显示对象，同一时间只能显示其中的一个显示对象，但可以在动画播放的过程中切换显示对象实现帧动画。
      * 显示对象可以是普通的图片纹理，也可以是子骨架的显示容器，网格显示对象，还可以是自定义的其他显示对象。
@@ -4194,10 +5133,12 @@ var dragonBones;
              */
             _this._localMatrix = new dragonBones.Matrix();
             /**
+             * @internal
              * @private
              */
             _this._colorTransform = new dragonBones.ColorTransform();
             /**
+             * @internal
              * @private
              */
             _this._ffdVertices = [];
@@ -4224,7 +5165,7 @@ var dragonBones;
             return _this;
         }
         /**
-         * @private
+         * @inheritDoc
          */
         Slot.prototype._onClear = function () {
             _super.prototype._onClear.call(this);
@@ -4515,8 +5456,7 @@ var dragonBones;
             return false;
         };
         /**
-         * @internal
-         * @private
+         * @inheritDoc
          */
         Slot.prototype._setArmature = function (value) {
             if (this._armature === value) {
@@ -4607,21 +5547,24 @@ var dragonBones;
             return this._displayDirty;
         };
         /**
+         * @internal
          * @private
          */
         Slot.prototype.init = function (slotData, displayDatas, rawDisplay, meshDisplay) {
             if (this._slotData !== null) {
                 return;
             }
+            this._slotData = slotData;
+            //
             this._visibleDirty = true;
             this._blendModeDirty = true;
             this._colorDirty = true;
-            this._slotData = slotData;
             this._blendMode = this._slotData.blendMode;
             this._zOrder = this._slotData.zOrder;
             this._colorTransform.copyFrom(this._slotData.color);
             this._rawDisplay = rawDisplay;
             this._meshDisplay = meshDisplay;
+            //
             this.rawDisplayDatas = displayDatas; //
         };
         /**
@@ -4749,10 +5692,20 @@ var dragonBones;
             this._displayDatas[displayIndex] = value;
         };
         /**
-         * 判断指定的点是否在插槽的自定义包围盒内。
-         * @param x 点的水平坐标。（骨架内坐标系）
-         * @param y 点的垂直坐标。（骨架内坐标系）
-         * @param color 指定的包围盒颜色。 [0: 与所有包围盒进行判断, N: 仅当包围盒的颜色为 N 时才进行判断]
+         * - Check whether a specific point is inside a custom bounding box in the slot.
+         * The coordinate system of the point is the inner coordinate system of the armature.
+         * Custom bounding boxes need to be customized in Dragonbones Pro.
+         * @param x - The horizontal coordinate of the point
+         * @param y - The vertical coordinate of the point.
+         * @version DragonBones 5.0
+         * @language en_US
+         */
+        /**
+         * - 检查特定点是否在插槽的自定义边界框内。
+         * 点的坐标系为骨架内坐标系。
+         * 自定义边界框需要在 DragonBones Pro 中自定义。
+         * @param x - 点的水平坐标
+         * @param y - 点的垂直坐标
          * @version DragonBones 5.0
          * @language zh_CN
          */
@@ -4767,14 +5720,31 @@ var dragonBones;
             return this._boundingBoxData.containsPoint(Slot._helpPoint.x, Slot._helpPoint.y);
         };
         /**
-         * 判断指定的线段与插槽的自定义包围盒是否相交。
-         * @param xA 线段起点的水平坐标。（骨架内坐标系）
-         * @param yA 线段起点的垂直坐标。（骨架内坐标系）
-         * @param xB 线段终点的水平坐标。（骨架内坐标系）
-         * @param yB 线段终点的垂直坐标。（骨架内坐标系）
-         * @param intersectionPointA 线段从起点到终点与包围盒相交的第一个交点。（骨架内坐标系）
-         * @param intersectionPointB 线段从终点到起点与包围盒相交的第一个交点。（骨架内坐标系）
-         * @param normalRadians 碰撞点处包围盒切线的法线弧度。 [x: 第一个碰撞点处切线的法线弧度, y: 第二个碰撞点处切线的法线弧度]
+         * - Check whether a specific segment intersects a custom bounding box for the slot.
+         * The coordinate system of the segment and intersection is the inner coordinate system of the armature.
+         * Custom bounding boxes need to be customized in Dragonbones Pro.
+         * @param xA - The horizontal coordinate of the beginning of the segment.
+         * @param yA - The vertical coordinate of the beginning of the segment.
+         * @param xB - The horizontal coordinate of the end point of the segment.
+         * @param yB - The vertical coordinate of the end point of the segment.
+         * @param intersectionPointA - The first intersection at which a line segment intersects the bounding box from the beginning to the end.
+         * @param intersectionPointB - The first intersection at which a line segment intersects the bounding box from the end to the beginning.
+         * @param normalRadians - The normal radians of the tangent of the intersection boundary box. [x: Normal radian of the first intersection tangent, y: Normal radian of the second intersection tangent]
+         * @returns Intersection situation. [1: Disjoint and segments within the bounding box, 0: Disjoint, 1: Intersecting and having a nodal point and ending in the bounding box, 2: Intersecting and having a nodal point and starting at the bounding box, 3: Intersecting and having two intersections, N: Intersecting and having N intersections]
+         * @version DragonBones 5.0
+         * @language en_US
+         */
+        /**
+         * - 检查特定线段是否与插槽的自定义边界框相交。
+         * 线段和交点的坐标系均为骨架内坐标系。
+         * 自定义边界框需要在 DragonBones Pro 中自定义。
+         * @param xA - 线段起点的水平坐标
+         * @param yA - 线段起点的垂直坐标
+         * @param xB - 线段终点的水平坐标
+         * @param yB - 线段终点的垂直坐标
+         * @param intersectionPointA - 线段从起点到终点与边界框相交的第一个交点
+         * @param intersectionPointB - 线段从终点到起点与边界框相交的第一个交点
+         * @param normalRadians - 交点边界框切线的法线弧度。 [x: 第一个交点切线的法线弧度, y: 第二个交点切线的法线弧度]
          * @returns 相交的情况。 [-1: 不相交且线段在包围盒内, 0: 不相交, 1: 相交且有一个交点且终点在包围盒内, 2: 相交且有一个交点且起点在包围盒内, 3: 相交且有两个交点, N: 相交且有 N 个交点]
          * @version DragonBones 5.0
          * @language zh_CN
@@ -4827,7 +5797,12 @@ var dragonBones;
             return intersectionCount;
         };
         /**
-         * 在下一帧更新显示对象的状态。
+         * - Forces the slot to update the state of the display object in the next frame.
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
+         * - 强制插槽在下一帧更新显示对象的状态。
          * @version DragonBones 4.5
          * @language zh_CN
          */
@@ -4837,7 +5812,13 @@ var dragonBones;
         };
         Object.defineProperty(Slot.prototype, "visible", {
             /**
-             * 控制此插槽的可见。
+             * - The visible of slot's display object.
+             * @default true
+             * @version DragonBones 5.6
+             * @language en_US
+             */
+            /**
+             * - 插槽的显示对象的可见。
              * @default true
              * @version DragonBones 5.6
              * @language zh_CN
@@ -4857,7 +5838,24 @@ var dragonBones;
         });
         Object.defineProperty(Slot.prototype, "displayIndex", {
             /**
-             * 此时显示的显示对象在显示列表中的索引。
+             * - The index of the display object displayed in the display list.
+             * @example
+             * <pre>
+             *     let slot = armature.getSlot("weapon");
+             *     slot.displayIndex = 3;
+             *     slot.displayController = "none";
+             * </pre>
+             * @version DragonBones 4.5
+             * @language en_US
+             */
+            /**
+             * - 此时显示的显示对象在显示列表中的索引。
+             * @example
+             * <pre>
+             *     let slot = armature.getSlot("weapon");
+             *     slot.displayIndex = 3;
+             *     slot.displayController = "none";
+             * </pre>
              * @version DragonBones 4.5
              * @language zh_CN
              */
@@ -4874,7 +5872,13 @@ var dragonBones;
         });
         Object.defineProperty(Slot.prototype, "name", {
             /**
-             * 插槽名称。
+             * - The slot name.
+             * @see dragonBones.SlotData#name
+             * @version DragonBones 3.0
+             * @language en_US
+             */
+            /**
+             * - 插槽名称。
              * @see dragonBones.SlotData#name
              * @version DragonBones 3.0
              * @language zh_CN
@@ -4887,7 +5891,12 @@ var dragonBones;
         });
         Object.defineProperty(Slot.prototype, "displayList", {
             /**
-             * 包含显示对象或子骨架的显示列表。
+             * - Contains a display list of display objects or child armatures.
+             * @version DragonBones 3.0
+             * @language en_US
+             */
+            /**
+             * - 包含显示对象或子骨架的显示列表。
              * @version DragonBones 3.0
              * @language zh_CN
              */
@@ -4924,7 +5933,13 @@ var dragonBones;
         });
         Object.defineProperty(Slot.prototype, "slotData", {
             /**
-             * 获取插槽数据。
+             * - The slot data.
+             * @see dragonBones.SlotData
+             * @version DragonBones 4.5
+             * @language en_US
+             */
+            /**
+             * - 插槽数据。
              * @see dragonBones.SlotData
              * @version DragonBones 4.5
              * @language zh_CN
@@ -4963,9 +5978,13 @@ var dragonBones;
         });
         Object.defineProperty(Slot.prototype, "boundingBoxData", {
             /**
-             * 插槽此时的自定义包围盒数据。
-             * @see dragonBones.Armature
-             * @version DragonBones 3.0
+             * - The custom bounding box data for the slot at current time.
+             * @version DragonBones 5.0
+             * @language en_US
+             */
+            /**
+             * - 插槽此时的自定义包围盒数据。
+             * @version DragonBones 5.0
              * @language zh_CN
              */
             get: function () {
@@ -4996,7 +6015,22 @@ var dragonBones;
         });
         Object.defineProperty(Slot.prototype, "display", {
             /**
-             * 此时显示的显示对象。
+             * - The display object that the slot displays at this time.
+             * @example
+             * <pre>
+             *     let slot = armature.getSlot("text");
+             *     slot.display = new yourEngine.TextField();
+             * </pre>
+             * @version DragonBones 3.0
+             * @language en_US
+             */
+            /**
+             * - 插槽此时显示的显示对象。
+             * @example
+             * <pre>
+             *     let slot = armature.getSlot("text");
+             *     slot.display = new yourEngine.TextField();
+             * </pre>
              * @version DragonBones 3.0
              * @language zh_CN
              */
@@ -5028,8 +6062,22 @@ var dragonBones;
         });
         Object.defineProperty(Slot.prototype, "childArmature", {
             /**
-             * 此时显示的子骨架。
-             * @see dragonBones.Armature
+             * - The child armature that the slot displayed at current time.
+             * @example
+             * <pre>
+             *     let slot = armature.getSlot("weapon");
+             *     slot.childArmature = factory.buildArmature("weapon_blabla", "weapon_blabla_project");
+             * </pre>
+             * @version DragonBones 3.0
+             * @language en_US
+             */
+            /**
+             * - 插槽此时显示的子骨架。
+             * @example
+             * <pre>
+             *     let slot = armature.getSlot("weapon");
+             *     slot.childArmature = factory.buildArmature("weapon_blabla", "weapon_blabla_project");
+             * </pre>
              * @version DragonBones 3.0
              * @language zh_CN
              */
@@ -5046,17 +6094,27 @@ var dragonBones;
             configurable: true
         });
         /**
+         * - Deprecated, please refer to {@link #display}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see #display
+         * @language en_US
+         */
+        /**
+         * - 已废弃，请参考 {@link #display}。
+         * @deprecated
+         * @language zh_CN
          */
         Slot.prototype.getDisplay = function () {
-            return this._display;
+            return this.display;
         };
         /**
+         * - Deprecated, please refer to {@link #display}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see #display
+         * @language en_US
+         */
+        /**
+         * - 已废弃，请参考 {@link #display}。
+         * @deprecated
+         * @language zh_CN
          */
         Slot.prototype.setDisplay = function (value) {
             this.display = value;
@@ -5065,11 +6123,33 @@ var dragonBones;
     }(dragonBones.TransformObject));
     dragonBones.Slot = Slot;
 })(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 var dragonBones;
 (function (dragonBones) {
     /**
-     * @private
      * @internal
+     * @private
      */
     var Constraint = (function (_super) {
         __extends(Constraint, _super);
@@ -5096,8 +6176,8 @@ var dragonBones;
     }(dragonBones.BaseObject));
     dragonBones.Constraint = Constraint;
     /**
-     * @private
      * @internal
+     * @private
      */
     var IKConstraint = (function (_super) {
         __extends(IKConstraint, _super);
@@ -5118,13 +6198,11 @@ var dragonBones;
             var ikGlobal = this._target.global;
             var global = this._bone.global;
             var globalTransformMatrix = this._bone.globalTransformMatrix;
-            // const boneLength = this.bone.boneData.length;
-            // const x = globalTransformMatrix.a * boneLength; 
-            var ikRadian = Math.atan2(ikGlobal.y - global.y, ikGlobal.x - global.x);
+            var radian = Math.atan2(ikGlobal.y - global.y, ikGlobal.x - global.x);
             if (global.scaleX < 0.0) {
-                ikRadian += Math.PI;
+                radian += Math.PI;
             }
-            global.rotation += (ikRadian - global.rotation) * this._weight;
+            global.rotation += (radian - global.rotation) * this._weight;
             global.toMatrix(globalTransformMatrix);
         };
         IKConstraint.prototype._computeB = function () {
@@ -5192,7 +6270,7 @@ var dragonBones;
             if (global.scaleX < 0.0) {
                 radianB += Math.PI;
             }
-            global.rotation = parentGlobal.rotation + dragonBones.Transform.normalizeRadian(radianB - parentGlobal.rotation - rawRadian + rawParentRadian) * this._weight;
+            global.rotation = parentGlobal.rotation + rawRadian - rawParentRadian + dragonBones.Transform.normalizeRadian(radianB - dR - rawRadian) * this._weight;
             global.toMatrix(globalTransformMatrix);
         };
         IKConstraint.prototype.init = function (constraintData, armature) {
@@ -5201,12 +6279,11 @@ var dragonBones;
             }
             this._constraintData = constraintData;
             this._armature = armature;
-            this._target = armature.getBone(this._constraintData.target.name);
-            this._bone = armature.getBone(this._constraintData.bone.name);
-            this._root = this._constraintData.root !== null ? armature.getBone(this._constraintData.root.name) : null;
+            this._target = this._armature.getBone(this._constraintData.target.name);
+            this._bone = this._armature.getBone(this._constraintData.bone.name);
+            this._root = this._constraintData.root !== null ? this._armature.getBone(this._constraintData.root.name) : null;
             {
                 var ikConstraintData = this._constraintData;
-                //
                 this._scaleEnabled = ikConstraintData.scaleEnabled;
                 this._bendPositive = ikConstraintData.bendPositive;
                 this._weight = ikConstraintData.weight;
@@ -5214,11 +6291,13 @@ var dragonBones;
             this._bone._hasConstraint = true;
         };
         IKConstraint.prototype.update = function () {
-            this._bone.updateByConstraint();
             if (this._root === null) {
+                this._bone.updateByConstraint();
                 this._computeA();
             }
             else {
+                this._root.updateByConstraint();
+                this._bone.updateByConstraint();
                 this._computeB();
             }
         };
@@ -5235,17 +6314,39 @@ var dragonBones;
     }(Constraint));
     dragonBones.IKConstraint = IKConstraint;
 })(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 var dragonBones;
 (function (dragonBones) {
     /**
-     * Worldclock provides clock support for animations, advance time for each IAnimatable object added to the clock.
+     * - Worldclock provides clock support for animations, advance time for each IAnimatable object added to the instance.
      * @see dragonBones.IAnimateble
      * @see dragonBones.Armature
      * @version DragonBones 3.0
      * @language en_US
      */
     /**
-     * WorldClock 对动画提供时钟支持，为每个加入到时钟的 IAnimatable 对象更新时间。
+     * - WorldClock 对动画提供时钟支持，为每个加入到该实例的 IAnimatable 对象更新时间。
      * @see dragonBones.IAnimateble
      * @see dragonBones.Armature
      * @version DragonBones 3.0
@@ -5253,13 +6354,13 @@ var dragonBones;
      */
     var WorldClock = (function () {
         /**
-         * Creating a Worldclock instance. Typically, you do not need to create Worldclock instance.
+         * - Creating a Worldclock instance. Typically, you do not need to create Worldclock instance.
          * When multiple Worldclock instances are running at different speeds, can achieving some specific animation effects, such as bullet time.
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
-         * 创建一个 WorldClock 实例。通常并不需要创建 WorldClock 实例。
+         * - 创建一个 WorldClock 实例。通常并不需要创建 WorldClock 实例。
          * 当多个 WorldClock 实例使用不同的速度运行时，可以实现一些特殊的动画效果，比如子弹时间等。
          * @version DragonBones 3.0
          * @language zh_CN
@@ -5267,25 +6368,25 @@ var dragonBones;
         function WorldClock(time) {
             if (time === void 0) { time = -1.0; }
             /**
-             * Current time. (In seconds)
+             * - Current time. (In seconds)
              * @version DragonBones 3.0
              * @language en_US
              */
             /**
-             * 当前的时间。 (以秒为单位)
+             * - 当前的时间。 (以秒为单位)
              * @version DragonBones 3.0
              * @language zh_CN
              */
             this.time = 0.0;
             /**
-             * Time elapsed speed, used to control animation speed-shift play.
+             * - The play speed, used to control animation speed-shift play.
              * [0: Stop play, (0~1): Slow play, 1: Normal play, (1~N): Fast play]
              * @default 1.0
              * @version DragonBones 3.0
              * @language en_US
              */
             /**
-             * 时间流逝速度，用于控制动画变速播放。
+             * - 播放速度，用于控制动画变速播放。
              * [0: 停止播放, (0~1): 慢速播放, 1: 正常播放, (1~N): 快速播放]
              * @default 1.0
              * @version DragonBones 3.0
@@ -5302,14 +6403,14 @@ var dragonBones;
             }
         }
         /**
-         * Advance time for all IAnimatable instances.
-         * @param passedTime Passed time [-1: Automatically calculates the time difference between the current frame and the previous frame, [0~N): Passed time] (In seconds)
+         * - Advance time for all IAnimatable instances.
+         * @param passedTime - Passed time. [-1: Automatically calculates the time difference between the current frame and the previous frame, [0~N): Passed time] (In seconds)
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
-         * 为所有的 IAnimatable 实例更新时间。
-         * @param passedTime 前进的时间 [-1: 自动计算当前帧与上一帧的时间差, [0~N): 前进的时间] (以秒为单位)
+         * - 为所有的 IAnimatable 实例更新时间。
+         * @param passedTime - 前进的时间。 [-1: 自动计算当前帧与上一帧的时间差, [0~N): 前进的时间] (以秒为单位)
          * @version DragonBones 3.0
          * @language zh_CN
          */
@@ -5361,14 +6462,14 @@ var dragonBones;
             }
         };
         /**
-         * Check whether contains a specific instance of IAnimatable.
-         * @param value The IAnimatable instance
+         * - Check whether contains a specific instance of IAnimatable.
+         * @param value - The IAnimatable instance
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
-         * 检查是否包含特定的 IAnimatable 实例。
-         * @param value IAnimatable 实例
+         * - 检查是否包含特定的 IAnimatable 实例。
+         * @param value - IAnimatable 实例
          * @version DragonBones 3.0
          * @language zh_CN
          */
@@ -5383,14 +6484,14 @@ var dragonBones;
             return ancestor === this;
         };
         /**
-         * Add IAnimatable instance.
-         * @param value The IAnimatable instance
+         * - Add IAnimatable instance.
+         * @param value - The IAnimatable instance
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
-         * 添加 IAnimatable 实例。
-         * @param value IAnimatable 实例
+         * - 添加 IAnimatable 实例。
+         * @param value - IAnimatable 实例
          * @version DragonBones 3.0
          * @language zh_CN
          */
@@ -5401,14 +6502,14 @@ var dragonBones;
             }
         };
         /**
-         * Removes a specified IAnimatable instance.
-         * @param value The IAnimatable instance
+         * - Removes a specified IAnimatable instance.
+         * @param value - The IAnimatable instance
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
-         * 移除特定的 IAnimatable 实例。
-         * @param value IAnimatable 实例
+         * - 移除特定的 IAnimatable 实例。
+         * @param value - IAnimatable 实例
          * @version DragonBones 3.0
          * @language zh_CN
          */
@@ -5420,12 +6521,12 @@ var dragonBones;
             }
         };
         /**
-         * Clear all IAnimatable instances.
+         * - Clear all IAnimatable instances.
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
-         * 清除所有的 IAnimatable 实例。
+         * - 清除所有的 IAnimatable 实例。
          * @version DragonBones 3.0
          * @language zh_CN
          */
@@ -5460,26 +6561,53 @@ var dragonBones;
             configurable: true
         });
         /**
-         * Deprecated.
-         * @see dragonBones.BaseFactory#clock
-         * @language en_US
+         * - Deprecated, please refer to {@link dragonBones.BaseFactory#clock}.
          * @deprecated
+         * @language en_US
          */
         /**
-         * 已废弃。
-         * @see dragonBones.BaseFactory#clock
-         * @language zh_CN
+         * - 已废弃，请参考 {@link dragonBones.BaseFactory#clock}。
          * @deprecated
+         * @language zh_CN
          */
         WorldClock.clock = new WorldClock();
         return WorldClock;
     }());
     dragonBones.WorldClock = WorldClock;
 })(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 var dragonBones;
 (function (dragonBones) {
     /**
-     * 动画控制器，用来播放动画数据，管理动画状态。
+     * - The animation player is used to play the animation data and manage the animation states.
+     * @see dragonBones.AnimationData
+     * @see dragonBones.AnimationState
+     * @version DragonBones 3.0
+     * @language en_US
+     */
+    /**
+     * - 动画播放器用来播放动画数据和管理动画状态。
      * @see dragonBones.AnimationData
      * @see dragonBones.AnimationState
      * @version DragonBones 3.0
@@ -5495,9 +6623,6 @@ var dragonBones;
             _this._animationConfig = null; // Initial value.
             return _this;
         }
-        /**
-         * @private
-         */
         Animation.toString = function () {
             return "[class dragonBones.Animation]";
         };
@@ -5517,7 +6642,6 @@ var dragonBones;
             }
             this.timeScale = 1.0;
             this._animationDirty = false;
-            this._timelineDirty = false;
             this._inheritTimeScale = 1.0;
             this._animationNames.length = 0;
             this._animationStates.length = 0;
@@ -5602,7 +6726,7 @@ var dragonBones;
                     this._lastAnimationState = null;
                 }
                 else {
-                    var animationData = animationState.animationData;
+                    var animationData = animationState._animationData;
                     var cacheFrameRate = animationData.cacheFrameRate;
                     if (this._animationDirty && cacheFrameRate > 0.0) {
                         this._animationDirty = false;
@@ -5614,9 +6738,6 @@ var dragonBones;
                             var slot = _c[_b];
                             slot._cachedFrameIndices = animationData.getSlotCachedFrameIndices(slot.name);
                         }
-                    }
-                    if (this._timelineDirty) {
-                        animationState._timelineDirty = true;
                     }
                     animationState.advanceTime(passedTime, cacheFrameRate);
                 }
@@ -5636,9 +6757,6 @@ var dragonBones;
                         if (r > 0) {
                             this._animationStates[i - r] = animationState;
                         }
-                        if (this._timelineDirty) {
-                            animationState._timelineDirty = true;
-                        }
                         animationState.advanceTime(passedTime, 0.0);
                     }
                     if (i === animationStateCount - 1 && r > 0) {
@@ -5653,10 +6771,15 @@ var dragonBones;
             else {
                 this._armature._cacheFrameIndex = -1;
             }
-            this._timelineDirty = false;
         };
         /**
-         * 清除所有动画状态。
+         * - Clear all animations states.
+         * @see dragonBones.AnimationState
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
+         * - 清除所有的动画状态。
          * @see dragonBones.AnimationState
          * @version DragonBones 4.5
          * @language zh_CN
@@ -5667,14 +6790,20 @@ var dragonBones;
                 animationState.returnToPool();
             }
             this._animationDirty = false;
-            this._timelineDirty = false;
             this._animationConfig.clear();
             this._animationStates.length = 0;
             this._lastAnimationState = null;
         };
         /**
-         * 暂停播放动画。
-         * @param animationName 动画状态的名称，如果未设置，则暂停所有动画状态。
+         * - Pause a specific animation state.
+         * @param animationName - The name of animation state. (If not set, it will pause all animations)
+         * @see dragonBones.AnimationState
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 暂停指定动画状态的播放。
+         * @param animationName - 动画状态名称。 （如果未设置，则暂停所有动画）
          * @see dragonBones.AnimationState
          * @version DragonBones 3.0
          * @language zh_CN
@@ -5695,13 +6824,23 @@ var dragonBones;
             }
         };
         /**
-         * 通过动画配置来播放动画。
-         * @param animationConfig 动画配置。
-         * @returns 对应的动画状态。
+         * - Play animation with a specific animation config.
+         * The API is still in the experimental phase and may encounter bugs or stability or compatibility issues when used.
+         * @param animationConfig - The animation config
+         * @returns The playing animation state
          * @see dragonBones.AnimationConfig
-         * @see dragonBones.AnimationState
-         * @version DragonBones 5.0
          * @beta
+         * @version DragonBones 5.0
+         * @language en_US
+         */
+        /**
+         * - 通过指定的动画配置来播放动画。
+         * 该 API 仍在实验阶段，使用时可能遭遇 bug 或稳定性或兼容性问题。
+         * @param animationConfig - 动画配置
+         * @returns 播放的动画状态
+         * @see dragonBones.AnimationConfig
+         * @beta
+         * @version DragonBones 5.0
          * @language zh_CN
          */
         Animation.prototype.playConfig = function (animationConfig) {
@@ -5714,7 +6853,7 @@ var dragonBones;
             if (animationConfig.fadeOutMode === 5 /* Single */) {
                 for (var _i = 0, _a = this._animationStates; _i < _a.length; _i++) {
                     var animationState_1 = _a[_i];
-                    if (animationState_1.animationData === animationData) {
+                    if (animationState_1._animationData === animationData) {
                         return animationState_1;
                     }
                 }
@@ -5799,11 +6938,26 @@ var dragonBones;
             return animationState;
         };
         /**
-         * 播放动画。
-         * @param animationName 动画数据名称，如果未设置，则播放默认动画，或将暂停状态切换为播放状态，或重新播放上一个正在播放的动画。
-         * @param playTimes 播放次数。 [-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]
-         * @returns 对应的动画状态。
-         * @see dragonBones.AnimationState
+         * - Play a specific animation.
+         * @param animationName - The name of animation data. (If not set, The default animation will be played, or resume the animation playing from pause status, or replay the last playing animation)
+         * @param playTimes - Playing repeat times. [-1: Use default value of the animation data, 0: No end loop playing, [1~N]: Repeat N times]
+         * @returns The playing animation state
+         * @example
+         * <pre>
+         *     armature.animation.play("walk");
+         * </pre>
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 播放指定动画。
+         * @param animationName - 动画数据名称。 （如果未设置，则播放默认动画，或将暂停状态切换为播放状态，或重新播放之前播放的动画）
+         * @param playTimes - 循环播放次数。 [-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]
+         * @returns 播放的动画状态
+         * @example
+         * <pre>
+         *     armature.animation.play("walk");
+         * </pre>
          * @version DragonBones 3.0
          * @language zh_CN
          */
@@ -5835,17 +6989,36 @@ var dragonBones;
             return this._lastAnimationState;
         };
         /**
-         * 淡入播放动画。
-         * @param animationName 动画数据名称。
-         * @param playTimes 播放次数。 [-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]
-         * @param fadeInTime 淡入时间。 [-1: 使用动画数据默认值, [0~N]: 淡入时间] (以秒为单位)
-         * @param layer 混合图层，图层高会优先获取混合权重。
-         * @param group 混合组，用于动画状态编组，方便控制淡出。
-         * @param fadeOutMode 淡出模式。
-         * @param resetToPose
-         * @returns 对应的动画状态。
-         * @see dragonBones.AnimationFadeOutMode
-         * @see dragonBones.AnimationState
+         * - Fade in a specific animation.
+         * @param animationName - The name of animation data
+         * @param fadeInTime - The fade in time. [-1: Use the default value of animation data, [0~N]: The fade in time (In seconds)]
+         * @param playTimes - playing repeat times. [-1: Use the default value of animation data, 0: No end loop playing, [1~N]: Repeat N times]
+         * @param layer - The blending layer, the animation states in high level layer will get the blending weights with high priority, when the total blending weights are more than 1.0, there will be no more weights can be allocated to the other animation states
+         * @param group - The blending group name, it is typically used to specify the substitution of multiple animation states blending.
+         * @param fadeOutMode - The fade out mode, which is typically used to specify alternate mode of multiple animation states blending.
+         * @returns The playing animation state
+         * @example
+         * <pre>
+         *     armature.animation.fadeIn("walk", 0.3, 0, 0, "normalGroup").resetToPose = false;
+         *     armature.animation.fadeIn("attack", 0.3, 1, 0, "attackGroup").resetToPose = false;
+         * </pre>
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
+         * - 淡入播放指定的动画。
+         * @param animationName - 动画数据名称
+         * @param fadeInTime - 淡入时间。 [-1: 使用动画数据默认值, [0~N]: 淡入时间 (以秒为单位)]
+         * @param playTimes - 播放次数。 [-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]
+         * @param layer - 混合图层，图层高的动画状态会优先获取混合权重，当混合权重分配总和超过 1.0 时，剩余的动画状态将不能再获得权重分配
+         * @param group - 混合组名称，该属性通常用来指定多个动画状态混合时的相互替换关系。
+         * @param fadeOutMode - 淡出模式，该属性通常用来指定多个动画状态混合时的相互替换模式。
+         * @returns 播放的动画状态
+         * @example
+         * <pre>
+         *     armature.animation.fadeIn("walk", 0.3, 0, 0, "normalGroup").resetToPose = false;
+         *     armature.animation.fadeIn("attack", 0.3, 1, 0, "attackGroup").resetToPose = false;
+         * </pre>
          * @version DragonBones 4.5
          * @language zh_CN
          */
@@ -5865,12 +7038,20 @@ var dragonBones;
             return this.playConfig(this._animationConfig);
         };
         /**
-         * 从指定时间开始播放动画。
-         * @param animationName 动画数据的名称。
-         * @param time 开始时间。 (以秒为单位)
-         * @param playTimes 播放次数。 [-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]
-         * @returns 对应的动画状态。
-         * @see dragonBones.AnimationState
+         * - Play a specific animation from the specific time.
+         * @param animationName - The name of animation data
+         * @param time - The start time point of playing. (In seconds)
+         * @param playTimes - Playing repeat times. [-1: Use the default value of animation data, 0: No end loop playing, [1~N]: Repeat N times]
+         * @returns The played animation state
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
+         * - 从指定时间开始播放指定的动画。
+         * @param animationName - 动画数据名称
+         * @param time - 播放开始的时间。 (以秒为单位)
+         * @param playTimes - 循环播放次数。 [-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]
+         * @returns 播放的动画状态
          * @version DragonBones 4.5
          * @language zh_CN
          */
@@ -5886,12 +7067,20 @@ var dragonBones;
             return this.playConfig(this._animationConfig);
         };
         /**
-         * 从指定帧开始播放动画。
-         * @param animationName 动画数据的名称。
-         * @param frame 帧。
-         * @param playTimes 播放次数。 [-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]
-         * @returns 对应的动画状态。
-         * @see dragonBones.AnimationState
+         * - Play a specific animation from the specific frame.
+         * @param animationName - The name of animation data
+         * @param frame - The start frame of playing
+         * @param playTimes - Playing repeat times. [-1: Use the default value of animation data, 0: No end loop playing, [1~N]: Repeat N times]
+         * @returns The played animation state
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
+         * - 从指定帧开始播放指定的动画。
+         * @param animationName - 动画数据名称
+         * @param frame - 播放开始的帧数
+         * @param playTimes - 播放次数。 [-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]
+         * @returns 播放的动画状态
          * @version DragonBones 4.5
          * @language zh_CN
          */
@@ -5910,12 +7099,20 @@ var dragonBones;
             return this.playConfig(this._animationConfig);
         };
         /**
-         * 从指定进度开始播放动画。
-         * @param animationName 动画数据的名称。
-         * @param progress 进度。 [0~1]
-         * @param playTimes 播放次数。 [-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]
-         * @returns 对应的动画状态。
-         * @see dragonBones.AnimationState
+         * - Play a specific animation from the specific progress.
+         * @param animationName - The name of animation data
+         * @param progress - The start progress value of playing
+         * @param playTimes - Playing repeat times. [-1: Use the default value of animation data, 0: No end loop playing, [1~N]: Repeat N times]
+         * @returns The played animation state
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
+         * - 从指定进度开始播放指定的动画。
+         * @param animationName - 动画数据名称
+         * @param progress - 开始播放的进度
+         * @param playTimes - 播放次数。 [-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]
+         * @returns 播放的动画状态
          * @version DragonBones 4.5
          * @language zh_CN
          */
@@ -5934,11 +7131,18 @@ var dragonBones;
             return this.playConfig(this._animationConfig);
         };
         /**
-         * 将动画停止到指定的时间。
-         * @param animationName 动画数据的名称。
-         * @param time 时间。 (以秒为单位)
-         * @returns 对应的动画状态。
-         * @see dragonBones.AnimationState
+         * - Stop a specific animation at the specific time.
+         * @param animationName - The name of animation data
+         * @param time - The stop time. (In seconds)
+         * @returns The played animation state
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
+         * - 在指定时间停止指定动画播放
+         * @param animationName - 动画数据名称
+         * @param time - 停止的时间。 (以秒为单位)
+         * @returns 播放的动画状态
          * @version DragonBones 4.5
          * @language zh_CN
          */
@@ -5951,11 +7155,18 @@ var dragonBones;
             return animationState;
         };
         /**
-         * 将动画停止到指定的帧。
-         * @param animationName 动画数据的名称。
-         * @param frame 帧。
-         * @returns 对应的动画状态。
-         * @see dragonBones.AnimationState
+         * - Stop a specific animation at the specific frame.
+         * @param animationName - The name of animation data
+         * @param frame - The stop frame
+         * @returns The played animation state
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
+         * - 在指定帧停止指定动画的播放
+         * @param animationName - 动画数据名称
+         * @param frame - 停止的帧数
+         * @returns 播放的动画状态
          * @version DragonBones 4.5
          * @language zh_CN
          */
@@ -5968,11 +7179,18 @@ var dragonBones;
             return animationState;
         };
         /**
-         * 将动画停止到指定的进度。
-         * @param animationName 动画数据的名称。
-         * @param progress 进度。 [0 ~ 1]
-         * @returns 对应的动画状态。
-         * @see dragonBones.AnimationState
+         * - Stop a specific animation at the specific progress.
+         * @param animationName - The name of animation data
+         * @param progress - The stop progress value
+         * @returns The played animation state
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
+         * - 在指定的进度停止指定的动画播放。
+         * @param animationName - 动画数据名称
+         * @param progress - 停止进度
+         * @returns 播放的动画状态
          * @version DragonBones 4.5
          * @language zh_CN
          */
@@ -5985,9 +7203,26 @@ var dragonBones;
             return animationState;
         };
         /**
-         * 获取动画状态。
-         * @param animationName 动画状态的名称。
-         * @see dragonBones.AnimationState
+         * - Get a specific animation state.
+         * @param animationName - The name of animation state
+         * @example
+         * <pre>
+         *     armature.animation.play("walk");
+         *     let walkState = armature.animation.getState("walk");
+         *     walkState.timeScale = 0.5;
+         * </pre>
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 获取指定的动画状态
+         * @param animationName - 动画状态名称
+         * @example
+         * <pre>
+         *     armature.animation.play("walk");
+         *     let walkState = armature.animation.getState("walk");
+         *     walkState.timeScale = 0.5;
+         * </pre>
          * @version DragonBones 3.0
          * @language zh_CN
          */
@@ -6002,8 +7237,15 @@ var dragonBones;
             return null;
         };
         /**
-         * 是否包含动画数据。
-         * @param animationName 动画数据的名称。
+         * - Check whether a specific animation data is included.
+         * @param animationName - The name of animation data
+         * @see dragonBones.AnimationData
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 检查是否包含指定的动画数据
+         * @param animationName - 动画数据名称
          * @see dragonBones.AnimationData
          * @version DragonBones 3.0
          * @language zh_CN
@@ -6012,8 +7254,12 @@ var dragonBones;
             return animationName in this._animations;
         };
         /**
-         * 获取所有的动画状态。
-         * @see dragonBones.AnimationState
+         * - Get all the animation states.
+         * @version DragonBones 5.1
+         * @language en_US
+         */
+        /**
+         * - 获取所有的动画状态
          * @version DragonBones 5.1
          * @language zh_CN
          */
@@ -6022,7 +7268,14 @@ var dragonBones;
         };
         Object.defineProperty(Animation.prototype, "isPlaying", {
             /**
-             * 动画是否处于播放状态。
+             * - Check whether there is an animation state is playing
+             * @see dragonBones.AnimationState
+             * @version DragonBones 3.0
+             * @language en_US
+             */
+            /**
+             * - 检查是否有动画状态正在播放
+             * @see dragonBones.AnimationState
              * @version DragonBones 3.0
              * @language zh_CN
              */
@@ -6040,7 +7293,13 @@ var dragonBones;
         });
         Object.defineProperty(Animation.prototype, "isCompleted", {
             /**
-             * 所有动画状态是否均已播放完毕。
+             * - Check whether all the animation states' playing were finished.
+             * @see dragonBones.AnimationState
+             * @version DragonBones 3.0
+             * @language en_US
+             */
+            /**
+             * - 检查是否所有的动画状态均已播放完毕。
              * @see dragonBones.AnimationState
              * @version DragonBones 3.0
              * @language zh_CN
@@ -6059,7 +7318,13 @@ var dragonBones;
         });
         Object.defineProperty(Animation.prototype, "lastAnimationName", {
             /**
-             * 上一个正在播放的动画状态名称。
+             * - The name of the last playing animation state.
+             * @see #lastAnimationState
+             * @version DragonBones 3.0
+             * @language en_US
+             */
+            /**
+             * - 上一个播放的动画状态名称
              * @see #lastAnimationState
              * @version DragonBones 3.0
              * @language zh_CN
@@ -6072,8 +7337,12 @@ var dragonBones;
         });
         Object.defineProperty(Animation.prototype, "animationNames", {
             /**
-             * 所有动画数据名称。
-             * @see #animations
+             * - The name of all animation data
+             * @version DragonBones 4.5
+             * @language en_US
+             */
+            /**
+             * - 所有动画数据的名称
              * @version DragonBones 4.5
              * @language zh_CN
              */
@@ -6085,8 +7354,12 @@ var dragonBones;
         });
         Object.defineProperty(Animation.prototype, "animations", {
             /**
-             * 所有动画数据。
-             * @see dragonBones.AnimationData
+             * - All animation data.
+             * @version DragonBones 4.5
+             * @language en_US
+             */
+            /**
+             * - 所有的动画数据。
              * @version DragonBones 4.5
              * @language zh_CN
              */
@@ -6102,8 +7375,8 @@ var dragonBones;
                     delete this._animations[k];
                 }
                 for (var k in value) {
-                    this._animations[k] = value[k];
                     this._animationNames.push(k);
+                    this._animations[k] = value[k];
                 }
             },
             enumerable: true,
@@ -6111,7 +7384,13 @@ var dragonBones;
         });
         Object.defineProperty(Animation.prototype, "animationConfig", {
             /**
-             * 一个可以快速使用的动画配置实例。
+             * - An AnimationConfig instance that can be used quickly.
+             * @see dragonBones.AnimationConfig
+             * @version DragonBones 5.0
+             * @language en_US
+             */
+            /**
+             * - 一个可以快速使用的动画配置实例。
              * @see dragonBones.AnimationConfig
              * @version DragonBones 5.0
              * @language zh_CN
@@ -6125,7 +7404,13 @@ var dragonBones;
         });
         Object.defineProperty(Animation.prototype, "lastAnimationState", {
             /**
-             * 上一个正在播放的动画状态。
+             * - The last playing animation state
+             * @see dragonBones.AnimationState
+             * @version DragonBones 3.0
+             * @language en_US
+             */
+            /**
+             * - 上一个播放的动画状态
              * @see dragonBones.AnimationState
              * @version DragonBones 3.0
              * @language zh_CN
@@ -6137,13 +7422,14 @@ var dragonBones;
             configurable: true
         });
         /**
+         * - Deprecated, please refer to {@link #play()} {@link #fadeIn()}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see #play()
-         * @see #fadeIn()
-         * @see #gotoAndPlayByTime()
-         * @see #gotoAndPlayByFrame()
-         * @see #gotoAndPlayByProgress()
+         * @language en_US
+         */
+        /**
+         * - 已废弃，请参考 {@link #play()} {@link #fadeIn()}。
+         * @deprecated
+         * @language zh_CN
          */
         Animation.prototype.gotoAndPlay = function (animationName, fadeInTime, duration, playTimes, layer, group, fadeOutMode, pauseFadeOut, pauseFadeIn) {
             if (fadeInTime === void 0) { fadeInTime = -1; }
@@ -6154,7 +7440,9 @@ var dragonBones;
             if (fadeOutMode === void 0) { fadeOutMode = 3 /* SameLayerAndGroup */; }
             if (pauseFadeOut === void 0) { pauseFadeOut = true; }
             if (pauseFadeIn === void 0) { pauseFadeIn = true; }
+            // tslint:disable-next-line:no-unused-expression
             pauseFadeOut;
+            // tslint:disable-next-line:no-unused-expression
             pauseFadeIn;
             this._animationConfig.clear();
             this._animationConfig.resetToPose = true;
@@ -6171,11 +7459,14 @@ var dragonBones;
             return this.playConfig(this._animationConfig);
         };
         /**
+         * - Deprecated, please refer to {@link #gotoAndStopByTime()}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see #gotoAndStopByTime()
-         * @see #gotoAndStopByFrame()
-         * @see #gotoAndStopByProgress()
+         * @language en_US
+         */
+        /**
+         * - 已废弃，请参考 {@link #gotoAndStopByTime()}。
+         * @deprecated
+         * @language zh_CN
          */
         Animation.prototype.gotoAndStop = function (animationName, time) {
             if (time === void 0) { time = 0; }
@@ -6183,10 +7474,14 @@ var dragonBones;
         };
         Object.defineProperty(Animation.prototype, "animationList", {
             /**
+             * - Deprecated, please refer to {@link #animationNames}.
              * @deprecated
-             * 已废弃，请参考 @see
-             * @see #animationNames
-             * @see #animations
+             * @language en_US
+             */
+            /**
+             * - 已废弃，请参考 {@link #animationNames}。
+             * @deprecated
+             * @language zh_CN
              */
             get: function () {
                 return this._animationNames;
@@ -6196,10 +7491,14 @@ var dragonBones;
         });
         Object.defineProperty(Animation.prototype, "animationDataList", {
             /**
+             * - Deprecated, please refer to {@link #animationNames}.
              * @deprecated
-             * 已废弃，请参考 @see
-             * @see #animationNames
-             * @see #animations
+             * @language en_US
+             */
+            /**
+             * - 已废弃，请参考 {@link #animationNames}。
+             * @deprecated
+             * @language zh_CN
              */
             get: function () {
                 var list = [];
@@ -6215,34 +7514,39 @@ var dragonBones;
     }(dragonBones.BaseObject));
     dragonBones.Animation = Animation;
 })(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 var dragonBones;
 (function (dragonBones) {
     /**
-     * @internal
-     * @private
+     * - The animation state is generated when the animation data is played.
+     * @see dragonBones.Animation
+     * @see dragonBones.AnimationData
+     * @version DragonBones 3.0
+     * @language en_US
      */
-    var BonePose = (function (_super) {
-        __extends(BonePose, _super);
-        function BonePose() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.current = new dragonBones.Transform();
-            _this.delta = new dragonBones.Transform();
-            _this.result = new dragonBones.Transform();
-            return _this;
-        }
-        BonePose.toString = function () {
-            return "[class dragonBones.BonePose]";
-        };
-        BonePose.prototype._onClear = function () {
-            this.current.identity();
-            this.delta.identity();
-            this.result.identity();
-        };
-        return BonePose;
-    }(dragonBones.BaseObject));
-    dragonBones.BonePose = BonePose;
     /**
-     * 动画状态，播放动画时产生，可以对每个播放的动画进行更细致的控制和调节。
+     * - 动画状态由播放动画数据时产生。
      * @see dragonBones.Animation
      * @see dragonBones.AnimationData
      * @version DragonBones 3.0
@@ -6266,9 +7570,6 @@ var dragonBones;
             _this._zOrderTimeline = null; // Initial value.
             return _this;
         }
-        /**
-         * @private
-         */
         AnimationState.toString = function () {
             return "[class dragonBones.AnimationState]";
         };
@@ -6298,19 +7599,18 @@ var dragonBones;
             if (this._zOrderTimeline !== null) {
                 this._zOrderTimeline.returnToPool();
             }
-            this.resetToPose = false;
+            this.actionEnabled = false;
             this.additiveBlending = false;
             this.displayControl = false;
-            this.actionEnabled = false;
-            this.layer = 0;
+            this.resetToPose = false;
             this.playTimes = 1;
+            this.layer = 0;
             this.timeScale = 1.0;
             this.weight = 1.0;
             this.autoFadeOutTime = 0.0;
             this.fadeTotalTime = 0.0;
             this.name = "";
             this.group = "";
-            this.animationData = null; //
             this._timelineDirty = true;
             this._playheadState = 0;
             this._fadeState = -1;
@@ -6327,6 +7627,7 @@ var dragonBones;
             this._constraintTimelines.length = 0;
             this._poseTimelines.length = 0;
             // this._bonePoses.clear();
+            this._animationData = null; //
             this._armature = null; //
             this._actionTimeline = null; //
             this._zOrderTimeline = null;
@@ -6348,7 +7649,7 @@ var dragonBones;
                     if (!this.containsBoneMask(timelineName)) {
                         continue;
                     }
-                    var timelineDatas = this.animationData.getBoneTimelines(timelineName);
+                    var timelineDatas = this._animationData.getBoneTimelines(timelineName);
                     if (timelineName in boneTimelines) {
                         delete boneTimelines[timelineName];
                     }
@@ -6431,7 +7732,7 @@ var dragonBones;
                         continue;
                     }
                     var timelineName = slot.name;
-                    var timelineDatas = this.animationData.getSlotTimeline(timelineName);
+                    var timelineDatas = this._animationData.getSlotTimelines(timelineName);
                     if (timelineName in slotTimelines) {
                         delete slotTimelines[timelineName];
                     }
@@ -6490,14 +7791,16 @@ var dragonBones;
                             if (slot.rawDisplayDatas !== null) {
                                 for (var _m = 0, _o = slot.rawDisplayDatas; _m < _o.length; _m++) {
                                     var displayData = _o[_m];
-                                    var meshOffset = displayData.offset;
-                                    if (displayData !== null && displayData.type === 2 /* Mesh */ && ffdFlags.indexOf(meshOffset) < 0) {
-                                        var timeline = dragonBones.BaseObject.borrowObject(dragonBones.SlotFFDTimelineState);
-                                        timeline.meshOffset = meshOffset; //
-                                        timeline.slot = slot;
-                                        timeline.init(this._armature, this, null);
-                                        this._slotTimelines.push(timeline);
-                                        this._poseTimelines.push(timeline);
+                                    if (displayData !== null && displayData.type === 2 /* Mesh */) {
+                                        var meshOffset = displayData.offset;
+                                        if (ffdFlags.indexOf(meshOffset) < 0) {
+                                            var timeline = dragonBones.BaseObject.borrowObject(dragonBones.SlotFFDTimelineState);
+                                            timeline.meshOffset = meshOffset; //
+                                            timeline.slot = slot;
+                                            timeline.init(this._armature, this, null);
+                                            this._slotTimelines.push(timeline);
+                                            this._poseTimelines.push(timeline);
+                                        }
                                     }
                                 }
                             }
@@ -6525,7 +7828,7 @@ var dragonBones;
                 for (var _t = 0, _u = this._armature._constraints; _t < _u.length; _t++) {
                     var constraint = _u[_t];
                     var timelineName = constraint.name;
-                    var timelineDatas = this.animationData.getConstraintTimeline(timelineName);
+                    var timelineDatas = this._animationData.getConstraintTimelines(timelineName);
                     if (timelineName in constraintTimelines) {
                         delete constraintTimelines[timelineName];
                     }
@@ -6607,15 +7910,16 @@ var dragonBones;
             }
         };
         AnimationState.prototype._blendBoneTimline = function (timeline) {
+            var boneWeight = this._weightResult > 0.0 ? this._weightResult : -this._weightResult;
             var bone = timeline.bone;
             var bonePose = timeline.bonePose.result;
             var animationPose = bone.animationPose;
-            var boneWeight = this._weightResult > 0.0 ? this._weightResult : -this._weightResult;
             if (!bone._blendDirty) {
                 bone._blendDirty = true;
                 bone._blendLayer = this.layer;
                 bone._blendLayerWeight = boneWeight;
                 bone._blendLeftWeight = 1.0;
+                //
                 animationPose.x = bonePose.x * boneWeight;
                 animationPose.y = bonePose.y * boneWeight;
                 animationPose.rotation = bonePose.rotation * boneWeight;
@@ -6626,6 +7930,7 @@ var dragonBones;
             else {
                 boneWeight *= bone._blendLeftWeight;
                 bone._blendLayerWeight += boneWeight;
+                //
                 animationPose.x += bonePose.x * boneWeight;
                 animationPose.y += bonePose.y * boneWeight;
                 animationPose.rotation += bonePose.rotation * boneWeight;
@@ -6638,15 +7943,16 @@ var dragonBones;
             }
         };
         /**
-         * @private
          * @internal
+         * @private
          */
         AnimationState.prototype.init = function (armature, animationData, animationConfig) {
             if (this._armature !== null) {
                 return;
             }
             this._armature = armature;
-            this.animationData = animationData;
+            this._animationData = animationData;
+            //
             this.resetToPose = animationConfig.resetToPose;
             this.additiveBlending = animationConfig.additiveBlending;
             this.displayControl = animationConfig.displayControl;
@@ -6667,7 +7973,7 @@ var dragonBones;
             }
             if (animationConfig.duration < 0.0) {
                 this._position = 0.0;
-                this._duration = this.animationData.duration;
+                this._duration = this._animationData.duration;
                 if (animationConfig.position !== 0.0) {
                     if (this.timeScale >= 0.0) {
                         this._time = animationConfig.position;
@@ -6698,19 +8004,19 @@ var dragonBones;
                 }
             }
             this._actionTimeline = dragonBones.BaseObject.borrowObject(dragonBones.ActionTimelineState);
-            this._actionTimeline.init(this._armature, this, this.animationData.actionTimeline);
+            this._actionTimeline.init(this._armature, this, this._animationData.actionTimeline);
             this._actionTimeline.currentTime = this._time;
             if (this._actionTimeline.currentTime < 0.0) {
                 this._actionTimeline.currentTime = this._duration - this._actionTimeline.currentTime;
             }
-            if (this.animationData.zOrderTimeline !== null) {
+            if (this._animationData.zOrderTimeline !== null) {
                 this._zOrderTimeline = dragonBones.BaseObject.borrowObject(dragonBones.ZOrderTimelineState);
-                this._zOrderTimeline.init(this._armature, this, this.animationData.zOrderTimeline);
+                this._zOrderTimeline.init(this._armature, this, this._animationData.zOrderTimeline);
             }
         };
         /**
-         * @private
          * @internal
+         * @private
          */
         AnimationState.prototype.advanceTime = function (passedTime, cacheFrameRate) {
             // Update fade time.
@@ -6754,11 +8060,11 @@ var dragonBones;
                 }
                 else {
                     this._armature._cacheFrameIndex = cacheFrameIndex;
-                    if (this.animationData.cachedFrames[cacheFrameIndex]) {
+                    if (this._animationData.cachedFrames[cacheFrameIndex]) {
                         isUpdateBoneTimeline = false;
                     }
                     else {
-                        this.animationData.cachedFrames[cacheFrameIndex] = true;
+                        this._animationData.cachedFrames[cacheFrameIndex] = true;
                     }
                 }
             }
@@ -6805,9 +8111,9 @@ var dragonBones;
                         }
                     }
                 }
-                for (var i = 0, l = this._slotTimelines.length; i < l; ++i) {
-                    var timeline = this._slotTimelines[i];
-                    if (this.displayControl) {
+                if (this.displayControl) {
+                    for (var i = 0, l = this._slotTimelines.length; i < l; ++i) {
+                        var timeline = this._slotTimelines[i];
                         var displayController = timeline.slot.displayController;
                         if (displayController === null ||
                             displayController === this.name ||
@@ -6856,7 +8162,12 @@ var dragonBones;
             }
         };
         /**
-         * 继续播放。
+         * - Continue play.
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 继续播放。
          * @version DragonBones 3.0
          * @language zh_CN
          */
@@ -6864,7 +8175,12 @@ var dragonBones;
             this._playheadState = 3; // 11
         };
         /**
-         * 暂停播放。
+         * - Stop play.
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 暂停播放。
          * @version DragonBones 3.0
          * @language zh_CN
          */
@@ -6872,9 +8188,16 @@ var dragonBones;
             this._playheadState &= 1; // 0x
         };
         /**
-         * 淡出动画。
-         * @param fadeOutTime 淡出时间。 (以秒为单位)
-         * @param pausePlayhead 淡出时是否暂停动画。
+         * - Fade out the animation state.
+         * @param fadeOutTime - The fade out time. (In seconds)
+         * @param pausePlayhead - Whether to pause the animation playing when fade out.
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 淡出动画状态。
+         * @param fadeOutTime - 淡出时间。 （以秒为单位）
+         * @param pausePlayhead - 淡出时是否暂停播放
          * @version DragonBones 3.0
          * @language zh_CN
          */
@@ -6911,8 +8234,14 @@ var dragonBones;
             this._fadeTime = this.fadeTotalTime * (1.0 - this._fadeProgress);
         };
         /**
-         * 是否包含骨骼遮罩。
-         * @param name 指定的骨骼名称。
+         * - Check if a specific bone mask is included.
+         * @param name - The bone name
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 检查是否包含特定骨骼遮罩。
+         * @param name - 骨骼名称
          * @version DragonBones 3.0
          * @language zh_CN
          */
@@ -6920,9 +8249,16 @@ var dragonBones;
             return this._boneMask.length === 0 || this._boneMask.indexOf(name) >= 0;
         };
         /**
-         * 添加骨骼遮罩。
-         * @param name 指定的骨骼名称。
-         * @param recursive 是否为该骨骼的子骨骼添加遮罩。
+         * - Add a specific bone mask.
+         * @param name - The bone name
+         * @param recursive - Whether or not to add a mask to the bone's sub-bone
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 添加特定的骨骼遮罩。
+         * @param name - 骨骼名称
+         * @param recursive - 是否为该骨骼的子骨骼添加遮罩
          * @version DragonBones 3.0
          * @language zh_CN
          */
@@ -6946,9 +8282,16 @@ var dragonBones;
             this._timelineDirty = true;
         };
         /**
-         * 删除骨骼遮罩。
-         * @param name 指定的骨骼名称。
-         * @param recursive 是否删除该骨骼的子骨骼遮罩。
+         * - Remove the mask of a specific bone.
+         * @param name - The bone name
+         * @param recursive - Whether to remove the bone's sub-bone mask
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 删除特定骨骼的遮罩。
+         * @param name - 骨骼名称
+         * @param recursive - 是否删除该骨骼的子骨骼遮罩
          * @version DragonBones 3.0
          * @language zh_CN
          */
@@ -6987,7 +8330,12 @@ var dragonBones;
             this._timelineDirty = true;
         };
         /**
-         * 删除所有骨骼遮罩。
+         * - Remove all bone masks.
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 删除所有骨骼遮罩。
          * @version DragonBones 3.0
          * @language zh_CN
          */
@@ -6997,7 +8345,12 @@ var dragonBones;
         };
         Object.defineProperty(AnimationState.prototype, "isFadeIn", {
             /**
-             * 是否正在淡入。
+             * - Whether the animation state is fading in.
+             * @version DragonBones 5.1
+             * @language en_US
+             */
+            /**
+             * - 是否正在淡入。
              * @version DragonBones 5.1
              * @language zh_CN
              */
@@ -7009,7 +8362,12 @@ var dragonBones;
         });
         Object.defineProperty(AnimationState.prototype, "isFadeOut", {
             /**
-             * 是否正在淡出。
+             * - Whether the animation state is fading out.
+             * @version DragonBones 5.1
+             * @language en_US
+             */
+            /**
+             * - 是否正在淡出。
              * @version DragonBones 5.1
              * @language zh_CN
              */
@@ -7021,7 +8379,12 @@ var dragonBones;
         });
         Object.defineProperty(AnimationState.prototype, "isFadeComplete", {
             /**
-             * 是否淡入完毕。
+             * - Whether the animation state is fade completed.
+             * @version DragonBones 5.1
+             * @language en_US
+             */
+            /**
+             * - 是否淡入或淡出完毕。
              * @version DragonBones 5.1
              * @language zh_CN
              */
@@ -7033,7 +8396,12 @@ var dragonBones;
         });
         Object.defineProperty(AnimationState.prototype, "isPlaying", {
             /**
-             * 是否正在播放。
+             * - Whether the animation state is playing.
+             * @version DragonBones 3.0
+             * @language en_US
+             */
+            /**
+             * - 是否正在播放。
              * @version DragonBones 3.0
              * @language zh_CN
              */
@@ -7045,7 +8413,12 @@ var dragonBones;
         });
         Object.defineProperty(AnimationState.prototype, "isCompleted", {
             /**
-             * 是否播放完毕。
+             * - Whether the animation state is play completed.
+             * @version DragonBones 3.0
+             * @language en_US
+             */
+            /**
+             * - 是否播放完毕。
              * @version DragonBones 3.0
              * @language zh_CN
              */
@@ -7057,7 +8430,12 @@ var dragonBones;
         });
         Object.defineProperty(AnimationState.prototype, "currentPlayTimes", {
             /**
-             * 当前播放次数。
+             * - The times has been played.
+             * @version DragonBones 3.0
+             * @language en_US
+             */
+            /**
+             * - 已经循环播放的次数。
              * @version DragonBones 3.0
              * @language zh_CN
              */
@@ -7069,7 +8447,12 @@ var dragonBones;
         });
         Object.defineProperty(AnimationState.prototype, "totalTime", {
             /**
-             * 总时间。 (以秒为单位)
+             * - The total time. (In seconds)
+             * @version DragonBones 3.0
+             * @language en_US
+             */
+            /**
+             * - 总播放时间。 （以秒为单位）
              * @version DragonBones 3.0
              * @language zh_CN
              */
@@ -7081,7 +8464,12 @@ var dragonBones;
         });
         Object.defineProperty(AnimationState.prototype, "currentTime", {
             /**
-             * 当前播放的时间。 (以秒为单位)
+             * - The time is currently playing. (In seconds)
+             * @version DragonBones 3.0
+             * @language en_US
+             */
+            /**
+             * - 当前播放的时间。 （以秒为单位）
              * @version DragonBones 3.0
              * @language zh_CN
              */
@@ -7119,10 +8507,75 @@ var dragonBones;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(AnimationState.prototype, "animationData", {
+            /**
+             * - The animation data.
+             * @see dragonBones.AnimationData
+             * @version DragonBones 3.0
+             * @language en_US
+             */
+            /**
+             * - 动画数据。
+             * @see dragonBones.AnimationData
+             * @version DragonBones 3.0
+             * @language zh_CN
+             */
+            get: function () {
+                return this._animationData;
+            },
+            enumerable: true,
+            configurable: true
+        });
         return AnimationState;
     }(dragonBones.BaseObject));
     dragonBones.AnimationState = AnimationState;
+    /**
+     * @internal
+     * @private
+     */
+    var BonePose = (function (_super) {
+        __extends(BonePose, _super);
+        function BonePose() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.current = new dragonBones.Transform();
+            _this.delta = new dragonBones.Transform();
+            _this.result = new dragonBones.Transform();
+            return _this;
+        }
+        BonePose.toString = function () {
+            return "[class dragonBones.BonePose]";
+        };
+        BonePose.prototype._onClear = function () {
+            this.current.identity();
+            this.delta.identity();
+            this.result.identity();
+        };
+        return BonePose;
+    }(dragonBones.BaseObject));
+    dragonBones.BonePose = BonePose;
 })(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 var dragonBones;
 (function (dragonBones) {
     /**
@@ -7228,7 +8681,7 @@ var dragonBones;
             if (this === this._actionTimeline) {
                 this._actionTimeline = null; //
             }
-            this._animationData = this._animationState.animationData;
+            this._animationData = this._animationState._animationData;
             this._frameRate = this._animationData.parent.frameRate;
             this._frameRateR = 1.0 / this._frameRate;
             this._position = this._animationState._position;
@@ -7418,6 +8871,28 @@ var dragonBones;
     }(TweenTimelineState));
     dragonBones.ConstraintTimelineState = ConstraintTimelineState;
 })(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 var dragonBones;
 (function (dragonBones) {
     /**
@@ -8270,10 +9745,8 @@ var dragonBones;
         };
         IKConstraintTimelineState.prototype._onClear = function () {
             _super.prototype._onClear.call(this);
-            this._dirty = false;
             this._current = 0.0;
             this._delta = 0.0;
-            this._result = 0.0;
         };
         IKConstraintTimelineState.prototype._onArriveAtFrame = function () {
             _super.prototype._onArriveAtFrame.call(this);
@@ -8304,62 +9777,49 @@ var dragonBones;
         };
         IKConstraintTimelineState.prototype._onUpdateFrame = function () {
             _super.prototype._onUpdateFrame.call(this);
-            this._dirty = true;
             if (this._tweenState !== 2 /* Always */) {
                 this._tweenState = 0 /* None */;
             }
-            this._result = this._current + this._delta * this._tweenProgress;
-        };
-        IKConstraintTimelineState.prototype.fadeOut = function () {
-            this._tweenState = 0 /* None */;
-            this._dirty = false;
-        };
-        IKConstraintTimelineState.prototype.update = function (passedTime) {
-            _super.prototype.update.call(this, passedTime);
             var ikConstraint = this.constraint;
-            // Fade animation.
-            if (this._tweenState !== 0 /* None */ || this._dirty) {
-                var result = ikConstraint._weight;
-                if (this._timelineData !== null) {
-                    if (this._animationState._fadeState !== 0 || this._animationState._subFadeState !== 0) {
-                        var fadeProgress = Math.pow(this._animationState._fadeProgress, 2);
-                        ikConstraint._weight += this._result - result * fadeProgress;
-                        ikConstraint.invalidUpdate();
-                    }
-                    else if (this._dirty) {
-                        this._dirty = false;
-                        ikConstraint._weight = this._result;
-                        ikConstraint.invalidUpdate();
-                    }
-                }
-                else {
-                    if (this._animationState._fadeState !== 0 || this._animationState._subFadeState !== 0) {
-                        var fadeProgress = Math.pow(this._animationState._fadeProgress, 2);
-                        ikConstraint._weight += 0.0 - result * fadeProgress;
-                        ikConstraint.invalidUpdate();
-                    }
-                    else if (this._dirty) {
-                        this._dirty = false;
-                        ikConstraint._weight = 0.0;
-                        ikConstraint.invalidUpdate();
-                    }
-                }
-            }
+            ikConstraint._weight = this._current + this._delta * this._tweenProgress;
+            ikConstraint.invalidUpdate();
         };
         return IKConstraintTimelineState;
     }(dragonBones.ConstraintTimelineState));
     dragonBones.IKConstraintTimelineState = IKConstraintTimelineState;
 })(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 var dragonBones;
 (function (dragonBones) {
     /**
-     * The properties of the object carry basic information about an event,
+     * - The properties of the object carry basic information about an event,
      * which are passed as parameter or parameter's parameter to event listeners when an event occurs.
      * @version DragonBones 4.5
      * @language en_US
      */
     /**
-     * 事件对象，包含有关事件的基本信息，当发生事件时，该实例将作为参数或参数的参数传递给事件侦听器。
+     * - 事件对象，包含有关事件的基本信息，当发生事件时，该实例将作为参数或参数的参数传递给事件侦听器。
      * @version DragonBones 4.5
      * @language zh_CN
      */
@@ -8385,100 +9845,100 @@ var dragonBones;
             this.data = null;
         };
         /**
-         * Animation start play.
+         * - Animation start play.
          * @version DragonBones 4.5
          * @language en_US
          */
         /**
-         * 动画开始播放。
+         * - 动画开始播放。
          * @version DragonBones 4.5
          * @language zh_CN
          */
         EventObject.START = "start";
         /**
-         * Animation loop play complete once.
+         * - Animation loop play complete once.
          * @version DragonBones 4.5
          * @language en_US
          */
         /**
-         * 动画循环播放完成一次。
+         * - 动画循环播放完成一次。
          * @version DragonBones 4.5
          * @language zh_CN
          */
         EventObject.LOOP_COMPLETE = "loopComplete";
         /**
-         * Animation play complete.
+         * - Animation play complete.
          * @version DragonBones 4.5
          * @language en_US
          */
         /**
-         * 动画播放完成。
+         * - 动画播放完成。
          * @version DragonBones 4.5
          * @language zh_CN
          */
         EventObject.COMPLETE = "complete";
         /**
-         * Animation fade in start.
+         * - Animation fade in start.
          * @version DragonBones 4.5
          * @language en_US
          */
         /**
-         * 动画淡入开始。
+         * - 动画淡入开始。
          * @version DragonBones 4.5
          * @language zh_CN
          */
         EventObject.FADE_IN = "fadeIn";
         /**
-         * Animation fade in complete.
+         * - Animation fade in complete.
          * @version DragonBones 4.5
          * @language en_US
          */
         /**
-         * 动画淡入完成。
+         * - 动画淡入完成。
          * @version DragonBones 4.5
          * @language zh_CN
          */
         EventObject.FADE_IN_COMPLETE = "fadeInComplete";
         /**
-         * Animation fade out start.
+         * - Animation fade out start.
          * @version DragonBones 4.5
          * @language en_US
          */
         /**
-         * 动画淡出开始。
+         * - 动画淡出开始。
          * @version DragonBones 4.5
          * @language zh_CN
          */
         EventObject.FADE_OUT = "fadeOut";
         /**
-         * Animation fade out complete.
+         * - Animation fade out complete.
          * @version DragonBones 4.5
          * @language en_US
          */
         /**
-         * 动画淡出完成。
+         * - 动画淡出完成。
          * @version DragonBones 4.5
          * @language zh_CN
          */
         EventObject.FADE_OUT_COMPLETE = "fadeOutComplete";
         /**
-         * Animation frame event.
+         * - Animation frame event.
          * @version DragonBones 4.5
          * @language en_US
          */
         /**
-         * 动画帧事件。
+         * - 动画帧事件。
          * @version DragonBones 4.5
          * @language zh_CN
          */
         EventObject.FRAME_EVENT = "frameEvent";
         /**
-         * Animation frame sound event.
+         * - Animation frame sound event.
          * @version DragonBones 4.5
          * @language en_US
          */
         /**
-         * 动画帧声音事件。
+         * - 动画帧声音事件。
          * @version DragonBones 4.5
          * @language zh_CN
          */
@@ -8487,9 +9947,32 @@ var dragonBones;
     }(dragonBones.BaseObject));
     dragonBones.EventObject = EventObject;
 })(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 var dragonBones;
 (function (dragonBones) {
     /**
+     * @internal
      * @private
      */
     var DataParser = (function () {
@@ -8580,9 +10063,14 @@ var dragonBones;
             }
         };
         /**
+         * - Deprecated, please refer to {@link dragonBones.BaseFactory#parsetTextureAtlasData()}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.BaseFactory#parseDragonBonesData()
+         * @language en_US
+         */
+        /**
+         * - 已废弃，请参考 {@link dragonBones.BaseFactory#parsetTextureAtlasData()}。
+         * @deprecated
+         * @language zh_CN
          */
         DataParser.parseDragonBonesData = function (rawData) {
             if (rawData instanceof ArrayBuffer) {
@@ -8593,13 +10081,18 @@ var dragonBones;
             }
         };
         /**
+         * - Deprecated, please refer to {@link dragonBones.BaseFactory#parsetTextureAtlasData()}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.BaseFactory#parsetTextureAtlasData()
+         * @language en_US
+         */
+        /**
+         * - 已废弃，请参考 {@link dragonBones.BaseFactory#parsetTextureAtlasData()}。
+         * @deprecated
+         * @language zh_CN
          */
         DataParser.parseTextureAtlasData = function (rawData, scale) {
             if (scale === void 0) { scale = 1; }
-            console.warn("已废弃，请参考 @see，WebAssembly 不支持该废弃 API。");
+            console.warn("已废弃");
             var textureAtlasData = {};
             var subTextureList = rawData[DataParser.SUB_TEXTURE];
             for (var i = 0, len = subTextureList.length; i < len; i++) {
@@ -8704,7 +10197,6 @@ var dragonBones;
         DataParser.OFFSET = "offset";
         DataParser.POSITION = "position";
         DataParser.DURATION = "duration";
-        DataParser.TWEEN_TYPE = "tweenType";
         DataParser.TWEEN_EASING = "tweenEasing";
         DataParser.TWEEN_ROTATE = "tweenRotate";
         DataParser.TWEEN_SCALE = "tweenScale";
@@ -8742,9 +10234,32 @@ var dragonBones;
     }());
     dragonBones.DataParser = DataParser;
 })(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 var dragonBones;
 (function (dragonBones) {
     /**
+     * @internal
      * @private
      */
     var ObjectDataParser = (function (_super) {
@@ -8811,9 +10326,6 @@ var dragonBones;
             }
             return defaultValue;
         };
-        /**
-         * @private
-         */
         ObjectDataParser._getNumber = function (rawData, key, defaultValue) {
             if (key in rawData) {
                 var value = rawData[key];
@@ -8824,9 +10336,6 @@ var dragonBones;
             }
             return defaultValue;
         };
-        /**
-         * @private
-         */
         ObjectDataParser._getString = function (rawData, key, defaultValue) {
             if (key in rawData) {
                 var value = rawData[key];
@@ -8845,9 +10354,6 @@ var dragonBones;
             }
             return defaultValue;
         };
-        /**
-         * @private
-         */
         ObjectDataParser.prototype._getCurvePoint = function (x1, y1, x2, y2, x3, y3, x4, y4, t, result) {
             var l_t = 1.0 - t;
             var powA = l_t * l_t;
@@ -8859,9 +10365,6 @@ var dragonBones;
             result.x = kA * x1 + kB * x2 + kC * x3 + kD * x4;
             result.y = kA * y1 + kB * y2 + kC * y3 + kD * y4;
         };
-        /**
-         * @private
-         */
         ObjectDataParser.prototype._samplingEasingCurve = function (curve, samples) {
             var curveCount = curve.length;
             var stepIndex = -2;
@@ -9108,9 +10611,6 @@ var dragonBones;
             }
             return armature;
         };
-        /**
-         * @private
-         */
         ObjectDataParser.prototype._parseBone = function (rawData) {
             var bone = dragonBones.BaseObject.borrowObject(dragonBones.BoneData);
             bone.inheritTranslation = ObjectDataParser._getBoolean(rawData, ObjectDataParser.INHERIT_TRANSLATION, true);
@@ -9124,9 +10624,6 @@ var dragonBones;
             }
             return bone;
         };
-        /**
-         * @private
-         */
         ObjectDataParser.prototype._parseIKConstraint = function (rawData) {
             var bone = this._armature.getBone(ObjectDataParser._getString(rawData, ObjectDataParser.BONE, ""));
             if (bone === null) {
@@ -9149,9 +10646,6 @@ var dragonBones;
             }
             return constraint;
         };
-        /**
-         * @private
-         */
         ObjectDataParser.prototype._parseSlot = function (rawData, zOrder) {
             var slot = dragonBones.BaseObject.borrowObject(dragonBones.SlotData);
             slot.displayIndex = ObjectDataParser._getNumber(rawData, ObjectDataParser.DISPLAY_INDEX, 0);
@@ -9176,9 +10670,6 @@ var dragonBones;
             }
             return slot;
         };
-        /**
-         * @private
-         */
         ObjectDataParser.prototype._parseSkin = function (rawData) {
             var skin = dragonBones.BaseObject.borrowObject(dragonBones.SkinData);
             skin.name = ObjectDataParser._getString(rawData, ObjectDataParser.NAME, ObjectDataParser.DEFAULT_NAME);
@@ -9208,9 +10699,6 @@ var dragonBones;
             }
             return skin;
         };
-        /**
-         * @private
-         */
         ObjectDataParser.prototype._parseDisplay = function (rawData) {
             var name = ObjectDataParser._getString(rawData, ObjectDataParser.NAME, "");
             var path = ObjectDataParser._getString(rawData, ObjectDataParser.PATH, "");
@@ -9299,9 +10787,6 @@ var dragonBones;
             }
             return display;
         };
-        /**
-         * @private
-         */
         ObjectDataParser.prototype._parsePivot = function (rawData, display) {
             if (ObjectDataParser.PIVOT in rawData) {
                 var rawPivot = rawData[ObjectDataParser.PIVOT];
@@ -9313,9 +10798,6 @@ var dragonBones;
                 display.pivot.y = 0.5;
             }
         };
-        /**
-         * @private
-         */
         ObjectDataParser.prototype._parseMesh = function (rawData, mesh) {
             var rawVertices = rawData[ObjectDataParser.VERTICES];
             var rawUVs = rawData[ObjectDataParser.UVS];
@@ -9390,9 +10872,6 @@ var dragonBones;
                 this._weightBonePoses[meshName] = rawBonePoses;
             }
         };
-        /**
-         * @private
-         */
         ObjectDataParser.prototype._parseBoundingBox = function (rawData) {
             var boundingBox = null;
             var type = 0 /* Rectangle */;
@@ -9422,9 +10901,6 @@ var dragonBones;
             }
             return boundingBox;
         };
-        /**
-         * @private
-         */
         ObjectDataParser.prototype._parsePolygonBoundingBox = function (rawData) {
             var polygonBoundingBox = dragonBones.BaseObject.borrowObject(dragonBones.PolygonBoundingBoxData);
             if (ObjectDataParser.VERTICES in rawData) {
@@ -9475,9 +10951,6 @@ var dragonBones;
             }
             return polygonBoundingBox;
         };
-        /**
-         * @private
-         */
         ObjectDataParser.prototype._parseAnimation = function (rawData) {
             var animation = dragonBones.BaseObject.borrowObject(dragonBones.AnimationData);
             animation.frameCount = Math.max(ObjectDataParser._getNumber(rawData, ObjectDataParser.DURATION, 1), 1);
@@ -9571,9 +11044,6 @@ var dragonBones;
             this._animation = null; //
             return animation;
         };
-        /**
-         * @private
-         */
         ObjectDataParser.prototype._parseTimeline = function (rawData, rawFrames, framesKey, type, addIntOffset, addFloatOffset, frameValueCount, frameParser) {
             if (rawData !== null && framesKey.length > 0 && framesKey in rawData) {
                 rawFrames = rawData[framesKey];
@@ -9658,9 +11128,6 @@ var dragonBones;
             this._timeline = null; //
             return timeline;
         };
-        /**
-         * @private
-         */
         ObjectDataParser.prototype._parseBoneTimeline = function (rawData) {
             var bone = this._armature.getBone(ObjectDataParser._getString(rawData, ObjectDataParser.NAME, ""));
             if (bone === null) {
@@ -9695,9 +11162,6 @@ var dragonBones;
             this._bone = null; //
             this._slot = null; //
         };
-        /**
-         * @private
-         */
         ObjectDataParser.prototype._parseSlotTimeline = function (rawData) {
             var slot = this._armature.getSlot(ObjectDataParser._getString(rawData, ObjectDataParser.NAME, ""));
             if (slot === null) {
@@ -9727,20 +11191,16 @@ var dragonBones;
             }
             this._slot = null; //
         };
-        /**
-         * @private
-         */
         ObjectDataParser.prototype._parseFrame = function (rawData, frameStart, frameCount) {
+            // tslint:disable-next-line:no-unused-expression
             rawData;
+            // tslint:disable-next-line:no-unused-expression
             frameCount;
             var frameOffset = this._frameArray.length;
             this._frameArray.length += 1;
             this._frameArray[frameOffset + 0 /* FramePosition */] = frameStart;
             return frameOffset;
         };
-        /**
-         * @private
-         */
         ObjectDataParser.prototype._parseTweenFrame = function (rawData, frameStart, frameCount) {
             var frameOffset = this._parseFrame(rawData, frameStart, frameCount);
             if (frameCount > 0) {
@@ -9793,6 +11253,7 @@ var dragonBones;
             return frameOffset;
         };
         ObjectDataParser.prototype._parseActionFrame = function (frame, frameStart, frameCount) {
+            // tslint:disable-next-line:no-unused-expression
             frameCount;
             var frameOffset = this._frameArray.length;
             var actionCount = frame.actions.length;
@@ -9849,9 +11310,6 @@ var dragonBones;
             this._frameArray[frameOffset + 1] = 0;
             return frameOffset;
         };
-        /**
-         * @private
-         */
         ObjectDataParser.prototype._parseBoneAllFrame = function (rawData, frameStart, frameCount) {
             this._helpTransform.identity();
             if (ObjectDataParser.TRANSFORM in rawData) {
@@ -9885,9 +11343,6 @@ var dragonBones;
             this._parseActionDataInFrame(rawData, frameStart, this._bone, this._slot);
             return frameOffset;
         };
-        /**
-         * @private
-         */
         ObjectDataParser.prototype._parseBoneTranslateFrame = function (rawData, frameStart, frameCount) {
             var frameOffset = this._parseTweenFrame(rawData, frameStart, frameCount);
             var frameFloatOffset = this._frameFloatArray.length;
@@ -9896,9 +11351,6 @@ var dragonBones;
             this._frameFloatArray[frameFloatOffset++] = ObjectDataParser._getNumber(rawData, ObjectDataParser.Y, 0.0);
             return frameOffset;
         };
-        /**
-         * @private
-         */
         ObjectDataParser.prototype._parseBoneRotateFrame = function (rawData, frameStart, frameCount) {
             // Modify rotation.
             var rotation = ObjectDataParser._getNumber(rawData, ObjectDataParser.ROTATE, 0.0) * dragonBones.Transform.DEG_RAD;
@@ -9923,9 +11375,6 @@ var dragonBones;
             this._frameFloatArray[frameFloatOffset++] = ObjectDataParser._getNumber(rawData, ObjectDataParser.SKEW, 0.0) * dragonBones.Transform.DEG_RAD;
             return frameOffset;
         };
-        /**
-         * @private
-         */
         ObjectDataParser.prototype._parseBoneScaleFrame = function (rawData, frameStart, frameCount) {
             var frameOffset = this._parseTweenFrame(rawData, frameStart, frameCount);
             var frameFloatOffset = this._frameFloatArray.length;
@@ -9934,9 +11383,6 @@ var dragonBones;
             this._frameFloatArray[frameFloatOffset++] = ObjectDataParser._getNumber(rawData, ObjectDataParser.Y, 1.0);
             return frameOffset;
         };
-        /**
-         * @private
-         */
         ObjectDataParser.prototype._parseSlotDisplayFrame = function (rawData, frameStart, frameCount) {
             var frameOffset = this._parseFrame(rawData, frameStart, frameCount);
             this._frameArray.length += 1;
@@ -9949,15 +11395,13 @@ var dragonBones;
             this._parseActionDataInFrame(rawData, frameStart, this._slot.parent, this._slot);
             return frameOffset;
         };
-        /**
-         * @private
-         */
         ObjectDataParser.prototype._parseSlotColorFrame = function (rawData, frameStart, frameCount) {
             var frameOffset = this._parseTweenFrame(rawData, frameStart, frameCount);
             var colorOffset = -1;
             if (ObjectDataParser.VALUE in rawData || ObjectDataParser.COLOR in rawData) {
                 var rawColor = ObjectDataParser.VALUE in rawData ? rawData[ObjectDataParser.VALUE] : rawData[ObjectDataParser.COLOR];
                 for (var k in rawColor) {
+                    // tslint:disable-next-line:no-unused-expression
                     k;
                     this._parseColorTransform(rawColor, this._helpColorTransform);
                     colorOffset = this._intArray.length;
@@ -9994,9 +11438,6 @@ var dragonBones;
             this._frameIntArray[frameIntOffset] = colorOffset;
             return frameOffset;
         };
-        /**
-         * @private
-         */
         ObjectDataParser.prototype._parseSlotFFDFrame = function (rawData, frameStart, frameCount) {
             var frameFloatOffset = this._frameFloatArray.length;
             var frameOffset = this._parseTweenFrame(rawData, frameStart, frameCount);
@@ -10068,9 +11509,6 @@ var dragonBones;
             }
             return frameOffset;
         };
-        /**
-         * @private
-         */
         ObjectDataParser.prototype._parseIKConstraintFrame = function (rawData, frameStart, frameCount) {
             var frameOffset = this._parseTweenFrame(rawData, frameStart, frameCount);
             var frameIntOffset = this._frameIntArray.length;
@@ -10079,9 +11517,6 @@ var dragonBones;
             this._frameIntArray[frameIntOffset++] = Math.round(ObjectDataParser._getNumber(rawData, ObjectDataParser.WEIGHT, 1.0) * 100.0);
             return frameOffset;
         };
-        /**
-         * @private
-         */
         ObjectDataParser.prototype._parseActionData = function (rawData, type, bone, slot) {
             var actions = new Array();
             if (typeof rawData === "string") {
@@ -10160,9 +11595,6 @@ var dragonBones;
             }
             return actions;
         };
-        /**
-         * @private
-         */
         ObjectDataParser.prototype._parseTransform = function (rawData, transform, scale) {
             transform.x = ObjectDataParser._getNumber(rawData, ObjectDataParser.X, 0.0) * scale;
             transform.y = ObjectDataParser._getNumber(rawData, ObjectDataParser.Y, 0.0) * scale;
@@ -10177,9 +11609,6 @@ var dragonBones;
             transform.scaleX = ObjectDataParser._getNumber(rawData, ObjectDataParser.SCALE_X, 1.0);
             transform.scaleY = ObjectDataParser._getNumber(rawData, ObjectDataParser.SCALE_Y, 1.0);
         };
-        /**
-         * @private
-         */
         ObjectDataParser.prototype._parseColorTransform = function (rawData, color) {
             color.alphaMultiplier = ObjectDataParser._getNumber(rawData, ObjectDataParser.ALPHA_MULTIPLIER, 100) * 0.01;
             color.redMultiplier = ObjectDataParser._getNumber(rawData, ObjectDataParser.RED_MULTIPLIER, 100) * 0.01;
@@ -10190,10 +11619,8 @@ var dragonBones;
             color.greenOffset = ObjectDataParser._getNumber(rawData, ObjectDataParser.GREEN_OFFSET, 0);
             color.blueOffset = ObjectDataParser._getNumber(rawData, ObjectDataParser.BLUE_OFFSET, 0);
         };
-        /**
-         * @private
-         */
         ObjectDataParser.prototype._parseArray = function (rawData) {
+            // tslint:disable-next-line:no-unused-expression
             rawData;
             this._intArray.length = 0;
             this._floatArray.length = 0;
@@ -10202,9 +11629,6 @@ var dragonBones;
             this._frameArray.length = 0;
             this._timelineArray.length = 0;
         };
-        /**
-         * @private
-         */
         ObjectDataParser.prototype._modifyArray = function () {
             // Align.
             if ((this._intArray.length % Int16Array.BYTES_PER_ELEMENT) !== 0) {
@@ -10291,9 +11715,6 @@ var dragonBones;
             }
             this._defaultColorOffset = -1;
         };
-        /**
-         * @inheritDoc
-         */
         ObjectDataParser.prototype.parseDragonBonesData = function (rawData, scale) {
             if (scale === void 0) { scale = 1; }
             console.assert(rawData !== null && rawData !== undefined, "Data error.");
@@ -10339,9 +11760,6 @@ var dragonBones;
             }
             return null;
         };
-        /**
-         * @inheritDoc
-         */
         ObjectDataParser.prototype.parseTextureAtlasData = function (rawData, textureAtlasData, scale) {
             if (scale === void 0) { scale = 1.0; }
             console.assert(rawData !== undefined);
@@ -10389,9 +11807,14 @@ var dragonBones;
             return true;
         };
         /**
+         * - Deprecated, please refer to {@link dragonBones.BaseFactory#parseDragonBonesData()}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.BaseFactory#parseDragonBonesData()
+         * @language en_US
+         */
+        /**
+         * - 已废弃，请参考 {@link dragonBones.BaseFactory#parseDragonBonesData()}。
+         * @deprecated
+         * @language zh_CN
          */
         ObjectDataParser.getInstance = function () {
             if (ObjectDataParser._objectDataParserInstance === null) {
@@ -10399,13 +11822,14 @@ var dragonBones;
             }
             return ObjectDataParser._objectDataParserInstance;
         };
-        /**
-         * @private
-         */
         ObjectDataParser._objectDataParserInstance = null;
         return ObjectDataParser;
     }(dragonBones.DataParser));
     dragonBones.ObjectDataParser = ObjectDataParser;
+    /**
+     * @internal
+     * @private
+     */
     var ActionFrame = (function () {
         function ActionFrame() {
             this.frameStart = 0;
@@ -10413,10 +11837,34 @@ var dragonBones;
         }
         return ActionFrame;
     }());
+    dragonBones.ActionFrame = ActionFrame;
 })(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 var dragonBones;
 (function (dragonBones) {
     /**
+     * @internal
      * @private
      */
     var BinaryDataParser = (function (_super) {
@@ -10573,9 +12021,6 @@ var dragonBones;
             this._timeline = null; //
             return timeline;
         };
-        /**
-         * @private
-         */
         BinaryDataParser.prototype._parseMesh = function (rawData, mesh) {
             mesh.offset = rawData[dragonBones.ObjectDataParser.OFFSET];
             var weightOffset = this._intArrayBuffer[mesh.offset + 3 /* MeshWeightOffset */];
@@ -10599,9 +12044,6 @@ var dragonBones;
                 mesh.weight = weight;
             }
         };
-        /**
-         * @private
-         */
         BinaryDataParser.prototype._parseAnimation = function (rawData) {
             var animation = dragonBones.BaseObject.borrowObject(dragonBones.AnimationData);
             animation.frameCount = Math.max(dragonBones.ObjectDataParser._getNumber(rawData, dragonBones.ObjectDataParser.DURATION, 1), 1);
@@ -10685,9 +12127,6 @@ var dragonBones;
             this._animation = null;
             return animation;
         };
-        /**
-         * @private
-         */
         BinaryDataParser.prototype._parseArray = function (rawData) {
             var offsets = rawData[dragonBones.ObjectDataParser.OFFSET];
             var l1 = offsets[1];
@@ -10728,9 +12167,6 @@ var dragonBones;
                 this._data.timelineArray = this._timelineArrayBuffer = timelineArray;
             }
         };
-        /**
-         * @inheritDoc
-         */
         BinaryDataParser.prototype.parseDragonBonesData = function (rawData, scale) {
             if (scale === void 0) { scale = 1; }
             console.assert(rawData !== null && rawData !== undefined && rawData instanceof ArrayBuffer, "Data error.");
@@ -10746,14 +12182,20 @@ var dragonBones;
             var headerBytes = new Uint8Array(rawData, 8 + 4, headerLength);
             var headerString = this._decodeUTF8(headerBytes);
             var header = JSON.parse(headerString);
-            this._binary = rawData;
+            //
             this._binaryOffset = 8 + 4 + headerLength;
+            this._binary = rawData;
             return _super.prototype.parseDragonBonesData.call(this, header, scale);
         };
         /**
+         * - Deprecated, please refer to {@link dragonBones.BaseFactory#parseDragonBonesData()}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.BaseFactory#parseDragonBonesData()
+         * @language en_US
+         */
+        /**
+         * - 已废弃，请参考 {@link dragonBones.BaseFactory#parseDragonBonesData()}。
+         * @deprecated
+         * @language zh_CN
          */
         BinaryDataParser.getInstance = function () {
             if (BinaryDataParser._binaryDataParserInstance === null) {
@@ -10761,30 +12203,50 @@ var dragonBones;
             }
             return BinaryDataParser._binaryDataParserInstance;
         };
-        /**
-         * @private
-         */
         BinaryDataParser._binaryDataParserInstance = null;
         return BinaryDataParser;
     }(dragonBones.ObjectDataParser));
     dragonBones.BinaryDataParser = BinaryDataParser;
 })(dragonBones || (dragonBones = {}));
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 var dragonBones;
 (function (dragonBones) {
     /**
-     * @private
+     * - Base class for the factory that create the armatures. (Typically only one global factory instance is required)
+     * The factory instance create armatures by parsed and added DragonBonesData instances and TextureAtlasData instances.
+     * Once the data has been parsed, it has been cached in the factory instance and does not need to be parsed again until it is cleared by the factory instance.
+     * @see dragonBones.DragonBonesData
+     * @see dragonBones.TextureAtlasData
+     * @see dragonBones.ArmatureData
+     * @see dragonBones.Armature
+     * @version DragonBones 3.0
+     * @language en_US
      */
-    var BuildArmaturePackage = (function () {
-        function BuildArmaturePackage() {
-            this.dataName = "";
-            this.textureAtlasName = "";
-            this.skin = null;
-        }
-        return BuildArmaturePackage;
-    }());
-    dragonBones.BuildArmaturePackage = BuildArmaturePackage;
     /**
-     * 创建骨架的基础工厂。 (通常只需要一个全局工厂实例)
+     * - 创建骨架的工厂基类。 （通常只需要一个全局工厂实例）
+     * 工厂通过解析并添加的 DragonBonesData 实例和 TextureAtlasData 实例来创建骨架。
+     * 当数据被解析过之后，已经添加到工厂中，在没有被工厂清理之前，不需要再次解析。
      * @see dragonBones.DragonBonesData
      * @see dragonBones.TextureAtlasData
      * @see dragonBones.ArmatureData
@@ -10794,20 +12256,19 @@ var dragonBones;
      */
     var BaseFactory = (function () {
         /**
-         * 创建一个工厂。 (通常只需要一个全局工厂实例)
-         * @param dataParser 龙骨数据解析器，如果不设置，则使用默认解析器。
+         * - Create a factory instance. (typically only one global factory instance is required)
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 创建一个工厂实例。 （通常只需要一个全局工厂实例）
          * @version DragonBones 3.0
          * @language zh_CN
          */
         function BaseFactory(dataParser) {
             if (dataParser === void 0) { dataParser = null; }
             /**
-             * 是否开启共享搜索。
-             * 如果开启，创建一个骨架时，可以从多个龙骨数据中寻找骨架数据，或贴图集数据中寻找贴图数据。 (通常在有共享导出的数据时开启)
-             * @see dragonBones.DragonBonesData#autoSearch
-             * @see dragonBones.TextureAtlasData#autoSearch
-             * @version DragonBones 4.5
-             * @language zh_CN
+             * @private
              */
             this.autoSearch = false;
             /**
@@ -10969,7 +12430,7 @@ var dragonBones;
                 armature.addSlot(slot, slotData.parent.name);
                 if (displays !== null) {
                     var displayList = new Array();
-                    // for (const displayData of displays) {
+                    // for (const displayData of displays) 
                     for (var i = 0, l = dragonBones.DragonBones.webAssembly ? displays.size() : displays.length; i < l; ++i) {
                         var displayData = dragonBones.DragonBones.webAssembly ? displays.get(i) : displays[i];
                         if (displayData !== null) {
@@ -10987,11 +12448,19 @@ var dragonBones;
         /**
          * @private
          */
+        BaseFactory.prototype._buildChildArmature = function (dataPackage, slot, displayData) {
+            // tslint:disable-next-line:no-unused-expression
+            slot;
+            return this.buildArmature(displayData.path, dataPackage !== null ? dataPackage.dataName : "", "", dataPackage !== null ? dataPackage.textureAtlasName : "");
+        };
+        /**
+         * @private
+         */
         BaseFactory.prototype._getSlotDisplay = function (dataPackage, displayData, rawDisplayData, slot) {
             var dataName = dataPackage !== null ? dataPackage.dataName : displayData.parent.parent.parent.name;
             var display = null;
             switch (displayData.type) {
-                case 0 /* Image */:
+                case 0 /* Image */: {
                     var imageDisplayData = displayData;
                     if (imageDisplayData.texture === null) {
                         imageDisplayData.texture = this._getTextureData(dataName, displayData.path);
@@ -11006,7 +12475,8 @@ var dragonBones;
                         display = slot.rawDisplay;
                     }
                     break;
-                case 2 /* Mesh */:
+                }
+                case 2 /* Mesh */: {
                     var meshDisplayData = displayData;
                     if (meshDisplayData.texture === null) {
                         meshDisplayData.texture = this._getTextureData(dataName, meshDisplayData.path);
@@ -11021,9 +12491,10 @@ var dragonBones;
                         display = slot.rawDisplay;
                     }
                     break;
-                case 1 /* Armature */:
+                }
+                case 1 /* Armature */: {
                     var armatureDisplayData = displayData;
-                    var childArmature = this.buildArmature(armatureDisplayData.path, dataName, null, dataPackage !== null ? dataPackage.textureAtlasName : null);
+                    var childArmature = this._buildChildArmature(dataPackage, slot, displayData);
                     if (childArmature !== null) {
                         childArmature.inheritAnimation = armatureDisplayData.inheritAnimation;
                         if (!childArmature.inheritAnimation) {
@@ -11042,15 +12513,398 @@ var dragonBones;
                     }
                     display = childArmature;
                     break;
+                }
                 case 3 /* BoundingBox */:
+                    break;
+                default:
                     break;
             }
             return display;
         };
         /**
+         * - Parse the raw data to a DragonBonesData instance and cache it to the factory.
+         * @param rawData - The raw data
+         * @param name - Specify a cache name for the instance so that the instance can be obtained through this name. (If not set, use the instance name instead)
+         * @param scale - Specify a scaling value for all armatures. (Default does not scale)
+         * @returns DragonBonesData instance
+         * @see #getDragonBonesData()
+         * @see #addDragonBonesData()
+         * @see #removeDragonBonesData()
+         * @see dragonBones.DragonBonesData
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
+         * - 将原始数据解析为 DragonBonesData 实例，并缓存到工厂中。
+         * @param rawData - 原始数据
+         * @param name - 为该实例指定一个缓存名称，以便可以通过此名称获取该实例。 （如果未设置，则使用该实例中的名称）
+         * @param scale - 为所有的骨架指定一个缩放值。 （默认不缩放）
+         * @returns DragonBonesData 实例
+         * @see #getDragonBonesData()
+         * @see #addDragonBonesData()
+         * @see #removeDragonBonesData()
+         * @see dragonBones.DragonBonesData
+         * @version DragonBones 4.5
+         * @language zh_CN
+         */
+        BaseFactory.prototype.parseDragonBonesData = function (rawData, name, scale) {
+            if (name === void 0) { name = null; }
+            if (scale === void 0) { scale = 1.0; }
+            var dataParser = rawData instanceof ArrayBuffer ? BaseFactory._binaryParser : this._dataParser;
+            var dragonBonesData = dataParser.parseDragonBonesData(rawData, scale);
+            while (true) {
+                var textureAtlasData = this._buildTextureAtlasData(null, null);
+                if (dataParser.parseTextureAtlasData(null, textureAtlasData, scale)) {
+                    this.addTextureAtlasData(textureAtlasData, name);
+                }
+                else {
+                    textureAtlasData.returnToPool();
+                    break;
+                }
+            }
+            if (dragonBonesData !== null) {
+                this.addDragonBonesData(dragonBonesData, name);
+            }
+            return dragonBonesData;
+        };
+        /**
+         * - Parse the raw texture atlas data and the texture atlas object to a TextureAtlasData instance and cache it to the factory.
+         * @param rawData - The raw texture atlas data
+         * @param textureAtlas - The texture atlas object
+         * @param name - Specify a cache name for the instance so that the instance can be obtained through this name. (If not set, use the instance name instead)
+         * @param scale - Specify a scaling value for the map set. (Not scaled by default)
+         * @returns TextureAtlasData instance
+         * @see #getTextureAtlasData()
+         * @see #addTextureAtlasData()
+         * @see #removeTextureAtlasData()
+         * @see dragonBones.TextureAtlasData
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
+         * - 将原始贴图集数据和贴图集对象解析为 TextureAtlasData 实例，并缓存到工厂中。
+         * @param rawData - 原始贴图集数据
+         * @param textureAtlas - 贴图集对象
+         * @param name - 为该实例指定一个缓存名称，以便可以通过此名称获取该实例。 （如果未设置，则使用该实例中的名称）
+         * @param scale - 为贴图集指定一个缩放值。 （默认不缩放）
+         * @returns TextureAtlasData 实例
+         * @see #getTextureAtlasData()
+         * @see #addTextureAtlasData()
+         * @see #removeTextureAtlasData()
+         * @see dragonBones.TextureAtlasData
+         * @version DragonBones 4.5
+         * @language zh_CN
+         */
+        BaseFactory.prototype.parseTextureAtlasData = function (rawData, textureAtlas, name, scale) {
+            if (name === void 0) { name = null; }
+            if (scale === void 0) { scale = 1.0; }
+            var textureAtlasData = this._buildTextureAtlasData(null, null);
+            this._dataParser.parseTextureAtlasData(rawData, textureAtlasData, scale);
+            this._buildTextureAtlasData(textureAtlasData, textureAtlas || null);
+            this.addTextureAtlasData(textureAtlasData, name);
+            return textureAtlasData;
+        };
+        /**
          * @private
          */
-        BaseFactory.prototype._replaceSlotDisplay = function (dataPackage, displayData, slot, displayIndex) {
+        BaseFactory.prototype.updateTextureAtlasData = function (name, textureAtlases) {
+            var textureAtlasDatas = this.getTextureAtlasData(name);
+            if (textureAtlasDatas !== null) {
+                for (var i = 0, l = textureAtlasDatas.length; i < l; ++i) {
+                    if (i < textureAtlases.length) {
+                        this._buildTextureAtlasData(textureAtlasDatas[i], textureAtlases[i]);
+                    }
+                }
+            }
+        };
+        /**
+         * - Get a specific DragonBonesData instance.
+         * @param name - The DragonBonesData instance cache name
+         * @returns DragonBonesData instance
+         * @see #parseDragonBonesData()
+         * @see #addDragonBonesData()
+         * @see #removeDragonBonesData()
+         * @see dragonBones.DragonBonesData
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 获取特定的 DragonBonesData 实例。
+         * @param name - DragonBonesData 实例的缓存名称
+         * @returns DragonBonesData 实例
+         * @see #parseDragonBonesData()
+         * @see #addDragonBonesData()
+         * @see #removeDragonBonesData()
+         * @see dragonBones.DragonBonesData
+         * @version DragonBones 3.0
+         * @language zh_CN
+         */
+        BaseFactory.prototype.getDragonBonesData = function (name) {
+            return (name in this._dragonBonesDataMap) ? this._dragonBonesDataMap[name] : null;
+        };
+        /**
+         * - Cache a DragonBonesData instance to the factory.
+         * @param data - The DragonBonesData instance
+         * @param name - Specify a cache name for the instance so that the instance can be obtained through this name. (if not set, use the instance name instead)
+         * @see #parseDragonBonesData()
+         * @see #getDragonBonesData()
+         * @see #removeDragonBonesData()
+         * @see dragonBones.DragonBonesData
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 将 DragonBonesData 实例缓存到工厂中。
+         * @param data - DragonBonesData 实例
+         * @param name - 为该实例指定一个缓存名称，以便可以通过此名称获取该实例。 （如果未设置，则使用该实例中的名称）
+         * @see #parseDragonBonesData()
+         * @see #getDragonBonesData()
+         * @see #removeDragonBonesData()
+         * @see dragonBones.DragonBonesData
+         * @version DragonBones 3.0
+         * @language zh_CN
+         */
+        BaseFactory.prototype.addDragonBonesData = function (data, name) {
+            if (name === void 0) { name = null; }
+            name = name !== null ? name : data.name;
+            if (name in this._dragonBonesDataMap) {
+                if (this._dragonBonesDataMap[name] === data) {
+                    return;
+                }
+                console.warn("Can not add same name data: " + name);
+                return;
+            }
+            this._dragonBonesDataMap[name] = data;
+        };
+        /**
+         * - Remove a DragonBonesData instance.
+         * @param name - The DragonBonesData instance cache name
+         * @param disposeData - Whether to dispose data
+         * @see #parseDragonBonesData()
+         * @see #getDragonBonesData()
+         * @see #addDragonBonesData()
+         * @see dragonBones.DragonBonesData
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 移除 DragonBonesData 实例。
+         * @param name - DragonBonesData 实例缓存名称
+         * @param disposeData - 是否释放数据
+         * @see #parseDragonBonesData()
+         * @see #getDragonBonesData()
+         * @see #addDragonBonesData()
+         * @see dragonBones.DragonBonesData
+         * @version DragonBones 3.0
+         * @language zh_CN
+         */
+        BaseFactory.prototype.removeDragonBonesData = function (name, disposeData) {
+            if (disposeData === void 0) { disposeData = true; }
+            if (name in this._dragonBonesDataMap) {
+                if (disposeData) {
+                    this._dragonBones.bufferObject(this._dragonBonesDataMap[name]);
+                }
+                delete this._dragonBonesDataMap[name];
+            }
+        };
+        /**
+         * - Get a list of specific TextureAtlasData instances.
+         * @param name - The TextureAtlasData cahce name
+         * @see #parseTextureAtlasData()
+         * @see #addTextureAtlasData()
+         * @see #removeTextureAtlasData()
+         * @see dragonBones.TextureAtlasData
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 获取特定的 TextureAtlasData 实例列表。
+         * @param name - TextureAtlasData 实例缓存名称
+         * @see #parseTextureAtlasData()
+         * @see #addTextureAtlasData()
+         * @see #removeTextureAtlasData()
+         * @see dragonBones.TextureAtlasData
+         * @version DragonBones 3.0
+         * @language zh_CN
+         */
+        BaseFactory.prototype.getTextureAtlasData = function (name) {
+            return (name in this._textureAtlasDataMap) ? this._textureAtlasDataMap[name] : null;
+        };
+        /**
+         * - Cache a TextureAtlasData instance to the factory.
+         * @param data - The TextureAtlasData instance
+         * @param name - Specify a cache name for the instance so that the instance can be obtained through this name. (if not set, use the instance name instead)
+         * @see #parseTextureAtlasData()
+         * @see #getTextureAtlasData()
+         * @see #removeTextureAtlasData()
+         * @see dragonBones.TextureAtlasData
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 将 TextureAtlasData 实例缓存到工厂中。
+         * @param data - TextureAtlasData 实例
+         * @param name - 为该实例指定一个缓存名称，以便可以通过此名称获取该实例。 （如果未设置，则使用该实例中的名称）
+         * @see #parseTextureAtlasData()
+         * @see #getTextureAtlasData()
+         * @see #removeTextureAtlasData()
+         * @see dragonBones.TextureAtlasData
+         * @version DragonBones 3.0
+         * @language zh_CN
+         */
+        BaseFactory.prototype.addTextureAtlasData = function (data, name) {
+            if (name === void 0) { name = null; }
+            name = name !== null ? name : data.name;
+            var textureAtlasList = (name in this._textureAtlasDataMap) ? this._textureAtlasDataMap[name] : (this._textureAtlasDataMap[name] = []);
+            if (textureAtlasList.indexOf(data) < 0) {
+                textureAtlasList.push(data);
+            }
+        };
+        /**
+         * - Remove a TextureAtlasData instance.
+         * @param name - The TextureAtlasData instance cache name
+         * @param disposeData - Whether to dispose data
+         * @see #parseTextureAtlasData()
+         * @see #getTextureAtlasData()
+         * @see #addTextureAtlasData()
+         * @see dragonBones.TextureAtlasData
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 移除 TextureAtlasData 实例。
+         * @param name - TextureAtlasData 实例的缓存名称
+         * @param disposeData - 是否释放数据
+         * @see #parseTextureAtlasData()
+         * @see #getTextureAtlasData()
+         * @see #addTextureAtlasData()
+         * @see dragonBones.TextureAtlasData
+         * @version DragonBones 3.0
+         * @language zh_CN
+         */
+        BaseFactory.prototype.removeTextureAtlasData = function (name, disposeData) {
+            if (disposeData === void 0) { disposeData = true; }
+            if (name in this._textureAtlasDataMap) {
+                var textureAtlasDataList = this._textureAtlasDataMap[name];
+                if (disposeData) {
+                    for (var _i = 0, textureAtlasDataList_1 = textureAtlasDataList; _i < textureAtlasDataList_1.length; _i++) {
+                        var textureAtlasData = textureAtlasDataList_1[_i];
+                        this._dragonBones.bufferObject(textureAtlasData);
+                    }
+                }
+                delete this._textureAtlasDataMap[name];
+            }
+        };
+        /**
+         * - Get a specific armature data.
+         * @param name - The armature data name
+         * @param dragonBonesName - The cached name for DragonbonesData instance
+         * @see dragonBones.ArmatureData
+         * @version DragonBones 5.1
+         * @language en_US
+         */
+        /**
+         * - 获取特定的骨架数据。
+         * @param name - 骨架数据名称
+         * @param dragonBonesName - DragonBonesData 实例的缓存名称
+         * @see dragonBones.ArmatureData
+         * @version DragonBones 5.1
+         * @language zh_CN
+         */
+        BaseFactory.prototype.getArmatureData = function (name, dragonBonesName) {
+            if (dragonBonesName === void 0) { dragonBonesName = ""; }
+            var dataPackage = new BuildArmaturePackage();
+            if (!this._fillBuildArmaturePackage(dataPackage, dragonBonesName, name, "", "")) {
+                return null;
+            }
+            return dataPackage.armature;
+        };
+        /**
+         * - Clear all cached DragonBonesData instances and TextureAtlasData instances.
+         * @param disposeData - Whether to dispose data
+         * @version DragonBones 4.5
+         * @language en_US
+         */
+        /**
+         * - 清除缓存的所有 DragonBonesData 实例和 TextureAtlasData 实例。
+         * @param disposeData - 是否释放数据
+         * @version DragonBones 4.5
+         * @language zh_CN
+         */
+        BaseFactory.prototype.clear = function (disposeData) {
+            if (disposeData === void 0) { disposeData = true; }
+            for (var k in this._dragonBonesDataMap) {
+                if (disposeData) {
+                    this._dragonBones.bufferObject(this._dragonBonesDataMap[k]);
+                }
+                delete this._dragonBonesDataMap[k];
+            }
+            for (var k in this._textureAtlasDataMap) {
+                if (disposeData) {
+                    var textureAtlasDataList = this._textureAtlasDataMap[k];
+                    for (var _i = 0, textureAtlasDataList_2 = textureAtlasDataList; _i < textureAtlasDataList_2.length; _i++) {
+                        var textureAtlasData = textureAtlasDataList_2[_i];
+                        this._dragonBones.bufferObject(textureAtlasData);
+                    }
+                }
+                delete this._textureAtlasDataMap[k];
+            }
+        };
+        /**
+         * - Create a armature from cached DragonBonesData instances and TextureAtlasData instances.
+         * @param armatureName - The armature data name
+         * @param dragonBonesName - The cached name of the DragonBonesData instance. (If not set, all DragonBonesData instances are retrieved, and when multiple DragonBonesData instances contain a the same name armature data, it may not be possible to accurately create a specific armature)
+         * @param skinName - The skin name, you can set a different ArmatureData name to share it's skin data. (If not set, use the default skin data)
+         * @returns The armature
+         * @example
+         * <pre>
+         *     let armature = factory.buildArmature("armatureName", "dragonBonesName");
+         *     armature.clock = factory.clock;
+         * </pre>
+         * @see dragonBones.DragonBonesData
+         * @see dragonBones.ArmatureData
+         * @see dragonBones.Armature
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * - 通过缓存的 DragonBonesData 实例和 TextureAtlasData 实例创建一个骨架。
+         * @param armatureName - 骨架数据名称
+         * @param dragonBonesName - DragonBonesData 实例的缓存名称。 （如果未设置，将检索所有的 DragonBonesData 实例，当多个 DragonBonesData 实例中包含同名的骨架数据时，可能无法准确的创建出特定的骨架）
+         * @param skinName - 皮肤名称，可以设置一个其他骨架数据名称来共享其皮肤数据（如果未设置，则使用默认的皮肤数据）
+         * @returns 骨架
+         * @example
+         * <pre>
+         *     let armature = factory.buildArmature("armatureName", "dragonBonesName");
+         *     armature.clock = factory.clock;
+         * </pre>
+         * @see dragonBones.DragonBonesData
+         * @see dragonBones.ArmatureData
+         * @see dragonBones.Armature
+         * @version DragonBones 3.0
+         * @language zh_CN
+         */
+        BaseFactory.prototype.buildArmature = function (armatureName, dragonBonesName, skinName, textureAtlasName) {
+            if (dragonBonesName === void 0) { dragonBonesName = ""; }
+            if (skinName === void 0) { skinName = ""; }
+            if (textureAtlasName === void 0) { textureAtlasName = ""; }
+            var dataPackage = new BuildArmaturePackage();
+            if (!this._fillBuildArmaturePackage(dataPackage, dragonBonesName || "", armatureName, skinName || "", textureAtlasName || "")) {
+                console.warn("No armature data: " + armatureName + ", " + (dragonBonesName !== null ? dragonBonesName : ""));
+                return null;
+            }
+            var armature = this._buildArmature(dataPackage);
+            this._buildBones(dataPackage, armature);
+            this._buildSlots(dataPackage, armature);
+            armature.invalidUpdate(null, true);
+            armature.advanceTime(0.0); // Update armature pose.
+            return armature;
+        };
+        /**
+         * @private
+         */
+        BaseFactory.prototype.replaceDisplay = function (slot, displayData, displayIndex) {
+            if (displayIndex === void 0) { displayIndex = -1; }
             if (displayIndex < 0) {
                 displayIndex = slot.displayIndex;
             }
@@ -11082,7 +12936,7 @@ var dragonBones;
                         }
                     }
                 }
-                displayList[displayIndex] = this._getSlotDisplay(dataPackage, displayData, rawDisplayData, slot);
+                displayList[displayIndex] = this._getSlotDisplay(null, displayData, rawDisplayData, slot);
             }
             else {
                 displayList[displayIndex] = null;
@@ -11090,324 +12944,109 @@ var dragonBones;
             slot.displayList = displayList;
         };
         /**
-         * 解析并添加龙骨数据。
-         * @param rawData 需要解析的原始数据。
-         * @param name 为数据提供一个名称，以便可以通过这个名称获取数据，如果未设置，则使用数据中的名称。
-         * @returns DragonBonesData
-         * @see #getDragonBonesData()
-         * @see #addDragonBonesData()
-         * @see #removeDragonBonesData()
-         * @see dragonBones.DragonBonesData
+         * - Replaces the current display data for a particular slot with a specific display data. (Specify display data with "dragonBonesName/armatureName/slotName/displayName")
+         * @param dragonBonesName - The DragonBonesData instance cache name
+         * @param armatureName - The armature data name
+         * @param slotName - The slot data name
+         * @param displayName - The display data name
+         * @param slot - The slot
+         * @param displayIndex - The index of the display data that is replaced. (If it is not set, replaces the current display data)
+         * @example
+         * <pre>
+         *     let slot = armature.getSlot("weapon");
+         *     factory.replaceSlotDisplay("dragonBonesName", "armatureName", "slotName", "displayName", slot);
+         * </pre>
          * @version DragonBones 4.5
-         * @language zh_CN
+         * @language en_US
          */
-        BaseFactory.prototype.parseDragonBonesData = function (rawData, name, scale) {
-            if (name === void 0) { name = null; }
-            if (scale === void 0) { scale = 1.0; }
-            var dataParser = rawData instanceof ArrayBuffer ? BaseFactory._binaryParser : this._dataParser;
-            var dragonBonesData = dataParser.parseDragonBonesData(rawData, scale);
-            while (true) {
-                var textureAtlasData = this._buildTextureAtlasData(null, null);
-                if (dataParser.parseTextureAtlasData(null, textureAtlasData, scale)) {
-                    this.addTextureAtlasData(textureAtlasData, name);
-                }
-                else {
-                    textureAtlasData.returnToPool();
-                    break;
-                }
-            }
-            if (dragonBonesData !== null) {
-                this.addDragonBonesData(dragonBonesData, name);
-            }
-            return dragonBonesData;
-        };
         /**
-         * 解析并添加贴图集数据。
-         * @param rawData 需要解析的原始数据。 (JSON)
-         * @param textureAtlas 贴图。
-         * @param name 为数据指定一个名称，以便可以通过这个名称获取数据，如果未设置，则使用数据中的名称。
-         * @param scale 为贴图集设置一个缩放值。
-         * @returns 贴图集数据
-         * @see #getTextureAtlasData()
-         * @see #addTextureAtlasData()
-         * @see #removeTextureAtlasData()
-         * @see dragonBones.TextureAtlasData
-         * @version DragonBones 4.5
-         * @language zh_CN
-         */
-        BaseFactory.prototype.parseTextureAtlasData = function (rawData, textureAtlas, name, scale) {
-            if (name === void 0) { name = null; }
-            if (scale === void 0) { scale = 1.0; }
-            var textureAtlasData = this._buildTextureAtlasData(null, null);
-            this._dataParser.parseTextureAtlasData(rawData, textureAtlasData, scale);
-            this._buildTextureAtlasData(textureAtlasData, textureAtlas || null);
-            this.addTextureAtlasData(textureAtlasData, name);
-            return textureAtlasData;
-        };
-        /**
-         * @version DragonBones 5.1
-         * @language zh_CN
-         */
-        BaseFactory.prototype.updateTextureAtlasData = function (name, textureAtlases) {
-            var textureAtlasDatas = this.getTextureAtlasData(name);
-            if (textureAtlasDatas !== null) {
-                for (var i = 0, l = textureAtlasDatas.length; i < l; ++i) {
-                    if (i < textureAtlases.length) {
-                        this._buildTextureAtlasData(textureAtlasDatas[i], textureAtlases[i]);
-                    }
-                }
-            }
-        };
-        /**
-         * 获取指定名称的龙骨数据。
-         * @param name 数据名称。
-         * @returns DragonBonesData
-         * @see #parseDragonBonesData()
-         * @see #addDragonBonesData()
-         * @see #removeDragonBonesData()
-         * @see dragonBones.DragonBonesData
-         * @version DragonBones 3.0
-         * @language zh_CN
-         */
-        BaseFactory.prototype.getDragonBonesData = function (name) {
-            return (name in this._dragonBonesDataMap) ? this._dragonBonesDataMap[name] : null;
-        };
-        /**
-         * 添加龙骨数据。
-         * @param data 龙骨数据。
-         * @param name 为数据指定一个名称，以便可以通过这个名称获取数据，如果未设置，则使用数据中的名称。
-         * @see #parseDragonBonesData()
-         * @see #getDragonBonesData()
-         * @see #removeDragonBonesData()
-         * @see dragonBones.DragonBonesData
-         * @version DragonBones 3.0
-         * @language zh_CN
-         */
-        BaseFactory.prototype.addDragonBonesData = function (data, name) {
-            if (name === void 0) { name = null; }
-            name = name !== null ? name : data.name;
-            if (name in this._dragonBonesDataMap) {
-                if (this._dragonBonesDataMap[name] === data) {
-                    return;
-                }
-                console.warn("Can not add same name data: " + name);
-                return;
-            }
-            this._dragonBonesDataMap[name] = data;
-        };
-        /**
-         * 移除龙骨数据。
-         * @param name 数据名称。
-         * @param disposeData 是否释放数据。
-         * @see #parseDragonBonesData()
-         * @see #getDragonBonesData()
-         * @see #addDragonBonesData()
-         * @see dragonBones.DragonBonesData
-         * @version DragonBones 3.0
-         * @language zh_CN
-         */
-        BaseFactory.prototype.removeDragonBonesData = function (name, disposeData) {
-            if (disposeData === void 0) { disposeData = true; }
-            if (name in this._dragonBonesDataMap) {
-                if (disposeData) {
-                    this._dragonBones.bufferObject(this._dragonBonesDataMap[name]);
-                }
-                delete this._dragonBonesDataMap[name];
-            }
-        };
-        /**
-         * 获取指定名称的贴图集数据列表。
-         * @param name 数据名称。
-         * @returns 贴图集数据列表。
-         * @see #parseTextureAtlasData()
-         * @see #addTextureAtlasData()
-         * @see #removeTextureAtlasData()
-         * @see dragonBones.TextureAtlasData
-         * @version DragonBones 3.0
-         * @language zh_CN
-         */
-        BaseFactory.prototype.getTextureAtlasData = function (name) {
-            return (name in this._textureAtlasDataMap) ? this._textureAtlasDataMap[name] : null;
-        };
-        /**
-         * 添加贴图集数据。
-         * @param data 贴图集数据。
-         * @param name 为数据指定一个名称，以便可以通过这个名称获取数据，如果未设置，则使用数据中的名称。
-         * @see #parseTextureAtlasData()
-         * @see #getTextureAtlasData()
-         * @see #removeTextureAtlasData()
-         * @see dragonBones.TextureAtlasData
-         * @version DragonBones 3.0
-         * @language zh_CN
-         */
-        BaseFactory.prototype.addTextureAtlasData = function (data, name) {
-            if (name === void 0) { name = null; }
-            name = name !== null ? name : data.name;
-            var textureAtlasList = (name in this._textureAtlasDataMap) ? this._textureAtlasDataMap[name] : (this._textureAtlasDataMap[name] = []);
-            if (textureAtlasList.indexOf(data) < 0) {
-                textureAtlasList.push(data);
-            }
-        };
-        /**
-         * 移除贴图集数据。
-         * @param name 数据名称。
-         * @param disposeData 是否释放数据。
-         * @see #parseTextureAtlasData()
-         * @see #getTextureAtlasData()
-         * @see #addTextureAtlasData()
-         * @see dragonBones.TextureAtlasData
-         * @version DragonBones 3.0
-         * @language zh_CN
-         */
-        BaseFactory.prototype.removeTextureAtlasData = function (name, disposeData) {
-            if (disposeData === void 0) { disposeData = true; }
-            if (name in this._textureAtlasDataMap) {
-                var textureAtlasDataList = this._textureAtlasDataMap[name];
-                if (disposeData) {
-                    for (var _i = 0, textureAtlasDataList_1 = textureAtlasDataList; _i < textureAtlasDataList_1.length; _i++) {
-                        var textureAtlasData = textureAtlasDataList_1[_i];
-                        this._dragonBones.bufferObject(textureAtlasData);
-                    }
-                }
-                delete this._textureAtlasDataMap[name];
-            }
-        };
-        /**
-         * 获取骨架数据。
-         * @param name 骨架数据名称。
-         * @param dragonBonesName 龙骨数据名称。
-         * @see dragonBones.ArmatureData
-         * @version DragonBones 5.1
-         * @language zh_CN
-         */
-        BaseFactory.prototype.getArmatureData = function (name, dragonBonesName) {
-            if (dragonBonesName === void 0) { dragonBonesName = ""; }
-            var dataPackage = new BuildArmaturePackage();
-            if (!this._fillBuildArmaturePackage(dataPackage, dragonBonesName, name, "", "")) {
-                return null;
-            }
-            return dataPackage.armature;
-        };
-        /**
-         * 清除所有的数据。
-         * @param disposeData 是否释放数据。
-         * @version DragonBones 4.5
-         * @language zh_CN
-         */
-        BaseFactory.prototype.clear = function (disposeData) {
-            if (disposeData === void 0) { disposeData = true; }
-            for (var k in this._dragonBonesDataMap) {
-                if (disposeData) {
-                    this._dragonBones.bufferObject(this._dragonBonesDataMap[k]);
-                }
-                delete this._dragonBonesDataMap[k];
-            }
-            for (var k in this._textureAtlasDataMap) {
-                if (disposeData) {
-                    var textureAtlasDataList = this._textureAtlasDataMap[k];
-                    for (var _i = 0, textureAtlasDataList_2 = textureAtlasDataList; _i < textureAtlasDataList_2.length; _i++) {
-                        var textureAtlasData = textureAtlasDataList_2[_i];
-                        this._dragonBones.bufferObject(textureAtlasData);
-                    }
-                }
-                delete this._textureAtlasDataMap[k];
-            }
-        };
-        /**
-         * 创建一个骨架。
-         * @param armatureName 骨架数据名称。
-         * @param dragonBonesName 龙骨数据名称，如果未设置，将检索所有的龙骨数据，当多个龙骨数据中包含同名的骨架数据时，可能无法创建出准确的骨架。
-         * @param skinName 皮肤名称，如果未设置，则使用默认皮肤。
-         * @param textureAtlasName 贴图集数据名称，如果未设置，则使用龙骨数据名称。
-         * @returns 骨架
-         * @see dragonBones.ArmatureData
-         * @see dragonBones.Armature
-         * @version DragonBones 3.0
-         * @language zh_CN
-         */
-        BaseFactory.prototype.buildArmature = function (armatureName, dragonBonesName, skinName, textureAtlasName) {
-            if (dragonBonesName === void 0) { dragonBonesName = null; }
-            if (skinName === void 0) { skinName = null; }
-            if (textureAtlasName === void 0) { textureAtlasName = null; }
-            var dataPackage = new BuildArmaturePackage();
-            if (!this._fillBuildArmaturePackage(dataPackage, dragonBonesName || "", armatureName, skinName || "", textureAtlasName || "")) {
-                console.warn("No armature data: " + armatureName + ", " + (dragonBonesName !== null ? dragonBonesName : ""));
-                return null;
-            }
-            var armature = this._buildArmature(dataPackage);
-            this._buildBones(dataPackage, armature);
-            this._buildSlots(dataPackage, armature);
-            armature.invalidUpdate(null, true);
-            armature.advanceTime(0.0); // Update armature pose.
-            return armature;
-        };
-        /**
-         * 用指定资源替换指定插槽的显示对象。(用 "dragonBonesName/armatureName/slotName/displayName" 的资源替换 "slot" 的显示对象)
-         * @param dragonBonesName 指定的龙骨数据名称。
-         * @param armatureName 指定的骨架名称。
-         * @param slotName 指定的插槽名称。
-         * @param displayName 指定的显示对象名称。
-         * @param slot 指定的插槽实例。
-         * @param displayIndex 要替换的显示对象的索引，如果未设置，则替换当前正在显示的显示对象。
+         * - 用特定的显示对象数据替换特定插槽当前的显示对象数据。(用 "dragonBonesName/armatureName/slotName/displayName" 指定显示对象数据)
+         * @param dragonBonesName - DragonBonesData 实例的缓存名称
+         * @param armatureName - 骨架数据名称
+         * @param slotName - 插槽数据名称
+         * @param displayName - 显示对象数据名称
+         * @param slot - 插槽
+         * @param displayIndex - 被替换的显示对象数据的索引。 （如果未设置，则替换当前的显示对象数据）
+         * @example
+         * <pre>
+         *     let slot = armature.getSlot("weapon");
+         *     factory.replaceSlotDisplay("dragonBonesName", "armatureName", "slotName", "displayName", slot);
+         * </pre>
          * @version DragonBones 4.5
          * @language zh_CN
          */
         BaseFactory.prototype.replaceSlotDisplay = function (dragonBonesName, armatureName, slotName, displayName, slot, displayIndex) {
             if (displayIndex === void 0) { displayIndex = -1; }
-            var dataPackage = {};
-            if (!this._fillBuildArmaturePackage(dataPackage, dragonBonesName || "", armatureName, "", "") || dataPackage.skin === null) {
-                return;
+            var armatureData = this.getArmatureData(armatureName, dragonBonesName || "");
+            if (!armatureData || !armatureData.defaultSkin) {
+                return false;
             }
-            var displays = dataPackage.skin.getDisplays(slotName);
-            if (displays === null) {
-                return;
+            var displayData = armatureData.defaultSkin.getDisplay(slotName, displayName);
+            if (!displayData) {
+                return false;
             }
-            // for (const displayData of displays) {
-            for (var i = 0, l = dragonBones.DragonBones.webAssembly ? displays.size() : displays.length; i < l; ++i) {
-                var displayData = dragonBones.DragonBones.webAssembly ? displays.get(i) : displays[i];
-                if (displayData !== null && displayData.name === displayName) {
-                    this._replaceSlotDisplay(dataPackage, displayData, slot, displayIndex);
-                    break;
-                }
-            }
+            this.replaceDisplay(slot, displayData, displayIndex);
+            return true;
         };
         /**
-         * 用指定资源列表替换插槽的显示对象列表。
-         * @param dragonBonesName 指定的 DragonBonesData 名称。
-         * @param armatureName 指定的骨架名称。
-         * @param slotName 指定的插槽名称。
-         * @param slot 指定的插槽实例。
-         * @version DragonBones 4.5
-         * @language zh_CN
+         * @private
          */
         BaseFactory.prototype.replaceSlotDisplayList = function (dragonBonesName, armatureName, slotName, slot) {
-            var dataPackage = {};
-            if (!this._fillBuildArmaturePackage(dataPackage, dragonBonesName || "", armatureName, "", "") || dataPackage.skin === null) {
-                return;
+            var armatureData = this.getArmatureData(armatureName, dragonBonesName || "");
+            if (!armatureData || !armatureData.defaultSkin) {
+                return false;
             }
-            var displays = dataPackage.skin.getDisplays(slotName);
-            if (displays === null) {
-                return;
+            var displays = armatureData.defaultSkin.getDisplays(slotName);
+            if (!displays) {
+                return false;
             }
             var displayIndex = 0;
-            // for (const displayData of displays) {
+            // for (const displayData of displays) 
             for (var i = 0, l = dragonBones.DragonBones.webAssembly ? displays.size() : displays.length; i < l; ++i) {
                 var displayData = dragonBones.DragonBones.webAssembly ? displays.get(i) : displays[i];
-                this._replaceSlotDisplay(dataPackage, displayData, slot, displayIndex++);
+                this.replaceDisplay(slot, displayData, displayIndex++);
             }
+            return true;
         };
         /**
-         * 更换骨架皮肤。
-         * @param armature 骨架。
-         * @param skin 皮肤数据。
-         * @param exclude 不需要更新的插槽。
+         * - Share specific skin data with specific armature.
+         * @param armature - The armature
+         * @param skin - The skin data
+         * @param exclude - A list of slot names that do not need to be replace
+         * @example
+         * <pre>
+         *     let armatureA = factory.buildArmature("armatureA", "dragonBonesA");
+         *     let armatureDataB = factory.getArmatureData("armatureB", "dragonBonesB");
+         *     if (armatureDataB && armatureDataB.defaultSkin) {
+         *     factory.replaceSkin(armatureA, armatureDataB.defaultSkin, ["arm_l", "weapon_l"]);
+         *     }
+         * </pre>
+         * @see dragonBones.Armature
+         * @see dragonBones.SkinData
+         * @version DragonBones 5.1
+         * @language en_US
+         */
+        /**
+         * - 将特定的皮肤数据共享给特定的骨架使用。
+         * @param armature - 骨架
+         * @param skin - 皮肤数据
+         * @param exclude - 不需要被替换的插槽名称列表
+         * @example
+         * <pre>
+         *     let armatureA = factory.buildArmature("armatureA", "dragonBonesA");
+         *     let armatureDataB = factory.getArmatureData("armatureB", "dragonBonesB");
+         *     if (armatureDataB && armatureDataB.defaultSkin) {
+         *     factory.replaceSkin(armatureA, armatureDataB.defaultSkin, ["arm_l", "weapon_l"]);
+         *     }
+         * </pre>
          * @see dragonBones.Armature
          * @see dragonBones.SkinData
          * @version DragonBones 5.1
          * @language zh_CN
          */
-        BaseFactory.prototype.changeSkin = function (armature, skin, exclude) {
+        BaseFactory.prototype.replaceSkin = function (armature, skin, exclude) {
             if (exclude === void 0) { exclude = null; }
+            var success = false;
             for (var _i = 0, _a = armature.getSlots(); _i < _a.length; _i++) {
                 var slot = _a[_i];
                 if (exclude !== null && exclude.indexOf(slot.name) >= 0) {
@@ -11429,65 +13068,81 @@ var dragonBones;
                         displayList[i] = null;
                     }
                 }
+                success = true;
                 slot.rawDisplayDatas = displays;
                 slot.displayList = displayList;
             }
+            return success;
         };
         /**
-         * 将骨架的动画替换成其他骨架的动画。 (通常这些骨架应该具有相同的骨架结构)
-         * @param toArmature 指定的骨架。
-         * @param fromArmatreName 其他骨架的名称。
-         * @param fromSkinName 其他骨架的皮肤名称，如果未设置，则使用默认皮肤。
-         * @param fromDragonBonesDataName 其他骨架属于的龙骨数据名称，如果未设置，则检索所有的龙骨数据。
-         * @param replaceOriginalAnimation 是否替换原有的同名动画。
-         * @returns 是否替换成功。
-         * @see dragonBones.Armature
-         * @see dragonBones.ArmatureData
-         * @version DragonBones 4.5
+         * - Replaces the existing animation data for a specific armature with the animation data for the specific armature data.
+         * This enables you to make a armature template so that other armature without animations can share it's animations.
+         * @example
+         * <pre>
+         *     let armatureA = factory.buildArmature("armatureA", "dragonBonesA");
+         *     let armatureDataB = factory.getArmatureData("armatureB", "dragonBonesB");
+         *     if (armatureDataB) {
+         *     factory.replaceAnimation(armatureA, armatureDataB);
+         *     }
+         * </pre>
+         * @version DragonBones 5.6
+         * @language en_US
+         */
+        /**
+         * - 用特定骨架数据的动画数据替换特定骨架现有的动画数据。
+         * 这样就能实现制作一个骨架动画模板，让其他没有制作动画的骨架共享该动画。
+         * @example
+         * <pre>
+         *     let armatureA = factory.buildArmature("armatureA", "dragonBonesA");
+         *     let armatureDataB = factory.getArmatureData("armatureB", "dragonBonesB");
+         *     if (armatureDataB) {
+         *     factory.replaceAnimation(armatureA, armatureDataB);
+         *     }
+         * </pre>
+         * @version DragonBones 5.6
          * @language zh_CN
          */
-        BaseFactory.prototype.copyAnimationsToArmature = function (toArmature, fromArmatreName, fromSkinName, fromDragonBonesDataName, replaceOriginalAnimation) {
-            if (fromSkinName === void 0) { fromSkinName = null; }
-            if (fromDragonBonesDataName === void 0) { fromDragonBonesDataName = null; }
-            if (replaceOriginalAnimation === void 0) { replaceOriginalAnimation = true; }
-            var dataPackage = new BuildArmaturePackage();
-            if (this._fillBuildArmaturePackage(dataPackage, fromDragonBonesDataName || "", fromArmatreName, fromSkinName || "", "")) {
-                var fromArmatureData = dataPackage.armature;
-                if (replaceOriginalAnimation) {
-                    toArmature.animation.animations = fromArmatureData.animations;
+        BaseFactory.prototype.replaceAnimation = function (armature, armatureData, isReplaceAll) {
+            if (isReplaceAll === void 0) { isReplaceAll = true; }
+            var skinData = armatureData.defaultSkin;
+            if (skinData === null) {
+                return false;
+            }
+            if (isReplaceAll) {
+                armature.animation.animations = armatureData.animations;
+            }
+            else {
+                var rawAnimations = armature.animation.animations;
+                var animations = {};
+                for (var k in rawAnimations) {
+                    animations[k] = rawAnimations[k];
                 }
-                else {
-                    var animations = {};
-                    for (var animationName in toArmature.animation.animations) {
-                        animations[animationName] = toArmature.animation.animations[animationName];
-                    }
-                    for (var animationName in fromArmatureData.animations) {
-                        animations[animationName] = fromArmatureData.animations[animationName];
-                    }
-                    toArmature.animation.animations = animations;
+                for (var k in armatureData.animations) {
+                    animations[k] = armatureData.animations[k];
                 }
-                if (dataPackage.skin) {
-                    var slots = toArmature.getSlots();
-                    for (var i = 0, l = slots.length; i < l; ++i) {
-                        var toSlot = slots[i];
-                        var toSlotDisplayList = toSlot.displayList;
-                        for (var j = 0, lJ = toSlotDisplayList.length; j < lJ; ++j) {
-                            var toDisplayObject = toSlotDisplayList[j];
-                            if (toDisplayObject instanceof dragonBones.Armature) {
-                                var displays = dataPackage.skin.getDisplays(toSlot.name);
-                                if (displays !== null && j < (dragonBones.DragonBones.webAssembly ? displays.size() : displays.length)) {
-                                    var fromDisplayData = dragonBones.DragonBones.webAssembly ? displays.get(j) : displays[j];
-                                    if (fromDisplayData !== null && fromDisplayData.type === 1 /* Armature */) {
-                                        this.copyAnimationsToArmature(toDisplayObject, fromDisplayData.path, fromSkinName, fromDragonBonesDataName, replaceOriginalAnimation);
-                                    }
+                armature.animation.animations = animations;
+            }
+            for (var _i = 0, _a = armature.getSlots(); _i < _a.length; _i++) {
+                var slot = _a[_i];
+                var index = 0;
+                for (var _b = 0, _c = slot.displayList; _b < _c.length; _b++) {
+                    var display = _c[_b];
+                    if (display instanceof dragonBones.Armature) {
+                        var displayDatas = skinData.getDisplays(slot.name);
+                        if (displayDatas !== null && index < (dragonBones.DragonBones.webAssembly ? displayDatas.size() : displayDatas.length)) {
+                            var displayData = dragonBones.DragonBones.webAssembly ? displayDatas.get(index) : displayDatas[index];
+                            if (displayData !== null && displayData.type === 1 /* Armature */) {
+                                var childArmatureData = this.getArmatureData(displayData.path, displayData.parent.parent.parent.name);
+                                if (childArmatureData) {
+                                    this.replaceAnimation(display, childArmatureData, isReplaceAll);
                                 }
                             }
                         }
                     }
-                    return true;
+                    index++;
                 }
             }
-            return false;
+            return true;
         };
         /**
          * @private
@@ -11503,7 +13158,12 @@ var dragonBones;
         };
         Object.defineProperty(BaseFactory.prototype, "clock", {
             /**
-             * 由引擎驱动的 WorldClock 实例。
+             * - An Worldclock instance updated by engine.
+             * @version DragonBones 5.7
+             * @language en_US
+             */
+            /**
+             * - 由引擎驱动的 WorldClock 实例。
              * @version DragonBones 5.7
              * @language zh_CN
              */
@@ -11513,6 +13173,52 @@ var dragonBones;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(BaseFactory.prototype, "dragonBones", {
+            /**
+             * @private
+             */
+            get: function () {
+                return this._dragonBones;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * - Deprecated, please refer to {@link #replaceSkin}.
+         * @deprecated
+         * @language en_US
+         */
+        /**
+         * - 已废弃，请参考 {@link #replaceSkin}。
+         * @deprecated
+         * @language zh_CN
+         */
+        BaseFactory.prototype.changeSkin = function (armature, skin, exclude) {
+            if (exclude === void 0) { exclude = null; }
+            return this.replaceSkin(armature, skin, exclude);
+        };
+        /**
+         * - Deprecated, please refer to {@link #replaceAnimation}.
+         * @deprecated
+         * @language en_US
+         */
+        /**
+         * - 已废弃，请参考 {@link #replaceAnimation}。
+         * @deprecated
+         * @language zh_CN
+         */
+        BaseFactory.prototype.copyAnimationsToArmature = function (toArmature, fromArmatreName, fromSkinName, fromDragonBonesDataName, replaceOriginalAnimation) {
+            if (fromSkinName === void 0) { fromSkinName = ""; }
+            if (fromDragonBonesDataName === void 0) { fromDragonBonesDataName = ""; }
+            if (replaceOriginalAnimation === void 0) { replaceOriginalAnimation = true; }
+            // tslint:disable-next-line:no-unused-expression
+            fromSkinName;
+            var armatureData = this.getArmatureData(fromArmatreName, fromDragonBonesDataName);
+            if (!armatureData) {
+                return false;
+            }
+            return this.replaceAnimation(toArmature, armatureData, replaceOriginalAnimation);
+        };
         /**
          * @private
          */
@@ -11524,9 +13230,27 @@ var dragonBones;
         return BaseFactory;
     }());
     dragonBones.BaseFactory = BaseFactory;
+    /**
+     * @internal
+     * @private
+     */
+    var BuildArmaturePackage = (function () {
+        function BuildArmaturePackage() {
+            this.dataName = "";
+            this.textureAtlasName = "";
+            this.skin = null;
+        }
+        return BuildArmaturePackage;
+    }());
+    dragonBones.BuildArmaturePackage = BuildArmaturePackage;
 })(dragonBones || (dragonBones = {}));
 var dragonBones;
 (function (dragonBones) {
+    /**
+     * The egret texture atlas data.
+     * @version DragonBones 3.0
+     * @language en_US
+     */
     /**
      * Egret 贴图集数据。
      * @version DragonBones 3.0
@@ -11543,7 +13267,7 @@ var dragonBones;
             return "[class dragonBones.EgretTextureAtlasData]";
         };
         /**
-         * @private
+         * @inheritDoc
          */
         EgretTextureAtlasData.prototype._onClear = function () {
             _super.prototype._onClear.call(this);
@@ -11554,12 +13278,17 @@ var dragonBones;
             this._renderTexture = null;
         };
         /**
-         * @private
+         * @inheritDoc
          */
         EgretTextureAtlasData.prototype.createTexture = function () {
             return dragonBones.BaseObject.borrowObject(EgretTextureData);
         };
         Object.defineProperty(EgretTextureAtlasData.prototype, "renderTexture", {
+            /**
+             * The Egret texture.
+             * @version DragonBones 3.0
+             * @language en_US
+             */
             /**
              * Egret 贴图。
              * @version DragonBones 3.0
@@ -11585,7 +13314,12 @@ var dragonBones;
                         if (textureData.renderTexture === null) {
                             textureData.renderTexture = new egret.Texture();
                         }
-                        textureData.renderTexture._bitmapData = bitmapData;
+                        if (dragonBones.EgretFactory._isV5) {
+                            textureData.renderTexture["$bitmapData"] = bitmapData;
+                        }
+                        else {
+                            textureData.renderTexture._bitmapData = bitmapData;
+                        }
                         if (textureData.rotated) {
                             textureData.renderTexture.$initData(textureData.region.x * scale, textureData.region.y * scale, subTextureHeight * scale, subTextureWidth * scale, 0, 0, subTextureHeight * scale, subTextureWidth * scale, textureAtlasWidth, textureAtlasHeight, textureData.rotated);
                         }
@@ -11605,22 +13339,32 @@ var dragonBones;
             configurable: true
         });
         /**
+         * Deprecated, please refer to {@link dragonBones.BaseFactory#removeTextureAtlasData()}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.BaseFactory#removeTextureAtlasData()
+         * @language en_US
+         */
+        /**
+         * 已废弃，请参考 {@link dragonBones.BaseFactory#removeTextureAtlasData()}。
+         * @deprecated
+         * @language zh_CN
          */
         EgretTextureAtlasData.prototype.dispose = function () {
-            console.warn("已废弃，请参考 @see");
+            console.warn("已废弃。");
             this.returnToPool();
         };
         Object.defineProperty(EgretTextureAtlasData.prototype, "texture", {
             /**
+             * Deprecated, please refer to {@link #renderTexture}.
              * @deprecated
-             * 已废弃，请参考 @see
-             * @see dragonBones.EgretTextureAtlasData#renderTexture
+             * @language en_US
+             */
+            /**
+             * 已废弃，请参考 {@link #renderTexture}。
+             * @deprecated
+             * @language zh_CN
              */
             get: function () {
-                console.warn("已废弃，请参考 @see");
+                console.warn("已废弃。");
                 return this.renderTexture;
             },
             enumerable: true,
@@ -11630,6 +13374,7 @@ var dragonBones;
     }(dragonBones.TextureAtlasData));
     dragonBones.EgretTextureAtlasData = EgretTextureAtlasData;
     /**
+     * @internal
      * @private
      */
     var EgretTextureData = (function (_super) {
@@ -11657,6 +13402,11 @@ var dragonBones;
 var dragonBones;
 (function (dragonBones) {
     /**
+     * The egret event.
+     * @version DragonBones 4.5
+     * @language en_US
+     */
+    /**
      * Egret 事件。
      * @version DragonBones 4.5
      * @language zh_CN
@@ -11667,6 +13417,12 @@ var dragonBones;
             return _super !== null && _super.apply(this, arguments) || this;
         }
         Object.defineProperty(EgretEvent.prototype, "eventObject", {
+            /**
+             * The event object.
+             * @see dragonBones.EventObject
+             * @version DragonBones 4.5
+             * @language en_US
+             */
             /**
              * 事件对象。
              * @see dragonBones.EventObject
@@ -11681,10 +13437,14 @@ var dragonBones;
         });
         Object.defineProperty(EgretEvent.prototype, "animationName", {
             /**
+             * Deprecated, please refer to {@link #eventObject} {@link #dragonBones.EventObject#animationState}.
              * @deprecated
-             * 已废弃，请参考 @see
-             * @see #eventObject
-             * @see dragonBones.EventObject#animationState
+             * @language en_US
+             */
+            /**
+             * 已废弃，请参考 {@link #eventObject} {@link #dragonBones.EventObject#animationState}。
+             * @deprecated
+             * @language zh_CN
              */
             get: function () {
                 var animationState = this.eventObject.animationState;
@@ -11695,10 +13455,14 @@ var dragonBones;
         });
         Object.defineProperty(EgretEvent.prototype, "armature", {
             /**
+             * Deprecated, please refer to {@link #eventObject} {@link #dragonBones.EventObject#armature}.
              * @deprecated
-             * 已废弃，请参考 @see
-             * @see #eventObject
-             * @see dragonBones.EventObject#armature
+             * @language en_US
+             */
+            /**
+             * 已废弃，请参考 {@link #eventObject} {@link #dragonBones.EventObject#armature}。
+             * @deprecated
+             * @language zh_CN
              */
             get: function () {
                 return this.eventObject.armature;
@@ -11708,10 +13472,14 @@ var dragonBones;
         });
         Object.defineProperty(EgretEvent.prototype, "bone", {
             /**
+             * Deprecated, please refer to {@link #eventObject} {@link #dragonBones.EventObject#bone}.
              * @deprecated
-             * 已废弃，请参考 @see
-             * @see #eventObject
-             * @see dragonBones.EventObject#bone
+             * @language en_US
+             */
+            /**
+             * 已废弃，请参考 {@link #eventObject} {@link #dragonBones.EventObject#bone}。
+             * @deprecated
+             * @language zh_CN
              */
             get: function () {
                 return this.eventObject.bone;
@@ -11721,10 +13489,14 @@ var dragonBones;
         });
         Object.defineProperty(EgretEvent.prototype, "slot", {
             /**
+             * Deprecated, please refer to {@link #eventObject} {@link #dragonBones.EventObject#slot}.
              * @deprecated
-             * 已废弃，请参考 @see
-             * @see #eventObject
-             * @see dragonBones.EventObject#slot
+             * @language en_US
+             */
+            /**
+             * 已废弃，请参考 {@link #eventObject} {@link #dragonBones.EventObject#slot}。
+             * @deprecated
+             * @language zh_CN
              */
             get: function () {
                 return this.eventObject.slot;
@@ -11734,10 +13506,14 @@ var dragonBones;
         });
         Object.defineProperty(EgretEvent.prototype, "animationState", {
             /**
+             * Deprecated, please refer to {@link #eventObject} {@link #dragonBones.EventObject#animationState}.
              * @deprecated
-             * 已废弃，请参考 @see
-             * @see #eventObject
-             * @see dragonBones.EventObject#animationState
+             * @language en_US
+             */
+            /**
+             * 已废弃，请参考 {@link #eventObject} {@link #dragonBones.EventObject#animationState}。
+             * @deprecated
+             * @language zh_CN
              */
             get: function () {
                 return this.eventObject.animationState;
@@ -11747,9 +13523,14 @@ var dragonBones;
         });
         Object.defineProperty(EgretEvent.prototype, "frameLabel", {
             /**
+             * Deprecated, please refer to {@link #eventObject} {@link #dragonBones.EventObject#name}.
              * @deprecated
-             * 已废弃，请参考 @see
-             * @see dragonBones.EventObject#name
+             * @language en_US
+             */
+            /**
+             * 已废弃，请参考 {@link #eventObject} {@link #dragonBones.EventObject#name}。
+             * @deprecated
+             * @language zh_CN
              */
             get: function () {
                 return this.eventObject.name;
@@ -11759,9 +13540,14 @@ var dragonBones;
         });
         Object.defineProperty(EgretEvent.prototype, "sound", {
             /**
+             * Deprecated, please refer to {@link #eventObject} {@link #dragonBones.EventObject#name}.
              * @deprecated
-             * 已废弃，请参考 @see
-             * @see dragonBones.EventObject#name
+             * @language en_US
+             */
+            /**
+             * 已废弃，请参考 {@link #eventObject} {@link #dragonBones.EventObject#name}。
+             * @deprecated
+             * @language zh_CN
              */
             get: function () {
                 return this.eventObject.name;
@@ -11771,9 +13557,14 @@ var dragonBones;
         });
         Object.defineProperty(EgretEvent.prototype, "movementID", {
             /**
+             * Deprecated, please refer to {@link #eventObject} {@link #dragonBones.EventObject#animationState}.
              * @deprecated
-             * 已废弃，请参考 @see
-             * @see #animationName
+             * @language en_US
+             */
+            /**
+             * 已废弃，请参考 {@link #eventObject} {@link #dragonBones.EventObject#animationState}。
+             * @deprecated
+             * @language zh_CN
              */
             get: function () {
                 return this.animationName;
@@ -11782,81 +13573,146 @@ var dragonBones;
             configurable: true
         });
         /**
+         * Deprecated, please refer to {@link #dragonBones.EventObject.START}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.EventObject.START
+         * @language en_US
+         */
+        /**
+         * 已废弃，请参考 {@link #dragonBones.EventObject.START}。
+         * @deprecated
+         * @language zh_CN
          */
         EgretEvent.START = dragonBones.EventObject.START;
         /**
+         * Deprecated, please refer to {@link #dragonBones.EventObject.LOOP_COMPLETE}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.EventObject.LOOP_COMPLETE
+         * @language en_US
+         */
+        /**
+         * 已废弃，请参考 {@link #dragonBones.EventObject.LOOP_COMPLETE}。
+         * @deprecated
+         * @language zh_CN
          */
         EgretEvent.LOOP_COMPLETE = dragonBones.EventObject.LOOP_COMPLETE;
         /**
+         * Deprecated, please refer to {@link #dragonBones.EventObject.COMPLETE}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.EventObject.COMPLETE
+         * @language en_US
+         */
+        /**
+         * 已废弃，请参考 {@link #dragonBones.EventObject.COMPLETE}。
+         * @deprecated
+         * @language zh_CN
          */
         EgretEvent.COMPLETE = dragonBones.EventObject.COMPLETE;
         /**
+         * Deprecated, please refer to {@link #dragonBones.EventObject.FADE_IN}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.EventObject.FADE_IN
+         * @language en_US
+         */
+        /**
+         * 已废弃，请参考 {@link #dragonBones.EventObject.FADE_IN}。
+         * @deprecated
+         * @language zh_CN
          */
         EgretEvent.FADE_IN = dragonBones.EventObject.FADE_IN;
         /**
+         * Deprecated, please refer to {@link #dragonBones.EventObject.FADE_IN_COMPLETE}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.EventObject.FADE_IN_COMPLETE
+         * @language en_US
+         */
+        /**
+         * 已废弃，请参考 {@link #dragonBones.EventObject.FADE_IN_COMPLETE}。
+         * @deprecated
+         * @language zh_CN
          */
         EgretEvent.FADE_IN_COMPLETE = dragonBones.EventObject.FADE_IN_COMPLETE;
         /**
+         * Deprecated, please refer to {@link #dragonBones.EventObject.FADE_OUT}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.EventObject.FADE_OUT
+         * @language en_US
+         */
+        /**
+         * 已废弃，请参考 {@link #dragonBones.EventObject.FADE_OUT}。
+         * @deprecated
+         * @language zh_CN
          */
         EgretEvent.FADE_OUT = dragonBones.EventObject.FADE_OUT;
         /**
+         * Deprecated, please refer to {@link #dragonBones.EventObject.FADE_OUT_COMPLETE}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.EventObject.FADE_OUT_COMPLETE
+         * @language en_US
+         */
+        /**
+         * 已废弃，请参考 {@link #dragonBones.EventObject.FADE_OUT_COMPLETE}。
+         * @deprecated
+         * @language zh_CN
          */
         EgretEvent.FADE_OUT_COMPLETE = dragonBones.EventObject.FADE_OUT_COMPLETE;
         /**
+         * Deprecated, please refer to {@link #dragonBones.EventObject.FRAME_EVENT}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.EventObject.FRAME_EVENT
+         * @language en_US
+         */
+        /**
+         * 已废弃，请参考 {@link #dragonBones.EventObject.FRAME_EVENT}。
+         * @deprecated
+         * @language zh_CN
          */
         EgretEvent.FRAME_EVENT = dragonBones.EventObject.FRAME_EVENT;
         /**
+         * Deprecated, please refer to {@link #dragonBones.EventObject.SOUND_EVENT}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.EventObject.SOUND_EVENT
+         * @language en_US
+         */
+        /**
+         * 已废弃，请参考 {@link #dragonBones.EventObject.SOUND_EVENT}。
+         * @deprecated
+         * @language zh_CN
          */
         EgretEvent.SOUND_EVENT = dragonBones.EventObject.SOUND_EVENT;
         /**
+         * Deprecated, please refer to {@link #dragonBones.EventObject.FRAME_EVENT}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.EventObject.FRAME_EVENT
+         * @language en_US
+         */
+        /**
+         * 已废弃，请参考 {@link #dragonBones.EventObject.FRAME_EVENT}。
+         * @deprecated
+         * @language zh_CN
          */
         EgretEvent.ANIMATION_FRAME_EVENT = dragonBones.EventObject.FRAME_EVENT;
         /**
+         * Deprecated, please refer to {@link #dragonBones.EventObject.FRAME_EVENT}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.EventObject.FRAME_EVENT
+         * @language en_US
+         */
+        /**
+         * 已废弃，请参考 {@link #dragonBones.EventObject.FRAME_EVENT}。
+         * @deprecated
+         * @language zh_CN
          */
         EgretEvent.BONE_FRAME_EVENT = dragonBones.EventObject.FRAME_EVENT;
         /**
+         * Deprecated, please refer to {@link #dragonBones.EventObject.FRAME_EVENT}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.EventObject.FRAME_EVENT
+         * @language en_US
+         */
+        /**
+         * 已废弃，请参考 {@link #dragonBones.EventObject.FRAME_EVENT}。
+         * @deprecated
+         * @language zh_CN
          */
         EgretEvent.MOVEMENT_FRAME_EVENT = dragonBones.EventObject.FRAME_EVENT;
         /**
+         * Deprecated, please refer to {@link #dragonBones.EventObject.SOUND_EVENT}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.EventObject.SOUND_EVENT
+         * @language en_US
+         */
+        /**
+         * 已废弃，请参考 {@link #dragonBones.EventObject.SOUND_EVENT}。
+         * @deprecated
+         * @language zh_CN
          */
         EgretEvent.SOUND = dragonBones.EventObject.SOUND_EVENT;
         return EgretEvent;
@@ -11873,7 +13729,7 @@ var dragonBones;
              * @internal
              * @private
              */
-            _this._batchEnabled = !__global["useNativeDisplayList"];
+            _this._batchEnabled = !__global["nativeRender"]; //
             /**
              * @internal
              * @private
@@ -11882,6 +13738,7 @@ var dragonBones;
             _this._debugDraw = false;
             _this._disposeProxy = false;
             _this._armature = null; //
+            _this._bounds = null;
             _this._debugDrawer = null;
             return _this;
         }
@@ -11891,16 +13748,17 @@ var dragonBones;
          */
         EgretArmatureDisplay.prototype.dbInit = function (armature) {
             this._armature = armature;
-            //
-            this.$renderNode = new egret.sys.GroupNode();
-            this.$renderNode.cleanBeforeRender = EgretArmatureDisplay._cleanBeforeRender;
+            if (this._batchEnabled) {
+                this.$renderNode = new egret.sys.GroupNode();
+                this.$renderNode.cleanBeforeRender = EgretArmatureDisplay._cleanBeforeRender;
+            }
         };
         /**
          * @inheritDoc
          */
         EgretArmatureDisplay.prototype.dbClear = function () {
-            this._disposeProxy = false;
             this._armature = null;
+            this._bounds = null;
             this._debugDrawer = null;
         };
         /**
@@ -11981,7 +13839,7 @@ var dragonBones;
                     this.removeChild(this._debugDrawer);
                 }
             }
-            if (!dragonBones.EgretFactory.isV5 && this._batchEnabled && this._childDirty) {
+            if (!dragonBones.EgretFactory._isV5 && this._batchEnabled && this._childDirty) {
                 this.$invalidateContentBounds();
             }
         };
@@ -12024,12 +13882,22 @@ var dragonBones;
             this.removeEventListener(type, listener, target);
         };
         /**
-         * 关闭批次渲染。（批次渲染出于性能考虑，不会更新渲染对象的边界属性，这样将无法正确获得渲染对象的宽高属性以及其内部显示对象的变换属性，如果需要使用这些属性，可以关闭批次渲染）
+         * Disable the batch.
+         * Batch rendering for performance reasons, the boundary properties of the render object are not updated.
+         * This will not correctly obtain the wide-height properties of the rendered object and the transformation properties of its internal display objects,
+         * which can turn off batch rendering if you need to use these properties.
+         * @version DragonBones 5.1
+         * @language en_US
+         */
+        /**
+         * 关闭批次渲染。
+         * 批次渲染出于性能考虑，不会更新渲染对象的边界属性。
+         * 这样将无法正确获得渲染对象的宽高属性以及其内部显示对象的变换属性，如果需要使用这些属性，可以关闭批次渲染。
          * @version DragonBones 5.1
          * @language zh_CN
          */
         EgretArmatureDisplay.prototype.disableBatch = function () {
-            if (!this._batchEnabled) {
+            if (!this._batchEnabled || !this._armature) {
                 return;
             }
             for (var _i = 0, _a = this._armature.getSlots(); _i < _a.length; _i++) {
@@ -12073,7 +13941,7 @@ var dragonBones;
          * @inheritDoc
          */
         EgretArmatureDisplay.prototype.$measureContentBounds = function (bounds) {
-            if (this._batchEnabled) {
+            if (this._batchEnabled && this._armature) {
                 if (this._childDirty) {
                     this._childDirty = false;
                     var isFirst = true;
@@ -12150,36 +14018,50 @@ var dragonBones;
                     }
                     bounds.width -= bounds.x;
                     bounds.height -= bounds.y;
+                    if (dragonBones.EgretFactory._isV5) {
+                        if (this._bounds === null) {
+                            this._bounds = new egret.Rectangle();
+                        }
+                        this._bounds.copyFrom(bounds);
+                    }
                 }
-                return;
+                else if (dragonBones.EgretFactory._isV5) {
+                    if (this._bounds === null) {
+                        this._bounds = new egret.Rectangle();
+                    }
+                    bounds.copyFrom(this._bounds);
+                }
+                return bounds; // V5
             }
-            _super.prototype.$measureContentBounds.call(this, bounds);
+            return _super.prototype.$measureContentBounds.call(this, bounds); // V5
         };
         /**
-         * @see #hasDBEventListener()
-         * @deprecated
+         * @inheritDoc
          */
         EgretArmatureDisplay.prototype.hasEvent = function (type) {
             return this.hasDBEventListener(type);
         };
         /**
-         * @see #addDBEventListener()
-         * @deprecated
+         * @inheritDoc
          */
         EgretArmatureDisplay.prototype.addEvent = function (type, listener, target) {
             this.addDBEventListener(type, listener, target);
         };
         /**
-         * @see #removeDBEventListener()
-         * @deprecated
+         * @inheritDoc
          */
         EgretArmatureDisplay.prototype.removeEvent = function (type, listener, target) {
             this.removeDBEventListener(type, listener, target);
         };
         /**
-         * @see dragonBones.Armature#clock
-         * @see dragonBones.BaseFactory#clock
+         * Deprecated, please refer to {@link dragonBones.Armature#clock} {@link dragonBones.BaseFactory#clock}.
          * @deprecated
+         * @language en_US
+         */
+        /**
+         * 已废弃，请参考 {@link dragonBones.Armature#clock} {@link dragonBones.BaseFactory#clock}。
+         * @deprecated
+         * @language zh_CN
          */
         EgretArmatureDisplay.prototype.advanceTimeBySelf = function (on) {
             if (on) {
@@ -12193,9 +14075,9 @@ var dragonBones;
     }(egret.DisplayObjectContainer));
     dragonBones.EgretArmatureDisplay = EgretArmatureDisplay;
     /**
+     * 已废弃，请参考 {@link dragonBones.EgretEvent}。
      * @deprecated
-     * 已废弃，请参考 @see
-     * @see dragonBones.EgretEvent
+     * @language zh_CN
      */
     var Event = (function (_super) {
         __extends(Event, _super);
@@ -12206,9 +14088,9 @@ var dragonBones;
     }(EgretEvent));
     dragonBones.Event = Event;
     /**
+     * 已废弃，请参考 {@link dragonBones.EgretEvent}。
      * @deprecated
-     * 已废弃，请参考 @see
-     * @see dragonBones.EgretEvent
+     * @language zh_CN
      */
     var ArmatureEvent = (function (_super) {
         __extends(ArmatureEvent, _super);
@@ -12219,9 +14101,9 @@ var dragonBones;
     }(EgretEvent));
     dragonBones.ArmatureEvent = ArmatureEvent;
     /**
+     * 已废弃，请参考 {@link dragonBones.EgretEvent}。
      * @deprecated
-     * 已废弃，请参考 @see
-     * @see dragonBones.EgretEvent
+     * @language zh_CN
      */
     var AnimationEvent = (function (_super) {
         __extends(AnimationEvent, _super);
@@ -12232,9 +14114,9 @@ var dragonBones;
     }(EgretEvent));
     dragonBones.AnimationEvent = AnimationEvent;
     /**
+     * 已废弃，请参考 {@link dragonBones.EgretEvent}。
      * @deprecated
-     * 已废弃，请参考 @see
-     * @see dragonBones.EgretEvent
+     * @language zh_CN
      */
     var FrameEvent = (function (_super) {
         __extends(FrameEvent, _super);
@@ -12245,9 +14127,9 @@ var dragonBones;
     }(EgretEvent));
     dragonBones.FrameEvent = FrameEvent;
     /**
+     * 已废弃，请参考 {@link dragonBones.EgretEvent}。
      * @deprecated
-     * 已废弃，请参考 @see
-     * @see dragonBones.EgretEvent
+     * @language zh_CN
      */
     var SoundEvent = (function (_super) {
         __extends(SoundEvent, _super);
@@ -12258,24 +14140,26 @@ var dragonBones;
     }(EgretEvent));
     dragonBones.SoundEvent = SoundEvent;
     /**
+     * 已废弃，请参考 {@link dragonBones.BaseFacory#parseTextureAtlasData()}。
      * @deprecated
-     * 已废弃，请参考 @see
-     * @see dragonBones.BaseFacory#parseTextureAtlasData()
+     * @language zh_CN
      */
     var EgretTextureAtlas = (function (_super) {
         __extends(EgretTextureAtlas, _super);
+        /**
+         * 已废弃，请参考 {@link dragonBones.BaseFacory#parseTextureAtlasData()}。
+         * @deprecated
+         * @language zh_CN
+         */
         function EgretTextureAtlas(texture, rawData, scale) {
             if (scale === void 0) { scale = 1; }
             var _this = _super.call(this) || this;
-            console.warn("已废弃，请参考 @see");
+            console.warn("已废弃");
             _this._onClear();
             dragonBones.ObjectDataParser.getInstance().parseTextureAtlasData(rawData, _this, scale);
             _this.renderTexture = texture;
             return _this;
         }
-        /**
-         * @private
-         */
         EgretTextureAtlas.toString = function () {
             return "[class dragonBones.EgretTextureAtlas]";
         };
@@ -12283,9 +14167,9 @@ var dragonBones;
     }(dragonBones.EgretTextureAtlasData));
     dragonBones.EgretTextureAtlas = EgretTextureAtlas;
     /**
+     * 已废弃，请参考 {@link dragonBones.BaseFacory#parseTextureAtlasData()}。
      * @deprecated
-     * 已废弃，请参考 @see
-     * @see dragonBones.EgretTextureAtlasData
+     * @language zh_CN
      */
     var EgretSheetAtlas = (function (_super) {
         __extends(EgretSheetAtlas, _super);
@@ -12296,34 +14180,38 @@ var dragonBones;
     }(EgretTextureAtlas));
     dragonBones.EgretSheetAtlas = EgretSheetAtlas;
     /**
+     * 已废弃，请参考 {@link dragonBones.EgretFactory#soundEventManager}。
      * @deprecated
-     * 已废弃，请参考 @see
-     * @see dragonBones.EgretFactory#soundEventManager
+     * @language zh_CN
      */
     var SoundEventManager = (function () {
         function SoundEventManager() {
         }
         /**
+         * 已废弃，请参考 {@link dragonBones.EgretFactory#soundEventManager}。
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.EgretFactory#soundEventManager
+         * @language zh_CN
          */
         SoundEventManager.getInstance = function () {
-            console.warn("已废弃，请参考 @see");
+            console.warn("已废弃");
             return dragonBones.EgretFactory.factory.soundEventManager;
         };
         return SoundEventManager;
     }());
     dragonBones.SoundEventManager = SoundEventManager;
     /**
+     * 已废弃，请参考 {@link dragonBones.Armature#cacheFrameRate}。
      * @deprecated
-     * 已废弃，请参考 @see
-     * @see dragonBones.Armature#cacheFrameRate
-     * @see dragonBones.Armature#enableAnimationCache()
+     * @language zh_CN
      */
     var AnimationCacheManager = (function () {
+        /**
+         * 已废弃，请参考 {@link dragonBones.Armature#cacheFrameRate}。
+         * @deprecated
+         * @language zh_CN
+         */
         function AnimationCacheManager() {
-            console.warn("已废弃，请参考 @see");
+            console.warn("已废弃");
         }
         return AnimationCacheManager;
     }());
@@ -12331,6 +14219,11 @@ var dragonBones;
 })(dragonBones || (dragonBones = {}));
 var dragonBones;
 (function (dragonBones) {
+    /**
+     * The egret slot.
+     * @version DragonBones 3.0
+     * @language en_US
+     */
     /**
      * Egret 插槽。
      * @version DragonBones 3.0
@@ -12341,8 +14234,15 @@ var dragonBones;
         function EgretSlot() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
             /**
+             * Whether to update the transform properties of the display object.
+             * For better performance, the transform properties of display object (x, y, rotation, ScaleX, ScaleX) are not updated and need to be set to true if these properties need to be accessed correctly.
+             * @default false
+             * @version DragonBones 3.0
+             * @language zh_CN
+             */
+            /**
              * 是否更新显示对象的变换属性。
-             * 为了更好的性能, 并不会更新 display 的变换属性 (x, y, rotation, scaleX, scaleX), 如果需要正确访问这些属性, 则需要设置为 true 。
+             * 为了更好的性能, 默认并不会更新显示对象的变换属性 (x, y, rotation, scaleX, scaleX), 如果需要正确访问这些属性, 则需要设置为 true 。
              * @default false
              * @version DragonBones 3.0
              * @language zh_CN
@@ -12357,11 +14257,11 @@ var dragonBones;
             return "[class dragonBones.EgretSlot]";
         };
         /**
-         * @private
+         * @inheritDoc
          */
         EgretSlot.prototype.init = function (slotData, displayDatas, rawDisplay, meshDisplay) {
             _super.prototype.init.call(this, slotData, displayDatas, rawDisplay, meshDisplay);
-            if (dragonBones.EgretFactory.isV5) {
+            if (dragonBones.EgretFactory._isV5) {
                 this._updateTransform = this._updateTransformV5;
             }
             else {
@@ -12369,7 +14269,7 @@ var dragonBones;
             }
         };
         /**
-         * @private
+         * @inheritDoc
          */
         EgretSlot.prototype._onClear = function () {
             _super.prototype._onClear.call(this);
@@ -12378,24 +14278,26 @@ var dragonBones;
             this._colorFilter = null;
         };
         /**
-         * @private
+         * @inheritDoc
          */
         EgretSlot.prototype._initDisplay = function (value) {
+            // tslint:disable-next-line:no-unused-expression
             value;
         };
         /**
-         * @private
+         * @inheritDoc
          */
         EgretSlot.prototype._disposeDisplay = function (value) {
+            // tslint:disable-next-line:no-unused-expression
             value;
         };
         /**
-         * @private
+         * @inheritDoc
          */
         EgretSlot.prototype._onUpdateDisplay = function () {
             this._armatureDisplay = this._armature.display;
             this._renderDisplay = (this._display !== null ? this._display : this._rawDisplay);
-            if (dragonBones.EgretFactory.isV5) {
+            if (dragonBones.EgretFactory._isV5) {
                 if (this._renderDisplay === this._rawDisplay && !(this._renderDisplay.$renderNode instanceof egret.sys.BitmapNode)) {
                     this._renderDisplay.$renderNode = new egret.sys.BitmapNode();
                 }
@@ -12411,7 +14313,7 @@ var dragonBones;
             }
         };
         /**
-         * @private
+         * @inheritDoc
          */
         EgretSlot.prototype._addDisplay = function () {
             if (this._armatureDisplay._batchEnabled) {
@@ -12422,7 +14324,7 @@ var dragonBones;
             }
         };
         /**
-         * @private
+         * @inheritDoc
          */
         EgretSlot.prototype._replaceDisplay = function (value) {
             var prevDisplay = value;
@@ -12437,7 +14339,7 @@ var dragonBones;
             }
         };
         /**
-         * @private
+         * @inheritDoc
          */
         EgretSlot.prototype._removeDisplay = function () {
             if (this._armatureDisplay._batchEnabled) {
@@ -12449,7 +14351,7 @@ var dragonBones;
             }
         };
         /**
-         * @private
+         * @inheritDoc
          */
         EgretSlot.prototype._updateZOrder = function () {
             if (this._armatureDisplay._batchEnabled) {
@@ -12465,21 +14367,21 @@ var dragonBones;
             }
         };
         /**
-         * @internal
-         * @private
+         * @inheritDoc
          */
         EgretSlot.prototype._updateVisible = function () {
             var visible = this._parent.visible && this._visible;
             if (this._armatureDisplay._batchEnabled) {
                 var node = this._renderDisplay.$renderNode;
                 node.alpha = visible ? 1.0 : 0.0;
+                this._displayDirty = true;
             }
             else {
                 this._renderDisplay.visible = visible;
             }
         };
         /**
-         * @private
+         * @inheritDoc
          */
         EgretSlot.prototype._updateBlendMode = function () {
             switch (this._blendMode) {
@@ -12501,7 +14403,7 @@ var dragonBones;
             }
         };
         /**
-         * @private
+         * @inheritDoc
          */
         EgretSlot.prototype._updateColor = function () {
             if (this._colorTransform.redMultiplier !== 1.0 ||
@@ -12550,7 +14452,7 @@ var dragonBones;
             }
         };
         /**
-         * @private
+         * @inheritDoc
          */
         EgretSlot.prototype._updateFrame = function () {
             var meshData = this._display === this._meshDisplay ? this._meshData : null;
@@ -12597,17 +14499,32 @@ var dragonBones;
                             var texture = currentTextureData.renderTexture;
                             var node = this._renderDisplay.$renderNode;
                             egret.sys.RenderNode.prototype.cleanBeforeRender.call(node);
-                            node.image = texture._bitmapData;
-                            node.drawMesh(texture._bitmapX, texture._bitmapY, texture._bitmapWidth, texture._bitmapHeight, texture._offsetX, texture._offsetY, texture.textureWidth, texture.textureHeight);
-                            node.imageWidth = texture._sourceWidth;
-                            node.imageHeight = texture._sourceHeight;
+                            if (dragonBones.EgretFactory._isV5) {
+                                node.image = texture["$bitmapData"];
+                            }
+                            else {
+                                node.image = texture._bitmapData;
+                            }
+                            if (dragonBones.EgretFactory._isV5) {
+                                node.image = texture["$bitmapData"];
+                                node.drawMesh(texture.$bitmapX, texture.$bitmapY, texture.$bitmapWidth, texture.$bitmapHeight, texture.$offsetX, texture.$offsetY, texture.textureWidth, texture.textureHeight);
+                                node.imageWidth = texture.$sourceWidth;
+                                node.imageHeight = texture.$sourceHeight;
+                            }
+                            else {
+                                node.image = texture._bitmapData;
+                                node.drawMesh(texture._bitmapX, texture._bitmapY, texture._bitmapWidth, texture._bitmapHeight, texture._offsetX, texture._offsetY, texture.textureWidth, texture.textureHeight);
+                                node.imageWidth = texture._sourceWidth;
+                                node.imageHeight = texture._sourceHeight;
+                            }
+                            this._blendModeDirty = true;
                             this._colorDirty = true;
                         }
                         meshDisplay.texture = currentTextureData.renderTexture;
                         meshDisplay.$setAnchorOffsetX(this._pivotX);
                         meshDisplay.$setAnchorOffsetY(this._pivotY);
                         meshDisplay.$updateVertices();
-                        if (!dragonBones.EgretFactory.isV5) {
+                        if (!dragonBones.EgretFactory._isV5) {
                             meshDisplay.$invalidateTransform();
                         }
                     }
@@ -12621,10 +14538,19 @@ var dragonBones;
                         if (this._armatureDisplay._batchEnabled) {
                             var node = this._renderDisplay.$renderNode;
                             egret.sys.RenderNode.prototype.cleanBeforeRender.call(node);
-                            node.image = texture._bitmapData;
-                            node.drawImage(texture._bitmapX, texture._bitmapY, texture._bitmapWidth, texture._bitmapHeight, texture._offsetX, texture._offsetY, textureWidth, textureHeight);
-                            node.imageWidth = texture._sourceWidth;
-                            node.imageHeight = texture._sourceHeight;
+                            if (dragonBones.EgretFactory._isV5) {
+                                node.image = texture["$bitmapData"];
+                                node.drawImage(texture.$bitmapX, texture.$bitmapY, texture.$bitmapWidth, texture.$bitmapHeight, texture.$offsetX, texture.$offsetY, textureWidth, textureHeight);
+                                node.imageWidth = texture.$sourceWidth;
+                                node.imageHeight = texture.$sourceHeight;
+                            }
+                            else {
+                                node.image = texture._bitmapData;
+                                node.drawImage(texture._bitmapX, texture._bitmapY, texture._bitmapWidth, texture._bitmapHeight, texture._offsetX, texture._offsetY, textureWidth, textureHeight);
+                                node.imageWidth = texture._sourceWidth;
+                                node.imageHeight = texture._sourceHeight;
+                            }
+                            this._blendModeDirty = true;
                             this._colorDirty = true;
                         }
                         else {
@@ -12648,7 +14574,7 @@ var dragonBones;
             normalDisplay.visible = false;
         };
         /**
-         * @private
+         * @inheritDoc
          */
         EgretSlot.prototype._updateMesh = function () {
             var hasFFD = this._ffdVertices.length > 0;
@@ -12689,7 +14615,7 @@ var dragonBones;
                     meshNode.vertices[iD++] = yG;
                 }
                 meshDisplay.$updateVertices();
-                if (!dragonBones.EgretFactory.isV5) {
+                if (!dragonBones.EgretFactory._isV5) {
                     meshDisplay.$invalidateTransform();
                 }
             }
@@ -12706,7 +14632,7 @@ var dragonBones;
                     meshNode.vertices[i] = floatArray[vertexOffset + i] * scale + this._ffdVertices[i];
                 }
                 meshDisplay.$updateVertices();
-                if (!dragonBones.EgretFactory.isV5) {
+                if (!dragonBones.EgretFactory._isV5) {
                     meshDisplay.$invalidateTransform();
                 }
             }
@@ -12715,9 +14641,10 @@ var dragonBones;
             }
         };
         /**
-         * @private
+         * @inheritDoc
          */
         EgretSlot.prototype._updateTransform = function (isSkinnedMesh) {
+            // tslint:disable-next-line:no-unused-expression
             isSkinnedMesh;
             throw new Error();
         };
@@ -12786,7 +14713,7 @@ var dragonBones;
                     displayMatrix.tx = this.globalTransformMatrix.tx - (this.globalTransformMatrix.a * this._pivotX + this.globalTransformMatrix.c * this._pivotY);
                     displayMatrix.ty = this.globalTransformMatrix.ty - (this.globalTransformMatrix.b * this._pivotX + this.globalTransformMatrix.d * this._pivotY);
                 }
-                else if (this.transformUpdateEnabled) {
+                else {
                     this._renderDisplay.$setMatrix(globalTransformMatrix, this.transformUpdateEnabled);
                 }
             }
@@ -12797,6 +14724,11 @@ var dragonBones;
 })(dragonBones || (dragonBones = {}));
 var dragonBones;
 (function (dragonBones) {
+    /**
+     * The Egret factory.
+     * @version DragonBones 3.0
+     * @language en_US
+     */
     /**
      * Egret 工厂。
      * @version DragonBones 3.0
@@ -12811,7 +14743,7 @@ var dragonBones;
             if (dataParser === void 0) { dataParser = null; }
             var _this = _super.call(this, dataParser) || this;
             if (EgretFactory._dragonBonesInstance === null) {
-                EgretFactory.isV5 = Number(egret.Capabilities.engineVersion.substr(0, 3)) >= 5.1;
+                EgretFactory._isV5 = Number(egret.Capabilities.engineVersion.substr(0, 3)) >= 5.1;
                 //
                 var eventManager = new dragonBones.EgretArmatureDisplay();
                 EgretFactory._dragonBonesInstance = new dragonBones.DragonBones(eventManager);
@@ -12831,6 +14763,11 @@ var dragonBones;
         };
         Object.defineProperty(EgretFactory, "factory", {
             /**
+             * A global factory instance that can be used directly.
+             * @version DragonBones 4.7
+             * @language en_US
+             */
+            /**
              * 一个可以直接使用的全局工厂实例。
              * @version DragonBones 4.7
              * @language zh_CN
@@ -12845,7 +14782,7 @@ var dragonBones;
             configurable: true
         });
         /**
-         * @private
+         * @inheritDoc
          */
         EgretFactory.prototype._isSupportMesh = function () {
             if (egret.Capabilities.renderMode === "webgl" || egret.Capabilities.runtimeType === egret.RuntimeType.NATIVE) {
@@ -12855,7 +14792,7 @@ var dragonBones;
             return false;
         };
         /**
-         * @private
+         * @inheritDoc
          */
         EgretFactory.prototype._buildTextureAtlasData = function (textureAtlasData, textureAtlas) {
             if (textureAtlasData !== null) {
@@ -12875,7 +14812,7 @@ var dragonBones;
             return textureAtlasData;
         };
         /**
-         * @private
+         * @inheritDoc
          */
         EgretFactory.prototype._buildArmature = function (dataPackage) {
             var armature = dragonBones.BaseObject.borrowObject(dragonBones.Armature);
@@ -12884,31 +14821,50 @@ var dragonBones;
             return armature;
         };
         /**
-         * @private
+         * @inheritDoc
          */
         EgretFactory.prototype._buildSlot = function (dataPackage, slotData, displays, armature) {
+            // tslint:disable-next-line:no-unused-expression
             dataPackage;
+            // tslint:disable-next-line:no-unused-expression
             armature;
             var slot = dragonBones.BaseObject.borrowObject(dragonBones.EgretSlot);
             slot.init(slotData, displays, new egret.Bitmap(), new egret.Mesh());
             return slot;
         };
         /**
-         * 创建一个指定名称的骨架。
-         * @param armatureName 骨架名称。
-         * @param dragonBonesName 龙骨数据名称，如果未设置，将检索所有的龙骨数据，如果多个数据中包含同名的骨架数据，可能无法创建出准确的骨架。
-         * @param skinName 皮肤名称，如果未设置，则使用默认皮肤。
-         * @param textureAtlasName 贴图集数据名称，如果未设置，则使用龙骨数据。
-         * @returns 骨架的显示容器。
-         * @see dragonBones.EgretArmatureDisplay
+         * Create a armature from cached DragonBonesData instances and TextureAtlasData instances, then use the {@link #clock} to update it.
+         * The difference is that the armature created by {@link #buildArmature} is not WorldClock instance update.
+         * @param armatureName The armature data name
+         * @param dragonBonesName The cached name of the DragonBonesData instance (If not set, all DragonBonesData instances are retrieved, and when multiple DragonBonesData instances contain a the same name armature data, it may not be possible to accurately create a specific armature)
+         * @param skinName The skin name, you can set a different ArmatureData name to share it's skin data (If not set, use the default skin data)
+         * @returns The armature display container.
          * @version DragonBones 4.5
+         * @example
+         * <pre>
+         *     let armatureDisplay = factory.buildArmatureDisplay("armatureName", "dragonBonesName");
+         * </pre>
+         * @language en_US
+         */
+        /**
+         * 通过缓存的 DragonBonesData 实例和 TextureAtlasData 实例创建一个骨架，并用 {@link #clock} 更新该骨架。
+         * 区别在于由 {@link #buildArmature} 创建的骨架没有 WorldClock 实例驱动。
+         * @param armatureName 骨架数据名称
+         * @param dragonBonesName DragonBonesData 实例的缓存名称 （如果未设置，将检索所有的 DragonBonesData 实例，当多个 DragonBonesData 实例中包含同名的骨架数据时，可能无法准确的创建出特定的骨架）
+         * @param skinName 皮肤名称，可以设置一个其他骨架数据名称来共享其皮肤数据（如果未设置，则使用默认的皮肤数据）
+         * @returns 骨架的显示容器。
+         * @version DragonBones 4.5
+         * @example
+         * <pre>
+         *     let armatureDisplay = factory.buildArmatureDisplay("armatureName", "dragonBonesName");
+         * </pre>
          * @language zh_CN
          */
         EgretFactory.prototype.buildArmatureDisplay = function (armatureName, dragonBonesName, skinName, textureAtlasName) {
-            if (dragonBonesName === void 0) { dragonBonesName = null; }
-            if (skinName === void 0) { skinName = null; }
-            if (textureAtlasName === void 0) { textureAtlasName = null; }
-            var armature = this.buildArmature(armatureName, dragonBonesName, skinName, textureAtlasName);
+            if (dragonBonesName === void 0) { dragonBonesName = ""; }
+            if (skinName === void 0) { skinName = ""; }
+            if (textureAtlasName === void 0) { textureAtlasName = ""; }
+            var armature = this.buildArmature(armatureName, dragonBonesName || "", skinName || "", textureAtlasName || "");
             if (armature !== null) {
                 this._dragonBones.clock.add(armature);
                 return armature.display;
@@ -12916,9 +14872,16 @@ var dragonBones;
             return null;
         };
         /**
-         * 获取带有指定贴图的显示对象。
-         * @param textureName 指定的贴图名称。
-         * @param textureAtlasName 指定的贴图集数据名称，如果未设置，将检索所有的贴图集数据。
+         * Create the display object with the specified texture.
+         * @param textureName The texture data name
+         * @param textureAtlasName The texture atlas data name (Of not set, all texture atlas data will be searched)
+         * @version DragonBones 3.0
+         * @language en_US
+         */
+        /**
+         * 创建带有指定贴图的显示对象。
+         * @param textureName 贴图数据名称。
+         * @param textureAtlasName 贴图集数据名称 （如果未设置，将检索所有的贴图集数据）
          * @version DragonBones 3.0
          * @language zh_CN
          */
@@ -12936,7 +14899,14 @@ var dragonBones;
         };
         Object.defineProperty(EgretFactory.prototype, "soundEventManager", {
             /**
-             * 获取全局声音事件管理器。
+             * A global sound event manager.
+             * Sound events can be listened to uniformly from the manager.
+             * @version DragonBones 4.5
+             * @language en_US
+             */
+            /**
+             * 全局声音事件管理器。
+             * 声音事件可以从该管理器统一侦听。
              * @version DragonBones 4.5
              * @language zh_CN
              */
@@ -12948,9 +14918,14 @@ var dragonBones;
         });
         Object.defineProperty(EgretFactory, "clock", {
             /**
-             * 已废弃，请参考 @see
-             * @see dragonBones.BaseFactory#clock
+             * Deprecated, please refer to {@link #clock}.
              * @deprecated
+             * @language en_US
+             */
+            /**
+             * 已废弃，请参考 {@link #clock}。
+             * @deprecated
+             * @language zh_CN
              */
             get: function () {
                 return EgretFactory.factory.clock;
@@ -12959,87 +14934,128 @@ var dragonBones;
             configurable: true
         });
         /**
+         * Deprecated, please refer to {@link #addDragonBonesData()}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.BaseFactory#addDragonBonesData()
+         * @language en_US
+         */
+        /**
+         * 已废弃，请参考 {@link #addDragonBonesData()}。
+         * @deprecated
+         * @language zh_CN
          */
         EgretFactory.prototype.addSkeletonData = function (dragonBonesData, dragonBonesName) {
             if (dragonBonesName === void 0) { dragonBonesName = null; }
-            console.warn("已废弃，请参考 @see");
+            console.warn("已废弃");
             this.addDragonBonesData(dragonBonesData, dragonBonesName);
         };
         /**
+         * Deprecated, please refer to {@link #getDragonBonesData()}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.BaseFactory#getDragonBonesData()
+         * @language en_US
+         */
+        /**
+         * 已废弃，请参考 {@link #getDragonBonesData()}。
+         * @deprecated
+         * @language zh_CN
          */
         EgretFactory.prototype.getSkeletonData = function (dragonBonesName) {
-            console.warn("已废弃，请参考 @see");
+            console.warn("已废弃");
             return this.getDragonBonesData(dragonBonesName);
         };
         /**
+         * Deprecated, please refer to {@link #removeDragonBonesData()}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.BaseFactory#removeDragonBonesData()
+         * @language en_US
+         */
+        /**
+         * 已废弃，请参考 {@link #removeDragonBonesData()}。
+         * @deprecated
+         * @language zh_CN
          */
         EgretFactory.prototype.removeSkeletonData = function (dragonBonesName) {
-            console.warn("已废弃，请参考 @see");
+            console.warn("已废弃");
             this.removeDragonBonesData(dragonBonesName);
         };
         /**
+         * Deprecated, please refer to {@link #addTextureAtlasData()}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.BaseFactory#addTextureAtlasData()
+         * @language en_US
+         */
+        /**
+         * 已废弃，请参考 {@link #addTextureAtlasData()}。
+         * @deprecated
+         * @language zh_CN
          */
         EgretFactory.prototype.addTextureAtlas = function (textureAtlasData, dragonBonesName) {
             if (dragonBonesName === void 0) { dragonBonesName = null; }
-            console.warn("已废弃，请参考 @see");
+            console.warn("已废弃");
             this.addTextureAtlasData(textureAtlasData, dragonBonesName);
         };
         /**
+         * Deprecated, please refer to {@link #getTextureAtlas()}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.BaseFactory#getTextureAtlasData()
+         * @language en_US
+         */
+        /**
+         * 已废弃，请参考 {@link #getTextureAtlas()}。
+         * @deprecated
+         * @language zh_CN
          */
         EgretFactory.prototype.getTextureAtlas = function (dragonBonesName) {
-            console.warn("已废弃，请参考 @see");
+            console.warn("已废弃");
             return this.getTextureAtlasData(dragonBonesName);
         };
         /**
+         * Deprecated, please refer to {@link #removeTextureAtlasData()}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.BaseFactory#removeTextureAtlasData()
+         * @language en_US
+         */
+        /**
+         * 已废弃，请参考 {@link #removeTextureAtlasData()}。
+         * @deprecated
+         * @language zh_CN
          */
         EgretFactory.prototype.removeTextureAtlas = function (dragonBonesName) {
-            console.warn("已废弃，请参考 @see");
+            console.warn("已废弃");
             this.removeTextureAtlasData(dragonBonesName);
         };
         /**
+         * Deprecated, please refer to {@link #buildArmature()}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.BaseFactory#buildArmature()
+         * @language en_US
+         */
+        /**
+         * 已废弃，请参考 {@link #buildArmature()}。
+         * @deprecated
+         * @language zh_CN
          */
         EgretFactory.prototype.buildFastArmature = function (armatureName, dragonBonesName, skinName) {
-            if (dragonBonesName === void 0) { dragonBonesName = null; }
-            if (skinName === void 0) { skinName = null; }
-            console.warn("已废弃，请参考 @see");
-            return this.buildArmature(armatureName, dragonBonesName, skinName);
+            if (dragonBonesName === void 0) { dragonBonesName = ""; }
+            if (skinName === void 0) { skinName = ""; }
+            console.warn("已废弃");
+            return this.buildArmature(armatureName, dragonBonesName || "", skinName || "");
         };
         /**
+         * Deprecated, please refer to {@link #clear()}.
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.BaseFactory#clear()
+         * @language en_US
+         */
+        /**
+         * 已废弃，请参考 {@link #clear()}。
+         * @deprecated
+         * @language zh_CN
          */
         EgretFactory.prototype.dispose = function () {
-            console.warn("已废弃，请参考 @see");
+            console.warn("已废弃");
             this.clear();
         };
-        EgretFactory._dragonBonesInstance = null;
-        EgretFactory._factory = null;
         /**
+         * @internal
          * @private
          */
-        EgretFactory.isV5 = false;
+        EgretFactory._isV5 = false;
+        EgretFactory._dragonBonesInstance = null;
+        EgretFactory._factory = null;
         return EgretFactory;
     }(dragonBones.BaseFactory));
     dragonBones.EgretFactory = EgretFactory;
@@ -13102,22 +15118,22 @@ var dragonBones;
         return false;
     }
     /**
-     * @language zh_CN
      * 是否包含指定名称的动画组。
      * @param groupName 动画组的名称。
      * @version DragonBones 4.7
+     * @language zh_CN
      */
     function hasMovieGroup(groupName) {
         return groupName in _groupConfigMap;
     }
     dragonBones.hasMovieGroup = hasMovieGroup;
     /**
-     * @language zh_CN
      * 添加动画组。
      * @param groupData 动画二进制数据。
      * @param textureAtlas 贴图集或贴图集列表。
      * @param groupName 为动画组指定一个名称，如果未设置，则使用数据中的名称。
      * @version DragonBones 4.7
+     * @language zh_CN
      */
     function addMovieGroup(groupData, textureAtlas, groupName) {
         if (groupName === void 0) { groupName = null; }
@@ -13171,10 +15187,10 @@ var dragonBones;
     }
     dragonBones.addMovieGroup = addMovieGroup;
     /**
-     * @language zh_CN
      * 移除动画组。
      * @param groupName 动画组的名称。
      * @version DragonBones 4.7
+     * @language zh_CN
      */
     function removeMovieGroup(groupName) {
         var groupConfig = _groupConfigMap[groupName];
@@ -13184,10 +15200,10 @@ var dragonBones;
     }
     dragonBones.removeMovieGroup = removeMovieGroup;
     /**
-     * @language zh_CN
      * 移除所有的动画组。
      * @param groupName 动画组的名称。
      * @version DragonBones 4.7
+     * @language zh_CN
      */
     function removeAllMovieGroup() {
         for (var i in _groupConfigMap) {
@@ -13196,19 +15212,18 @@ var dragonBones;
     }
     dragonBones.removeAllMovieGroup = removeAllMovieGroup;
     /**
-     * @language zh_CN
      * 创建一个动画。
      * @param movieName 动画的名称。
      * @param groupName 动画组的名称，如果未设置，将检索所有的动画组，当多个动画组中包含同名的动画时，可能无法创建出准确的动画。
      * @version DragonBones 4.7
+     * @language zh_CN
      */
     function buildMovie(movieName, groupName) {
         if (groupName === void 0) { groupName = null; }
         var createMovieHelper = { movieName: movieName, groupName: groupName };
         if (_fillCreateMovieHelper(createMovieHelper)) {
             var movie = new Movie(createMovieHelper);
-            dragonBones.EgretFactory.factory;
-            movie.clock = dragonBones.EgretFactory.clock;
+            movie.clock = dragonBones.EgretFactory.factory.clock;
             return movie;
         }
         else {
@@ -13218,10 +15233,10 @@ var dragonBones;
     }
     dragonBones.buildMovie = buildMovie;
     /**
-     * @language zh_CN
      * 获取指定动画组内包含的所有动画名称。
      * @param groupName 动画组的名称。
      * @version DragonBones 4.7
+     * @language zh_CN
      */
     function getMovieNames(groupName) {
         var groupConfig = _groupConfigMap[groupName];
@@ -13240,9 +15255,9 @@ var dragonBones;
     }
     dragonBones.getMovieNames = getMovieNames;
     /**
-     * @language zh_CN
      * 动画事件。
      * @version DragonBones 4.7
+     * @language zh_CN
      */
     var MovieEvent = (function (_super) {
         __extends(MovieEvent, _super);
@@ -13252,21 +15267,21 @@ var dragonBones;
         function MovieEvent(type) {
             var _this = _super.call(this, type) || this;
             /**
-             * @language zh_CN
              * 事件名称。 (帧标签的名称或声音的名称)
              * @version DragonBones 4.7
+             * @language zh_CN
              */
             _this.name = "";
             /**
-             * @language zh_CN
              * 发出事件的插槽名称。
              * @version DragonBones 4.7
+             * @language zh_CN
              */
             _this.slotName = "";
             /**
-             * @language zh_CN
              * 发出事件的动画剪辑名称。
              * @version DragonBones 4.7
+             * @language zh_CN
              */
             _this.clipName = "";
             return _this;
@@ -13323,33 +15338,33 @@ var dragonBones;
             configurable: true
         });
         /**
-         * @language zh_CN
          * 动画剪辑开始播放。
          * @version DragonBones 4.7
+         * @language zh_CN
          */
         MovieEvent.START = "start";
         /**
-         * @language zh_CN
          * 动画剪辑循环播放一次完成。
          * @version DragonBones 4.7
+         * @language zh_CN
          */
         MovieEvent.LOOP_COMPLETE = "loopComplete";
         /**
-         * @language zh_CN
          * 动画剪辑播放完成。
          * @version DragonBones 4.7
+         * @language zh_CN
          */
         MovieEvent.COMPLETE = "complete";
         /**
-         * @language zh_CN
          * 动画剪辑帧事件。
          * @version DragonBones 4.7
+         * @language zh_CN
          */
         MovieEvent.FRAME_EVENT = "frameEvent";
         /**
-         * @language zh_CN
          * 动画剪辑声音事件。
          * @version DragonBones 4.7
+         * @language zh_CN
          */
         MovieEvent.SOUND_EVENT = "soundEvent";
         return MovieEvent;
@@ -13390,10 +15405,10 @@ var dragonBones;
         return MovieSlot;
     }(egret.HashObject));
     /**
-     * @language zh_CN
      * 通过读取缓存的二进制动画数据来更新动画，具有良好的运行性能，同时对内存的占用也非常低。
      * @see dragonBones.buildMovie
      * @version DragonBones 4.7
+     * @language zh_CN
      */
     var Movie = (function (_super) {
         __extends(Movie, _super);
@@ -13404,18 +15419,18 @@ var dragonBones;
         function Movie(createMovieHelper) {
             var _this = _super.call(this) || this;
             /**
-             * @language zh_CN
              * 动画的播放速度。 [(-N~0): 倒转播放, 0: 停止播放, (0~1): 慢速播放, 1: 正常播放, (1~N): 快速播放]
              * @default 1
              * @version DragonBones 4.7
+             * @language zh_CN
              */
             _this.timeScale = 1;
             /**
-             * @language zh_CN
              * 动画剪辑的播放速度。 [(-N~0): 倒转播放, 0: 停止播放, (0~1): 慢速播放, 1: 正常播放, (1~N): 快速播放]
              * （当再次播放其他动画剪辑时，此值将被重置为 1）
              * @default 1
              * @version DragonBones 4.7
+             * @language zh_CN
              */
             _this.clipTimeScale = 1;
             _this._batchEnabled = true;
@@ -13642,7 +15657,12 @@ var dragonBones;
                         var width = this._groupConfig.rectangleArray[regionIndex + 2];
                         var height = this._groupConfig.rectangleArray[regionIndex + 3];
                         slot.displayConfig.texture = new egret.Texture();
-                        slot.displayConfig.texture._bitmapData = textureAtlasTexture._bitmapData;
+                        if (dragonBones.EgretFactory._isV5) {
+                            slot.displayConfig.texture["$bitmapData"] = textureAtlasTexture["$bitmapData"];
+                        }
+                        else {
+                            slot.displayConfig.texture._bitmapData = textureAtlasTexture._bitmapData;
+                        }
                         slot.displayConfig.texture.$initData(x, y, Math.min(width, textureAtlasTexture.textureWidth - x), Math.min(height, textureAtlasTexture.textureHeight - y), 0, 0, Math.min(width, textureAtlasTexture.textureWidth - x), Math.min(height, textureAtlasTexture.textureHeight - y), textureAtlasTexture.textureWidth, textureAtlasTexture.textureHeight);
                     }
                     if (this._batchEnabled) {
@@ -13650,10 +15670,18 @@ var dragonBones;
                         var texture = slot.displayConfig.texture;
                         var bitmapNode = slot.rawDisplay.$renderNode;
                         egret.sys.RenderNode.prototype.cleanBeforeRender.call(slot.rawDisplay.$renderNode);
-                        bitmapNode.image = texture._bitmapData;
-                        bitmapNode.drawImage(texture._bitmapX, texture._bitmapY, texture._bitmapWidth, texture._bitmapHeight, texture._offsetX, texture._offsetY, texture.textureWidth, texture.textureHeight);
-                        bitmapNode.imageWidth = texture._sourceWidth;
-                        bitmapNode.imageHeight = texture._sourceHeight;
+                        if (dragonBones.EgretFactory._isV5) {
+                            bitmapNode.image = texture["$bitmapData"];
+                            bitmapNode.drawImage(texture.$bitmapX, texture.$bitmapY, texture.$bitmapWidth, texture.$bitmapHeight, texture.$offsetX, texture.$offsetY, texture.textureWidth, texture.textureHeight);
+                            bitmapNode.imageWidth = texture._sourceWidth;
+                            bitmapNode.imageHeight = texture._sourceHeight;
+                        }
+                        else {
+                            bitmapNode.image = texture._bitmapData;
+                            bitmapNode.drawImage(texture._bitmapX, texture._bitmapY, texture._bitmapWidth, texture._bitmapHeight, texture._offsetX, texture._offsetY, texture.textureWidth, texture.textureHeight);
+                            bitmapNode.imageWidth = texture._sourceWidth;
+                            bitmapNode.imageHeight = texture._sourceHeight;
+                        }
                     }
                     else {
                         // Classic display.
@@ -14266,12 +16294,9 @@ var dragonBones;
             configurable: true
         });
         /**
+         * 已废弃，请参考 {@link dragonBones.Movie#clock} {@link dragonBones.Movie#clock} {@link dragonBones.EgretFactory#clock}。
          * @deprecated
-         * 已废弃，请参考 @see
-         * @see dragonBones.Movie#clock
-         * @see dragonBones.EgretFactory#clock
-         * @see dragonBones.Movie#timescale
-         * @see dragonBones.Movie#stop()
+         * @language zh_CN
          */
         Movie.prototype.advanceTimeBySelf = function (on) {
             if (on) {
@@ -14344,6 +16369,7 @@ var dragonBones;
             for (var _i = 0; _i < arguments.length; _i++) {
                 args[_i] = arguments[_i];
             }
+            // tslint:disable-next-line:no-unused-expression
             args;
         };
         Object.defineProperty(Movie.prototype, "lastAnimationName", {
