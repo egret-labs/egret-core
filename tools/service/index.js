@@ -105,8 +105,8 @@ var server;
         var options = egret.args;
         var nodePath = process.execPath, service = file.joinPath(egret.root, 'tools/bin/egret');
         var startupParams = ['--expose-gc', service, 'service'];
-        if (egret.args.runtime) {
-            startupParams.push("--runtime", egret.args.runtime);
+        if (egret.args.target) {
+            startupParams.push("--runtime", egret.args.target);
         }
         if (egret.args.experimental) {
             startupParams.push("-exp");

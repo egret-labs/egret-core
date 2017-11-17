@@ -8,9 +8,10 @@
             "dom",
             "es2015.promise"
         ],
-        "types":[]
+        "types": []
     },
-    "exclude": [
-        "node_modules"
+    "include": [
+        "src",
+        "libs"
     ]
 }

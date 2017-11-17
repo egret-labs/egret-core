@@ -12,17 +12,15 @@ var manager;
         });
     }
     manager.copyToLibs = copyToLibs;
-    function generateManifest(gameFileList, manifestPath, isDebug, platform) {
-        if (isDebug === void 0) { isDebug = true; }
-        if (platform === void 0) { platform = "web"; }
+    function generateManifest(gameFileList, options, manifestPath) {
         var initial = [];
         var game = [];
-        ProjectData_1.data.getModulesConfig(platform).forEach(function (m) {
+        ProjectData_1.data.getModulesConfig(options.platform).forEach(function (m) {
             m.target.forEach(function (m) {
-                initial.push(isDebug ? m.debug : m.release);
+                initial.push(options.debug ? m.debug : m.release);
             });
         });
-        if (isDebug) {
+        if (options.debug) {
             gameFileList.forEach(function (m) {
                 game.push("bin-debug/" + m);
             });
@@ -31,10 +29,12 @@ var manager;
             game.push("main.min.js");
         }
         var manifest = { initial: initial, game: game };
-        if (!manifestPath) {
-            manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
+        if (manifestPath) {
+            FileUtil.save(manifestPath, JSON.stringify(manifest, undefined, "\t"));
         }
-        FileUtil.save(manifestPath, JSON.stringify(manifest, undefined, "\t"));
+        else {
+            return manifest;
+        }
     }
     manager.generateManifest = generateManifest;
     function modifyNativeRequire(manifestPath) {
@@ -64,12 +64,12 @@ var manager;
         FileUtil.save(requirePath, requireContent);
     }
     manager.modifyNativeRequire = modifyNativeRequire;
-    function copyLibsForPublish(manifestPath, toPath, platform) {
+    function copyLibsForPublish(target) {
+        var result = [];
         var options = egret.args;
-        var manifest = JSON.parse(FileUtil.read(manifestPath));
-        ProjectData_1.data.getModulesConfig(platform).forEach(function (m) {
+        ProjectData_1.data.getModulesConfig(target).forEach(function (m) {
             m.target.forEach(function (m) {
-                FileUtil.copy(FileUtil.joinPath(options.projectDir, m.release), FileUtil.joinPath(toPath, m.release));
+                result.push(m.debug);
             });
         });
         if (ProjectData_1.data.isWasmProject()) {
@@ -80,9 +80,10 @@ var manager;
                 "egret.webassembly.wasm"
             ];
             arr.forEach(function (item) {
-                FileUtil.copy(FileUtil.joinPath(options.projectDir, "libs", item), FileUtil.joinPath(toPath, "libs", item));
+                result.push(FileUtil.joinPath("libs", item));
             });
         }
+        return result;
     }
     manager.copyLibsForPublish = copyLibsForPublish;
     function copyManifestForNative(toPath) {

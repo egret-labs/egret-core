@@ -13,35 +13,31 @@ import CompileProject = require('../actions/CompileProject');
 
 class Run implements egret.Command {
 
-    private serverStarted = false;
     private initVersion = "";//初始化的 egret 版本，如果版本变化了，关掉当前的进程
-    execute(): number {
-        var build = new Build();
-        build.execute(this.onBuildFinish);
-        return DontExitCode;
-    }
+    async execute() {
 
-    private onBuildFinish = (exitCode: number) => {
-        if (this.serverStarted)
-            return;
+        const exitCode = await new Build().execute()
+
         if (exitCode != 0) {
             process.exit(exitCode);
         }
         if (egret.args.platform == undefined || egret.args.platform == 'web') {
-            utils.getAvailablePort(port => this.onGotPort(port), egret.args.port);
+            const port = egret.args.port || await utils.getAvailablePort();
+            this.initServer(port);
         }
         else {
             process.exit(0);
         }
+        return DontExitCode;
     }
 
-    private onGotPort(port: number) {
+
+    private initServer(port: number) {
         egret.args.port = port;
         var addresses = utils.getNetworkAddress();
         if (addresses.length > 0) {
             egret.args.host = addresses[0];
         }
-        this.serverStarted = true;
         let openWithBrowser = !egret.args.serverOnly;
         let server = new Server();
         let projectDir = egret.args.projectDir;

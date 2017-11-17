@@ -6,7 +6,7 @@ var exmlActions = require("../actions/exml");
 var state = require("../lib/DirectoryState");
 var CompileProject = require("../actions/CompileProject");
 var parser = require("../parser/Parser");
-var EgretProject = require("../project/EgretProject");
+var EgretProject = require("../project");
 var copyNative = require("../actions/CopyNativeFiles");
 var EngineData_1 = require("../EngineData");
 var AutoCompileCommand = (function () {
@@ -54,7 +54,6 @@ var AutoCompileCommand = (function () {
         var _scripts = this._scripts || [];
         //预处理
         utils.clean(options.debugDir);
-        exmlActions.beforeBuild();
         //第一次运行，拷贝项目文件
         this.copyLibs();
         //编译
@@ -66,13 +65,13 @@ var AutoCompileCommand = (function () {
         _scripts = result.files.length > 0 ? result.files : _scripts;
         var manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
         var indexPath = FileUtil.joinPath(egret.args.projectDir, "index.html");
-        EgretProject.manager.generateManifest(_scripts, manifestPath);
+        EgretProject.manager.generateManifest(_scripts, { debug: true, platform: 'web' }, manifestPath);
         if (!EgretProject.data.useTemplate) {
             EgretProject.manager.modifyIndex(manifestPath, indexPath);
         }
-        exmlActions.afterBuild();
+        // exmlActions.updateSetting(egret.args.publish);
         //拷贝项目到native工程中
-        if (egret.args.runtime == "native") {
+        if (egret.args.target == "native") {
             console.log("----native build-----");
             EgretProject.manager.modifyNativeRequire(manifestPath);
             copyNative.refreshNative(true);
@@ -130,7 +129,7 @@ var AutoCompileCommand = (function () {
                     //修改 html 中 modules 块
                     var manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
                     var indexPath = FileUtil.joinPath(egret.args.projectDir, "index.html");
-                    EgretProject.manager.generateManifest(this._scripts, manifestPath);
+                    EgretProject.manager.generateManifest(this._scripts, { debug: true, platform: 'web' }, manifestPath);
                     if (!EgretProject.data.useTemplate) {
                         EgretProject.manager.modifyIndex(manifestPath, indexPath);
                     }
@@ -138,9 +137,6 @@ var AutoCompileCommand = (function () {
                     this.messages[2] = egret.args.tsconfigError;
                 }
             }
-        }
-        if (exmls.length) {
-            exmlActions.beforeBuildChanges(exmls);
         }
         var exmlTS = this.buildChangedEXML(exmls);
         this.buildChangedRes(others);
@@ -158,10 +154,10 @@ var AutoCompileCommand = (function () {
             this.messages[1] = result.messages;
         }
         if (exmls.length) {
-            exmlActions.afterBuildChanges(exmls);
+            // exmlActions.updateSetting(egret.args.publish)
         }
         //拷贝项目到native工程中
-        if (egret.args.runtime == "native") {
+        if (egret.args.target == "native") {
             console.log("----native build-----");
             var manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
             EgretProject.manager.modifyNativeRequire(manifestPath);
@@ -180,14 +176,14 @@ var AutoCompileCommand = (function () {
         //console.log("changed ts:", filesChanged);
         return this.compileProject.compileProject(egret.args, filesChanged);
     };
-    AutoCompileCommand.prototype.buildChangedEXML = function (filesChanges) {
-        if (!filesChanges || filesChanges.length == 0)
+    AutoCompileCommand.prototype.buildChangedEXML = function (exmls) {
+        if (!exmls || exmls.length == 0)
             return [];
-        var result = exmlActions.buildChanges(filesChanges.map(function (f) { return f.fileName; }));
+        var result = exmlActions.build(exmls.map(function (f) { return f.fileName; }));
         this.exitCode[0] = result.exitCode;
         this.messages[0] = result.messages;
         var exmlTS = [];
-        filesChanges.forEach(function (exml) {
+        exmls.forEach(function (exml) {
             var ts = exml.fileName.replace(/\.exml$/, ".g.ts");
             if (FileUtil.exists(ts))
                 exmlTS.push({
@@ -232,7 +228,7 @@ var AutoCompileCommand = (function () {
         console.log('Compile Template: ' + index);
         var manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
         var indexPath = FileUtil.joinPath(egret.args.projectDir, "index.html");
-        EgretProject.manager.generateManifest(this._scripts, manifestPath);
+        EgretProject.manager.generateManifest(this._scripts, { debug: true, platform: 'web' }, manifestPath);
         if (!EgretProject.data.useTemplate) {
             EgretProject.manager.modifyIndex(manifestPath, indexPath);
         }
@@ -240,15 +236,18 @@ var AutoCompileCommand = (function () {
         return 0;
     };
     AutoCompileCommand.prototype.onServiceMessage = function (msg) {
-        //console.log("onServiceMessage:",msg)
-        if (msg.command == 'build' && msg.option) {
-            this.sourceMapStateChanged = msg.option.sourceMap != egret.args.sourceMap;
-            egret.args = parser.parseJSON(msg.option);
+        switch (msg.command) {
+            case "build":
+                if (msg.option) {
+                    this.sourceMapStateChanged = msg.option.sourceMap != egret.args.sourceMap;
+                    egret.args = parser.parseJSON(msg.option);
+                }
+                this.buildChanges(msg.changes);
+                break;
+            case "shutdown":
+                utils.exit(0);
+                break;
         }
-        if (msg.command == 'build')
-            this.buildChanges(msg.changes);
-        if (msg.command == 'shutdown')
-            utils.exit(0);
     };
     AutoCompileCommand.prototype.sendCommand = function (cmd) {
         if (!cmd) {

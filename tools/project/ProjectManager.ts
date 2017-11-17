@@ -11,16 +11,17 @@ export namespace manager {
             FileUtil.copy(m.sourceDir, data.getFilePath(m.targetDir));
         })
     }
-
-    export function generateManifest(gameFileList: string[], manifestPath?: string, isDebug: boolean = true, platform: "web" | "native" = "web") {
-        let initial = [];
-        let game = [];
-        data.getModulesConfig(platform).forEach(m => {
+    export function generateManifest(gameFileList: string[], options: { debug: boolean, platform: "web" | "native" }): { initial: string[], game: string[] }
+    export function generateManifest(gameFileList: string[], options: { debug: boolean, platform: "web" | "native" }, manifestPath?: string): void
+    export function generateManifest(gameFileList: string[], options: { debug: boolean, platform: "web" | "native" }, manifestPath?: string) {
+        let initial: string[] = [];
+        let game: string[] = [];
+        data.getModulesConfig(options.platform).forEach(m => {
             m.target.forEach(m => {
-                initial.push(isDebug ? m.debug : m.release);
+                initial.push(options.debug ? m.debug : m.release);
             });
         });
-        if (isDebug) {
+        if (options.debug) {
             gameFileList.forEach(m => {
                 game.push("bin-debug/" + m);
             });
@@ -30,10 +31,13 @@ export namespace manager {
         }
 
         let manifest = { initial, game };
-        if (!manifestPath) {
-            manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
+        if (manifestPath) {
+            FileUtil.save(manifestPath, JSON.stringify(manifest, undefined, "\t"));
         }
-        FileUtil.save(manifestPath, JSON.stringify(manifest, undefined, "\t"));
+        else {
+            return manifest;
+        }
+
     }
 
     export function modifyNativeRequire(manifestPath: string) {
@@ -63,13 +67,12 @@ export namespace manager {
         FileUtil.save(requirePath, requireContent);
     }
 
-    export function copyLibsForPublish(manifestPath: string, toPath: string, platform: "web" | "native"): void {
-        let options = egret.args;
-        let manifest = JSON.parse(FileUtil.read(manifestPath));
-        data.getModulesConfig(platform).forEach(m => {
+    export function copyLibsForPublish(target: egret.target.Type): string[] {
+        const result: string[] = [];
+        const options = egret.args;
+        data.getModulesConfig(target).forEach(m => {
             m.target.forEach(m => {
-                FileUtil.copy(FileUtil.joinPath(options.projectDir, m.release),
-                    FileUtil.joinPath(toPath, m.release));
+                result.push(m.debug);
             });
         });
         if (data.isWasmProject()) {
@@ -80,10 +83,10 @@ export namespace manager {
                 "egret.webassembly.wasm"
             ];
             arr.forEach(function (item) {
-                FileUtil.copy(FileUtil.joinPath(options.projectDir, "libs", item),
-                    FileUtil.joinPath(toPath, "libs", item));
+                result.push(FileUtil.joinPath("libs", item));
             });
         }
+        return result;
     }
 
     export function copyManifestForNative(toPath: string): void {

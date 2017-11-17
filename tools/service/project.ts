@@ -71,8 +71,8 @@ class Project {
             'compileservice', this.path,
             (this.option.sourceMap ? "-sourcemap" : "")
         ];
-        if (this.option && this.option.runtime) {
-            params.push("--runtime", this.option.runtime);
+        if (this.option && this.option.target) {
+            params.push("--runtime", this.option.target);
         }
         if (this.option && this.option.experimental) {
             params.push("-exp");

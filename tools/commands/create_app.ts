@@ -4,8 +4,7 @@
 //import params = require("../ParamsParser");
 import file = require('../lib/FileUtil');
 import BuildCommand = require("./build");
-//import config = require("../ProjectConfig");
-import EgretProject = require('../project/EgretProject');
+import * as EgretProject from '../project';
 
 import CopyFilesCommand = require("./copyfile");
 import ParseConfigCommand = require("../actions/ParseConfig");
@@ -16,37 +15,29 @@ var cp_exec = require('child_process').exec;
 import copyNative = require("../actions/CopyNativeFiles");
 
 class CreateAppCommand implements egret.Command {
-    executeRes: number = 0;
 
     execute(): number {
         this.run();
-        return this.executeRes;
+        return DontExitCode;
     }
 
     private run() {
         var option = egret.args;
-
-        //if (!params.hasOption("-f") || !params.hasOption("-t")) {
-        //    globals.exit(1601);
-        //}
-        //var arg_app_name = params.getCommandArgs()[0];
-        //var template_path = params.getOption("-t");
-        //var arg_h5_path = params.getOption("-f");
-        var app_name = option.commands[1];
-        var arg_app_name = option.projectDir;
-        var template_path = option.nativeTemplatePath;
+        var appName = option.commands[1];
+        var projectDir = option.projectDir;
+        var nativeTemplatePath = option.nativeTemplatePath;
         var arg_h5_path = option.fileName;
         var reg = new RegExp("^[a-zA-Z]");
-        if (!reg.test(app_name)) {
+        if (!reg.test(appName)) {
             globals.exit(1612);
         }
-        if (!arg_app_name) {
+        if (!projectDir) {
             globals.exit(1610);
         }
-        if (file.exists(arg_app_name)) {
+        if (file.exists(projectDir)) {
             globals.exit(1611);
         }
-        if (!template_path || !arg_h5_path) {
+        if (!nativeTemplatePath || !arg_h5_path) {
             globals.exit(1601);
         }
         //判断项目合法性
@@ -71,21 +62,21 @@ class CreateAppCommand implements egret.Command {
 
         var startTime = Date.now();
 
-        var app_data = this.read_json_from(file.joinPath(template_path, "create_app.json"));
+        var app_data = this.read_json_from(file.joinPath(nativeTemplatePath, "create_app.json"));
         if (!app_data) {
-            globals.exit(1603, template_path);
+            globals.exit(1603, nativeTemplatePath);
         }
 
         var platform = "";
 
-        if (file.exists(file.joinPath(template_path, "proj.android"))) {//android
-            if (file.isFile(file.joinPath(file.joinPath(template_path, "proj.android"), "build.gradle"))) {
+        if (file.exists(file.joinPath(nativeTemplatePath, "proj.android"))) {//android
+            if (file.isFile(file.joinPath(file.joinPath(nativeTemplatePath, "proj.android"), "build.gradle"))) {
                 platform = "android_as";
             } else {
                 platform = "android";
             }
         }
-        else if (file.exists(file.joinPath(template_path, "proj.ios"))) {//ios
+        else if (file.exists(file.joinPath(nativeTemplatePath, "proj.ios"))) {//ios
             platform = "ios";
         }
         else {
@@ -93,12 +84,12 @@ class CreateAppCommand implements egret.Command {
         }
 
         var projectPath = file.joinPath(arg_h5_path);
-        var nativePath = file.joinPath(arg_app_name);
+        var nativePath = file.joinPath(projectDir);
 
         file.remove(nativePath);
 
         //生成native工程
-        this.create_app_from(nativePath, template_path, app_data);
+        this.create_app_from(nativePath, nativeTemplatePath, app_data);
 
         //修改egretProperties.json文件路径
         var properties = JSON.parse(file.read(file.joinPath(projectPath, "egretProperties.json")));
@@ -109,6 +100,7 @@ class CreateAppCommand implements egret.Command {
         file.save(file.joinPath(projectPath, "egretProperties.json"), JSON.stringify(properties, null, "\t"));
 
         EgretProject.data.init(arg_h5_path);
+
 
         //修改native项目配置
         new ParseConfigCommand().execute();
@@ -436,7 +428,6 @@ class CreateAppCommand implements egret.Command {
         var template_zip_path = file.joinPath(template_path, app_data["template"]["zip"]);
         var cmd = "unzip -q " + globals.addQuotes(template_zip_path) + " -d " + globals.addQuotes(app_path);
         //执行异步方法必须指定返回值为DontExitCode
-        this.executeRes = DontExitCode;
         var self = this;
         var build = cp_exec(cmd);
         build.stderr.on("data", function (data) {

@@ -6,7 +6,7 @@ import Compiler = require('./Compiler');
 import FileUtil = require('../lib/FileUtil');
 import CopyFilesCommand = require("../commands/copyfile");
 import ChangeEntranceCMD = require("../actions/ChangeEntranceCommand");
-import EgretProject = require("../project/EgretProject");
+import * as EgretProject from '../project';
 class CopyNativeFiles {
     static copyProjectFiles(platform, nativePath, isDebug) {
         var options = egret.args;
@@ -35,7 +35,7 @@ class CopyNativeFiles {
             var sourceRuntime = FileUtil.joinPath(options.templateDir, "runtime");
             var outputRuntime = FileUtil.joinPath(url2, "launcher");
             FileUtil.copy(sourceRuntime, outputRuntime);
-            if(EgretProject.data.useTemplate) {
+            if (EgretProject.data.useTemplate) {
                 EgretProject.manager.copyManifestForNative(FileUtil.joinPath(url2, "manifest.json"));
             }
 

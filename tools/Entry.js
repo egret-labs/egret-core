@@ -98,7 +98,9 @@ function executeCommandLine(args) {
         entry.exit(exitcode);
     }
     else {
-        exitcode.then(function (value) { return entry.exit(value); }).catch(function (e) { return console.log(e); });
+        exitcode.then(function (value) {
+            entry.exit(value);
+        }).catch(function (e) { return console.log(e); });
     }
 }
 exports.executeCommandLine = executeCommandLine;
@@ -116,7 +118,8 @@ var Entry = (function () {
             return 10002;
         }
         var command = new CommandClass();
-        return command.execute();
+        var result = command.execute();
+        return result;
     };
     Entry.prototype.exit = function (exitCode) {
         if (DontExitCode == exitCode)

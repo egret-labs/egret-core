@@ -2,44 +2,36 @@
 //import globals = require("../globals");
 //import params = require("../ParamsParser");
 var file = require("../lib/FileUtil");
-//import config = require("../ProjectConfig");
-var EgretProject = require("../project/EgretProject");
+var EgretProject = require("../project");
 var ParseConfigCommand = require("../actions/ParseConfig");
 var fs = require('fs');
 var cp_exec = require('child_process').exec;
 var copyNative = require("../actions/CopyNativeFiles");
 var CreateAppCommand = (function () {
     function CreateAppCommand() {
-        this.executeRes = 0;
         this.androidHomeWarnning = "请设置环境变量 ANDROID_HOME ，值为 Android SDK 的根目录。";
     }
     CreateAppCommand.prototype.execute = function () {
         this.run();
-        return this.executeRes;
+        return DontExitCode;
     };
     CreateAppCommand.prototype.run = function () {
         var option = egret.args;
-        //if (!params.hasOption("-f") || !params.hasOption("-t")) {
-        //    globals.exit(1601);
-        //}
-        //var arg_app_name = params.getCommandArgs()[0];
-        //var template_path = params.getOption("-t");
-        //var arg_h5_path = params.getOption("-f");
-        var app_name = option.commands[1];
-        var arg_app_name = option.projectDir;
-        var template_path = option.nativeTemplatePath;
+        var appName = option.commands[1];
+        var projectDir = option.projectDir;
+        var nativeTemplatePath = option.nativeTemplatePath;
         var arg_h5_path = option.fileName;
         var reg = new RegExp("^[a-zA-Z]");
-        if (!reg.test(app_name)) {
+        if (!reg.test(appName)) {
             globals.exit(1612);
         }
-        if (!arg_app_name) {
+        if (!projectDir) {
             globals.exit(1610);
         }
-        if (file.exists(arg_app_name)) {
+        if (file.exists(projectDir)) {
             globals.exit(1611);
         }
-        if (!template_path || !arg_h5_path) {
+        if (!nativeTemplatePath || !arg_h5_path) {
             globals.exit(1601);
         }
         //判断项目合法性
@@ -62,30 +54,30 @@ var CreateAppCommand = (function () {
         }
         option.projectDir = arg_h5_path;
         var startTime = Date.now();
-        var app_data = this.read_json_from(file.joinPath(template_path, "create_app.json"));
+        var app_data = this.read_json_from(file.joinPath(nativeTemplatePath, "create_app.json"));
         if (!app_data) {
-            globals.exit(1603, template_path);
+            globals.exit(1603, nativeTemplatePath);
         }
         var platform = "";
-        if (file.exists(file.joinPath(template_path, "proj.android"))) {
-            if (file.isFile(file.joinPath(file.joinPath(template_path, "proj.android"), "build.gradle"))) {
+        if (file.exists(file.joinPath(nativeTemplatePath, "proj.android"))) {
+            if (file.isFile(file.joinPath(file.joinPath(nativeTemplatePath, "proj.android"), "build.gradle"))) {
                 platform = "android_as";
             }
             else {
                 platform = "android";
             }
         }
-        else if (file.exists(file.joinPath(template_path, "proj.ios"))) {
+        else if (file.exists(file.joinPath(nativeTemplatePath, "proj.ios"))) {
             platform = "ios";
         }
         else {
             globals.exit(1601);
         }
         var projectPath = file.joinPath(arg_h5_path);
-        var nativePath = file.joinPath(arg_app_name);
+        var nativePath = file.joinPath(projectDir);
         file.remove(nativePath);
         //生成native工程
-        this.create_app_from(nativePath, template_path, app_data);
+        this.create_app_from(nativePath, nativeTemplatePath, app_data);
         //修改egretProperties.json文件路径
         var properties = JSON.parse(file.read(file.joinPath(projectPath, "egretProperties.json")));
         if (properties["native"] == null) {
@@ -392,7 +384,6 @@ var CreateAppCommand = (function () {
         var template_zip_path = file.joinPath(template_path, app_data["template"]["zip"]);
         var cmd = "unzip -q " + globals.addQuotes(template_zip_path) + " -d " + globals.addQuotes(app_path);
         //执行异步方法必须指定返回值为DontExitCode
-        this.executeRes = DontExitCode;
         var self = this;
         var build = cp_exec(cmd);
         build.stderr.on("data", function (data) {

@@ -8,11 +8,11 @@ import file = require('../lib/FileUtil');
 //import config = require('../ProjectConfig');
 //import globals = require("../Globals");
 
-class ParseConfigCommand implements egret.Command {
-    private htmlTxt:string;
-    private requireTxt:string;
+class ParseConfigCommand {
+    private htmlTxt: string;
+    private requireTxt: string;
 
-    public execute(callback?:(exitCode:number)=>void):number {
+    public execute() {
         this.htmlTxt = file.read(file.joinPath(egret.args.projectDir, "index.html"));
         this.requireTxt = file.read(file.joinPath(egret.root, "tools", "templates", "empty", "launcher", "native_require.js"));
 
@@ -28,17 +28,15 @@ class ParseConfigCommand implements egret.Command {
         this.read("data-log-filter", "logFilter", true, '""');
         this.read("texture-scale-factor", "textureScaleFactor", false, "1");
         this.read("data-multi-fingered", "maxTouches", false, "2");
-
-        //file.save(file.joinPath(egret.args.projectDir, "launcher", "native_require.js"), this.requireTxt);
         return 0;
     }
 
-    private read(name:string, replaceName:string, isString:boolean, defaultValue:string):void {
-        var result:string;
-        var index:number = this.htmlTxt.indexOf(name);
-        if(index != -1) {
-            var str:string = this.htmlTxt.slice(index + name.length + 2, this.htmlTxt.length);
-            var index2:number = str.indexOf('"');
+    private read(name: string, replaceName: string, isString: boolean, defaultValue: string): void {
+        var result: string;
+        var index: number = this.htmlTxt.indexOf(name);
+        if (index != -1) {
+            var str: string = this.htmlTxt.slice(index + name.length + 2, this.htmlTxt.length);
+            var index2: number = str.indexOf('"');
             result = str.slice(0, index2);
             if (isString) {
                 result = '"' + result + '"';

@@ -38,9 +38,9 @@ var utils = require("../lib/utils");
 var projectAction = require("../actions/Project");
 var FileUtil = require("../lib/FileUtil");
 var doT = require("../lib/doT");
-var EgretProject = require("../project/EgretProject");
-var TemplatesRoot = "tools/templates/";
+var EgretProject = require("../project");
 var Clean = require("../commands/clean");
+var TemplatesRoot = "tools/templates/";
 var Create = (function () {
     function Create() {
     }
@@ -97,7 +97,7 @@ function updateEgretProperties(projectConfig) {
     if (!props.modules) {
         props.modules = modules.map(function (m) { return ({ name: m.name }); });
     }
-    var promise = { name: "promise", path: "./promise" };
+    var promise = { name: "promise" };
     props.modules.push(promise);
     FileUtil.save(propFile, JSON.stringify(props, null, "  "));
 }

@@ -11,7 +11,7 @@ import file = require('../lib/FileUtil');
 import childProcess = require('child_process');
 import parser = require('../parser/Parser');
 import os = require("os");
-import {data as engineData} from "../EngineData";
+import { data as engineData } from "../EngineData";
 
 var COMPILE_SERVICE_PORT = 51545;
 //egret version, use to shutdown if the version is different to the value passed by the build command
@@ -91,7 +91,7 @@ export namespace server {
             console.log(`内存占用: ${heapTotal}M ${proj.path}`);
             let totalmem = engineData.getTotalMem();
             let maxHeap;
-            if(totalmem == -1) {
+            if (totalmem == -1) {
                 //取系统最大内存的四分之一，最低500M
                 maxHeap = Math.max(require("os").totalmem() / 1024 / 1024 / 4, 500);
             }
@@ -124,8 +124,8 @@ export namespace server {
         var nodePath = process.execPath,
             service = file.joinPath(egret.root, 'tools/bin/egret');
         var startupParams = ['--expose-gc', service, 'service'];
-        if (egret.args.runtime) {
-            startupParams.push("--runtime", egret.args.runtime);
+        if (egret.args.target) {
+            startupParams.push("--runtime", egret.args.target);
         }
         if (egret.args.experimental) {
             startupParams.push("-exp");

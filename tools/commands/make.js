@@ -21,6 +21,8 @@ var CompileEgretEngine = (function () {
             { name: "release", minify: true }
         ];
         var excludeList = [
+            FileUtil.escapePath(path.join(outputDir, "promise")),
+            FileUtil.escapePath(path.join(outputDir, "resourcemanager")),
             FileUtil.escapePath(path.join(outputDir, "egret3d")),
             FileUtil.escapePath(path.join(outputDir, "egret-wasm")),
             FileUtil.escapePath(path.join(outputDir, "eui-wasm")),
@@ -32,14 +34,14 @@ var CompileEgretEngine = (function () {
             FileUtil.escapePath(path.join(outputDir, "dragonBones"))
         ];
         utils.clean(outputDir, excludeList);
-        for (var i = 0; i < manifest.modules.length; i++) {
-            var m = manifest.modules[i];
+        for (var _i = 0, _a = manifest.modules; _i < _a.length; _i++) {
+            var m = _a[_i];
             preduceSwanModule(m);
             listModuleFiles(m);
-            for (var j = 0; j < configurations.length; j++) {
-                var config = configurations[j];
-                for (var k = 0; k < manifest.platforms.length; k++) {
-                    var platform = manifest.platforms[k];
+            for (var _b = 0, configurations_1 = configurations; _b < configurations_1.length; _b++) {
+                var config = configurations_1[_b];
+                for (var _c = 0, _d = manifest.platforms; _c < _d.length; _c++) {
+                    var platform = _d[_c];
                     code = this.buildModule(m, platform, config);
                     if (code != 0) {
                         delSwanTemp(m);
@@ -47,6 +49,7 @@ var CompileEgretEngine = (function () {
                     }
                 }
             }
+            // break;
             delSwanTemp(m);
         }
         // this.hideInternalMethods();
@@ -70,6 +73,7 @@ var CompileEgretEngine = (function () {
         var outDir = this.getModuleOutputPath(null, null, m.outFile);
         var declareFile = this.getModuleOutputPath(m.name, fileName + ".d.ts", m.outFile);
         var singleFile = this.getModuleOutputPath(m.name, fileName + ".js", m.outFile);
+        //var modFile = this.getModuleOutputPath(m.name, fileName + ".mod.js", m.outFile);
         var moduleRoot = FileUtil.joinPath(egret.root, m.root);
         if (!m.root) {
             return 0;

@@ -1206,21 +1206,21 @@ var EXMLCompiler = (function () {
     EXMLCompiler.prototype.isPackageName = function (name) {
         return name.indexOf(".") != -1;
     };
-    /**
-     * Egret命名空间
-     */
-    EXMLCompiler.E = "http://ns.egret-labs.org/egret";
-    /**
-     * Wing命名空间
-     */
-    EXMLCompiler.W = "http://ns.egret-labs.org/wing";
-    EXMLCompiler.DECLARATIONS = "Declarations";
-    /**
-     * 命名空间为fs的属性名列表
-     */
-    EXMLCompiler.wingKeys = ["$id", "$locked", "$includeIn", "$excludeFrom", "id", "locked", "includeIn", "excludeFrom"];
     return EXMLCompiler;
 }());
+/**
+ * Egret命名空间
+ */
+EXMLCompiler.E = "http://ns.egret-labs.org/egret";
+/**
+ * Wing命名空间
+ */
+EXMLCompiler.W = "http://ns.egret-labs.org/wing";
+EXMLCompiler.DECLARATIONS = "Declarations";
+/**
+ * 命名空间为fs的属性名列表
+ */
+EXMLCompiler.wingKeys = ["$id", "$locked", "$includeIn", "$excludeFrom", "id", "locked", "includeIn", "excludeFrom"];
 //=================代码生成工具类===================
 var CodeBase = (function () {
     function CodeBase() {
@@ -1956,37 +1956,37 @@ var CpSetStyle = (function (_super) {
 var DataType = (function () {
     function DataType() {
     }
-    DataType.DT_VOID = "void";
-    DataType.DT_NUMBER = "number";
-    DataType.DT_BOOLEAN = "boolean";
-    DataType.DT_ARRAY = "Array";
-    DataType.DT_STRING = "string";
-    DataType.DT_OBJECT = "Object";
-    DataType.DT_FUNCTION = "Function";
     return DataType;
 }());
+DataType.DT_VOID = "void";
+DataType.DT_NUMBER = "number";
+DataType.DT_BOOLEAN = "boolean";
+DataType.DT_ARRAY = "Array";
+DataType.DT_STRING = "string";
+DataType.DT_OBJECT = "Object";
+DataType.DT_FUNCTION = "Function";
 var KeyWords = (function () {
     function KeyWords() {
     }
-    KeyWords.KW_CLASS = "class";
-    KeyWords.KW_FUNCTION = "function";
-    KeyWords.KW_VAR = "var";
-    KeyWords.KW_INTERFACE = "interface";
-    KeyWords.KW_EXTENDS = "extends";
-    KeyWords.KW_IMPLEMENTS = "implements";
-    KeyWords.KW_MODULE = "module";
-    KeyWords.KW_SUPER = "super";
-    KeyWords.KW_THIS = "this";
-    KeyWords.KW_OVERRIDE = "override";
-    KeyWords.KW_RETURN = "return";
-    KeyWords.KW_EXPORT = "export";
     return KeyWords;
 }());
+KeyWords.KW_CLASS = "class";
+KeyWords.KW_FUNCTION = "function";
+KeyWords.KW_VAR = "var";
+KeyWords.KW_INTERFACE = "interface";
+KeyWords.KW_EXTENDS = "extends";
+KeyWords.KW_IMPLEMENTS = "implements";
+KeyWords.KW_MODULE = "module";
+KeyWords.KW_SUPER = "super";
+KeyWords.KW_THIS = "this";
+KeyWords.KW_OVERRIDE = "override";
+KeyWords.KW_RETURN = "return";
+KeyWords.KW_EXPORT = "export";
 var Modifiers = (function () {
     function Modifiers() {
     }
-    Modifiers.M_PUBLIC = "public";
-    Modifiers.M_PRIVATE = "private";
-    Modifiers.M_STATIC = "static";
     return Modifiers;
 }());
+Modifiers.M_PUBLIC = "public";
+Modifiers.M_PRIVATE = "private";
+Modifiers.M_STATIC = "static";

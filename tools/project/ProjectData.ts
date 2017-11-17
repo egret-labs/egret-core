@@ -31,8 +31,9 @@ type SourceCode = {
 
     debug: string,
     release: string,
-    platform: "web" | "native"
+    platform: egret.target.Type
 }
+
 
 export class EgretProjectData {
     private egretProperties: egret.EgretProperty = {
@@ -116,8 +117,8 @@ export class EgretProjectData {
     }
 
     getIgnorePath(): Array<any> {
-        if (globals.hasKeys(this.egretProperties, [egret.args.runtime, "path_ignore"])) {
-            return this.egretProperties[egret.args.runtime]["path_ignore"];
+        if (globals.hasKeys(this.egretProperties, [egret.args.target, "path_ignore"])) {
+            return this.egretProperties[egret.args.target]["path_ignore"];
         }
         return [];
     }
@@ -154,8 +155,8 @@ export class EgretProjectData {
     }
 
     getCopyExmlList(): Array<string> {
-        if (globals.hasKeys(this.egretProperties, [egret.args.runtime, "copyExmlList"])) {
-            return this.egretProperties[egret.args.runtime]["copyExmlList"];
+        if (globals.hasKeys(this.egretProperties, [egret.args.target, "copyExmlList"])) {
+            return this.egretProperties[egret.args.target]["copyExmlList"];
         }
         return [];
     }
@@ -247,7 +248,7 @@ export class EgretProjectData {
 
 
     @_utils.cache
-    getModulesConfig(platform: "web" | "native") {
+    getModulesConfig(platform: egret.target.Type) {
         let result = this.egretProperties.modules.map(m => {
             let name = m.name;
             let sourceDir = this.getModulePath(m);
@@ -281,14 +282,6 @@ export class EgretProjectData {
             return true;
         }
         return false;
-    }
-
-    getPublishType(runtime: string): number {
-        if (globals.hasKeys(this.egretProperties, ["publish", runtime])) {
-            return this.egretProperties["publish"][runtime];
-        }
-
-        return 0;
     }
 
     getResources(): string[] {

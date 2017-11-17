@@ -281,14 +281,13 @@ module helpModule {
         "create": "Create a new project",
         "build": "Compile the TypeScript files in project",
         "publish": "Publish the project, ues GoogleClosureCompiler to compress the code",
-        "startserver": "Start HttpServer, run the project in you browser",
+        "run": "Start HttpServer, run the project in you browser",
         "clean": "Reset the Egret engin code in the project",
         "create_lib": "Create a new third part library",
         "create_app": "Create a native app form Html5",
         "upgrade": "Upgrade the project code",
         "make": "Rebuild the Egret engine source code",
-        "info": "Get information of the Egret engine",
-        "apitest": "Check the api was replaced or not after upgrade engine. Only for the 2.4(or before) upgrade to 2.5(or later).Use this command in 2.5(or later) project"
+        "info": "Get information of the Egret engine"
     };
 
     global["helpModule"] = global["helpModule"] || helpModule;

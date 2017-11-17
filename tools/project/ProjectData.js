@@ -83,8 +83,8 @@ var EgretProjectData = (function () {
         return 1;
     };
     EgretProjectData.prototype.getIgnorePath = function () {
-        if (globals.hasKeys(this.egretProperties, [egret.args.runtime, "path_ignore"])) {
-            return this.egretProperties[egret.args.runtime]["path_ignore"];
+        if (globals.hasKeys(this.egretProperties, [egret.args.target, "path_ignore"])) {
+            return this.egretProperties[egret.args.target]["path_ignore"];
         }
         return [];
     };
@@ -117,8 +117,8 @@ var EgretProjectData = (function () {
         return "content";
     };
     EgretProjectData.prototype.getCopyExmlList = function () {
-        if (globals.hasKeys(this.egretProperties, [egret.args.runtime, "copyExmlList"])) {
-            return this.egretProperties[egret.args.runtime]["copyExmlList"];
+        if (globals.hasKeys(this.egretProperties, [egret.args.target, "copyExmlList"])) {
+            return this.egretProperties[egret.args.target]["copyExmlList"];
         }
         return [];
     };
@@ -235,12 +235,6 @@ var EgretProjectData = (function () {
         }
         return false;
     };
-    EgretProjectData.prototype.getPublishType = function (runtime) {
-        if (globals.hasKeys(this.egretProperties, ["publish", runtime])) {
-            return this.egretProperties["publish"][runtime];
-        }
-        return 0;
-    };
     EgretProjectData.prototype.getResources = function () {
         if (globals.hasKeys(this.egretProperties, ["resources"])) {
             return this.egretProperties["resources"];
@@ -263,11 +257,11 @@ var EgretProjectData = (function () {
         });
         return result;
     };
-    __decorate([
-        _utils.cache
-    ], EgretProjectData.prototype, "getModulesConfig", null);
     return EgretProjectData;
 }());
+__decorate([
+    _utils.cache
+], EgretProjectData.prototype, "getModulesConfig", null);
 exports.EgretProjectData = EgretProjectData;
 exports.data = new EgretProjectData();
 function getAppDataEnginesRootPath() {

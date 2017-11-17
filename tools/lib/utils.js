@@ -258,7 +258,13 @@ function minify(sourceFile, output) {
     };
     //UglifyJS参数参考这个页面：https://github.com/mishoo/UglifyJS2
     var result = UglifyJS.minify(sourceFile, { compress: { global_defs: defines }, output: { beautify: false } });
-    file.save(output, result.code);
+    var code = result.code;
+    if (output) {
+        file.save(output, code);
+    }
+    else {
+        return code;
+    }
 }
 exports.minify = minify;
 function clean(path, excludes) {
@@ -289,24 +295,44 @@ function getNetworkAddress() {
     return ips;
 }
 exports.getNetworkAddress = getNetworkAddress;
-function getAvailablePort(callback, port) {
-    if (port === void 0) { port = 0; }
-    function getPort() {
-        var server = net.createServer();
-        server.on('listening', function () {
-            port = server.address().port;
-            server.close();
+function measure(target, propertyKey, descriptor) {
+    var method = descriptor.value;
+    descriptor.value = function () {
+        var arg = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            arg[_i] = arguments[_i];
+        }
+        var timeBuildStart = (new Date()).getTime();
+        var promise = method.apply(this, arg);
+        return promise.then(function (result) {
+            var timeBuildEnd = (new Date()).getTime();
+            var timeBuildUsed = (timeBuildEnd - timeBuildStart) / 1000;
+            console.log(tr(1108, timeBuildUsed));
+            return result;
         });
-        server.on('close', function () {
-            callback(port);
-        });
-        server.on('error', function (err) {
-            port++;
-            getPort();
-        });
-        server.listen(port, '0.0.0.0');
-    }
-    getPort();
+    };
+}
+exports.measure = measure;
+function getAvailablePort() {
+    return new Promise(function (resolve, reject) {
+        var port = 0;
+        function getPort() {
+            var server = net.createServer();
+            server.on('listening', function () {
+                port = server.address().port;
+                server.close();
+            });
+            server.on('close', function () {
+                resolve(port);
+            });
+            server.on('error', function (err) {
+                port++;
+                getPort();
+            });
+            server.listen(port, '0.0.0.0');
+        }
+        getPort();
+    });
 }
 exports.getAvailablePort = getAvailablePort;
 function checkEgret() {

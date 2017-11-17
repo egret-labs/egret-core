@@ -7,9 +7,12 @@ import CompileProject = require('../actions/CompileProject');
 import projectAction = require('../actions/Project');
 import FileUtil = require('../lib/FileUtil');
 import doT = require('../lib/doT');
-import EgretProject = require('../project/EgretProject');
-var TemplatesRoot = "tools/templates/";
+import * as EgretProject from '../project';
+
 import Clean = require('../commands/clean');
+
+
+const TemplatesRoot = "tools/templates/";
 
 class Create implements egret.Command {
     project: egret.EgretProjectConfig;
@@ -67,7 +70,7 @@ function updateEgretProperties(projectConfig: egret.EgretProjectConfig) {
     if (!props.modules) {
         props.modules = modules.map(m => ({ name: m.name }));
     }
-    let promise = { name: "promise", path: "./promise" };
+    let promise = { name: "promise" };
     props.modules.push(promise);
     FileUtil.save(propFile, JSON.stringify(props, null, "  "));
 }

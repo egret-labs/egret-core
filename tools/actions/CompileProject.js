@@ -8,12 +8,9 @@ var CompileProject = (function () {
     function CompileProject() {
     }
     CompileProject.prototype.compile = function (options) {
-        //console.log("----compileProject.compile----")
-        exmlActions.beforeBuild();
-        //编译
         exmlActions.build();
         var result = this.compileProject(options);
-        exmlActions.afterBuild();
+        // exmlActions.updateSetting(false);
         if (result.exitStatus)
             return null;
         return result;

@@ -1,22 +1,21 @@
-﻿/// <reference path="../lib/types.d.ts" />
-
-import utils = require('../lib/utils');
-import server = require('../server/server');
-import service = require('../service/index');
-import FileUtil = require('../lib/FileUtil');
-import CompileProject = require('../actions/CompileProject');
-import * as project from '../project/EgretProject';
-import ts = require('../lib/typescript-plus/lib/typescript')
+﻿import * as utils from '../lib/utils';
+import * as  service from '../service/index';
+import * as FileUtil from '../lib/FileUtil';
+import * as project from '../project';
+import * as Compiler from '../actions/Compiler';
+import * as tasks from '../tasks';
 import * as path from 'path';
 
-import * as Compiler from '../actions/Compiler';
 console.log(utils.tr(1004, 0));
-var timeBuildStart: number = (new Date()).getTime();
-class Build implements egret.Command {
-    execute(callback?: (exitCode: number) => void): number {
-        callback = callback || defaultBuildCallback;
 
-        var options = egret.args;
+
+
+
+class Build implements egret.Command {
+    @utils.measure
+    async execute() {
+
+        const options = egret.args;
         let packageJsonContent
         if (packageJsonContent = FileUtil.read(project.data.getFilePath("package.json"))) {
             let packageJson: project.Package_JSON = JSON.parse(packageJsonContent);
@@ -40,12 +39,16 @@ class Build implements egret.Command {
             project.manager.copyToLibs();
         }
 
-        service.client.execCommand({
-            path: egret.args.projectDir,
-            command: "build",
-            option: egret.args
-        }, cmd => onGotBuildCommandResult(cmd, callback), true);
-        return DontExitCode;
+
+
+        const res = require('../lib/resourcemanager');
+        const command = "build";
+        const projectRoot = egret.args.projectDir;
+        tasks.run();
+        const target = egret.args.target;
+        await res.build({ projectRoot, debug: true, command, target });
+
+        return 0;
     }
 
     private buildLib2(packageJson: project.Package_JSON) {
@@ -133,22 +136,5 @@ class Build implements egret.Command {
     }
 }
 
-function onGotBuildCommandResult(cmd: egret.ServiceCommandResult, callback: (exitCode: number) => void) {
-    if (cmd.messages) {
-        cmd.messages.forEach(m => console.log(m));
-    }
 
-    if (!cmd.exitCode && egret.args.platform) {
-        setTimeout(() => callback(0), 500);
-    }
-    else
-        callback(cmd.exitCode || 0);
-}
-
-function defaultBuildCallback(code) {
-    var timeBuildEnd: number = (new Date()).getTime();
-    var timeBuildUsed: number = (timeBuildEnd - timeBuildStart) / 1000;
-    console.log(utils.tr(1108, timeBuildUsed));
-    utils.exit(code);
-}
 export = Build;

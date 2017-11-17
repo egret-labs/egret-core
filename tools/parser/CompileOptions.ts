@@ -7,7 +7,6 @@ import FileUtil = require('../lib/FileUtil');
 
 class CompileOptions implements egret.ToolArgs {
     command: string;
-    action: string;
     commands: string[];
     platform: string;
     projectDir: string;
@@ -93,7 +92,7 @@ class CompileOptions implements egret.ToolArgs {
     added: string[];
     removed: string[];
     modified: string[];
-    runtime: string = "web";
+    target: egret.target.Type = "web";
     experimental: boolean;
     version: string;
     compile: boolean;

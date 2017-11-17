@@ -96,25 +96,22 @@ exports.writeFileAsync = writeFileAsync;
 /**
  * 创建文件夹
  */
-function createDirectory(path, mode, made) {
+function createDirectory(path, mode) {
     path = escapePath(path);
     if (mode === undefined) {
         mode = 511 & (~process.umask());
     }
-    if (!made)
-        made = null;
     if (typeof mode === 'string')
         mode = parseInt(mode, 8);
     path = Path.resolve(path);
     try {
         FS.mkdirSync(path, mode);
-        made = made || path;
     }
     catch (err0) {
         switch (err0.code) {
             case 'ENOENT':
-                made = createDirectory(Path.dirname(path), mode, made);
-                createDirectory(path, mode, made);
+                createDirectory(Path.dirname(path), mode);
+                createDirectory(path, mode);
                 break;
             default:
                 var stat;
@@ -129,7 +126,6 @@ function createDirectory(path, mode, made) {
                 break;
         }
     }
-    return made;
 }
 exports.createDirectory = createDirectory;
 var textTemp = {};

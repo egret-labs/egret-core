@@ -1,6 +1,6 @@
 import file = require('../lib/FileUtil');
 import service = require('../service/index');
-import Project = require('../project/EgretProject');
+import Project = require('../project');
 import path = require('path');
 import utils = require('../lib/utils')
 import modify = require("./upgrade/ModifyProperties");
@@ -10,7 +10,7 @@ import projectAction = require('../actions/Project');
 type VersionInfo = {
 
     v: string,
-    command?: { new (): egret.Command }
+    command?: { new(): egret.Command }
 }
 
 class UpgradeCommand implements egret.Command {

@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var utils = require("../lib/utils");
 var file = require("../lib/FileUtil");
 var CompileOptions = require("./CompileOptions");
-var project = require("../project/EgretProject");
+var project = require("../project");
 var path = require("path");
 var EngineData_1 = require("../EngineData");
 exports.optionDeclarations = [
@@ -19,11 +19,11 @@ exports.optionDeclarations = [
     }, {
         name: 'autoCompile',
         type: 'boolean',
-        shortName: "a"
+        alias: "a"
     }, {
         name: 'fileName',
         type: 'string',
-        shortName: 'f'
+        alias: 'f'
     }, {
         name: 'port',
         type: 'number'
@@ -67,8 +67,9 @@ exports.optionDeclarations = [
         name: 'type',
         type: 'string'
     }, {
-        name: 'runtime',
-        type: 'string'
+        name: 'target',
+        type: 'string',
+        alias: 'runtime'
     }, {
         name: 'version',
         type: 'string'
@@ -81,7 +82,7 @@ exports.optionDeclarations = [
     }, {
         name: 'keepEXMLTS',
         type: 'boolean',
-        shortName: "k"
+        alias: "k"
     }, {
         name: 'log',
         type: 'boolean'
@@ -91,45 +92,45 @@ exports.optionDeclarations = [
     }, {
         name: 'nativeTemplatePath',
         type: 'string',
-        shortName: "t"
+        alias: "t"
     }, {
         name: 'all',
         type: 'boolean'
     }, {
         name: 'buildEngine',
         type: 'boolean',
-        shortName: "e"
+        alias: "e"
     }, {
         name: 'experimental',
         type: 'boolean',
-        shortName: "exp"
+        alias: "exp"
     }, {
         name: 'egretVersion',
         type: 'string',
-        shortName: "ev"
+        alias: "ev"
     }, {
         name: 'ide',
         type: 'string'
     }, {
         name: 'exmlGenJs',
         type: 'boolean',
-        shortName: 'gjs'
+        alias: 'gjs'
     }, {
         name: 'androidProjectPath',
         type: 'string',
-        shortName: 'p'
+        alias: 'p'
     }, {
         name: 'sdk',
         type: 'string',
-        shortName: 's'
+        alias: 's'
     }
 ];
-var shortOptionNames = {};
+var aliasNames = {};
 var optionNameMap = {};
 exports.optionDeclarations.forEach(function (option) {
     optionNameMap[option.name.toLowerCase()] = option;
-    if (option.shortName) {
-        shortOptionNames[option.shortName] = option.name;
+    if (option.alias) {
+        aliasNames[option.alias] = option.name;
     }
 });
 function parseCommandLine(commandLine) {
@@ -148,8 +149,8 @@ function parseCommandLine(commandLine) {
             if (s.charAt(0) === '-') {
                 s = s.slice(s.charAt(1) === '-' ? 2 : 1).toLowerCase();
                 // Try to translate short option names to their full equivalents.
-                if (s in shortOptionNames) {
-                    s = shortOptionNames[s].toLowerCase();
+                if (s in aliasNames) {
+                    s = aliasNames[s].toLowerCase();
                 }
                 if (s in optionNameMap) {
                     var opt = optionNameMap[s];
@@ -196,18 +197,6 @@ function parseCommandLine(commandLine) {
                 options.projectDir = commands[2];
                 commands.splice(2, 1);
             }
-            //else if (file.isDirectory(commands[1]) && !file.exists(commands[1]) || options.command=="create_app") {
-            //    options.projectDir = commands[1];
-            //    commands.splice(1, 1);
-            //}
-            //else if (file.isDirectory(commands[1]) || options.command=="create_lib") {
-            //    options.projectDir = commands[1];
-            //    commands.splice(1, 1);
-            //}
-            //else if (file.isDirectory(commands[1]) || options.command == "apitest") {
-            //    options.projectDir = commands[1];
-            //    commands.splice(1, 1);
-            //}
         }
         //create_app命令不强制设置projectDir属性
         if (options.projectDir == null && options.command == "create_app") {
@@ -256,7 +245,7 @@ function parseJSON(json) {
     options.added = json.added;
     options.modified = json.modified;
     options.removed = json.removed;
-    options.runtime = json.runtime;
+    options.target = json.target;
     options.experimental = json.experimental;
     return options;
 }

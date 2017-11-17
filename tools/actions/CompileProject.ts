@@ -9,12 +9,9 @@ import * as Compiler from './Compiler';
 
 class CompileProject {
     compile(options: egret.ToolArgs) {
-        //console.log("----compileProject.compile----")
-        exmlActions.beforeBuild();
-        //编译
         exmlActions.build();
-        var result = this.compileProject(options);
-        exmlActions.afterBuild();
+        const result = this.compileProject(options);
+        // exmlActions.updateSetting(false);
         if (result.exitStatus)
             return null;
 

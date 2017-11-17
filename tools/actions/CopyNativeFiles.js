@@ -2,7 +2,7 @@
 var FileUtil = require("../lib/FileUtil");
 var CopyFilesCommand = require("../commands/copyfile");
 var ChangeEntranceCMD = require("../actions/ChangeEntranceCommand");
-var EgretProject = require("../project/EgretProject");
+var EgretProject = require("../project");
 var CopyNativeFiles = (function () {
     function CopyNativeFiles() {
     }

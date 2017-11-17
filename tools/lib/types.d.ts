@@ -4,6 +4,17 @@
 
 declare module egret {
 
+    export namespace target {
+
+        export type Type = "web" | "native" | "any";
+
+        export interface Info {
+            name: Type;
+            description?: string;
+            declaration?: boolean;
+        }
+    }
+
     export interface Command {
         execute(): number | Promise<number>
     }
@@ -32,13 +43,11 @@ declare module egret {
         command: string;
         //子命令
         subCommand?: string;
-        action?: string;
         commands?: string[];
         platform?: string;
 
         type?: string;
-        native?: boolean;
-        runtime?: string;
+        target?: egret.target.Type;
         version?: string;
         compile?: boolean;
         password?: string;
@@ -102,13 +111,13 @@ declare module egret {
 
     export type EgretProperty = {
         "modules": EgretPropertyModule[],
-        "template"?:{
-            
+        "template"?: {
+
         },
-        "wasm"?:{
-            
+        "wasm"?: {
+
         },
-        "eui"?:{
+        "eui"?: {
             "exmlRoot"?: string | string[];
             "themes"?: string[];
             "exmlPublishPolicy"?: string;
@@ -154,14 +163,14 @@ declare module egret {
     export interface CommandLineOption {
         name: string;
         type: string | Map<number>;         // "string", "number", "boolean", or an object literal mapping named values to actual values
-        shortName?: string;                 // A short mnemonic for convenience - for instance, 'h' can be used in place of 'help'.
+        alias?: string;                 // A short mnemonic for convenience - for instance, 'h' can be used in place of 'help'.
         description?: DiagnosticMessage;    // The message describing what the command line switch does
         paramType?: DiagnosticMessage;      // The name to be used for a non-boolean option's parameter.
         error?: DiagnosticMessage;          // The error given when the argument does not fit a customized 'type'.
     }
 
     export interface ServiceCommand {
-        command: string;
+        command: "build" | "shutdown" | "buildResult" | "status" | "buildResult" | "init";
         path?: string;
         version?: string;
         option: ToolArgs;
@@ -203,7 +212,7 @@ declare module egret {
     export interface Manifest {
         registerClass: string;
         modules: EgretModule[];
-        platforms: TargetPlatform[];
+        platforms: target.Info[];
         configurations: CompileConfiguration[];
         scaleModes: ScaleMode[];
         orientationModes: OrientationMode[];
@@ -249,11 +258,7 @@ declare module egret {
         declaration?: boolean;
     }
 
-    export interface TargetPlatform {
-        name: string;
-        description?: string;
-        declaration?: boolean;
-    }
+
 
     export interface IEXMLHandler {
         compile(): number;

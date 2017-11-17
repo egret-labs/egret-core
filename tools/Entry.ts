@@ -93,7 +93,7 @@ function getEgretPath() {
 
 function getLanguageInfo() {
     let osLocal = require("./lib/os-local.js");
-    let i18n:string = osLocal();
+    let i18n: string = osLocal();
     i18n = i18n.toLowerCase();
     if (i18n == "zh_cn" || i18n == "zh_tw" || i18n == "zh_hk") {
         require('./locales/zh_CN');
@@ -115,7 +115,9 @@ export function executeCommandLine(args: string[]): void {
         entry.exit(exitcode);
     }
     else {
-        exitcode.then(value => entry.exit(value)).catch(e => console.log(e))
+        exitcode.then(value => {
+            entry.exit(value);
+        }).catch(e => console.log(e))
     }
 }
 class Entry {
@@ -124,14 +126,15 @@ class Entry {
         var self = this;
         options.command = options.command || "help";
         try {
-            var CommandClass: { new (): egret.Command } = require("./commands/" + options.command);
+            var CommandClass: { new(): egret.Command } = require("./commands/" + options.command);
         }
         catch (e) {
             console.log(utils.tr(10002, options.command));
             return 10002;
         }
         var command = new CommandClass();
-        return command.execute();
+        let result = command.execute();
+        return result;
     }
 
     exit(exitCode) {

@@ -463,24 +463,6 @@
         ]
       },
       {
-        "name": "res-examples",
-        "displayName": "ResourceManager sample project",
-        "displayName_en": "ResourceManager sample project",
-        "language": "TypeScript",
-        "tag": "game,app,TypeScript",
-        "description": "ResourceManager sample project",
-        "description_en": "ResourceManager sample project",
-        "defaultWidth": 640,
-        "defaultHeight": 1136,
-        "modules": [
-          "egret",
-          "game",
-          "res",
-          "eui",
-          "tween"
-        ]
-      },
-      {
         "name": "wasm",
         "displayName": "WebAssembly sample project",
         "displayName_en": "WebAssembly sample project",

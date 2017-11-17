@@ -204,17 +204,23 @@ export function endWith(text: string, match: string) {
 function escape(s) {
     return s.replace(/"/, '\\\"');
 }
-
-export function minify(sourceFile: string, output: string) {
-
-
-    var defines = {
+export function minify(sourceFile: string): string
+export function minify(sourceFile: string, output: string): void
+export function minify(sourceFile: string, output?: string) {
+    const defines = {
         DEBUG: false,
         RELEASE: true
     }
     //UglifyJS参数参考这个页面：https://github.com/mishoo/UglifyJS2
-    var result = UglifyJS.minify(sourceFile, { compress: { global_defs: defines }, output: { beautify: false } });
-    file.save(output, result.code);
+    const result = UglifyJS.minify(sourceFile, { compress: { global_defs: defines }, output: { beautify: false } });
+    const code = result.code;
+    if (output) {
+        file.save(output, code);
+    }
+    else {
+        return code;
+    }
+
 }
 
 export function clean(path: string, excludes?: string[]) {
@@ -246,25 +252,46 @@ export function getNetworkAddress(): string[] {
     return ips;
 }
 
-export function getAvailablePort(callback: (port: number) => void, port = 0) {
 
-    function getPort() {
-        var server = net.createServer();
-        server.on('listening', function () {
-            port = server.address().port
-            server.close()
+export function measure(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<any>) {
+
+    const method = descriptor.value;
+    descriptor.value = function (...arg) {
+        const timeBuildStart = (new Date()).getTime();
+        let promise = method.apply(this, arg);
+
+        return promise.then((result) => {
+            const timeBuildEnd = (new Date()).getTime();
+            const timeBuildUsed = (timeBuildEnd - timeBuildStart) / 1000;
+            console.log(tr(1108, timeBuildUsed));
+            return result;
         })
-        server.on('close', function () {
-            callback(port)
-        })
-        server.on('error', function (err) {
-            port++;
-            getPort();
-        })
-        server.listen(port, '0.0.0.0')
     }
+}
 
-    getPort();
+export function getAvailablePort() {
+    return new Promise<number>((resolve, reject) => {
+        let port = 0;
+
+        function getPort() {
+            var server = net.createServer();
+            server.on('listening', function () {
+                port = server.address().port
+                server.close()
+            })
+            server.on('close', function () {
+                resolve(port)
+            })
+            server.on('error', function (err) {
+                port++;
+                getPort();
+            })
+            server.listen(port, '0.0.0.0')
+        }
+        getPort();
+    })
+
+
 }
 
 export function checkEgret() {
