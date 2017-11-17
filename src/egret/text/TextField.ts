@@ -1626,6 +1626,10 @@ namespace egret {
                 }
             }
             else if (this.$TextField[sys.TextKeys.textFieldWidth] == 0) {
+                let graphics = this.graphicsNode;
+                if (graphics) {
+                    graphics.clear();
+                }
                 return;
             }
 

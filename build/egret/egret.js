@@ -21340,6 +21340,10 @@ var egret;
                 }
             }
             else if (this.$TextField[3 /* textFieldWidth */] == 0) {
+                var graphics = this.graphicsNode;
+                if (graphics) {
+                    graphics.clear();
+                }
                 return;
             }
             var underLines = this.drawText();
