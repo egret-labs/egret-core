@@ -1129,7 +1129,11 @@ function polyfill() {
         }
     }
 
-    var P = local.Promise;
+    var P = local.Promise;    
+    
+    if (typeof egret_native != "undefined" && egret_native.capability && !egret_native.capability("Promise")) {
+      P = undefined;
+    }
 
     if (P) {
         var promiseToString = null;
