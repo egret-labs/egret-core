@@ -48,30 +48,25 @@ var Run = (function () {
     }
     Run.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var exitCode, port, _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var exitCode, port;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0: return [4 /*yield*/, new Build().execute()];
                     case 1:
-                        exitCode = _b.sent();
+                        exitCode = _a.sent();
                         if (exitCode != 0) {
                             process.exit(exitCode);
                         }
-                        if (!(egret.args.platform == undefined || egret.args.platform == 'web')) return [3 /*break*/, 4];
-                        _a = egret.args.port;
-                        if (_a) return [3 /*break*/, 3];
-                        return [4 /*yield*/, utils.getAvailablePort()];
+                        if (!(egret.args.platform == undefined || egret.args.platform == 'web')) return [3 /*break*/, 3];
+                        return [4 /*yield*/, utils.getAvailablePort(egret.args.port)];
                     case 2:
-                        _a = (_b.sent());
-                        _b.label = 3;
-                    case 3:
-                        port = _a;
+                        port = _a.sent();
                         this.initServer(port);
-                        return [3 /*break*/, 5];
-                    case 4:
+                        return [3 /*break*/, 4];
+                    case 3:
                         process.exit(0);
-                        _b.label = 5;
-                    case 5: return [2 /*return*/, DontExitCode];
+                        _a.label = 4;
+                    case 4: return [2 /*return*/, DontExitCode];
                 }
             });
         });
