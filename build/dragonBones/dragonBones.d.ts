@@ -7131,6 +7131,9 @@ declare namespace dragonBones {
         /**
          * - Replaces the existing animation data for a specific armature with the animation data for the specific armature data.
          * This enables you to make a armature template so that other armature without animations can share it's animations.
+         * @param armature - The armtaure.
+         * @param armatureData - The armature data.
+         * @param isOverride - Whether to completely overwrite the original animation.
          * @example
          * <pre>
          *     let armatureA = factory.buildArmature("armatureA", "dragonBonesA");
@@ -7139,12 +7142,17 @@ declare namespace dragonBones {
          *     factory.replaceAnimation(armatureA, armatureDataB);
          *     }
          * </pre>
+         * @see dragonBones.Armature
+         * @see dragonBones.ArmatureData
          * @version DragonBones 5.6
          * @language en_US
          */
         /**
          * - 用特定骨架数据的动画数据替换特定骨架现有的动画数据。
          * 这样就能实现制作一个骨架动画模板，让其他没有制作动画的骨架共享该动画。
+         * @param armature - 骨架。
+         * @param armatureData - 骨架数据。
+         * @param isOverride - 是否完全覆盖原来的动画。
          * @example
          * <pre>
          *     let armatureA = factory.buildArmature("armatureA", "dragonBonesA");
@@ -7153,10 +7161,12 @@ declare namespace dragonBones {
          *     factory.replaceAnimation(armatureA, armatureDataB);
          *     }
          * </pre>
+         * @see dragonBones.Armature
+         * @see dragonBones.ArmatureData
          * @version DragonBones 5.6
          * @language zh_CN
          */
-        replaceAnimation(armature: Armature, armatureData: ArmatureData, isReplaceAll?: boolean): boolean;
+        replaceAnimation(armature: Armature, armatureData: ArmatureData, isOverride?: boolean): boolean;
         /**
          * @private
          */
@@ -7592,6 +7602,10 @@ declare namespace dragonBones {
      */
     class EgretArmatureDisplay extends egret.DisplayObjectContainer implements IArmatureProxy {
         private static _cleanBeforeRender();
+        /**
+         * @private
+         */
+        debugDraw: boolean;
         /**
          * @internal
          * @private

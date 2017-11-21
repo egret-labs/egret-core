@@ -13093,6 +13093,9 @@ var dragonBones;
         /**
          * - Replaces the existing animation data for a specific armature with the animation data for the specific armature data.
          * This enables you to make a armature template so that other armature without animations can share it's animations.
+         * @param armature - The armtaure.
+         * @param armatureData - The armature data.
+         * @param isOverride - Whether to completely overwrite the original animation.
          * @example
          * <pre>
          *     let armatureA = factory.buildArmature("armatureA", "dragonBonesA");
@@ -13101,12 +13104,17 @@ var dragonBones;
          *     factory.replaceAnimation(armatureA, armatureDataB);
          *     }
          * </pre>
+         * @see dragonBones.Armature
+         * @see dragonBones.ArmatureData
          * @version DragonBones 5.6
          * @language en_US
          */
         /**
          * - 用特定骨架数据的动画数据替换特定骨架现有的动画数据。
          * 这样就能实现制作一个骨架动画模板，让其他没有制作动画的骨架共享该动画。
+         * @param armature - 骨架。
+         * @param armatureData - 骨架数据。
+         * @param isOverride - 是否完全覆盖原来的动画。
          * @example
          * <pre>
          *     let armatureA = factory.buildArmature("armatureA", "dragonBonesA");
@@ -13115,16 +13123,18 @@ var dragonBones;
          *     factory.replaceAnimation(armatureA, armatureDataB);
          *     }
          * </pre>
+         * @see dragonBones.Armature
+         * @see dragonBones.ArmatureData
          * @version DragonBones 5.6
          * @language zh_CN
          */
-        BaseFactory.prototype.replaceAnimation = function (armature, armatureData, isReplaceAll) {
-            if (isReplaceAll === void 0) { isReplaceAll = true; }
+        BaseFactory.prototype.replaceAnimation = function (armature, armatureData, isOverride) {
+            if (isOverride === void 0) { isOverride = true; }
             var skinData = armatureData.defaultSkin;
             if (skinData === null) {
                 return false;
             }
-            if (isReplaceAll) {
+            if (isOverride) {
                 armature.animation.animations = armatureData.animations;
             }
             else {
@@ -13150,7 +13160,7 @@ var dragonBones;
                             if (displayData !== null && displayData.type === 1 /* Armature */) {
                                 var childArmatureData = this.getArmatureData(displayData.path, displayData.parent.parent.parent.name);
                                 if (childArmatureData) {
-                                    this.replaceAnimation(display, childArmatureData, isReplaceAll);
+                                    this.replaceAnimation(display, childArmatureData, isOverride);
                                 }
                             }
                         }
@@ -13786,6 +13796,10 @@ var dragonBones;
         function EgretArmatureDisplay() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
             /**
+             * @private
+             */
+            _this.debugDraw = false;
+            /**
              * @internal
              * @private
              */
@@ -13825,7 +13839,7 @@ var dragonBones;
          * @inheritDoc
          */
         EgretArmatureDisplay.prototype.dbUpdate = function () {
-            var drawed = dragonBones.DragonBones.debugDraw;
+            var drawed = dragonBones.DragonBones.debugDraw || this.debugDraw;
             if (drawed || this._debugDraw) {
                 this._debugDraw = drawed;
                 if (this._debugDraw) {
@@ -13964,6 +13978,9 @@ var dragonBones;
                 var slot = _a[_i];
                 // (slot as EgretSlot).transformUpdateEnabled = true;
                 var display = (slot._meshData ? slot.meshDisplay : slot.rawDisplay);
+                if (!slot.display && display === slot.meshDisplay) {
+                    display = slot.rawDisplay;
+                }
                 var node = display.$renderNode;
                 // Transform.
                 if (node.matrix) {
