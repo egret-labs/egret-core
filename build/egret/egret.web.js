@@ -1556,6 +1556,7 @@ var egret;
                 imageLoader.once(egret.Event.COMPLETE, function (e) {
                     var posterData = imageLoader.data;
                     _this.posterData = imageLoader.data;
+                    _this.$renderDirty = true;
                     _this.posterData.width = _this.getPlayWidth();
                     _this.posterData.height = _this.getPlayHeight();
                 }, this);
