@@ -126,6 +126,7 @@ namespace egret.web {
             let gl = this.gl;
 
             let texture: WebGLTexture = gl.createTexture();
+            texture["glContext"] = gl;
             gl.bindTexture(gl.TEXTURE_2D, texture);
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.width, this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
@@ -167,6 +168,10 @@ namespace egret.web {
 
             // 此处不解绑是否会造成bug？
             // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        }
+
+        public dispose():void {
+            WebGLUtils.deleteWebGLTexture(this.texture);
         }
     }
 }

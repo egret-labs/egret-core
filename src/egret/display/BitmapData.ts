@@ -214,7 +214,7 @@ namespace egret {
                 egret.WebGLUtils.deleteWebGLTexture(this.webGLTexture);
                 this.webGLTexture = null;
             }
-            //native
+            //native or WebGLRenderTarget
             if (this.source && this.source.dispose) {
                 this.source.dispose();
             }
