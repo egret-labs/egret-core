@@ -48,17 +48,17 @@ exports.default = {
         });
     }); },
     onFinish: function (pluginContext) { return __awaiter(_this, void 0, void 0, function () {
-        var target_1, scripts, jscode, filepath, htmlContent;
+        var target, scripts, jscode, filepath, htmlContent;
         return __generator(this, function (_a) {
             try {
-                target_1 = egret.args.target;
-                scripts = EgretProject.manager.copyLibsForPublish(target_1);
+                target = egret.args.target;
+                scripts = EgretProject.manager.copyLibsForPublish(target);
                 scripts.forEach(function (script) {
                     pluginContext.createFile(script, fs.readFileSync(FileUtil.joinPath(pluginContext.projectRoot, script)));
                 });
                 jscode = tinyCompiler();
                 pluginContext.createFile("main.min.js", new Buffer(jscode));
-                if (target_1 == 'web') {
+                if (target == 'web') {
                     filepath = FileUtil.joinPath(pluginContext.projectRoot, 'template/web/index.html');
                     htmlContent = fs.readFileSync(filepath);
                     pluginContext.createFile("index.html", htmlContent);
