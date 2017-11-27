@@ -8,7 +8,11 @@ function run() {
     res.createPlugin(manifest_1.default);
     res.createPlugin(compile_1.default);
     res.createPlugin(incrementCompile_1.default);
-    res.createPlugin(exml_1.default.debug);
-    res.createPlugin(exml_1.default.publish);
+    var debug = new exml_1.default('path');
+    debug.name = 'exml-debug';
+    var publish = new exml_1.default('commonjs');
+    publish.name = 'exml';
+    res.createPlugin(debug);
+    res.createPlugin(publish);
 }
 exports.run = run;

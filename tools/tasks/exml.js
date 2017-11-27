@@ -33,49 +33,34 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var exml = require("../actions/exml");
 var path = require("path");
-var res = require('../lib/resourcemanager');
-var debug = {
-    "name": "exml-debug",
-    onFile: function (file) { return __awaiter(_this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            return [2 /*return*/, file];
-        });
-    }); },
-    onFinish: function (pluginContext) {
-        try {
-            var result = exml.publishEXML('path');
-            result.forEach(function (item) {
-                var filename = path.relative(pluginContext.projectRoot, item.path).split("\\").join("/");
-                pluginContext.createFile(filename, new Buffer(item.content));
-            });
-        }
-        catch (e) {
-            console.log(e);
-        }
+var ExmlPlugin = (function () {
+    function ExmlPlugin(publishPolicy) {
+        this.publishPolicy = publishPolicy;
+        this.name = 'exml';
     }
-};
-var publish = {
-    "name": "exml",
-    onFile: function (file) { return __awaiter(_this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            return [2 /*return*/, file];
-        });
-    }); },
-    onFinish: function (pluginContext) {
-        try {
-            var result = exml.publishEXML();
-            result.forEach(function (item) {
-                var filename = path.relative(pluginContext.projectRoot, item.path).split("\\").join("/");
-                pluginContext.createFile(filename, new Buffer(item.content));
+    ExmlPlugin.prototype.onFile = function (file) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, file];
             });
-        }
-        catch (e) {
-            console.log(e);
-        }
-    }
-};
-exports.default = { debug: debug, publish: publish };
+        });
+    };
+    ExmlPlugin.prototype.onFinish = function (pluginContext) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                result = exml.publishEXML(this.publishPolicy);
+                result.forEach(function (item) {
+                    var filename = path.relative(pluginContext.projectRoot, item.path).split("\\").join("/");
+                    pluginContext.createFile(filename, new Buffer(item.content));
+                });
+                return [2 /*return*/];
+            });
+        });
+    };
+    return ExmlPlugin;
+}());
+exports.default = ExmlPlugin;
