@@ -7442,6 +7442,8 @@ var egret;
                     region.updateRegion(bounds, displayMatrix);
                 }
                 if (region.width <= 0 || region.height <= 0) {
+                    egret.sys.Region.release(region);
+                    egret.Matrix.release(displayMatrix);
                     return drawCalls;
                 }
                 var found = false;
@@ -7506,8 +7508,9 @@ var egret;
                         var maskBuffer = this.createRenderBuffer(region.width * matrix.a, region.height * matrix.d);
                         maskBuffer.context.pushBuffer(maskBuffer);
                         maskBuffer.setTransform(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
-                        offsetM = egret.Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
-                        drawCalls += this.drawDisplayObject(mask, maskBuffer, dirtyList, offsetM, mask.$displayList, region, root);
+                        var offsetM_1 = egret.Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
+                        drawCalls += this.drawDisplayObject(mask, maskBuffer, dirtyList, offsetM_1, mask.$displayList, region, root);
+                        egret.Matrix.release(offsetM_1);
                         maskBuffer.context.popBuffer();
                         displayBuffer.context.setGlobalCompositeOperation("destination-in");
                         displayBuffer.setTransform(1, 0, 0, -1, 0, maskBuffer.height);

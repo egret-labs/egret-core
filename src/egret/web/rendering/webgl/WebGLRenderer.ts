@@ -409,6 +409,8 @@ namespace egret.web {
                 region.updateRegion(bounds, displayMatrix);
             }
             if (region.width <= 0 || region.height <= 0) {
+                sys.Region.release(region);
+                Matrix.release(displayMatrix);
                 return drawCalls;
             }
             let found = false;
@@ -477,9 +479,10 @@ namespace egret.web {
                     let maskBuffer = this.createRenderBuffer(region.width * matrix.a, region.height * matrix.d);
                     maskBuffer.context.pushBuffer(maskBuffer);
                     maskBuffer.setTransform(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
-                    offsetM = Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
+                    let offsetM = Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
                     drawCalls += this.drawDisplayObject(mask, maskBuffer, dirtyList, offsetM,
                         mask.$displayList, region, root);
+                    Matrix.release(offsetM);
                     maskBuffer.context.popBuffer();
                     displayBuffer.context.setGlobalCompositeOperation("destination-in");
                     displayBuffer.setTransform(1, 0, 0, -1, 0, maskBuffer.height);

@@ -495,6 +495,8 @@ namespace egret {
                 region.updateRegion(bounds, displayMatrix);
             }
             if (region.width <= 0 || region.height <= 0) {
+                sys.Region.release(region);
+                Matrix.release(displayMatrix);
                 return drawCalls;
             }
             let found = false;
@@ -609,9 +611,10 @@ namespace egret {
                         return drawCalls;
                     }
                     maskContext.setTransform(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
-                    offsetM = Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
+                    let offsetM = Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
                     drawCalls += this.drawDisplayObject(mask, maskContext, dirtyList, offsetM,
                         mask.$displayList, region, root);
+                    Matrix.release(offsetM);
                     displayContext.globalCompositeOperation = "destination-in";
                     displayContext.setTransform(1, 0, 0, 1, 0, 0);
                     displayContext.globalAlpha = 1;

@@ -16772,6 +16772,8 @@ var egret;
                 region.updateRegion(bounds, displayMatrix);
             }
             if (region.width <= 0 || region.height <= 0) {
+                egret.sys.Region.release(region);
+                egret.Matrix.release(displayMatrix);
                 return drawCalls;
             }
             var found = false;
@@ -16873,8 +16875,9 @@ var egret;
                         return drawCalls;
                     }
                     maskContext.setTransform(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
-                    offsetM = egret.Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
-                    drawCalls += this.drawDisplayObject(mask, maskContext, dirtyList, offsetM, mask.$displayList, region, root);
+                    var offsetM_2 = egret.Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX, -region.minY);
+                    drawCalls += this.drawDisplayObject(mask, maskContext, dirtyList, offsetM_2, mask.$displayList, region, root);
+                    egret.Matrix.release(offsetM_2);
                     displayContext.globalCompositeOperation = "destination-in";
                     displayContext.setTransform(1, 0, 0, 1, 0, 0);
                     displayContext.globalAlpha = 1;
