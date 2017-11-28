@@ -5,11 +5,6 @@ var exml = require("../lib/eui/EXML");
 var EgretProject = require("../project");
 var exmlParser = require("../lib/eui/EXMLParser");
 var parser = new exmlParser.EXMLParser();
-function getSortedEXML(exmls) {
-    exmls.forEach(function (it) { return it.filename = file.getRelativePath(egret.args.projectDir, it.filename); });
-    exmls = exml.sort(exmls);
-    return exmls;
-}
 function generateThemeData() {
     //1.找到项目内后缀名为'.thm.json'的主题文件并返回列表
     var themeFilenames = searchTheme();
@@ -46,7 +41,7 @@ function publishEXML(exmls, exmlPublishPolicy) {
         });
     });
     //4.获得排序后的所有exml文件列表
-    exmls = getSortedEXML(exmls);
+    exmls = exml.sort(exmls);
     themeDatas.forEach(function (theme) { return theme.exmls = []; });
     exmls.forEach(function (e) {
         var epath = e.filename;

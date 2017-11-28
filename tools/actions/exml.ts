@@ -3,17 +3,12 @@
 
 import utils = require('../lib/utils');
 import file = require('../lib/FileUtil');
-import exml = require("../lib/eui/EXML");
+import * as exml from '../lib/eui/EXML';
 import * as EgretProject from '../project';
 import exmlParser = require("../lib/eui/EXMLParser");
 var parser = new exmlParser.EXMLParser();
 
 
-function getSortedEXML(exmls: exml.EXMLFile[]): exml.EXMLFile[] {
-    exmls.forEach(it => it.filename = file.getRelativePath(egret.args.projectDir, it.filename));
-    exmls = exml.sort(exmls);
-    return exmls;
-}
 
 function generateThemeData() {
     //1.找到项目内后缀名为'.thm.json'的主题文件并返回列表
@@ -55,7 +50,7 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy?: string) 
     });
 
     //4.获得排序后的所有exml文件列表
-    exmls = getSortedEXML(exmls);
+    exmls = exml.sort(exmls);
 
     themeDatas.forEach(theme => theme.exmls = []);
 
