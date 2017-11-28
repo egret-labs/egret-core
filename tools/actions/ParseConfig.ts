@@ -3,10 +3,7 @@
  */
 /// <reference path="../lib/types.d.ts" />
 
-//import params = require("../ParamsParser");
 import file = require('../lib/FileUtil');
-//import config = require('../ProjectConfig');
-//import globals = require("../Globals");
 
 class ParseConfigCommand {
     private htmlTxt: string;

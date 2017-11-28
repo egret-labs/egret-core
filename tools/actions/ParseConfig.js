@@ -2,10 +2,7 @@
  * Created by yanjiaqi on 15/8/31.
  */
 /// <reference path="../lib/types.d.ts" />
-//import params = require("../ParamsParser");
 var file = require("../lib/FileUtil");
-//import config = require('../ProjectConfig');
-//import globals = require("../Globals");
 var ParseConfigCommand = (function () {
     function ParseConfigCommand() {
     }

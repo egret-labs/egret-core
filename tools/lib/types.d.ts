@@ -94,6 +94,7 @@ declare module egret {
     }
 
     export interface EgretEUIThemeConfig {
+        path: string;
         skins?: { [host: string]: string };
         exmls?: Array<any>;
         autoGenerateExmlsList?: boolean;

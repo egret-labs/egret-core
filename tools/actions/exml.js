@@ -32,39 +32,36 @@ function getSortedEXML() {
     exmls = exml.sort(exmls);
     return exmls;
 }
+function generateThemeData() {
+    //1.找到项目内后缀名为'.thm.json'的主题文件并返回列表
+    var themeFilenames = searchTheme();
+    //2.将主题文件读入内存变成json对象
+    var themeDatas = themeFilenames.map(function (filename) {
+        var content = file.read(file.joinPath(egret.args.projectDir, filename));
+        var data = JSON.parse(content);
+        data.path = filename;
+        return data;
+    });
+    return themeDatas;
+}
 function publishEXML(exmlPublishPolicy) {
     if (!exmlPublishPolicy) {
         exmlPublishPolicy = EgretProject.data.getExmlPublishPolicy();
     }
-    var themeDatas = [];
-    //1.找到项目内后缀名为'.thm.json'的主题文件并返回列表
-    var themes = searchTheme();
-    if (themes.length == 0) {
-        return;
-    }
-    //2.将主题文件读入内存变成json对象
-    themeDatas = themes.map(function (t) {
-        try {
-            var data = JSON.parse(file.read(file.joinPath(egret.args.projectDir, t)));
-            return data || {};
-        }
-        catch (e) {
-            return {};
-        }
-    });
+    var themeDatas = generateThemeData();
     var oldEXMLS = [];
     //3.主题文件的exmls是一个列表，列表项是一个{path:string,content:string}的格式
     //由于存在一个exml存在于多个主题的情况 把 主题1－>N文件 建立 文件1->N主题的一对多关系表oldEXMLS(数组＋快表)
-    themeDatas.forEach(function (thm, i) {
-        thm.exmls && thm.exmls.forEach(function (e) {
+    themeDatas.forEach(function (theme) {
+        theme.exmls && theme.exmls.forEach(function (e) {
             var path = e.path ? e.path : e;
             if (oldEXMLS[path]) {
-                oldEXMLS[path].theme += themes[i] + ",";
+                oldEXMLS[path].theme += theme.path + ",";
                 return;
             }
             var exmlFile = {
                 path: path,
-                theme: "," + themes[i] + ","
+                theme: "," + theme.path + ","
             };
             oldEXMLS[path] = exmlFile;
             oldEXMLS.push(exmlFile);
@@ -72,7 +69,7 @@ function publishEXML(exmlPublishPolicy) {
     });
     //4.获得排序后的所有exml文件列表
     var exmls = getSortedEXML();
-    themeDatas.forEach(function (thm) { return thm.exmls = []; });
+    themeDatas.forEach(function (theme) { return theme.exmls = []; });
     exmls.forEach(function (e) {
         var epath = e.path;
         var exmlEl;
@@ -98,11 +95,10 @@ function publishEXML(exmlPublishPolicy) {
                 exmlEl = { path: e.path, content: e.content };
                 break;
         }
-        themeDatas.forEach(function (thm, i) {
+        themeDatas.forEach(function (thm) {
             if (epath in oldEXMLS) {
-                var thmPath = themes[i];
                 var exmlFile = oldEXMLS[epath];
-                if (exmlFile.theme.indexOf("," + thmPath + ",") >= 0)
+                if (exmlFile.theme.indexOf("," + thm.path + ",") >= 0)
                     thm.exmls.push(exmlEl);
             }
             else if (thm.autoGenerateExmlsList) {
@@ -110,9 +106,8 @@ function publishEXML(exmlPublishPolicy) {
             }
         });
     });
-    var files = themes.map(function (thm, i) {
-        var path = file.joinPath(egret.args.projectDir, thm);
-        var thmData = themeDatas[i];
+    var files = themeDatas.map(function (thmData) {
+        var path = thmData.path;
         if (exmlPublishPolicy == "commonjs") {
             var content = "window.skins = {};\nexports.paths = {};\nexports.skins = " + JSON.stringify(thmData.skins) + "\n";
             for (var _i = 0, _a = thmData.exmls; _i < _a.length; _i++) {

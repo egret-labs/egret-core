@@ -5,8 +5,6 @@
 
 import { UglifyPlugin, CompilePlugin, IncrementCompilePlugin } from 'built-in';
 
-var x = new UglifyPlugin();
-
 const config: ResourceManagerConfig = {
 
     configPath: 'config.res.js',
