@@ -40,19 +40,28 @@ var ExmlPlugin = (function () {
     function ExmlPlugin(publishPolicy) {
         this.publishPolicy = publishPolicy;
         this.name = 'exml';
+        this.exmls = [];
     }
     ExmlPlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
+            var filename, contents;
             return __generator(this, function (_a) {
+                filename = file.original_relative;
+                if (filename.indexOf('.exml') >= 0) {
+                    contents = file.contents.toString();
+                    this.exmls.push({ filename: filename, contents: contents });
+                }
                 return [2 /*return*/, file];
             });
         });
     };
     ExmlPlugin.prototype.onFinish = function (pluginContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var result;
+            var dtsContents, result;
             return __generator(this, function (_a) {
-                result = exml.publishEXML(this.publishPolicy);
+                dtsContents = exml.generateExmlDTS(this.exmls);
+                pluginContext.createFile('libs/exml.e.d.ts', new Buffer(dtsContents));
+                result = exml.publishEXML(this.exmls, this.publishPolicy);
                 result.forEach(function (item) {
                     var filename = path.relative(pluginContext.projectRoot, item.path).split("\\").join("/");
                     pluginContext.createFile(filename, new Buffer(item.content));

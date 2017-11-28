@@ -2,7 +2,6 @@
 var utils = require("../lib/utils");
 var service = require("../service/index");
 var FileUtil = require("../lib/FileUtil");
-var exmlActions = require("../actions/exml");
 var state = require("../lib/DirectoryState");
 var CompileProject = require("../actions/CompileProject");
 var parser = require("../parser/Parser");
@@ -57,9 +56,9 @@ var AutoCompileCommand = (function () {
         //第一次运行，拷贝项目文件
         this.copyLibs();
         //编译
-        var exmlresult = exmlActions.build();
-        this.exitCode[0] = exmlresult.exitCode;
-        this.messages[0] = exmlresult.messages;
+        // var exmlresult = exmlActions.build();
+        this.exitCode[0] = 0;
+        this.messages[0] = [];
         var result = compileProject.compileProject(options);
         //操作其他文件
         _scripts = result.files.length > 0 ? result.files : _scripts;
@@ -138,9 +137,9 @@ var AutoCompileCommand = (function () {
                 }
             }
         }
-        var exmlTS = this.buildChangedEXML(exmls);
+        // var exmlTS = this.buildChangedEXML(exmls);
         this.buildChangedRes(others);
-        codes = codes.concat(exmlTS);
+        // codes = codes.concat(exmlTS);
         if (codes.length || this.sourceMapStateChanged) {
             this.messages[1] = [];
             this.sourceMapStateChanged = false;
@@ -176,23 +175,23 @@ var AutoCompileCommand = (function () {
         //console.log("changed ts:", filesChanged);
         return this.compileProject.compileProject(egret.args, filesChanged);
     };
-    AutoCompileCommand.prototype.buildChangedEXML = function (exmls) {
-        if (!exmls || exmls.length == 0)
-            return [];
-        var result = exmlActions.build(exmls.map(function (f) { return f.fileName; }));
-        this.exitCode[0] = result.exitCode;
-        this.messages[0] = result.messages;
-        var exmlTS = [];
-        exmls.forEach(function (exml) {
-            var ts = exml.fileName.replace(/\.exml$/, ".g.ts");
-            if (FileUtil.exists(ts))
-                exmlTS.push({
-                    fileName: ts,
-                    type: exml.type
-                });
-        });
-        return exmlTS;
-    };
+    // private buildChangedEXML(exmls: egret.FileChanges): egret.FileChanges {
+    //     if (!exmls || exmls.length == 0)
+    //         return [];
+    //     // var result = exmlActions.build(exmls.map(f => f.fileName));
+    //     this.exitCode[0] = 0;//result.exitCode;
+    //     this.messages[0] = [];//result.messages;
+    //     var exmlTS: egret.FileChanges = [];
+    //     exmls.forEach(exml => {
+    //         var ts = exml.fileName.replace(/\.exml$/, ".g.ts");
+    //         if (FileUtil.exists(ts))
+    //             exmlTS.push({
+    //                 fileName: ts,
+    //                 type: exml.type
+    //             });
+    //     });
+    //     return exmlTS;
+    // }
     AutoCompileCommand.prototype.buildChangedRes = function (fileNames) {
         var _this = this;
         var src = egret.args.srcDir, temp = egret.args.templateDir, start = "index.html";

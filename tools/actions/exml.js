@@ -5,30 +5,8 @@ var exml = require("../lib/eui/EXML");
 var EgretProject = require("../project");
 var exmlParser = require("../lib/eui/EXMLParser");
 var parser = new exmlParser.EXMLParser();
-function build(exmls) {
-    generateExmlDTS();
-    if (!exmls) {
-        exmls = searchEXML();
-    }
-    return buildChanges(exmls);
-}
-exports.build = build;
-function buildChanges(exmls) {
-    var state = {
-        exitCode: 0,
-        messages: []
-    };
-    if (!exmls || exmls.length == 0)
-        return state;
-    return state;
-}
-function getSortedEXML() {
-    var files = searchEXML();
-    var exmls = files.map(function (path) { return ({
-        path: path,
-        content: file.read(path)
-    }); });
-    exmls.forEach(function (it) { return it.path = file.getRelativePath(egret.args.projectDir, it.path); });
+function getSortedEXML(exmls) {
+    exmls.forEach(function (it) { return it.filename = file.getRelativePath(egret.args.projectDir, it.filename); });
     exmls = exml.sort(exmls);
     return exmls;
 }
@@ -44,7 +22,7 @@ function generateThemeData() {
     });
     return themeDatas;
 }
-function publishEXML(exmlPublishPolicy) {
+function publishEXML(exmls, exmlPublishPolicy) {
     if (!exmlPublishPolicy) {
         exmlPublishPolicy = EgretProject.data.getExmlPublishPolicy();
     }
@@ -68,31 +46,31 @@ function publishEXML(exmlPublishPolicy) {
         });
     });
     //4.获得排序后的所有exml文件列表
-    var exmls = getSortedEXML();
+    exmls = getSortedEXML(exmls);
     themeDatas.forEach(function (theme) { return theme.exmls = []; });
     exmls.forEach(function (e) {
-        var epath = e.path;
+        var epath = e.filename;
         var exmlEl;
         switch (exmlPublishPolicy) {
             case "path":
                 exmlEl = epath;
                 break;
             case "content":
-                exmlEl = { path: e.path, content: e.content };
+                exmlEl = { path: e.filename, content: e.contents };
                 break;
             case "gjs":
-                var result = parser.parse(e.content);
-                exmlEl = { path: e.path, gjs: result.code, className: result.className };
+                var result = parser.parse(e.contents);
+                exmlEl = { path: e.filename, gjs: result.code, className: result.className };
                 break;
             case "commonjs":
-                var result1 = parser.parse(e.content);
-                exmlEl = { path: e.path, gjs: result1.code, className: result1.className };
+                var result1 = parser.parse(e.contents);
+                exmlEl = { path: e.filename, gjs: result1.code, className: result1.className };
                 break;
             //todo
             case "bin":
                 break;
             default:
-                exmlEl = { path: e.path, content: e.content };
+                exmlEl = { path: e.filename, content: e.contents };
                 break;
         }
         themeDatas.forEach(function (thm) {
@@ -133,18 +111,6 @@ function searchTheme() {
     files = files.map(function (it) { return file.getRelativePath(egret.args.projectDir, it); });
     return files;
 }
-function searchEXML() {
-    var exmlRoots = EgretProject.data.getExmlRoots();
-    if (exmlRoots.length == 1) {
-        return file.searchByFunction(exmlRoots[0], exmlFilter);
-    }
-    else {
-        return exmlRoots.reduce(function (previousValue, currentValue) {
-            previousValue = previousValue.concat(file.searchByFunction(currentValue, exmlFilter));
-            return previousValue;
-        }, []);
-    }
-}
 var ignorePath = EgretProject.data.getIgnorePath();
 function exmlFilter(f) {
     var isIgnore = false;
@@ -158,61 +124,47 @@ function exmlFilter(f) {
 function themeFilter(f) {
     return (f.indexOf('.thm.json') > 0) && (f.indexOf(egret.args.releaseRootDir) < 0);
 }
-function getExmlDtsPath() {
-    return file.joinPath(egret.args.projectDir, "libs", "exml.e.d.ts");
-}
-function generateExmlDTS() {
+function generateExmlDTS(exmls) {
     //去掉重复定义
     var classDefinations = {};
-    var sourceList = searchEXML();
-    var length = sourceList.length;
-    if (length == 0)
-        return;
+    var sourceList = exmls; // ? exmls.map(exml => exml.filename) : searchEXML();
     var dts = "";
     for (var _i = 0, sourceList_1 = sourceList; _i < sourceList_1.length; _i++) {
         var source = sourceList_1[_i];
-        if (!file.exists(source)) {
+        //解析exml并返回className和extendName继承关系
+        var ret = exml.getDtsInfoFromExml(source);
+        //去掉重复定义
+        if (classDefinations[ret.className]) {
             continue;
         }
-        var ext = file.getExtension(source).toLowerCase();
-        if (ext == "exml") {
-            //解析exml并返回className和extendName继承关系
-            var ret = exml.getDtsInfoFromExml(source);
-            //去掉重复定义
-            if (classDefinations[ret.className]) {
-                continue;
-            }
-            else {
-                classDefinations[ret.className] = ret.extendName;
-            }
-            //var className = p.substring(srcPath.length, p.length - 5);
-            var className = ret.className;
-            //className = className.split("/").join(".");
-            if (className != "eui.Skin") {
-                var index = className.lastIndexOf(".");
-                if (index == -1) {
-                    if (ret.extendName == "") {
-                        dts += "declare class " + className + "{\n}\n";
-                    }
-                    else {
-                        dts += "declare class " + className + " extends " + ret.extendName + "{\n}\n";
-                    }
+        else {
+            classDefinations[ret.className] = ret.extendName;
+        }
+        //var className = p.substring(srcPath.length, p.length - 5);
+        var className = ret.className;
+        //className = className.split("/").join(".");
+        if (className != "eui.Skin") {
+            var index = className.lastIndexOf(".");
+            if (index == -1) {
+                if (ret.extendName == "") {
+                    dts += "declare class " + className + "{\n}\n";
                 }
                 else {
-                    var moduleName = className.substring(0, index);
-                    className = className.substring(index + 1);
-                    if (ret.extendName == "") {
-                        dts += "declare module " + moduleName + "{\n\tclass " + className + "{\n\t}\n}\n";
-                    }
-                    else {
-                        dts += "declare module " + moduleName + "{\n\tclass " + className + " extends " + ret.extendName + "{\n\t}\n}\n";
-                    }
+                    dts += "declare class " + className + " extends " + ret.extendName + "{\n}\n";
+                }
+            }
+            else {
+                var moduleName = className.substring(0, index);
+                className = className.substring(index + 1);
+                if (ret.extendName == "") {
+                    dts += "declare module " + moduleName + "{\n\tclass " + className + "{\n\t}\n}\n";
+                }
+                else {
+                    dts += "declare module " + moduleName + "{\n\tclass " + className + " extends " + ret.extendName + "{\n\t}\n}\n";
                 }
             }
         }
     }
-    //保存exml
-    var exmlDtsPath = getExmlDtsPath();
-    file.save(exmlDtsPath, dts);
     return dts;
 }
+exports.generateExmlDTS = generateExmlDTS;

@@ -82,9 +82,9 @@ class AutoCompileCommand implements egret.Command {
         this.copyLibs();
 
         //编译
-        var exmlresult = exmlActions.build();
-        this.exitCode[0] = exmlresult.exitCode;
-        this.messages[0] = exmlresult.messages;
+        // var exmlresult = exmlActions.build();
+        this.exitCode[0] = 0
+        this.messages[0] = [];
         var result = compileProject.compileProject(options);
 
         //操作其他文件
@@ -177,9 +177,9 @@ class AutoCompileCommand implements egret.Command {
             }
         }
 
-        var exmlTS = this.buildChangedEXML(exmls);
+        // var exmlTS = this.buildChangedEXML(exmls);
         this.buildChangedRes(others);
-        codes = codes.concat(exmlTS);
+        // codes = codes.concat(exmlTS);
 
         if (codes.length || this.sourceMapStateChanged) {
             this.messages[1] = [];
@@ -223,26 +223,26 @@ class AutoCompileCommand implements egret.Command {
         return this.compileProject.compileProject(egret.args, filesChanged);
     }
 
-    private buildChangedEXML(exmls: egret.FileChanges): egret.FileChanges {
-        if (!exmls || exmls.length == 0)
-            return [];
+    // private buildChangedEXML(exmls: egret.FileChanges): egret.FileChanges {
+    //     if (!exmls || exmls.length == 0)
+    //         return [];
 
-        var result = exmlActions.build(exmls.map(f => f.fileName));
-        this.exitCode[0] = result.exitCode;
-        this.messages[0] = result.messages;
+    //     // var result = exmlActions.build(exmls.map(f => f.fileName));
+    //     this.exitCode[0] = 0;//result.exitCode;
+    //     this.messages[0] = [];//result.messages;
 
-        var exmlTS: egret.FileChanges = [];
-        exmls.forEach(exml => {
-            var ts = exml.fileName.replace(/\.exml$/, ".g.ts");
-            if (FileUtil.exists(ts))
-                exmlTS.push({
-                    fileName: ts,
-                    type: exml.type
-                });
-        });
+    //     var exmlTS: egret.FileChanges = [];
+    //     exmls.forEach(exml => {
+    //         var ts = exml.fileName.replace(/\.exml$/, ".g.ts");
+    //         if (FileUtil.exists(ts))
+    //             exmlTS.push({
+    //                 fileName: ts,
+    //                 type: exml.type
+    //             });
+    //     });
 
-        return exmlTS;
-    }
+    //     return exmlTS;
+    // }
 
     private buildChangedRes(fileNames: egret.FileChanges) {
 
