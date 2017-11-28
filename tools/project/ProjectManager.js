@@ -64,12 +64,14 @@ var manager;
         FileUtil.save(requirePath, requireContent);
     }
     manager.modifyNativeRequire = modifyNativeRequire;
-    function copyLibsForPublish(target) {
+    function copyLibsForPublish(target, mode) {
+        if (mode === void 0) { mode = 'debug'; }
         var result = [];
         var options = egret.args;
         ProjectData_1.data.getModulesConfig(target).forEach(function (m) {
             m.target.forEach(function (m) {
-                result.push(m.debug);
+                var filename = mode == 'debug' ? m.debug : m.release;
+                result.push(filename);
             });
         });
         if (ProjectData_1.data.isWasmProject()) {

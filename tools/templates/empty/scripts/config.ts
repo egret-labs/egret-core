@@ -1,9 +1,11 @@
 
 /// 阅读 config.d.ts 查看文档
-///<reference path="config.d.ts"/>
+///<reference path="api.d.ts"/>
 
 
+import { UglifyPlugin, CompilePlugin, IncrementCompilePlugin } from 'built-in';
 
+var x = new UglifyPlugin();
 
 const config: ResourceManagerConfig = {
 
@@ -22,7 +24,7 @@ const config: ResourceManagerConfig = {
             return {
                 outputDir,
                 commands: [
-                    "incrementCompile"
+                    new IncrementCompilePlugin()
                 ]
             }
         }
@@ -31,7 +33,8 @@ const config: ResourceManagerConfig = {
             return {
                 outputDir,
                 commands: [
-                    "compile"
+                    new CompilePlugin(),
+                    new UglifyPlugin()
                     // "zip",
                     // "spritesheet",
                     // "convertFileName",
@@ -40,8 +43,9 @@ const config: ResourceManagerConfig = {
                 ]
             }
         }
-
-
+        else {
+            throw `unknown command : ${params.command}`
+        }
     },
 
     mergeSelector: (path) => {

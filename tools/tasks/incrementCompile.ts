@@ -6,16 +6,17 @@ import * as utils from '../lib/utils';
 import * as  service from '../service/index';
 import * as path from 'path';
 
-export default {
-    name: "incrementCompile",
-    onFile: async (file) => {
-        return file;
-    },
-    onFinish: async (pluginContext) => {
+export class IncrementCompilePlugin {
 
+    async onFile(file) {
+        return file;
+    }
+
+    async onFinish(pluginContext) {
         await executeBuildCommand();
     }
 }
+
 
 function executeBuildCommand() {
 

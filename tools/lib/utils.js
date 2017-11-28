@@ -251,6 +251,16 @@ exports.endWith = endWith;
 function escape(s) {
     return s.replace(/"/, '\\\"');
 }
+function uglify(sourceFile) {
+    var defines = {
+        DEBUG: false,
+        RELEASE: true
+    };
+    var result = UglifyJS.minify(sourceFile, { compress: { global_defs: defines }, fromString: true, output: { beautify: false } });
+    var code = result.code;
+    return code;
+}
+exports.uglify = uglify;
 function minify(sourceFile, output) {
     var defines = {
         DEBUG: false,

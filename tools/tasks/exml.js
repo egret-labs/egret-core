@@ -63,4 +63,4 @@ var ExmlPlugin = (function () {
     };
     return ExmlPlugin;
 }());
-exports.default = ExmlPlugin;
+exports.ExmlPlugin = ExmlPlugin;

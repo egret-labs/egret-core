@@ -8,7 +8,7 @@ import * as path from 'path';
 
 import { PluginContext, Plugin } from './';
 
-class ExmlPlugin implements Plugin {
+export class ExmlPlugin implements Plugin {
 
     name = 'exml';
 
@@ -27,5 +27,3 @@ class ExmlPlugin implements Plugin {
         })
     }
 }
-
-export default ExmlPlugin;
