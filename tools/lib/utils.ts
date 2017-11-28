@@ -280,10 +280,8 @@ export function measure(target: any, propertyKey: string, descriptor: TypedPrope
     }
 }
 
-export function getAvailablePort() {
+export function getAvailablePort(port = 0) {
     return new Promise<number>((resolve, reject) => {
-        let port = 0;
-
         function getPort() {
             var server = net.createServer();
             server.on('listening', function () {

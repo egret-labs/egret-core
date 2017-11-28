@@ -323,9 +323,9 @@ function measure(target, propertyKey, descriptor) {
     };
 }
 exports.measure = measure;
-function getAvailablePort() {
+function getAvailablePort(port) {
+    if (port === void 0) { port = 0; }
     return new Promise(function (resolve, reject) {
-        var port = 0;
         function getPort() {
             var server = net.createServer();
             server.on('listening', function () {

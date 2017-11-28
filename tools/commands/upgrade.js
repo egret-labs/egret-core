@@ -44,6 +44,10 @@ var UpgradeCommand = (function () {
     }
     UpgradeCommand.prototype.execute = function () {
         utils.checkEgret();
+        //5.1.0版本不允许升级
+        if (true) {
+            globals.exit(1719);
+        }
         this.run();
         return DontExitCode;
     };

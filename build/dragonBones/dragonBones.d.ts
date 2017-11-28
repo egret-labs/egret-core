@@ -306,41 +306,41 @@ declare namespace dragonBones {
         static toString(): string;
         /**
          * - Set the maximum cache count of the specify object pool.
-         * @param objectConstructor - The specify class. (Set all object pools max cache count if not set)
-         * @param maxCount - Max count
+         * @param objectConstructor - The specify class. (Set all object pools max cache count if not set).
+         * @param maxCount - Max count.
          * @version DragonBones 4.5
          * @language en_US
          */
         /**
          * - 设置特定对象池的最大缓存数量。
-         * @param objectConstructor - 特定的类。 (不设置则设置所有对象池的最大缓存数量)
-         * @param maxCount - 最大缓存数量
+         * @param objectConstructor - 特定的类。 (不设置则设置所有对象池的最大缓存数量)。
+         * @param maxCount - 最大缓存数量。
          * @version DragonBones 4.5
          * @language zh_CN
          */
         static setMaxCount(objectConstructor: (typeof BaseObject) | null, maxCount: number): void;
         /**
          * - Clear the cached instances of a specify object pool.
-         * @param objectConstructor - Specify class. (Clear all cached instances if not set)
+         * @param objectConstructor - Specify class. (Clear all cached instances if not set).
          * @version DragonBones 4.5
          * @language en_US
          */
         /**
          * - 清除特定对象池的缓存实例。
-         * @param objectConstructor - 特定的类。 (不设置则清除所有缓存的实例)
+         * @param objectConstructor - 特定的类。 (不设置则清除所有缓存的实例)。
          * @version DragonBones 4.5
          * @language zh_CN
          */
         static clearPool(objectConstructor?: (typeof BaseObject) | null): void;
         /**
          * - Get an instance of the specify class from object pool.
-         * @param objectConstructor - The specify class
+         * @param objectConstructor - The specify class.
          * @version DragonBones 4.5
          * @language en_US
          */
         /**
          * - 从对象池中获取特定类的实例。
-         * @param objectConstructor - 特定的类
+         * @param objectConstructor - 特定的类。
          * @version DragonBones 4.5
          * @language zh_CN
          */
@@ -522,7 +522,7 @@ declare namespace dragonBones {
          */
         /**
          * - 将当前矩阵与另一个矩阵相乘。
-         * @param value - 需要相乘的矩阵
+         * @param value - 需要相乘的矩阵。
          * @version DragonBones 3.0
          * @language zh_CN
          */
@@ -540,19 +540,19 @@ declare namespace dragonBones {
         invert(): Matrix;
         /**
          * - Apply a matrix transformation to a specific point.
-         * @param x - X coordinate
-         * @param y - Y coordinate
-         * @param result - The point after the transformation is applied
-         * @param delta - Whether to ignore tx, ty's conversion to point
+         * @param x - X coordinate.
+         * @param y - Y coordinate.
+         * @param result - The point after the transformation is applied.
+         * @param delta - Whether to ignore tx, ty's conversion to point.
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
          * - 将矩阵转换应用于特定点。
-         * @param x - 横坐标
-         * @param y - 纵坐标
-         * @param result - 应用转换之后的点
-         * @param delta - 是否忽略 tx，ty 对点的转换
+         * @param x - 横坐标。
+         * @param y - 纵坐标。
+         * @param result - 应用转换之后的点。
+         * @param delta - 是否忽略 tx，ty 对点的转换。
          * @version DragonBones 3.0
          * @language zh_CN
          */
@@ -829,15 +829,15 @@ declare namespace dragonBones {
         y: number;
         /**
          * - Creates a new point. If you pass no parameters to this method, a point is created at (0,0).
-         * @param x - The horizontal coordinate
-         * @param y - The vertical coordinate
+         * @param x - The horizontal coordinate.
+         * @param y - The vertical coordinate.
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
          * - 创建一个 egret.Point 对象.若不传入任何参数，将会创建一个位于（0，0）位置的点。
-         * @param x - 该对象的x属性值，默认为 0.0
-         * @param y - 该对象的y属性值，默认为 0.0
+         * @param x - 该对象的x属性值，默认为 0.0。
+         * @param y - 该对象的y属性值，默认为 0.0。
          * @version DragonBones 3.0
          * @language zh_CN
          */
@@ -1252,13 +1252,13 @@ declare namespace dragonBones {
         addArmature(value: ArmatureData): void;
         /**
          * - Get a specific armature data.
-         * @param name - The armature data name
+         * @param name - The armature data name.
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
          * - 获取特定的骨架数据。
-         * @param name - 骨架数据名称
+         * @param name - 骨架数据名称。
          * @version DragonBones 3.0
          * @language zh_CN
          */
@@ -1486,7 +1486,7 @@ declare namespace dragonBones {
         addAction(value: ActionData, isDefault: boolean): void;
         /**
          * - Get a specific done data.
-         * @param name - The bone name
+         * @param name - The bone name.
          * @version DragonBones 3.0
          * @language en_US
          */
@@ -1499,7 +1499,7 @@ declare namespace dragonBones {
         getBone(name: string): BoneData | null;
         /**
          * - Get a specific slot data.
-         * @param name - The slot name
+         * @param name - The slot name.
          * @version DragonBones 3.0
          * @language en_US
          */
@@ -1516,7 +1516,7 @@ declare namespace dragonBones {
         getConstraint(name: string): ConstraintData | null;
         /**
          * - Get a specific skin data.
-         * @param name - The skin name
+         * @param name - The skin name.
          * @version DragonBones 3.0
          * @language en_US
          */
@@ -1529,7 +1529,7 @@ declare namespace dragonBones {
         getSkin(name: string): SkinData | null;
         /**
          * - Get a specific animation data.
-         * @param name - The animation name
+         * @param name - The animation name.
          * @version DragonBones 3.0
          * @language en_US
          */
@@ -3097,8 +3097,8 @@ declare namespace dragonBones {
         advanceTime(passedTime: number): void;
         /**
          * - Forces a specific bone or its owning slot to update the transform or display property in the next frame.
-         * @param boneName - The bone name. (If not set, all bones will be update)
-         * @param updateSlot - Whether to update the bone's slots
+         * @param boneName - The bone name. (If not set, all bones will be update).
+         * @param updateSlot - Whether to update the bone's slots.
          * @see dragonBones.Bone#invalidUpdate()
          * @see dragonBones.Slot#invalidUpdate()
          * @version DragonBones 3.0
@@ -3106,8 +3106,8 @@ declare namespace dragonBones {
          */
         /**
          * - 强制特定骨骼或其拥有的插槽在下一帧更新变换或显示属性。
-         * @param boneName - 骨骼名称。 （如果未设置，将更新所有骨骼）
-         * @param updateSlot - 是否更新骨骼的插槽
+         * @param boneName - 骨骼名称。 （如果未设置，将更新所有骨骼）。
+         * @param updateSlot - 是否更新骨骼的插槽。
          * @see dragonBones.Bone#invalidUpdate()
          * @see dragonBones.Slot#invalidUpdate()
          * @version DragonBones 3.0
@@ -3118,7 +3118,7 @@ declare namespace dragonBones {
          * - Check whether a specific point is inside a custom bounding box in a slot.
          * The coordinate system of the point is the inner coordinate system of the armature.
          * Custom bounding boxes need to be customized in Dragonbones Pro.
-         * @param x - The horizontal coordinate of the point
+         * @param x - The horizontal coordinate of the point.
          * @param y - The vertical coordinate of the point.
          * @version DragonBones 5.0
          * @language en_US
@@ -3127,8 +3127,8 @@ declare namespace dragonBones {
          * - 检查特定点是否在某个插槽的自定义边界框内。
          * 点的坐标系为骨架内坐标系。
          * 自定义边界框需要在 DragonBones Pro 中自定义。
-         * @param x - 点的水平坐标
-         * @param y - 点的垂直坐标
+         * @param x - 点的水平坐标。
+         * @param y - 点的垂直坐标。
          * @version DragonBones 5.0
          * @language zh_CN
          */
@@ -3143,7 +3143,7 @@ declare namespace dragonBones {
          * @param yB - The vertical coordinate of the end point of the segment.
          * @param intersectionPointA - The first intersection at which a line segment intersects the bounding box from the beginning to the end.
          * @param intersectionPointB - The first intersection at which a line segment intersects the bounding box from the end to the beginning.
-         * @param normalRadians - The normal radians of the tangent of the intersection boundary box. [x: Normal radian of the first intersection tangent, y: Normal radian of the second intersection tangent]
+         * @param normalRadians - The normal radians of the tangent of the intersection boundary box. [x: Normal radian of the first intersection tangent, y: Normal radian of the second intersection tangent].
          * @returns The slot of the first custom bounding box where the segment intersects from the start point to the end point.
          * @version DragonBones 5.0
          * @language en_US
@@ -3152,13 +3152,13 @@ declare namespace dragonBones {
          * - 检查特定线段是否与骨架的某个插槽的自定义边界框相交。
          * 线段和交点的坐标系均为骨架内坐标系。
          * 自定义边界框需要在 DragonBones Pro 中自定义。
-         * @param xA - 线段起点的水平坐标
-         * @param yA - 线段起点的垂直坐标
-         * @param xB - 线段终点的水平坐标
-         * @param yB - 线段终点的垂直坐标
-         * @param intersectionPointA - 线段从起点到终点与边界框相交的第一个交点
-         * @param intersectionPointB - 线段从终点到起点与边界框相交的第一个交点
-         * @param normalRadians - 交点边界框切线的法线弧度。 [x: 第一个交点切线的法线弧度, y: 第二个交点切线的法线弧度]
+         * @param xA - 线段起点的水平坐标。
+         * @param yA - 线段起点的垂直坐标。
+         * @param xB - 线段终点的水平坐标。
+         * @param yB - 线段终点的垂直坐标。
+         * @param intersectionPointA - 线段从起点到终点与边界框相交的第一个交点。
+         * @param intersectionPointB - 线段从终点到起点与边界框相交的第一个交点。
+         * @param normalRadians - 交点边界框切线的法线弧度。 [x: 第一个交点切线的法线弧度, y: 第二个交点切线的法线弧度]。
          * @returns 线段从起点到终点相交的第一个自定义边界框的插槽。
          * @version DragonBones 5.0
          * @language zh_CN
@@ -3175,7 +3175,7 @@ declare namespace dragonBones {
         } | null): Slot | null;
         /**
          * - Get a specific bone.
-         * @param name - The bone name
+         * @param name - The bone name.
          * @see dragonBones.Bone
          * @version DragonBones 3.0
          * @language en_US
@@ -3190,14 +3190,14 @@ declare namespace dragonBones {
         getBone(name: string): Bone | null;
         /**
          * - Get a specific bone by the display.
-         * @param display - The display object
+         * @param display - The display object.
          * @see dragonBones.Bone
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
          * - 通过显示对象获取特定的骨骼。
-         * @param display - 显示对象
+         * @param display - 显示对象。
          * @see dragonBones.Bone
          * @version DragonBones 3.0
          * @language zh_CN
@@ -3205,7 +3205,7 @@ declare namespace dragonBones {
         getBoneByDisplay(display: any): Bone | null;
         /**
          * - Get a specific slot.
-         * @param name - The slot name
+         * @param name - The slot name.
          * @see dragonBones.Slot
          * @version DragonBones 3.0
          * @language en_US
@@ -3220,14 +3220,14 @@ declare namespace dragonBones {
         getSlot(name: string): Slot | null;
         /**
          * - Get a specific slot by the display.
-         * @param display - The display object
+         * @param display - The display object.
          * @see dragonBones.Slot
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
          * - 通过显示对象获取特定的插槽。
-         * @param display - 显示对象
+         * @param display - 显示对象。
          * @see dragonBones.Slot
          * @version DragonBones 3.0
          * @language zh_CN
@@ -4198,7 +4198,7 @@ declare namespace dragonBones {
          * - Check whether a specific point is inside a custom bounding box in the slot.
          * The coordinate system of the point is the inner coordinate system of the armature.
          * Custom bounding boxes need to be customized in Dragonbones Pro.
-         * @param x - The horizontal coordinate of the point
+         * @param x - The horizontal coordinate of the point.
          * @param y - The vertical coordinate of the point.
          * @version DragonBones 5.0
          * @language en_US
@@ -4207,8 +4207,8 @@ declare namespace dragonBones {
          * - 检查特定点是否在插槽的自定义边界框内。
          * 点的坐标系为骨架内坐标系。
          * 自定义边界框需要在 DragonBones Pro 中自定义。
-         * @param x - 点的水平坐标
-         * @param y - 点的垂直坐标
+         * @param x - 点的水平坐标。
+         * @param y - 点的垂直坐标。
          * @version DragonBones 5.0
          * @language zh_CN
          */
@@ -4223,7 +4223,7 @@ declare namespace dragonBones {
          * @param yB - The vertical coordinate of the end point of the segment.
          * @param intersectionPointA - The first intersection at which a line segment intersects the bounding box from the beginning to the end.
          * @param intersectionPointB - The first intersection at which a line segment intersects the bounding box from the end to the beginning.
-         * @param normalRadians - The normal radians of the tangent of the intersection boundary box. [x: Normal radian of the first intersection tangent, y: Normal radian of the second intersection tangent]
+         * @param normalRadians - The normal radians of the tangent of the intersection boundary box. [x: Normal radian of the first intersection tangent, y: Normal radian of the second intersection tangent].
          * @returns Intersection situation. [1: Disjoint and segments within the bounding box, 0: Disjoint, 1: Intersecting and having a nodal point and ending in the bounding box, 2: Intersecting and having a nodal point and starting at the bounding box, 3: Intersecting and having two intersections, N: Intersecting and having N intersections]
          * @version DragonBones 5.0
          * @language en_US
@@ -4232,13 +4232,13 @@ declare namespace dragonBones {
          * - 检查特定线段是否与插槽的自定义边界框相交。
          * 线段和交点的坐标系均为骨架内坐标系。
          * 自定义边界框需要在 DragonBones Pro 中自定义。
-         * @param xA - 线段起点的水平坐标
-         * @param yA - 线段起点的垂直坐标
-         * @param xB - 线段终点的水平坐标
-         * @param yB - 线段终点的垂直坐标
-         * @param intersectionPointA - 线段从起点到终点与边界框相交的第一个交点
-         * @param intersectionPointB - 线段从终点到起点与边界框相交的第一个交点
-         * @param normalRadians - 交点边界框切线的法线弧度。 [x: 第一个交点切线的法线弧度, y: 第二个交点切线的法线弧度]
+         * @param xA - 线段起点的水平坐标。
+         * @param yA - 线段起点的垂直坐标。
+         * @param xB - 线段终点的水平坐标。
+         * @param yB - 线段终点的垂直坐标。
+         * @param intersectionPointA - 线段从起点到终点与边界框相交的第一个交点。
+         * @param intersectionPointB - 线段从终点到起点与边界框相交的第一个交点。
+         * @param normalRadians - 交点边界框切线的法线弧度。 [x: 第一个交点切线的法线弧度, y: 第二个交点切线的法线弧度]。
          * @returns 相交的情况。 [-1: 不相交且线段在包围盒内, 0: 不相交, 1: 相交且有一个交点且终点在包围盒内, 2: 相交且有一个交点且起点在包围盒内, 3: 相交且有两个交点, N: 相交且有 N 个交点]
          * @version DragonBones 5.0
          * @language zh_CN
@@ -4547,13 +4547,13 @@ declare namespace dragonBones {
     interface IAnimatable {
         /**
          * - Advance time.
-         * @param passedTime - Passed time. (In seconds)
+         * @param passedTime - Passed time. (In seconds).
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
          * - 更新时间。
-         * @param passedTime - 前进的时间。 （以秒为单位）
+         * @param passedTime - 前进的时间。 （以秒为单位）。
          * @version DragonBones 3.0
          * @language zh_CN
          */
@@ -4662,52 +4662,52 @@ declare namespace dragonBones {
         constructor(time?: number);
         /**
          * - Advance time for all IAnimatable instances.
-         * @param passedTime - Passed time. [-1: Automatically calculates the time difference between the current frame and the previous frame, [0~N): Passed time] (In seconds)
+         * @param passedTime - Passed time. [-1: Automatically calculates the time difference between the current frame and the previous frame, [0~N): Passed time] (In seconds).
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
          * - 为所有的 IAnimatable 实例更新时间。
-         * @param passedTime - 前进的时间。 [-1: 自动计算当前帧与上一帧的时间差, [0~N): 前进的时间] (以秒为单位)
+         * @param passedTime - 前进的时间。 [-1: 自动计算当前帧与上一帧的时间差, [0~N): 前进的时间] (以秒为单位)。
          * @version DragonBones 3.0
          * @language zh_CN
          */
         advanceTime(passedTime: number): void;
         /**
          * - Check whether contains a specific instance of IAnimatable.
-         * @param value - The IAnimatable instance
+         * @param value - The IAnimatable instance.
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
          * - 检查是否包含特定的 IAnimatable 实例。
-         * @param value - IAnimatable 实例
+         * @param value - IAnimatable 实例。
          * @version DragonBones 3.0
          * @language zh_CN
          */
         contains(value: IAnimatable): boolean;
         /**
          * - Add IAnimatable instance.
-         * @param value - The IAnimatable instance
+         * @param value - The IAnimatable instance.
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
          * - 添加 IAnimatable 实例。
-         * @param value - IAnimatable 实例
+         * @param value - IAnimatable 实例。
          * @version DragonBones 3.0
          * @language zh_CN
          */
         add(value: IAnimatable): void;
         /**
          * - Removes a specified IAnimatable instance.
-         * @param value - The IAnimatable instance
+         * @param value - The IAnimatable instance.
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
          * - 移除特定的 IAnimatable 实例。
-         * @param value - IAnimatable 实例
+         * @param value - IAnimatable 实例。
          * @version DragonBones 3.0
          * @language zh_CN
          */
@@ -4830,14 +4830,14 @@ declare namespace dragonBones {
         reset(): void;
         /**
          * - Pause a specific animation state.
-         * @param animationName - The name of animation state. (If not set, it will pause all animations)
+         * @param animationName - The name of animation state. (If not set, it will pause all animations).
          * @see dragonBones.AnimationState
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
          * - 暂停指定动画状态的播放。
-         * @param animationName - 动画状态名称。 （如果未设置，则暂停所有动画）
+         * @param animationName - 动画状态名称。 （如果未设置，则暂停所有动画）。
          * @see dragonBones.AnimationState
          * @version DragonBones 3.0
          * @language zh_CN
@@ -4846,7 +4846,7 @@ declare namespace dragonBones {
         /**
          * - Play animation with a specific animation config.
          * The API is still in the experimental phase and may encounter bugs or stability or compatibility issues when used.
-         * @param animationConfig - The animation config
+         * @param animationConfig - The animation config.
          * @returns The playing animation state
          * @see dragonBones.AnimationConfig
          * @beta
@@ -4856,7 +4856,7 @@ declare namespace dragonBones {
         /**
          * - 通过指定的动画配置来播放动画。
          * 该 API 仍在实验阶段，使用时可能遭遇 bug 或稳定性或兼容性问题。
-         * @param animationConfig - 动画配置
+         * @param animationConfig - 动画配置。
          * @returns 播放的动画状态
          * @see dragonBones.AnimationConfig
          * @beta
@@ -4866,8 +4866,8 @@ declare namespace dragonBones {
         playConfig(animationConfig: AnimationConfig): AnimationState | null;
         /**
          * - Play a specific animation.
-         * @param animationName - The name of animation data. (If not set, The default animation will be played, or resume the animation playing from pause status, or replay the last playing animation)
-         * @param playTimes - Playing repeat times. [-1: Use default value of the animation data, 0: No end loop playing, [1~N]: Repeat N times]
+         * @param animationName - The name of animation data. (If not set, The default animation will be played, or resume the animation playing from pause status, or replay the last playing animation).
+         * @param playTimes - Playing repeat times. [-1: Use default value of the animation data, 0: No end loop playing, [1~N]: Repeat N times].
          * @returns The playing animation state
          * @example
          * <pre>
@@ -4878,8 +4878,8 @@ declare namespace dragonBones {
          */
         /**
          * - 播放指定动画。
-         * @param animationName - 动画数据名称。 （如果未设置，则播放默认动画，或将暂停状态切换为播放状态，或重新播放之前播放的动画）
-         * @param playTimes - 循环播放次数。 [-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]
+         * @param animationName - 动画数据名称。 （如果未设置，则播放默认动画，或将暂停状态切换为播放状态，或重新播放之前播放的动画）。
+         * @param playTimes - 循环播放次数。 [-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]。
          * @returns 播放的动画状态
          * @example
          * <pre>
@@ -4891,10 +4891,10 @@ declare namespace dragonBones {
         play(animationName?: string | null, playTimes?: number): AnimationState | null;
         /**
          * - Fade in a specific animation.
-         * @param animationName - The name of animation data
-         * @param fadeInTime - The fade in time. [-1: Use the default value of animation data, [0~N]: The fade in time (In seconds)]
-         * @param playTimes - playing repeat times. [-1: Use the default value of animation data, 0: No end loop playing, [1~N]: Repeat N times]
-         * @param layer - The blending layer, the animation states in high level layer will get the blending weights with high priority, when the total blending weights are more than 1.0, there will be no more weights can be allocated to the other animation states
+         * @param animationName - The name of animation data.
+         * @param fadeInTime - The fade in time. [-1: Use the default value of animation data, [0~N]: The fade in time (In seconds)].
+         * @param playTimes - playing repeat times. [-1: Use the default value of animation data, 0: No end loop playing, [1~N]: Repeat N times].
+         * @param layer - The blending layer, the animation states in high level layer will get the blending weights with high priority, when the total blending weights are more than 1.0, there will be no more weights can be allocated to the other animation states.
          * @param group - The blending group name, it is typically used to specify the substitution of multiple animation states blending.
          * @param fadeOutMode - The fade out mode, which is typically used to specify alternate mode of multiple animation states blending.
          * @returns The playing animation state
@@ -4908,10 +4908,10 @@ declare namespace dragonBones {
          */
         /**
          * - 淡入播放指定的动画。
-         * @param animationName - 动画数据名称
-         * @param fadeInTime - 淡入时间。 [-1: 使用动画数据默认值, [0~N]: 淡入时间 (以秒为单位)]
-         * @param playTimes - 播放次数。 [-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]
-         * @param layer - 混合图层，图层高的动画状态会优先获取混合权重，当混合权重分配总和超过 1.0 时，剩余的动画状态将不能再获得权重分配
+         * @param animationName - 动画数据名称。
+         * @param fadeInTime - 淡入时间。 [-1: 使用动画数据默认值, [0~N]: 淡入时间 (以秒为单位)]。
+         * @param playTimes - 播放次数。 [-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]。
+         * @param layer - 混合图层，图层高的动画状态会优先获取混合权重，当混合权重分配总和超过 1.0 时，剩余的动画状态将不能再获得权重分配。
          * @param group - 混合组名称，该属性通常用来指定多个动画状态混合时的相互替换关系。
          * @param fadeOutMode - 淡出模式，该属性通常用来指定多个动画状态混合时的相互替换模式。
          * @returns 播放的动画状态
@@ -4926,18 +4926,18 @@ declare namespace dragonBones {
         fadeIn(animationName: string, fadeInTime?: number, playTimes?: number, layer?: number, group?: string | null, fadeOutMode?: AnimationFadeOutMode): AnimationState | null;
         /**
          * - Play a specific animation from the specific time.
-         * @param animationName - The name of animation data
-         * @param time - The start time point of playing. (In seconds)
-         * @param playTimes - Playing repeat times. [-1: Use the default value of animation data, 0: No end loop playing, [1~N]: Repeat N times]
+         * @param animationName - The name of animation data.
+         * @param time - The start time point of playing. (In seconds).
+         * @param playTimes - Playing repeat times. [-1: Use the default value of animation data, 0: No end loop playing, [1~N]: Repeat N times].
          * @returns The played animation state
          * @version DragonBones 4.5
          * @language en_US
          */
         /**
          * - 从指定时间开始播放指定的动画。
-         * @param animationName - 动画数据名称
-         * @param time - 播放开始的时间。 (以秒为单位)
-         * @param playTimes - 循环播放次数。 [-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]
+         * @param animationName - 动画数据名称。
+         * @param time - 播放开始的时间。 (以秒为单位)。
+         * @param playTimes - 循环播放次数。 [-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]。
          * @returns 播放的动画状态
          * @version DragonBones 4.5
          * @language zh_CN
@@ -4945,18 +4945,18 @@ declare namespace dragonBones {
         gotoAndPlayByTime(animationName: string, time?: number, playTimes?: number): AnimationState | null;
         /**
          * - Play a specific animation from the specific frame.
-         * @param animationName - The name of animation data
-         * @param frame - The start frame of playing
-         * @param playTimes - Playing repeat times. [-1: Use the default value of animation data, 0: No end loop playing, [1~N]: Repeat N times]
+         * @param animationName - The name of animation data.
+         * @param frame - The start frame of playing.
+         * @param playTimes - Playing repeat times. [-1: Use the default value of animation data, 0: No end loop playing, [1~N]: Repeat N times].
          * @returns The played animation state
          * @version DragonBones 4.5
          * @language en_US
          */
         /**
          * - 从指定帧开始播放指定的动画。
-         * @param animationName - 动画数据名称
-         * @param frame - 播放开始的帧数
-         * @param playTimes - 播放次数。 [-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]
+         * @param animationName - 动画数据名称。
+         * @param frame - 播放开始的帧数。
+         * @param playTimes - 播放次数。 [-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]。
          * @returns 播放的动画状态
          * @version DragonBones 4.5
          * @language zh_CN
@@ -4964,18 +4964,18 @@ declare namespace dragonBones {
         gotoAndPlayByFrame(animationName: string, frame?: number, playTimes?: number): AnimationState | null;
         /**
          * - Play a specific animation from the specific progress.
-         * @param animationName - The name of animation data
-         * @param progress - The start progress value of playing
-         * @param playTimes - Playing repeat times. [-1: Use the default value of animation data, 0: No end loop playing, [1~N]: Repeat N times]
+         * @param animationName - The name of animation data.
+         * @param progress - The start progress value of playing.
+         * @param playTimes - Playing repeat times. [-1: Use the default value of animation data, 0: No end loop playing, [1~N]: Repeat N times].
          * @returns The played animation state
          * @version DragonBones 4.5
          * @language en_US
          */
         /**
          * - 从指定进度开始播放指定的动画。
-         * @param animationName - 动画数据名称
-         * @param progress - 开始播放的进度
-         * @param playTimes - 播放次数。 [-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]
+         * @param animationName - 动画数据名称。
+         * @param progress - 开始播放的进度。
+         * @param playTimes - 播放次数。 [-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]。
          * @returns 播放的动画状态
          * @version DragonBones 4.5
          * @language zh_CN
@@ -4983,16 +4983,16 @@ declare namespace dragonBones {
         gotoAndPlayByProgress(animationName: string, progress?: number, playTimes?: number): AnimationState | null;
         /**
          * - Stop a specific animation at the specific time.
-         * @param animationName - The name of animation data
-         * @param time - The stop time. (In seconds)
+         * @param animationName - The name of animation data.
+         * @param time - The stop time. (In seconds).
          * @returns The played animation state
          * @version DragonBones 4.5
          * @language en_US
          */
         /**
          * - 在指定时间停止指定动画播放
-         * @param animationName - 动画数据名称
-         * @param time - 停止的时间。 (以秒为单位)
+         * @param animationName - 动画数据名称。
+         * @param time - 停止的时间。 (以秒为单位)。
          * @returns 播放的动画状态
          * @version DragonBones 4.5
          * @language zh_CN
@@ -5000,16 +5000,16 @@ declare namespace dragonBones {
         gotoAndStopByTime(animationName: string, time?: number): AnimationState | null;
         /**
          * - Stop a specific animation at the specific frame.
-         * @param animationName - The name of animation data
-         * @param frame - The stop frame
+         * @param animationName - The name of animation data.
+         * @param frame - The stop frame.
          * @returns The played animation state
          * @version DragonBones 4.5
          * @language en_US
          */
         /**
          * - 在指定帧停止指定动画的播放
-         * @param animationName - 动画数据名称
-         * @param frame - 停止的帧数
+         * @param animationName - 动画数据名称。
+         * @param frame - 停止的帧数。
          * @returns 播放的动画状态
          * @version DragonBones 4.5
          * @language zh_CN
@@ -5017,16 +5017,16 @@ declare namespace dragonBones {
         gotoAndStopByFrame(animationName: string, frame?: number): AnimationState | null;
         /**
          * - Stop a specific animation at the specific progress.
-         * @param animationName - The name of animation data
-         * @param progress - The stop progress value
+         * @param animationName - The name of animation data.
+         * @param progress - The stop progress value.
          * @returns The played animation state
          * @version DragonBones 4.5
          * @language en_US
          */
         /**
          * - 在指定的进度停止指定的动画播放。
-         * @param animationName - 动画数据名称
-         * @param progress - 停止进度
+         * @param animationName - 动画数据名称。
+         * @param progress - 停止进度。
          * @returns 播放的动画状态
          * @version DragonBones 4.5
          * @language zh_CN
@@ -5034,7 +5034,7 @@ declare namespace dragonBones {
         gotoAndStopByProgress(animationName: string, progress?: number): AnimationState | null;
         /**
          * - Get a specific animation state.
-         * @param animationName - The name of animation state
+         * @param animationName - The name of animation state.
          * @example
          * <pre>
          *     armature.animation.play("walk");
@@ -5046,7 +5046,7 @@ declare namespace dragonBones {
          */
         /**
          * - 获取指定的动画状态
-         * @param animationName - 动画状态名称
+         * @param animationName - 动画状态名称。
          * @example
          * <pre>
          *     armature.animation.play("walk");
@@ -5059,14 +5059,14 @@ declare namespace dragonBones {
         getState(animationName: string): AnimationState | null;
         /**
          * - Check whether a specific animation data is included.
-         * @param animationName - The name of animation data
+         * @param animationName - The name of animation data.
          * @see dragonBones.AnimationData
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
          * - 检查是否包含指定的动画数据
-         * @param animationName - 动画数据名称
+         * @param animationName - 动画数据名称。
          * @see dragonBones.AnimationData
          * @version DragonBones 3.0
          * @language zh_CN
@@ -5500,58 +5500,58 @@ declare namespace dragonBones {
         stop(): void;
         /**
          * - Fade out the animation state.
-         * @param fadeOutTime - The fade out time. (In seconds)
+         * @param fadeOutTime - The fade out time. (In seconds).
          * @param pausePlayhead - Whether to pause the animation playing when fade out.
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
          * - 淡出动画状态。
-         * @param fadeOutTime - 淡出时间。 （以秒为单位）
-         * @param pausePlayhead - 淡出时是否暂停播放
+         * @param fadeOutTime - 淡出时间。 （以秒为单位）。
+         * @param pausePlayhead - 淡出时是否暂停播放。
          * @version DragonBones 3.0
          * @language zh_CN
          */
         fadeOut(fadeOutTime: number, pausePlayhead?: boolean): void;
         /**
          * - Check if a specific bone mask is included.
-         * @param name - The bone name
+         * @param name - The bone name.
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
          * - 检查是否包含特定骨骼遮罩。
-         * @param name - 骨骼名称
+         * @param name - 骨骼名称。
          * @version DragonBones 3.0
          * @language zh_CN
          */
         containsBoneMask(name: string): boolean;
         /**
          * - Add a specific bone mask.
-         * @param name - The bone name
-         * @param recursive - Whether or not to add a mask to the bone's sub-bone
+         * @param name - The bone name.
+         * @param recursive - Whether or not to add a mask to the bone's sub-bone.
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
          * - 添加特定的骨骼遮罩。
-         * @param name - 骨骼名称
-         * @param recursive - 是否为该骨骼的子骨骼添加遮罩
+         * @param name - 骨骼名称。
+         * @param recursive - 是否为该骨骼的子骨骼添加遮罩。
          * @version DragonBones 3.0
          * @language zh_CN
          */
         addBoneMask(name: string, recursive?: boolean): void;
         /**
          * - Remove the mask of a specific bone.
-         * @param name - The bone name
-         * @param recursive - Whether to remove the bone's sub-bone mask
+         * @param name - The bone name.
+         * @param recursive - Whether to remove the bone's sub-bone mask.
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
          * - 删除特定骨骼的遮罩。
-         * @param name - 骨骼名称
-         * @param recursive - 是否删除该骨骼的子骨骼遮罩
+         * @param name - 骨骼名称。
+         * @param recursive - 是否删除该骨骼的子骨骼遮罩。
          * @version DragonBones 3.0
          * @language zh_CN
          */
@@ -6216,29 +6216,29 @@ declare namespace dragonBones {
     interface IEventDispatcher {
         /**
          * - Checks whether the object has any listeners registered for a specific type of event。
-         * @param type - Event type
+         * @param type - Event type.
          * @version DragonBones 4.5
          * @language en_US
          */
         /**
          * - 检查是否为特定的事件类型注册了任何侦听器。
-         * @param type - 事件类型
+         * @param type - 事件类型。
          * @version DragonBones 4.5
          * @language zh_CN
          */
         hasDBEventListener(type: EventStringType): boolean;
         /**
          * - Dispatches an event into the event flow.
-         * @param type - Event type
-         * @param eventObject - Event object
+         * @param type - Event type.
+         * @param eventObject - Event object.
          * @see dragonBones.EventObject
          * @version DragonBones 4.5
          * @language en_US
          */
         /**
          * - 分派特定的事件到事件流中。
-         * @param type - 事件类型
-         * @param eventObject - 事件数据
+         * @param type - 事件类型。
+         * @param eventObject - 事件数据。
          * @see dragonBones.EventObject
          * @version DragonBones 4.5
          * @language zh_CN
@@ -6246,34 +6246,34 @@ declare namespace dragonBones {
         dispatchDBEvent(type: EventStringType, eventObject: EventObject): void;
         /**
          * - Add an event listener object so that the listener receives notification of an event.
-         * @param type - Event type
-         * @param listener - Event listener
-         * @param thisObject - The listener function's "this"
+         * @param type - Event type.
+         * @param listener - Event listener.
+         * @param thisObject - The listener function's "this".
          * @version DragonBones 4.5
          * @language en_US
          */
         /**
          * - 添加特定事件类型的事件侦听器，以使侦听器能够接收事件通知。
-         * @param type - 事件类型
-         * @param listener - 事件侦听器
-         * @param thisObject - 侦听函数绑定的 this 对象
+         * @param type - 事件类型。
+         * @param listener - 事件侦听器。
+         * @param thisObject - 侦听函数绑定的 this 对象。
          * @version DragonBones 4.5
          * @language zh_CN
          */
         addDBEventListener(type: EventStringType, listener: Function, thisObject: any): void;
         /**
          * - Removes a listener from the object.
-         * @param type - Event type
-         * @param listener - Event listener
-         * @param thisObject - The listener function's "this"
+         * @param type - Event type.
+         * @param listener - Event listener.
+         * @param thisObject - The listener function's "this".
          * @version DragonBones 4.5
          * @language en_US
          */
         /**
          * - 删除特定事件类型的侦听器。
-         * @param type - 事件类型
-         * @param listener - 事件侦听器
-         * @param thisObject - 侦听函数绑定的 this 对象
+         * @param type - 事件类型。
+         * @param listener - 事件侦听器。
+         * @param thisObject - 侦听函数绑定的 this 对象。
          * @version DragonBones 4.5
          * @language zh_CN
          */
@@ -6789,9 +6789,9 @@ declare namespace dragonBones {
         protected abstract _buildSlot(dataPackage: BuildArmaturePackage, slotData: SlotData, displays: Array<DisplayData | null> | null, armature: Armature): Slot;
         /**
          * - Parse the raw data to a DragonBonesData instance and cache it to the factory.
-         * @param rawData - The raw data
-         * @param name - Specify a cache name for the instance so that the instance can be obtained through this name. (If not set, use the instance name instead)
-         * @param scale - Specify a scaling value for all armatures. (Default does not scale)
+         * @param rawData - The raw data.
+         * @param name - Specify a cache name for the instance so that the instance can be obtained through this name. (If not set, use the instance name instead).
+         * @param scale - Specify a scaling value for all armatures. (Default does not scale).
          * @returns DragonBonesData instance
          * @see #getDragonBonesData()
          * @see #addDragonBonesData()
@@ -6802,9 +6802,9 @@ declare namespace dragonBones {
          */
         /**
          * - 将原始数据解析为 DragonBonesData 实例，并缓存到工厂中。
-         * @param rawData - 原始数据
-         * @param name - 为该实例指定一个缓存名称，以便可以通过此名称获取该实例。 （如果未设置，则使用该实例中的名称）
-         * @param scale - 为所有的骨架指定一个缩放值。 （默认不缩放）
+         * @param rawData - 原始数据。
+         * @param name - 为该实例指定一个缓存名称，以便可以通过此名称获取该实例。 （如果未设置，则使用该实例中的名称）。
+         * @param scale - 为所有的骨架指定一个缩放值。 （默认不缩放）。
          * @returns DragonBonesData 实例
          * @see #getDragonBonesData()
          * @see #addDragonBonesData()
@@ -6816,10 +6816,10 @@ declare namespace dragonBones {
         parseDragonBonesData(rawData: any, name?: string | null, scale?: number): DragonBonesData | null;
         /**
          * - Parse the raw texture atlas data and the texture atlas object to a TextureAtlasData instance and cache it to the factory.
-         * @param rawData - The raw texture atlas data
-         * @param textureAtlas - The texture atlas object
-         * @param name - Specify a cache name for the instance so that the instance can be obtained through this name. (If not set, use the instance name instead)
-         * @param scale - Specify a scaling value for the map set. (Not scaled by default)
+         * @param rawData - The raw texture atlas data.
+         * @param textureAtlas - The texture atlas object.
+         * @param name - Specify a cache name for the instance so that the instance can be obtained through this name. (If not set, use the instance name instead).
+         * @param scale - Specify a scaling value for the map set. (Not scaled by default).
          * @returns TextureAtlasData instance
          * @see #getTextureAtlasData()
          * @see #addTextureAtlasData()
@@ -6830,10 +6830,10 @@ declare namespace dragonBones {
          */
         /**
          * - 将原始贴图集数据和贴图集对象解析为 TextureAtlasData 实例，并缓存到工厂中。
-         * @param rawData - 原始贴图集数据
-         * @param textureAtlas - 贴图集对象
-         * @param name - 为该实例指定一个缓存名称，以便可以通过此名称获取该实例。 （如果未设置，则使用该实例中的名称）
-         * @param scale - 为贴图集指定一个缩放值。 （默认不缩放）
+         * @param rawData - 原始贴图集数据。
+         * @param textureAtlas - 贴图集对象。
+         * @param name - 为该实例指定一个缓存名称，以便可以通过此名称获取该实例。 （如果未设置，则使用该实例中的名称）。
+         * @param scale - 为贴图集指定一个缩放值。 （默认不缩放）。
          * @returns TextureAtlasData 实例
          * @see #getTextureAtlasData()
          * @see #addTextureAtlasData()
@@ -6849,7 +6849,7 @@ declare namespace dragonBones {
         updateTextureAtlasData(name: string, textureAtlases: Array<any>): void;
         /**
          * - Get a specific DragonBonesData instance.
-         * @param name - The DragonBonesData instance cache name
+         * @param name - The DragonBonesData instance cache name.
          * @returns DragonBonesData instance
          * @see #parseDragonBonesData()
          * @see #addDragonBonesData()
@@ -6860,7 +6860,7 @@ declare namespace dragonBones {
          */
         /**
          * - 获取特定的 DragonBonesData 实例。
-         * @param name - DragonBonesData 实例的缓存名称
+         * @param name - DragonBonesData 实例的缓存名称。
          * @returns DragonBonesData 实例
          * @see #parseDragonBonesData()
          * @see #addDragonBonesData()
@@ -6872,8 +6872,8 @@ declare namespace dragonBones {
         getDragonBonesData(name: string): DragonBonesData | null;
         /**
          * - Cache a DragonBonesData instance to the factory.
-         * @param data - The DragonBonesData instance
-         * @param name - Specify a cache name for the instance so that the instance can be obtained through this name. (if not set, use the instance name instead)
+         * @param data - The DragonBonesData instance.
+         * @param name - Specify a cache name for the instance so that the instance can be obtained through this name. (if not set, use the instance name instead).
          * @see #parseDragonBonesData()
          * @see #getDragonBonesData()
          * @see #removeDragonBonesData()
@@ -6883,8 +6883,8 @@ declare namespace dragonBones {
          */
         /**
          * - 将 DragonBonesData 实例缓存到工厂中。
-         * @param data - DragonBonesData 实例
-         * @param name - 为该实例指定一个缓存名称，以便可以通过此名称获取该实例。 （如果未设置，则使用该实例中的名称）
+         * @param data - DragonBonesData 实例。
+         * @param name - 为该实例指定一个缓存名称，以便可以通过此名称获取该实例。 （如果未设置，则使用该实例中的名称）。
          * @see #parseDragonBonesData()
          * @see #getDragonBonesData()
          * @see #removeDragonBonesData()
@@ -6895,8 +6895,8 @@ declare namespace dragonBones {
         addDragonBonesData(data: DragonBonesData, name?: string | null): void;
         /**
          * - Remove a DragonBonesData instance.
-         * @param name - The DragonBonesData instance cache name
-         * @param disposeData - Whether to dispose data
+         * @param name - The DragonBonesData instance cache name.
+         * @param disposeData - Whether to dispose data.
          * @see #parseDragonBonesData()
          * @see #getDragonBonesData()
          * @see #addDragonBonesData()
@@ -6906,8 +6906,8 @@ declare namespace dragonBones {
          */
         /**
          * - 移除 DragonBonesData 实例。
-         * @param name - DragonBonesData 实例缓存名称
-         * @param disposeData - 是否释放数据
+         * @param name - DragonBonesData 实例缓存名称。
+         * @param disposeData - 是否释放数据。
          * @see #parseDragonBonesData()
          * @see #getDragonBonesData()
          * @see #addDragonBonesData()
@@ -6918,7 +6918,7 @@ declare namespace dragonBones {
         removeDragonBonesData(name: string, disposeData?: boolean): void;
         /**
          * - Get a list of specific TextureAtlasData instances.
-         * @param name - The TextureAtlasData cahce name
+         * @param name - The TextureAtlasData cahce name.
          * @see #parseTextureAtlasData()
          * @see #addTextureAtlasData()
          * @see #removeTextureAtlasData()
@@ -6928,7 +6928,7 @@ declare namespace dragonBones {
          */
         /**
          * - 获取特定的 TextureAtlasData 实例列表。
-         * @param name - TextureAtlasData 实例缓存名称
+         * @param name - TextureAtlasData 实例缓存名称。
          * @see #parseTextureAtlasData()
          * @see #addTextureAtlasData()
          * @see #removeTextureAtlasData()
@@ -6939,8 +6939,8 @@ declare namespace dragonBones {
         getTextureAtlasData(name: string): Array<TextureAtlasData> | null;
         /**
          * - Cache a TextureAtlasData instance to the factory.
-         * @param data - The TextureAtlasData instance
-         * @param name - Specify a cache name for the instance so that the instance can be obtained through this name. (if not set, use the instance name instead)
+         * @param data - The TextureAtlasData instance.
+         * @param name - Specify a cache name for the instance so that the instance can be obtained through this name. (if not set, use the instance name instead).
          * @see #parseTextureAtlasData()
          * @see #getTextureAtlasData()
          * @see #removeTextureAtlasData()
@@ -6950,8 +6950,8 @@ declare namespace dragonBones {
          */
         /**
          * - 将 TextureAtlasData 实例缓存到工厂中。
-         * @param data - TextureAtlasData 实例
-         * @param name - 为该实例指定一个缓存名称，以便可以通过此名称获取该实例。 （如果未设置，则使用该实例中的名称）
+         * @param data - TextureAtlasData 实例。
+         * @param name - 为该实例指定一个缓存名称，以便可以通过此名称获取该实例。 （如果未设置，则使用该实例中的名称）。
          * @see #parseTextureAtlasData()
          * @see #getTextureAtlasData()
          * @see #removeTextureAtlasData()
@@ -6962,8 +6962,8 @@ declare namespace dragonBones {
         addTextureAtlasData(data: TextureAtlasData, name?: string | null): void;
         /**
          * - Remove a TextureAtlasData instance.
-         * @param name - The TextureAtlasData instance cache name
-         * @param disposeData - Whether to dispose data
+         * @param name - The TextureAtlasData instance cache name.
+         * @param disposeData - Whether to dispose data.
          * @see #parseTextureAtlasData()
          * @see #getTextureAtlasData()
          * @see #addTextureAtlasData()
@@ -6973,8 +6973,8 @@ declare namespace dragonBones {
          */
         /**
          * - 移除 TextureAtlasData 实例。
-         * @param name - TextureAtlasData 实例的缓存名称
-         * @param disposeData - 是否释放数据
+         * @param name - TextureAtlasData 实例的缓存名称。
+         * @param disposeData - 是否释放数据。
          * @see #parseTextureAtlasData()
          * @see #getTextureAtlasData()
          * @see #addTextureAtlasData()
@@ -6985,16 +6985,16 @@ declare namespace dragonBones {
         removeTextureAtlasData(name: string, disposeData?: boolean): void;
         /**
          * - Get a specific armature data.
-         * @param name - The armature data name
-         * @param dragonBonesName - The cached name for DragonbonesData instance
+         * @param name - The armature data name.
+         * @param dragonBonesName - The cached name for DragonbonesData instance.
          * @see dragonBones.ArmatureData
          * @version DragonBones 5.1
          * @language en_US
          */
         /**
          * - 获取特定的骨架数据。
-         * @param name - 骨架数据名称
-         * @param dragonBonesName - DragonBonesData 实例的缓存名称
+         * @param name - 骨架数据名称。
+         * @param dragonBonesName - DragonBonesData 实例的缓存名称。
          * @see dragonBones.ArmatureData
          * @version DragonBones 5.1
          * @language zh_CN
@@ -7002,22 +7002,22 @@ declare namespace dragonBones {
         getArmatureData(name: string, dragonBonesName?: string): ArmatureData | null;
         /**
          * - Clear all cached DragonBonesData instances and TextureAtlasData instances.
-         * @param disposeData - Whether to dispose data
+         * @param disposeData - Whether to dispose data.
          * @version DragonBones 4.5
          * @language en_US
          */
         /**
          * - 清除缓存的所有 DragonBonesData 实例和 TextureAtlasData 实例。
-         * @param disposeData - 是否释放数据
+         * @param disposeData - 是否释放数据。
          * @version DragonBones 4.5
          * @language zh_CN
          */
         clear(disposeData?: boolean): void;
         /**
          * - Create a armature from cached DragonBonesData instances and TextureAtlasData instances.
-         * @param armatureName - The armature data name
-         * @param dragonBonesName - The cached name of the DragonBonesData instance. (If not set, all DragonBonesData instances are retrieved, and when multiple DragonBonesData instances contain a the same name armature data, it may not be possible to accurately create a specific armature)
-         * @param skinName - The skin name, you can set a different ArmatureData name to share it's skin data. (If not set, use the default skin data)
+         * @param armatureName - The armature data name.
+         * @param dragonBonesName - The cached name of the DragonBonesData instance. (If not set, all DragonBonesData instances are retrieved, and when multiple DragonBonesData instances contain a the same name armature data, it may not be possible to accurately create a specific armature).
+         * @param skinName - The skin name, you can set a different ArmatureData name to share it's skin data. (If not set, use the default skin data).
          * @returns The armature
          * @example
          * <pre>
@@ -7032,9 +7032,9 @@ declare namespace dragonBones {
          */
         /**
          * - 通过缓存的 DragonBonesData 实例和 TextureAtlasData 实例创建一个骨架。
-         * @param armatureName - 骨架数据名称
-         * @param dragonBonesName - DragonBonesData 实例的缓存名称。 （如果未设置，将检索所有的 DragonBonesData 实例，当多个 DragonBonesData 实例中包含同名的骨架数据时，可能无法准确的创建出特定的骨架）
-         * @param skinName - 皮肤名称，可以设置一个其他骨架数据名称来共享其皮肤数据（如果未设置，则使用默认的皮肤数据）
+         * @param armatureName - 骨架数据名称。
+         * @param dragonBonesName - DragonBonesData 实例的缓存名称。 （如果未设置，将检索所有的 DragonBonesData 实例，当多个 DragonBonesData 实例中包含同名的骨架数据时，可能无法准确的创建出特定的骨架）。
+         * @param skinName - 皮肤名称，可以设置一个其他骨架数据名称来共享其皮肤数据（如果未设置，则使用默认的皮肤数据）。
          * @returns 骨架
          * @example
          * <pre>
@@ -7054,12 +7054,12 @@ declare namespace dragonBones {
         replaceDisplay(slot: Slot, displayData: DisplayData, displayIndex?: number): void;
         /**
          * - Replaces the current display data for a particular slot with a specific display data. (Specify display data with "dragonBonesName/armatureName/slotName/displayName")
-         * @param dragonBonesName - The DragonBonesData instance cache name
-         * @param armatureName - The armature data name
-         * @param slotName - The slot data name
-         * @param displayName - The display data name
-         * @param slot - The slot
-         * @param displayIndex - The index of the display data that is replaced. (If it is not set, replaces the current display data)
+         * @param dragonBonesName - The DragonBonesData instance cache name.
+         * @param armatureName - The armature data name.
+         * @param slotName - The slot data name.
+         * @param displayName - The display data name.
+         * @param slot - The slot.
+         * @param displayIndex - The index of the display data that is replaced. (If it is not set, replaces the current display data).
          * @example
          * <pre>
          *     let slot = armature.getSlot("weapon");
@@ -7070,12 +7070,12 @@ declare namespace dragonBones {
          */
         /**
          * - 用特定的显示对象数据替换特定插槽当前的显示对象数据。(用 "dragonBonesName/armatureName/slotName/displayName" 指定显示对象数据)
-         * @param dragonBonesName - DragonBonesData 实例的缓存名称
-         * @param armatureName - 骨架数据名称
-         * @param slotName - 插槽数据名称
-         * @param displayName - 显示对象数据名称
-         * @param slot - 插槽
-         * @param displayIndex - 被替换的显示对象数据的索引。 （如果未设置，则替换当前的显示对象数据）
+         * @param dragonBonesName - DragonBonesData 实例的缓存名称。
+         * @param armatureName - 骨架数据名称。
+         * @param slotName - 插槽数据名称。
+         * @param displayName - 显示对象数据名称。
+         * @param slot - 插槽。
+         * @param displayIndex - 被替换的显示对象数据的索引。 （如果未设置，则替换当前的显示对象数据）。
          * @example
          * <pre>
          *     let slot = armature.getSlot("weapon");
@@ -7091,9 +7091,9 @@ declare namespace dragonBones {
         replaceSlotDisplayList(dragonBonesName: string | null, armatureName: string, slotName: string, slot: Slot): boolean;
         /**
          * - Share specific skin data with specific armature.
-         * @param armature - The armature
-         * @param skin - The skin data
-         * @param exclude - A list of slot names that do not need to be replace
+         * @param armature - The armature.
+         * @param skin - The skin data.
+         * @param exclude - A list of slot names that do not need to be replace.
          * @example
          * <pre>
          *     let armatureA = factory.buildArmature("armatureA", "dragonBonesA");
@@ -7109,9 +7109,9 @@ declare namespace dragonBones {
          */
         /**
          * - 将特定的皮肤数据共享给特定的骨架使用。
-         * @param armature - 骨架
-         * @param skin - 皮肤数据
-         * @param exclude - 不需要被替换的插槽名称列表
+         * @param armature - 骨架。
+         * @param skin - 皮肤数据。
+         * @param exclude - 不需要被替换的插槽名称列表。
          * @example
          * <pre>
          *     let armatureA = factory.buildArmature("armatureA", "dragonBonesA");
@@ -7213,14 +7213,36 @@ declare namespace dragonBones {
         skin: SkinData | null;
     }
 }
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 declare namespace dragonBones {
     /**
-     * The egret texture atlas data.
+     * - The egret texture atlas data.
      * @version DragonBones 3.0
      * @language en_US
      */
     /**
-     * Egret 贴图集数据。
+     * - Egret 贴图集数据。
      * @version DragonBones 3.0
      * @language zh_CN
      */
@@ -7241,34 +7263,34 @@ declare namespace dragonBones {
          */
         createTexture(): TextureData;
         /**
-         * The Egret texture.
+         * - The Egret texture.
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
-         * Egret 贴图。
+         * - Egret 贴图。
          * @version DragonBones 3.0
          * @language zh_CN
          */
         renderTexture: egret.Texture | null;
         /**
-         * Deprecated, please refer to {@link dragonBones.BaseFactory#removeTextureAtlasData()}.
+         * - Deprecated, please refer to {@link dragonBones.BaseFactory#removeTextureAtlasData()}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link dragonBones.BaseFactory#removeTextureAtlasData()}。
+         * - 已废弃，请参考 {@link dragonBones.BaseFactory#removeTextureAtlasData()}。
          * @deprecated
          * @language zh_CN
          */
         dispose(): void;
         /**
-         * Deprecated, please refer to {@link #renderTexture}.
+         * - Deprecated, please refer to {@link #renderTexture}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link #renderTexture}。
+         * - 已废弃，请参考 {@link #renderTexture}。
          * @deprecated
          * @language zh_CN
          */
@@ -7284,82 +7306,104 @@ declare namespace dragonBones {
         protected _onClear(): void;
     }
 }
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 declare namespace dragonBones {
     /**
-     * The egret event.
+     * - The egret event.
      * @version DragonBones 4.5
      * @language en_US
      */
     /**
-     * Egret 事件。
+     * - Egret 事件。
      * @version DragonBones 4.5
      * @language zh_CN
      */
     class EgretEvent extends egret.Event {
         /**
-         * The event object.
+         * - The event object.
          * @see dragonBones.EventObject
          * @version DragonBones 4.5
          * @language en_US
          */
         /**
-         * 事件对象。
+         * - 事件对象。
          * @see dragonBones.EventObject
          * @version DragonBones 4.5
          * @language zh_CN
          */
         readonly eventObject: EventObject;
         /**
-         * Deprecated, please refer to {@link #eventObject} {@link #dragonBones.EventObject#animationState}.
+         * - Deprecated, please refer to {@link #eventObject} {@link #dragonBones.EventObject#animationState}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link #eventObject} {@link #dragonBones.EventObject#animationState}。
+         * - 已废弃，请参考 {@link #eventObject} {@link #dragonBones.EventObject#animationState}。
          * @deprecated
          * @language zh_CN
          */
         readonly animationName: string;
         /**
-         * Deprecated, please refer to {@link #eventObject} {@link #dragonBones.EventObject#armature}.
+         * - Deprecated, please refer to {@link #eventObject} {@link #dragonBones.EventObject#armature}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link #eventObject} {@link #dragonBones.EventObject#armature}。
+         * - 已废弃，请参考 {@link #eventObject} {@link #dragonBones.EventObject#armature}。
          * @deprecated
          * @language zh_CN
          */
         readonly armature: Armature;
         /**
-         * Deprecated, please refer to {@link #eventObject} {@link #dragonBones.EventObject#bone}.
+         * - Deprecated, please refer to {@link #eventObject} {@link #dragonBones.EventObject#bone}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link #eventObject} {@link #dragonBones.EventObject#bone}。
+         * - 已废弃，请参考 {@link #eventObject} {@link #dragonBones.EventObject#bone}。
          * @deprecated
          * @language zh_CN
          */
         readonly bone: Bone | null;
         /**
-         * Deprecated, please refer to {@link #eventObject} {@link #dragonBones.EventObject#slot}.
+         * - Deprecated, please refer to {@link #eventObject} {@link #dragonBones.EventObject#slot}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link #eventObject} {@link #dragonBones.EventObject#slot}。
+         * - 已废弃，请参考 {@link #eventObject} {@link #dragonBones.EventObject#slot}。
          * @deprecated
          * @language zh_CN
          */
         readonly slot: Slot | null;
         /**
-         * Deprecated, please refer to {@link #eventObject} {@link #dragonBones.EventObject#animationState}.
+         * - Deprecated, please refer to {@link #eventObject} {@link #dragonBones.EventObject#animationState}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link #eventObject} {@link #dragonBones.EventObject#animationState}。
+         * - 已废弃，请参考 {@link #eventObject} {@link #dragonBones.EventObject#animationState}。
          * @deprecated
          * @language zh_CN
          */
@@ -7370,172 +7414,172 @@ declare namespace dragonBones {
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link #eventObject} {@link #dragonBones.EventObject#name}。
+         * - 已废弃，请参考 {@link #eventObject} {@link #dragonBones.EventObject#name}。
          * @deprecated
          * @language zh_CN
          */
         readonly frameLabel: string;
         /**
-         * Deprecated, please refer to {@link #eventObject} {@link #dragonBones.EventObject#name}.
+         * - Deprecated, please refer to {@link #eventObject} {@link #dragonBones.EventObject#name}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link #eventObject} {@link #dragonBones.EventObject#name}。
+         * - 已废弃，请参考 {@link #eventObject} {@link #dragonBones.EventObject#name}。
          * @deprecated
          * @language zh_CN
          */
         readonly sound: string;
         /**
-         * Deprecated, please refer to {@link #eventObject} {@link #dragonBones.EventObject#animationState}.
+         * - Deprecated, please refer to {@link #eventObject} {@link #dragonBones.EventObject#animationState}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link #eventObject} {@link #dragonBones.EventObject#animationState}。
+         * - 已废弃，请参考 {@link #eventObject} {@link #dragonBones.EventObject#animationState}。
          * @deprecated
          * @language zh_CN
          */
         readonly movementID: string;
         /**
-         * Deprecated, please refer to {@link #dragonBones.EventObject.START}.
+         * - Deprecated, please refer to {@link #dragonBones.EventObject.START}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link #dragonBones.EventObject.START}。
+         * - 已废弃，请参考 {@link #dragonBones.EventObject.START}。
          * @deprecated
          * @language zh_CN
          */
         static START: string;
         /**
-         * Deprecated, please refer to {@link #dragonBones.EventObject.LOOP_COMPLETE}.
+         * - Deprecated, please refer to {@link #dragonBones.EventObject.LOOP_COMPLETE}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link #dragonBones.EventObject.LOOP_COMPLETE}。
+         * - 已废弃，请参考 {@link #dragonBones.EventObject.LOOP_COMPLETE}。
          * @deprecated
          * @language zh_CN
          */
         static LOOP_COMPLETE: string;
         /**
-         * Deprecated, please refer to {@link #dragonBones.EventObject.COMPLETE}.
+         * - Deprecated, please refer to {@link #dragonBones.EventObject.COMPLETE}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link #dragonBones.EventObject.COMPLETE}。
+         * - 已废弃，请参考 {@link #dragonBones.EventObject.COMPLETE}。
          * @deprecated
          * @language zh_CN
          */
         static COMPLETE: string;
         /**
-         * Deprecated, please refer to {@link #dragonBones.EventObject.FADE_IN}.
+         * - Deprecated, please refer to {@link #dragonBones.EventObject.FADE_IN}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link #dragonBones.EventObject.FADE_IN}。
+         * - 已废弃，请参考 {@link #dragonBones.EventObject.FADE_IN}。
          * @deprecated
          * @language zh_CN
          */
         static FADE_IN: string;
         /**
-         * Deprecated, please refer to {@link #dragonBones.EventObject.FADE_IN_COMPLETE}.
+         * - Deprecated, please refer to {@link #dragonBones.EventObject.FADE_IN_COMPLETE}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link #dragonBones.EventObject.FADE_IN_COMPLETE}。
+         * - 已废弃，请参考 {@link #dragonBones.EventObject.FADE_IN_COMPLETE}。
          * @deprecated
          * @language zh_CN
          */
         static FADE_IN_COMPLETE: string;
         /**
-         * Deprecated, please refer to {@link #dragonBones.EventObject.FADE_OUT}.
+         * - Deprecated, please refer to {@link #dragonBones.EventObject.FADE_OUT}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link #dragonBones.EventObject.FADE_OUT}。
+         * - 已废弃，请参考 {@link #dragonBones.EventObject.FADE_OUT}。
          * @deprecated
          * @language zh_CN
          */
         static FADE_OUT: string;
         /**
-         * Deprecated, please refer to {@link #dragonBones.EventObject.FADE_OUT_COMPLETE}.
+         * - Deprecated, please refer to {@link #dragonBones.EventObject.FADE_OUT_COMPLETE}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link #dragonBones.EventObject.FADE_OUT_COMPLETE}。
+         * - 已废弃，请参考 {@link #dragonBones.EventObject.FADE_OUT_COMPLETE}。
          * @deprecated
          * @language zh_CN
          */
         static FADE_OUT_COMPLETE: string;
         /**
-         * Deprecated, please refer to {@link #dragonBones.EventObject.FRAME_EVENT}.
+         * - Deprecated, please refer to {@link #dragonBones.EventObject.FRAME_EVENT}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link #dragonBones.EventObject.FRAME_EVENT}。
+         * - 已废弃，请参考 {@link #dragonBones.EventObject.FRAME_EVENT}。
          * @deprecated
          * @language zh_CN
          */
         static FRAME_EVENT: string;
         /**
-         * Deprecated, please refer to {@link #dragonBones.EventObject.SOUND_EVENT}.
+         * - Deprecated, please refer to {@link #dragonBones.EventObject.SOUND_EVENT}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link #dragonBones.EventObject.SOUND_EVENT}。
+         * - 已废弃，请参考 {@link #dragonBones.EventObject.SOUND_EVENT}。
          * @deprecated
          * @language zh_CN
          */
         static SOUND_EVENT: string;
         /**
-         * Deprecated, please refer to {@link #dragonBones.EventObject.FRAME_EVENT}.
+         * - Deprecated, please refer to {@link #dragonBones.EventObject.FRAME_EVENT}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link #dragonBones.EventObject.FRAME_EVENT}。
+         * - 已废弃，请参考 {@link #dragonBones.EventObject.FRAME_EVENT}。
          * @deprecated
          * @language zh_CN
          */
         static ANIMATION_FRAME_EVENT: string;
         /**
-         * Deprecated, please refer to {@link #dragonBones.EventObject.FRAME_EVENT}.
+         * - Deprecated, please refer to {@link #dragonBones.EventObject.FRAME_EVENT}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link #dragonBones.EventObject.FRAME_EVENT}。
+         * - 已废弃，请参考 {@link #dragonBones.EventObject.FRAME_EVENT}。
          * @deprecated
          * @language zh_CN
          */
         static BONE_FRAME_EVENT: string;
         /**
-         * Deprecated, please refer to {@link #dragonBones.EventObject.FRAME_EVENT}.
+         * - Deprecated, please refer to {@link #dragonBones.EventObject.FRAME_EVENT}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link #dragonBones.EventObject.FRAME_EVENT}。
+         * - 已废弃，请参考 {@link #dragonBones.EventObject.FRAME_EVENT}。
          * @deprecated
          * @language zh_CN
          */
         static MOVEMENT_FRAME_EVENT: string;
         /**
-         * Deprecated, please refer to {@link #dragonBones.EventObject.SOUND_EVENT}.
+         * - Deprecated, please refer to {@link #dragonBones.EventObject.SOUND_EVENT}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link #dragonBones.EventObject.SOUND_EVENT}。
+         * - 已废弃，请参考 {@link #dragonBones.EventObject.SOUND_EVENT}。
          * @deprecated
          * @language zh_CN
          */
@@ -7594,7 +7638,7 @@ declare namespace dragonBones {
          */
         removeDBEventListener(type: EventStringType, listener: (event: EgretEvent) => void, target: any): void;
         /**
-         * Disable the batch.
+         * - Disable the batch.
          * Batch rendering for performance reasons, the boundary properties of the render object are not updated.
          * This will not correctly obtain the wide-height properties of the rendered object and the transformation properties of its internal display objects,
          * which can turn off batch rendering if you need to use these properties.
@@ -7602,7 +7646,7 @@ declare namespace dragonBones {
          * @language en_US
          */
         /**
-         * 关闭批次渲染。
+         * - 关闭批次渲染。
          * 批次渲染出于性能考虑，不会更新渲染对象的边界属性。
          * 这样将无法正确获得渲染对象的宽高属性以及其内部显示对象的变换属性，如果需要使用这些属性，可以关闭批次渲染。
          * @version DragonBones 5.1
@@ -7634,12 +7678,12 @@ declare namespace dragonBones {
          */
         removeEvent(type: EventStringType, listener: (event: EgretEvent) => void, target: any): void;
         /**
-         * Deprecated, please refer to {@link dragonBones.Armature#clock} {@link dragonBones.BaseFactory#clock}.
+         * - Deprecated, please refer to {@link dragonBones.Armature#clock} {@link dragonBones.BaseFactory#clock}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link dragonBones.Armature#clock} {@link dragonBones.BaseFactory#clock}。
+         * - 已废弃，请参考 {@link dragonBones.Armature#clock} {@link dragonBones.BaseFactory#clock}。
          * @deprecated
          * @language zh_CN
          */
@@ -7758,28 +7802,50 @@ declare namespace dragonBones {
         constructor();
     }
 }
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 declare namespace dragonBones {
     /**
-     * The egret slot.
+     * - The egret slot.
      * @version DragonBones 3.0
      * @language en_US
      */
     /**
-     * Egret 插槽。
+     * - Egret 插槽。
      * @version DragonBones 3.0
      * @language zh_CN
      */
     class EgretSlot extends Slot {
         static toString(): string;
         /**
-         * Whether to update the transform properties of the display object.
+         * - Whether to update the transform properties of the display object.
          * For better performance, the transform properties of display object (x, y, rotation, ScaleX, ScaleX) are not updated and need to be set to true if these properties need to be accessed correctly.
          * @default false
          * @version DragonBones 3.0
          * @language zh_CN
          */
         /**
-         * 是否更新显示对象的变换属性。
+         * - 是否更新显示对象的变换属性。
          * 为了更好的性能, 默认并不会更新显示对象的变换属性 (x, y, rotation, scaleX, scaleX), 如果需要正确访问这些属性, 则需要设置为 true 。
          * @default false
          * @version DragonBones 3.0
@@ -7853,14 +7919,36 @@ declare namespace dragonBones {
         private _updateTransformV5(isSkinnedMesh);
     }
 }
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 declare namespace dragonBones {
     /**
-     * The Egret factory.
+     * - The Egret factory.
      * @version DragonBones 3.0
      * @language en_US
      */
     /**
-     * Egret 工厂。
+     * - Egret 工厂。
      * @version DragonBones 3.0
      * @language zh_CN
      */
@@ -7874,12 +7962,12 @@ declare namespace dragonBones {
         private static _factory;
         private static _clockHandler(time);
         /**
-         * A global factory instance that can be used directly.
+         * - A global factory instance that can be used directly.
          * @version DragonBones 4.7
          * @language en_US
          */
         /**
-         * 一个可以直接使用的全局工厂实例。
+         * - 一个可以直接使用的全局工厂实例。
          * @version DragonBones 4.7
          * @language zh_CN
          */
@@ -7905,11 +7993,11 @@ declare namespace dragonBones {
          */
         protected _buildSlot(dataPackage: BuildArmaturePackage, slotData: SlotData, displays: Array<DisplayData | null> | null, armature: Armature): Slot;
         /**
-         * Create a armature from cached DragonBonesData instances and TextureAtlasData instances, then use the {@link #clock} to update it.
+         * - Create a armature from cached DragonBonesData instances and TextureAtlasData instances, then use the {@link #clock} to update it.
          * The difference is that the armature created by {@link #buildArmature} is not WorldClock instance update.
-         * @param armatureName The armature data name
-         * @param dragonBonesName The cached name of the DragonBonesData instance (If not set, all DragonBonesData instances are retrieved, and when multiple DragonBonesData instances contain a the same name armature data, it may not be possible to accurately create a specific armature)
-         * @param skinName The skin name, you can set a different ArmatureData name to share it's skin data (If not set, use the default skin data)
+         * @param armatureName - The armature data name
+         * @param dragonBonesName - The cached name of the DragonBonesData instance (If not set, all DragonBonesData instances are retrieved, and when multiple DragonBonesData instances contain a the same name armature data, it may not be possible to accurately create a specific armature)
+         * @param skinName - The skin name, you can set a different ArmatureData name to share it's skin data (If not set, use the default skin data)
          * @returns The armature display container.
          * @version DragonBones 4.5
          * @example
@@ -7919,11 +8007,11 @@ declare namespace dragonBones {
          * @language en_US
          */
         /**
-         * 通过缓存的 DragonBonesData 实例和 TextureAtlasData 实例创建一个骨架，并用 {@link #clock} 更新该骨架。
+         * - 通过缓存的 DragonBonesData 实例和 TextureAtlasData 实例创建一个骨架，并用 {@link #clock} 更新该骨架。
          * 区别在于由 {@link #buildArmature} 创建的骨架没有 WorldClock 实例驱动。
-         * @param armatureName 骨架数据名称
-         * @param dragonBonesName DragonBonesData 实例的缓存名称 （如果未设置，将检索所有的 DragonBonesData 实例，当多个 DragonBonesData 实例中包含同名的骨架数据时，可能无法准确的创建出特定的骨架）
-         * @param skinName 皮肤名称，可以设置一个其他骨架数据名称来共享其皮肤数据（如果未设置，则使用默认的皮肤数据）
+         * @param armatureName - 骨架数据名称
+         * @param dragonBonesName - DragonBonesData 实例的缓存名称 （如果未设置，将检索所有的 DragonBonesData 实例，当多个 DragonBonesData 实例中包含同名的骨架数据时，可能无法准确的创建出特定的骨架）
+         * @param skinName - 皮肤名称，可以设置一个其他骨架数据名称来共享其皮肤数据（如果未设置，则使用默认的皮肤数据）
          * @returns 骨架的显示容器。
          * @version DragonBones 4.5
          * @example
@@ -7934,134 +8022,156 @@ declare namespace dragonBones {
          */
         buildArmatureDisplay(armatureName: string, dragonBonesName?: string, skinName?: string, textureAtlasName?: string): EgretArmatureDisplay | null;
         /**
-         * Create the display object with the specified texture.
-         * @param textureName The texture data name
-         * @param textureAtlasName The texture atlas data name (Of not set, all texture atlas data will be searched)
+         * - Create the display object with the specified texture.
+         * @param textureName - The texture data name
+         * @param textureAtlasName - The texture atlas data name (Of not set, all texture atlas data will be searched)
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
-         * 创建带有指定贴图的显示对象。
-         * @param textureName 贴图数据名称。
-         * @param textureAtlasName 贴图集数据名称 （如果未设置，将检索所有的贴图集数据）
+         * - 创建带有指定贴图的显示对象。
+         * @param textureName - 贴图数据名称。
+         * @param textureAtlasName - 贴图集数据名称 （如果未设置，将检索所有的贴图集数据）
          * @version DragonBones 3.0
          * @language zh_CN
          */
         getTextureDisplay(textureName: string, textureAtlasName?: string | null): egret.Bitmap | null;
         /**
-         * A global sound event manager.
+         * - A global sound event manager.
          * Sound events can be listened to uniformly from the manager.
          * @version DragonBones 4.5
          * @language en_US
          */
         /**
-         * 全局声音事件管理器。
+         * - 全局声音事件管理器。
          * 声音事件可以从该管理器统一侦听。
          * @version DragonBones 4.5
          * @language zh_CN
          */
         readonly soundEventManager: EgretArmatureDisplay;
         /**
-         * Deprecated, please refer to {@link #clock}.
+         * - Deprecated, please refer to {@link #clock}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link #clock}。
+         * - 已废弃，请参考 {@link #clock}。
          * @deprecated
          * @language zh_CN
          */
         static readonly clock: WorldClock;
         /**
-         * Deprecated, please refer to {@link #addDragonBonesData()}.
+         * - Deprecated, please refer to {@link #addDragonBonesData()}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link #addDragonBonesData()}。
+         * - 已废弃，请参考 {@link #addDragonBonesData()}。
          * @deprecated
          * @language zh_CN
          */
         addSkeletonData(dragonBonesData: DragonBonesData, dragonBonesName?: string | null): void;
         /**
-         * Deprecated, please refer to {@link #getDragonBonesData()}.
+         * - Deprecated, please refer to {@link #getDragonBonesData()}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link #getDragonBonesData()}。
+         * - 已废弃，请参考 {@link #getDragonBonesData()}。
          * @deprecated
          * @language zh_CN
          */
         getSkeletonData(dragonBonesName: string): DragonBonesData | null;
         /**
-         * Deprecated, please refer to {@link #removeDragonBonesData()}.
+         * - Deprecated, please refer to {@link #removeDragonBonesData()}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link #removeDragonBonesData()}。
+         * - 已废弃，请参考 {@link #removeDragonBonesData()}。
          * @deprecated
          * @language zh_CN
          */
         removeSkeletonData(dragonBonesName: string): void;
         /**
-         * Deprecated, please refer to {@link #addTextureAtlasData()}.
+         * - Deprecated, please refer to {@link #addTextureAtlasData()}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link #addTextureAtlasData()}。
+         * - 已废弃，请参考 {@link #addTextureAtlasData()}。
          * @deprecated
          * @language zh_CN
          */
         addTextureAtlas(textureAtlasData: TextureAtlasData, dragonBonesName?: string | null): void;
         /**
-         * Deprecated, please refer to {@link #getTextureAtlas()}.
+         * - Deprecated, please refer to {@link #getTextureAtlas()}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link #getTextureAtlas()}。
+         * - 已废弃，请参考 {@link #getTextureAtlas()}。
          * @deprecated
          * @language zh_CN
          */
         getTextureAtlas(dragonBonesName: string): TextureAtlasData[] | null;
         /**
-         * Deprecated, please refer to {@link #removeTextureAtlasData()}.
+         * - Deprecated, please refer to {@link #removeTextureAtlasData()}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link #removeTextureAtlasData()}。
+         * - 已废弃，请参考 {@link #removeTextureAtlasData()}。
          * @deprecated
          * @language zh_CN
          */
         removeTextureAtlas(dragonBonesName: string): void;
         /**
-         * Deprecated, please refer to {@link #buildArmature()}.
+         * - Deprecated, please refer to {@link #buildArmature()}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link #buildArmature()}。
+         * - 已废弃，请参考 {@link #buildArmature()}。
          * @deprecated
          * @language zh_CN
          */
         buildFastArmature(armatureName: string, dragonBonesName?: string, skinName?: string): FastArmature | null;
         /**
-         * Deprecated, please refer to {@link #clear()}.
+         * - Deprecated, please refer to {@link #clear()}.
          * @deprecated
          * @language en_US
          */
         /**
-         * 已废弃，请参考 {@link #clear()}。
+         * - 已废弃，请参考 {@link #clear()}。
          * @deprecated
          * @language zh_CN
          */
         dispose(): void;
     }
 }
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2012-2016 DragonBones team and other contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 declare namespace dragonBones {
     /**
      * 是否包含指定名称的动画组。
