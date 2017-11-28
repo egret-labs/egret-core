@@ -42,15 +42,17 @@ type UserConfig = {
     /**
      * 插件
      */
-    commands: (string | Plugin)[]
+    commands: (string | BuildPlugin)[]
 }
 
 
-interface Plugin {
+interface BuildPlugin {
 
     onFile?(file: any): Promise<any>
 
     onFinish?(): Promise<any>
+
+    [options: string]: any;
 }
 
 
@@ -58,17 +60,19 @@ interface Plugin {
 
 declare module 'built-in' {
 
-    export class UglifyPlugin implements Plugin {
+    export class UglifyPlugin implements BuildPlugin {
 
+        constructor();
 
+        match(source: string[], target: string);
     }
 
-    export class CompilePlugin implements Plugin {
+    export class CompilePlugin implements BuildPlugin {
 
         constructor();
     }
 
-    export class IncrementCompilePlugin implements Plugin {
+    export class IncrementCompilePlugin implements BuildPlugin {
 
         constructor();
     }
@@ -76,7 +80,7 @@ declare module 'built-in' {
     /**
      * EXML 插件，用于发布 EXML 文件
      */
-    export class ExmlPlugin implements Plugin {
+    export class ExmlPlugin implements BuildPlugin {
 
         constructor(publishPolicy: EXML_Publish_Policy);
 
