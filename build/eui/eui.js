@@ -10598,6 +10598,9 @@ var eui;
                 egret.sys.BitmapNode.$updateTextureDataWithScale9Grid(this.$renderNode, this.$bitmapData, scale9Grid, this.$bitmapX, this.$bitmapY, this.$bitmapWidth, this.$bitmapHeight, this.$offsetX, this.$offsetY, this.$textureWidth, this.$textureHeight, width, height, this.$sourceWidth, this.$sourceHeight, this.$smoothing);
             }
             else {
+                if (this.fillMode == egret.BitmapFillMode.REPEAT && this.$renderNode instanceof egret.sys.NormalBitmapNode) {
+                    this.$renderNode = new egret.sys.BitmapNode();
+                }
                 egret.sys.BitmapNode.$updateTextureData(this.$renderNode, this.$bitmapData, this.$bitmapX, this.$bitmapY, this.$bitmapWidth, this.$bitmapHeight, this.$offsetX, this.$offsetY, this.$textureWidth, this.$textureHeight, width, height, this.$sourceWidth, this.$sourceHeight, this.$fillMode, this.$smoothing);
             }
         };
