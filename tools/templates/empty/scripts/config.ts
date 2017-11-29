@@ -1,9 +1,9 @@
 
-/// 阅读 config.d.ts 查看文档
+/// 阅读 api.d.ts 查看文档
 ///<reference path="api.d.ts"/>
 
 
-import { UglifyPlugin, CompilePlugin, IncrementCompilePlugin } from 'built-in';
+import { UglifyPlugin, CompilePlugin, IncrementCompilePlugin, ExmlPlugin } from 'built-in';
 
 const config: ResourceManagerConfig = {
 
@@ -31,6 +31,7 @@ const config: ResourceManagerConfig = {
             return {
                 outputDir,
                 commands: [
+                    new ExmlPlugin('commonjs'),
                     new CompilePlugin(),
                     new UglifyPlugin()
                     // "zip",
