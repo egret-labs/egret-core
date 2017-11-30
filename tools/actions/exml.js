@@ -5,104 +5,73 @@ var exml = require("../lib/eui/EXML");
 var EgretProject = require("../project");
 var exmlParser = require("../lib/eui/EXMLParser");
 var parser = new exmlParser.EXMLParser();
-function build(exmls) {
-    generateExmlDTS();
-    if (!exmls) {
-        exmls = searchEXML();
-    }
-    return buildChanges(exmls);
+function generateThemeData() {
+    //1.找到项目内后缀名为'.thm.json'的主题文件并返回列表
+    var themeFilenames = searchTheme();
+    //2.将主题文件读入内存变成json对象
+    var themeDatas = themeFilenames.map(function (filename) {
+        var content = file.read(file.joinPath(egret.args.projectDir, filename));
+        var data = JSON.parse(content);
+        data.path = filename;
+        return data;
+    });
+    return themeDatas;
 }
-exports.build = build;
-function buildChanges(exmls) {
-    var state = {
-        exitCode: 0,
-        messages: []
-    };
-    if (!exmls || exmls.length == 0)
-        return state;
-    return state;
-}
-function getSortedEXML() {
-    var files = searchEXML();
-    var exmls = files.map(function (path) { return ({
-        path: path,
-        content: file.read(path)
-    }); });
-    exmls.forEach(function (it) { return it.path = file.getRelativePath(egret.args.projectDir, it.path); });
-    exmls = exml.sort(exmls);
-    return exmls;
-}
-function publishEXML(exmlPublishPolicy) {
+function publishEXML(exmls, exmlPublishPolicy) {
     if (!exmlPublishPolicy) {
         exmlPublishPolicy = EgretProject.data.getExmlPublishPolicy();
     }
-    var themeDatas = [];
-    //1.找到项目内后缀名为'.thm.json'的主题文件并返回列表
-    var themes = searchTheme();
-    if (themes.length == 0) {
-        return;
-    }
-    //2.将主题文件读入内存变成json对象
-    themeDatas = themes.map(function (t) {
-        try {
-            var data = JSON.parse(file.read(file.joinPath(egret.args.projectDir, t)));
-            return data || {};
-        }
-        catch (e) {
-            return {};
-        }
-    });
+    var themeDatas = generateThemeData();
     var oldEXMLS = [];
     //3.主题文件的exmls是一个列表，列表项是一个{path:string,content:string}的格式
     //由于存在一个exml存在于多个主题的情况 把 主题1－>N文件 建立 文件1->N主题的一对多关系表oldEXMLS(数组＋快表)
-    themeDatas.forEach(function (thm, i) {
-        thm.exmls && thm.exmls.forEach(function (e) {
+    themeDatas.forEach(function (theme) {
+        theme.exmls && theme.exmls.forEach(function (e) {
             var path = e.path ? e.path : e;
             if (oldEXMLS[path]) {
-                oldEXMLS[path].theme += themes[i] + ",";
+                oldEXMLS[path].theme += theme.path + ",";
                 return;
             }
             var exmlFile = {
                 path: path,
-                theme: "," + themes[i] + ","
+                theme: "," + theme.path + ","
             };
             oldEXMLS[path] = exmlFile;
             oldEXMLS.push(exmlFile);
         });
     });
     //4.获得排序后的所有exml文件列表
-    var exmls = getSortedEXML();
-    themeDatas.forEach(function (thm) { return thm.exmls = []; });
+    exmls = exml.sort(exmls);
+    themeDatas.forEach(function (theme) { return theme.exmls = []; });
     exmls.forEach(function (e) {
-        var epath = e.path;
+        var epath = e.filename;
         var exmlEl;
         switch (exmlPublishPolicy) {
             case "path":
                 exmlEl = epath;
                 break;
             case "content":
-                exmlEl = { path: e.path, content: e.content };
+                exmlEl = { path: e.filename, content: e.contents };
                 break;
             case "gjs":
-                var result = parser.parse(e.content);
-                exmlEl = { path: e.path, gjs: result.code, className: result.className };
+                var result = parser.parse(e.contents);
+                exmlEl = { path: e.filename, gjs: result.code, className: result.className };
                 break;
             case "commonjs":
-                var result1 = parser.parse(e.content);
-                exmlEl = { path: e.path, gjs: result1.code, className: result1.className };
+                var result1 = parser.parse(e.contents);
+                exmlEl = { path: e.filename, gjs: result1.code, className: result1.className };
                 break;
             //todo
             case "bin":
                 break;
             default:
-                exmlEl = { path: e.path, content: e.content };
+                exmlEl = { path: e.filename, content: e.contents };
                 break;
         }
-        themeDatas.forEach(function (thm, i) {
+        themeDatas.forEach(function (thm) {
             if (epath in oldEXMLS) {
-                var thmPath = themes[i];
                 var exmlFile = oldEXMLS[epath];
-                if (exmlFile.theme.indexOf("," + thmPath + ",") >= 0)
+                if (exmlFile.theme.indexOf("," + thm.path + ",") >= 0)
                     thm.exmls.push(exmlEl);
             }
             else if (thm.autoGenerateExmlsList) {
@@ -110,9 +79,8 @@ function publishEXML(exmlPublishPolicy) {
             }
         });
     });
-    var files = themes.map(function (thm, i) {
-        var path = file.joinPath(egret.args.projectDir, thm);
-        var thmData = themeDatas[i];
+    var files = themeDatas.map(function (thmData) {
+        var path = thmData.path;
         if (exmlPublishPolicy == "commonjs") {
             var content = "window.skins = {};\nexports.paths = {};\nexports.skins = " + JSON.stringify(thmData.skins) + "\n";
             for (var _i = 0, _a = thmData.exmls; _i < _a.length; _i++) {
@@ -138,18 +106,6 @@ function searchTheme() {
     files = files.map(function (it) { return file.getRelativePath(egret.args.projectDir, it); });
     return files;
 }
-function searchEXML() {
-    var exmlRoots = EgretProject.data.getExmlRoots();
-    if (exmlRoots.length == 1) {
-        return file.searchByFunction(exmlRoots[0], exmlFilter);
-    }
-    else {
-        return exmlRoots.reduce(function (previousValue, currentValue) {
-            previousValue = previousValue.concat(file.searchByFunction(currentValue, exmlFilter));
-            return previousValue;
-        }, []);
-    }
-}
 var ignorePath = EgretProject.data.getIgnorePath();
 function exmlFilter(f) {
     var isIgnore = false;
@@ -163,61 +119,47 @@ function exmlFilter(f) {
 function themeFilter(f) {
     return (f.indexOf('.thm.json') > 0) && (f.indexOf(egret.args.releaseRootDir) < 0);
 }
-function getExmlDtsPath() {
-    return file.joinPath(egret.args.projectDir, "libs", "exml.e.d.ts");
-}
-function generateExmlDTS() {
+function generateExmlDTS(exmls) {
     //去掉重复定义
     var classDefinations = {};
-    var sourceList = searchEXML();
-    var length = sourceList.length;
-    if (length == 0)
-        return;
+    var sourceList = exmls; // ? exmls.map(exml => exml.filename) : searchEXML();
     var dts = "";
     for (var _i = 0, sourceList_1 = sourceList; _i < sourceList_1.length; _i++) {
         var source = sourceList_1[_i];
-        if (!file.exists(source)) {
+        //解析exml并返回className和extendName继承关系
+        var ret = exml.getDtsInfoFromExml(source);
+        //去掉重复定义
+        if (classDefinations[ret.className]) {
             continue;
         }
-        var ext = file.getExtension(source).toLowerCase();
-        if (ext == "exml") {
-            //解析exml并返回className和extendName继承关系
-            var ret = exml.getDtsInfoFromExml(source);
-            //去掉重复定义
-            if (classDefinations[ret.className]) {
-                continue;
-            }
-            else {
-                classDefinations[ret.className] = ret.extendName;
-            }
-            //var className = p.substring(srcPath.length, p.length - 5);
-            var className = ret.className;
-            //className = className.split("/").join(".");
-            if (className != "eui.Skin") {
-                var index = className.lastIndexOf(".");
-                if (index == -1) {
-                    if (ret.extendName == "") {
-                        dts += "declare class " + className + "{\n}\n";
-                    }
-                    else {
-                        dts += "declare class " + className + " extends " + ret.extendName + "{\n}\n";
-                    }
+        else {
+            classDefinations[ret.className] = ret.extendName;
+        }
+        //var className = p.substring(srcPath.length, p.length - 5);
+        var className = ret.className;
+        //className = className.split("/").join(".");
+        if (className != "eui.Skin") {
+            var index = className.lastIndexOf(".");
+            if (index == -1) {
+                if (ret.extendName == "") {
+                    dts += "declare class " + className + "{\n}\n";
                 }
                 else {
-                    var moduleName = className.substring(0, index);
-                    className = className.substring(index + 1);
-                    if (ret.extendName == "") {
-                        dts += "declare module " + moduleName + "{\n\tclass " + className + "{\n\t}\n}\n";
-                    }
-                    else {
-                        dts += "declare module " + moduleName + "{\n\tclass " + className + " extends " + ret.extendName + "{\n\t}\n}\n";
-                    }
+                    dts += "declare class " + className + " extends " + ret.extendName + "{\n}\n";
+                }
+            }
+            else {
+                var moduleName = className.substring(0, index);
+                className = className.substring(index + 1);
+                if (ret.extendName == "") {
+                    dts += "declare module " + moduleName + "{\n\tclass " + className + "{\n\t}\n}\n";
+                }
+                else {
+                    dts += "declare module " + moduleName + "{\n\tclass " + className + " extends " + ret.extendName + "{\n\t}\n}\n";
                 }
             }
         }
     }
-    //保存exml
-    var exmlDtsPath = getExmlDtsPath();
-    file.save(exmlDtsPath, dts);
     return dts;
 }
+exports.generateExmlDTS = generateExmlDTS;

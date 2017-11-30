@@ -204,6 +204,17 @@ export function endWith(text: string, match: string) {
 function escape(s) {
     return s.replace(/"/, '\\\"');
 }
+
+export function uglify(sourceFile: any) {
+    const defines = {
+        DEBUG: false,
+        RELEASE: true
+    }
+    const result = UglifyJS.minify(sourceFile, { compress: { global_defs: defines }, fromString: true, output: { beautify: false } });
+    const code = result.code;
+    return code;
+}
+
 export function minify(sourceFile: string): string
 export function minify(sourceFile: string, output: string): void
 export function minify(sourceFile: string, output?: string) {
@@ -269,10 +280,8 @@ export function measure(target: any, propertyKey: string, descriptor: TypedPrope
     }
 }
 
-export function getAvailablePort() {
+export function getAvailablePort(port = 0) {
     return new Promise<number>((resolve, reject) => {
-        let port = 0;
-
         function getPort() {
             var server = net.createServer();
             server.on('listening', function () {

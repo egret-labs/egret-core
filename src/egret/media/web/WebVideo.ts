@@ -438,7 +438,7 @@ namespace egret.web {
             imageLoader.once(egret.Event.COMPLETE, e => {
                 let posterData = <HTMLImageElement><any>imageLoader.data;
                 this.posterData = imageLoader.data;
-
+                this.$renderDirty = true;
                 this.posterData.width = this.getPlayWidth();
                 this.posterData.height = this.getPlayHeight();
 

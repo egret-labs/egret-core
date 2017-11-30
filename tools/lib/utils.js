@@ -251,6 +251,16 @@ exports.endWith = endWith;
 function escape(s) {
     return s.replace(/"/, '\\\"');
 }
+function uglify(sourceFile) {
+    var defines = {
+        DEBUG: false,
+        RELEASE: true
+    };
+    var result = UglifyJS.minify(sourceFile, { compress: { global_defs: defines }, fromString: true, output: { beautify: false } });
+    var code = result.code;
+    return code;
+}
+exports.uglify = uglify;
 function minify(sourceFile, output) {
     var defines = {
         DEBUG: false,
@@ -313,9 +323,9 @@ function measure(target, propertyKey, descriptor) {
     };
 }
 exports.measure = measure;
-function getAvailablePort() {
+function getAvailablePort(port) {
+    if (port === void 0) { port = 0; }
     return new Promise(function (resolve, reject) {
-        var port = 0;
         function getPort() {
             var server = net.createServer();
             server.on('listening', function () {

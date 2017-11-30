@@ -146,6 +146,7 @@ locale_strings[1715] = "Project testing sucessfully";
 locale_strings[1716] = "You use the old 3rd part library {0}.Please make sure these files not used the removed API or use the compatible 3rd party library {1}";
 locale_strings[1717] = "upgrade interruption, for the following reasons";
 locale_strings[1718] = "5.0.8 later version will delete template/debug/index.html template file, use index.html directly";
+locale_strings[1719] = "5.1 for the new feature experience version, only to create a new project, the old project can not be upgraded";
 //info
 locale_strings[1801] = "Egret version：{0}";
 locale_strings[1802] = "Egret installation path:{0}";

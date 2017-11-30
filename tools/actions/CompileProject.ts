@@ -9,9 +9,7 @@ import * as Compiler from './Compiler';
 
 class CompileProject {
     compile(options: egret.ToolArgs) {
-        exmlActions.build();
         const result = this.compileProject(options);
-        // exmlActions.updateSetting(false);
         if (result.exitStatus)
             return null;
 

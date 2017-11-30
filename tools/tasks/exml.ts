@@ -6,47 +6,33 @@ import * as utils from '../lib/utils';
 import * as exml from '../actions/exml';
 import * as path from 'path';
 
-const res = require('../lib/resourcemanager');
+import { PluginContext, Plugin } from './';
 
-const debug = {
-    "name": "exml-debug",
-    onFile: async (file) => {
-        return file;
-    },
-    onFinish: (pluginContext) => {
-        try {
-            const result = exml.publishEXML('path');
-            result.forEach(item => {
-                const filename = path.relative(pluginContext.projectRoot, item.path).split("\\").join("/");
-                pluginContext.createFile(filename, new Buffer(item.content))
-            })
-        }
-        catch (e) {
-            console.log(e)
-        }
+export class ExmlPlugin implements Plugin {
+
+    name = 'exml';
+
+    exmls: { filename: string, contents: string }[] = [];
+
+    constructor(public publishPolicy: string) {
 
     }
-};
-
-const publish = {
-    "name": "exml",
-    onFile: async (file) => {
+    async onFile(file) {
+        const filename = file.original_relative;
+        if (filename.indexOf('.exml') >= 0) {
+            const contents = file.contents.toString()
+            this.exmls.push({ filename, contents })
+        }
         return file;
-
-    },
-    onFinish: (pluginContext) => {
-        try {
-            const result = exml.publishEXML();
-            result.forEach(item => {
-                const filename = path.relative(pluginContext.projectRoot, item.path).split("\\").join("/");
-                pluginContext.createFile(filename, new Buffer(item.content))
-            })
-        }
-        catch (e) {
-            console.log(e)
-        }
-
     }
-};
 
-export default { debug, publish }
+    async onFinish(pluginContext) {
+        const dtsContents = exml.generateExmlDTS(this.exmls);
+        pluginContext.createFile('libs/exml.e.d.ts', new Buffer(dtsContents))
+        const result = exml.publishEXML(this.exmls, this.publishPolicy);
+        result.forEach(item => {
+            const filename = path.relative(pluginContext.projectRoot, item.path).split("\\").join("/");
+            pluginContext.createFile(filename, new Buffer(item.content))
+        })
+    }
+}

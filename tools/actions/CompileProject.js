@@ -1,16 +1,13 @@
 /// <reference path="../lib/types.d.ts" />
 // import Compiler = require('./Compiler');
 var FileUtil = require("../lib/FileUtil");
-var exmlActions = require("../actions/exml");
 var path = require("path");
 var Compiler = require("./Compiler");
 var CompileProject = (function () {
     function CompileProject() {
     }
     CompileProject.prototype.compile = function (options) {
-        exmlActions.build();
         var result = this.compileProject(options);
-        // exmlActions.updateSetting(false);
         if (result.exitStatus)
             return null;
         return result;

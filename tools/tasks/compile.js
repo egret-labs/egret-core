@@ -33,44 +33,97 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var EgretProject = require("../project");
 var fs = require("fs");
 var FileUtil = require("../lib/FileUtil");
 var Compiler = require("../actions/Compiler");
 var utils = require("../lib/utils");
-exports.default = {
-    name: "compile",
-    onFile: function (file) { return __awaiter(_this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            return [2 /*return*/, file];
+var CompilePlugin = (function () {
+    function CompilePlugin() {
+    }
+    CompilePlugin.prototype.onFile = function (file) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, file];
+            });
         });
-    }); },
-    onFinish: function (pluginContext) { return __awaiter(_this, void 0, void 0, function () {
-        var target_1, scripts, jscode, filepath, htmlContent;
-        return __generator(this, function (_a) {
-            try {
-                target_1 = egret.args.target;
-                scripts = EgretProject.manager.copyLibsForPublish(target_1);
+    };
+    CompilePlugin.prototype.onFinish = function (pluginContext) {
+        return __awaiter(this, void 0, void 0, function () {
+            var target, scripts, jscode, filepath, htmlContent;
+            return __generator(this, function (_a) {
+                target = egret.args.target;
+                scripts = EgretProject.manager.copyLibsForPublish(target, 'release');
                 scripts.forEach(function (script) {
                     pluginContext.createFile(script, fs.readFileSync(FileUtil.joinPath(pluginContext.projectRoot, script)));
                 });
                 jscode = tinyCompiler();
-                pluginContext.createFile("main.min.js", new Buffer(jscode));
-                if (target_1 == 'web') {
+                pluginContext.createFile("main.js", new Buffer(jscode));
+                if (target == 'web') {
                     filepath = FileUtil.joinPath(pluginContext.projectRoot, 'template/web/index.html');
                     htmlContent = fs.readFileSync(filepath);
                     pluginContext.createFile("index.html", htmlContent);
                 }
-            }
-            catch (e) {
-                console.log(e);
-            }
-            return [2 /*return*/];
+                return [2 /*return*/];
+            });
         });
-    }); }
-};
+    };
+    return CompilePlugin;
+}());
+exports.CompilePlugin = CompilePlugin;
+var UglifyPlugin = (function () {
+    function UglifyPlugin() {
+        this.codes = {};
+        this.matchers = [];
+        // outputFile: string
+    }
+    UglifyPlugin.prototype.match = function (sources, target) {
+        for (var _i = 0, sources_1 = sources; _i < sources_1.length; _i++) {
+            var source = sources_1[_i];
+            this.codes[source] = ";";
+        }
+        this.matchers.push({ sources: sources, target: target });
+    };
+    UglifyPlugin.prototype.onFile = function (file) {
+        return __awaiter(this, void 0, void 0, function () {
+            var filename;
+            return __generator(this, function (_a) {
+                filename = file.original_relative;
+                if (this.codes[filename]) {
+                    this.codes[filename] = file.contents.toString();
+                    return [2 /*return*/, null];
+                }
+                else {
+                    return [2 /*return*/, file];
+                }
+                return [2 /*return*/];
+            });
+        });
+    };
+    UglifyPlugin.prototype.onFinish = function (pluginContext) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            var _i, _a, matcher, jscode;
+            return __generator(this, function (_b) {
+                for (_i = 0, _a = this.matchers; _i < _a.length; _i++) {
+                    matcher = _a[_i];
+                    jscode = utils.uglify(matcher.sources.map(function (s) {
+                        var code = _this.codes[s];
+                        if (code == ';') {
+                            throw "missing source file " + s;
+                        }
+                        return code;
+                    }));
+                    pluginContext.createFile(matcher.target, new Buffer(jscode));
+                }
+                return [2 /*return*/];
+            });
+        });
+    };
+    return UglifyPlugin;
+}());
+exports.UglifyPlugin = UglifyPlugin;
 function tinyCompiler() {
     var os = require('os');
     var outfile = FileUtil.joinPath(os.tmpdir(), 'main.min.js');
@@ -86,6 +139,6 @@ function tinyCompiler() {
     compilerOptions.allowUnreachableCode = true;
     compilerOptions.emitReflection = true;
     this.compilerHost = compiler.compile(compilerOptions, fileNames);
-    var jscode = utils.minify(outfile);
+    var jscode = fs.readFileSync(outfile);
     return jscode;
 }

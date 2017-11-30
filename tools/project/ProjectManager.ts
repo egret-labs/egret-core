@@ -67,12 +67,13 @@ export namespace manager {
         FileUtil.save(requirePath, requireContent);
     }
 
-    export function copyLibsForPublish(target: egret.target.Type): string[] {
+    export function copyLibsForPublish(target: egret.target.Type, mode: "debug" | "release" = 'debug'): string[] {
         const result: string[] = [];
         const options = egret.args;
         data.getModulesConfig(target).forEach(m => {
             m.target.forEach(m => {
-                result.push(m.debug);
+                const filename = mode == 'debug' ? m.debug : m.release;
+                result.push(filename);
             });
         });
         if (data.isWasmProject()) {

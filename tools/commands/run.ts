@@ -22,7 +22,7 @@ class Run implements egret.Command {
             process.exit(exitCode);
         }
         if (egret.args.platform == undefined || egret.args.platform == 'web') {
-            const port = egret.args.port || await utils.getAvailablePort();
+            const port = await utils.getAvailablePort(egret.args.port);
             this.initServer(port);
         }
         else {
