@@ -375,8 +375,9 @@ namespace egret {
             let strokePath = this.strokePath;
             fillPath && fillPath.drawCircle(x, y, radius);
             strokePath && strokePath.drawCircle(x, y, radius);
-            this.extendBoundsByPoint(x - radius, y - radius);
-            this.extendBoundsByPoint(x + radius, y + radius);
+            //-1 +2 解决WebGL裁切问题
+            this.extendBoundsByPoint(x - radius - 1, y - radius - 1);
+            this.extendBoundsByPoint(x + radius + 2, y + radius + 2);
             this.updatePosition(x + radius, y);
             this.$renderNode.dirtyRender = true;
         }
@@ -412,9 +413,9 @@ namespace egret {
             let strokePath = this.strokePath;
             fillPath && fillPath.drawEllipse(x, y, width, height);
             strokePath && strokePath.drawEllipse(x, y, width, height);
-
-            this.extendBoundsByPoint(x, y);
-            this.extendBoundsByPoint(x + width, y + height);
+            //-1 +2 解决WebGL裁切问题
+            this.extendBoundsByPoint(x - 1, y - 1);
+            this.extendBoundsByPoint(x + width + 2, y + height + 2);
             this.updatePosition(x + width, y + height * 0.5);
             this.$renderNode.dirtyRender = true;
         }
@@ -738,10 +739,10 @@ namespace egret {
          */
         private updateNodeBounds():void {
             let node = this.$renderNode;
-            node.x = this.minX - 2;
-            node.y = this.minY - 2;
-            node.width = Math.ceil(this.maxX - this.minX) + 4;
-            node.height = Math.ceil(this.maxY - this.minY) + 4;
+            node.x = this.minX;
+            node.y = this.minY;
+            node.width = Math.ceil(this.maxX - this.minX);
+            node.height = Math.ceil(this.maxY - this.minY);
         }
 
         /**
