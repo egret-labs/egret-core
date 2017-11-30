@@ -5564,6 +5564,7 @@ var egret;
             WebGLRenderTarget.prototype.createTexture = function () {
                 var gl = this.gl;
                 var texture = gl.createTexture();
+                texture["glContext"] = gl;
                 gl.bindTexture(gl.TEXTURE_2D, texture);
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.width, this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
@@ -5598,6 +5599,9 @@ var egret;
                 gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, this.stencilBuffer);
                 // 此处不解绑是否会造成bug？
                 // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+            };
+            WebGLRenderTarget.prototype.dispose = function () {
+                egret.WebGLUtils.deleteWebGLTexture(this.texture);
             };
             return WebGLRenderTarget;
         }(egret.HashObject));
@@ -7696,8 +7700,15 @@ var egret;
                     node.$canvasScaleY = canvasScaleY;
                     node.dirtyRender = true;
                 }
-                width *= canvasScaleX;
-                height *= canvasScaleY;
+                //缩放叠加 width2 / width 填满整个区域
+                width = width * canvasScaleX;
+                height = height * canvasScaleY;
+                var width2 = Math.ceil(width);
+                var height2 = Math.ceil(height);
+                canvasScaleX *= width2 / width;
+                canvasScaleY *= height2 / height;
+                width = width2;
+                height = height2;
                 if (!this.canvasRenderBuffer || !this.canvasRenderBuffer.context) {
                     this.canvasRenderer = new egret.CanvasRenderer();
                     this.canvasRenderBuffer = new web.CanvasRenderBuffer(width, height);
