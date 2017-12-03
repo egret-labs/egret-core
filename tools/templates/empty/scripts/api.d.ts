@@ -72,11 +72,6 @@ declare module 'built-in' {
         constructor();
     }
 
-    export class IncrementCompilePlugin implements BuildPlugin {
-
-        constructor();
-    }
-
     /**
      * EXML 插件，用于发布 EXML 文件
      */

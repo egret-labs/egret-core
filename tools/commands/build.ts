@@ -47,8 +47,8 @@ class Build implements egret.Command {
         tasks.run();
         const target = egret.args.target;
         await res.build({ projectRoot, debug: true, command, target });
-
-        return 0;
+        console.log(222)
+        return DontExitCode;
     }
 
     private buildLib2(packageJson: project.Package_JSON) {

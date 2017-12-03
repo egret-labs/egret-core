@@ -39,6 +39,8 @@ var fs = require("fs");
 var FileUtil = require("../lib/FileUtil");
 var Compiler = require("../actions/Compiler");
 var utils = require("../lib/utils");
+var watch = require("../lib/watch");
+var compiler = new Compiler.Compiler();
 var CompilePlugin = (function () {
     function CompilePlugin() {
     }
@@ -51,9 +53,11 @@ var CompilePlugin = (function () {
     };
     CompilePlugin.prototype.onFinish = function (pluginContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var target, scripts, jscode, filepath, htmlContent;
+            var _this = this;
+            var target, projectRoot, scripts, jscode, filepath, htmlContent, srcPath;
             return __generator(this, function (_a) {
                 target = egret.args.target;
+                projectRoot = pluginContext.projectRoot;
                 scripts = EgretProject.manager.copyLibsForPublish(target, 'release');
                 scripts.forEach(function (script) {
                     pluginContext.createFile(script, fs.readFileSync(FileUtil.joinPath(pluginContext.projectRoot, script)));
@@ -61,13 +65,28 @@ var CompilePlugin = (function () {
                 jscode = tinyCompiler();
                 pluginContext.createFile("main.js", new Buffer(jscode));
                 if (target == 'web') {
-                    filepath = FileUtil.joinPath(pluginContext.projectRoot, 'template/web/index.html');
+                    filepath = FileUtil.joinPath(projectRoot, 'template/web/index.html');
                     htmlContent = fs.readFileSync(filepath);
                     pluginContext.createFile("index.html", htmlContent);
                 }
+                srcPath = FileUtil.joinPath(projectRoot, 'src');
+                watch.createMonitor(srcPath, { persistent: true, interval: 2007, filter: function (f, stat) { return !f.match(/\.g(\.d)?\.ts/); } }, function (m) {
+                    m.on("created", function (fileName) {
+                        return _this.onFileChanged([{ fileName: fileName, type: "added" }]);
+                    })
+                        .on("removed", function (fileName) {
+                        return _this.onFileChanged([{ fileName: fileName, type: "removed" }]);
+                    })
+                        .on("changed", function (fileName) {
+                        return _this.onFileChanged([{ fileName: fileName, type: "modified" }]);
+                    });
+                });
                 return [2 /*return*/];
             });
         });
+    };
+    CompilePlugin.prototype.onFileChanged = function (fileChanged) {
+        compiler.compileWithChanges(fileChanged);
     };
     return CompilePlugin;
 }());
@@ -130,7 +149,6 @@ function tinyCompiler() {
     var options = egret.args;
     options.minify = true;
     options.publish = true;
-    var compiler = new Compiler.Compiler();
     var configParsedResult = compiler.parseTsconfig(options.projectDir, options.publish);
     var compilerOptions = configParsedResult.options;
     var fileNames = configParsedResult.fileNames;

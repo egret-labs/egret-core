@@ -138,6 +138,7 @@ class Entry {
     }
 
     exit(exitCode) {
+        console.log(DontExitCode, exitCode)
         if (DontExitCode == exitCode)
             return;
         utils.exit(exitCode);

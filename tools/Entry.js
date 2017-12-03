@@ -122,6 +122,7 @@ var Entry = (function () {
         return result;
     };
     Entry.prototype.exit = function (exitCode) {
+        console.log(DontExitCode, exitCode);
         if (DontExitCode == exitCode)
             return;
         utils.exit(exitCode);

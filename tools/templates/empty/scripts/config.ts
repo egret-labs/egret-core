@@ -22,7 +22,7 @@ const config: ResourceManagerConfig = {
             return {
                 outputDir,
                 commands: [
-                    new IncrementCompilePlugin()
+                    new CompilePlugin(),
                 ]
             }
         }
@@ -31,7 +31,7 @@ const config: ResourceManagerConfig = {
             return {
                 outputDir,
                 commands: [
-                    new ExmlPlugin('commonjs'),
+                    // new ExmlPlugin('commonjs'),
                     new CompilePlugin(),
                     new UglifyPlugin()
                     // "zip",

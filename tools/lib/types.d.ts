@@ -270,7 +270,7 @@ declare module egret {
 
     export interface FileChange {
         fileName: string;
-        type: string;
+        type: 'added' | 'removed' | 'modified';
     }
 
 }
