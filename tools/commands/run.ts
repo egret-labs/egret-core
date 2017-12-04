@@ -15,12 +15,12 @@ class Run implements egret.Command {
 
     private initVersion = "";//初始化的 egret 版本，如果版本变化了，关掉当前的进程
     async execute() {
-
         const exitCode = await new Build().execute()
-
         if (exitCode != 0) {
             process.exit(exitCode);
         }
+        const platform = egret.args.platform;
+        console.log(platform)
         if (egret.args.platform == undefined || egret.args.platform == 'web') {
             const port = await utils.getAvailablePort(egret.args.port);
             this.initServer(port);

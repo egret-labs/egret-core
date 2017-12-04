@@ -48,7 +48,7 @@ var Run = (function () {
     }
     Run.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var exitCode, port;
+            var exitCode, platform, port;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, new Build().execute()];
@@ -57,6 +57,8 @@ var Run = (function () {
                         if (exitCode != 0) {
                             process.exit(exitCode);
                         }
+                        platform = egret.args.platform;
+                        console.log(platform);
                         if (!(egret.args.platform == undefined || egret.args.platform == 'web')) return [3 /*break*/, 3];
                         return [4 /*yield*/, utils.getAvailablePort(egret.args.port)];
                     case 2:

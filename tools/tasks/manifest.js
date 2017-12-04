@@ -37,30 +37,31 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var path = require("path");
 var manifest = {
     initial: [],
-    configURL: ""
+    game: [],
 };
 var ManifestPlugin = (function () {
     function ManifestPlugin() {
     }
     ManifestPlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
-            var filename, extname, crc32, crc32_file_path, origin_path, new_file_path, crc32, crc32_file_path, origin_path, new_file_path;
+            var filename, extname, crc32, crc32_file_path, origin_path, basename, new_file_path;
             return __generator(this, function (_a) {
                 filename = file.original_relative;
                 extname = path.extname(filename);
-                if (filename === "config.res.js") {
+                // if (filename === "config.res.js") {
+                //     const crc32 = globals.getCrc32();
+                //     const crc32_file_path = crc32(file.contents);
+                //     const origin_path = file.original_relative;
+                //     const new_file_path = "js/" + origin_path.substr(0, origin_path.length - file.extname.length) + "_" + crc32_file_path + file.extname;
+                //     file.path = path.join(file.base, new_file_path);
+                //     manifest.configURL = new_file_path;
+                // }
+                if (extname == ".js" && !file.isExistedInResourceFolder) {
                     crc32 = globals.getCrc32();
                     crc32_file_path = crc32(file.contents);
                     origin_path = file.original_relative;
-                    new_file_path = "js/" + origin_path.substr(0, origin_path.length - file.extname.length) + "_" + crc32_file_path + file.extname;
-                    file.path = path.join(file.base, new_file_path);
-                    manifest.configURL = new_file_path;
-                }
-                else if (extname == ".js" && !file.isExistedInResourceFolder) {
-                    crc32 = globals.getCrc32();
-                    crc32_file_path = crc32(file.contents);
-                    origin_path = file.original_relative;
-                    new_file_path = "js/" + origin_path.substr(0, origin_path.length - file.extname.length) + "_" + crc32_file_path + file.extname;
+                    basename = path.basename(origin_path);
+                    new_file_path = "js/" + basename.substr(0, basename.length - file.extname.length) + "_" + crc32_file_path + file.extname;
                     file.path = path.join(file.base, new_file_path);
                     manifest.initial.push(new_file_path);
                 }

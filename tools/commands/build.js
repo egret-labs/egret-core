@@ -83,8 +83,7 @@ var Build = (function () {
                         return [4 /*yield*/, res.build({ projectRoot: projectRoot, debug: true, command: command, target: target })];
                     case 1:
                         _a.sent();
-                        console.log(222);
-                        return [2 /*return*/, DontExitCode];
+                        return [2 /*return*/, 0];
                 }
             });
         });
