@@ -120,7 +120,6 @@ export class Compiler {
 
     private doCompile(): EgretCompilerHost {
         cachedExistingFiles = utils.createMap<boolean>();
-        console.log(this.fileNames)
         this.program = ts.createProgram(this.fileNames, this.options, compilerHost);
         this.sortFiles();
         let emitResult = this.program.emit();

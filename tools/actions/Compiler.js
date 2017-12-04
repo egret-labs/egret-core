@@ -98,7 +98,6 @@ var Compiler = (function () {
     };
     Compiler.prototype.doCompile = function () {
         cachedExistingFiles = utils.createMap();
-        console.log(this.fileNames);
         this.program = ts.createProgram(this.fileNames, this.options, compilerHost);
         this.sortFiles();
         var emitResult = this.program.emit();
