@@ -17,30 +17,36 @@ export class CompilePlugin {
         const target = egret.args.target;
         const projectRoot = pluginContext.projectRoot;
         const scripts = EgretProject.manager.copyLibsForPublish(target, 'release');
+
         scripts.forEach((script) => {
             pluginContext.createFile(script, fs.readFileSync(FileUtil.joinPath(pluginContext.projectRoot, script)));
         })
         const jscode = tinyCompiler();
         pluginContext.createFile("main.js", new Buffer(jscode));
+
         if (target == 'web') {
             const filepath = FileUtil.joinPath(projectRoot, 'template/web/index.html')
             const htmlContent = fs.readFileSync(filepath);
             pluginContext.createFile("index.html", htmlContent);
+
+
+
+
         }
 
         const srcPath = FileUtil.joinPath(projectRoot, 'src');
 
-        watch.createMonitor(srcPath, { persistent: true, interval: 2007, filter: (f, stat) => !f.match(/\.g(\.d)?\.ts/) }, m => {
-            m.on("created", (fileName) =>
-                this.onFileChanged([{ fileName, type: "added" }])
-            )
-                .on("removed", (fileName) =>
-                    this.onFileChanged([{ fileName, type: "removed" }])
-                )
-                .on("changed", (fileName) =>
-                    this.onFileChanged([{ fileName, type: "modified" }])
-                );
-        });
+        // watch.createMonitor(srcPath, { persistent: true, interval: 2007, filter: (f, stat) => !f.match(/\.g(\.d)?\.ts/) }, m => {
+        //     m.on("created", (fileName) =>
+        //         this.onFileChanged([{ fileName, type: "added" }])
+        //     )
+        //         .on("removed", (fileName) =>
+        //             this.onFileChanged([{ fileName, type: "removed" }])
+        //         )
+        //         .on("changed", (fileName) =>
+        //             this.onFileChanged([{ fileName, type: "modified" }])
+        //         );
+        // });
 
 
     }
@@ -61,10 +67,6 @@ export class UglifyPlugin {
     private codes: { [source: string]: string } = {};
 
     private matchers: { sources: string[], target: string }[] = [];
-
-    constructor() {
-        // outputFile: string
-    }
 
     match(sources: string[], target: string) {
         for (let source of sources) {
@@ -95,7 +97,6 @@ export class UglifyPlugin {
             }));
             pluginContext.createFile(matcher.target, new Buffer(jscode));
         }
-
     }
 
 }

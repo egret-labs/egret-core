@@ -7,9 +7,10 @@ const manifest = {
 }
 
 
-export default {
-    name: "manifest",
-    onFile: async (file) => {
+export class ManifestPlugin {
+
+    async onFile(file) {
+
         const filename = file.original_relative;
         const extname = path.extname(filename);
         if (filename === "config.res.js") {
@@ -29,10 +30,13 @@ export default {
             manifest.initial.push(new_file_path)
         }
         return file;
-
-    },
-    onFinish: async (context) => {
-        const content = JSON.stringify(manifest, null, '\t');
-        context.createFile("manifest.json", new Buffer(content));
     }
+    async onFinish(pluginContext) {
+
+        const content = JSON.stringify(manifest, null, '\t');
+        pluginContext.createFile("manifest.json", new Buffer(content));
+    }
+
+
+
 }

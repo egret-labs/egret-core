@@ -3,7 +3,7 @@
 ///<reference path="api.d.ts"/>
 
 
-import { UglifyPlugin, CompilePlugin, IncrementCompilePlugin, ExmlPlugin } from 'built-in';
+import { UglifyPlugin, IncrementCompilePlugin, CompilePlugin, ManifestPlugin, ExmlPlugin } from 'built-in';
 
 const config: ResourceManagerConfig = {
 
@@ -22,7 +22,7 @@ const config: ResourceManagerConfig = {
             return {
                 outputDir,
                 commands: [
-                    new CompilePlugin(),
+                    new IncrementCompilePlugin(),
                 ]
             }
         }
@@ -33,7 +33,8 @@ const config: ResourceManagerConfig = {
                 commands: [
                     // new ExmlPlugin('commonjs'),
                     new CompilePlugin(),
-                    new UglifyPlugin()
+                    new UglifyPlugin(),
+                    new ManifestPlugin()
                     // "zip",
                     // "spritesheet",
                     // "convertFileName",

@@ -39,7 +39,6 @@ var fs = require("fs");
 var FileUtil = require("../lib/FileUtil");
 var Compiler = require("../actions/Compiler");
 var utils = require("../lib/utils");
-var watch = require("../lib/watch");
 var compiler = new Compiler.Compiler();
 var CompilePlugin = (function () {
     function CompilePlugin() {
@@ -53,7 +52,6 @@ var CompilePlugin = (function () {
     };
     CompilePlugin.prototype.onFinish = function (pluginContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
             var target, projectRoot, scripts, jscode, filepath, htmlContent, srcPath;
             return __generator(this, function (_a) {
                 target = egret.args.target;
@@ -70,17 +68,6 @@ var CompilePlugin = (function () {
                     pluginContext.createFile("index.html", htmlContent);
                 }
                 srcPath = FileUtil.joinPath(projectRoot, 'src');
-                watch.createMonitor(srcPath, { persistent: true, interval: 2007, filter: function (f, stat) { return !f.match(/\.g(\.d)?\.ts/); } }, function (m) {
-                    m.on("created", function (fileName) {
-                        return _this.onFileChanged([{ fileName: fileName, type: "added" }]);
-                    })
-                        .on("removed", function (fileName) {
-                        return _this.onFileChanged([{ fileName: fileName, type: "removed" }]);
-                    })
-                        .on("changed", function (fileName) {
-                        return _this.onFileChanged([{ fileName: fileName, type: "modified" }]);
-                    });
-                });
                 return [2 /*return*/];
             });
         });
@@ -95,7 +82,6 @@ var UglifyPlugin = (function () {
     function UglifyPlugin() {
         this.codes = {};
         this.matchers = [];
-        // outputFile: string
     }
     UglifyPlugin.prototype.match = function (sources, target) {
         for (var _i = 0, sources_1 = sources; _i < sources_1.length; _i++) {

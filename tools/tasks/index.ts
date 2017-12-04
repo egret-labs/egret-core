@@ -1,14 +1,12 @@
 const res = require('../lib/resourcemanager');
-import manifest from './manifest';
-
-
+export { ManifestPlugin } from './manifest';
 export { ExmlPlugin } from './exml';
 export { IncrementCompilePlugin } from './incrementCompile'
 export { CompilePlugin, UglifyPlugin } from './compile';
 
 
 export function run() {
-    res.createPlugin(manifest);
+
 }
 
 export type Plugin = {

@@ -91,4 +91,13 @@ declare module 'built-in' {
      */
     type EXML_Publish_Policy = "path" | "commonjs" | "contents" | "gjs";
 
+
+    export class ManifestPlugin implements BuildPlugin {
+
+    }
+
+    export class IncrementCompilePlugin implements BuildPlugin {
+
+    }
+
 }
