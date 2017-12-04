@@ -22,7 +22,8 @@ export class SpriteSheetPlugin implements Plugin {
 async function generateSpriteSheet(spriteSheetFileName: string, dirname: string) {
     let texture_merger_path = await getTextureMergerPath()
     let cmd = "\"" + texture_merger_path + "\"";
-    let folder = path.join(process.cwd(), dirname);
+    const projectRoot = egret.args.projectDir;
+    let folder = path.join(projectRoot, "resource", dirname);
     let p = "\"" + folder + "\"";
     let o = "\"" + spriteSheetFileName + "\"";
     await shell(cmd, ["-p", p, "-o", o]);
@@ -30,5 +31,5 @@ async function generateSpriteSheet(spriteSheetFileName: string, dirname: string)
 
 
 function getTextureMergerPath() {
-
+    return `C:\\Program Files\\Egret\\TextureMerger\\TextureMerger.exe`
 }

@@ -55,14 +55,15 @@ var SpriteSheetPlugin = (function () {
 exports.SpriteSheetPlugin = SpriteSheetPlugin;
 function generateSpriteSheet(spriteSheetFileName, dirname) {
     return __awaiter(this, void 0, void 0, function () {
-        var texture_merger_path, cmd, folder, p, o;
+        var texture_merger_path, cmd, projectRoot, folder, p, o;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, getTextureMergerPath()];
                 case 1:
                     texture_merger_path = _a.sent();
                     cmd = "\"" + texture_merger_path + "\"";
-                    folder = path.join(process.cwd(), dirname);
+                    projectRoot = egret.args.projectDir;
+                    folder = path.join(projectRoot, "resource", dirname);
                     p = "\"" + folder + "\"";
                     o = "\"" + spriteSheetFileName + "\"";
                     return [4 /*yield*/, utils_1.shell(cmd, ["-p", p, "-o", o])];
@@ -74,4 +75,5 @@ function generateSpriteSheet(spriteSheetFileName, dirname) {
     });
 }
 function getTextureMergerPath() {
+    return "C:\\Program Files\\Egret\\TextureMerger\\TextureMerger.exe";
 }

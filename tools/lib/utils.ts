@@ -383,13 +383,15 @@ export function shell(path: string, args: string[], opt?: cp.ExecOptions, verbas
         }
     };
     let callback = (reslove, reject) => {
-        var shell = cp.exec(`path ${args.join(" ")}`, opt);
+        console.log(cmd)
+        var shell = cp.exec(cmd, opt);
         shell.on("error", (message) => { console.log(message); });
         shell.stderr.on("data", printStderrBufferMessage);
         shell.stderr.on("error", printStderrBufferMessage);
         shell.stdout.on("data", printStdoutBufferMessage);
         shell.stdout.on("error", printStdoutBufferMessage);
         shell.on('exit', function (code) {
+            console.log(code)
             if (code != 0) {
                 if (verbase) {
                     console.log('Failed: ' + code);
