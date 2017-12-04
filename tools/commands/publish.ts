@@ -20,11 +20,12 @@ class Publish implements egret.Command {
 
         const options = egret.args;
         const config = EgretProject.data;
-        const versionFile = getVersionInfo();
+
         const target = egret.args.target;
-        options.releaseDir = FileUtil.joinPath(config.getReleaseRoot(), target, versionFile);
+        const version = getVersionInfo();
+        options.releaseDir = FileUtil.joinPath(config.getReleaseRoot(), target, version);
         globals.log(1402, target, "");
-        await publishResource();
+        await publishResource(version);
         return DontExitCode;
     }
 }

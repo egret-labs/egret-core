@@ -41,29 +41,22 @@ var path = require("path");
 var EgretProject = require("../project");
 var ZipCommand = require("./ZipCommand");
 var copyNative = require("./CopyNativeFiles");
-function publishWithResourceManager(projectRoot, releaseDir) {
+function publishResource(version) {
     return __awaiter(this, void 0, void 0, function () {
-        var res, command, debug, target;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var _a, releaseDir, projectDir, projectRoot, res, command, debug, target;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
+                    _a = egret.args, releaseDir = _a.releaseDir, projectDir = _a.projectDir;
+                    projectRoot = projectDir;
                     res = require('../lib/resourcemanager');
                     tasks.run();
                     command = "publish";
                     debug = true;
                     target = egret.args.target;
-                    return [4 /*yield*/, res.build({ projectRoot: projectRoot, debug: debug, command: command, target: target })];
-                case 1: return [2 /*return*/, _a.sent()];
+                    return [4 /*yield*/, res.build({ projectRoot: projectRoot, debug: debug, command: command, target: target, version: version })];
+                case 1: return [2 /*return*/, _b.sent()];
             }
-        });
-    });
-}
-function publishResource() {
-    return __awaiter(this, void 0, void 0, function () {
-        var _a, releaseDir, projectDir;
-        return __generator(this, function (_b) {
-            _a = egret.args, releaseDir = _a.releaseDir, projectDir = _a.projectDir;
-            return [2 /*return*/, publishWithResourceManager(projectDir, releaseDir)];
         });
     });
 }

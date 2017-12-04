@@ -15,19 +15,17 @@ import copyNative = require("./CopyNativeFiles");
 import CompileProject = require('./CompileProject');
 
 
-async function publishWithResourceManager(projectRoot: string, releaseDir: string): Promise<number> {
-    // publishResourceOrigin(projectDir, releaseDir);
+export async function publishResource(version: string) {
+
+
+    let { releaseDir, projectDir } = egret.args;
+    const projectRoot = projectDir;
     const res = require('../lib/resourcemanager');
     tasks.run();
     const command = "publish";
     const debug = true;
     const target = egret.args.target;
-    return await res.build({ projectRoot, debug, command, target });
-}
-
-export async function publishResource() {
-    let { releaseDir, projectDir } = egret.args;
-    return publishWithResourceManager(projectDir, releaseDir);
+    return await res.build({ projectRoot, debug, command, target, version });
 
 }
 

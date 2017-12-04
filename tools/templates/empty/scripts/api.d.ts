@@ -15,7 +15,10 @@ type ResourceManagerConfig = {
      * 构建与发布配置
      */
     buildConfig: (param: {
-        command: 'build' | 'publish', target: string, projectName: string
+        command: 'build' | 'publish',
+        target: string,
+        projectName: string,
+        version: string
     }) => UserConfig,
     /**
      * 设置资源类型

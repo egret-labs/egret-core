@@ -43,18 +43,18 @@ var Publish = (function () {
     }
     Publish.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var options, config, versionFile, target;
+            var options, config, target, version;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         utils.checkEgret();
                         options = egret.args;
                         config = EgretProject.data;
-                        versionFile = getVersionInfo();
                         target = egret.args.target;
-                        options.releaseDir = FileUtil.joinPath(config.getReleaseRoot(), target, versionFile);
+                        version = getVersionInfo();
+                        options.releaseDir = FileUtil.joinPath(config.getReleaseRoot(), target, version);
                         globals.log(1402, target, "");
-                        return [4 /*yield*/, PublishResourceAction_1.publishResource()];
+                        return [4 /*yield*/, PublishResourceAction_1.publishResource(version)];
                     case 1:
                         _a.sent();
                         return [2 /*return*/, DontExitCode];
