@@ -415,7 +415,7 @@ function shell(path, args, opt, verbase) {
         }
     };
     var callback = function (reslove, reject) {
-        var shell = cp.spawn(path, args, opt);
+        var shell = cp.exec("path " + args.join(" "), opt);
         shell.on("error", function (message) { console.log(message); });
         shell.stderr.on("data", printStderrBufferMessage);
         shell.stderr.on("error", printStderrBufferMessage);

@@ -3,20 +3,26 @@ export { ManifestPlugin } from './manifest';
 export { ExmlPlugin } from './exml';
 export { IncrementCompilePlugin } from './incrementCompile'
 export { CompilePlugin, UglifyPlugin } from './compile';
+export { SpriteSheetPlugin } from './spritesheet';
 
 
 export function run() {
 
 }
 
-export type Plugin = {
+export interface Plugin {
+    onFile(file: File): Promise<File | null>;
+    onFinish(param: PluginContext): (void | Promise<void>)
 
-    name: string;
-
-    onFile: (file: any) => Promise<any | null>;
-
-    onFinish: (param: PluginContext) => void | Promise<void>
 }
+
+export type File = {
+
+    original_relative: string,
+
+    contents: Buffer;
+}
+
 
 export type PluginContext = {
     projectRoot: string,

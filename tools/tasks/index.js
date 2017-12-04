@@ -9,6 +9,8 @@ exports.IncrementCompilePlugin = incrementCompile_1.IncrementCompilePlugin;
 var compile_1 = require("./compile");
 exports.CompilePlugin = compile_1.CompilePlugin;
 exports.UglifyPlugin = compile_1.UglifyPlugin;
+var spritesheet_1 = require("./spritesheet");
+exports.SpriteSheetPlugin = spritesheet_1.SpriteSheetPlugin;
 function run() {
 }
 exports.run = run;

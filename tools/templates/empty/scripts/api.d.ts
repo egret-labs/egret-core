@@ -122,4 +122,12 @@ declare module 'built-in' {
 
     }
 
+
+    /**
+     * 自动纹理合并，beta
+     */
+    export class SpriteSheetPlugin implements BuildPlugin {
+
+    }
+
 }
