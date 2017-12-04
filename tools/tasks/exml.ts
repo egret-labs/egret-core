@@ -27,8 +27,11 @@ export class ExmlPlugin implements Plugin {
     }
 
     async onFinish(pluginContext) {
-        const dtsContents = exml.generateExmlDTS(this.exmls);
-        pluginContext.createFile('libs/exml.e.d.ts', new Buffer(dtsContents))
+
+        if (this.publishPolicy == "debug") {
+            const dtsContents = exml.generateExmlDTS(this.exmls);
+            pluginContext.createFile('libs/exml.e.d.ts', new Buffer(dtsContents))
+        }
         const result = exml.publishEXML(this.exmls, this.publishPolicy);
         result.forEach(item => {
             const filename = path.relative(pluginContext.projectRoot, item.path).split("\\").join("/");
