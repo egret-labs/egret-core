@@ -4,6 +4,8 @@ import file = require('../lib/FileUtil');
 import _utils = require('../lib/utils');
 import _path = require("path");
 import cp = require('child_process');
+import { cache } from '../lib/utils';
+import { version } from '../lib/doT';
 
 
 export type Package_JSON = {
@@ -170,6 +172,17 @@ export class EgretProjectData {
 
     private getModulePath2(p: string) {
         if (!p) {
+            const engineVersion = this.egretProperties.engineVersion
+            if (engineVersion) {
+                const versions = this.getEgretVersionInfos();
+                for (let version of versions) {
+                    if (version.version == engineVersion) {
+                        return version.path;
+                    }
+                }
+                console.error(`找不到版本${engineVersion}`);
+                return egret.root;
+            }
             return egret.root;
         }
         let egretLibs = getAppDataEnginesRootPath();
@@ -215,19 +228,12 @@ export class EgretProjectData {
         return this.getFilePath('libs/modules');
     }
 
+    @cache
     getEgretVersionInfos() {
-        var build = cp.spawnSync("egret", ["versions"], {
-            encoding: "utf-8"
-        });
-        let versions: string[];
-        if (build && build.stdout) {
-            versions = build.stdout.toString().split("\n");
-            //删除最后一行空格
-            versions = versions.slice(0, versions.length - 1);
-        }
-        else {
-            versions = [];
-        }
+        var stdout = cp.execSync("egret versions", { encoding: "utf-8" });
+        let versions: string[] = stdout.toString().split("\n");
+        //     //删除最后一行空格
+        versions = versions.slice(0, versions.length - 1);
         let result: egret.VersionInfo[] = versions.map(versionStr => {
             let version: string;
             let path: string;

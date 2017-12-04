@@ -81,7 +81,7 @@ function updateEgretProperties(projectConfig) {
     var propFile = FileUtil.joinPath(egret.args.projectDir, "egretProperties.json");
     var jsonString = FileUtil.read(propFile);
     var props = JSON.parse(jsonString);
-    props.egret_version = egret.version;
+    // props.egret_version = egret.version;
     props.template = {};
     if (projectConfig.type == "eui") {
         //添加eui项目默认配置

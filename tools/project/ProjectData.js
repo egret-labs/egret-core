@@ -9,6 +9,7 @@ var file = require("../lib/FileUtil");
 var _utils = require("../lib/utils");
 var _path = require("path");
 var cp = require("child_process");
+var utils_1 = require("../lib/utils");
 var EgretProjectData = (function () {
     function EgretProjectData() {
         this.egretProperties = {
@@ -130,6 +131,18 @@ var EgretProjectData = (function () {
     };
     EgretProjectData.prototype.getModulePath2 = function (p) {
         if (!p) {
+            var engineVersion = this.egretProperties.engineVersion;
+            if (engineVersion) {
+                var versions = this.getEgretVersionInfos();
+                for (var _i = 0, versions_1 = versions; _i < versions_1.length; _i++) {
+                    var version_1 = versions_1[_i];
+                    if (version_1.version == engineVersion) {
+                        return version_1.path;
+                    }
+                }
+                console.error("\u627E\u4E0D\u5230\u7248\u672C" + engineVersion);
+                return egret.root;
+            }
             return egret.root;
         }
         var egretLibs = getAppDataEnginesRootPath();
@@ -172,18 +185,10 @@ var EgretProjectData = (function () {
         return this.getFilePath('libs/modules');
     };
     EgretProjectData.prototype.getEgretVersionInfos = function () {
-        var build = cp.spawnSync("egret", ["versions"], {
-            encoding: "utf-8"
-        });
-        var versions;
-        if (build && build.stdout) {
-            versions = build.stdout.toString().split("\n");
-            //删除最后一行空格
-            versions = versions.slice(0, versions.length - 1);
-        }
-        else {
-            versions = [];
-        }
+        var stdout = cp.execSync("egret versions", { encoding: "utf-8" });
+        var versions = stdout.toString().split("\n");
+        //     //删除最后一行空格
+        versions = versions.slice(0, versions.length - 1);
         var result = versions.map(function (versionStr) {
             var version;
             var path;
@@ -259,6 +264,9 @@ var EgretProjectData = (function () {
     };
     return EgretProjectData;
 }());
+__decorate([
+    utils_1.cache
+], EgretProjectData.prototype, "getEgretVersionInfos", null);
 __decorate([
     _utils.cache
 ], EgretProjectData.prototype, "getModulesConfig", null);
