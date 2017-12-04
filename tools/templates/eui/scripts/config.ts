@@ -35,7 +35,10 @@ const config: ResourceManagerConfig = {
                 commands: [
                     new ExmlPlugin('default'),
                     new CompilePlugin(),
-                    new UglifyPlugin(),
+                    new UglifyPlugin([{
+                        sources: ["main.js"],
+                        target: "main.min.js"
+                    }]),
                     new ManifestPlugin()
                     // "zip",
                     // "spritesheet",

@@ -79,30 +79,26 @@ var CompilePlugin = (function () {
 }());
 exports.CompilePlugin = CompilePlugin;
 var UglifyPlugin = (function () {
-    function UglifyPlugin() {
+    function UglifyPlugin(param) {
         this.codes = {};
-        this.matchers = [];
+        this.matchers = param;
     }
-    UglifyPlugin.prototype.match = function (sources, target) {
-        for (var _i = 0, sources_1 = sources; _i < sources_1.length; _i++) {
-            var source = sources_1[_i];
-            this.codes[source] = ";";
-        }
-        this.matchers.push({ sources: sources, target: target });
-    };
     UglifyPlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
-            var filename;
-            return __generator(this, function (_a) {
+            var filename, _i, _a, matcher;
+            return __generator(this, function (_b) {
                 filename = file.original_relative;
-                if (this.codes[filename]) {
-                    this.codes[filename] = file.contents.toString();
-                    return [2 /*return*/, null];
-                }
-                else {
+                if (file.extname != ".js") {
                     return [2 /*return*/, file];
                 }
-                return [2 /*return*/];
+                for (_i = 0, _a = this.matchers; _i < _a.length; _i++) {
+                    matcher = _a[_i];
+                    if (matcher.sources.indexOf(filename) >= 0) {
+                        this.codes[filename] = file.contents.toString();
+                        return [2 /*return*/, null];
+                    }
+                }
+                return [2 /*return*/, file];
             });
         });
     };

@@ -63,11 +63,12 @@ interface BuildPlugin {
 
 declare module 'built-in' {
 
+    type UglifyPluginParams = { sources: string[], target: string }[]
+
     export class UglifyPlugin implements BuildPlugin {
 
-        constructor();
+        constructor(mergeSelector: UglifyPluginParams);
 
-        match(source: string[], target: string);
     }
 
     /**
