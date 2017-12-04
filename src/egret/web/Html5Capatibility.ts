@@ -103,7 +103,7 @@ namespace egret.web {
 
             egret.Capabilities.$isMobile = (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
 
-            Html5Capatibility._canUseBlob = false;
+            Html5Capatibility._canUseBlob = !!(window.Blob && window.URL);
             let canUseWebAudio = window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"];
             if (canUseWebAudio) {
                 try {
