@@ -23,10 +23,13 @@ function generateThemeData() {
     return themeDatas;
 }
 
-export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy?: string) {
+export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
 
-    if (!exmlPublishPolicy) {
+    if (!exmlPublishPolicy || exmlPublishPolicy == "default") {
         exmlPublishPolicy = EgretProject.data.getExmlPublishPolicy();
+    }
+    else if (exmlPublishPolicy == 'debug') {
+        exmlPublishPolicy = 'path';
     }
     const themeDatas = generateThemeData();
 

@@ -18,8 +18,11 @@ function generateThemeData() {
     return themeDatas;
 }
 function publishEXML(exmls, exmlPublishPolicy) {
-    if (!exmlPublishPolicy) {
+    if (!exmlPublishPolicy || exmlPublishPolicy == "default") {
         exmlPublishPolicy = EgretProject.data.getExmlPublishPolicy();
+    }
+    else if (exmlPublishPolicy == 'debug') {
+        exmlPublishPolicy = 'path';
     }
     var themeDatas = generateThemeData();
     var oldEXMLS = [];

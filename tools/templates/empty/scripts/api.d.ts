@@ -89,13 +89,13 @@ declare module 'built-in' {
 
     /**
      * 发布策略
-     * * path : 默认策略，用于开发环境
-     * * commonjs : 将EXML合并为一个 CommonJS 风格的文件
-     * * commonjs-debug : 
+     * * default : 使用 egretProperties.json 中的 exmlPublishPolicy 中的策略
+     * * debug : 默认策略，用于开发环境
      * * contents : 将 EXML 的内容写入到主题文件中
      * * gjs : 将生成的JS文件写入到主题文件中
+     * * commonjs : 将EXML合并为一个 CommonJS 风格的文件(暂未开放)
      */
-    type EXML_Publish_Policy = "path" | "commonjs" | "contents" | "gjs";
+    type EXML_Publish_Policy = "default" | "debug" | "contents" | "gjs" | "commonjs"
 
 
     /**

@@ -23,7 +23,7 @@ const config: ResourceManagerConfig = {
             return {
                 outputDir,
                 commands: [
-                    // new ExmlPlugin('debug'),
+                    new ExmlPlugin('debug'),
                     new IncrementCompilePlugin(),
                 ]
             }
@@ -33,7 +33,7 @@ const config: ResourceManagerConfig = {
             return {
                 outputDir,
                 commands: [
-                    // new ExmlPlugin('default'),
+                    new ExmlPlugin('default'),
                     new CompilePlugin(),
                     new UglifyPlugin(),
                     new ManifestPlugin()
