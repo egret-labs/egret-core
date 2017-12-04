@@ -63,11 +63,20 @@ interface BuildPlugin {
 
 declare module 'built-in' {
 
+    /**
+     * 混淆插件参数，设置源代码和目标代码
+     */
+    type UglifyPluginParam = { sources: string[], target: string };
+
+    type UglifyPluginParams = UglifyPluginParam[];
+
+    /**
+     * 混淆插件
+     */
     export class UglifyPlugin implements BuildPlugin {
 
-        constructor();
+        constructor(mergeSelector: UglifyPluginParams);
 
-        match(source: string[], target: string);
     }
 
     /**

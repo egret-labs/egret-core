@@ -59,8 +59,10 @@ var ExmlPlugin = (function () {
         return __awaiter(this, void 0, void 0, function () {
             var dtsContents, result;
             return __generator(this, function (_a) {
-                dtsContents = exml.generateExmlDTS(this.exmls);
-                pluginContext.createFile('libs/exml.e.d.ts', new Buffer(dtsContents));
+                if (this.publishPolicy == "debug") {
+                    dtsContents = exml.generateExmlDTS(this.exmls);
+                    pluginContext.createFile('libs/exml.e.d.ts', new Buffer(dtsContents));
+                }
                 result = exml.publishEXML(this.exmls, this.publishPolicy);
                 result.forEach(function (item) {
                     var filename = path.relative(pluginContext.projectRoot, item.path).split("\\").join("/");

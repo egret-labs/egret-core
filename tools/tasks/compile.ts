@@ -65,28 +65,27 @@ export class CompilePlugin {
 export class UglifyPlugin {
 
     private codes: { [source: string]: string } = {};
+    private matchers: { sources: string[], target: string }[]
 
-    private matchers: { sources: string[], target: string }[] = [];
-
-    match(sources: string[], target: string) {
-        for (let source of sources) {
-            this.codes[source] = ";";
-        }
-        this.matchers.push({ sources, target })
+    constructor(param) {
+        this.matchers = param;
     }
 
     async onFile(file) {
 
         const filename = file.original_relative;
-        if (this.codes[filename]) {
-            this.codes[filename] = file.contents.toString();
-            return null;
-        }
-        else {
+        if (file.extname != ".js") {
             return file;
         }
+        for (let matcher of this.matchers) {
+            if (matcher.sources.indexOf(filename) >= 0) {
+                this.codes[filename] = file.contents.toString();
+                return null;
+            }
+        }
+        return file;
     }
-    async  onFinish(pluginContext) {
+    async onFinish(pluginContext) {
         for (let matcher of this.matchers) {
             const jscode = utils.uglify(matcher.sources.map(s => {
                 const code = this.codes[s];
