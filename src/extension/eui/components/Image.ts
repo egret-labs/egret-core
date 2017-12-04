@@ -304,6 +304,9 @@ namespace eui {
                     width, height, this.$sourceWidth, this.$sourceHeight, this.$smoothing);
             }
             else {
+                if (this.fillMode == egret.BitmapFillMode.REPEAT && this.$renderNode instanceof egret.sys.NormalBitmapNode) {
+                    this.$renderNode = new egret.sys.BitmapNode();
+                }
                 egret.sys.BitmapNode.$updateTextureData(<egret.sys.NormalBitmapNode>this.$renderNode, this.$bitmapData,
                     this.$bitmapX, this.$bitmapY, this.$bitmapWidth, this.$bitmapHeight,
                     this.$offsetX, this.$offsetY, this.$textureWidth, this.$textureHeight,
