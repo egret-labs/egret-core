@@ -16,6 +16,7 @@ const config: ResourceManagerConfig = {
         const target = params.target;
         const command = params.command;
         const projectName = params.projectName;
+        const version = params.version;
 
         if (params.command == 'build') {
             const outputDir = '.';
@@ -27,7 +28,7 @@ const config: ResourceManagerConfig = {
             }
         }
         else if (params.command == 'publish') {
-            const outputDir = target == "web" ? "bin-release" : `../${projectName}_${target}`;
+            const outputDir = target == "web" ? `bin-release/${version}` : `../${projectName}_${target}`;
             return {
                 outputDir,
                 commands: [

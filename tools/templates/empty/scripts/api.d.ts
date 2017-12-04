@@ -70,6 +70,9 @@ declare module 'built-in' {
         match(source: string[], target: string);
     }
 
+    /**
+     * 编译命令
+     */
     export class CompilePlugin implements BuildPlugin {
 
         constructor();
@@ -95,10 +98,17 @@ declare module 'built-in' {
     type EXML_Publish_Policy = "path" | "commonjs" | "contents" | "gjs";
 
 
+    /**
+     * 生成 manifest 文件，这个文件会被用于记录 JavaScript 文件的版本号
+     */
     export class ManifestPlugin implements BuildPlugin {
 
     }
 
+    /**
+     * 增量编译
+     * 这个功能将会在未来被 watch 模式代替掉
+     */
     export class IncrementCompilePlugin implements BuildPlugin {
 
     }
