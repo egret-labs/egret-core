@@ -105,10 +105,6 @@ exports.optionDeclarations = [
         type: 'boolean',
         alias: "exp"
     }, {
-        name: 'egretVersion',
-        type: 'string',
-        alias: "ev"
-    }, {
         name: 'ide',
         type: 'string'
     }, {
