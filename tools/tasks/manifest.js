@@ -44,9 +44,9 @@ var ManifestPlugin = (function () {
     }
     ManifestPlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
-            var filename, extname, crc32, crc32_file_path, origin_path, basename, new_file_path;
+            var filename, extname, crc32, crc32_file_path, basename, new_file_path;
             return __generator(this, function (_a) {
-                filename = file.original_relative;
+                filename = file.origin;
                 extname = path.extname(filename);
                 // if (filename === "config.res.js") {
                 //     const crc32 = globals.getCrc32();
@@ -59,8 +59,7 @@ var ManifestPlugin = (function () {
                 if (extname == ".js" && !file.isExistedInResourceFolder) {
                     crc32 = globals.getCrc32();
                     crc32_file_path = crc32(file.contents);
-                    origin_path = file.original_relative;
-                    basename = path.basename(origin_path);
+                    basename = path.basename(filename);
                     new_file_path = "js/" + basename.substr(0, basename.length - file.extname.length) + "_" + crc32_file_path + file.extname;
                     file.path = path.join(file.base, new_file_path);
                     manifest.initial.push(new_file_path);

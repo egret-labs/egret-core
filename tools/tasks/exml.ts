@@ -18,7 +18,7 @@ export class ExmlPlugin implements Plugin {
 
     }
     async onFile(file) {
-        const filename = file.original_relative;
+        const filename = file.origin;
         if (filename.indexOf('.exml') >= 0) {
             const contents = file.contents.toString()
             this.exmls.push({ filename, contents })

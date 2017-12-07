@@ -46,7 +46,7 @@ var ExmlPlugin = (function () {
         return __awaiter(this, void 0, void 0, function () {
             var filename, contents;
             return __generator(this, function (_a) {
-                filename = file.original_relative;
+                filename = file.origin;
                 if (filename.indexOf('.exml') >= 0) {
                     contents = file.contents.toString();
                     this.exmls.push({ filename: filename, contents: contents });

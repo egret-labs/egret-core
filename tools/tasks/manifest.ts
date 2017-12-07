@@ -12,7 +12,7 @@ export class ManifestPlugin {
 
     async onFile(file) {
 
-        const filename = file.original_relative;
+        const filename = file.origin;
         const extname = path.extname(filename);
         // if (filename === "config.res.js") {
         //     const crc32 = globals.getCrc32();
@@ -25,8 +25,7 @@ export class ManifestPlugin {
         if (extname == ".js" && !file.isExistedInResourceFolder) {
             const crc32 = globals.getCrc32();
             const crc32_file_path = crc32(file.contents);
-            const origin_path = file.original_relative;
-            const basename = path.basename(origin_path);
+            const basename = path.basename(filename);
             const new_file_path = "js/" + basename.substr(0, basename.length - file.extname.length) + "_" + crc32_file_path + file.extname;
             file.path = path.join(file.base, new_file_path);
             manifest.initial.push(new_file_path)

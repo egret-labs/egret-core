@@ -87,7 +87,7 @@ var UglifyPlugin = (function () {
         return __awaiter(this, void 0, void 0, function () {
             var filename, _i, _a, matcher;
             return __generator(this, function (_b) {
-                filename = file.original_relative;
+                filename = file.origin;
                 if (file.extname != ".js") {
                     return [2 /*return*/, file];
                 }

@@ -73,7 +73,7 @@ export class UglifyPlugin {
 
     async onFile(file) {
 
-        const filename = file.original_relative;
+        const filename = file.origin;
         if (file.extname != ".js") {
             return file;
         }
