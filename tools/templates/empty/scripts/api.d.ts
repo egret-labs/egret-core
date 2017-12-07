@@ -45,18 +45,58 @@ type UserConfig = {
     /**
      * 插件
      */
-    commands: (string | BuildPlugin)[]
+    commands: (string | plugins.Command)[]
 }
 
 
-interface BuildPlugin {
+declare namespace plugins {
 
-    onFile?(file: any): Promise<any>
+    interface Command {
 
-    onFinish?(): Promise<any>
+        onFile?(file: File): Promise<File | null>
 
-    [options: string]: any;
+        onFinish?(): Promise<any>
+
+        [options: string]: any;
+    }
+
+    interface File {
+
+        contents: Uint8Array | null;
+
+        cwd: string;
+
+
+        base: string;
+
+
+        path: string;
+
+
+        readonly history: ReadonlyArray<string>;
+
+        relative: string;
+
+        dirname: string;
+
+        basename: string;
+
+
+        extname: string;
+
+        origin: string;
+
+        [customProperty: string]: any;
+
+    }
+
 }
+
+
+
+
+
+
 
 
 
@@ -73,7 +113,7 @@ declare module 'built-in' {
     /**
      * 混淆插件
      */
-    export class UglifyPlugin implements BuildPlugin {
+    export class UglifyPlugin implements plugins.Command {
 
         constructor(mergeSelector: UglifyPluginParams);
 
@@ -82,7 +122,7 @@ declare module 'built-in' {
     /**
      * 编译命令
      */
-    export class CompilePlugin implements BuildPlugin {
+    export class CompilePlugin implements plugins.Command {
 
         constructor();
     }
@@ -90,7 +130,7 @@ declare module 'built-in' {
     /**
      * EXML 插件，用于发布 EXML 文件
      */
-    export class ExmlPlugin implements BuildPlugin {
+    export class ExmlPlugin implements plugins.Command {
 
         constructor(publishPolicy: EXML_Publish_Policy);
 
@@ -110,7 +150,7 @@ declare module 'built-in' {
     /**
      * 生成 manifest 文件，这个文件会被用于记录 JavaScript 文件的版本号
      */
-    export class ManifestPlugin implements BuildPlugin {
+    export class ManifestPlugin implements plugins.Command {
 
     }
 
@@ -118,7 +158,7 @@ declare module 'built-in' {
      * 增量编译
      * 这个功能将会在未来被 watch 模式代替掉
      */
-    export class IncrementCompilePlugin implements BuildPlugin {
+    export class IncrementCompilePlugin implements plugins.Command {
 
     }
 
@@ -126,7 +166,7 @@ declare module 'built-in' {
     /**
      * 自动纹理合并，beta
      */
-    export class SpriteSheetPlugin implements BuildPlugin {
+    export class SpriteSheetPlugin implements plugins.Command {
 
     }
 
