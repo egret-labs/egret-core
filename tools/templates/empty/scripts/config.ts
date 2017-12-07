@@ -1,9 +1,11 @@
-
 /// 阅读 api.d.ts 查看文档
 ///<reference path="api.d.ts"/>
 
 
 import { UglifyPlugin, IncrementCompilePlugin, CompilePlugin, ManifestPlugin, ExmlPlugin } from 'built-in';
+
+
+import { CustomPlugin } from './myplugin';
 
 const config: ResourceManagerConfig = {
 
@@ -24,7 +26,7 @@ const config: ResourceManagerConfig = {
                 outputDir,
                 commands: [
                     // new ExmlPlugin('debug'),
-                    new IncrementCompilePlugin(),
+                    new CustomPlugin(),
                 ]
             }
         }

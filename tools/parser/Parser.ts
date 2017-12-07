@@ -108,10 +108,6 @@ export var optionDeclarations: egret.CommandLineOption[] = [
         type: 'boolean',
         alias: "exp"
     }, {
-        name: 'egretVersion',
-        type: 'string',
-        alias: "ev"
-    }, {
         name: 'ide',
         type: 'string'
     }, {
