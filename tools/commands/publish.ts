@@ -19,7 +19,7 @@ class Publish implements egret.Command {
         utils.checkEgret();
 
         const options = egret.args;
-        const config = EgretProject.data;
+        const config = EgretProject.projectData;
 
         const target = egret.args.target;
         const version = getVersionInfo();

@@ -17,14 +17,14 @@ class Build implements egret.Command {
 
         const options = egret.args;
         let packageJsonContent
-        if (packageJsonContent = FileUtil.read(project.data.getFilePath("package.json"))) {
+        if (packageJsonContent = FileUtil.read(project.projectData.getFilePath("package.json"))) {
             let packageJson: project.Package_JSON = JSON.parse(packageJsonContent);
             if (packageJson.modules) {//通过有modules来识别是egret库项目
                 globals.log(1119);
                 globals.exit(1120);
                 return 0;
             }
-            if (FileUtil.exists(project.data.getFilePath("tsconfig.json"))) {
+            if (FileUtil.exists(project.projectData.getFilePath("tsconfig.json"))) {
                 this.buildLib2(packageJson);
                 return 0;
             }

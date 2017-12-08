@@ -3,7 +3,7 @@
 import * as file from '../lib/FileUtil';
 import * as EgretProject from '../project';
 
-const config = EgretProject.data;
+const config = EgretProject.projectData;
 class CopyFilesCommand implements egret.Command {
     outputPath: string;
     ignorePathList: any[]

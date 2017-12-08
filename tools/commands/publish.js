@@ -49,7 +49,7 @@ var Publish = (function () {
                     case 0:
                         utils.checkEgret();
                         options = egret.args;
-                        config = EgretProject.data;
+                        config = EgretProject.projectData;
                         target = egret.args.target;
                         version = getVersionInfo();
                         options.releaseDir = FileUtil.joinPath(config.getReleaseRoot(), target, version);

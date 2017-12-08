@@ -31,7 +31,7 @@ class Clean implements egret.Command {
         let manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
         let indexPath = FileUtil.joinPath(egret.args.projectDir, "index.html");
         EgretProject.manager.generateManifest(result.files, { debug: true, platform: 'web' }, manifestPath);
-        if (!EgretProject.data.useTemplate) {
+        if (!EgretProject.projectData.useTemplate) {
             EgretProject.manager.modifyIndex(manifestPath, indexPath);
         }
 
@@ -41,7 +41,7 @@ class Clean implements egret.Command {
             EgretProject.manager.modifyNativeRequire(manifestPath);
             copyNative.refreshNative(true);
         }
-        if (EgretProject.data.isWasmProject()) {
+        if (EgretProject.projectData.isWasmProject()) {
             let arr = [
                 "egret.asm.js",
                 "egret.asm.js.mem",
@@ -49,7 +49,7 @@ class Clean implements egret.Command {
                 "egret.webassembly.wasm"
             ];
             let moduleName = "egret";
-            if (EgretProject.data.hasModule("dragonBones")) {
+            if (EgretProject.projectData.hasModule("dragonBones")) {
                 moduleName = "egretWithDragonBones";
             }
             arr.forEach(function (item) {

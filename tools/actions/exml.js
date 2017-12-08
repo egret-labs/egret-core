@@ -19,7 +19,7 @@ function generateThemeData() {
 }
 function publishEXML(exmls, exmlPublishPolicy) {
     if (!exmlPublishPolicy || exmlPublishPolicy == "default") {
-        exmlPublishPolicy = EgretProject.data.getExmlPublishPolicy();
+        exmlPublishPolicy = EgretProject.projectData.getExmlPublishPolicy();
     }
     else if (exmlPublishPolicy == 'debug') {
         exmlPublishPolicy = 'path';
@@ -101,7 +101,7 @@ function publishEXML(exmls, exmlPublishPolicy) {
 }
 exports.publishEXML = publishEXML;
 function searchTheme() {
-    var result = EgretProject.data.getThemes();
+    var result = EgretProject.projectData.getThemes();
     if (result) {
         return result;
     }
@@ -109,7 +109,7 @@ function searchTheme() {
     files = files.map(function (it) { return file.getRelativePath(egret.args.projectDir, it); });
     return files;
 }
-var ignorePath = EgretProject.data.getIgnorePath();
+var ignorePath = EgretProject.projectData.getIgnorePath();
 function exmlFilter(f) {
     var isIgnore = false;
     ignorePath.forEach(function (path) {

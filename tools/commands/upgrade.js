@@ -57,7 +57,7 @@ var UpgradeCommand = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        version = Project.data.getVersion();
+                        version = Project.projectData.getVersion();
                         if (!version) {
                             version = "1.0.0";
                         }
@@ -79,7 +79,7 @@ var UpgradeCommand = (function () {
                         _a.sent();
                         modify.save(upgradeConfigArr.pop().v);
                         globals.log(1702);
-                        return [4 /*yield*/, service.client.closeServer(Project.data.getProjectRoot())];
+                        return [4 /*yield*/, service.client.closeServer(Project.projectData.getProjectRoot())];
                     case 3:
                         _a.sent();
                         globals.exit(0);
@@ -121,7 +121,7 @@ var series = function (cb, arr) {
         .then(function () { return results; });
 };
 function upgrade(info) {
-    var version = Project.data.getVersion();
+    var version = Project.projectData.getVersion();
     var v = info.v;
     var command;
     if (info.command) {
@@ -154,10 +154,10 @@ var Upgrade_4_0_1 = (function () {
         return __awaiter(this, void 0, void 0, function () {
             var tsconfigPath, source, target, tsconfigContent, tsconfig, needLibs;
             return __generator(this, function (_a) {
-                tsconfigPath = Project.data.getFilePath('tsconfig.json');
+                tsconfigPath = Project.projectData.getFilePath('tsconfig.json');
                 if (!file.exists(tsconfigPath)) {
                     source = file.joinPath(egret.root, "tools/templates/empty/tsconfig.json");
-                    target = Project.data.getFilePath("tsconfig.json");
+                    target = Project.projectData.getFilePath("tsconfig.json");
                     file.copy(source, target);
                 }
                 tsconfigContent = file.read(tsconfigPath);
@@ -175,7 +175,7 @@ var Upgrade_4_0_1 = (function () {
                 });
                 tsconfigContent = JSON.stringify(tsconfig, null, "\t");
                 file.save(tsconfigPath, tsconfigContent);
-                file.copy(path.join(egret.root, 'tools/templates/empty/promise'), Project.data.getFilePath('polyfill'));
+                file.copy(path.join(egret.root, 'tools/templates/empty/promise'), Project.projectData.getFilePath('polyfill'));
                 globals.log(1703, "https://github.com/egret-labs/egret-core/tree/master/docs/cn/release-note/4.0.1");
                 return [2 /*return*/, 0];
             });

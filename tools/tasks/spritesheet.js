@@ -35,7 +35,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var path = require("path");
-var utils_1 = require("../lib/utils");
+var os_1 = require("os");
+var FileUtil = require("../lib/FileUtil");
 var SpriteSheetPlugin = (function () {
     function SpriteSheetPlugin() {
         console.error("spritesheet plugin is not implemented now !");
@@ -47,33 +48,54 @@ var SpriteSheetPlugin = (function () {
             });
         });
     };
-    SpriteSheetPlugin.prototype.onFinish = function (param) {
-        generateSpriteSheet("assets/spritesheet.sheet", 'assets');
+    SpriteSheetPlugin.prototype.onFinish = function (pluginContext) {
+        return __awaiter(this, void 0, void 0, function () {
+            function generateSpriteSheet(spriteSheetFileName, dirname) {
+                return __awaiter(this, void 0, void 0, function () {
+                    var texture_merger_path, projectRoot, tempDir, jsonPath, pngPath, folder;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [4 /*yield*/, getTextureMergerPath()];
+                            case 1:
+                                texture_merger_path = _a.sent();
+                                projectRoot = egret.args.projectDir;
+                                tempDir = path.join(os_1.tmpdir(), Math.random().toString());
+                                FileUtil.createDirectory(tempDir);
+                                jsonPath = path.join(tempDir, "temp.json");
+                                pngPath = jsonPath.replace('.json', ".png");
+                                pluginContext.createFile("main2.js", new Buffer('111111'));
+                                folder = path.join(projectRoot, "resource", dirname);
+                                try {
+                                    pluginContext.createFile("main3.js", new Buffer('111111'));
+                                    // await shell(texture_merger_path, ["-p", folder, "-o", jsonPath]);
+                                    pluginContext.createFile("main4.js", new Buffer('111111'));
+                                    // const jsonBuffer = await FileUtil.readFileAsync(jsonPath, null) as any as NodeBuffer;
+                                    pluginContext.createFile("main5.js", new Buffer('111111'));
+                                    // const pngBuffer = await FileUtil.readFileAsync(pngPath, null) as any as NodeBuffer;
+                                    // console.log(jsonBuffer)
+                                    pluginContext.createFile("main6.js", new Buffer('111111'));
+                                    // pluginContext.createFile("main2.js", new Buffer('111111'));
+                                    // param.createFile('111.png', pngBuffer);
+                                }
+                                catch (e) {
+                                    console.log(e);
+                                }
+                                return [2 /*return*/];
+                        }
+                    });
+                });
+            }
+            return __generator(this, function (_a) {
+                // await engineData.getEgretToolsInstalledList()
+                generateSpriteSheet("C:\\Users\\18571\\Desktop\\111.json", 'assets');
+                return [2 /*return*/];
+            });
+        });
     };
     return SpriteSheetPlugin;
 }());
 exports.SpriteSheetPlugin = SpriteSheetPlugin;
-function generateSpriteSheet(spriteSheetFileName, dirname) {
-    return __awaiter(this, void 0, void 0, function () {
-        var texture_merger_path, cmd, projectRoot, folder, p, o;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, getTextureMergerPath()];
-                case 1:
-                    texture_merger_path = _a.sent();
-                    cmd = "\"" + texture_merger_path + "\"";
-                    projectRoot = egret.args.projectDir;
-                    folder = path.join(projectRoot, "resource", dirname);
-                    p = "\"" + folder + "\"";
-                    o = "\"" + spriteSheetFileName + "\"";
-                    return [4 /*yield*/, utils_1.shell(cmd, ["-p", p, "-o", o])];
-                case 2:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    });
-}
 function getTextureMergerPath() {
     return "C:\\Program Files\\Egret\\TextureMerger\\TextureMerger.exe";
+    // return `C:\\Program Files\\Egret\\TextureMerger\\TextureMerger.exe`
 }

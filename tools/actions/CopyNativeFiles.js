@@ -18,7 +18,7 @@ var CopyNativeFiles = (function () {
         }
         FileUtil.remove(url2);
         if (isDebug) {
-            var config = EgretProject.data;
+            var config = EgretProject.projectData;
             try {
                 cpFiles.outputPath = url2;
                 cpFiles.ignorePathList = config.getIgnorePath();
@@ -30,10 +30,10 @@ var CopyNativeFiles = (function () {
             var sourceRuntime = FileUtil.joinPath(options.templateDir, "runtime");
             var outputRuntime = FileUtil.joinPath(url2, "launcher");
             FileUtil.copy(sourceRuntime, outputRuntime);
-            if (EgretProject.data.useTemplate) {
+            if (EgretProject.projectData.useTemplate) {
                 EgretProject.manager.copyManifestForNative(FileUtil.joinPath(url2, "manifest.json"));
             }
-            EgretProject.data.getModulesConfig('native').forEach(function (m) {
+            EgretProject.projectData.getModulesConfig('native').forEach(function (m) {
                 FileUtil.copy(m.sourceDir, FileUtil.joinPath(url2, m.targetDir));
             });
         }
@@ -43,7 +43,7 @@ var CopyNativeFiles = (function () {
     };
     CopyNativeFiles.refreshNative = function (isDebug, versionFile) {
         if (versionFile === void 0) { versionFile = null; }
-        var config = EgretProject.data;
+        var config = EgretProject.projectData;
         var nativePath;
         if (nativePath = config.getNativePath("android_as")) {
             var url1 = FileUtil.joinPath(nativePath, "proj.android");

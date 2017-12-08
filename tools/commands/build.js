@@ -56,14 +56,14 @@ var Build = (function () {
                 switch (_a.label) {
                     case 0:
                         options = egret.args;
-                        if (packageJsonContent = FileUtil.read(project.data.getFilePath("package.json"))) {
+                        if (packageJsonContent = FileUtil.read(project.projectData.getFilePath("package.json"))) {
                             packageJson = JSON.parse(packageJsonContent);
                             if (packageJson.modules) {
                                 globals.log(1119);
                                 globals.exit(1120);
                                 return [2 /*return*/, 0];
                             }
-                            if (FileUtil.exists(project.data.getFilePath("tsconfig.json"))) {
+                            if (FileUtil.exists(project.projectData.getFilePath("tsconfig.json"))) {
                                 this.buildLib2(packageJson);
                                 return [2 /*return*/, 0];
                             }

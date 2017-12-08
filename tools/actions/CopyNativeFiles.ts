@@ -22,7 +22,7 @@ class CopyNativeFiles {
         FileUtil.remove(url2);
 
         if (isDebug) {
-            var config = EgretProject.data;
+            var config = EgretProject.projectData;
             try {
                 cpFiles.outputPath = url2;
                 cpFiles.ignorePathList = config.getIgnorePath();
@@ -35,11 +35,11 @@ class CopyNativeFiles {
             var sourceRuntime = FileUtil.joinPath(options.templateDir, "runtime");
             var outputRuntime = FileUtil.joinPath(url2, "launcher");
             FileUtil.copy(sourceRuntime, outputRuntime);
-            if (EgretProject.data.useTemplate) {
+            if (EgretProject.projectData.useTemplate) {
                 EgretProject.manager.copyManifestForNative(FileUtil.joinPath(url2, "manifest.json"));
             }
 
-            EgretProject.data.getModulesConfig('native').forEach(m => {
+            EgretProject.projectData.getModulesConfig('native').forEach(m => {
                 FileUtil.copy(m.sourceDir, FileUtil.joinPath(url2, m.targetDir));
             })
         }
@@ -49,7 +49,7 @@ class CopyNativeFiles {
     }
 
     static refreshNative(isDebug, versionFile = null) {
-        var config = EgretProject.data;
+        var config = EgretProject.projectData;
         var nativePath;
         if (nativePath = config.getNativePath("android_as")) {
             var url1 = FileUtil.joinPath(nativePath, "proj.android");

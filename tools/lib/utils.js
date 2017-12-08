@@ -396,6 +396,7 @@ exports.createMap = createMap;
 function shell(path, args, opt, verbase) {
     var stdout = "";
     var stderr = "";
+    path = "\"" + path + "\"";
     var cmd = path + " " + args.join(" ");
     if (verbase) {
         console.log(cmd);
@@ -415,15 +416,13 @@ function shell(path, args, opt, verbase) {
         }
     };
     var callback = function (reslove, reject) {
-        console.log(cmd);
-        var shell = cp.exec(cmd, opt);
+        var shell = cp.exec(path + " " + args.join(" "));
         shell.on("error", function (message) { console.log(message); });
         shell.stderr.on("data", printStderrBufferMessage);
         shell.stderr.on("error", printStderrBufferMessage);
         shell.stdout.on("data", printStdoutBufferMessage);
         shell.stdout.on("error", printStdoutBufferMessage);
         shell.on('exit', function (code) {
-            console.log(code);
             if (code != 0) {
                 if (verbase) {
                     console.log('Failed: ' + code);

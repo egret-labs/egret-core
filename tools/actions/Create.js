@@ -50,7 +50,7 @@ var Create = (function () {
             return __generator(this, function (_a) {
                 proj = this.project;
                 options = egret.args;
-                project = EgretProject.data;
+                project = EgretProject.projectData;
                 projectAction.normalize(proj);
                 emptyTemplate = FileUtil.joinPath(egret.root, TemplatesRoot + "empty");
                 template = FileUtil.joinPath(egret.root, TemplatesRoot + proj.type);

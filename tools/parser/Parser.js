@@ -207,7 +207,7 @@ function parseCommandLine(commandLine) {
                 }
             }
             options.projectDir = file.joinPath(options.projectDir, "/");
-            project.data.init(options.projectDir);
+            project.projectData.init(options.projectDir);
         }
         EngineData_1.data.init();
         var packagePath = file.joinPath(egret.root, "package.json");

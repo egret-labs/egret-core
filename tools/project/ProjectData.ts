@@ -4,7 +4,7 @@ import file = require('../lib/FileUtil');
 import _utils = require('../lib/utils');
 import _path = require("path");
 import cp = require('child_process');
-import { cache } from '../lib/utils';
+import { cache, shell } from '../lib/utils';
 import { version } from '../lib/doT';
 
 
@@ -37,7 +37,7 @@ type SourceCode = {
 }
 
 
-export class EgretProjectData {
+class EgretProjectData {
     private egretProperties: egret.EgretProperty = {
         modules: []
     };
@@ -313,7 +313,16 @@ export class EgretProjectData {
     }
 }
 
-export var data = new EgretProjectData();
+
+class EngineData {
+
+    async getEgretToolsInstalledList() {
+        const result = await shell('egret', ['versions']);
+        // await ()
+        console.log(result);
+    }
+}
+
 
 
 
@@ -338,3 +347,8 @@ function getAppDataEnginesRootPath(): string {
         return path;
     return null;
 }
+
+export var projectData = new EgretProjectData();
+
+export var engineData = new EngineData();
+

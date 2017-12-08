@@ -20,7 +20,7 @@ class AutoCompileCommand implements egret.Command {
 
     execute(): number {
 
-        if (EgretProject.data.invalid(true)) {
+        if (EgretProject.projectData.invalid(true)) {
             process.exit(0);
             return;
         }
@@ -93,7 +93,7 @@ class AutoCompileCommand implements egret.Command {
         let manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
         let indexPath = FileUtil.joinPath(egret.args.projectDir, "index.html");
         EgretProject.manager.generateManifest(_scripts, { debug: true, platform: 'web' }, manifestPath);
-        if (!EgretProject.data.useTemplate) {
+        if (!EgretProject.projectData.useTemplate) {
             EgretProject.manager.modifyIndex(manifestPath, indexPath);
         }
 
@@ -162,13 +162,13 @@ class AutoCompileCommand implements egret.Command {
                     this.messages[2] = egret.args.tsconfigError;
                 }
                 else if (fileName.indexOf("egretProperties.json") > -1) {
-                    EgretProject.data.reload();
+                    EgretProject.projectData.reload();
                     this.copyLibs();
                     //修改 html 中 modules 块
                     let manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
                     let indexPath = FileUtil.joinPath(egret.args.projectDir, "index.html");
                     EgretProject.manager.generateManifest(this._scripts, { debug: true, platform: 'web' }, manifestPath);
-                    if (!EgretProject.data.useTemplate) {
+                    if (!EgretProject.projectData.useTemplate) {
                         EgretProject.manager.modifyIndex(manifestPath, indexPath);
                     }
                     this.compileProject.compileProject(egret.args);
@@ -288,7 +288,7 @@ class AutoCompileCommand implements egret.Command {
         let manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
         let indexPath = FileUtil.joinPath(egret.args.projectDir, "index.html");
         EgretProject.manager.generateManifest(this._scripts, { debug: true, platform: 'web' }, manifestPath);
-        if (!EgretProject.data.useTemplate) {
+        if (!EgretProject.projectData.useTemplate) {
             EgretProject.manager.modifyIndex(manifestPath, indexPath);
         }
 

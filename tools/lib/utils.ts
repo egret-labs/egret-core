@@ -364,6 +364,7 @@ export function createMap<T>(template?: MapLike<T>): Map<T> {
 export function shell(path: string, args: string[], opt?: cp.ExecOptions, verbase?: boolean): Promise<number> {
     let stdout = "";
     let stderr = "";
+    path = "\"" + path + "\"";
     var cmd = `${path} ${args.join(" ")}`;
     if (verbase) {
         console.log(cmd);
@@ -383,15 +384,13 @@ export function shell(path: string, args: string[], opt?: cp.ExecOptions, verbas
         }
     };
     let callback = (reslove, reject) => {
-        console.log(cmd)
-        var shell = cp.exec(cmd, opt);
+        var shell = cp.exec(path + " " + args.join(" "));
         shell.on("error", (message) => { console.log(message); });
         shell.stderr.on("data", printStderrBufferMessage);
         shell.stderr.on("error", printStderrBufferMessage);
         shell.stdout.on("data", printStdoutBufferMessage);
         shell.stdout.on("error", printStdoutBufferMessage);
         shell.on('exit', function (code) {
-            console.log(code)
             if (code != 0) {
                 if (verbase) {
                     console.log('Failed: ' + code);

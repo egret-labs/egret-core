@@ -26,7 +26,7 @@ function generateThemeData() {
 export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
 
     if (!exmlPublishPolicy || exmlPublishPolicy == "default") {
-        exmlPublishPolicy = EgretProject.data.getExmlPublishPolicy();
+        exmlPublishPolicy = EgretProject.projectData.getExmlPublishPolicy();
     }
     else if (exmlPublishPolicy == 'debug') {
         exmlPublishPolicy = 'path';
@@ -118,7 +118,7 @@ exports.skins = ${JSON.stringify(thmData.skins)}
 }
 
 function searchTheme() {
-    let result = EgretProject.data.getThemes();
+    let result = EgretProject.projectData.getThemes();
     if (result) {
         return result;
     }
@@ -127,7 +127,7 @@ function searchTheme() {
     return files;
 }
 
-const ignorePath = EgretProject.data.getIgnorePath();
+const ignorePath = EgretProject.projectData.getIgnorePath();
 function exmlFilter(f: string) {
     var isIgnore = false;
     ignorePath.forEach(path => {

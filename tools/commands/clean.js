@@ -68,7 +68,7 @@ var Clean = (function () {
                 manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
                 indexPath = FileUtil.joinPath(egret.args.projectDir, "index.html");
                 EgretProject.manager.generateManifest(result.files, { debug: true, platform: 'web' }, manifestPath);
-                if (!EgretProject.data.useTemplate) {
+                if (!EgretProject.projectData.useTemplate) {
                     EgretProject.manager.modifyIndex(manifestPath, indexPath);
                 }
                 //拷贝项目到native工程中
@@ -77,7 +77,7 @@ var Clean = (function () {
                     EgretProject.manager.modifyNativeRequire(manifestPath);
                     copyNative.refreshNative(true);
                 }
-                if (EgretProject.data.isWasmProject()) {
+                if (EgretProject.projectData.isWasmProject()) {
                     arr = [
                         "egret.asm.js",
                         "egret.asm.js.mem",
@@ -85,7 +85,7 @@ var Clean = (function () {
                         "egret.webassembly.wasm"
                     ];
                     moduleName_1 = "egret";
-                    if (EgretProject.data.hasModule("dragonBones")) {
+                    if (EgretProject.projectData.hasModule("dragonBones")) {
                         moduleName_1 = "egretWithDragonBones";
                     }
                     arr.forEach(function (item) {

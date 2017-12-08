@@ -88,7 +88,7 @@ function legacyPublishHTML5() {
     var manifestPath = FileUtil.joinPath(egret.args.releaseDir, "manifest.json");
     var indexPath = FileUtil.joinPath(egret.args.releaseDir, "index.html");
     EgretProject.manager.generateManifest(null, { debug: false, platform: "web" }, manifestPath);
-    if (!EgretProject.data.useTemplate) {
+    if (!EgretProject.projectData.useTemplate) {
         FileUtil.copy(FileUtil.joinPath(options.projectDir, "index.html"), indexPath);
         EgretProject.manager.modifyIndex(manifestPath, indexPath);
     }

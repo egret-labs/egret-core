@@ -5,17 +5,17 @@ var project = require("../actions/Project");
 var manager;
 (function (manager) {
     function copyToLibs() {
-        var moduleDir = ProjectData_1.data.getLibraryFolder();
+        var moduleDir = ProjectData_1.projectData.getLibraryFolder();
         FileUtil.remove(moduleDir);
-        ProjectData_1.data.getModulesConfig("web").forEach(function (m) {
-            FileUtil.copy(m.sourceDir, ProjectData_1.data.getFilePath(m.targetDir));
+        ProjectData_1.projectData.getModulesConfig("web").forEach(function (m) {
+            FileUtil.copy(m.sourceDir, ProjectData_1.projectData.getFilePath(m.targetDir));
         });
     }
     manager.copyToLibs = copyToLibs;
     function generateManifest(gameFileList, options, manifestPath) {
         var initial = [];
         var game = [];
-        ProjectData_1.data.getModulesConfig(options.platform).forEach(function (m) {
+        ProjectData_1.projectData.getModulesConfig(options.platform).forEach(function (m) {
             m.target.forEach(function (m) {
                 initial.push(options.debug ? m.debug : m.release);
             });
@@ -39,13 +39,13 @@ var manager;
     manager.generateManifest = generateManifest;
     function modifyNativeRequire(manifestPath) {
         var options = egret.args;
-        var indexPath = ProjectData_1.data.getFilePath('index.html');
+        var indexPath = ProjectData_1.projectData.getFilePath('index.html');
         var requirePath = FileUtil.joinPath(options.templateDir, "runtime", "native_require.js");
         var requireContent = FileUtil.read(requirePath);
         if (requireContent == "") {
             globals.exit(10021);
         }
-        if (!ProjectData_1.data.useTemplate) {
+        if (!ProjectData_1.projectData.useTemplate) {
             var manifest = JSON.parse(FileUtil.read(manifestPath));
             var fileList = manifest.initial.concat(manifest.game);
             var listStr_1 = "\n";
@@ -68,13 +68,13 @@ var manager;
         if (mode === void 0) { mode = 'debug'; }
         var result = [];
         var options = egret.args;
-        ProjectData_1.data.getModulesConfig(target).forEach(function (m) {
+        ProjectData_1.projectData.getModulesConfig(target).forEach(function (m) {
             m.target.forEach(function (m) {
                 var filename = mode == 'debug' ? m.debug : m.release;
                 result.push(filename);
             });
         });
-        if (ProjectData_1.data.isWasmProject()) {
+        if (ProjectData_1.projectData.isWasmProject()) {
             var arr = [
                 "egret.asm.js",
                 "egret.asm.js.mem",
@@ -101,7 +101,7 @@ var manager;
     }
     manager.copyManifestForNative = copyManifestForNative;
     function modifyIndex(manifestPath, indexPath) {
-        if (!ProjectData_1.data.useTemplate) {
+        if (!ProjectData_1.projectData.useTemplate) {
             var manifest = JSON.parse(FileUtil.read(manifestPath, true));
             var libs = manifest.initial;
             var libsScriptsStr = "";

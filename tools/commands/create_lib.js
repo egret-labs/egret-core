@@ -51,7 +51,7 @@ var CreateLib = (function () {
                             return [2 /*return*/, 0];
                         }
                         moduleName = FileUtil.basename(option.projectDir);
-                        project = EgretProject.data;
+                        project = EgretProject.projectData;
                         libraryTemplate = FileUtil.joinPath(egret.root, "tools/templates/library");
                         FileUtil.copy(libraryTemplate, project.getProjectRoot());
                         return [4 /*yield*/, convert(project.getFilePath("package.json"), function (data) {
