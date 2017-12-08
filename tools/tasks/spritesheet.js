@@ -51,11 +51,6 @@ var SpriteSheetPlugin = (function () {
     };
     SpriteSheetPlugin.prototype.onFinish = function (pluginContext) {
         return __awaiter(this, void 0, void 0, function () {
-            function sleep() {
-                return new Promise(function (reslove, reject) {
-                    setTimeout(function () { reslove(); }, 1000);
-                });
-            }
             function generateSpriteSheet(spriteSheetFileName, dirname) {
                 return __awaiter(this, void 0, void 0, function () {
                     var texture_merger_path, projectRoot, tempDir, jsonPath, pngPath, folder, jsonBuffer, pngBuffer, e_1;

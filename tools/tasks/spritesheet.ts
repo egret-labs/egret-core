@@ -5,6 +5,13 @@ import { engineData } from "../project/index";
 import { tmpdir } from "os";
 import * as FileUtil from '../lib/FileUtil';
 
+
+type SpriteSheetConfig = {
+
+    files?: string[]
+
+}
+
 export class SpriteSheetPlugin implements Plugin {
 
     constructor() {
@@ -16,13 +23,6 @@ export class SpriteSheetPlugin implements Plugin {
 
     }
     async onFinish(pluginContext: PluginContext): Promise<void> {
-
-        function sleep() {
-            return new Promise((reslove, reject) => {
-                setTimeout(() => { reslove() }, 1000)
-            })
-        }
-
 
         async function generateSpriteSheet(spriteSheetFileName: string, dirname: string) {
             let texture_merger_path = await getTextureMergerPath()
