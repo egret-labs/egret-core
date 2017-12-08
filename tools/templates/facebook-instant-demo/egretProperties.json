@@ -7,7 +7,6 @@
     "native": 1,
     "path": "bin-release"
   },
-  "egret_version": "3.2.6",
   "modules": [
     {
       "name": "egret"
@@ -25,8 +24,8 @@
       "name": "tween"
     },
     {
-      "name":"fbinstant",
-      "path":"./fbinstant"
+      "name": "fbinstant",
+      "path": "./fbinstant"
     }
   ]
 }
