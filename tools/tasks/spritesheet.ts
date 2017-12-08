@@ -17,6 +17,12 @@ export class SpriteSheetPlugin implements Plugin {
     }
     async onFinish(pluginContext: PluginContext): Promise<void> {
 
+        function sleep() {
+            return new Promise((reslove, reject) => {
+                setTimeout(() => { reslove() }, 1000)
+            })
+        }
+
 
         async function generateSpriteSheet(spriteSheetFileName: string, dirname: string) {
             let texture_merger_path = await getTextureMergerPath()
@@ -26,22 +32,13 @@ export class SpriteSheetPlugin implements Plugin {
             FileUtil.createDirectory(tempDir);
             const jsonPath = path.join(tempDir, "temp.json");
             const pngPath = jsonPath.replace('.json', ".png");
-            pluginContext.createFile("main2.js", new Buffer('111111'));
-            // const 
-            // console.log(jsonPath)
-
             let folder = path.join(projectRoot, "resource", dirname);
             try {
-                pluginContext.createFile("main3.js", new Buffer('111111'));
-                // await shell(texture_merger_path, ["-p", folder, "-o", jsonPath]);
-                pluginContext.createFile("main4.js", new Buffer('111111'));
-                // const jsonBuffer = await FileUtil.readFileAsync(jsonPath, null) as any as NodeBuffer;
-                pluginContext.createFile("main5.js", new Buffer('111111'));
-                // const pngBuffer = await FileUtil.readFileAsync(pngPath, null) as any as NodeBuffer;
-                // console.log(jsonBuffer)
-                pluginContext.createFile("main6.js", new Buffer('111111'));
-                // pluginContext.createFile("main2.js", new Buffer('111111'));
-                // param.createFile('111.png', pngBuffer);
+                await shell(texture_merger_path, ["-p", folder, "-o", jsonPath]);
+                const jsonBuffer = await FileUtil.readFileAsync(jsonPath, null) as any as NodeBuffer;
+                const pngBuffer = await FileUtil.readFileAsync(pngPath, null) as any as NodeBuffer;
+                pluginContext.createFile("111.json", jsonBuffer);
+                pluginContext.createFile('111.png', pngBuffer);
             }
             catch (e) {
                 console.log(e)
@@ -56,7 +53,7 @@ export class SpriteSheetPlugin implements Plugin {
 
 
 
-        generateSpriteSheet("C:\\Users\\18571\\Desktop\\111.json", 'assets')
+        await generateSpriteSheet("C:\\Users\\18571\\Desktop\\111.json", 'assets')
     }
 
 

@@ -32,6 +32,7 @@ import path = require('path');
 import file = require('./FileUtil');
 import UglifyJS = require("./uglify-js/uglifyjs");
 import net = require('net');
+import { setTimeout } from 'timers';
 
 
 
@@ -364,7 +365,7 @@ export function createMap<T>(template?: MapLike<T>): Map<T> {
 export function shell(path: string, args: string[], opt?: cp.ExecOptions, verbase?: boolean): Promise<number> {
     let stdout = "";
     let stderr = "";
-    path = "\"" + path + "\"";
+
     var cmd = `${path} ${args.join(" ")}`;
     if (verbase) {
         console.log(cmd);
@@ -384,13 +385,16 @@ export function shell(path: string, args: string[], opt?: cp.ExecOptions, verbas
         }
     };
     let callback = (reslove, reject) => {
-        var shell = cp.exec(path + " " + args.join(" "));
+        // path = "\"" + path + "\"";
+        // var shell = cp.spawn(path + " " + args.join(" "));
+        var shell = cp.spawn(path, args);
         shell.on("error", (message) => { console.log(message); });
         shell.stderr.on("data", printStderrBufferMessage);
         shell.stderr.on("error", printStderrBufferMessage);
         shell.stdout.on("data", printStdoutBufferMessage);
         shell.stdout.on("error", printStdoutBufferMessage);
         shell.on('exit', function (code) {
+            console.log(code)
             if (code != 0) {
                 if (verbase) {
                     console.log('Failed: ' + code);
@@ -404,6 +408,8 @@ export function shell(path: string, args: string[], opt?: cp.ExecOptions, verbas
     };
     return new Promise(callback);
 };
+
+
 
 let error_code_filename = path.join(__dirname, "../error_code.json");
 let errorcode = file.readJSONSync(error_code_filename, { "encoding": "utf-8" });

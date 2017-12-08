@@ -35,6 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var path = require("path");
+var utils_1 = require("../lib/utils");
 var os_1 = require("os");
 var FileUtil = require("../lib/FileUtil");
 var SpriteSheetPlugin = (function () {
@@ -50,9 +51,14 @@ var SpriteSheetPlugin = (function () {
     };
     SpriteSheetPlugin.prototype.onFinish = function (pluginContext) {
         return __awaiter(this, void 0, void 0, function () {
+            function sleep() {
+                return new Promise(function (reslove, reject) {
+                    setTimeout(function () { reslove(); }, 1000);
+                });
+            }
             function generateSpriteSheet(spriteSheetFileName, dirname) {
                 return __awaiter(this, void 0, void 0, function () {
-                    var texture_merger_path, projectRoot, tempDir, jsonPath, pngPath, folder;
+                    var texture_merger_path, projectRoot, tempDir, jsonPath, pngPath, folder, jsonBuffer, pngBuffer, e_1;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0: return [4 /*yield*/, getTextureMergerPath()];
@@ -63,32 +69,41 @@ var SpriteSheetPlugin = (function () {
                                 FileUtil.createDirectory(tempDir);
                                 jsonPath = path.join(tempDir, "temp.json");
                                 pngPath = jsonPath.replace('.json', ".png");
-                                pluginContext.createFile("main2.js", new Buffer('111111'));
                                 folder = path.join(projectRoot, "resource", dirname);
-                                try {
-                                    pluginContext.createFile("main3.js", new Buffer('111111'));
-                                    // await shell(texture_merger_path, ["-p", folder, "-o", jsonPath]);
-                                    pluginContext.createFile("main4.js", new Buffer('111111'));
-                                    // const jsonBuffer = await FileUtil.readFileAsync(jsonPath, null) as any as NodeBuffer;
-                                    pluginContext.createFile("main5.js", new Buffer('111111'));
-                                    // const pngBuffer = await FileUtil.readFileAsync(pngPath, null) as any as NodeBuffer;
-                                    // console.log(jsonBuffer)
-                                    pluginContext.createFile("main6.js", new Buffer('111111'));
-                                    // pluginContext.createFile("main2.js", new Buffer('111111'));
-                                    // param.createFile('111.png', pngBuffer);
-                                }
-                                catch (e) {
-                                    console.log(e);
-                                }
-                                return [2 /*return*/];
+                                _a.label = 2;
+                            case 2:
+                                _a.trys.push([2, 6, , 7]);
+                                return [4 /*yield*/, utils_1.shell(texture_merger_path, ["-p", folder, "-o", jsonPath])];
+                            case 3:
+                                _a.sent();
+                                return [4 /*yield*/, FileUtil.readFileAsync(jsonPath, null)];
+                            case 4:
+                                jsonBuffer = _a.sent();
+                                return [4 /*yield*/, FileUtil.readFileAsync(pngPath, null)];
+                            case 5:
+                                pngBuffer = _a.sent();
+                                pluginContext.createFile("111.json", jsonBuffer);
+                                pluginContext.createFile('111.png', pngBuffer);
+                                return [3 /*break*/, 7];
+                            case 6:
+                                e_1 = _a.sent();
+                                console.log(e_1);
+                                return [3 /*break*/, 7];
+                            case 7: return [2 /*return*/];
                         }
                     });
                 });
             }
             return __generator(this, function (_a) {
-                // await engineData.getEgretToolsInstalledList()
-                generateSpriteSheet("C:\\Users\\18571\\Desktop\\111.json", 'assets');
-                return [2 /*return*/];
+                switch (_a.label) {
+                    case 0: 
+                    // await engineData.getEgretToolsInstalledList()
+                    return [4 /*yield*/, generateSpriteSheet("C:\\Users\\18571\\Desktop\\111.json", 'assets')];
+                    case 1:
+                        // await engineData.getEgretToolsInstalledList()
+                        _a.sent();
+                        return [2 /*return*/];
+                }
             });
         });
     };
