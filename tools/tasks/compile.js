@@ -43,11 +43,11 @@ var compiler = new Compiler.Compiler();
 var CompilePlugin = (function () {
     function CompilePlugin(options) {
         this.options = options;
-        if (!options) {
-            options = { libraryType: "release" };
+        if (!this.options) {
+            this.options = { libraryType: "release" };
         }
-        if (!options.libraryType) {
-            options.libraryType = "release";
+        if (!this.options.libraryType) {
+            this.options.libraryType = "release";
         }
     }
     CompilePlugin.prototype.onFile = function (file) {

@@ -40,7 +40,11 @@ var manifest = {
     game: [],
 };
 var ManifestPlugin = (function () {
-    function ManifestPlugin() {
+    function ManifestPlugin(options) {
+        this.options = options;
+        if (!this.options) {
+            this.options = { output: "manifest.json" };
+        }
     }
     ManifestPlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
@@ -70,10 +74,20 @@ var ManifestPlugin = (function () {
     };
     ManifestPlugin.prototype.onFinish = function (pluginContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var content;
+            var output, extname, contents;
             return __generator(this, function (_a) {
-                content = JSON.stringify(manifest, null, '\t');
-                pluginContext.createFile("manifest.json", new Buffer(content));
+                output = this.options.output;
+                extname = path.extname(output);
+                contents = '';
+                switch (extname) {
+                    case ".json":
+                        contents = JSON.stringify(manifest, null, '\t');
+                        break;
+                    case ".js":
+                        contents = manifest.initial.concat(manifest.game).map(function (fileName) { return "require(\"" + fileName + "\")"; }).join("\n");
+                        break;
+                }
+                pluginContext.createFile(this.options.output, new Buffer(contents));
                 return [2 /*return*/];
             });
         });

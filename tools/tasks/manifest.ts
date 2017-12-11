@@ -8,9 +8,23 @@ const manifest = {
 }
 
 
+
+type ManifestPluginOptions = {
+
+    output: string
+}
+
 export class ManifestPlugin {
 
+    constructor(private options: ManifestPluginOptions) {
+        if (!this.options) {
+            this.options = { output: "manifest.json" }
+        }
+    }
+
     async onFile(file) {
+
+
 
         const filename = file.origin;
         const extname = path.extname(filename);
@@ -33,9 +47,20 @@ export class ManifestPlugin {
         return file;
     }
     async onFinish(pluginContext) {
+        const output = this.options.output;
+        const extname = path.extname(output);
+        let contents = '';
+        switch (extname) {
+            case ".json":
+                contents = JSON.stringify(manifest, null, '\t');
+                break;
+            case ".js":
+                contents = manifest.initial.concat(manifest.game).map((fileName) => `require("${fileName}")`).join("\n")
+                break;
+        }
+        pluginContext.createFile(this.options.output, new Buffer(contents));
 
-        const content = JSON.stringify(manifest, null, '\t');
-        pluginContext.createFile("manifest.json", new Buffer(content));
+
     }
 
 

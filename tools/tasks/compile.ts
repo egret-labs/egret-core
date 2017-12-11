@@ -14,11 +14,11 @@ type LibraryType = "debug" | "release";
 export class CompilePlugin {
 
     constructor(private options: { libraryType: LibraryType }) {
-        if (!options) {
-            options = { libraryType: "release" };
+        if (!this.options) {
+            this.options = { libraryType: "release" };
         }
-        if (!options.libraryType) {
-            options.libraryType = "release";
+        if (!this.options.libraryType) {
+            this.options.libraryType = "release";
         }
 
     }

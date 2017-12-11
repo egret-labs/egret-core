@@ -151,12 +151,24 @@ declare module 'built-in' {
     type EXML_Publish_Policy = "default" | "debug" | "contents" | "gjs" | "commonjs"
 
 
+
+
     /**
      * 生成 manifest 文件，这个文件会被用于记录 JavaScript 文件的版本号
      */
     export class ManifestPlugin implements plugins.Command {
-
+        constructor(options?: ManifestPluginOptions)
     }
+
+    /**
+     * 生成文件的文件名
+     * 支持 json 与 js 两种格式
+     */
+    type ManifestPluginOptions = {
+
+        output: string
+    }
+
 
     /**
      * 增量编译
