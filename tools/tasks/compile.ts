@@ -8,7 +8,20 @@ import { FileChanges } from '../lib/DirectoryState';
 
 const compiler = new Compiler.Compiler();
 
+
+type LibraryType = "debug" | "release";
+
 export class CompilePlugin {
+
+    constructor(private options: { libraryType: LibraryType }) {
+        if (!options) {
+            options = { libraryType: "release" };
+        }
+        if (!options.libraryType) {
+            options.libraryType = "release";
+        }
+
+    }
 
     async onFile(file) {
         return file;
@@ -16,7 +29,7 @@ export class CompilePlugin {
     async onFinish(pluginContext) {
         const target = egret.args.target;
         const projectRoot = pluginContext.projectRoot;
-        const scripts = EgretProject.manager.copyLibsForPublish(target, 'release');
+        const scripts = EgretProject.manager.copyLibsForPublish(target, this.options.libraryType);
 
         scripts.forEach((script) => {
             pluginContext.createFile(script, fs.readFileSync(FileUtil.joinPath(pluginContext.projectRoot, script)));

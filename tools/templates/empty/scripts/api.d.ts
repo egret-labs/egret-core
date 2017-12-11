@@ -55,14 +55,14 @@ declare namespace plugins {
 
         onFile?(file: File): Promise<File | null>
 
-        onFinish?(): Promise<any>
+        onFinish?(pluginContext: any): Promise<any>
 
         [options: string]: any;
     }
 
     interface File {
 
-        contents: Uint8Array | null;
+        contents: Uint8Array;
 
         cwd: string;
 
@@ -106,25 +106,29 @@ declare module 'built-in' {
     /**
      * 混淆插件参数，设置源代码和目标代码
      */
-    type UglifyPluginParam = { sources: string[], target: string };
+    type UglifyPluginOption = { sources: string[], target: string };
 
-    type UglifyPluginParams = UglifyPluginParam[];
+    type UglifyPluginOptions = UglifyPluginOption[];
 
     /**
      * 混淆插件
      */
     export class UglifyPlugin implements plugins.Command {
 
-        constructor(mergeSelector: UglifyPluginParams);
+        constructor(mergeSelector: UglifyPluginOptions);
 
     }
 
+
+    type LibraryType = "debug" | "release";
+
+    type CompilePluginOptions = { libraryType: LibraryType };
     /**
      * 编译命令
      */
     export class CompilePlugin implements plugins.Command {
 
-        constructor();
+        constructor(options: CompilePluginOptions);
     }
 
     /**

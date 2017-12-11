@@ -41,7 +41,14 @@ var Compiler = require("../actions/Compiler");
 var utils = require("../lib/utils");
 var compiler = new Compiler.Compiler();
 var CompilePlugin = (function () {
-    function CompilePlugin() {
+    function CompilePlugin(options) {
+        this.options = options;
+        if (!options) {
+            options = { libraryType: "release" };
+        }
+        if (!options.libraryType) {
+            options.libraryType = "release";
+        }
     }
     CompilePlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
@@ -56,7 +63,7 @@ var CompilePlugin = (function () {
             return __generator(this, function (_a) {
                 target = egret.args.target;
                 projectRoot = pluginContext.projectRoot;
-                scripts = EgretProject.manager.copyLibsForPublish(target, 'release');
+                scripts = EgretProject.manager.copyLibsForPublish(target, this.options.libraryType);
                 scripts.forEach(function (script) {
                     pluginContext.createFile(script, fs.readFileSync(FileUtil.joinPath(pluginContext.projectRoot, script)));
                 });
