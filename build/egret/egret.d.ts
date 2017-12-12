@@ -1,6 +1,5 @@
 declare var global: any;
 declare var __global: any;
-declare function __extends(d: any, b: any): void;
 declare let __define: any;
 declare namespace egret {
     /**

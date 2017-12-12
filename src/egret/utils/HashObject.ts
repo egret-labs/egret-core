@@ -40,15 +40,6 @@ if (typeof __global == 'undefined') {
     var __global = global;
 }
 
-function __extends(d, b) {
-    for (let p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() {
-        this.constructor = d;
-    }
-
-    __.prototype = b.prototype;
-    d.prototype = new __();
-}
 let __define = this && this.__define || function (o, p, g, s) { Object.defineProperty(o, p, { configurable: true, enumerable: true, get: g, set: s }) };
 
 namespace egret {

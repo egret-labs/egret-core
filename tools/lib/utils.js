@@ -256,7 +256,7 @@ function uglify(sourceFile) {
         DEBUG: false,
         RELEASE: true
     };
-    var result = UglifyJS.minify(sourceFile, { compress: { global_defs: defines }, fromString: true, output: { beautify: true } });
+    var result = UglifyJS.minify(sourceFile, { compress: { global_defs: defines }, fromString: true, output: { beautify: false } });
     var code = result.code;
     return code;
 }
