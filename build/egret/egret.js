@@ -40,6 +40,12 @@ var __extends = (this && this.__extends) || (function () {
 //
 //////////////////////////////////////////////////////////////////////////////////////
 /// <reference path="registerClass.ts" />
+if (typeof global == 'undefined') {
+    var global = window;
+}
+if (typeof __global == 'undefined') {
+    var __global = global;
+}
 function __extends(d, b) {
     for (var p in b)
         if (b.hasOwnProperty(p))
@@ -13179,30 +13185,38 @@ var egret;
                 infoLines = null;
             }
         }
-        /**
-         * FPS显示对象
-         */
-        FPS = (function (_super) {
+        var FPSImpl = (function (_super) {
             __extends(FPSImpl, _super);
             function FPSImpl(stage, showFPS, showLog, logFilter, styles) {
-                _super.call(this);
-                this["isFPS"] = true;
-                this.infoLines = [];
-                this.totalTime = 0;
-                this.totalTick = 0;
-                this.lastTime = 0;
-                this.drawCalls = 0;
-                this.costRender = 0;
-                this.costTicker = 0;
-                this._stage = stage;
-                this.showFPS = showFPS;
-                this.showLog = showLog;
-                this.logFilter = logFilter;
-                this.touchChildren = false;
-                this.touchEnabled = false;
-                this.styles = styles;
-                this.fpsDisplay = new egret.FPSDisplay(stage, showFPS, showLog, logFilter, styles);
-                this.addChild(this.fpsDisplay);
+                var _this = _super.call(this) || this;
+                _this.showFPS = showFPS;
+                _this.showLog = showLog;
+                _this.logFilter = logFilter;
+                _this.styles = styles;
+                _this.infoLines = [];
+                _this.totalTime = 0;
+                _this.totalTick = 0;
+                _this.lastTime = 0;
+                _this.drawCalls = 0;
+                _this.costRender = 0;
+                _this.costTicker = 0;
+                _this["isFPS"] = true;
+                _this.infoLines = [];
+                _this.totalTime = 0;
+                _this.totalTick = 0;
+                _this.lastTime = 0;
+                _this.drawCalls = 0;
+                _this.costRender = 0;
+                _this.costTicker = 0;
+                _this._stage = stage;
+                _this.showFPS = showFPS;
+                _this.showLog = showLog;
+                _this.logFilter = logFilter;
+                _this.touchChildren = false;
+                _this.touchEnabled = false;
+                _this.styles = styles;
+                _this.fpsDisplay = new egret.FPSDisplay(stage, showFPS, showLog, logFilter, styles);
+                _this.addChild(_this.fpsDisplay);
                 var logFilterRegExp;
                 try {
                     logFilterRegExp = logFilter ? new RegExp(logFilter) : null;
@@ -13210,11 +13224,12 @@ var egret;
                 catch (e) {
                     egret.log(e);
                 }
-                this.filter = function (message) {
+                _this.filter = function (message) {
                     if (logFilterRegExp)
                         return logFilterRegExp.test(message);
                     return !logFilter || message.indexOf(logFilter) == 0;
                 };
+                return _this;
             }
             FPSImpl.prototype.update = function (drawCalls, costRender, costTicker) {
                 var current = egret.getTimer();
@@ -13255,7 +13270,9 @@ var egret;
                 this.fpsDisplay.updateInfo(info);
             };
             return FPSImpl;
-        })(egret.Sprite);
+        }(egret.Sprite));
+        __reflect(FPSImpl.prototype, "FPSImpl");
+        __global.FPS = FPSImpl;
         function toArray(argument) {
             var args = [];
             for (var i = 0; i < argument.length; i++) {
@@ -24096,7 +24113,7 @@ var egret;
         }
         var paths = name.split(".");
         var length = paths.length;
-        definition = __global;
+        definition = global;
         for (var i = 0; i < length; i++) {
             var path = paths[i];
             definition = definition[path];
@@ -24114,7 +24131,6 @@ var egret;
         };
     }
 })(egret || (egret = {}));
-var __global = this.__global || this;
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.

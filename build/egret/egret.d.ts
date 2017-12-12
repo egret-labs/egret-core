@@ -1,3 +1,5 @@
+declare var global: any;
+declare var __global: any;
 declare function __extends(d: any, b: any): void;
 declare let __define: any;
 declare namespace egret {
@@ -14790,7 +14792,6 @@ declare namespace egret {
      */
     function getDefinitionByName(name: string): any;
 }
-declare let __global: any;
 declare namespace egret {
     /**
      * Get browser or Runtime parameters, returns an empty string if not set

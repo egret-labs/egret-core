@@ -224,7 +224,7 @@ namespace egret.sys {
      * FPS显示对象
      */
     interface FPS extends Sprite {
-        new (stage: Stage, showFPS: boolean, showLog: boolean, logFilter: string): FPS
+
         /**
          * 更新FPS信息
          */
@@ -236,7 +236,7 @@ namespace egret.sys {
         updateInfo(info: string): void;
     }
 
-    declare let FPS: { new (stage: Stage, showFPS: boolean, showLog: boolean, logFilter: string, styles: Object): FPS };
+    declare let FPS: { new(stage: Stage, showFPS: boolean, showLog: boolean, logFilter: string, styles: Object): FPS };
 
     /**
      * @private
@@ -287,13 +287,22 @@ namespace egret.sys {
         }
     }
 
-    /**
-     * FPS显示对象
-     */
-    FPS = (function (_super): FPS {
-        __extends(FPSImpl, _super);
-        function FPSImpl(stage, showFPS, showLog, logFilter, styles: Object) {
-            _super.call(this);
+
+    class FPSImpl extends egret.Sprite {
+
+        private infoLines = [];
+        private totalTime = 0;
+        private totalTick = 0;
+        private lastTime = 0;
+        private drawCalls = 0;
+        private costRender = 0;
+        private costTicker = 0;
+        private _stage: egret.Stage;
+        private fpsDisplay: FPSDisplay;
+        private filter: any;
+
+        constructor(stage: egret.Stage, private showFPS: boolean, private showLog: boolean, private logFilter: string, private styles?: Object) {
+            super();
             this["isFPS"] = true;
             this.infoLines = [];
             this.totalTime = 0;
@@ -319,14 +328,14 @@ namespace egret.sys {
             catch (e) {
                 log(e);
             }
-
             this.filter = function (message: string): boolean {
                 if (logFilterRegExp)
                     return logFilterRegExp.test(message);
                 return !logFilter || message.indexOf(logFilter) == 0;
             }
         }
-        FPSImpl.prototype.update = function (drawCalls, costRender, costTicker) {
+
+        update(drawCalls: number, costRender, costTicker) {
             let current = egret.getTimer();
             this.totalTime += current - this.lastTime;
             this.lastTime = current;
@@ -354,8 +363,9 @@ namespace egret.sys {
                 this.costRender = 0;
                 this.costTicker = 0;
             }
-        };
-        FPSImpl.prototype.updateInfo = function (info) {
+        }
+
+        updateInfo(info: any) {
             if (!info) {
                 return;
             }
@@ -367,8 +377,9 @@ namespace egret.sys {
             }
             this.fpsDisplay.updateInfo(info);
         }
-        return <FPS><any>FPSImpl;
-    })(egret.Sprite);
+    }
+
+    __global.FPS = FPSImpl;
 
     function toArray(argument) {
         let args = [];

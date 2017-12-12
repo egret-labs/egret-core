@@ -103,6 +103,7 @@ var CompileEgretEngine = (function () {
         var tsconfig = path.join(egret.root, 'src/egret/');
         var isPublish = configuration.name != "debug";
         var compileOptions = this.compiler.parseTsconfig(tsconfig, isPublish).options;
+        // com
         //make 使用引擎的配置,必须用下面的参数
         compileOptions.declaration = dts;
         compileOptions.out = singleFile;

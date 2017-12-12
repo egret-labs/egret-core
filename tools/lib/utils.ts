@@ -211,7 +211,7 @@ export function uglify(sourceFile: any) {
         DEBUG: false,
         RELEASE: true
     }
-    const result = UglifyJS.minify(sourceFile, { compress: { global_defs: defines }, fromString: true, output: { beautify: false } });
+    const result = UglifyJS.minify(sourceFile, { compress: { global_defs: defines }, fromString: true, output: { beautify: true } });
     const code = result.code;
     return code;
 }

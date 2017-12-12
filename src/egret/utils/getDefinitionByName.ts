@@ -51,7 +51,7 @@ namespace egret {
      * @includeExample egret/utils/getDefinitionByName.ts
      * @language zh_CN
      */
-    export function getDefinitionByName(name:string):any {
+    export function getDefinitionByName(name: string): any {
         if (!name)
             return null;
         let definition = getDefinitionByNameCache[name];
@@ -60,7 +60,7 @@ namespace egret {
         }
         let paths = name.split(".");
         let length = paths.length;
-        definition = __global;
+        definition = global;
         for (let i = 0; i < length; i++) {
             let path = paths[i];
             definition = definition[path];
@@ -72,12 +72,10 @@ namespace egret {
         return definition;
     }
 
-    if(DEBUG){
-        egret["cleanCache"] = function():void{
+    if (DEBUG) {
+        egret["cleanCache"] = function (): void {
             getDefinitionByNameCache = {};
         }
     }
 
 }
-
-let __global = this.__global || this;
