@@ -93,7 +93,7 @@ export var optionDeclarations: egret.CommandLineOption[] = [
         name: 'platform',
         type: 'string'
     }, {
-        name: 'nativeTemplatePath',
+        name: 'templatePath',
         type: 'string',
         alias: "t"
     }, {

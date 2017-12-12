@@ -55,7 +55,7 @@ declare module egret {
         ide: string;
         exmlGenJs: boolean;
         log: boolean;
-        nativeTemplatePath: string;
+        templatePath: string;
         all: boolean;
         projectDir: string;
         getTmpDir(): string;

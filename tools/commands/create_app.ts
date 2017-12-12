@@ -25,7 +25,7 @@ class CreateAppCommand implements egret.Command {
         var option = egret.args;
         var appName = option.commands[1];
         var projectDir = option.projectDir;
-        var nativeTemplatePath = option.nativeTemplatePath;
+        var templatePath = option.templatePath;
         var arg_h5_path = option.fileName;
         var reg = new RegExp("^[a-zA-Z]");
         if (!reg.test(appName)) {
@@ -37,7 +37,7 @@ class CreateAppCommand implements egret.Command {
         if (file.exists(projectDir)) {
             globals.exit(1611);
         }
-        if (!nativeTemplatePath || !arg_h5_path) {
+        if (!templatePath || !arg_h5_path) {
             globals.exit(1601);
         }
         //判断项目合法性
@@ -62,21 +62,21 @@ class CreateAppCommand implements egret.Command {
 
         var startTime = Date.now();
 
-        var app_data = this.read_json_from(file.joinPath(nativeTemplatePath, "create_app.json"));
+        var app_data = this.read_json_from(file.joinPath(templatePath, "create_app.json"));
         if (!app_data) {
-            globals.exit(1603, nativeTemplatePath);
+            globals.exit(1603, templatePath);
         }
 
         var platform = "";
 
-        if (file.exists(file.joinPath(nativeTemplatePath, "proj.android"))) {//android
-            if (file.isFile(file.joinPath(file.joinPath(nativeTemplatePath, "proj.android"), "build.gradle"))) {
+        if (file.exists(file.joinPath(templatePath, "proj.android"))) {//android
+            if (file.isFile(file.joinPath(file.joinPath(templatePath, "proj.android"), "build.gradle"))) {
                 platform = "android_as";
             } else {
                 platform = "android";
             }
         }
-        else if (file.exists(file.joinPath(nativeTemplatePath, "proj.ios"))) {//ios
+        else if (file.exists(file.joinPath(templatePath, "proj.ios"))) {//ios
             platform = "ios";
         }
         else {
@@ -89,7 +89,7 @@ class CreateAppCommand implements egret.Command {
         file.remove(nativePath);
 
         //生成native工程
-        this.create_app_from(nativePath, nativeTemplatePath, app_data);
+        this.create_app_from(nativePath, templatePath, app_data);
 
         //修改egretProperties.json文件路径
         var properties = JSON.parse(file.read(file.joinPath(projectPath, "egretProperties.json")));

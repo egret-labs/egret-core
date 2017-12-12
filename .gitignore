@@ -36,5 +36,6 @@ src/tsc_config_temp.txt
 
 .wing/settings.json
 /built
-/tests
+/tests**
+/target
 test-script.js

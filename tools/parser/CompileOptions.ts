@@ -99,7 +99,7 @@ class CompileOptions implements egret.ToolArgs {
     password: string;
     keepEXMLTS: boolean;
     log: boolean;
-    nativeTemplatePath: string;
+    templatePath: string;
     all: boolean;
     template: string;
     ide: string;
