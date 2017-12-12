@@ -468,5 +468,5 @@ module egret {
  */
 declare let egret_stages: egret.Stage[];
 if (DEBUG) {
-    egret_stages = [];
+    global.egret_stages = [];
 }

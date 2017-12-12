@@ -49,7 +49,7 @@ function __extends(d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 }
-let __define = this.__define || function (o, p, g, s) { Object.defineProperty(o, p, { configurable: true, enumerable: true, get: g, set: s }) };
+let __define = this && this.__define || function (o, p, g, s) { Object.defineProperty(o, p, { configurable: true, enumerable: true, get: g, set: s }) };
 
 namespace egret {
     /**

@@ -1,16 +1,13 @@
 var __reflect = (this && this.__reflect) || function (p, c, t) {
     p.__class__ = c, t ? t.push(c) : t = [c], p.__types__ = p.__types__ ? t.concat(p.__types__) : t;
 };
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+           __extends = this && this.__extends || function __extends(t, e) { 
+ function r() { 
+ this.constructor = t;
+}
+for (var i in e) e.hasOwnProperty(i) && (t[i] = e[i]);
+r.prototype = e.prototype, t.prototype = new r();
+};
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -56,7 +53,7 @@ function __extends(d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 }
-var __define = this.__define || function (o, p, g, s) { Object.defineProperty(o, p, { configurable: true, enumerable: true, get: g, set: s }); };
+var __define = this && this.__define || function (o, p, g, s) { Object.defineProperty(o, p, { configurable: true, enumerable: true, get: g, set: s }); };
 var egret;
 (function (egret) {
     /**
@@ -6416,8 +6413,8 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-this["DEBUG"] = true;
-this["RELEASE"] = false;
+global.DEBUG = true;
+global.RELEASE = false;
 var egret;
 (function (egret) {
     /**
@@ -14231,7 +14228,7 @@ var egret;
     egret.ticker = new egret.sys.SystemTicker();
 })(egret || (egret = {}));
 if (true) {
-    egret_stages = [];
+    global.egret_stages = [];
 }
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -16977,15 +16974,14 @@ var egret;
      * @platform Web,Native
      * @language zh_CN
      */
-    var RuntimeType = (function () {
-        function RuntimeType() {
-        }
+    var RuntimeType;
+    (function (RuntimeType) {
         /**
-         * Running on Web
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
+        * Running on Web
+        * @version Egret 2.4
+        * @platform Web,Native
+        * @language en_US
+        */
         /**
          * 运行在Web上
          * @version Egret 2.4
@@ -17006,10 +17002,7 @@ var egret;
          * @language zh_CN
          */
         RuntimeType.NATIVE = "native";
-        return RuntimeType;
-    }());
-    egret.RuntimeType = RuntimeType;
-    __reflect(RuntimeType.prototype, "egret.RuntimeType");
+    })(RuntimeType = egret.RuntimeType || (egret.RuntimeType = {}));
     /**
      * The Capabilities class provides properties that describe the system and runtime that are hosting the application.
      * @version Egret 2.4
@@ -17297,27 +17290,19 @@ var egret;
     egret.Capabilities = Capabilities;
     __reflect(Capabilities.prototype, "egret.Capabilities");
 })(egret || (egret = {}));
-/**
- * @private
- */
-var testDeviceType = function () {
-    if (!this["navigator"]) {
+egret.Capabilities.$isMobile = function () {
+    if (!global["navigator"]) {
         return true;
     }
     var ua = navigator.userAgent.toLowerCase();
     return (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
-};
-/**
- * @private
- */
-var testRuntimeType = function () {
-    if (this["navigator"]) {
+}();
+egret.Capabilities.$runtimeType = function () {
+    if (global["navigator"]) {
         return true;
     }
     return false;
-};
-egret.Capabilities.$isMobile = testDeviceType();
-egret.Capabilities.$runtimeType = testRuntimeType() ? egret.RuntimeType.WEB : egret.RuntimeType.NATIVE;
+}() ? egret.RuntimeType.WEB : egret.RuntimeType.NATIVE;
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.

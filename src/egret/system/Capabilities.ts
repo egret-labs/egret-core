@@ -41,20 +41,21 @@ namespace egret {
      * @platform Web,Native
      * @language zh_CN
      */
-    export class RuntimeType {
+    export namespace RuntimeType {
         /**
-         * Running on Web
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
+        * Running on Web
+        * @version Egret 2.4
+        * @platform Web,Native
+        * @language en_US
+        */
         /**
          * 运行在Web上
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
          */
-        public static WEB:string = "web";
+        export const WEB = "web";
+
         /**
          * Running on NATIVE
          * @version Egret 2.4
@@ -67,7 +68,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static NATIVE:string = "native";
+        export const NATIVE = "native";
     }
 
     /**
@@ -89,7 +90,7 @@ namespace egret {
         /**
          * @private
          */
-        static $language:string = "zh-CN";
+        static $language: string = "zh-CN";
         /**
          * Specifies the language code of the system on which the content is running. The language is specified as a lowercase
          * two-letter language code from ISO 639-1. For Chinese, an additional uppercase two-letter country code from ISO 3166
@@ -121,14 +122,14 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static get language():string {
+        public static get language(): string {
             return Capabilities.$language;
         }
 
         /**
          * @private
          */
-        static $isMobile:boolean;
+        static $isMobile: boolean;
 
         /**
          * Specifies whether the system is running in a mobile device.(such as a mobile phone or tablet)
@@ -142,14 +143,14 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static get isMobile():boolean {
+        public static get isMobile(): boolean {
             return Capabilities.$isMobile;
         }
 
         /**
          * @private
          */
-        static $os:string = "Unknown";
+        static $os: string = "Unknown";
 
         /**
          * Specifies the current operating system. The os property can return the following strings:
@@ -179,14 +180,14 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static get os():string {
+        public static get os(): string {
             return Capabilities.$os;
         }
 
         /**
          * @private
          */
-        static $runtimeType:string = "Unknown";
+        static $runtimeType: string = "Unknown";
 
         /**
          * It indicates the current type of operation. runtimeType property returns the following string:
@@ -208,7 +209,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static get runtimeType():string {
+        public static get runtimeType(): string {
             return Capabilities.$runtimeType;
         }
 
@@ -226,11 +227,11 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static get supportVersion():string {
+        public static get supportVersion(): string {
             return Capabilities.$supportVersion;
         }
 
-        static $supportVersion:string = "Unknown";
+        static $supportVersion: string = "Unknown";
 
         /***
          * version of Egret.
@@ -246,18 +247,18 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static get engineVersion():string {
+        public static get engineVersion(): string {
             return "5.1.0";
         }
 
         /**
          * 设置系统信息
          */
-        public static $setNativeCapabilities(value:string):void {
+        public static $setNativeCapabilities(value: string): void {
             let arr = value.split("-");
             if (arr.length <= 4) {
                 //todo 未来去掉数量判断，2.5.4版本之前的参数大于4个
-                let osType:string = arr[0];
+                let osType: string = arr[0];
                 switch (osType) {
                     case "android":
                         osType = "Android";
@@ -267,7 +268,7 @@ namespace egret {
                         break;
                 }
                 Capabilities.$os = osType;
-                let version = arr[2].substring(1,arr[2].length);
+                let version = arr[2].substring(1, arr[2].length);
                 Capabilities.$supportVersion = version;
             }
         }
@@ -286,11 +287,11 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static get renderMode():string {
+        public static get renderMode(): string {
             return Capabilities.$renderMode;
         }
 
-        static $renderMode:string = "Unknown";
+        static $renderMode: string = "Unknown";
 
         /***
          * Clients border width.
@@ -308,11 +309,11 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static get boundingClientWidth():number{
+        public static get boundingClientWidth(): number {
             return Capabilities.$boundingClientWidth;
         }
 
-        static $boundingClientWidth:number = 0;
+        static $boundingClientWidth: number = 0;
 
         /***
          * Clients border height.
@@ -330,37 +331,27 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static get boundingClientHeight():number{
+        public static get boundingClientHeight(): number {
             return Capabilities.$boundingClientHeight;
         }
 
-        static $boundingClientHeight:number = 0;
+        static $boundingClientHeight: number = 0;
     }
 
 
 }
 
-/**
- * @private
- */
-let testDeviceType = function () {
-    if (!this["navigator"]) {
+egret.Capabilities.$isMobile = function () {
+    if (!global["navigator"]) {
         return true
     }
     let ua = navigator.userAgent.toLowerCase();
     return (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
-};
-
-/**
- * @private
- */
-let testRuntimeType = function () {
-    if (this["navigator"]) {
+}();
+egret.Capabilities.$runtimeType = function () {
+    if (global["navigator"]) {
         return true;
     }
     return false;
-};
-
-egret.Capabilities.$isMobile = testDeviceType();
-egret.Capabilities.$runtimeType = testRuntimeType() ? egret.RuntimeType.WEB : egret.RuntimeType.NATIVE;
+}() ? egret.RuntimeType.WEB : egret.RuntimeType.NATIVE;
 

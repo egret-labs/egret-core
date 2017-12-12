@@ -10665,20 +10665,20 @@ declare namespace egret {
      * @platform Web,Native
      * @language zh_CN
      */
-    class RuntimeType {
+    namespace RuntimeType {
         /**
-         * Running on Web
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
+        * Running on Web
+        * @version Egret 2.4
+        * @platform Web,Native
+        * @language en_US
+        */
         /**
          * 运行在Web上
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
          */
-        static WEB: string;
+        const WEB = "web";
         /**
          * Running on NATIVE
          * @version Egret 2.4
@@ -10691,7 +10691,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        static NATIVE: string;
+        const NATIVE = "native";
     }
     /**
      * The Capabilities class provides properties that describe the system and runtime that are hosting the application.
@@ -10908,14 +10908,6 @@ declare namespace egret {
         static $boundingClientHeight: number;
     }
 }
-/**
- * @private
- */
-declare let testDeviceType: () => boolean;
-/**
- * @private
- */
-declare let testRuntimeType: () => boolean;
 declare namespace egret {
     /**
      * This class is used to create lightweight shapes using the drawing application program interface (API). The Shape
