@@ -22,8 +22,8 @@ class Target implements egret.Command {
         const projectName = path.basename(option.projectDir);
         const config: TargetTemplateConfig = await getTargetTemplateConfig();
         const projectRoot = path.resolve(option.projectDir, '../', projectName + "_" + config.projectType);
-        FileUtil.copyAsync(config.templatePath, projectRoot);
-        FileUtil.copyAsync(config.scriptPath, path.join(option.projectDir, 'scripts', config.projectType));
+        await FileUtil.copyAsync(config.templatePath, projectRoot);
+        await FileUtil.copyAsync(config.scriptPath, path.join(option.projectDir, 'scripts', config.projectType));
 
         config.args.forEach((arg) => {
             arg.files.forEach((filename) => {
@@ -38,14 +38,7 @@ class Target implements egret.Command {
                 FileUtil.save(filepath, content)
             })
         })
-
-        // read("ssss", (data) => {
-        //     console.log(data)
-        // })
-
-
-        return DontExitCode
-
+        return DontExitCode;
     }
 }
 

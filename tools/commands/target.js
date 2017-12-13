@@ -51,8 +51,12 @@ var Target = (function () {
                     case 1:
                         config = _a.sent();
                         projectRoot = path.resolve(option.projectDir, '../', projectName + "_" + config.projectType);
-                        FileUtil.copyAsync(config.templatePath, projectRoot);
-                        FileUtil.copyAsync(config.scriptPath, path.join(option.projectDir, 'scripts', config.projectType));
+                        return [4 /*yield*/, FileUtil.copyAsync(config.templatePath, projectRoot)];
+                    case 2:
+                        _a.sent();
+                        return [4 /*yield*/, FileUtil.copyAsync(config.scriptPath, path.join(option.projectDir, 'scripts', config.projectType))];
+                    case 3:
+                        _a.sent();
                         config.args.forEach(function (arg) {
                             arg.files.forEach(function (filename) {
                                 var filepath = path.join(projectRoot, filename);
@@ -66,9 +70,6 @@ var Target = (function () {
                                 FileUtil.save(filepath, content);
                             });
                         });
-                        // read("ssss", (data) => {
-                        //     console.log(data)
-                        // })
                         return [2 /*return*/, DontExitCode];
                 }
             });
