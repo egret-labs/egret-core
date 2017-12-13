@@ -40,11 +40,12 @@ var Target = (function () {
     }
     Target.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var option, projectName, config, projectRoot;
+            var option, options, projectName, config, projectRoot;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         option = egret.args;
+                        options = parseCommandLine();
                         projectName = path.basename(option.projectDir);
                         return [4 /*yield*/, getTargetTemplateConfig()];
                     case 1:
@@ -52,13 +53,51 @@ var Target = (function () {
                         projectRoot = path.resolve(option.projectDir, '../', projectName + "_" + config.projectType);
                         FileUtil.copyAsync(config.templatePath, projectRoot);
                         FileUtil.copyAsync(config.scriptPath, path.join(option.projectDir, 'scripts', config.projectType));
-                        return [2 /*return*/, 0];
+                        config.args.forEach(function (arg) {
+                            arg.files.forEach(function (filename) {
+                                var filepath = path.join(projectRoot, filename);
+                                var content = FileUtil.read(filepath);
+                                var value = options[arg.name];
+                                if (!value) {
+                                    throw "\u9700\u8981\u4F20\u9012\u53C2\u6570:--" + arg.name;
+                                }
+                                var reg = new RegExp("{" + arg.name + "}", "gi");
+                                content = content.replace(reg, value);
+                                FileUtil.save(filepath, content);
+                            });
+                        });
+                        // read("ssss", (data) => {
+                        //     console.log(data)
+                        // })
+                        return [2 /*return*/, DontExitCode];
                 }
             });
         });
     };
     return Target;
 }());
+function parseCommandLine() {
+    var args = process.argv.slice(2);
+    var result = {};
+    var i = 0;
+    while (i < args.length) {
+        var key = args[i++];
+        var value;
+        ;
+        if (key.charAt(0) === '-') {
+            if (key.charAt(1) === "-") {
+                key = key.slice(2);
+                value = args[i++];
+            }
+            else {
+                key = key.slice(1);
+                value = true;
+            }
+            result[key] = value;
+        }
+    }
+    return result;
+}
 function getTargetTemplateConfig() {
     return __awaiter(this, void 0, void 0, function () {
         var option, templatePath, targetConfigPath, result;
