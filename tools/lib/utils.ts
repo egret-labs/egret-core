@@ -411,23 +411,21 @@ export function shell(path: string, args: string[], opt?: cp.ExecOptions, verbas
 
 
 
-let error_code_filename = path.join(__dirname, "../error_code.json");
-let errorcode = file.readJSONSync(error_code_filename, { "encoding": "utf-8" });
 export class CliException extends Error {
 
     public message;
 
     constructor(public errorId, param?: string) {
         super();
-        var message: string = errorcode[this.errorId];
-        if (message) {
-            message = message.replace('{0}', param);
-        }
-        else {
-            message = `unkown error : ${errorId}`;
-            console.error(message);
-        }
-        this.message = message;
+        // var message: string = errorcode[this.errorId];
+        // if (message) {
+        //     message = message.replace('{0}', param);
+        // }
+        // else {
+        //     message = `unkown error : ${errorId}`;
+        //     console.error(message);
+        // }
+        this.message = errorId;
     }
 }
 

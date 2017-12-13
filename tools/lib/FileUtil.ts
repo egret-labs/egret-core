@@ -31,6 +31,7 @@ import FS = require("fs");
 import Path = require("path");
 import { resolve } from "url";
 import { Stats } from "fs";
+import { encode } from "punycode";
 
 var charset = "utf-8";
 
@@ -548,9 +549,10 @@ export function readJSONAsync(file: string, options?: { encoding: string; flag?:
     });
 }
 
-export async function readJSONSync(file: string, options?: { encoding: string; flag?: string; }) {
-    let ret = await readJSONAsync(file, options);
-    return ret;
+export function readJSONSync(file: string) {
+    console.log(file)
+    let content = readFileSync(file, 'utf-8')
+    return JSON.parse(content);
 }
 
 

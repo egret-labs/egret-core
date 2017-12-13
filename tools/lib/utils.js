@@ -440,22 +440,20 @@ function shell(path, args, opt, verbase) {
 }
 exports.shell = shell;
 ;
-var error_code_filename = path.join(__dirname, "../error_code.json");
-var errorcode = file.readJSONSync(error_code_filename, { "encoding": "utf-8" });
 var CliException = (function (_super) {
     __extends(CliException, _super);
     function CliException(errorId, param) {
         var _this = _super.call(this) || this;
         _this.errorId = errorId;
-        var message = errorcode[_this.errorId];
-        if (message) {
-            message = message.replace('{0}', param);
-        }
-        else {
-            message = "unkown error : " + errorId;
-            console.error(message);
-        }
-        _this.message = message;
+        // var message: string = errorcode[this.errorId];
+        // if (message) {
+        //     message = message.replace('{0}', param);
+        // }
+        // else {
+        //     message = `unkown error : ${errorId}`;
+        //     console.error(message);
+        // }
+        _this.message = errorId;
         return _this;
     }
     return CliException;

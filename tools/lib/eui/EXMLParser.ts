@@ -167,7 +167,7 @@ export class EXMLParser {
      * @param xmlData 要编译的EXML文件内容
      *
      */
-    public parse(text: string): {code:string, className:string} {
+    public parse(text: string): { code: string, className: string } {
         if (DEBUG) {
             if (!text) {
                 egretbridge.$error(1003, "text");
@@ -198,7 +198,7 @@ export class EXMLParser {
         this._className = className;
         let exClass = this.parseClass(xmlData, className);
         let code = exClass.toCode();
-        return {code, className};
+        return { code, className };
     }
 
     /**
@@ -209,6 +209,7 @@ export class EXMLParser {
         if (!exmlConfig) {
             exmlConfig = new EXMLConfig();
         }
+
         exmlConfig.dirPath = egret.args.projectDir;
         this.currentXML = xmlData;
         this.currentClassName = className;
@@ -329,7 +330,7 @@ export class EXMLParser {
                     if (id.match(e) == null) {
                         egretbridge.$warn(2022, id);
                     }
-                    if(id.match(new RegExp(/ /g)) != null) {
+                    if (id.match(new RegExp(/ /g)) != null) {
                         egretbridge.$warn(2022, id);
                     }
                     if (this.skinParts.indexOf(id) == -1) {

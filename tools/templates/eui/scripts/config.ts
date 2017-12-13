@@ -26,6 +26,7 @@ const config: ResourceManagerConfig = {
                 outputDir,
                 commands: [
                     new ExmlPlugin('debug'),
+                    new IncrementCompilePlugin(),
                     new CustomPlugin(),
                 ]
             }
