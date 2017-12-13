@@ -19,9 +19,8 @@ class Target implements egret.Command {
         const projectName = path.basename(option.projectDir);
         const config: TargetTemplateConfig = await getTargetTemplateConfig();
         const projectRoot = path.resolve(option.projectDir, '../', projectName + "_" + config.projectType);
-        FileUtil.copyAsync(config.templatePath, projectRoot)
+        FileUtil.copyAsync(config.templatePath, projectRoot);
         FileUtil.copyAsync(config.scriptPath, path.join(option.projectDir, 'scripts', config.projectType));
-        console.log(config.templatePath, projectRoot)
 
 
         return 0;

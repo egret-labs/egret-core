@@ -52,7 +52,6 @@ var Target = (function () {
                         projectRoot = path.resolve(option.projectDir, '../', projectName + "_" + config.projectType);
                         FileUtil.copyAsync(config.templatePath, projectRoot);
                         FileUtil.copyAsync(config.scriptPath, path.join(option.projectDir, 'scripts', config.projectType));
-                        console.log(config.templatePath, projectRoot);
                         return [2 /*return*/, 0];
                 }
             });
