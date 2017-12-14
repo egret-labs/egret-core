@@ -31,7 +31,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var __global = global;
 var xml = require("../xml/index");
 var utils = require("../utils");
-var config = require("./EXMLConfig");
 egret.XML = xml;
 /**
  * @private
@@ -189,7 +188,7 @@ function getDtsInfoFromExml(exmlFile) {
     if (!xml) {
         utils.exit(2002, exmlFile.filename);
     }
-    var className = config.EXMLConfig.getInstance().getClassNameById(xml.localName, xml.namespace);
+    var className = getClassNameById(xml.localName, xml.namespace);
     var extendName = "";
     if (xml["$class"]) {
         extendName = className;

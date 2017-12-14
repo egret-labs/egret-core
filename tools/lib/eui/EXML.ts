@@ -34,7 +34,6 @@
 var __global = global;
 var xml = require("../xml/index");
 var utils = require("../utils");
-import config = require("./EXMLConfig");
 egret.XML = xml;
 
 
@@ -244,7 +243,7 @@ export function getDtsInfoFromExml(exmlFile: EXMLFile): { className: string, ext
     if (!xml) {
         utils.exit(2002, exmlFile.filename);
     }
-    var className = config.EXMLConfig.getInstance().getClassNameById(xml.localName, xml.namespace);
+    var className = getClassNameById(xml.localName, xml.namespace);
     var extendName = "";
     if (xml["$class"]) {
         extendName = className;

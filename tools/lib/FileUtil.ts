@@ -550,7 +550,6 @@ export function readJSONAsync(file: string, options?: { encoding: string; flag?:
 }
 
 export function readJSONSync(file: string) {
-    console.log(file)
     let content = readFileSync(file, 'utf-8')
     return JSON.parse(content);
 }

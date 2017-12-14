@@ -549,7 +549,6 @@ function readJSONAsync(file, options) {
 }
 exports.readJSONAsync = readJSONAsync;
 function readJSONSync(file) {
-    console.log(file);
     var content = readFileSync(file, 'utf-8');
     return JSON.parse(content);
 }
