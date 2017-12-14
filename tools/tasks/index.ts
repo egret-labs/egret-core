@@ -18,9 +18,15 @@ export interface Plugin {
 
 export type File = {
 
-    original_relative: string,
+    origin: string,
 
     contents: Buffer;
+
+    path: string;
+
+    readonly base: string;
+
+    readonly extname: string;
 }
 
 

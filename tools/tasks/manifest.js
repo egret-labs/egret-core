@@ -60,13 +60,18 @@ var ManifestPlugin = (function () {
                 //     file.path = path.join(file.base, new_file_path);
                 //     manifest.configURL = new_file_path;
                 // }
-                if (extname == ".js" && !file.isExistedInResourceFolder) {
+                if (extname == ".js") {
                     crc32 = globals.getCrc32();
                     crc32_file_path = crc32(file.contents);
                     basename = path.basename(filename);
                     new_file_path = "js/" + basename.substr(0, basename.length - file.extname.length) + "_" + crc32_file_path + file.extname;
                     file.path = path.join(file.base, new_file_path);
-                    manifest.initial.push(new_file_path);
+                    if (filename.indexOf('libs/') >= 0) {
+                        manifest.initial.push(new_file_path);
+                    }
+                    else {
+                        manifest.game.push(new_file_path);
+                    }
                 }
                 return [2 /*return*/, file];
             });
