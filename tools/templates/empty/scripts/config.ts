@@ -25,9 +25,7 @@ const config: ResourceManagerConfig = {
             return {
                 outputDir,
                 commands: [
-                    // new ExmlPlugin('debug'),
                     new IncrementCompilePlugin(),
-                    // new CustomPlugin(),
                 ]
             }
         }
@@ -36,18 +34,13 @@ const config: ResourceManagerConfig = {
             return {
                 outputDir,
                 commands: [
-                    // new ExmlPlugin('default'),
+                    new CustomPlugin(),
                     new CompilePlugin({ libraryType: "release" }),
                     new UglifyPlugin([{
                         sources: ["main.js"],
                         target: "main.min.js"
                     }]),
                     new ManifestPlugin()
-                    // "zip",
-                    // "spritesheet",
-                    // "convertFileName",
-                    // "emitConfigFile",
-                    // "manifest"
                 ]
             }
         }

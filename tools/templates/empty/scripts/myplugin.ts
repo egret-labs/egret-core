@@ -1,3 +1,6 @@
+/**
+ * 示例自定义插件
+ */
 export class CustomPlugin implements plugins.Command {
 
     constructor() {
@@ -7,7 +10,7 @@ export class CustomPlugin implements plugins.Command {
         return file;
     }
 
-    async onFinish() {
+    async onFinish(commandContext: plugins.CommandContext) {
 
     }
 }

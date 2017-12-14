@@ -14,12 +14,7 @@ type ResourceManagerConfig = {
     /**
      * 构建与发布配置
      */
-    buildConfig: (param: {
-        command: 'build' | 'publish',
-        target: string,
-        projectName: string,
-        version: string
-    }) => UserConfig,
+    buildConfig: (param: BuildConfigParam) => UserConfig,
     /**
      * 设置资源类型
      */
@@ -48,44 +43,120 @@ type UserConfig = {
     commands: (string | plugins.Command)[]
 }
 
+type BuildConfigParam = {
+
+
+    /**
+     * 当前命令，build 或者 command
+     */
+    readonly command: string;
+
+    /**
+     * 发布平台
+     */
+    readonly target: string;
+
+    /**
+     * 开发者指定的版本号
+     */
+    readonly version: string;
+
+    /**
+     * 项目名称
+     */
+    readonly projectName: string;
+}
+
 
 declare namespace plugins {
 
+    interface CommandContext {
+
+        /**
+         * 可以用此接口进行文件创建
+         */
+        createFile(relativeFilePath: string, contents: Buffer);
+
+        /**
+         * 构建配置
+         */
+        buildConfig: BuildConfigParam
+
+    }
+
+    /**
+     * 构建管线命令
+     */
     interface Command {
 
+        /**
+         * 项目中的每个文件都会执行此函数，返回 file 表示保留此文件，返回 null 表示将此文件从构建管线中删除，即不会发布
+         */
         onFile?(file: File): Promise<File | null>
 
-        onFinish?(pluginContext: any): Promise<any>
+        /**
+         * 项目中所有文件均执行完后，最终会执行此函数。
+         * 这个函数主要被用于创建新文件
+         */
+        onFinish?(pluginContext?: CommandContext): Promise<void>
 
         [options: string]: any;
     }
 
     interface File {
 
-        contents: Uint8Array;
-
-        cwd: string;
-
-
-        base: string;
+        /**
+         * 文件内容的二进制流
+         */
+        contents: Buffer;
 
 
+        /**
+         * 文件绝对路径
+         */
         path: string;
 
+        /**
+         * 文件所在的项目的项目路径
+         */
+        readonly base: string;
 
+        /**
+         * 文件的相对于 base 属性的相对路径
+         */
+        readonly relative: string;
+
+
+        /**
+         * 文件变更历史，history[0] 即 origin 属性
+         */
         readonly history: ReadonlyArray<string>;
 
-        relative: string;
 
-        dirname: string;
+        /**
+         * 文件所在的文件夹的绝对路径
+         */
+        readonly dirname: string;
 
-        basename: string;
+        /**
+         * 文件的文件名
+         */
+        readonly basename: string;
 
 
-        extname: string;
+        /**
+         * 文件的扩展名
+         */
+        readonly extname: string;
 
-        origin: string;
+        /**
+         * 文件的初始文件名
+         */
+        readonly origin: string;
 
+        /**
+         * 其他自定义属性
+         */
         [customProperty: string]: any;
 
     }
