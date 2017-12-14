@@ -3,6 +3,7 @@ var file = require("../FileUtil");
 var path = require("path");
 var XMLTool = require("../xml/index");
 var componentScanner = require("../exml/exml-service/componentScanner");
+var EXMLParser_1 = require("./EXMLParser");
 /**
  * @private
  * EUI 命名空间
@@ -50,9 +51,9 @@ var EXMLConfig = (function () {
     });
     EXMLConfig.prototype.getClassToPathInfo = function (dirPath) {
         var _this = this;
-        var exmls = file.search(dirPath, 'exml');
-        exmls.forEach(function (exml) {
-            var str = file.read(exml);
+        var exmls = EXMLParser_1.fileSystem.getList();
+        exmls.forEach(function (filename) {
+            var str = EXMLParser_1.fileSystem.get(filename).contents;
             var xml = XMLTool.parse(str);
             var className = null;
             if (xml["$class"]) {
@@ -61,7 +62,7 @@ var EXMLConfig = (function () {
             else {
                 className = _this.getClassNameById(xml.localName, xml.namespace);
             }
-            exmls[className] = exml;
+            exmls[className] = filename;
         });
         return exmls;
     };

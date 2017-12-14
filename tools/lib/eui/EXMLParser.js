@@ -50,6 +50,28 @@ var basicTypes = [TYPE_ARRAY, TYPE_STexture, "boolean", "string", "number"];
 var wingKeys = ["id", "locked", "includeIn", "excludeFrom"];
 var htmlEntities = [["<", "&lt;"], [">", "&gt;"], ["&", "&amp;"], ["\"", "&quot;"], ["'", "&apos;"]];
 var jsKeyWords = ["null", "NaN", "undefined", "true", "false"];
+var EXMLFileSystem = (function () {
+    function EXMLFileSystem() {
+        this.root = {};
+        this.fileList = [];
+    }
+    EXMLFileSystem.prototype.getList = function () {
+        return this.fileList;
+    };
+    EXMLFileSystem.prototype.set = function (filename, content) {
+        this.fileList.push(filename);
+        this.root[filename] = content;
+    };
+    EXMLFileSystem.prototype.get = function (filename) {
+        var result = this.root[filename];
+        if (!result) {
+            console.warn("找不到资源", filename);
+        }
+        return result;
+    };
+    return EXMLFileSystem;
+}());
+exports.fileSystem = new EXMLFileSystem();
 /**
  * @private
  */

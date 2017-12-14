@@ -47,6 +47,7 @@ function publishEXML(exmls, exmlPublishPolicy) {
     exmls = exml.sort(exmls);
     themeDatas.forEach(function (theme) { return theme.exmls = []; });
     exmls.forEach(function (e) {
+        exmlParser.fileSystem.set(e.filename, e);
         var epath = e.filename;
         var exmlEl;
         switch (exmlPublishPolicy) {

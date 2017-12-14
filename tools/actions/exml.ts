@@ -24,7 +24,6 @@ function generateThemeData() {
 }
 
 export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
-
     if (!exmlPublishPolicy || exmlPublishPolicy == "default") {
         exmlPublishPolicy = EgretProject.projectData.getExmlPublishPolicy();
     }
@@ -58,6 +57,7 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
     themeDatas.forEach(theme => theme.exmls = []);
 
     exmls.forEach(e => {
+        exmlParser.fileSystem.set(e.filename, e);
         var epath = e.filename;
         var exmlEl;
 

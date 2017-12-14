@@ -3,6 +3,7 @@ import path = require("path");
 import XMLTool = require("../xml/index");
 import egretbridge = require("./egretbridge");
 import componentScanner = require("../exml/exml-service/componentScanner");
+import { fileSystem } from "./EXMLParser";
 /**
  * @private
  * EUI 命名空间
@@ -61,9 +62,9 @@ export class EXMLConfig {
     }
 
     private getClassToPathInfo(dirPath: string): any {
-        let exmls: string[] = file.search(dirPath, 'exml');
-        exmls.forEach(exml => {
-            let str: string = file.read(exml);
+        const exmls = fileSystem.getList();
+        exmls.forEach(filename => {
+            const str = fileSystem.get(filename).contents;
             let xml = XMLTool.parse(str);
             let className: string = null;
             if (xml["$class"]) {
@@ -71,7 +72,7 @@ export class EXMLConfig {
             } else {
                 className = this.getClassNameById(xml.localName, xml.namespace);
             }
-            exmls[className] = exml;
+            exmls[className] = filename;
         });
         return exmls;
     }

@@ -31,6 +31,7 @@ import XMLParser = require("../xml/index");
 import { EXAddItems, EXBinding, EXClass, EXCodeBlock, EXFunction, EXSetProperty, EXState, EXVariable, EXSetStateProperty } from "./CodeFactory";
 let DEBUG = false;
 import { egretbridge } from "./egretbridge";
+import { EXMLFile } from "./EXML";
 /**
  * @private
  * EXML配置管理器实例
@@ -57,6 +58,33 @@ let wingKeys: string[] = ["id", "locked", "includeIn", "excludeFrom"];
 let htmlEntities: string[][] = [["<", "&lt;"], [">", "&gt;"], ["&", "&amp;"], ["\"", "&quot;"], ["'", "&apos;"]];
 let jsKeyWords: string[] = ["null", "NaN", "undefined", "true", "false"];
 
+
+
+class EXMLFileSystem {
+
+    private root: { [index: string]: EXMLFile } = {};
+
+    private fileList: string[] = [];
+
+    getList() {
+        return this.fileList;
+    }
+
+    set(filename: string, content: EXMLFile) {
+        this.fileList.push(filename)
+        this.root[filename] = content;
+    }
+
+    get(filename: string) {
+        const result = this.root[filename];
+        if (!result) {
+            console.warn("找不到资源", filename);
+        }
+        return result;
+    }
+}
+
+export const fileSystem = new EXMLFileSystem();
 
 /**
  * @private
