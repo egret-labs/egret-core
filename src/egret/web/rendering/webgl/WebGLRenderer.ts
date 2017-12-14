@@ -405,7 +405,7 @@ namespace egret.web {
                     savedMatrix.d = curMatrix.d;
                     savedMatrix.tx = curMatrix.tx;
                     savedMatrix.ty = curMatrix.ty;
-                    buffer.setTransform(egret.sys.DisplayList.$canvasScaleX, 0, 0, -egret.sys.DisplayList.$canvasScaleY, (offsetX + displayBounds.x) * egret.sys.DisplayList.$canvasScaleX, (offsetY + displayBounds.y + displayBuffer.height) * egret.sys.DisplayList.$canvasScaleY);
+                    curMatrix.append(1, 0, 0, -1, offsetX + displayBounds.x, offsetY + displayBounds.y + displayBuffer.height);
                     let displayBufferWidth = displayBuffer.rootRenderTarget.width;
                     let displayBufferHeight = displayBuffer.rootRenderTarget.height;
                     buffer.context.drawTexture(displayBuffer.rootRenderTarget.texture, 0, 0, displayBufferWidth, displayBufferHeight,
