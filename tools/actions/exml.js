@@ -85,10 +85,11 @@ function publishEXML(exmls, exmlPublishPolicy) {
     var files = themeDatas.map(function (thmData) {
         var path = thmData.path;
         if (exmlPublishPolicy == "commonjs") {
-            var content = "window.skins = {};\nexports.paths = {};\nexports.skins = " + JSON.stringify(thmData.skins) + "\n";
+            var content = "\n            function __extends(d, b) {\n                for (let p in b) if (b.hasOwnProperty(p)) d[p] = b[p];\n                function __() {\n                    this.constructor = d;\n                }\n                __.prototype = b.prototype;\n                d.prototype = new __();\n             };\n             ";
+            content += "window.skins = {};window.generateEUI = {};\n            generateEUI.paths = {};\n            generateEUI.skins = " + JSON.stringify(thmData.skins) + "\n";
             for (var _i = 0, _a = thmData.exmls; _i < _a.length; _i++) {
                 var item = _a[_i];
-                content += "exports.paths['" + item.path + "'] = window." + item.className + " = " + item.gjs;
+                content += "generateEUI.paths['" + item.path + "'] = window." + item.className + " = " + item.gjs;
             }
             path = path.replace("thm.json", "thm.js");
             return { path: path, content: content };

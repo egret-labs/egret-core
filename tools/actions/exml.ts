@@ -98,13 +98,25 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
 
     let files = themeDatas.map((thmData) => {
         let path = thmData.path;
+
+
         if (exmlPublishPolicy == "commonjs") {
-            let content = `window.skins = {};
-exports.paths = {};
-exports.skins = ${JSON.stringify(thmData.skins)}
+            let content = `
+            function __extends(d, b) {
+                for (let p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+                function __() {
+                    this.constructor = d;
+                }
+                __.prototype = b.prototype;
+                d.prototype = new __();
+             };
+             `;
+            content += `window.skins = {};window.generateEUI = {};
+            generateEUI.paths = {};
+            generateEUI.skins = ${JSON.stringify(thmData.skins)}
 `;
             for (let item of thmData.exmls) {
-                content += `exports.paths['${item.path}'] = window.${item.className} = ${item.gjs}`;
+                content += `generateEUI.paths['${item.path}'] = window.${item.className} = ${item.gjs}`;
             }
             path = path.replace("thm.json", "thm.js");
             return { path, content }
