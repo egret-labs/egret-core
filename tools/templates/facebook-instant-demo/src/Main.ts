@@ -27,181 +27,249 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-class Main extends eui.UILayer {
-    protected createChildren(): void {
-        super.createChildren();
-        //注入自定义的素材解析器
-        let assetAdapter = new AssetAdapter();
-        egret.registerImplementation("eui.IAssetAdapter", assetAdapter);
-        egret.registerImplementation("eui.IThemeAdapter", new ThemeAdapter());
+class Main extends egret.DisplayObjectContainer {
+    public static menu: Menu;
+    private static _that: egret.DisplayObjectContainer;
+    private rewardedVideo: any;
+    public constructor() {
+        super();
+        this.addEventListener(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this);
+    }
 
-        //初始化Resource资源加载库
-        RES.addEventListener(RES.ResourceEvent.CONFIG_COMPLETE, this.onConfigComplete, this);
-        RES.loadConfig("resource/default.res.json", "resource/");
-
+    private onAddToStage(event: egret.Event) {
         //初始化Facebook SDK，在回调方法里获取相关信息
-        FBInstant.initializeAsync().then(function () {
-            console.log("player.getID", FBInstant.player.getID());
-            console.log("player.getName", FBInstant.player.getName());
-            console.log("player.getPhoto", FBInstant.player.getPhoto());
+        egretfb.EgretFBInstant.initializeAsync().then(function () {
+            egret.log("player.getID", egretfb.EgretFBInstant.player.getID());
+            try {
+                egretfb.EgretFBInstant.player.getSignedPlayerInfoAsync('egret').then((result) => {
+                    try {
+                        egret.log('result.playerID', result.getPlayerID())
+                        egret.log('result.getSignature.length', result.getSignature().length)
+                    } catch (err) {
+                        egret.log('SignedPlayerInfoAsync.err2', err)
+                    }
+                })
+            } catch (err) {
+                egret.log('SignedPlayerInfoAsync.err1', err)
+            }
+            egret.log("player.getID", egretfb.EgretFBInstant.player.getID());
+            egret.log("player.getName", egretfb.EgretFBInstant.player.getName());
+            egret.log("player.getPhoto.length", egretfb.EgretFBInstant.player.getPhoto().length);
 
-            console.log("getLocale:", FBInstant.getLocale());
-            console.log("getPlatform:", FBInstant.getPlatform());
-            console.log("getSDKVersion", FBInstant.getSDKVersion());
+            egret.log("getLocale:", egretfb.EgretFBInstant.getLocale());
+            egret.log("getPlatform:", egretfb.EgretFBInstant.getPlatform());
+            egret.log("getSDKVersion", egretfb.EgretFBInstant.getSDKVersion());
+            egret.log("num getSupportedAPIs", egretfb.EgretFBInstant.getSupportedAPIs().length);
+            egret.log('getEntryPointData', egretfb.EgretFBInstant.getEntryPointData())
+        })
+        this.createScence();
+        setTimeout(() => {
+            egretfb.EgretFBInstant.setLoadingProgress(100);
+            egretfb.EgretFBInstant.startGameAsync().then(() => {
+                this.showScence();
+            })
+        }, 1000)
+    }
+
+    private createScence() {
+        Main._that = this;
+        Context.init(this.stage);
+        Main.menu = new Menu("Egret Facebook SDK Test")
+        this.addChild(Main.menu);
+        Main.menu.addTestFunc("context", this.contextInfo, this);
+        Main.menu.addTestFunc("setDataAsync", this.setDataAsync, this);
+        Main.menu.addTestFunc("getDataAsync", this.getDataAsync, this);
+        Main.menu.addTestFunc("flushDataAsync", this.flushDataAsync, this);
+
+        Main.menu.addTestFunc("setStatsAsync", this.setStatsAsync, this);
+        Main.menu.addTestFunc("getStatsAsync", this.getStatsAsync, this);
+        Main.menu.addTestFunc("incrementStatsAsync", this.incrementStatsAsync, this);
+
+        Main.menu.addTestFunc("getInterstitialAdAsync", this.getInterstitialAdAsync, this);
+        Main.menu.addTestFunc("显示视频广告", this.playRewardedVideo, this);
+
+
+        Main.menu.addTestFunc("getConnectedPlayersAsync", this.getConnectedPlayersAsync, this);
+        Main.menu.addTestFunc("switchAsync", this.switchAsync, this);
+        Main.menu.addTestFunc("chooseAsync", this.chooseAsync, this);
+        Main.menu.addTestFunc("createAsync", this.createAsync, this);
+        Main.menu.addTestFunc("getPlayersAsync", this.getPlayersAsync, this);
+        Main.menu.addTestFunc("setSessionData", this.setSessionData, this);
+        Main.menu.addTestFunc("shareAsync", this.shareAsync, this);
+        Main.menu.addTestFunc("updateAsync", this.updateAsync, this);
+        Main.menu.addTestFunc("logEvent", this.logEvent, this);
+        Main.menu.addTestFunc("quit", this.quit, this);
+
+    }
+
+    public static backMenu(): void {
+        Main._that.removeChildren();
+        Main._that.addChild(Main.menu);
+    }
+    private showScence() {
+        egret.log('showScence')
+        this.loadRewardedVideo();
+        egretfb.EgretFBInstant.onPause(() => {
+            egret.log('onPause');
+        });
+    }
+    private loadRewardedVideo() {
+        egretfb.EgretFBInstant.getRewardedVideoAsync('380072779038584_503394323373095')
+            .then((rewardedVideo) => {
+                this.rewardedVideo = rewardedVideo;
+                egret.log('开始加载视频广告，翻墙网络慢,请稍等..', JSON.stringify(rewardedVideo))
+                return this.rewardedVideo.loadAsync();
+            }).then(() => {
+                egret.log('视频广告加载结束,可以播放 ')
+            }, (err) => {
+                egret.log('视频广告加载错误', JSON.stringify(err));
+            })
+    }
+    async playRewardedVideo() {
+        await this.rewardedVideo.showAsync();
+        this.loadRewardedVideo();
+    }
+    private contextInfo() {
+        egret.log('context.getID', egretfb.EgretFBInstant.context.getID());
+        egret.log('context.getType', egretfb.EgretFBInstant.context.getType());
+        egret.log('context.isSizeBetween0-10', JSON.stringify(egretfb.EgretFBInstant.context.isSizeBetween(0, 10)));
+    }
+    private setDataAsync() {
+        var saveData = { score: 123, value: Math.floor(Math.random() * 100) }
+        egretfb.EgretFBInstant.player.setDataAsync(saveData).then(() => {
+            egret.log('data is set');
+        })
+        egret.log('setDataAsync', JSON.stringify(saveData));
+    }
+    private getDataAsync() {
+        egretfb.EgretFBInstant.player.getDataAsync(['score', 'value']).then((data) => {
+            egret.log('getDataAsync', data['score'], data['value'])
         })
     }
-    /**
-     * 配置文件加载完成,开始预加载皮肤主题资源和preload资源组。
-     */
-    private onConfigComplete(event: RES.ResourceEvent): void {
-        RES.removeEventListener(RES.ResourceEvent.CONFIG_COMPLETE, this.onConfigComplete, this);
-        //加载皮肤主题配置文件,可以手动修改这个文件。替换默认皮肤。
-        let theme = new eui.Theme("resource/default.thm.json", this.stage);
-        theme.addEventListener(eui.UIEvent.COMPLETE, this.onThemeLoadComplete, this);
-
-        RES.addEventListener(RES.ResourceEvent.GROUP_COMPLETE, this.onResourceLoadComplete, this);
-        RES.addEventListener(RES.ResourceEvent.GROUP_PROGRESS, this.onResourceProgress, this);
-        RES.loadGroup("preload");
+    private flushDataAsync() {
+        var saveData = { score: 778, value: Math.floor(Math.random() * 100) }
+        egret.log('flushDataAsync', JSON.stringify(saveData));
+        egretfb.EgretFBInstant.player.setDataAsync(saveData)
+            .then(egretfb.EgretFBInstant.player.flushDataAsync)
+            .then(() => {
+                egret.log('flushDataAsync succ');
+            })
     }
-    private isThemeLoadEnd: boolean = false;
-    /**
-     * 主题文件加载完成,开始预加载 
-     */
-    private onThemeLoadComplete(): void {
-        this.isThemeLoadEnd = true;
-        this.createScene();
-    }
-    private isResourceLoadEnd: boolean = false;
-    /**
-     * preload资源组加载完成
-     */
-    private onResourceLoadComplete(event: RES.ResourceEvent): void {
-        if (event.groupName == "preload") {
-            RES.removeEventListener(RES.ResourceEvent.GROUP_COMPLETE, this.onResourceLoadComplete, this);
-            RES.removeEventListener(RES.ResourceEvent.GROUP_PROGRESS, this.onResourceProgress, this);
-            this.isResourceLoadEnd = true;
-            this.createScene();
-        }
-    }
-    /***
-     * 资源加载完成，创建游戏场景
-     */
-    private createScene() {
-        if (this.isThemeLoadEnd && this.isResourceLoadEnd) {
-            console.log('FBInstantGameSDK')
-            console.warn('注意:正式版需要使用下面FBInstant.startGameAsync方法')
-            // FBInstant.startGameAsync().then(() => {
-            //     console.log('用户点击了开始游戏的按钮');
-            //     this.startCreateScene();
-            // });
-            this.startCreateScene();//测试代码，直接开始游戏。正式版需要注释掉
-        }
-    }
-    /**
-     * preload资源组加载进度
-     * 通知Facebook平台当前加载的进度
-     */
-    private onResourceProgress(event: RES.ResourceEvent): void {
-        if (event.groupName == "preload") {
-            var percent = Math.floor((event.itemsLoaded / event.itemsTotal) * 100);
-            FBInstant.setLoadingProgress(percent);
-        }
-    }
-    private textfield: egret.TextField;
-    /**
-     * 创建场景界面
-     */
-    protected startCreateScene(): void {
-        let self = this;
-        let sky: egret.Bitmap = this.createBitmapByName("bg_jpg");
-        this.addChild(sky);
-        let stageW: number = this.stage.stageWidth;
-        let stageH: number = this.stage.stageHeight;
-        sky.width = stageW;
-        sky.height = stageH;
-
-        let icon: egret.Bitmap = this.createBitmapByName("egret_icon_png");
-        this.addChild(icon);
-        icon.x = 26;
-        icon.y = 33;
-
-
-
-        let textfield = new egret.TextField();
-        this.addChild(textfield);
-        textfield.width = stageW;
-        textfield.textAlign = egret.HorizontalAlign.CENTER;
-        textfield.size = 24;
-        textfield.textColor = 0xffffff;
-        textfield.y = 135;
-        textfield.text = "游戏开始";
-        this.textfield = textfield;
-
-        let group = new eui.Group();
-        group.layout = new eui.VerticalLayout();
-        group.horizontalCenter = 0;
-        group.verticalCenter = 0;
-        this.addChild(group);
-
-
-        let btnSetData = new eui.Button();
-        btnSetData.label = "点击保存数据";
-        group.addChild(btnSetData);
-        btnSetData.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
-            console.log("注意，该方法只在 Facebook 真实环境下生效");
-            var saveData = {
-                achievements: ['medal1', 'medal2', 'medal3'],
-                currentLife: 300,
-            };
-            console.log('开始保存数据：', saveData);
-            FBInstant.player.setDataAsync(saveData).then(() => {
-                //保存数据的回调方法
-                console.log('保存数据成功');
+    private setStatsAsync() {
+        var saveState = { level: 68, money: Math.floor(Math.random() * 100) }
+        egretfb.EgretFBInstant.player
+            .setStatsAsync(saveState)
+            .then(function () {
+                egret.log('data is set');
             });
-        }, this);
-
-        let btnGetData = new eui.Button();
-        btnGetData.label = "点击读取数据";
-        group.addChild(btnGetData);
-        btnGetData.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
-            console.log("注意，该方法只在 Facebook 真实环境下生效");
-            console.log('开始读取数据');
-            FBInstant.player.getDataAsync(['achievements', 'currentLife']).then((data) => {
-                //读取数据的回调方法
-                console.log('读取数据:', data);
+    }
+    private getStatsAsync() {
+        egretfb.EgretFBInstant.player
+            .getStatsAsync(['level', 'money'])
+            .then(function (stats) {
+                egret.log('getStatsAsync', JSON.stringify(stats))
             });
-        }, this);
-
-        let btnContext = new eui.Button();
-        btnContext.label = "获取游戏来源";
-        group.addChild(btnContext);
-        btnContext.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
-            console.log("注意，该方法只在 Facebook 真实环境下生效");
-            console.log('获取游戏来源id', FBInstant.context.getID());
-            console.log('获取游戏来源类型', FBInstant.context.getType());
-        }, this);
-
-
-        let btnGameOver = new eui.Button();
-        btnGameOver.label = "点击退出游戏";
-        group.addChild(btnGameOver);
-        btnGameOver.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
-            console.log("注意，该方法只在 Facebook 真实环境下生效");
-            FBInstant.quit();
-        }, this);
-
-
     }
-    private getRandom() {
-        return Math.floor(Math.random() * 100);
+    private incrementStatsAsync() {
+        var saveState = { level: 15, money: 1276, life: 9 }
+        egretfb.EgretFBInstant.player
+            .incrementStatsAsync(saveState)
+            .then(function (stats) {
+                egret.log('incrementStatsAsync', JSON.stringify(stats));
+            });
     }
-    /**
-     * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
-     */
-    private createBitmapByName(name: string): egret.Bitmap {
-        let result = new egret.Bitmap();
-        let texture: egret.Texture = RES.getRes(name);
-        result.texture = texture;
-        return result;
+    private getInterstitialAdAsync() {
+        var ad = null;
+        egretfb.EgretFBInstant.getInterstitialAdAsync('380072779038584_502979883414539')
+            .then((interstitial) => {
+                ad = interstitial;
+                egret.log('interstitial', JSON.stringify(interstitial))
+                egret.log('getPlacementID', ad.getPlacementID())
+                return ad.loadAsync();
+            }).then(() => {
+                egret.log('ad loaded');
+                // return ad.showAsync();
+            }, (err) => {
+                egret.log('err', JSON.stringify(err));
+            }).then(() => {
+                egret.log('watch ad');
+            });
+    }
+
+    private getConnectedPlayersAsync() {
+        egretfb.EgretFBInstant.player.getConnectedPlayersAsync().then((players) => {
+            egret.log('getConnectedPlayersAsync.length', players.length)
+            players.map((player) => {//好友很多的话，请注释此方法
+                egret.log('id', player.getID());
+                egret.log('name', player.getName());
+            })
+        })
+    }
+    private switchAsync() {
+        egret.log('context.id now:', egretfb.EgretFBInstant.context.getID())
+        egretfb.EgretFBInstant.context.switchAsync('12345678').then(() => {
+            egret.log('context.id switch:', egretfb.EgretFBInstant.context.getID())
+        }, (err) => {
+            egret.log('switchAsync error', JSON.stringify(err));
+        })
+    }
+    private chooseAsync() {
+        egret.log('context.id now:', egretfb.EgretFBInstant.context.getID())
+        egretfb.EgretFBInstant.context.chooseAsync().then(() => {
+            egret.log('context.id chooseAsync:', egretfb.EgretFBInstant.context.getID())
+        }, (err) => {
+            egret.log('chooseAsync error', JSON.stringify(err));
+        })
+    }
+    private createAsync() {
+        egretfb.EgretFBInstant.context.createAsync('123456').then(() => {
+            egret.log('context.id chooseAsync:', egretfb.EgretFBInstant.context.getID())
+        }, (err) => {
+            egret.log('chooseAsync error', JSON.stringify(err));
+        })
+    }
+    private getPlayersAsync() {
+        egretfb.EgretFBInstant.context.getPlayersAsync().then((players) => {
+            egret.log('getPlayersAsync:', JSON.stringify(players));
+        }, (err) => {
+            egret.log('getPlayersAsync error', JSON.stringify(err));
+        })
+    }
+    private setSessionData() {
+        egretfb.EgretFBInstant.setSessionData({ coinsEarned: 10, eventsSeen: ['start', 'zhangyu'] })
+    }
+    private shareAsync() {
+        var shareObj:egretfb.EgretSharePayload = { intent: 'REQUEST', image: '', text: 'zhangyu is asking for your help!', data: { myReplayData: '...' } };
+        egretfb.EgretFBInstant.shareAsync(shareObj).then(function () {
+            egret.log('share end! continue game')
+        });
+    }
+    private updateAsync() {
+        egretfb.EgretFBInstant.updateAsync({
+            action: 'CUSTOM',
+            cta: 'Join The Fight',
+            template: 'join_fight',
+            image: '',
+            text: 'zhangyu just invaded Y\'s village!',
+            data: { myReplayData: 'good' },
+            strategy: 'IMMEDIATE',
+            notification: 'NO_PUSH',
+        }).then(function () {
+            //当消息发送后，关闭游戏
+            egretfb.EgretFBInstant.quit();
+        });
+    }
+    private logEvent() {
+        var logged = egretfb.EgretFBInstant.logEvent(
+            'my_custom_event',
+            42,
+            { custom_property: 'custom_value' },
+        );
+        egret.log('logEvent', logged);
+    }
+    private quit() {
+        egretfb.EgretFBInstant.quit();
     }
 }
+
+
