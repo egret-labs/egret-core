@@ -106,13 +106,13 @@ declare namespace plugins {
     interface File {
 
         /**
-         * 文件内容的二进制流
+         * 文件内容的二进制流，如果开发者需要修改文件内容，请修改此属性
          */
         contents: Buffer;
 
 
         /**
-         * 文件绝对路径
+         * 文件绝对路径，如果开发者需要对文件进行重命名，请修改此属性
          */
         path: string;
 
