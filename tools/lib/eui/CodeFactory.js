@@ -468,6 +468,19 @@ var EXVariable = (function (_super) {
     return EXVariable;
 }(CodeBase));
 exports.EXVariable = EXVariable;
+var EXArray = (function (_super) {
+    __extends(EXArray, _super);
+    function EXArray(array) {
+        var _this = _super.call(this) || this;
+        _this.array = array;
+        return _this;
+    }
+    EXArray.prototype.toCode = function () {
+        return "[" + this.array.map(function (v) { return "\"" + v + "\""; }).join(",") + "]";
+    };
+    return EXArray;
+}(CodeBase));
+exports.EXArray = EXArray;
 /**
  * @private
  */
