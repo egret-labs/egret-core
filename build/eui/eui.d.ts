@@ -8401,6 +8401,10 @@ declare namespace eui {
          * @platform Web,Native
          */
         protected updateDisplayList(unscaledWidth: number, unscaledHeight: number): void;
+        /**
+         * @private
+         */
+        $onRemoveFromStage(): void;
     }
 }
 declare namespace eui {

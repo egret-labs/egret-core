@@ -18,14 +18,11 @@
       "name": "res"
     },
     {
-      "name": "eui"
-    },
-    {
       "name": "tween"
     },
     {
-      "name": "fbinstant",
-      "path": "./fbinstant"
+      "name":"egretfb",
+      "path":"./egretfb"
     }
   ]
 }

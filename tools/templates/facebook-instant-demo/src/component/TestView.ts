@@ -27,30 +27,35 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
+class TestView extends egret.DisplayObjectContainer {
+    public constructor() {
+        super();
+        this.view = new egret.DisplayObjectContainer();
+        this.init();
+    }
 
-class AssetAdapter implements eui.IAssetAdapter {
-    /**
-     * @language zh_CN
-     * 解析素材
-     * @param source 待解析的新素材标识符
-     * @param compFunc 解析完成回调函数，示例：callBack(content:any,source:string):void;
-     * @param thisObject callBack的 this 引用
-     */
-    public getAsset(source: string, compFunc:Function, thisObject: any): void {
-        function onGetRes(data: any): void {
-            compFunc.call(thisObject, data, source);
-        }
-        if (RES.hasRes(source)) {
-            let data = RES.getRes(source);
-            if (data) {
-                onGetRes(data);
-            }
-            else {
-                RES.getResAsync(source, onGetRes, this);
-            }
-        }
-        else {
-            RES.getResByUrl(source, onGetRes, this, RES.ResourceItem.TYPE_IMAGE);
-        }
+    protected view: egret.DisplayObjectContainer;
+    private init(): void {
+        let back: Button = new Button("Back Menu");
+        back.x = (Context.stageWidth - back.width) / 2;
+        back.y = 10;
+        this.addChild(back);
+        back.addEventListener("CHAGE_STAGE", this.change_scene, this);
+    }
+    private change_scene(evt: egret.Event): void {
+        this.dispose();
+        Main.backMenu();
+    }
+
+    public start(): void {
+        this.view = new egret.DisplayObjectContainer();
+        this.view.y = 50;
+        this.addChild(this.view);
+    }
+
+    protected dispose(): void {
+        this.view.removeChildren();
+        this.removeChild(this.view);
+        this.view = null;
     }
 }

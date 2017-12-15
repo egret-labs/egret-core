@@ -1,26 +1,24 @@
-# Facebook InstantGame API v4.1 说明
+# Facebook InstantGame API v5.0 说明
 
-# FBInstant
-
-Instant Games SDK 的顶级命名空间.
+# EgretFBInstant
 
 ## player
 包含当前用户信息的一些方法和属性
 
 ### getID()
 玩家的唯一标识ID。一个Facebook用户的id是不会改变的。同一个Facebook的用户，在不同的游戏里会有不用的id。
-注意，该方法必须放在 FBInstant.initializeAsync() 的回调里。
+注意，该方法必须放在 egretfb.EgretFBInstant.initializeAsync() 的回调里。
 
 **代码示例：**
 
 ```
-// 该方法必须放在 FBInstant.initializeAsync() 的回调里
-var playerID = FBInstant.player.getID();
+// 该方法必须放在 egretfb.EgretFBInstant.initializeAsync() 的回调里
+var playerID = egretfb.EgretFBInstant.player.getID();
 ```
 返回值：**string**，用户的唯一ID
 
 ### getSignedPlayerInfoAsync( )
-获取玩家的唯一ID和一个签名，签名用来验证该 ID 来自 Facebook ，没有被篡改。该方法必须放在 FBInstant.initializeAsync() 的回调里。
+获取玩家的唯一ID和一个签名，签名用来验证该 ID 来自 Facebook ，没有被篡改。该方法必须放在 egretfb.EgretFBInstant.initializeAsync() 的回调里。
 
 **参数**
 
@@ -29,13 +27,13 @@ var playerID = FBInstant.player.getID();
 **代码示例**
 
 ```
-该方法必须放在 FBInstant.initializeAsync() 的回调里。
+该方法必须放在 egretfb.EgretFBInstant.initializeAsync() 的回调里。
 // resolves.
-FBInstant.player.getSignedPlayerInfoAsync('my_metadata')
+egretfb.EgretFBInstant.player.getSignedPlayerInfoAsync('my_metadata')
   .then(function (result) {
     // ID和签名的验证应放在服务器端处理。
     SendToMyServer(
-      result.getPlayerID(), // 和 FBInstant.player.getID() 相同
+      result.getPlayerID(), // 和 egretfb.EgretFBInstant.player.getID() 相同
       result.getSignature(),
       'GAIN_COINS',
       100);
@@ -51,28 +49,28 @@ FBInstant.player.getSignedPlayerInfoAsync('my_metadata')
 
 ### getName()
 用户的名字。
-注意，该方法必须放在 FBInstant.initializeAsync() 的回调里。
+注意，该方法必须放在 egretfb.EgretFBInstant.initializeAsync() 的回调里。
 
 代码示例：
 
 ```
-//该方法必须放在 FBInstant.initializeAsync() 的回调里。
-var playerName = FBInstant.player.getName();
+//该方法必须放在 egretfb.EgretFBInstant.initializeAsync() 的回调里。
+var playerName = egretfb.EgretFBInstant.player.getName();
 ```
 返回值：**string**，用户的名字
 
 ### getPhoto()
 用户头像的链接地址。头像的图片始终为正方形，尺寸最小为200x200。建议在游戏中使用的时候，先将图像缩放到所需的大小。
-注意，该方法必须放在 FBInstant.initializeAsync() 的回调里。
+注意，该方法必须放在 egretfb.EgretFBInstant.initializeAsync() 的回调里。
 警告：由于跨域的问题，在 canvas 里使用图片会有问题。要防止此情况，请将图像的 cross-origin 属性设置为 "anonymous"
 
 代码示例：
 
 ```
-//该方法必须放在 FBInstant.initializeAsync() 的回调里。
+//该方法必须放在 egretfb.EgretFBInstant.initializeAsync() 的回调里。
 var playerImage = new Image();
 playerImage.crossOrigin = 'anonymous';
-playerImage.src = FBInstant.player.getPhoto();
+playerImage.src = egretfb.EgretFBInstant.player.getPhoto();
 ```
 返回值：string，用户的头像的链接地址
 
@@ -86,7 +84,7 @@ playerImage.src = FBInstant.player.getPhoto();
 代码示例：
 
 ```
-FBInstant.player
+egretfb.EgretFBInstant.player
   .getDataAsync(['achievements', 'currentLife'])
   .then(function(data) {
      console.log('data is loaded');
@@ -109,7 +107,7 @@ FBInstant.player
 代码示例：
 
 ```
-FBInstant.player
+egretfb.EgretFBInstant.player
   .setDataAsync({
     achievements: ['medal1', 'medal2', 'medal3'],
     currentLife: 300,
@@ -132,12 +130,12 @@ FBInstant.player
 代码示例：
 
 ```
-FBInstant.player
+egretfb.EgretFBInstant.player
   .setDataAsync({
     achievements: ['medal1', 'medal2', 'medal3'],
     currentLife: 300,
   })
-  .then(FBInstant.player.flushDataAsync)
+  .then(egretfb.EgretFBInstant.player.flushDataAsync)
   .then(function() {
     console.log('Data persisted to FB!');
 });
@@ -155,7 +153,7 @@ FBInstant.player
 代码示例：
 
 ```
-var connectedPlayers = FBInstant.player.getConnectedPlayersAsync()
+var connectedPlayers = egretfb.EgretFBInstant.player.getConnectedPlayersAsync()
   .then(function(players) {
     console.log(players.map(function(player) {
       return {
@@ -176,13 +174,13 @@ var connectedPlayers = FBInstant.player.getConnectedPlayersAsync()
 包含当前游戏环境的一些方法和属性
 
 ### getID()
-当前游戏来源的唯一id。它代表了当前游戏是在哪玩的（例如：是在 messenger 的对话里还是 facebook 的网页里）。如果是在独立页面玩的游戏，这个id值为 null。只有在 FBInstant.startGameAsync 方法被调用后，这个结果才能保证是正确的。
+当前游戏来源的唯一id。它代表了当前游戏是在哪玩的（例如：是在 messenger 的对话里还是 facebook 的网页里）。如果是在独立页面玩的游戏，这个id值为 null。只有在 egretfb.EgretFBInstant.startGameAsync 方法被调用后，这个结果才能保证是正确的。
 
 代码示例：
 
 ```
-//该方法必须放在 FBInstant.startGameAsync() 的回调里。
-var contextID = FBInstant.context.getID();
+//该方法必须放在 egretfb.EgretFBInstant.startGameAsync() 的回调里。
+var contextID = egretfb.EgretFBInstant.context.getID();
 ```
 返回值 string，当前游戏环境的id。
 
@@ -192,8 +190,8 @@ var contextID = FBInstant.context.getID();
 代码示例：
 
 ```
-//该方法必须放在 FBInstant.startGameAsync() 的回调里。
-var contextType = FBInstant.context.getType();
+//该方法必须放在 egretfb.EgretFBInstant.startGameAsync() 的回调里。
+var contextType = egretfb.EgretFBInstant.context.getType();
 ```
 返回值 ("POST" | "THREAD" | "GROUP" | "SOLO") 当前游戏环境的类型。
 
@@ -208,33 +206,33 @@ var contextType = FBInstant.context.getType();
 代码示例：
 
 ```
-console.log(FBInstant.context.isSizeBetween(3, 5)); //(Context size = 4)
+console.log(egretfb.EgretFBInstant.context.isSizeBetween(3, 5)); //(Context size = 4)
 // {answer: true, minSize: 3, maxSize: 5}
 ```
 ```
-console.log(FBInstant.context.isSizeBetween(5, 7)); //(Context size = 4)
+console.log(egretfb.EgretFBInstant.context.isSizeBetween(5, 7)); //(Context size = 4)
 // {answer: false, minSize: 5, maxSize: 7}
 ```
 ```
-console.log(FBInstant.context.isSizeBetween(2, 10));// (Context size = 3)
+console.log(egretfb.EgretFBInstant.context.isSizeBetween(2, 10));// (Context size = 3)
 // {answer: true, minSize: 2, maxSize: 10}
-console.log(FBInstant.context.isSizeBetween(4, 8));// (Still in same context)
+console.log(egretfb.EgretFBInstant.context.isSizeBetween(4, 8));// (Still in same context)
 // {answer: true, minSize: 2, maxSize: 10}
 ```
 ```
-console.log(FBInstant.context.isSizeBetween(3, null)); //(Context size = 4)
+console.log(egretfb.EgretFBInstant.context.isSizeBetween(3, null)); //(Context size = 4)
 // {answer: true, minSize: 3, maxSize: null}
 ```
 ```
-console.log(FBInstant.context.isSizeBetween(null, 3)); (Context size = 4)
+console.log(egretfb.EgretFBInstant.context.isSizeBetween(null, 3)); (Context size = 4)
 // {answer: false, minSize: null, maxSize: 3}
 ```
 ```
-console.log(FBInstant.context.isSizeBetween("test", 5)); (Context size = 4)
+console.log(egretfb.EgretFBInstant.context.isSizeBetween("test", 5)); (Context size = 4)
 // null
 ```
 ```
-console.log(FBInstant.context.isSizeBetween(0, 100)); (Context size = null)
+console.log(egretfb.EgretFBInstant.context.isSizeBetween(0, 100)); (Context size = null)
 // null
 ```
 返回值 ContextSizeResponse。
@@ -249,12 +247,12 @@ console.log(FBInstant.context.isSizeBetween(0, 100)); (Context size = null)
 代码示例：
 
 ```
-console.log(FBInstant.context.getID());
+console.log(egretfb.EgretFBInstant.context.getID());
 // 1122334455
-FBInstant.context
+egretfb.EgretFBInstant.context
   .switchAsync('1234567890')
   .then(function() {
-    console.log(FBInstant.context.getID());
+    console.log(egretfb.EgretFBInstant.context.getID());
     // 1234567890
   });
 ```
@@ -283,26 +281,26 @@ FBInstant.context
 代码示例：
 
 ```
-console.log(FBInstant.context.getID());
+console.log(egretfb.EgretFBInstant.context.getID());
 // 1122334455
-FBInstant.context
+egretfb.EgretFBInstant.context
   .chooseAsync()
   .then(function() {
-    console.log(FBInstant.context.getID());
+    console.log(egretfb.EgretFBInstant.context.getID());
     // 1234567890
   });
 ```
 
 ```
-console.log(FBInstant.context.getID());
+console.log(egretfb.EgretFBInstant.context.getID());
 // 1122334455
-FBInstant.context
+egretfb.EgretFBInstant.context
   .chooseAsync({
     filters: ['NEW_CONTEXT_ONLY'],
     minSize: 3,
   })
   .then(function() {
-    console.log(FBInstant.context.getID());
+    console.log(egretfb.EgretFBInstant.context.getID());
     // 1234567890
   });
 ```
@@ -325,12 +323,12 @@ FBInstant.context
 代码示例：
 
 ```
-console.log(FBInstant.context.getID());
+console.log(egretfb.EgretFBInstant.context.getID());
 // 1122334455
-FBInstant.context
+egretfb.EgretFBInstant.context
   .createAsync('12345678')
   .then(function() {
-    console.log(FBInstant.context.getID());
+    console.log(egretfb.EgretFBInstant.context.getID());
     // 5544332211
   });
 ```
@@ -350,7 +348,7 @@ FBInstant.context
 代码示例：
 
 ```
-var contextPlayers = FBInstant.context.getPlayersAsync()
+var contextPlayers = egretfb.EgretFBInstant.context.getPlayersAsync()
   .then(function(players) {
     console.log(players.map(function(player) {
       return {
@@ -371,24 +369,24 @@ var contextPlayers = FBInstant.context.getPlayersAsync()
 
 获取用户的地域信息。 例如 **zh_CN**、 **en_US**
 全部的地域信息数据，请看此链接 https://www.facebook.com/translations/FacebookLocales.xml 。使用这个值用来确定游戏中应该显示那种语言。
-该方法必须放在 FBInstant.initializeAsync() 的回调里。
+该方法必须放在 egretfb.EgretFBInstant.initializeAsync() 的回调里。
 
 代码示例：
 
 ```
-// 该方法必须放在 FBInstant.initializeAsync() 的回调里
-var locale = FBInstant.getLocale(); // 'en_US'
+// 该方法必须放在 egretfb.EgretFBInstant.initializeAsync() 的回调里
+var locale = egretfb.EgretFBInstant.getLocale(); // 'en_US'
 ```
 返回值 string，当前地域信息。
 
 ### getPlatform()
-当前游戏运行在哪个平台。该方法必须放在 FBInstant.initializeAsync() 的回调里
+当前游戏运行在哪个平台。该方法必须放在 egretfb.EgretFBInstant.initializeAsync() 的回调里
 
 代码示例：
 
 ```
-该方法必须放在 FBInstant.initializeAsync() 的回调里
-var platform = FBInstant.getPlatform(); // 'IOS'
+该方法必须放在 egretfb.EgretFBInstant.initializeAsync() 的回调里
+var platform = egretfb.EgretFBInstant.getPlatform(); // 'IOS'
 ```
 返回值 string，当前游戏运行的平台("IOS" | "ANDROID" | "WEB" | "MOBILE_WEB")
 
@@ -398,7 +396,7 @@ var platform = FBInstant.getPlatform(); // 'IOS'
 代码示例：
 
 ```
-var sdkVersion = FBInstant.getSDKVersion(); // '4.1'
+var sdkVersion = egretfb.EgretFBInstant.getSDKVersion(); // '4.1'
 ```
 返回值 string，SDK 的版本号。
 
@@ -408,12 +406,12 @@ var sdkVersion = FBInstant.getSDKVersion(); // '4.1'
 代码示例：
 
 ```
-FBInstant.initializeAsync().then(function() {
+egretfb.EgretFBInstant.initializeAsync().then(function() {
   // 在初始化完成之前，下面这些属性都是无法得到的。必须要放在这个回调方法里。
-  var locale = FBInstant.getLocale(); // 'en_US'
-  var platform = FBInstant.getPlatform(); // 'IOS'
-  var sdkVersion = FBInstant.getSDKVersion(); // '4.1'
-  var playerID = FBInstant.player.getID();
+  var locale = egretfb.EgretFBInstant.getLocale(); // 'en_US'
+  var platform = egretfb.EgretFBInstant.getPlatform(); // 'IOS'
+  var sdkVersion = egretfb.EgretFBInstant.getSDKVersion(); // '4.1'
+  var playerID = egretfb.EgretFBInstant.player.getID();
 });
 ```
 *  Throws INVALID_OPERATION
@@ -431,7 +429,7 @@ FBInstant.initializeAsync().then(function() {
 代码示例：
 
 ```
-FBInstant.setLoadingProgress(50); // 50%的资源被加载了
+egretfb.EgretFBInstant.setLoadingProgress(50); // 50%的资源被加载了
 ```
 返回值 void
 
@@ -442,8 +440,8 @@ FBInstant.setLoadingProgress(50); // 50%的资源被加载了
 代码示例：
 
 ```
-//该方法必须放在 FBInstant.initializeAsync() 的回调里
-FBInstant.getSupportedAPIs();
+//该方法必须放在 egretfb.EgretFBInstant.initializeAsync() 的回调里
+egretfb.EgretFBInstant.getSupportedAPIs();
 // ['getLocale', 'initializeAsync', 'player.getID', 'context.getType', ...]
 ```
 返回值  Array&lt;string> 返回客户端支持的 API 函数列表
@@ -457,8 +455,8 @@ FBInstant.getSupportedAPIs();
 代码示例：
 
 ```
-//该方法必须放在 FBInstant.initializeAsync() 的回调里
-const entryPointData = FBInstant.getEntryPointData();
+//该方法必须放在 egretfb.EgretFBInstant.initializeAsync() 的回调里
+const entryPointData = egretfb.EgretFBInstant.getEntryPointData();
 ```
 返回值  Object 与当前入口点相关的数据。
 
@@ -472,7 +470,7 @@ const entryPointData = FBInstant.getEntryPointData();
 代码示例：
 
 ```
-FBInstant.setSessionData({coinsEarned: 10, eventsSeen: ['start', ...]});
+egretfb.EgretFBInstant.setSessionData({coinsEarned: 10, eventsSeen: ['start', ...]});
 ```
 返回值 void
 
@@ -482,7 +480,7 @@ FBInstant.setSessionData({coinsEarned: 10, eventsSeen: ['start', ...]});
 代码示例：
 
 ```
-FBInstant.startGameAsync().then(function() {
+egretfb.EgretFBInstant.startGameAsync().then(function() {
   myGame.start();
 });
 ```
@@ -491,7 +489,7 @@ FBInstant.startGameAsync().then(function() {
 返回值 [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)当游戏应当开始玩的时候会返回 promise
 
 ### shareAsync()
-这将启动一个对话框，让用户共享指定的内容，可能是一个 Messenger 里的消息，或者是用户时间线上的一个帖子。一个blob数据可以附加在分享上，当游戏通过分享启动时，可以通过 FBInstant.getEntryPointData() 方法获取。这个数据必须少于1000个字符。用户可以选择取消分享，或者关闭对话框，但不论用户是否真的分享了内容，都会返回 promise 的 resolve。
+这将启动一个对话框，让用户共享指定的内容，可能是一个 Messenger 里的消息，或者是用户时间线上的一个帖子。一个blob数据可以附加在分享上，当游戏通过分享启动时，可以通过 egretfb.EgretFBInstant.getEntryPointData() 方法获取。这个数据必须少于1000个字符。用户可以选择取消分享，或者关闭对话框，但不论用户是否真的分享了内容，都会返回 promise 的 resolve。
 
 **参数**
 
@@ -500,7 +498,7 @@ FBInstant.startGameAsync().then(function() {
 代码示例：
 
 ```
-FBInstant.shareAsync({
+egretfb.EgretFBInstant.shareAsync({
   intent: 'REQUEST',
   image: base64Picture,
   text: 'X is asking for your help!',
@@ -530,9 +528,9 @@ FBInstant.shareAsync({
 //这将发送一个自定义更新。如果游戏是运行在一个 messenger 的对话里，
 //它将发送一条带有图文的消息到指定的对话里。
 //如果其他用户通过这条消息启动了游戏，
-//这些游戏会话将可以通过 FBInstant.getEntryPointData() 方法获取附加的 blob 数据。 
+//这些游戏会话将可以通过 egretfb.EgretFBInstant.getEntryPointData() 方法获取附加的 blob 数据。 
 
-FBInstant.updateAsync({
+egretfb.EgretFBInstant.updateAsync({
   action: 'CUSTOM',
   cta: 'Join The Fight',
   template:'join_fight',
@@ -543,7 +541,7 @@ FBInstant.updateAsync({
   notification: 'NO_PUSH',
 }).then(function() {
   //当消息发送后，关闭游戏
-  FBInstant.quit();
+  egretfb.EgretFBInstant.quit();
 });
 ```
 ** Throws INVALID_PARAM
@@ -556,7 +554,7 @@ FBInstant.updateAsync({
 代码示例：
 
 ```
-FBInstant.quit();
+egretfb.EgretFBInstant.quit();
 ```
 返回值 void
 
@@ -575,7 +573,7 @@ FBInstant.quit();
 代码示例：
 
 ```
-var logged = FBInstant.logEvent(
+var logged = egretfb.EgretFBInstant.logEvent(
   'my_custom_event',
   42,
   {custom_property: 'custom_value'},

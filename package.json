@@ -288,24 +288,13 @@
         "dependencies": []
       },
       {
-        "name": "game",
-        "description": "game 游戏库",
-        "description_en": "game lib",
-        "files": [],
-        "root": "src/extension/game",
-        "dependencies": [
-          "egret"
-        ]
-      },
-      {
         "name": "res",
         "description": "res 资源加载库",
         "description_en": "resource lib",
         "files": [],
         "root": "src/extension/resource",
         "dependencies": [
-          "egret",
-          "game"
+          "egret"
         ]
       },
       {
@@ -319,11 +308,19 @@
         ]
       },
       {
-        "name": "experimental",
-        "description": "egret实验功能库",
-        "description_en": "egret experimental function lib",
+        "name": "dragonBones",
+        "description": "dragonbones 龙骨动画库",
+        "description_en": "dragonbones animation lib",
         "files": [],
-        "root": "src/extension/experimental",
+        "root": "",
+        "dependencies": []
+      },
+      {
+        "name": "game",
+        "description": "game 游戏库",
+        "description_en": "game lib",
+        "files": [],
+        "root": "src/extension/game",
         "dependencies": [
           "egret"
         ]
@@ -349,20 +346,22 @@
         ]
       },
       {
-        "name": "dragonBones",
-        "description": "dragonbones 龙骨动画库",
-        "description_en": "dragonbones animation lib",
-        "files": [],
-        "root": "",
-        "dependencies": []
-      },
-      {
         "name": "egret3d",
         "description": "egret 3D引擎库",
         "description_en": "egret 3D engine lib",
         "files": [],
         "root": "",
         "dependencies": []
+      },
+      {
+        "name": "experimental",
+        "description": "egret实验功能库",
+        "description_en": "egret experimental function lib",
+        "files": [],
+        "root": "src/extension/experimental",
+        "dependencies": [
+          "egret"
+        ]
       }
     ],
     "platforms": [
