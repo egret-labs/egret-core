@@ -43,7 +43,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var file = require("../lib/FileUtil");
 var _utils = require("../lib/utils");
 var _path = require("path");
-var cp = require("child_process");
 var utils_1 = require("../lib/utils");
 var EgretProjectData = (function () {
     function EgretProjectData() {
@@ -97,12 +96,6 @@ var EgretProjectData = (function () {
     };
     EgretProjectData.prototype.getFilePath = function (fileName) {
         return _path.resolve(this.getProjectRoot(), fileName);
-    };
-    /**
-     * 获取项目使用的egret版本号
-     */
-    EgretProjectData.prototype.getVersion = function () {
-        return this.egretProperties.egret_version;
     };
     EgretProjectData.prototype.getReleaseRoot = function () {
         var p = "bin-release";
@@ -168,7 +161,7 @@ var EgretProjectData = (function () {
         if (!p) {
             var engineVersion = this.egretProperties.engineVersion;
             if (engineVersion) {
-                var versions = this.getEgretVersionInfos();
+                var versions = exports.engineData.getEgretToolsInstalledList();
                 for (var _i = 0, versions_1 = versions; _i < versions_1.length; _i++) {
                     var version_1 = versions_1[_i];
                     if (version_1.version == engineVersion) {
@@ -218,28 +211,6 @@ var EgretProjectData = (function () {
     };
     EgretProjectData.prototype.getLibraryFolder = function () {
         return this.getFilePath('libs/modules');
-    };
-    EgretProjectData.prototype.getEgretVersionInfos = function () {
-        var stdout = cp.execSync("egret versions", { encoding: "utf-8" });
-        var versions = stdout.toString().split("\n");
-        //     //删除最后一行空格
-        versions = versions.slice(0, versions.length - 1);
-        var result = versions.map(function (versionStr) {
-            var version;
-            var path;
-            var versionRegExp = /(\d+\.){2}\d+(\.\d+)?/g;
-            var matchResultVersion = versionStr.match(versionRegExp);
-            if (matchResultVersion && matchResultVersion.length > 0) {
-                version = matchResultVersion[0];
-            }
-            var pathRegExp = /(?:[a-zA-Z]\:)?(?:[\\|\/][^\\|\/]+)+[\\|\/]?/g;
-            var matchResult2 = versionStr.match(pathRegExp);
-            if (matchResult2 && matchResult2.length > 0) {
-                path = _path.join(matchResult2[0], '.');
-            }
-            return { version: version, path: path };
-        });
-        return result;
     };
     EgretProjectData.prototype.getModulesConfig = function (platform) {
         var _this = this;
@@ -300,24 +271,41 @@ var EgretProjectData = (function () {
     return EgretProjectData;
 }());
 __decorate([
-    utils_1.cache
-], EgretProjectData.prototype, "getEgretVersionInfos", null);
-__decorate([
     _utils.cache
 ], EgretProjectData.prototype, "getModulesConfig", null);
 var EngineData = (function () {
     function EngineData() {
+        this.versions = [];
     }
     EngineData.prototype.getEgretToolsInstalledList = function () {
+        return this.versions;
+    };
+    EngineData.prototype.init = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var result;
+            var data, versionsArr;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, utils_1.shell('egret', ['versions'])];
+                    case 0: return [4 /*yield*/, utils_1.shell(process.argv[0], [process.argv[1], "versions"])];
                     case 1:
-                        result = _a.sent();
-                        // await ()
-                        console.log(result);
+                        data = _a.sent();
+                        versionsArr = data.stdout.toString().split("\n");
+                        //     //删除最后一行空格
+                        versionsArr = versionsArr.slice(0, versionsArr.length - 1);
+                        this.versions = versionsArr.map(function (versionStr) {
+                            var version;
+                            var path;
+                            var versionRegExp = /(\d+\.){2}\d+(\.\d+)?/g;
+                            var matchResultVersion = versionStr.match(versionRegExp);
+                            if (matchResultVersion && matchResultVersion.length > 0) {
+                                version = matchResultVersion[0];
+                            }
+                            var pathRegExp = /(?:[a-zA-Z]\:)?(?:[\\|\/][^\\|\/]+)+[\\|\/]?/g;
+                            var matchResult2 = versionStr.match(pathRegExp);
+                            if (matchResult2 && matchResult2.length > 0) {
+                                path = _path.join(matchResult2[0], '.');
+                            }
+                            return { version: version, path: path };
+                        });
                         return [2 /*return*/];
                 }
             });

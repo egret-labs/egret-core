@@ -118,7 +118,7 @@ var UglifyPlugin = (function () {
                     matcher = _a[_i];
                     jscode = utils.uglify(matcher.sources.map(function (s) {
                         var code = _this.codes[s];
-                        if (code == ';') {
+                        if (!code) {
                             throw "missing source file " + s;
                         }
                         return code;

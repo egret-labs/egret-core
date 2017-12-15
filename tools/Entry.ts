@@ -40,6 +40,8 @@ require('./globals');
 import Parser = require("./parser/Parser");
 import earlyParams = require("./parser/ParseEarlyVersionParams");
 import utils = require('./lib/utils');
+import { shell } from "./lib/utils";
+import { engineData } from "./project/index";
 
 
 var fs = require('fs')
@@ -105,9 +107,14 @@ function getLanguageInfo() {
 getLanguageInfo();//引用语言包
 
 
-export function executeCommandLine(args: string[]): void {
+export async function executeCommandLine(args: string[]) {
     var options = Parser.parseCommandLine(args);
     egret.args = options;
+
+    const version = getPackageJsonConfig().version;
+    console.log(`您正在使用白鹭编译器 ${version} 版本`)
+
+    await engineData.init();
 
     earlyParams.parse(options, args);
     var exitcode = entry.executeOption(options);
@@ -119,7 +126,9 @@ export function executeCommandLine(args: string[]): void {
             entry.exit(value);
         }).catch(e => console.log(e))
     }
+
 }
+
 class Entry {
 
     executeOption(options: egret.ToolArgs) {

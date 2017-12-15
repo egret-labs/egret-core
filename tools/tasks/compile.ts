@@ -102,7 +102,7 @@ export class UglifyPlugin {
         for (let matcher of this.matchers) {
             const jscode = utils.uglify(matcher.sources.map(s => {
                 const code = this.codes[s];
-                if (code == ';') {
+                if (!code) {
                     throw `missing source file ${s}`
                 }
                 return code;

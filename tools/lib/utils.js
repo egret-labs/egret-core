@@ -414,7 +414,7 @@ function shell(path, args, opt, verbase) {
             console.log(str);
         }
     };
-    var callback = function (reslove, reject) {
+    return new Promise(function (reslove, reject) {
         // path = "\"" + path + "\"";
         // var shell = cp.spawn(path + " " + args.join(" "));
         var shell = cp.spawn(path, args);
@@ -424,7 +424,6 @@ function shell(path, args, opt, verbase) {
         shell.stdout.on("data", printStdoutBufferMessage);
         shell.stdout.on("error", printStdoutBufferMessage);
         shell.on('exit', function (code) {
-            console.log(code);
             if (code != 0) {
                 if (verbase) {
                     console.log('Failed: ' + code);
@@ -435,8 +434,7 @@ function shell(path, args, opt, verbase) {
                 reslove({ code: code, stdout: stdout, stderr: stderr });
             }
         });
-    };
-    return new Promise(callback);
+    });
 }
 exports.shell = shell;
 ;

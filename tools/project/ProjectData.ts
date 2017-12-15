@@ -94,13 +94,6 @@ class EgretProjectData {
         return _path.resolve(this.getProjectRoot(), fileName);
     }
 
-    /**
-     * 获取项目使用的egret版本号
-     */
-    getVersion() {
-        return this.egretProperties.egret_version;
-    }
-
     getReleaseRoot() {
         var p = "bin-release";
         if (globals.hasKeys(this.egretProperties, ["publish", "path"])) {
@@ -174,7 +167,7 @@ class EgretProjectData {
         if (!p) {
             const engineVersion = this.egretProperties.engineVersion
             if (engineVersion) {
-                const versions = this.getEgretVersionInfos();
+                const versions = engineData.getEgretToolsInstalledList();
                 for (let version of versions) {
                     if (version.version == engineVersion) {
                         return version.path;
@@ -227,31 +220,6 @@ class EgretProjectData {
     getLibraryFolder() {
         return this.getFilePath('libs/modules');
     }
-
-    @cache
-    getEgretVersionInfos() {
-        var stdout = cp.execSync("egret versions", { encoding: "utf-8" });
-        let versions: string[] = stdout.toString().split("\n");
-        //     //删除最后一行空格
-        versions = versions.slice(0, versions.length - 1);
-        let result: egret.VersionInfo[] = versions.map(versionStr => {
-            let version: string;
-            let path: string;
-            const versionRegExp = /(\d+\.){2}\d+(\.\d+)?/g;
-            let matchResultVersion = versionStr.match(versionRegExp);
-            if (matchResultVersion && matchResultVersion.length > 0) {
-                version = matchResultVersion[0];
-            }
-            const pathRegExp = /(?:[a-zA-Z]\:)?(?:[\\|\/][^\\|\/]+)+[\\|\/]?/g;
-            let matchResult2 = versionStr.match(pathRegExp);
-            if (matchResult2 && matchResult2.length > 0) {
-                path = _path.join(matchResult2[0], '.');
-            }
-            return { version, path };
-        });
-        return result;
-    }
-
 
     @_utils.cache
     getModulesConfig(platform: egret.target.Type) {
@@ -316,10 +284,33 @@ class EgretProjectData {
 
 class EngineData {
 
-    async getEgretToolsInstalledList() {
-        const result = await shell('egret', ['versions']);
-        // await ()
-        console.log(result);
+    private versions: egret.VersionInfo[] = [];
+
+    getEgretToolsInstalledList() {
+        return this.versions;
+    }
+
+    async init() {
+
+        const data = await shell(process.argv[0], [process.argv[1], "versions"]);
+        let versionsArr: string[] = data.stdout.toString().split("\n");
+        //     //删除最后一行空格
+        versionsArr = versionsArr.slice(0, versionsArr.length - 1);
+        this.versions = versionsArr.map(versionStr => {
+            let version: string;
+            let path: string;
+            const versionRegExp = /(\d+\.){2}\d+(\.\d+)?/g;
+            let matchResultVersion = versionStr.match(versionRegExp);
+            if (matchResultVersion && matchResultVersion.length > 0) {
+                version = matchResultVersion[0];
+            }
+            const pathRegExp = /(?:[a-zA-Z]\:)?(?:[\\|\/][^\\|\/]+)+[\\|\/]?/g;
+            let matchResult2 = versionStr.match(pathRegExp);
+            if (matchResult2 && matchResult2.length > 0) {
+                path = _path.join(matchResult2[0], '.');
+            }
+            return { version, path };
+        });
     }
 }
 

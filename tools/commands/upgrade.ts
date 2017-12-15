@@ -3,7 +3,6 @@ import service = require('../service/index');
 import Project = require('../project');
 import path = require('path');
 import utils = require('../lib/utils')
-import modify = require("./upgrade/ModifyProperties");
 import doT = require('../lib/doT');
 import projectAction = require('../actions/Project');
 
@@ -30,35 +29,36 @@ class UpgradeCommand implements egret.Command {
     }
 
     private async run() {
-        var version = Project.projectData.getVersion();
-        if (!version) {
-            version = "1.0.0";
-        }
+        //     var version = Project.projectData.getVersion();
+        //     if (!version) {
+        //         version = "1.0.0";
+        //     }
 
 
-        let upgradeConfigArr: VersionInfo[] = [
-            { "v": "4.0.1", command: Upgrade_4_0_1 },
-            { "v": "4.0.3" },
-            { "v": "4.1.0", command: Upgrade_4_1_0 },
-            { "v": "5.0.0" },
-            { "v": "5.0.1", command: Upgrade_5_0_1 },
-            { "v": "5.0.8", command: Upgrade_5_0_8 },
-            { "v": "5.0.14" }
-        ];
+        //     let upgradeConfigArr: VersionInfo[] = [
+        //         { "v": "4.0.1", command: Upgrade_4_0_1 },
+        //         { "v": "4.0.3" },
+        //         { "v": "4.1.0", command: Upgrade_4_1_0 },
+        //         { "v": "5.0.0" },
+        //         { "v": "5.0.1", command: Upgrade_5_0_1 },
+        //         { "v": "5.0.8", command: Upgrade_5_0_8 },
+        //         { "v": "5.0.14" }
+        //     ];
 
-        try {
-            modify.initProperties();
-            await series(upgrade, upgradeConfigArr.concat())
-            modify.save(upgradeConfigArr.pop().v);
-            globals.log(1702);
-            await service.client.closeServer(Project.projectData.getProjectRoot())
-            globals.exit(0);
-        }
-        catch (e) {
-            globals.log(1717);
-            console.log(e)
-            globals.exit(1705);
-        }
+        //     try {
+        //         modify.initProperties();
+        //         await series(upgrade, upgradeConfigArr.concat())
+        //         modify.save(upgradeConfigArr.pop().v);
+        //         globals.log(1702);
+        //         await service.client.closeServer(Project.projectData.getProjectRoot())
+        //         globals.exit(0);
+        //     }
+        //     catch (e) {
+        //         globals.log(1717);
+        //         console.log(e)
+        //         globals.exit(1705);
+        //     }
+        // }
     }
 }
 
@@ -96,31 +96,31 @@ let series = <T>(cb: (data: T, index?: number, result?: any) => PromiseLike<numb
 }
 
 function upgrade(info: VersionInfo) {
-    var version = Project.projectData.getVersion();
-    var v = info.v;
-    var command: egret.Command;
-    if (info.command) {
-        command = new info.command();
-    }
-    var result = globals.compressVersion(version, v);
-    if (result < 0) {
-        globals.log(1704, v);
-        if (!command) {
-            return Promise.resolve(0);
-        } else {
-            var commandPromise = command.execute();
-            if (typeof commandPromise == 'number') {
-                console.error('internal error !!!')
-            }
-            else {
-                return commandPromise;
-            }
+    // var version = Project.projectData.getVersion();
+    // var v = info.v;
+    // var command: egret.Command;
+    // if (info.command) {
+    //     command = new info.command();
+    // }
+    // var result = globals.compressVersion(version, v);
+    // if (result < 0) {
+    //     globals.log(1704, v);
+    //     if (!command) {
+    //         return Promise.resolve(0);
+    //     } else {
+    //         var commandPromise = command.execute();
+    //         if (typeof commandPromise == 'number') {
+    //             console.error('internal error !!!')
+    //         }
+    //         else {
+    //             return commandPromise;
+    //         }
 
-        }
+    //     }
 
-    } else {
-        return Promise.resolve(0)
-    }
+    // } else {
+    //     return Promise.resolve(0)
+    // }
 }
 
 
@@ -163,7 +163,7 @@ class Upgrade_4_1_0 {
      * 将用户的系统内置模块添加 path 字段，并指向老版本的模块，而非新版本模块
      */
     async execute() {
-        modify.upgradeModulePath();
+        // modify.upgradeModulePath();
         globals.log(1703, "https://github.com/egret-labs/egret-core/tree/master/docs/cn/release-note/4.1.0")
         return 0;
     }
@@ -179,7 +179,7 @@ class Upgrade_5_0_1 {
             let modules = json.modules;
             modules.push({ name: "promise", path: "./promise" });
             file.save(jsonPath, JSON.stringify(json, undefined, "\t"));
-            modify.initProperties();
+            // modify.initProperties();
         }
         return 0;
     }

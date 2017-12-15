@@ -34,11 +34,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 var file = require("../lib/FileUtil");
-var service = require("../service/index");
 var Project = require("../project");
 var path = require("path");
 var utils = require("../lib/utils");
-var modify = require("./upgrade/ModifyProperties");
 var UpgradeCommand = (function () {
     function UpgradeCommand() {
     }
@@ -53,45 +51,8 @@ var UpgradeCommand = (function () {
     };
     UpgradeCommand.prototype.run = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var version, upgradeConfigArr, e_1;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        version = Project.projectData.getVersion();
-                        if (!version) {
-                            version = "1.0.0";
-                        }
-                        upgradeConfigArr = [
-                            { "v": "4.0.1", command: Upgrade_4_0_1 },
-                            { "v": "4.0.3" },
-                            { "v": "4.1.0", command: Upgrade_4_1_0 },
-                            { "v": "5.0.0" },
-                            { "v": "5.0.1", command: Upgrade_5_0_1 },
-                            { "v": "5.0.8", command: Upgrade_5_0_8 },
-                            { "v": "5.0.14" }
-                        ];
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 4, , 5]);
-                        modify.initProperties();
-                        return [4 /*yield*/, series(upgrade, upgradeConfigArr.concat())];
-                    case 2:
-                        _a.sent();
-                        modify.save(upgradeConfigArr.pop().v);
-                        globals.log(1702);
-                        return [4 /*yield*/, service.client.closeServer(Project.projectData.getProjectRoot())];
-                    case 3:
-                        _a.sent();
-                        globals.exit(0);
-                        return [3 /*break*/, 5];
-                    case 4:
-                        e_1 = _a.sent();
-                        globals.log(1717);
-                        console.log(e_1);
-                        globals.exit(1705);
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
-                }
+                return [2 /*return*/];
             });
         });
     };
@@ -121,31 +82,29 @@ var series = function (cb, arr) {
         .then(function () { return results; });
 };
 function upgrade(info) {
-    var version = Project.projectData.getVersion();
-    var v = info.v;
-    var command;
-    if (info.command) {
-        command = new info.command();
-    }
-    var result = globals.compressVersion(version, v);
-    if (result < 0) {
-        globals.log(1704, v);
-        if (!command) {
-            return Promise.resolve(0);
-        }
-        else {
-            var commandPromise = command.execute();
-            if (typeof commandPromise == 'number') {
-                console.error('internal error !!!');
-            }
-            else {
-                return commandPromise;
-            }
-        }
-    }
-    else {
-        return Promise.resolve(0);
-    }
+    // var version = Project.projectData.getVersion();
+    // var v = info.v;
+    // var command: egret.Command;
+    // if (info.command) {
+    //     command = new info.command();
+    // }
+    // var result = globals.compressVersion(version, v);
+    // if (result < 0) {
+    //     globals.log(1704, v);
+    //     if (!command) {
+    //         return Promise.resolve(0);
+    //     } else {
+    //         var commandPromise = command.execute();
+    //         if (typeof commandPromise == 'number') {
+    //             console.error('internal error !!!')
+    //         }
+    //         else {
+    //             return commandPromise;
+    //         }
+    //     }
+    // } else {
+    //     return Promise.resolve(0)
+    // }
 }
 var Upgrade_4_0_1 = (function () {
     function Upgrade_4_0_1() {
@@ -192,7 +151,7 @@ var Upgrade_4_1_0 = (function () {
     Upgrade_4_1_0.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                modify.upgradeModulePath();
+                // modify.upgradeModulePath();
                 globals.log(1703, "https://github.com/egret-labs/egret-core/tree/master/docs/cn/release-note/4.1.0");
                 return [2 /*return*/, 0];
             });
@@ -215,7 +174,7 @@ var Upgrade_5_0_1 = (function () {
                     modules = json.modules;
                     modules.push({ name: "promise", path: "./promise" });
                     file.save(jsonPath, JSON.stringify(json, undefined, "\t"));
-                    modify.initProperties();
+                    // modify.initProperties();
                 }
                 return [2 /*return*/, 0];
             });
