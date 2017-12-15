@@ -240,7 +240,6 @@ var EgretProjectData = (function () {
             });
             return { name: name, target: target, sourceDir: sourceDir, targetDir: targetDir };
         });
-        console.log(result);
         return result;
     };
     EgretProjectData.prototype.isWasmProject = function () {

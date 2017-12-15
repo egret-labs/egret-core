@@ -250,7 +250,6 @@ class EgretProjectData {
             });
             return { name, target, sourceDir, targetDir };
         })
-        console.log(result)
         return result;
     }
 
