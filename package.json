@@ -294,8 +294,7 @@
         "files": [],
         "root": "src/extension/resource",
         "dependencies": [
-          "egret",
-          "game"
+          "egret"
         ]
       },
       {
