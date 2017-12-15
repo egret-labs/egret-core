@@ -24,6 +24,8 @@ export type File = {
 
     path: string;
 
+    readonly relative: string;
+
     readonly base: string;
 
     readonly extname: string;

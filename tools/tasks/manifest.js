@@ -48,7 +48,7 @@ var ManifestPlugin = (function () {
     }
     ManifestPlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
-            var filename, extname, crc32, crc32_file_path, basename, new_file_path;
+            var filename, extname, crc32, crc32_file_path, basename, new_file_path, basename, new_file_path, relative;
             return __generator(this, function (_a) {
                 filename = file.origin;
                 extname = path.extname(filename);
@@ -61,16 +61,24 @@ var ManifestPlugin = (function () {
                 //     manifest.configURL = new_file_path;
                 // }
                 if (extname == ".js") {
-                    crc32 = globals.getCrc32();
-                    crc32_file_path = crc32(file.contents);
-                    basename = path.basename(filename);
-                    new_file_path = "js/" + basename.substr(0, basename.length - file.extname.length) + "_" + crc32_file_path + file.extname;
-                    file.path = path.join(file.base, new_file_path);
-                    if (filename.indexOf('libs/') >= 0) {
-                        manifest.initial.push(new_file_path);
+                    if (this.options.hash == 'crc32') {
+                        crc32 = globals.getCrc32();
+                        crc32_file_path = crc32(file.contents);
+                        basename = path.basename(filename);
+                        new_file_path = "js/" + basename.substr(0, basename.length - file.extname.length) + "_" + crc32_file_path + file.extname;
+                        file.path = path.join(file.base, new_file_path);
                     }
                     else {
-                        manifest.game.push(new_file_path);
+                        basename = path.basename(filename);
+                        new_file_path = "js/" + basename.substr(0, basename.length - file.extname.length) + file.extname;
+                        file.path = path.join(file.base, new_file_path);
+                    }
+                    relative = file.relative.split("\\").join('/');
+                    if (filename.indexOf('libs/') >= 0) {
+                        manifest.initial.push(relative);
+                    }
+                    else {
+                        manifest.game.push(relative);
                     }
                 }
                 return [2 /*return*/, file];
@@ -92,6 +100,7 @@ var ManifestPlugin = (function () {
                         contents = manifest.initial.concat(manifest.game).map(function (fileName) { return "require(\"" + fileName + "\")"; }).join("\n");
                         break;
                 }
+                console.log(manifest);
                 pluginContext.createFile(this.options.output, new Buffer(contents));
                 return [2 /*return*/];
             });

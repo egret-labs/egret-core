@@ -40,7 +40,7 @@ const config: ResourceManagerConfig = {
                         sources: ["main.js"],
                         target: "main.min.js"
                     }]),
-                    new ManifestPlugin()
+                    new ManifestPlugin({ output: "manifest.json", hash: "crc32" })
                 ]
             }
         }

@@ -237,7 +237,11 @@ declare module 'built-in' {
      */
     type ManifestPluginOptions = {
 
-        output: string
+        output: string,
+
+        hash?: "crc32"
+
+
     }
 
 

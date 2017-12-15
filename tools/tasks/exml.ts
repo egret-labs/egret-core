@@ -34,7 +34,7 @@ export class ExmlPlugin implements Plugin {
         }
         const result = exml.publishEXML(this.exmls, this.publishPolicy);
         result.forEach(item => {
-            const filename = path.relative(pluginContext.projectRoot, item.path).split("\\").join("/");
+            const filename = item.path.split("\\").join("/");
             pluginContext.createFile(filename, new Buffer(item.content))
         })
     }

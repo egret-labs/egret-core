@@ -12,7 +12,9 @@ const manifest = {
 
 type ManifestPluginOptions = {
 
-    output: string
+    output: string,
+
+    hash?: "crc32"
 }
 
 export class ManifestPlugin {
@@ -38,19 +40,27 @@ export class ManifestPlugin {
         //     manifest.configURL = new_file_path;
         // }
         if (extname == ".js") {
-            const crc32 = globals.getCrc32();
-            const crc32_file_path = crc32(file.contents);
-            const basename = path.basename(filename);
-
-            const new_file_path = "js/" + basename.substr(0, basename.length - file.extname.length) + "_" + crc32_file_path + file.extname;
-            file.path = path.join(file.base, new_file_path);
-
-            if (filename.indexOf('libs/') >= 0) {
-                manifest.initial.push(new_file_path);
+            if (this.options.hash == 'crc32') {
+                const crc32 = globals.getCrc32();
+                const crc32_file_path = crc32(file.contents);
+                const basename = path.basename(filename);
+                const new_file_path = "js/" + basename.substr(0, basename.length - file.extname.length) + "_" + crc32_file_path + file.extname;
+                file.path = path.join(file.base, new_file_path);
             }
             else {
-                manifest.game.push(new_file_path);
+                const basename = path.basename(filename);
+                const new_file_path = "js/" + basename.substr(0, basename.length - file.extname.length) + file.extname;
+                file.path = path.join(file.base, new_file_path);
             }
+
+            const relative = file.relative.split("\\").join('/');
+            if (filename.indexOf('libs/') >= 0) {
+                manifest.initial.push(relative);
+            }
+            else {
+                manifest.game.push(relative);
+            }
+
 
 
         }
@@ -68,6 +78,7 @@ export class ManifestPlugin {
                 contents = manifest.initial.concat(manifest.game).map((fileName) => `require("${fileName}")`).join("\n")
                 break;
         }
+        console.log(manifest)
         pluginContext.createFile(this.options.output, new Buffer(contents));
 
 

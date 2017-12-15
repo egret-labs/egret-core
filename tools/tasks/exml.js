@@ -35,7 +35,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var exml = require("../actions/exml");
-var path = require("path");
 var ExmlPlugin = (function () {
     function ExmlPlugin(publishPolicy) {
         this.publishPolicy = publishPolicy;
@@ -65,7 +64,7 @@ var ExmlPlugin = (function () {
                 }
                 result = exml.publishEXML(this.exmls, this.publishPolicy);
                 result.forEach(function (item) {
-                    var filename = path.relative(pluginContext.projectRoot, item.path).split("\\").join("/");
+                    var filename = item.path.split("\\").join("/");
                     pluginContext.createFile(filename, new Buffer(item.content));
                 });
                 return [2 /*return*/];
