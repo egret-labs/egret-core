@@ -100,7 +100,7 @@ var ManifestPlugin = (function () {
                         contents = manifest.initial.concat(manifest.game).map(function (fileName) { return "require(\"" + fileName + "\")"; }).join("\n");
                         break;
                 }
-                console.log(manifest);
+                // console.log (this.options.output,)
                 pluginContext.createFile(this.options.output, new Buffer(contents));
                 return [2 /*return*/];
             });

@@ -54,6 +54,7 @@ export class ManifestPlugin {
             }
 
             const relative = file.relative.split("\\").join('/');
+
             if (filename.indexOf('libs/') >= 0) {
                 manifest.initial.push(relative);
             }
@@ -78,7 +79,7 @@ export class ManifestPlugin {
                 contents = manifest.initial.concat(manifest.game).map((fileName) => `require("${fileName}")`).join("\n")
                 break;
         }
-        console.log(manifest)
+        // console.log (this.options.output,)
         pluginContext.createFile(this.options.output, new Buffer(contents));
 
 

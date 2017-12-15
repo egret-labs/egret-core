@@ -103,7 +103,7 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
         if (exmlPublishPolicy == "commonjs") {
             let content = `
             function __extends(d, b) {
-                for (let p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+                for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
                 function __() {
                     this.constructor = d;
                 }
