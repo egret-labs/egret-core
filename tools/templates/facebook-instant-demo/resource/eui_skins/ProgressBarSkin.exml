@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<e:Skin class="skins.ProgressBarSkin" minWidth="30" minHeight="18" xmlns:e="http://ns.egret.com/eui">
-	<e:Image source="track_pb_png" scale9Grid="1,1,4,4" width="100%"
-			 height="100%" verticalCenter="0"/>
-	<e:Image id="thumb" height="100%" width="100%" source="thumb_pb_png"/>
-	<e:Label id="labelDisplay" textAlign="center" verticalAlign="middle"
-			 size="15" fontFamily="Tahoma" textColor="0x707070"
-			 horizontalCenter="0" verticalCenter="0"/>
-</e:Skin>

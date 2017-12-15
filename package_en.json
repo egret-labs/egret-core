@@ -288,24 +288,13 @@
         "dependencies": []
       },
       {
-        "name": "game",
-        "description": "game lib",
-        "description_en": "game lib",
-        "files": [],
-        "root": "src/extension/game",
-        "dependencies": [
-          "egret"
-        ]
-      },
-      {
         "name": "res",
         "description": "resource lib",
         "description_en": "resource lib",
         "files": [],
         "root": "src/extension/resource",
         "dependencies": [
-          "egret",
-          "game"
+          "egret"
         ]
       },
       {
@@ -319,11 +308,19 @@
         ]
       },
       {
-        "name": "experimental",
-        "description": "egret experimental function lib",
-        "description_en": "egret experimental function lib",
+        "name": "dragonBones",
+        "description": "dragonbones animation lib",
+        "description_en": "dragonbones animation lib",
         "files": [],
-        "root": "src/extension/experimental",
+        "root": "",
+        "dependencies": []
+      },
+      {
+        "name": "game",
+        "description": "game lib",
+        "description_en": "game lib",
+        "files": [],
+        "root": "src/extension/game",
         "dependencies": [
           "egret"
         ]
@@ -349,20 +346,22 @@
         ]
       },
       {
-        "name": "dragonBones",
-        "description": "dragonbones animation lib",
-        "description_en": "dragonbones animation lib",
-        "files": [],
-        "root": "",
-        "dependencies": []
-      },
-      {
         "name": "egret3d",
         "description": "egret 3D engine lib",
         "description_en": "egret 3D engine lib",
         "files": [],
         "root": "",
         "dependencies": []
+      },
+      {
+        "name": "experimental",
+        "description": "egret experimental function lib",
+        "description_en": "egret experimental function lib",
+        "files": [],
+        "root": "src/extension/experimental",
+        "dependencies": [
+          "egret"
+        ]
       }
     ],
     "platforms": [
