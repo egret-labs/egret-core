@@ -88,7 +88,7 @@ function updateEgretProperties(projectConfig) {
         props.eui = {
             exmlRoot: ["resource/eui_skins"],
             themes: ["resource/default.thm.json"],
-            exmlPublishPolicy: "content"
+            exmlPublishPolicy: "commonjs"
         };
     }
     else if (projectConfig.type == "wasm") {
