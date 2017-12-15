@@ -145,6 +145,9 @@ export function parseCommandLine(commandLine: string[]) {
     var errors: string[] = [];
     egret.root = utils.getEgretRoot();
     parseStrings(commandLine);
+    if (options.target as string === 'html5') {
+        options.target = 'web';
+    }
     return options;
 
     function parseStrings(args: string[]) {
@@ -257,7 +260,6 @@ export function parseJSON(json: egret.ToolArgs): egret.ToolArgs {
     options.added = json.added;
     options.modified = json.modified;
     options.removed = json.removed;
-    options.target = json.target as egret.target.Type;
     options.experimental = json.experimental;
 
     return options;

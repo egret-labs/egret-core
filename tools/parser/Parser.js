@@ -136,6 +136,9 @@ function parseCommandLine(commandLine) {
     var errors = [];
     egret.root = utils.getEgretRoot();
     parseStrings(commandLine);
+    if (options.target === 'html5') {
+        options.target = 'web';
+    }
     return options;
     function parseStrings(args) {
         var i = 0;
@@ -241,7 +244,6 @@ function parseJSON(json) {
     options.added = json.added;
     options.modified = json.modified;
     options.removed = json.removed;
-    options.target = json.target;
     options.experimental = json.experimental;
     return options;
 }

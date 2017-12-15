@@ -243,6 +243,7 @@ declare module 'built-in' {
 
     /**
      * 增量编译
+     * 这个插件生成的 JavaScript 代码不会被添加到构建管线中，后续其他插件无法获取生成的 js 文件
      * 这个功能将会在未来被 watch 模式代替掉
      */
     export class IncrementCompilePlugin implements plugins.Command {

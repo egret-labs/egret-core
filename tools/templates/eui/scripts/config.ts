@@ -36,8 +36,8 @@ const config: ResourceManagerConfig = {
                 outputDir,
                 commands: [
                     new CustomPlugin(),
-                    new ExmlPlugin('default'),
                     new CompilePlugin({ libraryType: "release" }),
+                    new ExmlPlugin('commonjs'),
                     new UglifyPlugin([{
                         sources: ["main.js"],
                         target: "main.min.js"
