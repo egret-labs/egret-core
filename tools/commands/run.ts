@@ -20,7 +20,6 @@ class Run implements egret.Command {
             process.exit(exitCode);
         }
         const platform = egret.args.platform;
-        console.log(platform)
         if (egret.args.platform == undefined || egret.args.platform == 'web') {
             const port = await utils.getAvailablePort(egret.args.port);
             this.initServer(port);

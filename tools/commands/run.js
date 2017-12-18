@@ -58,7 +58,6 @@ var Run = (function () {
                             process.exit(exitCode);
                         }
                         platform = egret.args.platform;
-                        console.log(platform);
                         if (!(egret.args.platform == undefined || egret.args.platform == 'web')) return [3 /*break*/, 3];
                         return [4 /*yield*/, utils.getAvailablePort(egret.args.port)];
                     case 2:
