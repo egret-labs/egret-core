@@ -337,8 +337,18 @@ function getAppDataEnginesRootPath() {
 }
 
 function getEgretLauncherPath() {
-    let npmEgretPath = getAppDataPath();
-    npmEgretPath = file.joinPath(npmEgretPath, 'npm/node_modules/egret/EgretEngine');
+    let npmEgretPath;
+    if (process.platform === 'darwin') {
+        let basicPath = '/usr/local';
+        if (!file.existsSync(basicPath)) {//some mac doesn't have path '/usr/local'
+            basicPath = '/usr';
+        }
+        npmEgretPath = file.joinPath(basicPath, 'lib/node_modules/egret/EgretEngine');
+    }
+    else {
+        npmEgretPath = file.joinPath(getAppDataPath(), 'npm/node_modules/egret/EgretEngine');
+
+    }
     if (!file.exists(npmEgretPath)) {
         throw `找不到  ${npmEgretPath}，请在 Egret Launcher 中执行修复引擎`;//todo i18n
     }

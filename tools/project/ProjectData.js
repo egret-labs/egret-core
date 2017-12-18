@@ -327,8 +327,17 @@ function getAppDataEnginesRootPath() {
     return result;
 }
 function getEgretLauncherPath() {
-    var npmEgretPath = getAppDataPath();
-    npmEgretPath = file.joinPath(npmEgretPath, 'npm/node_modules/egret/EgretEngine');
+    var npmEgretPath;
+    if (process.platform === 'darwin') {
+        var basicPath = '/usr/local';
+        if (!file.existsSync(basicPath)) {
+            basicPath = '/usr';
+        }
+        npmEgretPath = file.joinPath(basicPath, 'lib/node_modules/egret/EgretEngine');
+    }
+    else {
+        npmEgretPath = file.joinPath(getAppDataPath(), 'npm/node_modules/egret/EgretEngine');
+    }
     if (!file.exists(npmEgretPath)) {
         throw "\u627E\u4E0D\u5230  " + npmEgretPath + "\uFF0C\u8BF7\u5728 Egret Launcher \u4E2D\u6267\u884C\u4FEE\u590D\u5F15\u64CE"; //todo i18n
     }
