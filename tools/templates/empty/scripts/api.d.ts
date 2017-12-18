@@ -217,7 +217,7 @@ declare module 'built-in' {
      * * debug : 默认策略，用于开发环境
      * * contents : 将 EXML 的内容写入到主题文件中
      * * gjs : 将生成的JS文件写入到主题文件中
-     * * commonjs : 将EXML合并为一个 CommonJS 风格的文件(暂未开放)
+     * * commonjs : 将EXML合并为一个 CommonJS 风格的文件
      */
     type EXML_Publish_Policy = "default" | "debug" | "contents" | "gjs" | "commonjs"
 
@@ -259,6 +259,14 @@ declare module 'built-in' {
      * 自动纹理合并，beta
      */
     export class SpriteSheetPlugin implements plugins.Command {
+
+    }
+
+
+    /** 
+     * 生成 res.json 文件或者 res.js 文件
+     */
+    export class EmitResConfigFilePlugin implements plugins.Command {
 
     }
 

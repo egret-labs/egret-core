@@ -11,6 +11,8 @@ exports.CompilePlugin = compile_1.CompilePlugin;
 exports.UglifyPlugin = compile_1.UglifyPlugin;
 var spritesheet_1 = require("./spritesheet");
 exports.SpriteSheetPlugin = spritesheet_1.SpriteSheetPlugin;
+var resConfig_1 = require("./resConfig");
+exports.EmitResConfigFilePlugin = resConfig_1.EmitResConfigFilePlugin;
 function run() {
 }
 exports.run = run;
