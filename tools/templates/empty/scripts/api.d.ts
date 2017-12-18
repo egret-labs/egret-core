@@ -263,10 +263,15 @@ declare module 'built-in' {
     }
 
 
+    type EmitResConfigFilePluginOptions = { output: string, typeSelector: (path: string) => string | null | undefined }
+
+
     /** 
      * 生成 res.json 文件或者 res.js 文件
      */
     export class EmitResConfigFilePlugin implements plugins.Command {
+
+        constructor(options: EmitResConfigFilePluginOptions)
 
     }
 

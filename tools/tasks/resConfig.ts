@@ -5,21 +5,29 @@ import { Plugin } from './';
 
 const wing_res_json = "wing.res.json";
 
-// async function executeFilter(url: string) {
-//     if (url == wing_res_json) {
-//         return null;
-//     }
-//     let type = ResourceConfig.typeSelector(url);
-//     let name = ResourceConfig.nameSelector(url);
-//     if (type) {
-//         return { name, url, type }
-//     }
-//     else {
-//         return null;
-//     }
-// }
+async function executeFilter(url: string) {
+    if (url == wing_res_json) {
+        return null;
+    }
+    let type = ResourceConfig.typeSelector(url);
+    let name = url;
+    if (type) {
+        return { name, url, type }
+    }
+    else {
+        return null;
+    }
+}
+
+type EmitResConfigFilePluginOptions = { output: string, typeSelector: (path: string) => string }
+
 
 export class EmitResConfigFilePlugin implements Plugin {
+
+    constructor(private options: EmitResConfigFilePluginOptions) {
+        ResourceConfig.typeSelector = options.typeSelector;
+    }
+
     async  onFile(file: plugin.File): Promise<plugin.File> {
 
         const filename = file.origin;
@@ -27,7 +35,7 @@ export class EmitResConfigFilePlugin implements Plugin {
             return null;
         }
         else {
-            let r = { name: file.relative, url: file.relative, type: 'image' };
+            let r = await executeFilter(filename)
             if (r) {
                 r.url = file.relative;
                 ResourceConfig.addFile(r, true);
@@ -96,27 +104,25 @@ export class EmitResConfigFilePlugin implements Plugin {
         //         }
 
         async function emitResourceConfigFile(debug: boolean) {
-            let userConfig = ResourceConfig.userConfig;
-            let config = ResourceConfig.generateConfig(true);
-            let content = JSON.stringify(config, null, "\t");
-            return content;
-            // `exports.resourceRoot = "${userConfig.outputDir}"`;
-            //     let file = `exports.typeSelector = ${ResourceConfig.typeSelector.toString()};
-            // exports.resourceRoot = "${ResourceConfig.resourceRoot}";
-            // exports.alias = ${JSON.stringify(config.alias, null, "\t")};
-            // exports.groups = ${JSON.stringify(config.groups, null, "\t")};
-            // exports.resources = ${JSON.stringify(config.resources, null, "\t")};
-            // `
-            //     return file;
+            const userConfig = ResourceConfig.userConfig;
+            const config = ResourceConfig.generateConfig(true);
+            const content = JSON.stringify(config, null, "\t");
+            const file = `exports.typeSelector = ${ResourceConfig.typeSelector.toString()};
+exports.resourceRoot = "${ResourceConfig.resourceRoot}";
+exports.alias = ${JSON.stringify(config.alias, null, "\t")};
+exports.groups = ${JSON.stringify(config.groups, null, "\t")};
+exports.resources = ${JSON.stringify(config.resources, null, "\t")};
+            `
+            return file;
         }
 
         let config = ResourceConfig.getConfig();
         // await convertResourceJson(pluginContext.projectRoot, config);
         let configContent = await emitResourceConfigFile(true);
-        console.log(configContent)
-        // param.createFile(Reso, new Buffer(configContent));
+        param.createFile(this.options.output, new Buffer(configContent));
 
-        //         let wingConfigContent = await ResourceConfig.generateClassicalConfig();
+        let wingConfigContent = await ResourceConfig.generateClassicalConfig();
+        // console.log(wingConfigContent)
         //         pluginContext.createFile(wing_res_json, new Buffer(wingConfigContent));
     }
 }

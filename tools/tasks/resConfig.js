@@ -35,42 +35,53 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var wing_res_json = "wing.res.json";
-// async function executeFilter(url: string) {
-//     if (url == wing_res_json) {
-//         return null;
-//     }
-//     let type = ResourceConfig.typeSelector(url);
-//     let name = ResourceConfig.nameSelector(url);
-//     if (type) {
-//         return { name, url, type }
-//     }
-//     else {
-//         return null;
-//     }
-// }
+function executeFilter(url) {
+    return __awaiter(this, void 0, void 0, function () {
+        var type, name;
+        return __generator(this, function (_a) {
+            if (url == wing_res_json) {
+                return [2 /*return*/, null];
+            }
+            type = ResourceConfig.typeSelector(url);
+            name = url;
+            if (type) {
+                return [2 /*return*/, { name: name, url: url, type: type }];
+            }
+            else {
+                return [2 /*return*/, null];
+            }
+            return [2 /*return*/];
+        });
+    });
+}
 var EmitResConfigFilePlugin = (function () {
-    function EmitResConfigFilePlugin() {
+    function EmitResConfigFilePlugin(options) {
+        this.options = options;
+        ResourceConfig.typeSelector = options.typeSelector;
     }
     EmitResConfigFilePlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
             var filename, r;
             return __generator(this, function (_a) {
-                filename = file.origin;
-                if (filename.indexOf('resource/') === -1) {
-                    return [2 /*return*/, null];
-                }
-                else {
-                    r = { name: file.relative, url: file.relative, type: 'image' };
-                    if (r) {
-                        r.url = file.relative;
-                        ResourceConfig.addFile(r, true);
-                        return [2 /*return*/, file];
-                    }
-                    else {
+                switch (_a.label) {
+                    case 0:
+                        filename = file.origin;
+                        if (!(filename.indexOf('resource/') === -1)) return [3 /*break*/, 1];
                         return [2 /*return*/, null];
-                    }
+                    case 1: return [4 /*yield*/, executeFilter(filename)];
+                    case 2:
+                        r = _a.sent();
+                        if (r) {
+                            r.url = file.relative;
+                            ResourceConfig.addFile(r, true);
+                            return [2 /*return*/, file];
+                        }
+                        else {
+                            return [2 /*return*/, null];
+                        }
+                        _a.label = 3;
+                    case 3: return [2 /*return*/];
                 }
-                return [2 /*return*/];
             });
         });
     };
@@ -125,16 +136,17 @@ var EmitResConfigFilePlugin = (function () {
             //         }
             function emitResourceConfigFile(debug) {
                 return __awaiter(this, void 0, void 0, function () {
-                    var userConfig, config, content;
+                    var userConfig, config, content, file;
                     return __generator(this, function (_a) {
                         userConfig = ResourceConfig.userConfig;
                         config = ResourceConfig.generateConfig(true);
                         content = JSON.stringify(config, null, "\t");
-                        return [2 /*return*/, content];
+                        file = "exports.typeSelector = " + ResourceConfig.typeSelector.toString() + ";\nexports.resourceRoot = \"" + ResourceConfig.resourceRoot + "\";\nexports.alias = " + JSON.stringify(config.alias, null, "\t") + ";\nexports.groups = " + JSON.stringify(config.groups, null, "\t") + ";\nexports.resources = " + JSON.stringify(config.resources, null, "\t") + ";\n            ";
+                        return [2 /*return*/, file];
                     });
                 });
             }
-            var config, configContent;
+            var config, configContent, wingConfigContent;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -142,7 +154,10 @@ var EmitResConfigFilePlugin = (function () {
                         return [4 /*yield*/, emitResourceConfigFile(true)];
                     case 1:
                         configContent = _a.sent();
-                        console.log(configContent);
+                        param.createFile(this.options.output, new Buffer(configContent));
+                        return [4 /*yield*/, ResourceConfig.generateClassicalConfig()];
+                    case 2:
+                        wingConfigContent = _a.sent();
                         return [2 /*return*/];
                 }
             });
