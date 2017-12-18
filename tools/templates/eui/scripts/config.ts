@@ -38,11 +38,16 @@ const config: ResourceManagerConfig = {
                     new CustomPlugin(),
                     new CompilePlugin({ libraryType: "release" }),
                     new ExmlPlugin('default'),
-                    new UglifyPlugin([{
-                        sources: ["main.js"],
-                        target: "main.min.js"
-                    }]),
-                    new ManifestPlugin()
+                    new UglifyPlugin([
+                        {
+                            sources: ['resource/default.thm.js'],
+                            target: "default.thm.min.js"
+                        },
+                        {
+                            sources: ["main.js"],
+                            target: "main.min.js"
+                        }]),
+                    new ManifestPlugin({ output: "manifest.json", hash: "crc32" })
                 ]
             }
         }
