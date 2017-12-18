@@ -43,7 +43,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var file = require("../lib/FileUtil");
 var _utils = require("../lib/utils");
 var _path = require("path");
-var utils_1 = require("../lib/utils");
 var EgretProjectData = (function () {
     function EgretProjectData() {
         this.egretProperties = {
@@ -284,56 +283,57 @@ var EngineData = (function () {
     };
     EngineData.prototype.init = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var data, versionsArr;
+            var egretjspath, egretjs, data, item, value;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, utils_1.shell(process.argv[0], [process.argv[1], "versions"])];
-                    case 1:
-                        data = _a.sent();
-                        versionsArr = data.stdout.toString().split("\n");
-                        //     //删除最后一行空格
-                        versionsArr = versionsArr.slice(0, versionsArr.length - 1);
-                        this.versions = versionsArr.map(function (versionStr) {
-                            var version;
-                            var path;
-                            var versionRegExp = /(\d+\.){2}\d+(\.\d+)?/g;
-                            var matchResultVersion = versionStr.match(versionRegExp);
-                            if (matchResultVersion && matchResultVersion.length > 0) {
-                                version = matchResultVersion[0];
-                            }
-                            var pathRegExp = /(?:[a-zA-Z]\:)?(?:[\\|\/][^\\|\/]+)+[\\|\/]?/g;
-                            var matchResult2 = versionStr.match(pathRegExp);
-                            if (matchResult2 && matchResult2.length > 0) {
-                                path = _path.join(matchResult2[0], '.');
-                            }
-                            return { version: version, path: path };
-                        });
-                        return [2 /*return*/];
+                egretjspath = file.joinPath(getEgretLauncherPath(), "egret.js");
+                egretjs = require(egretjspath);
+                data = egretjs.selector.getAllEngineVersions();
+                for (item in data) {
+                    value = data[item];
+                    this.versions.push({ version: value.version, path: value.root });
                 }
+                return [2 /*return*/];
             });
         });
     };
     return EngineData;
 }());
-function getAppDataEnginesRootPath() {
-    var path;
+function getAppDataPath() {
+    var result;
     switch (process.platform) {
         case 'darwin':
             var home = process.env.HOME || ("/Users/" + (process.env.NAME || process.env.LOGNAME));
             if (!home)
                 return null;
-            path = home + "/Library/Application Support/Egret/engine/";
+            result = home + "/Library/Application Support/"; //Egret/engine/`;
             break;
         case 'win32':
             var appdata = process.env.AppData || process.env.USERPROFILE + "/AppData/Roaming/";
-            path = file.escapePath(appdata + "/Egret/engine/");
+            result = file.escapePath(appdata);
             break;
         default:
             ;
     }
-    if (file.exists(path))
-        return path;
-    return null;
+    if (!file.exists(result)) {
+        throw 'missing appdata path';
+    }
+    return result;
+}
+function getAppDataEnginesRootPath() {
+    var result = file.joinPath(getAppDataPath(), "Egret/engine/");
+    if (!file.exists(result)) {
+        throw "\u627E\u4E0D\u5230 " + result + "\uFF0C\u8BF7\u5728 Egret Launcher \u4E2D\u6267\u884C\u4FEE\u590D\u5F15\u64CE"; //todo i18n
+    }
+    return result;
+}
+function getEgretLauncherPath() {
+    var npmEgretPath = getAppDataPath();
+    npmEgretPath = file.joinPath(npmEgretPath, 'npm/node_modules/egret/EgretEngine');
+    if (!file.exists(npmEgretPath)) {
+        throw "\u627E\u4E0D\u5230  " + npmEgretPath + "\uFF0C\u8BF7\u5728 Egret Launcher \u4E2D\u6267\u884C\u4FEE\u590D\u5F15\u64CE"; //todo i18n
+    }
+    var launcherPath = file.joinPath(file.read(npmEgretPath), "../");
+    return launcherPath;
 }
 exports.projectData = new EgretProjectData();
 exports.engineData = new EngineData();

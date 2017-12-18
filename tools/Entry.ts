@@ -107,25 +107,27 @@ function getLanguageInfo() {
 getLanguageInfo();//引用语言包
 
 
-export async function executeCommandLine(args: string[]) {
+export function executeCommandLine(args: string[]) {
     var options = Parser.parseCommandLine(args);
     egret.args = options;
 
     const version = getPackageJsonConfig().version;
     console.log(`您正在使用白鹭编译器 ${version} 版本`)
 
-    await engineData.init();
+    engineData.init().then(() => {
+        earlyParams.parse(options, args);
+        var exitcode = entry.executeOption(options);
+        if (typeof exitcode == "number") {
+            entry.exit(exitcode);
+        }
+        else {
+            exitcode.then(value => {
+                entry.exit(value);
+            }).catch(e => console.log(e))
+        }
+    }).catch(e => console.log(e))
 
-    earlyParams.parse(options, args);
-    var exitcode = entry.executeOption(options);
-    if (typeof exitcode == "number") {
-        entry.exit(exitcode);
-    }
-    else {
-        exitcode.then(value => {
-            entry.exit(value);
-        }).catch(e => console.log(e))
-    }
+
 
 }
 

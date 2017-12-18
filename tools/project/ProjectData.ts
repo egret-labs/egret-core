@@ -294,51 +294,57 @@ class EngineData {
 
     async init() {
 
-        const data = await shell(process.argv[0], [process.argv[1], "versions"]);
-        let versionsArr: string[] = data.stdout.toString().split("\n");
-        //     //删除最后一行空格
-        versionsArr = versionsArr.slice(0, versionsArr.length - 1);
-        this.versions = versionsArr.map(versionStr => {
-            let version: string;
-            let path: string;
-            const versionRegExp = /(\d+\.){2}\d+(\.\d+)?/g;
-            let matchResultVersion = versionStr.match(versionRegExp);
-            if (matchResultVersion && matchResultVersion.length > 0) {
-                version = matchResultVersion[0];
-            }
-            const pathRegExp = /(?:[a-zA-Z]\:)?(?:[\\|\/][^\\|\/]+)+[\\|\/]?/g;
-            let matchResult2 = versionStr.match(pathRegExp);
-            if (matchResult2 && matchResult2.length > 0) {
-                path = _path.join(matchResult2[0], '.');
-            }
-            return { version, path };
-        });
+        const egretjspath = file.joinPath(getEgretLauncherPath(), "egret.js");
+        const egretjs = require(egretjspath)
+        const data = egretjs.selector.getAllEngineVersions();
+        for (let item in data) {
+            const value = data[item];
+            this.versions.push({ version: value.version, path: value.root })
+        }
     }
 }
 
-
-
-
-function getAppDataEnginesRootPath(): string {
-    var path: string;
-
+function getAppDataPath() {
+    var result: string;
     switch (process.platform) {
         case 'darwin':
             var home = process.env.HOME || ("/Users/" + (process.env.NAME || process.env.LOGNAME));
             if (!home)
                 return null;
-            path = `${home}/Library/Application Support/Egret/engine/`;
+            result = `${home}/Library/Application Support/`;//Egret/engine/`;
             break;
         case 'win32':
             var appdata = process.env.AppData || `${process.env.USERPROFILE}/AppData/Roaming/`;
-            path = file.escapePath(`${appdata}/Egret/engine/`);
+            result = file.escapePath(appdata);
             break;
         default:
             ;
     }
-    if (file.exists(path))
-        return path;
-    return null;
+
+    if (!file.exists(result)) {
+        throw 'missing appdata path'
+    }
+    return result;
+}
+
+
+function getAppDataEnginesRootPath() {
+    const result = file.joinPath(getAppDataPath(), "Egret/engine/");
+    if (!file.exists(result)) {
+        throw `找不到 ${result}，请在 Egret Launcher 中执行修复引擎`;//todo i18n
+    }
+    return result;
+}
+
+function getEgretLauncherPath() {
+    let npmEgretPath = getAppDataPath();
+    npmEgretPath = file.joinPath(npmEgretPath, 'npm/node_modules/egret/EgretEngine');
+    if (!file.exists(npmEgretPath)) {
+        throw `找不到  ${npmEgretPath}，请在 Egret Launcher 中执行修复引擎`;//todo i18n
+    }
+    const launcherPath = file.joinPath(file.read(npmEgretPath), "../");
+    return launcherPath;
+
 }
 
 export var projectData = new EgretProjectData();
