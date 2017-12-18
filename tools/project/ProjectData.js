@@ -110,6 +110,9 @@ var EgretProjectData = (function () {
         }
         return 1;
     };
+    EgretProjectData.prototype.getVersion = function () {
+        return this.egretProperties.egret_version || this.egretProperties.compilerVersion;
+    };
     EgretProjectData.prototype.getIgnorePath = function () {
         if (globals.hasKeys(this.egretProperties, [egret.args.target, "path_ignore"])) {
             return this.egretProperties[egret.args.target]["path_ignore"];

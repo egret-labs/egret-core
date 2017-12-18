@@ -110,6 +110,7 @@ declare module egret {
 
     export type EgretProperty = {
         "engineVersion"?: string,
+        "compilerVersion"?: string,
         "modules": EgretPropertyModule[],
         "template"?: {
 

@@ -111,6 +111,10 @@ class EgretProjectData {
         return 1;
     }
 
+    getVersion() {
+        return this.egretProperties.egret_version || this.egretProperties.compilerVersion;
+    }
+
     getIgnorePath(): Array<any> {
         if (globals.hasKeys(this.egretProperties, [egret.args.target, "path_ignore"])) {
             return this.egretProperties[egret.args.target]["path_ignore"];
