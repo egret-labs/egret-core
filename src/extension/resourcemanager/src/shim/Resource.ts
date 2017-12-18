@@ -71,8 +71,11 @@ module RES {
      * @platform Web,Native
      * @language zh_CN
      */
-    export function loadConfig(url?: string, resourceRoot?: string): Promise<void> {
-        instance = new Resource();
+    export function loadConfig(url?: string, resourceRoot?: string) {
+        if (url) {
+            setConfigURL(url);
+        }
+        if (!instance) instance = new Resource();
         return instance.loadConfig();
     }
     /**
@@ -380,6 +383,7 @@ module RES {
      * @language zh_CN
      */
     export function addEventListener(type: string, listener: (event: egret.Event) => void, thisObject: any, useCapture: boolean = false, priority: number = 0): void {
+        if (!instance) instance = new Resource();
         instance.addEventListener(type, listener, thisObject, useCapture, priority);
     }
     /**

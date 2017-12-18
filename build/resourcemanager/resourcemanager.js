@@ -1842,7 +1842,11 @@ var RES;
      * @language zh_CN
      */
     function loadConfig(url, resourceRoot) {
-        instance = new Resource();
+        if (url) {
+            RES.setConfigURL(url);
+        }
+        if (!instance)
+            instance = new Resource();
         return instance.loadConfig();
     }
     RES.loadConfig = loadConfig;
@@ -2142,6 +2146,8 @@ var RES;
     function addEventListener(type, listener, thisObject, useCapture, priority) {
         if (useCapture === void 0) { useCapture = false; }
         if (priority === void 0) { priority = 0; }
+        if (!instance)
+            instance = new Resource();
         instance.addEventListener(type, listener, thisObject, useCapture, priority);
     }
     RES.addEventListener = addEventListener;
