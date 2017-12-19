@@ -85,7 +85,7 @@ var EmitResConfigFilePlugin = (function () {
             });
         });
     };
-    EmitResConfigFilePlugin.prototype.onFinish = function (param) {
+    EmitResConfigFilePlugin.prototype.onFinish = function (pluginContext) {
         return __awaiter(this, void 0, void 0, function () {
             //         async function convertResourceJson(projectRoot: string, config: Data) {
             //             let filename = path.join(projectRoot, "resource/default.res.json");
@@ -154,10 +154,11 @@ var EmitResConfigFilePlugin = (function () {
                         return [4 /*yield*/, emitResourceConfigFile(true)];
                     case 1:
                         configContent = _a.sent();
-                        param.createFile(this.options.output, new Buffer(configContent));
+                        pluginContext.createFile(this.options.output, new Buffer(configContent));
                         return [4 /*yield*/, ResourceConfig.generateClassicalConfig()];
                     case 2:
                         wingConfigContent = _a.sent();
+                        pluginContext.createFile(wing_res_json, new Buffer(wingConfigContent));
                         return [2 /*return*/];
                 }
             });
@@ -195,6 +196,7 @@ var ResourceConfig;
                     resources: []
                 };
                 resources = config.resources;
+                console.log(resources);
                 alias = {};
                 for (aliasName in config.alias) {
                     alias[config.alias[aliasName]] = aliasName;
@@ -205,7 +207,6 @@ var ResourceConfig;
                         r.name = alias[r.name];
                     }
                     result.resources.push(r);
-                    // console.log(f.name)
                 });
                 return [2 /*return*/, JSON.stringify(result, null, "\t")];
             });

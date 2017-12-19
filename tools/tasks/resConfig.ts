@@ -47,7 +47,7 @@ export class EmitResConfigFilePlugin implements Plugin {
         }
 
     }
-    async  onFinish(param: plugin.PluginContext): Promise<void> {
+    async  onFinish(pluginContext: plugin.PluginContext): Promise<void> {
 
 
         //         async function convertResourceJson(projectRoot: string, config: Data) {
@@ -119,11 +119,10 @@ exports.resources = ${JSON.stringify(config.resources, null, "\t")};
         let config = ResourceConfig.getConfig();
         // await convertResourceJson(pluginContext.projectRoot, config);
         let configContent = await emitResourceConfigFile(true);
-        param.createFile(this.options.output, new Buffer(configContent));
+        pluginContext.createFile(this.options.output, new Buffer(configContent));
 
         let wingConfigContent = await ResourceConfig.generateClassicalConfig();
-        // console.log(wingConfigContent)
-        //         pluginContext.createFile(wing_res_json, new Buffer(wingConfigContent));
+        pluginContext.createFile(wing_res_json, new Buffer(wingConfigContent));
     }
 }
 
@@ -161,6 +160,7 @@ namespace ResourceConfig {
             resources: []
         }
         let resources = config.resources;
+        console.log(resources)
 
         let alias = {};
         for (var aliasName in config.alias) {
@@ -173,7 +173,6 @@ namespace ResourceConfig {
                 r.name = alias[r.name]
             }
             result.resources.push(r);
-            // console.log(f.name)
         })
         return JSON.stringify(result, null, "\t");
     }
