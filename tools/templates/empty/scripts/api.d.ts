@@ -217,7 +217,7 @@ declare module 'built-in' {
      * * debug : 默认策略，用于开发环境
      * * contents : 将 EXML 的内容写入到主题文件中
      * * gjs : 将生成的JS文件写入到主题文件中
-     * * commonjs : 将EXML合并为一个 CommonJS 风格的文件
+     * * commonjs : 将EXML合并为一个 CommonJS 风格的文件(暂未开放)
      */
     type EXML_Publish_Policy = "default" | "debug" | "contents" | "gjs" | "commonjs"
 
@@ -244,6 +244,23 @@ declare module 'built-in' {
 
     }
 
+    type EmitResConfigFilePluginOptions = {
+        output: string,
+        typeSelector: (path: string) => string | null | undefined,
+        nameSelector: (path: string) => string | null | undefined,
+        groupSelector: (path: string) => string | null | undefined,
+    }
+
+
+    /** 
+     * 生成 res.json 文件或者 res.js 文件
+     */
+    export class EmitResConfigFilePlugin implements plugins.Command {
+
+        constructor(options: EmitResConfigFilePluginOptions)
+
+    }
+
 
     /**
      * 增量编译
@@ -259,19 +276,6 @@ declare module 'built-in' {
      * 自动纹理合并，beta
      */
     export class SpriteSheetPlugin implements plugins.Command {
-
-    }
-
-
-    type EmitResConfigFilePluginOptions = { output: string, typeSelector: (path: string) => string | null | undefined }
-
-
-    /** 
-     * 生成 res.json 文件或者 res.js 文件
-     */
-    export class EmitResConfigFilePlugin implements plugins.Command {
-
-        constructor(options: EmitResConfigFilePluginOptions)
 
     }
 

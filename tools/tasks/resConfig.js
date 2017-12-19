@@ -43,7 +43,7 @@ function executeFilter(url) {
                 return [2 /*return*/, null];
             }
             type = ResourceConfig.typeSelector(url);
-            name = url;
+            name = ResourceConfig.nameSelector(url);
             if (type) {
                 return [2 /*return*/, { name: name, url: url, type: type }];
             }
@@ -58,6 +58,8 @@ var EmitResConfigFilePlugin = (function () {
     function EmitResConfigFilePlugin(options) {
         this.options = options;
         ResourceConfig.typeSelector = options.typeSelector;
+        ResourceConfig.nameSelector = options.nameSelector;
+        ResourceConfig.groupSelector = options.groupSelector;
     }
     EmitResConfigFilePlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
@@ -73,7 +75,7 @@ var EmitResConfigFilePlugin = (function () {
                         r = _a.sent();
                         if (r) {
                             r.url = file.relative;
-                            ResourceConfig.addFile(r, true);
+                            resourceVfs.addFile(r, true);
                             return [2 /*return*/, file];
                         }
                         else {
@@ -136,9 +138,8 @@ var EmitResConfigFilePlugin = (function () {
             //         }
             function emitResourceConfigFile(debug) {
                 return __awaiter(this, void 0, void 0, function () {
-                    var userConfig, config, content, file;
+                    var config, content, file;
                     return __generator(this, function (_a) {
-                        userConfig = ResourceConfig.userConfig;
                         config = ResourceConfig.generateConfig(true);
                         content = JSON.stringify(config, null, "\t");
                         file = "exports.typeSelector = " + ResourceConfig.typeSelector.toString() + ";\nexports.resourceRoot = \"" + ResourceConfig.resourceRoot + "\";\nexports.alias = " + JSON.stringify(config.alias, null, "\t") + ";\nexports.groups = " + JSON.stringify(config.groups, null, "\t") + ";\nexports.resources = " + JSON.stringify(config.resources, null, "\t") + ";\n            ";
@@ -196,7 +197,6 @@ var ResourceConfig;
                     resources: []
                 };
                 resources = config.resources;
-                console.log(resources);
                 alias = {};
                 for (aliasName in config.alias) {
                     alias[config.alias[aliasName]] = aliasName;
@@ -263,25 +263,6 @@ var ResourceConfig;
     }
     ResourceConfig.generateConfig = generateConfig;
     var resourcePath;
-    function addFile(r, checkDuplicate) {
-        var url = r.url, name = r.name;
-        url = url.split("\\").join("/");
-        name = name.split("\\").join("/");
-        r.url = url;
-        r.name = name;
-        if (checkDuplicate) {
-            var a = resourceVfs.getFile(r.name);
-            if (a && a.url != r.url) {
-                console.warn("duplicate: " + r.url + " => " + a.url);
-            }
-        }
-        resourceVfs.addFile(r);
-    }
-    ResourceConfig.addFile = addFile;
-    function getFile(filename) {
-        return resourceVfs.getFile(filename);
-    }
-    ResourceConfig.getFile = getFile;
 })(ResourceConfig || (ResourceConfig = {}));
 var vfs;
 (function (vfs) {
@@ -294,7 +275,13 @@ var vfs;
             this.rootPath = rootPath;
             return this.root;
         };
-        FileSystem.prototype.addFile = function (r) {
+        FileSystem.prototype.addFile = function (r, checkDuplicate) {
+            if (checkDuplicate) {
+                var a = resourceVfs.getFile(r.name);
+                if (a && a.url != r.url) {
+                    console.warn("duplicate: " + r.url + " => " + r.name);
+                }
+            }
             var type = r.type, name = r.name, url = r.url;
             if (!type)
                 type = "";

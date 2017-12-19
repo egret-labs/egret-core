@@ -10,7 +10,7 @@ async function executeFilter(url: string) {
         return null;
     }
     let type = ResourceConfig.typeSelector(url);
-    let name = url;
+    let name = ResourceConfig.nameSelector(url);
     if (type) {
         return { name, url, type }
     }
@@ -19,13 +19,21 @@ async function executeFilter(url: string) {
     }
 }
 
-type EmitResConfigFilePluginOptions = { output: string, typeSelector: (path: string) => string }
+type EmitResConfigFilePluginOptions = {
+    output: string,
+    typeSelector: (path: string) => string,
+    nameSelector: (path: string) => string,
+    groupSelector: (path: string) => string
+
+}
 
 
 export class EmitResConfigFilePlugin implements Plugin {
 
     constructor(private options: EmitResConfigFilePluginOptions) {
         ResourceConfig.typeSelector = options.typeSelector;
+        ResourceConfig.nameSelector = options.nameSelector;
+        ResourceConfig.groupSelector = options.groupSelector;
     }
 
     async  onFile(file: plugin.File): Promise<plugin.File> {
@@ -37,8 +45,10 @@ export class EmitResConfigFilePlugin implements Plugin {
         else {
             let r = await executeFilter(filename)
             if (r) {
+
+
                 r.url = file.relative;
-                ResourceConfig.addFile(r, true);
+                resourceVfs.addFile(r, true);
                 return file;
             }
             else {
@@ -104,7 +114,6 @@ export class EmitResConfigFilePlugin implements Plugin {
         //         }
 
         async function emitResourceConfigFile(debug: boolean) {
-            const userConfig = ResourceConfig.userConfig;
             const config = ResourceConfig.generateConfig(true);
             const content = JSON.stringify(config, null, "\t");
             const file = `exports.typeSelector = ${ResourceConfig.typeSelector.toString()};
@@ -120,7 +129,6 @@ exports.resources = ${JSON.stringify(config.resources, null, "\t")};
         // await convertResourceJson(pluginContext.projectRoot, config);
         let configContent = await emitResourceConfigFile(true);
         pluginContext.createFile(this.options.output, new Buffer(configContent));
-
         let wingConfigContent = await ResourceConfig.generateClassicalConfig();
         pluginContext.createFile(wing_res_json, new Buffer(wingConfigContent));
     }
@@ -160,7 +168,6 @@ namespace ResourceConfig {
             resources: []
         }
         let resources = config.resources;
-        console.log(resources)
 
         let alias = {};
         for (var aliasName in config.alias) {
@@ -239,39 +246,13 @@ namespace ResourceConfig {
 
     export var nameSelector: (path: string) => string;
 
+    export var groupSelector: (path: string) => string;
+
     export var mergeSelector: (path: string) => string | null;
-    export var resourceConfigFileName: string;
 
-    export type UserConfig = {
-        outputDir: string,
-        commands: string[]
-    }
-
-
-    export var userConfig: UserConfig
 
     var resourcePath: string;
 
-    export function addFile(r: vfs.File, checkDuplicate: boolean) {
-        let { url, name } = r;
-        url = url.split("\\").join("/");
-        name = name.split("\\").join("/");
-        r.url = url;
-        r.name = name;
-
-        if (checkDuplicate) {
-            let a = resourceVfs.getFile(r.name)
-            if (a && a.url != r.url) {
-                console.warn("duplicate: " + r.url + " => " + a.url)
-            }
-        }
-        resourceVfs.addFile(r);
-    }
-
-
-    export function getFile(filename: string): vfs.File | undefined {
-        return resourceVfs.getFile(filename);
-    }
 }
 
 
@@ -304,7 +285,14 @@ namespace vfs {
 
 
 
-        addFile(r: File) {
+        addFile(r: File, checkDuplicate: boolean) {
+
+            if (checkDuplicate) {
+                let a = resourceVfs.getFile(r.name)
+                if (a && a.url != r.url) {
+                    console.warn("duplicate: " + r.url + " => " + r.name)
+                }
+            }
 
             let { type, name, url } = r;
             if (!type) type = "";
