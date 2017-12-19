@@ -34,16 +34,31 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var path = require("path");
 var wing_res_json = "wing.res.json";
+var filter = [
+    wing_res_json,
+    "resource/default.res.json"
+];
 function executeFilter(url) {
     return __awaiter(this, void 0, void 0, function () {
-        var type, name;
+        var type, name, groupName, group;
         return __generator(this, function (_a) {
-            if (url == wing_res_json) {
+            if (filter.indexOf(url) >= 0) {
                 return [2 /*return*/, null];
             }
-            type = ResourceConfig.typeSelector(url);
-            name = ResourceConfig.nameSelector(url);
+            type = options.typeSelector(url);
+            name = options.nameSelector(url);
+            groupName = options.groupSelector(url);
+            if (groupName) {
+                if (!config.groups[groupName]) {
+                    config.groups[groupName] = [];
+                }
+                group = config.groups[groupName];
+                if (group.indexOf(name) == -1) {
+                    group.push(name);
+                }
+            }
             if (type) {
                 return [2 /*return*/, { name: name, url: url, type: type }];
             }
@@ -54,12 +69,11 @@ function executeFilter(url) {
         });
     });
 }
+var options;
 var EmitResConfigFilePlugin = (function () {
-    function EmitResConfigFilePlugin(options) {
-        this.options = options;
-        ResourceConfig.typeSelector = options.typeSelector;
-        ResourceConfig.nameSelector = options.nameSelector;
-        ResourceConfig.groupSelector = options.groupSelector;
+    function EmitResConfigFilePlugin(paramOptions) {
+        this.paramOptions = paramOptions;
+        options = paramOptions;
     }
     EmitResConfigFilePlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
@@ -74,7 +88,6 @@ var EmitResConfigFilePlugin = (function () {
                     case 2:
                         r = _a.sent();
                         if (r) {
-                            r.url = file.relative;
                             resourceVfs.addFile(r, true);
                             return [2 /*return*/, file];
                         }
@@ -140,9 +153,9 @@ var EmitResConfigFilePlugin = (function () {
                 return __awaiter(this, void 0, void 0, function () {
                     var config, content, file;
                     return __generator(this, function (_a) {
-                        config = ResourceConfig.generateConfig(true);
+                        config = resourceConfig.generateConfig(true);
                         content = JSON.stringify(config, null, "\t");
-                        file = "exports.typeSelector = " + ResourceConfig.typeSelector.toString() + ";\nexports.resourceRoot = \"" + ResourceConfig.resourceRoot + "\";\nexports.alias = " + JSON.stringify(config.alias, null, "\t") + ";\nexports.groups = " + JSON.stringify(config.groups, null, "\t") + ";\nexports.resources = " + JSON.stringify(config.resources, null, "\t") + ";\n            ";
+                        file = "exports.typeSelector = " + options.typeSelector.toString() + ";\nexports.resourceRoot = \"resource\";\nexports.alias = " + JSON.stringify(config.alias, null, "\t") + ";\nexports.groups = " + JSON.stringify(config.groups, null, "\t") + ";\nexports.resources = " + JSON.stringify(config.resources, null, "\t") + ";\n            ";
                         return [2 /*return*/, file];
                     });
                 });
@@ -151,16 +164,19 @@ var EmitResConfigFilePlugin = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        config = ResourceConfig.getConfig();
+                        config = resourceConfig.getConfig();
+                        if (!(path.extname(options.output) == ".js")) return [3 /*break*/, 2];
                         return [4 /*yield*/, emitResourceConfigFile(true)];
                     case 1:
                         configContent = _a.sent();
-                        pluginContext.createFile(this.options.output, new Buffer(configContent));
-                        return [4 /*yield*/, ResourceConfig.generateClassicalConfig()];
-                    case 2:
+                        pluginContext.createFile(options.output, new Buffer(configContent));
+                        return [3 /*break*/, 4];
+                    case 2: return [4 /*yield*/, resourceConfig.generateClassicalConfig()];
+                    case 3:
                         wingConfigContent = _a.sent();
-                        pluginContext.createFile(wing_res_json, new Buffer(wingConfigContent));
-                        return [2 /*return*/];
+                        pluginContext.createFile(options.output, new Buffer(wingConfigContent));
+                        _a.label = 4;
+                    case 4: return [2 /*return*/];
                 }
             });
         });
@@ -168,8 +184,8 @@ var EmitResConfigFilePlugin = (function () {
     return EmitResConfigFilePlugin;
 }());
 exports.EmitResConfigFilePlugin = EmitResConfigFilePlugin;
-var ResourceConfig;
-(function (ResourceConfig) {
+var resourceConfig;
+(function (resourceConfig) {
     function loop(r, callback) {
         for (var key in r) {
             var f = r[key];
@@ -187,15 +203,19 @@ var ResourceConfig;
     function getConfig() {
         return config;
     }
-    ResourceConfig.getConfig = getConfig;
+    resourceConfig.getConfig = getConfig;
     function generateClassicalConfig() {
         return __awaiter(this, void 0, void 0, function () {
-            var result, resources, alias, aliasName;
+            var result, groups, groupName, resources, alias, aliasName;
             return __generator(this, function (_a) {
                 result = {
                     groups: [],
                     resources: []
                 };
+                groups = config.groups;
+                for (groupName in groups) {
+                    result.groups.push({ name: groupName, keys: groups[groupName].join(",") });
+                }
                 resources = config.resources;
                 alias = {};
                 for (aliasName in config.alias) {
@@ -212,7 +232,7 @@ var ResourceConfig;
             });
         });
     }
-    ResourceConfig.generateClassicalConfig = generateClassicalConfig;
+    resourceConfig.generateClassicalConfig = generateClassicalConfig;
     function generateConfig(debug) {
         var loop = function (r) {
             for (var key in r) {
@@ -224,7 +244,7 @@ var ResourceConfig;
                     if (!debug) {
                         delete f.name;
                         // console.log 
-                        if (ResourceConfig.typeSelector(f.url) == f.type) {
+                        if (options.typeSelector(f.url) == f.type) {
                             delete f.type;
                         }
                         if (Object.keys(f).length == 1) {
@@ -261,9 +281,8 @@ var ResourceConfig;
         };
         return result;
     }
-    ResourceConfig.generateConfig = generateConfig;
-    var resourcePath;
-})(ResourceConfig || (ResourceConfig = {}));
+    resourceConfig.generateConfig = generateConfig;
+})(resourceConfig || (resourceConfig = {}));
 var vfs;
 (function (vfs) {
     var FileSystem = (function () {
@@ -359,6 +378,6 @@ var vfs;
     }());
     vfs.FileSystem = FileSystem;
 })(vfs || (vfs = {}));
-var config = { alias: [], groups: [], resources: {} };
+var config = { alias: {}, groups: {}, resources: {} };
 var resourceVfs = new vfs.FileSystem();
 resourceVfs.init(config.resources, "resource");

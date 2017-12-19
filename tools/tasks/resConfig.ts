@@ -3,14 +3,32 @@ import * as path from 'path';
 import { Plugin } from './';
 
 
+
 const wing_res_json = "wing.res.json";
 
+const filter = [
+    wing_res_json,
+    "resource/default.res.json"
+]
+
 async function executeFilter(url: string) {
-    if (url == wing_res_json) {
+
+    if (filter.indexOf(url) >= 0) {
         return null;
     }
-    let type = ResourceConfig.typeSelector(url);
-    let name = ResourceConfig.nameSelector(url);
+    let type = options.typeSelector(url);
+    let name = options.nameSelector(url);
+    let groupName = options.groupSelector(url);
+
+    if (groupName) {
+        if (!config.groups[groupName]) {
+            config.groups[groupName] = [];
+        }
+        const group = config.groups[groupName];
+        if (group.indexOf(name) == -1) {
+            group.push(name);
+        }
+    }
     if (type) {
         return { name, url, type }
     }
@@ -27,13 +45,13 @@ type EmitResConfigFilePluginOptions = {
 
 }
 
+let options: EmitResConfigFilePluginOptions;
+
 
 export class EmitResConfigFilePlugin implements Plugin {
 
-    constructor(private options: EmitResConfigFilePluginOptions) {
-        ResourceConfig.typeSelector = options.typeSelector;
-        ResourceConfig.nameSelector = options.nameSelector;
-        ResourceConfig.groupSelector = options.groupSelector;
+    constructor(private paramOptions: EmitResConfigFilePluginOptions) {
+        options = paramOptions;
     }
 
     async  onFile(file: plugin.File): Promise<plugin.File> {
@@ -45,9 +63,6 @@ export class EmitResConfigFilePlugin implements Plugin {
         else {
             let r = await executeFilter(filename)
             if (r) {
-
-
-                r.url = file.relative;
                 resourceVfs.addFile(r, true);
                 return file;
             }
@@ -114,23 +129,28 @@ export class EmitResConfigFilePlugin implements Plugin {
         //         }
 
         async function emitResourceConfigFile(debug: boolean) {
-            const config = ResourceConfig.generateConfig(true);
+            const config = resourceConfig.generateConfig(true);
             const content = JSON.stringify(config, null, "\t");
-            const file = `exports.typeSelector = ${ResourceConfig.typeSelector.toString()};
-exports.resourceRoot = "${ResourceConfig.resourceRoot}";
+            const file = `exports.typeSelector = ${options.typeSelector.toString()};
+exports.resourceRoot = "resource";
 exports.alias = ${JSON.stringify(config.alias, null, "\t")};
 exports.groups = ${JSON.stringify(config.groups, null, "\t")};
 exports.resources = ${JSON.stringify(config.resources, null, "\t")};
-            `
+            `;
             return file;
         }
 
-        let config = ResourceConfig.getConfig();
+        let config = resourceConfig.getConfig();
         // await convertResourceJson(pluginContext.projectRoot, config);
-        let configContent = await emitResourceConfigFile(true);
-        pluginContext.createFile(this.options.output, new Buffer(configContent));
-        let wingConfigContent = await ResourceConfig.generateClassicalConfig();
-        pluginContext.createFile(wing_res_json, new Buffer(wingConfigContent));
+
+        if (path.extname(options.output) == ".js") {
+            let configContent = await emitResourceConfigFile(true);
+            pluginContext.createFile(options.output, new Buffer(configContent));
+        }
+        else {
+            let wingConfigContent = await resourceConfig.generateClassicalConfig();
+            pluginContext.createFile(options.output, new Buffer(wingConfigContent));
+        }
     }
 }
 
@@ -138,7 +158,7 @@ exports.resources = ${JSON.stringify(config.resources, null, "\t")};
 
 
 
-namespace ResourceConfig {
+namespace resourceConfig {
 
 
     function loop(r: vfs.Dictionary, callback: (file: vfs.File) => void) {
@@ -163,10 +183,20 @@ namespace ResourceConfig {
     }
 
     export async function generateClassicalConfig() {
-        let result: legacy.Info = {
+        // {
+        // 	"keys": "bg_jpg,egret_icon_png,description_json",
+        // 	"name": "preload"
+        // }
+        let result: legacy.Data = {
             groups: [],
             resources: []
         }
+
+        let groups = config.groups;
+        for (let groupName in groups) {
+            result.groups.push({ name: groupName, keys: groups[groupName].join(",") })
+        }
+
         let resources = config.resources;
 
         let alias = {};
@@ -184,9 +214,9 @@ namespace ResourceConfig {
         return JSON.stringify(result, null, "\t");
     }
 
-    export function generateConfig(debug: boolean): GeneratedData {
+    export function generateConfig(debug: boolean): generate.Data {
 
-        let loop = (r: GeneratedDictionary) => {
+        let loop = (r: generate.Dictionary) => {
             for (var key in r) {
                 var f = r[key];
                 if (isFile(f)) {
@@ -197,7 +227,7 @@ namespace ResourceConfig {
                     if (!debug) {
                         delete f.name;
                         // console.log 
-                        if (ResourceConfig.typeSelector(f.url) == f.type) {
+                        if (options.typeSelector(f.url) == f.type) {
                             delete f.type;
                         }
                         if (Object.keys(f).length == 1) {
@@ -219,7 +249,7 @@ namespace ResourceConfig {
             }
         }
 
-        let isFile = (r: GeneratedDictionary[keyof GeneratedDictionary]): r is GeneratedFile => {
+        let isFile = (r: generate.Dictionary[keyof generate.Dictionary]): r is generate.File => {
             if (r['url']) {
                 return true;
             }
@@ -228,31 +258,15 @@ namespace ResourceConfig {
             }
         }
 
-        let generatedData: GeneratedDictionary = JSON.parse(JSON.stringify(config.resources));
+        let generatedData: generate.Dictionary = JSON.parse(JSON.stringify(config.resources));
         loop(generatedData);
-        let result: GeneratedData = {
+        let result: generate.Data = {
             alias: config.alias,
             groups: config.groups,
             resources: generatedData
         }
         return result;
     }
-
-
-
-    export var resourceRoot: string;
-
-    export var typeSelector: (path: string) => string;
-
-    export var nameSelector: (path: string) => string;
-
-    export var groupSelector: (path: string) => string;
-
-    export var mergeSelector: (path: string) => string | null;
-
-
-    var resourcePath: string;
-
 }
 
 
@@ -375,7 +389,7 @@ namespace vfs {
 namespace legacy {
 
 
-    export interface Info {
+    export interface Data {
         groups: GroupInfo[],
         resources: ResourceInfo[],
     }
@@ -393,29 +407,31 @@ namespace legacy {
     }
 }
 
-interface GeneratedDictionary {
 
-    [file: string]: GeneratedFile | GeneratedDictionary
+namespace generate {
+    export interface Dictionary {
 
-}
+        [file: string]: File | Dictionary
 
-type GeneratedFile = string | vfs.File;
+    }
 
-interface GeneratedData {
+    export type File = string | vfs.File;
 
-    resources: GeneratedDictionary
+    export interface Data {
 
-    groups: {
-        [groupName: string]: string[]
-    },
+        resources: Dictionary
 
-    alias: {
-        [aliasName: string]: string
+        groups: {
+            [groupName: string]: string[]
+        },
+
+        alias: {
+            [aliasName: string]: string
+        }
+
     }
 
 }
-
-
 
 interface Data {
 
@@ -430,6 +446,6 @@ interface Data {
     }
 
 }
-var config: Data = { alias: [], groups: [], resources: {} } as any as Data;
+var config: Data = { alias: {}, groups: {}, resources: {} };
 const resourceVfs = new vfs.FileSystem();
 resourceVfs.init(config.resources, "resource");
