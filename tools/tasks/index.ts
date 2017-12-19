@@ -4,6 +4,7 @@ export { ExmlPlugin } from './exml';
 export { IncrementCompilePlugin } from './incrementCompile'
 export { CompilePlugin, UglifyPlugin } from './compile';
 export { SpriteSheetPlugin } from './spritesheet';
+export { EmitResConfigFilePlugin } from './resConfig';
 
 
 export function run() {
