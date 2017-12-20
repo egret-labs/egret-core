@@ -1,11 +1,8 @@
 {
   "name": "egret",
-  "version": "5.1.1",
+  "version": "5.1.2",
   "private": true,
   "author": "egret-labs",
-  "scripts": {
-    "start": "node app"
-  },
   "bin": {
     "egret": "./tools/bin/egret"
   },
