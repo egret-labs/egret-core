@@ -288,19 +288,48 @@ class EgretProjectData {
 }
 
 
+type LauncherAPI = {
+
+
+    getAllEngineVersions(): any
+
+    getInstalledTools(): { name: string, version: string, path: string }[];
+}
+
 class EngineData {
 
     private versions: egret.VersionInfo[] = [];
+
+
+    private proxy: LauncherAPI;
 
     getEgretToolsInstalledList() {
         return this.versions;
     }
 
+
+    getLauncherLibrary(): LauncherAPI {
+        const egretjspath = file.joinPath(getEgretLauncherPath(), "egret.js");
+        const m = require(egretjspath);
+        const selector: LauncherAPI = m.selector;
+        if (!this.proxy) {
+            this.proxy = new Proxy(m.selector, {
+                get: (target, p, receiver) => {
+                    const result = target[p];
+                    if (!result) {
+                        throw `找不到 Launcher API: ${p},请升级最新的 Egret Launcher 以解决此问题`//i18n
+                    }
+                    return result;
+                }
+            });
+        }
+        return this.proxy;
+    }
+
     async init() {
 
-        const egretjspath = file.joinPath(getEgretLauncherPath(), "egret.js");
-        const egretjs = require(egretjspath)
-        const data = egretjs.selector.getAllEngineVersions();
+        const egretjs = this.getLauncherLibrary();
+        const data = egretjs.getAllEngineVersions();
         for (let item in data) {
             const value = data[item];
             this.versions.push({ version: value.version, path: value.root })

@@ -35,13 +35,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var path = require("path");
-var utils_1 = require("../lib/utils");
+var index_1 = require("../project/index");
 var os_1 = require("os");
 var FileUtil = require("../lib/FileUtil");
 var TextureMergerPlugin = (function () {
     function TextureMergerPlugin(options) {
         this.options = options;
-        console.error("spritesheet plugin is not implemented now !");
+        console.error("TextureMergerPlugin is not implemented now !");
     }
     TextureMergerPlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
@@ -54,7 +54,7 @@ var TextureMergerPlugin = (function () {
         return __awaiter(this, void 0, void 0, function () {
             function generateSpriteSheet(spriteSheetFileName, dirname) {
                 return __awaiter(this, void 0, void 0, function () {
-                    var texture_merger_path, projectRoot, tempDir, jsonPath, pngPath, folder, jsonBuffer, pngBuffer, e_1;
+                    var texture_merger_path, projectRoot, tempDir, jsonPath, pngPath, folder;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0: return [4 /*yield*/, getTextureMergerPath()];
@@ -66,26 +66,19 @@ var TextureMergerPlugin = (function () {
                                 jsonPath = path.join(tempDir, "temp.json");
                                 pngPath = jsonPath.replace('.json', ".png");
                                 folder = path.join(projectRoot, "resource", dirname);
-                                _a.label = 2;
-                            case 2:
-                                _a.trys.push([2, 6, , 7]);
-                                return [4 /*yield*/, utils_1.shell(texture_merger_path, ["-p", folder, "-o", jsonPath])];
-                            case 3:
-                                _a.sent();
-                                return [4 /*yield*/, FileUtil.readFileAsync(jsonPath, null)];
-                            case 4:
-                                jsonBuffer = _a.sent();
-                                return [4 /*yield*/, FileUtil.readFileAsync(pngPath, null)];
-                            case 5:
-                                pngBuffer = _a.sent();
-                                pluginContext.createFile("111.json", jsonBuffer);
-                                pluginContext.createFile('111.png', pngBuffer);
-                                return [3 /*break*/, 7];
-                            case 6:
-                                e_1 = _a.sent();
-                                console.log(e_1);
-                                return [3 /*break*/, 7];
-                            case 7: return [2 /*return*/];
+                                // const tmproject = 
+                                try {
+                                    // const result = await shell(texture_merger_path, ["-p", folder, "-o", jsonPath]);
+                                    // const result = await shell(texture_merger_path, ["-cp", tmproject, "-o", tempDir]);
+                                    // const jsonBuffer = await FileUtil.readFileAsync(jsonPath, null) as any as NodeBuffer;
+                                    // const pngBuffer = await FileUtil.readFileAsync(pngPath, null) as any as NodeBuffer;
+                                    // pluginContext.createFile("111.json", jsonBuffer);
+                                    // pluginContext.createFile('111.png', pngBuffer);
+                                }
+                                catch (e) {
+                                    console.log(e);
+                                }
+                                return [2 /*return*/];
                         }
                     });
                 });
@@ -107,6 +100,12 @@ var TextureMergerPlugin = (function () {
 }());
 exports.TextureMergerPlugin = TextureMergerPlugin;
 function getTextureMergerPath() {
-    return "C:\\Program Files\\Egret\\TextureMerger\\TextureMerger.exe";
-    // return `C:\\Program Files\\Egret\\TextureMerger\\TextureMerger.exe`
+    var toolsList = index_1.engineData.getLauncherLibrary().getInstalledTools();
+    var tm = toolsList.filter(function (m) {
+        return m.name == "Texture Merger";
+    })[0];
+    if (!tm) {
+        throw '请安装 Texture Merger'; //i18n
+    }
+    return tm.path + "/TextureMerger.exe";
 }

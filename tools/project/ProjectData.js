@@ -284,13 +284,29 @@ var EngineData = (function () {
     EngineData.prototype.getEgretToolsInstalledList = function () {
         return this.versions;
     };
+    EngineData.prototype.getLauncherLibrary = function () {
+        var egretjspath = file.joinPath(getEgretLauncherPath(), "egret.js");
+        var m = require(egretjspath);
+        var selector = m.selector;
+        if (!this.proxy) {
+            this.proxy = new Proxy(m.selector, {
+                get: function (target, p, receiver) {
+                    var result = target[p];
+                    if (!result) {
+                        throw "\u627E\u4E0D\u5230 Launcher API: " + p + ",\u8BF7\u5347\u7EA7\u6700\u65B0\u7684 Egret Launcher \u4EE5\u89E3\u51B3\u6B64\u95EE\u9898"; //i18n
+                    }
+                    return result;
+                }
+            });
+        }
+        return this.proxy;
+    };
     EngineData.prototype.init = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var egretjspath, egretjs, data, item, value;
+            var egretjs, data, item, value;
             return __generator(this, function (_a) {
-                egretjspath = file.joinPath(getEgretLauncherPath(), "egret.js");
-                egretjs = require(egretjspath);
-                data = egretjs.selector.getAllEngineVersions();
+                egretjs = this.getLauncherLibrary();
+                data = egretjs.getAllEngineVersions();
                 for (item in data) {
                     value = data[item];
                     this.versions.push({ version: value.version, path: value.root });
