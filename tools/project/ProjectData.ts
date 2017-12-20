@@ -313,7 +313,7 @@ class EngineData {
         const m = require(egretjspath);
         const selector: LauncherAPI = m.selector;
         if (!this.proxy) {
-            this.proxy = new Proxy(m.selector, {
+            this.proxy = new Proxy(selector, {
                 get: (target, p, receiver) => {
                     const result = target[p];
                     if (!result) {

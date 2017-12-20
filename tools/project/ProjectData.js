@@ -289,7 +289,7 @@ var EngineData = (function () {
         var m = require(egretjspath);
         var selector = m.selector;
         if (!this.proxy) {
-            this.proxy = new Proxy(m.selector, {
+            this.proxy = new Proxy(selector, {
                 get: function (target, p, receiver) {
                     var result = target[p];
                     if (!result) {
