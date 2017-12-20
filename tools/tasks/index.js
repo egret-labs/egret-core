@@ -9,8 +9,8 @@ exports.IncrementCompilePlugin = incrementCompile_1.IncrementCompilePlugin;
 var compile_1 = require("./compile");
 exports.CompilePlugin = compile_1.CompilePlugin;
 exports.UglifyPlugin = compile_1.UglifyPlugin;
-var spritesheet_1 = require("./spritesheet");
-exports.SpriteSheetPlugin = spritesheet_1.SpriteSheetPlugin;
+var texturemerger_1 = require("./texturemerger");
+exports.TextureMergerPlugin = texturemerger_1.TextureMergerPlugin;
 var resConfig_1 = require("./resConfig");
 exports.EmitResConfigFilePlugin = resConfig_1.EmitResConfigFilePlugin;
 function run() {

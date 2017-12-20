@@ -6,15 +6,17 @@ import { tmpdir } from "os";
 import * as FileUtil from '../lib/FileUtil';
 
 
-type SpriteSheetConfig = {
+type TextureMergerOptions = {
 
-    files?: string[]
+    path: string;
+
+    output: string;
 
 }
 
-export class SpriteSheetPlugin implements Plugin {
+export class TextureMergerPlugin implements Plugin {
 
-    constructor() {
+    constructor(private options: TextureMergerOptions) {
         console.error("spritesheet plugin is not implemented now !")
     }
 

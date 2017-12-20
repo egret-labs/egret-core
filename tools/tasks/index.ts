@@ -3,7 +3,7 @@ export { ManifestPlugin } from './manifest';
 export { ExmlPlugin } from './exml';
 export { IncrementCompilePlugin } from './incrementCompile'
 export { CompilePlugin, UglifyPlugin } from './compile';
-export { SpriteSheetPlugin } from './spritesheet';
+export { TextureMergerPlugin } from './texturemerger';
 export { EmitResConfigFilePlugin } from './resConfig';
 
 

@@ -278,11 +278,26 @@ declare module 'built-in' {
 
     }
 
+    type TextureMergerOptions = {
 
+        /**
+         * TextureMerger 项目路径
+         */
+        path: string;
+
+        /**
+         * 输出路径
+         */
+        output: string;
+
+
+    }
     /**
-     * 自动纹理合并，beta
+     * 使用 TextureMerger 实现纹理自动合并，依赖 TextureMerger 1.7 以上的版本
      */
-    export class SpriteSheetPlugin implements plugins.Command {
+    export class TextureMergerPlugin implements plugins.Command {
+
+        constructor(options: TextureMergerOptions);
 
     }
 

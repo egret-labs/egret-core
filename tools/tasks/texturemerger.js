@@ -38,18 +38,19 @@ var path = require("path");
 var utils_1 = require("../lib/utils");
 var os_1 = require("os");
 var FileUtil = require("../lib/FileUtil");
-var SpriteSheetPlugin = (function () {
-    function SpriteSheetPlugin() {
+var TextureMergerPlugin = (function () {
+    function TextureMergerPlugin(options) {
+        this.options = options;
         console.error("spritesheet plugin is not implemented now !");
     }
-    SpriteSheetPlugin.prototype.onFile = function (file) {
+    TextureMergerPlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/, file];
             });
         });
     };
-    SpriteSheetPlugin.prototype.onFinish = function (pluginContext) {
+    TextureMergerPlugin.prototype.onFinish = function (pluginContext) {
         return __awaiter(this, void 0, void 0, function () {
             function generateSpriteSheet(spriteSheetFileName, dirname) {
                 return __awaiter(this, void 0, void 0, function () {
@@ -102,9 +103,9 @@ var SpriteSheetPlugin = (function () {
             });
         });
     };
-    return SpriteSheetPlugin;
+    return TextureMergerPlugin;
 }());
-exports.SpriteSheetPlugin = SpriteSheetPlugin;
+exports.TextureMergerPlugin = TextureMergerPlugin;
 function getTextureMergerPath() {
     return "C:\\Program Files\\Egret\\TextureMerger\\TextureMerger.exe";
     // return `C:\\Program Files\\Egret\\TextureMerger\\TextureMerger.exe`
