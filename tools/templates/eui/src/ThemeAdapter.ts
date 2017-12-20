@@ -39,13 +39,6 @@ class ThemeAdapter implements eui.IThemeAdapter {
      */
     public getTheme(url: string, onSuccess: Function, onError: Function, thisObject: any): void {
 
-        if (typeof generateEUI !== 'undefined') {
-            egret.callLater(() => {
-                onSuccess.call(thisObject, generateEUI);
-            }, this);
-        }
-
-
         function onResGet(e: string): void {
             onSuccess.call(thisObject, e);
         }
@@ -55,8 +48,16 @@ class ThemeAdapter implements eui.IThemeAdapter {
                 onError.call(thisObject);
             }
         }
-        RES.addEventListener(RES.ResourceEvent.ITEM_LOAD_ERROR, onResError, null);
-        RES.getResByUrl(url, onResGet, this, RES.ResourceItem.TYPE_TEXT);
+
+        if (typeof generateEUI !== 'undefined') {
+            egret.callLater(() => {
+                onSuccess.call(thisObject, generateEUI);
+            }, this);
+        }
+        else {
+            RES.addEventListener(RES.ResourceEvent.ITEM_LOAD_ERROR, onResError, null);
+            RES.getResByUrl(url, onResGet, this, RES.ResourceItem.TYPE_TEXT);
+        }
     }
 }
 
