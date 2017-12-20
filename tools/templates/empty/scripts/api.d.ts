@@ -217,7 +217,7 @@ declare module 'built-in' {
      * * debug : 默认策略，用于开发环境
      * * contents : 将 EXML 的内容写入到主题文件中
      * * gjs : 将生成的JS文件写入到主题文件中
-     * * commonjs : 将EXML合并为一个 CommonJS 风格的文件(暂未开放)
+     * * commonjs : 将EXML合并为一个 CommonJS 风格的文件
      */
     type EXML_Publish_Policy = "default" | "debug" | "contents" | "gjs" | "commonjs"
 
@@ -244,6 +244,13 @@ declare module 'built-in' {
 
     }
 
+    /** 
+     * EmitResConfigFilePlugin 的参数
+     * * output: 生成路径，可以指定生成为 *.res.js 文件或者 *.res.json 文件
+     * * typeSelector: 根据文件路径决定文件类型
+     * * nameSelector: 根据文件路径决定文件的资源名
+     * * groupSelector: 根据文件路径决定资源所述的资源组 
+     */
     type EmitResConfigFilePluginOptions = {
         output: string,
         typeSelector: (path: string) => string | null | undefined,
