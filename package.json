@@ -346,14 +346,6 @@
         ]
       },
       {
-        "name": "egret3d",
-        "description": "egret 3D引擎库",
-        "description_en": "egret 3D engine lib",
-        "files": [],
-        "root": "",
-        "dependencies": []
-      },
-      {
         "name": "experimental",
         "description": "egret实验功能库",
         "description_en": "egret experimental function lib",
@@ -381,20 +373,6 @@
     ],
     "templates": [
       {
-        "name": "empty",
-        "displayName": "空 Egret 项目",
-        "displayName_en": "Empty Egret project",
-        "language": "TypeScript",
-        "tag": "game,app,TypeScript",
-        "description": "创建一个空项目,仅添加 Egret 相关模块引用",
-        "description_en": "Create an empty project, add only reference to Egret related modules",
-        "defaultWidth": 640,
-        "defaultHeight": 1136,
-        "modules": [
-          "egret"
-        ]
-      },
-      {
         "name": "game",
         "displayName": "Egret 游戏项目",
         "displayName_en": "Egret game project",
@@ -408,7 +386,7 @@
           "egret",
           "game",
           "tween",
-          "res"
+          "assetsmanager"
         ]
       },
       {
@@ -424,23 +402,8 @@
         "modules": [
           "egret",
           "eui",
-          "res",
+          "assetsmanager",
           "tween"
-        ]
-      },
-      {
-        "name": "egret3d",
-        "displayName": "Egret 3D 项目",
-        "displayName_en": "Egret 3D project",
-        "language": "TypeScript",
-        "tag": "game,app,TypeScript",
-        "description": "创建一个 Egret 3D 项目",
-        "description_en": "Create an Egret 3D project",
-        "defaultWidth": 640,
-        "defaultHeight": 960,
-        "modules": [
-          "egret",
-          "egret3d"
         ]
       },
       {
