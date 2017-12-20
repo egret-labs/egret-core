@@ -1052,6 +1052,9 @@ var RES;
                                         return fsData[filename];
                                     },
                                     addFile: function (filename, type) {
+                                        if (!type)
+                                            type = "";
+                                        fsData[filename] = { name: filename, type: type, url: filename };
                                     },
                                     profile: function () {
                                         console.log(fsData);

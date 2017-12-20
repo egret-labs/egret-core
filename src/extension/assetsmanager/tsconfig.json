@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "target": "es5",
-        "outFile": "../../../build/resourcemanager/resourcemanager.js",
+        "outFile": "../../../build/assetsmanager/assetsmanager.js",
         "declaration": true,
         "noImplicitAny": false,
         "stripInternal": true,

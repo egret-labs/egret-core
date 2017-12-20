@@ -300,10 +300,9 @@ namespace vfs {
 
 
         addFile(r: File, checkDuplicate: boolean) {
-
             if (checkDuplicate) {
                 let a = resourceVfs.getFile(r.name)
-                if (a && a.url != r.url) {
+                if (a && resourceVfs.rootPath + "/" + a.url != r.url) {
                     console.warn("duplicate: " + r.url + " => " + r.name)
                 }
             }

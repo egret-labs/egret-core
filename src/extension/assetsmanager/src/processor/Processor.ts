@@ -458,7 +458,8 @@ module RES.processor {
                 },
 
                 addFile: (filename, type) => {
-
+                    if (!type) type = "";
+                    fsData[filename] = { name: filename, type, url: filename };
                 },
 
                 profile: () => {

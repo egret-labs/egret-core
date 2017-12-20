@@ -297,7 +297,7 @@ var vfs;
         FileSystem.prototype.addFile = function (r, checkDuplicate) {
             if (checkDuplicate) {
                 var a = resourceVfs.getFile(r.name);
-                if (a && a.url != r.url) {
+                if (a && resourceVfs.rootPath + "/" + a.url != r.url) {
                     console.warn("duplicate: " + r.url + " => " + r.name);
                 }
             }
