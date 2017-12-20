@@ -319,7 +319,7 @@ class EngineData {
                     if (!result) {
                         throw `找不到 Launcher API: ${p},请升级最新的 Egret Launcher 以解决此问题`//i18n
                     }
-                    return result;
+                    return result.bind(target)
                 }
             });
         }

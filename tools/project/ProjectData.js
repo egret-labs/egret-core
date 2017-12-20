@@ -295,7 +295,7 @@ var EngineData = (function () {
                     if (!result) {
                         throw "\u627E\u4E0D\u5230 Launcher API: " + p + ",\u8BF7\u5347\u7EA7\u6700\u65B0\u7684 Egret Launcher \u4EE5\u89E3\u51B3\u6B64\u95EE\u9898"; //i18n
                     }
-                    return result;
+                    return result.bind(target);
                 }
             });
         }
