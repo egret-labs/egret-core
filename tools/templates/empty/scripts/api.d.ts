@@ -65,6 +65,11 @@ type BuildConfigParam = {
      * 项目名称
      */
     readonly projectName: string;
+
+    /**
+     * 项目路径
+     */
+    readonly projectRoot: string;
 }
 
 
