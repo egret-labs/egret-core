@@ -427,71 +427,76 @@ module RES.processor {
         }
     }
 
+    type LegacyResourceConfig = {
+        groups: LegacyGroupInfo[],
+        resources: LegacyResourceInfo[],
+    }
+
+    type LegacyGroupInfo = {
+        keys: string,
+        name: string
+    }
+
+    type LegacyResourceInfo = {
+        name: string;
+        type: string;
+        url: string;
+        subkeys?: string
+    }
+
     export const LegacyResourceConfigProcessor: Processor = {
 
 
-        async onLoadStart(host, resource) {
-
-            type LegacyResourceConfig = {
-                groups: GroupInfo[],
-                resources: ResourceInfo[],
-            }
-
-            type GroupInfo = {
-                keys: string,
-                name: string
-            }
-
-            type ResourceInfo = {
-                name: string;
-                type: string;
-                url: string;
-                subkeys?: string
-            }
+        onLoadStart(host, resource) {
 
 
-            let data: LegacyResourceConfig = await host.load(resource, JsonProcessor);
-            let fileSystem: FileSystem = {
 
-                getFile: (filename) => {
-                    return fsData[filename]
-                },
 
-                addFile: (filename, type) => {
-                    if (!type) type = "";
-                    fsData[filename] = { name: filename, type, url: filename };
-                },
+            return host.load(resource, JsonProcessor).then((data: LegacyResourceConfig) => {
+                const resConfigData = RES.config.config;
+                let fileSystem = resConfigData.fileSystem;
+                if (!fileSystem) {
+                    fileSystem = {
 
-                profile: () => {
-                    console.log(fsData);
+                        fsData: {},
+
+                        getFile: (filename) => {
+                            return fsData[filename]
+                        },
+
+                        addFile: (filename, type) => {
+                            if (!type) type = "";
+                            fsData[filename] = { name: filename, type, url: filename };
+                        },
+
+                        profile: () => {
+                            console.log(fsData);
+                        }
+
+                    } as FileSystem;
+                    resConfigData.fileSystem = fileSystem;
                 }
 
-            }
-            let groups = {};
-            for (let g of data.groups) {
-                groups[g.name] = g.keys.split(",");
-            }
-            let alias: { [index: string]: string } = {};
-            let fsData: { [index: string]: ResourceInfo } = {};
-            for (let resource of data.resources) {
-                fsData[resource.name] = resource;
-                if (resource.subkeys) {
-                    resource.subkeys.split(".").forEach(subkey => {
-                        alias[subkey] = resource.name + "#" + subkey;
-                    })
-                    // ResourceConfig.
-                }
-            }
-            let result: Data = {
-                groups,
-                resourceRoot: "resource",
-                fileSystem,
-                alias: {},
-                typeSelector: (file) => { return "unknown" },
-                mergeSelector: null
-            }
 
-            return result;
+
+                let groups = resConfigData.groups;
+                for (let g of data.groups) {
+                    groups[g.name] = g.keys.split(",");
+                }
+                let alias: { [index: string]: string } = resConfigData.alias;
+                let fsData: { [index: string]: LegacyResourceInfo } = fileSystem['fsData'];
+                for (let resource of data.resources) {
+                    fsData[resource.name] = resource;
+                    if (resource.subkeys) {
+                        resource.subkeys.split(".").forEach(subkey => {
+                            alias[subkey] = resource.name + "#" + subkey;
+                        })
+                        // ResourceConfig.
+                    }
+                }
+                return resConfigData;
+            })
+
         },
 
         async onRemoveStart() { }

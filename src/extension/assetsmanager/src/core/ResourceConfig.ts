@@ -59,9 +59,6 @@ module RES {
     var configItem: ResourceInfo & { resourceRoot: string };
 
     export function setConfigURL(url: string) {
-        if (configItem) {
-            return;
-        }
         let type;
         if (url.indexOf(".json") >= 0) {
             type = "legacyResourceConfig";
@@ -69,7 +66,7 @@ module RES {
         else {
             type = "resourceConfig";
         }
-        configItem = { type, resourceRoot, url, name: url };
+        configItem = { type, resourceRoot, url, name: url, extra: true };
     }
 
 
@@ -137,6 +134,13 @@ module RES {
         }
 
         init() {
+            if (!this.config) {
+                this.config = {
+                    alias: {}, groups: {}, resourceRoot: "resource",
+                    typeSelector: () => 'unknown', mergeSelector: null,
+                    fileSystem: null as any as FileSystem
+                }
+            }
             return queue.loadResource(configItem).then((data) => {
                 return this.parseConfig(data)
             }).catch(e => {

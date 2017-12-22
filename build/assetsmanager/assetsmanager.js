@@ -149,9 +149,6 @@ var RES;
     RES.getResourceInfo = getResourceInfo;
     var configItem;
     function setConfigURL(url) {
-        if (configItem) {
-            return;
-        }
         var type;
         if (url.indexOf(".json") >= 0) {
             type = "legacyResourceConfig";
@@ -159,7 +156,7 @@ var RES;
         else {
             type = "resourceConfig";
         }
-        configItem = { type: type, resourceRoot: RES.resourceRoot, url: url, name: url };
+        configItem = { type: type, resourceRoot: RES.resourceRoot, url: url, name: url, extra: true };
     }
     RES.setConfigURL = setConfigURL;
     RES.resourceRoot = "";
@@ -173,6 +170,13 @@ var RES;
         }
         ResourceConfig.prototype.init = function () {
             var _this = this;
+            if (!this.config) {
+                this.config = {
+                    alias: {}, groups: {}, resourceRoot: "resource",
+                    typeSelector: function () { return 'unknown'; }, mergeSelector: null,
+                    fileSystem: null
+                };
+            }
             return RES.queue.loadResource(configItem).then(function (data) {
                 return _this.parseConfig(data);
             }).catch(function (e) {
@@ -1040,57 +1044,47 @@ var RES;
         };
         processor_1.LegacyResourceConfigProcessor = {
             onLoadStart: function (host, resource) {
-                return __awaiter(this, void 0, void 0, function () {
-                    var data, fileSystem, groups, _i, _a, g, alias, fsData, _loop_1, _b, _c, resource_1, result;
-                    return __generator(this, function (_d) {
-                        switch (_d.label) {
-                            case 0: return [4 /*yield*/, host.load(resource, processor_1.JsonProcessor)];
-                            case 1:
-                                data = _d.sent();
-                                fileSystem = {
-                                    getFile: function (filename) {
-                                        return fsData[filename];
-                                    },
-                                    addFile: function (filename, type) {
-                                        if (!type)
-                                            type = "";
-                                        fsData[filename] = { name: filename, type: type, url: filename };
-                                    },
-                                    profile: function () {
-                                        console.log(fsData);
-                                    }
-                                };
-                                groups = {};
-                                for (_i = 0, _a = data.groups; _i < _a.length; _i++) {
-                                    g = _a[_i];
-                                    groups[g.name] = g.keys.split(",");
-                                }
-                                alias = {};
-                                fsData = {};
-                                _loop_1 = function (resource_1) {
-                                    fsData[resource_1.name] = resource_1;
-                                    if (resource_1.subkeys) {
-                                        resource_1.subkeys.split(".").forEach(function (subkey) {
-                                            alias[subkey] = resource_1.name + "#" + subkey;
-                                        });
-                                        // ResourceConfig.
-                                    }
-                                };
-                                for (_b = 0, _c = data.resources; _b < _c.length; _b++) {
-                                    resource_1 = _c[_b];
-                                    _loop_1(resource_1);
-                                }
-                                result = {
-                                    groups: groups,
-                                    resourceRoot: "resource",
-                                    fileSystem: fileSystem,
-                                    alias: {},
-                                    typeSelector: function (file) { return "unknown"; },
-                                    mergeSelector: null
-                                };
-                                return [2 /*return*/, result];
+                return host.load(resource, processor_1.JsonProcessor).then(function (data) {
+                    var resConfigData = RES.config.config;
+                    var fileSystem = resConfigData.fileSystem;
+                    if (!fileSystem) {
+                        fileSystem = {
+                            fsData: {},
+                            getFile: function (filename) {
+                                return fsData[filename];
+                            },
+                            addFile: function (filename, type) {
+                                if (!type)
+                                    type = "";
+                                fsData[filename] = { name: filename, type: type, url: filename };
+                            },
+                            profile: function () {
+                                console.log(fsData);
+                            }
+                        };
+                        resConfigData.fileSystem = fileSystem;
+                    }
+                    var groups = resConfigData.groups;
+                    for (var _i = 0, _a = data.groups; _i < _a.length; _i++) {
+                        var g = _a[_i];
+                        groups[g.name] = g.keys.split(",");
+                    }
+                    var alias = resConfigData.alias;
+                    var fsData = fileSystem['fsData'];
+                    var _loop_1 = function (resource_1) {
+                        fsData[resource_1.name] = resource_1;
+                        if (resource_1.subkeys) {
+                            resource_1.subkeys.split(".").forEach(function (subkey) {
+                                alias[subkey] = resource_1.name + "#" + subkey;
+                            });
+                            // ResourceConfig.
                         }
-                    });
+                    };
+                    for (var _b = 0, _c = data.resources; _b < _c.length; _b++) {
+                        var resource_1 = _c[_b];
+                        _loop_1(resource_1);
+                    }
+                    return resConfigData;
                 });
             },
             onRemoveStart: function () {
