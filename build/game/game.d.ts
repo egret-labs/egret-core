@@ -1510,7 +1510,7 @@ declare namespace egret {
      * @language zh_CN
      */
     class MovieClip extends DisplayObject {
-        $bitmapData: Texture;
+        $texture: Texture;
         private offsetPoint;
         $movieClipData: MovieClipData;
         /**
@@ -1585,6 +1585,7 @@ declare namespace egret {
          * @platform Web,Native
          */
         constructor(movieClipData?: MovieClipData);
+        protected createNativeNode(): void;
         /**
          * @private
          */

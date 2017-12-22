@@ -26,14 +26,12 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+/**
+ * @private
+ */
+declare namespace egret_native {
 
-namespace egret.native {
-    /**
-     * @private
-     */
-    export function getOption(key:string):string {
-        return egret_native.getOption(key);
-    }
+    function sendInfoToPlugin(info: string): void;
 
-    egret.getOption = getOption;
+    function receivedPluginInfo(info: string): void;
 }

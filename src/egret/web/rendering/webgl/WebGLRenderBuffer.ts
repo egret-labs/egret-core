@@ -59,10 +59,39 @@ namespace egret.web {
          */
         private root: boolean;
 
+        /**
+         * @private
+         */
+        private $width: number;
+        /**
+         * @private
+         */
+        private $height: number;
+        /**
+         * @private
+         * render buffer id for wasm 
+         */
+        public bufferIdForWasm: number;
+
         public constructor(width?: number, height?: number, root?: boolean) {
             super();
             // 获取webglRenderContext
             this.context = WebGLRenderContext.getInstance(width, height);
+
+            if (__global.nativeRender) {
+                this.$width = width;
+                this.$height = height;
+                this.surface = this.context.surface;
+                this.rootRenderTarget = null;
+                if (root) {
+                    this.bufferIdForWasm = 0;
+                }
+                else {
+                    this.bufferIdForWasm = NativeNode.setValuesToRenderBuffer(this);
+                }
+                return;
+            }
+
             // buffer 对应的 render target
             this.rootRenderTarget = new WebGLRenderTarget(this.context.context, 3, 3);
             if (width && height) {
@@ -157,7 +186,12 @@ namespace egret.web {
          * @readOnly
          */
         public get width(): number {
-            return this.rootRenderTarget.width;
+            if (__global.nativeRender) {
+                return this.$width;
+            }
+            else {
+                return this.rootRenderTarget.width;
+            }
         }
 
         /**
@@ -165,7 +199,12 @@ namespace egret.web {
          * @readOnly
          */
         public get height(): number {
-            return this.rootRenderTarget.height;
+            if (__global.nativeRender) {
+                return this.$height;
+            }
+            else {
+                return this.rootRenderTarget.height;
+            }
         }
 
         /**
@@ -175,11 +214,15 @@ namespace egret.web {
          * @param useMaxSize 若传入true，则将改变后的尺寸与已有尺寸对比，保留较大的尺寸。
          */
         public resize(width: number, height: number, useMaxSize?: boolean): void {
-            this.context.pushBuffer(this);
-
             width = width || 1;
             height = height || 1;
+            if (__global.nativeRender) {
+                this.$width = width;
+                this.$height = height;
+                return;
+            }
 
+            this.context.pushBuffer(this);
             // render target 尺寸重置
             if (width != this.rootRenderTarget.width || height != this.rootRenderTarget.height) {
                 this.context.drawCmdManager.pushResize(this, width, height);

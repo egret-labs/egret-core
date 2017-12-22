@@ -64,14 +64,17 @@ namespace egret {
          */
         constructor(blurX:number = 4, blurY:number = 4, quality:number = 1) {
             super();
-            this.type = "blur";
-            this.$blurX = blurX;
-            this.$blurY = blurY;
-            this.$quality = quality;
+            let self = this;
+            self.type = "blur";
+            self.$blurX = blurX;
+            self.$blurY = blurY;
+            self.$quality = quality;
 
-            this.blurXFilter = new BlurXFilter(blurX);
+            self.blurXFilter = new BlurXFilter(blurX);
 
-            this.blurYFilter = new BlurYFilter(blurY);
+            self.blurYFilter = new BlurYFilter(blurY);
+
+            self.onPropertyChange();
         }
 
         /**
@@ -106,11 +109,13 @@ namespace egret {
         }
 
         public set blurX(value:number) {
-            if(this.$blurX == value) {
+            let self = this;
+            if (self.$blurX == value) {
                 return;
             }
-            this.$blurX = value;
-            this.blurXFilter.blurX = value;
+            self.$blurX = value;
+            self.blurXFilter.blurX = value;
+            self.onPropertyChange();
         }
         
         /**
@@ -135,11 +140,13 @@ namespace egret {
         }
 
         public set blurY(value:number) {
-            if(this.$blurY == value) {
+            let self = this;
+            if (self.$blurY == value) {
                 return;
             }
-            this.$blurY = value;
-            this.blurYFilter.blurY = value;
+            self.$blurY = value;
+            self.blurYFilter.blurY = value;
+            self.onPropertyChange();
         }
         
         /**
@@ -152,6 +159,24 @@ namespace egret {
          */
         public $toJson():string {
             return '{"blurX": ' + this.$blurX + ', "blurY": ' + this.$blurY + ', "quality": 1}';
+        }
+
+        protected updatePadding(): void {
+            let self = this;
+            self.paddingLeft = self.blurX;
+            self.paddingRight = self.blurX;
+            self.paddingTop = self.blurY;
+            self.paddingBottom = self.blurY;
+        }
+
+        public onPropertyChange(): void {
+            let self = this;
+            self.updatePadding();
+            if (__global.nativeRender) {
+                NativeNode.setFilterPadding(self.blurXFilter.$id, 0, 0, self.paddingLeft, self.paddingRight);
+                NativeNode.setFilterPadding(self.blurYFilter.$id, self.paddingTop, self.paddingBottom, 0, 0);
+                NativeNode.setDataToFilter(self.$id);
+            }
         }
     }
 
@@ -177,9 +202,15 @@ namespace egret {
         constructor(blurX:number = 4) {
             super();
 
-            this.type = "blurX";
+            if (__global.nativeRender) {
+                this.type = "blur";
+            }
+            else {
+                this.type = "blurX";
+            }
 
-            this.$uniforms.blur = {x: blurX, y: 0};
+            this.$uniforms.blur = { x: blurX, y: 0 };
+            this.onPropertyChange();
         }
 
         public set blurX(value:number) {
@@ -195,9 +226,15 @@ namespace egret {
         constructor(blurY:number = 4) {
             super();
 
-            this.type = "blurY";
+            if (__global.nativeRender) {
+                this.type = "blur";
+            }
+            else {
+                this.type = "blurY";
+            }
 
-            this.$uniforms.blur = {x: 0, y: blurY};
+            this.$uniforms.blur = { x: 0, y: blurY };
+            this.onPropertyChange();
         }
 
         public set blurY(value:number) {

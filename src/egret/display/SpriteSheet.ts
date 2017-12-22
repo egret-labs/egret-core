@@ -159,6 +159,7 @@ namespace egret {
                 textureHeight = offsetY + bitmapHeight;
             }
             let texture:Texture = new egret.Texture();
+            texture.disposeBitmapData = false;
             texture.$bitmapData = this.$texture.$bitmapData;
             texture.$initData(this._bitmapX + bitmapX, this._bitmapY + bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, this.$texture.$sourceWidth, this.$texture.$sourceHeight);
 

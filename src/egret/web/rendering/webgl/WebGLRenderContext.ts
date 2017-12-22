@@ -182,6 +182,10 @@ namespace egret.web {
 
             this.surface = createCanvas(width, height);
 
+            if(__global.nativeRender) {
+                return;
+            }
+
             this.initWebGL();
 
             this.$bufferStack = [];

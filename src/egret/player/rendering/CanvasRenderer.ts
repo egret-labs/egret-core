@@ -41,7 +41,7 @@ namespace egret {
 
     let blendModes = ["source-over", "lighter", "destination-out"];
     let defaultCompositeOp = "source-over";
-    let BLACK_COLOR = "#000000";
+    export let BLACK_COLOR = "#000000";
     let CAPS_STYLES = { none: 'butt', square: 'square', round: 'round' };
     let renderBufferPool: sys.RenderBuffer[] = [];//渲染缓冲区对象池
     let renderBufferPool_Filters: sys.RenderBuffer[] = [];//滤镜缓冲区对象池
@@ -600,20 +600,10 @@ namespace egret {
                 let offsetY = node.drawY;
                 let destHeight = node.drawW;
                 let destWidth = node.drawH;
-                if ((<any>context).saveTransform) {//for native
-                    (<any>context).saveTransform();
-                }
-                else {
-                    context.save();
-                }
+                context.save();
                 context.transform(0, -1, 1, 0, 0, destWidth);
                 context.drawImage(image.source, sourceX, sourceY, sourceWidth, sourceHeight, offsetX + context.$offsetX, offsetY + context.$offsetY, destWidth, destHeight);
-                if ((<any>context).restoreTransform) {//for native
-                    (<any>context).restoreTransform();
-                }
-                else {
-                    context.restore();
-                }
+                context.restore();
             }
             else {
                 context.drawImage(image.source, node.sourceX, node.sourceY, node.sourceW, node.sourceH,
@@ -641,12 +631,7 @@ namespace egret {
             let offsetX;
             let offsetY;
             if (m) {
-                if ((<any>context).saveTransform) {//for native
-                    (<any>context).saveTransform();
-                }
-                else {
-                    context.save();
-                }
+                context.save();
                 saved = true;
                 if (context.$offsetX != 0 || context.$offsetY != 0) {
                     context.translate(context.$offsetX, context.$offsetY);
@@ -669,73 +654,37 @@ namespace egret {
             let filter = node.filter;
             //todo 暂时只考虑绘制一次的情况
             if (filter && length == 8) {
-                if (Capabilities.runtimeType == RuntimeType.NATIVE) { // for native
-                    egret_native.Graphics.setGlobalShader(filter);
-                    drawCalls++;
-                    if (node.rotated) {
-                        let sourceX = data[0];
-                        let sourceY = data[1];
-                        let sourceHeight = data[2];
-                        let sourceWidth = data[3];
-                        let offsetX = data[4];
-                        let offsetY = data[5];
-                        let destHeight = data[6];
-                        let destWidth = data[7];
-                        if ((<any>context).saveTransform) {//for native
-                            (<any>context).saveTransform();
-                        }
-                        else {
-                            context.save();
-                        }
-                        context.transform(0, -1, 1, 0, 0, destWidth);
-                        context.drawImage(image.source, sourceX, sourceY, sourceWidth, sourceHeight,
-                            offsetX + context.$offsetX, offsetY + context.$offsetY, destWidth, destHeight);
-                        if ((<any>context).restoreTransform) {//for native
-                            (<any>context).restoreTransform();
-                        }
-                        else {
-                            context.restore();
-                        }
-                    }
-                    else {
-                        context.drawImage(image.source, data[0], data[1], data[2], data[3],
-                            data[4] + context.$offsetX, data[5] + context.$offsetY, data[6], data[7]);
-                    }
-                    egret_native.Graphics.setGlobalShader(null);
+                let sourceX = data[0];
+                let sourceY = data[1];
+                let sourceWidth = data[2];
+                let sourceHeight = data[3];
+                let offsetX = data[4];
+                let offsetY = data[5];
+                let destWidth = data[6];
+                let destHeight = data[7];
+                if (node.rotated) {
+                    sourceWidth = data[3];
+                    sourceHeight = data[2];
+                    destWidth = data[7];
+                    destHeight = data[6];
                 }
-                else {
-                    let sourceX = data[0];
-                    let sourceY = data[1];
-                    let sourceWidth = data[2];
-                    let sourceHeight = data[3];
-                    let offsetX = data[4];
-                    let offsetY = data[5];
-                    let destWidth = data[6];
-                    let destHeight = data[7];
-                    if (node.rotated) {
-                        sourceWidth = data[3];
-                        sourceHeight = data[2];
-                        destWidth = data[7];
-                        destHeight = data[6];
-                    }
-                    let displayBuffer = this.createRenderBuffer(destWidth, destHeight);
-                    let displayContext = displayBuffer.context;
-                    drawCalls++;
-                    if (node.rotated) {
-                        context.transform(0, -1, 1, 0, 0, destWidth);
-                    }
-                    displayContext.drawImage(image.source, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, destWidth, destHeight);
-                    //绘制结果到屏幕
-                    drawCalls++;
-                    // 应用滤镜
-                    let imageData = displayContext.getImageData(0, 0, destWidth, destHeight);
-                    colorFilter(imageData.data, destWidth, destHeight, (<ColorMatrixFilter>filter).$matrix);
-                    displayContext.putImageData(imageData, 0, 0);
-                    // 绘制结果的时候，应用滤镜
-                    context.drawImage(displayBuffer.surface, 0, 0, destWidth, destHeight,
-                        offsetX + context.$offsetX, offsetY + context.$offsetY, destWidth, destHeight);
-                    renderBufferPool.push(displayBuffer);
+                let displayBuffer = this.createRenderBuffer(destWidth, destHeight);
+                let displayContext = displayBuffer.context;
+                drawCalls++;
+                if (node.rotated) {
+                    context.transform(0, -1, 1, 0, 0, destWidth);
                 }
+                displayContext.drawImage(image.source, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, destWidth, destHeight);
+                //绘制结果到屏幕
+                drawCalls++;
+                // 应用滤镜
+                let imageData = displayContext.getImageData(0, 0, destWidth, destHeight);
+                colorFilter(imageData.data, destWidth, destHeight, (<ColorMatrixFilter>filter).$matrix);
+                displayContext.putImageData(imageData, 0, 0);
+                // 绘制结果的时候，应用滤镜
+                context.drawImage(displayBuffer.surface, 0, 0, destWidth, destHeight,
+                    offsetX + context.$offsetX, offsetY + context.$offsetY, destWidth, destHeight);
+                renderBufferPool.push(displayBuffer);
             }
             else {
                 while (pos < length) {
@@ -749,21 +698,11 @@ namespace egret {
                         let offsetY = data[pos++];
                         let destHeight = data[pos++];
                         let destWidth = data[pos++];
-                        if ((<any>context).saveTransform) {//for native
-                            (<any>context).saveTransform();
-                        }
-                        else {
-                            context.save();
-                        }
+                        context.save();
                         context.transform(0, -1, 1, 0, 0, destWidth);
                         context.drawImage(image.source, sourceX, sourceY, sourceWidth, sourceHeight,
                             offsetX + context.$offsetX, offsetY + context.$offsetY, destWidth, destHeight);
-                        if ((<any>context).restoreTransform) {//for native
-                            (<any>context).restoreTransform();
-                        }
-                        else {
-                            context.restore();
-                        }
+                        context.restore();
                     }
                     else {
                         context.drawImage(image.source, data[pos++], data[pos++], data[pos++], data[pos++],
@@ -772,18 +711,7 @@ namespace egret {
                 }
             }
             if (saved) {
-                if ((<any>context).restoreTransform) {//for native
-                    (<any>context).restoreTransform();
-                    if (blendMode) {
-                        context.globalCompositeOperation = defaultCompositeOp;
-                    }
-                    if (alpha == alpha) {
-                        context.globalAlpha = originAlpha;
-                    }
-                }
-                else {
-                    context.restore();
-                }
+                context.restore();
             }
             else {
                 if (blendMode) {
@@ -803,73 +731,7 @@ namespace egret {
         }
 
         private renderMesh(node: sys.MeshNode, context: any): number {
-            if (Capabilities.runtimeType != RuntimeType.NATIVE) {
-                return 0;
-            }
-            let image = node.image;
-            let data = node.drawData;
-            let length = data.length;
-            let pos = 0;
-            let m = node.matrix;
-            let blendMode = node.blendMode;
-            let alpha = node.alpha;
-            let offsetX;
-            let offsetY;
-            if (m) {
-                context.saveTransform();
-                if (context.$offsetX != 0 || context.$offsetY != 0) {
-                    context.translate(context.$offsetX, context.$offsetY);
-                    offsetX = context.$offsetX;
-                    offsetY = context.$offsetY;
-                    context.$offsetX = context.$offsetY = 0;
-                }
-                context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-            }
-            if (blendMode) {
-                context.globalCompositeOperation = blendModes[blendMode];
-            }
-            let originAlpha: number;
-            if (alpha == alpha) {
-                originAlpha = context.globalAlpha;
-                context.globalAlpha *= alpha;
-            }
-
-            let drawCalls: number = 0;
-            let filter = node.filter;
-            if (filter) {
-                egret_native.Graphics.setGlobalShader(filter);
-                while (pos < length) {
-                    drawCalls++;
-                    context.drawMesh(image.source, data[pos++], data[pos++], data[pos++], data[pos++],
-                        data[pos++] + context.$offsetX, data[pos++] + context.$offsetY, data[pos++], data[pos++],
-                        node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds);
-                }
-                egret_native.Graphics.setGlobalShader(null);
-            }
-            else {
-                while (pos < length) {
-                    drawCalls++;
-                    context.drawMesh(image.source, data[pos++], data[pos++], data[pos++], data[pos++],
-                        data[pos++] + context.$offsetX, data[pos++] + context.$offsetY, data[pos++], data[pos++],
-                        node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds);
-                }
-            }
-            if (m) {
-                context.restoreTransform();
-            }
-            if (blendMode) {
-                context.globalCompositeOperation = defaultCompositeOp;
-            }
-            if (alpha == alpha) {
-                context.globalAlpha = originAlpha;
-            }
-            if (offsetX) {
-                context.$offsetX = offsetX;
-            }
-            if (offsetY) {
-                context.$offsetY = offsetY;
-            }
-            return 1;
+            return 0;
         }
 
         public renderText(node: sys.TextNode, context: CanvasRenderingContext2D): void {
@@ -989,12 +851,7 @@ namespace egret {
             let offsetX;
             let offsetY;
             if (m) {
-                if ((<any>context).saveTransform) {//for native
-                    (<any>context).saveTransform();
-                }
-                else {
-                    context.save();
-                }
+                context.save();
                 saved = true;
                 if (context.$offsetX != 0 || context.$offsetY != 0) {
                     context.translate(context.$offsetX, context.$offsetY);
@@ -1014,12 +871,7 @@ namespace egret {
             }
 
             if (saved) {
-                if ((<any>context).restoreTransform) {//for native
-                    (<any>context).restoreTransform();
-                }
-                else {
-                    context.restore();
-                }
+                context.restore();
             }
             if (offsetX) {
                 context.$offsetX = offsetX;
@@ -1046,7 +898,7 @@ namespace egret {
      * @private
      * 获取字体字符串
      */
-    function getFontString(node: sys.TextNode, format: sys.TextFormat): string {
+    export function getFontString(node: sys.TextNode, format: sys.TextFormat): string {
         let italic: boolean = format.italic == null ? node.italic : format.italic;
         let bold: boolean = format.bold == null ? node.bold : format.bold;
         let size: number = format.size == null ? node.size : format.size;
@@ -1061,7 +913,7 @@ namespace egret {
      * @private
      * 获取RGBA字符串
      */
-    function getRGBAString(color: number, alpha: number): string {
+    export function getRGBAString(color: number, alpha: number): string {
         let red = color >> 16;
         let green = (color >> 8) & 0xFF;
         let blue = color & 0xFF;

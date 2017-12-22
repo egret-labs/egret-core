@@ -26,43 +26,28 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-namespace egret.native {
-    let callBackDic = {};
 
+/**
+ * @private
+ */
+namespace egret {
     /**
      * @private
      */
-    export class NativeExternalInterface implements ExternalInterface {
-
-        static call(functionName:string, value:string):void {
-            let data:any = {};
-            data.functionName = functionName;
-            data.value = value;
-            egret_native.sendInfoToPlugin(JSON.stringify(data));
-        }
-
-        static addCallback(functionName:string, listener:(value)=>void):void {
-            callBackDic[functionName] = listener;
-        }
+    export const enum NativeObjectType {
+        CONTAINER = 0,
+        BITMAP = 1,
+        BITMAP_DATA = 2,
+        COLOR_MATRIX_FILTER = 3,
+        BLUR_FILTER = 4,
+        GLOW_FILTER = 5,
+        FILTER = 6,
+        TEXT = 7,
+        GRAPHICS = 8,
+        SPRITE = 9,
+        PARTICLE_SYSTEM = 10,
+        BITMAP_TEXT = 11,
+        MESH = 12,
+        STAGE = 13
     }
-
-    /**
-     * @private
-     * @param info
-     */
-    function onReceivedPluginInfo(info:string):void {
-        let data = JSON.parse(info);
-        let functionName = data.functionName;
-        let listener = callBackDic[functionName];
-        if (listener) {
-            let value = data.value;
-            listener.call(null, value);
-        }
-        else {
-            egret.$warn(1050, functionName);
-        }
-    }
-
-    ExternalInterface = NativeExternalInterface;
-    egret_native.receivedPluginInfo = onReceivedPluginInfo;
 }

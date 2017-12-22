@@ -651,18 +651,6 @@ declare namespace RES {
 }
 declare namespace RES {
     /**
-     * @private
-     */
-    class FontAnalyzer extends SheetAnalyzer {
-        constructor();
-        analyzeConfig(resItem: ResourceItem, data: string): string;
-        analyzeBitmap(resItem: ResourceItem, texture: egret.Texture): void;
-        private getTexturePath(url, fntText);
-        protected onResourceDestroy(font: egret.BitmapFont): void;
-    }
-}
-declare namespace RES {
-    /**
      * @class RES.ResourceConfig
      * @classdesc
      * @private
@@ -745,6 +733,49 @@ declare namespace RES {
          * 转换Object数据为ResourceItem对象
          */
         private parseResourceItem(data);
+    }
+}
+declare namespace RES {
+    /**
+     * @private
+     */
+    class SoundAnalyzer extends AnalyzerBase {
+        /**
+         * 构造函数
+         */
+        constructor();
+        /**
+         * 字节流数据缓存字典
+         */
+        protected soundDic: any;
+        /**
+         * 加载项字典
+         */
+        protected resItemDic: any[];
+        /**
+         * @inheritDoc
+         */
+        loadFile(resItem: ResourceItem, callBack: Function, thisObject: any): void;
+        /**
+         * 一项加载结束
+         */
+        protected onLoadFinish(event: egret.Event): void;
+        /**
+         * 解析并缓存加载成功的数据
+         */
+        protected analyzeData(resItem: ResourceItem, data: egret.Sound): void;
+        /**
+         * @inheritDoc
+         */
+        getRes(name: string): any;
+        /**
+         * @inheritDoc
+         */
+        hasRes(name: string): boolean;
+        /**
+         * @inheritDoc
+         */
+        destroyRes(name: string): boolean;
     }
 }
 declare namespace RES {
@@ -957,70 +988,16 @@ declare namespace RES.web {
         getVirtualUrl(url: string): string;
     }
 }
-declare namespace RES.native {
-    /**
-     * @private
-     */
-    class NativeVersionController implements VersionController {
-        private _versionInfo;
-        private _versionPath;
-        private _localFileArr;
-        constructor();
-        fetchVersion(callback: egret.AsyncCallback): void;
-        private getList(callback, type, root?);
-        /**
-         * 获取所有有变化的文件
-         * @returns {any[]}
-         */
-        getChangeList(): Array<{
-            url: string;
-            size: number;
-        }>;
-        getVirtualUrl(url: string): string;
-        private getLocalData(filePath);
-    }
-}
 declare namespace RES {
     /**
      * @private
      */
-    class SoundAnalyzer extends AnalyzerBase {
-        /**
-         * 构造函数
-         */
+    class FontAnalyzer extends SheetAnalyzer {
         constructor();
-        /**
-         * 字节流数据缓存字典
-         */
-        protected soundDic: any;
-        /**
-         * 加载项字典
-         */
-        protected resItemDic: any[];
-        /**
-         * @inheritDoc
-         */
-        loadFile(resItem: ResourceItem, callBack: Function, thisObject: any): void;
-        /**
-         * 一项加载结束
-         */
-        protected onLoadFinish(event: egret.Event): void;
-        /**
-         * 解析并缓存加载成功的数据
-         */
-        protected analyzeData(resItem: ResourceItem, data: egret.Sound): void;
-        /**
-         * @inheritDoc
-         */
-        getRes(name: string): any;
-        /**
-         * @inheritDoc
-         */
-        hasRes(name: string): boolean;
-        /**
-         * @inheritDoc
-         */
-        destroyRes(name: string): boolean;
+        analyzeConfig(resItem: ResourceItem, data: string): string;
+        analyzeBitmap(resItem: ResourceItem, texture: egret.Texture): void;
+        private getTexturePath(url, fntText);
+        protected onResourceDestroy(font: egret.BitmapFont): void;
     }
 }
 declare namespace RES {

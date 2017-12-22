@@ -57,6 +57,10 @@ namespace egret.sys {
             this.showLog = false;
             this.stageDisplayList = null;
             this.displayFPS = displayFPS;
+
+            if (__global.nativeRender) {
+                NativeDelegate.setRootBuffer(buffer);
+            }
         }
 
         /**
@@ -163,6 +167,12 @@ namespace egret.sys {
          * 渲染屏幕
          */
         $render(triggerByFrame: boolean, costTicker: number): void {
+            if (__global.nativeRender) {
+                NativeDelegate.update();
+                NativeDelegate.render();
+                return;
+            }
+
             if (this.showFPS || this.showLog) {
                 this.stage.addChild(this.fps);
             }
@@ -183,15 +193,17 @@ namespace egret.sys {
          */
         public updateStageSize(stageWidth: number, stageHeight: number): void {
             let stage = this.stage;
-            //if (stageWidth !== stage.$stageWidth || stageHeight !== stage.$stageHeight) {
             stage.$stageWidth = stageWidth;
             stage.$stageHeight = stageHeight;
-            this.screenDisplayList.setClipRect(stageWidth, stageHeight);
-            if (this.stageDisplayList) {
-                this.stageDisplayList.setClipRect(stageWidth, stageHeight);
+            if (__global.nativeRender) {
+                NativeDelegate.resize(stageWidth, stageHeight);
+            } else {
+                this.screenDisplayList.setClipRect(stageWidth, stageHeight);
+                if (this.stageDisplayList) {
+                    this.stageDisplayList.setClipRect(stageWidth, stageHeight);
+                }
             }
             stage.dispatchEventWith(Event.RESIZE);
-            //}
         }
 
 
@@ -236,7 +248,7 @@ namespace egret.sys {
         updateInfo(info: string): void;
     }
 
-    declare let FPS: { new(stage: Stage, showFPS: boolean, showLog: boolean, logFilter: string, styles: Object): FPS };
+    declare let FPS: { new (stage: Stage, showFPS: boolean, showLog: boolean, logFilter: string, styles: Object): FPS };
 
     /**
      * @private

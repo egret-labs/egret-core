@@ -67,6 +67,10 @@ namespace egret {
             this.$graphics.$setTarget(this);
         }
 
+        protected createNativeNode(): void {
+            this.$nativeNode = new NativeNode(NativeObjectType.GRAPHICS);
+        }
+
         /**
          * @private
          */

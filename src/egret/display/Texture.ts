@@ -74,6 +74,26 @@ namespace egret {
 
         /**
          * @private
+         * 纹理id
+         */
+        public $textureId: number;
+
+        /**
+         * Whether to destroy the corresponding BitmapData when the texture is destroyed
+         * @version Egret 5.0.8
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 销毁纹理时是否销毁对应BitmapData
+         * @version Egret 5.0.8
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        public disposeBitmapData: boolean = true;
+
+        /**
+         * @private
          * 表示这个纹理在 bitmapData 上的 x 起始位置
          */
         public $bitmapX: number = 0;
@@ -354,8 +374,13 @@ namespace egret {
          */
         public dispose(): void {
             if (this.$bitmapData) {
-                this.$bitmapData.$dispose();
+                if(this.disposeBitmapData) {
+                    this.$bitmapData.$dispose();
+                }
                 this.$bitmapData = null;
+            }
+            if(__global.nativeRender) {
+                NativeNode.disposeTexture(this);
             }
         }
     }

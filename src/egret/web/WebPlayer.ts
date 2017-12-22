@@ -62,7 +62,9 @@ namespace egret.web {
             let webInput = new HTMLInput();
 
             if (option.showFPS || option.showLog) {
-                player.displayFPS(option.showFPS, option.showLog, option.logFilter, option.fpsStyles);
+                if (!__global.nativeRender) {
+                    player.displayFPS(option.showFPS, option.showLog, option.logFilter, option.fpsStyles);
+                }
             }
             this.playerOption = option;
             this.container = container;
@@ -236,6 +238,11 @@ namespace egret.web {
             this.webTouchHandler.updateScaleMode(scalex, scaley, rotation);
             this.webInput.$updateSize();
             this.player.updateStageSize(stageWidth, stageHeight);//不要在这个方法后面修改属性
+            // todo
+            if(__global.nativeRender) {
+                canvas.width = stageWidth * canvasScaleX;
+                canvas.height = stageHeight * canvasScaleY;
+            }
         }
 
         public setContentSize(width: number, height: number): void {

@@ -2934,7 +2934,7 @@ var egret;
         function MovieClip(movieClipData) {
             var _this = _super.call(this) || this;
             //Render Property
-            _this.$bitmapData = null;
+            _this.$texture = null;
             //Render Property
             _this.offsetPoint = egret.Point.create(0, 0);
             //Data Property
@@ -3010,10 +3010,15 @@ var egret;
              */
             _this.lastTime = 0;
             _this.$smoothing = egret.Bitmap.defaultSmoothing;
-            _this.$renderNode = new egret.sys.NormalBitmapNode();
             _this.setMovieClipData(movieClipData);
+            if (!__global.nativeRender) {
+                _this.$renderNode = new egret.sys.NormalBitmapNode();
+            }
             return _this;
         }
+        MovieClip.prototype.createNativeNode = function () {
+            this.$nativeNode = new egret.NativeNode(11 /* BITMAP_TEXT */);
+        };
         Object.defineProperty(MovieClip.prototype, "smoothing", {
             /**
              * Whether or not is smoothed when scaled.
@@ -3031,7 +3036,6 @@ var egret;
                 return this.$smoothing;
             },
             set: function (value) {
-                value = !!value;
                 if (value == this.$smoothing) {
                     return;
                 }
@@ -3086,7 +3090,7 @@ var egret;
          * @private
          */
         MovieClip.prototype.$updateRenderNode = function () {
-            var texture = this.$bitmapData;
+            var texture = this.$texture;
             if (texture) {
                 var offsetX = Math.round(this.offsetPoint.x);
                 var offsetY = Math.round(this.offsetPoint.y);
@@ -3105,7 +3109,7 @@ var egret;
          * @private
          */
         MovieClip.prototype.$measureContentBounds = function (bounds) {
-            var texture = this.$bitmapData;
+            var texture = this.$texture;
             if (texture) {
                 var x = this.offsetPoint.x;
                 var y = this.offsetPoint.y;
@@ -3396,19 +3400,30 @@ var egret;
             if (self.displayedKeyFrameNum == currentFrameNum) {
                 return;
             }
-            self.$bitmapData = self.$movieClipData.getTextureByFrame(currentFrameNum);
+            var texture = self.$movieClipData.getTextureByFrame(currentFrameNum);
+            self.$texture = texture;
             self.$movieClipData.$getOffsetByFrame(currentFrameNum, self.offsetPoint);
             self.displayedKeyFrameNum = currentFrameNum;
             self.$renderDirty = true;
-            var p = self.$parent;
-            if (p && !p.$cacheDirty) {
-                p.$cacheDirty = true;
-                p.$cacheDirtyUp();
+            if (__global.nativeRender) {
+                self.$nativeNode.setDataToBitmapNode(self.$nativeNode.id, texture, [texture.$bitmapX, texture.$bitmapY, texture.$bitmapWidth, texture.$bitmapHeight,
+                    self.offsetPoint.x, self.offsetPoint.y, texture.$getScaleBitmapWidth(), texture.$getScaleBitmapHeight(),
+                    texture.$sourceWidth, texture.$sourceHeight]);
+                //todo 负数offsetPoint
+                self.$nativeNode.setWidth(texture.$getTextureWidth() + self.offsetPoint.x);
+                self.$nativeNode.setHeight(texture.$getTextureHeight() + self.offsetPoint.y);
             }
-            var maskedObject = self.$maskedObject;
-            if (maskedObject && !maskedObject.$cacheDirty) {
-                maskedObject.$cacheDirty = true;
-                maskedObject.$cacheDirtyUp();
+            else {
+                var p = self.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                var maskedObject = self.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
             }
         };
         /**
@@ -3417,7 +3432,7 @@ var egret;
          */
         MovieClip.prototype.$renderFrame = function () {
             var self = this;
-            self.$bitmapData = self.$movieClipData.getTextureByFrame(self.$currentFrameNum);
+            self.$texture = self.$movieClipData.getTextureByFrame(self.$currentFrameNum);
             self.$renderDirty = true;
             var p = self.$parent;
             if (p && !p.$cacheDirty) {
