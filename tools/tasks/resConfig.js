@@ -36,148 +36,78 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var path = require("path");
 var wing_res_json = "wing.res.json";
-var filter = [
+var filters = [
     wing_res_json,
-    "resource/default.res.json"
 ];
-function executeFilter(url) {
-    return __awaiter(this, void 0, void 0, function () {
-        var type, name, groupName, group;
-        return __generator(this, function (_a) {
-            if (filter.indexOf(url) >= 0) {
-                return [2 /*return*/, null];
-            }
-            type = options.typeSelector(url);
-            name = options.nameSelector(url);
-            groupName = options.groupSelector(url);
-            if (groupName) {
-                if (!config.groups[groupName]) {
-                    config.groups[groupName] = [];
-                }
-                group = config.groups[groupName];
-                if (group.indexOf(name) == -1) {
-                    group.push(name);
-                }
-            }
-            if (type) {
-                return [2 /*return*/, { name: name, url: url, type: type }];
-            }
-            else {
-                return [2 /*return*/, null];
-            }
-            return [2 /*return*/];
-        });
-    });
-}
-var options;
 var EmitResConfigFilePlugin = (function () {
-    function EmitResConfigFilePlugin(paramOptions) {
-        this.paramOptions = paramOptions;
-        options = paramOptions;
+    function EmitResConfigFilePlugin(options) {
+        this.options = options;
+        this.config = { alias: {}, groups: {}, resources: {} };
+        this.fileSystem = new vfs.FileSystem();
+        this.fileSystem.init(this.config.resources, "resource");
+        filters.push(options.output);
     }
+    EmitResConfigFilePlugin.prototype.executeFilter = function (url) {
+        var config = this.config;
+        var options = this.options;
+        if (filters.indexOf(url) >= 0) {
+            return null;
+        }
+        var type = options.typeSelector(url);
+        if (!type) {
+            return null;
+        }
+        var name = options.nameSelector(url);
+        var groupName = options.groupSelector(url);
+        if (groupName) {
+            if (!config.groups[groupName]) {
+                config.groups[groupName] = [];
+            }
+            var group = config.groups[groupName];
+            if (group.indexOf(name) == -1) {
+                group.push(name);
+            }
+        }
+        return { name: name, url: url, type: type };
+    };
     EmitResConfigFilePlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
             var filename, r;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        filename = file.origin;
-                        if (!(filename.indexOf('resource/') === -1)) return [3 /*break*/, 1];
-                        return [2 /*return*/, null];
-                    case 1: return [4 /*yield*/, executeFilter(filename)];
-                    case 2:
-                        r = _a.sent();
-                        if (r) {
-                            resourceVfs.addFile(r, true);
-                            return [2 /*return*/, file];
-                        }
-                        else {
-                            return [2 /*return*/, null];
-                        }
-                        _a.label = 3;
-                    case 3: return [2 /*return*/];
+                filename = file.origin;
+                if (filename.indexOf('resource/') >= 0) {
+                    r = this.executeFilter(filename);
+                    if (r) {
+                        this.fileSystem.addFile(r, true);
+                    }
                 }
+                return [2 /*return*/, file];
             });
         });
     };
     EmitResConfigFilePlugin.prototype.onFinish = function (pluginContext) {
         return __awaiter(this, void 0, void 0, function () {
-            //         async function convertResourceJson(projectRoot: string, config: Data) {
-            //             let filename = path.join(projectRoot, "resource/default.res.json");
-            //             if (!fs.existsSync(filename)) {
-            //                 filename = path.join(projectRoot, "resource/resource.json");
-            //             }
-            //             if (!fs.existsSync(filename)) {
-            //                 return;
-            //             }
-            //             let resourceJson: legacy.Info = await fs.readJSONAsync(filename);
-            //             for (let r of resourceJson.resources) {
-            //                 let resourceName = ResourceConfig.nameSelector(r.url);
-            //                 let file = ResourceConfig.getFile(resourceName);
-            //                 if (!file) {
-            //                     if (await fs.existsAsync(path.join(pluginContext.resourceFolder, r.url))) {
-            //                         ResourceConfig.addFile(r, false)
-            //                     }
-            //                     else {
-            //                         console.error(`missing file ${r.name} ${r.url} `)
-            //                     }
-            //                     continue;
-            //                 }
-            //                 if (file.name != r.name) {
-            //                     config.alias[r.name] = file.name;
-            //                 }
-            //                 for (var resource_custom_key in r) {
-            //                     if (resource_custom_key == "url" || resource_custom_key == "name") {
-            //                         continue;
-            //                     }
-            //                     else if (resource_custom_key == "subkeys") {
-            //                         var subkeysArr = (r[resource_custom_key] as string).split(",");
-            //                         for (let subkey of subkeysArr) {
-            //                             // if (!obj.alias[subkeysArr[i]]) {
-            //                             config.alias[subkey] = r.name + "#" + subkey;
-            //                             file[resource_custom_key] = r[resource_custom_key];
-            //                             // }
-            //                         }
-            //                     }
-            //                     else {
-            //                         // 包含 type 在内的自定义属性
-            //                         file[resource_custom_key] = r[resource_custom_key];
-            //                     }
-            //                 }
-            //             }
-            //             for (let group of resourceJson.groups) {
-            //                 config.groups[group.name] = group.keys.split(",");
-            //             }
-            //         }
             function emitResourceConfigFile(debug) {
-                return __awaiter(this, void 0, void 0, function () {
-                    var config, content, file;
-                    return __generator(this, function (_a) {
-                        config = resourceConfig.generateConfig(true);
-                        content = JSON.stringify(config, null, "\t");
-                        file = "exports.typeSelector = " + options.typeSelector.toString() + ";\nexports.resourceRoot = \"resource\";\nexports.alias = " + JSON.stringify(config.alias, null, "\t") + ";\nexports.groups = " + JSON.stringify(config.groups, null, "\t") + ";\nexports.resources = " + JSON.stringify(config.resources, null, "\t") + ";\n            ";
-                        return [2 /*return*/, file];
-                    });
-                });
+                var generateConfig = resourceConfig.generateConfig(config, true);
+                var content = JSON.stringify(generateConfig, null, "\t");
+                var file = "exports.typeSelector = " + options.typeSelector.toString() + ";\nexports.resourceRoot = \"resource\";\nexports.alias = " + JSON.stringify(generateConfig.alias, null, "\t") + ";\nexports.groups = " + JSON.stringify(generateConfig.groups, null, "\t") + ";\nexports.resources = " + JSON.stringify(generateConfig.resources, null, "\t") + ";\n            ";
+                return file;
             }
-            var config, configContent, wingConfigContent;
+            var options, config, configContent, wingConfigContent;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        config = resourceConfig.getConfig();
-                        if (!(path.extname(options.output) == ".js")) return [3 /*break*/, 2];
-                        return [4 /*yield*/, emitResourceConfigFile(true)];
-                    case 1:
-                        configContent = _a.sent();
-                        pluginContext.createFile(options.output, new Buffer(configContent));
-                        return [3 /*break*/, 4];
-                    case 2: return [4 /*yield*/, resourceConfig.generateClassicalConfig()];
-                    case 3:
-                        wingConfigContent = _a.sent();
-                        pluginContext.createFile(options.output, new Buffer(wingConfigContent));
-                        _a.label = 4;
-                    case 4: return [2 /*return*/];
+                options = this.options;
+                config = this.config;
+                // let config = this.config;
+                // await convertResourceJson(pluginContext.projectRoot, config);
+                if (path.extname(options.output) == ".js") {
+                    configContent = emitResourceConfigFile(true);
+                    pluginContext.createFile(options.output, new Buffer(configContent));
                 }
+                else {
+                    wingConfigContent = resourceConfig.generateClassicalConfig(this.config);
+                    pluginContext.createFile(options.output, new Buffer(wingConfigContent));
+                }
+                return [2 /*return*/];
             });
         });
     };
@@ -200,40 +130,35 @@ var resourceConfig;
     function isFile(r) {
         return r.url;
     }
-    function getConfig() {
-        return config;
-    }
-    resourceConfig.getConfig = getConfig;
-    function generateClassicalConfig() {
-        return __awaiter(this, void 0, void 0, function () {
-            var result, groups, groupName, resources, alias, aliasName;
-            return __generator(this, function (_a) {
-                result = {
-                    groups: [],
-                    resources: []
-                };
-                groups = config.groups;
-                for (groupName in groups) {
-                    result.groups.push({ name: groupName, keys: groups[groupName].join(",") });
-                }
-                resources = config.resources;
-                alias = {};
-                for (aliasName in config.alias) {
-                    alias[config.alias[aliasName]] = aliasName;
-                }
-                loop(resources, function (f) {
-                    var r = f;
-                    if (alias[r.name]) {
-                        r.name = alias[r.name];
-                    }
-                    result.resources.push(r);
-                });
-                return [2 /*return*/, JSON.stringify(result, null, "\t")];
-            });
+    function generateClassicalConfig(config) {
+        // {
+        // 	"keys": "bg_jpg,egret_icon_png,description_json",
+        // 	"name": "preload"
+        // }
+        var result = {
+            groups: [],
+            resources: []
+        };
+        var groups = config.groups;
+        for (var groupName in groups) {
+            result.groups.push({ name: groupName, keys: groups[groupName].join(",") });
+        }
+        var resources = config.resources;
+        var alias = {};
+        for (var aliasName in config.alias) {
+            alias[config.alias[aliasName]] = aliasName;
+        }
+        loop(resources, function (f) {
+            var r = f;
+            if (alias[r.name]) {
+                r.name = alias[r.name];
+            }
+            result.resources.push(r);
         });
+        return JSON.stringify(result, null, "\t");
     }
     resourceConfig.generateClassicalConfig = generateClassicalConfig;
-    function generateConfig(debug) {
+    function generateConfig(config, debug) {
         var loop = function (r) {
             for (var key in r) {
                 var f = r[key];
@@ -241,16 +166,16 @@ var resourceConfig;
                     if (typeof (f) == "string") {
                         continue;
                     }
-                    if (!debug) {
-                        delete f.name;
-                        // console.log 
-                        if (options.typeSelector(f.url) == f.type) {
-                            delete f.type;
-                        }
-                        if (Object.keys(f).length == 1) {
-                            r[key] = f.url;
-                        }
-                    }
+                    // if (!debug) {
+                    //     delete f.name;
+                    //     // console.log 
+                    //     if (options.typeSelector(f.url) == f.type) {
+                    //         delete f.type;
+                    //     }
+                    //     if (Object.keys(f).length == 1) {
+                    //         r[key] = f.url;
+                    //     }
+                    // }
                     // if (typeof f === 'string') {
                     //     f = { url: f, name: p };
                     //     r[key] = f;
@@ -296,8 +221,8 @@ var vfs;
         };
         FileSystem.prototype.addFile = function (r, checkDuplicate) {
             if (checkDuplicate) {
-                var a = resourceVfs.getFile(r.name);
-                if (a && resourceVfs.rootPath + "/" + a.url != r.url) {
+                var a = this.getFile(r.name);
+                if (a && this.rootPath + "/" + a.url != r.url) {
                     console.warn("duplicate: " + r.url + " => " + r.name);
                 }
             }
@@ -378,6 +303,50 @@ var vfs;
     }());
     vfs.FileSystem = FileSystem;
 })(vfs || (vfs = {}));
-var config = { alias: {}, groups: {}, resources: {} };
-var resourceVfs = new vfs.FileSystem();
-resourceVfs.init(config.resources, "resource");
+//         async function convertResourceJson(projectRoot: string, config: Data) {
+//             let filename = path.join(projectRoot, "resource/default.res.json");
+//             if (!fs.existsSync(filename)) {
+//                 filename = path.join(projectRoot, "resource/resource.json");
+//             }
+//             if (!fs.existsSync(filename)) {
+//                 return;
+//             }
+//             let resourceJson: legacy.Info = await fs.readJSONAsync(filename);
+//             for (let r of resourceJson.resources) {
+//                 let resourceName = ResourceConfig.nameSelector(r.url);
+//                 let file = ResourceConfig.getFile(resourceName);
+//                 if (!file) {
+//                     if (await fs.existsAsync(path.join(pluginContext.resourceFolder, r.url))) {
+//                         ResourceConfig.addFile(r, false)
+//                     }
+//                     else {
+//                         console.error(`missing file ${r.name} ${r.url} `)
+//                     }
+//                     continue;
+//                 }
+//                 if (file.name != r.name) {
+//                     config.alias[r.name] = file.name;
+//                 }
+//                 for (var resource_custom_key in r) {
+//                     if (resource_custom_key == "url" || resource_custom_key == "name") {
+//                         continue;
+//                     }
+//                     else if (resource_custom_key == "subkeys") {
+//                         var subkeysArr = (r[resource_custom_key] as string).split(",");
+//                         for (let subkey of subkeysArr) {
+//                             // if (!obj.alias[subkeysArr[i]]) {
+//                             config.alias[subkey] = r.name + "#" + subkey;
+//                             file[resource_custom_key] = r[resource_custom_key];
+//                             // }
+//                         }
+//                     }
+//                     else {
+//                         // 包含 type 在内的自定义属性
+//                         file[resource_custom_key] = r[resource_custom_key];
+//                     }
+//                 }
+//             }
+//             for (let group of resourceJson.groups) {
+//                 config.groups[group.name] = group.keys.split(",");
+//             }
+//         } 

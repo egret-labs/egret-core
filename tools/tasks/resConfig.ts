@@ -6,36 +6,11 @@ import { Plugin } from './';
 
 const wing_res_json = "wing.res.json";
 
-const filter = [
+const filters = [
     wing_res_json,
-    "resource/default.res.json"
 ]
 
-async function executeFilter(url: string) {
 
-    if (filter.indexOf(url) >= 0) {
-        return null;
-    }
-    let type = options.typeSelector(url);
-    let name = options.nameSelector(url);
-    let groupName = options.groupSelector(url);
-
-    if (groupName) {
-        if (!config.groups[groupName]) {
-            config.groups[groupName] = [];
-        }
-        const group = config.groups[groupName];
-        if (group.indexOf(name) == -1) {
-            group.push(name);
-        }
-    }
-    if (type) {
-        return { name, url, type }
-    }
-    else {
-        return null;
-    }
-}
 
 type EmitResConfigFilePluginOptions = {
     output: string,
@@ -45,110 +20,82 @@ type EmitResConfigFilePluginOptions = {
 
 }
 
-let options: EmitResConfigFilePluginOptions;
+
 
 
 export class EmitResConfigFilePlugin implements Plugin {
 
-    constructor(private paramOptions: EmitResConfigFilePluginOptions) {
-        options = paramOptions;
+    private config: ResourceConfigData = { alias: {}, groups: {}, resources: {} };
+    private fileSystem = new vfs.FileSystem();
+
+
+    constructor(private options: EmitResConfigFilePluginOptions) {
+        this.fileSystem.init(this.config.resources, "resource");
+        filters.push(options.output);
+    }
+
+    private executeFilter(url: string) {
+        const config = this.config;
+        const options = this.options;
+        if (filters.indexOf(url) >= 0) {
+            return null;
+        }
+        let type = options.typeSelector(url);
+        if (!type) {
+            return null;
+        }
+        let name = options.nameSelector(url);
+        let groupName = options.groupSelector(url);
+
+        if (groupName) {
+            if (!config.groups[groupName]) {
+                config.groups[groupName] = [];
+            }
+            const group = config.groups[groupName];
+            if (group.indexOf(name) == -1) {
+                group.push(name);
+            }
+        }
+        return { name, url, type }
     }
 
     async  onFile(file: plugin.File): Promise<plugin.File> {
-
         const filename = file.origin;
-        if (filename.indexOf('resource/') === -1) {
-            return null;
-        }
-        else {
-            let r = await executeFilter(filename)
+        if (filename.indexOf('resource/') >= 0) {
+            let r = this.executeFilter(filename)
             if (r) {
-                resourceVfs.addFile(r, true);
-                return file;
-            }
-            else {
-                return null;
+                this.fileSystem.addFile(r, true);
             }
         }
+        return file;
 
     }
     async  onFinish(pluginContext: plugin.PluginContext): Promise<void> {
 
 
-        //         async function convertResourceJson(projectRoot: string, config: Data) {
-
-        //             let filename = path.join(projectRoot, "resource/default.res.json");
-        //             if (!fs.existsSync(filename)) {
-        //                 filename = path.join(projectRoot, "resource/resource.json");
-        //             }
-        //             if (!fs.existsSync(filename)) {
-        //                 return;
-        //             }
-        //             let resourceJson: legacy.Info = await fs.readJSONAsync(filename);
-        //             for (let r of resourceJson.resources) {
-
-        //                 let resourceName = ResourceConfig.nameSelector(r.url);
-        //                 let file = ResourceConfig.getFile(resourceName);
-        //                 if (!file) {
-        //                     if (await fs.existsAsync(path.join(pluginContext.resourceFolder, r.url))) {
-        //                         ResourceConfig.addFile(r, false)
-        //                     }
-        //                     else {
-        //                         console.error(`missing file ${r.name} ${r.url} `)
-        //                     }
-        //                     continue;
-        //                 }
-        //                 if (file.name != r.name) {
-        //                     config.alias[r.name] = file.name;
-        //                 }
-        //                 for (var resource_custom_key in r) {
-        //                     if (resource_custom_key == "url" || resource_custom_key == "name") {
-        //                         continue;
-        //                     }
-        //                     else if (resource_custom_key == "subkeys") {
-        //                         var subkeysArr = (r[resource_custom_key] as string).split(",");
-        //                         for (let subkey of subkeysArr) {
-        //                             // if (!obj.alias[subkeysArr[i]]) {
-        //                             config.alias[subkey] = r.name + "#" + subkey;
-        //                             file[resource_custom_key] = r[resource_custom_key];
-        //                             // }
-        //                         }
-        //                     }
-        //                     else {
-        //                         // 包含 type 在内的自定义属性
-        //                         file[resource_custom_key] = r[resource_custom_key];
-        //                     }
-
-        //                 }
-
-        //             }
-        //             for (let group of resourceJson.groups) {
-        //                 config.groups[group.name] = group.keys.split(",");
-        //             }
-
-        //         }
-
-        async function emitResourceConfigFile(debug: boolean) {
-            const config = resourceConfig.generateConfig(true);
-            const content = JSON.stringify(config, null, "\t");
+        function emitResourceConfigFile(debug: boolean) {
+            const generateConfig = resourceConfig.generateConfig(config, true);
+            const content = JSON.stringify(generateConfig, null, "\t");
             const file = `exports.typeSelector = ${options.typeSelector.toString()};
 exports.resourceRoot = "resource";
-exports.alias = ${JSON.stringify(config.alias, null, "\t")};
-exports.groups = ${JSON.stringify(config.groups, null, "\t")};
-exports.resources = ${JSON.stringify(config.resources, null, "\t")};
+exports.alias = ${JSON.stringify(generateConfig.alias, null, "\t")};
+exports.groups = ${JSON.stringify(generateConfig.groups, null, "\t")};
+exports.resources = ${JSON.stringify(generateConfig.resources, null, "\t")};
             `;
             return file;
         }
 
-        let config = resourceConfig.getConfig();
-        // await convertResourceJson(pluginContext.projectRoot, config);
 
+        const options = this.options;
+        const config = this.config;
+        // let config = this.config;
+        // await convertResourceJson(pluginContext.projectRoot, config);
         if (path.extname(options.output) == ".js") {
-            let configContent = await emitResourceConfigFile(true);
+            let configContent = emitResourceConfigFile(true);
             pluginContext.createFile(options.output, new Buffer(configContent));
         }
         else {
-            let wingConfigContent = await resourceConfig.generateClassicalConfig();
+            let wingConfigContent = resourceConfig.generateClassicalConfig(this.config);
             pluginContext.createFile(options.output, new Buffer(wingConfigContent));
         }
     }
@@ -178,11 +125,7 @@ namespace resourceConfig {
         return r.url;
     }
 
-    export function getConfig() {
-        return config;
-    }
-
-    export async function generateClassicalConfig() {
+    export function generateClassicalConfig(config: ResourceConfigData) {
         // {
         // 	"keys": "bg_jpg,egret_icon_png,description_json",
         // 	"name": "preload"
@@ -214,7 +157,7 @@ namespace resourceConfig {
         return JSON.stringify(result, null, "\t");
     }
 
-    export function generateConfig(debug: boolean): generate.Data {
+    export function generateConfig(config: ResourceConfigData, debug: boolean): generate.Data {
 
         let loop = (r: generate.Dictionary) => {
             for (var key in r) {
@@ -224,16 +167,16 @@ namespace resourceConfig {
                         continue;
                     }
 
-                    if (!debug) {
-                        delete f.name;
-                        // console.log 
-                        if (options.typeSelector(f.url) == f.type) {
-                            delete f.type;
-                        }
-                        if (Object.keys(f).length == 1) {
-                            r[key] = f.url;
-                        }
-                    }
+                    // if (!debug) {
+                    //     delete f.name;
+                    //     // console.log 
+                    //     if (options.typeSelector(f.url) == f.type) {
+                    //         delete f.type;
+                    //     }
+                    //     if (Object.keys(f).length == 1) {
+                    //         r[key] = f.url;
+                    //     }
+                    // }
                     // if (typeof f === 'string') {
                     //     f = { url: f, name: p };
                     //     r[key] = f;
@@ -301,8 +244,8 @@ namespace vfs {
 
         addFile(r: File, checkDuplicate: boolean) {
             if (checkDuplicate) {
-                let a = resourceVfs.getFile(r.name)
-                if (a && resourceVfs.rootPath + "/" + a.url != r.url) {
+                let a = this.getFile(r.name)
+                if (a && this.rootPath + "/" + a.url != r.url) {
                     console.warn("duplicate: " + r.url + " => " + r.name)
                 }
             }
@@ -432,7 +375,7 @@ namespace generate {
 
 }
 
-interface Data {
+interface ResourceConfigData {
 
     resources: vfs.Dictionary,
 
@@ -445,6 +388,56 @@ interface Data {
     }
 
 }
-var config: Data = { alias: {}, groups: {}, resources: {} };
-const resourceVfs = new vfs.FileSystem();
-resourceVfs.init(config.resources, "resource");
+
+        //         async function convertResourceJson(projectRoot: string, config: Data) {
+
+        //             let filename = path.join(projectRoot, "resource/default.res.json");
+        //             if (!fs.existsSync(filename)) {
+        //                 filename = path.join(projectRoot, "resource/resource.json");
+        //             }
+        //             if (!fs.existsSync(filename)) {
+        //                 return;
+        //             }
+        //             let resourceJson: legacy.Info = await fs.readJSONAsync(filename);
+        //             for (let r of resourceJson.resources) {
+
+        //                 let resourceName = ResourceConfig.nameSelector(r.url);
+        //                 let file = ResourceConfig.getFile(resourceName);
+        //                 if (!file) {
+        //                     if (await fs.existsAsync(path.join(pluginContext.resourceFolder, r.url))) {
+        //                         ResourceConfig.addFile(r, false)
+        //                     }
+        //                     else {
+        //                         console.error(`missing file ${r.name} ${r.url} `)
+        //                     }
+        //                     continue;
+        //                 }
+        //                 if (file.name != r.name) {
+        //                     config.alias[r.name] = file.name;
+        //                 }
+        //                 for (var resource_custom_key in r) {
+        //                     if (resource_custom_key == "url" || resource_custom_key == "name") {
+        //                         continue;
+        //                     }
+        //                     else if (resource_custom_key == "subkeys") {
+        //                         var subkeysArr = (r[resource_custom_key] as string).split(",");
+        //                         for (let subkey of subkeysArr) {
+        //                             // if (!obj.alias[subkeysArr[i]]) {
+        //                             config.alias[subkey] = r.name + "#" + subkey;
+        //                             file[resource_custom_key] = r[resource_custom_key];
+        //                             // }
+        //                         }
+        //                     }
+        //                     else {
+        //                         // 包含 type 在内的自定义属性
+        //                         file[resource_custom_key] = r[resource_custom_key];
+        //                     }
+
+        //                 }
+
+        //             }
+        //             for (let group of resourceJson.groups) {
+        //                 config.groups[group.name] = group.keys.split(",");
+        //             }
+
+        //         }
