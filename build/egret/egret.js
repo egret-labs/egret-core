@@ -18702,17 +18702,9 @@ var egret;
                     renderCmds.push(1);
                 }
                 if (textField.$graphicsNode) {
-                    renderCmds.push(1020);
-                    renderCmds.push(-node.x);
-                    renderCmds.push(-node.y);
-                    renderCmds.push(0);
                     renderCmds.push(1015);
                     bufferGraphicsData(textFieldId, textField.$graphicsNode, renderCmds);
                     renderCmds.push(1016);
-                    renderCmds.push(1020);
-                    renderCmds.push(node.x);
-                    renderCmds.push(node.y);
-                    renderCmds.push(0);
                 }
                 var drawData = node.drawData;
                 var length_8 = drawData.length;
@@ -19630,6 +19622,16 @@ var egret;
             if (bitmapData.$bitmapDataId) {
                 delete bitmapDataMap[bitmapData.$bitmapDataId];
             }
+        };
+        NativeNode.disposeTextData = function (node) {
+            displayCmdBuffer[displayCmdBufferIndex++] = 149 /* DISPOSE_TEXT_DATA */;
+            displayCmdBuffer[displayCmdBufferIndex++] = node.$nativeNode.id;
+            displayCmdBufferSize++;
+        };
+        NativeNode.disposeGraphicData = function (graphic) {
+            displayCmdBuffer[displayCmdBufferIndex++] = 148 /* DISPOSE_GRAPHICS_DATA */;
+            displayCmdBuffer[displayCmdBufferIndex++] = graphic.$targetDisplay.$nativeNode.id;
+            displayCmdBufferSize++;
         };
         NativeNode.disposeFilter = function (filter) {
             displayCmdBuffer[displayCmdBufferIndex++] = 142 /* DISPOSE_FILTER */;
@@ -22654,6 +22656,9 @@ var egret;
             }
             if (this.textNode) {
                 this.textNode.clean();
+                if (__global.nativeRender) {
+                    egret.NativeNode.disposeTextData(this);
+                }
             }
         };
         /**
@@ -27676,6 +27681,9 @@ var egret;
         Graphics.prototype.$onRemoveFromStage = function () {
             if (this.$renderNode) {
                 this.$renderNode.clean();
+            }
+            if (__global.nativeRender) {
+                egret.NativeNode.disposeGraphicData(this);
             }
         };
         return Graphics;

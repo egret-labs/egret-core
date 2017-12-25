@@ -1537,7 +1537,11 @@ namespace egret {
 
             if (this.textNode) {
                 this.textNode.clean();
+                if (__global.nativeRender) {
+                    NativeNode.disposeTextData(this);
+                }
             }
+
         }
 
         /**

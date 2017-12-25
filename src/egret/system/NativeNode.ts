@@ -73,6 +73,8 @@ namespace egret {
         SET_MESH_UVS_DATA = 145,
         SET_MESH_INDICES_DATA = 146,
         SET_MESH_BITMAP_DATA = 147,
+        DISPOSE_GRAPHICS_DATA = 148,
+        DISPOSE_TEXT_DATA = 149,
 
         SET_CUSTOM_DATA = 901,
         SET_PARTICLE_BITMAP_DATA = 902,
@@ -793,6 +795,18 @@ namespace egret {
             if (bitmapData.$bitmapDataId) {
                 delete bitmapDataMap[bitmapData.$bitmapDataId];
             }
+        }
+
+        public static disposeTextData(node: TextField): void {
+            displayCmdBuffer[displayCmdBufferIndex++] = CommandType.DISPOSE_TEXT_DATA;
+            displayCmdBuffer[displayCmdBufferIndex++] = node.$nativeNode.id;
+            displayCmdBufferSize++;
+        }
+
+        public static disposeGraphicData(graphic: Graphics): void {
+            displayCmdBuffer[displayCmdBufferIndex++] = CommandType.DISPOSE_GRAPHICS_DATA;
+            displayCmdBuffer[displayCmdBufferIndex++] = graphic.$targetDisplay.$nativeNode.id;
+            displayCmdBufferSize++;
         }
 
         public static disposeFilter(filter: Filter): void {

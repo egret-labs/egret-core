@@ -831,6 +831,9 @@ namespace egret {
             if (this.$renderNode) {
                 this.$renderNode.clean();
             }
+            if (__global.nativeRender) {
+                NativeNode.disposeGraphicData(this);
+            }
         }
     }
 }

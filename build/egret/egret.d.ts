@@ -10959,6 +10959,8 @@ declare namespace egret {
         disposeDisplayObject(): void;
         static disposeTexture(texture: Texture): void;
         static disposeBitmapData(bitmapData: BitmapData): void;
+        static disposeTextData(node: TextField): void;
+        static disposeGraphicData(graphic: Graphics): void;
         static disposeFilter(filter: Filter): void;
     }
 }
