@@ -386,17 +386,9 @@ namespace egret.NativeDelegate {
             }
 
             if (textField.$graphicsNode) {
-                renderCmds.push(1020);
-                renderCmds.push(-node.x);
-                renderCmds.push(-node.y);
-                renderCmds.push(0);
                 renderCmds.push(1015);
                 bufferGraphicsData(textFieldId, textField.$graphicsNode, renderCmds);
                 renderCmds.push(1016);
-                renderCmds.push(1020);
-                renderCmds.push(node.x);
-                renderCmds.push(node.y);
-                renderCmds.push(0);
             }
             let drawData = node.drawData;
             let length = drawData.length;
