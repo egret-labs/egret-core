@@ -18791,9 +18791,12 @@ var egret;
                         currTextData.renderParms += text;
                         currTextData.renderParms += ";";
                         // 1013: strokeText
+                        renderCmds.push(1013);
                         if (stroke) {
-                            renderCmds.push(1013);
                             renderCmds.push(stroke * 2);
+                        }
+                        else {
+                            renderCmds.push(0);
                         }
                         //1014: fillText
                         renderCmds.push(1014);
