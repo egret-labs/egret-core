@@ -101,8 +101,8 @@ namespace egret {
             this.$bitmapData.height = height;
 
             if (__global.nativeRender) {
-                let savedBuffer = Native.getCurrentBuffer();
-                Native.activateBuffer(this.$renderBuffer);
+                let savedBuffer = NativeDelegate.getCurrentBuffer();
+                NativeDelegate.activateBuffer(this.$renderBuffer);
                 let useClip = false;
                 let clipX = 0;
                 let clipY = 0;
@@ -115,9 +115,9 @@ namespace egret {
                     clipW = clipBounds.width;
                     clipH = clipBounds.height;
                 }
-                Native.update();
-                Native.renderDisplayObject(displayObject.$nativeNode.id, scale, useClip, clipX, clipY, clipW, clipH);
-                Native.activateBuffer(savedBuffer);
+                NativeDelegate.update();
+                NativeDelegate.renderDisplayObject(displayObject.$nativeNode.id, scale, useClip, clipX, clipY, clipW, clipH);
+                NativeDelegate.activateBuffer(savedBuffer);
             }
             else {
                 let matrix = Matrix.create();

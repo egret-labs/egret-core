@@ -2025,8 +2025,8 @@ var egret;
             if (stageX === void 0) { stageX = 0; }
             if (stageY === void 0) { stageY = 0; }
             if (__global.nativeRender) {
-                egret.Native.update();
-                var result = egret.Native.globalToLocal(this.$nativeNode.id, stageX, stageY);
+                egret.NativeDelegate.update();
+                var result = egret.NativeDelegate.globalToLocal(this.$nativeNode.id, stageX, stageY);
                 var arr = result.split(",");
                 var x = parseFloat(arr[0]);
                 var y = parseFloat(arr[1]);
@@ -2068,8 +2068,8 @@ var egret;
             if (localX === void 0) { localX = 0; }
             if (localY === void 0) { localY = 0; }
             if (__global.nativeRender) {
-                egret.Native.update();
-                var result = egret.Native.localToGlobal(this.$nativeNode.id, localX, localY);
+                egret.NativeDelegate.update();
+                var result = egret.NativeDelegate.localToGlobal(this.$nativeNode.id, localX, localY);
                 var arr = result.split(",");
                 var x = parseFloat(arr[0]);
                 var y = parseFloat(arr[1]);
@@ -2350,19 +2350,19 @@ var egret;
                 if (__global.nativeRender) {
                     var buffer = egret.sys.customHitTestBuffer;
                     buffer.resize(3, 3);
-                    egret.Native.forHitTest = true;
-                    var savedBuffer = egret.Native.getCurrentBuffer();
-                    egret.Native.activateBuffer(buffer);
-                    egret.Native.update();
-                    egret.Native.renderDisplayObjectWithOffset(self.$nativeNode.id, 1 - localX, 1 - localY);
+                    egret.NativeDelegate.forHitTest = true;
+                    var savedBuffer = egret.NativeDelegate.getCurrentBuffer();
+                    egret.NativeDelegate.activateBuffer(buffer);
+                    egret.NativeDelegate.update();
+                    egret.NativeDelegate.renderDisplayObjectWithOffset(self.$nativeNode.id, 1 - localX, 1 - localY);
                     try {
-                        data = egret.Native.getPixels(1, 1);
+                        data = egret.NativeDelegate.getPixels(1, 1);
                     }
                     catch (e) {
                         throw new Error(egret.sys.tr(1039));
                     }
-                    egret.Native.activateBuffer(savedBuffer);
-                    egret.Native.forHitTest = false;
+                    egret.NativeDelegate.activateBuffer(savedBuffer);
+                    egret.NativeDelegate.forHitTest = false;
                     if (data[3] === 0) {
                         return false;
                     }
@@ -10780,8 +10780,8 @@ var egret;
             this.$bitmapData.width = width;
             this.$bitmapData.height = height;
             if (__global.nativeRender) {
-                var savedBuffer = egret.Native.getCurrentBuffer();
-                egret.Native.activateBuffer(this.$renderBuffer);
+                var savedBuffer = egret.NativeDelegate.getCurrentBuffer();
+                egret.NativeDelegate.activateBuffer(this.$renderBuffer);
                 var useClip = false;
                 var clipX = 0;
                 var clipY = 0;
@@ -10794,9 +10794,9 @@ var egret;
                     clipW = clipBounds.width;
                     clipH = clipBounds.height;
                 }
-                egret.Native.update();
-                egret.Native.renderDisplayObject(displayObject.$nativeNode.id, scale, useClip, clipX, clipY, clipW, clipH);
-                egret.Native.activateBuffer(savedBuffer);
+                egret.NativeDelegate.update();
+                egret.NativeDelegate.renderDisplayObject(displayObject.$nativeNode.id, scale, useClip, clipX, clipY, clipW, clipH);
+                egret.NativeDelegate.activateBuffer(savedBuffer);
             }
             else {
                 var matrix = egret.Matrix.create();
@@ -13541,7 +13541,7 @@ var egret;
                 DisplayList.$canvasScaleX = x;
                 DisplayList.$canvasScaleY = y;
                 if (__global.nativeRender) {
-                    egret.Native.setCanvasScaleFactor(DisplayList.$canvasScaleFactor, x, y);
+                    egret.NativeDelegate.setCanvasScaleFactor(DisplayList.$canvasScaleFactor, x, y);
                 }
             };
             DisplayList.$canvasScaleFactor = 1;
@@ -14054,7 +14054,7 @@ var egret;
                 _this.stageDisplayList = null;
                 _this.displayFPS = displayFPS;
                 if (__global.nativeRender) {
-                    egret.Native.setRootBuffer(buffer);
+                    egret.NativeDelegate.setRootBuffer(buffer);
                 }
                 return _this;
             }
@@ -14130,8 +14130,8 @@ var egret;
              */
             Player.prototype.$render = function (triggerByFrame, costTicker) {
                 if (__global.nativeRender) {
-                    egret.Native.update();
-                    egret.Native.render();
+                    egret.NativeDelegate.update();
+                    egret.NativeDelegate.render();
                     return;
                 }
                 if (this.showFPS || this.showLog) {
@@ -14156,7 +14156,7 @@ var egret;
                 stage.$stageWidth = stageWidth;
                 stage.$stageHeight = stageHeight;
                 if (__global.nativeRender) {
-                    egret.Native.resize(stageWidth, stageHeight);
+                    egret.NativeDelegate.resize(stageWidth, stageHeight);
                 }
                 else {
                     this.screenDisplayList.setClipRect(stageWidth, stageHeight);
@@ -18390,8 +18390,8 @@ var egret;
  */
 var egret;
 (function (egret) {
-    var Native;
-    (function (Native) {
+    var NativeDelegate;
+    (function (NativeDelegate) {
         var renderCmdBuffer;
         var vertexCmdBuffer;
         var indexCmdBuffer;
@@ -18409,7 +18409,7 @@ var egret;
         var gl;
         var context;
         var rootWebGLBuffer;
-        Native.forHitTest = false;
+        NativeDelegate.forHitTest = false;
         /**
          * @private
          */
@@ -18419,11 +18419,11 @@ var egret;
          */
         var _thisObjectList = [];
         var isInit = false;
-        Native.addModuleCallback = function (callback, thisObj) {
+        NativeDelegate.addModuleCallback = function (callback, thisObj) {
             _callBackList.push(callback);
             _thisObjectList.push(thisObj);
         };
-        Native.init = function (wasmSize) {
+        NativeDelegate.init = function (wasmSize) {
             if (wasmSize === void 0) { wasmSize = (128 * 1024 * 1024); }
             if (isInit) {
                 if (_callBackList.length > 0) {
@@ -18477,31 +18477,31 @@ var egret;
             }
             initImpl2();
         };
-        Native.setRootBuffer = function (buffer) {
+        NativeDelegate.setRootBuffer = function (buffer) {
             rootWebGLBuffer = buffer;
         };
-        Native.setRenderMode = function (mode) {
+        NativeDelegate.setRenderMode = function (mode) {
             setRenderModeFun(2);
         };
-        Native.renderDisplayObject = function (id, scale, useClip, clipX, clipY, clipW, clipH) {
+        NativeDelegate.renderDisplayObject = function (id, scale, useClip, clipX, clipY, clipW, clipH) {
             renderDisplayObjectFun(id, scale, useClip, clipX, clipY, clipW, clipH);
         };
-        Native.renderDisplayObjectWithOffset = function (id, offsetX, offsetY) {
-            renderDisplayObject2Fun(id, offsetX, offsetY, Native.forHitTest);
+        NativeDelegate.renderDisplayObjectWithOffset = function (id, offsetX, offsetY) {
+            renderDisplayObject2Fun(id, offsetX, offsetY, NativeDelegate.forHitTest);
         };
-        Native.localToGlobal = function (id, localX, localY) {
+        NativeDelegate.localToGlobal = function (id, localX, localY) {
             return localToGlobalFun(id, localX, localY);
         };
-        Native.globalToLocal = function (id, globalX, globalY) {
+        NativeDelegate.globalToLocal = function (id, globalX, globalY) {
             return globalToLocalFun(id, globalX, globalY);
         };
-        Native.resize = function (width, height) {
+        NativeDelegate.resize = function (width, height) {
             resizeFun(width, height);
         };
-        Native.setCanvasScaleFactor = function (factor, scalex, scaley) {
+        NativeDelegate.setCanvasScaleFactor = function (factor, scalex, scaley) {
             Module.setCanvasScaleFactor(factor, scalex, scaley);
         };
-        Native.update = function () {
+        NativeDelegate.update = function () {
             validateDirtyTextField();
             validateDirtyGraphics();
             egret.NativeNode.update();
@@ -18509,11 +18509,11 @@ var egret;
                 updateFun();
             }
         };
-        Native.dirtyTextField = function (node) {
+        NativeDelegate.dirtyTextField = function (node) {
             dirtyTextFieldList.push(node);
             textFieldMap[node.$nativeNode.id] = node;
         };
-        Native.dirtyGraphics = function (graphics) {
+        NativeDelegate.dirtyGraphics = function (graphics) {
             dirtyGraphicsList.push(graphics);
             graphicsMap[graphics.$targetDisplay.$nativeNode.id] = graphics;
         };
@@ -18565,7 +18565,7 @@ var egret;
             }
         };
         var timeStamp;
-        Native.updatePreCallback = function (currTimeStamp) {
+        NativeDelegate.updatePreCallback = function (currTimeStamp) {
             var dt = currTimeStamp - timeStamp;
             timeStamp = currTimeStamp;
             if (updateCallbackListFun) {
@@ -18574,7 +18574,7 @@ var egret;
             return false;
         };
         var bindDefaultIndex = false;
-        Native.render = function () {
+        NativeDelegate.render = function () {
             if (renderFun) {
                 renderFun();
             }
@@ -18855,7 +18855,7 @@ var egret;
             }
             width *= canvasScaleX;
             height *= canvasScaleY;
-            if (node.dirtyRender || Native.forHitTest) {
+            if (node.dirtyRender || NativeDelegate.forHitTest) {
                 renderCmds.push(1010);
                 renderCmds.push(1);
                 // 1011: resize
@@ -18891,7 +18891,7 @@ var egret;
                     switch (path.type) {
                         case 1 /* Fill */:
                             var fillPath = path;
-                            parseColorString(Native.forHitTest ? egret.BLACK_COLOR : egret.getRGBAString(fillPath.fillColor, fillPath.fillAlpha), colorVal);
+                            parseColorString(NativeDelegate.forHitTest ? egret.BLACK_COLOR : egret.getRGBAString(fillPath.fillColor, fillPath.fillAlpha), colorVal);
                             renderCmds.push(1021);
                             renderCmds.push(colorVal.color);
                             renderCmds.push(colorVal.alpha);
@@ -18910,7 +18910,7 @@ var egret;
                         case 3 /* Stroke */:
                             var strokeFill = path;
                             var lineWidth = strokeFill.lineWidth;
-                            parseColorString(Native.forHitTest ? egret.BLACK_COLOR : egret.getRGBAString(strokeFill.lineColor, strokeFill.lineAlpha), colorVal);
+                            parseColorString(NativeDelegate.forHitTest ? egret.BLACK_COLOR : egret.getRGBAString(strokeFill.lineColor, strokeFill.lineAlpha), colorVal);
                             // native no implement
                             // context.lineCap = CAPS_STYLES[strokeFill.caps];
                             // context.lineJoin = strokeFill.joints;
@@ -18950,29 +18950,29 @@ var egret;
                 if (isGraphics) {
                     graphicsMap[graphicsId].$targetDisplay.$nativeNode.setGraphicsRenderData(renderCmds);
                 }
-                if (!Native.forHitTest) {
+                if (!NativeDelegate.forHitTest) {
                     node.dirtyRender = false;
                 }
             }
         };
-        Native.activateWebGLBuffer = function (buffer) {
+        NativeDelegate.activateWebGLBuffer = function (buffer) {
             if (!buffer) {
                 buffer = rootWebGLBuffer;
             }
             activateBufferFun(buffer.bufferIdForWasm, buffer.width, buffer.height);
         };
-        Native.getCurrentBuffer = function () {
-            return Native.currentWebGLBuffer;
+        NativeDelegate.getCurrentBuffer = function () {
+            return NativeDelegate.currentWebGLBuffer;
         };
-        Native.getPixels = function (x, y, width, height) {
+        NativeDelegate.getPixels = function (x, y, width, height) {
             if (width === void 0) { width = 1; }
             if (height === void 0) { height = 1; }
             var pixels = new Uint8Array(4 * width * height);
             getPixelsFun(x, y, width, height, pixels);
             return pixels;
         };
-        Native.activateBuffer = function (buffer) {
-            Native.activateWebGLBuffer(buffer);
+        NativeDelegate.activateBuffer = function (buffer) {
+            NativeDelegate.activateWebGLBuffer(buffer);
         };
         var textFieldMap = egret.createMap();
         var graphicsMap = egret.createMap();
@@ -18983,7 +18983,7 @@ var egret;
         var filterMap = egret.createMap();
         var dirtyTextFieldList = [];
         var dirtyGraphicsList = [];
-    })(Native = egret.Native || (egret.Native = {}));
+    })(NativeDelegate = egret.NativeDelegate || (egret.NativeDelegate = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -22674,7 +22674,7 @@ var egret;
             self.$renderDirty = true;
             self.$TextField[18 /* textLinesChanged */] = true;
             if (__global.nativeRender) {
-                egret.Native.dirtyTextField(this);
+                egret.NativeDelegate.dirtyTextField(this);
             }
             else {
                 var p = self.$parent;
@@ -27514,7 +27514,7 @@ var egret;
             var self = this;
             self.$renderNode.dirtyRender = true;
             if (__global.nativeRender) {
-                egret.Native.dirtyGraphics(self);
+                egret.NativeDelegate.dirtyGraphics(self);
             }
         };
         /**
@@ -29054,7 +29054,7 @@ var egret;
             }
             var ua = navigator.userAgent.toLowerCase();
             if (ua.indexOf("egretnative") >= 0 && __global.nativeRender) {
-                egret.Native.addModuleCallback(function () {
+                egret.NativeDelegate.addModuleCallback(function () {
                     web.Html5Capatibility.$init();
                     // WebGL上下文参数自定义
                     if (options.renderMode == "webgl") {
@@ -29064,7 +29064,7 @@ var egret;
                     }
                     egret.sys.CanvasRenderBuffer = web.CanvasRenderBuffer;
                     setRenderMode(options.renderMode);
-                    egret.Native.setRenderMode(egret.Capabilities.$renderMode);
+                    egret.NativeDelegate.setRenderMode(egret.Capabilities.$renderMode);
                     var canvasScaleFactor;
                     if (options.canvasScaleFactor) {
                         canvasScaleFactor = options.canvasScaleFactor;
@@ -29097,7 +29097,7 @@ var egret;
                         }
                     });
                 }, null);
-                egret.Native.init();
+                egret.NativeDelegate.init();
             }
             else {
                 web.Html5Capatibility._audioType = options.audioType;

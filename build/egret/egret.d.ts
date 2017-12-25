@@ -10878,7 +10878,7 @@ declare let Module: any;
 /**
  * @private
  */
-declare namespace egret.Native {
+declare namespace egret.NativeDelegate {
     let currentWebGLBuffer: web.WebGLRenderBuffer;
     let forHitTest: boolean;
     let addModuleCallback: (callback: Function, thisObj: any) => void;
