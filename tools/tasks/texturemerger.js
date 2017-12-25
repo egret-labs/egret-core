@@ -35,62 +35,85 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var path = require("path");
+var utils_1 = require("../lib/utils");
 var index_1 = require("../project/index");
 var os_1 = require("os");
 var FileUtil = require("../lib/FileUtil");
 var TextureMergerPlugin = (function () {
     function TextureMergerPlugin(options) {
         this.options = options;
-        console.error("TextureMergerPlugin is not implemented now !");
+        this.tmprojects = [];
     }
     TextureMergerPlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
+            var extname;
             return __generator(this, function (_a) {
-                return [2 /*return*/, file];
+                extname = file.extname;
+                if (extname == '.tmproject') {
+                    this.tmprojects.push(file.origin);
+                    return [2 /*return*/, null];
+                }
+                else {
+                    return [2 /*return*/, file];
+                }
+                return [2 /*return*/];
             });
         });
     };
     TextureMergerPlugin.prototype.onFinish = function (pluginContext) {
         return __awaiter(this, void 0, void 0, function () {
-            function generateSpriteSheet(spriteSheetFileName, dirname) {
-                return __awaiter(this, void 0, void 0, function () {
-                    var texture_merger_path, projectRoot, tempDir, jsonPath, pngPath, folder;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, getTextureMergerPath()];
-                            case 1:
-                                texture_merger_path = _a.sent();
-                                projectRoot = egret.args.projectDir;
-                                tempDir = path.join(os_1.tmpdir(), Math.random().toString());
-                                FileUtil.createDirectory(tempDir);
-                                jsonPath = path.join(tempDir, "temp.json");
-                                pngPath = jsonPath.replace('.json', ".png");
-                                folder = path.join(projectRoot, "resource", dirname);
-                                // const tmproject = 
-                                try {
-                                    // const result = await shell(texture_merger_path, ["-p", folder, "-o", jsonPath]);
-                                    // const result = await shell(texture_merger_path, ["-cp", tmproject, "-o", tempDir]);
-                                    // const jsonBuffer = await FileUtil.readFileAsync(jsonPath, null) as any as NodeBuffer;
-                                    // const pngBuffer = await FileUtil.readFileAsync(pngPath, null) as any as NodeBuffer;
-                                    // pluginContext.createFile("111.json", jsonBuffer);
-                                    // pluginContext.createFile('111.png', pngBuffer);
-                                }
-                                catch (e) {
-                                    console.log(e);
-                                }
-                                return [2 /*return*/];
-                        }
-                    });
-                });
-            }
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: 
-                    // await engineData.getEgretToolsInstalledList()
-                    return [4 /*yield*/, generateSpriteSheet("C:\\Users\\18571\\Desktop\\111.json", 'assets')];
+            var options, texture_merger_path, projectRoot, tempDir, _i, _a, tm, tmprojectFilePath, tmprojectDir, filename, jsonPath, pngPath, result, jsonBuffer, pngBuffer, e_1;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        options = this.options;
+                        return [4 /*yield*/, getTextureMergerPath()];
                     case 1:
-                        // await engineData.getEgretToolsInstalledList()
-                        _a.sent();
+                        texture_merger_path = _b.sent();
+                        projectRoot = egret.args.projectDir;
+                        tempDir = path.join(os_1.tmpdir(), 'egret/texturemerger', Math.random().toString());
+                        FileUtil.createDirectory(tempDir);
+                        _i = 0, _a = this.tmprojects;
+                        _b.label = 2;
+                    case 2:
+                        if (!(_i < _a.length)) return [3 /*break*/, 9];
+                        tm = _a[_i];
+                        tmprojectFilePath = path.join(pluginContext.projectRoot, tm) //options.path;
+                        ;
+                        tmprojectDir = path.dirname(tm);
+                        filename = path.basename(tmprojectFilePath, ".tmproject");
+                        jsonPath = path.join(tempDir, filename + ".json");
+                        pngPath = path.join(tempDir, filename + ".png");
+                        _b.label = 3;
+                    case 3:
+                        _b.trys.push([3, 7, , 8]);
+                        return [4 /*yield*/, utils_1.shell(texture_merger_path, ["-cp", tmprojectFilePath, "-o", tempDir])];
+                    case 4:
+                        result = _b.sent();
+                        return [4 /*yield*/, FileUtil.readFileAsync(jsonPath, null)];
+                    case 5:
+                        jsonBuffer = _b.sent();
+                        return [4 /*yield*/, FileUtil.readFileAsync(pngPath, null)];
+                    case 6:
+                        pngBuffer = _b.sent();
+                        pluginContext.createFile(path.join(tmprojectDir, filename + ".json"), jsonBuffer);
+                        pluginContext.createFile(path.join(tmprojectDir, filename + ".png"), pngBuffer);
+                        return [3 /*break*/, 8];
+                    case 7:
+                        e_1 = _b.sent();
+                        if (e_1.code) {
+                            console.error("TextureMerger \u6267\u884C\u9519\u8BEF\uFF0C\u9519\u8BEF\u7801\uFF1A" + e_1.code);
+                            console.error("\u6267\u884C\u547D\u4EE4:" + e_1.path + " " + e_1.args.join(" "));
+                        }
+                        else {
+                            console.error(e_1);
+                        }
+                        return [3 /*break*/, 8];
+                    case 8:
+                        _i++;
+                        return [3 /*break*/, 2];
+                    case 9:
+                        FileUtil.remove(tempDir);
                         return [2 /*return*/];
                 }
             });

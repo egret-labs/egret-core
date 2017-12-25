@@ -68,10 +68,7 @@ var Build = (function () {
                                 return [2 /*return*/, 0];
                             }
                         }
-                        if (FileUtil.exists(options.srcDir) == false ||
-                            FileUtil.exists(options.templateDir) == false) {
-                            utils.exit(10015, options.projectDir);
-                        }
+                        utils.checkEgret();
                         if (!FileUtil.exists(FileUtil.joinPath(options.projectDir, 'libs/modules/egret/'))) {
                             project.manager.copyToLibs();
                         }
