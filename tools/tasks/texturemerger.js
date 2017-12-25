@@ -136,7 +136,7 @@ function getTextureMergerPath() {
     }
     switch (process.platform) {
         case 'darwin':
-            return tm.path + "//Contents/MacOS/TextureMerger";
+            return tm.path + "/Contents/MacOS/TextureMerger";
             break;
         case 'win32':
             return tm.path + "/TextureMerger.exe";
