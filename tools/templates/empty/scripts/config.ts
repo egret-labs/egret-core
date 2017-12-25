@@ -2,7 +2,7 @@
 ///<reference path="api.d.ts"/>
 
 import * as path from 'path';
-import { UglifyPlugin, IncrementCompilePlugin, CompilePlugin, ManifestPlugin, ExmlPlugin, EmitResConfigFilePlugin } from 'built-in';
+import { UglifyPlugin, IncrementCompilePlugin, CompilePlugin, ManifestPlugin, ExmlPlugin, EmitResConfigFilePlugin, TextureMergerPlugin } from 'built-in';
 import { CustomPlugin } from './myplugin';
 
 const config: ResourceManagerConfig = {
@@ -39,6 +39,7 @@ const config: ResourceManagerConfig = {
                 outputDir,
                 commands: [
                     new CustomPlugin(),
+                    new TextureMergerPlugin(),
                     new CompilePlugin({ libraryType: "release" }),
                     new UglifyPlugin([{
                         sources: ["main.js"],
