@@ -43,14 +43,22 @@ var TextureMergerPlugin = (function () {
     function TextureMergerPlugin(options) {
         this.options = options;
         this.tmprojects = [];
+        this.removedList = [];
     }
     TextureMergerPlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
-            var extname;
+            var extname, data, tmprojectDir_1, imageFiles;
             return __generator(this, function (_a) {
                 extname = file.extname;
                 if (extname == '.tmproject') {
                     this.tmprojects.push(file.origin);
+                    data = JSON.parse(file.contents.toString());
+                    tmprojectDir_1 = path.dirname(file.origin);
+                    imageFiles = data.files.map(function (f) {
+                        var globalPath = path.resolve(file.base, tmprojectDir_1, f);
+                        return path.relative(file.base, globalPath).split("\\").join("/");
+                    });
+                    this.removedList = this.removedList.concat(imageFiles);
                     return [2 /*return*/, null];
                 }
                 else {

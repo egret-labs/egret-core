@@ -5,7 +5,6 @@ import { engineData } from "../project/index";
 import { tmpdir } from "os";
 import * as FileUtil from '../lib/FileUtil';
 
-
 type TextureMergerOptions = {
 
     path: string;
@@ -14,9 +13,22 @@ type TextureMergerOptions = {
 
 }
 
+type TextureMergerProjectConfig = {
+
+    projectName: string,
+
+    files: string[],
+
+    version: string,
+
+    options: any
+}
+
 export class TextureMergerPlugin implements Plugin {
 
     private tmprojects: string[] = [];
+
+    private removedList: string[] = [];
 
     constructor(private options: TextureMergerOptions) {
     }
@@ -25,16 +37,22 @@ export class TextureMergerPlugin implements Plugin {
         const extname = file.extname;
         if (extname == '.tmproject') {
             this.tmprojects.push(file.origin);
+            const data: TextureMergerProjectConfig = JSON.parse(file.contents.toString());
+
+            const tmprojectDir = path.dirname(file.origin);
+            const imageFiles = data.files.map(f => {
+                const globalPath = path.resolve(file.base, tmprojectDir, f);
+                return path.relative(file.base, globalPath).split("\\").join("/");
+            })
+            this.removedList = this.removedList.concat(imageFiles);
             return null;
         }
         else {
             return file;
         }
-
-
     }
-    async onFinish(pluginContext: PluginContext): Promise<void> {
 
+    async onFinish(pluginContext: PluginContext): Promise<void> {
         const options = this.options;
 
         let texture_merger_path = await getTextureMergerPath()
