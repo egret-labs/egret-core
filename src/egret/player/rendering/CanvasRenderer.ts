@@ -408,12 +408,13 @@ namespace egret {
                 return drawCalls;
             }
 
-            drawCalls += this.drawDisplayObject(displayObject, displayContext, 0, 0);
+            drawCalls += this.drawDisplayObject(displayObject, displayContext, -displayBounds.x, -displayBounds.y);
             //绘制遮罩
             if (mask) {
                 let maskMatrix = Matrix.create();
                 maskMatrix.copyFrom(mask.$getConcatenatedMatrix());
                 mask.$getConcatenatedMatrixAt(displayObject, maskMatrix);
+                maskMatrix.translate(-displayBounds.x, -displayBounds.y);
                 //如果只有一次绘制或是已经被cache直接绘制到displayContext
                 if (Capabilities.$runtimeType == RuntimeType.WEB && maskRenderNode && maskRenderNode.$getRenderCount() == 1 || mask.$displayList) {
                     displayContext.globalCompositeOperation = "destination-in";
@@ -426,7 +427,7 @@ namespace egret {
                     let maskBuffer = this.createRenderBuffer(displayBounds.width, displayBounds.height);
                     let maskContext = maskBuffer.context;
                     maskContext.setTransform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
-                    drawCalls += this.drawDisplayObject(mask, maskContext, -displayBounds.x, -displayBounds.y);
+                    drawCalls += this.drawDisplayObject(mask, maskContext, 0, 0);
                     displayContext.globalCompositeOperation = "destination-in";
                     displayContext.globalAlpha = 1;
                     displayContext.drawImage(maskBuffer.surface, 0, 0);
