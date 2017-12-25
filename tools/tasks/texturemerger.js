@@ -130,9 +130,17 @@ function getTextureMergerPath() {
     if (!tm) {
         throw '请安装 Texture Merger'; //i18n
     }
-    var isUpperVersion = globals.compressVersion(tm.version, "1.6.9");
+    var isUpperVersion = globals.compressVersion(tm.version, "1.7.0");
     if (isUpperVersion < 0) {
-        throw '请将 Texture Merger 升级至 1.6.9 以上版本';
+        throw '请将 Texture Merger 升级至 1.7.0 以上版本';
     }
-    return tm.path + "/TextureMerger.exe";
+    switch (process.platform) {
+        case 'darwin':
+            return tm.path + "/TextureMerger.exe";
+            break;
+        case 'win32':
+            return tm.path + "/TextureMerger.exe";
+            break;
+    }
+    throw '不支持的平台';
 }
