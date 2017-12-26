@@ -7475,10 +7475,14 @@ var egret;
             }
         };
         NativeDelegate.dirtyTextField = function (textField) {
-            dirtyTextFieldList.push(textField);
+            if (dirtyTextFieldList.indexOf(textField) == -1) {
+                dirtyTextFieldList.push(textField);
+            }
         };
         NativeDelegate.dirtyGraphics = function (graphics) {
-            dirtyGraphicsList.push(graphics);
+            if (dirtyGraphicsList.indexOf(graphics) == -1) {
+                dirtyGraphicsList.push(graphics);
+            }
         };
         var validateDirtyTextField = function () {
             var length = dirtyTextFieldList.length;

@@ -180,11 +180,15 @@ namespace egret.NativeDelegate {
 
 
     export let dirtyTextField = function (textField: TextField): void {
-        dirtyTextFieldList.push(textField);
+        if (dirtyTextFieldList.indexOf(textField) == -1) {
+            dirtyTextFieldList.push(textField);
+        }
     }
 
     export let dirtyGraphics = function (graphics: Graphics): void {
-        dirtyGraphicsList.push(graphics);
+        if (dirtyGraphicsList.indexOf(graphics) == -1) {
+            dirtyGraphicsList.push(graphics);
+        }
     }
 
     let validateDirtyTextField = function (): void {
@@ -536,8 +540,7 @@ namespace egret.NativeDelegate {
             isGraphics = true;
         }
 
-        if(renderCmds == null || renderCmds == undefined)
-        {
+        if (renderCmds == null || renderCmds == undefined) {
             return;
         }
 
