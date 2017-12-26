@@ -45,6 +45,7 @@ namespace egret {
          */
         public $id: number = null;
 
+
         /**
          * @private 
          */
@@ -67,6 +68,12 @@ namespace egret {
          */
         protected paddingRight: number = 0;
         
+        /**
+         * @private
+         * @native Render
+         */
+        public $obj: any;
+
         constructor() {
             super();
             this.$uniforms = {};

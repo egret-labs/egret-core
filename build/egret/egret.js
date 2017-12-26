@@ -19214,6 +19214,7 @@ var egret;
         };
         NativeNode.createFilter = function (filter) {
             filter.$id = filterId;
+            filter.$obj = new Module.WasmNode(filterId, 6 /* FILTER */);
             filterMap[filterId] = filter;
             filterId++;
             displayCmdBuffer[displayCmdBufferIndex++] = 0 /* CREATE_OBJECT */;

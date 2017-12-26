@@ -333,6 +333,7 @@ namespace egret {
 
         public static createFilter(filter: Filter): void {
             filter.$id = filterId;
+            filter.$obj = new Module.WasmNode(filterId, NativeObjectType.FILTER);
             filterMap[filterId] = filter;
             filterId++;
             displayCmdBuffer[displayCmdBufferIndex++] = CommandType.CREATE_OBJECT;

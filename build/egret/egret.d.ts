@@ -2355,6 +2355,11 @@ declare namespace egret {
          * @private
          */
         protected paddingRight: number;
+        /**
+         * @private
+         * @native Render
+         */
+        $obj: any;
         constructor();
         /**
          * @private
