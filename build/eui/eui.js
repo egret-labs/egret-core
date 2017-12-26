@@ -13909,6 +13909,15 @@ var eui;
             g.endFill();
             this.$invalidateContentBounds();
         };
+        /**
+         * @private
+         */
+        Rect.prototype.$onRemoveFromStage = function () {
+            _super.prototype.$onRemoveFromStage.call(this);
+            if (this.$graphics) {
+                this.$graphics.$onRemoveFromStage();
+            }
+        };
         return Rect;
     }(eui.Component));
     eui.Rect = Rect;

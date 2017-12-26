@@ -283,5 +283,15 @@ namespace eui {
             g.endFill();
             this.$invalidateContentBounds();
         }
+
+        /**
+         * @private
+         */
+        public $onRemoveFromStage():void {
+            super.$onRemoveFromStage();
+            if(this.$graphics) {
+                this.$graphics.$onRemoveFromStage();
+            }
+        }
     }
 }
