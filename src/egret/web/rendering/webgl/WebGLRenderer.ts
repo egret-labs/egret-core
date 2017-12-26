@@ -288,7 +288,23 @@ namespace egret.web {
                 // 绘制结果的时候，应用滤镜
                 buffer.$offsetX = offsetX + displayBounds.x;
                 buffer.$offsetY = offsetY + displayBounds.y;
+                let savedMatrix = Matrix.create();
+                let curMatrix = buffer.globalMatrix;
+                savedMatrix.a = curMatrix.a;
+                savedMatrix.b = curMatrix.b;
+                savedMatrix.c = curMatrix.c;
+                savedMatrix.d = curMatrix.d;
+                savedMatrix.tx = curMatrix.tx;
+                savedMatrix.ty = curMatrix.ty;
+                buffer.useOffset();
                 buffer.context.drawTargetWidthFilters(filters, displayBuffer);
+                curMatrix.a = savedMatrix.a;
+                curMatrix.b = savedMatrix.b;
+                curMatrix.c = savedMatrix.c;
+                curMatrix.d = savedMatrix.d;
+                curMatrix.tx = savedMatrix.tx;
+                curMatrix.ty = savedMatrix.ty;
+                Matrix.release(savedMatrix);
                 if (hasBlendMode) {
                     buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
                 }

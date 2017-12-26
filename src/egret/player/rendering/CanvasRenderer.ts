@@ -201,16 +201,16 @@ namespace egret {
                 return drawCalls;
             }
             // 为显示对象创建一个新的buffer
-            let displayBuffer = this.createRenderBuffer(displayBounds.width, displayBounds.height, true);
+            let displayBuffer = this.createRenderBuffer(displayBounds.width - displayBounds.x, displayBounds.height - displayBounds.y, true);
             let displayContext = displayBuffer.context;
             if (displayObject.$mask) {
-                drawCalls += this.drawWithClip(displayObject, context, offsetX, offsetY);
+                drawCalls += this.drawWithClip(displayObject, displayContext, -displayBounds.x, -displayBounds.y);
             }
             else if (displayObject.$scrollRect || displayObject.$maskRect) {
-                drawCalls += this.drawWithScrollRect(displayObject, context, offsetX, offsetY);
+                drawCalls += this.drawWithScrollRect(displayObject, displayContext, -displayBounds.x, -displayBounds.y);
             }
             else {
-                drawCalls += this.drawDisplayObject(displayObject, context, offsetX, offsetY);
+                drawCalls += this.drawDisplayObject(displayObject, displayContext, -displayBounds.x, -displayBounds.y);
             }
 
             //绘制结果到屏幕
