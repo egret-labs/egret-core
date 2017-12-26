@@ -7374,6 +7374,7 @@ var egret;
         var globalToLocalFun;
         var getPixelsFun;
         var activateBufferFun;
+        var syncTextDataFunc;
         var gl;
         var context;
         var rootWebGLBuffer;
@@ -7410,11 +7411,10 @@ var egret;
             var that = this;
             function initImpl2() {
                 Module["__bitmapDataMap"] = bitmapDataMap;
-                Module["__textFieldDataMap"] = textFieldDataMap;
                 Module["__customFilterDataMap"] = customFilterDataMap;
                 getPixelsFun = Module.getPixels;
                 Module.customInit();
-                Module.downloadBuffers(function (buffer, buffer1, buffer2, buffer3) {
+                Module.downloadBuffers(function (buffer3) {
                     egret.NativeNode.init(buffer3, bitmapDataMap, filterMap, customFilterDataMap);
                     updateFun = Module.update;
                     renderFun = Module.render;
@@ -7426,6 +7426,7 @@ var egret;
                     localToGlobalFun = Module.localToGlobal;
                     globalToLocalFun = Module.globalToLocal;
                     activateBufferFun = Module.activateBuffer;
+                    syncTextDataFunc = Module.sendTextFieldData;
                     timeStamp = egret.getTimer();
                     if (_callBackList.length > 0) {
                         var locCallAsyncFunctionList = _callBackList;
@@ -7473,6 +7474,7 @@ var egret;
             if (updateFun) {
                 updateFun();
             }
+            syncDirtyTextField();
         };
         NativeDelegate.dirtyTextField = function (textField) {
             if (dirtyTextFieldList.indexOf(textField) == -1) {
@@ -7483,6 +7485,17 @@ var egret;
             if (dirtyGraphicsList.indexOf(graphics) == -1) {
                 dirtyGraphicsList.push(graphics);
             }
+        };
+        var syncDirtyTextField = function () {
+            if (!syncTextDataFunc) {
+                return;
+            }
+            for (var key in textFieldDataMap) {
+                if (textFieldDataMap[key].length > 0) {
+                    syncTextDataFunc(key, textFieldDataMap[key]);
+                }
+            }
+            textFieldDataMap = {};
         };
         var validateDirtyTextField = function () {
             var length = dirtyTextFieldList.length;
@@ -7607,7 +7620,7 @@ var egret;
             var textFieldId = textField.$nativeNode.id;
             var width = node.width - node.x;
             var height = node.height - node.y;
-            if (width <= 0 || height <= 0 || !width || !height) {
+            if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) {
                 return;
             }
             var canvasScaleX = egret.sys.DisplayList.$canvasScaleX;
@@ -7624,23 +7637,14 @@ var egret;
             height *= canvasScaleY;
             var x1 = node.x * canvasScaleX;
             var y1 = node.y * canvasScaleY;
-            if (!textFieldDataMap[textFieldId]) {
-                var textData = { x: node.x, y: node.y, width: node.width, height: node.height, renderCmds: [], renderParms: "" };
-                textFieldDataMap[textFieldId] = textData;
-            }
             var offsetX = -node.x;
             var offsetY = -node.y;
-            var currTextData = textFieldDataMap[textFieldId];
-            var renderCmds = currTextData.renderCmds;
+            var renderCmds = [];
+            var renderParms = "";
             if (node.dirtyRender) {
                 renderCmds.length = 0;
-                currTextData.renderParms = "";
                 renderCmds.push(1010);
                 renderCmds.push(1);
-                currTextData.x = node.x;
-                currTextData.y = node.y;
-                currTextData.width = node.width;
-                currTextData.height = node.height;
                 // 1011: resize
                 renderCmds.push(1011);
                 renderCmds.push(width);
@@ -7702,7 +7706,7 @@ var egret;
                         renderCmds.push(fontSize);
                         //TODO
                         // if (fontPath != this.currentFont) {
-                        currTextData.renderParms += fontPath;
+                        renderParms += fontPath;
                         // }
                         if (fontStr.indexOf("bold") == -1) {
                             renderCmds.push(0);
@@ -7716,7 +7720,7 @@ var egret;
                         else {
                             renderCmds.push(1);
                         }
-                        currTextData.renderParms += ";";
+                        renderParms += ";";
                         //  setFillStyle
                         var fontColor = 0; //black
                         var fillColor = void 0;
@@ -7755,8 +7759,8 @@ var egret;
                         }
                         renderCmds.push(strokeColorInt);
                         // renderCmds.push(strokeAlpha);
-                        currTextData.renderParms += text;
-                        currTextData.renderParms += ";";
+                        renderParms += text;
+                        renderParms += ";";
                         // 1013: strokeText
                         renderCmds.push(1013);
                         if (stroke) {
@@ -7783,6 +7787,7 @@ var egret;
                     renderCmds.push(-1);
                 }
                 textField.$nativeNode.setDataToTextField(textFieldId, renderCmds);
+                textFieldDataMap[textFieldId] = renderParms;
                 node.dirtyRender = false;
             }
         };
@@ -7793,18 +7798,7 @@ var egret;
             var width = node.width;
             var height = node.height;
             if (graphics) {
-                var graphicsId = graphics.$targetDisplay.$nativeNode.id;
-                if (!graphicsDataMap[graphicsId]) {
-                    var graphicData = { x: node.x, y: node.y, width: node.width, height: node.height, renderCmds: [] };
-                    graphicsDataMap[graphicsId] = graphicData;
-                }
-                var currGraphicData = graphicsDataMap[graphicsId];
-                currGraphicData.x = node.x;
-                currGraphicData.y = node.y;
-                currGraphicData.width = node.width;
-                currGraphicData.height = node.height;
-                currGraphicData.renderCmds.length = 0;
-                renderCmds = currGraphicData.renderCmds;
+                renderCmds = [];
                 isGraphics = true;
             }
             if (renderCmds == null || renderCmds == undefined) {
@@ -7941,7 +7935,6 @@ var egret;
         var bitmapDataMap = {};
         var textFieldDataMap = {};
         var customFilterDataMap = {};
-        var graphicsDataMap = {}; //key: graphicsId or textFieldId(has graphics node)
         var filterMap = egret.createMap();
         var dirtyTextFieldList = [];
         var dirtyGraphicsList = [];

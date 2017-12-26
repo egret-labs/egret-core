@@ -57,6 +57,7 @@ namespace egret.NativeDelegate {
     let globalToLocalFun: Function;
     let getPixelsFun: Function;
     let activateBufferFun: Function;
+    let syncTextDataFunc: Function;
 
     let gl: WebGLRenderingContext;
     let context: web.WebGLRenderContext;
@@ -100,13 +101,12 @@ namespace egret.NativeDelegate {
 
         function initImpl2() {
             Module["__bitmapDataMap"] = bitmapDataMap;
-            Module["__textFieldDataMap"] = textFieldDataMap;
             Module["__customFilterDataMap"] = customFilterDataMap;
             getPixelsFun = Module.getPixels;
 
             Module.customInit();
 
-            Module.downloadBuffers(function (buffer: Float32Array, buffer1: Float32Array, buffer2: Float32Array, buffer3: Float32Array) {
+            Module.downloadBuffers(function (buffer3: Float32Array) {
                 NativeNode.init(buffer3, bitmapDataMap, filterMap, customFilterDataMap);
 
                 updateFun = Module.update;
@@ -119,6 +119,7 @@ namespace egret.NativeDelegate {
                 localToGlobalFun = Module.localToGlobal;
                 globalToLocalFun = Module.globalToLocal;
                 activateBufferFun = Module.activateBuffer;
+                syncTextDataFunc = Module.sendTextFieldData;
                 timeStamp = egret.getTimer();
                 if (_callBackList.length > 0) {
                     let locCallAsyncFunctionList = _callBackList;
@@ -175,6 +176,7 @@ namespace egret.NativeDelegate {
         if (updateFun) {
             updateFun();
         }
+        syncDirtyTextField();
     }
 
 
@@ -189,6 +191,18 @@ namespace egret.NativeDelegate {
         if (dirtyGraphicsList.indexOf(graphics) == -1) {
             dirtyGraphicsList.push(graphics);
         }
+    }
+
+    let syncDirtyTextField = function(): void {
+        if(!syncTextDataFunc) {
+            return;
+        }
+        for(let key in textFieldDataMap) {
+            if(textFieldDataMap[key].length > 0) {
+                syncTextDataFunc(key, textFieldDataMap[key]);
+            }
+        }
+        textFieldDataMap = {};
     }
 
     let validateDirtyTextField = function (): void {
@@ -322,7 +336,7 @@ namespace egret.NativeDelegate {
         let textFieldId = textField.$nativeNode.id;
         let width = node.width - node.x;
         let height = node.height - node.y;
-        if (width <= 0 || height <= 0 || !width || !height) {
+        if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) {
             return;
         }
 
@@ -341,23 +355,14 @@ namespace egret.NativeDelegate {
         let x1 = node.x * canvasScaleX;
         let y1 = node.y * canvasScaleY;
 
-        if (!textFieldDataMap[textFieldId]) {
-            let textData = { x: node.x, y: node.y, width: node.width, height: node.height, renderCmds: [], renderParms: "" };
-            textFieldDataMap[textFieldId] = textData;
-        }
-        let offsetX = -node.x;
+       let offsetX = -node.x;
         let offsetY = -node.y;
-        let currTextData = textFieldDataMap[textFieldId];
-        let renderCmds = currTextData.renderCmds;
+        let renderCmds = [];
+        let renderParms  = "";
         if (node.dirtyRender) {
             renderCmds.length = 0;
-            currTextData.renderParms = "";
             renderCmds.push(1010);
             renderCmds.push(1);
-            currTextData.x = node.x;
-            currTextData.y = node.y;
-            currTextData.width = node.width;
-            currTextData.height = node.height;
             // 1011: resize
             renderCmds.push(1011);
             renderCmds.push(width);
@@ -423,7 +428,7 @@ namespace egret.NativeDelegate {
                     renderCmds.push(fontSize);
                     //TODO
                     // if (fontPath != this.currentFont) {
-                    currTextData.renderParms += fontPath;
+                    renderParms += fontPath;
                     // }
 
                     if (fontStr.indexOf("bold") == -1) {
@@ -439,7 +444,7 @@ namespace egret.NativeDelegate {
                         renderCmds.push(1);
                     }
 
-                    currTextData.renderParms += ";";
+                    renderParms += ";";
 
                     //  setFillStyle
                     let fontColor = 0;  //black
@@ -482,8 +487,8 @@ namespace egret.NativeDelegate {
                     renderCmds.push(strokeColorInt);
                     // renderCmds.push(strokeAlpha);
 
-                    currTextData.renderParms += text;
-                    currTextData.renderParms += ";";
+                    renderParms += text;
+                    renderParms += ";";
 
                     // 1013: strokeText
                     renderCmds.push(1013);
@@ -513,6 +518,7 @@ namespace egret.NativeDelegate {
             }
 
             textField.$nativeNode.setDataToTextField(textFieldId, renderCmds);
+            textFieldDataMap[textFieldId] = renderParms;
             node.dirtyRender = false;
         }
     }
@@ -523,20 +529,7 @@ namespace egret.NativeDelegate {
         let height = node.height;
 
         if (graphics) {
-            let graphicsId = graphics.$targetDisplay.$nativeNode.id;
-            if (!graphicsDataMap[graphicsId]) {
-                let graphicData = { x: node.x, y: node.y, width: node.width, height: node.height, renderCmds: [] };
-                graphicsDataMap[graphicsId] = graphicData;
-            }
-
-            let currGraphicData = graphicsDataMap[graphicsId];
-            currGraphicData.x = node.x;
-            currGraphicData.y = node.y;
-            currGraphicData.width = node.width;
-            currGraphicData.height = node.height;
-            currGraphicData.renderCmds.length = 0;
-
-            renderCmds = currGraphicData.renderCmds;
+            renderCmds = [];
             isGraphics = true;
         }
 
@@ -688,7 +681,6 @@ namespace egret.NativeDelegate {
     let bitmapDataMap = {};
     var textFieldDataMap = {};
     let customFilterDataMap = {};
-    let graphicsDataMap = {};   //key: graphicsId or textFieldId(has graphics node)
 
     let filterMap = egret.createMap<Filter>();
 
