@@ -1,0 +1,32 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "outFile": "../../../build/assetsmanager/assetsmanager.js",
+        "declaration": true,
+        "noImplicitAny": false,
+        "stripInternal": true,
+        "allowUnreachableCode": true,
+        "experimentalDecorators": true,
+        "strictNullChecks": true,
+        "sourceMap": false,
+        "lib": [
+            "es5",
+            "dom",
+            "es2015.promise"
+        ]
+    },
+    "files": [
+        "src/core/FileSystem.ts",
+        "src/core/ResourceConfig.ts",
+        "src/core/ResourceLoader.ts",
+        "src/core/ResourceManager.ts",
+        "src/processor/Processor.ts",
+        "src/shim/ResourceEvent.ts",
+        "src/shim/ResourceItem.ts",
+        "src/DEBUG.ts",
+        "src/shim/native.ts",
+        "src/shim/Resource.ts",
+        "../../../build/egret/egret.d.ts",
+        "../../../build/game/game.d.ts"
+    ]
+}

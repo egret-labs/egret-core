@@ -39,3 +39,4 @@ src/tsc_config_temp.txt
 /tests**
 /target**
 test-script.js
+tsconfig.debug.json

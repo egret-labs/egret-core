@@ -159,21 +159,15 @@ var EgretProjectData = (function () {
         }
         return null;
     };
-    EgretProjectData.prototype.getModulePath2 = function (p) {
+    EgretProjectData.prototype.getModulePath2 = function (m) {
+        var p = m.path;
         if (!p) {
-            var engineVersion = this.egretProperties.engineVersion;
+            var engineVersion = m.version || this.egretProperties.engineVersion;
             if (engineVersion) {
-                var versions = exports.engineData.getEgretToolsInstalledList();
-                for (var _i = 0, versions_1 = versions; _i < versions_1.length; _i++) {
-                    var version_1 = versions_1[_i];
-                    if (version_1.version == engineVersion) {
-                        return version_1.path;
-                    }
-                }
-                console.error("\u627E\u4E0D\u5230\u7248\u672C" + engineVersion);
-                return egret.root;
+                var versions = exports.engineData.getEgretToolsInstalledByVersion(engineVersion);
+                return _path.join(versions, 'build', m.name);
             }
-            return egret.root;
+            return _path.join(egret.root, 'build', m.name);
         }
         var egretLibs = getAppDataEnginesRootPath();
         var keyword = '${EGRET_APP_DATA}';
@@ -187,7 +181,7 @@ var EgretProjectData = (function () {
         return p;
     };
     EgretProjectData.prototype.getModulePath = function (m) {
-        var modulePath = this.getModulePath2(m.path);
+        var modulePath = this.getModulePath2(m);
         modulePath = file.getAbsolutePath(modulePath);
         var name = m.name;
         if (this.isWasmProject()) {
@@ -199,10 +193,11 @@ var EgretProjectData = (function () {
             _path.join(modulePath, "bin", name),
             _path.join(modulePath, "bin"),
             _path.join(modulePath, "build", name),
+            _path.join(modulePath)
         ];
-        if (m.path) {
-            searchPaths.push(modulePath);
-        }
+        // if (m.path) {
+        //     searchPaths.push(modulePath)
+        // }
         if (this.isWasmProject()) {
             searchPaths.unshift(_path.join(modulePath, "bin-wasm"));
             searchPaths.unshift(_path.join(modulePath, "bin-wasm", name));
@@ -281,16 +276,38 @@ var EngineData = (function () {
     function EngineData() {
         this.versions = [];
     }
-    EngineData.prototype.getEgretToolsInstalledList = function () {
-        return this.versions;
+    EngineData.prototype.getEgretToolsInstalledByVersion = function (checkVersion) {
+        for (var _i = 0, _a = this.versions; _i < _a.length; _i++) {
+            var versionInfo = _a[_i];
+            if (versionInfo.version == checkVersion) {
+                return versionInfo.path;
+            }
+        }
+        throw "\u627E\u4E0D\u5230\u6307\u5B9A\u7684 egret \u7248\u672C: " + checkVersion;
+    };
+    EngineData.prototype.getLauncherLibrary = function () {
+        var egretjspath = file.joinPath(getEgretLauncherPath(), "egret.js");
+        var m = require(egretjspath);
+        var selector = m.selector;
+        if (!this.proxy) {
+            this.proxy = new Proxy(selector, {
+                get: function (target, p, receiver) {
+                    var result = target[p];
+                    if (!result) {
+                        throw "\u627E\u4E0D\u5230 Launcher API: " + p + ",\u8BF7\u5347\u7EA7\u6700\u65B0\u7684 Egret Launcher \u4EE5\u89E3\u51B3\u6B64\u95EE\u9898"; //i18n
+                    }
+                    return result.bind(target);
+                }
+            });
+        }
+        return this.proxy;
     };
     EngineData.prototype.init = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var egretjspath, egretjs, data, item, value;
+            var egretjs, data, item, value;
             return __generator(this, function (_a) {
-                egretjspath = file.joinPath(getEgretLauncherPath(), "egret.js");
-                egretjs = require(egretjspath);
-                data = egretjs.selector.getAllEngineVersions();
+                egretjs = this.getLauncherLibrary();
+                data = egretjs.getAllEngineVersions();
                 for (item in data) {
                     value = data[item];
                     this.versions.push({ version: value.version, path: value.root });

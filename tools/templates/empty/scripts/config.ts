@@ -1,10 +1,8 @@
 /// 阅读 api.d.ts 查看文档
 ///<reference path="api.d.ts"/>
 
-
-import { UglifyPlugin, IncrementCompilePlugin, CompilePlugin, ManifestPlugin, ExmlPlugin } from 'built-in';
-
-
+import * as path from 'path';
+import { UglifyPlugin, IncrementCompilePlugin, CompilePlugin, ManifestPlugin, ExmlPlugin, EmitResConfigFilePlugin, TextureMergerPlugin } from 'built-in';
 import { CustomPlugin } from './myplugin';
 
 const config: ResourceManagerConfig = {
@@ -25,6 +23,12 @@ const config: ResourceManagerConfig = {
             return {
                 outputDir,
                 commands: [
+                    new EmitResConfigFilePlugin({
+                        output: "resource/default.res.json",
+                        typeSelector: config.typeSelector,
+                        nameSelector: p => path.basename(p).replace(/\./gi, "_"),
+                        groupSelector: p => "preload"
+                    }),
                     new IncrementCompilePlugin(),
                 ]
             }
@@ -35,6 +39,7 @@ const config: ResourceManagerConfig = {
                 outputDir,
                 commands: [
                     new CustomPlugin(),
+                    new TextureMergerPlugin(),
                     new CompilePlugin({ libraryType: "release" }),
                     new UglifyPlugin([{
                         sources: ["main.js"],

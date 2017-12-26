@@ -428,10 +428,10 @@ function shell(path, args, opt, verbase) {
                 if (verbase) {
                     console.log('Failed: ' + code);
                 }
-                reject({ code: code, stdout: stdout, stderr: stderr });
+                reject({ code: code, stdout: stdout, stderr: stderr, path: path, args: args });
             }
             else {
-                reslove({ code: code, stdout: stdout, stderr: stderr });
+                reslove({ code: code, stdout: stdout, stderr: stderr, path: path, args: args });
             }
         });
     });

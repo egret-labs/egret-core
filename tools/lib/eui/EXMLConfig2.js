@@ -29,7 +29,6 @@ var EXMLConfig = (function () {
          */
         //public componentDic:any = {};
         this.config = {};
-        this.idMap = {};
         var configStr = file.read(path.join(egret.root, "tools", "lib", "eui", "default.json"));
         configStr = configStr.replace(/^\uFEFF/, '');
         var configObj = JSON.parse(configStr);
@@ -78,12 +77,6 @@ var EXMLConfig = (function () {
         for (var className in this.config) {
             var component = this.config[className];
             var dotIndex = className.lastIndexOf(".");
-            //解析id
-            if (dotIndex !== -1) {
-                var id = className.substring(dotIndex + 1);
-                // console.log(className,"[id]:"+id);
-                this.idMap[id] = className;
-            }
             //查找并设置默认属性
             if (!component.default) {
                 this._findProp(component);
@@ -150,7 +143,7 @@ var EXMLConfig = (function () {
         if (ns == exports.NS_W) {
         }
         else if (!ns || ns == exports.NS_S) {
-            name = this.idMap[id];
+            name = "eui." + id;
         }
         else {
             name = ns.substring(0, ns.length - 1) + id;

@@ -384,7 +384,10 @@ export function shell(path: string, args: string[], opt?: cp.ExecOptions, verbas
             console.log(str);
         }
     };
-    return new Promise<{ code: number, stdout: string, stderr: string }>((reslove, reject) => {
+
+    type Result = { code: number, stdout: string, stderr: string, path: string, args: any[] };
+
+    return new Promise<Result>((reslove, reject) => {
         // path = "\"" + path + "\"";
         // var shell = cp.spawn(path + " " + args.join(" "));
         var shell = cp.spawn(path, args);
@@ -398,10 +401,10 @@ export function shell(path: string, args: string[], opt?: cp.ExecOptions, verbas
                 if (verbase) {
                     console.log('Failed: ' + code);
                 }
-                reject({ code, stdout, stderr });
+                reject({ code, stdout, stderr, path, args });
             }
             else {
-                reslove({ code, stdout, stderr });
+                reslove({ code, stdout, stderr, path, args });
             }
         });
     });

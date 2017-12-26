@@ -99,13 +99,14 @@ declare module egret {
     }
 
     export type EgretPropertyModule = {
-        "name": string,
-        "path"?: string;
+        name: string,
+        version?: string,
+        path?: string;
     }
 
     export type VersionInfo = {
-        "version": string,
-        "path": string;
+        version: string,
+        path: string;
     }
 
     export type EgretProperty = {

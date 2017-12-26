@@ -1549,8 +1549,8 @@ var eui;
             /**
              * @private
              */
-            UIComponentImpl.prototype.$invalidateMatrix = function () {
-                this.$super.$invalidateMatrix.call(this);
+            UIComponentImpl.prototype.$updateUseTransform = function () {
+                this.$super.$updateUseTransform.call(this);
                 this.invalidateParentLayout();
             };
             /**

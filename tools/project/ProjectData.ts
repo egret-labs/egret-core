@@ -167,20 +167,16 @@ class EgretProjectData {
         return null;
     }
 
-    private getModulePath2(p: string) {
+    private getModulePath2(m: egret.EgretPropertyModule) {
+        let p = m.path;
         if (!p) {
-            const engineVersion = this.egretProperties.engineVersion
+
+            const engineVersion = m.version || this.egretProperties.engineVersion
             if (engineVersion) {
-                const versions = engineData.getEgretToolsInstalledList();
-                for (let version of versions) {
-                    if (version.version == engineVersion) {
-                        return version.path;
-                    }
-                }
-                console.error(`找不到版本${engineVersion}`);
-                return egret.root;
+                const versions = engineData.getEgretToolsInstalledByVersion(engineVersion);
+                return _path.join(versions, 'build', m.name);
             }
-            return egret.root;
+            return _path.join(egret.root, 'build', m.name);
         }
         let egretLibs = getAppDataEnginesRootPath();
         let keyword = '${EGRET_APP_DATA}';
@@ -196,7 +192,7 @@ class EgretProjectData {
     }
 
     private getModulePath(m: egret.EgretPropertyModule) {
-        let modulePath = this.getModulePath2(m.path)
+        let modulePath = this.getModulePath2(m)
         modulePath = file.getAbsolutePath(modulePath);
         let name = m.name;
         if (this.isWasmProject()) {
@@ -208,10 +204,11 @@ class EgretProjectData {
             _path.join(modulePath, "bin", name),
             _path.join(modulePath, "bin"),
             _path.join(modulePath, "build", name),
+            _path.join(modulePath)
         ];
-        if (m.path) {
-            searchPaths.push(modulePath)
-        }
+        // if (m.path) {
+        //     searchPaths.push(modulePath)
+        // }
         if (this.isWasmProject()) {
             searchPaths.unshift(_path.join(modulePath, "bin-wasm"));
             searchPaths.unshift(_path.join(modulePath, "bin-wasm", name));
@@ -288,19 +285,53 @@ class EgretProjectData {
 }
 
 
+type LauncherAPI = {
+
+
+    getAllEngineVersions(): any
+
+    getInstalledTools(): { name: string, version: string, path: string }[];
+}
+
 class EngineData {
 
     private versions: egret.VersionInfo[] = [];
 
-    getEgretToolsInstalledList() {
-        return this.versions;
+
+    private proxy: LauncherAPI;
+
+    getEgretToolsInstalledByVersion(checkVersion: string) {
+        for (let versionInfo of this.versions) {
+            if (versionInfo.version == checkVersion) {
+                return versionInfo.path;
+            }
+        }
+        throw `找不到指定的 egret 版本: ${checkVersion}`;
+    }
+
+
+    getLauncherLibrary(): LauncherAPI {
+        const egretjspath = file.joinPath(getEgretLauncherPath(), "egret.js");
+        const m = require(egretjspath);
+        const selector: LauncherAPI = m.selector;
+        if (!this.proxy) {
+            this.proxy = new Proxy(selector, {
+                get: (target, p, receiver) => {
+                    const result = target[p];
+                    if (!result) {
+                        throw `找不到 Launcher API: ${p},请升级最新的 Egret Launcher 以解决此问题`//i18n
+                    }
+                    return result.bind(target)
+                }
+            });
+        }
+        return this.proxy;
     }
 
     async init() {
 
-        const egretjspath = file.joinPath(getEgretLauncherPath(), "egret.js");
-        const egretjs = require(egretjspath)
-        const data = egretjs.selector.getAllEngineVersions();
+        const egretjs = this.getLauncherLibrary();
+        const data = egretjs.getAllEngineVersions();
         for (let item in data) {
             const value = data[item];
             this.versions.push({ version: value.version, path: value.root })

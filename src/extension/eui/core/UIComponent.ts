@@ -1384,8 +1384,8 @@ namespace eui.sys {
         /**
          * @private
          */
-        $invalidateMatrix(): void {
-            this.$super.$invalidateMatrix.call(this);
+        protected $updateUseTransform(): void {
+            this.$super.$updateUseTransform.call(this);
             this.invalidateParentLayout();
         }
         /**
