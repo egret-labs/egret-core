@@ -1541,7 +1541,6 @@ declare namespace dragonBones {
          */
         getSkin(name: string): SkinData | null;
         /**
-         * @internal
          * @private
          */
         getMesh(skinName: string, slotName: string, meshName: string): MeshDisplayData | null;
@@ -1910,8 +1909,8 @@ declare namespace dragonBones {
         type: DisplayType;
         name: string;
         path: string;
-        parent: SkinData;
         readonly transform: Transform;
+        parent: SkinData;
         protected _onClear(): void;
     }
     /**
@@ -4312,7 +4311,12 @@ declare namespace dragonBones {
         /**
          * @private
          */
-        protected _getDefaultRawDisplayData(): DisplayData | null;
+        protected _isMeshBonesUpdate(): boolean;
+        /**
+         * Support default skin data.
+         * @private
+         */
+        protected _getDefaultRawDisplayData(displayIndex: number): DisplayData | null;
         /**
          * @private
          */
@@ -4325,10 +4329,6 @@ declare namespace dragonBones {
          * @private
          */
         protected _updateGlobalTransformMatrix(isCache: boolean): void;
-        /**
-         * @private
-         */
-        protected _isMeshBonesUpdate(): boolean;
         /**
          * @inheritDoc
          */
@@ -5880,7 +5880,10 @@ declare namespace dragonBones {
         leftWeight: number;
         layerWeight: number;
         blendWeight: number;
-        update(weight: number, layer: number): number;
+        /**
+         * -1: First blending, 0: No blending, 1: Blending.
+         */
+        update(weight: number, p_layer: number): number;
         clear(): void;
     }
 }
@@ -7263,6 +7266,7 @@ declare namespace dragonBones {
         clear(disposeData?: boolean): void;
         /**
          * - Create a armature from cached DragonBonesData instances and TextureAtlasData instances.
+         * Note that when the created armature that is no longer in use, you need to explicitly dispose {@link #dragonBones.Armature#dispose()}.
          * @param armatureName - The armature data name.
          * @param dragonBonesName - The cached name of the DragonBonesData instance. (If not set, all DragonBonesData instances are retrieved, and when multiple DragonBonesData instances contain a the same name armature data, it may not be possible to accurately create a specific armature)
          * @param skinName - The skin name, you can set a different ArmatureData name to share it's skin data. (If not set, use the default skin data)
@@ -7274,12 +7278,12 @@ declare namespace dragonBones {
          * </pre>
          * @see dragonBones.DragonBonesData
          * @see dragonBones.ArmatureData
-         * @see dragonBones.Armature
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
          * - 通过缓存的 DragonBonesData 实例和 TextureAtlasData 实例创建一个骨架。
+         * 注意，创建的骨架不再使用时，需要显式释放 {@link #dragonBones.Armature#dispose()}。
          * @param armatureName - 骨架数据名称。
          * @param dragonBonesName - DragonBonesData 实例的缓存名称。 （如果未设置，将检索所有的 DragonBonesData 实例，当多个 DragonBonesData 实例中包含同名的骨架数据时，可能无法准确的创建出特定的骨架）
          * @param skinName - 皮肤名称，可以设置一个其他骨架数据名称来共享其皮肤数据（如果未设置，则使用默认的皮肤数据）。
@@ -7291,7 +7295,6 @@ declare namespace dragonBones {
          * </pre>
          * @see dragonBones.DragonBonesData
          * @see dragonBones.ArmatureData
-         * @see dragonBones.Armature
          * @version DragonBones 3.0
          * @language zh_CN
          */
@@ -8269,11 +8272,14 @@ declare namespace dragonBones {
         protected _buildSlot(dataPackage: BuildArmaturePackage, slotData: SlotData, displays: Array<DisplayData | null> | null, armature: Armature): Slot;
         /**
          * - Create a armature from cached DragonBonesData instances and TextureAtlasData instances, then use the {@link #clock} to update it.
+         * Note that when the created armature proxy that is no longer in use, you need to explicitly dispose {@link #dragonBones.IArmatureProxy#dispose()}.
          * The difference is that the armature created by {@link #buildArmature} is not WorldClock instance update.
          * @param armatureName - The armature data name.
          * @param dragonBonesName - The cached name of the DragonBonesData instance. (If not set, all DragonBonesData instances are retrieved, and when multiple DragonBonesData instances contain a the same name armature data, it may not be possible to accurately create a specific armature)
          * @param skinName - The skin name, you can set a different ArmatureData name to share it's skin data. (If not set, use the default skin data)
          * @returns The armature display container.
+         * @see dragonBones.IArmatureProxy
+         * @see dragonBones.BaseFactory#buildArmature
          * @version DragonBones 4.5
          * @example
          * <pre>
@@ -8284,10 +8290,13 @@ declare namespace dragonBones {
         /**
          * - 通过缓存的 DragonBonesData 实例和 TextureAtlasData 实例创建一个骨架，并用 {@link #clock} 更新该骨架。
          * 区别在于由 {@link #buildArmature} 创建的骨架没有 WorldClock 实例驱动。
+         * 注意，创建的骨架代理不再使用时，需要显式释放 {@link #dragonBones.IArmatureProxy#dispose()}。
          * @param armatureName - 骨架数据名称。
          * @param dragonBonesName - DragonBonesData 实例的缓存名称。 （如果未设置，将检索所有的 DragonBonesData 实例，当多个 DragonBonesData 实例中包含同名的骨架数据时，可能无法准确的创建出特定的骨架）
          * @param skinName - 皮肤名称，可以设置一个其他骨架数据名称来共享其皮肤数据。（如果未设置，则使用默认的皮肤数据）
          * @returns 骨架的显示容器。
+         * @see dragonBones.IArmatureProxy
+         * @see dragonBones.BaseFactory#buildArmature
          * @version DragonBones 4.5
          * @example
          * <pre>

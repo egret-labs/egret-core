@@ -1676,7 +1676,6 @@ var dragonBones;
             return name in this.skins ? this.skins[name] : null;
         };
         /**
-         * @internal
          * @private
          */
         ArmatureData.prototype.getMesh = function (skinName, slotName, meshName) {
@@ -5822,7 +5821,7 @@ var dragonBones;
                     eachDisplay.dispose();
                 }
                 else {
-                    this._disposeDisplay(eachDisplay, false);
+                    this._disposeDisplay(eachDisplay, true);
                 }
             }
             if (this._meshDisplay !== null && this._meshDisplay !== this._rawDisplay) {
@@ -5868,12 +5867,25 @@ var dragonBones;
         /**
          * @private
          */
-        Slot.prototype._getDefaultRawDisplayData = function () {
-            var defaultSkin = this._armature.armatureData.defaultSkin;
+        Slot.prototype._isMeshBonesUpdate = function () {
+            for (var _i = 0, _a = this._meshBones; _i < _a.length; _i++) {
+                var bone = _a[_i];
+                if (bone !== null && bone._childrenTransformDirty) {
+                    return true;
+                }
+            }
+            return false;
+        };
+        /**
+         * Support default skin data.
+         * @private
+         */
+        Slot.prototype._getDefaultRawDisplayData = function (displayIndex) {
+            var defaultSkin = this._armature._armatureData.defaultSkin;
             if (defaultSkin !== null) {
                 var defaultRawDisplayDatas = defaultSkin.getDisplays(this._slotData.name);
                 if (defaultRawDisplayDatas !== null) {
-                    return this._displayIndex < defaultRawDisplayDatas.length ? defaultRawDisplayDatas[this._displayIndex] : null;
+                    return displayIndex < defaultRawDisplayDatas.length ? defaultRawDisplayDatas[displayIndex] : null;
                 }
             }
             return null;
@@ -5889,9 +5901,9 @@ var dragonBones;
             if (this._displayIndex >= 0) {
                 if (this._rawDisplayDatas !== null) {
                     rawDisplayData = this._displayIndex < this._rawDisplayDatas.length ? this._rawDisplayDatas[this._displayIndex] : null;
-                    if (rawDisplayData === null) {
-                        rawDisplayData = this._getDefaultRawDisplayData();
-                    }
+                }
+                if (rawDisplayData === null) {
+                    rawDisplayData = this._getDefaultRawDisplayData(this._displayIndex);
                 }
                 if (this._displayIndex < this._displayDatas.length) {
                     this._displayData = this._displayDatas[this._displayIndex];
@@ -5960,6 +5972,9 @@ var dragonBones;
                     if (frame !== null) {
                         this._pivotX += frame.x * scale;
                         this._pivotY += frame.y * scale;
+                    }
+                    if (!dragonBones.DragonBones.yDown) {
+                        this._pivotY -= (this._textureData.rotated ? this._textureData.region.width : this._textureData.region.height) * scale;
                     }
                 }
                 else {
@@ -6124,15 +6139,13 @@ var dragonBones;
                         if (this._displayData !== null && this._displayData.type === 1 /* Armature */) {
                             actions = this._displayData.actions;
                         }
-                        else {
-                            if (this._displayIndex >= 0 && this._rawDisplayDatas !== null) {
-                                var rawDisplayData = this._displayIndex < this._rawDisplayDatas.length ? this._rawDisplayDatas[this._displayIndex] : null;
-                                if (rawDisplayData === null) {
-                                    rawDisplayData = this._getDefaultRawDisplayData();
-                                }
-                                if (rawDisplayData !== null && rawDisplayData.type === 1 /* Armature */) {
-                                    actions = rawDisplayData.actions;
-                                }
+                        else if (this._displayIndex >= 0 && this._rawDisplayDatas !== null) {
+                            var rawDisplayData = this._displayIndex < this._rawDisplayDatas.length ? this._rawDisplayDatas[this._displayIndex] : null;
+                            if (rawDisplayData === null) {
+                                rawDisplayData = this._getDefaultRawDisplayData(this._displayIndex);
+                            }
+                            if (rawDisplayData !== null && rawDisplayData.type === 1 /* Armature */) {
+                                actions = rawDisplayData.actions;
                             }
                         }
                         if (actions !== null && actions.length > 0) {
@@ -6161,18 +6174,6 @@ var dragonBones;
             else {
                 this._globalDirty = true;
             }
-        };
-        /**
-         * @private
-         */
-        Slot.prototype._isMeshBonesUpdate = function () {
-            for (var _i = 0, _a = this._meshBones; _i < _a.length; _i++) {
-                var bone = _a[_i];
-                if (bone !== null && bone._childrenTransformDirty) {
-                    return true;
-                }
-            }
-            return false;
         };
         /**
          * @inheritDoc
@@ -6299,7 +6300,7 @@ var dragonBones;
             if (this._displayDirty) {
                 this._displayDirty = false;
                 this._updateDisplay();
-                // TODO remove slot
+                // TODO remove slot offset.
                 if (this._transformDirty) {
                     if (this.origin !== null) {
                         this.global.copyFrom(this.origin).add(this.offset).toMatrix(this._localMatrix);
@@ -6695,7 +6696,7 @@ var dragonBones;
                     for (var i = 0, l = this._displayDatas.length; i < l; ++i) {
                         var rawDisplayData = this._rawDisplayDatas[i];
                         if (rawDisplayData === null) {
-                            rawDisplayData = this._getDefaultRawDisplayData();
+                            rawDisplayData = this._getDefaultRawDisplayData(i);
                         }
                         this._displayDatas[i] = rawDisplayData;
                     }
@@ -9358,16 +9359,19 @@ var dragonBones;
     var BlendState = /** @class */ (function () {
         function BlendState() {
         }
-        BlendState.prototype.update = function (weight, layer) {
+        /**
+         * -1: First blending, 0: No blending, 1: Blending.
+         */
+        BlendState.prototype.update = function (weight, p_layer) {
             if (this.dirty) {
                 if (this.leftWeight > 0.0) {
-                    if (this.layer !== layer) {
+                    if (this.layer !== p_layer) {
                         if (this.layerWeight >= this.leftWeight) {
                             this.leftWeight = 0.0;
                             return 0;
                         }
                         else {
-                            this.layer = layer;
+                            this.layer = p_layer;
                             this.leftWeight -= this.layerWeight;
                             this.layerWeight = 0.0;
                         }
@@ -9379,14 +9383,14 @@ var dragonBones;
                 weight *= this.leftWeight;
                 this.layerWeight += weight;
                 this.blendWeight = weight;
-                return 1;
+                return 2;
             }
             this.dirty = true;
-            this.layer = layer;
+            this.layer = p_layer;
             this.layerWeight = weight;
             this.leftWeight = 1.0;
             this.blendWeight = weight;
-            return -1;
+            return 1;
         };
         BlendState.prototype.clear = function () {
             this.dirty = false;
@@ -9684,7 +9688,7 @@ var dragonBones;
             var blendWeight = this.bone._blendState.blendWeight;
             var animationPose = this.bone.animationPose;
             var result = this.bonePose.result;
-            if (state > 0) {
+            if (state === 2) {
                 animationPose.x += result.x * blendWeight;
                 animationPose.y += result.y * blendWeight;
                 animationPose.rotation += result.rotation * blendWeight;
@@ -9692,7 +9696,7 @@ var dragonBones;
                 animationPose.scaleX += (result.scaleX - 1.0) * blendWeight;
                 animationPose.scaleY += (result.scaleY - 1.0) * blendWeight;
             }
-            else if (blendWeight !== 1.00) {
+            else if (blendWeight !== 1.0) {
                 animationPose.x = result.x * blendWeight;
                 animationPose.y = result.y * blendWeight;
                 animationPose.rotation = result.rotation * blendWeight;
@@ -10399,7 +10403,7 @@ var dragonBones;
                 else {
                     value = this._frameFloatArray[this._frameFloatOffset + i - this._valueCount];
                 }
-                if (state > 0) {
+                if (state === 2) {
                     result[i] += value * blendWeight;
                 }
                 else if (blendWeight !== 1.0) {
@@ -10828,7 +10832,7 @@ var dragonBones;
         AnimationTimelineState.prototype.blend = function (state) {
             var animationState = this.animationState;
             var blendWeight = animationState._blendState.blendWeight;
-            if (state > 0) {
+            if (state === 2) {
                 animationState.weight += this._floats[5] * blendWeight;
                 animationState.currentTime += this._floats[2] * blendWeight;
             }
@@ -11857,14 +11861,14 @@ var dragonBones;
                     meshDisplay.path = path.length > 0 ? path : name;
                     if (dragonBones.DataParser.SHARE in rawData) {
                         this._cacheRawMeshes.push(rawData);
-                        this._cacheRawMeshes.push(meshDisplay);
+                        this._cacheMeshes.push(meshDisplay);
                     }
                     else {
                         this._parseMesh(rawData, meshDisplay);
                     }
                     if ((dragonBones.DataParser.GLUE_WEIGHTS in rawData) && (dragonBones.DataParser.GLUE_MESHES in rawData)) {
                         this._cacheRawMeshes.push(rawData);
-                        this._cacheRawMeshes.push(meshDisplay);
+                        this._cacheMeshes.push(meshDisplay);
                     }
                     break;
                 case 3 /* BoundingBox */:
@@ -14064,6 +14068,7 @@ var dragonBones;
         };
         /**
          * - Create a armature from cached DragonBonesData instances and TextureAtlasData instances.
+         * Note that when the created armature that is no longer in use, you need to explicitly dispose {@link #dragonBones.Armature#dispose()}.
          * @param armatureName - The armature data name.
          * @param dragonBonesName - The cached name of the DragonBonesData instance. (If not set, all DragonBonesData instances are retrieved, and when multiple DragonBonesData instances contain a the same name armature data, it may not be possible to accurately create a specific armature)
          * @param skinName - The skin name, you can set a different ArmatureData name to share it's skin data. (If not set, use the default skin data)
@@ -14075,12 +14080,12 @@ var dragonBones;
          * </pre>
          * @see dragonBones.DragonBonesData
          * @see dragonBones.ArmatureData
-         * @see dragonBones.Armature
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
          * - 通过缓存的 DragonBonesData 实例和 TextureAtlasData 实例创建一个骨架。
+         * 注意，创建的骨架不再使用时，需要显式释放 {@link #dragonBones.Armature#dispose()}。
          * @param armatureName - 骨架数据名称。
          * @param dragonBonesName - DragonBonesData 实例的缓存名称。 （如果未设置，将检索所有的 DragonBonesData 实例，当多个 DragonBonesData 实例中包含同名的骨架数据时，可能无法准确的创建出特定的骨架）
          * @param skinName - 皮肤名称，可以设置一个其他骨架数据名称来共享其皮肤数据（如果未设置，则使用默认的皮肤数据）。
@@ -14092,7 +14097,6 @@ var dragonBones;
          * </pre>
          * @see dragonBones.DragonBonesData
          * @see dragonBones.ArmatureData
-         * @see dragonBones.Armature
          * @version DragonBones 3.0
          * @language zh_CN
          */
@@ -15655,7 +15659,7 @@ var dragonBones;
             this._renderDisplay = (this._display !== null ? this._display : this._rawDisplay);
             if (dragonBones.EgretFactory._isV5) {
                 if (this._renderDisplay === this._rawDisplay && !(this._renderDisplay.$renderNode instanceof egret.sys.BitmapNode)) {
-                    this._renderDisplay.$renderNode = new egret.sys.BitmapNode();
+                    this._renderDisplay.$renderNode = new egret.sys.BitmapNode(); // 默认是 sys.NormalBitmapNode 没有矩阵，需要替换成 egret.sys.BitmapNode。
                 }
             }
             if (this._armatureDisplay._batchEnabled) {
@@ -16265,11 +16269,14 @@ var dragonBones;
         };
         /**
          * - Create a armature from cached DragonBonesData instances and TextureAtlasData instances, then use the {@link #clock} to update it.
+         * Note that when the created armature proxy that is no longer in use, you need to explicitly dispose {@link #dragonBones.IArmatureProxy#dispose()}.
          * The difference is that the armature created by {@link #buildArmature} is not WorldClock instance update.
          * @param armatureName - The armature data name.
          * @param dragonBonesName - The cached name of the DragonBonesData instance. (If not set, all DragonBonesData instances are retrieved, and when multiple DragonBonesData instances contain a the same name armature data, it may not be possible to accurately create a specific armature)
          * @param skinName - The skin name, you can set a different ArmatureData name to share it's skin data. (If not set, use the default skin data)
          * @returns The armature display container.
+         * @see dragonBones.IArmatureProxy
+         * @see dragonBones.BaseFactory#buildArmature
          * @version DragonBones 4.5
          * @example
          * <pre>
@@ -16280,10 +16287,13 @@ var dragonBones;
         /**
          * - 通过缓存的 DragonBonesData 实例和 TextureAtlasData 实例创建一个骨架，并用 {@link #clock} 更新该骨架。
          * 区别在于由 {@link #buildArmature} 创建的骨架没有 WorldClock 实例驱动。
+         * 注意，创建的骨架代理不再使用时，需要显式释放 {@link #dragonBones.IArmatureProxy#dispose()}。
          * @param armatureName - 骨架数据名称。
          * @param dragonBonesName - DragonBonesData 实例的缓存名称。 （如果未设置，将检索所有的 DragonBonesData 实例，当多个 DragonBonesData 实例中包含同名的骨架数据时，可能无法准确的创建出特定的骨架）
          * @param skinName - 皮肤名称，可以设置一个其他骨架数据名称来共享其皮肤数据。（如果未设置，则使用默认的皮肤数据）
          * @returns 骨架的显示容器。
+         * @see dragonBones.IArmatureProxy
+         * @see dragonBones.BaseFactory#buildArmature
          * @version DragonBones 4.5
          * @example
          * <pre>
