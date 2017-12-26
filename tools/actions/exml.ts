@@ -177,32 +177,32 @@ export function generateExmlDTS(exmls: exml.EXMLFile[]) {
     var dts = "";
     for (let source of sourceList) {
         //解析exml并返回className和extendName继承关系
-        var ret = exml.getDtsInfoFromExml(source);
+        var result = exml.getDtsInfoFromExml(source);
         //去掉重复定义
-        if (classDefinations[ret.className]) {
+        if (classDefinations[result.className]) {
             continue;
         } else {
-            classDefinations[ret.className] = ret.extendName;
+            classDefinations[result.className] = result.extendName;
         }
         //var className = p.substring(srcPath.length, p.length - 5);
-        var className = ret.className;
+        var className = result.className;
         //className = className.split("/").join(".");
         if (className != "eui.Skin") {
             var index = className.lastIndexOf(".");
             if (index == -1) {
-                if (ret.extendName == "") {
+                if (result.extendName == "") {
                     dts += "declare class " + className + "{\n}\n";
                 } else {
-                    dts += "declare class " + className + " extends " + ret.extendName + "{\n}\n";
+                    dts += "declare class " + className + " extends " + result.extendName + "{\n}\n";
                 }
             }
             else {
                 var moduleName = className.substring(0, index);
                 className = className.substring(index + 1);
-                if (ret.extendName == "") {
+                if (result.extendName == "") {
                     dts += "declare module " + moduleName + "{\n\tclass " + className + "{\n\t}\n}\n";
                 } else {
-                    dts += "declare module " + moduleName + "{\n\tclass " + className + " extends " + ret.extendName + "{\n\t}\n}\n";
+                    dts += "declare module " + moduleName + "{\n\tclass " + className + " extends " + result.extendName + "{\n\t}\n}\n";
                 }
             }
         }
