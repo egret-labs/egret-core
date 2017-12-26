@@ -182,7 +182,7 @@ namespace egret.web {
 
             this.surface = createCanvas(width, height);
 
-            if(__global.nativeRender) {
+            if(egret.nativeRender) {
                 return;
             }
 

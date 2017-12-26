@@ -78,7 +78,7 @@ namespace egret.web {
             // 获取webglRenderContext
             this.context = WebGLRenderContext.getInstance(width, height);
 
-            if (__global.nativeRender) {
+            if (egret.nativeRender) {
                 this.$width = width;
                 this.$height = height;
                 this.surface = this.context.surface;
@@ -186,7 +186,7 @@ namespace egret.web {
          * @readOnly
          */
         public get width(): number {
-            if (__global.nativeRender) {
+            if (egret.nativeRender) {
                 return this.$width;
             }
             else {
@@ -199,7 +199,7 @@ namespace egret.web {
          * @readOnly
          */
         public get height(): number {
-            if (__global.nativeRender) {
+            if (egret.nativeRender) {
                 return this.$height;
             }
             else {
@@ -216,7 +216,7 @@ namespace egret.web {
         public resize(width: number, height: number, useMaxSize?: boolean): void {
             width = width || 1;
             height = height || 1;
-            if (__global.nativeRender) {
+            if (egret.nativeRender) {
                 this.$width = width;
                 this.$height = height;
                 return;

@@ -184,7 +184,7 @@ namespace egret {
                     maskedObject.$cacheDirty = true;
                     maskedObject.$cacheDirtyUp();
                 }
-                if (__global.nativeRender) {
+                if (egret.nativeRender) {
                     this.setBitmapDataToWasm(null);
                 }
                 return true;
@@ -244,7 +244,7 @@ namespace egret {
         public $refreshImageData(): void {
             let texture: Texture = this.$texture;
             if (texture) {
-                if (__global.nativeRender) {
+                if (egret.nativeRender) {
                     this.setBitmapDataToWasm(texture);
                 }
                 this.setImageData(texture.$bitmapData,
@@ -255,7 +255,7 @@ namespace egret {
                     texture.$sourceWidth, texture.$sourceHeight);
             }
             else {
-                if (__global.nativeRender) {
+                if (egret.nativeRender) {
                     this.setBitmapDataToWasm(null);
                 }
             }
@@ -313,7 +313,7 @@ namespace egret {
             let self = this;
             self.$scale9Grid = value;
             self.$renderDirty = true;
-            if (__global.nativeRender) {
+            if (egret.nativeRender) {
                 if (value) {
                     self.$nativeNode.setScale9Grid(value.x, value.y, value.width, value.height);
                 } else {
@@ -435,7 +435,7 @@ namespace egret {
             }
             self.$explicitBitmapWidth = value;
             self.$renderDirty = true;
-            if (__global.nativeRender) {
+            if (egret.nativeRender) {
                 self.$nativeNode.setWidth(value);
             }
             else {
@@ -465,7 +465,7 @@ namespace egret {
             }
             self.$explicitBitmapHeight = value;
             self.$renderDirty = true;
-            if (__global.nativeRender) {
+            if (egret.nativeRender) {
                 self.$nativeNode.setHeight(value);
             }
             else {

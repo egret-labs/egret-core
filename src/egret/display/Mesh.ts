@@ -92,7 +92,7 @@ namespace egret {
             let self = this;
             self._verticesDirty = true;
             self.$renderDirty = true;
-            if (__global.nativeRender) {
+            if (egret.nativeRender) {
                 let renderNode = <sys.MeshNode>(this.$renderNode);
                 this.$nativeNode.setDataToMesh(renderNode.vertices, renderNode.indices, renderNode.uvs);
             }

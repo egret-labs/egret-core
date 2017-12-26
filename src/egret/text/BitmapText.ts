@@ -57,7 +57,7 @@ namespace egret {
          */
         public constructor() {
             super();
-            if (!__global.nativeRender) {
+            if (!egret.nativeRender) {
                 this.$renderNode = new sys.BitmapNode();
             }
         }
@@ -394,7 +394,7 @@ namespace egret {
             let textLinesWidth: number[] = this.$textLinesWidth;
             let bitmapFont: BitmapFont = self.$font;
             let node
-            if (!__global.nativeRender) {
+            if (!egret.nativeRender) {
                 node = <sys.BitmapNode>this.$renderNode;
                 if (bitmapFont.$texture) {
                     node.image = bitmapFont.$texture.$bitmapData;
@@ -441,7 +441,7 @@ namespace egret {
                     }
                     let bitmapWidth = texture.$bitmapWidth;
                     let bitmapHeight = texture.$bitmapHeight;
-                    if (__global.nativeRender) {
+                    if (egret.nativeRender) {
                         drawArr.push(texture.$bitmapX, texture.$bitmapY,
                             bitmapWidth, bitmapHeight, xPos + texture.$offsetX, yPos + texture.$offsetY,
                             texture.$getScaleBitmapWidth(), texture.$getScaleBitmapHeight(),
@@ -458,7 +458,7 @@ namespace egret {
                 }
                 yPos += lineHeight + self.$lineSpacing;
             }
-            if (__global.nativeRender) {
+            if (egret.nativeRender) {
                 self.$nativeNode.setDataToBitmapNode(self.$nativeNode.id, bitmapFont.$texture, drawArr);
                 let bounds = self.$getContentBounds();
                 self.$nativeNode.setWidth(bounds.width);

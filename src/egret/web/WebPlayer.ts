@@ -62,7 +62,7 @@ namespace egret.web {
             let webInput = new HTMLInput();
 
             if (option.showFPS || option.showLog) {
-                if (!__global.nativeRender) {
+                if (!egret.nativeRender) {
                     player.displayFPS(option.showFPS, option.showLog, option.logFilter, option.fpsStyles);
                 }
             }
@@ -239,7 +239,7 @@ namespace egret.web {
             this.webInput.$updateSize();
             this.player.updateStageSize(stageWidth, stageHeight);//不要在这个方法后面修改属性
             // todo
-            if(__global.nativeRender) {
+            if(egret.nativeRender) {
                 canvas.width = stageWidth * canvasScaleX;
                 canvas.height = stageHeight * canvasScaleY;
             }

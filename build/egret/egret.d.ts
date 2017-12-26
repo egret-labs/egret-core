@@ -2371,61 +2371,16 @@ declare namespace egret {
 }
 declare namespace egret {
     /**
-     * The Sprite class is a basic display list building block: a display list node that can contain children.
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/display/Sprite.ts
-     * @language en_US
+     * @private
      */
-    /**
-     * Sprite 类是基本显示列表构造块：一个可包含子项的显示列表节点。
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/display/Sprite.ts
-     * @language zh_CN
-     */
-    class Sprite extends DisplayObjectContainer {
-        /**
-         * Creates a new Sprite instance.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 实例化一个容器
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        constructor();
-        protected createNativeNode(): void;
-        /**
-         * @private
-         */
-        $graphics: Graphics;
-        /**
-         * Specifies the Graphics object belonging to this Shape object, where vector drawing commands can occur.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 获取 Shape 中的 Graphics 对象。可通过此对象执行矢量绘图命令。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        readonly graphics: Graphics;
-        $hitTest(stageX: number, stageY: number): DisplayObject;
-        /**
-         * @private
-         */
-        $measureContentBounds(bounds: Rectangle): void;
-        /**
-         * @private
-         */
-        $onRemoveFromStage(): void;
+    interface MapLike<T> {
+        [key: string]: T;
+        [key: number]: T;
     }
+    /**
+     * @private
+     */
+    function createMap<T>(): MapLike<T>;
 }
 declare namespace egret {
     interface Geolocation {
@@ -5064,6 +5019,39 @@ declare namespace egret_native {
     function sendInfoToPlugin(info: string): void;
     function receivedPluginInfo(info: string): void;
 }
+declare module egret {
+    var nativeRender: boolean;
+}
+/**
+ * @private
+ */
+declare let Module: any;
+/**
+ * @private
+ */
+declare namespace egret.NativeDelegate {
+    let currentWebGLBuffer: web.WebGLRenderBuffer;
+    let forHitTest: boolean;
+    let addModuleCallback: (callback: Function, thisObj: any) => void;
+    let init: (wasmSize?: number) => void;
+    let setRootBuffer: (buffer: any) => void;
+    let setRenderMode: (mode: string) => void;
+    let renderDisplayObject: (id: number, scale: number, useClip: boolean, clipX: number, clipY: number, clipW: number, clipH: number) => void;
+    let renderDisplayObjectWithOffset: (id: number, offsetX: number, offsetY: number) => void;
+    let localToGlobal: (id: number, localX: number, localY: number) => string;
+    let globalToLocal: (id: number, globalX: number, globalY: number) => string;
+    let resize: (width: number, height: number) => void;
+    let setCanvasScaleFactor: (factor: number, scalex: number, scaley: number) => void;
+    let update: () => void;
+    let dirtyTextField: (node: TextField) => void;
+    let dirtyGraphics: (graphics: Graphics) => void;
+    let updatePreCallback: (currTimeStamp: number) => boolean;
+    let render: () => void;
+    let activateWebGLBuffer: (buffer: web.WebGLRenderBuffer) => void;
+    let getCurrentBuffer: () => sys.RenderBuffer;
+    let getPixels: (x: number, y: number, width?: number, height?: number) => number[];
+    let activateBuffer: (buffer: sys.RenderBuffer) => void;
+}
 declare namespace egret {
     /**
      * @private
@@ -5154,16 +5142,24 @@ declare namespace egret.sys {
 }
 declare namespace egret {
     /**
-     * @private
+     * Get browser or Runtime parameters, returns an empty string if not set
+     * Get the url parameter corresponds to the browser, access to the corresponding parameter in the Runtime setOption
+     * @method egret.getOption
+     * @param key {string} Parameters key
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @language en_US
      */
-    interface MapLike<T> {
-        [key: string]: T;
-        [key: number]: T;
-    }
     /**
-     * @private
+     * 获取浏览器或者Runtime参数，如果没有设置返回空字符串
+     * 在浏览器中相当于获取url中参数，在Runtime获取对应setOption参数
+     * @method egret.getOption
+     * @param key {string} 参数key
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @language zh_CN
      */
-    function createMap<T>(): MapLike<T>;
+    let getOption: (key: string) => string;
 }
 declare namespace egret {
     /**
@@ -5213,24 +5209,61 @@ declare namespace egret {
 }
 declare namespace egret {
     /**
-     * Get browser or Runtime parameters, returns an empty string if not set
-     * Get the url parameter corresponds to the browser, access to the corresponding parameter in the Runtime setOption
-     * @method egret.getOption
-     * @param key {string} Parameters key
+     * The Sprite class is a basic display list building block: a display list node that can contain children.
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/display/Sprite.ts
      * @language en_US
      */
     /**
-     * 获取浏览器或者Runtime参数，如果没有设置返回空字符串
-     * 在浏览器中相当于获取url中参数，在Runtime获取对应setOption参数
-     * @method egret.getOption
-     * @param key {string} 参数key
+     * Sprite 类是基本显示列表构造块：一个可包含子项的显示列表节点。
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/display/Sprite.ts
      * @language zh_CN
      */
-    let getOption: (key: string) => string;
+    class Sprite extends DisplayObjectContainer {
+        /**
+         * Creates a new Sprite instance.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 实例化一个容器
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        constructor();
+        protected createNativeNode(): void;
+        /**
+         * @private
+         */
+        $graphics: Graphics;
+        /**
+         * Specifies the Graphics object belonging to this Shape object, where vector drawing commands can occur.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 获取 Shape 中的 Graphics 对象。可通过此对象执行矢量绘图命令。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        readonly graphics: Graphics;
+        $hitTest(stageX: number, stageY: number): DisplayObject;
+        /**
+         * @private
+         */
+        $measureContentBounds(bounds: Rectangle): void;
+        /**
+         * @private
+         */
+        $onRemoveFromStage(): void;
+    }
 }
 declare namespace egret {
     /**
@@ -5604,28 +5637,6 @@ declare namespace egret {
      * @language zh_CN
      */
     function setRendererContext(custom: CustomContext): void;
-}
-declare namespace egret {
-    /**
-     * The JointStyle class is an enumeration of constant values that specify the joint style to use in drawing lines.
-     * These constants are provided for use as values in the joints parameter of the egret.Graphics.lineStyle() method.
-     * @see egret.Graphics#lineStyle()
-     * @version Egret 2.5
-     * @platform Web,Native
-     * @language en_US
-     */
-    /**
-     * JointStyle 类是指定要在绘制线条中使用的联接点样式的常量值枚举。提供的这些常量用作 egret.Graphics.lineStyle() 方法的 joints 参数中的值。
-     * @see egret.Graphics#lineStyle()
-     * @version Egret 2.5
-     * @platform Web,Native
-     * @language zh_CN
-     */
-    const JointStyle: {
-        BEVEL: string;
-        MITER: string;
-        ROUND: string;
-    };
 }
 declare namespace egret.web {
     /**
@@ -10876,35 +10887,66 @@ declare namespace egret {
         static RADIAL: string;
     }
 }
-/**
- * @private
- */
-declare let Module: any;
-/**
- * @private
- */
-declare namespace egret.NativeDelegate {
-    let currentWebGLBuffer: web.WebGLRenderBuffer;
-    let forHitTest: boolean;
-    let addModuleCallback: (callback: Function, thisObj: any) => void;
-    let init: (wasmSize?: number) => void;
-    let setRootBuffer: (buffer: any) => void;
-    let setRenderMode: (mode: string) => void;
-    let renderDisplayObject: (id: number, scale: number, useClip: boolean, clipX: number, clipY: number, clipW: number, clipH: number) => void;
-    let renderDisplayObjectWithOffset: (id: number, offsetX: number, offsetY: number) => void;
-    let localToGlobal: (id: number, localX: number, localY: number) => string;
-    let globalToLocal: (id: number, globalX: number, globalY: number) => string;
-    let resize: (width: number, height: number) => void;
-    let setCanvasScaleFactor: (factor: number, scalex: number, scaley: number) => void;
-    let update: () => void;
-    let dirtyTextField: (node: TextField) => void;
-    let dirtyGraphics: (graphics: Graphics) => void;
-    let updatePreCallback: (currTimeStamp: number) => boolean;
-    let render: () => void;
-    let activateWebGLBuffer: (buffer: web.WebGLRenderBuffer) => void;
-    let getCurrentBuffer: () => sys.RenderBuffer;
-    let getPixels: (x: number, y: number, width?: number, height?: number) => number[];
-    let activateBuffer: (buffer: sys.RenderBuffer) => void;
+declare namespace egret {
+    /**
+     * MotionEvent represents the device's movement
+     * Acceleration and accelerationIncludingGravity to represents the device's acceleration
+     * RotationRate to represents the device's rotation
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/sensor/Motion.ts
+     * @language en_US
+     */
+    /**
+     * MotionEvent 类呈现设备运动的具体信息
+     * Acceleration 和 accelerationIncludingGravity 呈现设备三个维度的加速度信息
+     * RotationRate 呈现设备的旋转状态信息
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/sensor/Motion.ts
+     * @language zh_CN
+     */
+    class MotionEvent extends Event {
+        /**
+         * An object giving the acceleration of the device on the three axis X, Y and Z. Acceleration is expressed in m/s2.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * acceleration 表示设备在 X Y Z 轴方将的加速度信息，单位是  m/s2，不包含重力
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        acceleration: DeviceAcceleration;
+        /**
+         * An object giving the acceleration of the device on the three axis X, Y and Z with the effect of gravity. Acceleration is expressed in m/s2.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * acceleration 表示设备在 X Y Z 轴方将的加速度信息，单位是  m/s2，包含重力
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        accelerationIncludingGravity: DeviceAcceleration;
+        /**
+         * An object giving the rate of change of the device's orientation on the three orientation axis alpha, beta and gamma. Rotation rate is express in degrees per seconds.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * rotationRate 表示设备在 alpha、 beta 和 gamma 三个轴向的角速度信息，单位是 角度每秒
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        rotationRate: DeviceRotationRate;
+    }
 }
 declare namespace egret {
     /**
@@ -11887,63 +11929,70 @@ declare namespace egret {
 }
 declare namespace egret {
     /**
-     * MotionEvent represents the device's movement
-     * Acceleration and accelerationIncludingGravity to represents the device's acceleration
-     * RotationRate to represents the device's rotation
+     * The OrientationEvent provides information from the physical orientation of the device.
+     * Note: Currently, Browsers on the iOS and Android does not handle the coordinates the same way.
+     * Take care about this while using them.
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/sensor/Motion.ts
+     * @includeExample egret/sensor/DeviceOrientation.ts
      * @language en_US
      */
     /**
-     * MotionEvent 类呈现设备运动的具体信息
-     * Acceleration 和 accelerationIncludingGravity 呈现设备三个维度的加速度信息
-     * RotationRate 呈现设备的旋转状态信息
+     * OrientationEvent 提供设备的方向信息
+     * 注意: 目前各个浏览器和操作系统处理方向的方式不完全相同，请根据使用场景做相应的校正，
+     * 比如使用两次方向数据的变化而不是直接使用方向的值
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/sensor/Motion.ts
+     * @includeExample egret/sensor/DeviceOrientation.ts
      * @language zh_CN
      */
-    class MotionEvent extends Event {
+    class OrientationEvent extends Event {
         /**
-         * An object giving the acceleration of the device on the three axis X, Y and Z. Acceleration is expressed in m/s2.
+         * A number representing the motion of the device around the z axis,
+         * express in degrees with values ranging from 0 to 360
          * @version Egret 2.4
          * @platform Web,Native
          * @language en_US
          */
         /**
-         * acceleration 表示设备在 X Y Z 轴方将的加速度信息，单位是  m/s2，不包含重力
+         * 表示设备绕 Z 轴的角度，单位是 角度 范围是 0 到 360
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
          */
-        acceleration: DeviceAcceleration;
+        alpha: number;
         /**
-         * An object giving the acceleration of the device on the three axis X, Y and Z with the effect of gravity. Acceleration is expressed in m/s2.
+         * A number representing the motion of the device around the x axis,
+         * express in degrees with values ranging from -180 to 180.
+         * This represents a front to back motion of the device.
          * @version Egret 2.4
          * @platform Web,Native
          * @language en_US
          */
         /**
-         * acceleration 表示设备在 X Y Z 轴方将的加速度信息，单位是  m/s2，包含重力
+         * 表示设备绕 X 轴的角度，单位是 角度 范围是 -180 到 180.
+         * 这个值表示设备从前向后的旋转状态
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
          */
-        accelerationIncludingGravity: DeviceAcceleration;
+        beta: number;
         /**
-         * An object giving the rate of change of the device's orientation on the three orientation axis alpha, beta and gamma. Rotation rate is express in degrees per seconds.
+         * A number representing the motion of the device around the y axis,
+         * express in degrees with values ranging from -90 to 90.
+         * This represents a left to right motion of the device.
          * @version Egret 2.4
          * @platform Web,Native
          * @language en_US
          */
         /**
-         * rotationRate 表示设备在 alpha、 beta 和 gamma 三个轴向的角速度信息，单位是 角度每秒
+         * 表示设备绕 Y 轴的角度，单位是 角度 范围是 -90 到 90.
+         * 这个值表示设备从前向后的旋转状态
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
          */
-        rotationRate: DeviceRotationRate;
+        gamma: number;
     }
 }
 declare namespace egret.sys {
@@ -13039,71 +13088,121 @@ declare namespace egret {
     }
 }
 declare namespace egret {
+    interface HttpRequest {
+        addEventListener<Z>(type: "progress", listener: (this: Z, e: ProgressEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number): any;
+        addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number): any;
+    }
     /**
-     * The OrientationEvent provides information from the physical orientation of the device.
-     * Note: Currently, Browsers on the iOS and Android does not handle the coordinates the same way.
-     * Take care about this while using them.
+     * When a load operation has begun or a socket has received data, ProgressEvent object is dispatched.
+     * There are two types of progress events: ProgressEvent.PROGRESS and ProgressEvent.SOCKET_DATA.
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/sensor/DeviceOrientation.ts
      * @language en_US
      */
     /**
-     * OrientationEvent 提供设备的方向信息
-     * 注意: 目前各个浏览器和操作系统处理方向的方式不完全相同，请根据使用场景做相应的校正，
-     * 比如使用两次方向数据的变化而不是直接使用方向的值
+     * 当加载操作已开始或套接字已接收到数据时，将调度 ProgressEvent 对象。
+     * 有两种类型的进程事件：ProgressEvent.PROGRESS 和 ProgressEvent.SOCKET_DATA。
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/sensor/DeviceOrientation.ts
      * @language zh_CN
      */
-    class OrientationEvent extends Event {
+    class ProgressEvent extends egret.Event {
         /**
-         * A number representing the motion of the device around the z axis,
-         * express in degrees with values ranging from 0 to 360
+         * Changes in the loading progress
          * @version Egret 2.4
          * @platform Web,Native
          * @language en_US
          */
         /**
-         * 表示设备绕 Z 轴的角度，单位是 角度 范围是 0 到 360
+         * 加载进度发生变化
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
          */
-        alpha: number;
+        static PROGRESS: "progress";
         /**
-         * A number representing the motion of the device around the x axis,
-         * express in degrees with values ranging from -180 to 180.
-         * This represents a front to back motion of the device.
+         * Get the data
          * @version Egret 2.4
          * @platform Web,Native
          * @language en_US
          */
         /**
-         * 表示设备绕 X 轴的角度，单位是 角度 范围是 -180 到 180.
-         * 这个值表示设备从前向后的旋转状态
+         * 获取到数据
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
          */
-        beta: number;
+        static SOCKET_DATA: "socketData";
         /**
-         * A number representing the motion of the device around the y axis,
-         * express in degrees with values ranging from -90 to 90.
-         * This represents a left to right motion of the device.
+         * Number of items or bytes when the listener processes the event。
          * @version Egret 2.4
          * @platform Web,Native
          * @language en_US
          */
         /**
-         * 表示设备绕 Y 轴的角度，单位是 角度 范围是 -90 到 90.
-         * 这个值表示设备从前向后的旋转状态
+         * 在侦听器处理事件时加载的项数或字节数。
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
          */
-        gamma: number;
+        bytesLoaded: number;
+        /**
+         * If the loading process succeeds, the total number or the total number of bytes that will be loaded term.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 如果加载过程成功，将加载的总项数或总字节数。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        bytesTotal: number;
+        /**
+         * 创建一个 egret.ProgressEvent 对象
+         * @param type  The type of the event, accessible as Event.type.
+         * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
+         * @param cancelable Determines whether the Event object can be canceled. The default values is false.
+         * @param bytesLoaded {number} Number of items or bytes loaded
+         * @param bytesTotal {number} The total number of items or bytes loaded
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 创建一个 egret.ProgressEvent 对象
+         * @param type  事件的类型，可以作为 Event.type 访问。
+         * @param bubbles  确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
+         * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
+         * @param bytesLoaded {number} 加载的项数或字节数
+         * @param bytesTotal {number} 加载的总项数或总字节数
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        constructor(type: string, bubbles?: boolean, cancelable?: boolean, bytesLoaded?: number, bytesTotal?: number);
+        /**
+         * EventDispatcher object using the specified event object thrown Event. The objects will be thrown in the object cache pool for the next round robin.
+         * @param target {egret.IEventDispatcher} Distribute event target
+         * @param type  The type of the event, accessible as Event.type.
+         * @param bytesLoaded {number} Number of items or bytes loaded
+         * @param bytesTotal {number} The total number of items or bytes loaded
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * @param target {egret.IEventDispatcher} 派发事件目标
+         * @param type {string} 事件类型
+         * @param bytesLoaded {number} 加载的项数或字节数
+         * @param bytesTotal {number} 加载的总项数或总字节数
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        static dispatchProgressEvent(target: IEventDispatcher, type: string, bytesLoaded?: number, bytesTotal?: number): boolean;
     }
 }
 declare namespace egret {
@@ -14157,152 +14256,6 @@ declare namespace egret {
     }
 }
 declare namespace egret {
-    interface HttpRequest {
-        addEventListener<Z>(type: "progress", listener: (this: Z, e: ProgressEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number): any;
-        addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number): any;
-    }
-    /**
-     * When a load operation has begun or a socket has received data, ProgressEvent object is dispatched.
-     * There are two types of progress events: ProgressEvent.PROGRESS and ProgressEvent.SOCKET_DATA.
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language en_US
-     */
-    /**
-     * 当加载操作已开始或套接字已接收到数据时，将调度 ProgressEvent 对象。
-     * 有两种类型的进程事件：ProgressEvent.PROGRESS 和 ProgressEvent.SOCKET_DATA。
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language zh_CN
-     */
-    class ProgressEvent extends egret.Event {
-        /**
-         * Changes in the loading progress
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 加载进度发生变化
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        static PROGRESS: "progress";
-        /**
-         * Get the data
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 获取到数据
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        static SOCKET_DATA: "socketData";
-        /**
-         * Number of items or bytes when the listener processes the event。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 在侦听器处理事件时加载的项数或字节数。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        bytesLoaded: number;
-        /**
-         * If the loading process succeeds, the total number or the total number of bytes that will be loaded term.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 如果加载过程成功，将加载的总项数或总字节数。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        bytesTotal: number;
-        /**
-         * 创建一个 egret.ProgressEvent 对象
-         * @param type  The type of the event, accessible as Event.type.
-         * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
-         * @param cancelable Determines whether the Event object can be canceled. The default values is false.
-         * @param bytesLoaded {number} Number of items or bytes loaded
-         * @param bytesTotal {number} The total number of items or bytes loaded
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 创建一个 egret.ProgressEvent 对象
-         * @param type  事件的类型，可以作为 Event.type 访问。
-         * @param bubbles  确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
-         * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
-         * @param bytesLoaded {number} 加载的项数或字节数
-         * @param bytesTotal {number} 加载的总项数或总字节数
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        constructor(type: string, bubbles?: boolean, cancelable?: boolean, bytesLoaded?: number, bytesTotal?: number);
-        /**
-         * EventDispatcher object using the specified event object thrown Event. The objects will be thrown in the object cache pool for the next round robin.
-         * @param target {egret.IEventDispatcher} Distribute event target
-         * @param type  The type of the event, accessible as Event.type.
-         * @param bytesLoaded {number} Number of items or bytes loaded
-         * @param bytesTotal {number} The total number of items or bytes loaded
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @param target {egret.IEventDispatcher} 派发事件目标
-         * @param type {string} 事件类型
-         * @param bytesLoaded {number} 加载的项数或字节数
-         * @param bytesTotal {number} 加载的总项数或总字节数
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        static dispatchProgressEvent(target: IEventDispatcher, type: string, bytesLoaded?: number, bytesTotal?: number): boolean;
-    }
-}
-declare namespace egret {
-    /**
-     * @private
-     */
-    let fontMapping: {};
-    /**
-     * 兼容旧版本不使用 fontMapping 的情况
-     * @private
-     */
-    let useFontMapping: boolean;
-    /**
-     * Register font mapping.
-     * @param fontFamily The font family name to register.
-     * @param value The font value.
-     * @version Egret 3.2.3
-     * @platform Native
-     * @language en_US
-     */
-    /**
-     * 注册字体映射
-     * @param fontFamily 要注册的字体名称
-     * @param value 注册的字体值
-     * @version Egret 3.2.3
-     * @platform Native
-     * @language zh_CN
-     */
-    function registerFontMapping(fontFamily: string, value: string): void;
-}
-declare namespace egret {
     interface Stage {
         addEventListener<Z>(type: "orientationChange", listener: (this: Z, e: StageOrientationEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number): any;
         addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number): any;
@@ -14372,6 +14325,34 @@ declare namespace egret {
          */
         static dispatchStageOrientationEvent(target: IEventDispatcher, type: string): boolean;
     }
+}
+declare namespace egret {
+    /**
+     * @private
+     */
+    let fontMapping: {};
+    /**
+     * 兼容旧版本不使用 fontMapping 的情况
+     * @private
+     */
+    let useFontMapping: boolean;
+    /**
+     * Register font mapping.
+     * @param fontFamily The font family name to register.
+     * @param value The font value.
+     * @version Egret 3.2.3
+     * @platform Native
+     * @language en_US
+     */
+    /**
+     * 注册字体映射
+     * @param fontFamily 要注册的字体名称
+     * @param value 注册的字体值
+     * @version Egret 3.2.3
+     * @platform Native
+     * @language zh_CN
+     */
+    function registerFontMapping(fontFamily: string, value: string): void;
 }
 declare namespace egret {
     /**
@@ -14597,264 +14578,6 @@ declare namespace egret {
          * @language zh_CN
          */
         static dispatchTimerEvent(target: IEventDispatcher, type: string, bubbles?: boolean, cancelable?: boolean): boolean;
-    }
-}
-declare namespace egret {
-    /**
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    class NumberUtils {
-        /**
-         * Judge whether it is a numerical value
-         * @param value Parameter that needs to be judged
-         * @returns
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 判断是否是数值
-         * @param value 需要判断的参数
-         * @returns
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        static isNumber(value: any): boolean;
-        /**
-         * Obtain the approximate sin value of the corresponding angle value
-         * @param value {number} Angle value
-         * @returns {number} sin value
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 得到对应角度值的sin近似值
-         * @param value {number} 角度值
-         * @returns {number} sin值
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        static sin(value: number): number;
-        /**
-         * @private
-         *
-         * @param value
-         * @returns
-         */
-        private static sinInt(value);
-        /**
-         * Obtain the approximate cos value of the corresponding angle value
-         * @param value {number} Angle value
-         * @returns {number} cos value
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 得到对应角度值的cos近似值
-         * @param value {number} 角度值
-         * @returns {number} cos值
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        static cos(value: number): number;
-        /**
-         * @private
-         *
-         * @param value
-         * @returns
-         */
-        private static cosInt(value);
-    }
-}
-/**
- * @private
- */
-declare let egret_sin_map: {};
-/**
- * @private
- */
-declare let egret_cos_map: {};
-/**
- * @private
- */
-declare let DEG_TO_RAD: number;
-declare namespace egret {
-    /**
-     * The Timer class is the interface to timers, which let you run code on a specified time sequence. Use the start()
-     * method to start a timer. Add an event listener for the timer event to set up code to be run on the timer interval.<br/>
-     * You can create Timer objects to run once or repeat at specified intervals to execute code on a schedule. Depending
-     * on the framerate or the runtime environment (available memory and other factors), the runtime may dispatchEvent events at
-     * slightly offset intervals.
-     * @see egret.TimerEvent
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/Timer.ts
-     * @language en_US
-     */
-    /**
-     * Timer 类是计时器的接口，它使您能按指定的时间序列运行代码。
-     * 使用 start() 方法来启动计时器。为 timer 事件添加事件侦听器，以便将代码设置为按计时器间隔运行。
-     * 可以创建 Timer 对象以运行一次或按指定间隔重复运行，从而按计划执行代码。
-     * 根据 Egret 的帧速率或运行时环境（可用内存和其他因素），运行时调度事件的间隔可能稍有不同。
-     * @see egret.TimerEvent
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/Timer.ts
-     * @language zh_CN
-     */
-    class Timer extends EventDispatcher {
-        /**
-         * Constructs a new Timer object with the specified delay and repeatCount states.
-         * @param delay The delay between timer events, in milliseconds. A delay lower than 20 milliseconds is not recommended.
-         * Timer frequency is limited to 60 frames per second, meaning a delay lower than 16.6 milliseconds causes runtime problems.
-         * @param repeatCount Specifies the number of repetitions. If zero, the timer repeats indefinitely.If nonzero,
-         * the timer runs the specified number of times and then stops.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 使用指定的 delay 和 repeatCount 状态构造新的 Timer 对象。
-         * @param delay 计时器事件间的延迟（以毫秒为单位）。建议 delay 不要低于 20 毫秒。计时器频率不得超过 60 帧/秒，这意味着低于 16.6 毫秒的延迟可导致出现运行时问题。
-         * @param repeatCount 指定重复次数。如果为零，则计时器将持续不断重复运行。如果不为 0，则将运行计时器，运行次数为指定的次数，然后停止。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        constructor(delay: number, repeatCount?: number);
-        /**
-         * @private
-         */
-        private _delay;
-        /**
-         * The delay between timer events, in milliseconds. A delay lower than 20 milliseconds is not recommended.<br/>
-         * Note: Timer frequency is limited to 60 frames per second, meaning a delay lower than 16.6 milliseconds causes runtime problems.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 计时器事件间的延迟（以毫秒为单位）。如果在计时器正在运行时设置延迟间隔，则计时器将按相同的 repeatCount 迭代重新启动。<br/>
-         * 注意：建议 delay 不要低于 20 毫秒。计时器频率不得超过 60 帧/秒，这意味着低于 16.6 毫秒的延迟可导致出现运行时问题。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        delay: number;
-        /**
-         * The total number of times the timer is set to run. If the repeat count is set to 0, the timer continues indefinitely,
-         * until the stop() method is invoked or the program stops. If the repeat count is nonzero, the timer runs the specified
-         * number of times. If repeatCount is set to a total that is the same or less then currentCount the timer stops and will not fire again.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 设置的计时器运行总次数。如果重复计数设置为 0，则计时器将持续不断运行，或直至调用了 stop() 方法或节目停止。
-         * 如果重复计数不为 0，则将运行计时器，运行次数为指定的次数。如果设置的 repeatCount 总数等于或小于 currentCount，则计时器将停止并且不会再次触发。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        repeatCount: number;
-        /**
-         * @private
-         */
-        private _currentCount;
-        /**
-         * The total number of times the timer has fired since it started at zero. If the timer has been reset, only the fires since the reset are counted.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 计时器从 0 开始后触发的总次数。如果已重置了计时器，则只会计入重置后的触发次数。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        readonly currentCount: number;
-        /**
-         * @private
-         */
-        private _running;
-        /**
-         * The timer's current state; true if the timer is running, otherwise false.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 计时器的当前状态；如果计时器正在运行，则为 true，否则为 false。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        readonly running: boolean;
-        /**
-         * Stops the timer, if it is running, and sets the currentCount property back to 0, like the reset button of a stopwatch.
-         * Then, when start() is called, the timer instance runs for the specified number of repetitions, as set by the repeatCount value.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 如果计时器正在运行，则停止计时器，并将 currentCount 属性设回为 0，这类似于秒表的重置按钮。然后，在调用 start() 后，将运行计时器实例，运行次数为指定的重复次数（由 repeatCount 值设置）。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        reset(): void;
-        /**
-         * Starts the timer, if it is not already running.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 如果计时器尚未运行，则启动计时器。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        start(): void;
-        /**
-         * Stops the timer. When start() is called after stop(), the timer instance runs for the remaining number of
-         * repetitions, as set by the repeatCount property.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 停止计时器。如果在调用 stop() 后调用 start()，则将继续运行计时器实例，运行次数为剩余的 重复次数（由 repeatCount 属性设置）。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        stop(): void;
-        /**
-         * @private
-         */
-        private updateInterval;
-        /**
-         * @private
-         */
-        private lastCount;
-        /**
-         * @private
-         */
-        private lastTimeStamp;
-        /**
-         * @private
-         * Ticker以60FPS频率刷新此方法
-         */
-        $update(timeStamp: number): boolean;
     }
 }
 declare namespace egret {
@@ -15293,121 +15016,261 @@ declare namespace egret {
 }
 declare namespace egret {
     /**
-     * @private
-     */
-    let $callLaterFunctionList: any[];
-    /**
-     * @private
-     */
-    let $callLaterThisList: any[];
-    /**
-     * @private
-     */
-    let $callLaterArgsList: any[];
-    /**
-     * Delay the function to run unless screen is redrawn.
-     * @param method {Function} The function to be delayed to run
-     * @param thisObject {any} this reference of callback function
-     * @param ...args {any} Function parameter list
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/utils/callLater.ts
-     * @language en_US
      */
-    /**
-     * 延迟函数到屏幕重绘前执行。
-     * @param method {Function} 要延迟执行的函数
-     * @param thisObject {any} 回调函数的this引用
-     * @param ...args {any} 函数参数列表
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/callLater.ts
-     * @language zh_CN
-     */
-    function callLater(method: Function, thisObject: any, ...args: any[]): void;
-    /**
-     * @private
-     */
-    let $callAsyncFunctionList: any[];
-    /**
-     * @private
-     */
-    let $callAsyncThisList: any[];
-    /**
-     * @private
-     */
-    let $callAsyncArgsList: any[];
-    /**
-     * 异步调用函数
-     * @param method {Function} 要异步调用的函数
-     * @param thisObject {any} 函数的this引用
-     * @param ...args {any} 函数参数列表
-     * @private
-     */
-    function $callAsync(method: Function, thisObject: any, ...args: any[]): void;
+    class NumberUtils {
+        /**
+         * Judge whether it is a numerical value
+         * @param value Parameter that needs to be judged
+         * @returns
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 判断是否是数值
+         * @param value 需要判断的参数
+         * @returns
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        static isNumber(value: any): boolean;
+        /**
+         * Obtain the approximate sin value of the corresponding angle value
+         * @param value {number} Angle value
+         * @returns {number} sin value
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 得到对应角度值的sin近似值
+         * @param value {number} 角度值
+         * @returns {number} sin值
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        static sin(value: number): number;
+        /**
+         * @private
+         *
+         * @param value
+         * @returns
+         */
+        private static sinInt(value);
+        /**
+         * Obtain the approximate cos value of the corresponding angle value
+         * @param value {number} Angle value
+         * @returns {number} cos value
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 得到对应角度值的cos近似值
+         * @param value {number} 角度值
+         * @returns {number} cos值
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        static cos(value: number): number;
+        /**
+         * @private
+         *
+         * @param value
+         * @returns
+         */
+        private static cosInt(value);
+    }
 }
+/**
+ * @private
+ */
+declare let egret_sin_map: {};
+/**
+ * @private
+ */
+declare let egret_cos_map: {};
+/**
+ * @private
+ */
+declare let DEG_TO_RAD: number;
 declare namespace egret {
     /**
-     * Call setter properties of the parent class, instead of the other writing languages, such as super.alpha = 1;
-     * @param currentClass The current class class name, non-string
-     * @param thisObj The current object. Always this
-     * @param type Setter property names need to call
-     * @param values Value passed to the parent class
-     *
-     * @exmaple egret.superSetter(egret.Sprite, this, "alpha", 1);
-     * @language en_US
-     */
-    /**
-     * 调用父类的setter属性，代替其他语言的写法，如 super.alpha = 1;
-     * @param thisObj 当前对象。永远都this
-     * @param currentClass 当前 class 类名，非字符串
-     * @param type 需要调用的setter属性名称
-     * @param values 传给父类的值
-     *
-     * @exmaple egret.superSetter(egret.Sprite, this, "alpha", 1);
-     * @language zh_CN
-     */
-    function superSetter(currentClass: any, thisObj: any, type: string, ...values: any[]): any;
-    /**
-     * Get getter property value of the parent class. Instead of writing in other languages, such as super.alpha;
-     * @param currentClass The current class class name, non-string
-     * @param thisObj The current object. Always this
-     * @param type Setter property names need to call
-     * @returns {any} The value returned by the parent
-     *
-     * @exmaple egret.superGetter(egret.Sprite, this, "alpha");
-     * @language en_US
-     */
-    /**
-     * 获取父类的getter属性值。代替其他语言的写法，如 super.alpha;
-     * @param thisObj 当前对象。永远都this
-     * @param currentClass 当前 class 类名，非字符串
-     * @param type 需要调用的setter属性名称
-     * @returns {any} 父类返回的值
-     *
-     * @exmaple egret.superGetter(egret.Sprite, this, "alpha");
-     * @language zh_CN
-     */
-    function superGetter(currentClass: any, thisObj: any, type: string): any;
-}
-declare namespace egret {
-    /**
-     * Returns a reference to the class object of the class specified by the name parameter.
-     * @param name The name of a class.
+     * The Timer class is the interface to timers, which let you run code on a specified time sequence. Use the start()
+     * method to start a timer. Add an event listener for the timer event to set up code to be run on the timer interval.<br/>
+     * You can create Timer objects to run once or repeat at specified intervals to execute code on a schedule. Depending
+     * on the framerate or the runtime environment (available memory and other factors), the runtime may dispatchEvent events at
+     * slightly offset intervals.
+     * @see egret.TimerEvent
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/utils/getDefinitionByName.ts
+     * @includeExample egret/utils/Timer.ts
      * @language en_US
      */
     /**
-     * 返回 name 参数指定的类的类对象引用。
-     * @param name 类的名称。
+     * Timer 类是计时器的接口，它使您能按指定的时间序列运行代码。
+     * 使用 start() 方法来启动计时器。为 timer 事件添加事件侦听器，以便将代码设置为按计时器间隔运行。
+     * 可以创建 Timer 对象以运行一次或按指定间隔重复运行，从而按计划执行代码。
+     * 根据 Egret 的帧速率或运行时环境（可用内存和其他因素），运行时调度事件的间隔可能稍有不同。
+     * @see egret.TimerEvent
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/utils/getDefinitionByName.ts
+     * @includeExample egret/utils/Timer.ts
      * @language zh_CN
      */
-    function getDefinitionByName(name: string): any;
+    class Timer extends EventDispatcher {
+        /**
+         * Constructs a new Timer object with the specified delay and repeatCount states.
+         * @param delay The delay between timer events, in milliseconds. A delay lower than 20 milliseconds is not recommended.
+         * Timer frequency is limited to 60 frames per second, meaning a delay lower than 16.6 milliseconds causes runtime problems.
+         * @param repeatCount Specifies the number of repetitions. If zero, the timer repeats indefinitely.If nonzero,
+         * the timer runs the specified number of times and then stops.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 使用指定的 delay 和 repeatCount 状态构造新的 Timer 对象。
+         * @param delay 计时器事件间的延迟（以毫秒为单位）。建议 delay 不要低于 20 毫秒。计时器频率不得超过 60 帧/秒，这意味着低于 16.6 毫秒的延迟可导致出现运行时问题。
+         * @param repeatCount 指定重复次数。如果为零，则计时器将持续不断重复运行。如果不为 0，则将运行计时器，运行次数为指定的次数，然后停止。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        constructor(delay: number, repeatCount?: number);
+        /**
+         * @private
+         */
+        private _delay;
+        /**
+         * The delay between timer events, in milliseconds. A delay lower than 20 milliseconds is not recommended.<br/>
+         * Note: Timer frequency is limited to 60 frames per second, meaning a delay lower than 16.6 milliseconds causes runtime problems.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 计时器事件间的延迟（以毫秒为单位）。如果在计时器正在运行时设置延迟间隔，则计时器将按相同的 repeatCount 迭代重新启动。<br/>
+         * 注意：建议 delay 不要低于 20 毫秒。计时器频率不得超过 60 帧/秒，这意味着低于 16.6 毫秒的延迟可导致出现运行时问题。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        delay: number;
+        /**
+         * The total number of times the timer is set to run. If the repeat count is set to 0, the timer continues indefinitely,
+         * until the stop() method is invoked or the program stops. If the repeat count is nonzero, the timer runs the specified
+         * number of times. If repeatCount is set to a total that is the same or less then currentCount the timer stops and will not fire again.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 设置的计时器运行总次数。如果重复计数设置为 0，则计时器将持续不断运行，或直至调用了 stop() 方法或节目停止。
+         * 如果重复计数不为 0，则将运行计时器，运行次数为指定的次数。如果设置的 repeatCount 总数等于或小于 currentCount，则计时器将停止并且不会再次触发。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        repeatCount: number;
+        /**
+         * @private
+         */
+        private _currentCount;
+        /**
+         * The total number of times the timer has fired since it started at zero. If the timer has been reset, only the fires since the reset are counted.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 计时器从 0 开始后触发的总次数。如果已重置了计时器，则只会计入重置后的触发次数。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        readonly currentCount: number;
+        /**
+         * @private
+         */
+        private _running;
+        /**
+         * The timer's current state; true if the timer is running, otherwise false.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 计时器的当前状态；如果计时器正在运行，则为 true，否则为 false。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        readonly running: boolean;
+        /**
+         * Stops the timer, if it is running, and sets the currentCount property back to 0, like the reset button of a stopwatch.
+         * Then, when start() is called, the timer instance runs for the specified number of repetitions, as set by the repeatCount value.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 如果计时器正在运行，则停止计时器，并将 currentCount 属性设回为 0，这类似于秒表的重置按钮。然后，在调用 start() 后，将运行计时器实例，运行次数为指定的重复次数（由 repeatCount 值设置）。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        reset(): void;
+        /**
+         * Starts the timer, if it is not already running.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 如果计时器尚未运行，则启动计时器。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        start(): void;
+        /**
+         * Stops the timer. When start() is called after stop(), the timer instance runs for the remaining number of
+         * repetitions, as set by the repeatCount property.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 停止计时器。如果在调用 stop() 后调用 start()，则将继续运行计时器实例，运行次数为剩余的 重复次数（由 repeatCount 属性设置）。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        stop(): void;
+        /**
+         * @private
+         */
+        private updateInterval;
+        /**
+         * @private
+         */
+        private lastCount;
+        /**
+         * @private
+         */
+        private lastTimeStamp;
+        /**
+         * @private
+         * Ticker以60FPS频率刷新此方法
+         */
+        $update(timeStamp: number): boolean;
+    }
 }
 declare namespace egret {
     interface DisplayObject {
@@ -15700,6 +15563,146 @@ declare namespace egret {
          */
         static dispatchTouchEvent(target: IEventDispatcher, type: string, bubbles?: boolean, cancelable?: boolean, stageX?: number, stageY?: number, touchPointID?: number, touchDown?: boolean): boolean;
     }
+}
+declare namespace egret {
+    /**
+     * @private
+     */
+    let $callLaterFunctionList: any[];
+    /**
+     * @private
+     */
+    let $callLaterThisList: any[];
+    /**
+     * @private
+     */
+    let $callLaterArgsList: any[];
+    /**
+     * Delay the function to run unless screen is redrawn.
+     * @param method {Function} The function to be delayed to run
+     * @param thisObject {any} this reference of callback function
+     * @param ...args {any} Function parameter list
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/callLater.ts
+     * @language en_US
+     */
+    /**
+     * 延迟函数到屏幕重绘前执行。
+     * @param method {Function} 要延迟执行的函数
+     * @param thisObject {any} 回调函数的this引用
+     * @param ...args {any} 函数参数列表
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/callLater.ts
+     * @language zh_CN
+     */
+    function callLater(method: Function, thisObject: any, ...args: any[]): void;
+    /**
+     * @private
+     */
+    let $callAsyncFunctionList: any[];
+    /**
+     * @private
+     */
+    let $callAsyncThisList: any[];
+    /**
+     * @private
+     */
+    let $callAsyncArgsList: any[];
+    /**
+     * 异步调用函数
+     * @param method {Function} 要异步调用的函数
+     * @param thisObject {any} 函数的this引用
+     * @param ...args {any} 函数参数列表
+     * @private
+     */
+    function $callAsync(method: Function, thisObject: any, ...args: any[]): void;
+}
+declare namespace egret {
+    /**
+     * Call setter properties of the parent class, instead of the other writing languages, such as super.alpha = 1;
+     * @param currentClass The current class class name, non-string
+     * @param thisObj The current object. Always this
+     * @param type Setter property names need to call
+     * @param values Value passed to the parent class
+     *
+     * @exmaple egret.superSetter(egret.Sprite, this, "alpha", 1);
+     * @language en_US
+     */
+    /**
+     * 调用父类的setter属性，代替其他语言的写法，如 super.alpha = 1;
+     * @param thisObj 当前对象。永远都this
+     * @param currentClass 当前 class 类名，非字符串
+     * @param type 需要调用的setter属性名称
+     * @param values 传给父类的值
+     *
+     * @exmaple egret.superSetter(egret.Sprite, this, "alpha", 1);
+     * @language zh_CN
+     */
+    function superSetter(currentClass: any, thisObj: any, type: string, ...values: any[]): any;
+    /**
+     * Get getter property value of the parent class. Instead of writing in other languages, such as super.alpha;
+     * @param currentClass The current class class name, non-string
+     * @param thisObj The current object. Always this
+     * @param type Setter property names need to call
+     * @returns {any} The value returned by the parent
+     *
+     * @exmaple egret.superGetter(egret.Sprite, this, "alpha");
+     * @language en_US
+     */
+    /**
+     * 获取父类的getter属性值。代替其他语言的写法，如 super.alpha;
+     * @param thisObj 当前对象。永远都this
+     * @param currentClass 当前 class 类名，非字符串
+     * @param type 需要调用的setter属性名称
+     * @returns {any} 父类返回的值
+     *
+     * @exmaple egret.superGetter(egret.Sprite, this, "alpha");
+     * @language zh_CN
+     */
+    function superGetter(currentClass: any, thisObj: any, type: string): any;
+}
+declare namespace egret {
+    /**
+     * Returns a reference to the class object of the class specified by the name parameter.
+     * @param name The name of a class.
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/getDefinitionByName.ts
+     * @language en_US
+     */
+    /**
+     * 返回 name 参数指定的类的类对象引用。
+     * @param name 类的名称。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/getDefinitionByName.ts
+     * @language zh_CN
+     */
+    function getDefinitionByName(name: string): any;
+}
+declare namespace egret {
+    /**
+     * The JointStyle class is an enumeration of constant values that specify the joint style to use in drawing lines.
+     * These constants are provided for use as values in the joints parameter of the egret.Graphics.lineStyle() method.
+     * @see egret.Graphics#lineStyle()
+     * @version Egret 2.5
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * JointStyle 类是指定要在绘制线条中使用的联接点样式的常量值枚举。提供的这些常量用作 egret.Graphics.lineStyle() 方法的 joints 参数中的值。
+     * @see egret.Graphics#lineStyle()
+     * @version Egret 2.5
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    const JointStyle: {
+        BEVEL: string;
+        MITER: string;
+        ROUND: string;
+    };
 }
 declare namespace egret {
     /**

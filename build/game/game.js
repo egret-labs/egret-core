@@ -3011,7 +3011,7 @@ var egret;
             _this.lastTime = 0;
             _this.$smoothing = egret.Bitmap.defaultSmoothing;
             _this.setMovieClipData(movieClipData);
-            if (!__global.nativeRender) {
+            if (!egret.nativeRender) {
                 _this.$renderNode = new egret.sys.NormalBitmapNode();
             }
             return _this;
@@ -3405,7 +3405,7 @@ var egret;
             self.$movieClipData.$getOffsetByFrame(currentFrameNum, self.offsetPoint);
             self.displayedKeyFrameNum = currentFrameNum;
             self.$renderDirty = true;
-            if (__global.nativeRender) {
+            if (egret.nativeRender) {
                 self.$nativeNode.setDataToBitmapNode(self.$nativeNode.id, texture, [texture.$bitmapX, texture.$bitmapY, texture.$bitmapWidth, texture.$bitmapHeight,
                     self.offsetPoint.x, self.offsetPoint.y, texture.$getScaleBitmapWidth(), texture.$getScaleBitmapHeight(),
                     texture.$sourceWidth, texture.$sourceHeight]);

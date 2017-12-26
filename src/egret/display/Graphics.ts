@@ -631,7 +631,7 @@ namespace egret {
         private dirty(): void {
             let self = this;
             self.$renderNode.dirtyRender = true;
-            if (__global.nativeRender) {
+            if (egret.nativeRender) {
                 NativeDelegate.dirtyGraphics(self);
             }
         }

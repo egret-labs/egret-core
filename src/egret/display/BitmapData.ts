@@ -309,7 +309,7 @@ namespace egret {
                     maskedObject.$cacheDirtyUp();
                 }
             }
-            if (__global.nativeRender) {
+            if (egret.nativeRender) {
                 NativeNode.disposeBitmapData(bitmapData);
             }
             delete BitmapData._displayList[hashCode];

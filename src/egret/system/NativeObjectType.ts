@@ -35,19 +35,52 @@ namespace egret {
      * @private
      */
     export const enum NativeObjectType {
+        /**
+         * 容器
+         */
         CONTAINER = 0,
+        /**
+         * 位图
+         */
         BITMAP = 1,
+        /**
+         * 位图数据
+         */
         BITMAP_DATA = 2,
-        COLOR_MATRIX_FILTER = 3,
-        BLUR_FILTER = 4,
-        GLOW_FILTER = 5,
+        // COLOR_MATRIX_FILTER = 3,
+        // BLUR_FILTER = 4,
+        // GLOW_FILTER = 5,
+        /**
+         * 滤镜
+         */
         FILTER = 6,
+        /**
+         * 文本
+         */
         TEXT = 7,
+        /**
+         * 矢量绘图
+         */
         GRAPHICS = 8,
+        /**
+         * 含一个适量绘图的容器
+         */
         SPRITE = 9,
+        /**
+         * 粒子系统
+         */
         PARTICLE_SYSTEM = 10,
+        /**
+         * 位图文本
+         */
         BITMAP_TEXT = 11,
+        /**
+         * 网格
+         */
         MESH = 12,
+        /**
+         * 舞台（根容器）
+         */
         STAGE = 13
     }
 }

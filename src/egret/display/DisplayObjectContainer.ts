@@ -195,7 +195,7 @@ namespace egret {
                     }
                 }
             }
-            if (__global.nativeRender) {
+            if (egret.nativeRender) {
                 self.$nativeNode.addChildAt(child.$nativeNode.id, index);
             }
             else {
@@ -429,7 +429,7 @@ namespace egret {
             if (indexNow != -1) {
                 children.splice(indexNow, 1);
             }
-            if (__global.nativeRender) {
+            if (egret.nativeRender) {
                 self.$nativeNode.removeChild(child.$nativeNode.id);
             }
             else {
@@ -496,7 +496,7 @@ namespace egret {
             //放到新的位置
             this.$children.splice(index, 0, child);
             this.$childAdded(child, index);
-            if (__global.nativeRender) {
+            if (egret.nativeRender) {
                 this.$nativeNode.removeChild(child.$nativeNode.id);
                 this.$nativeNode.addChildAt(child.$nativeNode.id, index);
             }
@@ -600,7 +600,7 @@ namespace egret {
             list[index2] = child1;
             this.$childAdded(child2, index1);
             this.$childAdded(child1, index2);
-            if(__global.nativeRender) {
+            if(egret.nativeRender) {
                 this.$nativeNode.swapChild(index1, index2);
             }
             else {

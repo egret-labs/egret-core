@@ -142,7 +142,7 @@ namespace egret {
             super();
             this.$smoothing = Bitmap.defaultSmoothing;
             this.setMovieClipData(movieClipData);
-            if (!__global.nativeRender) {
+            if (!egret.nativeRender) {
                 this.$renderNode = new sys.NormalBitmapNode();
             }
         }
@@ -571,7 +571,7 @@ namespace egret {
 
             self.displayedKeyFrameNum = currentFrameNum;
             self.$renderDirty = true;
-            if (__global.nativeRender) {
+            if (egret.nativeRender) {
                 self.$nativeNode.setDataToBitmapNode(self.$nativeNode.id, texture,
                     [texture.$bitmapX, texture.$bitmapY, texture.$bitmapWidth, texture.$bitmapHeight,
                     self.offsetPoint.x, self.offsetPoint.y, texture.$getScaleBitmapWidth(), texture.$getScaleBitmapHeight(),

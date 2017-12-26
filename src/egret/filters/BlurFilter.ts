@@ -172,7 +172,7 @@ namespace egret {
         public onPropertyChange(): void {
             let self = this;
             self.updatePadding();
-            if (__global.nativeRender) {
+            if (egret.nativeRender) {
                 NativeNode.setFilterPadding(self.blurXFilter.$id, 0, 0, self.paddingLeft, self.paddingRight);
                 NativeNode.setFilterPadding(self.blurYFilter.$id, self.paddingTop, self.paddingBottom, 0, 0);
                 NativeNode.setDataToFilter(self.$id);
@@ -202,7 +202,7 @@ namespace egret {
         constructor(blurX:number = 4) {
             super();
 
-            if (__global.nativeRender) {
+            if (egret.nativeRender) {
                 this.type = "blur";
             }
             else {
@@ -226,7 +226,7 @@ namespace egret {
         constructor(blurY:number = 4) {
             super();
 
-            if (__global.nativeRender) {
+            if (egret.nativeRender) {
                 this.type = "blur";
             }
             else {

@@ -96,9 +96,6 @@ namespace egret {
 
     let displayObjectId: number = 0;
 
-    let textFieldMap;
-    let graphicsMap;
-
     let bitmapDataMap;
     let bitmapDataId = 1;
 
@@ -107,33 +104,26 @@ namespace egret {
     let customFilterDataMap = {};
     let customFilterUniformMap = {};
 
-    let dirtyTextField: TextField[];
-    let dirtyGraphics: Graphics[];
-
     let displayCmdBufferIndex: number = 2;
     let displayCmdBufferSize: number = 0;
     let displayCmdBuffer: Float32Array;
-    if (__global.nativeRender) {
+    if (egret.nativeRender) {
         displayCmdBuffer = new Float32Array(20000);
     }
-
-    let isForNative = false;
 
     /**
      * @private
      */
     export class NativeNode {
 
-        public static init(buffer: Float32Array, isNative, map1, map2, map3): void {
+        public static init(buffer: Float32Array, map1, map2, map3): void {
             //初始化之前有原生对象创建
             if (displayCmdBufferIndex != 2) {
-                console.log("displayCmdBufferIndex " + displayCmdBufferIndex);
                 for (let i = 2; i < displayCmdBufferIndex; i++) {
                     buffer[i] = displayCmdBuffer[i];
                 }
             }
             displayCmdBuffer = buffer;
-            isForNative = isNative;
             displayCmdBuffer[0] = 0;
             displayCmdBuffer[1] = 2;
             bitmapDataMap = map1;
@@ -678,10 +668,6 @@ namespace egret {
 
 
         public static setDataToFilter(id: number): void {
-            if (isForNative === false) {
-                return;
-            }
-
             let currFilter = filterMap[id];
             let customArr = [];
             let filterType;

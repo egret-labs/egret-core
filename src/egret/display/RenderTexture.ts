@@ -100,8 +100,7 @@ namespace egret {
             this.$bitmapData.width = width;
             this.$bitmapData.height = height;
 
-            if (__global.nativeRender) {
-                let savedBuffer = NativeDelegate.getCurrentBuffer();
+            if (egret.nativeRender) {
                 NativeDelegate.activateBuffer(this.$renderBuffer);
                 let useClip = false;
                 let clipX = 0;
@@ -117,7 +116,7 @@ namespace egret {
                 }
                 NativeDelegate.update();
                 NativeDelegate.renderDisplayObject(displayObject.$nativeNode.id, scale, useClip, clipX, clipY, clipW, clipH);
-                NativeDelegate.activateBuffer(savedBuffer);
+                NativeDelegate.activateBuffer(null);
             }
             else {
                 let matrix = Matrix.create();

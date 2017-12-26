@@ -379,7 +379,7 @@ namespace egret {
                 }
                 this.$bitmapData = null;
             }
-            if(__global.nativeRender) {
+            if(egret.nativeRender) {
                 NativeNode.disposeTexture(this);
             }
         }

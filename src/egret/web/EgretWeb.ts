@@ -97,7 +97,7 @@ namespace egret.web {
         let ua: string = navigator.userAgent.toLowerCase();
 
 
-        if (ua.indexOf("egretnative") >= 0 && __global.nativeRender) {// Egret Native
+        if (ua.indexOf("egretnative") >= 0 && egret.nativeRender) {// Egret Native
             egret.NativeDelegate.addModuleCallback(function () {
                 Html5Capatibility.$init();
 

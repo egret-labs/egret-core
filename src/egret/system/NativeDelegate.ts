@@ -30,16 +30,22 @@
 /**
  * @private
  */
+module egret {
+    /**
+     * @private
+     */
+    export var nativeRender: boolean = __global.nativeRender;
+}
+
+/**
+ * @private
+ */
 declare let Module: any;
 
 /**
  * @private
  */
 namespace egret.NativeDelegate {
-    let renderCmdBuffer: Float32Array;
-    let vertexCmdBuffer: Float32Array;
-    let indexCmdBuffer: Float32Array;
-
     let updateFun: Function;
     let renderFun: Function;
     let resizeFun: Function;
@@ -55,8 +61,6 @@ namespace egret.NativeDelegate {
     let gl: WebGLRenderingContext;
     let context: web.WebGLRenderContext;
     let rootWebGLBuffer: web.WebGLRenderBuffer;
-
-    export let currentWebGLBuffer: web.WebGLRenderBuffer;
 
     export let forHitTest: boolean = false;
     type ColorAttrib = { color: number, alpha: number };
@@ -103,10 +107,7 @@ namespace egret.NativeDelegate {
             Module.customInit();
 
             Module.downloadBuffers(function (buffer: Float32Array, buffer1: Float32Array, buffer2: Float32Array, buffer3: Float32Array) {
-                renderCmdBuffer = buffer;
-                vertexCmdBuffer = buffer1;
-                indexCmdBuffer = buffer2;
-                NativeNode.init(buffer3, __global.nativeRender, bitmapDataMap, filterMap, customFilterDataMap);
+                NativeNode.init(buffer3, bitmapDataMap, filterMap, customFilterDataMap);
 
                 updateFun = Module.update;
                 renderFun = Module.render;
@@ -164,7 +165,7 @@ namespace egret.NativeDelegate {
         resizeFun(width, height);
     }
 
-    export let setCanvasScaleFactor = function(factor: number, scalex: number, scaley: number): void {
+    export let setCanvasScaleFactor = function (factor: number, scalex: number, scaley: number): void {
         Module.setCanvasScaleFactor(factor, scalex, scaley);
     }
     export let update = function (): void {
@@ -176,11 +177,9 @@ namespace egret.NativeDelegate {
         }
     }
 
-
-
-    export let dirtyTextField = function (node: TextField): void {
-        dirtyTextFieldList.push(node);
-        textFieldMap[node.$nativeNode.id] = node;
+    export let dirtyTextField = function (textField: TextField): void {
+        dirtyTextFieldList.push(textField);
+        textFieldMap[textField.$nativeNode.id] = textField;
     }
 
     export let dirtyGraphics = function (graphics: Graphics): void {
@@ -200,7 +199,7 @@ namespace egret.NativeDelegate {
                 let width = node.width - node.x;
                 let height = node.height - node.y;
                 if (node.drawData.length == 0) {
-                    let graphicNode = textField.$graphicsNode; 
+                    let graphicNode = textField.$graphicsNode;
                     if (graphicNode) {
                         textField.$nativeNode.setTextRect(graphicNode.x, graphicNode.y, graphicNode.width, graphicNode.height);
                     }
@@ -319,7 +318,7 @@ namespace egret.NativeDelegate {
         let node: sys.TextNode = <sys.TextNode>textField.$renderNode;
         let width = node.width - node.x;
         let height = node.height - node.y;
-        if (width <= 0 || height <= 0 || !width || !height ) {
+        if (width <= 0 || height <= 0 || !width || !height) {
             return;
         }
 
@@ -497,7 +496,7 @@ namespace egret.NativeDelegate {
                     renderCmds.push(y);
                 }
             }
-            if( x1 || y1) {
+            if (x1 || y1) {
                 // 1019: setTransform
                 renderCmds.push(1019);
                 renderCmds.push(canvasScaleX);
@@ -665,10 +664,6 @@ namespace egret.NativeDelegate {
             buffer = rootWebGLBuffer;
         }
         activateBufferFun(buffer.bufferIdForWasm, buffer.width, buffer.height);
-    }
-
-    export let getCurrentBuffer = function (): sys.RenderBuffer {
-        return currentWebGLBuffer;
     }
 
     export let getPixels = function (x: number, y: number, width: number = 1, height: number = 1): number[] {

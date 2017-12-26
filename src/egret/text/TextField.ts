@@ -1452,7 +1452,7 @@ namespace egret {
             if (values[sys.TextKeys.background] || values[sys.TextKeys.border] || (lines && lines.length > 0)) {
                 if (!graphics) {
                     graphics = this.$graphicsNode = new sys.GraphicsNode();
-                    if (!__global.nativeRender) {
+                    if (!egret.nativeRender) {
                         let groupNode = new sys.GroupNode();
                         groupNode.addNode(graphics);
                         groupNode.addNode(this.textNode);
@@ -1564,7 +1564,7 @@ namespace egret {
             let self = this;
             self.$renderDirty = true;
             self.$TextField[sys.TextKeys.textLinesChanged] = true;
-            if (__global.nativeRender) {
+            if (egret.nativeRender) {
                 NativeDelegate.dirtyTextField(this);
             }
             else {

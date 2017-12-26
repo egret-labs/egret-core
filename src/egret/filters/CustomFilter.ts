@@ -182,7 +182,7 @@ namespace egret {
         }
 
         public onPropertyChange(): void {
-            if (__global.nativeRender) {
+            if (egret.nativeRender) {
                 let self = this;
                 NativeNode.setFilterPadding(self.$id, self.$padding, self.$padding, self.$padding, self.$padding);
                 NativeNode.setDataToFilter(self.$id);

@@ -58,7 +58,7 @@ namespace egret.sys {
             this.stageDisplayList = null;
             this.displayFPS = displayFPS;
 
-            if (__global.nativeRender) {
+            if (egret.nativeRender) {
                 NativeDelegate.setRootBuffer(buffer);
             }
         }
@@ -167,7 +167,7 @@ namespace egret.sys {
          * 渲染屏幕
          */
         $render(triggerByFrame: boolean, costTicker: number): void {
-            if (__global.nativeRender) {
+            if (egret.nativeRender) {
                 NativeDelegate.update();
                 NativeDelegate.render();
                 return;
@@ -195,7 +195,7 @@ namespace egret.sys {
             let stage = this.stage;
             stage.$stageWidth = stageWidth;
             stage.$stageHeight = stageHeight;
-            if (__global.nativeRender) {
+            if (egret.nativeRender) {
                 NativeDelegate.resize(stageWidth, stageHeight);
             } else {
                 this.screenDisplayList.setClipRect(stageWidth, stageHeight);
