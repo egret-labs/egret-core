@@ -18511,11 +18511,9 @@ var egret;
         };
         NativeDelegate.dirtyTextField = function (node) {
             dirtyTextFieldList.push(node);
-            textFieldMap[node.$nativeNode.id] = node;
         };
         NativeDelegate.dirtyGraphics = function (graphics) {
             dirtyGraphicsList.push(graphics);
-            graphicsMap[graphics.$targetDisplay.$nativeNode.id] = graphics;
         };
         var validateDirtyTextField = function () {
             var length = dirtyTextFieldList.length;
@@ -18540,7 +18538,7 @@ var egret;
                     else {
                         textField.$nativeNode.setTextRect(node.x, node.y, width, height);
                     }
-                    bufferTextData(textField.$nativeNode.id);
+                    bufferTextData(textField);
                 }
             }
         };
@@ -18560,7 +18558,8 @@ var egret;
                     else {
                         graphics.$targetDisplay.$nativeNode.setGraphicsRect(node.x, node.y, node.width, node.height, graphics.$targetIsSprite);
                     }
-                    bufferGraphicsData(graphics.$targetDisplay.$nativeNode.id, node);
+                    // bufferGraphicsData(graphics.$targetDisplay.$nativeNode.id, node);
+                    bufferGraphicsData(node, graphics);
                 }
             }
         };
@@ -18635,9 +18634,9 @@ var egret;
                 }
             }
         };
-        var bufferTextData = function (textFieldId) {
-            var textField = textFieldMap[textFieldId];
+        var bufferTextData = function (textField) {
             var node = textField.$renderNode;
+            var textFieldId = textField.$nativeNode.id;
             var width = node.width - node.x;
             var height = node.height - node.y;
             if (width <= 0 || height <= 0 || !width || !height) {
@@ -18703,7 +18702,7 @@ var egret;
                 }
                 if (textField.$graphicsNode) {
                     renderCmds.push(1015);
-                    bufferGraphicsData(textFieldId, textField.$graphicsNode, renderCmds);
+                    bufferGraphicsData(textField.$graphicsNode, null, renderCmds);
                     renderCmds.push(1016);
                 }
                 var drawData = node.drawData;
@@ -18819,12 +18818,14 @@ var egret;
                 node.dirtyRender = false;
             }
         };
-        var bufferGraphicsData = function (graphicsId, node, renderCmds) {
+        var bufferGraphicsData = function (node, graphics, renderCmds) {
+            if (graphics === void 0) { graphics = null; }
             if (renderCmds === void 0) { renderCmds = null; }
+            var isGraphics = false;
             var width = node.width;
             var height = node.height;
-            var isGraphics = false;
-            if (renderCmds === null) {
+            if (graphics) {
+                var graphicsId = graphics.$targetDisplay.$nativeNode.id;
                 if (!graphicsDataMap[graphicsId]) {
                     var graphicData = { x: node.x, y: node.y, width: node.width, height: node.height, renderCmds: [] };
                     graphicsDataMap[graphicsId] = graphicData;
@@ -18837,6 +18838,9 @@ var egret;
                 currGraphicData.renderCmds.length = 0;
                 renderCmds = currGraphicData.renderCmds;
                 isGraphics = true;
+            }
+            if (renderCmds == null || renderCmds == undefined) {
+                return;
             }
             var canvasScaleX = egret.sys.DisplayList.$canvasScaleX;
             var canvasScaleY = egret.sys.DisplayList.$canvasScaleY;
@@ -18943,7 +18947,7 @@ var egret;
                     renderCmds.push(-1);
                 }
                 if (isGraphics) {
-                    graphicsMap[graphicsId].$targetDisplay.$nativeNode.setGraphicsRenderData(renderCmds);
+                    graphics.$targetDisplay.$nativeNode.setGraphicsRenderData(renderCmds);
                 }
                 if (!NativeDelegate.forHitTest) {
                     node.dirtyRender = false;
@@ -18969,8 +18973,6 @@ var egret;
         NativeDelegate.activateBuffer = function (buffer) {
             NativeDelegate.activateWebGLBuffer(buffer);
         };
-        var textFieldMap = egret.createMap();
-        var graphicsMap = egret.createMap();
         var bitmapDataMap = {};
         var textFieldDataMap = {};
         var customFilterDataMap = {};
