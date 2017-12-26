@@ -177,14 +177,14 @@ namespace egret.NativeDelegate {
         }
     }
 
+
+
     export let dirtyTextField = function (textField: TextField): void {
         dirtyTextFieldList.push(textField);
-        textFieldMap[textField.$nativeNode.id] = textField;
     }
 
     export let dirtyGraphics = function (graphics: Graphics): void {
         dirtyGraphicsList.push(graphics);
-        graphicsMap[graphics.$targetDisplay.$nativeNode.id] = graphics;
     }
 
     let validateDirtyTextField = function (): void {
@@ -210,7 +210,7 @@ namespace egret.NativeDelegate {
                 else {
                     textField.$nativeNode.setTextRect(node.x, node.y, width, height);
                 }
-                bufferTextData(textField.$nativeNode.id);
+                bufferTextData(textField);
             }
         }
     }
@@ -231,7 +231,7 @@ namespace egret.NativeDelegate {
                 else {
                     graphics.$targetDisplay.$nativeNode.setGraphicsRect(node.x, node.y, node.width, node.height, graphics.$targetIsSprite);
                 }
-                bufferGraphicsData(graphics.$targetDisplay.$nativeNode.id, node);
+                bufferGraphicsData(node, graphics);
             }
         }
     }
@@ -313,9 +313,9 @@ namespace egret.NativeDelegate {
         }
     }
 
-    let bufferTextData = function (textFieldId: number): void {
-        let textField = textFieldMap[textFieldId];
+    let bufferTextData = function (textField: TextField): void {
         let node: sys.TextNode = <sys.TextNode>textField.$renderNode;
+        let textFieldId = textField.$nativeNode.id;
         let width = node.width - node.x;
         let height = node.height - node.y;
         if (width <= 0 || height <= 0 || !width || !height) {
@@ -386,7 +386,7 @@ namespace egret.NativeDelegate {
 
             if (textField.$graphicsNode) {
                 renderCmds.push(1015);
-                bufferGraphicsData(textFieldId, textField.$graphicsNode, renderCmds);
+                bufferGraphicsData(textField.$graphicsNode, null, renderCmds);
                 renderCmds.push(1016);
             }
             let drawData = node.drawData;
@@ -513,12 +513,13 @@ namespace egret.NativeDelegate {
         }
     }
 
-    let bufferGraphicsData = function (graphicsId: number, node: sys.GraphicsNode, renderCmds: Array<number> = null): void {
+    let bufferGraphicsData = function (node: sys.GraphicsNode, graphics: Graphics = null, renderCmds: Array<number> = null): void {
+        let isGraphics = false;
         let width = node.width;
         let height = node.height;
 
-        let isGraphics = false;
-        if (renderCmds === null) {
+        if (graphics) {
+            let graphicsId = graphics.$targetDisplay.$nativeNode.id;
             if (!graphicsDataMap[graphicsId]) {
                 let graphicData = { x: node.x, y: node.y, width: node.width, height: node.height, renderCmds: [] };
                 graphicsDataMap[graphicsId] = graphicData;
@@ -533,6 +534,11 @@ namespace egret.NativeDelegate {
 
             renderCmds = currGraphicData.renderCmds;
             isGraphics = true;
+        }
+
+        if(renderCmds == null || renderCmds == undefined)
+        {
+            return;
         }
 
         let canvasScaleX = sys.DisplayList.$canvasScaleX;
@@ -650,7 +656,7 @@ namespace egret.NativeDelegate {
             }
 
             if (isGraphics) {
-                graphicsMap[graphicsId].$targetDisplay.$nativeNode.setGraphicsRenderData(renderCmds);
+                graphics.$targetDisplay.$nativeNode.setGraphicsRenderData(renderCmds);
             }
 
             if (!forHitTest) {
@@ -675,9 +681,6 @@ namespace egret.NativeDelegate {
     export let activateBuffer = function (buffer: sys.RenderBuffer): void {
         activateWebGLBuffer(<web.WebGLRenderBuffer>buffer);
     }
-
-    let textFieldMap = egret.createMap<TextField>();
-    let graphicsMap = egret.createMap<Graphics>();
 
     let bitmapDataMap = {};
     var textFieldDataMap = {};

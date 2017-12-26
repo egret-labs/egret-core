@@ -2351,7 +2351,6 @@ var egret;
                     var buffer = egret.sys.customHitTestBuffer;
                     buffer.resize(3, 3);
                     egret.NativeDelegate.forHitTest = true;
-                    var savedBuffer = egret.NativeDelegate.getCurrentBuffer();
                     egret.NativeDelegate.activateBuffer(buffer);
                     egret.NativeDelegate.update();
                     egret.NativeDelegate.renderDisplayObjectWithOffset(self.$nativeNode.id, 1 - localX, 1 - localY);
@@ -2361,7 +2360,7 @@ var egret;
                     catch (e) {
                         throw new Error(egret.sys.tr(1039));
                     }
-                    egret.NativeDelegate.activateBuffer(savedBuffer);
+                    egret.NativeDelegate.activateBuffer(null);
                     egret.NativeDelegate.forHitTest = false;
                     if (data[3] === 0) {
                         return false;
@@ -7348,8 +7347,14 @@ egret.Capabilities.$runtimeType = function () {
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+/**
+ * @private
+ */
 var egret;
 (function (egret) {
+    /**
+     * @private
+     */
     egret.nativeRender = __global.nativeRender;
 })(egret || (egret = {}));
 /**
@@ -7358,9 +7363,6 @@ var egret;
 (function (egret) {
     var NativeDelegate;
     (function (NativeDelegate) {
-        var renderCmdBuffer;
-        var vertexCmdBuffer;
-        var indexCmdBuffer;
         var updateFun;
         var renderFun;
         var resizeFun;
@@ -7413,10 +7415,7 @@ var egret;
                 getPixelsFun = Module.getPixels;
                 Module.customInit();
                 Module.downloadBuffers(function (buffer, buffer1, buffer2, buffer3) {
-                    renderCmdBuffer = buffer;
-                    vertexCmdBuffer = buffer1;
-                    indexCmdBuffer = buffer2;
-                    egret.NativeNode.init(buffer3, __global.nativeRender, bitmapDataMap, filterMap, customFilterDataMap);
+                    egret.NativeNode.init(buffer3, bitmapDataMap, filterMap, customFilterDataMap);
                     updateFun = Module.update;
                     renderFun = Module.render;
                     resizeFun = Module.resize;
@@ -7475,13 +7474,11 @@ var egret;
                 updateFun();
             }
         };
-        NativeDelegate.dirtyTextField = function (node) {
-            dirtyTextFieldList.push(node);
-            textFieldMap[node.$nativeNode.id] = node;
+        NativeDelegate.dirtyTextField = function (textField) {
+            dirtyTextFieldList.push(textField);
         };
         NativeDelegate.dirtyGraphics = function (graphics) {
             dirtyGraphicsList.push(graphics);
-            graphicsMap[graphics.$targetDisplay.$nativeNode.id] = graphics;
         };
         var validateDirtyTextField = function () {
             var length = dirtyTextFieldList.length;
@@ -7506,7 +7503,7 @@ var egret;
                     else {
                         textField.$nativeNode.setTextRect(node.x, node.y, width, height);
                     }
-                    bufferTextData(textField.$nativeNode.id);
+                    bufferTextData(textField);
                 }
             }
         };
@@ -7526,7 +7523,7 @@ var egret;
                     else {
                         graphics.$targetDisplay.$nativeNode.setGraphicsRect(node.x, node.y, node.width, node.height, graphics.$targetIsSprite);
                     }
-                    bufferGraphicsData(graphics.$targetDisplay.$nativeNode.id, node);
+                    bufferGraphicsData(node, graphics);
                 }
             }
         };
@@ -7601,9 +7598,9 @@ var egret;
                 }
             }
         };
-        var bufferTextData = function (textFieldId) {
-            var textField = textFieldMap[textFieldId];
+        var bufferTextData = function (textField) {
             var node = textField.$renderNode;
+            var textFieldId = textField.$nativeNode.id;
             var width = node.width - node.x;
             var height = node.height - node.y;
             if (width <= 0 || height <= 0 || !width || !height) {
@@ -7668,17 +7665,9 @@ var egret;
                     renderCmds.push(1);
                 }
                 if (textField.$graphicsNode) {
-                    renderCmds.push(1020);
-                    renderCmds.push(-node.x);
-                    renderCmds.push(-node.y);
-                    renderCmds.push(0);
                     renderCmds.push(1015);
-                    bufferGraphicsData(textFieldId, textField.$graphicsNode, renderCmds);
+                    bufferGraphicsData(textField.$graphicsNode, null, renderCmds);
                     renderCmds.push(1016);
-                    renderCmds.push(1020);
-                    renderCmds.push(node.x);
-                    renderCmds.push(node.y);
-                    renderCmds.push(0);
                 }
                 var drawData = node.drawData;
                 var length_2 = drawData.length;
@@ -7765,9 +7754,12 @@ var egret;
                         currTextData.renderParms += text;
                         currTextData.renderParms += ";";
                         // 1013: strokeText
+                        renderCmds.push(1013);
                         if (stroke) {
-                            renderCmds.push(1013);
                             renderCmds.push(stroke * 2);
+                        }
+                        else {
+                            renderCmds.push(0);
                         }
                         //1014: fillText
                         renderCmds.push(1014);
@@ -7790,12 +7782,14 @@ var egret;
                 node.dirtyRender = false;
             }
         };
-        var bufferGraphicsData = function (graphicsId, node, renderCmds) {
+        var bufferGraphicsData = function (node, graphics, renderCmds) {
+            if (graphics === void 0) { graphics = null; }
             if (renderCmds === void 0) { renderCmds = null; }
+            var isGraphics = false;
             var width = node.width;
             var height = node.height;
-            var isGraphics = false;
-            if (renderCmds === null) {
+            if (graphics) {
+                var graphicsId = graphics.$targetDisplay.$nativeNode.id;
                 if (!graphicsDataMap[graphicsId]) {
                     var graphicData = { x: node.x, y: node.y, width: node.width, height: node.height, renderCmds: [] };
                     graphicsDataMap[graphicsId] = graphicData;
@@ -7808,6 +7802,9 @@ var egret;
                 currGraphicData.renderCmds.length = 0;
                 renderCmds = currGraphicData.renderCmds;
                 isGraphics = true;
+            }
+            if (renderCmds == null || renderCmds == undefined) {
+                return;
             }
             var canvasScaleX = egret.sys.DisplayList.$canvasScaleX;
             var canvasScaleY = egret.sys.DisplayList.$canvasScaleY;
@@ -7914,7 +7911,7 @@ var egret;
                     renderCmds.push(-1);
                 }
                 if (isGraphics) {
-                    graphicsMap[graphicsId].$targetDisplay.$nativeNode.setGraphicsRenderData(renderCmds);
+                    graphics.$targetDisplay.$nativeNode.setGraphicsRenderData(renderCmds);
                 }
                 if (!NativeDelegate.forHitTest) {
                     node.dirtyRender = false;
@@ -7927,9 +7924,6 @@ var egret;
             }
             activateBufferFun(buffer.bufferIdForWasm, buffer.width, buffer.height);
         };
-        NativeDelegate.getCurrentBuffer = function () {
-            return NativeDelegate.currentWebGLBuffer;
-        };
         NativeDelegate.getPixels = function (x, y, width, height) {
             if (width === void 0) { width = 1; }
             if (height === void 0) { height = 1; }
@@ -7940,8 +7934,6 @@ var egret;
         NativeDelegate.activateBuffer = function (buffer) {
             NativeDelegate.activateWebGLBuffer(buffer);
         };
-        var textFieldMap = egret.createMap();
-        var graphicsMap = egret.createMap();
         var bitmapDataMap = {};
         var textFieldDataMap = {};
         var customFilterDataMap = {};
@@ -11324,7 +11316,6 @@ var egret;
             this.$bitmapData.width = width;
             this.$bitmapData.height = height;
             if (egret.nativeRender) {
-                var savedBuffer = egret.NativeDelegate.getCurrentBuffer();
                 egret.NativeDelegate.activateBuffer(this.$renderBuffer);
                 var useClip = false;
                 var clipX = 0;
@@ -11340,7 +11331,7 @@ var egret;
                 }
                 egret.NativeDelegate.update();
                 egret.NativeDelegate.renderDisplayObject(displayObject.$nativeNode.id, scale, useClip, clipX, clipY, clipW, clipH);
-                egret.NativeDelegate.activateBuffer(savedBuffer);
+                egret.NativeDelegate.activateBuffer(null);
             }
             else {
                 var matrix = egret.Matrix.create();
@@ -15946,109 +15937,6 @@ var egret;
                     var tsY = destH / textureHeight * scale;
                     node.drawImage(bitmapX, bitmapY, bitmapWidth, bitmapHeight, tsX * offsetX, tsY * offsetY, tsX * bitmapWidth, tsY * bitmapHeight);
                 }
-<<<<<<< Updated upstream
-                if (textField.$graphicsNode) {
-                    renderCmds.push(1015);
-                    bufferGraphicsData(textFieldId, textField.$graphicsNode, renderCmds);
-                    renderCmds.push(1016);
-                }
-                var drawData = node.drawData;
-                var length_8 = drawData.length;
-                var pos = 0;
-                while (pos < length_8) {
-                    var x = drawData[pos++];
-                    var y = drawData[pos++];
-                    var text = drawData[pos++];
-                    var format = drawData[pos++];
-                    var textColor = format.textColor == null ? node.textColor : format.textColor;
-                    var strokeColor = format.strokeColor == null ? node.strokeColor : format.strokeColor;
-                    var stroke = format.stroke == null ? node.stroke : format.stroke;
-                    // 1012: setFontFormat 
-                    renderCmds.push(1012);
-                    var fontStr = egret.getFontString(node, format);
-                    var fontPath = "";
-                    var fontSize = -1;
-                    var strArray = fontStr.split(",");
-                    if (strArray.length > 0) {
-                        var arr = strArray[0].split(" ");
-                        for (var i = 0; i < arr.length; i++) {
-                            if (arr[i].indexOf("px") != -1) {
-                                fontSize = Number(arr[i].replace(/px/, ""));
-                                fontPath = fontStr.substring(fontStr.indexOf(arr[i]) + arr[i].length + 1);
-                                break;
-                            }
-                        }
-                        renderCmds.push(fontSize);
-                        //TODO
-                        // if (fontPath != this.currentFont) {
-                        currTextData.renderParms += fontPath;
-                        // }
-                        if (fontStr.indexOf("bold") == -1) {
-                            renderCmds.push(0);
-                        }
-                        else {
-                            renderCmds.push(1);
-                        }
-                        if (fontStr.indexOf("italic") == -1) {
-                            renderCmds.push(0);
-                        }
-                        else {
-                            renderCmds.push(1);
-                        }
-                        currTextData.renderParms += ";";
-                        //  setFillStyle
-                        var fontColor = 0; //black
-                        var fillColor = void 0;
-                        var fillAlpha = void 0;
-                        var fillStr = egret.toColorString(textColor);
-                        if (fillStr.indexOf("r") == -1) {
-                            fillStr = fillStr.replace(/#/, "");
-                            fontColor = parseInt(fillStr, 16);
-                        }
-                        else {
-                            fillStr = fillStr.replace(/rgba\(/, "");
-                            fillStr = fillStr.replace(/\)/, "");
-                            var colorArr = fillStr.split(",");
-                            fillColor = (Number(colorArr[0]) << 16) | (Number(colorArr[1]) << 8) | Number(colorArr[2]);
-                            fillAlpha = Number(arr[3]);
-                        }
-                        // console.log("font color = " + fontColor);
-                        renderCmds.push(fontColor);
-                        // native fillColor fillAlph no implement
-                        // renderCmds.push(fillColor);
-                        // renderCmds.push(fillAlpha);
-                        // setStrokeStype
-                        var strokeStr = egret.toColorString(strokeColor);
-                        var strokeColorInt = 0; // black
-                        var strokeAlpha = void 0;
-                        if (strokeStr.indexOf("r") == -1) {
-                            strokeStr = strokeStr.replace(/#/, "");
-                            strokeColorInt = parseInt(strokeStr, 16);
-                        }
-                        else {
-                            strokeStr = strokeStr.replace(/rgba\(/, "");
-                            strokeStr = strokeStr.replace(/\)/, "");
-                            var coloarArr2 = strokeStr.split(",");
-                            strokeColorInt = (Number(coloarArr2[0]) << 16) | (Number(coloarArr2[1]) << 8) | Number(coloarArr2[2]);
-                            strokeAlpha = Number(arr[3]);
-                        }
-                        renderCmds.push(strokeColorInt);
-                        // renderCmds.push(strokeAlpha);
-                        currTextData.renderParms += text;
-                        currTextData.renderParms += ";";
-                        // 1013: strokeText
-                        renderCmds.push(1013);
-                        if (stroke) {
-                            renderCmds.push(stroke * 2);
-                        }
-                        else {
-                            renderCmds.push(0);
-                        }
-                        //1014: fillText
-                        renderCmds.push(1014);
-                        renderCmds.push(x);
-                        renderCmds.push(y);
-=======
                 else if (fillMode == egret.BitmapFillMode.CLIP) {
                     var displayW = Math.min(textureWidth, destW);
                     var displayH = Math.min(textureHeight, destH);
@@ -16065,7 +15953,6 @@ var egret;
                             var displayH = Math.min(destH - startY, textureHeight);
                             BitmapNode.drawClipImage(node, scale, bitmapX, bitmapY, scaledBitmapW, scaledBitmapH, offsetX, offsetY, displayW, displayH, startX, startY);
                         }
->>>>>>> Stashed changes
                     }
                 }
             };
@@ -16450,241 +16337,6 @@ var egret;
 //////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
-<<<<<<< Updated upstream
-    var displayObjectId = 0;
-    var textFieldMap;
-    var graphicsMap;
-    var bitmapDataMap;
-    var bitmapDataId = 1;
-    var filterMap;
-    var filterId = 1;
-    var customFilterDataMap = {};
-    var customFilterUniformMap = {};
-    var dirtyTextField;
-    var dirtyGraphics;
-    var displayCmdBufferIndex = 2;
-    var displayCmdBufferSize = 0;
-    var displayCmdBuffer;
-    if (__global.nativeRender) {
-        displayCmdBuffer = new Float32Array(20000);
-    }
-    var isForNative = false;
-    /**
-     * @private
-     */
-    var NativeNode = (function () {
-        function NativeNode(type) {
-            this.id = displayObjectId;
-            this.$obj = new Module.WasmNode(this.id, type);
-            displayCmdBuffer[displayCmdBufferIndex++] = 0 /* CREATE_OBJECT */;
-            displayCmdBuffer[displayCmdBufferIndex++] = displayObjectId;
-            displayCmdBuffer[displayCmdBufferIndex++] = type;
-            displayCmdBufferSize++;
-            displayObjectId++;
-        }
-        NativeNode.init = function (buffer, isNative, map1, map2, map3) {
-            //初始化之前有原生对象创建
-            if (displayCmdBufferIndex != 2) {
-                console.log("displayCmdBufferIndex " + displayCmdBufferIndex);
-                for (var i = 2; i < displayCmdBufferIndex; i++) {
-                    buffer[i] = displayCmdBuffer[i];
-                }
-            }
-            displayCmdBuffer = buffer;
-            isForNative = isNative;
-            displayCmdBuffer[0] = 0;
-            displayCmdBuffer[1] = 2;
-            bitmapDataMap = map1;
-            filterMap = map2;
-            customFilterDataMap = map3;
-        };
-        NativeNode.update = function () {
-            displayCmdBuffer[0] = displayCmdBufferSize;
-            displayCmdBuffer[1] = displayCmdBufferIndex;
-            displayCmdBufferSize = 0;
-            displayCmdBufferIndex = 2;
-        };
-        NativeNode.prototype.addChildAt = function (childId, index) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 3 /* ADD_CHILD_AT */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = childId;
-            displayCmdBuffer[displayCmdBufferIndex++] = index;
-            displayCmdBufferSize++;
-        };
-        NativeNode.prototype.removeChild = function (childId) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 2 /* REMOVE_CHILD */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = childId;
-            displayCmdBufferSize++;
-        };
-        NativeNode.prototype.swapChild = function (index1, index2) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 4 /* SWAP_CHILD_AT */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = index1;
-            displayCmdBuffer[displayCmdBufferIndex++] = index2;
-            displayCmdBufferSize++;
-        };
-        NativeNode.prototype.setX = function (value) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 101 /* SET_X */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value;
-            displayCmdBufferSize++;
-        };
-        NativeNode.prototype.setY = function (value) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 102 /* SET_Y */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value;
-            displayCmdBufferSize++;
-        };
-        NativeNode.prototype.setRotation = function (value) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 103 /* SET_ROTATION */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value;
-            displayCmdBufferSize++;
-        };
-        NativeNode.prototype.setScaleX = function (value) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 104 /* SET_SCALE_X */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value;
-            displayCmdBufferSize++;
-        };
-        NativeNode.prototype.setScaleY = function (value) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 105 /* SET_SCALE_Y */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value;
-            displayCmdBufferSize++;
-        };
-        NativeNode.prototype.setSkewX = function (value) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 106 /* SET_SKEW_X */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value;
-            displayCmdBufferSize++;
-        };
-        NativeNode.prototype.setSkewY = function (value) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 107 /* SET_SKEW_Y */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value;
-            displayCmdBufferSize++;
-        };
-        NativeNode.prototype.setAlpha = function (value) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 108 /* SET_ALPHA */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value;
-            displayCmdBufferSize++;
-        };
-        NativeNode.prototype.setAnchorOffsetX = function (value) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 116 /* SET_ANCHOR_OFFSET_X */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value;
-            displayCmdBufferSize++;
-        };
-        NativeNode.prototype.setAnchorOffsetY = function (value) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 117 /* SET_ANCHOR_OFFSET_Y */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value;
-            displayCmdBufferSize++;
-        };
-        NativeNode.prototype.setVisible = function (value) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 118 /* SET_VISIBLE */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value ? 1 : 0;
-            displayCmdBufferSize++;
-        };
-        NativeNode.prototype.setBlendMode = function (value) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 126 /* SET_BLEND_MODE */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value;
-            displayCmdBufferSize++;
-        };
-        NativeNode.prototype.setMaskRect = function (x, y, w, h) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 127 /* SET_MASK_RECT */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = x;
-            displayCmdBuffer[displayCmdBufferIndex++] = y;
-            displayCmdBuffer[displayCmdBufferIndex++] = w;
-            displayCmdBuffer[displayCmdBufferIndex++] = h;
-            displayCmdBufferSize++;
-        };
-        NativeNode.prototype.setScrollRect = function (x, y, w, h) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 128 /* SET_SCROLL_RECT */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = x;
-            displayCmdBuffer[displayCmdBufferIndex++] = y;
-            displayCmdBuffer[displayCmdBufferIndex++] = w;
-            displayCmdBuffer[displayCmdBufferIndex++] = h;
-            displayCmdBufferSize++;
-        };
-        NativeNode.prototype.setFilters = function (filters) {
-            if (!filters) {
-                displayCmdBuffer[displayCmdBufferIndex++] = 134 /* SET_FILTERS */;
-                displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-                displayCmdBuffer[displayCmdBufferIndex++] = 0;
-                displayCmdBufferSize++;
-                return;
-            }
-            displayCmdBuffer[displayCmdBufferIndex++] = 134 /* SET_FILTERS */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            var lengthIndex = displayCmdBufferIndex++;
-            var length = filters.length;
-            var trueLength = length;
-            for (var i = 0; i < length; i++) {
-                var filter = filters[i];
-                if (filter.type == "blur") {
-                    var blurFilter = filter;
-                    if (blurFilter.$blurX != 0 && blurFilter.$blurY != 0) {
-                        trueLength++;
-                        displayCmdBuffer[displayCmdBufferIndex++] = blurFilter.blurXFilter.$id;
-                        displayCmdBuffer[displayCmdBufferIndex++] = blurFilter.blurYFilter.$id;
-                    }
-                    else if (blurFilter.$blurX != 0) {
-                        displayCmdBuffer[displayCmdBufferIndex++] = blurFilter.blurXFilter.$id;
-                    }
-                    else if (blurFilter.$blurY != 0) {
-                        displayCmdBuffer[displayCmdBufferIndex++] = blurFilter.blurYFilter.$id;
-                    }
-                    else {
-                        trueLength--;
-                    }
-                }
-                else {
-                    displayCmdBuffer[displayCmdBufferIndex++] = filter.$id;
-                }
-            }
-            displayCmdBuffer[lengthIndex] = trueLength;
-            displayCmdBufferSize++;
-        };
-        NativeNode.createFilter = function (filter) {
-            filter.$id = filterId;
-            filter.$obj = new Module.WasmNode(filterId, 6 /* FILTER */);
-            filterMap[filterId] = filter;
-            filterId++;
-            displayCmdBuffer[displayCmdBufferIndex++] = 0 /* CREATE_OBJECT */;
-            displayCmdBuffer[displayCmdBufferIndex++] = filter.$id;
-            displayCmdBuffer[displayCmdBufferIndex++] = 6 /* FILTER */;
-            displayCmdBufferSize++;
-        };
-        NativeNode.setFilterPadding = function (filterId, paddingTop, paddingBottom, paddingLeft, paddingRight) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 136 /* SET_PADDING_TO_FILTER */;
-            displayCmdBuffer[displayCmdBufferIndex++] = filterId;
-            displayCmdBuffer[displayCmdBufferIndex++] = paddingTop;
-            displayCmdBuffer[displayCmdBufferIndex++] = paddingBottom;
-            displayCmdBuffer[displayCmdBufferIndex++] = paddingLeft;
-            displayCmdBuffer[displayCmdBufferIndex++] = paddingRight;
-            displayCmdBufferSize++;
-        };
-        NativeNode.prototype.setMask = function (value) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 131 /* SET_MASK */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value;
-            displayCmdBufferSize++;
-        };
-        NativeNode.setValuesToBitmapData = function (value) {
-            var bitmapData = value.bitmapData;
-            if (!bitmapData.$bitmapDataId) {
-                bitmapData.$bitmapDataId = bitmapDataId;
-                bitmapDataMap[bitmapDataId] = bitmapData;
-                bitmapDataId++;
-=======
     var sys;
     (function (sys) {
         /**
@@ -16728,7 +16380,6 @@ var egret;
                 _this.uvs = [];
                 _this.indices = [];
                 return _this;
->>>>>>> Stashed changes
             }
             /**
              * 绘制一次位图
@@ -17470,26 +17121,6 @@ var egret;
             renderBufferPool.push(displayBuffer);
             return drawCalls;
         };
-<<<<<<< Updated upstream
-        NativeNode.disposeTextData = function (node) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 149 /* DISPOSE_TEXT_DATA */;
-            displayCmdBuffer[displayCmdBufferIndex++] = node.$nativeNode.id;
-            displayCmdBufferSize++;
-        };
-        NativeNode.disposeGraphicData = function (graphic) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 148 /* DISPOSE_GRAPHICS_DATA */;
-            displayCmdBuffer[displayCmdBufferIndex++] = graphic.$targetDisplay.$nativeNode.id;
-            displayCmdBufferSize++;
-        };
-        NativeNode.disposeFilter = function (filter) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 142 /* DISPOSE_FILTER */;
-            displayCmdBuffer[displayCmdBufferIndex++] = filter.$id;
-            displayCmdBufferSize++;
-            delete filterMap[filter.$id];
-            var blurFilter = filter;
-            if (blurFilter.blurXFilter) {
-                delete filterMap[blurFilter.blurXFilter.$id];
-=======
         CanvasRenderer.prototype.drawWithClip = function (displayObject, context, offsetX, offsetY) {
             var drawCalls = 0;
             var hasBlendMode = (displayObject.$blendMode !== 0);
@@ -17499,7 +17130,6 @@ var egret;
                 if (!compositeOp) {
                     compositeOp = defaultCompositeOp;
                 }
->>>>>>> Stashed changes
             }
             var scrollRect = displayObject.$scrollRect ? displayObject.$scrollRect : displayObject.$maskRect;
             var mask = displayObject.$mask;
@@ -19351,23 +18981,18 @@ var egret;
 var egret;
 (function (egret) {
     var displayObjectId = 0;
-    var textFieldMap;
-    var graphicsMap;
     var bitmapDataMap;
     var bitmapDataId = 1;
     var filterMap;
     var filterId = 1;
     var customFilterDataMap = {};
     var customFilterUniformMap = {};
-    var dirtyTextField;
-    var dirtyGraphics;
     var displayCmdBufferIndex = 2;
     var displayCmdBufferSize = 0;
     var displayCmdBuffer;
     if (egret.nativeRender) {
         displayCmdBuffer = new Float32Array(20000);
     }
-    var isForNative = false;
     /**
      * @private
      */
@@ -19381,16 +19006,14 @@ var egret;
             displayCmdBufferSize++;
             displayObjectId++;
         }
-        NativeNode.init = function (buffer, isNative, map1, map2, map3) {
+        NativeNode.init = function (buffer, map1, map2, map3) {
             //初始化之前有原生对象创建
             if (displayCmdBufferIndex != 2) {
-                console.log("displayCmdBufferIndex " + displayCmdBufferIndex);
                 for (var i = 2; i < displayCmdBufferIndex; i++) {
                     buffer[i] = displayCmdBuffer[i];
                 }
             }
             displayCmdBuffer = buffer;
-            isForNative = isNative;
             displayCmdBuffer[0] = 0;
             displayCmdBuffer[1] = 2;
             bitmapDataMap = map1;
@@ -19554,6 +19177,7 @@ var egret;
         };
         NativeNode.createFilter = function (filter) {
             filter.$id = filterId;
+            filter.$obj = new Module.WasmNode(filterId, 6 /* FILTER */);
             filterMap[filterId] = filter;
             filterId++;
             displayCmdBuffer[displayCmdBufferIndex++] = 0 /* CREATE_OBJECT */;
@@ -19855,9 +19479,6 @@ var egret;
             displayCmdBufferSize += 3;
         };
         NativeNode.setDataToFilter = function (id) {
-            if (isForNative === false) {
-                return;
-            }
             var currFilter = filterMap[id];
             var customArr = [];
             var filterType;
@@ -19965,6 +19586,16 @@ var egret;
             if (bitmapData.$bitmapDataId) {
                 delete bitmapDataMap[bitmapData.$bitmapDataId];
             }
+        };
+        NativeNode.disposeTextData = function (node) {
+            displayCmdBuffer[displayCmdBufferIndex++] = 149 /* DISPOSE_TEXT_DATA */;
+            displayCmdBuffer[displayCmdBufferIndex++] = node.$nativeNode.id;
+            displayCmdBufferSize++;
+        };
+        NativeNode.disposeGraphicData = function (graphic) {
+            displayCmdBuffer[displayCmdBufferIndex++] = 148 /* DISPOSE_GRAPHICS_DATA */;
+            displayCmdBuffer[displayCmdBufferIndex++] = graphic.$targetDisplay.$nativeNode.id;
+            displayCmdBufferSize++;
         };
         NativeNode.disposeFilter = function (filter) {
             displayCmdBuffer[displayCmdBufferIndex++] = 142 /* DISPOSE_FILTER */;
@@ -21766,169 +21397,6 @@ var egret;
             /**
              * @private
              */
-<<<<<<< Updated upstream
-            set: function (value) {
-                this.$setBackgroundColor(value);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * @private
-         */
-        TextField.prototype.$setBackgroundColor = function (value) {
-            this.$TextField[34 /* backgroundColor */] = value;
-        };
-        /**
-         * @private
-         *
-         */
-        TextField.prototype.fillBackground = function (lines) {
-            var graphics = this.$graphicsNode;
-            if (graphics) {
-                graphics.clear();
-            }
-            var values = this.$TextField;
-            if (values[33 /* background */] || values[31 /* border */] || (lines && lines.length > 0)) {
-                if (!graphics) {
-                    graphics = this.$graphicsNode = new egret.sys.GraphicsNode();
-                    if (!__global.nativeRender) {
-                        var groupNode = new egret.sys.GroupNode();
-                        groupNode.addNode(graphics);
-                        groupNode.addNode(this.textNode);
-                        this.$renderNode = groupNode;
-                    }
-                    else {
-                        this.$renderNode = this.textNode;
-                    }
-                }
-                var fillPath = void 0;
-                var strokePath = void 0;
-                //渲染背景
-                if (values[33 /* background */]) {
-                    fillPath = graphics.beginFill(values[34 /* backgroundColor */]);
-                    fillPath.drawRect(0, 0, this.$getWidth(), this.$getHeight());
-                }
-                //渲染边框
-                if (values[31 /* border */]) {
-                    strokePath = graphics.lineStyle(1, values[32 /* borderColor */]);
-                    //1像素和3像素线条宽度的情况，会向右下角偏移0.5像素绘制。少画一像素宽度，正好能不超出文本测量边界。
-                    strokePath.drawRect(0, 0, this.$getWidth() - 1, this.$getHeight() - 1);
-                }
-                //渲染下划线
-                if (lines && lines.length > 0) {
-                    var textColor = values[2 /* textColor */];
-                    var lastColor = -1;
-                    var length_11 = lines.length;
-                    for (var i = 0; i < length_11; i += 4) {
-                        var x = lines[i];
-                        var y = lines[i + 1];
-                        var w = lines[i + 2];
-                        var color = lines[i + 3] || textColor;
-                        if (lastColor < 0 || lastColor != color) {
-                            lastColor = color;
-                            strokePath = graphics.lineStyle(2, color, 1, egret.CapsStyle.NONE);
-                        }
-                        strokePath.moveTo(x, y);
-                        strokePath.lineTo(x + w, y);
-                    }
-                }
-            }
-            if (graphics) {
-                var bounds = this.$getRenderBounds();
-                graphics.x = bounds.x;
-                graphics.y = bounds.y;
-                graphics.width = bounds.width;
-                graphics.height = bounds.height;
-                egret.Rectangle.release(bounds);
-            }
-        };
-        /**
-         * Enter the text automatically entered into the input state, the input type is text only and may only be invoked in the user interaction.
-         * @version Egret 3.0.8
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 输入文本自动进入到输入状态，仅在类型是输入文本并且是在用户交互下才可以调用。
-         * @version Egret 3.0.8
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        TextField.prototype.setFocus = function () {
-            if (this.type == egret.TextFieldType.INPUT && this.$stage) {
-                this.inputUtils.$onFocus();
-            }
-        };
-        /**
-         * @private
-         *
-         */
-        TextField.prototype.$onRemoveFromStage = function () {
-            _super.prototype.$onRemoveFromStage.call(this);
-            this.removeEvent();
-            if (this.$TextField[24 /* type */] == egret.TextFieldType.INPUT) {
-                this.inputUtils._removeStageText();
-            }
-            if (this.textNode) {
-                this.textNode.clean();
-                if (__global.nativeRender) {
-                    egret.NativeNode.disposeTextData(this);
-                }
-            }
-        };
-        /**
-         * @private
-         *
-         * @param stage
-         * @param nestLevel
-         */
-        TextField.prototype.$onAddToStage = function (stage, nestLevel) {
-            _super.prototype.$onAddToStage.call(this, stage, nestLevel);
-            this.addEvent();
-            if (this.$TextField[24 /* type */] == egret.TextFieldType.INPUT) {
-                this.inputUtils._addStageText();
-            }
-        };
-        TextField.prototype.$invalidateTextField = function () {
-            var self = this;
-            self.$renderDirty = true;
-            self.$TextField[18 /* textLinesChanged */] = true;
-            if (__global.nativeRender) {
-                egret.NativeDelegate.dirtyTextField(this);
-            }
-            else {
-                var p = self.$parent;
-                if (p && !p.$cacheDirty) {
-                    p.$cacheDirty = true;
-                    p.$cacheDirtyUp();
-                }
-                var maskedObject = self.$maskedObject;
-                if (maskedObject && !maskedObject.$cacheDirty) {
-                    maskedObject.$cacheDirty = true;
-                    maskedObject.$cacheDirtyUp();
-                }
-            }
-        };
-        TextField.prototype.$getRenderBounds = function () {
-            var bounds = this.$getContentBounds();
-            var tmpBounds = egret.Rectangle.create();
-            tmpBounds.copyFrom(bounds);
-            if (this.$TextField[31 /* border */]) {
-                tmpBounds.width += 2;
-                tmpBounds.height += 2;
-            }
-            var _strokeDouble = this.$TextField[27 /* stroke */] * 2;
-            if (_strokeDouble > 0) {
-                tmpBounds.width += _strokeDouble * 2;
-                tmpBounds.height += _strokeDouble * 2;
-            }
-            tmpBounds.x -= _strokeDouble + 2; //+2和+4 是为了webgl纹理太小导致裁切问题
-            tmpBounds.y -= _strokeDouble + 2;
-            tmpBounds.width = Math.ceil(tmpBounds.width) + 4;
-            tmpBounds.height = Math.ceil(tmpBounds.height) + 4;
-            return tmpBounds;
-=======
             _this.$isTyping = false;
             var textNode = new egret.sys.TextNode();
             textNode.fontFamily = TextField.default_fontFamily;
@@ -21978,7 +21446,6 @@ var egret;
         }
         TextField.prototype.createNativeNode = function () {
             this.$nativeNode = new egret.NativeNode(7 /* TEXT */);
->>>>>>> Stashed changes
         };
         /**
          * @private
@@ -23153,6 +22620,9 @@ var egret;
             }
             if (this.textNode) {
                 this.textNode.clean();
+                if (__global.nativeRender) {
+                    egret.NativeNode.disposeTextData(this);
+                }
             }
         };
         /**

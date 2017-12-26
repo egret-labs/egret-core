@@ -5019,7 +5019,13 @@ declare namespace egret_native {
     function sendInfoToPlugin(info: string): void;
     function receivedPluginInfo(info: string): void;
 }
+/**
+ * @private
+ */
 declare module egret {
+    /**
+     * @private
+     */
     var nativeRender: boolean;
 }
 /**
@@ -5030,7 +5036,6 @@ declare let Module: any;
  * @private
  */
 declare namespace egret.NativeDelegate {
-    let currentWebGLBuffer: web.WebGLRenderBuffer;
     let forHitTest: boolean;
     let addModuleCallback: (callback: Function, thisObj: any) => void;
     let init: (wasmSize?: number) => void;
@@ -5043,12 +5048,11 @@ declare namespace egret.NativeDelegate {
     let resize: (width: number, height: number) => void;
     let setCanvasScaleFactor: (factor: number, scalex: number, scaley: number) => void;
     let update: () => void;
-    let dirtyTextField: (node: TextField) => void;
+    let dirtyTextField: (textField: TextField) => void;
     let dirtyGraphics: (graphics: Graphics) => void;
     let updatePreCallback: (currTimeStamp: number) => boolean;
     let render: () => void;
     let activateWebGLBuffer: (buffer: web.WebGLRenderBuffer) => void;
-    let getCurrentBuffer: () => sys.RenderBuffer;
     let getPixels: (x: number, y: number, width?: number, height?: number) => number[];
     let activateBuffer: (buffer: sys.RenderBuffer) => void;
 }
@@ -10953,7 +10957,7 @@ declare namespace egret {
      * @private
      */
     class NativeNode {
-        static init(buffer: Float32Array, isNative: any, map1: any, map2: any, map3: any): void;
+        static init(buffer: Float32Array, map1: any, map2: any, map3: any): void;
         id: number;
         protected $obj: any;
         static update(): void;
@@ -11019,19 +11023,49 @@ declare namespace egret {
      * @private
      */
     const enum NativeObjectType {
+        /**
+         * 容器
+         */
         CONTAINER = 0,
+        /**
+         * 位图
+         */
         BITMAP = 1,
+        /**
+         * 位图数据
+         */
         BITMAP_DATA = 2,
-        COLOR_MATRIX_FILTER = 3,
-        BLUR_FILTER = 4,
-        GLOW_FILTER = 5,
+        /**
+         * 滤镜
+         */
         FILTER = 6,
+        /**
+         * 文本
+         */
         TEXT = 7,
+        /**
+         * 矢量绘图
+         */
         GRAPHICS = 8,
+        /**
+         * 含一个适量绘图的容器
+         */
         SPRITE = 9,
+        /**
+         * 粒子系统
+         */
         PARTICLE_SYSTEM = 10,
+        /**
+         * 位图文本
+         */
         BITMAP_TEXT = 11,
+        /**
+         * 网格
+         */
         MESH = 12,
+        /**
+         * 舞台（根容器）
+         */
         STAGE = 13,
     }
 }
