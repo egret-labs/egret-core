@@ -407,7 +407,7 @@ declare namespace egret {
          */
         $nestLevel: number;
         $useTranslate: boolean;
-        private $updateUseTransform();
+        protected $updateUseTransform(): void;
         /**
          * The Stage of the display object. you can create and load multiple display objects into the display list, and
          * the stage property of each display object refers to the same Stage object.<br/>

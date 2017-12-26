@@ -1279,7 +1279,7 @@ declare namespace eui.sys {
         /**
          * @private
          */
-        $invalidateMatrix(): void;
+        protected $updateUseTransform(): void;
         /**
          * @private
          */
