@@ -102,7 +102,7 @@ namespace egret {
     function _error(code:number, ...params:any[]):void {
         let text:string = egret.sys.tr.apply(null, arguments);
         if (DEBUG) {
-            egret.sys.$logToFPS("Error #" + code + ": " + text)
+            egret.sys.$errorToFPS("Error #" + code + ": " + text);
         }
         throw new Error("#" + code + ": " + text);//使用这种方式报错能够终止后续代码继续运行
     }
@@ -112,7 +112,7 @@ namespace egret {
     function _warn(code:number, ...params:any[]):void {
         let text:string = egret.sys.tr.apply(null, arguments);
         if (DEBUG) {
-            egret.sys.$logToFPS("Warning #" + code + ": " + text)
+            egret.sys.$warnToFPS("Warning #" + code + ": " + text);
         }
         egret.warn("Warning #" + code + ": " + text);
     }
