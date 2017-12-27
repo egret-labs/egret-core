@@ -278,9 +278,17 @@ namespace egret.sys {
         update(drawCalls: number, dirtyRatio: number, ...args): void;
 
         /**
-         * 插入一条日志信息
+         * 插入一条log信息
          */
         updateInfo(info: string): void;
+        /**
+         * 插入一条warn信息
+         */
+        updateWarn(info: string): void;
+        /**
+         * 插入一条error信息
+         */
+        updateError(info: string): void;
     }
 
     declare let FPS: { new (stage: Stage, showFPS: boolean, showLog: boolean, logFilter: string, styles: Object): FPS };
@@ -289,18 +297,38 @@ namespace egret.sys {
      * @private
      */
     export let $logToFPS: (info: string) => void;
+    export let $warnToFPS: (info: string) => void;
+    export let $errorToFPS: (info: string) => void;
 
 
-    let infoLines: string[] = [];
+    let logLines: string[] = [];
+    let warnLines: string[] = [];
+    let errorLines: string[] = [];
     let fpsDisplay: FPS;
     let fpsStyle: Object;
 
     $logToFPS = function (info: string): void {
         if (!fpsDisplay) {
-            infoLines.push(info);
+            logLines.push(info);
             return;
         }
         fpsDisplay.updateInfo(info);
+    };
+
+    $warnToFPS = function (info: string): void {
+        if (!fpsDisplay) {
+            warnLines.push(info);
+            return;
+        }
+        fpsDisplay.updateWarn(info);
+    };
+
+    $errorToFPS = function (info: string): void {
+        if (!fpsDisplay) {
+            errorLines.push(info);
+            return;
+        }
+        fpsDisplay.updateError(info);
     };
 
     function displayFPS(showFPS: boolean, showLog: boolean, logFilter: string, styles: Object): void {
@@ -314,6 +342,24 @@ namespace egret.sys {
                 sys.$logToFPS(info);
                 console.log.apply(console, toArray(arguments));
             };
+            egret.warn = function () {
+                let length = arguments.length;
+                let info = "";
+                for (let i = 0; i < length; i++) {
+                    info += arguments[i] + " ";
+                }
+                sys.$warnToFPS(info);
+                console.warn.apply(console, toArray(arguments));
+            };
+            egret.error = function () {
+                let length = arguments.length;
+                let info = "";
+                for (let i = 0; i < length; i++) {
+                    info += arguments[i] + " ";
+                }
+                sys.$errorToFPS(info);
+                console.error.apply(console, toArray(arguments));
+            };
         }
         fpsStyle = styles ? {} : styles;
         showLog = !!showLog;
@@ -326,11 +372,23 @@ namespace egret.sys {
             fpsDisplay.x = x;
             fpsDisplay.y = y;
 
-            let length = infoLines.length;
-            for (let i = 0; i < length; i++) {
-                fpsDisplay.updateInfo(infoLines[i]);
+            let logLength = logLines.length;
+            for (let i = 0; i < logLength; i++) {
+                fpsDisplay.updateInfo(logLines[i]);
             }
-            infoLines = null;
+            logLines = null;
+
+            let warnLength = warnLines.length;
+            for (let i = 0; i < warnLength; i++) {
+                fpsDisplay.updateWarn(warnLines[i]);
+            }
+            warnLines = null;
+
+            let errorLength = errorLines.length;
+            for (let i = 0; i < errorLength; i++) {
+                fpsDisplay.updateError(errorLines[i]);
+            }
+            errorLines = null;
         }
     }
 
@@ -495,6 +553,40 @@ namespace egret.sys {
                 return;
             }
             this.fpsDisplay.updateInfo(info);
+        }
+        FPSImpl.prototype.updateWarn = function (info) {
+            if (!info) {
+                return;
+            }
+            if (!this.showLog) {
+                return;
+            }
+            if (!this.filter(info)) {
+                return;
+            }
+            if(this.fpsDisplay.updateWarn) {
+                this.fpsDisplay.updateWarn(info);
+            }
+            else {
+                this.fpsDisplay.updateInfo("[Warning]" + info);
+            }
+        }
+        FPSImpl.prototype.updateError = function (info) {
+            if (!info) {
+                return;
+            }
+            if (!this.showLog) {
+                return;
+            }
+            if (!this.filter(info)) {
+                return;
+            }
+            if(this.fpsDisplay.updateError) {
+                this.fpsDisplay.updateError(info);
+            }
+            else {
+                this.fpsDisplay.updateInfo("[Error]" + info);
+            }
         }
         return <FPS><any>FPSImpl;
     })(egret.Sprite);

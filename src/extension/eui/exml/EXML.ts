@@ -88,7 +88,7 @@ namespace EXML {
      * @platform Web,Native
      * @language zh_CN
      */
-    export function parse(text: string): { new (): any } {
+    export function parse(text: string): { new(): any } {
         return parser.parse(text);
     }
 
@@ -194,28 +194,31 @@ namespace EXML {
         callBack && callBack.call(thisObject, clazzes, urls);
     }
 
+    export function update(url: string, clazz: any) {
+        parsedClasses[url] = clazz;
+        let list: any[] = callBackMap[url];
+        delete callBackMap[url];
+        let length = list ? list.length : 0;
+        for (let i = 0; i < length; i++) {
+            let arr = list[i];
+            if (arr[0] && arr[1])
+                arr[0].call(arr[1], clazz, url);
+        }
+    }
+
+
     /**
      * @private
      * @param url
      * @param text
      */
-    export function $parseURLContentAsJs(url: string, text: string, className: string): any {
+    export function $parseURLContentAsJs(url: string, text: string, className: string) {
         let clazz: any = null;
         if (text) {
             clazz = parser.$parseCode(text, className);
+            update(url, clazz)
         }
-        if (url) {
-            parsedClasses[url] = clazz;
-            let list: any[] = callBackMap[url];
-            delete callBackMap[url];
-            let length = list ? list.length : 0;
-            for (let i = 0; i < length; i++) {
-                let arr = list[i];
-                if (arr[0] && arr[1])
-                    arr[0].call(arr[1], clazz, url);
-            }
-        }
-        return clazz;
+
     }
     /**
      * @private
@@ -231,7 +234,7 @@ namespace EXML {
             }
         }
         if (url) {
-            if(clazz) {
+            if (clazz) {
                 parsedClasses[url] = clazz;
             }
             let list: any[] = callBackMap[url];

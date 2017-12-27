@@ -7489,7 +7489,7 @@ var egret;
         }
         var text = egret.sys.tr.apply(null, arguments);
         if (true) {
-            egret.sys.$logToFPS("Error #" + code + ": " + text);
+            egret.sys.$errorToFPS("Error #" + code + ": " + text);
         }
         throw new Error("#" + code + ": " + text); //使用这种方式报错能够终止后续代码继续运行
     }
@@ -7501,7 +7501,7 @@ var egret;
         }
         var text = egret.sys.tr.apply(null, arguments);
         if (true) {
-            egret.sys.$logToFPS("Warning #" + code + ": " + text);
+            egret.sys.$warnToFPS("Warning #" + code + ": " + text);
         }
         egret.warn("Warning #" + code + ": " + text);
     }
@@ -13675,15 +13675,31 @@ var egret;
         }(egret.HashObject));
         sys.Player = Player;
         __reflect(Player.prototype, "egret.sys.Player");
-        var infoLines = [];
+        var logLines = [];
+        var warnLines = [];
+        var errorLines = [];
         var fpsDisplay;
         var fpsStyle;
         sys.$logToFPS = function (info) {
             if (!fpsDisplay) {
-                infoLines.push(info);
+                logLines.push(info);
                 return;
             }
             fpsDisplay.updateInfo(info);
+        };
+        sys.$warnToFPS = function (info) {
+            if (!fpsDisplay) {
+                warnLines.push(info);
+                return;
+            }
+            fpsDisplay.updateWarn(info);
+        };
+        sys.$errorToFPS = function (info) {
+            if (!fpsDisplay) {
+                errorLines.push(info);
+                return;
+            }
+            fpsDisplay.updateError(info);
         };
         function displayFPS(showFPS, showLog, logFilter, styles) {
             if (showLog) {
@@ -13696,6 +13712,24 @@ var egret;
                     sys.$logToFPS(info);
                     console.log.apply(console, toArray(arguments));
                 };
+                egret.warn = function () {
+                    var length = arguments.length;
+                    var info = "";
+                    for (var i = 0; i < length; i++) {
+                        info += arguments[i] + " ";
+                    }
+                    sys.$warnToFPS(info);
+                    console.warn.apply(console, toArray(arguments));
+                };
+                egret.error = function () {
+                    var length = arguments.length;
+                    var info = "";
+                    for (var i = 0; i < length; i++) {
+                        info += arguments[i] + " ";
+                    }
+                    sys.$errorToFPS(info);
+                    console.error.apply(console, toArray(arguments));
+                };
             }
             fpsStyle = styles ? {} : styles;
             showLog = !!showLog;
@@ -13707,11 +13741,21 @@ var egret;
                 fpsDisplay = this.fps = new FPS(this.stage, showFPS, showLog, logFilter, styles);
                 fpsDisplay.x = x;
                 fpsDisplay.y = y;
-                var length_5 = infoLines.length;
-                for (var i = 0; i < length_5; i++) {
-                    fpsDisplay.updateInfo(infoLines[i]);
+                var logLength = logLines.length;
+                for (var i = 0; i < logLength; i++) {
+                    fpsDisplay.updateInfo(logLines[i]);
                 }
-                infoLines = null;
+                logLines = null;
+                var warnLength = warnLines.length;
+                for (var i = 0; i < warnLength; i++) {
+                    fpsDisplay.updateWarn(warnLines[i]);
+                }
+                warnLines = null;
+                var errorLength = errorLines.length;
+                for (var i = 0; i < errorLength; i++) {
+                    fpsDisplay.updateError(errorLines[i]);
+                }
+                errorLines = null;
             }
         }
         function showPaintRect(value) {
@@ -13865,6 +13909,40 @@ var egret;
                     return;
                 }
                 this.fpsDisplay.updateInfo(info);
+            };
+            FPSImpl.prototype.updateWarn = function (info) {
+                if (!info) {
+                    return;
+                }
+                if (!this.showLog) {
+                    return;
+                }
+                if (!this.filter(info)) {
+                    return;
+                }
+                if (this.fpsDisplay.updateWarn) {
+                    this.fpsDisplay.updateWarn(info);
+                }
+                else {
+                    this.fpsDisplay.updateInfo(info);
+                }
+            };
+            FPSImpl.prototype.updateError = function (info) {
+                if (!info) {
+                    return;
+                }
+                if (!this.showLog) {
+                    return;
+                }
+                if (!this.filter(info)) {
+                    return;
+                }
+                if (this.fpsDisplay.updateError) {
+                    this.fpsDisplay.updateError(info);
+                }
+                else {
+                    this.fpsDisplay.updateInfo(info);
+                }
             };
             return FPSImpl;
         })(egret.Sprite);
@@ -14956,8 +15034,8 @@ var egret;
                     egret.$callLaterArgsList = [];
                 }
                 if (functionList) {
-                    var length_6 = functionList.length;
-                    for (var i = 0; i < length_6; i++) {
+                    var length_5 = functionList.length;
+                    for (var i = 0; i < length_5; i++) {
                         var func = functionList[i];
                         if (func != null) {
                             func.apply(thisList[i], argsList[i]);
@@ -16401,8 +16479,8 @@ var egret;
                 if (renderBufferPool.length > 6) {
                     renderBufferPool.length = 6;
                 }
-                var length_7 = renderBufferPool.length;
-                for (var i = 0; i < length_7; i++) {
+                var length_6 = renderBufferPool.length;
+                for (var i = 0; i < length_6; i++) {
                     renderBufferPool[i].resize(0, 0);
                 }
                 if (renderBufferPool_Filters.length > 1) {
@@ -16493,8 +16571,8 @@ var egret;
             }
             var children = displayObject.$children;
             if (children) {
-                var length_8 = children.length;
-                for (var i = 0; i < length_8; i++) {
+                var length_7 = children.length;
+                for (var i = 0; i < length_7; i++) {
                     var child = children[i];
                     if (!child.$visible || child.$alpha <= 0 || child.$maskedObject) {
                         continue;
@@ -18545,7 +18623,7 @@ var egret;
          */
         BitmapFont.prototype.getConfigByKey = function (configText, key) {
             var itemConfigTextList = configText.split(" ");
-            for (var i = 0, length_9 = itemConfigTextList.length; i < length_9; i++) {
+            for (var i = 0, length_8 = itemConfigTextList.length; i < length_8; i++) {
                 var itemConfigText = itemConfigTextList[i];
                 if (key == itemConfigText.substring(0, key.length)) {
                     var value = itemConfigText.substring(key.length + 1);
@@ -21220,8 +21298,8 @@ var egret;
                 if (lines && lines.length > 0) {
                     var textColor = values[2 /* textColor */];
                     var lastColor = -1;
-                    var length_10 = lines.length;
-                    for (var i = 0; i < length_10; i += 4) {
+                    var length_9 = lines.length;
+                    for (var i = 0; i < length_9; i += 4) {
                         var x = lines[i];
                         var y = lines[i + 1];
                         var w = lines[i + 2];
@@ -23956,8 +24034,8 @@ var egret;
         }
         var superTypes = prototype.__types__;
         if (prototype.__types__) {
-            var length_11 = superTypes.length;
-            for (var i = 0; i < length_11; i++) {
+            var length_10 = superTypes.length;
+            for (var i = 0; i < length_10; i++) {
                 var name_1 = superTypes[i];
                 if (types.indexOf(name_1) == -1) {
                     types.push(name_1);

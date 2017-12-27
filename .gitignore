@@ -36,4 +36,7 @@ src/tsc_config_temp.txt
 
 .wing/settings.json
 /built
-/tests
+/tests*
+tsconfig.debug.json
+target
+test-script.js
