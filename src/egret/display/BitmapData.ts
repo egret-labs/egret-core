@@ -199,7 +199,7 @@ namespace egret {
         }
 
         public $dispose(): void {
-            if (Capabilities.runtimeType == RuntimeType.WEB && Capabilities.renderMode == "webgl" && this.webGLTexture) {
+            if (Capabilities.renderMode == "webgl" && this.webGLTexture) {
                 egret.WebGLUtils.deleteWebGLTexture(this.webGLTexture);
                 this.webGLTexture = null;
             }

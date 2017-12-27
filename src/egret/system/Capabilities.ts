@@ -43,14 +43,16 @@ namespace egret {
      */
     export namespace RuntimeType {
         /**
-        * Running on Web
-        * @version Egret 2.4
-        * @platform Web,Native
-        * @language en_US
-        */
+         * Running on Web
+         * @version Egret 2.4
+         * @deprecated
+         * @platform Web,Native
+         * @language en_US
+         */
         /**
          * 运行在Web上
          * @version Egret 2.4
+         * @deprecated
          * @platform Web,Native
          * @language zh_CN
          */
@@ -59,12 +61,14 @@ namespace egret {
         /**
          * Running on NATIVE
          * @version Egret 2.4
+         * @deprecated
          * @platform Web,Native
          * @language en_US
          */
         /**
          * 运行在NATIVE上
          * @version Egret 2.4
+         * @deprecated
          * @platform Web,Native
          * @language zh_CN
          */
@@ -196,6 +200,7 @@ namespace egret {
          * <li>Run on Native     egret.RuntimeType.NATIVE</li>
          * </ul>
          * @version Egret 2.4
+         * @deprecated
          * @platform Web,Native
          * @language en_US
          */
@@ -206,6 +211,7 @@ namespace egret {
          * <li>运行在Native上     egret.RuntimeType.NATIVE</li>
          * </ul>
          * @version Egret 2.4
+         * @deprecated
          * @platform Web,Native
          * @language zh_CN
          */
@@ -348,10 +354,5 @@ egret.Capabilities.$isMobile = function () {
     let ua = navigator.userAgent.toLowerCase();
     return (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
 }();
-egret.Capabilities.$runtimeType = function () {
-    if (global["navigator"]) {
-        return true;
-    }
-    return false;
-}() ? egret.RuntimeType.WEB : egret.RuntimeType.NATIVE;
+egret.Capabilities.$runtimeType = egret.RuntimeType.WEB;
 

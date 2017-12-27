@@ -4715,14 +4715,16 @@ declare namespace egret {
      */
     namespace RuntimeType {
         /**
-        * Running on Web
-        * @version Egret 2.4
-        * @platform Web,Native
-        * @language en_US
-        */
+         * Running on Web
+         * @version Egret 2.4
+         * @deprecated
+         * @platform Web,Native
+         * @language en_US
+         */
         /**
          * 运行在Web上
          * @version Egret 2.4
+         * @deprecated
          * @platform Web,Native
          * @language zh_CN
          */
@@ -4730,12 +4732,14 @@ declare namespace egret {
         /**
          * Running on NATIVE
          * @version Egret 2.4
+         * @deprecated
          * @platform Web,Native
          * @language en_US
          */
         /**
          * 运行在NATIVE上
          * @version Egret 2.4
+         * @deprecated
          * @platform Web,Native
          * @language zh_CN
          */
@@ -4853,6 +4857,7 @@ declare namespace egret {
          * <li>Run on Native     egret.RuntimeType.NATIVE</li>
          * </ul>
          * @version Egret 2.4
+         * @deprecated
          * @platform Web,Native
          * @language en_US
          */
@@ -4863,6 +4868,7 @@ declare namespace egret {
          * <li>运行在Native上     egret.RuntimeType.NATIVE</li>
          * </ul>
          * @version Egret 2.4
+         * @deprecated
          * @platform Web,Native
          * @language zh_CN
          */
@@ -10100,7 +10106,6 @@ declare namespace egret {
          */
         private drawDisplayObject(displayObject, context, offsetX, offsetY, isStage?);
         private drawWithFilter(displayObject, context, offsetX, offsetY);
-        private drawWithFilterNative(displayObject, context, offsetX, offsetY);
         private drawWithClip(displayObject, context, offsetX, offsetY);
         private drawWithScrollRect(displayObject, context, offsetX, offsetY);
         drawNodeToBuffer(node: sys.RenderNode, buffer: sys.RenderBuffer, matrix: Matrix, forHitTest?: boolean): void;

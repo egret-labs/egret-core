@@ -2752,16 +2752,12 @@ var egret;
             if (request.method == egret.URLRequestMethod.GET || !request.data) {
             }
             else if (request.data instanceof egret.URLVariables) {
-                if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB) {
-                    httpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                }
+                httpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                 var urlVars = request.data;
                 sendData = urlVars.toString();
             }
             else {
-                if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB) {
-                    httpRequest.setRequestHeader("Content-Type", "multipart/form-data");
-                }
+                httpRequest.setRequestHeader("Content-Type", "multipart/form-data");
                 sendData = request.data;
             }
             var length = request.requestHeaders.length;
@@ -2846,9 +2842,7 @@ var egret;
             function onLoadComplete(e) {
                 removeListeners();
                 var bitmapData = imageLoader.data;
-                if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB) {
-                    bitmapData.source.setAttribute("bitmapSrc", virtualUrl);
-                }
+                bitmapData.source.setAttribute("bitmapSrc", virtualUrl);
                 var texture = new egret.Texture();
                 texture._setBitmapData(bitmapData);
                 loader.data = texture;
@@ -4360,26 +4354,6 @@ var egret;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(MainContext, "runtimeType", {
-            /**
-             * @version Egret 2.4
-             * @platform Web,Native
-             */
-            get: function () {
-                egret.$warn(1041, "egret.MainContext.runtimeType", "egret.Capabilities.runtimeType");
-                return MainContext._runtimeType;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * 游戏启动，开启主循环，参考Flash的滑动跑道模型
-         * @method egret.MainContext#run
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        MainContext.prototype.run = function () {
-        };
         Object.defineProperty(MainContext, "instance", {
             /**
              * @method egret.Ticker.getInstance
@@ -4411,16 +4385,6 @@ var egret;
          * @platform Web,Native
          */
         MainContext.DEVICE_MOBILE = "native";
-        /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        MainContext.RUNTIME_HTML5 = "runtimeHtml5";
-        /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        MainContext.RUNTIME_NATIVE = "runtimeNative";
         return MainContext;
     }(egret.EventDispatcher));
     egret.MainContext = MainContext;
@@ -4439,16 +4403,16 @@ egret["testDeviceType1"] = function () {
 /**
  * @private
  */
-egret["testRuntimeType1"] = function () {
-    if (this["navigator"]) {
-        return true;
-    }
-    return false;
-};
+// egret["testRuntimeType1"] = function () {
+//     if (this["navigator"]) {
+//         return true;
+//     }
+//     return false;
+// };
 egret.MainContext.deviceType = egret["testDeviceType1"]() ? egret.MainContext.DEVICE_MOBILE : egret.MainContext.DEVICE_PC;
-egret.MainContext._runtimeType = egret["testRuntimeType1"]() ? egret.MainContext.RUNTIME_HTML5 : egret.MainContext.RUNTIME_NATIVE;
+// egret.MainContext._runtimeType = egret["testRuntimeType1"]() ? egret.MainContext.RUNTIME_HTML5 : egret.MainContext.RUNTIME_NATIVE;
 delete egret["testDeviceType1"];
-delete egret["testRuntimeType1"];
+// delete egret["testRuntimeType1"]; 
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.

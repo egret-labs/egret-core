@@ -182,9 +182,6 @@ namespace egret {
         }
 
         private drawWithFilter(displayObject: DisplayObject, context: CanvasRenderingContext2D, offsetX: number, offsetY: number): number {
-            if (Capabilities.runtimeType == RuntimeType.NATIVE) {
-                return this.drawWithFilterNative(displayObject, context, offsetX, offsetY);
-            }
             let drawCalls = 0;
             let filters = displayObject.$filters;
             let filtersLen: number = filters.length;
@@ -257,76 +254,6 @@ namespace egret {
             return drawCalls;
         }
 
-        private drawWithFilterNative(displayObject: DisplayObject, context: CanvasRenderingContext2D, offsetX: number, offsetY: number): number {
-            let drawCalls = 0;
-            let filters = displayObject.$filters;
-            let hasBlendMode = (displayObject.$blendMode !== 0);
-            let compositeOp: string;
-            if (hasBlendMode) {
-                compositeOp = blendModes[displayObject.$blendMode];
-                if (!compositeOp) {
-                    compositeOp = defaultCompositeOp;
-                }
-            }
-
-            let displayBounds = displayObject.$getOriginalBounds();
-            if (displayBounds.width <= 0 || displayBounds.height <= 0) {
-                return drawCalls;
-            }
-
-            if (filters.length == 1 && filters[0].type == "colorTransform" && !displayObject.$children) {
-                if (hasBlendMode) {
-                    context.globalCompositeOperation = compositeOp;
-                }
-                (<any>context).setGlobalShader(filters[0]);
-                if (displayObject.$mask) {
-                    drawCalls += this.drawWithClip(displayObject, context, offsetX, offsetY);
-                }
-                else if (displayObject.$scrollRect || displayObject.$maskRect) {
-                    drawCalls += this.drawWithScrollRect(displayObject, context, offsetX, offsetY);
-                }
-                else {
-                    drawCalls += this.drawDisplayObject(displayObject, context, offsetX, offsetY);
-                }
-                (<any>context).setGlobalShader(null);
-                if (hasBlendMode) {
-                    context.globalCompositeOperation = defaultCompositeOp;
-                }
-                return drawCalls;
-            }
-
-            let displayBuffer = this.createRenderBuffer(displayBounds.width, displayBounds.height);
-            if (displayObject.$mask) {
-                drawCalls += this.drawWithClip(displayObject, context, offsetX, offsetY);
-            }
-            else if (displayObject.$scrollRect || displayObject.$maskRect) {
-                drawCalls += this.drawWithScrollRect(displayObject, context, offsetX, offsetY);
-            }
-            else {
-                drawCalls += this.drawDisplayObject(displayObject, context, offsetX, offsetY);
-            }
-
-            //绘制结果到屏幕
-            if (drawCalls > 0) {
-                if (hasBlendMode) {
-                    context.globalCompositeOperation = compositeOp;
-                }
-                drawCalls++;
-                context.globalAlpha = 1;
-                // 绘制结果的时候，应用滤镜
-                (<any>context).setGlobalShader(filters[0]);
-                context.drawImage(displayBuffer.surface, 0, 0, displayBuffer.width, displayBuffer.height, offsetX + displayBounds.x, offsetY + displayBounds.y, displayBuffer.width, displayBuffer.height);
-                (<any>context).setGlobalShader(null);
-                if (hasBlendMode) {
-                    context.globalCompositeOperation = defaultCompositeOp;
-                }
-
-            }
-
-            renderBufferPool.push(displayBuffer);
-            return drawCalls;
-        }
-
         private drawWithClip(displayObject: DisplayObject, context: CanvasRenderingContext2D, offsetX: number, offsetY: number): number {
             let drawCalls = 0;
             let hasBlendMode = (displayObject.$blendMode !== 0);
@@ -371,7 +298,7 @@ namespace egret {
             }
             let maskRenderNode = mask.$getRenderNode();
             //遮罩是单纯的填充图形,且alpha为1,性能优化
-            if (mask && Capabilities.$runtimeType == RuntimeType.WEB && (!mask.$children || mask.$children.length == 0) &&
+            if (mask && (!mask.$children || mask.$children.length == 0) &&
                 maskRenderNode && maskRenderNode.type == sys.RenderNodeType.GraphicsNode &&
                 maskRenderNode.drawData.length == 1 &&
                 (<sys.Path2D>maskRenderNode.drawData[0]).type == sys.PathType.Fill &&
@@ -416,7 +343,7 @@ namespace egret {
                 mask.$getConcatenatedMatrixAt(displayObject, maskMatrix);
                 maskMatrix.translate(-displayBounds.x, -displayBounds.y);
                 //如果只有一次绘制或是已经被cache直接绘制到displayContext
-                if (Capabilities.$runtimeType == RuntimeType.WEB && maskRenderNode && maskRenderNode.$getRenderCount() == 1 || mask.$displayList) {
+                if (maskRenderNode && maskRenderNode.$getRenderCount() == 1 || mask.$displayList) {
                     displayContext.globalCompositeOperation = "destination-in";
                     displayContext.save();
                     displayContext.setTransform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);

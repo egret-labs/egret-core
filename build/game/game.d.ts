@@ -2257,31 +2257,11 @@ declare namespace egret {
          */
         static DEVICE_MOBILE: string;
         /**
-         * @private
-         */
-        static _runtimeType: string;
-        /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static readonly runtimeType: string;
-        /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static RUNTIME_HTML5: string;
-        /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static RUNTIME_NATIVE: string;
-        /**
          * 游戏启动，开启主循环，参考Flash的滑动跑道模型
          * @method egret.MainContext#run
          * @version Egret 2.4
          * @platform Web,Native
          */
-        run(): void;
         /**
          * @private
          */

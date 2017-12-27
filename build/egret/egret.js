@@ -6965,14 +6965,16 @@ var egret;
     var RuntimeType;
     (function (RuntimeType) {
         /**
-        * Running on Web
-        * @version Egret 2.4
-        * @platform Web,Native
-        * @language en_US
-        */
+         * Running on Web
+         * @version Egret 2.4
+         * @deprecated
+         * @platform Web,Native
+         * @language en_US
+         */
         /**
          * 运行在Web上
          * @version Egret 2.4
+         * @deprecated
          * @platform Web,Native
          * @language zh_CN
          */
@@ -6980,12 +6982,14 @@ var egret;
         /**
          * Running on NATIVE
          * @version Egret 2.4
+         * @deprecated
          * @platform Web,Native
          * @language en_US
          */
         /**
          * 运行在NATIVE上
          * @version Egret 2.4
+         * @deprecated
          * @platform Web,Native
          * @language zh_CN
          */
@@ -7108,6 +7112,7 @@ var egret;
              * <li>Run on Native     egret.RuntimeType.NATIVE</li>
              * </ul>
              * @version Egret 2.4
+             * @deprecated
              * @platform Web,Native
              * @language en_US
              */
@@ -7118,6 +7123,7 @@ var egret;
              * <li>运行在Native上     egret.RuntimeType.NATIVE</li>
              * </ul>
              * @version Egret 2.4
+             * @deprecated
              * @platform Web,Native
              * @language zh_CN
              */
@@ -7285,12 +7291,7 @@ egret.Capabilities.$isMobile = function () {
     var ua = navigator.userAgent.toLowerCase();
     return (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
 }();
-egret.Capabilities.$runtimeType = function () {
-    if (global["navigator"]) {
-        return true;
-    }
-    return false;
-}() ? egret.RuntimeType.WEB : egret.RuntimeType.NATIVE;
+egret.Capabilities.$runtimeType = egret.RuntimeType.WEB;
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -16981,9 +16982,6 @@ var egret;
             return drawCalls;
         };
         CanvasRenderer.prototype.drawWithFilter = function (displayObject, context, offsetX, offsetY) {
-            if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
-                return this.drawWithFilterNative(displayObject, context, offsetX, offsetY);
-            }
             var drawCalls = 0;
             var filters = displayObject.$filters;
             var filtersLen = filters.length;
@@ -17055,69 +17053,6 @@ var egret;
             renderBufferPool_Filters.push(displayBuffer);
             return drawCalls;
         };
-        CanvasRenderer.prototype.drawWithFilterNative = function (displayObject, context, offsetX, offsetY) {
-            var drawCalls = 0;
-            var filters = displayObject.$filters;
-            var hasBlendMode = (displayObject.$blendMode !== 0);
-            var compositeOp;
-            if (hasBlendMode) {
-                compositeOp = blendModes[displayObject.$blendMode];
-                if (!compositeOp) {
-                    compositeOp = defaultCompositeOp;
-                }
-            }
-            var displayBounds = displayObject.$getOriginalBounds();
-            if (displayBounds.width <= 0 || displayBounds.height <= 0) {
-                return drawCalls;
-            }
-            if (filters.length == 1 && filters[0].type == "colorTransform" && !displayObject.$children) {
-                if (hasBlendMode) {
-                    context.globalCompositeOperation = compositeOp;
-                }
-                context.setGlobalShader(filters[0]);
-                if (displayObject.$mask) {
-                    drawCalls += this.drawWithClip(displayObject, context, offsetX, offsetY);
-                }
-                else if (displayObject.$scrollRect || displayObject.$maskRect) {
-                    drawCalls += this.drawWithScrollRect(displayObject, context, offsetX, offsetY);
-                }
-                else {
-                    drawCalls += this.drawDisplayObject(displayObject, context, offsetX, offsetY);
-                }
-                context.setGlobalShader(null);
-                if (hasBlendMode) {
-                    context.globalCompositeOperation = defaultCompositeOp;
-                }
-                return drawCalls;
-            }
-            var displayBuffer = this.createRenderBuffer(displayBounds.width, displayBounds.height);
-            if (displayObject.$mask) {
-                drawCalls += this.drawWithClip(displayObject, context, offsetX, offsetY);
-            }
-            else if (displayObject.$scrollRect || displayObject.$maskRect) {
-                drawCalls += this.drawWithScrollRect(displayObject, context, offsetX, offsetY);
-            }
-            else {
-                drawCalls += this.drawDisplayObject(displayObject, context, offsetX, offsetY);
-            }
-            //绘制结果到屏幕
-            if (drawCalls > 0) {
-                if (hasBlendMode) {
-                    context.globalCompositeOperation = compositeOp;
-                }
-                drawCalls++;
-                context.globalAlpha = 1;
-                // 绘制结果的时候，应用滤镜
-                context.setGlobalShader(filters[0]);
-                context.drawImage(displayBuffer.surface, 0, 0, displayBuffer.width, displayBuffer.height, offsetX + displayBounds.x, offsetY + displayBounds.y, displayBuffer.width, displayBuffer.height);
-                context.setGlobalShader(null);
-                if (hasBlendMode) {
-                    context.globalCompositeOperation = defaultCompositeOp;
-                }
-            }
-            renderBufferPool.push(displayBuffer);
-            return drawCalls;
-        };
         CanvasRenderer.prototype.drawWithClip = function (displayObject, context, offsetX, offsetY) {
             var drawCalls = 0;
             var hasBlendMode = (displayObject.$blendMode !== 0);
@@ -17159,7 +17094,7 @@ var egret;
             }
             var maskRenderNode = mask.$getRenderNode();
             //遮罩是单纯的填充图形,且alpha为1,性能优化
-            if (mask && egret.Capabilities.$runtimeType == egret.RuntimeType.WEB && (!mask.$children || mask.$children.length == 0) &&
+            if (mask && (!mask.$children || mask.$children.length == 0) &&
                 maskRenderNode && maskRenderNode.type == 3 /* GraphicsNode */ &&
                 maskRenderNode.drawData.length == 1 &&
                 maskRenderNode.drawData[0].type == 1 /* Fill */ &&
@@ -17201,7 +17136,7 @@ var egret;
                 mask.$getConcatenatedMatrixAt(displayObject, maskMatrix);
                 maskMatrix.translate(-displayBounds.x, -displayBounds.y);
                 //如果只有一次绘制或是已经被cache直接绘制到displayContext
-                if (egret.Capabilities.$runtimeType == egret.RuntimeType.WEB && maskRenderNode && maskRenderNode.$getRenderCount() == 1 || mask.$displayList) {
+                if (maskRenderNode && maskRenderNode.$getRenderCount() == 1 || mask.$displayList) {
                     displayContext.globalCompositeOperation = "destination-in";
                     displayContext.save();
                     displayContext.setTransform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
@@ -18335,7 +18270,7 @@ var egret;
             return bitmapData;
         };
         BitmapData.prototype.$dispose = function () {
-            if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB && egret.Capabilities.renderMode == "webgl" && this.webGLTexture) {
+            if (egret.Capabilities.renderMode == "webgl" && this.webGLTexture) {
                 egret.WebGLUtils.deleteWebGLTexture(this.webGLTexture);
                 this.webGLTexture = null;
             }

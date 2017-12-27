@@ -2026,9 +2026,7 @@ var RES;
         }(egret.EventDispatcher));
         web.Html5VersionController = Html5VersionController;
         __reflect(Html5VersionController.prototype, "RES.web.Html5VersionController", ["RES.VersionController", "RES.IVersionController"]);
-        if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB) {
-            RES.VersionController = Html5VersionController;
-        }
+        RES.VersionController = Html5VersionController;
     })(web = RES.web || (RES.web = {}));
 })(RES || (RES = {}));
 //////////////////////////////////////////////////////////////////////////////////////

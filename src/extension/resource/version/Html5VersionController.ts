@@ -113,7 +113,5 @@ namespace RES.web {
         }
     }
 
-    if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB) {
-        VersionController = Html5VersionController;
-    }
+    VersionController = Html5VersionController;
 }
