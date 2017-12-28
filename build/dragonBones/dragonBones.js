@@ -111,6 +111,10 @@ var dragonBones;
         console.assert = function () { };
     }
 })(dragonBones || (dragonBones = {}));
+//
+if (typeof global === 'undefined') {
+    var global = window;
+}
 /**
  * The MIT License (MIT)
  *
@@ -15018,7 +15022,7 @@ var dragonBones;
              * @internal
              * @private
              */
-            _this._batchEnabled = !__global["nativeRender"]; //
+            _this._batchEnabled = !global["nativeRender"]; //
             /**
              * @internal
              * @private
