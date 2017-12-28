@@ -34,7 +34,7 @@ const config: ResourceManagerConfig = {
             }
         }
         else if (params.command == 'publish') {
-            const outputDir = target == "web" ? `bin-release/${version}` : `../${projectName}_${target}`;
+            const outputDir = target == "web" ? `bin-release/web/${version}` : `../${projectName}_${target}`;
             return {
                 outputDir,
                 commands: [
