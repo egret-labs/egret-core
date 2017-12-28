@@ -6,7 +6,7 @@ declare module egret {
 
     export namespace target {
 
-        export type Type = "web" | "native" | "any";
+        export type Type = "web" | "native" | "wxgame" | "any";
 
         export interface Info {
             name: Type;
@@ -44,7 +44,6 @@ declare module egret {
         //子命令
         subCommand?: string;
         commands?: string[];
-        platform?: string;
 
         type?: string;
         target?: egret.target.Type;

@@ -42,32 +42,46 @@ var Build = require("./build");
 var Server = require("../server/server");
 var FileUtil = require("../lib/FileUtil");
 var service = require("../service/index");
+var project_1 = require("../project");
 var Run = (function () {
     function Run() {
         this.initVersion = ""; //初始化的 egret 版本，如果版本变化了，关掉当前的进程
     }
     Run.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var exitCode, platform, port;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var exitCode, target, toolsList, _a, port, wechatIDE, path_1, projectPath;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0: return [4 /*yield*/, new Build().execute()];
                     case 1:
-                        exitCode = _a.sent();
-                        if (exitCode != 0) {
-                            process.exit(exitCode);
+                        exitCode = _b.sent();
+                        target = egret.args.target;
+                        toolsList = project_1.engineData.getLauncherLibrary().getInstalledTools();
+                        _a = egret.args.target;
+                        switch (_a) {
+                            case "web": return [3 /*break*/, 2];
+                            case "wxgame": return [3 /*break*/, 4];
                         }
-                        platform = egret.args.platform;
-                        if (!(egret.args.platform == undefined || egret.args.platform == 'web')) return [3 /*break*/, 3];
-                        return [4 /*yield*/, utils.getAvailablePort(egret.args.port)];
-                    case 2:
-                        port = _a.sent();
-                        this.initServer(port);
-                        return [3 /*break*/, 4];
+                        return [3 /*break*/, 6];
+                    case 2: return [4 /*yield*/, utils.getAvailablePort(egret.args.port)];
                     case 3:
-                        process.exit(0);
-                        _a.label = 4;
-                    case 4: return [2 /*return*/, DontExitCode];
+                        port = _b.sent();
+                        this.initServer(port);
+                        return [2 /*return*/, DontExitCode];
+                    case 4:
+                        wechatIDE = toolsList.filter(function (m) {
+                            return m.name == "Wechat IDE";
+                        })[0];
+                        if (!wechatIDE) {
+                            throw '请安装微信 Web 开发者工具'; //i18n
+                        }
+                        path_1 = "C:\\Program Files (x86)\\Tencent\\微信web开发者工具\\cli.bat";
+                        projectPath = egret.args.projectDir;
+                        return [4 /*yield*/, utils.shell(path_1, ["-o", projectPath])];
+                    case 5:
+                        _b.sent();
+                        return [2 /*return*/, DontExitCode];
+                    case 6: return [2 /*return*/];
                 }
             });
         });

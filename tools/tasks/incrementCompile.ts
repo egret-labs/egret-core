@@ -38,7 +38,7 @@ function onGotBuildCommandResult(cmd: egret.ServiceCommandResult, callback: (exi
         cmd.messages.forEach(m => console.log(m));
     }
 
-    if (!cmd.exitCode && egret.args.platform) {
+    if (!cmd.exitCode) {
         setTimeout(() => callback(0), 500);
     }
     else
