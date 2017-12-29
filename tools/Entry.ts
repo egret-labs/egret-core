@@ -123,7 +123,23 @@ export function executeCommandLine(args: string[]) {
         else {
             exitcode.then(value => {
                 entry.exit(value);
-            }).catch(e => console.log(e))
+            }).catch(e => {
+                if (e instanceof Error) {
+                    console.error(e.toString());
+                    entry.exit(9999)
+                }
+                else if (typeof e == 'string') {
+                    console.error(e)
+                    entry.exit(1)
+                }
+                else if (typeof e == 'number') {
+                    entry.exit(e)
+                }
+                else {
+                    console.error(e);
+                    entry.exit(9998)
+                }
+            })
         }
     }).catch(e => console.log(e))
 

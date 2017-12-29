@@ -104,7 +104,23 @@ function executeCommandLine(args) {
         else {
             exitcode.then(function (value) {
                 entry.exit(value);
-            }).catch(function (e) { return console.log(e); });
+            }).catch(function (e) {
+                if (e instanceof Error) {
+                    console.error(e.toString());
+                    entry.exit(9999);
+                }
+                else if (typeof e == 'string') {
+                    console.error(e);
+                    entry.exit(1);
+                }
+                else if (typeof e == 'number') {
+                    entry.exit(e);
+                }
+                else {
+                    console.error(e);
+                    entry.exit(9998);
+                }
+            });
         }
     }).catch(function (e) { return console.log(e); });
 }
