@@ -230,6 +230,10 @@ namespace eui {
             if (data.styles) {
                 this.$styles = data.styles;
             }
+            let paths = data.paths;
+            for (let path in paths) {
+                window[path] = EXML.update(path, paths[path])
+            }
 
             if (!data.exmls || data.exmls.length == 0) {
                 this.onLoaded();

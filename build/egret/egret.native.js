@@ -2318,6 +2318,7 @@ var egret;
                 fps.textColor = this.fontColor;
                 fps.textFlow = [
                     { text: "0 FPS " + egret.Capabilities.renderMode + "\n" },
+                    { text: "min0 max60 avg30\n" },
                     { text: "Draw: 0\nDirty: 0%\n" },
                     { text: "Cost: " },
                     { text: "0 ", style: { "textColor": 0x18fefe } },
@@ -2333,7 +2334,6 @@ var egret;
                 this.addChild(text);
                 this.textLog = text;
             };
-            ;
             NativeFps.prototype.update = function (datas) {
                 this.arrFps.push(datas.fps);
                 var fpsTotal = 0;
@@ -2361,16 +2361,31 @@ var egret;
                     { text: datas.costDirty + " ", style: { "textColor": 0xffff00 } },
                     { text: datas.costRender + " ", style: { "textColor": 0xff0000 } }
                 ];
-                this.updateLayout();
             };
-            ;
             NativeFps.prototype.updateInfo = function (info) {
+                this.updateLogDisplay(info, 1);
+            };
+            NativeFps.prototype.updateWarn = function (info) {
+                this.updateLogDisplay(info, 2);
+            };
+            NativeFps.prototype.updateError = function (info) {
+                this.updateLogDisplay(info, 3);
+            };
+            NativeFps.prototype.updateLogDisplay = function (info, type) {
                 var fpsHeight = 0;
                 if (this.showFps) {
-                    fpsHeight = this.textFps.height;
+                    fpsHeight = this.textFps.textHeight;
                     this.textLog.y = fpsHeight + 4;
                 }
-                this.arrLog.push(info);
+                if (type == 3) {
+                    this.arrLog.push("[Error]" + info);
+                }
+                else if (type == 2) {
+                    this.arrLog.push("[Warning]" + info);
+                }
+                else {
+                    this.arrLog.push(info);
+                }
                 this.textLog.text = this.arrLog.join('\n');
                 if (this._stage.stageHeight > 0) {
                     if (this.textLog.textWidth > this._stage.stageWidth - 20 - this.panelX) {
@@ -2381,17 +2396,6 @@ var egret;
                         this.textLog.text = this.arrLog.join("\n");
                     }
                 }
-                this.updateLayout();
-            };
-            NativeFps.prototype.updateLayout = function () {
-                if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
-                    return;
-                }
-                var g = this.shape.$graphics;
-                g.clear();
-                g.beginFill(0x000000, this.bgAlpha);
-                g.drawRect(0, 0, this.width + 8, this.height + 8);
-                g.endFill();
             };
             return NativeFps;
         }(egret.Sprite));

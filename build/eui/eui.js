@@ -18997,6 +18997,10 @@ var eui;
             if (data.styles) {
                 this.$styles = data.styles;
             }
+            var paths = data.paths;
+            for (var path in paths) {
+                window[path] = EXML.update(path, paths[path]);
+            }
             if (!data.exmls || data.exmls.length == 0) {
                 this.onLoaded();
             }
@@ -21212,6 +21216,18 @@ var EXML;
         });
         callBack && callBack.call(thisObject, clazzes, urls);
     }
+    function update(url, clazz) {
+        parsedClasses[url] = clazz;
+        var list = callBackMap[url];
+        delete callBackMap[url];
+        var length = list ? list.length : 0;
+        for (var i = 0; i < length; i++) {
+            var arr = list[i];
+            if (arr[0] && arr[1])
+                arr[0].call(arr[1], clazz, url);
+        }
+    }
+    EXML.update = update;
     /**
      * @private
      * @param url
@@ -21221,19 +21237,8 @@ var EXML;
         var clazz = null;
         if (text) {
             clazz = parser.$parseCode(text, className);
+            update(url, clazz);
         }
-        if (url) {
-            parsedClasses[url] = clazz;
-            var list = callBackMap[url];
-            delete callBackMap[url];
-            var length_30 = list ? list.length : 0;
-            for (var i = 0; i < length_30; i++) {
-                var arr = list[i];
-                if (arr[0] && arr[1])
-                    arr[0].call(arr[1], clazz, url);
-            }
-        }
-        return clazz;
     }
     EXML.$parseURLContentAsJs = $parseURLContentAsJs;
     /**
@@ -21255,8 +21260,8 @@ var EXML;
             }
             var list = callBackMap[url];
             delete callBackMap[url];
-            var length_31 = list ? list.length : 0;
-            for (var i = 0; i < length_31; i++) {
+            var length_30 = list ? list.length : 0;
+            for (var i = 0; i < length_30; i++) {
                 var arr = list[i];
                 if (arr[0] && arr[1])
                     arr[0].call(arr[1], clazz, url);
@@ -22248,8 +22253,8 @@ var eui;
                 if (totalPercentWidth > 0) {
                     this.flexChildrenProportionally(targetWidth, widthToDistribute, totalPercentWidth, childInfoArray);
                     var roundOff_1 = 0;
-                    var length_32 = childInfoArray.length;
-                    for (i = 0; i < length_32; i++) {
+                    var length_31 = childInfoArray.length;
+                    for (i = 0; i < length_31; i++) {
                         childInfo = childInfoArray[i];
                         var childSize = Math.round(childInfo.size + roundOff_1);
                         roundOff_1 += childInfo.size - childSize;
@@ -24322,8 +24327,8 @@ var eui;
                 if (totalPercentHeight > 0) {
                     this.flexChildrenProportionally(targetHeight, heightToDistribute, totalPercentHeight, childInfoArray);
                     var roundOff_2 = 0;
-                    var length_33 = childInfoArray.length;
-                    for (i = 0; i < length_33; i++) {
+                    var length_32 = childInfoArray.length;
+                    for (i = 0; i < length_32; i++) {
                         childInfo = childInfoArray[i];
                         var childSize = Math.round(childInfo.size + roundOff_2);
                         roundOff_2 += childInfo.size - childSize;
