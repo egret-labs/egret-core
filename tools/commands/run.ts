@@ -40,7 +40,12 @@ class Run implements egret.Command {
                 if (FileUtil.exists(wxPath)) {
                     let projectPath = egret.args.projectDir;
                     projectPath = path.resolve(projectPath, "../", path.basename(projectPath) + "_wxgame");
-                    let r = await utils.shell(wxPath, ["-o", projectPath]);
+                    try {
+                        await utils.shell(wxPath, ["-o", projectPath], null, true);
+                    }
+                    catch (e) {
+                        return 1;
+                    }
                 }
                 else {
                     throw '请安装最新微信开发者工具'

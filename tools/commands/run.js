@@ -50,7 +50,7 @@ var Run = (function () {
     }
     Run.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var exitCode, target, toolsList, _a, port, wxPath, projectPath, r;
+            var exitCode, target, toolsList, _a, port, wxPath, projectPath, e_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0: return [4 /*yield*/, new Build().execute()];
@@ -63,7 +63,7 @@ var Run = (function () {
                             case "web": return [3 /*break*/, 2];
                             case "wxgame": return [3 /*break*/, 4];
                         }
-                        return [3 /*break*/, 8];
+                        return [3 /*break*/, 11];
                     case 2: return [4 /*yield*/, utils.getAvailablePort(egret.args.port)];
                     case 3:
                         port = _b.sent();
@@ -79,16 +79,23 @@ var Run = (function () {
                                 wxPath = "C:\\Program Files (x86)\\Tencent\\微信web开发者工具\\cli.bat";
                                 break;
                         }
-                        if (!FileUtil.exists(wxPath)) return [3 /*break*/, 6];
+                        if (!FileUtil.exists(wxPath)) return [3 /*break*/, 9];
                         projectPath = egret.args.projectDir;
                         projectPath = path.resolve(projectPath, "../", path.basename(projectPath) + "_wxgame");
-                        return [4 /*yield*/, utils.shell(wxPath, ["-o", projectPath])];
+                        _b.label = 5;
                     case 5:
-                        r = _b.sent();
-                        return [3 /*break*/, 7];
-                    case 6: throw '请安装最新微信开发者工具';
-                    case 7: return [2 /*return*/, DontExitCode];
-                    case 8: return [2 /*return*/];
+                        _b.trys.push([5, 7, , 8]);
+                        return [4 /*yield*/, utils.shell(wxPath, ["-o", projectPath], null, true)];
+                    case 6:
+                        _b.sent();
+                        return [3 /*break*/, 8];
+                    case 7:
+                        e_1 = _b.sent();
+                        return [2 /*return*/, 1];
+                    case 8: return [3 /*break*/, 10];
+                    case 9: throw '请安装最新微信开发者工具';
+                    case 10: return [2 /*return*/, DontExitCode];
+                    case 11: return [2 /*return*/];
                 }
             });
         });
