@@ -96,6 +96,10 @@ function executeCommandLine(args) {
     var version = getPackageJsonConfig().version;
     console.log("\u60A8\u6B63\u5728\u4F7F\u7528\u767D\u9E6D\u7F16\u8BD1\u5668 " + version + " \u7248\u672C");
     index_1.engineData.init().then(function () {
+        var currentTarget = index_1.projectData.getCurrentTarget();
+        if (egret.args.target == "none") {
+            egret.args.target = currentTarget;
+        }
         earlyParams.parse(options, args);
         var exitcode = entry.executeOption(options);
         if (typeof exitcode == "number") {

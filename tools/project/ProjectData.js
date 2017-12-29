@@ -46,7 +46,8 @@ var _path = require("path");
 var EgretProjectData = (function () {
     function EgretProjectData() {
         this.egretProperties = {
-            modules: []
+            modules: [],
+            target: { current: "web" }
         };
         this.projectRoot = "";
     }
@@ -134,6 +135,14 @@ var EgretProjectData = (function () {
             }
         }
         return [egret.args.projectDir];
+    };
+    EgretProjectData.prototype.getCurrentTarget = function () {
+        if (globals.hasKeys(this.egretProperties, ["target", "current"])) {
+            return this.egretProperties.target.current;
+        }
+        else {
+            return "web";
+        }
     };
     EgretProjectData.prototype.getThemes = function () {
         if (globals.hasKeys(this.egretProperties, ["eui", "themes"])) {

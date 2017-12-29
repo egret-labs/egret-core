@@ -41,7 +41,7 @@ import Parser = require("./parser/Parser");
 import earlyParams = require("./parser/ParseEarlyVersionParams");
 import utils = require('./lib/utils');
 import { shell } from "./lib/utils";
-import { engineData } from "./project/index";
+import { engineData, projectData } from "./project/index";
 
 
 var fs = require('fs')
@@ -113,8 +113,11 @@ export function executeCommandLine(args: string[]) {
 
     const version = getPackageJsonConfig().version;
     console.log(`您正在使用白鹭编译器 ${version} 版本`)
-
     engineData.init().then(() => {
+        let currentTarget = projectData.getCurrentTarget();
+        if (egret.args.target == "none") {
+            egret.args.target = currentTarget as egret.target.Type;
+        }
         earlyParams.parse(options, args);
         var exitcode = entry.executeOption(options);
         if (typeof exitcode == "number") {

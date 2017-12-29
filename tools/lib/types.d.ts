@@ -6,7 +6,7 @@ declare module egret {
 
     export namespace target {
 
-        export type Type = "web" | "native" | "wxgame" | "any";
+        export type Type = "web" | "native" | "wxgame" | "any" | "none"
 
         export interface Info {
             name: Type;
@@ -112,6 +112,9 @@ declare module egret {
         "engineVersion"?: string,
         "compilerVersion"?: string,
         "modules": EgretPropertyModule[],
+        "target"?: {
+            "current": string
+        }
         "template"?: {
 
         },

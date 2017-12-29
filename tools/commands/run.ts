@@ -21,7 +21,7 @@ class Run implements egret.Command {
         const target = egret.args.target;
         const toolsList = engineData.getLauncherLibrary().getInstalledTools();
 
-        switch (egret.args.target) {
+        switch (target) {
             case "web":
                 const port = await utils.getAvailablePort(egret.args.port);
                 this.initServer(port);
