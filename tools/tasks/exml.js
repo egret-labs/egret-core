@@ -58,6 +58,9 @@ var ExmlPlugin = (function () {
         return __awaiter(this, void 0, void 0, function () {
             var dtsContents, result;
             return __generator(this, function (_a) {
+                if (this.exmls.length == 0) {
+                    return [2 /*return*/];
+                }
                 if (this.publishPolicy == "debug") {
                     dtsContents = exml.generateExmlDTS(this.exmls);
                     pluginContext.createFile('libs/exml.e.d.ts', new Buffer(dtsContents));
