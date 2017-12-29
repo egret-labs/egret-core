@@ -38,6 +38,7 @@ var utils = require("../lib/utils");
 // import fileUtil = require('../lib/FileUtil');
 var watch = require("../lib/watch");
 var path = require("path");
+var Build = require("./build");
 var Server = require("../server/server");
 var FileUtil = require("../lib/FileUtil");
 var service = require("../service/index");
@@ -49,24 +50,26 @@ var Run = (function () {
     }
     Run.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var target, toolsList, _a, port, wxPath, projectPath, r;
+            var exitCode, target, toolsList, _a, port, wxPath, projectPath, r;
             return __generator(this, function (_b) {
                 switch (_b.label) {
-                    case 0:
+                    case 0: return [4 /*yield*/, new Build().execute()];
+                    case 1:
+                        exitCode = _b.sent();
                         target = egret.args.target;
                         toolsList = project_1.engineData.getLauncherLibrary().getInstalledTools();
                         _a = egret.args.target;
                         switch (_a) {
-                            case "web": return [3 /*break*/, 1];
-                            case "wxgame": return [3 /*break*/, 3];
+                            case "web": return [3 /*break*/, 2];
+                            case "wxgame": return [3 /*break*/, 4];
                         }
-                        return [3 /*break*/, 7];
-                    case 1: return [4 /*yield*/, utils.getAvailablePort(egret.args.port)];
-                    case 2:
+                        return [3 /*break*/, 8];
+                    case 2: return [4 /*yield*/, utils.getAvailablePort(egret.args.port)];
+                    case 3:
                         port = _b.sent();
                         this.initServer(port);
                         return [2 /*return*/, DontExitCode];
-                    case 3:
+                    case 4:
                         wxPath = "";
                         switch (os.platform()) {
                             case "darwin":
@@ -76,16 +79,16 @@ var Run = (function () {
                                 wxPath = "C:\\Program Files (x86)\\Tencent\\微信web开发者工具\\cli.bat";
                                 break;
                         }
-                        if (!FileUtil.exists(wxPath)) return [3 /*break*/, 5];
+                        if (!FileUtil.exists(wxPath)) return [3 /*break*/, 6];
                         projectPath = egret.args.projectDir;
                         projectPath = path.resolve(projectPath, "../", path.basename(projectPath) + "_wxgame");
                         return [4 /*yield*/, utils.shell(wxPath, ["-o", projectPath])];
-                    case 4:
+                    case 5:
                         r = _b.sent();
-                        return [3 /*break*/, 6];
-                    case 5: throw '请安装最新微信开发者工具';
-                    case 6: return [2 /*return*/, DontExitCode];
-                    case 7: return [2 /*return*/];
+                        return [3 /*break*/, 7];
+                    case 6: throw '请安装最新微信开发者工具';
+                    case 7: return [2 /*return*/, DontExitCode];
+                    case 8: return [2 /*return*/];
                 }
             });
         });
