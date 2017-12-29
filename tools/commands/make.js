@@ -31,6 +31,7 @@ var CompileEgretEngine = (function () {
             FileUtil.escapePath(path.join(outputDir, "wasm_libs")),
             FileUtil.escapePath(path.join(outputDir, "media")),
             FileUtil.escapePath(path.join(outputDir, "nest")),
+            FileUtil.escapePath(path.join(outputDir, "res")),
             FileUtil.escapePath(path.join(outputDir, "dragonBones"))
         ];
         utils.clean(outputDir, excludeList);
