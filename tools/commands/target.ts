@@ -23,7 +23,7 @@ class Target implements egret.Command {
         const config: TargetTemplateConfig = await getTargetTemplateConfig();
         const projectRoot = path.resolve(option.projectDir, '../', projectName + "_" + config.projectType);
         await FileUtil.copyAsync(config.templatePath, projectRoot);
-        await FileUtil.copyAsync(config.scriptPath, path.join(option.projectDir, 'scripts', config.projectType));
+        await FileUtil.copyAsync(path.join(config.scriptPath, "egret.wxgame.js"), path.join(option.projectDir, 'scripts', config.projectType, "egret.wxgame.js"));
 
         config.args.forEach((arg) => {
             arg.files.forEach((filename) => {

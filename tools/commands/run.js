@@ -38,50 +38,54 @@ var utils = require("../lib/utils");
 // import fileUtil = require('../lib/FileUtil');
 var watch = require("../lib/watch");
 var path = require("path");
-var Build = require("./build");
 var Server = require("../server/server");
 var FileUtil = require("../lib/FileUtil");
 var service = require("../service/index");
 var project_1 = require("../project");
+var os = require("os");
 var Run = (function () {
     function Run() {
         this.initVersion = ""; //初始化的 egret 版本，如果版本变化了，关掉当前的进程
     }
     Run.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var exitCode, target, toolsList, _a, port, wechatIDE, path_1, projectPath;
+            var target, toolsList, _a, port, wxPath, projectPath, r;
             return __generator(this, function (_b) {
                 switch (_b.label) {
-                    case 0: return [4 /*yield*/, new Build().execute()];
-                    case 1:
-                        exitCode = _b.sent();
+                    case 0:
                         target = egret.args.target;
                         toolsList = project_1.engineData.getLauncherLibrary().getInstalledTools();
                         _a = egret.args.target;
                         switch (_a) {
-                            case "web": return [3 /*break*/, 2];
-                            case "wxgame": return [3 /*break*/, 4];
+                            case "web": return [3 /*break*/, 1];
+                            case "wxgame": return [3 /*break*/, 3];
                         }
-                        return [3 /*break*/, 6];
-                    case 2: return [4 /*yield*/, utils.getAvailablePort(egret.args.port)];
-                    case 3:
+                        return [3 /*break*/, 7];
+                    case 1: return [4 /*yield*/, utils.getAvailablePort(egret.args.port)];
+                    case 2:
                         port = _b.sent();
                         this.initServer(port);
                         return [2 /*return*/, DontExitCode];
-                    case 4:
-                        wechatIDE = toolsList.filter(function (m) {
-                            return m.name == "Wechat IDE";
-                        })[0];
-                        if (!wechatIDE) {
-                            throw '请安装微信 Web 开发者工具'; //i18n
+                    case 3:
+                        wxPath = "";
+                        switch (os.platform()) {
+                            case "darwin":
+                                wxPath = "/Applications/wechatwebdevtools.app/Contents/Resources/app.nw/bin/cli";
+                                break;
+                            case "win32":
+                                wxPath = "C:\\Program Files (x86)\\Tencent\\微信web开发者工具\\cli.bat";
+                                break;
                         }
-                        path_1 = "C:\\Program Files (x86)\\Tencent\\微信web开发者工具\\cli.bat";
+                        if (!FileUtil.exists(wxPath)) return [3 /*break*/, 5];
                         projectPath = egret.args.projectDir;
-                        return [4 /*yield*/, utils.shell(path_1, ["-o", projectPath])];
-                    case 5:
-                        _b.sent();
-                        return [2 /*return*/, DontExitCode];
-                    case 6: return [2 /*return*/];
+                        projectPath = path.resolve(projectPath, "../", path.basename(projectPath) + "_wxgame");
+                        return [4 /*yield*/, utils.shell(wxPath, ["-o", projectPath])];
+                    case 4:
+                        r = _b.sent();
+                        return [3 /*break*/, 6];
+                    case 5: throw '请安装最新微信开发者工具';
+                    case 6: return [2 /*return*/, DontExitCode];
+                    case 7: return [2 /*return*/];
                 }
             });
         });

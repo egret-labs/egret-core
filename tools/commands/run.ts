@@ -10,13 +10,14 @@ import Server = require('../server/server');
 import FileUtil = require('../lib/FileUtil');
 import service = require('../service/index');
 import CompileProject = require('../actions/CompileProject');
-import { engineData } from '../project';
+import { engineData, projectData } from '../project';
+import * as os from 'os';
 
 class Run implements egret.Command {
 
     private initVersion = "";//初始化的 egret 版本，如果版本变化了，关掉当前的进程
     async execute() {
-        const exitCode = await new Build().execute();
+        // const exitCode = await new Build().execute();
         const target = egret.args.target;
         const toolsList = engineData.getLauncherLibrary().getInstalledTools();
 
@@ -27,18 +28,25 @@ class Run implements egret.Command {
                 return DontExitCode;
                 break;
             case "wxgame":
-                const wechatIDE = toolsList.filter(m => {
-                    return m.name == "Wechat IDE";
-                })[0];
-                if (!wechatIDE) {
-                    throw '请安装微信 Web 开发者工具'; //i18n
+                let wxPath = "";
+                switch (os.platform()) {
+                    case "darwin":
+                        wxPath = "/Applications/wechatwebdevtools.app/Contents/Resources/app.nw/bin/cli";
+                        break;
+                    case "win32":
+                        wxPath = "C:\\Program Files (x86)\\Tencent\\微信web开发者工具\\cli.bat";
+                        break;
                 }
-                // const path = wechatIDE.path;
-                const path = "C:\\Program Files (x86)\\Tencent\\微信web开发者工具\\cli.bat";
-                const projectPath = egret.args.projectDir;
-                await utils.shell(path, ["-o", projectPath])
+                if (FileUtil.exists(wxPath)) {
+                    let projectPath = egret.args.projectDir;
+                    projectPath = path.resolve(projectPath, "../", path.basename(projectPath) + "_wxgame");
+                    let r = await utils.shell(wxPath, ["-o", projectPath]);
+                }
+                else {
+                    throw '请安装最新微信开发者工具'
+                }
                 return DontExitCode
-                break;
+
 
 
         }

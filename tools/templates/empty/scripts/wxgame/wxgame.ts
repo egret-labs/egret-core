@@ -18,7 +18,12 @@ export class WxgamePlugin implements plugins.Command {
             }
             else {
                 let content = file.contents.toString();
-                if (filename == "libs/modules/res/res.js" || filename == 'libs/modules/res/res.min.js') {
+                if (
+                    filename == "libs/modules/res/res.js" ||
+                    filename == 'libs/modules/res/res.min.js' ||
+                    filename == 'libs/modules/assetsmanager/assetsmanager.min.js' ||
+                    filename == 'libs/modules/assetsmanager/assetsmanager.js'
+                ) {
                     content += ";window.RES = RES;"
                 }
                 if (filename == "libs/modules/eui/eui.js" || filename == 'libs/modules/eui/eui.min.js') {

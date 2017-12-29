@@ -54,7 +54,7 @@ var Target = (function () {
                         return [4 /*yield*/, FileUtil.copyAsync(config.templatePath, projectRoot)];
                     case 2:
                         _a.sent();
-                        return [4 /*yield*/, FileUtil.copyAsync(config.scriptPath, path.join(option.projectDir, 'scripts', config.projectType))];
+                        return [4 /*yield*/, FileUtil.copyAsync(path.join(config.scriptPath, "egret.wxgame.js"), path.join(option.projectDir, 'scripts', config.projectType, "egret.wxgame.js"))];
                     case 3:
                         _a.sent();
                         config.args.forEach(function (arg) {
