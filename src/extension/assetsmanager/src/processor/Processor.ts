@@ -187,15 +187,15 @@ module RES.processor {
 
     }
 
-    export var SheetProcessor: Processor = {
+    export const SheetProcessor: Processor = {
 
         async onLoadStart(host, resource): Promise<any> {
 
             let data = await host.load(resource, JsonProcessor);
-            let imagePath = getRelativePath(resource.name, data.file);
-            let r = host.resourceConfig.getResource(imagePath);
+            let imagePath = "resource/" + getRelativePath(resource.url, data.file);
+            let r = host.resourceConfig.getResource(data.file);
             if (!r) {
-                throw new ResourceManagerError(1001, imagePath);
+                r = { name: imagePath, url: imagePath, extra: true, type: 'image' };
             }
             var texture: egret.Texture = await host.load(r);
             var frames: any = data.frames;
@@ -488,7 +488,7 @@ module RES.processor {
                 for (let resource of data.resources) {
                     fsData[resource.name] = resource;
                     if (resource.subkeys) {
-                        resource.subkeys.split(".").forEach(subkey => {
+                        resource.subkeys.split(",").forEach(subkey => {
                             alias[subkey] = resource.name + "#" + subkey;
                         })
                         // ResourceConfig.

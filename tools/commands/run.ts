@@ -51,11 +51,7 @@ class Run implements egret.Command {
                     throw '请安装最新微信开发者工具'
                 }
                 return DontExitCode
-
-
-
         }
-
     }
 
 
