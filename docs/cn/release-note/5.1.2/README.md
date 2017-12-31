@@ -25,7 +25,7 @@
 之前的 ResourceManager 模块与 RES 模块有90%的 API 是完全一致的，AssetsManager 也继承了这一点，与此同时，AssetsManager 也完全支持 RES 模块的形如 ```default.res.json```的配置文件，以保证尽可能的保证开发者继续使用自己熟悉的工作流并进行逐步的迁移。
 
 
-在更新 AssetsManager 的同时，我们还为资源管理模块加入了两个非常使用的构建管线插件，分别是：
+在更新 AssetsManager 的同时，我们还为资源管理模块加入了两个非常实用的构建管线插件，分别是：
 
 * 资源配置文件自动生成插件
 * 纹理集自动合并插件
