@@ -1,3 +1,11 @@
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -47,7 +55,7 @@ var EmitResConfigFilePlugin = (function () {
         this.fileSystem.init(this.config.resources, "resource");
         filters.push(options.output);
     }
-    EmitResConfigFilePlugin.prototype.executeFilter = function (url) {
+    EmitResConfigFilePlugin.prototype.executeFilter = function (url, fileParams) {
         var config = this.config;
         var options = this.options;
         if (filters.indexOf(url) >= 0) {
@@ -59,6 +67,9 @@ var EmitResConfigFilePlugin = (function () {
         }
         var name = options.nameSelector(url);
         var groupName = options.groupSelector(url);
+        if (fileParams && fileParams.subkeys && typeof fileParams.subkeys == 'object') {
+            fileParams.subkeys = fileParams.subkeys.map(function (p) { return options.nameSelector(p); }).join(",");
+        }
         if (groupName) {
             if (!config.groups[groupName]) {
                 config.groups[groupName] = [];
@@ -68,7 +79,7 @@ var EmitResConfigFilePlugin = (function () {
                 group.push(name);
             }
         }
-        return { name: name, url: url, type: type };
+        return __assign({ name: name, url: url, type: type }, fileParams);
     };
     EmitResConfigFilePlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
@@ -76,7 +87,7 @@ var EmitResConfigFilePlugin = (function () {
             return __generator(this, function (_a) {
                 filename = file.origin;
                 if (filename.indexOf('resource/') >= 0) {
-                    r = this.executeFilter(filename);
+                    r = this.executeFilter(filename, file.options);
                     if (r) {
                         this.fileSystem.addFile(r, true);
                     }
@@ -240,7 +251,7 @@ var vfs;
             }
             var d = this.reslove(folder);
             if (d) {
-                d[basefilename] = { url: url, type: type, name: name };
+                d[basefilename] = __assign({ url: url, type: type, name: name }, r);
             }
         };
         FileSystem.prototype.getFile = function (filename) {
