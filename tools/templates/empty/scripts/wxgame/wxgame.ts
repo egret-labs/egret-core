@@ -34,7 +34,7 @@ export class WxgamePlugin implements plugins.Command {
                 }
                 content = "var egret = window.egret;" + content;
                 if (filename == 'main.js') {
-                    content += ";window.GameApp = Main;"
+                    content += ";window.Main = Main;"
                 }
                 file.contents = new Buffer(content);
             }
@@ -42,9 +42,6 @@ export class WxgamePlugin implements plugins.Command {
         return file;
     }
     async onFinish(pluginContext) {
-        const fielurl = path.join(pluginContext.projectRoot, "scripts/wxgame/egret.wxgame.js");
-        let content = fs.readFileSync(fielurl, 'utf-8');
-        content = content.replace(/var egret;/gi, "");
-        pluginContext.createFile("libs/modules/egret/egret.wxgame.js", new Buffer(content))
+
     }
 }
