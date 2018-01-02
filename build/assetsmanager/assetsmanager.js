@@ -833,10 +833,10 @@ var RES;
                             case 0: return [4 /*yield*/, host.load(resource, processor_1.JsonProcessor)];
                             case 1:
                                 data = _a.sent();
-                                imagePath = getRelativePath(resource.name, data.file);
-                                r = host.resourceConfig.getResource(imagePath);
+                                imagePath = "resource/" + getRelativePath(resource.url, data.file);
+                                r = host.resourceConfig.getResource(data.file);
                                 if (!r) {
-                                    throw new RES.ResourceManagerError(1001, imagePath);
+                                    r = { name: imagePath, url: imagePath, extra: true, type: 'image' };
                                 }
                                 return [4 /*yield*/, host.load(r)];
                             case 2:
@@ -1074,7 +1074,7 @@ var RES;
                     var _loop_1 = function (resource_1) {
                         fsData[resource_1.name] = resource_1;
                         if (resource_1.subkeys) {
-                            resource_1.subkeys.split(".").forEach(function (subkey) {
+                            resource_1.subkeys.split(",").forEach(function (subkey) {
                                 alias[subkey] = resource_1.name + "#" + subkey;
                             });
                             // ResourceConfig.

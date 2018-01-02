@@ -201,7 +201,7 @@ declare module RES.processor {
     var JsonProcessor: Processor;
     var XMLProcessor: Processor;
     var CommonJSProcessor: Processor;
-    var SheetProcessor: Processor;
+    const SheetProcessor: Processor;
     var FontProcessor: Processor;
     var SoundProcessor: Processor;
     var MovieClipProcessor: Processor;
