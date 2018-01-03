@@ -6901,10 +6901,13 @@ var egret;
                 var result = new Uint8Array(4 * width * height);
                 for (var i = 0; i < height; i++) {
                     for (var j = 0; j < width; j++) {
-                        result[(width * (height - i - 1) + j) * 4] = pixels[(width * i + j) * 4];
-                        result[(width * (height - i - 1) + j) * 4 + 1] = pixels[(width * i + j) * 4 + 1];
-                        result[(width * (height - i - 1) + j) * 4 + 2] = pixels[(width * i + j) * 4 + 2];
-                        result[(width * (height - i - 1) + j) * 4 + 3] = pixels[(width * i + j) * 4 + 3];
+                        var index1 = (width * (height - i - 1) + j) * 4;
+                        var index2 = (width * i + j) * 4;
+                        var a = pixels[index2 + 3];
+                        result[index1] = Math.round(pixels[index2] / a * 255);
+                        result[index1 + 1] = Math.round(pixels[index2 + 1] / a * 255);
+                        result[index1 + 2] = Math.round(pixels[index2 + 2] / a * 255);
+                        result[index1 + 3] = pixels[index2 + 3];
                     }
                 }
                 return result;

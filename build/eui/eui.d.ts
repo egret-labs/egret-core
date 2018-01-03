@@ -13212,12 +13212,13 @@ declare namespace EXML {
      * @private
      */
     function $loadAll(urls: string[], callBack?: (clazz: any[], url: string[]) => void, thisObject?: any, useCache?: boolean): void;
+    function update(url: string, clazz: any): void;
     /**
      * @private
      * @param url
      * @param text
      */
-    function $parseURLContentAsJs(url: string, text: string, className: string): any;
+    function $parseURLContentAsJs(url: string, text: string, className: string): void;
     /**
      * @private
      */
