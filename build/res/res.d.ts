@@ -393,7 +393,10 @@ declare namespace RES {
          * @platform Web,Native
          * @language zh_CN
          */
-        fetchVersion(callback: egret.AsyncCallback): void;
+        fetchVersion(callback: {
+            onSuccess: (data: any) => any;
+            onFail: (error: number, data: any) => any;
+        }): void;
         /**
          * Get all changed files.<br/>
          * The main application in native scene. Changes here include new file, update file (the same file name, but changed files).<br/>
@@ -976,7 +979,10 @@ declare namespace RES.web {
     class Html5VersionController extends egret.EventDispatcher implements VersionController {
         constructor();
         private _versionInfo;
-        fetchVersion(callback: egret.AsyncCallback): void;
+        fetchVersion(callback: {
+            onSuccess: (data: any) => any;
+            onFail: (error: number, data: any) => any;
+        }): void;
         /**
          * 获取所有有变化的文件
          * @returns {any[]}

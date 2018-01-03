@@ -3010,8 +3010,8 @@ var egret;
             }
             return _this;
         }
-        MovieClip.prototype.createNativeNode = function () {
-            this.$nativeNode = new egret.NativeNode(11 /* BITMAP_TEXT */);
+        MovieClip.prototype.createNativeDisplayObject = function () {
+            this.$nativeDisplayObject = new egret_native.NativeDisplayObject(11 /* BITMAP_TEXT */);
         };
         Object.defineProperty(MovieClip.prototype, "smoothing", {
             /**
@@ -3400,12 +3400,12 @@ var egret;
             self.displayedKeyFrameNum = currentFrameNum;
             self.$renderDirty = true;
             if (egret.nativeRender) {
-                self.$nativeNode.setDataToBitmapNode(self.$nativeNode.id, texture, [texture.$bitmapX, texture.$bitmapY, texture.$bitmapWidth, texture.$bitmapHeight,
+                self.$nativeDisplayObject.setDataToBitmapNode(self.$nativeDisplayObject.id, texture, [texture.$bitmapX, texture.$bitmapY, texture.$bitmapWidth, texture.$bitmapHeight,
                     self.offsetPoint.x, self.offsetPoint.y, texture.$getScaleBitmapWidth(), texture.$getScaleBitmapHeight(),
                     texture.$sourceWidth, texture.$sourceHeight]);
                 //todo 负数offsetPoint
-                self.$nativeNode.setWidth(texture.$getTextureWidth() + self.offsetPoint.x);
-                self.$nativeNode.setHeight(texture.$getTextureHeight() + self.offsetPoint.y);
+                self.$nativeDisplayObject.setWidth(texture.$getTextureWidth() + self.offsetPoint.x);
+                self.$nativeDisplayObject.setHeight(texture.$getTextureHeight() + self.offsetPoint.y);
             }
             else {
                 var p = self.$parent;

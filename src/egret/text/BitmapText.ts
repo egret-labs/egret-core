@@ -62,8 +62,8 @@ namespace egret {
             }
         }
 
-        protected createNativeNode(): void {
-            this.$nativeNode = new NativeNode(NativeObjectType.BITMAP_TEXT);
+        protected createNativeDisplayObject(): void {
+            this.$nativeDisplayObject = new egret_native.NativeDisplayObject(egret_native.NativeObjectType.BITMAP_TEXT);
         }
 
         private $smoothing: boolean = Bitmap.defaultSmoothing;
@@ -459,10 +459,10 @@ namespace egret {
                 yPos += lineHeight + self.$lineSpacing;
             }
             if (egret.nativeRender) {
-                self.$nativeNode.setDataToBitmapNode(self.$nativeNode.id, bitmapFont.$texture, drawArr);
+                self.$nativeDisplayObject.setDataToBitmapNode(self.$nativeDisplayObject.id, bitmapFont.$texture, drawArr);
                 let bounds = self.$getContentBounds();
-                self.$nativeNode.setWidth(bounds.width);
-                self.$nativeNode.setHeight(bounds.height);
+                self.$nativeDisplayObject.setWidth(bounds.width);
+                self.$nativeDisplayObject.setHeight(bounds.height);
             }
         }
 

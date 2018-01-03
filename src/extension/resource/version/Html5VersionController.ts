@@ -38,9 +38,15 @@ namespace RES.web {
             super();
         }
 
-        private _versionInfo:Object = {};
+        private _versionInfo: Object = {};
 
-        public fetchVersion(callback:egret.AsyncCallback):void {
+        public fetchVersion(callback: {
+
+            onSuccess: (data: any) => any;
+
+            onFail: (error: number, data: any) => any;
+
+        }): void {
 
             callback.onSuccess(null);
             return;
@@ -87,11 +93,11 @@ namespace RES.web {
          * 获取所有有变化的文件
          * @returns {any[]}
          */
-        public getChangeList():Array<{url:string; size:number}> {
+        public getChangeList(): Array<{ url: string; size: number }> {
             return [];
         }
 
-        public getVirtualUrl(url:string):string {
+        public getVirtualUrl(url: string): string {
 
             return url;
 

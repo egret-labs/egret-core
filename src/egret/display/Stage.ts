@@ -67,8 +67,8 @@ namespace egret {
             this.$nestLevel = 1;
         }
 
-        protected createNativeNode(): void {
-            this.$nativeNode = new NativeNode(NativeObjectType.STAGE);
+        protected createNativeDisplayObject(): void {
+            this.$nativeDisplayObject = new egret_native.NativeDisplayObject(egret_native.NativeObjectType.STAGE);
         }
 
         /**
@@ -292,15 +292,6 @@ namespace egret {
             }
             this.$maxTouches = value;
             this.$screen.updateMaxTouches();
-        }
-        /**
-         * @private
-         */
-        public set dirtyRegionPolicy(policy:string) {
-            
-        }
-        public get dirtyRegionPolicy():string{
-            return null;
         }
 
         /**

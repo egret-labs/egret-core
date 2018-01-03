@@ -196,7 +196,7 @@ namespace egret {
                 }
             }
             if (egret.nativeRender) {
-                self.$nativeNode.addChildAt(child.$nativeNode.id, index);
+                self.$nativeDisplayObject.addChildAt(child.$nativeDisplayObject.id, index);
             }
             else {
                 if (!self.$cacheDirty) {
@@ -430,7 +430,7 @@ namespace egret {
                 children.splice(indexNow, 1);
             }
             if (egret.nativeRender) {
-                self.$nativeNode.removeChild(child.$nativeNode.id);
+                self.$nativeDisplayObject.removeChild(child.$nativeDisplayObject.id);
             }
             else {
                 if (!self.$cacheDirty) {
@@ -497,8 +497,8 @@ namespace egret {
             this.$children.splice(index, 0, child);
             this.$childAdded(child, index);
             if (egret.nativeRender) {
-                this.$nativeNode.removeChild(child.$nativeNode.id);
-                this.$nativeNode.addChildAt(child.$nativeNode.id, index);
+                this.$nativeDisplayObject.removeChild(child.$nativeDisplayObject.id);
+                this.$nativeDisplayObject.addChildAt(child.$nativeDisplayObject.id, index);
             }
             else {
                 if (!self.$cacheDirty) {
@@ -601,7 +601,7 @@ namespace egret {
             this.$childAdded(child2, index1);
             this.$childAdded(child1, index2);
             if(egret.nativeRender) {
-                this.$nativeNode.swapChild(index1, index2);
+                this.$nativeDisplayObject.swapChild(index1, index2);
             }
             else {
                 if (!self.$cacheDirty) {

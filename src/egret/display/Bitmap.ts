@@ -99,8 +99,8 @@ namespace egret {
         protected $explicitBitmapWidth: number = NaN;
         protected $explicitBitmapHeight: number = NaN;
 
-        protected createNativeNode(): void {
-            this.$nativeNode = new NativeNode(NativeObjectType.BITMAP);
+        protected createNativeDisplayObject(): void {
+            this.$nativeDisplayObject = new egret_native.NativeDisplayObject(egret_native.NativeObjectType.BITMAP);
         }
 
         /**
@@ -235,7 +235,7 @@ namespace egret {
          * @private
          */
         protected setBitmapDataToWasm(data?: Texture): void {
-            this.$nativeNode.setBitmapData(data);
+            this.$nativeDisplayObject.setBitmapData(data);
         }
 
         /**
@@ -315,9 +315,9 @@ namespace egret {
             self.$renderDirty = true;
             if (egret.nativeRender) {
                 if (value) {
-                    self.$nativeNode.setScale9Grid(value.x, value.y, value.width, value.height);
+                    self.$nativeDisplayObject.setScale9Grid(value.x, value.y, value.width, value.height);
                 } else {
-                    self.$nativeNode.setScale9Grid(0, 0, -1, -1);
+                    self.$nativeDisplayObject.setScale9Grid(0, 0, -1, -1);
                 }
             }
             else {
@@ -436,7 +436,7 @@ namespace egret {
             self.$explicitBitmapWidth = value;
             self.$renderDirty = true;
             if (egret.nativeRender) {
-                self.$nativeNode.setWidth(value);
+                self.$nativeDisplayObject.setWidth(value);
             }
             else {
                 let p = self.$parent;
@@ -466,7 +466,7 @@ namespace egret {
             self.$explicitBitmapHeight = value;
             self.$renderDirty = true;
             if (egret.nativeRender) {
-                self.$nativeNode.setHeight(value);
+                self.$nativeDisplayObject.setHeight(value);
             }
             else {
                 let p = self.$parent;

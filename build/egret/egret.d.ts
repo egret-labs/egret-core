@@ -82,13 +82,6 @@ declare namespace egret {
          */
         readonly hashCode: number;
     }
-    /**
-     * @private
-     */
-    interface AsyncCallback {
-        onSuccess: (data: any) => any;
-        onFail: (error: number, data: any) => any;
-    }
 }
 declare namespace egret {
     /**
@@ -337,8 +330,8 @@ declare namespace egret {
          * @language zh_CN
          */
         constructor();
-        $nativeNode: NativeNode;
-        protected createNativeNode(): void;
+        $nativeDisplayObject: egret_native.NativeDisplayObject;
+        protected createNativeDisplayObject(): void;
         /**
          * @private
          * 是否添加到舞台上，防止重复发送 removed_from_stage 消息
@@ -4096,7 +4089,7 @@ declare namespace egret {
         protected $smoothing: boolean;
         protected $explicitBitmapWidth: number;
         protected $explicitBitmapHeight: number;
-        protected createNativeNode(): void;
+        protected createNativeDisplayObject(): void;
         /**
          * @private
          * 显示对象添加到舞台
@@ -5041,7 +5034,7 @@ declare let Module: any;
 /**
  * @private
  */
-declare namespace egret.NativeDelegate {
+declare namespace egret_native {
     let forHitTest: boolean;
     let addModuleCallback: (callback: Function, thisObj: any) => void;
     let init: (wasmSize?: number) => void;
@@ -5054,13 +5047,13 @@ declare namespace egret.NativeDelegate {
     let resize: (width: number, height: number) => void;
     let setCanvasScaleFactor: (factor: number, scalex: number, scaley: number) => void;
     let update: () => void;
-    let dirtyTextField: (textField: TextField) => void;
-    let dirtyGraphics: (graphics: Graphics) => void;
+    let dirtyTextField: (textField: egret.TextField) => void;
+    let dirtyGraphics: (graphics: egret.Graphics) => void;
     let updatePreCallback: (currTimeStamp: number) => boolean;
     let render: () => void;
-    let activateWebGLBuffer: (buffer: web.WebGLRenderBuffer) => void;
+    let activateWebGLBuffer: (buffer: egret.web.WebGLRenderBuffer) => void;
     let getPixels: (x: number, y: number, width?: number, height?: number) => number[];
-    let activateBuffer: (buffer: sys.RenderBuffer) => void;
+    let activateBuffer: (buffer: egret.sys.RenderBuffer) => void;
 }
 declare namespace egret {
     /**
@@ -5246,7 +5239,7 @@ declare namespace egret {
          * @language zh_CN
          */
         constructor();
-        protected createNativeNode(): void;
+        protected createNativeDisplayObject(): void;
         /**
          * @private
          */
@@ -5619,34 +5612,6 @@ declare namespace egret {
      * @language zh_CN
      */
     function updateAllScreens(): void;
-    /**
-     * @private
-     */
-    type CustomContext = {
-        onStart: (egretContext: EgretContext) => void;
-        onRender: (egretContext: EgretContext) => void;
-        onStop: (egretContext: EgretContext) => void;
-        onResize: (egretContext: EgretContext) => void;
-    };
-    /**
-     * @private
-     */
-    type EgretContext = {
-        setAutoClear: (value: boolean) => void;
-        save: () => void;
-        restore: () => void;
-    };
-    /**
-     * Insert render context, now for egret3d
-     * @private
-     * @language en_US
-     */
-    /**
-     * 插入渲染上下文，目前用于egret3d的混入
-     * @private
-     * @language zh_CN
-     */
-    function setRendererContext(custom: CustomContext): void;
 }
 declare namespace egret.web {
     /**
@@ -6081,7 +6046,7 @@ declare namespace egret {
      */
     class Mesh extends Bitmap {
         constructor(value?: Texture);
-        protected createNativeNode(): void;
+        protected createNativeDisplayObject(): void;
         /**
          * @private
          */
@@ -7269,7 +7234,7 @@ declare namespace egret {
          * @language zh_CN
          */
         constructor();
-        protected createNativeNode(): void;
+        protected createNativeDisplayObject(): void;
         /**
          * @private
          */
@@ -8598,7 +8563,6 @@ declare namespace egret.sys {
          * 显示列表根节点
          */
         root: DisplayObject;
-        needUpdateRegions: boolean;
         /**
          * @private
          * 设置剪裁边界，不再绘制完整目标对象，画布尺寸由外部决定，超过边界的节点将跳过绘制。
@@ -8663,7 +8627,7 @@ declare namespace egret {
          * @platform Web,Native
          */
         constructor();
-        protected createNativeNode(): void;
+        protected createNativeDisplayObject(): void;
         /**
          * Gets and sets the frame rate of the stage. The frame rate is defined as frames per second. Valid range for the
          * frame rate is from 0.01 to 1000 frames per second.<br/>
@@ -9103,17 +9067,6 @@ declare namespace egret.sys {
          */
         new (width?: number, height?: number): RenderBuffer;
     };
-}
-declare namespace egret.sys {
-    /**
-     * @private
-     */
-    interface Renderable extends HashObject {
-        /**
-         * 获取渲染节点
-         */
-        $getRenderNode(): RenderNode;
-    }
 }
 declare namespace egret.sys {
     /**
@@ -10957,11 +10910,11 @@ declare namespace egret {
         rotationRate: DeviceRotationRate;
     }
 }
-declare namespace egret {
+declare namespace egret_native {
     /**
      * @private
      */
-    class NativeNode {
+    class NativeDisplayObject {
         static init(buffer: Float32Array, map1: any, map2: any, map3: any): void;
         id: number;
         protected $obj: any;
@@ -10984,19 +10937,19 @@ declare namespace egret {
         setBlendMode(value: number): void;
         setMaskRect(x: number, y: number, w: number, h: number): void;
         setScrollRect(x: number, y: number, w: number, h: number): void;
-        setFilters(filters: Array<Filter>): void;
-        static createFilter(filter: Filter): void;
+        setFilters(filters: Array<egret.Filter>): void;
+        static createFilter(filter: egret.Filter): void;
         static setFilterPadding(filterId: number, paddingTop: number, paddingBottom: number, paddingLeft: number, paddingRight: number): void;
         setMask(value: number): void;
-        static setValuesToBitmapData(value: Texture): void;
+        static setValuesToBitmapData(value: egret.Texture): void;
         /**
          * for wasm native
          * @param private
          */
-        static setValuesToRenderBuffer(value: sys.RenderBuffer): number;
-        setBitmapData(value: Texture): void;
-        setBitmapDataToMesh(value: Texture): void;
-        setBitmapDataToParticle(value: Texture): void;
+        static setValuesToRenderBuffer(value: egret.sys.RenderBuffer): number;
+        setBitmapData(value: egret.Texture): void;
+        setBitmapDataToMesh(value: egret.Texture): void;
+        setBitmapDataToParticle(value: egret.Texture): void;
         setStopToParticle(value: boolean): void;
         setCustomData(config: any): void;
         setWidth(value: number): void;
@@ -11008,22 +10961,22 @@ declare namespace egret {
         setTextRect(x: number, y: number, w: number, h: number): void;
         setGraphicsRect(x: number, y: number, w: number, h: number, isSprite: boolean): void;
         setGraphicsRenderData(arr: Array<number>): void;
-        setDataToBitmapNode(id: number, texture: Texture, arr: number[]): void;
+        setDataToBitmapNode(id: number, texture: egret.Texture, arr: number[]): void;
         setDataToMesh(vertexArr: number[], indiceArr: number[], uvArr: number[]): void;
         static setDataToFilter(id: number): void;
         setDataToTextField(id: number, arr: number[]): void;
         disposeDisplayObject(): void;
-        static disposeTexture(texture: Texture): void;
-        static disposeBitmapData(bitmapData: BitmapData): void;
-        static disposeTextData(node: TextField): void;
-        static disposeGraphicData(graphic: Graphics): void;
-        static disposeFilter(filter: Filter): void;
+        static disposeTexture(texture: egret.Texture): void;
+        static disposeBitmapData(bitmapData: egret.BitmapData): void;
+        static disposeTextData(node: egret.TextField): void;
+        static disposeGraphicData(graphic: egret.Graphics): void;
+        static disposeFilter(filter: egret.Filter): void;
     }
 }
 /**
  * @private
  */
-declare namespace egret {
+declare namespace egret_native {
     /**
      * @private
      */
@@ -11192,7 +11145,7 @@ declare namespace egret {
          * @language zh_CN
          */
         constructor();
-        protected createNativeNode(): void;
+        protected createNativeDisplayObject(): void;
         private $smoothing;
         /**
          * Whether or not is smoothed when scaled.
@@ -12265,7 +12218,7 @@ declare namespace egret {
          * @platform Web,Native
          */
         constructor();
-        protected createNativeNode(): void;
+        protected createNativeDisplayObject(): void;
         /**
          * @private
          */
@@ -14367,34 +14320,6 @@ declare namespace egret {
 }
 declare namespace egret {
     /**
-     * @private
-     */
-    let fontMapping: {};
-    /**
-     * 兼容旧版本不使用 fontMapping 的情况
-     * @private
-     */
-    let useFontMapping: boolean;
-    /**
-     * Register font mapping.
-     * @param fontFamily The font family name to register.
-     * @param value The font value.
-     * @version Egret 3.2.3
-     * @platform Native
-     * @language en_US
-     */
-    /**
-     * 注册字体映射
-     * @param fontFamily 要注册的字体名称
-     * @param value 注册的字体值
-     * @version Egret 3.2.3
-     * @platform Native
-     * @language zh_CN
-     */
-    function registerFontMapping(fontFamily: string, value: string): void;
-}
-declare namespace egret {
-    /**
      * When a user clicks a hyperlink rich text object dispatches TextEvent object. Text Event Type: TextEvent.LINK.
      * @version Egret 2.4
      * @platform Web,Native
@@ -16022,11 +15947,6 @@ declare namespace egret.web {
          * @returns {string}
          */
         private static getIOSVersion();
-        /**
-         * @private
-         *
-         */
-        private static checkHtml5Support();
     }
     /**
      * @private
@@ -16676,7 +16596,6 @@ declare namespace egret.web {
         $offsetY: number;
         setTransform(a: number, b: number, c: number, d: number, tx: number, ty: number): void;
         transform(a: number, b: number, c: number, d: number, tx: number, ty: number): void;
-        translate(dx: number, dy: number): void;
         useOffset(): void;
         saveTransform(): void;
         restoreTransform(): void;

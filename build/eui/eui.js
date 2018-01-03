@@ -13656,8 +13656,8 @@ var eui;
             _this.fillColor = fillColor;
             return _this;
         }
-        Rect.prototype.createNativeNode = function () {
-            this.$nativeNode = new egret.NativeNode(8 /* GRAPHICS */);
+        Rect.prototype.createNativeDisplayObject = function () {
+            this.$nativeDisplayObject = new egret_native.NativeDisplayObject(8 /* GRAPHICS */);
         };
         Object.defineProperty(Rect.prototype, "graphics", {
             get: function () {

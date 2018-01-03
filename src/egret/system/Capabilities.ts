@@ -191,7 +191,7 @@ namespace egret {
         /**
          * @private
          */
-        static $runtimeType: string = "Unknown";
+        static $runtimeType: string = egret.RuntimeType.WEB;
 
         /**
          * It indicates the current type of operation. runtimeType property returns the following string:
@@ -354,5 +354,3 @@ egret.Capabilities.$isMobile = function () {
     let ua = navigator.userAgent.toLowerCase();
     return (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
 }();
-egret.Capabilities.$runtimeType = egret.RuntimeType.WEB;
-

@@ -326,8 +326,8 @@ namespace egret {
             };
         }
 
-        protected createNativeNode(): void {
-            this.$nativeNode = new NativeNode(NativeObjectType.TEXT);
+        protected createNativeDisplayObject(): void {
+            this.$nativeDisplayObject = new egret_native.NativeDisplayObject(egret_native.NativeObjectType.TEXT);
         }
 
         /**
@@ -1537,8 +1537,8 @@ namespace egret {
 
             if (this.textNode) {
                 this.textNode.clean();
-                if (__global.nativeRender) {
-                    NativeNode.disposeTextData(this);
+                if (egret.nativeRender) {
+                    egret_native.NativeDisplayObject.disposeTextData(this);
                 }
             }
 
@@ -1565,7 +1565,7 @@ namespace egret {
             self.$renderDirty = true;
             self.$TextField[sys.TextKeys.textLinesChanged] = true;
             if (egret.nativeRender) {
-                NativeDelegate.dirtyTextField(this);
+                egret_native.dirtyTextField(this);
             }
             else {
                 let p = self.$parent;

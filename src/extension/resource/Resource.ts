@@ -627,17 +627,13 @@ namespace RES {
                 itemList.push(resItem);
             }
 
-            let callback:egret.AsyncCallback = {
-
-
+            let callback = {
                 onSuccess:(data:any)=>{
                     this.resLoader.loadGroup(itemList,Resource.GROUP_CONFIG,Number.MAX_VALUE);
                 },
-
                 onFail:(err:number,data:any)=>{
                     ResourceEvent.dispatchResourceEvent(this,ResourceEvent.CONFIG_LOAD_ERROR);
                 }
-
             };
 
             if (this.vcs){

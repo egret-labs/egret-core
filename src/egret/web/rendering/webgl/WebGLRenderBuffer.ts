@@ -87,7 +87,7 @@ namespace egret.web {
                     this.bufferIdForWasm = 0;
                 }
                 else {
-                    this.bufferIdForWasm = NativeNode.setValuesToRenderBuffer(this);
+                    this.bufferIdForWasm = egret_native.NativeDisplayObject.setValuesToRenderBuffer(this);
                 }
                 return;
             }
@@ -386,12 +386,6 @@ namespace egret.web {
             }
             matrix.tx = tx * a1 + ty * c1 + matrix.tx;
             matrix.ty = tx * b1 + ty * d1 + matrix.ty;
-        }
-
-        public translate(dx: number, dy: number): void {
-            let matrix = this.globalMatrix;
-            matrix.tx += dx;
-            matrix.ty += dy;
         }
 
         public useOffset(): void {

@@ -53,8 +53,8 @@ namespace eui {
             this.fillColor = fillColor;
         }
 
-        protected createNativeNode(): void {
-            this.$nativeNode = new egret.NativeNode(egret.NativeObjectType.GRAPHICS);
+        protected createNativeDisplayObject(): void {
+            this.$nativeDisplayObject = new egret_native.NativeDisplayObject(egret_native.NativeObjectType.GRAPHICS);
         }
 
 

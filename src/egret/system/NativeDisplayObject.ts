@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-namespace egret {
+namespace egret_native {
     //渲染命令枚举
     const enum CommandType {
         CREATE_OBJECT = 0,
@@ -114,7 +114,7 @@ namespace egret {
     /**
      * @private
      */
-    export class NativeNode {
+    export class NativeDisplayObject {
 
         public static init(buffer: Float32Array, map1, map2, map3): void {
             //初始化之前有原生对象创建
@@ -280,7 +280,7 @@ namespace egret {
             displayCmdBufferSize++;
         }
 
-        public setFilters(filters: Array<Filter>): void {
+        public setFilters(filters: Array<egret.Filter>): void {
             if (!filters) {
                 displayCmdBuffer[displayCmdBufferIndex++] = CommandType.SET_FILTERS;
                 displayCmdBuffer[displayCmdBufferIndex++] = this.id;
@@ -297,7 +297,7 @@ namespace egret {
             for (let i = 0; i < length; i++) {
                 let filter = filters[i];
                 if (filter.type == "blur") {
-                    let blurFilter = (<BlurFilter>filter);
+                    let blurFilter = (<egret.BlurFilter>filter);
                     if (blurFilter.$blurX != 0 && blurFilter.$blurY != 0) {
                         trueLength++;
                         displayCmdBuffer[displayCmdBufferIndex++] = blurFilter.blurXFilter.$id;
@@ -321,7 +321,7 @@ namespace egret {
             displayCmdBufferSize++;
         }
 
-        public static createFilter(filter: Filter): void {
+        public static createFilter(filter: egret.Filter): void {
             filter.$id = filterId;
             filter.$obj = new Module.WasmNode(filterId, NativeObjectType.FILTER);
             filterMap[filterId] = filter;
@@ -351,7 +351,7 @@ namespace egret {
 
 
 
-        public static setValuesToBitmapData(value: Texture): void {
+        public static setValuesToBitmapData(value: egret.Texture): void {
             let bitmapData = value.bitmapData;
             if (!bitmapData.$bitmapDataId) {
                 bitmapData.$bitmapDataId = bitmapDataId;
@@ -394,17 +394,17 @@ namespace egret {
          * for wasm native
          * @param private
          */
-        public static setValuesToRenderBuffer(value: sys.RenderBuffer): number {
+        public static setValuesToRenderBuffer(value: egret.sys.RenderBuffer): number {
             let texture;
-            if ((<web.WebGLRenderBuffer>value).rootRenderTarget) {
-                texture = (<web.WebGLRenderBuffer>value).rootRenderTarget.texture;
+            if ((<egret.web.WebGLRenderBuffer>value).rootRenderTarget) {
+                texture = (<egret.web.WebGLRenderBuffer>value).rootRenderTarget.texture;
             }
-            else if ((<web.WebGLRenderBuffer>value)["texture"]) {
-                texture = (<web.WebGLRenderBuffer>value)["texture"];
+            else if ((<egret.web.WebGLRenderBuffer>value)["texture"]) {
+                texture = (<egret.web.WebGLRenderBuffer>value)["texture"];
             }
             else {
                 texture = {};
-                (<web.WebGLRenderBuffer>value)["texture"] = texture;
+                (<egret.web.WebGLRenderBuffer>value)["texture"] = texture;
             }
             if (!texture.$bitmapDataId) {
                 texture["isTexture"] = true;
@@ -423,12 +423,12 @@ namespace egret {
 
                 bitmapDataId++;
 
-                (<web.WebGLRenderBuffer>value).bufferIdForWasm = bitmapDataId;
+                (<egret.web.WebGLRenderBuffer>value).bufferIdForWasm = bitmapDataId;
             }
             return texture.$bitmapDataId;
         }
 
-        public setBitmapData(value: Texture): void {
+        public setBitmapData(value: egret.Texture): void {
             if (!value) {
                 displayCmdBuffer[displayCmdBufferIndex++] = CommandType.SET_BITMAP_DATA;
                 displayCmdBuffer[displayCmdBufferIndex++] = this.id;
@@ -437,16 +437,16 @@ namespace egret {
                 return;
             }
             //todo lcj
-            if ((<RenderTexture>value).$renderBuffer) {
+            if ((<egret.RenderTexture>value).$renderBuffer) {
                 let texture;
-                if ((<web.WebGLRenderBuffer>(<RenderTexture>value).$renderBuffer).rootRenderTarget) {
-                    texture = (<web.WebGLRenderBuffer>(<RenderTexture>value).$renderBuffer).rootRenderTarget.texture;
+                if ((<egret.web.WebGLRenderBuffer>(<egret.RenderTexture>value).$renderBuffer).rootRenderTarget) {
+                    texture = (<egret.web.WebGLRenderBuffer>(<egret.RenderTexture>value).$renderBuffer).rootRenderTarget.texture;
                 }
-                else if ((<web.WebGLRenderBuffer>(<RenderTexture>value).$renderBuffer)["texture"]) {
-                    texture = (<web.WebGLRenderBuffer>(<RenderTexture>value).$renderBuffer)["texture"];
+                else if ((<egret.web.WebGLRenderBuffer>(<egret.RenderTexture>value).$renderBuffer)["texture"]) {
+                    texture = (<egret.web.WebGLRenderBuffer>(<egret.RenderTexture>value).$renderBuffer)["texture"];
                 }
                 else {
-                    texture = (<web.CanvasRenderBuffer>(<RenderTexture>value).$renderBuffer).surface;
+                    texture = (<egret.web.CanvasRenderBuffer>(<egret.RenderTexture>value).$renderBuffer).surface;
                 }
 
                 if (!texture.$bitmapDataId) {
@@ -488,7 +488,7 @@ namespace egret {
                 displayCmdBufferSize++;
             }
             else {
-                NativeNode.setValuesToBitmapData(value);
+                NativeDisplayObject.setValuesToBitmapData(value);
                 displayCmdBuffer[displayCmdBufferIndex++] = CommandType.SET_BITMAP_DATA;
                 displayCmdBuffer[displayCmdBufferIndex++] = this.id;
                 displayCmdBuffer[displayCmdBufferIndex++] = value.$textureId;
@@ -496,7 +496,7 @@ namespace egret {
             }
         }
 
-        public setBitmapDataToMesh(value: Texture): void {
+        public setBitmapDataToMesh(value: egret.Texture): void {
             if (!value) {
                 displayCmdBuffer[displayCmdBufferIndex++] = CommandType.SET_MESH_BITMAP_DATA;
                 displayCmdBuffer[displayCmdBufferIndex++] = this.id;
@@ -505,15 +505,15 @@ namespace egret {
                 return;
             }
 
-            NativeNode.setValuesToBitmapData(value);
+            NativeDisplayObject.setValuesToBitmapData(value);
             displayCmdBuffer[displayCmdBufferIndex++] = CommandType.SET_MESH_BITMAP_DATA;
             displayCmdBuffer[displayCmdBufferIndex++] = this.id;
             displayCmdBuffer[displayCmdBufferIndex++] = value.$textureId;
             displayCmdBufferSize++;
         }
 
-        public setBitmapDataToParticle(value: Texture): void {
-            NativeNode.setValuesToBitmapData(value);
+        public setBitmapDataToParticle(value: egret.Texture): void {
+            NativeDisplayObject.setValuesToBitmapData(value);
             displayCmdBuffer[displayCmdBufferIndex++] = CommandType.SET_PARTICLE_BITMAP_DATA;
             displayCmdBuffer[displayCmdBufferIndex++] = this.id;
             displayCmdBuffer[displayCmdBufferIndex++] = value.$textureId;
@@ -625,8 +625,8 @@ namespace egret {
             displayCmdBufferSize++;
         }
 
-        public setDataToBitmapNode(id: number, texture: Texture, arr: number[]): void {
-            NativeNode.setValuesToBitmapData(texture);
+        public setDataToBitmapNode(id: number, texture: egret.Texture, arr: number[]): void {
+            NativeDisplayObject.setValuesToBitmapData(texture);
             displayCmdBuffer[displayCmdBufferIndex++] = CommandType.SET_DATA_TO_BITMAP_NODE;
             displayCmdBuffer[displayCmdBufferIndex++] = id;
             displayCmdBuffer[displayCmdBufferIndex++] = texture.$bitmapData.$bitmapDataId;
@@ -678,8 +678,8 @@ namespace egret {
             let vertexSrcStr = "";
             let fragmentSrcStr = "";
             if (currFilter.type == "custom") {
-                vertexSrcStr = (<CustomFilter>currFilter).$vertexSrc;
-                fragmentSrcStr = (<CustomFilter>currFilter).$fragmentSrc;
+                vertexSrcStr = (<egret.CustomFilter>currFilter).$vertexSrc;
+                fragmentSrcStr = (<egret.CustomFilter>currFilter).$fragmentSrc;
                 filterType = FilterType.custom;
             }
             else if (currFilter.type == "colorTransform") {
@@ -772,36 +772,36 @@ namespace egret {
             displayCmdBufferSize++;
         }
 
-        public static disposeTexture(texture: Texture): void {
+        public static disposeTexture(texture: egret.Texture): void {
             displayCmdBuffer[displayCmdBufferIndex++] = CommandType.DISPOSE_BITMAP_DATA;
             displayCmdBuffer[displayCmdBufferIndex++] = texture.$textureId;
             displayCmdBufferSize++;
         }
 
-        public static disposeBitmapData(bitmapData: BitmapData): void {
+        public static disposeBitmapData(bitmapData: egret.BitmapData): void {
             if (bitmapData.$bitmapDataId) {
                 delete bitmapDataMap[bitmapData.$bitmapDataId];
             }
         }
 
-        public static disposeTextData(node: TextField): void {
+        public static disposeTextData(node: egret.TextField): void {
             displayCmdBuffer[displayCmdBufferIndex++] = CommandType.DISPOSE_TEXT_DATA;
-            displayCmdBuffer[displayCmdBufferIndex++] = node.$nativeNode.id;
+            displayCmdBuffer[displayCmdBufferIndex++] = node.$nativeDisplayObject.id;
             displayCmdBufferSize++;
         }
 
-        public static disposeGraphicData(graphic: Graphics): void {
+        public static disposeGraphicData(graphic: egret.Graphics): void {
             displayCmdBuffer[displayCmdBufferIndex++] = CommandType.DISPOSE_GRAPHICS_DATA;
-            displayCmdBuffer[displayCmdBufferIndex++] = graphic.$targetDisplay.$nativeNode.id;
+            displayCmdBuffer[displayCmdBufferIndex++] = graphic.$targetDisplay.$nativeDisplayObject.id;
             displayCmdBufferSize++;
         }
 
-        public static disposeFilter(filter: Filter): void {
+        public static disposeFilter(filter: egret.Filter): void {
             displayCmdBuffer[displayCmdBufferIndex++] = CommandType.DISPOSE_FILTER;
             displayCmdBuffer[displayCmdBufferIndex++] = filter.$id;
             displayCmdBufferSize++;
             delete filterMap[filter.$id];
-            let blurFilter: BlurFilter = <BlurFilter>filter;
+            let blurFilter: egret.BlurFilter = <egret.BlurFilter>filter;
             if (blurFilter.blurXFilter) {
                 delete filterMap[blurFilter.blurXFilter.$id];
             }

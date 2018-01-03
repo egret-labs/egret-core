@@ -59,7 +59,7 @@ namespace egret.sys {
             this.displayFPS = displayFPS;
 
             if (egret.nativeRender) {
-                NativeDelegate.setRootBuffer(buffer);
+                egret_native.setRootBuffer(buffer);
             }
         }
 
@@ -168,8 +168,8 @@ namespace egret.sys {
          */
         $render(triggerByFrame: boolean, costTicker: number): void {
             if (egret.nativeRender) {
-                NativeDelegate.update();
-                NativeDelegate.render();
+                egret_native.update();
+                egret_native.render();
                 return;
             }
 
@@ -196,7 +196,7 @@ namespace egret.sys {
             stage.$stageWidth = stageWidth;
             stage.$stageHeight = stageHeight;
             if (egret.nativeRender) {
-                NativeDelegate.resize(stageWidth, stageHeight);
+                egret_native.resize(stageWidth, stageHeight);
             } else {
                 this.screenDisplayList.setClipRect(stageWidth, stageHeight);
                 if (this.stageDisplayList) {

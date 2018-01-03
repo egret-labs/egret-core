@@ -8277,7 +8277,7 @@ declare namespace eui {
      */
     class Rect extends Component {
         constructor(width?: number, height?: number, fillColor?: number);
-        protected createNativeNode(): void;
+        protected createNativeDisplayObject(): void;
         /**
          * @private
          */

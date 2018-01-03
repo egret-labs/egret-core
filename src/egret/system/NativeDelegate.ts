@@ -45,7 +45,7 @@ declare let Module: any;
 /**
  * @private
  */
-namespace egret.NativeDelegate {
+namespace egret_native {
     let updateFun: Function;
     let renderFun: Function;
     let resizeFun: Function;
@@ -60,8 +60,8 @@ namespace egret.NativeDelegate {
     let syncTextDataFunc: Function;
 
     let gl: WebGLRenderingContext;
-    let context: web.WebGLRenderContext;
-    let rootWebGLBuffer: web.WebGLRenderBuffer;
+    let context: egret.web.WebGLRenderContext;
+    let rootWebGLBuffer: egret.web.WebGLRenderBuffer;
 
     export let forHitTest: boolean = false;
     type ColorAttrib = { color: number, alpha: number };
@@ -107,7 +107,7 @@ namespace egret.NativeDelegate {
             Module.customInit();
 
             Module.downloadBuffers(function (buffer3: Float32Array) {
-                NativeNode.init(buffer3, bitmapDataMap, filterMap, customFilterDataMap);
+                NativeDisplayObject.init(buffer3, bitmapDataMap, filterMap, customFilterDataMap);
 
                 updateFun = Module.update;
                 renderFun = Module.render;
@@ -172,7 +172,7 @@ namespace egret.NativeDelegate {
     export let update = function (): void {
         validateDirtyTextField();
         validateDirtyGraphics();
-        NativeNode.update();
+        NativeDisplayObject.update();
         if (updateFun) {
             updateFun();
         }
@@ -181,13 +181,13 @@ namespace egret.NativeDelegate {
 
 
 
-    export let dirtyTextField = function (textField: TextField): void {
+    export let dirtyTextField = function (textField: egret.TextField): void {
         if (dirtyTextFieldList.indexOf(textField) == -1) {
             dirtyTextFieldList.push(textField);
         }
     }
 
-    export let dirtyGraphics = function (graphics: Graphics): void {
+    export let dirtyGraphics = function (graphics: egret.Graphics): void {
         if (dirtyGraphicsList.indexOf(graphics) == -1) {
             dirtyGraphicsList.push(graphics);
         }
@@ -213,20 +213,20 @@ namespace egret.NativeDelegate {
             for (let i: number = 0; i < length; i++) {
                 let textField = locList[i];
                 textField.$getRenderNode();
-                let node = <sys.TextNode>textField.$renderNode;
+                let node = <egret.sys.TextNode>textField.$renderNode;
                 let width = node.width - node.x;
                 let height = node.height - node.y;
                 if (node.drawData.length == 0) {
                     let graphicNode = textField.$graphicsNode;
                     if (graphicNode) {
-                        textField.$nativeNode.setTextRect(graphicNode.x, graphicNode.y, graphicNode.width, graphicNode.height);
+                        textField.$nativeDisplayObject.setTextRect(graphicNode.x, graphicNode.y, graphicNode.width, graphicNode.height);
                     }
                     else {
-                        textField.$nativeNode.setTextRect(0, 0, 0, 0);
+                        textField.$nativeDisplayObject.setTextRect(0, 0, 0, 0);
                     }
                 }
                 else {
-                    textField.$nativeNode.setTextRect(node.x, node.y, width, height);
+                    textField.$nativeDisplayObject.setTextRect(node.x, node.y, width, height);
                 }
                 bufferTextData(textField);
             }
@@ -244,10 +244,10 @@ namespace egret.NativeDelegate {
                 let width = node.width;
                 let height = node.height;
                 if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) {
-                    graphics.$targetDisplay.$nativeNode.setGraphicsRect(0, 0, 0, 0, graphics.$targetIsSprite);
+                    graphics.$targetDisplay.$nativeDisplayObject.setGraphicsRect(0, 0, 0, 0, graphics.$targetIsSprite);
                 }
                 else {
-                    graphics.$targetDisplay.$nativeNode.setGraphicsRect(node.x, node.y, node.width, node.height, graphics.$targetIsSprite);
+                    graphics.$targetDisplay.$nativeDisplayObject.setGraphicsRect(node.x, node.y, node.width, node.height, graphics.$targetIsSprite);
                 }
                 bufferGraphicsData(node, graphics);
             }
@@ -287,7 +287,7 @@ namespace egret.NativeDelegate {
         }
     }
 
-    let bufferRenderPath = function (path: sys.Path2D, currCmds: Array<number>) {
+    let bufferRenderPath = function (path: egret.sys.Path2D, currCmds: Array<number>) {
         // 1023 beginPath
         currCmds.push(1023);
         let data = path.$data;
@@ -297,7 +297,7 @@ namespace egret.NativeDelegate {
         for (let commandIndex = 0; commandIndex < commandCount; commandIndex++) {
             let command = commands[commandIndex];
             switch (command) {
-                case sys.PathCommand.CubicCurveTo:
+                case egret.sys.PathCommand.CubicCurveTo:
                     // context.bezierCurveTo(data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
                     currCmds.push(1024);
                     currCmds.push(data[pos++]);
@@ -307,7 +307,7 @@ namespace egret.NativeDelegate {
                     currCmds.push(data[pos++]);
                     currCmds.push(data[pos++]);
                     break;
-                case sys.PathCommand.CurveTo:
+                case egret.sys.PathCommand.CurveTo:
                     // context.quadraticCurveTo(data[pos++], data[pos++], data[pos++], data[pos++]);
                     currCmds.push(1025);
                     currCmds.push(data[pos++]);
@@ -315,13 +315,13 @@ namespace egret.NativeDelegate {
                     currCmds.push(data[pos++]);
                     currCmds.push(data[pos++]);
                     break;
-                case sys.PathCommand.LineTo:
+                case egret.sys.PathCommand.LineTo:
                     // context.lineTo(data[pos++], data[pos++]);
                     currCmds.push(1026);
                     currCmds.push(data[pos++]);
                     currCmds.push(data[pos++]);
                     break;
-                case sys.PathCommand.MoveTo:
+                case egret.sys.PathCommand.MoveTo:
                     // context.moveTo(data[pos++], data[pos++]);
                     currCmds.push(1027);
                     currCmds.push(data[pos++]);
@@ -331,17 +331,17 @@ namespace egret.NativeDelegate {
         }
     }
 
-    let bufferTextData = function (textField: TextField): void {
-        let node: sys.TextNode = <sys.TextNode>textField.$renderNode;
-        let textFieldId = textField.$nativeNode.id;
+    let bufferTextData = function (textField: egret.TextField): void {
+        let node: egret.sys.TextNode = <egret.sys.TextNode>textField.$renderNode;
+        let textFieldId = textField.$nativeDisplayObject.id;
         let width = node.width - node.x;
         let height = node.height - node.y;
         if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) {
             return;
         }
 
-        let canvasScaleX = sys.DisplayList.$canvasScaleX;
-        let canvasScaleY = sys.DisplayList.$canvasScaleY;
+        let canvasScaleX = egret.sys.DisplayList.$canvasScaleX;
+        let canvasScaleY = egret.sys.DisplayList.$canvasScaleY;
         // let maxTextureSize = buffer.context.$maxTextureSize;
         let maxTextureSize = 4096;
         if (width * canvasScaleX > maxTextureSize) {
@@ -405,13 +405,13 @@ namespace egret.NativeDelegate {
                 let x = drawData[pos++];
                 let y = drawData[pos++];
                 let text = drawData[pos++];
-                let format: sys.TextFormat = drawData[pos++];
+                let format: egret.sys.TextFormat = drawData[pos++];
                 let textColor = format.textColor == null ? node.textColor : format.textColor;
                 let strokeColor = format.strokeColor == null ? node.strokeColor : format.strokeColor;
                 let stroke = format.stroke == null ? node.stroke : format.stroke;
                 // 1012: setFontFormat 
                 renderCmds.push(1012);
-                let fontStr = getFontString(node, format);
+                let fontStr = egret.getFontString(node, format);
                 let fontPath = "";
                 let fontSize = -1;
                 let strArray = fontStr.split(",");
@@ -450,7 +450,7 @@ namespace egret.NativeDelegate {
                     let fontColor = 0;  //black
                     let fillColor;
                     let fillAlpha;
-                    let fillStr = toColorString(textColor);
+                    let fillStr = egret.toColorString(textColor);
                     if (fillStr.indexOf("r") == -1) {
                         fillStr = fillStr.replace(/#/, "");
                         fontColor = parseInt(fillStr, 16);
@@ -469,7 +469,7 @@ namespace egret.NativeDelegate {
                     // renderCmds.push(fillAlpha);
 
                     // setStrokeStype
-                    let strokeStr = toColorString(strokeColor);
+                    let strokeStr = egret.toColorString(strokeColor);
                     let strokeColorInt = 0;    // black
                     let strokeAlpha;
                     if (strokeStr.indexOf("r") == -1) {
@@ -517,13 +517,13 @@ namespace egret.NativeDelegate {
                 renderCmds.push(-1);
             }
 
-            textField.$nativeNode.setDataToTextField(textFieldId, renderCmds);
+            textField.$nativeDisplayObject.setDataToTextField(textFieldId, renderCmds);
             textFieldDataMap[textFieldId] = renderParms;
             node.dirtyRender = false;
         }
     }
 
-    let bufferGraphicsData = function (node: sys.GraphicsNode, graphics: Graphics = null, renderCmds: Array<number> = null): void {
+    let bufferGraphicsData = function (node: egret.sys.GraphicsNode, graphics: egret.Graphics = null, renderCmds: Array<number> = null): void {
         let isGraphics = false;
         let width = node.width;
         let height = node.height;
@@ -537,8 +537,8 @@ namespace egret.NativeDelegate {
             return;
         }
 
-        let canvasScaleX = sys.DisplayList.$canvasScaleX;
-        let canvasScaleY = sys.DisplayList.$canvasScaleY;
+        let canvasScaleX = egret.sys.DisplayList.$canvasScaleX;
+        let canvasScaleY = egret.sys.DisplayList.$canvasScaleY;
         if (width * canvasScaleX < 1 || height * canvasScaleY < 1) {
             canvasScaleX = canvasScaleY = 1;
         }
@@ -584,13 +584,13 @@ namespace egret.NativeDelegate {
             let length = drawData.length;
             let colorVal: ColorAttrib = { color: 0, alpha: 1 };
             for (let i = 0; i < length; i++) {
-                let path: sys.Path2D = drawData[i];
+                let path: egret.sys.Path2D = drawData[i];
                 colorVal.color = 0;
                 colorVal.alpha = 1;
                 switch (path.type) {
-                    case sys.PathType.Fill:
-                        let fillPath = <sys.FillPath>path;
-                        parseColorString(forHitTest ? egret.BLACK_COLOR : getRGBAString(fillPath.fillColor, fillPath.fillAlpha), colorVal);
+                    case egret.sys.PathType.Fill:
+                        let fillPath = <egret.sys.FillPath>path;
+                        parseColorString(forHitTest ? egret.BLACK_COLOR : egret.getRGBAString(fillPath.fillColor, fillPath.fillAlpha), colorVal);
                         renderCmds.push(1021)
                         renderCmds.push(colorVal.color);
                         renderCmds.push(colorVal.alpha);
@@ -604,14 +604,14 @@ namespace egret.NativeDelegate {
                         renderCmds.push(1028);
                         // }
                         break;
-                    case sys.PathType.GradientFill:
+                    case egret.sys.PathType.GradientFill:
                         // native no implement
 
                         break;
-                    case sys.PathType.Stroke:
-                        let strokeFill = <sys.StrokePath>path;
+                    case egret.sys.PathType.Stroke:
+                        let strokeFill = <egret.sys.StrokePath>path;
                         let lineWidth = strokeFill.lineWidth;
-                        parseColorString(forHitTest ? egret.BLACK_COLOR : getRGBAString(strokeFill.lineColor, strokeFill.lineAlpha), colorVal);
+                        parseColorString(forHitTest ? egret.BLACK_COLOR : egret.getRGBAString(strokeFill.lineColor, strokeFill.lineAlpha), colorVal);
                         // native no implement
                         // context.lineCap = CAPS_STYLES[strokeFill.caps];
                         // context.lineJoin = strokeFill.joints;
@@ -652,7 +652,7 @@ namespace egret.NativeDelegate {
             }
 
             if (isGraphics) {
-                graphics.$targetDisplay.$nativeNode.setGraphicsRenderData(renderCmds);
+                graphics.$targetDisplay.$nativeDisplayObject.setGraphicsRenderData(renderCmds);
             }
 
             if (!forHitTest) {
@@ -661,7 +661,7 @@ namespace egret.NativeDelegate {
         }
     }
 
-    export let activateWebGLBuffer = function (buffer: web.WebGLRenderBuffer): void {
+    export let activateWebGLBuffer = function (buffer: egret.web.WebGLRenderBuffer): void {
         if (!buffer) {
             buffer = rootWebGLBuffer;
         }
@@ -674,16 +674,16 @@ namespace egret.NativeDelegate {
         return <number[]><any>pixels;
     }
 
-    export let activateBuffer = function (buffer: sys.RenderBuffer): void {
-        activateWebGLBuffer(<web.WebGLRenderBuffer>buffer);
+    export let activateBuffer = function (buffer: egret.sys.RenderBuffer): void {
+        activateWebGLBuffer(<egret.web.WebGLRenderBuffer>buffer);
     }
 
     let bitmapDataMap = {};
     var textFieldDataMap = {};
     let customFilterDataMap = {};
 
-    let filterMap = egret.createMap<Filter>();
+    let filterMap = egret.createMap<egret.Filter>();
 
-    let dirtyTextFieldList: TextField[] = [];
-    let dirtyGraphicsList: Graphics[] = [];
+    let dirtyTextFieldList: egret.TextField[] = [];
+    let dirtyGraphicsList: egret.Graphics[] = [];
 }

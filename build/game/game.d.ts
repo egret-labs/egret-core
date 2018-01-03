@@ -1585,7 +1585,7 @@ declare namespace egret {
          * @platform Web,Native
          */
         constructor(movieClipData?: MovieClipData);
-        protected createNativeNode(): void;
+        protected createNativeDisplayObject(): void;
         /**
          * @private
          */

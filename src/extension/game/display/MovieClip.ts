@@ -147,8 +147,8 @@ namespace egret {
             }
         }
 
-        protected createNativeNode(): void {
-            this.$nativeNode = new NativeNode(NativeObjectType.BITMAP_TEXT);
+        protected createNativeDisplayObject(): void {
+            this.$nativeDisplayObject = new egret_native.NativeDisplayObject(egret_native.NativeObjectType.BITMAP_TEXT);
         }
 
         /**
@@ -572,13 +572,13 @@ namespace egret {
             self.displayedKeyFrameNum = currentFrameNum;
             self.$renderDirty = true;
             if (egret.nativeRender) {
-                self.$nativeNode.setDataToBitmapNode(self.$nativeNode.id, texture,
+                self.$nativeDisplayObject.setDataToBitmapNode(self.$nativeDisplayObject.id, texture,
                     [texture.$bitmapX, texture.$bitmapY, texture.$bitmapWidth, texture.$bitmapHeight,
                     self.offsetPoint.x, self.offsetPoint.y, texture.$getScaleBitmapWidth(), texture.$getScaleBitmapHeight(),
                     texture.$sourceWidth, texture.$sourceHeight]);
                 //todo 负数offsetPoint
-                self.$nativeNode.setWidth(texture.$getTextureWidth() + self.offsetPoint.x);
-                self.$nativeNode.setHeight(texture.$getTextureHeight() + self.offsetPoint.y);
+                self.$nativeDisplayObject.setWidth(texture.$getTextureWidth() + self.offsetPoint.x);
+                self.$nativeDisplayObject.setHeight(texture.$getTextureHeight() + self.offsetPoint.y);
             }
             else {
                 let p = self.$parent;

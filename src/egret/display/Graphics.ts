@@ -632,7 +632,7 @@ namespace egret {
             let self = this;
             self.$renderNode.dirtyRender = true;
             if (egret.nativeRender) {
-                NativeDelegate.dirtyGraphics(self);
+                egret_native.dirtyGraphics(self);
             }
         }
 
@@ -831,8 +831,8 @@ namespace egret {
             if (this.$renderNode) {
                 this.$renderNode.clean();
             }
-            if (__global.nativeRender) {
-                NativeNode.disposeGraphicData(this);
+            if (egret.nativeRender) {
+                egret_native.NativeDisplayObject.disposeGraphicData(this);
             }
         }
     }

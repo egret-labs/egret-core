@@ -310,7 +310,7 @@ namespace egret {
                 }
             }
             if (egret.nativeRender) {
-                NativeNode.disposeBitmapData(bitmapData);
+                egret_native.NativeDisplayObject.disposeBitmapData(bitmapData);
             }
             delete BitmapData._displayList[hashCode];
         }

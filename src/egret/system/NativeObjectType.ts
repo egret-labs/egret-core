@@ -30,7 +30,7 @@
 /**
  * @private
  */
-namespace egret {
+namespace egret_native {
     /**
      * @private
      */
