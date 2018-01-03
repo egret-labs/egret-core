@@ -13924,7 +13924,7 @@ var egret;
                     this.fpsDisplay.updateWarn(info);
                 }
                 else {
-                    this.fpsDisplay.updateInfo(info);
+                    this.fpsDisplay.updateInfo("[Warning]" + info);
                 }
             };
             FPSImpl.prototype.updateError = function (info) {
@@ -13941,7 +13941,7 @@ var egret;
                     this.fpsDisplay.updateError(info);
                 }
                 else {
-                    this.fpsDisplay.updateInfo(info);
+                    this.fpsDisplay.updateInfo("[Error]" + info);
                 }
             };
             return FPSImpl;
