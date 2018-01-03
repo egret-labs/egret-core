@@ -98,7 +98,7 @@ namespace egret {
             self.updatePadding();
             if (egret.nativeRender) {
                 NativeNode.setFilterPadding(self.$id, self.paddingTop, self.paddingBottom, self.paddingLeft, self.paddingRight);
-                NativeNode.setDataToFilter(self.$id);
+                NativeNode.setDataToFilter(self);
             }
         }
     }

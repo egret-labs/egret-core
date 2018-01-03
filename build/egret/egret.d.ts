@@ -11010,7 +11010,7 @@ declare namespace egret {
         setGraphicsRenderData(arr: Array<number>): void;
         setDataToBitmapNode(id: number, texture: Texture, arr: number[]): void;
         setDataToMesh(vertexArr: number[], indiceArr: number[], uvArr: number[]): void;
-        static setDataToFilter(id: number): void;
+        static setDataToFilter(currFilter: Filter): void;
         setDataToTextField(id: number, arr: number[]): void;
         disposeDisplayObject(): void;
         static disposeTexture(texture: Texture): void;

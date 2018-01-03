@@ -185,7 +185,7 @@ namespace egret {
             if (egret.nativeRender) {
                 let self = this;
                 NativeNode.setFilterPadding(self.$id, self.$padding, self.$padding, self.$padding, self.$padding);
-                NativeNode.setDataToFilter(self.$id);
+                NativeNode.setDataToFilter(self);
             }
         }
     }

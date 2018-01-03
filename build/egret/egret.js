@@ -4260,7 +4260,7 @@ var egret;
             self.updatePadding();
             if (egret.nativeRender) {
                 egret.NativeNode.setFilterPadding(self.$id, self.paddingTop, self.paddingBottom, self.paddingLeft, self.paddingRight);
-                egret.NativeNode.setDataToFilter(self.$id);
+                egret.NativeNode.setDataToFilter(self);
             }
         };
         return Filter;
@@ -8854,7 +8854,7 @@ var egret;
             if (egret.nativeRender) {
                 egret.NativeNode.setFilterPadding(self.blurXFilter.$id, 0, 0, self.paddingLeft, self.paddingRight);
                 egret.NativeNode.setFilterPadding(self.blurYFilter.$id, self.paddingTop, self.paddingBottom, 0, 0);
-                egret.NativeNode.setDataToFilter(self.$id);
+                egret.NativeNode.setDataToFilter(self);
             }
         };
         return BlurFilter;
@@ -9232,7 +9232,7 @@ var egret;
             if (egret.nativeRender) {
                 var self_1 = this;
                 egret.NativeNode.setFilterPadding(self_1.$id, self_1.$padding, self_1.$padding, self_1.$padding, self_1.$padding);
-                egret.NativeNode.setDataToFilter(self_1.$id);
+                egret.NativeNode.setDataToFilter(self_1);
             }
         };
         return CustomFilter;
@@ -18916,7 +18916,6 @@ var egret;
     var displayObjectId = 0;
     var bitmapDataMap;
     var bitmapDataId = 1;
-    var filterMap;
     var filterId = 1;
     var customFilterDataMap = {};
     var customFilterUniformMap = {};
@@ -18950,7 +18949,6 @@ var egret;
             displayCmdBuffer[0] = 0;
             displayCmdBuffer[1] = 2;
             bitmapDataMap = map1;
-            filterMap = map2;
             customFilterDataMap = map3;
         };
         NativeNode.update = function () {
@@ -19111,7 +19109,6 @@ var egret;
         NativeNode.createFilter = function (filter) {
             filter.$id = filterId;
             filter.$obj = new Module.WasmNode(filterId, 6 /* FILTER */);
-            filterMap[filterId] = filter;
             filterId++;
             displayCmdBuffer[displayCmdBufferIndex++] = 0 /* CREATE_OBJECT */;
             displayCmdBuffer[displayCmdBufferIndex++] = filter.$id;
@@ -19411,8 +19408,8 @@ var egret;
             }
             displayCmdBufferSize += 3;
         };
-        NativeNode.setDataToFilter = function (id) {
-            var currFilter = filterMap[id];
+        NativeNode.setDataToFilter = function (currFilter) {
+            var id = currFilter.$id;
             var customArr = [];
             var filterType;
             if (!customFilterUniformMap[currFilter.$id]) {
@@ -19534,14 +19531,6 @@ var egret;
             displayCmdBuffer[displayCmdBufferIndex++] = 142 /* DISPOSE_FILTER */;
             displayCmdBuffer[displayCmdBufferIndex++] = filter.$id;
             displayCmdBufferSize++;
-            delete filterMap[filter.$id];
-            var blurFilter = filter;
-            if (blurFilter.blurXFilter) {
-                delete filterMap[blurFilter.blurXFilter.$id];
-            }
-            if (blurFilter.blurYFilter) {
-                delete filterMap[blurFilter.blurYFilter.$id];
-            }
         };
         return NativeNode;
     }());
