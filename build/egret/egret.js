@@ -4260,7 +4260,7 @@ var egret;
             self.updatePadding();
             if (egret.nativeRender) {
                 egret_native.NativeDisplayObject.setFilterPadding(self.$id, self.paddingTop, self.paddingBottom, self.paddingLeft, self.paddingRight);
-                egret_native.NativeDisplayObject.setDataToFilter(self.$id);
+                egret_native.NativeDisplayObject.setDataToFilter(self);
             }
         };
         return Filter;
@@ -7274,7 +7274,7 @@ var egret;
         /**
          * @private
          */
-        Capabilities.$runtimeType = "Unknown";
+        Capabilities.$runtimeType = egret.RuntimeType.WEB;
         Capabilities.$supportVersion = "Unknown";
         Capabilities.$renderMode = "Unknown";
         Capabilities.$boundingClientWidth = 0;
@@ -7291,7 +7291,6 @@ egret.Capabilities.$isMobile = function () {
     var ua = navigator.userAgent.toLowerCase();
     return (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
 }();
-egret.Capabilities.$runtimeType = egret.RuntimeType.WEB;
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -8553,149 +8552,6 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var web;
-    (function (web) {
-        /**
-         * @private
-         */
-        var WebExternalInterface = (function () {
-            function WebExternalInterface() {
-            }
-            /**
-             * @private
-             * @param functionName
-             * @param value
-             */
-            WebExternalInterface.call = function (functionName, value) {
-            };
-            /**
-             * @private
-             * @param functionName
-             * @param listener
-             */
-            WebExternalInterface.addCallback = function (functionName, listener) {
-            };
-            return WebExternalInterface;
-        }());
-        web.WebExternalInterface = WebExternalInterface;
-        __reflect(WebExternalInterface.prototype, "egret.web.WebExternalInterface", ["egret.ExternalInterface"]);
-        var ua = navigator.userAgent.toLowerCase();
-        if (ua.indexOf("egretnative") < 0) {
-            egret.ExternalInterface = WebExternalInterface;
-        }
-    })(web = egret.web || (egret.web = {}));
-})(egret || (egret = {}));
-(function (egret) {
-    var web;
-    (function (web) {
-        var callBackDic = {};
-        /**
-         * @private
-         */
-        var NativeExternalInterface = (function () {
-            function NativeExternalInterface() {
-            }
-            NativeExternalInterface.call = function (functionName, value) {
-                var data = {};
-                data.functionName = functionName;
-                data.value = value;
-                egret_native.sendInfoToPlugin(JSON.stringify(data));
-            };
-            NativeExternalInterface.addCallback = function (functionName, listener) {
-                callBackDic[functionName] = listener;
-            };
-            return NativeExternalInterface;
-        }());
-        web.NativeExternalInterface = NativeExternalInterface;
-        __reflect(NativeExternalInterface.prototype, "egret.web.NativeExternalInterface", ["egret.ExternalInterface"]);
-        /**
-         * @private
-         * @param info
-         */
-        function onReceivedPluginInfo(info) {
-            var data = JSON.parse(info);
-            var functionName = data.functionName;
-            var listener = callBackDic[functionName];
-            if (listener) {
-                var value = data.value;
-                listener.call(null, value);
-            }
-            else {
-                egret.$warn(1050, functionName);
-            }
-        }
-        var ua = navigator.userAgent.toLowerCase();
-        if (ua.indexOf("egretnative") >= 0) {
-            egret.ExternalInterface = NativeExternalInterface;
-            egret_native.receivedPluginInfo = onReceivedPluginInfo;
-        }
-    })(web = egret.web || (egret.web = {}));
-})(egret || (egret = {}));
-(function (egret) {
-    var web;
-    (function (web) {
-        var callBackDic = {};
-        /**
-         * @private
-         */
-        var WebViewExternalInterface = (function () {
-            function WebViewExternalInterface() {
-            }
-            WebViewExternalInterface.call = function (functionName, value) {
-                __global.ExternalInterface.call(functionName, value);
-            };
-            WebViewExternalInterface.addCallback = function (functionName, listener) {
-                callBackDic[functionName] = listener;
-            };
-            WebViewExternalInterface.invokeCallback = function (functionName, value) {
-                var listener = callBackDic[functionName];
-                if (listener) {
-                    listener.call(null, value);
-                }
-                else {
-                    egret.$warn(1050, functionName);
-                }
-            };
-            return WebViewExternalInterface;
-        }());
-        web.WebViewExternalInterface = WebViewExternalInterface;
-        __reflect(WebViewExternalInterface.prototype, "egret.web.WebViewExternalInterface", ["egret.ExternalInterface"]);
-        var ua = navigator.userAgent.toLowerCase();
-        if (ua.indexOf("egretwebview") >= 0) {
-            egret.ExternalInterface = WebViewExternalInterface;
-        }
-    })(web = egret.web || (egret.web = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -8852,7 +8708,7 @@ var egret;
             if (egret.nativeRender) {
                 egret_native.NativeDisplayObject.setFilterPadding(self.blurXFilter.$id, 0, 0, self.paddingLeft, self.paddingRight);
                 egret_native.NativeDisplayObject.setFilterPadding(self.blurYFilter.$id, self.paddingTop, self.paddingBottom, 0, 0);
-                egret_native.NativeDisplayObject.setDataToFilter(self.$id);
+                egret_native.NativeDisplayObject.setDataToFilter(self);
             }
         };
         return BlurFilter;
@@ -9230,7 +9086,7 @@ var egret;
             if (egret.nativeRender) {
                 var self_1 = this;
                 egret_native.NativeDisplayObject.setFilterPadding(self_1.$id, self_1.$padding, self_1.$padding, self_1.$padding, self_1.$padding);
-                egret_native.NativeDisplayObject.setDataToFilter(self_1.$id);
+                egret_native.NativeDisplayObject.setDataToFilter(self_1);
             }
         };
         return CustomFilter;
@@ -9492,111 +9348,26 @@ var egret;
 var egret;
 (function (egret) {
     /**
-     * @private
+     * OrientationMode 类为舞台初始旋转模式提供值。
      */
-    var Mesh = (function (_super) {
-        __extends(Mesh, _super);
-        function Mesh(value) {
-            var _this = _super.call(this, value) || this;
-            /**
-             * @private
-             */
-            _this._verticesDirty = true;
-            _this._bounds = new egret.Rectangle();
-            _this.$renderNode = new egret.sys.MeshNode();
-            return _this;
-        }
-        Mesh.prototype.createNativeDisplayObject = function () {
-            this.$nativeDisplayObject = new egret_native.NativeDisplayObject(12 /* MESH */);
-        };
+    egret.OrientationMode = {
         /**
-         * @private
+         * 适配屏幕
          */
-        Mesh.prototype.setBitmapDataToWasm = function (data) {
-            this.$nativeDisplayObject.setBitmapDataToMesh(data);
-        };
+        AUTO: "auto",
         /**
-         * @private
+         * 默认竖屏
          */
-        Mesh.prototype.$updateRenderNode = function () {
-            var image = this.$bitmapData;
-            if (!image) {
-                return;
-            }
-            var scale = egret.$TextureScaleFactor;
-            var node = this.$renderNode;
-            node.smoothing = this.$smoothing;
-            node.image = image;
-            node.imageWidth = this.$sourceWidth;
-            node.imageHeight = this.$sourceHeight;
-            var destW = !isNaN(this.$explicitBitmapWidth) ? this.$explicitBitmapWidth : this.$textureWidth;
-            var destH = !isNaN(this.$explicitBitmapHeight) ? this.$explicitBitmapHeight : this.$textureHeight;
-            var tsX = destW / this.$textureWidth;
-            var tsY = destH / this.$textureHeight;
-            var bitmapWidth = this.$bitmapWidth;
-            var bitmapHeight = this.$bitmapHeight;
-            node.drawMesh(this.$bitmapX, this.$bitmapY, bitmapWidth, bitmapHeight, this.$offsetX * tsX, this.$offsetY * tsY, tsX * bitmapWidth, tsY * bitmapHeight);
-        };
+        PORTRAIT: "portrait",
         /**
-         * @private
+         * 默认横屏，舞台顺时针旋转90度
          */
-        Mesh.prototype.$updateVertices = function () {
-            var self = this;
-            self._verticesDirty = true;
-            self.$renderDirty = true;
-            if (egret.nativeRender) {
-                var renderNode = (this.$renderNode);
-                this.$nativeDisplayObject.setDataToMesh(renderNode.vertices, renderNode.indices, renderNode.uvs);
-            }
-            else {
-                var p = self.$parent;
-                if (p && !p.$cacheDirty) {
-                    p.$cacheDirty = true;
-                    p.$cacheDirtyUp();
-                }
-                var maskedObject = self.$maskedObject;
-                if (maskedObject && !maskedObject.$cacheDirty) {
-                    maskedObject.$cacheDirty = true;
-                    maskedObject.$cacheDirtyUp();
-                }
-            }
-        };
+        LANDSCAPE: "landscape",
         /**
-         * @private
+         * 默认横屏，舞台逆时针旋转90度
          */
-        Mesh.prototype.$measureContentBounds = function (bounds) {
-            if (this._verticesDirty) {
-                this._verticesDirty = false;
-                var node = this.$renderNode;
-                var vertices = node.vertices;
-                if (vertices.length) {
-                    this._bounds.setTo(Number.MAX_VALUE, Number.MAX_VALUE, -Number.MAX_VALUE, -Number.MAX_VALUE);
-                    for (var i = 0, l = vertices.length; i < l; i += 2) {
-                        var x = vertices[i];
-                        var y = vertices[i + 1];
-                        if (this._bounds.x > x)
-                            this._bounds.x = x;
-                        if (this._bounds.width < x)
-                            this._bounds.width = x;
-                        if (this._bounds.y > y)
-                            this._bounds.y = y;
-                        if (this._bounds.height < y)
-                            this._bounds.height = y;
-                    }
-                    this._bounds.width -= this._bounds.x;
-                    this._bounds.height -= this._bounds.y;
-                }
-                else {
-                    this._bounds.setTo(0, 0, 0, 0);
-                }
-                node.bounds.copyFrom(this._bounds);
-            }
-            bounds.copyFrom(this._bounds);
-        };
-        return Mesh;
-    }(egret.Bitmap));
-    egret.Mesh = Mesh;
-    __reflect(Mesh.prototype, "egret.Mesh");
+        LANDSCAPE_FLIPPED: "landscapeFlipped"
+    };
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -9629,26 +9400,129 @@ var egret;
 var egret;
 (function (egret) {
     /**
-     * OrientationMode 类为舞台初始旋转模式提供值。
+     * RenderTexture is a dynamic texture
+     * @extends egret.Texture
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/display/RenderTexture.ts
+     * @language en_US
      */
-    egret.OrientationMode = {
+    /**
+     * RenderTexture 是动态纹理类，他实现了将显示对象及其子对象绘制成为一个纹理的功能
+     * @extends egret.Texture
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/display/RenderTexture.ts
+     * @language zh_CN
+     */
+    var RenderTexture = (function (_super) {
+        __extends(RenderTexture, _super);
+        function RenderTexture() {
+            var _this = _super.call(this) || this;
+            _this.$renderBuffer = new egret.sys.RenderBuffer();
+            var bitmapData = new egret.BitmapData(_this.$renderBuffer.surface);
+            bitmapData.$deleteSource = false;
+            _this._setBitmapData(bitmapData);
+            return _this;
+        }
         /**
-         * 适配屏幕
+         * The specified display object is drawn as a texture
+         * @param displayObject {egret.DisplayObject} the display to draw
+         * @param clipBounds {egret.Rectangle} clip rect
+         * @param scale {number} scale factor
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
          */
-        AUTO: "auto",
         /**
-         * 默认竖屏
+         * 将指定显示对象绘制为一个纹理
+         * @param displayObject {egret.DisplayObject} 需要绘制的显示对象
+         * @param clipBounds {egret.Rectangle} 绘制矩形区域
+         * @param scale {number} 缩放比例
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
          */
-        PORTRAIT: "portrait",
+        RenderTexture.prototype.drawToTexture = function (displayObject, clipBounds, scale) {
+            if (scale === void 0) { scale = 1; }
+            if (clipBounds && (clipBounds.width == 0 || clipBounds.height == 0)) {
+                return false;
+            }
+            var bounds = clipBounds || displayObject.$getOriginalBounds();
+            if (bounds.width == 0 || bounds.height == 0) {
+                return false;
+            }
+            scale /= egret.$TextureScaleFactor;
+            var width = (bounds.x + bounds.width) * scale;
+            var height = (bounds.y + bounds.height) * scale;
+            if (clipBounds) {
+                width = bounds.width * scale;
+                height = bounds.height * scale;
+            }
+            var renderBuffer = this.$renderBuffer;
+            if (!renderBuffer) {
+                return false;
+            }
+            renderBuffer.resize(width, height);
+            this.$bitmapData.width = width;
+            this.$bitmapData.height = height;
+            if (egret.nativeRender) {
+                egret_native.activateBuffer(this.$renderBuffer);
+                var useClip = false;
+                var clipX = 0;
+                var clipY = 0;
+                var clipW = 0;
+                var clipH = 0;
+                if (clipBounds) {
+                    useClip = true;
+                    clipX = clipBounds.x;
+                    clipY = clipBounds.y;
+                    clipW = clipBounds.width;
+                    clipH = clipBounds.height;
+                }
+                egret_native.update();
+                egret_native.renderDisplayObject(displayObject.$nativeDisplayObject.id, scale, useClip, clipX, clipY, clipW, clipH);
+                egret_native.activateBuffer(null);
+            }
+            else {
+                var matrix = egret.Matrix.create();
+                matrix.identity();
+                //应用裁切
+                if (clipBounds) {
+                    matrix.translate(-clipBounds.x, -clipBounds.y);
+                }
+                matrix.scale(scale, scale);
+                egret.sys.systemRenderer.render(displayObject, renderBuffer, matrix, true);
+                egret.Matrix.release(matrix);
+            }
+            //设置纹理参数
+            this.$initData(0, 0, width, height, 0, 0, width, height, width, height);
+            return true;
+        };
         /**
-         * 默认横屏，舞台顺时针旋转90度
+         * @inheritDoc
          */
-        LANDSCAPE: "landscape",
+        RenderTexture.prototype.getPixel32 = function (x, y) {
+            var data;
+            if (this.$renderBuffer) {
+                var scale = egret.$TextureScaleFactor;
+                x = Math.round(x / scale);
+                y = Math.round(y / scale);
+                data = this.$renderBuffer.getPixels(x, y, 1, 1);
+            }
+            return data;
+        };
         /**
-         * 默认横屏，舞台逆时针旋转90度
+         * @inheritDoc
          */
-        LANDSCAPE_FLIPPED: "landscapeFlipped"
-    };
+        RenderTexture.prototype.dispose = function () {
+            _super.prototype.dispose.call(this);
+            this.$renderBuffer = null;
+        };
+        return RenderTexture;
+    }(egret.Texture));
+    egret.RenderTexture = RenderTexture;
+    __reflect(RenderTexture.prototype, "egret.RenderTexture");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -11245,129 +11119,90 @@ var egret;
 var egret;
 (function (egret) {
     /**
-     * RenderTexture is a dynamic texture
-     * @extends egret.Texture
+     * This class is used to create lightweight shapes using the drawing application program interface (API). The Shape
+     * class includes a graphics property, which lets you access methods from the Graphics class.
+     * @see egret.Graphics
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/display/RenderTexture.ts
+     * @includeExample egret/display/Shape.ts
      * @language en_US
      */
     /**
-     * RenderTexture 是动态纹理类，他实现了将显示对象及其子对象绘制成为一个纹理的功能
-     * @extends egret.Texture
+     * 此类用于使用绘图应用程序编程接口 (API) 创建简单形状。Shape 类含有 graphics 属性，通过该属性您可以访问各种矢量绘图方法。
+     * @see egret.Graphics
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/display/RenderTexture.ts
+     * @includeExample egret/display/Shape.ts
      * @language zh_CN
      */
-    var RenderTexture = (function (_super) {
-        __extends(RenderTexture, _super);
-        function RenderTexture() {
-            var _this = _super.call(this) || this;
-            _this.$renderBuffer = new egret.sys.RenderBuffer();
-            var bitmapData = new egret.BitmapData(_this.$renderBuffer.surface);
-            bitmapData.$deleteSource = false;
-            _this._setBitmapData(bitmapData);
-            return _this;
-        }
+    var Shape = (function (_super) {
+        __extends(Shape, _super);
         /**
-         * The specified display object is drawn as a texture
-         * @param displayObject {egret.DisplayObject} the display to draw
-         * @param clipBounds {egret.Rectangle} clip rect
-         * @param scale {number} scale factor
+         * Creates a new Shape object.
          * @version Egret 2.4
          * @platform Web,Native
          * @language en_US
          */
         /**
-         * 将指定显示对象绘制为一个纹理
-         * @param displayObject {egret.DisplayObject} 需要绘制的显示对象
-         * @param clipBounds {egret.Rectangle} 绘制矩形区域
-         * @param scale {number} 缩放比例
+         * 创建一个 Shape 对象
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
          */
-        RenderTexture.prototype.drawToTexture = function (displayObject, clipBounds, scale) {
-            if (scale === void 0) { scale = 1; }
-            if (clipBounds && (clipBounds.width == 0 || clipBounds.height == 0)) {
-                return false;
+        function Shape() {
+            var _this = _super.call(this) || this;
+            _this.$graphics = new egret.Graphics();
+            _this.$graphics.$setTarget(_this);
+            return _this;
+        }
+        Shape.prototype.createNativeDisplayObject = function () {
+            this.$nativeDisplayObject = new egret_native.NativeDisplayObject(8 /* GRAPHICS */);
+        };
+        Object.defineProperty(Shape.prototype, "graphics", {
+            /**
+             * Specifies the Graphics object belonging to this Shape object, where vector drawing commands can occur.
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language en_US
+             */
+            /**
+             * 获取 Shape 中的 Graphics 对象。可通过此对象执行矢量绘图命令。
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language zh_CN
+             */
+            get: function () {
+                return this.$graphics;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * @private
+         */
+        Shape.prototype.$measureContentBounds = function (bounds) {
+            this.$graphics.$measureContentBounds(bounds);
+        };
+        Shape.prototype.$hitTest = function (stageX, stageY) {
+            var target = _super.prototype.$hitTest.call(this, stageX, stageY);
+            if (target == this) {
+                target = this.$graphics.$hitTest(stageX, stageY);
             }
-            var bounds = clipBounds || displayObject.$getOriginalBounds();
-            if (bounds.width == 0 || bounds.height == 0) {
-                return false;
-            }
-            scale /= egret.$TextureScaleFactor;
-            var width = (bounds.x + bounds.width) * scale;
-            var height = (bounds.y + bounds.height) * scale;
-            if (clipBounds) {
-                width = bounds.width * scale;
-                height = bounds.height * scale;
-            }
-            var renderBuffer = this.$renderBuffer;
-            if (!renderBuffer) {
-                return false;
-            }
-            renderBuffer.resize(width, height);
-            this.$bitmapData.width = width;
-            this.$bitmapData.height = height;
-            if (egret.nativeRender) {
-                egret_native.activateBuffer(this.$renderBuffer);
-                var useClip = false;
-                var clipX = 0;
-                var clipY = 0;
-                var clipW = 0;
-                var clipH = 0;
-                if (clipBounds) {
-                    useClip = true;
-                    clipX = clipBounds.x;
-                    clipY = clipBounds.y;
-                    clipW = clipBounds.width;
-                    clipH = clipBounds.height;
-                }
-                egret_native.update();
-                egret_native.renderDisplayObject(displayObject.$nativeDisplayObject.id, scale, useClip, clipX, clipY, clipW, clipH);
-                egret_native.activateBuffer(null);
-            }
-            else {
-                var matrix = egret.Matrix.create();
-                matrix.identity();
-                //应用裁切
-                if (clipBounds) {
-                    matrix.translate(-clipBounds.x, -clipBounds.y);
-                }
-                matrix.scale(scale, scale);
-                egret.sys.systemRenderer.render(displayObject, renderBuffer, matrix, true);
-                egret.Matrix.release(matrix);
-            }
-            //设置纹理参数
-            this.$initData(0, 0, width, height, 0, 0, width, height, width, height);
-            return true;
+            return target;
         };
         /**
-         * @inheritDoc
+         * @private
          */
-        RenderTexture.prototype.getPixel32 = function (x, y) {
-            var data;
-            if (this.$renderBuffer) {
-                var scale = egret.$TextureScaleFactor;
-                x = Math.round(x / scale);
-                y = Math.round(y / scale);
-                data = this.$renderBuffer.getPixels(x, y, 1, 1);
+        Shape.prototype.$onRemoveFromStage = function () {
+            _super.prototype.$onRemoveFromStage.call(this);
+            if (this.$graphics) {
+                this.$graphics.$onRemoveFromStage();
             }
-            return data;
         };
-        /**
-         * @inheritDoc
-         */
-        RenderTexture.prototype.dispose = function () {
-            _super.prototype.dispose.call(this);
-            this.$renderBuffer = null;
-        };
-        return RenderTexture;
-    }(egret.Texture));
-    egret.RenderTexture = RenderTexture;
-    __reflect(RenderTexture.prototype, "egret.RenderTexture");
+        return Shape;
+    }(egret.DisplayObject));
+    egret.Shape = Shape;
+    __reflect(Shape.prototype, "egret.Shape");
 })(egret || (egret = {}));
 var egret;
 (function (egret) {
@@ -11480,90 +11315,64 @@ var egret;
 var egret;
 (function (egret) {
     /**
-     * This class is used to create lightweight shapes using the drawing application program interface (API). The Shape
-     * class includes a graphics property, which lets you access methods from the Graphics class.
-     * @see egret.Graphics
+     * The BitmapFillMode class defines the image fill mode of Bitmap.
+     * The BitmapFillMode class defines a pattern enumeration for adjusting size. These patterns determine how Bitmap fill the size designated by the layout system.
+     * @see http://edn.egret.com/cn/docs/page/134 Texture filling way
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/display/Shape.ts
+     * @includeExample egret/display/BitmapFillMode.ts
      * @language en_US
      */
     /**
-     * 此类用于使用绘图应用程序编程接口 (API) 创建简单形状。Shape 类含有 graphics 属性，通过该属性您可以访问各种矢量绘图方法。
-     * @see egret.Graphics
+     * BitmapFillMode 类定义Bitmap的图像填充方式。
+     * BitmapFillMode 类定义了调整大小模式的一个枚举，这些模式确定 Bitmap 如何填充由布局系统指定的尺寸。
+     * @see http://edn.egret.com/cn/docs/page/134 纹理的填充方式
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/display/Shape.ts
+     * @includeExample egret/display/BitmapFillMode.ts
      * @language zh_CN
      */
-    var Shape = (function (_super) {
-        __extends(Shape, _super);
+    egret.BitmapFillMode = {
         /**
-         * Creates a new Shape object.
+         * Repeat the bitmap to fill area.
+         * @version Egret 2.4
+         * @platform Web
+         * @language en_US
+         */
+        /**
+         * 重复位图以填充区域。
+         * @version Egret 2.4
+         * @platform Web
+         * @language zh_CN
+         */
+        REPEAT: "repeat",
+        /**
+         * Scale bitmap fill to fill area.
          * @version Egret 2.4
          * @platform Web,Native
          * @language en_US
          */
         /**
-         * 创建一个 Shape 对象
+         * 位图填充拉伸以填充区域。
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
          */
-        function Shape() {
-            var _this = _super.call(this) || this;
-            _this.$graphics = new egret.Graphics();
-            _this.$graphics.$setTarget(_this);
-            return _this;
-        }
-        Shape.prototype.createNativeDisplayObject = function () {
-            this.$nativeDisplayObject = new egret_native.NativeDisplayObject(8 /* GRAPHICS */);
-        };
-        Object.defineProperty(Shape.prototype, "graphics", {
-            /**
-             * Specifies the Graphics object belonging to this Shape object, where vector drawing commands can occur.
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language en_US
-             */
-            /**
-             * 获取 Shape 中的 Graphics 对象。可通过此对象执行矢量绘图命令。
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language zh_CN
-             */
-            get: function () {
-                return this.$graphics;
-            },
-            enumerable: true,
-            configurable: true
-        });
+        SCALE: "scale",
         /**
-         * @private
+         * The bitmap ends at the edge of the region.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
          */
-        Shape.prototype.$measureContentBounds = function (bounds) {
-            this.$graphics.$measureContentBounds(bounds);
-        };
-        Shape.prototype.$hitTest = function (stageX, stageY) {
-            var target = _super.prototype.$hitTest.call(this, stageX, stageY);
-            if (target == this) {
-                target = this.$graphics.$hitTest(stageX, stageY);
-            }
-            return target;
-        };
         /**
-         * @private
+         * 在区域的边缘处截断不显示位图。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
          */
-        Shape.prototype.$onRemoveFromStage = function () {
-            _super.prototype.$onRemoveFromStage.call(this);
-            if (this.$graphics) {
-                this.$graphics.$onRemoveFromStage();
-            }
-        };
-        return Shape;
-    }(egret.DisplayObject));
-    egret.Shape = Shape;
-    __reflect(Shape.prototype, "egret.Shape");
+        CLIP: "clip"
+    };
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -11765,65 +11574,112 @@ var egret;
 //////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
+    //混合模式在Web端只有部分被支持，在 Native 中全部都支持。
+    //目前所有平台的浏览器都支持的有：Layer,Alpha,Normal,Add,ERASE。
+    //IOS中的所有浏览器以及Android内的部分浏览器还支持：Multiply,Screen,Lighten,Darken,Difference,Overlay,HardLight。
+    //仅在 Native 端支持的有：Subtract,Invert。
     /**
-     * The BitmapFillMode class defines the image fill mode of Bitmap.
-     * The BitmapFillMode class defines a pattern enumeration for adjusting size. These patterns determine how Bitmap fill the size designated by the layout system.
-     * @see http://edn.egret.com/cn/docs/page/134 Texture filling way
+     * A class that provides constant values for visual blend mode effects. These constants are used in the blendMode
+     * property of the DisplayObject class.
+     * @see egret.DisplayObject#blendMode
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/display/BitmapFillMode.ts
+     * @includeExample egret/display/BlendMode.ts
+     * @see http://edn.egret.com/cn/docs/page/108 显示容器的概念与实现
      * @language en_US
      */
     /**
-     * BitmapFillMode 类定义Bitmap的图像填充方式。
-     * BitmapFillMode 类定义了调整大小模式的一个枚举，这些模式确定 Bitmap 如何填充由布局系统指定的尺寸。
-     * @see http://edn.egret.com/cn/docs/page/134 纹理的填充方式
+     * 提供混合模式可视效果的常量值的类,通常用于 DisplayObject 的 blendMode 属性上。
+     * @see egret.DisplayObject#blendMode
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/display/BitmapFillMode.ts
+     * @includeExample egret/display/BlendMode.ts
+     * @see http://edn.egret.com/cn/docs/page/108 显示容器的概念与实现
      * @language zh_CN
      */
-    egret.BitmapFillMode = {
+    var BlendMode = (function () {
+        function BlendMode() {
+        }
         /**
-         * Repeat the bitmap to fill area.
-         * @version Egret 2.4
-         * @platform Web
-         * @language en_US
-         */
-        /**
-         * 重复位图以填充区域。
-         * @version Egret 2.4
-         * @platform Web
-         * @language zh_CN
-         */
-        REPEAT: "repeat",
-        /**
-         * Scale bitmap fill to fill area.
+         * The display object appears in front of the background. Pixel values of the display object override the pixel
+         * values of the background. Where the display object is transparent, the background is visible.
          * @version Egret 2.4
          * @platform Web,Native
          * @language en_US
          */
         /**
-         * 位图填充拉伸以填充区域。
+         * 该显示对象出现在背景前面。显示对象的像素值会覆盖背景的像素值。在显示对象为透明的区域，背景是可见的。
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
          */
-        SCALE: "scale",
+        BlendMode.NORMAL = "normal";
         /**
-         * The bitmap ends at the edge of the region.
+         * Adds the values of the constituent colors of the display object to the colors of its background, applying a
+         * ceiling of 0xFF. This setting is commonly used for animating a lightening dissolve between two objects.<br/>
+         * For example, if the display object has a pixel with an RGB value of 0xAAA633, and the background pixel has an
+         * RGB value of 0xDD2200, the resulting RGB value for the displayed pixel is 0xFFC833 (because 0xAA + 0xDD > 0xFF,
+         * 0xA6 + 0x22 = 0xC8, and 0x33 + 0x00 = 0x33).
          * @version Egret 2.4
          * @platform Web,Native
          * @language en_US
          */
         /**
-         * 在区域的边缘处截断不显示位图。
+         * 将显示对象的原色值添加到它的背景颜色中，上限值为 0xFF。此设置通常用于使两个对象间的加亮溶解产生动画效果。<br/>
+         * 例如，如果显示对象的某个像素的 RGB 值为 0xAAA633，背景像素的 RGB 值为 0xDD2200，则显示像素的结果 RGB 值为 0xFFC833
+         * （因为 0xAA + 0xDD > 0xFF，0xA6 + 0x22 = 0xC8，且 0x33 + 0x00 = 0x33）。
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
          */
-        CLIP: "clip"
-    };
+        BlendMode.ADD = "add";
+        /**
+         * Erases the background based on the alpha value of the display object.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 根据显示对象的 Alpha 值擦除背景。Alpha 值不为0的区域将被擦除。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        BlendMode.ERASE = "erase";
+        return BlendMode;
+    }());
+    egret.BlendMode = BlendMode;
+    __reflect(BlendMode.prototype, "egret.BlendMode");
+})(egret || (egret = {}));
+(function (egret) {
+    var sys;
+    (function (sys) {
+        var blendModeString = ["normal", "add", "erase"];
+        var blendModeNumber = {};
+        var length = blendModeString.length;
+        for (var i = 0; i < length; i++) {
+            var str = blendModeString[i];
+            blendModeNumber[str] = i;
+        }
+        /**
+         * @private
+         * 转换 blendMode 字符串为数字。
+         */
+        function blendModeToNumber(blendMode) {
+            var num = blendModeNumber[blendMode];
+            return num === undefined ? 0 : num;
+        }
+        sys.blendModeToNumber = blendModeToNumber;
+        /**
+         * @private
+         * 转换数字为 blendMode 字符串。
+         */
+        function numberToBlendMode(blendMode) {
+            var str = blendModeString[blendMode];
+            return str === undefined ? "normal" : str;
+        }
+        sys.numberToBlendMode = numberToBlendMode;
+    })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -13335,112 +13191,314 @@ var egret;
 //////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
-    //混合模式在Web端只有部分被支持，在 Native 中全部都支持。
-    //目前所有平台的浏览器都支持的有：Layer,Alpha,Normal,Add,ERASE。
-    //IOS中的所有浏览器以及Android内的部分浏览器还支持：Multiply,Screen,Lighten,Darken,Difference,Overlay,HardLight。
-    //仅在 Native 端支持的有：Subtract,Invert。
     /**
-     * A class that provides constant values for visual blend mode effects. These constants are used in the blendMode
-     * property of the DisplayObject class.
-     * @see egret.DisplayObject#blendMode
+     * The Stage class represents the main drawing area.The Stage object is not globally accessible. You need to access
+     * it through the stage property of a DisplayObject instance.<br/>
+     * The Stage class has several ancestor classes — Sprite, DisplayObject, and EventDispatcher — from which it inherits
+     * properties and methods. Many of these properties and methods are inapplicable to Stage objects.
+     * @event egret.Event.RESIZE Dispatched when the stageWidth or stageHeight property of the Stage object is changed.
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/display/BlendMode.ts
-     * @see http://edn.egret.com/cn/docs/page/108 显示容器的概念与实现
+     * @includeExample egret/display/Stage.ts
      * @language en_US
      */
     /**
-     * 提供混合模式可视效果的常量值的类,通常用于 DisplayObject 的 blendMode 属性上。
-     * @see egret.DisplayObject#blendMode
+     * Stage 类代表主绘图区。
+     * 可以利用 DisplayObject 实例的 stage 属性进行访问。<br/>
+     * Stage 类具有多个祖代类: Sprite、DisplayObject 和 EventDispatcher，属性和方法便是从这些类继承而来的。
+     * 从这些继承的许多属性和方法不适用于 Stage 对象。
+     * @event egret.Event.RESIZE 当stageWidth或stageHeight属性发生改变时调度
+     * @event egret.Event.DEACTIVATE 当stage失去焦点后调度
+     * @event egret.Event.ACTIVATE 当stage获得焦点后调度
+     *
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/display/BlendMode.ts
-     * @see http://edn.egret.com/cn/docs/page/108 显示容器的概念与实现
+     * @includeExample egret/display/Stage.ts
      * @language zh_CN
      */
-    var BlendMode = (function () {
-        function BlendMode() {
-        }
-        /**
-         * The display object appears in front of the background. Pixel values of the display object override the pixel
-         * values of the background. Where the display object is transparent, the background is visible.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 该显示对象出现在背景前面。显示对象的像素值会覆盖背景的像素值。在显示对象为透明的区域，背景是可见的。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        BlendMode.NORMAL = "normal";
-        /**
-         * Adds the values of the constituent colors of the display object to the colors of its background, applying a
-         * ceiling of 0xFF. This setting is commonly used for animating a lightening dissolve between two objects.<br/>
-         * For example, if the display object has a pixel with an RGB value of 0xAAA633, and the background pixel has an
-         * RGB value of 0xDD2200, the resulting RGB value for the displayed pixel is 0xFFC833 (because 0xAA + 0xDD > 0xFF,
-         * 0xA6 + 0x22 = 0xC8, and 0x33 + 0x00 = 0x33).
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 将显示对象的原色值添加到它的背景颜色中，上限值为 0xFF。此设置通常用于使两个对象间的加亮溶解产生动画效果。<br/>
-         * 例如，如果显示对象的某个像素的 RGB 值为 0xAAA633，背景像素的 RGB 值为 0xDD2200，则显示像素的结果 RGB 值为 0xFFC833
-         * （因为 0xAA + 0xDD > 0xFF，0xA6 + 0x22 = 0xC8，且 0x33 + 0x00 = 0x33）。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        BlendMode.ADD = "add";
-        /**
-         * Erases the background based on the alpha value of the display object.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 根据显示对象的 Alpha 值擦除背景。Alpha 值不为0的区域将被擦除。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        BlendMode.ERASE = "erase";
-        return BlendMode;
-    }());
-    egret.BlendMode = BlendMode;
-    __reflect(BlendMode.prototype, "egret.BlendMode");
-})(egret || (egret = {}));
-(function (egret) {
-    var sys;
-    (function (sys) {
-        var blendModeString = ["normal", "add", "erase"];
-        var blendModeNumber = {};
-        var length = blendModeString.length;
-        for (var i = 0; i < length; i++) {
-            var str = blendModeString[i];
-            blendModeNumber[str] = i;
-        }
+    var Stage = (function (_super) {
+        __extends(Stage, _super);
         /**
          * @private
-         * 转换 blendMode 字符串为数字。
+         * Stage不许允许自行实例化
+         * @version Egret 2.4
+         * @platform Web,Native
          */
-        function blendModeToNumber(blendMode) {
-            var num = blendModeNumber[blendMode];
-            return num === undefined ? 0 : num;
+        function Stage() {
+            var _this = _super.call(this) || this;
+            /**
+             * @private
+             */
+            _this.$stageWidth = 0;
+            /**
+             * @private
+             */
+            _this.$stageHeight = 0;
+            _this.$scaleMode = egret.StageScaleMode.SHOW_ALL;
+            _this.$orientation = egret.OrientationMode.AUTO;
+            _this.$maxTouches = 99;
+            _this.$stage = _this;
+            _this.$nestLevel = 1;
+            return _this;
         }
-        sys.blendModeToNumber = blendModeToNumber;
+        Stage.prototype.createNativeDisplayObject = function () {
+            this.$nativeDisplayObject = new egret_native.NativeDisplayObject(13 /* STAGE */);
+        };
+        Object.defineProperty(Stage.prototype, "frameRate", {
+            /**
+             * Gets and sets the frame rate of the stage. The frame rate is defined as frames per second. Valid range for the
+             * frame rate is from 0.01 to 1000 frames per second.<br/>
+             * Note: setting the frameRate property of one Stage object changes the frame rate for all Stage objects
+             * @default 30
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language en_US
+             */
+            /**
+             * 获取并设置舞台的帧速率。帧速率是指每秒显示的帧数。帧速率的有效范围为每秒 0.01 到 60 个帧。<br/>
+             * 注意: 修改任何一个Stage的frameRate属性都会同步修改其他Stage的帧率。
+             * @default 30
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language zh_CN
+             */
+            get: function () {
+                return egret.ticker.$frameRate;
+            },
+            set: function (value) {
+                egret.ticker.$setFrameRate(value);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Stage.prototype, "stageWidth", {
+            /**
+             * Indicates the width of the stage, in pixels.
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language en_US
+             */
+            /**
+             * 舞台的当前宽度（以像素为单位）。
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language zh_CN
+             */
+            get: function () {
+                return this.$stageWidth;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Stage.prototype, "stageHeight", {
+            /**
+             * Indicates the height of the stage, in pixels.
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language en_US
+             */
+            /**
+             * 舞台的当前高度（以像素为单位）。
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language zh_CN
+             */
+            get: function () {
+                return this.$stageHeight;
+            },
+            enumerable: true,
+            configurable: true
+        });
         /**
-         * @private
-         * 转换数字为 blendMode 字符串。
+         * After you call the invalidate() method, when the display list is next rendered, the Egret runtime sends a render
+         * event to each display object that has registered to listen for the render event. You must call the invalidate()
+         * method each time you want the Egret runtime to send render events.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
          */
-        function numberToBlendMode(blendMode) {
-            var str = blendModeString[blendMode];
-            return str === undefined ? "normal" : str;
-        }
-        sys.numberToBlendMode = numberToBlendMode;
-    })(sys = egret.sys || (egret.sys = {}));
+        /**
+         * 调用 invalidate() 方法后，在显示列表下次呈现时，Egret 会向每个已注册侦听 Event.RENDER 事件的显示对象发送一个 Event.RENDER 事件。
+         * 每次您希望 Egret 发送 Event.RENDER 事件时，都必须调用 invalidate() 方法。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        Stage.prototype.invalidate = function () {
+            egret.sys.$invalidateRenderFlag = true;
+        };
+        /**
+         * @deprecated
+         */
+        Stage.prototype.registerImplementation = function (interfaceName, instance) {
+            egret.registerImplementation(interfaceName, instance);
+        };
+        /**
+         * @deprecated
+         */
+        Stage.prototype.getImplementation = function (interfaceName) {
+            return egret.getImplementation(interfaceName);
+        };
+        Object.defineProperty(Stage.prototype, "scaleMode", {
+            /**
+             * A StageScaleMode class that specifies which scale mode to use. The following are valid values:<br/>
+             * <ul>
+             * <li>StageScaleMode.EXACT_FIT -- The entire application be visible in the specified area without trying to preserve the original aspect ratio. Distortion can occur, the application may be stretched or compressed.</li>
+             * <li>StageScaleMode.SHOW_ALL -- The entire application is visible in the specified area without distortion while maintaining the application of the original aspect ratio. Applications may display border.</li>
+             * <li>StageScaleMode.NO_SCALE -- The size of the entire application is fixed, so that even if the size of the player window changes, it remains unchanged. If the player window is smaller than the content, it may do some trimming.</li>
+             * <li>StageScaleMode.NO_BORDER -- Keep the original aspect ratio scaling application content, after scaling a narrow direction of application content to fill the viewport players on both sides in the other direction may exceed the viewport and the player is cut.</li>
+             * <li>StageScaleMode.FIXED_WIDTH -- Keep the original aspect ratio scaling application content, after scaling application content in the horizontal and vertical directions to fill the viewport player, but only to keep the contents of the original application constant width, height may change.</li>
+             * <li>StageScaleMode.FIXED_HEIGHT -- Keep the original aspect ratio scaling application content, after scaling application content in the horizontal and vertical directions to fill the viewport player, but only to keep the contents of the original application constant height, width may change.</li>
+             * </ul>
+             * @default egret.StageScaleMode.SHOW_ALL
+             * @language en_US
+             */
+            /**
+             * 一个 StageScaleMode 类中指定要使用哪种缩放模式的值。以下是有效值：<br/>
+             * <ul>
+             * <li>StageScaleMode.EXACT_FIT -- 整个应用程序在指定区域中可见，但不尝试保持原始高宽比。可能会发生扭曲，应用程序可能会拉伸或压缩显示。</li>
+             * <li>StageScaleMode.SHOW_ALL -- 整个应用程序在指定区域中可见，且不发生扭曲，同时保持应用程序的原始高宽比。应用程序的可能会显示边框。</li>
+             * <li>StageScaleMode.NO_SCALE -- 整个应用程序的大小固定，因此，即使播放器窗口的大小更改，它也会保持不变。如果播放器窗口比内容小，则可能进行一些裁切。</li>
+             * <li>StageScaleMode.NO_BORDER -- 保持原始宽高比缩放应用程序内容，缩放后应用程序内容的较窄方向填满播放器视口，另一个方向的两侧可能会超出播放器视口而被裁切。</li>
+             * <li>StageScaleMode.FIXED_WIDTH -- 保持原始宽高比缩放应用程序内容，缩放后应用程序内容在水平和垂直方向都填满播放器视口，但只保持应用程序内容的原始宽度不变，高度可能会改变。</li>
+             * <li>StageScaleMode.FIXED_HEIGHT -- 保持原始宽高比缩放应用程序内容，缩放后应用程序内容在水平和垂直方向都填满播放器视口，但只保持应用程序内容的原始高度不变，宽度可能会改变。</li>
+             * </ul>
+             * @default egret.StageScaleMode.SHOW_ALL
+             * @language zh_CN
+             */
+            get: function () {
+                return this.$scaleMode;
+            },
+            set: function (value) {
+                if (this.$scaleMode == value) {
+                    return;
+                }
+                this.$scaleMode = value;
+                this.$screen.updateScreenSize();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Stage.prototype, "orientation", {
+            /**
+             * Horizontal and vertical screen display screen, can only be set under the current Native in the configuration file. A egret.OrientationMode class that specifies which display mode to use. The following are valid values:<br/>
+             * <ul>
+             * <li>egret.OrientationMode.AUTO -- Always follow the direction of application display screen, always guaranteed by the look down.</li>
+             * <li>egret.OrientationMode.PORTRAIT -- Applications remain portrait mode, namely horizontal screen look, the screen from left to right.</li>
+             * <li>egret.OrientationMode.LANDSCAPE -- Applications remain horizontal screen mode, namely vertical screen, the screen from right to left.</li>
+             * <li>egret.OrientationMode.LANDSCAPE_FLIPPED -- Applications remain horizontal screen mode, namely vertical screen, the screen from left to right.</li>
+             * </ul>
+             * @platform Web
+             * @version 2.4
+             * @language en_US
+             */
+            /**
+             * 屏幕横竖屏显示方式，目前 Native 下只能在配置文件里设置。一个 egret.OrientationMode 类中指定要使用哪种显示方式。以下是有效值：<br/>
+             * <ul>
+             * <li>egret.OrientationMode.AUTO -- 应用始终跟随屏幕的方向显示，始终保证由上往下看。</li>
+             * <li>egret.OrientationMode.PORTRAIT -- 应用始终保持竖屏模式，即横屏看时，屏幕由左往右看。</li>
+             * <li>egret.OrientationMode.LANDSCAPE -- 应用始终保持横屏模式，即竖屏看时，屏幕显示由右往左。</li>
+             * <li>egret.OrientationMode.LANDSCAPE_FLIPPED -- 应用始终保持横屏模式，即竖屏看时，屏幕显示由左往右。</li>
+             * </ul>
+             * @platform Web
+             * @version 2.4
+             * @language zh_CN
+             */
+            get: function () {
+                return this.$orientation;
+            },
+            set: function (value) {
+                if (this.$orientation == value) {
+                    return;
+                }
+                this.$orientation = value;
+                this.$screen.updateScreenSize();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Stage.prototype, "textureScaleFactor", {
+            /**
+             * Draw texture zoom ratio
+             * @default 1
+             * @language en_US
+             */
+            /**
+             * 绘制纹理的缩放比率，默认值为1
+             * @default 1
+             * @language zh_CN
+             */
+            get: function () {
+                return egret.$TextureScaleFactor;
+            },
+            set: function (value) {
+                egret.$TextureScaleFactor = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Stage.prototype, "maxTouches", {
+            /**
+             * Set the number of screens can simultaneously touch. Above this amount will not be triggered in response.
+             * @default 99
+             * @language en_US
+             */
+            /**
+             * 设置屏幕同时可以触摸的数量。高于这个数量将不会被触发响应。
+             * @default 99
+             * @language zh_CN
+             */
+            get: function () {
+                return this.$maxTouches;
+            },
+            set: function (value) {
+                if (this.$maxTouches == value) {
+                    return;
+                }
+                this.$maxTouches = value;
+                this.$screen.updateMaxTouches();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * Set resolution size
+         * @param width width
+         * @param height height
+         * @version Egret 2.5.5
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 设置分辨率尺寸
+         * @param width 宽度
+         * @param height 高度
+         * @version Egret 2.5.5
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        Stage.prototype.setContentSize = function (width, height) {
+            this.$screen.setContentSize(width, height);
+        };
+        return Stage;
+    }(egret.DisplayObjectContainer));
+    egret.Stage = Stage;
+    __reflect(Stage.prototype, "egret.Stage");
+    if (true) {
+        egret.$markCannotUse(Stage, "alpha", 1);
+        egret.$markCannotUse(Stage, "visible", true);
+        egret.$markCannotUse(Stage, "x", 0);
+        egret.$markCannotUse(Stage, "y", 0);
+        egret.$markCannotUse(Stage, "scaleX", 1);
+        egret.$markCannotUse(Stage, "scaleY", 1);
+        egret.$markCannotUse(Stage, "rotation", 0);
+        egret.$markCannotUse(Stage, "cacheAsBitmap", false);
+        egret.$markCannotUse(Stage, "scrollRect", null);
+        egret.$markCannotUse(Stage, "filters", null);
+        egret.$markCannotUse(Stage, "blendMode", null);
+        egret.$markCannotUse(Stage, "touchEnabled", true);
+        egret.$markCannotUse(Stage, "matrix", null);
+    }
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -14117,357 +14175,6 @@ var egret;
 var egret;
 (function (egret) {
     /**
-     * The Stage class represents the main drawing area.The Stage object is not globally accessible. You need to access
-     * it through the stage property of a DisplayObject instance.<br/>
-     * The Stage class has several ancestor classes — Sprite, DisplayObject, and EventDispatcher — from which it inherits
-     * properties and methods. Many of these properties and methods are inapplicable to Stage objects.
-     * @event egret.Event.RESIZE Dispatched when the stageWidth or stageHeight property of the Stage object is changed.
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/display/Stage.ts
-     * @language en_US
-     */
-    /**
-     * Stage 类代表主绘图区。
-     * 可以利用 DisplayObject 实例的 stage 属性进行访问。<br/>
-     * Stage 类具有多个祖代类: Sprite、DisplayObject 和 EventDispatcher，属性和方法便是从这些类继承而来的。
-     * 从这些继承的许多属性和方法不适用于 Stage 对象。
-     * @event egret.Event.RESIZE 当stageWidth或stageHeight属性发生改变时调度
-     * @event egret.Event.DEACTIVATE 当stage失去焦点后调度
-     * @event egret.Event.ACTIVATE 当stage获得焦点后调度
-     *
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/display/Stage.ts
-     * @language zh_CN
-     */
-    var Stage = (function (_super) {
-        __extends(Stage, _super);
-        /**
-         * @private
-         * Stage不许允许自行实例化
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        function Stage() {
-            var _this = _super.call(this) || this;
-            /**
-             * @private
-             */
-            _this.$stageWidth = 0;
-            /**
-             * @private
-             */
-            _this.$stageHeight = 0;
-            _this.$scaleMode = egret.StageScaleMode.SHOW_ALL;
-            _this.$orientation = egret.OrientationMode.AUTO;
-            _this.$maxTouches = 99;
-            _this.$stage = _this;
-            _this.$nestLevel = 1;
-            return _this;
-        }
-        Stage.prototype.createNativeDisplayObject = function () {
-            this.$nativeDisplayObject = new egret_native.NativeDisplayObject(13 /* STAGE */);
-        };
-        Object.defineProperty(Stage.prototype, "frameRate", {
-            /**
-             * Gets and sets the frame rate of the stage. The frame rate is defined as frames per second. Valid range for the
-             * frame rate is from 0.01 to 1000 frames per second.<br/>
-             * Note: setting the frameRate property of one Stage object changes the frame rate for all Stage objects
-             * @default 30
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language en_US
-             */
-            /**
-             * 获取并设置舞台的帧速率。帧速率是指每秒显示的帧数。帧速率的有效范围为每秒 0.01 到 60 个帧。<br/>
-             * 注意: 修改任何一个Stage的frameRate属性都会同步修改其他Stage的帧率。
-             * @default 30
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language zh_CN
-             */
-            get: function () {
-                return egret.ticker.$frameRate;
-            },
-            set: function (value) {
-                egret.ticker.$setFrameRate(value);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Stage.prototype, "stageWidth", {
-            /**
-             * Indicates the width of the stage, in pixels.
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language en_US
-             */
-            /**
-             * 舞台的当前宽度（以像素为单位）。
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language zh_CN
-             */
-            get: function () {
-                return this.$stageWidth;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Stage.prototype, "stageHeight", {
-            /**
-             * Indicates the height of the stage, in pixels.
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language en_US
-             */
-            /**
-             * 舞台的当前高度（以像素为单位）。
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language zh_CN
-             */
-            get: function () {
-                return this.$stageHeight;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * After you call the invalidate() method, when the display list is next rendered, the Egret runtime sends a render
-         * event to each display object that has registered to listen for the render event. You must call the invalidate()
-         * method each time you want the Egret runtime to send render events.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 调用 invalidate() 方法后，在显示列表下次呈现时，Egret 会向每个已注册侦听 Event.RENDER 事件的显示对象发送一个 Event.RENDER 事件。
-         * 每次您希望 Egret 发送 Event.RENDER 事件时，都必须调用 invalidate() 方法。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        Stage.prototype.invalidate = function () {
-            egret.sys.$invalidateRenderFlag = true;
-        };
-        /**
-         * @deprecated
-         */
-        Stage.prototype.registerImplementation = function (interfaceName, instance) {
-            egret.registerImplementation(interfaceName, instance);
-        };
-        /**
-         * @deprecated
-         */
-        Stage.prototype.getImplementation = function (interfaceName) {
-            return egret.getImplementation(interfaceName);
-        };
-        Object.defineProperty(Stage.prototype, "scaleMode", {
-            /**
-             * A StageScaleMode class that specifies which scale mode to use. The following are valid values:<br/>
-             * <ul>
-             * <li>StageScaleMode.EXACT_FIT -- The entire application be visible in the specified area without trying to preserve the original aspect ratio. Distortion can occur, the application may be stretched or compressed.</li>
-             * <li>StageScaleMode.SHOW_ALL -- The entire application is visible in the specified area without distortion while maintaining the application of the original aspect ratio. Applications may display border.</li>
-             * <li>StageScaleMode.NO_SCALE -- The size of the entire application is fixed, so that even if the size of the player window changes, it remains unchanged. If the player window is smaller than the content, it may do some trimming.</li>
-             * <li>StageScaleMode.NO_BORDER -- Keep the original aspect ratio scaling application content, after scaling a narrow direction of application content to fill the viewport players on both sides in the other direction may exceed the viewport and the player is cut.</li>
-             * <li>StageScaleMode.FIXED_WIDTH -- Keep the original aspect ratio scaling application content, after scaling application content in the horizontal and vertical directions to fill the viewport player, but only to keep the contents of the original application constant width, height may change.</li>
-             * <li>StageScaleMode.FIXED_HEIGHT -- Keep the original aspect ratio scaling application content, after scaling application content in the horizontal and vertical directions to fill the viewport player, but only to keep the contents of the original application constant height, width may change.</li>
-             * </ul>
-             * @default egret.StageScaleMode.SHOW_ALL
-             * @language en_US
-             */
-            /**
-             * 一个 StageScaleMode 类中指定要使用哪种缩放模式的值。以下是有效值：<br/>
-             * <ul>
-             * <li>StageScaleMode.EXACT_FIT -- 整个应用程序在指定区域中可见，但不尝试保持原始高宽比。可能会发生扭曲，应用程序可能会拉伸或压缩显示。</li>
-             * <li>StageScaleMode.SHOW_ALL -- 整个应用程序在指定区域中可见，且不发生扭曲，同时保持应用程序的原始高宽比。应用程序的可能会显示边框。</li>
-             * <li>StageScaleMode.NO_SCALE -- 整个应用程序的大小固定，因此，即使播放器窗口的大小更改，它也会保持不变。如果播放器窗口比内容小，则可能进行一些裁切。</li>
-             * <li>StageScaleMode.NO_BORDER -- 保持原始宽高比缩放应用程序内容，缩放后应用程序内容的较窄方向填满播放器视口，另一个方向的两侧可能会超出播放器视口而被裁切。</li>
-             * <li>StageScaleMode.FIXED_WIDTH -- 保持原始宽高比缩放应用程序内容，缩放后应用程序内容在水平和垂直方向都填满播放器视口，但只保持应用程序内容的原始宽度不变，高度可能会改变。</li>
-             * <li>StageScaleMode.FIXED_HEIGHT -- 保持原始宽高比缩放应用程序内容，缩放后应用程序内容在水平和垂直方向都填满播放器视口，但只保持应用程序内容的原始高度不变，宽度可能会改变。</li>
-             * </ul>
-             * @default egret.StageScaleMode.SHOW_ALL
-             * @language zh_CN
-             */
-            get: function () {
-                return this.$scaleMode;
-            },
-            set: function (value) {
-                if (this.$scaleMode == value) {
-                    return;
-                }
-                this.$scaleMode = value;
-                this.$screen.updateScreenSize();
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Stage.prototype, "orientation", {
-            /**
-             * Horizontal and vertical screen display screen, can only be set under the current Native in the configuration file. A egret.OrientationMode class that specifies which display mode to use. The following are valid values:<br/>
-             * <ul>
-             * <li>egret.OrientationMode.AUTO -- Always follow the direction of application display screen, always guaranteed by the look down.</li>
-             * <li>egret.OrientationMode.PORTRAIT -- Applications remain portrait mode, namely horizontal screen look, the screen from left to right.</li>
-             * <li>egret.OrientationMode.LANDSCAPE -- Applications remain horizontal screen mode, namely vertical screen, the screen from right to left.</li>
-             * <li>egret.OrientationMode.LANDSCAPE_FLIPPED -- Applications remain horizontal screen mode, namely vertical screen, the screen from left to right.</li>
-             * </ul>
-             * @platform Web
-             * @version 2.4
-             * @language en_US
-             */
-            /**
-             * 屏幕横竖屏显示方式，目前 Native 下只能在配置文件里设置。一个 egret.OrientationMode 类中指定要使用哪种显示方式。以下是有效值：<br/>
-             * <ul>
-             * <li>egret.OrientationMode.AUTO -- 应用始终跟随屏幕的方向显示，始终保证由上往下看。</li>
-             * <li>egret.OrientationMode.PORTRAIT -- 应用始终保持竖屏模式，即横屏看时，屏幕由左往右看。</li>
-             * <li>egret.OrientationMode.LANDSCAPE -- 应用始终保持横屏模式，即竖屏看时，屏幕显示由右往左。</li>
-             * <li>egret.OrientationMode.LANDSCAPE_FLIPPED -- 应用始终保持横屏模式，即竖屏看时，屏幕显示由左往右。</li>
-             * </ul>
-             * @platform Web
-             * @version 2.4
-             * @language zh_CN
-             */
-            get: function () {
-                return this.$orientation;
-            },
-            set: function (value) {
-                if (this.$orientation == value) {
-                    return;
-                }
-                this.$orientation = value;
-                this.$screen.updateScreenSize();
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Stage.prototype, "textureScaleFactor", {
-            /**
-             * Draw texture zoom ratio
-             * @default 1
-             * @language en_US
-             */
-            /**
-             * 绘制纹理的缩放比率，默认值为1
-             * @default 1
-             * @language zh_CN
-             */
-            get: function () {
-                return egret.$TextureScaleFactor;
-            },
-            set: function (value) {
-                egret.$TextureScaleFactor = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Stage.prototype, "maxTouches", {
-            /**
-             * Set the number of screens can simultaneously touch. Above this amount will not be triggered in response.
-             * @default 99
-             * @language en_US
-             */
-            /**
-             * 设置屏幕同时可以触摸的数量。高于这个数量将不会被触发响应。
-             * @default 99
-             * @language zh_CN
-             */
-            get: function () {
-                return this.$maxTouches;
-            },
-            set: function (value) {
-                if (this.$maxTouches == value) {
-                    return;
-                }
-                this.$maxTouches = value;
-                this.$screen.updateMaxTouches();
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Stage.prototype, "dirtyRegionPolicy", {
-            get: function () {
-                return null;
-            },
-            /**
-             * @private
-             */
-            set: function (policy) {
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * Set resolution size
-         * @param width width
-         * @param height height
-         * @version Egret 2.5.5
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 设置分辨率尺寸
-         * @param width 宽度
-         * @param height 高度
-         * @version Egret 2.5.5
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        Stage.prototype.setContentSize = function (width, height) {
-            this.$screen.setContentSize(width, height);
-        };
-        return Stage;
-    }(egret.DisplayObjectContainer));
-    egret.Stage = Stage;
-    __reflect(Stage.prototype, "egret.Stage");
-    if (true) {
-        egret.$markCannotUse(Stage, "alpha", 1);
-        egret.$markCannotUse(Stage, "visible", true);
-        egret.$markCannotUse(Stage, "x", 0);
-        egret.$markCannotUse(Stage, "y", 0);
-        egret.$markCannotUse(Stage, "scaleX", 1);
-        egret.$markCannotUse(Stage, "scaleY", 1);
-        egret.$markCannotUse(Stage, "rotation", 0);
-        egret.$markCannotUse(Stage, "cacheAsBitmap", false);
-        egret.$markCannotUse(Stage, "scrollRect", null);
-        egret.$markCannotUse(Stage, "filters", null);
-        egret.$markCannotUse(Stage, "blendMode", null);
-        egret.$markCannotUse(Stage, "touchEnabled", true);
-        egret.$markCannotUse(Stage, "matrix", null);
-    }
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    /**
      * The CapsStyle class is an enumeration of constant values that specify the caps style to use in drawing lines.
      * The constants are provided for use as values in the caps parameter of the egret.Graphics.lineStyle() method.
      * @see egret.Graphics#lineStyle()
@@ -14524,6 +14231,29 @@ var egret;
         SQUARE: "square"
     };
 })(egret || (egret = {}));
+var egret;
+(function (egret) {
+    var web;
+    (function (web) {
+        /**
+         * @private
+         */
+        var EgretShaderLib = (function () {
+            function EgretShaderLib() {
+            }
+            EgretShaderLib.blur_frag = "precision mediump float;\nuniform vec2 blur;\nuniform sampler2D uSampler;\nvarying vec2 vTextureCoord;\nuniform vec2 uTextureSize;\nvoid main()\n{\n    const int sampleRadius = 5;\n    const int samples = sampleRadius * 2 + 1;\n    vec2 blurUv = blur / uTextureSize;\n    vec4 color = vec4(0, 0, 0, 0);\n    vec2 uv = vec2(0.0, 0.0);\n    blurUv /= float(sampleRadius);\n    for (int i = -sampleRadius; i <= sampleRadius; i++) {\n        uv.x = vTextureCoord.x + float(i) * blurUv.x;\n        uv.y = vTextureCoord.y + float(i) * blurUv.y;\n        color += texture2D(uSampler, uv);\n    }\n    color /= float(samples);\n    gl_FragColor = color;\n}";
+            EgretShaderLib.colorTransform_frag = "precision mediump float;\nvarying vec2 vTextureCoord;\nvarying vec4 vColor;\nuniform mat4 matrix;\nuniform vec4 colorAdd;\nuniform sampler2D uSampler;\nvoid main(void) {\n    vec4 texColor = texture2D(uSampler, vTextureCoord);\n    if(texColor.a > 0.) {\n        texColor = vec4(texColor.rgb / texColor.a, texColor.a);\n    }\n    vec4 locColor = clamp(texColor * matrix + colorAdd, 0., 1.);\n    gl_FragColor = vColor * vec4(locColor.rgb * locColor.a, locColor.a);\n}";
+            EgretShaderLib.default_vert = "attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\nattribute vec2 aColor;\nuniform vec2 projectionVector;\nvarying vec2 vTextureCoord;\nvarying vec4 vColor;\nconst vec2 center = vec2(-1.0, 1.0);\nvoid main(void) {\n   gl_Position = vec4( (aVertexPosition / projectionVector) + center , 0.0, 1.0);\n   vTextureCoord = aTextureCoord;\n   vColor = vec4(aColor.x, aColor.x, aColor.x, aColor.x);\n}";
+            EgretShaderLib.glow_frag = "precision mediump float;\nvarying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform float dist;\nuniform float angle;\nuniform vec4 color;\nuniform float alpha;\nuniform float blurX;\nuniform float blurY;\nuniform float strength;\nuniform float inner;\nuniform float knockout;\nuniform float hideObject;\nuniform vec2 uTextureSize;\nfloat random(vec3 scale, float seed)\n{\n    return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);\n}\nvoid main(void) {\n    vec2 px = vec2(1.0 / uTextureSize.x, 1.0 / uTextureSize.y);\n    const float linearSamplingTimes = 7.0;\n    const float circleSamplingTimes = 12.0;\n    vec4 ownColor = texture2D(uSampler, vTextureCoord);\n    vec4 curColor;\n    float totalAlpha = 0.0;\n    float maxTotalAlpha = 0.0;\n    float curDistanceX = 0.0;\n    float curDistanceY = 0.0;\n    float offsetX = dist * cos(angle) * px.x;\n    float offsetY = dist * sin(angle) * px.y;\n    const float PI = 3.14159265358979323846264;\n    float cosAngle;\n    float sinAngle;\n    float offset = PI * 2.0 / circleSamplingTimes * random(vec3(12.9898, 78.233, 151.7182), 0.0);\n    float stepX = blurX * px.x / linearSamplingTimes;\n    float stepY = blurY * px.y / linearSamplingTimes;\n    for (float a = 0.0; a <= PI * 2.0; a += PI * 2.0 / circleSamplingTimes) {\n        cosAngle = cos(a + offset);\n        sinAngle = sin(a + offset);\n        for (float i = 1.0; i <= linearSamplingTimes; i++) {\n            curDistanceX = i * stepX * cosAngle;\n            curDistanceY = i * stepY * sinAngle;\n            \n            curColor = texture2D(uSampler, vec2(vTextureCoord.x + curDistanceX - offsetX, vTextureCoord.y + curDistanceY + offsetY));\n            totalAlpha += (linearSamplingTimes - i) * curColor.a;\n            maxTotalAlpha += (linearSamplingTimes - i);\n        }\n    }\n    ownColor.a = max(ownColor.a, 0.0001);\n    ownColor.rgb = ownColor.rgb / ownColor.a;\n    float outerGlowAlpha = (totalAlpha / maxTotalAlpha) * strength * alpha * (1. - inner) * max(min(hideObject, knockout), 1. - ownColor.a);\n    float innerGlowAlpha = ((maxTotalAlpha - totalAlpha) / maxTotalAlpha) * strength * alpha * inner * ownColor.a;\n    ownColor.a = max(ownColor.a * knockout * (1. - hideObject), 0.0001);\n    vec3 mix1 = mix(ownColor.rgb, color.rgb, innerGlowAlpha / (innerGlowAlpha + ownColor.a));\n    vec3 mix2 = mix(mix1, color.rgb, outerGlowAlpha / (innerGlowAlpha + ownColor.a + outerGlowAlpha));\n    float resultAlpha = min(ownColor.a + outerGlowAlpha + innerGlowAlpha, 1.);\n    gl_FragColor = vec4(mix2 * resultAlpha, resultAlpha);\n}";
+            EgretShaderLib.primitive_frag = "precision lowp float;\nvarying vec2 vTextureCoord;\nvarying vec4 vColor;\nvoid main(void) {\n    gl_FragColor = vColor;\n}";
+            EgretShaderLib.texture_frag = "precision lowp float;\nvarying vec2 vTextureCoord;\nvarying vec4 vColor;\nuniform sampler2D uSampler;\nvoid main(void) {\n    gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor;\n}";
+            return EgretShaderLib;
+        }());
+        web.EgretShaderLib = EgretShaderLib;
+        __reflect(EgretShaderLib.prototype, "egret.web.EgretShaderLib");
+    })(web = egret.web || (egret.web = {}));
+})(egret || (egret = {}));
+;
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -16400,69 +16130,245 @@ var egret;
 var egret;
 (function (egret) {
     /**
-     * Values for the dirty region policy
-     * @version Egret 2.5
+     * A BitmapData object contains an array of pixel data. This data can represent either a fully opaque bitmap or a
+     * transparent bitmap that contains alpha channel data. Either type of BitmapData object is stored as a buffer of 32-bit
+     * integers. Each 32-bit integer determines the properties of a single pixel in the bitmap.<br/>
+     * Each 32-bit integer is a combination of four 8-bit channel values (from 0 to 255) that describe the alpha transparency
+     * and the red, green, and blue (ARGB) values of the pixel. (For ARGB values, the most significant byte represents the
+     * alpha channel value, followed by red, green, and blue.)
+     * @see egret.Bitmap
+     * @version Egret 2.4
      * @platform Web,Native
      * @language en_US
      */
     /**
-     * 脏矩形策略常量。
-     * @version Egret 3.0
+     * BitmapData 对象是一个包含像素数据的数组。此数据可以表示完全不透明的位图，或表示包含 Alpha 通道数据的透明位图。
+     * 以上任一类型的 BitmapData 对象都作为 32 位整数的缓冲区进行存储。每个 32 位整数确定位图中单个像素的属性。<br/>
+     * 每个 32 位整数都是四个 8 位通道值（从 0 到 255）的组合，这些值描述像素的 Alpha 透明度以及红色、绿色、蓝色 (ARGB) 值。
+     * （对于 ARGB 值，最高有效字节代表 Alpha 通道值，其后的有效字节分别代表红色、绿色和蓝色通道值。）
+     * @see egret.Bitmap
+     * @version Egret 2.4
      * @platform Web,Native
      * @language zh_CN
      */
-    egret.DirtyRegionPolicy = {
+    var BitmapData = (function (_super) {
+        __extends(BitmapData, _super);
         /**
-         * Close automatic detection of dirty region
-         * @version Egret 3.0
+         * Initializes a BitmapData object to refer to the specified source object.
+         * @param source The source object being referenced.
+         * @version Egret 2.4
          * @platform Web,Native
          * @language en_US
          */
         /**
-         * 关闭自动脏矩形检测
-         * @version Egret 3.0
+         * 创建一个引用指定 source 实例的 BitmapData 对象
+         * @param source 被引用的 source 实例
+         * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
          */
-        OFF: "off",
-        /**
-         * Open automatic detection of dirty region
-         * @version Egret 3.0
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 开启自动脏矩形检测
-         * @version Egret 3.0
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        ON: "on"
-    };
-})(egret || (egret = {}));
-var egret;
-(function (egret) {
-    var web;
-    (function (web) {
-        /**
-         * @private
-         */
-        var EgretShaderLib = (function () {
-            function EgretShaderLib() {
+        function BitmapData(source) {
+            var _this = _super.call(this) || this;
+            /**
+             * Texture format.
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language en_US
+             */
+            /**
+             * 纹理格式。
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language zh_CN
+             */
+            _this.format = "image";
+            /**
+             * @private
+             * webgl纹理生成后，是否删掉原始图像数据
+             */
+            _this.$deleteSource = true;
+            _this.source = source;
+            _this.width = source.width;
+            _this.height = source.height;
+            return _this;
+        }
+        BitmapData.create = function (type, data, callback) {
+            var base64 = "";
+            if (type === "arraybuffer") {
+                base64 = egret.Base64Util.encode(data);
             }
-            EgretShaderLib.blur_frag = "precision mediump float;\nuniform vec2 blur;\nuniform sampler2D uSampler;\nvarying vec2 vTextureCoord;\nuniform vec2 uTextureSize;\nvoid main()\n{\n    const int sampleRadius = 5;\n    const int samples = sampleRadius * 2 + 1;\n    vec2 blurUv = blur / uTextureSize;\n    vec4 color = vec4(0, 0, 0, 0);\n    vec2 uv = vec2(0.0, 0.0);\n    blurUv /= float(sampleRadius);\n    for (int i = -sampleRadius; i <= sampleRadius; i++) {\n        uv.x = vTextureCoord.x + float(i) * blurUv.x;\n        uv.y = vTextureCoord.y + float(i) * blurUv.y;\n        color += texture2D(uSampler, uv);\n    }\n    color /= float(samples);\n    gl_FragColor = color;\n}";
-            EgretShaderLib.colorTransform_frag = "precision mediump float;\nvarying vec2 vTextureCoord;\nvarying vec4 vColor;\nuniform mat4 matrix;\nuniform vec4 colorAdd;\nuniform sampler2D uSampler;\nvoid main(void) {\n    vec4 texColor = texture2D(uSampler, vTextureCoord);\n    if(texColor.a > 0.) {\n        texColor = vec4(texColor.rgb / texColor.a, texColor.a);\n    }\n    vec4 locColor = clamp(texColor * matrix + colorAdd, 0., 1.);\n    gl_FragColor = vColor * vec4(locColor.rgb * locColor.a, locColor.a);\n}";
-            EgretShaderLib.default_vert = "attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\nattribute vec2 aColor;\nuniform vec2 projectionVector;\nvarying vec2 vTextureCoord;\nvarying vec4 vColor;\nconst vec2 center = vec2(-1.0, 1.0);\nvoid main(void) {\n   gl_Position = vec4( (aVertexPosition / projectionVector) + center , 0.0, 1.0);\n   vTextureCoord = aTextureCoord;\n   vColor = vec4(aColor.x, aColor.x, aColor.x, aColor.x);\n}";
-            EgretShaderLib.glow_frag = "precision mediump float;\nvarying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform float dist;\nuniform float angle;\nuniform vec4 color;\nuniform float alpha;\nuniform float blurX;\nuniform float blurY;\nuniform float strength;\nuniform float inner;\nuniform float knockout;\nuniform float hideObject;\nuniform vec2 uTextureSize;\nfloat random(vec3 scale, float seed)\n{\n    return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);\n}\nvoid main(void) {\n    vec2 px = vec2(1.0 / uTextureSize.x, 1.0 / uTextureSize.y);\n    const float linearSamplingTimes = 7.0;\n    const float circleSamplingTimes = 12.0;\n    vec4 ownColor = texture2D(uSampler, vTextureCoord);\n    vec4 curColor;\n    float totalAlpha = 0.0;\n    float maxTotalAlpha = 0.0;\n    float curDistanceX = 0.0;\n    float curDistanceY = 0.0;\n    float offsetX = dist * cos(angle) * px.x;\n    float offsetY = dist * sin(angle) * px.y;\n    const float PI = 3.14159265358979323846264;\n    float cosAngle;\n    float sinAngle;\n    float offset = PI * 2.0 / circleSamplingTimes * random(vec3(12.9898, 78.233, 151.7182), 0.0);\n    float stepX = blurX * px.x / linearSamplingTimes;\n    float stepY = blurY * px.y / linearSamplingTimes;\n    for (float a = 0.0; a <= PI * 2.0; a += PI * 2.0 / circleSamplingTimes) {\n        cosAngle = cos(a + offset);\n        sinAngle = sin(a + offset);\n        for (float i = 1.0; i <= linearSamplingTimes; i++) {\n            curDistanceX = i * stepX * cosAngle;\n            curDistanceY = i * stepY * sinAngle;\n            \n            curColor = texture2D(uSampler, vec2(vTextureCoord.x + curDistanceX - offsetX, vTextureCoord.y + curDistanceY + offsetY));\n            totalAlpha += (linearSamplingTimes - i) * curColor.a;\n            maxTotalAlpha += (linearSamplingTimes - i);\n        }\n    }\n    ownColor.a = max(ownColor.a, 0.0001);\n    ownColor.rgb = ownColor.rgb / ownColor.a;\n    float outerGlowAlpha = (totalAlpha / maxTotalAlpha) * strength * alpha * (1. - inner) * max(min(hideObject, knockout), 1. - ownColor.a);\n    float innerGlowAlpha = ((maxTotalAlpha - totalAlpha) / maxTotalAlpha) * strength * alpha * inner * ownColor.a;\n    ownColor.a = max(ownColor.a * knockout * (1. - hideObject), 0.0001);\n    vec3 mix1 = mix(ownColor.rgb, color.rgb, innerGlowAlpha / (innerGlowAlpha + ownColor.a));\n    vec3 mix2 = mix(mix1, color.rgb, outerGlowAlpha / (innerGlowAlpha + ownColor.a + outerGlowAlpha));\n    float resultAlpha = min(ownColor.a + outerGlowAlpha + innerGlowAlpha, 1.);\n    gl_FragColor = vec4(mix2 * resultAlpha, resultAlpha);\n}";
-            EgretShaderLib.primitive_frag = "precision lowp float;\nvarying vec2 vTextureCoord;\nvarying vec4 vColor;\nvoid main(void) {\n    gl_FragColor = vColor;\n}";
-            EgretShaderLib.texture_frag = "precision lowp float;\nvarying vec2 vTextureCoord;\nvarying vec4 vColor;\nuniform sampler2D uSampler;\nvoid main(void) {\n    gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor;\n}";
-            return EgretShaderLib;
-        }());
-        web.EgretShaderLib = EgretShaderLib;
-        __reflect(EgretShaderLib.prototype, "egret.web.EgretShaderLib");
-    })(web = egret.web || (egret.web = {}));
+            else {
+                base64 = data;
+            }
+            var imageType = "image/png"; //default value
+            if (base64.charAt(0) === '/') {
+                imageType = "image/jpeg";
+            }
+            else if (base64.charAt(0) === 'R') {
+                imageType = "image/gif";
+            }
+            else if (base64.charAt(0) === 'i') {
+                imageType = "image/png";
+            }
+            var img = new Image();
+            img.src = "data:" + imageType + ";base64," + base64;
+            img.crossOrigin = '*';
+            var bitmapData = new BitmapData(img);
+            img.onload = function () {
+                img.onload = undefined;
+                bitmapData.source = img;
+                bitmapData.height = img.height;
+                bitmapData.width = img.width;
+                if (callback) {
+                    callback(bitmapData);
+                }
+            };
+            return bitmapData;
+        };
+        BitmapData.prototype.$dispose = function () {
+            if (egret.Capabilities.renderMode == "webgl" && this.webGLTexture) {
+                egret.WebGLUtils.deleteWebGLTexture(this.webGLTexture);
+                this.webGLTexture = null;
+            }
+            //native or WebGLRenderTarget
+            if (this.source && this.source.dispose) {
+                this.source.dispose();
+            }
+            this.source = null;
+            BitmapData.$dispose(this);
+        };
+        BitmapData.$addDisplayObject = function (displayObject, bitmapData) {
+            if (!bitmapData) {
+                return;
+            }
+            var hashCode = bitmapData.hashCode;
+            if (!hashCode) {
+                return;
+            }
+            if (!BitmapData._displayList[hashCode]) {
+                BitmapData._displayList[hashCode] = [displayObject];
+                return;
+            }
+            var tempList = BitmapData._displayList[hashCode];
+            if (tempList.indexOf(displayObject) < 0) {
+                tempList.push(displayObject);
+            }
+        };
+        BitmapData.$removeDisplayObject = function (displayObject, bitmapData) {
+            if (!bitmapData) {
+                return;
+            }
+            var hashCode = bitmapData.hashCode;
+            if (!hashCode) {
+                return;
+            }
+            if (!BitmapData._displayList[hashCode]) {
+                return;
+            }
+            var tempList = BitmapData._displayList[hashCode];
+            var index = tempList.indexOf(displayObject);
+            if (index >= 0) {
+                tempList.splice(index);
+            }
+        };
+        BitmapData.$invalidate = function (bitmapData) {
+            if (!bitmapData) {
+                return;
+            }
+            var hashCode = bitmapData.hashCode;
+            if (!hashCode) {
+                return;
+            }
+            if (!BitmapData._displayList[hashCode]) {
+                return;
+            }
+            var tempList = BitmapData._displayList[hashCode];
+            for (var i = 0; i < tempList.length; i++) {
+                if (tempList[i] instanceof egret.Bitmap) {
+                    tempList[i].$refreshImageData();
+                }
+                var bitmap = tempList[i];
+                bitmap.$renderDirty = true;
+                var p = bitmap.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                var maskedObject = bitmap.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
+            }
+        };
+        BitmapData.$dispose = function (bitmapData) {
+            if (!bitmapData) {
+                return;
+            }
+            var hashCode = bitmapData.hashCode;
+            if (!hashCode) {
+                return;
+            }
+            if (!BitmapData._displayList[hashCode]) {
+                return;
+            }
+            var tempList = BitmapData._displayList[hashCode];
+            for (var _i = 0, tempList_1 = tempList; _i < tempList_1.length; _i++) {
+                var node = tempList_1[_i];
+                if (node instanceof egret.Bitmap) {
+                    node.$bitmapData = null;
+                }
+                node.$renderDirty = true;
+                var p = node.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                var maskedObject = node.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
+            }
+            if (egret.nativeRender) {
+                egret_native.NativeDisplayObject.disposeBitmapData(bitmapData);
+            }
+            delete BitmapData._displayList[hashCode];
+        };
+        BitmapData._displayList = egret.createMap();
+        return BitmapData;
+    }(egret.HashObject));
+    egret.BitmapData = BitmapData;
+    __reflect(BitmapData.prototype, "egret.BitmapData");
 })(egret || (egret = {}));
-;
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -16723,6 +16629,84 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    // export interface TextField{
+    //     addEventListener<Z>(type: "focusIn" |
+    //                               "focusOut"
+    //         , listener: (this: Z, e: FocusEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number);
+    //     addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number);
+    // }
+    /**
+     * When the user changes the focus from one object in the display list to another object, the object dispatches a FocusEvent object. Currently only supports input text.
+     * Focus events: FocusEvent.FOCUS_IN FocusEvent.FOCUS_OUT
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * 用户将焦点从显示列表中的一个对象更改到另一个对象时，对象将调度 FocusEvent 对象。目前只支持输入文本。
+     * 焦点事件：FocusEvent.FOCUS_IN FocusEvent.FOCUS_OUT
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    var FocusEvent = (function (_super) {
+        __extends(FocusEvent, _super);
+        /**
+         * Create a egret.FocusEvent objects
+         * @param type  The type of the event, accessible as Event.type.
+         * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
+         * @param cancelable Determines whether the Event object can be canceled. The default values is false.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 创建一个 egret.FocusEvent 对象
+         * @param type  事件的类型，可以作为 Event.type 访问。
+         * @param bubbles  确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
+         * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        function FocusEvent(type, bubbles, cancelable) {
+            if (bubbles === void 0) { bubbles = false; }
+            if (cancelable === void 0) { cancelable = false; }
+            return _super.call(this, type, bubbles, cancelable) || this;
+        }
+        /**
+         * Gets focus
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 获得焦点
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        FocusEvent.FOCUS_IN = "focusIn";
+        /**
+         * Loses focus
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 失去焦点
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        FocusEvent.FOCUS_OUT = "focusOut";
+        return FocusEvent;
+    }(egret.Event));
+    egret.FocusEvent = FocusEvent;
+    __reflect(FocusEvent.prototype, "egret.FocusEvent");
+})(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -18003,6 +17987,61 @@ var egret;
         }
     }
 })(egret || (egret = {}));
+var egret;
+(function (egret) {
+    /**
+     * The GradientType class provides values for the type parameter in the beginGradientFill() methods of the egret.Graphics class.
+     *
+     * @see egret.Graphics#beginGradientFill()
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * GradientType 类为 egret.Graphics 类的 beginGradientFill() 方法中的 type 参数提供值。
+     *
+     * @see egret.Graphics#beginGradientFill()
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    var GradientType = (function () {
+        function GradientType() {
+        }
+        /**
+         * Value used to specify a linear gradient fill.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 用于指定线性渐变填充的值
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        GradientType.LINEAR = "linear";
+        /**
+         * Value used to specify a radial gradient fill.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 用于指定放射状渐变填充的值
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        GradientType.RADIAL = "radial";
+        return GradientType;
+    }());
+    egret.GradientType = GradientType;
+    __reflect(GradientType.prototype, "egret.GradientType");
+})(egret || (egret = {}));
+var egret;
+(function (egret) {
+})(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -18033,30 +18072,24 @@ var egret;
 //////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
-    // export interface TextField{
-    //     addEventListener<Z>(type: "focusIn" |
-    //                               "focusOut"
-    //         , listener: (this: Z, e: FocusEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number);
-    //     addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number);
-    // }
     /**
-     * When the user changes the focus from one object in the display list to another object, the object dispatches a FocusEvent object. Currently only supports input text.
-     * Focus events: FocusEvent.FOCUS_IN FocusEvent.FOCUS_OUT
+     * When a network request returns an HTTP status code, the application dispatches HTTPStatusEvent objects.
+     * Before error or completion events will always send HTTPStatusEvent object. HTTPStatusEvent object does not necessarily indicate an error condition; it simply reflects the HTTP status code provided by the network stack (if any).
      * @version Egret 2.4
      * @platform Web,Native
      * @language en_US
      */
     /**
-     * 用户将焦点从显示列表中的一个对象更改到另一个对象时，对象将调度 FocusEvent 对象。目前只支持输入文本。
-     * 焦点事件：FocusEvent.FOCUS_IN FocusEvent.FOCUS_OUT
+     * 在网络请求返回 HTTP 状态代码时，应用程序将调度 HTTPStatusEvent 对象。
+     * 在错误或完成事件之前，将始终发送 HTTPStatusEvent 对象。HTTPStatusEvent 对象不一定表示错误条件；它仅反映网络堆栈提供的 HTTP 状态代码（如果有的话）。
      * @version Egret 2.4
      * @platform Web,Native
      * @language zh_CN
      */
-    var FocusEvent = (function (_super) {
-        __extends(FocusEvent, _super);
+    var HTTPStatusEvent = (function (_super) {
+        __extends(HTTPStatusEvent, _super);
         /**
-         * Create a egret.FocusEvent objects
+         * Create a egret.HTTPStatusEvent objects
          * @param type  The type of the event, accessible as Event.type.
          * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
          * @param cancelable Determines whether the Event object can be canceled. The default values is false.
@@ -18065,7 +18098,7 @@ var egret;
          * @language en_US
          */
         /**
-         * 创建一个 egret.FocusEvent 对象
+         * 创建一个 egret.HTTPStatusEvent 对象
          * @param type  事件的类型，可以作为 Event.type 访问。
          * @param bubbles  确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
          * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
@@ -18073,286 +18106,75 @@ var egret;
          * @platform Web,Native
          * @language zh_CN
          */
-        function FocusEvent(type, bubbles, cancelable) {
+        function HTTPStatusEvent(type, bubbles, cancelable) {
             if (bubbles === void 0) { bubbles = false; }
             if (cancelable === void 0) { cancelable = false; }
-            return _super.call(this, type, bubbles, cancelable) || this;
-        }
-        /**
-         * Gets focus
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 获得焦点
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        FocusEvent.FOCUS_IN = "focusIn";
-        /**
-         * Loses focus
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 失去焦点
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        FocusEvent.FOCUS_OUT = "focusOut";
-        return FocusEvent;
-    }(egret.Event));
-    egret.FocusEvent = FocusEvent;
-    __reflect(FocusEvent.prototype, "egret.FocusEvent");
-})(egret || (egret = {}));
-var egret;
-(function (egret) {
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    /**
-     * A BitmapData object contains an array of pixel data. This data can represent either a fully opaque bitmap or a
-     * transparent bitmap that contains alpha channel data. Either type of BitmapData object is stored as a buffer of 32-bit
-     * integers. Each 32-bit integer determines the properties of a single pixel in the bitmap.<br/>
-     * Each 32-bit integer is a combination of four 8-bit channel values (from 0 to 255) that describe the alpha transparency
-     * and the red, green, and blue (ARGB) values of the pixel. (For ARGB values, the most significant byte represents the
-     * alpha channel value, followed by red, green, and blue.)
-     * @see egret.Bitmap
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language en_US
-     */
-    /**
-     * BitmapData 对象是一个包含像素数据的数组。此数据可以表示完全不透明的位图，或表示包含 Alpha 通道数据的透明位图。
-     * 以上任一类型的 BitmapData 对象都作为 32 位整数的缓冲区进行存储。每个 32 位整数确定位图中单个像素的属性。<br/>
-     * 每个 32 位整数都是四个 8 位通道值（从 0 到 255）的组合，这些值描述像素的 Alpha 透明度以及红色、绿色、蓝色 (ARGB) 值。
-     * （对于 ARGB 值，最高有效字节代表 Alpha 通道值，其后的有效字节分别代表红色、绿色和蓝色通道值。）
-     * @see egret.Bitmap
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language zh_CN
-     */
-    var BitmapData = (function (_super) {
-        __extends(BitmapData, _super);
-        /**
-         * Initializes a BitmapData object to refer to the specified source object.
-         * @param source The source object being referenced.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 创建一个引用指定 source 实例的 BitmapData 对象
-         * @param source 被引用的 source 实例
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        function BitmapData(source) {
-            var _this = _super.call(this) || this;
+            var _this = _super.call(this, type, bubbles, cancelable) || this;
             /**
-             * Texture format.
+             * @private
+             */
+            _this._status = 0;
+            return _this;
+        }
+        Object.defineProperty(HTTPStatusEvent.prototype, "status", {
+            /**
+             * he server returns the HTTP status code.
              * @version Egret 2.4
              * @platform Web,Native
              * @language en_US
              */
             /**
-             * 纹理格式。
+             * 由服务器返回的 HTTP 状态代码。
              * @version Egret 2.4
              * @platform Web,Native
              * @language zh_CN
              */
-            _this.format = "image";
-            /**
-             * @private
-             * webgl纹理生成后，是否删掉原始图像数据
-             */
-            _this.$deleteSource = true;
-            _this.source = source;
-            _this.width = source.width;
-            _this.height = source.height;
-            return _this;
-        }
-        BitmapData.create = function (type, data, callback) {
-            var base64 = "";
-            if (type === "arraybuffer") {
-                base64 = egret.Base64Util.encode(data);
-            }
-            else {
-                base64 = data;
-            }
-            var imageType = "image/png"; //default value
-            if (base64.charAt(0) === '/') {
-                imageType = "image/jpeg";
-            }
-            else if (base64.charAt(0) === 'R') {
-                imageType = "image/gif";
-            }
-            else if (base64.charAt(0) === 'i') {
-                imageType = "image/png";
-            }
-            var img = new Image();
-            img.src = "data:" + imageType + ";base64," + base64;
-            img.crossOrigin = '*';
-            var bitmapData = new BitmapData(img);
-            img.onload = function () {
-                img.onload = undefined;
-                bitmapData.source = img;
-                bitmapData.height = img.height;
-                bitmapData.width = img.width;
-                if (callback) {
-                    callback(bitmapData);
-                }
-            };
-            return bitmapData;
+            get: function () {
+                return this._status;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * EventDispatcher object using the specified event object thrown Event. The objects will be thrown in the object cache pool for the next round robin.
+         * @param target {egret.IEventDispatcher} Distribute event target
+         * @param status {number} The server returns the HTTP status code
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * @param target {egret.IEventDispatcher} 派发事件目标
+         * @param status {number} 由服务器返回的 HTTP 状态代码
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        HTTPStatusEvent.dispatchHTTPStatusEvent = function (target, status) {
+            var event = egret.Event.create(HTTPStatusEvent, HTTPStatusEvent.HTTP_STATUS);
+            event._status = status;
+            var result = target.dispatchEvent(event);
+            egret.Event.release(event);
+            return result;
         };
-        BitmapData.prototype.$dispose = function () {
-            if (egret.Capabilities.renderMode == "webgl" && this.webGLTexture) {
-                egret.WebGLUtils.deleteWebGLTexture(this.webGLTexture);
-                this.webGLTexture = null;
-            }
-            //native or WebGLRenderTarget
-            if (this.source && this.source.dispose) {
-                this.source.dispose();
-            }
-            this.source = null;
-            BitmapData.$dispose(this);
-        };
-        BitmapData.$addDisplayObject = function (displayObject, bitmapData) {
-            if (!bitmapData) {
-                return;
-            }
-            var hashCode = bitmapData.hashCode;
-            if (!hashCode) {
-                return;
-            }
-            if (!BitmapData._displayList[hashCode]) {
-                BitmapData._displayList[hashCode] = [displayObject];
-                return;
-            }
-            var tempList = BitmapData._displayList[hashCode];
-            if (tempList.indexOf(displayObject) < 0) {
-                tempList.push(displayObject);
-            }
-        };
-        BitmapData.$removeDisplayObject = function (displayObject, bitmapData) {
-            if (!bitmapData) {
-                return;
-            }
-            var hashCode = bitmapData.hashCode;
-            if (!hashCode) {
-                return;
-            }
-            if (!BitmapData._displayList[hashCode]) {
-                return;
-            }
-            var tempList = BitmapData._displayList[hashCode];
-            var index = tempList.indexOf(displayObject);
-            if (index >= 0) {
-                tempList.splice(index);
-            }
-        };
-        BitmapData.$invalidate = function (bitmapData) {
-            if (!bitmapData) {
-                return;
-            }
-            var hashCode = bitmapData.hashCode;
-            if (!hashCode) {
-                return;
-            }
-            if (!BitmapData._displayList[hashCode]) {
-                return;
-            }
-            var tempList = BitmapData._displayList[hashCode];
-            for (var i = 0; i < tempList.length; i++) {
-                if (tempList[i] instanceof egret.Bitmap) {
-                    tempList[i].$refreshImageData();
-                }
-                var bitmap = tempList[i];
-                bitmap.$renderDirty = true;
-                var p = bitmap.$parent;
-                if (p && !p.$cacheDirty) {
-                    p.$cacheDirty = true;
-                    p.$cacheDirtyUp();
-                }
-                var maskedObject = bitmap.$maskedObject;
-                if (maskedObject && !maskedObject.$cacheDirty) {
-                    maskedObject.$cacheDirty = true;
-                    maskedObject.$cacheDirtyUp();
-                }
-            }
-        };
-        BitmapData.$dispose = function (bitmapData) {
-            if (!bitmapData) {
-                return;
-            }
-            var hashCode = bitmapData.hashCode;
-            if (!hashCode) {
-                return;
-            }
-            if (!BitmapData._displayList[hashCode]) {
-                return;
-            }
-            var tempList = BitmapData._displayList[hashCode];
-            for (var _i = 0, tempList_1 = tempList; _i < tempList_1.length; _i++) {
-                var node = tempList_1[_i];
-                if (node instanceof egret.Bitmap) {
-                    node.$bitmapData = null;
-                }
-                node.$renderDirty = true;
-                var p = node.$parent;
-                if (p && !p.$cacheDirty) {
-                    p.$cacheDirty = true;
-                    p.$cacheDirtyUp();
-                }
-                var maskedObject = node.$maskedObject;
-                if (maskedObject && !maskedObject.$cacheDirty) {
-                    maskedObject.$cacheDirty = true;
-                    maskedObject.$cacheDirtyUp();
-                }
-            }
-            if (egret.nativeRender) {
-                egret_native.NativeDisplayObject.disposeBitmapData(bitmapData);
-            }
-            delete BitmapData._displayList[hashCode];
-        };
-        BitmapData._displayList = egret.createMap();
-        return BitmapData;
-    }(egret.HashObject));
-    egret.BitmapData = BitmapData;
-    __reflect(BitmapData.prototype, "egret.BitmapData");
+        /**
+         * HTTPStatusEvent.HTTP_STATUS constant defines the value of the type property httpStatus event object.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * HTTPStatusEvent.HTTP_STATUS 常量定义 httpStatus 事件对象的 type 属性值。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        HTTPStatusEvent.HTTP_STATUS = "httpStatus";
+        return HTTPStatusEvent;
+    }(egret.Event));
+    egret.HTTPStatusEvent = HTTPStatusEvent;
+    __reflect(HTTPStatusEvent.prototype, "egret.HTTPStatusEvent");
 })(egret || (egret = {}));
 var egret;
 (function (egret) {
@@ -18560,112 +18382,6 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    /**
-     * When a network request returns an HTTP status code, the application dispatches HTTPStatusEvent objects.
-     * Before error or completion events will always send HTTPStatusEvent object. HTTPStatusEvent object does not necessarily indicate an error condition; it simply reflects the HTTP status code provided by the network stack (if any).
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language en_US
-     */
-    /**
-     * 在网络请求返回 HTTP 状态代码时，应用程序将调度 HTTPStatusEvent 对象。
-     * 在错误或完成事件之前，将始终发送 HTTPStatusEvent 对象。HTTPStatusEvent 对象不一定表示错误条件；它仅反映网络堆栈提供的 HTTP 状态代码（如果有的话）。
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language zh_CN
-     */
-    var HTTPStatusEvent = (function (_super) {
-        __extends(HTTPStatusEvent, _super);
-        /**
-         * Create a egret.HTTPStatusEvent objects
-         * @param type  The type of the event, accessible as Event.type.
-         * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
-         * @param cancelable Determines whether the Event object can be canceled. The default values is false.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 创建一个 egret.HTTPStatusEvent 对象
-         * @param type  事件的类型，可以作为 Event.type 访问。
-         * @param bubbles  确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
-         * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        function HTTPStatusEvent(type, bubbles, cancelable) {
-            if (bubbles === void 0) { bubbles = false; }
-            if (cancelable === void 0) { cancelable = false; }
-            var _this = _super.call(this, type, bubbles, cancelable) || this;
-            /**
-             * @private
-             */
-            _this._status = 0;
-            return _this;
-        }
-        Object.defineProperty(HTTPStatusEvent.prototype, "status", {
-            /**
-             * he server returns the HTTP status code.
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language en_US
-             */
-            /**
-             * 由服务器返回的 HTTP 状态代码。
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language zh_CN
-             */
-            get: function () {
-                return this._status;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * EventDispatcher object using the specified event object thrown Event. The objects will be thrown in the object cache pool for the next round robin.
-         * @param target {egret.IEventDispatcher} Distribute event target
-         * @param status {number} The server returns the HTTP status code
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @param target {egret.IEventDispatcher} 派发事件目标
-         * @param status {number} 由服务器返回的 HTTP 状态代码
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        HTTPStatusEvent.dispatchHTTPStatusEvent = function (target, status) {
-            var event = egret.Event.create(HTTPStatusEvent, HTTPStatusEvent.HTTP_STATUS);
-            event._status = status;
-            var result = target.dispatchEvent(event);
-            egret.Event.release(event);
-            return result;
-        };
-        /**
-         * HTTPStatusEvent.HTTP_STATUS constant defines the value of the type property httpStatus event object.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * HTTPStatusEvent.HTTP_STATUS 常量定义 httpStatus 事件对象的 type 属性值。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        HTTPStatusEvent.HTTP_STATUS = "httpStatus";
-        return HTTPStatusEvent;
-    }(egret.Event));
-    egret.HTTPStatusEvent = HTTPStatusEvent;
-    __reflect(HTTPStatusEvent.prototype, "egret.HTTPStatusEvent");
-})(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -18694,6 +18410,777 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    /**
+     * @private
+     * 格式化弧线角度的值
+     */
+    function clampAngle(value) {
+        value %= Math.PI * 2;
+        if (value < 0) {
+            value += Math.PI * 2;
+        }
+        return value;
+    }
+    /**
+     * The Graphics class contains a set of methods for creating vector shape. Display objects that support drawing include Sprite and Shape objects. Each class in these classes includes the graphics attribute that is a Graphics object.
+     * The following auxiliary functions are provided for ease of use: drawRect(), drawRoundRect(), drawCircle(), and drawEllipse().
+     * @see http://edn.egret.com/cn/docs/page/136 Draw Rectangle
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/display/Graphics.ts
+     * @language en_US
+     */
+    /**
+     * Graphics 类包含一组可用来创建矢量形状的方法。支持绘制的显示对象包括 Sprite 和 Shape 对象。这些类中的每一个类都包括 graphics 属性，该属性是一个 Graphics 对象。
+     * 以下是为便于使用而提供的一些辅助函数：drawRect()、drawRoundRect()、drawCircle() 和 drawEllipse()。
+     * @see http://edn.egret.com/cn/docs/page/136 绘制矩形
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/display/Graphics.ts
+     * @language zh_CN
+     */
+    var Graphics = (function (_super) {
+        __extends(Graphics, _super);
+        /**
+         * Initializes a Graphics object.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 创建一个 Graphics 对象。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        function Graphics() {
+            var _this = _super.call(this) || this;
+            /**
+             * 当前移动到的坐标X
+             */
+            _this.lastX = 0;
+            /**
+             * 当前移动到的坐标Y
+             */
+            _this.lastY = 0;
+            /**
+             * 当前正在绘制的填充
+             */
+            _this.fillPath = null;
+            /**
+             * 当前正在绘制的线条
+             */
+            _this.strokePath = null;
+            /**
+             * 线条的左上方宽度
+             */
+            _this.topLeftStrokeWidth = 0;
+            /**
+             * 线条的右下方宽度
+             */
+            _this.bottomRightStrokeWidth = 0;
+            /**
+             * @private
+             */
+            _this.minX = Infinity;
+            /**
+             * @private
+             */
+            _this.minY = Infinity;
+            /**
+             * @private
+             */
+            _this.maxX = -Infinity;
+            /**
+             * @private
+             */
+            _this.maxY = -Infinity;
+            /**
+             * 是否已经包含上一次moveTo的坐标点
+             */
+            _this.includeLastPosition = true;
+            _this.$renderNode = new egret.sys.GraphicsNode();
+            return _this;
+        }
+        /**
+         * @private
+         * 设置绑定到的目标显示对象
+         */
+        Graphics.prototype.$setTarget = function (target) {
+            if (this.$targetDisplay) {
+                this.$targetDisplay.$renderNode = null;
+            }
+            target.$renderNode = this.$renderNode;
+            this.$targetDisplay = target;
+            this.$targetIsSprite = target instanceof egret.Sprite;
+        };
+        /**
+         * 对1像素和3像素特殊处理，向右下角偏移0.5像素，以显示清晰锐利的线条。
+         */
+        Graphics.prototype.setStrokeWidth = function (width) {
+            switch (width) {
+                case 1:
+                    this.topLeftStrokeWidth = 0;
+                    this.bottomRightStrokeWidth = 1;
+                    break;
+                case 3:
+                    this.topLeftStrokeWidth = 1;
+                    this.bottomRightStrokeWidth = 2;
+                    break;
+                default:
+                    var half = Math.ceil(width * 0.5) | 0;
+                    this.topLeftStrokeWidth = half;
+                    this.bottomRightStrokeWidth = half;
+                    break;
+            }
+        };
+        /**
+         * Specify a simple single color fill that will be used for subsequent calls to other Graphics methods (for example, lineTo() and drawCircle()) when drawing.
+         * Calling the clear() method will clear the fill.
+         * @param color Filled color
+         * @param alpha Filled Alpha value
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 指定一种简单的单一颜色填充，在绘制时该填充将在随后对其他 Graphics 方法（如 lineTo() 或 drawCircle()）的调用中使用。
+         * 调用 clear() 方法会清除填充。
+         * @param color 填充的颜色
+         * @param alpha 填充的 Alpha 值
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        Graphics.prototype.beginFill = function (color, alpha) {
+            if (alpha === void 0) { alpha = 1; }
+            color = +color || 0;
+            alpha = +alpha || 0;
+            this.fillPath = this.$renderNode.beginFill(color, alpha, this.strokePath);
+            if (this.$renderNode.drawData.length > 1) {
+                this.fillPath.moveTo(this.lastX, this.lastY);
+            }
+        };
+        /**
+         * Specifies a gradient fill used by subsequent calls to other Graphics methods (such as lineTo() or drawCircle()) for the object.
+         * Calling the clear() method clears the fill.
+         * @param type A value from the GradientType class that specifies which gradient type to use: GradientType.LINEAR or GradientType.RADIAL.
+         * @param colors An array of RGB hexadecimal color values used in the gradient; for example, red is 0xFF0000, blue is 0x0000FF, and so on. You can specify up to 15 colors. For each color, specify a corresponding value in the alphas and ratios parameters.
+         * @param alphas An array of alpha values for the corresponding colors in the colors array;
+         * @param ratios An array of color distribution ratios; valid values are 0-255.
+         * @param matrix A transformation matrix as defined by the egret.Matrix class. The egret.Matrix class includes a createGradientBox() method, which lets you conveniently set up the matrix for use with the beginGradientFill() method.
+         * @platform Web,Native
+         * @version Egret 2.4
+         * @language en_US
+         */
+        /**
+         * 指定一种渐变填充，用于随后调用对象的其他 Graphics 方法（如 lineTo() 或 drawCircle()）。
+         * 调用 clear() 方法会清除填充。
+         * @param type 用于指定要使用哪种渐变类型的 GradientType 类的值：GradientType.LINEAR 或 GradientType.RADIAL。
+         * @param colors 渐变中使用的 RGB 十六进制颜色值的数组（例如，红色为 0xFF0000，蓝色为 0x0000FF，等等）。对于每种颜色，请在 alphas 和 ratios 参数中指定对应值。
+         * @param alphas colors 数组中对应颜色的 alpha 值数组。
+         * @param ratios 颜色分布比率的数组。有效值为 0 到 255。
+         * @param matrix 一个由 egret.Matrix 类定义的转换矩阵。egret.Matrix 类包括 createGradientBox() 方法，通过该方法可以方便地设置矩阵，以便与 beginGradientFill() 方法一起使用
+         * @platform Web,Native
+         * @version Egret 2.4
+         * @language zh_CN
+         */
+        Graphics.prototype.beginGradientFill = function (type, colors, alphas, ratios, matrix) {
+            if (matrix === void 0) { matrix = null; }
+            this.fillPath = this.$renderNode.beginGradientFill(type, colors, alphas, ratios, matrix, this.strokePath);
+            if (this.$renderNode.drawData.length > 1) {
+                this.fillPath.moveTo(this.lastX, this.lastY);
+            }
+        };
+        /**
+         * Apply fill to the lines and curves added after the previous calling to the beginFill() method.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 对从上一次调用 beginFill()方法之后添加的直线和曲线应用填充。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        Graphics.prototype.endFill = function () {
+            this.fillPath = null;
+        };
+        /**
+         * Specify a line style that will be used for subsequent calls to Graphics methods such as lineTo() and drawCircle().
+         * @param thickness An integer, indicating the thickness of the line in points. Valid values are 0 to 255. If a number is not specified, or if the parameter is undefined, a line is not drawn. If a value less than 0 is passed, the default value is 0. Value 0 indicates hairline thickness; the maximum thickness is 255. If a value greater than 255 is passed, the default value is 255.
+         * @param color A hexadecimal color value of the line (for example, red is 0xFF0000, and blue is 0x0000FF, etc.). If no value is specified, the default value is 0x000000 (black). Optional.
+         * @param alpha Indicates Alpha value of the line's color. Valid values are 0 to 1. If no value is specified, the default value is 1 (solid). If the value is less than 0, the default value is 0. If the value is greater than 1, the default value is 1.
+         * @param pixelHinting A boolean value that specifies whether to hint strokes to full pixels. This affects both the position of anchors of a curve and the line stroke size itself. With pixelHinting set to true, the line width is adjusted to full pixel width. With pixelHinting set to false, disjoints can appear for curves and straight lines.
+         * @param scaleMode Specifies the scale mode to be used
+         * @param caps Specifies the value of the CapsStyle class of the endpoint type at the end of the line. (default = CapsStyle.ROUND)
+         * @param joints Specifies the type of joint appearance of corner.  (default = JointStyle.ROUND)
+         * @param miterLimit Indicates the limit number of cut miter.
+         * @param lineDash set the line dash.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 指定一种线条样式以用于随后对 lineTo() 或 drawCircle() 等 Graphics 方法的调用。
+         * @param thickness 一个整数，以点为单位表示线条的粗细，有效值为 0 到 255。如果未指定数字，或者未定义该参数，则不绘制线条。如果传递的值小于 0，则默认值为 0。值 0 表示极细的粗细；最大粗细为 255。如果传递的值大于 255，则默认值为 255。
+         * @param color 线条的十六进制颜色值（例如，红色为 0xFF0000，蓝色为 0x0000FF 等）。如果未指明值，则默认值为 0x000000（黑色）。可选。
+         * @param alpha 表示线条颜色的 Alpha 值的数字；有效值为 0 到 1。如果未指明值，则默认值为 1（纯色）。如果值小于 0，则默认值为 0。如果值大于 1，则默认值为 1。
+         * @param pixelHinting 布尔型值，指定是否提示笔触采用完整像素。它同时影响曲线锚点的位置以及线条笔触大小本身。在 pixelHinting 设置为 true 的情况下，线条宽度会调整到完整像素宽度。在 pixelHinting 设置为 false 的情况下，对于曲线和直线可能会出现脱节。
+         * @param scaleMode 用于指定要使用的比例模式
+         * @param caps 用于指定线条末端处端点类型的 CapsStyle 类的值。默认值：CapsStyle.ROUND
+         * @param joints 指定用于拐角的连接外观的类型。默认值：JointStyle.ROUND
+         * @param miterLimit 用于表示剪切斜接的极限值的数字。
+         * @param lineDash 设置虚线样式。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        Graphics.prototype.lineStyle = function (thickness, color, alpha, pixelHinting, scaleMode, caps, joints, miterLimit, lineDash) {
+            if (thickness === void 0) { thickness = NaN; }
+            if (color === void 0) { color = 0; }
+            if (alpha === void 0) { alpha = 1.0; }
+            if (pixelHinting === void 0) { pixelHinting = false; }
+            if (scaleMode === void 0) { scaleMode = "normal"; }
+            if (caps === void 0) { caps = null; }
+            if (joints === void 0) { joints = null; }
+            if (miterLimit === void 0) { miterLimit = 3; }
+            thickness = +thickness || 0;
+            if (thickness <= 0) {
+                this.strokePath = null;
+                this.setStrokeWidth(0);
+            }
+            else {
+                color = +color || 0;
+                alpha = +alpha || 0;
+                miterLimit = +miterLimit || 0;
+                this.setStrokeWidth(thickness);
+                this.strokePath = this.$renderNode.lineStyle(thickness, color, alpha, caps, joints, miterLimit);
+                if (lineDash) {
+                    this.strokePath.setLineDash(lineDash);
+                }
+                if (this.$renderNode.drawData.length > 1) {
+                    this.strokePath.moveTo(this.lastX, this.lastY);
+                }
+            }
+        };
+        /**
+         * Draw a rectangle
+         * @param x x position of the center, relative to the registration point of the parent display object (in pixels).
+         * @param y y position of the center, relative to the registration point of the parent display object (in pixels).
+         * @param width Width of the rectangle (in pixels).
+         * @param height Height of the rectangle (in pixels).
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 绘制一个矩形
+         * @param x 圆心相对于父显示对象注册点的 x 位置（以像素为单位）。
+         * @param y 相对于父显示对象注册点的圆心的 y 位置（以像素为单位）。
+         * @param width 矩形的宽度（以像素为单位）。
+         * @param height 矩形的高度（以像素为单位）。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        Graphics.prototype.drawRect = function (x, y, width, height) {
+            x = +x || 0;
+            y = +y || 0;
+            width = +width || 0;
+            height = +height || 0;
+            var fillPath = this.fillPath;
+            var strokePath = this.strokePath;
+            fillPath && fillPath.drawRect(x, y, width, height);
+            strokePath && strokePath.drawRect(x, y, width, height);
+            this.extendBoundsByPoint(x + width, y + height);
+            this.updatePosition(x, y);
+            this.dirty();
+        };
+        /**
+         * Draw a rectangle with rounded corners.
+         * @param x x position of the center, relative to the registration point of the parent display object (in pixels).
+         * @param y y position of the center, relative to the registration point of the parent display object (in pixels).
+         * @param width Width of the rectangle (in pixels).
+         * @param height Height of the rectangle (in pixels).
+         * @param ellipseWidth Width used to draw an ellipse with rounded corners (in pixels).
+         * @param ellipseHeight Height used to draw an ellipse with rounded corners (in pixels). (Optional) If no value is specified, the default value matches the value of the ellipseWidth parameter.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 绘制一个圆角矩形。
+         * @param x 圆心相对于父显示对象注册点的 x 位置（以像素为单位）。
+         * @param y 相对于父显示对象注册点的圆心的 y 位置（以像素为单位）。
+         * @param width 矩形的宽度（以像素为单位）。
+         * @param height 矩形的高度（以像素为单位）。
+         * @param ellipseWidth 用于绘制圆角的椭圆的宽度（以像素为单位）。
+         * @param ellipseHeight 用于绘制圆角的椭圆的高度（以像素为单位）。 （可选）如果未指定值，则默认值与为 ellipseWidth 参数提供的值相匹配。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        Graphics.prototype.drawRoundRect = function (x, y, width, height, ellipseWidth, ellipseHeight) {
+            x = +x || 0;
+            y = +y || 0;
+            width = +width || 0;
+            height = +height || 0;
+            ellipseWidth = +ellipseWidth || 0;
+            ellipseHeight = +ellipseHeight || 0;
+            var fillPath = this.fillPath;
+            var strokePath = this.strokePath;
+            fillPath && fillPath.drawRoundRect(x, y, width, height, ellipseWidth, ellipseHeight);
+            strokePath && strokePath.drawRoundRect(x, y, width, height, ellipseWidth, ellipseHeight);
+            var radiusX = (ellipseWidth * 0.5) | 0;
+            var radiusY = ellipseHeight ? (ellipseHeight * 0.5) | 0 : radiusX;
+            var right = x + width;
+            var bottom = y + height;
+            var ybw = bottom - radiusY;
+            this.extendBoundsByPoint(x, y);
+            this.extendBoundsByPoint(right, bottom);
+            this.updatePosition(right, ybw);
+            this.dirty();
+        };
+        /**
+         * Draw a circle.
+         * @param x x position of the center, relative to the registration point of the parent display object (in pixels).
+         * @param y y position of the center, relative to the registration point of the parent display object (in pixels).
+         * @param r Radius of the circle (in pixels).
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 绘制一个圆。
+         * @param x 圆心相对于父显示对象注册点的 x 位置（以像素为单位）。
+         * @param y 相对于父显示对象注册点的圆心的 y 位置（以像素为单位）。
+         * @param radius 圆的半径（以像素为单位）。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        Graphics.prototype.drawCircle = function (x, y, radius) {
+            x = +x || 0;
+            y = +y || 0;
+            radius = +radius || 0;
+            var fillPath = this.fillPath;
+            var strokePath = this.strokePath;
+            fillPath && fillPath.drawCircle(x, y, radius);
+            strokePath && strokePath.drawCircle(x, y, radius);
+            //-1 +2 解决WebGL裁切问题
+            this.extendBoundsByPoint(x - radius - 1, y - radius - 1);
+            this.extendBoundsByPoint(x + radius + 2, y + radius + 2);
+            this.updatePosition(x + radius, y);
+            this.dirty();
+        };
+        /**
+         * Draw an ellipse.
+         * @param x A number indicating the horizontal position, relative to the registration point of the parent display object (in pixels).
+         * @param y A number indicating the vertical position, relative to the registration point of the parent display object (in pixels).
+         * @param width Width of the rectangle (in pixels).
+         * @param height Height of the rectangle (in pixels).
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 绘制一个椭圆。
+         * @param x 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
+         * @param y 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
+         * @param width 矩形的宽度（以像素为单位）。
+         * @param height 矩形的高度（以像素为单位）。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        Graphics.prototype.drawEllipse = function (x, y, width, height) {
+            x = +x || 0;
+            y = +y || 0;
+            width = +width || 0;
+            height = +height || 0;
+            var fillPath = this.fillPath;
+            var strokePath = this.strokePath;
+            fillPath && fillPath.drawEllipse(x, y, width, height);
+            strokePath && strokePath.drawEllipse(x, y, width, height);
+            //-1 +2 解决WebGL裁切问题
+            this.extendBoundsByPoint(x - 1, y - 1);
+            this.extendBoundsByPoint(x + width + 2, y + height + 2);
+            this.updatePosition(x + width, y + height * 0.5);
+            this.dirty();
+        };
+        /**
+         * Move the current drawing position to (x, y). If any of these parameters is missed, calling this method will fail and the current drawing position keeps unchanged.
+         * @param x A number indicating the horizontal position, relative to the registration point of the parent display object (in pixels).
+         * @param y A number indicating the vertical position, relative to the registration point of the parent display object (in pixels).
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 将当前绘图位置移动到 (x, y)。如果缺少任何一个参数，则此方法将失败，并且当前绘图位置不改变。
+         * @param x 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
+         * @param y 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        Graphics.prototype.moveTo = function (x, y) {
+            x = +x || 0;
+            y = +y || 0;
+            var fillPath = this.fillPath;
+            var strokePath = this.strokePath;
+            fillPath && fillPath.moveTo(x, y);
+            strokePath && strokePath.moveTo(x, y);
+            this.includeLastPosition = false;
+            this.lastX = x;
+            this.lastY = y;
+            this.dirty();
+        };
+        /**
+         * Draw a straight line from the current drawing position to (x, y) using the current line style; the current drawing position is then set to (x, y).
+         * @param x A number indicating the horizontal position, relative to the registration point of the parent display object (in pixels).
+         * @param y A number indicating the vertical position, relative to the registration point of the parent display object (in pixels).
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 使用当前线条样式绘制一条从当前绘图位置开始到 (x, y) 结束的直线；当前绘图位置随后会设置为 (x, y)。
+         * @param x 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
+         * @param y 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        Graphics.prototype.lineTo = function (x, y) {
+            x = +x || 0;
+            y = +y || 0;
+            var fillPath = this.fillPath;
+            var strokePath = this.strokePath;
+            fillPath && fillPath.lineTo(x, y);
+            strokePath && strokePath.lineTo(x, y);
+            this.updatePosition(x, y);
+            this.dirty();
+        };
+        /**
+         * Draw a quadratic Bezier curve from the current drawing position to (anchorX, anchorY) using the current line style according to the control points specified by (controlX, controlY). The current drawing position is then set to (anchorX, anchorY).
+         * If the curveTo() method is called before the moveTo() method, the default value of the current drawing position is (0, 0). If any of these parameters is missed, calling this method will fail and the current drawing position keeps unchanged.
+         * The drawn curve is a quadratic Bezier curve. A quadratic Bezier curve contains two anchor points and one control point. The curve interpolates the two anchor points and bends to the control point.
+         * @param controlX A number indicating the horizontal position of the control point, relative to the registration point of the parent display object.
+         * @param controlY A number indicating the vertical position of the control point, relative to the registration point of the parent display object.
+         * @param anchorX A number indicating the horizontal position of the next anchor point, relative to the registration point of the parent display object.
+         * @param anchorY A number indicating the vertical position of the next anchor point, relative to the registration point of the parent display object.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 使用当前线条样式和由 (controlX, controlY) 指定的控制点绘制一条从当前绘图位置开始到 (anchorX, anchorY) 结束的二次贝塞尔曲线。当前绘图位置随后设置为 (anchorX, anchorY)。
+         * 如果在调用 moveTo() 方法之前调用了 curveTo() 方法，则当前绘图位置的默认值为 (0, 0)。如果缺少任何一个参数，则此方法将失败，并且当前绘图位置不改变。
+         * 绘制的曲线是二次贝塞尔曲线。二次贝塞尔曲线包含两个锚点和一个控制点。该曲线内插这两个锚点，并向控制点弯曲。
+         * @param controlX 一个数字，指定控制点相对于父显示对象注册点的水平位置。
+         * @param controlY 一个数字，指定控制点相对于父显示对象注册点的垂直位置。
+         * @param anchorX 一个数字，指定下一个锚点相对于父显示对象注册点的水平位置。
+         * @param anchorY 一个数字，指定下一个锚点相对于父显示对象注册点的垂直位置。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        Graphics.prototype.curveTo = function (controlX, controlY, anchorX, anchorY) {
+            controlX = +controlX || 0;
+            controlY = +controlY || 0;
+            anchorX = +anchorX || 0;
+            anchorY = +anchorY || 0;
+            var fillPath = this.fillPath;
+            var strokePath = this.strokePath;
+            fillPath && fillPath.curveTo(controlX, controlY, anchorX, anchorY);
+            strokePath && strokePath.curveTo(controlX, controlY, anchorX, anchorY);
+            this.extendBoundsByPoint(controlX, controlY);
+            this.extendBoundsByPoint(anchorX, anchorY);
+            this.updatePosition(anchorX, anchorY);
+            this.dirty();
+        };
+        /**
+         * Draws a cubic Bezier curve from the current drawing position to the specified anchor. Cubic Bezier curves consist of two anchor points and two control points. The curve interpolates the two anchor points and two control points to the curve.
+         * @param controlX1 Specifies the first control point relative to the registration point of the parent display the horizontal position of the object.
+         * @param controlY1 Specifies the first control point relative to the registration point of the parent display the vertical position of the object.
+         * @param controlX2 Specify the second control point relative to the registration point of the parent display the horizontal position of the object.
+         * @param controlY2 Specify the second control point relative to the registration point of the parent display the vertical position of the object.
+         * @param anchorX Specifies the anchor point relative to the registration point of the parent display the horizontal position of the object.
+         * @param anchorY Specifies the anchor point relative to the registration point of the parent display the vertical position of the object.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 从当前绘图位置到指定的锚点绘制一条三次贝塞尔曲线。三次贝塞尔曲线由两个锚点和两个控制点组成。该曲线内插这两个锚点，并向两个控制点弯曲。
+         * @param controlX1 指定首个控制点相对于父显示对象的注册点的水平位置。
+         * @param controlY1 指定首个控制点相对于父显示对象的注册点的垂直位置。
+         * @param controlX2 指定第二个控制点相对于父显示对象的注册点的水平位置。
+         * @param controlY2 指定第二个控制点相对于父显示对象的注册点的垂直位置。
+         * @param anchorX 指定锚点相对于父显示对象的注册点的水平位置。
+         * @param anchorY 指定锚点相对于父显示对象的注册点的垂直位置。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        Graphics.prototype.cubicCurveTo = function (controlX1, controlY1, controlX2, controlY2, anchorX, anchorY) {
+            controlX1 = +controlX1 || 0;
+            controlY1 = +controlY1 || 0;
+            controlX2 = +controlX2 || 0;
+            controlY2 = +controlY2 || 0;
+            anchorX = +anchorX || 0;
+            anchorY = +anchorY || 0;
+            var fillPath = this.fillPath;
+            var strokePath = this.strokePath;
+            fillPath && fillPath.cubicCurveTo(controlX1, controlY1, controlX2, controlY2, anchorX, anchorY);
+            strokePath && strokePath.cubicCurveTo(controlX1, controlY1, controlX2, controlY2, anchorX, anchorY);
+            this.extendBoundsByPoint(controlX1, controlY1);
+            this.extendBoundsByPoint(controlX2, controlY2);
+            this.extendBoundsByPoint(anchorX, anchorY);
+            this.updatePosition(anchorX, anchorY);
+            this.dirty();
+        };
+        /**
+         * adds an arc to the path which is centered at (x, y) position with radius r starting at startAngle and ending
+         * at endAngle going in the given direction by anticlockwise (defaulting to clockwise).
+         * @param x The x coordinate of the arc's center.
+         * @param y The y coordinate of the arc's center.
+         * @param radius The arc's radius.
+         * @param startAngle The angle at which the arc starts, measured clockwise from the positive x axis and expressed in radians.
+         * @param endAngle The angle at which the arc ends, measured clockwise from the positive x axis and expressed in radians.
+         * @param anticlockwise if true, causes the arc to be drawn counter-clockwise between the two angles. By default it is drawn clockwise.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 绘制一段圆弧路径。圆弧路径的圆心在 (x, y) 位置，半径为 r ，根据anticlockwise （默认为顺时针）指定的方向从 startAngle 开始绘制，到 endAngle 结束。
+         * @param x 圆弧中心（圆心）的 x 轴坐标。
+         * @param y 圆弧中心（圆心）的 y 轴坐标。
+         * @param radius 圆弧的半径。
+         * @param startAngle 圆弧的起始点， x轴方向开始计算，单位以弧度表示。
+         * @param endAngle 圆弧的终点， 单位以弧度表示。
+         * @param anticlockwise 如果为 true，逆时针绘制圆弧，反之，顺时针绘制。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        Graphics.prototype.drawArc = function (x, y, radius, startAngle, endAngle, anticlockwise) {
+            if (radius < 0 || startAngle === endAngle) {
+                return;
+            }
+            x = +x || 0;
+            y = +y || 0;
+            radius = +radius || 0;
+            startAngle = +startAngle || 0;
+            endAngle = +endAngle || 0;
+            anticlockwise = !!anticlockwise;
+            startAngle = clampAngle(startAngle);
+            endAngle = clampAngle(endAngle);
+            var fillPath = this.fillPath;
+            var strokePath = this.strokePath;
+            if (fillPath) {
+                fillPath.$lastX = this.lastX;
+                fillPath.$lastY = this.lastY;
+                fillPath.drawArc(x, y, radius, startAngle, endAngle, anticlockwise);
+            }
+            if (strokePath) {
+                strokePath.$lastX = this.lastX;
+                strokePath.$lastY = this.lastY;
+                strokePath.drawArc(x, y, radius, startAngle, endAngle, anticlockwise);
+            }
+            if (anticlockwise) {
+                this.arcBounds(x, y, radius, endAngle, startAngle);
+            }
+            else {
+                this.arcBounds(x, y, radius, startAngle, endAngle);
+            }
+            var endX = x + Math.cos(endAngle) * radius;
+            var endY = y + Math.sin(endAngle) * radius;
+            this.updatePosition(endX, endY);
+            this.dirty();
+        };
+        Graphics.prototype.dirty = function () {
+            var self = this;
+            self.$renderNode.dirtyRender = true;
+            if (egret.nativeRender) {
+                egret_native.dirtyGraphics(self);
+            }
+        };
+        /**
+         * @private
+         * 测量圆弧的矩形大小
+         */
+        Graphics.prototype.arcBounds = function (x, y, radius, startAngle, endAngle) {
+            var PI = Math.PI;
+            if (Math.abs(startAngle - endAngle) < 0.01) {
+                this.extendBoundsByPoint(x - radius, y - radius);
+                this.extendBoundsByPoint(x + radius, y + radius);
+                return;
+            }
+            if (startAngle > endAngle) {
+                endAngle += PI * 2;
+            }
+            var startX = Math.cos(startAngle) * radius;
+            var endX = Math.cos(endAngle) * radius;
+            var xMin = Math.min(startX, endX);
+            var xMax = Math.max(startX, endX);
+            var startY = Math.sin(startAngle) * radius;
+            var endY = Math.sin(endAngle) * radius;
+            var yMin = Math.min(startY, endY);
+            var yMax = Math.max(startY, endY);
+            var startRange = startAngle / (PI * 0.5);
+            var endRange = endAngle / (PI * 0.5);
+            for (var i = Math.ceil(startRange); i <= endRange; i++) {
+                switch (i % 4) {
+                    case 0:
+                        xMax = radius;
+                        break;
+                    case 1:
+                        yMax = radius;
+                        break;
+                    case 2:
+                        xMin = -radius;
+                        break;
+                    case 3:
+                        yMin = -radius;
+                        break;
+                }
+            }
+            xMin = Math.floor(xMin);
+            yMin = Math.floor(yMin);
+            xMax = Math.ceil(xMax);
+            yMax = Math.ceil(yMax);
+            this.extendBoundsByPoint(xMin + x, yMin + y);
+            this.extendBoundsByPoint(xMax + x, yMax + y);
+        };
+        /**
+         * Clear graphics that are drawn to this Graphics object, and reset fill and line style settings.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 清除绘制到此 Graphics 对象的图形，并重置填充和线条样式设置。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        Graphics.prototype.clear = function () {
+            this.$renderNode.clear();
+            this.updatePosition(0, 0);
+            this.minX = Infinity;
+            this.minY = Infinity;
+            this.maxX = -Infinity;
+            this.maxY = -Infinity;
+            this.dirty();
+        };
+        /**
+         * @private
+         */
+        Graphics.prototype.extendBoundsByPoint = function (x, y) {
+            this.extendBoundsByX(x);
+            this.extendBoundsByY(y);
+        };
+        /**
+         * @private
+         */
+        Graphics.prototype.extendBoundsByX = function (x) {
+            this.minX = Math.min(this.minX, x - this.topLeftStrokeWidth);
+            this.maxX = Math.max(this.maxX, x + this.bottomRightStrokeWidth);
+            this.updateNodeBounds();
+        };
+        /**
+         * @private
+         */
+        Graphics.prototype.extendBoundsByY = function (y) {
+            this.minY = Math.min(this.minY, y - this.topLeftStrokeWidth);
+            this.maxY = Math.max(this.maxY, y + this.bottomRightStrokeWidth);
+            this.updateNodeBounds();
+        };
+        /**
+         * @private
+         */
+        Graphics.prototype.updateNodeBounds = function () {
+            var node = this.$renderNode;
+            node.x = this.minX;
+            node.y = this.minY;
+            node.width = Math.ceil(this.maxX - this.minX);
+            node.height = Math.ceil(this.maxY - this.minY);
+        };
+        /**
+         * 更新当前的lineX和lineY值，并标记尺寸失效。
+         * @private
+         */
+        Graphics.prototype.updatePosition = function (x, y) {
+            if (!this.includeLastPosition) {
+                this.extendBoundsByPoint(this.lastX, this.lastY);
+                this.includeLastPosition = true;
+            }
+            this.lastX = x;
+            this.lastY = y;
+            this.extendBoundsByPoint(x, y);
+        };
+        /**
+         * @private
+         */
+        Graphics.prototype.$measureContentBounds = function (bounds) {
+            if (this.minX === Infinity) {
+                bounds.setEmpty();
+            }
+            else {
+                bounds.setTo(this.minX, this.minY, this.maxX - this.minX, this.maxY - this.minY);
+            }
+        };
+        /**
+         * @private
+         *
+         */
+        Graphics.prototype.$hitTest = function (stageX, stageY) {
+            var target = this.$targetDisplay;
+            var m = target.$getInvertedConcatenatedMatrix();
+            var localX = m.a * stageX + m.c * stageY + m.tx;
+            var localY = m.b * stageX + m.d * stageY + m.ty;
+            var buffer = egret.sys.canvasHitTestBuffer;
+            buffer.resize(3, 3);
+            var node = this.$renderNode;
+            var matrix = egret.Matrix.create();
+            matrix.identity();
+            matrix.translate(1 - localX, 1 - localY);
+            egret.sys.canvasRenderer.drawNodeToBuffer(node, buffer, matrix, true);
+            egret.Matrix.release(matrix);
+            try {
+                var data = buffer.getPixels(1, 1);
+                if (data[3] === 0) {
+                    return null;
+                }
+            }
+            catch (e) {
+                throw new Error(egret.sys.tr(1039));
+            }
+            return target;
+        };
+        /**
+         * @private
+         */
+        Graphics.prototype.$onRemoveFromStage = function () {
+            if (this.$renderNode) {
+                this.$renderNode.clean();
+            }
+            if (egret.nativeRender) {
+                egret_native.NativeDisplayObject.disposeGraphicData(this);
+            }
+        };
+        return Graphics;
+    }(egret.HashObject));
+    egret.Graphics = Graphics;
+    __reflect(Graphics.prototype, "egret.Graphics");
+})(egret || (egret = {}));
 var egret;
 (function (egret) {
     /**
@@ -18741,58 +19228,6 @@ var egret;
         return implMap[interfaceName];
     }
     egret.getImplementation = getImplementation;
-})(egret || (egret = {}));
-var egret;
-(function (egret) {
-    /**
-     * The GradientType class provides values for the type parameter in the beginGradientFill() methods of the egret.Graphics class.
-     *
-     * @see egret.Graphics#beginGradientFill()
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language en_US
-     */
-    /**
-     * GradientType 类为 egret.Graphics 类的 beginGradientFill() 方法中的 type 参数提供值。
-     *
-     * @see egret.Graphics#beginGradientFill()
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language zh_CN
-     */
-    var GradientType = (function () {
-        function GradientType() {
-        }
-        /**
-         * Value used to specify a linear gradient fill.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 用于指定线性渐变填充的值
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        GradientType.LINEAR = "linear";
-        /**
-         * Value used to specify a radial gradient fill.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 用于指定放射状渐变填充的值
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        GradientType.RADIAL = "radial";
-        return GradientType;
-    }());
-    egret.GradientType = GradientType;
-    __reflect(GradientType.prototype, "egret.GradientType");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -18880,12 +19315,69 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    /**
+     * The OrientationEvent provides information from the physical orientation of the device.
+     * Note: Currently, Browsers on the iOS and Android does not handle the coordinates the same way.
+     * Take care about this while using them.
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/sensor/DeviceOrientation.ts
+     * @language en_US
+     */
+    /**
+     * OrientationEvent 提供设备的方向信息
+     * 注意: 目前各个浏览器和操作系统处理方向的方式不完全相同，请根据使用场景做相应的校正，
+     * 比如使用两次方向数据的变化而不是直接使用方向的值
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/sensor/DeviceOrientation.ts
+     * @language zh_CN
+     */
+    var OrientationEvent = (function (_super) {
+        __extends(OrientationEvent, _super);
+        function OrientationEvent() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        return OrientationEvent;
+    }(egret.Event));
+    egret.OrientationEvent = OrientationEvent;
+    __reflect(OrientationEvent.prototype, "egret.OrientationEvent");
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 var egret_native;
 (function (egret_native) {
     var displayObjectId = 0;
     var bitmapDataMap;
     var bitmapDataId = 1;
-    var filterMap;
     var filterId = 1;
     var customFilterDataMap = {};
     var customFilterUniformMap = {};
@@ -18919,7 +19411,6 @@ var egret_native;
             displayCmdBuffer[0] = 0;
             displayCmdBuffer[1] = 2;
             bitmapDataMap = map1;
-            filterMap = map2;
             customFilterDataMap = map3;
         };
         NativeDisplayObject.update = function () {
@@ -19080,7 +19571,6 @@ var egret_native;
         NativeDisplayObject.createFilter = function (filter) {
             filter.$id = filterId;
             filter.$obj = new Module.WasmNode(filterId, 6 /* FILTER */);
-            filterMap[filterId] = filter;
             filterId++;
             displayCmdBuffer[displayCmdBufferIndex++] = 0 /* CREATE_OBJECT */;
             displayCmdBuffer[displayCmdBufferIndex++] = filter.$id;
@@ -19380,8 +19870,8 @@ var egret_native;
             }
             displayCmdBufferSize += 3;
         };
-        NativeDisplayObject.setDataToFilter = function (id) {
-            var currFilter = filterMap[id];
+        NativeDisplayObject.setDataToFilter = function (currFilter) {
+            var id = currFilter.$id;
             var customArr = [];
             var filterType;
             if (!customFilterUniformMap[currFilter.$id]) {
@@ -19503,14 +19993,6 @@ var egret_native;
             displayCmdBuffer[displayCmdBufferIndex++] = 142 /* DISPOSE_FILTER */;
             displayCmdBuffer[displayCmdBufferIndex++] = filter.$id;
             displayCmdBufferSize++;
-            delete filterMap[filter.$id];
-            var blurFilter = filter;
-            if (blurFilter.blurXFilter) {
-                delete filterMap[blurFilter.blurXFilter.$id];
-            }
-            if (blurFilter.blurYFilter) {
-                delete filterMap[blurFilter.blurYFilter.$id];
-            }
         };
         return NativeDisplayObject;
     }());
@@ -21171,32 +21653,139 @@ var egret;
 var egret;
 (function (egret) {
     /**
-     * The OrientationEvent provides information from the physical orientation of the device.
-     * Note: Currently, Browsers on the iOS and Android does not handle the coordinates the same way.
-     * Take care about this while using them.
+     * When a load operation has begun or a socket has received data, ProgressEvent object is dispatched.
+     * There are two types of progress events: ProgressEvent.PROGRESS and ProgressEvent.SOCKET_DATA.
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/sensor/DeviceOrientation.ts
      * @language en_US
      */
     /**
-     * OrientationEvent 提供设备的方向信息
-     * 注意: 目前各个浏览器和操作系统处理方向的方式不完全相同，请根据使用场景做相应的校正，
-     * 比如使用两次方向数据的变化而不是直接使用方向的值
+     * 当加载操作已开始或套接字已接收到数据时，将调度 ProgressEvent 对象。
+     * 有两种类型的进程事件：ProgressEvent.PROGRESS 和 ProgressEvent.SOCKET_DATA。
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/sensor/DeviceOrientation.ts
      * @language zh_CN
      */
-    var OrientationEvent = (function (_super) {
-        __extends(OrientationEvent, _super);
-        function OrientationEvent() {
-            return _super !== null && _super.apply(this, arguments) || this;
+    var ProgressEvent = (function (_super) {
+        __extends(ProgressEvent, _super);
+        /**
+         * 创建一个 egret.ProgressEvent 对象
+         * @param type  The type of the event, accessible as Event.type.
+         * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
+         * @param cancelable Determines whether the Event object can be canceled. The default values is false.
+         * @param bytesLoaded {number} Number of items or bytes loaded
+         * @param bytesTotal {number} The total number of items or bytes loaded
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 创建一个 egret.ProgressEvent 对象
+         * @param type  事件的类型，可以作为 Event.type 访问。
+         * @param bubbles  确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
+         * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
+         * @param bytesLoaded {number} 加载的项数或字节数
+         * @param bytesTotal {number} 加载的总项数或总字节数
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        function ProgressEvent(type, bubbles, cancelable, bytesLoaded, bytesTotal) {
+            if (bubbles === void 0) { bubbles = false; }
+            if (cancelable === void 0) { cancelable = false; }
+            if (bytesLoaded === void 0) { bytesLoaded = 0; }
+            if (bytesTotal === void 0) { bytesTotal = 0; }
+            var _this = _super.call(this, type, bubbles, cancelable) || this;
+            /**
+             * Number of items or bytes when the listener processes the event。
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language en_US
+             */
+            /**
+             * 在侦听器处理事件时加载的项数或字节数。
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language zh_CN
+             */
+            _this.bytesLoaded = 0;
+            /**
+             * If the loading process succeeds, the total number or the total number of bytes that will be loaded term.
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language en_US
+             */
+            /**
+             * 如果加载过程成功，将加载的总项数或总字节数。
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language zh_CN
+             */
+            _this.bytesTotal = 0;
+            _this.bytesLoaded = bytesLoaded;
+            _this.bytesTotal = bytesTotal;
+            return _this;
         }
-        return OrientationEvent;
+        /**
+         * EventDispatcher object using the specified event object thrown Event. The objects will be thrown in the object cache pool for the next round robin.
+         * @param target {egret.IEventDispatcher} Distribute event target
+         * @param type  The type of the event, accessible as Event.type.
+         * @param bytesLoaded {number} Number of items or bytes loaded
+         * @param bytesTotal {number} The total number of items or bytes loaded
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * @param target {egret.IEventDispatcher} 派发事件目标
+         * @param type {string} 事件类型
+         * @param bytesLoaded {number} 加载的项数或字节数
+         * @param bytesTotal {number} 加载的总项数或总字节数
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        ProgressEvent.dispatchProgressEvent = function (target, type, bytesLoaded, bytesTotal) {
+            if (bytesLoaded === void 0) { bytesLoaded = 0; }
+            if (bytesTotal === void 0) { bytesTotal = 0; }
+            var event = egret.Event.create(ProgressEvent, type);
+            event.bytesLoaded = bytesLoaded;
+            event.bytesTotal = bytesTotal;
+            var result = target.dispatchEvent(event);
+            egret.Event.release(event);
+            return result;
+        };
+        /**
+         * Changes in the loading progress
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 加载进度发生变化
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        ProgressEvent.PROGRESS = "progress";
+        /**
+         * Get the data
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 获取到数据
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        ProgressEvent.SOCKET_DATA = "socketData";
+        return ProgressEvent;
     }(egret.Event));
-    egret.OrientationEvent = OrientationEvent;
-    __reflect(OrientationEvent.prototype, "egret.OrientationEvent");
+    egret.ProgressEvent = ProgressEvent;
+    __reflect(ProgressEvent.prototype, "egret.ProgressEvent");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -23531,139 +24120,83 @@ var egret;
 var egret;
 (function (egret) {
     /**
-     * When a load operation has begun or a socket has received data, ProgressEvent object is dispatched.
-     * There are two types of progress events: ProgressEvent.PROGRESS and ProgressEvent.SOCKET_DATA.
+     * When the direction of the stage of change, Stage object dispatches StageOrientationEvent object.
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/events/StageOrientationEvent.ts
      * @language en_US
      */
     /**
-     * 当加载操作已开始或套接字已接收到数据时，将调度 ProgressEvent 对象。
-     * 有两种类型的进程事件：ProgressEvent.PROGRESS 和 ProgressEvent.SOCKET_DATA。
+     * 当舞台的方向更改时，Stage 对象将调度 StageOrientationEvent 对象。
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/events/StageOrientationEvent.ts
      * @language zh_CN
      */
-    var ProgressEvent = (function (_super) {
-        __extends(ProgressEvent, _super);
+    var StageOrientationEvent = (function (_super) {
+        __extends(StageOrientationEvent, _super);
         /**
-         * 创建一个 egret.ProgressEvent 对象
-         * @param type  The type of the event, accessible as Event.type.
-         * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
-         * @param cancelable Determines whether the Event object can be canceled. The default values is false.
-         * @param bytesLoaded {number} Number of items or bytes loaded
-         * @param bytesTotal {number} The total number of items or bytes loaded
+         * Creating contains specific information related to the event and the stage direction of StageOrientationEvent object.
+         * @param type Event types:StageOrientationEvent.ORIENTATION_CHANGE
+         * @param bubbles It indicates whether the Event object participates in the bubbling stage of the event flow.
+         * @param cancelable It indicates whether the Event object can be canceled.
          * @version Egret 2.4
          * @platform Web,Native
          * @language en_US
          */
         /**
-         * 创建一个 egret.ProgressEvent 对象
-         * @param type  事件的类型，可以作为 Event.type 访问。
-         * @param bubbles  确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
-         * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
-         * @param bytesLoaded {number} 加载的项数或字节数
-         * @param bytesTotal {number} 加载的总项数或总字节数
+         * 创建包含与舞台方向事件相关的特定信息的 StageOrientationEvent 对象。
+         * @param type 事件的类型：StageOrientationEvent.ORIENTATION_CHANGE
+         * @param bubbles 表示 Event 对象是否参与事件流的冒泡阶段。
+         * @param cancelable 表示是否可以取消 Event 对象。
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
          */
-        function ProgressEvent(type, bubbles, cancelable, bytesLoaded, bytesTotal) {
+        function StageOrientationEvent(type, bubbles, cancelable) {
             if (bubbles === void 0) { bubbles = false; }
             if (cancelable === void 0) { cancelable = false; }
-            if (bytesLoaded === void 0) { bytesLoaded = 0; }
-            if (bytesTotal === void 0) { bytesTotal = 0; }
-            var _this = _super.call(this, type, bubbles, cancelable) || this;
-            /**
-             * Number of items or bytes when the listener processes the event。
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language en_US
-             */
-            /**
-             * 在侦听器处理事件时加载的项数或字节数。
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language zh_CN
-             */
-            _this.bytesLoaded = 0;
-            /**
-             * If the loading process succeeds, the total number or the total number of bytes that will be loaded term.
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language en_US
-             */
-            /**
-             * 如果加载过程成功，将加载的总项数或总字节数。
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language zh_CN
-             */
-            _this.bytesTotal = 0;
-            _this.bytesLoaded = bytesLoaded;
-            _this.bytesTotal = bytesTotal;
-            return _this;
+            return _super.call(this, type, bubbles, cancelable) || this;
         }
         /**
-         * EventDispatcher object using the specified event object thrown Event. The objects will be thrown in the object cache pool for the next round robin.
-         * @param target {egret.IEventDispatcher} Distribute event target
-         * @param type  The type of the event, accessible as Event.type.
-         * @param bytesLoaded {number} Number of items or bytes loaded
-         * @param bytesTotal {number} The total number of items or bytes loaded
+         * 派发一个屏幕旋转的事件。
+         * @param target {egret.IEventDispatcher} 派发事件目标
+         * @param type {egret.IEventDispatcher} 派发事件类型
          * @version Egret 2.4
          * @platform Web,Native
          * @language en_US
          */
         /**
-         * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @param target {egret.IEventDispatcher} 派发事件目标
-         * @param type {string} 事件类型
-         * @param bytesLoaded {number} 加载的项数或字节数
-         * @param bytesTotal {number} 加载的总项数或总字节数
+         * 派发一个屏幕旋转的事件。
+         * @param target {egret.IEventDispatcher} Distribute event target
+         * @param type {egret.IEventDispatcher} Distribute event type
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
          */
-        ProgressEvent.dispatchProgressEvent = function (target, type, bytesLoaded, bytesTotal) {
-            if (bytesLoaded === void 0) { bytesLoaded = 0; }
-            if (bytesTotal === void 0) { bytesTotal = 0; }
-            var event = egret.Event.create(ProgressEvent, type);
-            event.bytesLoaded = bytesLoaded;
-            event.bytesTotal = bytesTotal;
+        StageOrientationEvent.dispatchStageOrientationEvent = function (target, type) {
+            var event = egret.Event.create(StageOrientationEvent, type);
             var result = target.dispatchEvent(event);
             egret.Event.release(event);
             return result;
         };
         /**
-         * Changes in the loading progress
+         * After screen rotation distribute events.
          * @version Egret 2.4
          * @platform Web,Native
          * @language en_US
          */
         /**
-         * 加载进度发生变化
+         * 屏幕旋转后派发的事件。
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
          */
-        ProgressEvent.PROGRESS = "progress";
-        /**
-         * Get the data
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 获取到数据
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        ProgressEvent.SOCKET_DATA = "socketData";
-        return ProgressEvent;
+        StageOrientationEvent.ORIENTATION_CHANGE = "orientationChange";
+        return StageOrientationEvent;
     }(egret.Event));
-    egret.ProgressEvent = ProgressEvent;
-    __reflect(ProgressEvent.prototype, "egret.ProgressEvent");
+    egret.StageOrientationEvent = StageOrientationEvent;
+    __reflect(StageOrientationEvent.prototype, "egret.StageOrientationEvent");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -25847,115 +26380,6 @@ var egret;
 //////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
-    /**
-     * When the direction of the stage of change, Stage object dispatches StageOrientationEvent object.
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/events/StageOrientationEvent.ts
-     * @language en_US
-     */
-    /**
-     * 当舞台的方向更改时，Stage 对象将调度 StageOrientationEvent 对象。
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/events/StageOrientationEvent.ts
-     * @language zh_CN
-     */
-    var StageOrientationEvent = (function (_super) {
-        __extends(StageOrientationEvent, _super);
-        /**
-         * Creating contains specific information related to the event and the stage direction of StageOrientationEvent object.
-         * @param type Event types:StageOrientationEvent.ORIENTATION_CHANGE
-         * @param bubbles It indicates whether the Event object participates in the bubbling stage of the event flow.
-         * @param cancelable It indicates whether the Event object can be canceled.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 创建包含与舞台方向事件相关的特定信息的 StageOrientationEvent 对象。
-         * @param type 事件的类型：StageOrientationEvent.ORIENTATION_CHANGE
-         * @param bubbles 表示 Event 对象是否参与事件流的冒泡阶段。
-         * @param cancelable 表示是否可以取消 Event 对象。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        function StageOrientationEvent(type, bubbles, cancelable) {
-            if (bubbles === void 0) { bubbles = false; }
-            if (cancelable === void 0) { cancelable = false; }
-            return _super.call(this, type, bubbles, cancelable) || this;
-        }
-        /**
-         * 派发一个屏幕旋转的事件。
-         * @param target {egret.IEventDispatcher} 派发事件目标
-         * @param type {egret.IEventDispatcher} 派发事件类型
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 派发一个屏幕旋转的事件。
-         * @param target {egret.IEventDispatcher} Distribute event target
-         * @param type {egret.IEventDispatcher} Distribute event type
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        StageOrientationEvent.dispatchStageOrientationEvent = function (target, type) {
-            var event = egret.Event.create(StageOrientationEvent, type);
-            var result = target.dispatchEvent(event);
-            egret.Event.release(event);
-            return result;
-        };
-        /**
-         * After screen rotation distribute events.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 屏幕旋转后派发的事件。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        StageOrientationEvent.ORIENTATION_CHANGE = "orientationChange";
-        return StageOrientationEvent;
-    }(egret.Event));
-    egret.StageOrientationEvent = StageOrientationEvent;
-    __reflect(StageOrientationEvent.prototype, "egret.StageOrientationEvent");
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
     // export interface TextField{
     //     addEventListener<Z>(type: "link"
     //         , listener: (this: Z, e: TextEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number);
@@ -26259,773 +26683,422 @@ var egret;
 var egret;
 (function (egret) {
     /**
-     * @private
-     * 格式化弧线角度的值
-     */
-    function clampAngle(value) {
-        value %= Math.PI * 2;
-        if (value < 0) {
-            value += Math.PI * 2;
-        }
-        return value;
-    }
-    /**
-     * The Graphics class contains a set of methods for creating vector shape. Display objects that support drawing include Sprite and Shape objects. Each class in these classes includes the graphics attribute that is a Graphics object.
-     * The following auxiliary functions are provided for ease of use: drawRect(), drawRoundRect(), drawCircle(), and drawEllipse().
-     * @see http://edn.egret.com/cn/docs/page/136 Draw Rectangle
-     * @version Egret 2.4
+     * The JointStyle class is an enumeration of constant values that specify the joint style to use in drawing lines.
+     * These constants are provided for use as values in the joints parameter of the egret.Graphics.lineStyle() method.
+     * @see egret.Graphics#lineStyle()
+     * @version Egret 2.5
      * @platform Web,Native
-     * @includeExample egret/display/Graphics.ts
      * @language en_US
      */
     /**
-     * Graphics 类包含一组可用来创建矢量形状的方法。支持绘制的显示对象包括 Sprite 和 Shape 对象。这些类中的每一个类都包括 graphics 属性，该属性是一个 Graphics 对象。
-     * 以下是为便于使用而提供的一些辅助函数：drawRect()、drawRoundRect()、drawCircle() 和 drawEllipse()。
-     * @see http://edn.egret.com/cn/docs/page/136 绘制矩形
-     * @version Egret 2.4
+     * JointStyle 类是指定要在绘制线条中使用的联接点样式的常量值枚举。提供的这些常量用作 egret.Graphics.lineStyle() 方法的 joints 参数中的值。
+     * @see egret.Graphics#lineStyle()
+     * @version Egret 2.5
      * @platform Web,Native
-     * @includeExample egret/display/Graphics.ts
      * @language zh_CN
      */
-    var Graphics = (function (_super) {
-        __extends(Graphics, _super);
+    egret.JointStyle = {
         /**
-         * Initializes a Graphics object.
+         * Specifies beveled joints in the joints parameter of the egret.Graphics.lineStyle() method.
+         * @version Egret 2.5
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 在 egret.Graphics.lineStyle() 方法的 joints 参数中指定斜角连接。
+         * @version Egret 2.5
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        BEVEL: "bevel",
+        /**
+         * Specifies mitered joints in the joints parameter of the egret.Graphics.lineStyle() method.
+         * @version Egret 2.5
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 在 egret.Graphics.lineStyle() 方法的 joints 参数中指定尖角连接。
+         * @version Egret 2.5
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        MITER: "miter",
+        /**
+         * Specifies round joints in the joints parameter of the egret.Graphics.lineStyle() method.
+         * @version Egret 2.5
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 在 egret.Graphics.lineStyle() 方法的 joints 参数中指定圆角连接。
+         * @version Egret 2.5
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        ROUND: "round"
+    };
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+/// <reference path="../geom/Point.ts" />
+var egret;
+(function (egret) {
+    var localPoint = new egret.Point();
+    /**
+     * The TouchEvent class lets you handle events on devices that detect user contact with the device (such as a finger
+     * on a touch screen).When a user interacts with a device such as a mobile phone or tablet with a touch screen, the
+     * user typically touches the screen with his or her fingers or a pointing device. You can develop applications that
+     * respond to basic touch events (such as a single finger tap) with the TouchEvent class. Create event listeners using
+     * the event types defined in this class.
+     * Note: When objects are nested on the display list, touch events target the deepest possible nested object that is
+     * visible in the display list. This object is called the target node. To have a target node's ancestor (an object
+     * containing the target node in the display list) receive notification of a touch event, use EventDispatcher.addEventListener()
+     * on the ancestor node with the type parameter set to the specific touch event you want to detect.
+     *
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/events/TouchEvent.ts
+     * @language en_US
+     */
+    /**
+     * 使用 TouchEvent 类，您可以处理设备上那些检测用户与设备之间的接触的事件。
+     * 当用户与带有触摸屏的移动电话或平板电脑等设备交互时，用户通常使用手指或指针设备接触屏幕。可使用 TouchEvent
+     * 类开发响应基本触摸事件（如单个手指点击）的应用程序。使用此类中定义的事件类型创建事件侦听器。
+     * 注意：当对象嵌套在显示列表中时，触摸事件的目标将是显示列表中可见的最深的可能嵌套对象。
+     * 此对象称为目标节点。要使目标节点的祖代（祖代是一个包含显示列表中所有目标节点的对象，从舞台到目标节点的父节点均包括在内）
+     * 接收触摸事件的通知，请对祖代节点使用 EventDispatcher.on() 并将 type 参数设置为要检测的特定触摸事件。
+     *
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/events/TouchEvent.ts
+     * @language zh_CN
+     */
+    var TouchEvent = (function (_super) {
+        __extends(TouchEvent, _super);
+        /**
+         * Creates an Event object that contains information about touch events.
+         * @param type  The type of the event, accessible as Event.type.
+         * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
+         * @param cancelable Determines whether the Event object can be canceled. The default values is false.
+         * @param stageX The horizontal coordinate at which the event occurred in global Stage coordinates.
+         * @param stageY The vertical coordinate at which the event occurred in global Stage coordinates.
+         * @param touchPointID A unique identification number assigned to the touch point.
          * @version Egret 2.4
          * @platform Web,Native
          * @language en_US
          */
         /**
-         * 创建一个 Graphics 对象。
+         * 创建一个 TouchEvent 对象，其中包含有关Touch事件的信息
+         * @param type 事件的类型，可以作为 Event.type 访问。
+         * @param bubbles 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
+         * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
+         * @param stageX 事件发生点在全局舞台坐标系中的水平坐标
+         * @param stageY 事件发生点在全局舞台坐标系中的垂直坐标
+         * @param touchPointID 分配给触摸点的唯一标识号
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
          */
-        function Graphics() {
-            var _this = _super.call(this) || this;
+        function TouchEvent(type, bubbles, cancelable, stageX, stageY, touchPointID) {
+            var _this = _super.call(this, type, bubbles, cancelable) || this;
+            _this.targetChanged = true;
             /**
-             * 当前移动到的坐标X
+             * Whether the touch is pressed (true) or not pressed (false).
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language en_US
              */
-            _this.lastX = 0;
             /**
-             * 当前移动到的坐标Y
+             * 表示触摸已按下 (true) 还是未按下 (false)。
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language zh_CN
              */
-            _this.lastY = 0;
-            /**
-             * 当前正在绘制的填充
-             */
-            _this.fillPath = null;
-            /**
-             * 当前正在绘制的线条
-             */
-            _this.strokePath = null;
-            /**
-             * 线条的左上方宽度
-             */
-            _this.topLeftStrokeWidth = 0;
-            /**
-             * 线条的右下方宽度
-             */
-            _this.bottomRightStrokeWidth = 0;
-            /**
-             * @private
-             */
-            _this.minX = Infinity;
-            /**
-             * @private
-             */
-            _this.minY = Infinity;
-            /**
-             * @private
-             */
-            _this.maxX = -Infinity;
-            /**
-             * @private
-             */
-            _this.maxY = -Infinity;
-            /**
-             * 是否已经包含上一次moveTo的坐标点
-             */
-            _this.includeLastPosition = true;
-            _this.$renderNode = new egret.sys.GraphicsNode();
+            _this.touchDown = false;
+            _this.$initTo(stageX, stageY, touchPointID);
             return _this;
         }
         /**
          * @private
-         * 设置绑定到的目标显示对象
          */
-        Graphics.prototype.$setTarget = function (target) {
-            if (this.$targetDisplay) {
-                this.$targetDisplay.$renderNode = null;
-            }
-            target.$renderNode = this.$renderNode;
-            this.$targetDisplay = target;
-            this.$targetIsSprite = target instanceof egret.Sprite;
+        TouchEvent.prototype.$initTo = function (stageX, stageY, touchPointID) {
+            this.touchPointID = +touchPointID || 0;
+            this.$stageX = +stageX || 0;
+            this.$stageY = +stageY || 0;
         };
-        /**
-         * 对1像素和3像素特殊处理，向右下角偏移0.5像素，以显示清晰锐利的线条。
-         */
-        Graphics.prototype.setStrokeWidth = function (width) {
-            switch (width) {
-                case 1:
-                    this.topLeftStrokeWidth = 0;
-                    this.bottomRightStrokeWidth = 1;
-                    break;
-                case 3:
-                    this.topLeftStrokeWidth = 1;
-                    this.bottomRightStrokeWidth = 2;
-                    break;
-                default:
-                    var half = Math.ceil(width * 0.5) | 0;
-                    this.topLeftStrokeWidth = half;
-                    this.bottomRightStrokeWidth = half;
-                    break;
-            }
-        };
-        /**
-         * Specify a simple single color fill that will be used for subsequent calls to other Graphics methods (for example, lineTo() and drawCircle()) when drawing.
-         * Calling the clear() method will clear the fill.
-         * @param color Filled color
-         * @param alpha Filled Alpha value
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 指定一种简单的单一颜色填充，在绘制时该填充将在随后对其他 Graphics 方法（如 lineTo() 或 drawCircle()）的调用中使用。
-         * 调用 clear() 方法会清除填充。
-         * @param color 填充的颜色
-         * @param alpha 填充的 Alpha 值
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        Graphics.prototype.beginFill = function (color, alpha) {
-            if (alpha === void 0) { alpha = 1; }
-            color = +color || 0;
-            alpha = +alpha || 0;
-            this.fillPath = this.$renderNode.beginFill(color, alpha, this.strokePath);
-            if (this.$renderNode.drawData.length > 1) {
-                this.fillPath.moveTo(this.lastX, this.lastY);
-            }
-        };
-        /**
-         * Specifies a gradient fill used by subsequent calls to other Graphics methods (such as lineTo() or drawCircle()) for the object.
-         * Calling the clear() method clears the fill.
-         * @param type A value from the GradientType class that specifies which gradient type to use: GradientType.LINEAR or GradientType.RADIAL.
-         * @param colors An array of RGB hexadecimal color values used in the gradient; for example, red is 0xFF0000, blue is 0x0000FF, and so on. You can specify up to 15 colors. For each color, specify a corresponding value in the alphas and ratios parameters.
-         * @param alphas An array of alpha values for the corresponding colors in the colors array;
-         * @param ratios An array of color distribution ratios; valid values are 0-255.
-         * @param matrix A transformation matrix as defined by the egret.Matrix class. The egret.Matrix class includes a createGradientBox() method, which lets you conveniently set up the matrix for use with the beginGradientFill() method.
-         * @platform Web,Native
-         * @version Egret 2.4
-         * @language en_US
-         */
-        /**
-         * 指定一种渐变填充，用于随后调用对象的其他 Graphics 方法（如 lineTo() 或 drawCircle()）。
-         * 调用 clear() 方法会清除填充。
-         * @param type 用于指定要使用哪种渐变类型的 GradientType 类的值：GradientType.LINEAR 或 GradientType.RADIAL。
-         * @param colors 渐变中使用的 RGB 十六进制颜色值的数组（例如，红色为 0xFF0000，蓝色为 0x0000FF，等等）。对于每种颜色，请在 alphas 和 ratios 参数中指定对应值。
-         * @param alphas colors 数组中对应颜色的 alpha 值数组。
-         * @param ratios 颜色分布比率的数组。有效值为 0 到 255。
-         * @param matrix 一个由 egret.Matrix 类定义的转换矩阵。egret.Matrix 类包括 createGradientBox() 方法，通过该方法可以方便地设置矩阵，以便与 beginGradientFill() 方法一起使用
-         * @platform Web,Native
-         * @version Egret 2.4
-         * @language zh_CN
-         */
-        Graphics.prototype.beginGradientFill = function (type, colors, alphas, ratios, matrix) {
-            if (matrix === void 0) { matrix = null; }
-            this.fillPath = this.$renderNode.beginGradientFill(type, colors, alphas, ratios, matrix, this.strokePath);
-            if (this.$renderNode.drawData.length > 1) {
-                this.fillPath.moveTo(this.lastX, this.lastY);
-            }
-        };
-        /**
-         * Apply fill to the lines and curves added after the previous calling to the beginFill() method.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 对从上一次调用 beginFill()方法之后添加的直线和曲线应用填充。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        Graphics.prototype.endFill = function () {
-            this.fillPath = null;
-        };
-        /**
-         * Specify a line style that will be used for subsequent calls to Graphics methods such as lineTo() and drawCircle().
-         * @param thickness An integer, indicating the thickness of the line in points. Valid values are 0 to 255. If a number is not specified, or if the parameter is undefined, a line is not drawn. If a value less than 0 is passed, the default value is 0. Value 0 indicates hairline thickness; the maximum thickness is 255. If a value greater than 255 is passed, the default value is 255.
-         * @param color A hexadecimal color value of the line (for example, red is 0xFF0000, and blue is 0x0000FF, etc.). If no value is specified, the default value is 0x000000 (black). Optional.
-         * @param alpha Indicates Alpha value of the line's color. Valid values are 0 to 1. If no value is specified, the default value is 1 (solid). If the value is less than 0, the default value is 0. If the value is greater than 1, the default value is 1.
-         * @param pixelHinting A boolean value that specifies whether to hint strokes to full pixels. This affects both the position of anchors of a curve and the line stroke size itself. With pixelHinting set to true, the line width is adjusted to full pixel width. With pixelHinting set to false, disjoints can appear for curves and straight lines.
-         * @param scaleMode Specifies the scale mode to be used
-         * @param caps Specifies the value of the CapsStyle class of the endpoint type at the end of the line. (default = CapsStyle.ROUND)
-         * @param joints Specifies the type of joint appearance of corner.  (default = JointStyle.ROUND)
-         * @param miterLimit Indicates the limit number of cut miter.
-         * @param lineDash set the line dash.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 指定一种线条样式以用于随后对 lineTo() 或 drawCircle() 等 Graphics 方法的调用。
-         * @param thickness 一个整数，以点为单位表示线条的粗细，有效值为 0 到 255。如果未指定数字，或者未定义该参数，则不绘制线条。如果传递的值小于 0，则默认值为 0。值 0 表示极细的粗细；最大粗细为 255。如果传递的值大于 255，则默认值为 255。
-         * @param color 线条的十六进制颜色值（例如，红色为 0xFF0000，蓝色为 0x0000FF 等）。如果未指明值，则默认值为 0x000000（黑色）。可选。
-         * @param alpha 表示线条颜色的 Alpha 值的数字；有效值为 0 到 1。如果未指明值，则默认值为 1（纯色）。如果值小于 0，则默认值为 0。如果值大于 1，则默认值为 1。
-         * @param pixelHinting 布尔型值，指定是否提示笔触采用完整像素。它同时影响曲线锚点的位置以及线条笔触大小本身。在 pixelHinting 设置为 true 的情况下，线条宽度会调整到完整像素宽度。在 pixelHinting 设置为 false 的情况下，对于曲线和直线可能会出现脱节。
-         * @param scaleMode 用于指定要使用的比例模式
-         * @param caps 用于指定线条末端处端点类型的 CapsStyle 类的值。默认值：CapsStyle.ROUND
-         * @param joints 指定用于拐角的连接外观的类型。默认值：JointStyle.ROUND
-         * @param miterLimit 用于表示剪切斜接的极限值的数字。
-         * @param lineDash 设置虚线样式。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        Graphics.prototype.lineStyle = function (thickness, color, alpha, pixelHinting, scaleMode, caps, joints, miterLimit, lineDash) {
-            if (thickness === void 0) { thickness = NaN; }
-            if (color === void 0) { color = 0; }
-            if (alpha === void 0) { alpha = 1.0; }
-            if (pixelHinting === void 0) { pixelHinting = false; }
-            if (scaleMode === void 0) { scaleMode = "normal"; }
-            if (caps === void 0) { caps = null; }
-            if (joints === void 0) { joints = null; }
-            if (miterLimit === void 0) { miterLimit = 3; }
-            thickness = +thickness || 0;
-            if (thickness <= 0) {
-                this.strokePath = null;
-                this.setStrokeWidth(0);
-            }
-            else {
-                color = +color || 0;
-                alpha = +alpha || 0;
-                miterLimit = +miterLimit || 0;
-                this.setStrokeWidth(thickness);
-                this.strokePath = this.$renderNode.lineStyle(thickness, color, alpha, caps, joints, miterLimit);
-                if (lineDash) {
-                    this.strokePath.setLineDash(lineDash);
+        Object.defineProperty(TouchEvent.prototype, "stageX", {
+            /**
+             * The horizontal coordinate at which the event occurred in global Stage coordinates.
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language en_US
+             */
+            /**
+             * 事件发生点在全局舞台坐标中的水平坐标。
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language zh_CN
+             */
+            get: function () {
+                return this.$stageX;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(TouchEvent.prototype, "stageY", {
+            /**
+             * The vertical coordinate at which the event occurred in global Stage coordinates.
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language en_US
+             */
+            /**
+             * 事件发生点在全局舞台坐标中的垂直坐标。
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language zh_CN
+             */
+            get: function () {
+                return this.$stageY;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(TouchEvent.prototype, "localX", {
+            /**
+             * The horizontal coordinate at which the event occurred relative to the display object.
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language en_US
+             */
+            /**
+             * 事件发生点相对于所属显示对象的水平坐标。
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language zh_CN
+             */
+            get: function () {
+                if (this.targetChanged) {
+                    this.getLocalXY();
                 }
-                if (this.$renderNode.drawData.length > 1) {
-                    this.strokePath.moveTo(this.lastX, this.lastY);
+                return this._localX;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(TouchEvent.prototype, "localY", {
+            /**
+             * The vertical coordinate at which the event occurred relative to the display object.
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language en_US
+             */
+            /**
+             * 事件发生点相对于所属显示对象的垂直坐标。
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language zh_CN
+             */
+            get: function () {
+                if (this.targetChanged) {
+                    this.getLocalXY();
                 }
-            }
-        };
-        /**
-         * Draw a rectangle
-         * @param x x position of the center, relative to the registration point of the parent display object (in pixels).
-         * @param y y position of the center, relative to the registration point of the parent display object (in pixels).
-         * @param width Width of the rectangle (in pixels).
-         * @param height Height of the rectangle (in pixels).
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 绘制一个矩形
-         * @param x 圆心相对于父显示对象注册点的 x 位置（以像素为单位）。
-         * @param y 相对于父显示对象注册点的圆心的 y 位置（以像素为单位）。
-         * @param width 矩形的宽度（以像素为单位）。
-         * @param height 矩形的高度（以像素为单位）。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        Graphics.prototype.drawRect = function (x, y, width, height) {
-            x = +x || 0;
-            y = +y || 0;
-            width = +width || 0;
-            height = +height || 0;
-            var fillPath = this.fillPath;
-            var strokePath = this.strokePath;
-            fillPath && fillPath.drawRect(x, y, width, height);
-            strokePath && strokePath.drawRect(x, y, width, height);
-            this.extendBoundsByPoint(x + width, y + height);
-            this.updatePosition(x, y);
-            this.dirty();
-        };
-        /**
-         * Draw a rectangle with rounded corners.
-         * @param x x position of the center, relative to the registration point of the parent display object (in pixels).
-         * @param y y position of the center, relative to the registration point of the parent display object (in pixels).
-         * @param width Width of the rectangle (in pixels).
-         * @param height Height of the rectangle (in pixels).
-         * @param ellipseWidth Width used to draw an ellipse with rounded corners (in pixels).
-         * @param ellipseHeight Height used to draw an ellipse with rounded corners (in pixels). (Optional) If no value is specified, the default value matches the value of the ellipseWidth parameter.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 绘制一个圆角矩形。
-         * @param x 圆心相对于父显示对象注册点的 x 位置（以像素为单位）。
-         * @param y 相对于父显示对象注册点的圆心的 y 位置（以像素为单位）。
-         * @param width 矩形的宽度（以像素为单位）。
-         * @param height 矩形的高度（以像素为单位）。
-         * @param ellipseWidth 用于绘制圆角的椭圆的宽度（以像素为单位）。
-         * @param ellipseHeight 用于绘制圆角的椭圆的高度（以像素为单位）。 （可选）如果未指定值，则默认值与为 ellipseWidth 参数提供的值相匹配。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        Graphics.prototype.drawRoundRect = function (x, y, width, height, ellipseWidth, ellipseHeight) {
-            x = +x || 0;
-            y = +y || 0;
-            width = +width || 0;
-            height = +height || 0;
-            ellipseWidth = +ellipseWidth || 0;
-            ellipseHeight = +ellipseHeight || 0;
-            var fillPath = this.fillPath;
-            var strokePath = this.strokePath;
-            fillPath && fillPath.drawRoundRect(x, y, width, height, ellipseWidth, ellipseHeight);
-            strokePath && strokePath.drawRoundRect(x, y, width, height, ellipseWidth, ellipseHeight);
-            var radiusX = (ellipseWidth * 0.5) | 0;
-            var radiusY = ellipseHeight ? (ellipseHeight * 0.5) | 0 : radiusX;
-            var right = x + width;
-            var bottom = y + height;
-            var ybw = bottom - radiusY;
-            this.extendBoundsByPoint(x, y);
-            this.extendBoundsByPoint(right, bottom);
-            this.updatePosition(right, ybw);
-            this.dirty();
-        };
-        /**
-         * Draw a circle.
-         * @param x x position of the center, relative to the registration point of the parent display object (in pixels).
-         * @param y y position of the center, relative to the registration point of the parent display object (in pixels).
-         * @param r Radius of the circle (in pixels).
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 绘制一个圆。
-         * @param x 圆心相对于父显示对象注册点的 x 位置（以像素为单位）。
-         * @param y 相对于父显示对象注册点的圆心的 y 位置（以像素为单位）。
-         * @param radius 圆的半径（以像素为单位）。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        Graphics.prototype.drawCircle = function (x, y, radius) {
-            x = +x || 0;
-            y = +y || 0;
-            radius = +radius || 0;
-            var fillPath = this.fillPath;
-            var strokePath = this.strokePath;
-            fillPath && fillPath.drawCircle(x, y, radius);
-            strokePath && strokePath.drawCircle(x, y, radius);
-            //-1 +2 解决WebGL裁切问题
-            this.extendBoundsByPoint(x - radius - 1, y - radius - 1);
-            this.extendBoundsByPoint(x + radius + 2, y + radius + 2);
-            this.updatePosition(x + radius, y);
-            this.dirty();
-        };
-        /**
-         * Draw an ellipse.
-         * @param x A number indicating the horizontal position, relative to the registration point of the parent display object (in pixels).
-         * @param y A number indicating the vertical position, relative to the registration point of the parent display object (in pixels).
-         * @param width Width of the rectangle (in pixels).
-         * @param height Height of the rectangle (in pixels).
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 绘制一个椭圆。
-         * @param x 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
-         * @param y 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
-         * @param width 矩形的宽度（以像素为单位）。
-         * @param height 矩形的高度（以像素为单位）。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        Graphics.prototype.drawEllipse = function (x, y, width, height) {
-            x = +x || 0;
-            y = +y || 0;
-            width = +width || 0;
-            height = +height || 0;
-            var fillPath = this.fillPath;
-            var strokePath = this.strokePath;
-            fillPath && fillPath.drawEllipse(x, y, width, height);
-            strokePath && strokePath.drawEllipse(x, y, width, height);
-            //-1 +2 解决WebGL裁切问题
-            this.extendBoundsByPoint(x - 1, y - 1);
-            this.extendBoundsByPoint(x + width + 2, y + height + 2);
-            this.updatePosition(x + width, y + height * 0.5);
-            this.dirty();
-        };
-        /**
-         * Move the current drawing position to (x, y). If any of these parameters is missed, calling this method will fail and the current drawing position keeps unchanged.
-         * @param x A number indicating the horizontal position, relative to the registration point of the parent display object (in pixels).
-         * @param y A number indicating the vertical position, relative to the registration point of the parent display object (in pixels).
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 将当前绘图位置移动到 (x, y)。如果缺少任何一个参数，则此方法将失败，并且当前绘图位置不改变。
-         * @param x 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
-         * @param y 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        Graphics.prototype.moveTo = function (x, y) {
-            x = +x || 0;
-            y = +y || 0;
-            var fillPath = this.fillPath;
-            var strokePath = this.strokePath;
-            fillPath && fillPath.moveTo(x, y);
-            strokePath && strokePath.moveTo(x, y);
-            this.includeLastPosition = false;
-            this.lastX = x;
-            this.lastY = y;
-            this.dirty();
-        };
-        /**
-         * Draw a straight line from the current drawing position to (x, y) using the current line style; the current drawing position is then set to (x, y).
-         * @param x A number indicating the horizontal position, relative to the registration point of the parent display object (in pixels).
-         * @param y A number indicating the vertical position, relative to the registration point of the parent display object (in pixels).
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 使用当前线条样式绘制一条从当前绘图位置开始到 (x, y) 结束的直线；当前绘图位置随后会设置为 (x, y)。
-         * @param x 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
-         * @param y 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        Graphics.prototype.lineTo = function (x, y) {
-            x = +x || 0;
-            y = +y || 0;
-            var fillPath = this.fillPath;
-            var strokePath = this.strokePath;
-            fillPath && fillPath.lineTo(x, y);
-            strokePath && strokePath.lineTo(x, y);
-            this.updatePosition(x, y);
-            this.dirty();
-        };
-        /**
-         * Draw a quadratic Bezier curve from the current drawing position to (anchorX, anchorY) using the current line style according to the control points specified by (controlX, controlY). The current drawing position is then set to (anchorX, anchorY).
-         * If the curveTo() method is called before the moveTo() method, the default value of the current drawing position is (0, 0). If any of these parameters is missed, calling this method will fail and the current drawing position keeps unchanged.
-         * The drawn curve is a quadratic Bezier curve. A quadratic Bezier curve contains two anchor points and one control point. The curve interpolates the two anchor points and bends to the control point.
-         * @param controlX A number indicating the horizontal position of the control point, relative to the registration point of the parent display object.
-         * @param controlY A number indicating the vertical position of the control point, relative to the registration point of the parent display object.
-         * @param anchorX A number indicating the horizontal position of the next anchor point, relative to the registration point of the parent display object.
-         * @param anchorY A number indicating the vertical position of the next anchor point, relative to the registration point of the parent display object.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 使用当前线条样式和由 (controlX, controlY) 指定的控制点绘制一条从当前绘图位置开始到 (anchorX, anchorY) 结束的二次贝塞尔曲线。当前绘图位置随后设置为 (anchorX, anchorY)。
-         * 如果在调用 moveTo() 方法之前调用了 curveTo() 方法，则当前绘图位置的默认值为 (0, 0)。如果缺少任何一个参数，则此方法将失败，并且当前绘图位置不改变。
-         * 绘制的曲线是二次贝塞尔曲线。二次贝塞尔曲线包含两个锚点和一个控制点。该曲线内插这两个锚点，并向控制点弯曲。
-         * @param controlX 一个数字，指定控制点相对于父显示对象注册点的水平位置。
-         * @param controlY 一个数字，指定控制点相对于父显示对象注册点的垂直位置。
-         * @param anchorX 一个数字，指定下一个锚点相对于父显示对象注册点的水平位置。
-         * @param anchorY 一个数字，指定下一个锚点相对于父显示对象注册点的垂直位置。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        Graphics.prototype.curveTo = function (controlX, controlY, anchorX, anchorY) {
-            controlX = +controlX || 0;
-            controlY = +controlY || 0;
-            anchorX = +anchorX || 0;
-            anchorY = +anchorY || 0;
-            var fillPath = this.fillPath;
-            var strokePath = this.strokePath;
-            fillPath && fillPath.curveTo(controlX, controlY, anchorX, anchorY);
-            strokePath && strokePath.curveTo(controlX, controlY, anchorX, anchorY);
-            this.extendBoundsByPoint(controlX, controlY);
-            this.extendBoundsByPoint(anchorX, anchorY);
-            this.updatePosition(anchorX, anchorY);
-            this.dirty();
-        };
-        /**
-         * Draws a cubic Bezier curve from the current drawing position to the specified anchor. Cubic Bezier curves consist of two anchor points and two control points. The curve interpolates the two anchor points and two control points to the curve.
-         * @param controlX1 Specifies the first control point relative to the registration point of the parent display the horizontal position of the object.
-         * @param controlY1 Specifies the first control point relative to the registration point of the parent display the vertical position of the object.
-         * @param controlX2 Specify the second control point relative to the registration point of the parent display the horizontal position of the object.
-         * @param controlY2 Specify the second control point relative to the registration point of the parent display the vertical position of the object.
-         * @param anchorX Specifies the anchor point relative to the registration point of the parent display the horizontal position of the object.
-         * @param anchorY Specifies the anchor point relative to the registration point of the parent display the vertical position of the object.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 从当前绘图位置到指定的锚点绘制一条三次贝塞尔曲线。三次贝塞尔曲线由两个锚点和两个控制点组成。该曲线内插这两个锚点，并向两个控制点弯曲。
-         * @param controlX1 指定首个控制点相对于父显示对象的注册点的水平位置。
-         * @param controlY1 指定首个控制点相对于父显示对象的注册点的垂直位置。
-         * @param controlX2 指定第二个控制点相对于父显示对象的注册点的水平位置。
-         * @param controlY2 指定第二个控制点相对于父显示对象的注册点的垂直位置。
-         * @param anchorX 指定锚点相对于父显示对象的注册点的水平位置。
-         * @param anchorY 指定锚点相对于父显示对象的注册点的垂直位置。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        Graphics.prototype.cubicCurveTo = function (controlX1, controlY1, controlX2, controlY2, anchorX, anchorY) {
-            controlX1 = +controlX1 || 0;
-            controlY1 = +controlY1 || 0;
-            controlX2 = +controlX2 || 0;
-            controlY2 = +controlY2 || 0;
-            anchorX = +anchorX || 0;
-            anchorY = +anchorY || 0;
-            var fillPath = this.fillPath;
-            var strokePath = this.strokePath;
-            fillPath && fillPath.cubicCurveTo(controlX1, controlY1, controlX2, controlY2, anchorX, anchorY);
-            strokePath && strokePath.cubicCurveTo(controlX1, controlY1, controlX2, controlY2, anchorX, anchorY);
-            this.extendBoundsByPoint(controlX1, controlY1);
-            this.extendBoundsByPoint(controlX2, controlY2);
-            this.extendBoundsByPoint(anchorX, anchorY);
-            this.updatePosition(anchorX, anchorY);
-            this.dirty();
-        };
-        /**
-         * adds an arc to the path which is centered at (x, y) position with radius r starting at startAngle and ending
-         * at endAngle going in the given direction by anticlockwise (defaulting to clockwise).
-         * @param x The x coordinate of the arc's center.
-         * @param y The y coordinate of the arc's center.
-         * @param radius The arc's radius.
-         * @param startAngle The angle at which the arc starts, measured clockwise from the positive x axis and expressed in radians.
-         * @param endAngle The angle at which the arc ends, measured clockwise from the positive x axis and expressed in radians.
-         * @param anticlockwise if true, causes the arc to be drawn counter-clockwise between the two angles. By default it is drawn clockwise.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 绘制一段圆弧路径。圆弧路径的圆心在 (x, y) 位置，半径为 r ，根据anticlockwise （默认为顺时针）指定的方向从 startAngle 开始绘制，到 endAngle 结束。
-         * @param x 圆弧中心（圆心）的 x 轴坐标。
-         * @param y 圆弧中心（圆心）的 y 轴坐标。
-         * @param radius 圆弧的半径。
-         * @param startAngle 圆弧的起始点， x轴方向开始计算，单位以弧度表示。
-         * @param endAngle 圆弧的终点， 单位以弧度表示。
-         * @param anticlockwise 如果为 true，逆时针绘制圆弧，反之，顺时针绘制。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        Graphics.prototype.drawArc = function (x, y, radius, startAngle, endAngle, anticlockwise) {
-            if (radius < 0 || startAngle === endAngle) {
-                return;
-            }
-            x = +x || 0;
-            y = +y || 0;
-            radius = +radius || 0;
-            startAngle = +startAngle || 0;
-            endAngle = +endAngle || 0;
-            anticlockwise = !!anticlockwise;
-            startAngle = clampAngle(startAngle);
-            endAngle = clampAngle(endAngle);
-            var fillPath = this.fillPath;
-            var strokePath = this.strokePath;
-            if (fillPath) {
-                fillPath.$lastX = this.lastX;
-                fillPath.$lastY = this.lastY;
-                fillPath.drawArc(x, y, radius, startAngle, endAngle, anticlockwise);
-            }
-            if (strokePath) {
-                strokePath.$lastX = this.lastX;
-                strokePath.$lastY = this.lastY;
-                strokePath.drawArc(x, y, radius, startAngle, endAngle, anticlockwise);
-            }
-            if (anticlockwise) {
-                this.arcBounds(x, y, radius, endAngle, startAngle);
-            }
-            else {
-                this.arcBounds(x, y, radius, startAngle, endAngle);
-            }
-            var endX = x + Math.cos(endAngle) * radius;
-            var endY = y + Math.sin(endAngle) * radius;
-            this.updatePosition(endX, endY);
-            this.dirty();
-        };
-        Graphics.prototype.dirty = function () {
-            var self = this;
-            self.$renderNode.dirtyRender = true;
-            if (egret.nativeRender) {
-                egret_native.dirtyGraphics(self);
-            }
-        };
-        /**
-         * @private
-         * 测量圆弧的矩形大小
-         */
-        Graphics.prototype.arcBounds = function (x, y, radius, startAngle, endAngle) {
-            var PI = Math.PI;
-            if (Math.abs(startAngle - endAngle) < 0.01) {
-                this.extendBoundsByPoint(x - radius, y - radius);
-                this.extendBoundsByPoint(x + radius, y + radius);
-                return;
-            }
-            if (startAngle > endAngle) {
-                endAngle += PI * 2;
-            }
-            var startX = Math.cos(startAngle) * radius;
-            var endX = Math.cos(endAngle) * radius;
-            var xMin = Math.min(startX, endX);
-            var xMax = Math.max(startX, endX);
-            var startY = Math.sin(startAngle) * radius;
-            var endY = Math.sin(endAngle) * radius;
-            var yMin = Math.min(startY, endY);
-            var yMax = Math.max(startY, endY);
-            var startRange = startAngle / (PI * 0.5);
-            var endRange = endAngle / (PI * 0.5);
-            for (var i = Math.ceil(startRange); i <= endRange; i++) {
-                switch (i % 4) {
-                    case 0:
-                        xMax = radius;
-                        break;
-                    case 1:
-                        yMax = radius;
-                        break;
-                    case 2:
-                        xMin = -radius;
-                        break;
-                    case 3:
-                        yMin = -radius;
-                        break;
-                }
-            }
-            xMin = Math.floor(xMin);
-            yMin = Math.floor(yMin);
-            xMax = Math.ceil(xMax);
-            yMax = Math.ceil(yMax);
-            this.extendBoundsByPoint(xMin + x, yMin + y);
-            this.extendBoundsByPoint(xMax + x, yMax + y);
-        };
-        /**
-         * Clear graphics that are drawn to this Graphics object, and reset fill and line style settings.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 清除绘制到此 Graphics 对象的图形，并重置填充和线条样式设置。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        Graphics.prototype.clear = function () {
-            this.$renderNode.clear();
-            this.updatePosition(0, 0);
-            this.minX = Infinity;
-            this.minY = Infinity;
-            this.maxX = -Infinity;
-            this.maxY = -Infinity;
-            this.dirty();
-        };
+                return this._localY;
+            },
+            enumerable: true,
+            configurable: true
+        });
         /**
          * @private
          */
-        Graphics.prototype.extendBoundsByPoint = function (x, y) {
-            this.extendBoundsByX(x);
-            this.extendBoundsByY(y);
+        TouchEvent.prototype.getLocalXY = function () {
+            this.targetChanged = false;
+            var m = this.$target.$getInvertedConcatenatedMatrix();
+            m.transformPoint(this.$stageX, this.$stageY, localPoint);
+            this._localX = localPoint.x;
+            this._localY = localPoint.y;
+        };
+        TouchEvent.prototype.$setTarget = function (target) {
+            this.$target = target;
+            this.targetChanged = !!target;
+            return true;
         };
         /**
-         * @private
+         * Instructs Egret runtime to render after processing of this event completes, if the display list has been modified.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
          */
-        Graphics.prototype.extendBoundsByX = function (x) {
-            this.minX = Math.min(this.minX, x - this.topLeftStrokeWidth);
-            this.maxX = Math.max(this.maxX, x + this.bottomRightStrokeWidth);
-            this.updateNodeBounds();
-        };
         /**
-         * @private
+         * 如果已修改显示列表，调用此方法将会忽略帧频限制，在此事件处理完成后立即重绘屏幕。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
          */
-        Graphics.prototype.extendBoundsByY = function (y) {
-            this.minY = Math.min(this.minY, y - this.topLeftStrokeWidth);
-            this.maxY = Math.max(this.maxY, y + this.bottomRightStrokeWidth);
-            this.updateNodeBounds();
+        TouchEvent.prototype.updateAfterEvent = function () {
+            egret.sys.$requestRenderingFlag = true;
         };
         /**
-         * @private
-         */
-        Graphics.prototype.updateNodeBounds = function () {
-            var node = this.$renderNode;
-            node.x = this.minX;
-            node.y = this.minY;
-            node.width = Math.ceil(this.maxX - this.minX);
-            node.height = Math.ceil(this.maxY - this.minY);
-        };
-        /**
-         * 更新当前的lineX和lineY值，并标记尺寸失效。
-         * @private
-         */
-        Graphics.prototype.updatePosition = function (x, y) {
-            if (!this.includeLastPosition) {
-                this.extendBoundsByPoint(this.lastX, this.lastY);
-                this.includeLastPosition = true;
-            }
-            this.lastX = x;
-            this.lastY = y;
-            this.extendBoundsByPoint(x, y);
-        };
-        /**
-         * @private
-         */
-        Graphics.prototype.$measureContentBounds = function (bounds) {
-            if (this.minX === Infinity) {
-                bounds.setEmpty();
-            }
-            else {
-                bounds.setTo(this.minX, this.minY, this.maxX - this.minX, this.maxY - this.minY);
-            }
-        };
-        /**
-         * @private
+         * uses a specified target to dispatchEvent an event. Using this method can reduce the number of
+         * reallocate event objects, which allows you to get better code execution performance.
+         * @param target the event target
+         * @param type  The type of the event, accessible as Event.type.
+         * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
+         * @param cancelable Determines whether the Event object can be canceled. The default values is false.
+         * @param stageX The horizontal coordinate at which the event occurred in global Stage coordinates.
+         * @param stageY The vertical coordinate at which the event occurred in global Stage coordinates.
+         * @param touchPointID A unique identification number (as an int) assigned to the touch point.
          *
+         * @see egret.Event.create()
+         * @see egret.Event.release()
+         *
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
          */
-        Graphics.prototype.$hitTest = function (stageX, stageY) {
-            var target = this.$targetDisplay;
-            var m = target.$getInvertedConcatenatedMatrix();
-            var localX = m.a * stageX + m.c * stageY + m.tx;
-            var localY = m.b * stageX + m.d * stageY + m.ty;
-            var buffer = egret.sys.canvasHitTestBuffer;
-            buffer.resize(3, 3);
-            var node = this.$renderNode;
-            var matrix = egret.Matrix.create();
-            matrix.identity();
-            matrix.translate(1 - localX, 1 - localY);
-            egret.sys.canvasRenderer.drawNodeToBuffer(node, buffer, matrix, true);
-            egret.Matrix.release(matrix);
-            try {
-                var data = buffer.getPixels(1, 1);
-                if (data[3] === 0) {
-                    return null;
-                }
+        /**
+         * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * @param target 派发事件目标
+         * @param type 事件的类型，可以作为 Event.type 访问。
+         * @param bubbles 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
+         * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
+         * @param stageX 事件发生点在全局舞台坐标系中的水平坐标
+         * @param stageY 事件发生点在全局舞台坐标系中的垂直坐标
+         * @param touchPointID 分配给触摸点的唯一标识号
+         *
+         * @see egret.Event.create()
+         * @see egret.Event.release()
+         *
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        TouchEvent.dispatchTouchEvent = function (target, type, bubbles, cancelable, stageX, stageY, touchPointID, touchDown) {
+            if (touchDown === void 0) { touchDown = false; }
+            if (!bubbles && !target.hasEventListener(type)) {
+                return true;
             }
-            catch (e) {
-                throw new Error(egret.sys.tr(1039));
-            }
-            return target;
+            var event = egret.Event.create(TouchEvent, type, bubbles, cancelable);
+            event.$initTo(stageX, stageY, touchPointID);
+            event.touchDown = touchDown;
+            var result = target.dispatchEvent(event);
+            egret.Event.release(event);
+            return result;
         };
         /**
-         * @private
+         * Dispatched when the user touches the device, and is continuously dispatched until the point of contact is removed.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
          */
-        Graphics.prototype.$onRemoveFromStage = function () {
-            if (this.$renderNode) {
-                this.$renderNode.clean();
-            }
-            if (egret.nativeRender) {
-                egret_native.NativeDisplayObject.disposeGraphicData(this);
-            }
-        };
-        return Graphics;
-    }(egret.HashObject));
-    egret.Graphics = Graphics;
-    __reflect(Graphics.prototype, "egret.Graphics");
+        /**
+         * 当用户触碰设备时进行调度，而且会连续调度，直到接触点被删除。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        TouchEvent.TOUCH_MOVE = "touchMove";
+        /**
+         * Dispatched when the user first contacts a touch-enabled device (such as touches a finger to a mobile phone or tablet with a touch screen).
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 当用户第一次触摸启用触摸的设备时（例如，用手指触摸配有触摸屏的移动电话或平板电脑）调度。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        TouchEvent.TOUCH_BEGIN = "touchBegin";
+        /**
+         * Dispatched when the user removes contact with a touch-enabled device (such as lifts a finger off a mobile phone
+         * or tablet with a touch screen).
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 当用户移除与启用触摸的设备的接触时（例如，将手指从配有触摸屏的移动电话或平板电脑上抬起）调度。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        TouchEvent.TOUCH_END = "touchEnd";
+        /**
+         * Dispatched when an event of some kind occurred that canceled the touch.
+         * Such as the eui.Scroller will dispatch 'TOUCH_CANCEL' when it start move, the 'TOUCH_END' and 'TOUCH_TAP' will not be triggered.
+         * @version Egret 3.0.1
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 由于某个事件取消了触摸时触发。比如 eui.Scroller 在开始滚动后会触发 'TOUCH_CANCEL' 事件，不再触发后续的 'TOUCH_END' 和 'TOUCH_TAP' 事件
+         * @version Egret 3.0.1
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        TouchEvent.TOUCH_CANCEL = "touchCancel";
+        /**
+         * Dispatched when the user lifts the point of contact over the same DisplayObject instance on which the contact
+         * was initiated on a touch-enabled device.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 当用户在触摸设备上与开始触摸的同一 DisplayObject 实例上抬起接触点时调度。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        TouchEvent.TOUCH_TAP = "touchTap";
+        /**
+         * Dispatched when the user lifts the point of contact over the different DisplayObject instance on which the contact
+         * was initiated on a touch-enabled device (such as presses and releases a finger from a single point over a display
+         * object on a mobile phone or tablet with a touch screen).
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 当用户在触摸设备上与开始触摸的不同 DisplayObject 实例上抬起接触点时调度。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        TouchEvent.TOUCH_RELEASE_OUTSIDE = "touchReleaseOutside";
+        return TouchEvent;
+    }(egret.Event));
+    egret.TouchEvent = TouchEvent;
+    __reflect(TouchEvent.prototype, "egret.TouchEvent");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -27494,338 +27567,114 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-/// <reference path="../geom/Point.ts" />
 var egret;
 (function (egret) {
-    var localPoint = new egret.Point();
     /**
-     * The TouchEvent class lets you handle events on devices that detect user contact with the device (such as a finger
-     * on a touch screen).When a user interacts with a device such as a mobile phone or tablet with a touch screen, the
-     * user typically touches the screen with his or her fingers or a pointing device. You can develop applications that
-     * respond to basic touch events (such as a single finger tap) with the TouchEvent class. Create event listeners using
-     * the event types defined in this class.
-     * Note: When objects are nested on the display list, touch events target the deepest possible nested object that is
-     * visible in the display list. This object is called the target node. To have a target node's ancestor (an object
-     * containing the target node in the display list) receive notification of a touch event, use EventDispatcher.addEventListener()
-     * on the ancestor node with the type parameter set to the specific touch event you want to detect.
-     *
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/events/TouchEvent.ts
-     * @language en_US
+     * @private
      */
-    /**
-     * 使用 TouchEvent 类，您可以处理设备上那些检测用户与设备之间的接触的事件。
-     * 当用户与带有触摸屏的移动电话或平板电脑等设备交互时，用户通常使用手指或指针设备接触屏幕。可使用 TouchEvent
-     * 类开发响应基本触摸事件（如单个手指点击）的应用程序。使用此类中定义的事件类型创建事件侦听器。
-     * 注意：当对象嵌套在显示列表中时，触摸事件的目标将是显示列表中可见的最深的可能嵌套对象。
-     * 此对象称为目标节点。要使目标节点的祖代（祖代是一个包含显示列表中所有目标节点的对象，从舞台到目标节点的父节点均包括在内）
-     * 接收触摸事件的通知，请对祖代节点使用 EventDispatcher.on() 并将 type 参数设置为要检测的特定触摸事件。
-     *
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/events/TouchEvent.ts
-     * @language zh_CN
-     */
-    var TouchEvent = (function (_super) {
-        __extends(TouchEvent, _super);
-        /**
-         * Creates an Event object that contains information about touch events.
-         * @param type  The type of the event, accessible as Event.type.
-         * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
-         * @param cancelable Determines whether the Event object can be canceled. The default values is false.
-         * @param stageX The horizontal coordinate at which the event occurred in global Stage coordinates.
-         * @param stageY The vertical coordinate at which the event occurred in global Stage coordinates.
-         * @param touchPointID A unique identification number assigned to the touch point.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 创建一个 TouchEvent 对象，其中包含有关Touch事件的信息
-         * @param type 事件的类型，可以作为 Event.type 访问。
-         * @param bubbles 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
-         * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
-         * @param stageX 事件发生点在全局舞台坐标系中的水平坐标
-         * @param stageY 事件发生点在全局舞台坐标系中的垂直坐标
-         * @param touchPointID 分配给触摸点的唯一标识号
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        function TouchEvent(type, bubbles, cancelable, stageX, stageY, touchPointID) {
-            var _this = _super.call(this, type, bubbles, cancelable) || this;
-            _this.targetChanged = true;
+    var Mesh = (function (_super) {
+        __extends(Mesh, _super);
+        function Mesh(value) {
+            var _this = _super.call(this, value) || this;
             /**
-             * Whether the touch is pressed (true) or not pressed (false).
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language en_US
+             * @private
              */
-            /**
-             * 表示触摸已按下 (true) 还是未按下 (false)。
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language zh_CN
-             */
-            _this.touchDown = false;
-            _this.$initTo(stageX, stageY, touchPointID);
+            _this._verticesDirty = true;
+            _this._bounds = new egret.Rectangle();
+            _this.$renderNode = new egret.sys.MeshNode();
             return _this;
         }
+        Mesh.prototype.createNativeDisplayObject = function () {
+            this.$nativeDisplayObject = new egret_native.NativeDisplayObject(12 /* MESH */);
+        };
         /**
          * @private
          */
-        TouchEvent.prototype.$initTo = function (stageX, stageY, touchPointID) {
-            this.touchPointID = +touchPointID || 0;
-            this.$stageX = +stageX || 0;
-            this.$stageY = +stageY || 0;
+        Mesh.prototype.setBitmapDataToWasm = function (data) {
+            this.$nativeDisplayObject.setBitmapDataToMesh(data);
         };
-        Object.defineProperty(TouchEvent.prototype, "stageX", {
-            /**
-             * The horizontal coordinate at which the event occurred in global Stage coordinates.
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language en_US
-             */
-            /**
-             * 事件发生点在全局舞台坐标中的水平坐标。
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language zh_CN
-             */
-            get: function () {
-                return this.$stageX;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(TouchEvent.prototype, "stageY", {
-            /**
-             * The vertical coordinate at which the event occurred in global Stage coordinates.
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language en_US
-             */
-            /**
-             * 事件发生点在全局舞台坐标中的垂直坐标。
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language zh_CN
-             */
-            get: function () {
-                return this.$stageY;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(TouchEvent.prototype, "localX", {
-            /**
-             * The horizontal coordinate at which the event occurred relative to the display object.
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language en_US
-             */
-            /**
-             * 事件发生点相对于所属显示对象的水平坐标。
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language zh_CN
-             */
-            get: function () {
-                if (this.targetChanged) {
-                    this.getLocalXY();
-                }
-                return this._localX;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(TouchEvent.prototype, "localY", {
-            /**
-             * The vertical coordinate at which the event occurred relative to the display object.
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language en_US
-             */
-            /**
-             * 事件发生点相对于所属显示对象的垂直坐标。
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language zh_CN
-             */
-            get: function () {
-                if (this.targetChanged) {
-                    this.getLocalXY();
-                }
-                return this._localY;
-            },
-            enumerable: true,
-            configurable: true
-        });
         /**
          * @private
          */
-        TouchEvent.prototype.getLocalXY = function () {
-            this.targetChanged = false;
-            var m = this.$target.$getInvertedConcatenatedMatrix();
-            m.transformPoint(this.$stageX, this.$stageY, localPoint);
-            this._localX = localPoint.x;
-            this._localY = localPoint.y;
-        };
-        TouchEvent.prototype.$setTarget = function (target) {
-            this.$target = target;
-            this.targetChanged = !!target;
-            return true;
-        };
-        /**
-         * Instructs Egret runtime to render after processing of this event completes, if the display list has been modified.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 如果已修改显示列表，调用此方法将会忽略帧频限制，在此事件处理完成后立即重绘屏幕。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        TouchEvent.prototype.updateAfterEvent = function () {
-            egret.sys.$requestRenderingFlag = true;
-        };
-        /**
-         * uses a specified target to dispatchEvent an event. Using this method can reduce the number of
-         * reallocate event objects, which allows you to get better code execution performance.
-         * @param target the event target
-         * @param type  The type of the event, accessible as Event.type.
-         * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
-         * @param cancelable Determines whether the Event object can be canceled. The default values is false.
-         * @param stageX The horizontal coordinate at which the event occurred in global Stage coordinates.
-         * @param stageY The vertical coordinate at which the event occurred in global Stage coordinates.
-         * @param touchPointID A unique identification number (as an int) assigned to the touch point.
-         *
-         * @see egret.Event.create()
-         * @see egret.Event.release()
-         *
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @param target 派发事件目标
-         * @param type 事件的类型，可以作为 Event.type 访问。
-         * @param bubbles 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
-         * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
-         * @param stageX 事件发生点在全局舞台坐标系中的水平坐标
-         * @param stageY 事件发生点在全局舞台坐标系中的垂直坐标
-         * @param touchPointID 分配给触摸点的唯一标识号
-         *
-         * @see egret.Event.create()
-         * @see egret.Event.release()
-         *
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        TouchEvent.dispatchTouchEvent = function (target, type, bubbles, cancelable, stageX, stageY, touchPointID, touchDown) {
-            if (touchDown === void 0) { touchDown = false; }
-            if (!bubbles && !target.hasEventListener(type)) {
-                return true;
+        Mesh.prototype.$updateRenderNode = function () {
+            var image = this.$bitmapData;
+            if (!image) {
+                return;
             }
-            var event = egret.Event.create(TouchEvent, type, bubbles, cancelable);
-            event.$initTo(stageX, stageY, touchPointID);
-            event.touchDown = touchDown;
-            var result = target.dispatchEvent(event);
-            egret.Event.release(event);
-            return result;
+            var scale = egret.$TextureScaleFactor;
+            var node = this.$renderNode;
+            node.smoothing = this.$smoothing;
+            node.image = image;
+            node.imageWidth = this.$sourceWidth;
+            node.imageHeight = this.$sourceHeight;
+            var destW = !isNaN(this.$explicitBitmapWidth) ? this.$explicitBitmapWidth : this.$textureWidth;
+            var destH = !isNaN(this.$explicitBitmapHeight) ? this.$explicitBitmapHeight : this.$textureHeight;
+            var tsX = destW / this.$textureWidth;
+            var tsY = destH / this.$textureHeight;
+            var bitmapWidth = this.$bitmapWidth;
+            var bitmapHeight = this.$bitmapHeight;
+            node.drawMesh(this.$bitmapX, this.$bitmapY, bitmapWidth, bitmapHeight, this.$offsetX * tsX, this.$offsetY * tsY, tsX * bitmapWidth, tsY * bitmapHeight);
         };
         /**
-         * Dispatched when the user touches the device, and is continuously dispatched until the point of contact is removed.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
+         * @private
          */
+        Mesh.prototype.$updateVertices = function () {
+            var self = this;
+            self._verticesDirty = true;
+            self.$renderDirty = true;
+            if (egret.nativeRender) {
+                var renderNode = (this.$renderNode);
+                this.$nativeDisplayObject.setDataToMesh(renderNode.vertices, renderNode.indices, renderNode.uvs);
+            }
+            else {
+                var p = self.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                var maskedObject = self.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
+            }
+        };
         /**
-         * 当用户触碰设备时进行调度，而且会连续调度，直到接触点被删除。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
+         * @private
          */
-        TouchEvent.TOUCH_MOVE = "touchMove";
-        /**
-         * Dispatched when the user first contacts a touch-enabled device (such as touches a finger to a mobile phone or tablet with a touch screen).
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 当用户第一次触摸启用触摸的设备时（例如，用手指触摸配有触摸屏的移动电话或平板电脑）调度。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        TouchEvent.TOUCH_BEGIN = "touchBegin";
-        /**
-         * Dispatched when the user removes contact with a touch-enabled device (such as lifts a finger off a mobile phone
-         * or tablet with a touch screen).
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 当用户移除与启用触摸的设备的接触时（例如，将手指从配有触摸屏的移动电话或平板电脑上抬起）调度。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        TouchEvent.TOUCH_END = "touchEnd";
-        /**
-         * Dispatched when an event of some kind occurred that canceled the touch.
-         * Such as the eui.Scroller will dispatch 'TOUCH_CANCEL' when it start move, the 'TOUCH_END' and 'TOUCH_TAP' will not be triggered.
-         * @version Egret 3.0.1
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 由于某个事件取消了触摸时触发。比如 eui.Scroller 在开始滚动后会触发 'TOUCH_CANCEL' 事件，不再触发后续的 'TOUCH_END' 和 'TOUCH_TAP' 事件
-         * @version Egret 3.0.1
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        TouchEvent.TOUCH_CANCEL = "touchCancel";
-        /**
-         * Dispatched when the user lifts the point of contact over the same DisplayObject instance on which the contact
-         * was initiated on a touch-enabled device.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 当用户在触摸设备上与开始触摸的同一 DisplayObject 实例上抬起接触点时调度。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        TouchEvent.TOUCH_TAP = "touchTap";
-        /**
-         * Dispatched when the user lifts the point of contact over the different DisplayObject instance on which the contact
-         * was initiated on a touch-enabled device (such as presses and releases a finger from a single point over a display
-         * object on a mobile phone or tablet with a touch screen).
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 当用户在触摸设备上与开始触摸的不同 DisplayObject 实例上抬起接触点时调度。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        TouchEvent.TOUCH_RELEASE_OUTSIDE = "touchReleaseOutside";
-        return TouchEvent;
-    }(egret.Event));
-    egret.TouchEvent = TouchEvent;
-    __reflect(TouchEvent.prototype, "egret.TouchEvent");
+        Mesh.prototype.$measureContentBounds = function (bounds) {
+            if (this._verticesDirty) {
+                this._verticesDirty = false;
+                var node = this.$renderNode;
+                var vertices = node.vertices;
+                if (vertices.length) {
+                    this._bounds.setTo(Number.MAX_VALUE, Number.MAX_VALUE, -Number.MAX_VALUE, -Number.MAX_VALUE);
+                    for (var i = 0, l = vertices.length; i < l; i += 2) {
+                        var x = vertices[i];
+                        var y = vertices[i + 1];
+                        if (this._bounds.x > x)
+                            this._bounds.x = x;
+                        if (this._bounds.width < x)
+                            this._bounds.width = x;
+                        if (this._bounds.y > y)
+                            this._bounds.y = y;
+                        if (this._bounds.height < y)
+                            this._bounds.height = y;
+                    }
+                    this._bounds.width -= this._bounds.x;
+                    this._bounds.height -= this._bounds.y;
+                }
+                else {
+                    this._bounds.setTo(0, 0, 0, 0);
+                }
+                node.bounds.copyFrom(this._bounds);
+            }
+            bounds.copyFrom(this._bounds);
+        };
+        return Mesh;
+    }(egret.Bitmap));
+    egret.Mesh = Mesh;
+    __reflect(Mesh.prototype, "egret.Mesh");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -28172,62 +28021,118 @@ var egret;
 //////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
-    /**
-     * The JointStyle class is an enumeration of constant values that specify the joint style to use in drawing lines.
-     * These constants are provided for use as values in the joints parameter of the egret.Graphics.lineStyle() method.
-     * @see egret.Graphics#lineStyle()
-     * @version Egret 2.5
-     * @platform Web,Native
-     * @language en_US
-     */
-    /**
-     * JointStyle 类是指定要在绘制线条中使用的联接点样式的常量值枚举。提供的这些常量用作 egret.Graphics.lineStyle() 方法的 joints 参数中的值。
-     * @see egret.Graphics#lineStyle()
-     * @version Egret 2.5
-     * @platform Web,Native
-     * @language zh_CN
-     */
-    egret.JointStyle = {
+    var web;
+    (function (web) {
         /**
-         * Specifies beveled joints in the joints parameter of the egret.Graphics.lineStyle() method.
-         * @version Egret 2.5
-         * @platform Web,Native
-         * @language en_US
+         * @private
          */
+        var WebExternalInterface = (function () {
+            function WebExternalInterface() {
+            }
+            /**
+             * @private
+             * @param functionName
+             * @param value
+             */
+            WebExternalInterface.call = function (functionName, value) {
+            };
+            /**
+             * @private
+             * @param functionName
+             * @param listener
+             */
+            WebExternalInterface.addCallback = function (functionName, listener) {
+            };
+            return WebExternalInterface;
+        }());
+        web.WebExternalInterface = WebExternalInterface;
+        __reflect(WebExternalInterface.prototype, "egret.web.WebExternalInterface", ["egret.ExternalInterface"]);
+        var ua = navigator.userAgent.toLowerCase();
+        if (ua.indexOf("egretnative") < 0) {
+            egret.ExternalInterface = WebExternalInterface;
+        }
+    })(web = egret.web || (egret.web = {}));
+})(egret || (egret = {}));
+(function (egret) {
+    var web;
+    (function (web) {
+        var callBackDic = {};
         /**
-         * 在 egret.Graphics.lineStyle() 方法的 joints 参数中指定斜角连接。
-         * @version Egret 2.5
-         * @platform Web,Native
-         * @language zh_CN
+         * @private
          */
-        BEVEL: "bevel",
+        var NativeExternalInterface = (function () {
+            function NativeExternalInterface() {
+            }
+            NativeExternalInterface.call = function (functionName, value) {
+                var data = {};
+                data.functionName = functionName;
+                data.value = value;
+                egret_native.sendInfoToPlugin(JSON.stringify(data));
+            };
+            NativeExternalInterface.addCallback = function (functionName, listener) {
+                callBackDic[functionName] = listener;
+            };
+            return NativeExternalInterface;
+        }());
+        web.NativeExternalInterface = NativeExternalInterface;
+        __reflect(NativeExternalInterface.prototype, "egret.web.NativeExternalInterface", ["egret.ExternalInterface"]);
         /**
-         * Specifies mitered joints in the joints parameter of the egret.Graphics.lineStyle() method.
-         * @version Egret 2.5
-         * @platform Web,Native
-         * @language en_US
+         * @private
+         * @param info
          */
+        function onReceivedPluginInfo(info) {
+            var data = JSON.parse(info);
+            var functionName = data.functionName;
+            var listener = callBackDic[functionName];
+            if (listener) {
+                var value = data.value;
+                listener.call(null, value);
+            }
+            else {
+                egret.$warn(1050, functionName);
+            }
+        }
+        var ua = navigator.userAgent.toLowerCase();
+        if (ua.indexOf("egretnative") >= 0) {
+            egret.ExternalInterface = NativeExternalInterface;
+            egret_native.receivedPluginInfo = onReceivedPluginInfo;
+        }
+    })(web = egret.web || (egret.web = {}));
+})(egret || (egret = {}));
+(function (egret) {
+    var web;
+    (function (web) {
+        var callBackDic = {};
         /**
-         * 在 egret.Graphics.lineStyle() 方法的 joints 参数中指定尖角连接。
-         * @version Egret 2.5
-         * @platform Web,Native
-         * @language zh_CN
+         * @private
          */
-        MITER: "miter",
-        /**
-         * Specifies round joints in the joints parameter of the egret.Graphics.lineStyle() method.
-         * @version Egret 2.5
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 在 egret.Graphics.lineStyle() 方法的 joints 参数中指定圆角连接。
-         * @version Egret 2.5
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        ROUND: "round"
-    };
+        var WebViewExternalInterface = (function () {
+            function WebViewExternalInterface() {
+            }
+            WebViewExternalInterface.call = function (functionName, value) {
+                __global.ExternalInterface.call(functionName, value);
+            };
+            WebViewExternalInterface.addCallback = function (functionName, listener) {
+                callBackDic[functionName] = listener;
+            };
+            WebViewExternalInterface.invokeCallback = function (functionName, value) {
+                var listener = callBackDic[functionName];
+                if (listener) {
+                    listener.call(null, value);
+                }
+                else {
+                    egret.$warn(1050, functionName);
+                }
+            };
+            return WebViewExternalInterface;
+        }());
+        web.WebViewExternalInterface = WebViewExternalInterface;
+        __reflect(WebViewExternalInterface.prototype, "egret.web.WebViewExternalInterface", ["egret.ExternalInterface"]);
+        var ua = navigator.userAgent.toLowerCase();
+        if (ua.indexOf("egretwebview") >= 0) {
+            egret.ExternalInterface = WebViewExternalInterface;
+        }
+    })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //

@@ -175,7 +175,7 @@ namespace egret {
             if (egret.nativeRender) {
                 egret_native.NativeDisplayObject.setFilterPadding(self.blurXFilter.$id, 0, 0, self.paddingLeft, self.paddingRight);
                 egret_native.NativeDisplayObject.setFilterPadding(self.blurYFilter.$id, self.paddingTop, self.paddingBottom, 0, 0);
-                egret_native.NativeDisplayObject.setDataToFilter(self.$id);
+                egret_native.NativeDisplayObject.setDataToFilter(self);
             }
         }
     }

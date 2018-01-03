@@ -99,7 +99,6 @@ namespace egret_native {
     let bitmapDataMap;
     let bitmapDataId = 1;
 
-    let filterMap;
     let filterId = 1;
     let customFilterDataMap = {};
     let customFilterUniformMap = {};
@@ -127,7 +126,6 @@ namespace egret_native {
             displayCmdBuffer[0] = 0;
             displayCmdBuffer[1] = 2;
             bitmapDataMap = map1;
-            filterMap = map2;
             customFilterDataMap = map3;
         }
 
@@ -324,7 +322,6 @@ namespace egret_native {
         public static createFilter(filter: egret.Filter): void {
             filter.$id = filterId;
             filter.$obj = new Module.WasmNode(filterId, NativeObjectType.FILTER);
-            filterMap[filterId] = filter;
             filterId++;
             displayCmdBuffer[displayCmdBufferIndex++] = CommandType.CREATE_OBJECT;
             displayCmdBuffer[displayCmdBufferIndex++] = filter.$id;
@@ -667,8 +664,8 @@ namespace egret_native {
         }
 
 
-        public static setDataToFilter(id: number): void {
-            let currFilter = filterMap[id];
+        public static setDataToFilter(currFilter: egret.Filter): void {
+            let id = currFilter.$id;
             let customArr = [];
             let filterType;
             if (!customFilterUniformMap[currFilter.$id]) {
@@ -800,14 +797,6 @@ namespace egret_native {
             displayCmdBuffer[displayCmdBufferIndex++] = CommandType.DISPOSE_FILTER;
             displayCmdBuffer[displayCmdBufferIndex++] = filter.$id;
             displayCmdBufferSize++;
-            delete filterMap[filter.$id];
-            let blurFilter: egret.BlurFilter = <egret.BlurFilter>filter;
-            if (blurFilter.blurXFilter) {
-                delete filterMap[blurFilter.blurXFilter.$id];
-            }
-            if (blurFilter.blurYFilter) {
-                delete filterMap[blurFilter.blurYFilter.$id];
-            }
         }
     }
 }
