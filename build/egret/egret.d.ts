@@ -11367,6 +11367,7 @@ declare namespace egret_native {
         setWidth(value: number): void;
         setHeight(value: number): void;
         setCacheAsBitmap(value: boolean): void;
+        setBitmapFillMode(fillMode: string): void;
         setScale9Grid(x: number, y: number, w: number, h: number): void;
         setMatrix(a: number, b: number, c: number, d: number, tx: number, ty: number): void;
         setIsTyping(value: boolean): void;

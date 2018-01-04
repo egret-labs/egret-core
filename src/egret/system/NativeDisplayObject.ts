@@ -75,6 +75,7 @@ namespace egret_native {
         SET_MESH_BITMAP_DATA = 147,
         DISPOSE_GRAPHICS_DATA = 148,
         DISPOSE_TEXT_DATA = 149,
+        SET_FILLMODE = 150,
 
         SET_CUSTOM_DATA = 901,
         SET_PARTICLE_BITMAP_DATA = 902,
@@ -554,6 +555,20 @@ namespace egret_native {
             displayCmdBuffer[displayCmdBufferIndex++] = CommandType.SET_CACHE_AS_BITMAP;
             displayCmdBuffer[displayCmdBufferIndex++] = this.id;
             displayCmdBuffer[displayCmdBufferIndex++] = value ? 1 : 0;
+            displayCmdBufferSize++;
+        }
+
+        public setBitmapFillMode(fillMode: string): void {
+            displayCmdBuffer[displayCmdBufferIndex++] = CommandType.SET_FILLMODE;
+            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
+            let value = 0;
+            if(fillMode == egret.BitmapFillMode.REPEAT) {
+                value = 1;
+            }
+            else if(fillMode == egret.BitmapFillMode.CLIP) {
+                value = 2;
+            }
+            displayCmdBuffer[displayCmdBufferIndex++] = value;
             displayCmdBufferSize++;
         }
 

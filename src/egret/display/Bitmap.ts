@@ -378,6 +378,10 @@ namespace egret {
             }
             this.$fillMode = value;
 
+            if (egret.nativeRender) {
+                this.$nativeDisplayObject.setBitmapFillMode(this.$fillMode);
+            }
+
             return true;
         }
 

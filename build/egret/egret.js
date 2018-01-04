@@ -6337,6 +6337,9 @@ var egret;
                 return false;
             }
             this.$fillMode = value;
+            if (egret.nativeRender) {
+                this.$nativeDisplayObject.setBitmapFillMode(this.$fillMode);
+            }
             return true;
         };
         Object.defineProperty(Bitmap.prototype, "smoothing", {
@@ -19773,6 +19776,19 @@ var egret_native;
             displayCmdBuffer[displayCmdBufferIndex++] = 135 /* SET_CACHE_AS_BITMAP */;
             displayCmdBuffer[displayCmdBufferIndex++] = this.id;
             displayCmdBuffer[displayCmdBufferIndex++] = value ? 1 : 0;
+            displayCmdBufferSize++;
+        };
+        NativeDisplayObject.prototype.setBitmapFillMode = function (fillMode) {
+            displayCmdBuffer[displayCmdBufferIndex++] = 150 /* SET_FILLMODE */;
+            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
+            var value = 0;
+            if (fillMode == egret.BitmapFillMode.REPEAT) {
+                value = 1;
+            }
+            else if (fillMode == egret.BitmapFillMode.CLIP) {
+                value = 2;
+            }
+            displayCmdBuffer[displayCmdBufferIndex++] = value;
             displayCmdBufferSize++;
         };
         NativeDisplayObject.prototype.setScale9Grid = function (x, y, w, h) {
