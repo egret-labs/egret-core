@@ -1265,17 +1265,17 @@ declare namespace dragonBones {
         addArmature(value: ArmatureData): void;
         /**
          * - Get a specific armature data.
-         * @param name - The armature data name.
+         * @param armatureName - The armature data name.
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
          * - 获取特定的骨架数据。
-         * @param name - 骨架数据名称。
+         * @param armatureName - 骨架数据名称。
          * @version DragonBones 3.0
          * @language zh_CN
          */
-        getArmature(name: string): ArmatureData | null;
+        getArmature(armatureName: string): ArmatureData | null;
         /**
          * - Deprecated, please refer to {@link #dragonBones.BaseFactory#removeDragonBonesData()}.
          * @deprecated
@@ -1499,64 +1499,64 @@ declare namespace dragonBones {
         addAction(value: ActionData, isDefault: boolean): void;
         /**
          * - Get a specific done data.
-         * @param name - The bone name.
+         * @param boneName - The bone name.
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
          * - 获取特定的骨骼数据。
-         * @param name - 骨骼名称。
+         * @param boneName - 骨骼名称。
          * @version DragonBones 3.0
          * @language zh_CN
          */
-        getBone(name: string): BoneData | null;
+        getBone(boneName: string): BoneData | null;
         /**
          * - Get a specific slot data.
-         * @param name - The slot name.
+         * @param slotName - The slot name.
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
          * - 获取特定的插槽数据。
-         * @param name - 插槽名称。
+         * @param slotName - 插槽名称。
          * @version DragonBones 3.0
          * @language zh_CN
          */
-        getSlot(name: string): SlotData | null;
+        getSlot(slotName: string): SlotData | null;
         /**
          * @private
          */
-        getConstraint(name: string): ConstraintData | null;
+        getConstraint(constraintName: string): ConstraintData | null;
         /**
          * - Get a specific skin data.
-         * @param name - The skin name.
+         * @param skinName - The skin name.
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
          * - 获取特定皮肤数据。
-         * @param name - 皮肤名称。
+         * @param skinName - 皮肤名称。
          * @version DragonBones 3.0
          * @language zh_CN
          */
-        getSkin(name: string): SkinData | null;
+        getSkin(skinName: string): SkinData | null;
         /**
          * @private
          */
         getMesh(skinName: string, slotName: string, meshName: string): MeshDisplayData | null;
         /**
          * - Get a specific animation data.
-         * @param name - The animation name.
+         * @param animationName - The animation animationName.
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
          * - 获取特定的动画数据。
-         * @param name - 动画名称。
+         * @param animationName - 动画名称。
          * @version DragonBones 3.0
          * @language zh_CN
          */
-        getAnimation(name: string): AnimationData | null;
+        getAnimation(animationName: string): AnimationData | null;
     }
     /**
      * - The bone data.
@@ -2443,35 +2443,35 @@ declare namespace dragonBones {
         /**
          * @private
          */
-        addAnimationTimeline(name: string, timeline: TimelineData): void;
+        addAnimationTimeline(timelineName: string, timeline: TimelineData): void;
         /**
          * @private
          */
-        getBoneTimelines(name: string): Array<TimelineData> | null;
+        getBoneTimelines(timelineName: string): Array<TimelineData> | null;
         /**
          * @private
          */
-        getSurfaceTimelines(name: string): Array<TimelineData> | null;
+        getSurfaceTimelines(timelineName: string): Array<TimelineData> | null;
         /**
          * @private
          */
-        getSlotTimelines(name: string): Array<TimelineData> | null;
+        getSlotTimelines(timelineName: string): Array<TimelineData> | null;
         /**
          * @private
          */
-        getConstraintTimelines(name: string): Array<TimelineData> | null;
+        getConstraintTimelines(timelineName: string): Array<TimelineData> | null;
         /**
          * @private
          */
-        getAnimationTimelines(name: string): Array<TimelineData> | null;
+        getAnimationTimelines(timelineName: string): Array<TimelineData> | null;
         /**
          * @private
          */
-        getBoneCachedFrameIndices(name: string): Array<number> | null;
+        getBoneCachedFrameIndices(boneName: string): Array<number> | null;
         /**
          * @private
          */
-        getSlotCachedFrameIndices(name: string): Array<number> | null;
+        getSlotCachedFrameIndices(slotName: string): Array<number> | null;
     }
     /**
      * @internal
@@ -2773,15 +2773,15 @@ declare namespace dragonBones {
         /**
          * @private
          */
-        containsBoneMask(name: string): boolean;
+        containsBoneMask(boneName: string): boolean;
         /**
          * @private
          */
-        addBoneMask(armature: Armature, name: string, recursive?: boolean): void;
+        addBoneMask(armature: Armature, boneName: string, recursive?: boolean): void;
         /**
          * @private
          */
-        removeBoneMask(armature: Armature, name: string, recursive?: boolean): void;
+        removeBoneMask(armature: Armature, boneName: string, recursive?: boolean): void;
     }
 }
 /**
@@ -2881,7 +2881,7 @@ declare namespace dragonBones {
         /**
          * @private
          */
-        getTexture(name: string): TextureData | null;
+        getTexture(textureName: string): TextureData | null;
     }
     /**
      * @internal
@@ -4563,6 +4563,10 @@ declare namespace dragonBones {
          * @example
          * <pre>
          *     let slot = armature.getSlot("weapon");
+         *     let prevChildArmature = slot.childArmature;
+         *     if (prevChildArmature) {
+         *         prevChildArmature.dispose();
+         *     }
          *     slot.childArmature = factory.buildArmature("weapon_blabla", "weapon_blabla_project");
          * </pre>
          * @version DragonBones 3.0
@@ -4570,9 +4574,14 @@ declare namespace dragonBones {
          */
         /**
          * - 插槽此时显示的子骨架。
+         * 注意，被替换的对象并不会被回收，根据语言和引擎的不同，需要额外处理。
          * @example
          * <pre>
          *     let slot = armature.getSlot("weapon");
+         *     let prevChildArmature = slot.childArmature;
+         *     if (prevChildArmature) {
+         *         prevChildArmature.dispose();
+         *     }
          *     slot.childArmature = factory.buildArmature("weapon_blabla", "weapon_blabla_project");
          * </pre>
          * @version DragonBones 3.0
@@ -5705,47 +5714,47 @@ declare namespace dragonBones {
         fadeOut(fadeOutTime: number, pausePlayhead?: boolean): void;
         /**
          * - Check if a specific bone mask is included.
-         * @param name - The bone name.
+         * @param boneName - The bone name.
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
          * - 检查是否包含特定骨骼遮罩。
-         * @param name - 骨骼名称。
+         * @param boneName - 骨骼名称。
          * @version DragonBones 3.0
          * @language zh_CN
          */
-        containsBoneMask(name: string): boolean;
+        containsBoneMask(boneName: string): boolean;
         /**
          * - Add a specific bone mask.
-         * @param name - The bone name.
+         * @param boneName - The bone name.
          * @param recursive - Whether or not to add a mask to the bone's sub-bone.
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
          * - 添加特定的骨骼遮罩。
-         * @param name - 骨骼名称。
+         * @param boneName - 骨骼名称。
          * @param recursive - 是否为该骨骼的子骨骼添加遮罩。
          * @version DragonBones 3.0
          * @language zh_CN
          */
-        addBoneMask(name: string, recursive?: boolean): void;
+        addBoneMask(boneName: string, recursive?: boolean): void;
         /**
          * - Remove the mask of a specific bone.
-         * @param name - The bone name.
+         * @param boneName - The bone name.
          * @param recursive - Whether to remove the bone's sub-bone mask.
          * @version DragonBones 3.0
          * @language en_US
          */
         /**
          * - 删除特定骨骼的遮罩。
-         * @param name - 骨骼名称。
+         * @param boneName - 骨骼名称。
          * @param recursive - 是否删除该骨骼的子骨骼遮罩。
          * @version DragonBones 3.0
          * @language zh_CN
          */
-        removeBoneMask(name: string, recursive?: boolean): void;
+        removeBoneMask(boneName: string, recursive?: boolean): void;
         /**
          * - Remove all bone masks.
          * @version DragonBones 3.0
