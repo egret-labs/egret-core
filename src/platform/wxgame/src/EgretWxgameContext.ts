@@ -76,7 +76,7 @@ namespace egret.wxapp {
         // for (let i = 0; i < length; i++) {
         //     let container = containerList[i];
         //     let player = <WebPlayer>container["egret-player"];
-            window['player'].updateScreenSize();
+        window['player'].updateScreenSize();
         // }
     }
 
@@ -112,7 +112,7 @@ namespace egret.wxapp {
         if (options.canvasScaleFactor) {
             canvasScaleFactor = options.canvasScaleFactor;
         }
-        else if(options.calculateCanvasScaleFactor) {
+        else if (options.calculateCanvasScaleFactor) {
             canvasScaleFactor = options.calculateCanvasScaleFactor(sys.canvasHitTestBuffer.context);
         }
         else {
@@ -162,16 +162,16 @@ namespace egret.wxapp {
      * @param renderMode
      */
     function setRenderMode(renderMode: string): void {
-        if (renderMode == "webgl" 
-       // && WebGLUtils.checkCanUseWebGL()    wxapp需要重新实现checkCanUseWebGL 
-    ) {
-             Capabilities.$renderMode = "webgl";
+        if (renderMode == "webgl"
+            // && WebGLUtils.checkCanUseWebGL()    wxapp需要重新实现checkCanUseWebGL 
+        ) {
+            Capabilities.$renderMode = "webgl";
             sys.RenderBuffer = wxapp.WebGLRenderBuffer;
             sys.systemRenderer = new WebGLRenderer();
             sys.canvasRenderer = new CanvasRenderer();
             sys.customHitTestBuffer = new WebGLRenderBuffer(3, 3);
             sys.canvasHitTestBuffer = new CanvasRenderBuffer(3, 3);
-       
+
         }
         else {
             Capabilities.$renderMode = "canvas";
