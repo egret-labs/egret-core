@@ -19127,6 +19127,8 @@ var egret;
             var lineHeights = [];
             this.$lineHeights = lineHeights;
             if (!values[2 /* text */] || !values[5 /* font */]) {
+                values[8 /* textWidth */] = 0;
+                values[9 /* textHeight */] = 0;
                 return textLines;
             }
             var lineSpacing = values[3 /* lineSpacing */];
