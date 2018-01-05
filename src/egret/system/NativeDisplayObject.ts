@@ -143,7 +143,7 @@ namespace egret_native {
 
         constructor(type: number) {
             this.id = displayObjectId;
-            this.$obj = new Module.WasmNode(this.id, type);
+            this.$obj = new egret_native.NrNode(this.id, type);
             displayCmdBuffer[displayCmdBufferIndex++] = CommandType.CREATE_OBJECT;
             displayCmdBuffer[displayCmdBufferIndex++] = displayObjectId;
             displayCmdBuffer[displayCmdBufferIndex++] = type;
@@ -322,7 +322,7 @@ namespace egret_native {
 
         public static createFilter(filter: egret.Filter): void {
             filter.$id = filterId;
-            filter.$obj = new Module.WasmNode(filterId, NativeObjectType.FILTER);
+            filter.$obj = new egret_native.NrNode(filterId, NativeObjectType.FILTER);
             filterId++;
             displayCmdBuffer[displayCmdBufferIndex++] = CommandType.CREATE_OBJECT;
             displayCmdBuffer[displayCmdBufferIndex++] = filter.$id;

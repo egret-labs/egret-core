@@ -5017,6 +5017,25 @@ declare namespace egret {
 declare namespace egret_native {
     function sendInfoToPlugin(info: string): void;
     function receivedPluginInfo(info: string): void;
+    function nrInit(): void;
+    function nrDownloadBuffers(callback: (displayCmdBuffer: Float32Array) => void): void;
+    function nrSetRenderMode(mode: number): void;
+    function nrSetRenderMode(mode: number): void;
+    function nrRenderDisplayObject(id: number, scale: number, useClip: boolean, clipX: number, clipY: number, clipW: number, clipH: number): void;
+    function nrRenderDisplayObject2(id: number, offsetX: number, offsetY: number, forHitTest: boolean): void;
+    function nrLocalToGlobal(id: number, localX: number, localY: number): string;
+    function nrGlobalToLocal(id: number, globalX: number, globalY: number): string;
+    function nrResize(width: number, height: number): void;
+    function nrSetCanvasScaleFactor(factor: number, scalex: number, scaley: number): void;
+    function nrUpdate(): void;
+    function nrRender(): void;
+    function nrSendTextFieldData(textFieldId: number, strData: string): void;
+    function nrUpdateCallbackList(dt: number): void;
+    function nrActiveBuffer(id: number, width: number, height: number): void;
+    function nrGetPixels(x: number, y: number, width: number, height: number, pixels: Uint8Array): void;
+    class NrNode {
+        constructor(id: number, type: number);
+    }
 }
 /**
  * @private
@@ -5030,30 +5049,22 @@ declare module egret {
 /**
  * @private
  */
-declare let Module: any;
-/**
- * @private
- */
 declare namespace egret_native {
     let forHitTest: boolean;
     let addModuleCallback: (callback: Function, thisObj: any) => void;
     let init: (wasmSize?: number) => void;
     let setRootBuffer: (buffer: any) => void;
-    let setRenderMode: (mode: string) => void;
-    let renderDisplayObject: (id: number, scale: number, useClip: boolean, clipX: number, clipY: number, clipW: number, clipH: number) => void;
-    let renderDisplayObjectWithOffset: (id: number, offsetX: number, offsetY: number) => void;
-    let localToGlobal: (id: number, localX: number, localY: number) => string;
-    let globalToLocal: (id: number, globalX: number, globalY: number) => string;
-    let resize: (width: number, height: number) => void;
-    let setCanvasScaleFactor: (factor: number, scalex: number, scaley: number) => void;
     let update: () => void;
     let dirtyTextField: (textField: egret.TextField) => void;
     let dirtyGraphics: (graphics: egret.Graphics) => void;
     let updatePreCallback: (currTimeStamp: number) => boolean;
-    let render: () => void;
     let activateWebGLBuffer: (buffer: egret.web.WebGLRenderBuffer) => void;
     let getPixels: (x: number, y: number, width?: number, height?: number) => number[];
     let activateBuffer: (buffer: egret.sys.RenderBuffer) => void;
+    let getJsImage: (key: any) => any;
+    let getJsCustomFilterVertexSrc: (key: any) => any;
+    let getJsCustomFilterFragSrc: (key: any) => any;
+    let getJsCustomFilterUniforms: (key: any) => any;
 }
 declare namespace egret {
     /**

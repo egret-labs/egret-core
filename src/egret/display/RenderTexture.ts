@@ -115,7 +115,7 @@ namespace egret {
                     clipH = clipBounds.height;
                 }
                 egret_native.update();
-                egret_native.renderDisplayObject(displayObject.$nativeDisplayObject.id, scale, useClip, clipX, clipY, clipW, clipH);
+                egret_native.nrRenderDisplayObject(displayObject.$nativeDisplayObject.id, scale, useClip, clipX, clipY, clipW, clipH);
                 egret_native.activateBuffer(null);
             }
             else {

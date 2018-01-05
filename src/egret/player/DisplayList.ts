@@ -198,7 +198,7 @@ namespace egret.sys {
             DisplayList.$canvasScaleX = x;
             DisplayList.$canvasScaleY = y;
             if (egret.nativeRender) {
-                egret_native.setCanvasScaleFactor(DisplayList.$canvasScaleFactor, x, y);
+                egret_native.nrSetCanvasScaleFactor(DisplayList.$canvasScaleFactor, x, y);
             }
         }
     }

@@ -169,7 +169,7 @@ namespace egret.sys {
         $render(triggerByFrame: boolean, costTicker: number): void {
             if (egret.nativeRender) {
                 egret_native.update();
-                egret_native.render();
+                egret_native.nrRender();
                 return;
             }
 
@@ -196,7 +196,7 @@ namespace egret.sys {
             stage.$stageWidth = stageWidth;
             stage.$stageHeight = stageHeight;
             if (egret.nativeRender) {
-                egret_native.resize(stageWidth, stageHeight);
+                egret_native.nrResize(stageWidth, stageHeight);
             } else {
                 this.screenDisplayList.setClipRect(stageWidth, stageHeight);
                 if (this.stageDisplayList) {

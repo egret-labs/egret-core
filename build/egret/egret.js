@@ -2026,7 +2026,7 @@ var egret;
             if (stageY === void 0) { stageY = 0; }
             if (egret.nativeRender) {
                 egret_native.update();
-                var result = egret_native.globalToLocal(this.$nativeDisplayObject.id, stageX, stageY);
+                var result = egret_native.nrGlobalToLocal(this.$nativeDisplayObject.id, stageX, stageY);
                 var arr = result.split(",");
                 var x = parseFloat(arr[0]);
                 var y = parseFloat(arr[1]);
@@ -2069,7 +2069,7 @@ var egret;
             if (localY === void 0) { localY = 0; }
             if (egret.nativeRender) {
                 egret_native.update();
-                var result = egret_native.localToGlobal(this.$nativeDisplayObject.id, localX, localY);
+                var result = egret_native.nrLocalToGlobal(this.$nativeDisplayObject.id, localX, localY);
                 var arr = result.split(",");
                 var x = parseFloat(arr[0]);
                 var y = parseFloat(arr[1]);
@@ -2353,7 +2353,7 @@ var egret;
                     egret_native.forHitTest = true;
                     egret_native.activateBuffer(buffer);
                     egret_native.update();
-                    egret_native.renderDisplayObjectWithOffset(self.$nativeDisplayObject.id, 1 - localX, 1 - localY);
+                    egret_native.nrRenderDisplayObject2(self.$nativeDisplayObject.id, 1 - localX, 1 - localY, true);
                     try {
                         data = egret_native.getPixels(1, 1);
                     }
@@ -7412,23 +7412,9 @@ var egret_native;
         isInit = true;
         var that = this;
         function initImpl2() {
-            Module["__bitmapDataMap"] = bitmapDataMap;
-            Module["__customFilterDataMap"] = customFilterDataMap;
-            getPixelsFun = Module.getPixels;
-            Module.customInit();
-            Module.downloadBuffers(function (buffer3) {
-                egret_native.NativeDisplayObject.init(buffer3, bitmapDataMap, filterMap, customFilterDataMap);
-                updateFun = Module.update;
-                renderFun = Module.render;
-                resizeFun = Module.resize;
-                setRenderModeFun = Module.setRenderMode;
-                updateCallbackListFun = Module.updateCallbackList;
-                renderDisplayObjectFun = Module.renderDisplayObject;
-                renderDisplayObject2Fun = Module.renderDisplayObject2;
-                localToGlobalFun = Module.localToGlobal;
-                globalToLocalFun = Module.globalToLocal;
-                activateBufferFun = Module.activateBuffer;
-                syncTextDataFunc = Module.sendTextFieldData;
+            egret_native.nrInit();
+            egret_native.nrDownloadBuffers(function (displayCmdBuffer) {
+                egret_native.NativeDisplayObject.init(displayCmdBuffer, bitmapDataMap, filterMap, customFilterDataMap);
                 timeStamp = egret.getTimer();
                 if (_callBackList.length > 0) {
                     var locCallAsyncFunctionList = _callBackList;
@@ -7448,34 +7434,11 @@ var egret_native;
     egret_native.setRootBuffer = function (buffer) {
         rootWebGLBuffer = buffer;
     };
-    egret_native.setRenderMode = function (mode) {
-        setRenderModeFun(2);
-    };
-    egret_native.renderDisplayObject = function (id, scale, useClip, clipX, clipY, clipW, clipH) {
-        renderDisplayObjectFun(id, scale, useClip, clipX, clipY, clipW, clipH);
-    };
-    egret_native.renderDisplayObjectWithOffset = function (id, offsetX, offsetY) {
-        renderDisplayObject2Fun(id, offsetX, offsetY, egret_native.forHitTest);
-    };
-    egret_native.localToGlobal = function (id, localX, localY) {
-        return localToGlobalFun(id, localX, localY);
-    };
-    egret_native.globalToLocal = function (id, globalX, globalY) {
-        return globalToLocalFun(id, globalX, globalY);
-    };
-    egret_native.resize = function (width, height) {
-        resizeFun(width, height);
-    };
-    egret_native.setCanvasScaleFactor = function (factor, scalex, scaley) {
-        Module.setCanvasScaleFactor(factor, scalex, scaley);
-    };
     egret_native.update = function () {
         validateDirtyTextField();
         validateDirtyGraphics();
         egret_native.NativeDisplayObject.update();
-        if (updateFun) {
-            updateFun();
-        }
+        egret_native.nrUpdate();
         syncDirtyTextField();
     };
     egret_native.dirtyTextField = function (textField) {
@@ -7489,12 +7452,9 @@ var egret_native;
         }
     };
     var syncDirtyTextField = function () {
-        if (!syncTextDataFunc) {
-            return;
-        }
         for (var key in textFieldDataMap) {
             if (textFieldDataMap[key].length > 0) {
-                syncTextDataFunc(key, textFieldDataMap[key]);
+                egret_native.nrSendTextFieldData(key, textFieldDataMap[key]);
             }
         }
         textFieldDataMap = {};
@@ -7550,16 +7510,8 @@ var egret_native;
     egret_native.updatePreCallback = function (currTimeStamp) {
         var dt = currTimeStamp - timeStamp;
         timeStamp = currTimeStamp;
-        if (updateCallbackListFun) {
-            updateCallbackListFun(dt);
-        }
+        egret_native.nrUpdateCallbackList(dt);
         return false;
-    };
-    var bindDefaultIndex = false;
-    egret_native.render = function () {
-        if (renderFun) {
-            renderFun();
-        }
     };
     var parseColorString = function (colorStr, colorVal) {
         if (colorStr.indexOf("r") == -1) {
@@ -7922,17 +7874,34 @@ var egret_native;
         if (!buffer) {
             buffer = rootWebGLBuffer;
         }
-        activateBufferFun(buffer.bufferIdForWasm, buffer.width, buffer.height);
+        egret_native.nrActiveBuffer(buffer.bufferIdForWasm, buffer.width, buffer.height);
     };
     egret_native.getPixels = function (x, y, width, height) {
         if (width === void 0) { width = 1; }
         if (height === void 0) { height = 1; }
         var pixels = new Uint8Array(4 * width * height);
-        getPixelsFun(x, y, width, height, pixels);
+        egret_native.nrGetPixels(x, y, width, height, pixels);
         return pixels;
     };
     egret_native.activateBuffer = function (buffer) {
         egret_native.activateWebGLBuffer(buffer);
+    };
+    egret_native.getJsImage = function (key) {
+        if (bitmapDataMap[key].isTexture === true) {
+            return null;
+        }
+        else {
+            return bitmapDataMap[key].source;
+        }
+    };
+    egret_native.getJsCustomFilterVertexSrc = function (key) {
+        return customFilterDataMap[key].vertexSrc;
+    };
+    egret_native.getJsCustomFilterFragSrc = function (key) {
+        return customFilterDataMap[key].fragmentSrc;
+    };
+    egret_native.getJsCustomFilterUniforms = function (key) {
+        return customFilterDataMap[key].uniformsSrc;
     };
     var bitmapDataMap = {};
     var textFieldDataMap = {};
@@ -9484,7 +9453,7 @@ var egret;
                     clipH = clipBounds.height;
                 }
                 egret_native.update();
-                egret_native.renderDisplayObject(displayObject.$nativeDisplayObject.id, scale, useClip, clipX, clipY, clipW, clipH);
+                egret_native.nrRenderDisplayObject(displayObject.$nativeDisplayObject.id, scale, useClip, clipX, clipY, clipW, clipH);
                 egret_native.activateBuffer(null);
             }
             else {
@@ -14132,7 +14101,7 @@ var egret;
                 DisplayList.$canvasScaleX = x;
                 DisplayList.$canvasScaleY = y;
                 if (egret.nativeRender) {
-                    egret_native.setCanvasScaleFactor(DisplayList.$canvasScaleFactor, x, y);
+                    egret_native.nrSetCanvasScaleFactor(DisplayList.$canvasScaleFactor, x, y);
                 }
             };
             DisplayList.$canvasScaleFactor = 1;
@@ -14394,7 +14363,7 @@ var egret;
             Player.prototype.$render = function (triggerByFrame, costTicker) {
                 if (egret.nativeRender) {
                     egret_native.update();
-                    egret_native.render();
+                    egret_native.nrRender();
                     return;
                 }
                 if (this.showFPS || this.showLog) {
@@ -14419,7 +14388,7 @@ var egret;
                 stage.$stageWidth = stageWidth;
                 stage.$stageHeight = stageHeight;
                 if (egret.nativeRender) {
-                    egret_native.resize(stageWidth, stageHeight);
+                    egret_native.nrResize(stageWidth, stageHeight);
                 }
                 else {
                     this.screenDisplayList.setClipRect(stageWidth, stageHeight);
@@ -19396,7 +19365,7 @@ var egret_native;
     var NativeDisplayObject = (function () {
         function NativeDisplayObject(type) {
             this.id = displayObjectId;
-            this.$obj = new Module.WasmNode(this.id, type);
+            this.$obj = new egret_native.NrNode(this.id, type);
             displayCmdBuffer[displayCmdBufferIndex++] = 0 /* CREATE_OBJECT */;
             displayCmdBuffer[displayCmdBufferIndex++] = displayObjectId;
             displayCmdBuffer[displayCmdBufferIndex++] = type;
@@ -19573,7 +19542,7 @@ var egret_native;
         };
         NativeDisplayObject.createFilter = function (filter) {
             filter.$id = filterId;
-            filter.$obj = new Module.WasmNode(filterId, 6 /* FILTER */);
+            filter.$obj = new egret_native.NrNode(filterId, 6 /* FILTER */);
             filterId++;
             displayCmdBuffer[displayCmdBufferIndex++] = 0 /* CREATE_OBJECT */;
             displayCmdBuffer[displayCmdBufferIndex++] = filter.$id;
@@ -28828,7 +28797,7 @@ var egret;
                     }
                     egret.sys.CanvasRenderBuffer = web.CanvasRenderBuffer;
                     setRenderMode(options.renderMode);
-                    egret_native.setRenderMode(egret.Capabilities.$renderMode);
+                    egret_native.nrSetRenderMode(2);
                     var canvasScaleFactor;
                     if (options.canvasScaleFactor) {
                         canvasScaleFactor = options.canvasScaleFactor;

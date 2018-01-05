@@ -40,11 +40,6 @@ module egret {
 /**
  * @private
  */
-declare let Module: any;
-
-/**
- * @private
- */
 namespace egret_native {
     let updateFun: Function;
     let renderFun: Function;
@@ -100,26 +95,10 @@ namespace egret_native {
         let that = this;
 
         function initImpl2() {
-            Module["__bitmapDataMap"] = bitmapDataMap;
-            Module["__customFilterDataMap"] = customFilterDataMap;
-            getPixelsFun = Module.getPixels;
+            egret_native.nrInit();
 
-            Module.customInit();
-
-            Module.downloadBuffers(function (buffer3: Float32Array) {
-                NativeDisplayObject.init(buffer3, bitmapDataMap, filterMap, customFilterDataMap);
-
-                updateFun = Module.update;
-                renderFun = Module.render;
-                resizeFun = Module.resize;
-                setRenderModeFun = Module.setRenderMode;
-                updateCallbackListFun = Module.updateCallbackList;
-                renderDisplayObjectFun = Module.renderDisplayObject;
-                renderDisplayObject2Fun = Module.renderDisplayObject2;
-                localToGlobalFun = Module.localToGlobal;
-                globalToLocalFun = Module.globalToLocal;
-                activateBufferFun = Module.activateBuffer;
-                syncTextDataFunc = Module.sendTextFieldData;
+            egret_native.nrDownloadBuffers(function (displayCmdBuffer: Float32Array) {
+                NativeDisplayObject.init(displayCmdBuffer, bitmapDataMap, filterMap, customFilterDataMap);
                 timeStamp = egret.getTimer();
                 if (_callBackList.length > 0) {
                     let locCallAsyncFunctionList = _callBackList;
@@ -142,44 +121,13 @@ namespace egret_native {
         rootWebGLBuffer = buffer;
     }
 
-    export let setRenderMode = function (mode: string): void {
-        setRenderModeFun(2);
-    }
-
-    export let renderDisplayObject = function (id: number, scale: number, useClip: boolean, clipX: number, clipY: number, clipW: number, clipH: number): void {
-        renderDisplayObjectFun(id, scale, useClip, clipX, clipY, clipW, clipH);
-    }
-
-    export let renderDisplayObjectWithOffset = function (id: number, offsetX: number, offsetY: number): void {
-        renderDisplayObject2Fun(id, offsetX, offsetY, forHitTest);
-    }
-
-    export let localToGlobal = function (id: number, localX: number, localY: number): string {
-        return localToGlobalFun(id, localX, localY);
-    }
-
-    export let globalToLocal = function (id: number, globalX: number, globalY: number): string {
-        return globalToLocalFun(id, globalX, globalY);
-    }
-
-    export let resize = function (width: number, height: number): void {
-        resizeFun(width, height);
-    }
-
-    export let setCanvasScaleFactor = function (factor: number, scalex: number, scaley: number): void {
-        Module.setCanvasScaleFactor(factor, scalex, scaley);
-    }
     export let update = function (): void {
         validateDirtyTextField();
         validateDirtyGraphics();
         NativeDisplayObject.update();
-        if (updateFun) {
-            updateFun();
-        }
+        egret_native.nrUpdate();
         syncDirtyTextField();
     }
-
-
 
     export let dirtyTextField = function (textField: egret.TextField): void {
         if (dirtyTextFieldList.indexOf(textField) == -1) {
@@ -193,13 +141,10 @@ namespace egret_native {
         }
     }
 
-    let syncDirtyTextField = function(): void {
-        if(!syncTextDataFunc) {
-            return;
-        }
-        for(let key in textFieldDataMap) {
-            if(textFieldDataMap[key].length > 0) {
-                syncTextDataFunc(key, textFieldDataMap[key]);
+    let syncDirtyTextField = function (): void {
+        for (let key in textFieldDataMap) {
+            if (textFieldDataMap[key].length > 0) {
+                egret_native.nrSendTextFieldData(<number><any>key, textFieldDataMap[key]);
             }
         }
         textFieldDataMap = {};
@@ -259,18 +204,8 @@ namespace egret_native {
     export let updatePreCallback = function (currTimeStamp: number): boolean {
         var dt: number = currTimeStamp - timeStamp;
         timeStamp = currTimeStamp;
-        if (updateCallbackListFun) {
-            updateCallbackListFun(dt);
-        }
+        egret_native.nrUpdateCallbackList(dt);
         return false;
-    }
-
-    let bindDefaultIndex: boolean = false;
-
-    export let render = function (): void {
-        if (renderFun) {
-            renderFun();
-        }
     }
 
     let parseColorString = function (colorStr: string, colorVal: ColorAttrib): void {
@@ -355,10 +290,10 @@ namespace egret_native {
         let x1 = node.x * canvasScaleX;
         let y1 = node.y * canvasScaleY;
 
-       let offsetX = -node.x;
+        let offsetX = -node.x;
         let offsetY = -node.y;
         let renderCmds = [];
-        let renderParms  = "";
+        let renderParms = "";
         if (node.dirtyRender) {
             renderCmds.length = 0;
             renderCmds.push(1010);
@@ -665,18 +600,39 @@ namespace egret_native {
         if (!buffer) {
             buffer = rootWebGLBuffer;
         }
-        activateBufferFun(buffer.bufferIdForWasm, buffer.width, buffer.height);
+        egret_native.nrActiveBuffer(buffer.bufferIdForWasm, buffer.width, buffer.height);
     }
 
     export let getPixels = function (x: number, y: number, width: number = 1, height: number = 1): number[] {
         let pixels = new Uint8Array(4 * width * height);
-        getPixelsFun(x, y, width, height, pixels);
+        egret_native.nrGetPixels(x, y, width, height, pixels);
         return <number[]><any>pixels;
     }
 
     export let activateBuffer = function (buffer: egret.sys.RenderBuffer): void {
         activateWebGLBuffer(<egret.web.WebGLRenderBuffer>buffer);
     }
+
+    export let getJsImage = function (key) {
+        if (bitmapDataMap[key].isTexture === true) {
+            return null;
+        }
+        else {
+            return bitmapDataMap[key].source;
+        }
+    };
+
+    export let getJsCustomFilterVertexSrc = function (key) {
+        return customFilterDataMap[key].vertexSrc;
+    };
+
+    export let getJsCustomFilterFragSrc = function (key) {
+        return customFilterDataMap[key].fragmentSrc;
+    };
+
+    export let getJsCustomFilterUniforms = function (key) {
+    return customFilterDataMap[key].uniformsSrc;
+};
 
     let bitmapDataMap = {};
     var textFieldDataMap = {};

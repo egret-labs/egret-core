@@ -1680,7 +1680,7 @@ namespace egret {
         public globalToLocal(stageX: number = 0, stageY: number = 0, resultPoint?: Point): Point {
             if (egret.nativeRender) {
                 egret_native.update();
-                let result = egret_native.globalToLocal(this.$nativeDisplayObject.id, stageX, stageY);
+                let result = egret_native.nrGlobalToLocal(this.$nativeDisplayObject.id, stageX, stageY);
                 let arr = result.split(",");
                 let x = parseFloat(arr[0]);
                 let y = parseFloat(arr[1]);
@@ -1722,7 +1722,7 @@ namespace egret {
         public localToGlobal(localX: number = 0, localY: number = 0, resultPoint?: Point): Point {
             if (egret.nativeRender) {
                 egret_native.update();
-                let result = egret_native.localToGlobal(this.$nativeDisplayObject.id, localX, localY);
+                let result = egret_native.nrLocalToGlobal(this.$nativeDisplayObject.id, localX, localY);
                 let arr = result.split(",");
                 let x = parseFloat(arr[0]);
                 let y = parseFloat(arr[1]);
@@ -2035,7 +2035,7 @@ namespace egret {
                     egret_native.forHitTest = true;
                     egret_native.activateBuffer(buffer);
                     egret_native.update();
-                    egret_native.renderDisplayObjectWithOffset(self.$nativeDisplayObject.id, 1 - localX, 1 - localY);
+                    egret_native.nrRenderDisplayObject2(self.$nativeDisplayObject.id, 1 - localX, 1 - localY, true);
                     try {
                         data = egret_native.getPixels(1, 1);
                     }

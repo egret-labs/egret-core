@@ -76,7 +76,7 @@ namespace egret.web {
 
                 sys.CanvasRenderBuffer = CanvasRenderBuffer;
                 setRenderMode(options.renderMode);
-                egret_native.setRenderMode(Capabilities.$renderMode);
+                egret_native.nrSetRenderMode(2);
 
                 let canvasScaleFactor;
                 if (options.canvasScaleFactor) {

@@ -34,4 +34,25 @@ declare namespace egret_native {
     function sendInfoToPlugin(info: string): void;
 
     function receivedPluginInfo(info: string): void;
+
+    function nrInit(): void;
+    function nrDownloadBuffers(callback: (displayCmdBuffer: Float32Array) => void): void;
+    function nrSetRenderMode(mode: number): void;
+    function nrSetRenderMode(mode: number): void;
+    function nrRenderDisplayObject(id: number, scale: number, useClip: boolean, clipX: number, clipY: number, clipW: number, clipH: number): void;
+    function nrRenderDisplayObject2(id: number, offsetX: number, offsetY: number, forHitTest: boolean): void;
+    function nrLocalToGlobal(id: number, localX: number, localY: number): string;
+    function nrGlobalToLocal(id: number, globalX: number, globalY: number): string;
+    function nrResize(width: number, height: number): void;
+    function nrSetCanvasScaleFactor(factor: number, scalex: number, scaley: number): void;
+    function nrUpdate(): void;
+    function nrRender(): void;
+    function nrSendTextFieldData(textFieldId: number, strData: string): void;
+    function nrUpdateCallbackList(dt: number): void;
+    function nrActiveBuffer(id: number, width: number, height: number): void;
+    function nrGetPixels(x: number, y: number, width: number, height: number, pixels: Uint8Array): void;
+
+    class NrNode {
+        constructor(id: number, type: number)
+    }
 }
