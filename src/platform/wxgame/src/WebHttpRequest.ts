@@ -34,7 +34,7 @@ namespace egret.wxapp {
      */
     export class WebHttpRequest extends EventDispatcher implements HttpRequest {
 
-        private _response:string;
+        private _response: string;
 
         /**
          * @private
@@ -46,14 +46,14 @@ namespace egret.wxapp {
         /**
          * @private
          */
-        private _xhr:XMLHttpRequest;
+        private _xhr: XMLHttpRequest;
 
         /**
          * @private
          * 本次请求返回的数据，数据类型根据responseType设置的值确定。
          */
 
-        public get response():any {
+        public get response(): any {
             if (this._response) {
                 return this._response;
             }
@@ -61,7 +61,7 @@ namespace egret.wxapp {
             if (!this._xhr) {
                 return null;
             }
-            
+
             if (this._xhr.response != undefined) {
                 return this._xhr.response;
             }
@@ -70,8 +70,8 @@ namespace egret.wxapp {
                 return this._xhr.responseText;
             }
 
-            if (this._responseType == "arraybuffer" && /msie 9.0/i.test(navigator.userAgent)){
-                let w:any = window;
+            if (this._responseType == "arraybuffer" && /msie 9.0/i.test(navigator.userAgent)) {
+                let w: any = window;
                 return w.convertResponseBodyToText(this._xhr["responseBody"]);
             }
 
@@ -91,49 +91,49 @@ namespace egret.wxapp {
         /**
          * @private
          */
-        private _responseType:"" | "arraybuffer" | "blob" | "document" | "json" | "text";
+        private _responseType: "" | "arraybuffer" | "blob" | "document" | "json" | "text";
 
         /**
          * @private
          * 设置返回的数据格式，请使用 HttpResponseType 里定义的枚举值。设置非法的值或不设置，都将使用HttpResponseType.TEXT。
          */
-        public get responseType():"" | "arraybuffer" | "blob" | "document" | "json" | "text" {
+        public get responseType(): "" | "arraybuffer" | "blob" | "document" | "json" | "text" {
             return this._responseType;
         }
 
-        public set responseType(value:"" | "arraybuffer" | "blob" | "document" | "json" | "text") {
+        public set responseType(value: "" | "arraybuffer" | "blob" | "document" | "json" | "text") {
             this._responseType = value;
         }
 
         /**
          * @private
          */
-        private _withCredentials:boolean;
+        private _withCredentials: boolean;
 
         /**
          * @private
          * 表明在进行跨站(cross-site)的访问控制(Access-Control)请求时，是否使用认证信息(例如cookie或授权的header)。 默认为 false。(这个标志不会影响同站的请求)
          */
-        public get withCredentials():boolean {
+        public get withCredentials(): boolean {
             return this._withCredentials;
         }
 
-        public set withCredentials(value:boolean) {
+        public set withCredentials(value: boolean) {
             this._withCredentials = value;
         }
 
         /**
          * @private
          */
-        private _url:string = "";
-        private _method:string = "";
+        private _url: string = "";
+        private _method: string = "";
 
         /**
          * @private
          *
          * @returns
          */
-        private getXHR():any {
+        private getXHR(): any {
             if (window["XMLHttpRequest"]) {
                 return new window["XMLHttpRequest"]();
             } else {
@@ -147,7 +147,7 @@ namespace egret.wxapp {
          * @param url 该请求所要访问的URL该请求所要访问的URL
          * @param method 请求所使用的HTTP方法， 请使用 HttpMethod 定义的枚举值.
          */
-        public open(url:string, method:string = "GET"):void {
+        public open(url: string, method: string = "GET"): void {
             this._url = url;
             this._method = method;
             if (this._xhr) {
@@ -160,25 +160,25 @@ namespace egret.wxapp {
             this._xhr.open(this._method, this._url, true);
         }
 
-        public readFileAsync():void {
-            var self=this;
-            
-              var onSuccessFunc = function (content) {
+        public readFileAsync(): void {
+            var self = this;
+
+            var onSuccessFunc = function (content) {
                 self._response = content;
                 self.dispatchEventWith(egret.Event.COMPLETE);
-              };
-              var onErrorFunc = function () {
+            };
+            var onErrorFunc = function () {
                 self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
-              };
+            };
 
             const fs = wx.getFileSystemManager();
 
             fs.readFile({
-              filePath: self._url,
-              encoding: 'utf8',
-              success({ data }) {
-                onSuccessFunc(data);
-              }
+                filePath: self._url,
+                encoding: 'utf8',
+                success({ data }) {
+                    onSuccessFunc(data);
+                }
             })
         }
 
@@ -187,11 +187,11 @@ namespace egret.wxapp {
          * 发送请求.
          * @param data 需要发送的数据
          */
-        public send(data?:any):void {
-            if (!this.isNetUrl(this._url)){
+        public send(data?: any): void {
+            this._response = undefined;
+            if (!this.isNetUrl(this._url)) {
                 this.readFileAsync();
-             }else
-             {
+            } else {
                 if (this._responseType != null) {
                     this._xhr.responseType = this._responseType;
                 }
@@ -199,7 +199,7 @@ namespace egret.wxapp {
                     this._xhr.withCredentials = this._withCredentials;
                 }
                 if (this.headerObj) {
-                    for(let key in this.headerObj) {
+                    for (let key in this.headerObj) {
                         this._xhr.setRequestHeader(key, this.headerObj[key]);
                     }
                 }
@@ -212,7 +212,7 @@ namespace egret.wxapp {
          * @param url
          * @returns {boolean}
          */
-        private isNetUrl(url:string):boolean {
+        private isNetUrl(url: string): boolean {
             return url.indexOf("http://") != -1 || url.indexOf("HTTP://") != -1 || url.indexOf("https://") != -1 || url.indexOf("HTTPS://") != -1;
         }
 
@@ -220,7 +220,7 @@ namespace egret.wxapp {
          * @private
          * 如果请求已经被发送,则立刻中止请求.
          */
-        public abort():void {
+        public abort(): void {
             if (this._xhr) {
                 this._xhr.abort();
             }
@@ -230,7 +230,7 @@ namespace egret.wxapp {
          * @private
          * 返回所有响应头信息(响应头名和值), 如果响应头还没接受,则返回"".
          */
-        public getAllResponseHeaders():string {
+        public getAllResponseHeaders(): string {
             if (!this._xhr) {
                 return null;
             }
@@ -238,15 +238,15 @@ namespace egret.wxapp {
             return result ? result : "";
         }
 
-        private headerObj:any;
+        private headerObj: any;
         /**
          * @private
          * 给指定的HTTP请求头赋值.在这之前,您必须确认已经调用 open() 方法打开了一个url.
          * @param header 将要被赋值的请求头名称.
          * @param value 给指定的请求头赋的值.
          */
-        public setRequestHeader(header:string, value:string):void {
-            if(!this.headerObj) {
+        public setRequestHeader(header: string, value: string): void {
+            if (!this.headerObj) {
                 this.headerObj = {};
             }
             this.headerObj[header] = value;
@@ -257,7 +257,7 @@ namespace egret.wxapp {
          * 返回指定的响应头的值, 如果响应头还没被接受,或该响应头不存在,则返回"".
          * @param header 要返回的响应头名称
          */
-        public getResponseHeader(header:string):string {
+        public getResponseHeader(header: string): string {
             if (!this._xhr) {
                 return null;
             }
@@ -268,13 +268,13 @@ namespace egret.wxapp {
         /**
          * @private
          */
-        private onReadyStateChange():void {
+        private onReadyStateChange(): void {
             let xhr = this._xhr;
             if (xhr.readyState == 4) {// 4 = "loaded"
                 let ioError = (xhr.status >= 400 || xhr.status == 0);
                 let url = this._url;
                 let self = this;
-                window.setTimeout(function ():void {
+                window.setTimeout(function (): void {
                     if (ioError) {//请求错误
                         if (DEBUG && !self.hasEventListener(IOErrorEvent.IO_ERROR)) {
                             $error(1011, url);
@@ -292,7 +292,7 @@ namespace egret.wxapp {
         /**
          * @private
          */
-        private updateProgress(event):void {
+        private updateProgress(event): void {
             if (event.lengthComputable) {
                 ProgressEvent.dispatchProgressEvent(this, ProgressEvent.PROGRESS, event.loaded, event.total);
             }
@@ -303,4 +303,4 @@ namespace egret.wxapp {
 
 }
 
-declare var wx:any;
+declare var wx: any;
