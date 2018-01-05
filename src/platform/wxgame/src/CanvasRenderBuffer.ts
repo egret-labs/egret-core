@@ -34,15 +34,7 @@ namespace egret.wxapp {
      */
     function createCanvas(width?:number, height?:number):HTMLCanvasElement {
 
-        // let canvas:HTMLCanvasElement = document.createElement("canvas");
-        
-        let canvas;
-        
-        if (egret.Capabilities.renderMode==='webgl'){
-            canvas = document.createElement("canvas");
-        }else{
-            canvas = window['canvas'];
-        }
+        let canvas:HTMLCanvasElement = document.createElement("canvas");
 
         if (!isNaN(width) && !isNaN(height)) {
             canvas.width = width;
@@ -84,7 +76,12 @@ namespace egret.wxapp {
     export class CanvasRenderBuffer implements sys.RenderBuffer {
 
         public constructor(width?:number, height?:number, root?:boolean) {
-            this.surface = createCanvas(width, height);
+            if(root) {
+                this.surface = window["canvas"];
+            }
+            else {
+                this.surface = createCanvas(width, height);
+            }
             this.context = this.surface.getContext("2d");
             if (this.context) {
                 this.context.$offsetX = 0;
