@@ -173,13 +173,24 @@ namespace egret.wxapp {
 
             const fs = wx.getFileSystemManager();
 
-            fs.readFile({
-                filePath: self._url,
-                encoding: 'utf8',
-                success({ data }) {
-                    onSuccessFunc(data);
-                }
-            })
+            if (self.responseType == "arraybuffer") {
+                //不传 encoding 默认返回二进制格式，传了 encoding:binary 反而返回 string 格式
+                fs.readFile({
+                    filePath: self._url,
+                    success({ data }) {
+                        onSuccessFunc(data);
+                    }
+                })
+            }
+            else {
+                fs.readFile({
+                    filePath: self._url,
+                    encoding: 'utf8',
+                    success({ data }) {
+                        onSuccessFunc(data);
+                    }
+                })
+            }
         }
 
         /**
