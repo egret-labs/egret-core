@@ -39,7 +39,9 @@ type SourceCode = {
 
 class EgretProjectData {
     private egretProperties: egret.EgretProperty = {
-        modules: []
+        modules: [],
+        target: { current: "web" }
+
     };
 
     projectRoot = "";
@@ -137,6 +139,15 @@ class EgretProjectData {
             }
         }
         return [egret.args.projectDir];
+    }
+
+    getCurrentTarget() {
+        if (globals.hasKeys(this.egretProperties, ["target", "current"])) {
+            return this.egretProperties.target.current;
+        }
+        else {
+            return "web"
+        }
     }
 
     getThemes(): string[] {

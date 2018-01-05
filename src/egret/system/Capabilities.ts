@@ -248,7 +248,7 @@ namespace egret {
          * @language zh_CN
          */
         public static get engineVersion(): string {
-            return "5.1.1";
+            return "5.1.2";
         }
 
         /**

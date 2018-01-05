@@ -1,13 +1,11 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+function __extends(d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() {
+        this.constructor = d;
+    }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -17,8 +15,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    var _ = { label: 0, sent: function () { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function () { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -479,13 +477,13 @@ var RES;
             var mapper = function (r) {
                 return _this.loadResource(r)
                     .then(function (response) {
-                    RES.host.save(r, response);
-                    current++;
-                    if (reporter && reporter.onProgress) {
-                        reporter.onProgress(current, total);
-                    }
-                    return response;
-                });
+                        RES.host.save(r, response);
+                        current++;
+                        if (reporter && reporter.onProgress) {
+                            reporter.onProgress(current, total);
+                        }
+                        return response;
+                    });
             };
             total = list.length;
             return Promise.all(list.map(mapper));
@@ -640,17 +638,17 @@ var RES;
                 var _this = this;
                 return __generator(this, function (_a) {
                     return [2 /*return*/, new Promise(function (reslove, reject) {
-                            var onSuccess = function () {
-                                var texture = loader['data'] ? loader['data'] : loader['response'];
-                                reslove(texture);
-                            };
-                            var onError = function () {
-                                var e = new RES.ResourceManagerError(1001, resource.url);
-                                reject(e);
-                            };
-                            loader.addEventListener(egret.Event.COMPLETE, onSuccess, _this);
-                            loader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, _this);
-                        })];
+                        var onSuccess = function () {
+                            var texture = loader['data'] ? loader['data'] : loader['response'];
+                            reslove(texture);
+                        };
+                        var onError = function () {
+                            var e = new RES.ResourceManagerError(1001, resource.url);
+                            reject(e);
+                        };
+                        loader.addEventListener(egret.Event.COMPLETE, onSuccess, _this);
+                        loader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, _this);
+                    })];
                 });
             });
         }
@@ -833,10 +831,10 @@ var RES;
                             case 0: return [4 /*yield*/, host.load(resource, processor_1.JsonProcessor)];
                             case 1:
                                 data = _a.sent();
-                                imagePath = getRelativePath(resource.name, data.file);
-                                r = host.resourceConfig.getResource(imagePath);
+                                imagePath = "resource/" + getRelativePath(resource.url, data.file);
+                                r = host.resourceConfig.getResource(data.file);
                                 if (!r) {
-                                    throw new RES.ResourceManagerError(1001, imagePath);
+                                    r = { name: imagePath, url: imagePath, extra: true, type: 'image' };
                                 }
                                 return [4 /*yield*/, host.load(r)];
                             case 2:
@@ -958,20 +956,20 @@ var RES;
                 var imageResource;
                 return host.load(resource, processor_1.JsonProcessor)
                     .then(function (value) {
-                    mcData = value;
-                    var jsonPath = resource.name;
-                    var imagePath = jsonPath.substring(0, jsonPath.lastIndexOf(".")) + ".png";
-                    imageResource = host.resourceConfig.getResource(imagePath, true);
-                    if (!imageResource) {
-                        throw new RES.ResourceManagerError(1001, imagePath);
-                    }
-                    return host.load(imageResource);
-                }).then(function (value) {
-                    host.save(imageResource, value);
-                    var mcTexture = value;
-                    var mcDataFactory = new egret.MovieClipDataFactory(mcData, mcTexture);
-                    return mcDataFactory;
-                });
+                        mcData = value;
+                        var jsonPath = resource.name;
+                        var imagePath = jsonPath.substring(0, jsonPath.lastIndexOf(".")) + ".png";
+                        imageResource = host.resourceConfig.getResource(imagePath, true);
+                        if (!imageResource) {
+                            throw new RES.ResourceManagerError(1001, imagePath);
+                        }
+                        return host.load(imageResource);
+                    }).then(function (value) {
+                        host.save(imageResource, value);
+                        var mcTexture = value;
+                        var mcDataFactory = new egret.MovieClipDataFactory(mcData, mcTexture);
+                        return mcDataFactory;
+                    });
             },
             onRemoveStart: function (host, resource) {
                 var mcFactory = host.get(resource);
@@ -1074,7 +1072,7 @@ var RES;
                     var _loop_1 = function (resource_1) {
                         fsData[resource_1.name] = resource_1;
                         if (resource_1.subkeys) {
-                            resource_1.subkeys.split(".").forEach(function (subkey) {
+                            resource_1.subkeys.split(",").forEach(function (subkey) {
                                 alias[subkey] = resource_1.name + "#" + subkey;
                             });
                             // ResourceConfig.
@@ -1088,9 +1086,11 @@ var RES;
                 });
             },
             onRemoveStart: function () {
-                return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
-                    return [2 /*return*/];
-                }); });
+                return __awaiter(this, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        return [2 /*return*/];
+                    });
+                });
             }
         };
         var PVRParser = (function () {
@@ -2082,6 +2082,8 @@ var RES;
      * @language zh_CN
      */
     function setMaxLoadingThread(thread) {
+        if (!instance)
+            instance = new Resource();
         instance.setMaxLoadingThread(thread);
     }
     RES.setMaxLoadingThread = setMaxLoadingThread;

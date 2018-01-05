@@ -7,7 +7,7 @@ var CompileOptions = (function () {
         this._host = null;
         this._port = NaN;
         this.esTarget = 'ES5';
-        this.target = "web";
+        this.target = "none";
         this._tmpDir = null;
     }
     Object.defineProperty(CompileOptions.prototype, "srcDir", {

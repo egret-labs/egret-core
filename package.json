@@ -296,21 +296,11 @@
       },
       {
         "name": "assetsmanager",
-        "description": "资源管理器（新）",
+        "description": "assetsmanager 资源管理器",
         "description_en": "AssetsManager",
         "files": [],
         "root": "",
         "dependencies": []
-      },
-      {
-        "name": "res",
-        "description": "res 资源加载库（不推荐使用）",
-        "description_en": "resource lib",
-        "files": [],
-        "root": "src/extension/resource",
-        "dependencies": [
-          "egret"
-        ]
       },
       {
         "name": "dragonBones",

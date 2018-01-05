@@ -86,12 +86,26 @@ function publishEXML(exmls, exmlPublishPolicy) {
     var files = themeDatas.map(function (thmData) {
         var path = thmData.path;
         if (exmlPublishPolicy == "commonjs") {
-            var content = "\n            function __extends(d, b) {\n                for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];\n                function __() {\n                    this.constructor = d;\n                }\n                __.prototype = b.prototype;\n                d.prototype = new __();\n             };\n             ";
-            content += "window.skins = {};window.generateEUI = {};\n            generateEUI.paths = {};\n            generateEUI.skins = " + JSON.stringify(thmData.skins) + "\n";
+            var content = "\nfunction __extends(d, b) {\n    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];\n        function __() {\n            this.constructor = d;\n        }\n    __.prototype = b.prototype;\n    d.prototype = new __();\n};\n";
+            content += "window.generateEUI = {};\ngenerateEUI.paths = {};\ngenerateEUI.skins = " + JSON.stringify(thmData.skins) + "\n";
+            var namespaces = [];
             for (var _i = 0, _a = thmData.exmls; _i < _a.length; _i++) {
                 var item = _a[_i];
+                // skins.items = {};
+                //skins.items.EUIComponent
+                //items.EUIComponent;
+                var packages = item.className.split(".");
+                var temp = '';
+                for (var i = 0; i < packages.length - 1; i++) {
+                    temp = i == 0 ? packages[i] : temp + "." + packages[i];
+                    if (namespaces.indexOf(temp) == -1) {
+                        namespaces.push(temp);
+                    }
+                }
                 content += "generateEUI.paths['" + item.path + "'] = window." + item.className + " = " + item.gjs;
             }
+            var result = namespaces.map(function (v) { return "window." + v + "={};"; }).join("\n");
+            content = result + content;
             path = path.replace("thm.json", "thm.js");
             return { path: path, content: content };
         }

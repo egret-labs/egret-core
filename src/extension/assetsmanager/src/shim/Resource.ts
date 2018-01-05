@@ -324,6 +324,7 @@ module RES {
      * @language zh_CN
      */
     export function setMaxLoadingThread(thread: number): void {
+        if (!instance) instance = new Resource();
         instance.setMaxLoadingThread(thread);
     }
 
