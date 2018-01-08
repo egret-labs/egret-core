@@ -89,7 +89,7 @@ namespace egret.wxapp {
          */
         private readOption(container: any, options: { renderMode?: string; screenAdapter?: sys.IScreenAdapter }): PlayerOption {
             let option: PlayerOption = {};
-            option.entryClassName = 'GameApp';
+            option.entryClassName = 'Main';
             option.scaleMode = 'showAll' || egret.StageScaleMode.NO_SCALE;
             option.frameRate =  30;
             option.contentWidth = 640;
