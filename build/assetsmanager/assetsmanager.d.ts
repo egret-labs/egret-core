@@ -605,7 +605,7 @@ declare module RES {
      * @platform Web,Native
      * @language zh_CN
      */
-    function loadConfig(url?: string, resourceRoot?: string): Promise<void>;
+    function loadConfig(url: string, resourceRoot: string): Promise<void>;
     /**
      * Load a set of resources according to the group name.
      * @param name Group name to load the resource group.

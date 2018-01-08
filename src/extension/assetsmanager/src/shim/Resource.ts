@@ -71,11 +71,12 @@ module RES {
      * @platform Web,Native
      * @language zh_CN
      */
-    export function loadConfig(url?: string, resourceRoot?: string) {
+    export function loadConfig(url: string, resourceRoot: string) {
         if (url) {
             setConfigURL(url);
         }
         if (!instance) instance = new Resource();
+        config.resourceRoot = resourceRoot;
         return instance.loadConfig();
     }
     /**

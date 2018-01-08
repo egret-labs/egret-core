@@ -170,7 +170,7 @@ var RES;
             var _this = this;
             if (!this.config) {
                 this.config = {
-                    alias: {}, groups: {}, resourceRoot: "resource",
+                    alias: {}, groups: {}, resourceRoot: this.resourceRoot,
                     typeSelector: function () { return 'unknown'; }, mergeSelector: null,
                     fileSystem: null
                 };
@@ -1844,6 +1844,7 @@ var RES;
         }
         if (!instance)
             instance = new Resource();
+        RES.config.resourceRoot = resourceRoot;
         return instance.loadConfig();
     }
     RES.loadConfig = loadConfig;

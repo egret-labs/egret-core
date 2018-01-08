@@ -136,7 +136,7 @@ module RES {
         init() {
             if (!this.config) {
                 this.config = {
-                    alias: {}, groups: {}, resourceRoot: "resource",
+                    alias: {}, groups: {}, resourceRoot: this.resourceRoot,
                     typeSelector: () => 'unknown', mergeSelector: null,
                     fileSystem: null as any as FileSystem
                 }
