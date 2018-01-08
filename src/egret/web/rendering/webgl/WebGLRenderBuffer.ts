@@ -124,7 +124,7 @@ namespace egret.web {
          * 模版开关状态
          */
         private stencilState: boolean = false;
-        public $stencilList: { x:number, y:number, width:number, height:number }[] = [];
+        public $stencilList: { x: number, y: number, width: number, height: number }[] = [];
         public stencilHandleCount: number = 0;
 
         public enableStencil(): void {
@@ -245,6 +245,13 @@ namespace egret.web {
          * 获取指定区域的像素
          */
         public getPixels(x: number, y: number, width: number = 1, height: number = 1): number[] {
+            if (egret.nativeRender) {
+                egret_native.activateBuffer(this);
+                let data = new Uint8Array(4 * width * height);
+                egret_native.nrGetPixels(1, 1, 1, 1, data);
+                egret_native.activateBuffer(null);
+                return <number[]><any>data;
+            }
             let pixels = new Uint8Array(4 * width * height);
 
             let useFrameBuffer = this.rootRenderTarget.useFrameBuffer;
