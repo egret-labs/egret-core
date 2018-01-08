@@ -245,24 +245,23 @@ namespace egret.web {
          * 获取指定区域的像素
          */
         public getPixels(x: number, y: number, width: number = 1, height: number = 1): number[] {
-            if (egret.nativeRender) {
-                egret_native.activateBuffer(this);
-                let data = new Uint8Array(4 * width * height);
-                egret_native.nrGetPixels(1, 1, 1, 1, data);
-                egret_native.activateBuffer(null);
-                return <number[]><any>data;
-            }
             let pixels = new Uint8Array(4 * width * height);
 
-            let useFrameBuffer = this.rootRenderTarget.useFrameBuffer;
-            this.rootRenderTarget.useFrameBuffer = true;
-            this.rootRenderTarget.activate();
+            if (egret.nativeRender) {
+                egret_native.activateBuffer(this);
+                egret_native.nrGetPixels(x, y, width, height, pixels);
+                egret_native.activateBuffer(null);
+            }
+            else {
+                let useFrameBuffer = this.rootRenderTarget.useFrameBuffer;
+                this.rootRenderTarget.useFrameBuffer = true;
+                this.rootRenderTarget.activate();
 
-            this.context.getPixels(x, y, width, height, pixels);
+                this.context.getPixels(x, y, width, height, pixels);
 
-            this.rootRenderTarget.useFrameBuffer = useFrameBuffer;
-            this.rootRenderTarget.activate();
-
+                this.rootRenderTarget.useFrameBuffer = useFrameBuffer;
+                this.rootRenderTarget.activate();
+            }
             //图像反转
             let result = new Uint8Array(4 * width * height);
             for (let i = 0; i < height; i++) {

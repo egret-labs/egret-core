@@ -30313,20 +30313,20 @@ var egret;
             WebGLRenderBuffer.prototype.getPixels = function (x, y, width, height) {
                 if (width === void 0) { width = 1; }
                 if (height === void 0) { height = 1; }
+                var pixels = new Uint8Array(4 * width * height);
                 if (egret.nativeRender) {
                     egret_native.activateBuffer(this);
-                    var data = new Uint8Array(4 * width * height);
-                    egret_native.nrGetPixels(1, 1, 1, 1, data);
+                    egret_native.nrGetPixels(x, y, width, height, pixels);
                     egret_native.activateBuffer(null);
-                    return data;
                 }
-                var pixels = new Uint8Array(4 * width * height);
-                var useFrameBuffer = this.rootRenderTarget.useFrameBuffer;
-                this.rootRenderTarget.useFrameBuffer = true;
-                this.rootRenderTarget.activate();
-                this.context.getPixels(x, y, width, height, pixels);
-                this.rootRenderTarget.useFrameBuffer = useFrameBuffer;
-                this.rootRenderTarget.activate();
+                else {
+                    var useFrameBuffer = this.rootRenderTarget.useFrameBuffer;
+                    this.rootRenderTarget.useFrameBuffer = true;
+                    this.rootRenderTarget.activate();
+                    this.context.getPixels(x, y, width, height, pixels);
+                    this.rootRenderTarget.useFrameBuffer = useFrameBuffer;
+                    this.rootRenderTarget.activate();
+                }
                 //图像反转
                 var result = new Uint8Array(4 * width * height);
                 for (var i = 0; i < height; i++) {
