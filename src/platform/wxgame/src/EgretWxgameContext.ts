@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 namespace egret.wxgame {
-    export let version = "1.0.5";
+    export let version = "1.0.7";
 }
 
 namespace egret.wxapp {
