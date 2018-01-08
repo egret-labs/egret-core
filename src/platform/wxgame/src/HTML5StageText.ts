@@ -82,7 +82,7 @@ namespace egret.wxapp {
             if (this.$textfield.maxChars) {
                 info.maxLength = this.$textfield.maxChars;
             }
-            wx.showKeyboard();
+            wx.showKeyboard(info);
             // let self = this;
             // wx.onKeyboardInput(function (res) {
             //     self.textValue = res.value;
