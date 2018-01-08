@@ -168,5 +168,9 @@ namespace egret.wxapp {
             // 此处不解绑是否会造成bug？
             // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         }
+
+        public dispose():void {
+            WebGLUtils.deleteWebGLTexture(this.texture);
+        }
     }
 }
