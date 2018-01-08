@@ -103,7 +103,8 @@ namespace egret.wxapp {
          * @private
          */
         $hide(): void {
-            wx.offTouchCancel(this.onKeyboardComplete);
+            wx.offKeyboardComplete();
+            wx.offKeyboardConfirm();
             wx.hideKeyboard({});
             this.dispatchEvent(new egret.Event("blur"));
         }
