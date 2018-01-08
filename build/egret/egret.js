@@ -15571,101 +15571,6 @@ var egret;
 //////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
-    var sys;
-    (function (sys) {
-        /**
-         * @private
-         * Mesh 渲染节点
-         */
-        var MeshNode = (function (_super) {
-            __extends(MeshNode, _super);
-            function MeshNode() {
-                var _this = _super.call(this) || this;
-                /**
-                 * 要绘制的位图
-                 */
-                _this.image = null;
-                /**
-                 * 控制在缩放时是否对位图进行平滑处理。
-                 */
-                _this.smoothing = true;
-                /**
-                 * 顶点索引。
-                 */
-                _this.bounds = new egret.Rectangle();
-                /**
-                 * 使用的混合模式
-                 */
-                _this.blendMode = null;
-                /**
-                 * 相对透明度
-                 */
-                _this.alpha = NaN;
-                /**
-                 * 颜色变换滤镜
-                 */
-                _this.filter = null;
-                /**
-                 * 翻转
-                 */
-                _this.rotated = false;
-                _this.type = 5 /* MeshNode */;
-                _this.vertices = [];
-                _this.uvs = [];
-                _this.indices = [];
-                return _this;
-            }
-            /**
-             * 绘制一次位图
-             */
-            MeshNode.prototype.drawMesh = function (sourceX, sourceY, sourceW, sourceH, drawX, drawY, drawW, drawH) {
-                this.drawData.push(sourceX, sourceY, sourceW, sourceH, drawX, drawY, drawW, drawH);
-                this.renderCount++;
-            };
-            /**
-             * 在显示对象的$updateRenderNode()方法被调用前，自动清空自身的drawData数据。
-             */
-            MeshNode.prototype.cleanBeforeRender = function () {
-                _super.prototype.cleanBeforeRender.call(this);
-                this.image = null;
-                this.matrix = null;
-            };
-            return MeshNode;
-        }(sys.RenderNode));
-        sys.MeshNode = MeshNode;
-        __reflect(MeshNode.prototype, "egret.sys.MeshNode");
-    })(sys = egret.sys || (egret.sys = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
     /**
      * A BitmapData object contains an array of pixel data. This data can represent either a fully opaque bitmap or a
      * transparent bitmap that contains alpha channel data. Either type of BitmapData object is stored as a buffer of 32-bit
@@ -15877,6 +15782,89 @@ var egret;
     }(egret.HashObject));
     egret.BitmapData = BitmapData;
     __reflect(BitmapData.prototype, "egret.BitmapData");
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var sys;
+    (function (sys) {
+        /**
+         * @private
+         * 位图渲染节点
+         */
+        var NormalBitmapNode = (function (_super) {
+            __extends(NormalBitmapNode, _super);
+            function NormalBitmapNode() {
+                var _this = _super.call(this) || this;
+                /**
+                 * 要绘制的位图
+                 */
+                _this.image = null;
+                /**
+                 * 控制在缩放时是否对位图进行平滑处理。
+                 */
+                _this.smoothing = true;
+                /**
+                 * 翻转
+                 */
+                _this.rotated = false;
+                _this.type = 6 /* NormalBitmapNode */;
+                return _this;
+            }
+            /**
+             * 绘制一次位图
+             */
+            NormalBitmapNode.prototype.drawImage = function (sourceX, sourceY, sourceW, sourceH, drawX, drawY, drawW, drawH) {
+                var self = this;
+                self.sourceX = sourceX;
+                self.sourceY = sourceY;
+                self.sourceW = sourceW;
+                self.sourceH = sourceH;
+                self.drawX = drawX;
+                self.drawY = drawY;
+                self.drawW = drawW;
+                self.drawH = drawH;
+                self.renderCount = 1;
+            };
+            /**
+             * 在显示对象的$updateRenderNode()方法被调用前，自动清空自身的drawData数据。
+             */
+            NormalBitmapNode.prototype.cleanBeforeRender = function () {
+                _super.prototype.cleanBeforeRender.call(this);
+                this.image = null;
+            };
+            return NormalBitmapNode;
+        }(sys.RenderNode));
+        sys.NormalBitmapNode = NormalBitmapNode;
+        __reflect(NormalBitmapNode.prototype, "egret.sys.NormalBitmapNode");
+    })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -18852,1247 +18840,6 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-/**
- * @private
- */
-var egret_native;
-(function (egret_native) {
-    egret_native.forHitTest = false;
-    /**
-     * @private
-     */
-    var _callBackList = [];
-    /**
-     * @private
-     */
-    var _thisObjectList = [];
-    var isInit = false;
-    egret_native.addModuleCallback = function (callback, thisObj) {
-        _callBackList.push(callback);
-        _thisObjectList.push(thisObj);
-    };
-    egret_native.initNativeRender = function () {
-        if (isInit) {
-            if (_callBackList.length > 0) {
-                var locCallAsyncFunctionList = _callBackList;
-                var locCallAsyncThisList = _thisObjectList;
-                for (var i = 0; i < locCallAsyncFunctionList.length; i++) {
-                    var func = locCallAsyncFunctionList[i];
-                    if (func != null) {
-                        func.apply(locCallAsyncThisList[i]);
-                    }
-                }
-            }
-            return;
-        }
-        isInit = true;
-        var that = this;
-        egret_native.nrInit();
-        egret_native.nrDownloadBuffers(function (displayCmdBuffer) {
-            egret_native.NativeDisplayObject.init(displayCmdBuffer, bitmapDataMap, filterMap, customFilterDataMap);
-            timeStamp = egret.getTimer();
-            if (_callBackList.length > 0) {
-                var locCallAsyncFunctionList = _callBackList;
-                var locCallAsyncThisList = _thisObjectList;
-                for (var i = 0; i < locCallAsyncFunctionList.length; i++) {
-                    var func = locCallAsyncFunctionList[i];
-                    if (func != null) {
-                        func.apply(locCallAsyncThisList[i]);
-                    }
-                }
-            }
-            egret.startTick(that.updatePreCallback, that);
-        });
-    };
-    egret_native.updateNativeRender = function () {
-        validateDirtyTextField();
-        validateDirtyGraphics();
-        egret_native.NativeDisplayObject.update();
-        egret_native.nrUpdate();
-        syncDirtyTextField();
-    };
-    egret_native.dirtyTextField = function (textField) {
-        if (dirtyTextFieldList.indexOf(textField) == -1) {
-            dirtyTextFieldList.push(textField);
-        }
-    };
-    egret_native.dirtyGraphics = function (graphics) {
-        if (dirtyGraphicsList.indexOf(graphics) == -1) {
-            dirtyGraphicsList.push(graphics);
-        }
-    };
-    var syncDirtyTextField = function () {
-        for (var key in textFieldDataMap) {
-            if (textFieldDataMap[key].length > 0) {
-                egret_native.nrSendTextFieldData(key, textFieldDataMap[key]);
-            }
-        }
-        textFieldDataMap = {};
-    };
-    var validateDirtyTextField = function () {
-        var length = dirtyTextFieldList.length;
-        if (length > 0) {
-            var locList = dirtyTextFieldList;
-            dirtyTextFieldList = [];
-            for (var i = 0; i < length; i++) {
-                var textField = locList[i];
-                textField.$getRenderNode();
-                var node = textField.$renderNode;
-                var width = node.width - node.x;
-                var height = node.height - node.y;
-                if (node.drawData.length == 0) {
-                    var graphicNode = textField.$graphicsNode;
-                    if (graphicNode) {
-                        textField.$nativeDisplayObject.setTextRect(graphicNode.x, graphicNode.y, graphicNode.width, graphicNode.height);
-                    }
-                    else {
-                        textField.$nativeDisplayObject.setTextRect(0, 0, 0, 0);
-                    }
-                }
-                else {
-                    textField.$nativeDisplayObject.setTextRect(node.x, node.y, width, height);
-                }
-                bufferTextData(textField);
-            }
-        }
-    };
-    var validateDirtyGraphics = function () {
-        var length = dirtyGraphicsList.length;
-        if (length > 0) {
-            var locList = dirtyGraphicsList;
-            dirtyGraphicsList = [];
-            for (var i = 0; i < length; i++) {
-                var graphics = locList[i];
-                var node = graphics.$renderNode;
-                var width = node.width;
-                var height = node.height;
-                if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) {
-                    graphics.$targetDisplay.$nativeDisplayObject.setGraphicsRect(0, 0, 0, 0, graphics.$targetIsSprite);
-                }
-                else {
-                    graphics.$targetDisplay.$nativeDisplayObject.setGraphicsRect(node.x, node.y, node.width, node.height, graphics.$targetIsSprite);
-                }
-                bufferGraphicsData(node, graphics);
-            }
-        }
-    };
-    var timeStamp;
-    var updatePreCallback = function (currTimeStamp) {
-        var dt = currTimeStamp - timeStamp;
-        timeStamp = currTimeStamp;
-        egret_native.nrUpdateCallbackList(dt);
-        return false;
-    };
-    var parseColorString = function (colorStr, colorVal) {
-        if (colorStr.indexOf("r") == -1) {
-            colorStr = colorStr.replace(/#/, "");
-            colorVal.color = parseInt(colorStr, 16);
-        }
-        else {
-            colorStr = colorStr.replace(/rgba\(/, "");
-            colorStr = colorStr.replace(/\)/, "");
-            var colorArr = colorStr.split(",");
-            colorVal.color = (Number(colorArr[0]) << 16) | (Number(colorArr[1]) << 8) | Number(colorArr[2]);
-            colorVal.alpha = Number(colorArr[3]);
-        }
-    };
-    var bufferRenderPath = function (path, currCmds) {
-        // 1023 beginPath
-        currCmds.push(1023);
-        var data = path.$data;
-        var commands = path.$commands;
-        var commandCount = commands.length;
-        var pos = 0;
-        for (var commandIndex = 0; commandIndex < commandCount; commandIndex++) {
-            var command = commands[commandIndex];
-            switch (command) {
-                case 4 /* CubicCurveTo */:
-                    // context.bezierCurveTo(data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
-                    currCmds.push(1024);
-                    currCmds.push(data[pos++]);
-                    currCmds.push(data[pos++]);
-                    currCmds.push(data[pos++]);
-                    currCmds.push(data[pos++]);
-                    currCmds.push(data[pos++]);
-                    currCmds.push(data[pos++]);
-                    break;
-                case 3 /* CurveTo */:
-                    // context.quadraticCurveTo(data[pos++], data[pos++], data[pos++], data[pos++]);
-                    currCmds.push(1025);
-                    currCmds.push(data[pos++]);
-                    currCmds.push(data[pos++]);
-                    currCmds.push(data[pos++]);
-                    currCmds.push(data[pos++]);
-                    break;
-                case 2 /* LineTo */:
-                    // context.lineTo(data[pos++], data[pos++]);
-                    currCmds.push(1026);
-                    currCmds.push(data[pos++]);
-                    currCmds.push(data[pos++]);
-                    break;
-                case 1 /* MoveTo */:
-                    // context.moveTo(data[pos++], data[pos++]);
-                    currCmds.push(1027);
-                    currCmds.push(data[pos++]);
-                    currCmds.push(data[pos++]);
-                    break;
-            }
-        }
-    };
-    var bufferTextData = function (textField) {
-        var node = textField.$renderNode;
-        var textFieldId = textField.$nativeDisplayObject.id;
-        var width = node.width - node.x;
-        var height = node.height - node.y;
-        if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) {
-            return;
-        }
-        var canvasScaleX = egret.sys.DisplayList.$canvasScaleX;
-        var canvasScaleY = egret.sys.DisplayList.$canvasScaleY;
-        // let maxTextureSize = buffer.context.$maxTextureSize;
-        var maxTextureSize = 4096;
-        if (width * canvasScaleX > maxTextureSize) {
-            canvasScaleX *= maxTextureSize / (width * canvasScaleX);
-        }
-        if (height * canvasScaleY > maxTextureSize) {
-            canvasScaleY *= maxTextureSize / (height * canvasScaleY);
-        }
-        width *= canvasScaleX;
-        height *= canvasScaleY;
-        var x1 = node.x * canvasScaleX;
-        var y1 = node.y * canvasScaleY;
-        var offsetX = -node.x;
-        var offsetY = -node.y;
-        var renderCmds = [];
-        var renderParms = "";
-        if (node.dirtyRender) {
-            renderCmds.length = 0;
-            renderCmds.push(1010);
-            renderCmds.push(1);
-            // 1011: resize
-            renderCmds.push(1011);
-            renderCmds.push(width);
-            renderCmds.push(height);
-            renderCmds.push(node.x);
-            renderCmds.push(node.y);
-            if (canvasScaleX != 1 || canvasScaleY != 1) {
-                renderCmds.push(1019);
-                renderCmds.push(canvasScaleX);
-                renderCmds.push(0);
-                renderCmds.push(0);
-                renderCmds.push(canvasScaleY);
-                renderCmds.push(0);
-                renderCmds.push(0);
-                renderCmds.push(0);
-            }
-            if (x1 || y1) {
-                // 1019: setTransform
-                renderCmds.push(1019);
-                renderCmds.push(canvasScaleX);
-                renderCmds.push(0);
-                renderCmds.push(0);
-                renderCmds.push(canvasScaleY);
-                renderCmds.push(-x1);
-                renderCmds.push(-y1);
-                renderCmds.push(1);
-            }
-            if (textField.$graphicsNode) {
-                renderCmds.push(1015);
-                bufferGraphicsData(textField.$graphicsNode, null, renderCmds);
-                renderCmds.push(1016);
-            }
-            var drawData = node.drawData;
-            var length_8 = drawData.length;
-            var pos = 0;
-            while (pos < length_8) {
-                var x = drawData[pos++];
-                var y = drawData[pos++];
-                var text = drawData[pos++];
-                var format = drawData[pos++];
-                var textColor = format.textColor == null ? node.textColor : format.textColor;
-                var strokeColor = format.strokeColor == null ? node.strokeColor : format.strokeColor;
-                var stroke = format.stroke == null ? node.stroke : format.stroke;
-                // 1012: setFontFormat 
-                renderCmds.push(1012);
-                var fontStr = egret.getFontString(node, format);
-                var fontPath = "";
-                var fontSize = -1;
-                var strArray = fontStr.split(",");
-                if (strArray.length > 0) {
-                    var arr = strArray[0].split(" ");
-                    for (var i = 0; i < arr.length; i++) {
-                        if (arr[i].indexOf("px") != -1) {
-                            fontSize = Number(arr[i].replace(/px/, ""));
-                            fontPath = fontStr.substring(fontStr.indexOf(arr[i]) + arr[i].length + 1);
-                            break;
-                        }
-                    }
-                    renderCmds.push(fontSize);
-                    //TODO
-                    // if (fontPath != this.currentFont) {
-                    renderParms += fontPath;
-                    // }
-                    if (fontStr.indexOf("bold") == -1) {
-                        renderCmds.push(0);
-                    }
-                    else {
-                        renderCmds.push(1);
-                    }
-                    if (fontStr.indexOf("italic") == -1) {
-                        renderCmds.push(0);
-                    }
-                    else {
-                        renderCmds.push(1);
-                    }
-                    renderParms += ";";
-                    //  setFillStyle
-                    var fontColor = 0; //black
-                    var fillColor = void 0;
-                    var fillAlpha = void 0;
-                    var fillStr = egret.toColorString(textColor);
-                    if (fillStr.indexOf("r") == -1) {
-                        fillStr = fillStr.replace(/#/, "");
-                        fontColor = parseInt(fillStr, 16);
-                    }
-                    else {
-                        fillStr = fillStr.replace(/rgba\(/, "");
-                        fillStr = fillStr.replace(/\)/, "");
-                        var colorArr = fillStr.split(",");
-                        fillColor = (Number(colorArr[0]) << 16) | (Number(colorArr[1]) << 8) | Number(colorArr[2]);
-                        fillAlpha = Number(arr[3]);
-                    }
-                    // console.log("font color = " + fontColor);
-                    renderCmds.push(fontColor);
-                    // native fillColor fillAlph no implement
-                    // renderCmds.push(fillColor);
-                    // renderCmds.push(fillAlpha);
-                    // setStrokeStype
-                    var strokeStr = egret.toColorString(strokeColor);
-                    var strokeColorInt = 0; // black
-                    var strokeAlpha = void 0;
-                    if (strokeStr.indexOf("r") == -1) {
-                        strokeStr = strokeStr.replace(/#/, "");
-                        strokeColorInt = parseInt(strokeStr, 16);
-                    }
-                    else {
-                        strokeStr = strokeStr.replace(/rgba\(/, "");
-                        strokeStr = strokeStr.replace(/\)/, "");
-                        var coloarArr2 = strokeStr.split(",");
-                        strokeColorInt = (Number(coloarArr2[0]) << 16) | (Number(coloarArr2[1]) << 8) | Number(coloarArr2[2]);
-                        strokeAlpha = Number(arr[3]);
-                    }
-                    renderCmds.push(strokeColorInt);
-                    // renderCmds.push(strokeAlpha);
-                    renderParms += text;
-                    renderParms += ";";
-                    // 1013: strokeText
-                    renderCmds.push(1013);
-                    if (stroke) {
-                        renderCmds.push(stroke * 2);
-                    }
-                    else {
-                        renderCmds.push(0);
-                    }
-                    //1014: fillText
-                    renderCmds.push(1014);
-                    renderCmds.push(x);
-                    renderCmds.push(y);
-                }
-            }
-            if (x1 || y1) {
-                // 1019: setTransform
-                renderCmds.push(1019);
-                renderCmds.push(canvasScaleX);
-                renderCmds.push(0);
-                renderCmds.push(0);
-                renderCmds.push(canvasScaleY);
-                renderCmds.push(0);
-                renderCmds.push(0);
-                renderCmds.push(-1);
-            }
-            textField.$nativeDisplayObject.setDataToTextField(textFieldId, renderCmds);
-            textFieldDataMap[textFieldId] = renderParms;
-            node.dirtyRender = false;
-        }
-    };
-    var bufferGraphicsData = function (node, graphics, renderCmds) {
-        if (graphics === void 0) { graphics = null; }
-        if (renderCmds === void 0) { renderCmds = null; }
-        var isGraphics = false;
-        var width = node.width;
-        var height = node.height;
-        if (graphics) {
-            renderCmds = [];
-            isGraphics = true;
-        }
-        if (renderCmds == null || renderCmds == undefined) {
-            return;
-        }
-        var canvasScaleX = egret.sys.DisplayList.$canvasScaleX;
-        var canvasScaleY = egret.sys.DisplayList.$canvasScaleY;
-        if (width * canvasScaleX < 1 || height * canvasScaleY < 1) {
-            canvasScaleX = canvasScaleY = 1;
-        }
-        if (node.$canvasScaleX != canvasScaleX || node.$canvasScaleY != canvasScaleY) {
-            node.$canvasScaleX = canvasScaleX;
-            node.$canvasScaleY = canvasScaleY;
-            node.dirtyRender = true;
-        }
-        width *= canvasScaleX;
-        height *= canvasScaleY;
-        if (node.dirtyRender || egret_native.forHitTest) {
-            renderCmds.push(1010);
-            renderCmds.push(1);
-            // 1011: resize
-            renderCmds.push(1011);
-            renderCmds.push(width);
-            renderCmds.push(height);
-            renderCmds.push(node.x);
-            renderCmds.push(node.y);
-            if (canvasScaleX != 1 || canvasScaleY != 1) {
-                renderCmds.push(1019);
-                renderCmds.push(canvasScaleX);
-                renderCmds.push(0);
-                renderCmds.push(0);
-                renderCmds.push(canvasScaleY);
-                renderCmds.push(0);
-                renderCmds.push(0);
-                renderCmds.push(0);
-            }
-            // 1020: translate
-            if (node.x || node.y) {
-                renderCmds.push(1020);
-                renderCmds.push(-node.x);
-                renderCmds.push(-node.y);
-                renderCmds.push(1);
-            }
-            var drawData = node.drawData;
-            var length_9 = drawData.length;
-            var colorVal = { color: 0, alpha: 1 };
-            for (var i = 0; i < length_9; i++) {
-                var path = drawData[i];
-                colorVal.color = 0;
-                colorVal.alpha = 1;
-                switch (path.type) {
-                    case 1 /* Fill */:
-                        var fillPath = path;
-                        parseColorString(egret_native.forHitTest ? egret.BLACK_COLOR : egret.getRGBAString(fillPath.fillColor, fillPath.fillAlpha), colorVal);
-                        renderCmds.push(1021);
-                        renderCmds.push(colorVal.color);
-                        renderCmds.push(colorVal.alpha);
-                        bufferRenderPath(path, renderCmds);
-                        // if (this.renderingMask) {
-                        //     context.clip();
-                        // }
-                        // else {
-                        // 1028 context.fill();
-                        renderCmds.push(1028);
-                        // }
-                        break;
-                    case 2 /* GradientFill */:
-                        // native no implement
-                        break;
-                    case 3 /* Stroke */:
-                        var strokeFill = path;
-                        var lineWidth = strokeFill.lineWidth;
-                        parseColorString(egret_native.forHitTest ? egret.BLACK_COLOR : egret.getRGBAString(strokeFill.lineColor, strokeFill.lineAlpha), colorVal);
-                        // native no implement
-                        // context.lineCap = CAPS_STYLES[strokeFill.caps];
-                        // context.lineJoin = strokeFill.joints;
-                        // context.miterLimit = strokeFill.miterLimit;
-                        renderCmds.push(1022);
-                        renderCmds.push(colorVal.color);
-                        renderCmds.push(colorVal.alpha);
-                        renderCmds.push(lineWidth);
-                        //对1像素和3像素特殊处理，向右下角偏移0.5像素，以显示清晰锐利的线条。
-                        var isSpecialCaseWidth = lineWidth === 1 || lineWidth === 3;
-                        if (isSpecialCaseWidth) {
-                            // 1020 translate context.translate(0.5, 0.5);
-                            renderCmds.push(1020);
-                            renderCmds.push(0.5);
-                            renderCmds.push(0.5);
-                            renderCmds.push(0);
-                        }
-                        bufferRenderPath(path, renderCmds);
-                        // 1029 stroke
-                        renderCmds.push(1029);
-                        if (isSpecialCaseWidth) {
-                            // 1020 translate context.translate(-0.5, -0.5);
-                            renderCmds.push(1020);
-                            renderCmds.push(-0.5);
-                            renderCmds.push(-0.5);
-                            renderCmds.push(0);
-                        }
-                        break;
-                }
-            }
-            if (node.x || node.y) {
-                renderCmds.push(1020);
-                renderCmds.push(node.x);
-                renderCmds.push(node.y);
-                renderCmds.push(-1);
-            }
-            if (isGraphics) {
-                graphics.$targetDisplay.$nativeDisplayObject.setGraphicsRenderData(renderCmds);
-            }
-            if (!egret_native.forHitTest) {
-                node.dirtyRender = false;
-            }
-        }
-    };
-    egret_native.activateBuffer = function (buffer) {
-        if (!buffer) {
-            buffer = egret_native.rootWebGLBuffer;
-        }
-        egret_native.nrActiveBuffer(buffer.bufferIdForWasm, buffer.width, buffer.height);
-    };
-    egret_native.getJsImage = function (key) {
-        if (bitmapDataMap[key].isTexture === true) {
-            return null;
-        }
-        else {
-            return bitmapDataMap[key].source;
-        }
-    };
-    egret_native.getJsCustomFilterVertexSrc = function (key) {
-        return customFilterDataMap[key].vertexSrc;
-    };
-    egret_native.getJsCustomFilterFragSrc = function (key) {
-        return customFilterDataMap[key].fragmentSrc;
-    };
-    egret_native.getJsCustomFilterUniforms = function (key) {
-        return customFilterDataMap[key].uniformsSrc;
-    };
-    var bitmapDataMap = {};
-    var textFieldDataMap = {};
-    var customFilterDataMap = {};
-    var filterMap = egret.createMap();
-    var dirtyTextFieldList = [];
-    var dirtyGraphicsList = [];
-})(egret_native || (egret_native = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret_native;
-(function (egret_native) {
-    var displayObjectId = 0;
-    var bitmapDataMap;
-    var bitmapDataId = 1;
-    var filterId = 1;
-    var customFilterDataMap = {};
-    var customFilterUniformMap = {};
-    var displayCmdBufferIndex = 2;
-    var displayCmdBufferSize = 0;
-    var displayCmdBuffer;
-    if (egret.nativeRender) {
-        displayCmdBuffer = new Float32Array(20000);
-    }
-    /**
-     * @private
-     */
-    var NativeDisplayObject = (function () {
-        function NativeDisplayObject(type) {
-            this.id = displayObjectId;
-            this.$obj = new egret_native.NrNode(this.id, type);
-            displayCmdBuffer[displayCmdBufferIndex++] = 0 /* CREATE_OBJECT */;
-            displayCmdBuffer[displayCmdBufferIndex++] = displayObjectId;
-            displayCmdBuffer[displayCmdBufferIndex++] = type;
-            displayCmdBufferSize++;
-            displayObjectId++;
-        }
-        NativeDisplayObject.init = function (buffer, map1, map2, map3) {
-            //初始化之前有原生对象创建
-            if (displayCmdBufferIndex != 2) {
-                for (var i = 2; i < displayCmdBufferIndex; i++) {
-                    buffer[i] = displayCmdBuffer[i];
-                }
-            }
-            displayCmdBuffer = buffer;
-            displayCmdBuffer[0] = 0;
-            displayCmdBuffer[1] = 2;
-            bitmapDataMap = map1;
-            customFilterDataMap = map3;
-        };
-        NativeDisplayObject.update = function () {
-            displayCmdBuffer[0] = displayCmdBufferSize;
-            displayCmdBuffer[1] = displayCmdBufferIndex;
-            displayCmdBufferSize = 0;
-            displayCmdBufferIndex = 2;
-        };
-        NativeDisplayObject.prototype.addChildAt = function (childId, index) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 3 /* ADD_CHILD_AT */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = childId;
-            displayCmdBuffer[displayCmdBufferIndex++] = index;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.removeChild = function (childId) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 2 /* REMOVE_CHILD */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = childId;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.swapChild = function (index1, index2) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 4 /* SWAP_CHILD_AT */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = index1;
-            displayCmdBuffer[displayCmdBufferIndex++] = index2;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setX = function (value) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 101 /* SET_X */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setY = function (value) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 102 /* SET_Y */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setRotation = function (value) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 103 /* SET_ROTATION */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setScaleX = function (value) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 104 /* SET_SCALE_X */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setScaleY = function (value) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 105 /* SET_SCALE_Y */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setSkewX = function (value) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 106 /* SET_SKEW_X */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setSkewY = function (value) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 107 /* SET_SKEW_Y */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setAlpha = function (value) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 108 /* SET_ALPHA */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setAnchorOffsetX = function (value) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 116 /* SET_ANCHOR_OFFSET_X */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setAnchorOffsetY = function (value) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 117 /* SET_ANCHOR_OFFSET_Y */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setVisible = function (value) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 118 /* SET_VISIBLE */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value ? 1 : 0;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setBlendMode = function (value) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 126 /* SET_BLEND_MODE */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setMaskRect = function (x, y, w, h) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 127 /* SET_MASK_RECT */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = x;
-            displayCmdBuffer[displayCmdBufferIndex++] = y;
-            displayCmdBuffer[displayCmdBufferIndex++] = w;
-            displayCmdBuffer[displayCmdBufferIndex++] = h;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setScrollRect = function (x, y, w, h) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 128 /* SET_SCROLL_RECT */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = x;
-            displayCmdBuffer[displayCmdBufferIndex++] = y;
-            displayCmdBuffer[displayCmdBufferIndex++] = w;
-            displayCmdBuffer[displayCmdBufferIndex++] = h;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setFilters = function (filters) {
-            if (!filters) {
-                displayCmdBuffer[displayCmdBufferIndex++] = 134 /* SET_FILTERS */;
-                displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-                displayCmdBuffer[displayCmdBufferIndex++] = 0;
-                displayCmdBufferSize++;
-                return;
-            }
-            displayCmdBuffer[displayCmdBufferIndex++] = 134 /* SET_FILTERS */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            var lengthIndex = displayCmdBufferIndex++;
-            var length = filters.length;
-            var trueLength = length;
-            for (var i = 0; i < length; i++) {
-                var filter = filters[i];
-                if (filter.type == "blur") {
-                    var blurFilter = filter;
-                    if (blurFilter.$blurX != 0 && blurFilter.$blurY != 0) {
-                        trueLength++;
-                        displayCmdBuffer[displayCmdBufferIndex++] = blurFilter.blurXFilter.$id;
-                        displayCmdBuffer[displayCmdBufferIndex++] = blurFilter.blurYFilter.$id;
-                    }
-                    else if (blurFilter.$blurX != 0) {
-                        displayCmdBuffer[displayCmdBufferIndex++] = blurFilter.blurXFilter.$id;
-                    }
-                    else if (blurFilter.$blurY != 0) {
-                        displayCmdBuffer[displayCmdBufferIndex++] = blurFilter.blurYFilter.$id;
-                    }
-                    else {
-                        trueLength--;
-                    }
-                }
-                else {
-                    displayCmdBuffer[displayCmdBufferIndex++] = filter.$id;
-                }
-            }
-            displayCmdBuffer[lengthIndex] = trueLength;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.createFilter = function (filter) {
-            filter.$id = filterId;
-            filter.$obj = new egret_native.NrNode(filterId, 6 /* FILTER */);
-            filterId++;
-            displayCmdBuffer[displayCmdBufferIndex++] = 0 /* CREATE_OBJECT */;
-            displayCmdBuffer[displayCmdBufferIndex++] = filter.$id;
-            displayCmdBuffer[displayCmdBufferIndex++] = 6 /* FILTER */;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.setFilterPadding = function (filterId, paddingTop, paddingBottom, paddingLeft, paddingRight) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 136 /* SET_PADDING_TO_FILTER */;
-            displayCmdBuffer[displayCmdBufferIndex++] = filterId;
-            displayCmdBuffer[displayCmdBufferIndex++] = paddingTop;
-            displayCmdBuffer[displayCmdBufferIndex++] = paddingBottom;
-            displayCmdBuffer[displayCmdBufferIndex++] = paddingLeft;
-            displayCmdBuffer[displayCmdBufferIndex++] = paddingRight;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setMask = function (value) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 131 /* SET_MASK */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.setValuesToBitmapData = function (value) {
-            var bitmapData = value.bitmapData;
-            if (!bitmapData.$bitmapDataId) {
-                bitmapData.$bitmapDataId = bitmapDataId;
-                bitmapDataMap[bitmapDataId] = bitmapData;
-                bitmapDataId++;
-            }
-            if (!value.$textureId) {
-                value.$textureId = bitmapDataId;
-                displayCmdBuffer[displayCmdBufferIndex++] = 0 /* CREATE_OBJECT */;
-                displayCmdBuffer[displayCmdBufferIndex++] = bitmapDataId;
-                displayCmdBuffer[displayCmdBufferIndex++] = 2 /* BITMAP_DATA */;
-                displayCmdBufferSize++;
-                displayCmdBuffer[displayCmdBufferIndex++] = 122 /* SET_VALUES_TO_BITMAP_DATA */;
-                displayCmdBuffer[displayCmdBufferIndex++] = value.$textureId;
-                displayCmdBuffer[displayCmdBufferIndex++] = value.$bitmapX;
-                displayCmdBuffer[displayCmdBufferIndex++] = value.$bitmapY;
-                displayCmdBuffer[displayCmdBufferIndex++] = value.$bitmapWidth;
-                displayCmdBuffer[displayCmdBufferIndex++] = value.$bitmapHeight;
-                displayCmdBuffer[displayCmdBufferIndex++] = value.$offsetX;
-                displayCmdBuffer[displayCmdBufferIndex++] = value.$offsetY;
-                displayCmdBuffer[displayCmdBufferIndex++] = value.$getTextureWidth();
-                displayCmdBuffer[displayCmdBufferIndex++] = value.$getTextureHeight();
-                displayCmdBuffer[displayCmdBufferIndex++] = value.$sourceWidth;
-                displayCmdBuffer[displayCmdBufferIndex++] = value.$sourceHeight;
-                displayCmdBuffer[displayCmdBufferIndex++] = value.$rotated ? 1 : 0;
-                displayCmdBufferSize++;
-                displayCmdBuffer[displayCmdBufferIndex++] = 123 /* SET_IMAGE_ID_TO_BITMAP_DATA */;
-                displayCmdBuffer[displayCmdBufferIndex++] = value.$textureId;
-                displayCmdBuffer[displayCmdBufferIndex++] = bitmapData.$bitmapDataId;
-                displayCmdBufferSize++;
-                bitmapDataId++;
-            }
-        };
-        /**
-         * for wasm native
-         * @param private
-         */
-        NativeDisplayObject.setValuesToRenderBuffer = function (value) {
-            var texture;
-            if (value.rootRenderTarget) {
-                texture = value.rootRenderTarget.texture;
-            }
-            else if (value["texture"]) {
-                texture = value["texture"];
-            }
-            else {
-                texture = {};
-                value["texture"] = texture;
-            }
-            if (!texture.$bitmapDataId) {
-                texture["isTexture"] = true;
-                texture.$bitmapDataId = bitmapDataId;
-                bitmapDataMap[bitmapDataId] = texture;
-                displayCmdBuffer[displayCmdBufferIndex++] = 0 /* CREATE_OBJECT */;
-                displayCmdBuffer[displayCmdBufferIndex++] = texture.$bitmapDataId;
-                displayCmdBuffer[displayCmdBufferIndex++] = 2;
-                displayCmdBufferSize++;
-                displayCmdBuffer[displayCmdBufferIndex++] = 123 /* SET_IMAGE_ID_TO_BITMAP_DATA */;
-                displayCmdBuffer[displayCmdBufferIndex++] = texture.$bitmapDataId;
-                displayCmdBuffer[displayCmdBufferIndex++] = texture.$bitmapDataId;
-                displayCmdBufferSize++;
-                bitmapDataId++;
-                value.bufferIdForWasm = bitmapDataId;
-            }
-            return texture.$bitmapDataId;
-        };
-        NativeDisplayObject.prototype.setBitmapData = function (value) {
-            if (!value) {
-                displayCmdBuffer[displayCmdBufferIndex++] = 121 /* SET_BITMAP_DATA */;
-                displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-                displayCmdBuffer[displayCmdBufferIndex++] = -1;
-                displayCmdBufferSize++;
-                return;
-            }
-            //todo lcj
-            if (value.$renderBuffer) {
-                var texture = void 0;
-                if (value.$renderBuffer.rootRenderTarget) {
-                    texture = value.$renderBuffer.rootRenderTarget.texture;
-                }
-                else if (value.$renderBuffer["texture"]) {
-                    texture = value.$renderBuffer["texture"];
-                }
-                else {
-                    texture = value.$renderBuffer.surface;
-                }
-                if (!texture.$bitmapDataId) {
-                    texture["isTexture"] = true;
-                    texture.$bitmapDataId = bitmapDataId;
-                    bitmapDataMap[bitmapDataId] = texture;
-                    displayCmdBuffer[displayCmdBufferIndex++] = 0 /* CREATE_OBJECT */;
-                    displayCmdBuffer[displayCmdBufferIndex++] = texture.$bitmapDataId;
-                    displayCmdBuffer[displayCmdBufferIndex++] = 2;
-                    displayCmdBufferSize++;
-                    displayCmdBuffer[displayCmdBufferIndex++] = 123 /* SET_IMAGE_ID_TO_BITMAP_DATA */;
-                    displayCmdBuffer[displayCmdBufferIndex++] = texture.$bitmapDataId;
-                    displayCmdBuffer[displayCmdBufferIndex++] = texture.$bitmapDataId;
-                    displayCmdBufferSize++;
-                    bitmapDataId++;
-                }
-                displayCmdBuffer[displayCmdBufferIndex++] = 122 /* SET_VALUES_TO_BITMAP_DATA */;
-                displayCmdBuffer[displayCmdBufferIndex++] = texture.$bitmapDataId;
-                displayCmdBuffer[displayCmdBufferIndex++] = value.$bitmapX;
-                displayCmdBuffer[displayCmdBufferIndex++] = value.$bitmapY;
-                displayCmdBuffer[displayCmdBufferIndex++] = value.$bitmapWidth;
-                displayCmdBuffer[displayCmdBufferIndex++] = value.$bitmapHeight;
-                displayCmdBuffer[displayCmdBufferIndex++] = value.$offsetY;
-                displayCmdBuffer[displayCmdBufferIndex++] = value.$offsetX;
-                displayCmdBuffer[displayCmdBufferIndex++] = value.textureHeight;
-                displayCmdBuffer[displayCmdBufferIndex++] = value.textureWidth;
-                displayCmdBuffer[displayCmdBufferIndex++] = value.$sourceWidth;
-                displayCmdBuffer[displayCmdBufferIndex++] = value.$sourceHeight;
-                displayCmdBuffer[displayCmdBufferIndex++] = value.$rotated ? 1 : 0;
-                displayCmdBufferSize++;
-                displayCmdBuffer[displayCmdBufferIndex++] = 121 /* SET_BITMAP_DATA */;
-                displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-                displayCmdBuffer[displayCmdBufferIndex++] = texture.$bitmapDataId;
-                displayCmdBufferSize++;
-            }
-            else {
-                NativeDisplayObject.setValuesToBitmapData(value);
-                displayCmdBuffer[displayCmdBufferIndex++] = 121 /* SET_BITMAP_DATA */;
-                displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-                displayCmdBuffer[displayCmdBufferIndex++] = value.$textureId;
-                displayCmdBufferSize++;
-            }
-        };
-        NativeDisplayObject.prototype.setBitmapDataToMesh = function (value) {
-            if (!value) {
-                displayCmdBuffer[displayCmdBufferIndex++] = 147 /* SET_MESH_BITMAP_DATA */;
-                displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-                displayCmdBuffer[displayCmdBufferIndex++] = -1;
-                displayCmdBufferSize++;
-                return;
-            }
-            NativeDisplayObject.setValuesToBitmapData(value);
-            displayCmdBuffer[displayCmdBufferIndex++] = 147 /* SET_MESH_BITMAP_DATA */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value.$textureId;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setBitmapDataToParticle = function (value) {
-            NativeDisplayObject.setValuesToBitmapData(value);
-            displayCmdBuffer[displayCmdBufferIndex++] = 902 /* SET_PARTICLE_BITMAP_DATA */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value.$textureId;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setStopToParticle = function (value) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 903 /* SET_PARTICLE_STOP */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value ? 1 : 0;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setCustomData = function (config) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 901 /* SET_CUSTOM_DATA */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            var len = config.length;
-            displayCmdBuffer[displayCmdBufferIndex++] = config.length;
-            for (var i = 0; i < config.length; i++) {
-                displayCmdBuffer[displayCmdBufferIndex++] = config[i];
-            }
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setWidth = function (value) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 114 /* SET_WIDTH */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setHeight = function (value) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 115 /* SET_HEIGHT */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setCacheAsBitmap = function (value) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 135 /* SET_CACHE_AS_BITMAP */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value ? 1 : 0;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setBitmapFillMode = function (fillMode) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 150 /* SET_FILLMODE */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            var value = 0;
-            if (fillMode == egret.BitmapFillMode.REPEAT) {
-                value = 1;
-            }
-            else if (fillMode == egret.BitmapFillMode.CLIP) {
-                value = 2;
-            }
-            displayCmdBuffer[displayCmdBufferIndex++] = value;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setScale9Grid = function (x, y, w, h) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 124 /* SET_SCALE_9_GRID */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = x;
-            displayCmdBuffer[displayCmdBufferIndex++] = y;
-            displayCmdBuffer[displayCmdBufferIndex++] = w;
-            displayCmdBuffer[displayCmdBufferIndex++] = h;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setMatrix = function (a, b, c, d, tx, ty) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 125 /* SET_MATRIX */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = a;
-            displayCmdBuffer[displayCmdBufferIndex++] = b;
-            displayCmdBuffer[displayCmdBufferIndex++] = c;
-            displayCmdBuffer[displayCmdBufferIndex++] = d;
-            displayCmdBuffer[displayCmdBufferIndex++] = tx;
-            displayCmdBuffer[displayCmdBufferIndex++] = ty;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setIsTyping = function (value) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 137 /* SET_ISTYPING */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = value ? 1 : 0;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setTextRect = function (x, y, w, h) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 138 /* SET_TEXT_RECT */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = x;
-            displayCmdBuffer[displayCmdBufferIndex++] = y;
-            displayCmdBuffer[displayCmdBufferIndex++] = w;
-            displayCmdBuffer[displayCmdBufferIndex++] = h;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setGraphicsRect = function (x, y, w, h, isSprite) {
-            if (isSprite) {
-                displayCmdBuffer[displayCmdBufferIndex++] = 143 /* SET_SPRITE_GRAPHICS_RECT */;
-            }
-            else {
-                displayCmdBuffer[displayCmdBufferIndex++] = 139 /* SET_GRAPHICS_RECT */;
-            }
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBuffer[displayCmdBufferIndex++] = x;
-            displayCmdBuffer[displayCmdBufferIndex++] = y;
-            displayCmdBuffer[displayCmdBufferIndex++] = w;
-            displayCmdBuffer[displayCmdBufferIndex++] = h;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setGraphicsRenderData = function (arr) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 1003 /* SET_GRAPHICS_RENDERDATA */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            var length = arr.length;
-            displayCmdBuffer[displayCmdBufferIndex++] = length;
-            for (var i = 0; i < length; i++) {
-                displayCmdBuffer[displayCmdBufferIndex++] = arr[i];
-            }
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setDataToBitmapNode = function (id, texture, arr) {
-            NativeDisplayObject.setValuesToBitmapData(texture);
-            displayCmdBuffer[displayCmdBufferIndex++] = 1001 /* SET_DATA_TO_BITMAP_NODE */;
-            displayCmdBuffer[displayCmdBufferIndex++] = id;
-            displayCmdBuffer[displayCmdBufferIndex++] = texture.$bitmapData.$bitmapDataId;
-            var length = arr.length;
-            displayCmdBuffer[displayCmdBufferIndex++] = length / 10;
-            for (var i = 0; i < length; i++) {
-                displayCmdBuffer[displayCmdBufferIndex++] = arr[i];
-            }
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setDataToMesh = function (vertexArr, indiceArr, uvArr) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 144 /* SET_MESH_VERTICE_DATA */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            var length = vertexArr.length;
-            displayCmdBuffer[displayCmdBufferIndex++] = length;
-            for (var i = 0; i < length; i++) {
-                displayCmdBuffer[displayCmdBufferIndex++] = vertexArr[i];
-            }
-            displayCmdBuffer[displayCmdBufferIndex++] = 146 /* SET_MESH_INDICES_DATA */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            length = indiceArr.length;
-            displayCmdBuffer[displayCmdBufferIndex++] = length;
-            for (var i = 0; i < length; i++) {
-                displayCmdBuffer[displayCmdBufferIndex++] = indiceArr[i];
-            }
-            displayCmdBuffer[displayCmdBufferIndex++] = 145 /* SET_MESH_UVS_DATA */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            length = uvArr.length;
-            displayCmdBuffer[displayCmdBufferIndex++] = length;
-            for (var i = 0; i < length; i++) {
-                displayCmdBuffer[displayCmdBufferIndex++] = uvArr[i];
-            }
-            displayCmdBufferSize += 3;
-        };
-        NativeDisplayObject.setDataToFilter = function (currFilter) {
-            var id = currFilter.$id;
-            var customArr = [];
-            var filterType;
-            if (!customFilterUniformMap[currFilter.$id]) {
-                customFilterUniformMap[currFilter.$id] = [];
-            }
-            var currUniformArray = customFilterUniformMap[currFilter.$id];
-            var vertexSrcStr = "";
-            var fragmentSrcStr = "";
-            if (currFilter.type == "custom") {
-                vertexSrcStr = currFilter.$vertexSrc;
-                fragmentSrcStr = currFilter.$fragmentSrc;
-                filterType = 4 /* custom */;
-            }
-            else if (currFilter.type == "colorTransform") {
-                filterType = 1 /* colorTransform */;
-            }
-            else if (currFilter.type == "blur") {
-                filterType = 2 /* blur */;
-            }
-            else if (currFilter.type == "glow") {
-                filterType = 3 /* glow */;
-            }
-            var uniformsStrVal = "";
-            var uniformCustomId = 0;
-            var uniforms = currFilter.$uniforms;
-            for (var key in uniforms) {
-                uniformsStrVal += key;
-                uniformsStrVal += " ";
-                currUniformArray[uniformCustomId] = key;
-                uniformCustomId++;
-            }
-            customFilterDataMap[currFilter.$id] = {
-                vertexSrc: vertexSrcStr,
-                fragmentSrc: fragmentSrcStr,
-                uniformsSrc: uniformsStrVal
-            };
-            for (var i = 0; i < currUniformArray.length; i++) {
-                var uniformdata = uniforms[currUniformArray[i]];
-                var tempType = typeof uniformdata;
-                if (tempType == "number") {
-                    customArr.push(1);
-                    customArr.push(uniformdata);
-                }
-                else if (uniformdata instanceof (Array)) {
-                    customArr.push(uniformdata.length);
-                    for (var j = 0; j < uniformdata.length; j++) {
-                        customArr.push(uniformdata[j]);
-                    }
-                }
-                else if (tempType == "object") {
-                    customArr.push(1);
-                    var objectNum = 1;
-                    if (uniformdata.x !== null && uniformdata.x !== undefined) {
-                        //  || uniformdata.x !== uniformdata.x) {
-                        objectNum++;
-                        customArr.push(uniformdata.x);
-                    }
-                    if (uniformdata.y !== null && uniformdata.y !== undefined) {
-                        objectNum++;
-                        customArr.push(uniformdata.y);
-                    }
-                    if (uniformdata.z !== null && uniformdata.z !== undefined) {
-                        objectNum++;
-                        customArr.push(uniformdata.z);
-                    }
-                    if (uniformdata.w !== null && uniformdata.w !== undefined) {
-                        objectNum++;
-                        customArr.push(uniformdata.w);
-                    }
-                    customArr[customArr.length - objectNum] = objectNum - 1;
-                }
-            }
-            displayCmdBuffer[displayCmdBufferIndex++] = 1004 /* SET_DATA_TO_FILTER */;
-            displayCmdBuffer[displayCmdBufferIndex++] = id;
-            displayCmdBuffer[displayCmdBufferIndex++] = filterType;
-            var length = customArr.length;
-            displayCmdBuffer[displayCmdBufferIndex++] = length;
-            for (var i = 0; i < length; i++) {
-                displayCmdBuffer[displayCmdBufferIndex++] = customArr[i];
-            }
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.setDataToTextField = function (id, arr) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 1002 /* SET_DATA_TO_TEXTFIELD */;
-            displayCmdBuffer[displayCmdBufferIndex++] = id;
-            var length = arr.length;
-            displayCmdBuffer[displayCmdBufferIndex++] = length;
-            for (var i = 0; i < length; i++) {
-                displayCmdBuffer[displayCmdBufferIndex++] = arr[i];
-            }
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.prototype.disposeDisplayObject = function () {
-            displayCmdBuffer[displayCmdBufferIndex++] = 140 /* DISPOSE_DISPLAY_OBJECT */;
-            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.disposeTexture = function (texture) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 141 /* DISPOSE_BITMAP_DATA */;
-            displayCmdBuffer[displayCmdBufferIndex++] = texture.$textureId;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.disposeBitmapData = function (bitmapData) {
-            if (bitmapData.$bitmapDataId) {
-                delete bitmapDataMap[bitmapData.$bitmapDataId];
-            }
-        };
-        NativeDisplayObject.disposeTextData = function (node) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 149 /* DISPOSE_TEXT_DATA */;
-            displayCmdBuffer[displayCmdBufferIndex++] = node.$nativeDisplayObject.id;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.disposeGraphicData = function (graphic) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 148 /* DISPOSE_GRAPHICS_DATA */;
-            displayCmdBuffer[displayCmdBufferIndex++] = graphic.$targetDisplay.$nativeDisplayObject.id;
-            displayCmdBufferSize++;
-        };
-        NativeDisplayObject.disposeFilter = function (filter) {
-            displayCmdBuffer[displayCmdBufferIndex++] = 142 /* DISPOSE_FILTER */;
-            displayCmdBuffer[displayCmdBufferIndex++] = filter.$id;
-            displayCmdBufferSize++;
-        };
-        return NativeDisplayObject;
-    }());
-    egret_native.NativeDisplayObject = NativeDisplayObject;
-    __reflect(NativeDisplayObject.prototype, "egret_native.NativeDisplayObject");
-})(egret_native || (egret_native = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
     /**
@@ -20252,7 +18999,7 @@ var egret;
          */
         BitmapFont.prototype.getConfigByKey = function (configText, key) {
             var itemConfigTextList = configText.split(" ");
-            for (var i = 0, length_10 = itemConfigTextList.length; i < length_10; i++) {
+            for (var i = 0, length_8 = itemConfigTextList.length; i < length_8; i++) {
                 var itemConfigText = itemConfigTextList[i];
                 if (key == itemConfigText.substring(0, key.length)) {
                     var value = itemConfigText.substring(key.length + 1);
@@ -22989,8 +21736,8 @@ var egret;
                 if (lines && lines.length > 0) {
                     var textColor = values[2 /* textColor */];
                     var lastColor = -1;
-                    var length_11 = lines.length;
-                    for (var i = 0; i < length_11; i += 4) {
+                    var length_9 = lines.length;
+                    for (var i = 0; i < length_9; i += 4) {
                         var x = lines[i];
                         var y = lines[i + 1];
                         var w = lines[i + 2];
@@ -28840,8 +27587,8 @@ var egret;
                     egret.sys.screenAdapter = new egret.sys.DefaultScreenAdapter();
                 }
                 var list = document.querySelectorAll(".egret-player");
-                var length_12 = list.length;
-                for (var i = 0; i < length_12; i++) {
+                var length_10 = list.length;
+                for (var i = 0; i < length_10; i++) {
                     var container = list[i];
                     var player = new web.WebPlayer(container, options);
                     container["egret-player"] = player;
@@ -29599,8 +28346,8 @@ var egret;
                 }
                 search = search.slice(1);
                 var searchArr = search.split("&");
-                var length_13 = searchArr.length;
-                for (var i = 0; i < length_13; i++) {
+                var length_11 = searchArr.length;
+                for (var i = 0; i < length_11; i++) {
                     var str = searchArr[i];
                     var arr = str.split("=");
                     if (arr[0] == key) {
@@ -32848,8 +31595,8 @@ var egret;
                     if (renderBufferPool.length > 6) {
                         renderBufferPool.length = 6;
                     }
-                    var length_14 = renderBufferPool.length;
-                    for (var i = 0; i < length_14; i++) {
+                    var length_12 = renderBufferPool.length;
+                    for (var i = 0; i < length_12; i++) {
                         renderBufferPool[i].resize(0, 0);
                     }
                 }
@@ -32912,8 +31659,8 @@ var egret;
                 }
                 var children = displayObject.$children;
                 if (children) {
-                    var length_15 = children.length;
-                    for (var i = 0; i < length_15; i++) {
+                    var length_13 = children.length;
+                    for (var i = 0; i < length_13; i++) {
                         var child = children[i];
                         var offsetX2 = void 0;
                         var offsetY2 = void 0;
@@ -33339,8 +32086,8 @@ var egret;
                 }
                 var children = displayObject.$children;
                 if (children) {
-                    var length_16 = children.length;
-                    for (var i = 0; i < length_16; i++) {
+                    var length_14 = children.length;
+                    for (var i = 0; i < length_14; i++) {
                         var child = children[i];
                         switch (child.$renderMode) {
                             case 1 /* NONE */:
@@ -34176,11 +32923,11 @@ var egret;
     (function (sys) {
         /**
          * @private
-         * 位图渲染节点
+         * Mesh 渲染节点
          */
-        var NormalBitmapNode = (function (_super) {
-            __extends(NormalBitmapNode, _super);
-            function NormalBitmapNode() {
+        var MeshNode = (function (_super) {
+            __extends(MeshNode, _super);
+            function MeshNode() {
                 var _this = _super.call(this) || this;
                 /**
                  * 要绘制的位图
@@ -34191,37 +32938,49 @@ var egret;
                  */
                 _this.smoothing = true;
                 /**
+                 * 顶点索引。
+                 */
+                _this.bounds = new egret.Rectangle();
+                /**
+                 * 使用的混合模式
+                 */
+                _this.blendMode = null;
+                /**
+                 * 相对透明度
+                 */
+                _this.alpha = NaN;
+                /**
+                 * 颜色变换滤镜
+                 */
+                _this.filter = null;
+                /**
                  * 翻转
                  */
                 _this.rotated = false;
-                _this.type = 6 /* NormalBitmapNode */;
+                _this.type = 5 /* MeshNode */;
+                _this.vertices = [];
+                _this.uvs = [];
+                _this.indices = [];
                 return _this;
             }
             /**
              * 绘制一次位图
              */
-            NormalBitmapNode.prototype.drawImage = function (sourceX, sourceY, sourceW, sourceH, drawX, drawY, drawW, drawH) {
-                var self = this;
-                self.sourceX = sourceX;
-                self.sourceY = sourceY;
-                self.sourceW = sourceW;
-                self.sourceH = sourceH;
-                self.drawX = drawX;
-                self.drawY = drawY;
-                self.drawW = drawW;
-                self.drawH = drawH;
-                self.renderCount = 1;
+            MeshNode.prototype.drawMesh = function (sourceX, sourceY, sourceW, sourceH, drawX, drawY, drawW, drawH) {
+                this.drawData.push(sourceX, sourceY, sourceW, sourceH, drawX, drawY, drawW, drawH);
+                this.renderCount++;
             };
             /**
              * 在显示对象的$updateRenderNode()方法被调用前，自动清空自身的drawData数据。
              */
-            NormalBitmapNode.prototype.cleanBeforeRender = function () {
+            MeshNode.prototype.cleanBeforeRender = function () {
                 _super.prototype.cleanBeforeRender.call(this);
                 this.image = null;
+                this.matrix = null;
             };
-            return NormalBitmapNode;
+            return MeshNode;
         }(sys.RenderNode));
-        sys.NormalBitmapNode = NormalBitmapNode;
-        __reflect(NormalBitmapNode.prototype, "egret.sys.NormalBitmapNode");
+        sys.MeshNode = MeshNode;
+        __reflect(MeshNode.prototype, "egret.sys.MeshNode");
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));

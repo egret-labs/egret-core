@@ -55,3 +55,139 @@ declare namespace egret_native {
         constructor(id: number, type: number)
     }
 }
+
+/**
+ * @private
+ */
+declare namespace egret_native {
+    let rootWebGLBuffer: egret.web.WebGLRenderBuffer;
+    let forHitTest: boolean;
+    let addModuleCallback: (callback: Function, thisObj: any) => void;
+    let initNativeRender: () => void;
+    let updateNativeRender: () => void;
+    let dirtyTextField: (textField: egret.TextField) => void;
+    let dirtyGraphics: (graphics: egret.Graphics) => void;
+    let activateBuffer: (buffer: egret.sys.RenderBuffer) => void;
+    let getJsImage: (key: any) => any;
+    let getJsCustomFilterVertexSrc: (key: any) => any;
+    let getJsCustomFilterFragSrc: (key: any) => any;
+    let getJsCustomFilterUniforms: (key: any) => any;
+}
+declare namespace egret_native {
+    /**
+     * @private
+     */
+    class NativeDisplayObject {
+        static init(buffer: Float32Array, map1: any, map2: any, map3: any): void;
+        id: number;
+        protected $obj: any;
+        static update(): void;
+        constructor(type: number);
+        addChildAt(childId: number, index: number): void;
+        removeChild(childId: number): void;
+        swapChild(index1: number, index2: number): void;
+        setX(value: number): void;
+        setY(value: number): void;
+        setRotation(value: number): void;
+        setScaleX(value: number): void;
+        setScaleY(value: number): void;
+        setSkewX(value: number): void;
+        setSkewY(value: number): void;
+        setAlpha(value: number): void;
+        setAnchorOffsetX(value: number): void;
+        setAnchorOffsetY(value: number): void;
+        setVisible(value: boolean): void;
+        setBlendMode(value: number): void;
+        setMaskRect(x: number, y: number, w: number, h: number): void;
+        setScrollRect(x: number, y: number, w: number, h: number): void;
+        setFilters(filters: Array<egret.Filter>): void;
+        static createFilter(filter: egret.Filter): void;
+        static setFilterPadding(filterId: number, paddingTop: number, paddingBottom: number, paddingLeft: number, paddingRight: number): void;
+        setMask(value: number): void;
+        static setValuesToBitmapData(value: egret.Texture): void;
+        /**
+         * for wasm native
+         * @param private
+         */
+        static setValuesToRenderBuffer(value: egret.sys.RenderBuffer): number;
+        setBitmapData(value: egret.Texture): void;
+        setBitmapDataToMesh(value: egret.Texture): void;
+        setBitmapDataToParticle(value: egret.Texture): void;
+        setStopToParticle(value: boolean): void;
+        setCustomData(config: any): void;
+        setWidth(value: number): void;
+        setHeight(value: number): void;
+        setCacheAsBitmap(value: boolean): void;
+        setBitmapFillMode(fillMode: string): void;
+        setScale9Grid(x: number, y: number, w: number, h: number): void;
+        setMatrix(a: number, b: number, c: number, d: number, tx: number, ty: number): void;
+        setIsTyping(value: boolean): void;
+        setTextRect(x: number, y: number, w: number, h: number): void;
+        setGraphicsRect(x: number, y: number, w: number, h: number, isSprite: boolean): void;
+        setGraphicsRenderData(arr: Array<number>): void;
+        setDataToBitmapNode(id: number, texture: egret.Texture, arr: number[]): void;
+        setDataToMesh(vertexArr: number[], indiceArr: number[], uvArr: number[]): void;
+        static setDataToFilter(currFilter: egret.Filter): void;
+        setDataToTextField(id: number, arr: number[]): void;
+        disposeDisplayObject(): void;
+        static disposeTexture(texture: egret.Texture): void;
+        static disposeBitmapData(bitmapData: egret.BitmapData): void;
+        static disposeTextData(node: egret.TextField): void;
+        static disposeGraphicData(graphic: egret.Graphics): void;
+        static disposeFilter(filter: egret.Filter): void;
+    }
+}
+/**
+ * @private
+ */
+declare namespace egret_native {
+    /**
+     * @private
+     */
+    const enum NativeObjectType {
+        /**
+         * 容器
+         */
+        CONTAINER = 0,
+        /**
+         * 位图
+         */
+        BITMAP = 1,
+        /**
+         * 位图数据
+         */
+        BITMAP_DATA = 2,
+        /**
+         * 滤镜
+         */
+        FILTER = 6,
+        /**
+         * 文本
+         */
+        TEXT = 7,
+        /**
+         * 矢量绘图
+         */
+        GRAPHICS = 8,
+        /**
+         * 含一个适量绘图的容器
+         */
+        SPRITE = 9,
+        /**
+         * 粒子系统
+         */
+        PARTICLE_SYSTEM = 10,
+        /**
+         * 位图文本
+         */
+        BITMAP_TEXT = 11,
+        /**
+         * 网格
+         */
+        MESH = 12,
+        /**
+         * 舞台（根容器）
+         */
+        STAGE = 13,
+    }
+}
