@@ -82,7 +82,7 @@ namespace egret.wxapp {
             if (this.$textfield.maxChars) {
                 info.maxLength = this.$textfield.maxChars;
             }
-            wx.showKeyboard();
+            wx.showKeyboard(info);
             // let self = this;
             // wx.onKeyboardInput(function (res) {
             //     self.textValue = res.value;
@@ -103,7 +103,8 @@ namespace egret.wxapp {
          * @private
          */
         $hide(): void {
-            wx.offTouchCancel(this.onKeyboardComplete);
+            wx.offKeyboardComplete();
+            wx.offKeyboardConfirm();
             wx.hideKeyboard({});
             this.dispatchEvent(new egret.Event("blur"));
         }

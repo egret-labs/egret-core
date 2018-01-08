@@ -179,6 +179,9 @@ namespace egret.wxapp {
                     filePath: self._url,
                     success({ data }) {
                         onSuccessFunc(data);
+                    },
+                    fail() {
+                        onErrorFunc();
                     }
                 })
             }
@@ -188,6 +191,9 @@ namespace egret.wxapp {
                     encoding: 'utf8',
                     success({ data }) {
                         onSuccessFunc(data);
+                    },
+                    fail() {
+                        onErrorFunc();
                     }
                 })
             }

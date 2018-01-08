@@ -27,6 +27,10 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
+namespace egret.wxgame {
+    export let version = "1.0.5";
+}
+
 namespace egret.wxapp {
 
     let customContext: CustomContext;
