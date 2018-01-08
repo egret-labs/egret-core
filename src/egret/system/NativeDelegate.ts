@@ -30,34 +30,8 @@
 /**
  * @private
  */
-module egret {
-    /**
-     * @private
-     */
-    export var nativeRender: boolean = __global.nativeRender;
-}
-
-/**
- * @private
- */
 namespace egret_native {
-    let updateFun: Function;
-    let renderFun: Function;
-    let resizeFun: Function;
-    let setRenderModeFun: Function;
-    let updateCallbackListFun: Function;
-    let renderDisplayObjectFun: Function;
-    let renderDisplayObject2Fun: Function;
-    let localToGlobalFun: Function;
-    let globalToLocalFun: Function;
-    let getPixelsFun: Function;
-    let activateBufferFun: Function;
-    let syncTextDataFunc: Function;
-
-    let gl: WebGLRenderingContext;
-    let context: egret.web.WebGLRenderContext;
-    let rootWebGLBuffer: egret.web.WebGLRenderBuffer;
-
+    export let rootWebGLBuffer: egret.web.WebGLRenderBuffer;
     export let forHitTest: boolean = false;
     type ColorAttrib = { color: number, alpha: number };
 
@@ -77,7 +51,7 @@ namespace egret_native {
         _thisObjectList.push(thisObj);
     }
 
-    export let init = function (wasmSize: number = (128 * 1024 * 1024)): void {
+    export let initNativeRender = function (): void {
         if (isInit) {
             if (_callBackList.length > 0) {
                 let locCallAsyncFunctionList = _callBackList;
@@ -93,35 +67,25 @@ namespace egret_native {
         }
         isInit = true;
         let that = this;
-
-        function initImpl2() {
-            egret_native.nrInit();
-
-            egret_native.nrDownloadBuffers(function (displayCmdBuffer: Float32Array) {
-                NativeDisplayObject.init(displayCmdBuffer, bitmapDataMap, filterMap, customFilterDataMap);
-                timeStamp = egret.getTimer();
-                if (_callBackList.length > 0) {
-                    let locCallAsyncFunctionList = _callBackList;
-                    let locCallAsyncThisList = _thisObjectList;
-                    for (let i: number = 0; i < locCallAsyncFunctionList.length; i++) {
-                        let func: Function = locCallAsyncFunctionList[i];
-                        if (func != null) {
-                            func.apply(locCallAsyncThisList[i]);
-                        }
+        egret_native.nrInit();
+        egret_native.nrDownloadBuffers(function (displayCmdBuffer: Float32Array) {
+            NativeDisplayObject.init(displayCmdBuffer, bitmapDataMap, filterMap, customFilterDataMap);
+            timeStamp = egret.getTimer();
+            if (_callBackList.length > 0) {
+                let locCallAsyncFunctionList = _callBackList;
+                let locCallAsyncThisList = _thisObjectList;
+                for (let i: number = 0; i < locCallAsyncFunctionList.length; i++) {
+                    let func: Function = locCallAsyncFunctionList[i];
+                    if (func != null) {
+                        func.apply(locCallAsyncThisList[i]);
                     }
                 }
-                egret.startTick(that.updatePreCallback, that);
-            });
-        }
-
-        initImpl2();
+            }
+            egret.startTick(that.updatePreCallback, that);
+        });
     }
 
-    export let setRootBuffer = function (buffer): void {
-        rootWebGLBuffer = buffer;
-    }
-
-    export let update = function (): void {
+    export let updateNativeRender = function (): void {
         validateDirtyTextField();
         validateDirtyGraphics();
         NativeDisplayObject.update();
@@ -201,7 +165,7 @@ namespace egret_native {
 
     let timeStamp: number;
 
-    export let updatePreCallback = function (currTimeStamp: number): boolean {
+    let updatePreCallback = function (currTimeStamp: number): boolean {
         var dt: number = currTimeStamp - timeStamp;
         timeStamp = currTimeStamp;
         egret_native.nrUpdateCallbackList(dt);
@@ -596,21 +560,11 @@ namespace egret_native {
         }
     }
 
-    export let activateWebGLBuffer = function (buffer: egret.web.WebGLRenderBuffer): void {
+    export let activateBuffer = function (buffer: egret.sys.RenderBuffer): void {
         if (!buffer) {
             buffer = rootWebGLBuffer;
         }
-        egret_native.nrActiveBuffer(buffer.bufferIdForWasm, buffer.width, buffer.height);
-    }
-
-    export let getPixels = function (x: number, y: number, width: number = 1, height: number = 1): number[] {
-        let pixels = new Uint8Array(4 * width * height);
-        egret_native.nrGetPixels(x, y, width, height, pixels);
-        return <number[]><any>pixels;
-    }
-
-    export let activateBuffer = function (buffer: egret.sys.RenderBuffer): void {
-        activateWebGLBuffer(<egret.web.WebGLRenderBuffer>buffer);
+        egret_native.nrActiveBuffer((<egret.web.WebGLRenderBuffer>buffer).bufferIdForWasm, buffer.width, buffer.height);
     }
 
     export let getJsImage = function (key) {
@@ -631,8 +585,8 @@ namespace egret_native {
     };
 
     export let getJsCustomFilterUniforms = function (key) {
-    return customFilterDataMap[key].uniformsSrc;
-};
+        return customFilterDataMap[key].uniformsSrc;
+    };
 
     let bitmapDataMap = {};
     var textFieldDataMap = {};

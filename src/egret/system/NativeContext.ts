@@ -38,7 +38,6 @@ declare namespace egret_native {
     function nrInit(): void;
     function nrDownloadBuffers(callback: (displayCmdBuffer: Float32Array) => void): void;
     function nrSetRenderMode(mode: number): void;
-    function nrSetRenderMode(mode: number): void;
     function nrRenderDisplayObject(id: number, scale: number, useClip: boolean, clipX: number, clipY: number, clipW: number, clipH: number): void;
     function nrRenderDisplayObject2(id: number, offsetX: number, offsetY: number, forHitTest: boolean): void;
     function nrLocalToGlobal(id: number, localX: number, localY: number): string;

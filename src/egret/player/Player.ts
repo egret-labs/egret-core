@@ -59,7 +59,7 @@ namespace egret.sys {
             this.displayFPS = displayFPS;
 
             if (egret.nativeRender) {
-                egret_native.setRootBuffer(buffer);
+                egret_native.rootWebGLBuffer = <any>buffer;
             }
         }
 
@@ -168,7 +168,7 @@ namespace egret.sys {
          */
         $render(triggerByFrame: boolean, costTicker: number): void {
             if (egret.nativeRender) {
-                egret_native.update();
+                egret_native.updateNativeRender();
                 egret_native.nrRender();
                 return;
             }

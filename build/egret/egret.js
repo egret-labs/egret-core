@@ -2025,7 +2025,7 @@ var egret;
             if (stageX === void 0) { stageX = 0; }
             if (stageY === void 0) { stageY = 0; }
             if (egret.nativeRender) {
-                egret_native.update();
+                egret_native.updateNativeRender();
                 var result = egret_native.nrGlobalToLocal(this.$nativeDisplayObject.id, stageX, stageY);
                 var arr = result.split(",");
                 var x = parseFloat(arr[0]);
@@ -2068,7 +2068,7 @@ var egret;
             if (localX === void 0) { localX = 0; }
             if (localY === void 0) { localY = 0; }
             if (egret.nativeRender) {
-                egret_native.update();
+                egret_native.updateNativeRender();
                 var result = egret_native.nrLocalToGlobal(this.$nativeDisplayObject.id, localX, localY);
                 var arr = result.split(",");
                 var x = parseFloat(arr[0]);
@@ -2352,10 +2352,11 @@ var egret;
                     buffer.resize(3, 3);
                     egret_native.forHitTest = true;
                     egret_native.activateBuffer(buffer);
-                    egret_native.update();
+                    egret_native.updateNativeRender();
                     egret_native.nrRenderDisplayObject2(self.$nativeDisplayObject.id, 1 - localX, 1 - localY, true);
                     try {
-                        data = egret_native.getPixels(1, 1);
+                        data = new Uint8Array(4);
+                        egret_native.nrGetPixels(1, 1, 1, 1, data);
                     }
                     catch (e) {
                         throw new Error(egret.sys.tr(1039));
@@ -4268,18 +4269,159 @@ var egret;
     egret.Filter = Filter;
     __reflect(Filter.prototype, "egret.Filter");
 })(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
     /**
-     * @private
+     * The Sprite class is a basic display list building block: a display list node that can contain children.
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/display/Sprite.ts
+     * @language en_US
      */
-    function createMap() {
-        var obj = Object.create(null);
-        obj.__v8__ = undefined;
-        delete obj.__v8__;
-        return obj;
-    }
-    egret.createMap = createMap;
+    /**
+     * Sprite 类是基本显示列表构造块：一个可包含子项的显示列表节点。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/display/Sprite.ts
+     * @language zh_CN
+     */
+    var Sprite = (function (_super) {
+        __extends(Sprite, _super);
+        /**
+         * Creates a new Sprite instance.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 实例化一个容器
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        function Sprite() {
+            var _this = _super.call(this) || this;
+            _this.$graphics = new egret.Graphics();
+            _this.$graphics.$setTarget(_this);
+            return _this;
+        }
+        Sprite.prototype.createNativeDisplayObject = function () {
+            this.$nativeDisplayObject = new egret_native.NativeDisplayObject(9 /* SPRITE */);
+        };
+        Object.defineProperty(Sprite.prototype, "graphics", {
+            /**
+             * Specifies the Graphics object belonging to this Shape object, where vector drawing commands can occur.
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language en_US
+             */
+            /**
+             * 获取 Shape 中的 Graphics 对象。可通过此对象执行矢量绘图命令。
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language zh_CN
+             */
+            get: function () {
+                return this.$graphics;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Sprite.prototype.$hitTest = function (stageX, stageY) {
+            if (!this.$visible) {
+                return null;
+            }
+            var m = this.$getInvertedConcatenatedMatrix();
+            var localX = m.a * stageX + m.c * stageY + m.tx;
+            var localY = m.b * stageX + m.d * stageY + m.ty;
+            var rect = this.$scrollRect ? this.$scrollRect : this.$maskRect;
+            if (rect && !rect.contains(localX, localY)) {
+                return null;
+            }
+            if (this.$mask && !this.$mask.$hitTest(stageX, stageY)) {
+                return null;
+            }
+            var children = this.$children;
+            var found = false;
+            var target = null;
+            for (var i = children.length - 1; i >= 0; i--) {
+                var child = children[i];
+                if (child.$maskedObject) {
+                    continue;
+                }
+                target = child.$hitTest(stageX, stageY);
+                if (target) {
+                    found = true;
+                    if (target.$touchEnabled) {
+                        break;
+                    }
+                    else {
+                        target = null;
+                    }
+                }
+            }
+            if (target) {
+                if (this.$touchChildren) {
+                    return target;
+                }
+                return this;
+            }
+            if (found) {
+                return this;
+            }
+            target = egret.DisplayObject.prototype.$hitTest.call(this, stageX, stageY);
+            if (target) {
+                target = this.$graphics.$hitTest(stageX, stageY);
+            }
+            return target;
+        };
+        /**
+         * @private
+         */
+        Sprite.prototype.$measureContentBounds = function (bounds) {
+            this.$graphics.$measureContentBounds(bounds);
+        };
+        /**
+         * @private
+         */
+        Sprite.prototype.$onRemoveFromStage = function () {
+            _super.prototype.$onRemoveFromStage.call(this);
+            if (this.$graphics) {
+                this.$graphics.$onRemoveFromStage();
+            }
+        };
+        return Sprite;
+    }(egret.DisplayObjectContainer));
+    egret.Sprite = Sprite;
+    __reflect(Sprite.prototype, "egret.Sprite");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -7350,594 +7492,6 @@ egret.Capabilities.$isMobile = function () {
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-/**
- * @private
- */
-var egret;
-(function (egret) {
-    /**
-     * @private
-     */
-    egret.nativeRender = __global.nativeRender;
-})(egret || (egret = {}));
-/**
- * @private
- */
-var egret_native;
-(function (egret_native) {
-    var updateFun;
-    var renderFun;
-    var resizeFun;
-    var setRenderModeFun;
-    var updateCallbackListFun;
-    var renderDisplayObjectFun;
-    var renderDisplayObject2Fun;
-    var localToGlobalFun;
-    var globalToLocalFun;
-    var getPixelsFun;
-    var activateBufferFun;
-    var syncTextDataFunc;
-    var gl;
-    var context;
-    var rootWebGLBuffer;
-    egret_native.forHitTest = false;
-    /**
-     * @private
-     */
-    var _callBackList = [];
-    /**
-     * @private
-     */
-    var _thisObjectList = [];
-    var isInit = false;
-    egret_native.addModuleCallback = function (callback, thisObj) {
-        _callBackList.push(callback);
-        _thisObjectList.push(thisObj);
-    };
-    egret_native.init = function (wasmSize) {
-        if (wasmSize === void 0) { wasmSize = (128 * 1024 * 1024); }
-        if (isInit) {
-            if (_callBackList.length > 0) {
-                var locCallAsyncFunctionList = _callBackList;
-                var locCallAsyncThisList = _thisObjectList;
-                for (var i = 0; i < locCallAsyncFunctionList.length; i++) {
-                    var func = locCallAsyncFunctionList[i];
-                    if (func != null) {
-                        func.apply(locCallAsyncThisList[i]);
-                    }
-                }
-            }
-            return;
-        }
-        isInit = true;
-        var that = this;
-        function initImpl2() {
-            egret_native.nrInit();
-            egret_native.nrDownloadBuffers(function (displayCmdBuffer) {
-                egret_native.NativeDisplayObject.init(displayCmdBuffer, bitmapDataMap, filterMap, customFilterDataMap);
-                timeStamp = egret.getTimer();
-                if (_callBackList.length > 0) {
-                    var locCallAsyncFunctionList = _callBackList;
-                    var locCallAsyncThisList = _thisObjectList;
-                    for (var i = 0; i < locCallAsyncFunctionList.length; i++) {
-                        var func = locCallAsyncFunctionList[i];
-                        if (func != null) {
-                            func.apply(locCallAsyncThisList[i]);
-                        }
-                    }
-                }
-                egret.startTick(that.updatePreCallback, that);
-            });
-        }
-        initImpl2();
-    };
-    egret_native.setRootBuffer = function (buffer) {
-        rootWebGLBuffer = buffer;
-    };
-    egret_native.update = function () {
-        validateDirtyTextField();
-        validateDirtyGraphics();
-        egret_native.NativeDisplayObject.update();
-        egret_native.nrUpdate();
-        syncDirtyTextField();
-    };
-    egret_native.dirtyTextField = function (textField) {
-        if (dirtyTextFieldList.indexOf(textField) == -1) {
-            dirtyTextFieldList.push(textField);
-        }
-    };
-    egret_native.dirtyGraphics = function (graphics) {
-        if (dirtyGraphicsList.indexOf(graphics) == -1) {
-            dirtyGraphicsList.push(graphics);
-        }
-    };
-    var syncDirtyTextField = function () {
-        for (var key in textFieldDataMap) {
-            if (textFieldDataMap[key].length > 0) {
-                egret_native.nrSendTextFieldData(key, textFieldDataMap[key]);
-            }
-        }
-        textFieldDataMap = {};
-    };
-    var validateDirtyTextField = function () {
-        var length = dirtyTextFieldList.length;
-        if (length > 0) {
-            var locList = dirtyTextFieldList;
-            dirtyTextFieldList = [];
-            for (var i = 0; i < length; i++) {
-                var textField = locList[i];
-                textField.$getRenderNode();
-                var node = textField.$renderNode;
-                var width = node.width - node.x;
-                var height = node.height - node.y;
-                if (node.drawData.length == 0) {
-                    var graphicNode = textField.$graphicsNode;
-                    if (graphicNode) {
-                        textField.$nativeDisplayObject.setTextRect(graphicNode.x, graphicNode.y, graphicNode.width, graphicNode.height);
-                    }
-                    else {
-                        textField.$nativeDisplayObject.setTextRect(0, 0, 0, 0);
-                    }
-                }
-                else {
-                    textField.$nativeDisplayObject.setTextRect(node.x, node.y, width, height);
-                }
-                bufferTextData(textField);
-            }
-        }
-    };
-    var validateDirtyGraphics = function () {
-        var length = dirtyGraphicsList.length;
-        if (length > 0) {
-            var locList = dirtyGraphicsList;
-            dirtyGraphicsList = [];
-            for (var i = 0; i < length; i++) {
-                var graphics = locList[i];
-                var node = graphics.$renderNode;
-                var width = node.width;
-                var height = node.height;
-                if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) {
-                    graphics.$targetDisplay.$nativeDisplayObject.setGraphicsRect(0, 0, 0, 0, graphics.$targetIsSprite);
-                }
-                else {
-                    graphics.$targetDisplay.$nativeDisplayObject.setGraphicsRect(node.x, node.y, node.width, node.height, graphics.$targetIsSprite);
-                }
-                bufferGraphicsData(node, graphics);
-            }
-        }
-    };
-    var timeStamp;
-    egret_native.updatePreCallback = function (currTimeStamp) {
-        var dt = currTimeStamp - timeStamp;
-        timeStamp = currTimeStamp;
-        egret_native.nrUpdateCallbackList(dt);
-        return false;
-    };
-    var parseColorString = function (colorStr, colorVal) {
-        if (colorStr.indexOf("r") == -1) {
-            colorStr = colorStr.replace(/#/, "");
-            colorVal.color = parseInt(colorStr, 16);
-        }
-        else {
-            colorStr = colorStr.replace(/rgba\(/, "");
-            colorStr = colorStr.replace(/\)/, "");
-            var colorArr = colorStr.split(",");
-            colorVal.color = (Number(colorArr[0]) << 16) | (Number(colorArr[1]) << 8) | Number(colorArr[2]);
-            colorVal.alpha = Number(colorArr[3]);
-        }
-    };
-    var bufferRenderPath = function (path, currCmds) {
-        // 1023 beginPath
-        currCmds.push(1023);
-        var data = path.$data;
-        var commands = path.$commands;
-        var commandCount = commands.length;
-        var pos = 0;
-        for (var commandIndex = 0; commandIndex < commandCount; commandIndex++) {
-            var command = commands[commandIndex];
-            switch (command) {
-                case 4 /* CubicCurveTo */:
-                    // context.bezierCurveTo(data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
-                    currCmds.push(1024);
-                    currCmds.push(data[pos++]);
-                    currCmds.push(data[pos++]);
-                    currCmds.push(data[pos++]);
-                    currCmds.push(data[pos++]);
-                    currCmds.push(data[pos++]);
-                    currCmds.push(data[pos++]);
-                    break;
-                case 3 /* CurveTo */:
-                    // context.quadraticCurveTo(data[pos++], data[pos++], data[pos++], data[pos++]);
-                    currCmds.push(1025);
-                    currCmds.push(data[pos++]);
-                    currCmds.push(data[pos++]);
-                    currCmds.push(data[pos++]);
-                    currCmds.push(data[pos++]);
-                    break;
-                case 2 /* LineTo */:
-                    // context.lineTo(data[pos++], data[pos++]);
-                    currCmds.push(1026);
-                    currCmds.push(data[pos++]);
-                    currCmds.push(data[pos++]);
-                    break;
-                case 1 /* MoveTo */:
-                    // context.moveTo(data[pos++], data[pos++]);
-                    currCmds.push(1027);
-                    currCmds.push(data[pos++]);
-                    currCmds.push(data[pos++]);
-                    break;
-            }
-        }
-    };
-    var bufferTextData = function (textField) {
-        var node = textField.$renderNode;
-        var textFieldId = textField.$nativeDisplayObject.id;
-        var width = node.width - node.x;
-        var height = node.height - node.y;
-        if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) {
-            return;
-        }
-        var canvasScaleX = egret.sys.DisplayList.$canvasScaleX;
-        var canvasScaleY = egret.sys.DisplayList.$canvasScaleY;
-        // let maxTextureSize = buffer.context.$maxTextureSize;
-        var maxTextureSize = 4096;
-        if (width * canvasScaleX > maxTextureSize) {
-            canvasScaleX *= maxTextureSize / (width * canvasScaleX);
-        }
-        if (height * canvasScaleY > maxTextureSize) {
-            canvasScaleY *= maxTextureSize / (height * canvasScaleY);
-        }
-        width *= canvasScaleX;
-        height *= canvasScaleY;
-        var x1 = node.x * canvasScaleX;
-        var y1 = node.y * canvasScaleY;
-        var offsetX = -node.x;
-        var offsetY = -node.y;
-        var renderCmds = [];
-        var renderParms = "";
-        if (node.dirtyRender) {
-            renderCmds.length = 0;
-            renderCmds.push(1010);
-            renderCmds.push(1);
-            // 1011: resize
-            renderCmds.push(1011);
-            renderCmds.push(width);
-            renderCmds.push(height);
-            renderCmds.push(node.x);
-            renderCmds.push(node.y);
-            if (canvasScaleX != 1 || canvasScaleY != 1) {
-                renderCmds.push(1019);
-                renderCmds.push(canvasScaleX);
-                renderCmds.push(0);
-                renderCmds.push(0);
-                renderCmds.push(canvasScaleY);
-                renderCmds.push(0);
-                renderCmds.push(0);
-                renderCmds.push(0);
-            }
-            if (x1 || y1) {
-                // 1019: setTransform
-                renderCmds.push(1019);
-                renderCmds.push(canvasScaleX);
-                renderCmds.push(0);
-                renderCmds.push(0);
-                renderCmds.push(canvasScaleY);
-                renderCmds.push(-x1);
-                renderCmds.push(-y1);
-                renderCmds.push(1);
-            }
-            if (textField.$graphicsNode) {
-                renderCmds.push(1015);
-                bufferGraphicsData(textField.$graphicsNode, null, renderCmds);
-                renderCmds.push(1016);
-            }
-            var drawData = node.drawData;
-            var length_2 = drawData.length;
-            var pos = 0;
-            while (pos < length_2) {
-                var x = drawData[pos++];
-                var y = drawData[pos++];
-                var text = drawData[pos++];
-                var format = drawData[pos++];
-                var textColor = format.textColor == null ? node.textColor : format.textColor;
-                var strokeColor = format.strokeColor == null ? node.strokeColor : format.strokeColor;
-                var stroke = format.stroke == null ? node.stroke : format.stroke;
-                // 1012: setFontFormat 
-                renderCmds.push(1012);
-                var fontStr = egret.getFontString(node, format);
-                var fontPath = "";
-                var fontSize = -1;
-                var strArray = fontStr.split(",");
-                if (strArray.length > 0) {
-                    var arr = strArray[0].split(" ");
-                    for (var i = 0; i < arr.length; i++) {
-                        if (arr[i].indexOf("px") != -1) {
-                            fontSize = Number(arr[i].replace(/px/, ""));
-                            fontPath = fontStr.substring(fontStr.indexOf(arr[i]) + arr[i].length + 1);
-                            break;
-                        }
-                    }
-                    renderCmds.push(fontSize);
-                    //TODO
-                    // if (fontPath != this.currentFont) {
-                    renderParms += fontPath;
-                    // }
-                    if (fontStr.indexOf("bold") == -1) {
-                        renderCmds.push(0);
-                    }
-                    else {
-                        renderCmds.push(1);
-                    }
-                    if (fontStr.indexOf("italic") == -1) {
-                        renderCmds.push(0);
-                    }
-                    else {
-                        renderCmds.push(1);
-                    }
-                    renderParms += ";";
-                    //  setFillStyle
-                    var fontColor = 0; //black
-                    var fillColor = void 0;
-                    var fillAlpha = void 0;
-                    var fillStr = egret.toColorString(textColor);
-                    if (fillStr.indexOf("r") == -1) {
-                        fillStr = fillStr.replace(/#/, "");
-                        fontColor = parseInt(fillStr, 16);
-                    }
-                    else {
-                        fillStr = fillStr.replace(/rgba\(/, "");
-                        fillStr = fillStr.replace(/\)/, "");
-                        var colorArr = fillStr.split(",");
-                        fillColor = (Number(colorArr[0]) << 16) | (Number(colorArr[1]) << 8) | Number(colorArr[2]);
-                        fillAlpha = Number(arr[3]);
-                    }
-                    // console.log("font color = " + fontColor);
-                    renderCmds.push(fontColor);
-                    // native fillColor fillAlph no implement
-                    // renderCmds.push(fillColor);
-                    // renderCmds.push(fillAlpha);
-                    // setStrokeStype
-                    var strokeStr = egret.toColorString(strokeColor);
-                    var strokeColorInt = 0; // black
-                    var strokeAlpha = void 0;
-                    if (strokeStr.indexOf("r") == -1) {
-                        strokeStr = strokeStr.replace(/#/, "");
-                        strokeColorInt = parseInt(strokeStr, 16);
-                    }
-                    else {
-                        strokeStr = strokeStr.replace(/rgba\(/, "");
-                        strokeStr = strokeStr.replace(/\)/, "");
-                        var coloarArr2 = strokeStr.split(",");
-                        strokeColorInt = (Number(coloarArr2[0]) << 16) | (Number(coloarArr2[1]) << 8) | Number(coloarArr2[2]);
-                        strokeAlpha = Number(arr[3]);
-                    }
-                    renderCmds.push(strokeColorInt);
-                    // renderCmds.push(strokeAlpha);
-                    renderParms += text;
-                    renderParms += ";";
-                    // 1013: strokeText
-                    renderCmds.push(1013);
-                    if (stroke) {
-                        renderCmds.push(stroke * 2);
-                    }
-                    else {
-                        renderCmds.push(0);
-                    }
-                    //1014: fillText
-                    renderCmds.push(1014);
-                    renderCmds.push(x);
-                    renderCmds.push(y);
-                }
-            }
-            if (x1 || y1) {
-                // 1019: setTransform
-                renderCmds.push(1019);
-                renderCmds.push(canvasScaleX);
-                renderCmds.push(0);
-                renderCmds.push(0);
-                renderCmds.push(canvasScaleY);
-                renderCmds.push(0);
-                renderCmds.push(0);
-                renderCmds.push(-1);
-            }
-            textField.$nativeDisplayObject.setDataToTextField(textFieldId, renderCmds);
-            textFieldDataMap[textFieldId] = renderParms;
-            node.dirtyRender = false;
-        }
-    };
-    var bufferGraphicsData = function (node, graphics, renderCmds) {
-        if (graphics === void 0) { graphics = null; }
-        if (renderCmds === void 0) { renderCmds = null; }
-        var isGraphics = false;
-        var width = node.width;
-        var height = node.height;
-        if (graphics) {
-            renderCmds = [];
-            isGraphics = true;
-        }
-        if (renderCmds == null || renderCmds == undefined) {
-            return;
-        }
-        var canvasScaleX = egret.sys.DisplayList.$canvasScaleX;
-        var canvasScaleY = egret.sys.DisplayList.$canvasScaleY;
-        if (width * canvasScaleX < 1 || height * canvasScaleY < 1) {
-            canvasScaleX = canvasScaleY = 1;
-        }
-        if (node.$canvasScaleX != canvasScaleX || node.$canvasScaleY != canvasScaleY) {
-            node.$canvasScaleX = canvasScaleX;
-            node.$canvasScaleY = canvasScaleY;
-            node.dirtyRender = true;
-        }
-        width *= canvasScaleX;
-        height *= canvasScaleY;
-        if (node.dirtyRender || egret_native.forHitTest) {
-            renderCmds.push(1010);
-            renderCmds.push(1);
-            // 1011: resize
-            renderCmds.push(1011);
-            renderCmds.push(width);
-            renderCmds.push(height);
-            renderCmds.push(node.x);
-            renderCmds.push(node.y);
-            if (canvasScaleX != 1 || canvasScaleY != 1) {
-                renderCmds.push(1019);
-                renderCmds.push(canvasScaleX);
-                renderCmds.push(0);
-                renderCmds.push(0);
-                renderCmds.push(canvasScaleY);
-                renderCmds.push(0);
-                renderCmds.push(0);
-                renderCmds.push(0);
-            }
-            // 1020: translate
-            if (node.x || node.y) {
-                renderCmds.push(1020);
-                renderCmds.push(-node.x);
-                renderCmds.push(-node.y);
-                renderCmds.push(1);
-            }
-            var drawData = node.drawData;
-            var length_3 = drawData.length;
-            var colorVal = { color: 0, alpha: 1 };
-            for (var i = 0; i < length_3; i++) {
-                var path = drawData[i];
-                colorVal.color = 0;
-                colorVal.alpha = 1;
-                switch (path.type) {
-                    case 1 /* Fill */:
-                        var fillPath = path;
-                        parseColorString(egret_native.forHitTest ? egret.BLACK_COLOR : egret.getRGBAString(fillPath.fillColor, fillPath.fillAlpha), colorVal);
-                        renderCmds.push(1021);
-                        renderCmds.push(colorVal.color);
-                        renderCmds.push(colorVal.alpha);
-                        bufferRenderPath(path, renderCmds);
-                        // if (this.renderingMask) {
-                        //     context.clip();
-                        // }
-                        // else {
-                        // 1028 context.fill();
-                        renderCmds.push(1028);
-                        // }
-                        break;
-                    case 2 /* GradientFill */:
-                        // native no implement
-                        break;
-                    case 3 /* Stroke */:
-                        var strokeFill = path;
-                        var lineWidth = strokeFill.lineWidth;
-                        parseColorString(egret_native.forHitTest ? egret.BLACK_COLOR : egret.getRGBAString(strokeFill.lineColor, strokeFill.lineAlpha), colorVal);
-                        // native no implement
-                        // context.lineCap = CAPS_STYLES[strokeFill.caps];
-                        // context.lineJoin = strokeFill.joints;
-                        // context.miterLimit = strokeFill.miterLimit;
-                        renderCmds.push(1022);
-                        renderCmds.push(colorVal.color);
-                        renderCmds.push(colorVal.alpha);
-                        renderCmds.push(lineWidth);
-                        //对1像素和3像素特殊处理，向右下角偏移0.5像素，以显示清晰锐利的线条。
-                        var isSpecialCaseWidth = lineWidth === 1 || lineWidth === 3;
-                        if (isSpecialCaseWidth) {
-                            // 1020 translate context.translate(0.5, 0.5);
-                            renderCmds.push(1020);
-                            renderCmds.push(0.5);
-                            renderCmds.push(0.5);
-                            renderCmds.push(0);
-                        }
-                        bufferRenderPath(path, renderCmds);
-                        // 1029 stroke
-                        renderCmds.push(1029);
-                        if (isSpecialCaseWidth) {
-                            // 1020 translate context.translate(-0.5, -0.5);
-                            renderCmds.push(1020);
-                            renderCmds.push(-0.5);
-                            renderCmds.push(-0.5);
-                            renderCmds.push(0);
-                        }
-                        break;
-                }
-            }
-            if (node.x || node.y) {
-                renderCmds.push(1020);
-                renderCmds.push(node.x);
-                renderCmds.push(node.y);
-                renderCmds.push(-1);
-            }
-            if (isGraphics) {
-                graphics.$targetDisplay.$nativeDisplayObject.setGraphicsRenderData(renderCmds);
-            }
-            if (!egret_native.forHitTest) {
-                node.dirtyRender = false;
-            }
-        }
-    };
-    egret_native.activateWebGLBuffer = function (buffer) {
-        if (!buffer) {
-            buffer = rootWebGLBuffer;
-        }
-        egret_native.nrActiveBuffer(buffer.bufferIdForWasm, buffer.width, buffer.height);
-    };
-    egret_native.getPixels = function (x, y, width, height) {
-        if (width === void 0) { width = 1; }
-        if (height === void 0) { height = 1; }
-        var pixels = new Uint8Array(4 * width * height);
-        egret_native.nrGetPixels(x, y, width, height, pixels);
-        return pixels;
-    };
-    egret_native.activateBuffer = function (buffer) {
-        egret_native.activateWebGLBuffer(buffer);
-    };
-    egret_native.getJsImage = function (key) {
-        if (bitmapDataMap[key].isTexture === true) {
-            return null;
-        }
-        else {
-            return bitmapDataMap[key].source;
-        }
-    };
-    egret_native.getJsCustomFilterVertexSrc = function (key) {
-        return customFilterDataMap[key].vertexSrc;
-    };
-    egret_native.getJsCustomFilterFragSrc = function (key) {
-        return customFilterDataMap[key].fragmentSrc;
-    };
-    egret_native.getJsCustomFilterUniforms = function (key) {
-        return customFilterDataMap[key].uniformsSrc;
-    };
-    var bitmapDataMap = {};
-    var textFieldDataMap = {};
-    var customFilterDataMap = {};
-    var filterMap = egret.createMap();
-    var dirtyTextFieldList = [];
-    var dirtyGraphicsList = [];
-})(egret_native || (egret_native = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
 })(egret || (egret = {}));
@@ -7978,36 +7532,18 @@ var egret;
     (function (sys) {
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
+    /**
+     * @private
+     */
+    function createMap() {
+        var obj = Object.create(null);
+        obj.__v8__ = undefined;
+        delete obj.__v8__;
+        return obj;
+    }
+    egret.createMap = createMap;
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -8102,8 +7638,8 @@ var egret;
         }
         var superTypes = prototype.__types__;
         if (prototype.__types__) {
-            var length_4 = superTypes.length;
-            for (var i = 0; i < length_4; i++) {
+            var length_2 = superTypes.length;
+            for (var i = 0; i < length_2; i++) {
                 var name_1 = superTypes[i];
                 if (types.indexOf(name_1) == -1) {
                     types.push(name_1);
@@ -8144,129 +7680,6 @@ var egret;
 //////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
-    /**
-     * The Sprite class is a basic display list building block: a display list node that can contain children.
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/display/Sprite.ts
-     * @language en_US
-     */
-    /**
-     * Sprite 类是基本显示列表构造块：一个可包含子项的显示列表节点。
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/display/Sprite.ts
-     * @language zh_CN
-     */
-    var Sprite = (function (_super) {
-        __extends(Sprite, _super);
-        /**
-         * Creates a new Sprite instance.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 实例化一个容器
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        function Sprite() {
-            var _this = _super.call(this) || this;
-            _this.$graphics = new egret.Graphics();
-            _this.$graphics.$setTarget(_this);
-            return _this;
-        }
-        Sprite.prototype.createNativeDisplayObject = function () {
-            this.$nativeDisplayObject = new egret_native.NativeDisplayObject(9 /* SPRITE */);
-        };
-        Object.defineProperty(Sprite.prototype, "graphics", {
-            /**
-             * Specifies the Graphics object belonging to this Shape object, where vector drawing commands can occur.
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language en_US
-             */
-            /**
-             * 获取 Shape 中的 Graphics 对象。可通过此对象执行矢量绘图命令。
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language zh_CN
-             */
-            get: function () {
-                return this.$graphics;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Sprite.prototype.$hitTest = function (stageX, stageY) {
-            if (!this.$visible) {
-                return null;
-            }
-            var m = this.$getInvertedConcatenatedMatrix();
-            var localX = m.a * stageX + m.c * stageY + m.tx;
-            var localY = m.b * stageX + m.d * stageY + m.ty;
-            var rect = this.$scrollRect ? this.$scrollRect : this.$maskRect;
-            if (rect && !rect.contains(localX, localY)) {
-                return null;
-            }
-            if (this.$mask && !this.$mask.$hitTest(stageX, stageY)) {
-                return null;
-            }
-            var children = this.$children;
-            var found = false;
-            var target = null;
-            for (var i = children.length - 1; i >= 0; i--) {
-                var child = children[i];
-                if (child.$maskedObject) {
-                    continue;
-                }
-                target = child.$hitTest(stageX, stageY);
-                if (target) {
-                    found = true;
-                    if (target.$touchEnabled) {
-                        break;
-                    }
-                    else {
-                        target = null;
-                    }
-                }
-            }
-            if (target) {
-                if (this.$touchChildren) {
-                    return target;
-                }
-                return this;
-            }
-            if (found) {
-                return this;
-            }
-            target = egret.DisplayObject.prototype.$hitTest.call(this, stageX, stageY);
-            if (target) {
-                target = this.$graphics.$hitTest(stageX, stageY);
-            }
-            return target;
-        };
-        /**
-         * @private
-         */
-        Sprite.prototype.$measureContentBounds = function (bounds) {
-            this.$graphics.$measureContentBounds(bounds);
-        };
-        /**
-         * @private
-         */
-        Sprite.prototype.$onRemoveFromStage = function () {
-            _super.prototype.$onRemoveFromStage.call(this);
-            if (this.$graphics) {
-                this.$graphics.$onRemoveFromStage();
-            }
-        };
-        return Sprite;
-    }(egret.DisplayObjectContainer));
-    egret.Sprite = Sprite;
-    __reflect(Sprite.prototype, "egret.Sprite");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -8495,6 +7908,158 @@ var egret;
 //////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
+})(egret || (egret = {}));
+/**
+ * @private
+ */
+(function (egret) {
+    /**
+     * @private
+     */
+    egret.nativeRender = __global.nativeRender;
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var web;
+    (function (web) {
+        /**
+         * @private
+         */
+        var WebExternalInterface = (function () {
+            function WebExternalInterface() {
+            }
+            /**
+             * @private
+             * @param functionName
+             * @param value
+             */
+            WebExternalInterface.call = function (functionName, value) {
+            };
+            /**
+             * @private
+             * @param functionName
+             * @param listener
+             */
+            WebExternalInterface.addCallback = function (functionName, listener) {
+            };
+            return WebExternalInterface;
+        }());
+        web.WebExternalInterface = WebExternalInterface;
+        __reflect(WebExternalInterface.prototype, "egret.web.WebExternalInterface", ["egret.ExternalInterface"]);
+        var ua = navigator.userAgent.toLowerCase();
+        if (ua.indexOf("egretnative") < 0) {
+            egret.ExternalInterface = WebExternalInterface;
+        }
+    })(web = egret.web || (egret.web = {}));
+})(egret || (egret = {}));
+(function (egret) {
+    var web;
+    (function (web) {
+        var callBackDic = {};
+        /**
+         * @private
+         */
+        var NativeExternalInterface = (function () {
+            function NativeExternalInterface() {
+            }
+            NativeExternalInterface.call = function (functionName, value) {
+                var data = {};
+                data.functionName = functionName;
+                data.value = value;
+                egret_native.sendInfoToPlugin(JSON.stringify(data));
+            };
+            NativeExternalInterface.addCallback = function (functionName, listener) {
+                callBackDic[functionName] = listener;
+            };
+            return NativeExternalInterface;
+        }());
+        web.NativeExternalInterface = NativeExternalInterface;
+        __reflect(NativeExternalInterface.prototype, "egret.web.NativeExternalInterface", ["egret.ExternalInterface"]);
+        /**
+         * @private
+         * @param info
+         */
+        function onReceivedPluginInfo(info) {
+            var data = JSON.parse(info);
+            var functionName = data.functionName;
+            var listener = callBackDic[functionName];
+            if (listener) {
+                var value = data.value;
+                listener.call(null, value);
+            }
+            else {
+                egret.$warn(1050, functionName);
+            }
+        }
+        var ua = navigator.userAgent.toLowerCase();
+        if (ua.indexOf("egretnative") >= 0) {
+            egret.ExternalInterface = NativeExternalInterface;
+            egret_native.receivedPluginInfo = onReceivedPluginInfo;
+        }
+    })(web = egret.web || (egret.web = {}));
+})(egret || (egret = {}));
+(function (egret) {
+    var web;
+    (function (web) {
+        var callBackDic = {};
+        /**
+         * @private
+         */
+        var WebViewExternalInterface = (function () {
+            function WebViewExternalInterface() {
+            }
+            WebViewExternalInterface.call = function (functionName, value) {
+                __global.ExternalInterface.call(functionName, value);
+            };
+            WebViewExternalInterface.addCallback = function (functionName, listener) {
+                callBackDic[functionName] = listener;
+            };
+            WebViewExternalInterface.invokeCallback = function (functionName, value) {
+                var listener = callBackDic[functionName];
+                if (listener) {
+                    listener.call(null, value);
+                }
+                else {
+                    egret.$warn(1050, functionName);
+                }
+            };
+            return WebViewExternalInterface;
+        }());
+        web.WebViewExternalInterface = WebViewExternalInterface;
+        __reflect(WebViewExternalInterface.prototype, "egret.web.WebViewExternalInterface", ["egret.ExternalInterface"]);
+        var ua = navigator.userAgent.toLowerCase();
+        if (ua.indexOf("egretwebview") >= 0) {
+            egret.ExternalInterface = WebViewExternalInterface;
+        }
+    })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -9452,7 +9017,7 @@ var egret;
                     clipW = clipBounds.width;
                     clipH = clipBounds.height;
                 }
-                egret_native.update();
+                egret_native.updateNativeRender();
                 egret_native.nrRenderDisplayObject(displayObject.$nativeDisplayObject.id, scale, useClip, clipX, clipY, clipW, clipH);
                 egret_native.activateBuffer(null);
             }
@@ -14286,7 +13851,7 @@ var egret;
                 _this.stageDisplayList = null;
                 _this.displayFPS = displayFPS;
                 if (egret.nativeRender) {
-                    egret_native.setRootBuffer(buffer);
+                    egret_native.rootWebGLBuffer = buffer;
                 }
                 return _this;
             }
@@ -14362,7 +13927,7 @@ var egret;
              */
             Player.prototype.$render = function (triggerByFrame, costTicker) {
                 if (egret.nativeRender) {
-                    egret_native.update();
+                    egret_native.updateNativeRender();
                     egret_native.nrRender();
                     return;
                 }
@@ -14434,8 +13999,8 @@ var egret;
                 fpsDisplay = this.fps = new FPS(this.stage, showFPS, showLog, logFilter, styles);
                 fpsDisplay.x = x;
                 fpsDisplay.y = y;
-                var length_5 = infoLines.length;
-                for (var i = 0; i < length_5; i++) {
+                var length_3 = infoLines.length;
+                for (var i = 0; i < length_3; i++) {
                     fpsDisplay.updateInfo(infoLines[i]);
                 }
                 infoLines = null;
@@ -15279,8 +14844,8 @@ var egret;
                     egret.$callLaterArgsList = [];
                 }
                 if (functionList) {
-                    var length_6 = functionList.length;
-                    for (var i = 0; i < length_6; i++) {
+                    var length_4 = functionList.length;
+                    for (var i = 0; i < length_4; i++) {
                         var func = functionList[i];
                         if (func != null) {
                             func.apply(thisList[i], argsList[i]);
@@ -16793,8 +16358,8 @@ var egret;
                 if (renderBufferPool.length > 6) {
                     renderBufferPool.length = 6;
                 }
-                var length_7 = renderBufferPool.length;
-                for (var i = 0; i < length_7; i++) {
+                var length_5 = renderBufferPool.length;
+                for (var i = 0; i < length_5; i++) {
                     renderBufferPool[i].resize(0, 0);
                 }
             }
@@ -16857,8 +16422,8 @@ var egret;
             }
             var children = displayObject.$children;
             if (children) {
-                var length_8 = children.length;
-                for (var i = 0; i < length_8; i++) {
+                var length_6 = children.length;
+                for (var i = 0; i < length_6; i++) {
                     var child = children[i];
                     var offsetX2 = void 0;
                     var offsetY2 = void 0;
@@ -17172,8 +16737,8 @@ var egret;
             }
             var children = displayObject.$children;
             if (children) {
-                var length_9 = children.length;
-                for (var i = 0; i < length_9; i++) {
+                var length_7 = children.length;
+                for (var i = 0; i < length_7; i++) {
                     var child = children[i];
                     switch (child.$renderMode) {
                         case 1 /* NONE */:
@@ -19287,36 +18852,524 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
+/**
+ * @private
+ */
+var egret_native;
+(function (egret_native) {
+    egret_native.forHitTest = false;
     /**
-     * The OrientationEvent provides information from the physical orientation of the device.
-     * Note: Currently, Browsers on the iOS and Android does not handle the coordinates the same way.
-     * Take care about this while using them.
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/sensor/DeviceOrientation.ts
-     * @language en_US
+     * @private
      */
+    var _callBackList = [];
     /**
-     * OrientationEvent 提供设备的方向信息
-     * 注意: 目前各个浏览器和操作系统处理方向的方式不完全相同，请根据使用场景做相应的校正，
-     * 比如使用两次方向数据的变化而不是直接使用方向的值
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/sensor/DeviceOrientation.ts
-     * @language zh_CN
+     * @private
      */
-    var OrientationEvent = (function (_super) {
-        __extends(OrientationEvent, _super);
-        function OrientationEvent() {
-            return _super !== null && _super.apply(this, arguments) || this;
+    var _thisObjectList = [];
+    var isInit = false;
+    egret_native.addModuleCallback = function (callback, thisObj) {
+        _callBackList.push(callback);
+        _thisObjectList.push(thisObj);
+    };
+    egret_native.initNativeRender = function () {
+        if (isInit) {
+            if (_callBackList.length > 0) {
+                var locCallAsyncFunctionList = _callBackList;
+                var locCallAsyncThisList = _thisObjectList;
+                for (var i = 0; i < locCallAsyncFunctionList.length; i++) {
+                    var func = locCallAsyncFunctionList[i];
+                    if (func != null) {
+                        func.apply(locCallAsyncThisList[i]);
+                    }
+                }
+            }
+            return;
         }
-        return OrientationEvent;
-    }(egret.Event));
-    egret.OrientationEvent = OrientationEvent;
-    __reflect(OrientationEvent.prototype, "egret.OrientationEvent");
-})(egret || (egret = {}));
+        isInit = true;
+        var that = this;
+        egret_native.nrInit();
+        egret_native.nrDownloadBuffers(function (displayCmdBuffer) {
+            egret_native.NativeDisplayObject.init(displayCmdBuffer, bitmapDataMap, filterMap, customFilterDataMap);
+            timeStamp = egret.getTimer();
+            if (_callBackList.length > 0) {
+                var locCallAsyncFunctionList = _callBackList;
+                var locCallAsyncThisList = _thisObjectList;
+                for (var i = 0; i < locCallAsyncFunctionList.length; i++) {
+                    var func = locCallAsyncFunctionList[i];
+                    if (func != null) {
+                        func.apply(locCallAsyncThisList[i]);
+                    }
+                }
+            }
+            egret.startTick(that.updatePreCallback, that);
+        });
+    };
+    egret_native.updateNativeRender = function () {
+        validateDirtyTextField();
+        validateDirtyGraphics();
+        egret_native.NativeDisplayObject.update();
+        egret_native.nrUpdate();
+        syncDirtyTextField();
+    };
+    egret_native.dirtyTextField = function (textField) {
+        if (dirtyTextFieldList.indexOf(textField) == -1) {
+            dirtyTextFieldList.push(textField);
+        }
+    };
+    egret_native.dirtyGraphics = function (graphics) {
+        if (dirtyGraphicsList.indexOf(graphics) == -1) {
+            dirtyGraphicsList.push(graphics);
+        }
+    };
+    var syncDirtyTextField = function () {
+        for (var key in textFieldDataMap) {
+            if (textFieldDataMap[key].length > 0) {
+                egret_native.nrSendTextFieldData(key, textFieldDataMap[key]);
+            }
+        }
+        textFieldDataMap = {};
+    };
+    var validateDirtyTextField = function () {
+        var length = dirtyTextFieldList.length;
+        if (length > 0) {
+            var locList = dirtyTextFieldList;
+            dirtyTextFieldList = [];
+            for (var i = 0; i < length; i++) {
+                var textField = locList[i];
+                textField.$getRenderNode();
+                var node = textField.$renderNode;
+                var width = node.width - node.x;
+                var height = node.height - node.y;
+                if (node.drawData.length == 0) {
+                    var graphicNode = textField.$graphicsNode;
+                    if (graphicNode) {
+                        textField.$nativeDisplayObject.setTextRect(graphicNode.x, graphicNode.y, graphicNode.width, graphicNode.height);
+                    }
+                    else {
+                        textField.$nativeDisplayObject.setTextRect(0, 0, 0, 0);
+                    }
+                }
+                else {
+                    textField.$nativeDisplayObject.setTextRect(node.x, node.y, width, height);
+                }
+                bufferTextData(textField);
+            }
+        }
+    };
+    var validateDirtyGraphics = function () {
+        var length = dirtyGraphicsList.length;
+        if (length > 0) {
+            var locList = dirtyGraphicsList;
+            dirtyGraphicsList = [];
+            for (var i = 0; i < length; i++) {
+                var graphics = locList[i];
+                var node = graphics.$renderNode;
+                var width = node.width;
+                var height = node.height;
+                if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) {
+                    graphics.$targetDisplay.$nativeDisplayObject.setGraphicsRect(0, 0, 0, 0, graphics.$targetIsSprite);
+                }
+                else {
+                    graphics.$targetDisplay.$nativeDisplayObject.setGraphicsRect(node.x, node.y, node.width, node.height, graphics.$targetIsSprite);
+                }
+                bufferGraphicsData(node, graphics);
+            }
+        }
+    };
+    var timeStamp;
+    var updatePreCallback = function (currTimeStamp) {
+        var dt = currTimeStamp - timeStamp;
+        timeStamp = currTimeStamp;
+        egret_native.nrUpdateCallbackList(dt);
+        return false;
+    };
+    var parseColorString = function (colorStr, colorVal) {
+        if (colorStr.indexOf("r") == -1) {
+            colorStr = colorStr.replace(/#/, "");
+            colorVal.color = parseInt(colorStr, 16);
+        }
+        else {
+            colorStr = colorStr.replace(/rgba\(/, "");
+            colorStr = colorStr.replace(/\)/, "");
+            var colorArr = colorStr.split(",");
+            colorVal.color = (Number(colorArr[0]) << 16) | (Number(colorArr[1]) << 8) | Number(colorArr[2]);
+            colorVal.alpha = Number(colorArr[3]);
+        }
+    };
+    var bufferRenderPath = function (path, currCmds) {
+        // 1023 beginPath
+        currCmds.push(1023);
+        var data = path.$data;
+        var commands = path.$commands;
+        var commandCount = commands.length;
+        var pos = 0;
+        for (var commandIndex = 0; commandIndex < commandCount; commandIndex++) {
+            var command = commands[commandIndex];
+            switch (command) {
+                case 4 /* CubicCurveTo */:
+                    // context.bezierCurveTo(data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
+                    currCmds.push(1024);
+                    currCmds.push(data[pos++]);
+                    currCmds.push(data[pos++]);
+                    currCmds.push(data[pos++]);
+                    currCmds.push(data[pos++]);
+                    currCmds.push(data[pos++]);
+                    currCmds.push(data[pos++]);
+                    break;
+                case 3 /* CurveTo */:
+                    // context.quadraticCurveTo(data[pos++], data[pos++], data[pos++], data[pos++]);
+                    currCmds.push(1025);
+                    currCmds.push(data[pos++]);
+                    currCmds.push(data[pos++]);
+                    currCmds.push(data[pos++]);
+                    currCmds.push(data[pos++]);
+                    break;
+                case 2 /* LineTo */:
+                    // context.lineTo(data[pos++], data[pos++]);
+                    currCmds.push(1026);
+                    currCmds.push(data[pos++]);
+                    currCmds.push(data[pos++]);
+                    break;
+                case 1 /* MoveTo */:
+                    // context.moveTo(data[pos++], data[pos++]);
+                    currCmds.push(1027);
+                    currCmds.push(data[pos++]);
+                    currCmds.push(data[pos++]);
+                    break;
+            }
+        }
+    };
+    var bufferTextData = function (textField) {
+        var node = textField.$renderNode;
+        var textFieldId = textField.$nativeDisplayObject.id;
+        var width = node.width - node.x;
+        var height = node.height - node.y;
+        if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) {
+            return;
+        }
+        var canvasScaleX = egret.sys.DisplayList.$canvasScaleX;
+        var canvasScaleY = egret.sys.DisplayList.$canvasScaleY;
+        // let maxTextureSize = buffer.context.$maxTextureSize;
+        var maxTextureSize = 4096;
+        if (width * canvasScaleX > maxTextureSize) {
+            canvasScaleX *= maxTextureSize / (width * canvasScaleX);
+        }
+        if (height * canvasScaleY > maxTextureSize) {
+            canvasScaleY *= maxTextureSize / (height * canvasScaleY);
+        }
+        width *= canvasScaleX;
+        height *= canvasScaleY;
+        var x1 = node.x * canvasScaleX;
+        var y1 = node.y * canvasScaleY;
+        var offsetX = -node.x;
+        var offsetY = -node.y;
+        var renderCmds = [];
+        var renderParms = "";
+        if (node.dirtyRender) {
+            renderCmds.length = 0;
+            renderCmds.push(1010);
+            renderCmds.push(1);
+            // 1011: resize
+            renderCmds.push(1011);
+            renderCmds.push(width);
+            renderCmds.push(height);
+            renderCmds.push(node.x);
+            renderCmds.push(node.y);
+            if (canvasScaleX != 1 || canvasScaleY != 1) {
+                renderCmds.push(1019);
+                renderCmds.push(canvasScaleX);
+                renderCmds.push(0);
+                renderCmds.push(0);
+                renderCmds.push(canvasScaleY);
+                renderCmds.push(0);
+                renderCmds.push(0);
+                renderCmds.push(0);
+            }
+            if (x1 || y1) {
+                // 1019: setTransform
+                renderCmds.push(1019);
+                renderCmds.push(canvasScaleX);
+                renderCmds.push(0);
+                renderCmds.push(0);
+                renderCmds.push(canvasScaleY);
+                renderCmds.push(-x1);
+                renderCmds.push(-y1);
+                renderCmds.push(1);
+            }
+            if (textField.$graphicsNode) {
+                renderCmds.push(1015);
+                bufferGraphicsData(textField.$graphicsNode, null, renderCmds);
+                renderCmds.push(1016);
+            }
+            var drawData = node.drawData;
+            var length_8 = drawData.length;
+            var pos = 0;
+            while (pos < length_8) {
+                var x = drawData[pos++];
+                var y = drawData[pos++];
+                var text = drawData[pos++];
+                var format = drawData[pos++];
+                var textColor = format.textColor == null ? node.textColor : format.textColor;
+                var strokeColor = format.strokeColor == null ? node.strokeColor : format.strokeColor;
+                var stroke = format.stroke == null ? node.stroke : format.stroke;
+                // 1012: setFontFormat 
+                renderCmds.push(1012);
+                var fontStr = egret.getFontString(node, format);
+                var fontPath = "";
+                var fontSize = -1;
+                var strArray = fontStr.split(",");
+                if (strArray.length > 0) {
+                    var arr = strArray[0].split(" ");
+                    for (var i = 0; i < arr.length; i++) {
+                        if (arr[i].indexOf("px") != -1) {
+                            fontSize = Number(arr[i].replace(/px/, ""));
+                            fontPath = fontStr.substring(fontStr.indexOf(arr[i]) + arr[i].length + 1);
+                            break;
+                        }
+                    }
+                    renderCmds.push(fontSize);
+                    //TODO
+                    // if (fontPath != this.currentFont) {
+                    renderParms += fontPath;
+                    // }
+                    if (fontStr.indexOf("bold") == -1) {
+                        renderCmds.push(0);
+                    }
+                    else {
+                        renderCmds.push(1);
+                    }
+                    if (fontStr.indexOf("italic") == -1) {
+                        renderCmds.push(0);
+                    }
+                    else {
+                        renderCmds.push(1);
+                    }
+                    renderParms += ";";
+                    //  setFillStyle
+                    var fontColor = 0; //black
+                    var fillColor = void 0;
+                    var fillAlpha = void 0;
+                    var fillStr = egret.toColorString(textColor);
+                    if (fillStr.indexOf("r") == -1) {
+                        fillStr = fillStr.replace(/#/, "");
+                        fontColor = parseInt(fillStr, 16);
+                    }
+                    else {
+                        fillStr = fillStr.replace(/rgba\(/, "");
+                        fillStr = fillStr.replace(/\)/, "");
+                        var colorArr = fillStr.split(",");
+                        fillColor = (Number(colorArr[0]) << 16) | (Number(colorArr[1]) << 8) | Number(colorArr[2]);
+                        fillAlpha = Number(arr[3]);
+                    }
+                    // console.log("font color = " + fontColor);
+                    renderCmds.push(fontColor);
+                    // native fillColor fillAlph no implement
+                    // renderCmds.push(fillColor);
+                    // renderCmds.push(fillAlpha);
+                    // setStrokeStype
+                    var strokeStr = egret.toColorString(strokeColor);
+                    var strokeColorInt = 0; // black
+                    var strokeAlpha = void 0;
+                    if (strokeStr.indexOf("r") == -1) {
+                        strokeStr = strokeStr.replace(/#/, "");
+                        strokeColorInt = parseInt(strokeStr, 16);
+                    }
+                    else {
+                        strokeStr = strokeStr.replace(/rgba\(/, "");
+                        strokeStr = strokeStr.replace(/\)/, "");
+                        var coloarArr2 = strokeStr.split(",");
+                        strokeColorInt = (Number(coloarArr2[0]) << 16) | (Number(coloarArr2[1]) << 8) | Number(coloarArr2[2]);
+                        strokeAlpha = Number(arr[3]);
+                    }
+                    renderCmds.push(strokeColorInt);
+                    // renderCmds.push(strokeAlpha);
+                    renderParms += text;
+                    renderParms += ";";
+                    // 1013: strokeText
+                    renderCmds.push(1013);
+                    if (stroke) {
+                        renderCmds.push(stroke * 2);
+                    }
+                    else {
+                        renderCmds.push(0);
+                    }
+                    //1014: fillText
+                    renderCmds.push(1014);
+                    renderCmds.push(x);
+                    renderCmds.push(y);
+                }
+            }
+            if (x1 || y1) {
+                // 1019: setTransform
+                renderCmds.push(1019);
+                renderCmds.push(canvasScaleX);
+                renderCmds.push(0);
+                renderCmds.push(0);
+                renderCmds.push(canvasScaleY);
+                renderCmds.push(0);
+                renderCmds.push(0);
+                renderCmds.push(-1);
+            }
+            textField.$nativeDisplayObject.setDataToTextField(textFieldId, renderCmds);
+            textFieldDataMap[textFieldId] = renderParms;
+            node.dirtyRender = false;
+        }
+    };
+    var bufferGraphicsData = function (node, graphics, renderCmds) {
+        if (graphics === void 0) { graphics = null; }
+        if (renderCmds === void 0) { renderCmds = null; }
+        var isGraphics = false;
+        var width = node.width;
+        var height = node.height;
+        if (graphics) {
+            renderCmds = [];
+            isGraphics = true;
+        }
+        if (renderCmds == null || renderCmds == undefined) {
+            return;
+        }
+        var canvasScaleX = egret.sys.DisplayList.$canvasScaleX;
+        var canvasScaleY = egret.sys.DisplayList.$canvasScaleY;
+        if (width * canvasScaleX < 1 || height * canvasScaleY < 1) {
+            canvasScaleX = canvasScaleY = 1;
+        }
+        if (node.$canvasScaleX != canvasScaleX || node.$canvasScaleY != canvasScaleY) {
+            node.$canvasScaleX = canvasScaleX;
+            node.$canvasScaleY = canvasScaleY;
+            node.dirtyRender = true;
+        }
+        width *= canvasScaleX;
+        height *= canvasScaleY;
+        if (node.dirtyRender || egret_native.forHitTest) {
+            renderCmds.push(1010);
+            renderCmds.push(1);
+            // 1011: resize
+            renderCmds.push(1011);
+            renderCmds.push(width);
+            renderCmds.push(height);
+            renderCmds.push(node.x);
+            renderCmds.push(node.y);
+            if (canvasScaleX != 1 || canvasScaleY != 1) {
+                renderCmds.push(1019);
+                renderCmds.push(canvasScaleX);
+                renderCmds.push(0);
+                renderCmds.push(0);
+                renderCmds.push(canvasScaleY);
+                renderCmds.push(0);
+                renderCmds.push(0);
+                renderCmds.push(0);
+            }
+            // 1020: translate
+            if (node.x || node.y) {
+                renderCmds.push(1020);
+                renderCmds.push(-node.x);
+                renderCmds.push(-node.y);
+                renderCmds.push(1);
+            }
+            var drawData = node.drawData;
+            var length_9 = drawData.length;
+            var colorVal = { color: 0, alpha: 1 };
+            for (var i = 0; i < length_9; i++) {
+                var path = drawData[i];
+                colorVal.color = 0;
+                colorVal.alpha = 1;
+                switch (path.type) {
+                    case 1 /* Fill */:
+                        var fillPath = path;
+                        parseColorString(egret_native.forHitTest ? egret.BLACK_COLOR : egret.getRGBAString(fillPath.fillColor, fillPath.fillAlpha), colorVal);
+                        renderCmds.push(1021);
+                        renderCmds.push(colorVal.color);
+                        renderCmds.push(colorVal.alpha);
+                        bufferRenderPath(path, renderCmds);
+                        // if (this.renderingMask) {
+                        //     context.clip();
+                        // }
+                        // else {
+                        // 1028 context.fill();
+                        renderCmds.push(1028);
+                        // }
+                        break;
+                    case 2 /* GradientFill */:
+                        // native no implement
+                        break;
+                    case 3 /* Stroke */:
+                        var strokeFill = path;
+                        var lineWidth = strokeFill.lineWidth;
+                        parseColorString(egret_native.forHitTest ? egret.BLACK_COLOR : egret.getRGBAString(strokeFill.lineColor, strokeFill.lineAlpha), colorVal);
+                        // native no implement
+                        // context.lineCap = CAPS_STYLES[strokeFill.caps];
+                        // context.lineJoin = strokeFill.joints;
+                        // context.miterLimit = strokeFill.miterLimit;
+                        renderCmds.push(1022);
+                        renderCmds.push(colorVal.color);
+                        renderCmds.push(colorVal.alpha);
+                        renderCmds.push(lineWidth);
+                        //对1像素和3像素特殊处理，向右下角偏移0.5像素，以显示清晰锐利的线条。
+                        var isSpecialCaseWidth = lineWidth === 1 || lineWidth === 3;
+                        if (isSpecialCaseWidth) {
+                            // 1020 translate context.translate(0.5, 0.5);
+                            renderCmds.push(1020);
+                            renderCmds.push(0.5);
+                            renderCmds.push(0.5);
+                            renderCmds.push(0);
+                        }
+                        bufferRenderPath(path, renderCmds);
+                        // 1029 stroke
+                        renderCmds.push(1029);
+                        if (isSpecialCaseWidth) {
+                            // 1020 translate context.translate(-0.5, -0.5);
+                            renderCmds.push(1020);
+                            renderCmds.push(-0.5);
+                            renderCmds.push(-0.5);
+                            renderCmds.push(0);
+                        }
+                        break;
+                }
+            }
+            if (node.x || node.y) {
+                renderCmds.push(1020);
+                renderCmds.push(node.x);
+                renderCmds.push(node.y);
+                renderCmds.push(-1);
+            }
+            if (isGraphics) {
+                graphics.$targetDisplay.$nativeDisplayObject.setGraphicsRenderData(renderCmds);
+            }
+            if (!egret_native.forHitTest) {
+                node.dirtyRender = false;
+            }
+        }
+    };
+    egret_native.activateBuffer = function (buffer) {
+        if (!buffer) {
+            buffer = egret_native.rootWebGLBuffer;
+        }
+        egret_native.nrActiveBuffer(buffer.bufferIdForWasm, buffer.width, buffer.height);
+    };
+    egret_native.getJsImage = function (key) {
+        if (bitmapDataMap[key].isTexture === true) {
+            return null;
+        }
+        else {
+            return bitmapDataMap[key].source;
+        }
+    };
+    egret_native.getJsCustomFilterVertexSrc = function (key) {
+        return customFilterDataMap[key].vertexSrc;
+    };
+    egret_native.getJsCustomFilterFragSrc = function (key) {
+        return customFilterDataMap[key].fragmentSrc;
+    };
+    egret_native.getJsCustomFilterUniforms = function (key) {
+        return customFilterDataMap[key].uniformsSrc;
+    };
+    var bitmapDataMap = {};
+    var textFieldDataMap = {};
+    var customFilterDataMap = {};
+    var filterMap = egret.createMap();
+    var dirtyTextFieldList = [];
+    var dirtyGraphicsList = [];
+})(egret_native || (egret_native = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -21638,139 +21691,32 @@ var egret;
 var egret;
 (function (egret) {
     /**
-     * When a load operation has begun or a socket has received data, ProgressEvent object is dispatched.
-     * There are two types of progress events: ProgressEvent.PROGRESS and ProgressEvent.SOCKET_DATA.
+     * The OrientationEvent provides information from the physical orientation of the device.
+     * Note: Currently, Browsers on the iOS and Android does not handle the coordinates the same way.
+     * Take care about this while using them.
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/sensor/DeviceOrientation.ts
      * @language en_US
      */
     /**
-     * 当加载操作已开始或套接字已接收到数据时，将调度 ProgressEvent 对象。
-     * 有两种类型的进程事件：ProgressEvent.PROGRESS 和 ProgressEvent.SOCKET_DATA。
+     * OrientationEvent 提供设备的方向信息
+     * 注意: 目前各个浏览器和操作系统处理方向的方式不完全相同，请根据使用场景做相应的校正，
+     * 比如使用两次方向数据的变化而不是直接使用方向的值
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/sensor/DeviceOrientation.ts
      * @language zh_CN
      */
-    var ProgressEvent = (function (_super) {
-        __extends(ProgressEvent, _super);
-        /**
-         * 创建一个 egret.ProgressEvent 对象
-         * @param type  The type of the event, accessible as Event.type.
-         * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
-         * @param cancelable Determines whether the Event object can be canceled. The default values is false.
-         * @param bytesLoaded {number} Number of items or bytes loaded
-         * @param bytesTotal {number} The total number of items or bytes loaded
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 创建一个 egret.ProgressEvent 对象
-         * @param type  事件的类型，可以作为 Event.type 访问。
-         * @param bubbles  确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
-         * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
-         * @param bytesLoaded {number} 加载的项数或字节数
-         * @param bytesTotal {number} 加载的总项数或总字节数
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        function ProgressEvent(type, bubbles, cancelable, bytesLoaded, bytesTotal) {
-            if (bubbles === void 0) { bubbles = false; }
-            if (cancelable === void 0) { cancelable = false; }
-            if (bytesLoaded === void 0) { bytesLoaded = 0; }
-            if (bytesTotal === void 0) { bytesTotal = 0; }
-            var _this = _super.call(this, type, bubbles, cancelable) || this;
-            /**
-             * Number of items or bytes when the listener processes the event。
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language en_US
-             */
-            /**
-             * 在侦听器处理事件时加载的项数或字节数。
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language zh_CN
-             */
-            _this.bytesLoaded = 0;
-            /**
-             * If the loading process succeeds, the total number or the total number of bytes that will be loaded term.
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language en_US
-             */
-            /**
-             * 如果加载过程成功，将加载的总项数或总字节数。
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language zh_CN
-             */
-            _this.bytesTotal = 0;
-            _this.bytesLoaded = bytesLoaded;
-            _this.bytesTotal = bytesTotal;
-            return _this;
+    var OrientationEvent = (function (_super) {
+        __extends(OrientationEvent, _super);
+        function OrientationEvent() {
+            return _super !== null && _super.apply(this, arguments) || this;
         }
-        /**
-         * EventDispatcher object using the specified event object thrown Event. The objects will be thrown in the object cache pool for the next round robin.
-         * @param target {egret.IEventDispatcher} Distribute event target
-         * @param type  The type of the event, accessible as Event.type.
-         * @param bytesLoaded {number} Number of items or bytes loaded
-         * @param bytesTotal {number} The total number of items or bytes loaded
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @param target {egret.IEventDispatcher} 派发事件目标
-         * @param type {string} 事件类型
-         * @param bytesLoaded {number} 加载的项数或字节数
-         * @param bytesTotal {number} 加载的总项数或总字节数
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        ProgressEvent.dispatchProgressEvent = function (target, type, bytesLoaded, bytesTotal) {
-            if (bytesLoaded === void 0) { bytesLoaded = 0; }
-            if (bytesTotal === void 0) { bytesTotal = 0; }
-            var event = egret.Event.create(ProgressEvent, type);
-            event.bytesLoaded = bytesLoaded;
-            event.bytesTotal = bytesTotal;
-            var result = target.dispatchEvent(event);
-            egret.Event.release(event);
-            return result;
-        };
-        /**
-         * Changes in the loading progress
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 加载进度发生变化
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        ProgressEvent.PROGRESS = "progress";
-        /**
-         * Get the data
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 获取到数据
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        ProgressEvent.SOCKET_DATA = "socketData";
-        return ProgressEvent;
+        return OrientationEvent;
     }(egret.Event));
-    egret.ProgressEvent = ProgressEvent;
-    __reflect(ProgressEvent.prototype, "egret.ProgressEvent");
+    egret.OrientationEvent = OrientationEvent;
+    __reflect(OrientationEvent.prototype, "egret.OrientationEvent");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -24105,83 +24051,139 @@ var egret;
 var egret;
 (function (egret) {
     /**
-     * When the direction of the stage of change, Stage object dispatches StageOrientationEvent object.
+     * When a load operation has begun or a socket has received data, ProgressEvent object is dispatched.
+     * There are two types of progress events: ProgressEvent.PROGRESS and ProgressEvent.SOCKET_DATA.
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/events/StageOrientationEvent.ts
      * @language en_US
      */
     /**
-     * 当舞台的方向更改时，Stage 对象将调度 StageOrientationEvent 对象。
+     * 当加载操作已开始或套接字已接收到数据时，将调度 ProgressEvent 对象。
+     * 有两种类型的进程事件：ProgressEvent.PROGRESS 和 ProgressEvent.SOCKET_DATA。
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/events/StageOrientationEvent.ts
      * @language zh_CN
      */
-    var StageOrientationEvent = (function (_super) {
-        __extends(StageOrientationEvent, _super);
+    var ProgressEvent = (function (_super) {
+        __extends(ProgressEvent, _super);
         /**
-         * Creating contains specific information related to the event and the stage direction of StageOrientationEvent object.
-         * @param type Event types:StageOrientationEvent.ORIENTATION_CHANGE
-         * @param bubbles It indicates whether the Event object participates in the bubbling stage of the event flow.
-         * @param cancelable It indicates whether the Event object can be canceled.
+         * 创建一个 egret.ProgressEvent 对象
+         * @param type  The type of the event, accessible as Event.type.
+         * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
+         * @param cancelable Determines whether the Event object can be canceled. The default values is false.
+         * @param bytesLoaded {number} Number of items or bytes loaded
+         * @param bytesTotal {number} The total number of items or bytes loaded
          * @version Egret 2.4
          * @platform Web,Native
          * @language en_US
          */
         /**
-         * 创建包含与舞台方向事件相关的特定信息的 StageOrientationEvent 对象。
-         * @param type 事件的类型：StageOrientationEvent.ORIENTATION_CHANGE
-         * @param bubbles 表示 Event 对象是否参与事件流的冒泡阶段。
-         * @param cancelable 表示是否可以取消 Event 对象。
+         * 创建一个 egret.ProgressEvent 对象
+         * @param type  事件的类型，可以作为 Event.type 访问。
+         * @param bubbles  确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
+         * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
+         * @param bytesLoaded {number} 加载的项数或字节数
+         * @param bytesTotal {number} 加载的总项数或总字节数
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
          */
-        function StageOrientationEvent(type, bubbles, cancelable) {
+        function ProgressEvent(type, bubbles, cancelable, bytesLoaded, bytesTotal) {
             if (bubbles === void 0) { bubbles = false; }
             if (cancelable === void 0) { cancelable = false; }
-            return _super.call(this, type, bubbles, cancelable) || this;
+            if (bytesLoaded === void 0) { bytesLoaded = 0; }
+            if (bytesTotal === void 0) { bytesTotal = 0; }
+            var _this = _super.call(this, type, bubbles, cancelable) || this;
+            /**
+             * Number of items or bytes when the listener processes the event。
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language en_US
+             */
+            /**
+             * 在侦听器处理事件时加载的项数或字节数。
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language zh_CN
+             */
+            _this.bytesLoaded = 0;
+            /**
+             * If the loading process succeeds, the total number or the total number of bytes that will be loaded term.
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language en_US
+             */
+            /**
+             * 如果加载过程成功，将加载的总项数或总字节数。
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language zh_CN
+             */
+            _this.bytesTotal = 0;
+            _this.bytesLoaded = bytesLoaded;
+            _this.bytesTotal = bytesTotal;
+            return _this;
         }
         /**
-         * 派发一个屏幕旋转的事件。
-         * @param target {egret.IEventDispatcher} 派发事件目标
-         * @param type {egret.IEventDispatcher} 派发事件类型
+         * EventDispatcher object using the specified event object thrown Event. The objects will be thrown in the object cache pool for the next round robin.
+         * @param target {egret.IEventDispatcher} Distribute event target
+         * @param type  The type of the event, accessible as Event.type.
+         * @param bytesLoaded {number} Number of items or bytes loaded
+         * @param bytesTotal {number} The total number of items or bytes loaded
          * @version Egret 2.4
          * @platform Web,Native
          * @language en_US
          */
         /**
-         * 派发一个屏幕旋转的事件。
-         * @param target {egret.IEventDispatcher} Distribute event target
-         * @param type {egret.IEventDispatcher} Distribute event type
+         * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * @param target {egret.IEventDispatcher} 派发事件目标
+         * @param type {string} 事件类型
+         * @param bytesLoaded {number} 加载的项数或字节数
+         * @param bytesTotal {number} 加载的总项数或总字节数
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
          */
-        StageOrientationEvent.dispatchStageOrientationEvent = function (target, type) {
-            var event = egret.Event.create(StageOrientationEvent, type);
+        ProgressEvent.dispatchProgressEvent = function (target, type, bytesLoaded, bytesTotal) {
+            if (bytesLoaded === void 0) { bytesLoaded = 0; }
+            if (bytesTotal === void 0) { bytesTotal = 0; }
+            var event = egret.Event.create(ProgressEvent, type);
+            event.bytesLoaded = bytesLoaded;
+            event.bytesTotal = bytesTotal;
             var result = target.dispatchEvent(event);
             egret.Event.release(event);
             return result;
         };
         /**
-         * After screen rotation distribute events.
+         * Changes in the loading progress
          * @version Egret 2.4
          * @platform Web,Native
          * @language en_US
          */
         /**
-         * 屏幕旋转后派发的事件。
+         * 加载进度发生变化
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
          */
-        StageOrientationEvent.ORIENTATION_CHANGE = "orientationChange";
-        return StageOrientationEvent;
+        ProgressEvent.PROGRESS = "progress";
+        /**
+         * Get the data
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 获取到数据
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        ProgressEvent.SOCKET_DATA = "socketData";
+        return ProgressEvent;
     }(egret.Event));
-    egret.StageOrientationEvent = StageOrientationEvent;
-    __reflect(StageOrientationEvent.prototype, "egret.StageOrientationEvent");
+    egret.ProgressEvent = ProgressEvent;
+    __reflect(ProgressEvent.prototype, "egret.ProgressEvent");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -26365,6 +26367,115 @@ var egret;
 //////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
+    /**
+     * When the direction of the stage of change, Stage object dispatches StageOrientationEvent object.
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/events/StageOrientationEvent.ts
+     * @language en_US
+     */
+    /**
+     * 当舞台的方向更改时，Stage 对象将调度 StageOrientationEvent 对象。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/events/StageOrientationEvent.ts
+     * @language zh_CN
+     */
+    var StageOrientationEvent = (function (_super) {
+        __extends(StageOrientationEvent, _super);
+        /**
+         * Creating contains specific information related to the event and the stage direction of StageOrientationEvent object.
+         * @param type Event types:StageOrientationEvent.ORIENTATION_CHANGE
+         * @param bubbles It indicates whether the Event object participates in the bubbling stage of the event flow.
+         * @param cancelable It indicates whether the Event object can be canceled.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 创建包含与舞台方向事件相关的特定信息的 StageOrientationEvent 对象。
+         * @param type 事件的类型：StageOrientationEvent.ORIENTATION_CHANGE
+         * @param bubbles 表示 Event 对象是否参与事件流的冒泡阶段。
+         * @param cancelable 表示是否可以取消 Event 对象。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        function StageOrientationEvent(type, bubbles, cancelable) {
+            if (bubbles === void 0) { bubbles = false; }
+            if (cancelable === void 0) { cancelable = false; }
+            return _super.call(this, type, bubbles, cancelable) || this;
+        }
+        /**
+         * 派发一个屏幕旋转的事件。
+         * @param target {egret.IEventDispatcher} 派发事件目标
+         * @param type {egret.IEventDispatcher} 派发事件类型
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 派发一个屏幕旋转的事件。
+         * @param target {egret.IEventDispatcher} Distribute event target
+         * @param type {egret.IEventDispatcher} Distribute event type
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        StageOrientationEvent.dispatchStageOrientationEvent = function (target, type) {
+            var event = egret.Event.create(StageOrientationEvent, type);
+            var result = target.dispatchEvent(event);
+            egret.Event.release(event);
+            return result;
+        };
+        /**
+         * After screen rotation distribute events.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 屏幕旋转后派发的事件。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        StageOrientationEvent.ORIENTATION_CHANGE = "orientationChange";
+        return StageOrientationEvent;
+    }(egret.Event));
+    egret.StageOrientationEvent = StageOrientationEvent;
+    __reflect(StageOrientationEvent.prototype, "egret.StageOrientationEvent");
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
     // export interface TextField{
     //     addEventListener<Z>(type: "link"
     //         , listener: (this: Z, e: TextEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number);
@@ -26723,367 +26834,6 @@ var egret;
          */
         ROUND: "round"
     };
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-/// <reference path="../geom/Point.ts" />
-var egret;
-(function (egret) {
-    var localPoint = new egret.Point();
-    /**
-     * The TouchEvent class lets you handle events on devices that detect user contact with the device (such as a finger
-     * on a touch screen).When a user interacts with a device such as a mobile phone or tablet with a touch screen, the
-     * user typically touches the screen with his or her fingers or a pointing device. You can develop applications that
-     * respond to basic touch events (such as a single finger tap) with the TouchEvent class. Create event listeners using
-     * the event types defined in this class.
-     * Note: When objects are nested on the display list, touch events target the deepest possible nested object that is
-     * visible in the display list. This object is called the target node. To have a target node's ancestor (an object
-     * containing the target node in the display list) receive notification of a touch event, use EventDispatcher.addEventListener()
-     * on the ancestor node with the type parameter set to the specific touch event you want to detect.
-     *
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/events/TouchEvent.ts
-     * @language en_US
-     */
-    /**
-     * 使用 TouchEvent 类，您可以处理设备上那些检测用户与设备之间的接触的事件。
-     * 当用户与带有触摸屏的移动电话或平板电脑等设备交互时，用户通常使用手指或指针设备接触屏幕。可使用 TouchEvent
-     * 类开发响应基本触摸事件（如单个手指点击）的应用程序。使用此类中定义的事件类型创建事件侦听器。
-     * 注意：当对象嵌套在显示列表中时，触摸事件的目标将是显示列表中可见的最深的可能嵌套对象。
-     * 此对象称为目标节点。要使目标节点的祖代（祖代是一个包含显示列表中所有目标节点的对象，从舞台到目标节点的父节点均包括在内）
-     * 接收触摸事件的通知，请对祖代节点使用 EventDispatcher.on() 并将 type 参数设置为要检测的特定触摸事件。
-     *
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/events/TouchEvent.ts
-     * @language zh_CN
-     */
-    var TouchEvent = (function (_super) {
-        __extends(TouchEvent, _super);
-        /**
-         * Creates an Event object that contains information about touch events.
-         * @param type  The type of the event, accessible as Event.type.
-         * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
-         * @param cancelable Determines whether the Event object can be canceled. The default values is false.
-         * @param stageX The horizontal coordinate at which the event occurred in global Stage coordinates.
-         * @param stageY The vertical coordinate at which the event occurred in global Stage coordinates.
-         * @param touchPointID A unique identification number assigned to the touch point.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 创建一个 TouchEvent 对象，其中包含有关Touch事件的信息
-         * @param type 事件的类型，可以作为 Event.type 访问。
-         * @param bubbles 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
-         * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
-         * @param stageX 事件发生点在全局舞台坐标系中的水平坐标
-         * @param stageY 事件发生点在全局舞台坐标系中的垂直坐标
-         * @param touchPointID 分配给触摸点的唯一标识号
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        function TouchEvent(type, bubbles, cancelable, stageX, stageY, touchPointID) {
-            var _this = _super.call(this, type, bubbles, cancelable) || this;
-            _this.targetChanged = true;
-            /**
-             * Whether the touch is pressed (true) or not pressed (false).
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language en_US
-             */
-            /**
-             * 表示触摸已按下 (true) 还是未按下 (false)。
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language zh_CN
-             */
-            _this.touchDown = false;
-            _this.$initTo(stageX, stageY, touchPointID);
-            return _this;
-        }
-        /**
-         * @private
-         */
-        TouchEvent.prototype.$initTo = function (stageX, stageY, touchPointID) {
-            this.touchPointID = +touchPointID || 0;
-            this.$stageX = +stageX || 0;
-            this.$stageY = +stageY || 0;
-        };
-        Object.defineProperty(TouchEvent.prototype, "stageX", {
-            /**
-             * The horizontal coordinate at which the event occurred in global Stage coordinates.
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language en_US
-             */
-            /**
-             * 事件发生点在全局舞台坐标中的水平坐标。
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language zh_CN
-             */
-            get: function () {
-                return this.$stageX;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(TouchEvent.prototype, "stageY", {
-            /**
-             * The vertical coordinate at which the event occurred in global Stage coordinates.
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language en_US
-             */
-            /**
-             * 事件发生点在全局舞台坐标中的垂直坐标。
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language zh_CN
-             */
-            get: function () {
-                return this.$stageY;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(TouchEvent.prototype, "localX", {
-            /**
-             * The horizontal coordinate at which the event occurred relative to the display object.
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language en_US
-             */
-            /**
-             * 事件发生点相对于所属显示对象的水平坐标。
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language zh_CN
-             */
-            get: function () {
-                if (this.targetChanged) {
-                    this.getLocalXY();
-                }
-                return this._localX;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(TouchEvent.prototype, "localY", {
-            /**
-             * The vertical coordinate at which the event occurred relative to the display object.
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language en_US
-             */
-            /**
-             * 事件发生点相对于所属显示对象的垂直坐标。
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language zh_CN
-             */
-            get: function () {
-                if (this.targetChanged) {
-                    this.getLocalXY();
-                }
-                return this._localY;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * @private
-         */
-        TouchEvent.prototype.getLocalXY = function () {
-            this.targetChanged = false;
-            var m = this.$target.$getInvertedConcatenatedMatrix();
-            m.transformPoint(this.$stageX, this.$stageY, localPoint);
-            this._localX = localPoint.x;
-            this._localY = localPoint.y;
-        };
-        TouchEvent.prototype.$setTarget = function (target) {
-            this.$target = target;
-            this.targetChanged = !!target;
-            return true;
-        };
-        /**
-         * Instructs Egret runtime to render after processing of this event completes, if the display list has been modified.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 如果已修改显示列表，调用此方法将会忽略帧频限制，在此事件处理完成后立即重绘屏幕。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        TouchEvent.prototype.updateAfterEvent = function () {
-            egret.sys.$requestRenderingFlag = true;
-        };
-        /**
-         * uses a specified target to dispatchEvent an event. Using this method can reduce the number of
-         * reallocate event objects, which allows you to get better code execution performance.
-         * @param target the event target
-         * @param type  The type of the event, accessible as Event.type.
-         * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
-         * @param cancelable Determines whether the Event object can be canceled. The default values is false.
-         * @param stageX The horizontal coordinate at which the event occurred in global Stage coordinates.
-         * @param stageY The vertical coordinate at which the event occurred in global Stage coordinates.
-         * @param touchPointID A unique identification number (as an int) assigned to the touch point.
-         *
-         * @see egret.Event.create()
-         * @see egret.Event.release()
-         *
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @param target 派发事件目标
-         * @param type 事件的类型，可以作为 Event.type 访问。
-         * @param bubbles 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
-         * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
-         * @param stageX 事件发生点在全局舞台坐标系中的水平坐标
-         * @param stageY 事件发生点在全局舞台坐标系中的垂直坐标
-         * @param touchPointID 分配给触摸点的唯一标识号
-         *
-         * @see egret.Event.create()
-         * @see egret.Event.release()
-         *
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        TouchEvent.dispatchTouchEvent = function (target, type, bubbles, cancelable, stageX, stageY, touchPointID, touchDown) {
-            if (touchDown === void 0) { touchDown = false; }
-            if (!bubbles && !target.hasEventListener(type)) {
-                return true;
-            }
-            var event = egret.Event.create(TouchEvent, type, bubbles, cancelable);
-            event.$initTo(stageX, stageY, touchPointID);
-            event.touchDown = touchDown;
-            var result = target.dispatchEvent(event);
-            egret.Event.release(event);
-            return result;
-        };
-        /**
-         * Dispatched when the user touches the device, and is continuously dispatched until the point of contact is removed.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 当用户触碰设备时进行调度，而且会连续调度，直到接触点被删除。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        TouchEvent.TOUCH_MOVE = "touchMove";
-        /**
-         * Dispatched when the user first contacts a touch-enabled device (such as touches a finger to a mobile phone or tablet with a touch screen).
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 当用户第一次触摸启用触摸的设备时（例如，用手指触摸配有触摸屏的移动电话或平板电脑）调度。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        TouchEvent.TOUCH_BEGIN = "touchBegin";
-        /**
-         * Dispatched when the user removes contact with a touch-enabled device (such as lifts a finger off a mobile phone
-         * or tablet with a touch screen).
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 当用户移除与启用触摸的设备的接触时（例如，将手指从配有触摸屏的移动电话或平板电脑上抬起）调度。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        TouchEvent.TOUCH_END = "touchEnd";
-        /**
-         * Dispatched when an event of some kind occurred that canceled the touch.
-         * Such as the eui.Scroller will dispatch 'TOUCH_CANCEL' when it start move, the 'TOUCH_END' and 'TOUCH_TAP' will not be triggered.
-         * @version Egret 3.0.1
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 由于某个事件取消了触摸时触发。比如 eui.Scroller 在开始滚动后会触发 'TOUCH_CANCEL' 事件，不再触发后续的 'TOUCH_END' 和 'TOUCH_TAP' 事件
-         * @version Egret 3.0.1
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        TouchEvent.TOUCH_CANCEL = "touchCancel";
-        /**
-         * Dispatched when the user lifts the point of contact over the same DisplayObject instance on which the contact
-         * was initiated on a touch-enabled device.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 当用户在触摸设备上与开始触摸的同一 DisplayObject 实例上抬起接触点时调度。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        TouchEvent.TOUCH_TAP = "touchTap";
-        /**
-         * Dispatched when the user lifts the point of contact over the different DisplayObject instance on which the contact
-         * was initiated on a touch-enabled device (such as presses and releases a finger from a single point over a display
-         * object on a mobile phone or tablet with a touch screen).
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 当用户在触摸设备上与开始触摸的不同 DisplayObject 实例上抬起接触点时调度。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        TouchEvent.TOUCH_RELEASE_OUTSIDE = "touchReleaseOutside";
-        return TouchEvent;
-    }(egret.Event));
-    egret.TouchEvent = TouchEvent;
-    __reflect(TouchEvent.prototype, "egret.TouchEvent");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -27552,114 +27302,338 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+/// <reference path="../geom/Point.ts" />
 var egret;
 (function (egret) {
+    var localPoint = new egret.Point();
     /**
-     * @private
+     * The TouchEvent class lets you handle events on devices that detect user contact with the device (such as a finger
+     * on a touch screen).When a user interacts with a device such as a mobile phone or tablet with a touch screen, the
+     * user typically touches the screen with his or her fingers or a pointing device. You can develop applications that
+     * respond to basic touch events (such as a single finger tap) with the TouchEvent class. Create event listeners using
+     * the event types defined in this class.
+     * Note: When objects are nested on the display list, touch events target the deepest possible nested object that is
+     * visible in the display list. This object is called the target node. To have a target node's ancestor (an object
+     * containing the target node in the display list) receive notification of a touch event, use EventDispatcher.addEventListener()
+     * on the ancestor node with the type parameter set to the specific touch event you want to detect.
+     *
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/events/TouchEvent.ts
+     * @language en_US
      */
-    var Mesh = (function (_super) {
-        __extends(Mesh, _super);
-        function Mesh(value) {
-            var _this = _super.call(this, value) || this;
+    /**
+     * 使用 TouchEvent 类，您可以处理设备上那些检测用户与设备之间的接触的事件。
+     * 当用户与带有触摸屏的移动电话或平板电脑等设备交互时，用户通常使用手指或指针设备接触屏幕。可使用 TouchEvent
+     * 类开发响应基本触摸事件（如单个手指点击）的应用程序。使用此类中定义的事件类型创建事件侦听器。
+     * 注意：当对象嵌套在显示列表中时，触摸事件的目标将是显示列表中可见的最深的可能嵌套对象。
+     * 此对象称为目标节点。要使目标节点的祖代（祖代是一个包含显示列表中所有目标节点的对象，从舞台到目标节点的父节点均包括在内）
+     * 接收触摸事件的通知，请对祖代节点使用 EventDispatcher.on() 并将 type 参数设置为要检测的特定触摸事件。
+     *
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/events/TouchEvent.ts
+     * @language zh_CN
+     */
+    var TouchEvent = (function (_super) {
+        __extends(TouchEvent, _super);
+        /**
+         * Creates an Event object that contains information about touch events.
+         * @param type  The type of the event, accessible as Event.type.
+         * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
+         * @param cancelable Determines whether the Event object can be canceled. The default values is false.
+         * @param stageX The horizontal coordinate at which the event occurred in global Stage coordinates.
+         * @param stageY The vertical coordinate at which the event occurred in global Stage coordinates.
+         * @param touchPointID A unique identification number assigned to the touch point.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 创建一个 TouchEvent 对象，其中包含有关Touch事件的信息
+         * @param type 事件的类型，可以作为 Event.type 访问。
+         * @param bubbles 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
+         * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
+         * @param stageX 事件发生点在全局舞台坐标系中的水平坐标
+         * @param stageY 事件发生点在全局舞台坐标系中的垂直坐标
+         * @param touchPointID 分配给触摸点的唯一标识号
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        function TouchEvent(type, bubbles, cancelable, stageX, stageY, touchPointID) {
+            var _this = _super.call(this, type, bubbles, cancelable) || this;
+            _this.targetChanged = true;
             /**
-             * @private
+             * Whether the touch is pressed (true) or not pressed (false).
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language en_US
              */
-            _this._verticesDirty = true;
-            _this._bounds = new egret.Rectangle();
-            _this.$renderNode = new egret.sys.MeshNode();
+            /**
+             * 表示触摸已按下 (true) 还是未按下 (false)。
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language zh_CN
+             */
+            _this.touchDown = false;
+            _this.$initTo(stageX, stageY, touchPointID);
             return _this;
         }
-        Mesh.prototype.createNativeDisplayObject = function () {
-            this.$nativeDisplayObject = new egret_native.NativeDisplayObject(12 /* MESH */);
-        };
         /**
          * @private
          */
-        Mesh.prototype.setBitmapDataToWasm = function (data) {
-            this.$nativeDisplayObject.setBitmapDataToMesh(data);
+        TouchEvent.prototype.$initTo = function (stageX, stageY, touchPointID) {
+            this.touchPointID = +touchPointID || 0;
+            this.$stageX = +stageX || 0;
+            this.$stageY = +stageY || 0;
         };
+        Object.defineProperty(TouchEvent.prototype, "stageX", {
+            /**
+             * The horizontal coordinate at which the event occurred in global Stage coordinates.
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language en_US
+             */
+            /**
+             * 事件发生点在全局舞台坐标中的水平坐标。
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language zh_CN
+             */
+            get: function () {
+                return this.$stageX;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(TouchEvent.prototype, "stageY", {
+            /**
+             * The vertical coordinate at which the event occurred in global Stage coordinates.
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language en_US
+             */
+            /**
+             * 事件发生点在全局舞台坐标中的垂直坐标。
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language zh_CN
+             */
+            get: function () {
+                return this.$stageY;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(TouchEvent.prototype, "localX", {
+            /**
+             * The horizontal coordinate at which the event occurred relative to the display object.
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language en_US
+             */
+            /**
+             * 事件发生点相对于所属显示对象的水平坐标。
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language zh_CN
+             */
+            get: function () {
+                if (this.targetChanged) {
+                    this.getLocalXY();
+                }
+                return this._localX;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(TouchEvent.prototype, "localY", {
+            /**
+             * The vertical coordinate at which the event occurred relative to the display object.
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language en_US
+             */
+            /**
+             * 事件发生点相对于所属显示对象的垂直坐标。
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language zh_CN
+             */
+            get: function () {
+                if (this.targetChanged) {
+                    this.getLocalXY();
+                }
+                return this._localY;
+            },
+            enumerable: true,
+            configurable: true
+        });
         /**
          * @private
          */
-        Mesh.prototype.$updateRenderNode = function () {
-            var image = this.$bitmapData;
-            if (!image) {
-                return;
-            }
-            var scale = egret.$TextureScaleFactor;
-            var node = this.$renderNode;
-            node.smoothing = this.$smoothing;
-            node.image = image;
-            node.imageWidth = this.$sourceWidth;
-            node.imageHeight = this.$sourceHeight;
-            var destW = !isNaN(this.$explicitBitmapWidth) ? this.$explicitBitmapWidth : this.$textureWidth;
-            var destH = !isNaN(this.$explicitBitmapHeight) ? this.$explicitBitmapHeight : this.$textureHeight;
-            var tsX = destW / this.$textureWidth;
-            var tsY = destH / this.$textureHeight;
-            var bitmapWidth = this.$bitmapWidth;
-            var bitmapHeight = this.$bitmapHeight;
-            node.drawMesh(this.$bitmapX, this.$bitmapY, bitmapWidth, bitmapHeight, this.$offsetX * tsX, this.$offsetY * tsY, tsX * bitmapWidth, tsY * bitmapHeight);
+        TouchEvent.prototype.getLocalXY = function () {
+            this.targetChanged = false;
+            var m = this.$target.$getInvertedConcatenatedMatrix();
+            m.transformPoint(this.$stageX, this.$stageY, localPoint);
+            this._localX = localPoint.x;
+            this._localY = localPoint.y;
+        };
+        TouchEvent.prototype.$setTarget = function (target) {
+            this.$target = target;
+            this.targetChanged = !!target;
+            return true;
         };
         /**
-         * @private
+         * Instructs Egret runtime to render after processing of this event completes, if the display list has been modified.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
          */
-        Mesh.prototype.$updateVertices = function () {
-            var self = this;
-            self._verticesDirty = true;
-            self.$renderDirty = true;
-            if (egret.nativeRender) {
-                var renderNode = (this.$renderNode);
-                this.$nativeDisplayObject.setDataToMesh(renderNode.vertices, renderNode.indices, renderNode.uvs);
-            }
-            else {
-                var p = self.$parent;
-                if (p && !p.$cacheDirty) {
-                    p.$cacheDirty = true;
-                    p.$cacheDirtyUp();
-                }
-                var maskedObject = self.$maskedObject;
-                if (maskedObject && !maskedObject.$cacheDirty) {
-                    maskedObject.$cacheDirty = true;
-                    maskedObject.$cacheDirtyUp();
-                }
-            }
+        /**
+         * 如果已修改显示列表，调用此方法将会忽略帧频限制，在此事件处理完成后立即重绘屏幕。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        TouchEvent.prototype.updateAfterEvent = function () {
+            egret.sys.$requestRenderingFlag = true;
         };
         /**
-         * @private
+         * uses a specified target to dispatchEvent an event. Using this method can reduce the number of
+         * reallocate event objects, which allows you to get better code execution performance.
+         * @param target the event target
+         * @param type  The type of the event, accessible as Event.type.
+         * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
+         * @param cancelable Determines whether the Event object can be canceled. The default values is false.
+         * @param stageX The horizontal coordinate at which the event occurred in global Stage coordinates.
+         * @param stageY The vertical coordinate at which the event occurred in global Stage coordinates.
+         * @param touchPointID A unique identification number (as an int) assigned to the touch point.
+         *
+         * @see egret.Event.create()
+         * @see egret.Event.release()
+         *
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
          */
-        Mesh.prototype.$measureContentBounds = function (bounds) {
-            if (this._verticesDirty) {
-                this._verticesDirty = false;
-                var node = this.$renderNode;
-                var vertices = node.vertices;
-                if (vertices.length) {
-                    this._bounds.setTo(Number.MAX_VALUE, Number.MAX_VALUE, -Number.MAX_VALUE, -Number.MAX_VALUE);
-                    for (var i = 0, l = vertices.length; i < l; i += 2) {
-                        var x = vertices[i];
-                        var y = vertices[i + 1];
-                        if (this._bounds.x > x)
-                            this._bounds.x = x;
-                        if (this._bounds.width < x)
-                            this._bounds.width = x;
-                        if (this._bounds.y > y)
-                            this._bounds.y = y;
-                        if (this._bounds.height < y)
-                            this._bounds.height = y;
-                    }
-                    this._bounds.width -= this._bounds.x;
-                    this._bounds.height -= this._bounds.y;
-                }
-                else {
-                    this._bounds.setTo(0, 0, 0, 0);
-                }
-                node.bounds.copyFrom(this._bounds);
+        /**
+         * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * @param target 派发事件目标
+         * @param type 事件的类型，可以作为 Event.type 访问。
+         * @param bubbles 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
+         * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
+         * @param stageX 事件发生点在全局舞台坐标系中的水平坐标
+         * @param stageY 事件发生点在全局舞台坐标系中的垂直坐标
+         * @param touchPointID 分配给触摸点的唯一标识号
+         *
+         * @see egret.Event.create()
+         * @see egret.Event.release()
+         *
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        TouchEvent.dispatchTouchEvent = function (target, type, bubbles, cancelable, stageX, stageY, touchPointID, touchDown) {
+            if (touchDown === void 0) { touchDown = false; }
+            if (!bubbles && !target.hasEventListener(type)) {
+                return true;
             }
-            bounds.copyFrom(this._bounds);
+            var event = egret.Event.create(TouchEvent, type, bubbles, cancelable);
+            event.$initTo(stageX, stageY, touchPointID);
+            event.touchDown = touchDown;
+            var result = target.dispatchEvent(event);
+            egret.Event.release(event);
+            return result;
         };
-        return Mesh;
-    }(egret.Bitmap));
-    egret.Mesh = Mesh;
-    __reflect(Mesh.prototype, "egret.Mesh");
+        /**
+         * Dispatched when the user touches the device, and is continuously dispatched until the point of contact is removed.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 当用户触碰设备时进行调度，而且会连续调度，直到接触点被删除。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        TouchEvent.TOUCH_MOVE = "touchMove";
+        /**
+         * Dispatched when the user first contacts a touch-enabled device (such as touches a finger to a mobile phone or tablet with a touch screen).
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 当用户第一次触摸启用触摸的设备时（例如，用手指触摸配有触摸屏的移动电话或平板电脑）调度。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        TouchEvent.TOUCH_BEGIN = "touchBegin";
+        /**
+         * Dispatched when the user removes contact with a touch-enabled device (such as lifts a finger off a mobile phone
+         * or tablet with a touch screen).
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 当用户移除与启用触摸的设备的接触时（例如，将手指从配有触摸屏的移动电话或平板电脑上抬起）调度。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        TouchEvent.TOUCH_END = "touchEnd";
+        /**
+         * Dispatched when an event of some kind occurred that canceled the touch.
+         * Such as the eui.Scroller will dispatch 'TOUCH_CANCEL' when it start move, the 'TOUCH_END' and 'TOUCH_TAP' will not be triggered.
+         * @version Egret 3.0.1
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 由于某个事件取消了触摸时触发。比如 eui.Scroller 在开始滚动后会触发 'TOUCH_CANCEL' 事件，不再触发后续的 'TOUCH_END' 和 'TOUCH_TAP' 事件
+         * @version Egret 3.0.1
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        TouchEvent.TOUCH_CANCEL = "touchCancel";
+        /**
+         * Dispatched when the user lifts the point of contact over the same DisplayObject instance on which the contact
+         * was initiated on a touch-enabled device.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 当用户在触摸设备上与开始触摸的同一 DisplayObject 实例上抬起接触点时调度。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        TouchEvent.TOUCH_TAP = "touchTap";
+        /**
+         * Dispatched when the user lifts the point of contact over the different DisplayObject instance on which the contact
+         * was initiated on a touch-enabled device (such as presses and releases a finger from a single point over a display
+         * object on a mobile phone or tablet with a touch screen).
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 当用户在触摸设备上与开始触摸的不同 DisplayObject 实例上抬起接触点时调度。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        TouchEvent.TOUCH_RELEASE_OUTSIDE = "touchReleaseOutside";
+        return TouchEvent;
+    }(egret.Event));
+    egret.TouchEvent = TouchEvent;
+    __reflect(TouchEvent.prototype, "egret.TouchEvent");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -28006,118 +27980,112 @@ var egret;
 //////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
-    var web;
-    (function (web) {
-        /**
-         * @private
-         */
-        var WebExternalInterface = (function () {
-            function WebExternalInterface() {
-            }
+    /**
+     * @private
+     */
+    var Mesh = (function (_super) {
+        __extends(Mesh, _super);
+        function Mesh(value) {
+            var _this = _super.call(this, value) || this;
             /**
              * @private
-             * @param functionName
-             * @param value
              */
-            WebExternalInterface.call = function (functionName, value) {
-            };
-            /**
-             * @private
-             * @param functionName
-             * @param listener
-             */
-            WebExternalInterface.addCallback = function (functionName, listener) {
-            };
-            return WebExternalInterface;
-        }());
-        web.WebExternalInterface = WebExternalInterface;
-        __reflect(WebExternalInterface.prototype, "egret.web.WebExternalInterface", ["egret.ExternalInterface"]);
-        var ua = navigator.userAgent.toLowerCase();
-        if (ua.indexOf("egretnative") < 0) {
-            egret.ExternalInterface = WebExternalInterface;
+            _this._verticesDirty = true;
+            _this._bounds = new egret.Rectangle();
+            _this.$renderNode = new egret.sys.MeshNode();
+            return _this;
         }
-    })(web = egret.web || (egret.web = {}));
-})(egret || (egret = {}));
-(function (egret) {
-    var web;
-    (function (web) {
-        var callBackDic = {};
+        Mesh.prototype.createNativeDisplayObject = function () {
+            this.$nativeDisplayObject = new egret_native.NativeDisplayObject(12 /* MESH */);
+        };
         /**
          * @private
          */
-        var NativeExternalInterface = (function () {
-            function NativeExternalInterface() {
+        Mesh.prototype.setBitmapDataToWasm = function (data) {
+            this.$nativeDisplayObject.setBitmapDataToMesh(data);
+        };
+        /**
+         * @private
+         */
+        Mesh.prototype.$updateRenderNode = function () {
+            var image = this.$bitmapData;
+            if (!image) {
+                return;
             }
-            NativeExternalInterface.call = function (functionName, value) {
-                var data = {};
-                data.functionName = functionName;
-                data.value = value;
-                egret_native.sendInfoToPlugin(JSON.stringify(data));
-            };
-            NativeExternalInterface.addCallback = function (functionName, listener) {
-                callBackDic[functionName] = listener;
-            };
-            return NativeExternalInterface;
-        }());
-        web.NativeExternalInterface = NativeExternalInterface;
-        __reflect(NativeExternalInterface.prototype, "egret.web.NativeExternalInterface", ["egret.ExternalInterface"]);
+            var scale = egret.$TextureScaleFactor;
+            var node = this.$renderNode;
+            node.smoothing = this.$smoothing;
+            node.image = image;
+            node.imageWidth = this.$sourceWidth;
+            node.imageHeight = this.$sourceHeight;
+            var destW = !isNaN(this.$explicitBitmapWidth) ? this.$explicitBitmapWidth : this.$textureWidth;
+            var destH = !isNaN(this.$explicitBitmapHeight) ? this.$explicitBitmapHeight : this.$textureHeight;
+            var tsX = destW / this.$textureWidth;
+            var tsY = destH / this.$textureHeight;
+            var bitmapWidth = this.$bitmapWidth;
+            var bitmapHeight = this.$bitmapHeight;
+            node.drawMesh(this.$bitmapX, this.$bitmapY, bitmapWidth, bitmapHeight, this.$offsetX * tsX, this.$offsetY * tsY, tsX * bitmapWidth, tsY * bitmapHeight);
+        };
         /**
          * @private
-         * @param info
          */
-        function onReceivedPluginInfo(info) {
-            var data = JSON.parse(info);
-            var functionName = data.functionName;
-            var listener = callBackDic[functionName];
-            if (listener) {
-                var value = data.value;
-                listener.call(null, value);
+        Mesh.prototype.$updateVertices = function () {
+            var self = this;
+            self._verticesDirty = true;
+            self.$renderDirty = true;
+            if (egret.nativeRender) {
+                var renderNode = (this.$renderNode);
+                this.$nativeDisplayObject.setDataToMesh(renderNode.vertices, renderNode.indices, renderNode.uvs);
             }
             else {
-                egret.$warn(1050, functionName);
+                var p = self.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                var maskedObject = self.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
             }
-        }
-        var ua = navigator.userAgent.toLowerCase();
-        if (ua.indexOf("egretnative") >= 0) {
-            egret.ExternalInterface = NativeExternalInterface;
-            egret_native.receivedPluginInfo = onReceivedPluginInfo;
-        }
-    })(web = egret.web || (egret.web = {}));
-})(egret || (egret = {}));
-(function (egret) {
-    var web;
-    (function (web) {
-        var callBackDic = {};
+        };
         /**
          * @private
          */
-        var WebViewExternalInterface = (function () {
-            function WebViewExternalInterface() {
-            }
-            WebViewExternalInterface.call = function (functionName, value) {
-                __global.ExternalInterface.call(functionName, value);
-            };
-            WebViewExternalInterface.addCallback = function (functionName, listener) {
-                callBackDic[functionName] = listener;
-            };
-            WebViewExternalInterface.invokeCallback = function (functionName, value) {
-                var listener = callBackDic[functionName];
-                if (listener) {
-                    listener.call(null, value);
+        Mesh.prototype.$measureContentBounds = function (bounds) {
+            if (this._verticesDirty) {
+                this._verticesDirty = false;
+                var node = this.$renderNode;
+                var vertices = node.vertices;
+                if (vertices.length) {
+                    this._bounds.setTo(Number.MAX_VALUE, Number.MAX_VALUE, -Number.MAX_VALUE, -Number.MAX_VALUE);
+                    for (var i = 0, l = vertices.length; i < l; i += 2) {
+                        var x = vertices[i];
+                        var y = vertices[i + 1];
+                        if (this._bounds.x > x)
+                            this._bounds.x = x;
+                        if (this._bounds.width < x)
+                            this._bounds.width = x;
+                        if (this._bounds.y > y)
+                            this._bounds.y = y;
+                        if (this._bounds.height < y)
+                            this._bounds.height = y;
+                    }
+                    this._bounds.width -= this._bounds.x;
+                    this._bounds.height -= this._bounds.y;
                 }
                 else {
-                    egret.$warn(1050, functionName);
+                    this._bounds.setTo(0, 0, 0, 0);
                 }
-            };
-            return WebViewExternalInterface;
-        }());
-        web.WebViewExternalInterface = WebViewExternalInterface;
-        __reflect(WebViewExternalInterface.prototype, "egret.web.WebViewExternalInterface", ["egret.ExternalInterface"]);
-        var ua = navigator.userAgent.toLowerCase();
-        if (ua.indexOf("egretwebview") >= 0) {
-            egret.ExternalInterface = WebViewExternalInterface;
-        }
-    })(web = egret.web || (egret.web = {}));
+                node.bounds.copyFrom(this._bounds);
+            }
+            bounds.copyFrom(this._bounds);
+        };
+        return Mesh;
+    }(egret.Bitmap));
+    egret.Mesh = Mesh;
+    __reflect(Mesh.prototype, "egret.Mesh");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -28830,7 +28798,7 @@ var egret;
                         }
                     });
                 }, null);
-                egret_native.init();
+                egret_native.initNativeRender();
             }
             else {
                 web.Html5Capatibility._audioType = options.audioType;

@@ -112,7 +112,7 @@ namespace egret.web {
                     }
                 });
             }, null);
-            egret_native.init();
+            egret_native.initNativeRender();
         }
         else {
             Html5Capatibility._audioType = options.audioType;

@@ -1679,7 +1679,7 @@ namespace egret {
          */
         public globalToLocal(stageX: number = 0, stageY: number = 0, resultPoint?: Point): Point {
             if (egret.nativeRender) {
-                egret_native.update();
+                egret_native.updateNativeRender();
                 let result = egret_native.nrGlobalToLocal(this.$nativeDisplayObject.id, stageX, stageY);
                 let arr = result.split(",");
                 let x = parseFloat(arr[0]);
@@ -1721,7 +1721,7 @@ namespace egret {
          */
         public localToGlobal(localX: number = 0, localY: number = 0, resultPoint?: Point): Point {
             if (egret.nativeRender) {
-                egret_native.update();
+                egret_native.updateNativeRender();
                 let result = egret_native.nrLocalToGlobal(this.$nativeDisplayObject.id, localX, localY);
                 let arr = result.split(",");
                 let x = parseFloat(arr[0]);
@@ -2028,16 +2028,17 @@ namespace egret {
                 let m = self.$getInvertedConcatenatedMatrix();
                 let localX = m.a * x + m.c * y + m.tx;
                 let localY = m.b * x + m.d * y + m.ty;
-                let data: number[];
+                let data: number[] | Uint8Array;
                 if (egret.nativeRender) {
                     let buffer = sys.customHitTestBuffer;
                     buffer.resize(3, 3);
                     egret_native.forHitTest = true;
                     egret_native.activateBuffer(buffer);
-                    egret_native.update();
+                    egret_native.updateNativeRender();
                     egret_native.nrRenderDisplayObject2(self.$nativeDisplayObject.id, 1 - localX, 1 - localY, true);
                     try {
-                        data = egret_native.getPixels(1, 1);
+                        data = new Uint8Array(4);
+                        egret_native.nrGetPixels(1, 1, 1, 1, data);
                     }
                     catch (e) {
                         throw new Error(sys.tr(1039));

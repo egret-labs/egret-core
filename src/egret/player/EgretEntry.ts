@@ -58,5 +58,14 @@ namespace egret {
      * @language zh_CN
      */
     export declare function updateAllScreens(): void;
+}
 
+/**
+ * @private
+ */
+module egret {
+    /**
+     * @private
+     */
+    export var nativeRender: boolean = __global.nativeRender;
 }
