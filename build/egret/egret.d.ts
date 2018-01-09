@@ -9023,6 +9023,12 @@ declare namespace egret {
         antialias?: boolean;
         canvasScaleFactor?: number;
         calculateCanvasScaleFactor?: (context: CanvasRenderingContext2D) => number;
+        entryClassName?: string;
+        scaleMode?: string;
+        frameRate?: number;
+        contentWidth?: number;
+        contentHeight?: number;
+        orientation?: string;
     };
     /**
      * egret project entry function

@@ -33,13 +33,13 @@ namespace egret.wxapp {
      */
     export class WebPlayer extends egret.HashObject implements egret.sys.Screen {
 
-        public constructor(container: any, options: { renderMode?: string; screenAdapter?: sys.IScreenAdapter }) {
+        public constructor(container: any, options: runEgretOptions) {
             super();
             this.init(container, options);
             this.initOrientation();
         }
 
-        private init(container: any, options: { renderMode?: string; screenAdapter?: sys.IScreenAdapter }): void {
+        private init(container: any, options: runEgretOptions): void {
             let option = this.readOption(container, options);
             let stage = new egret.Stage();
             stage.$screen = this;
@@ -87,14 +87,14 @@ namespace egret.wxapp {
         /**
          * 读取初始化参数
          */
-        private readOption(container: any, options: { renderMode?: string; screenAdapter?: sys.IScreenAdapter }): PlayerOption {
+        private readOption(container: any, options: runEgretOptions): PlayerOption {
             let option: PlayerOption = {};
-            option.entryClassName = 'Main';
-            option.scaleMode = 'showAll' || egret.StageScaleMode.NO_SCALE;
-            option.frameRate =  30;
-            option.contentWidth = 640;
-            option.contentHeight = 1136;
-            option.orientation = egret.OrientationMode.AUTO;
+            option.entryClassName = options.entryClassName || "Main";
+            option.scaleMode = options.scaleMode || egret.StageScaleMode.FIXED_WIDTH;
+            option.frameRate =  options.frameRate || 30;
+            option.contentWidth = options.contentWidth || 640;
+            option.contentHeight = options.contentHeight || 1136;
+            option.orientation = options.orientation || egret.OrientationMode.AUTO;
             option.maxTouches =  2;
             option.textureScaleFactor = 1;
 

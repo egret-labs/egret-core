@@ -33,13 +33,13 @@ namespace egret.web {
      */
     export class WebPlayer extends egret.HashObject implements egret.sys.Screen {
 
-        public constructor(container: HTMLDivElement, options: { renderMode?: string; screenAdapter?: sys.IScreenAdapter }) {
+        public constructor(container: HTMLDivElement, options: runEgretOptions) {
             super();
             this.init(container, options);
             this.initOrientation();
         }
 
-        private init(container: HTMLDivElement, options: { renderMode?: string; screenAdapter?: sys.IScreenAdapter }): void {
+        private init(container: HTMLDivElement, options: runEgretOptions): void {
             let option = this.readOption(container, options);
             let stage = new egret.Stage();
             stage.$screen = this;
@@ -91,7 +91,7 @@ namespace egret.web {
         /**
          * 读取初始化参数
          */
-        private readOption(container: HTMLDivElement, options: { renderMode?: string; screenAdapter?: sys.IScreenAdapter }): PlayerOption {
+        private readOption(container: HTMLDivElement, options: runEgretOptions): PlayerOption {
             let option: PlayerOption = {};
             option.entryClassName = container.getAttribute("data-entry-class");
             option.scaleMode = container.getAttribute("data-scale-mode") || egret.StageScaleMode.NO_SCALE;

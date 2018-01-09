@@ -35,7 +35,15 @@ namespace egret {
         screenAdapter?: sys.IScreenAdapter;
         antialias?: boolean;
         canvasScaleFactor?: number;
-        calculateCanvasScaleFactor?: (context:CanvasRenderingContext2D)=>number
+        calculateCanvasScaleFactor?: (context:CanvasRenderingContext2D)=>number;
+
+        //以下目前仅供微信小游戏使用
+        entryClassName?:string;
+        scaleMode?:string;
+        frameRate?:number;
+        contentWidth?:number;
+        contentHeight?:number;
+        orientation?:string;
     };
 
     /**
