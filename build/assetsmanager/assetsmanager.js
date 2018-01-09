@@ -723,7 +723,7 @@ var RES;
         processor_1.ImageProcessor = {
             onLoadStart: function (host, resource) {
                 return __awaiter(this, void 0, void 0, function () {
-                    var loader, bitmapData, texture;
+                    var loader, bitmapData, texture, r, list;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
@@ -734,11 +734,14 @@ var RES;
                                 bitmapData = _a.sent();
                                 texture = new egret.Texture();
                                 texture._setBitmapData(bitmapData);
+                                r = host.resourceConfig.getResource(resource.name);
+                                if (r && r.scale9grid) {
+                                    list = r.scale9grid.split(",");
+                                    texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
+                                }
                                 // var config: any = resItem.data;
                                 // if (config && config["scale9grid"]) {
-                                //     var str: string = config["scale9grid"];
-                                //     var list: Array<string> = str.split(",");
-                                //     texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
+                                //     
                                 // }
                                 return [2 /*return*/, texture];
                         }

@@ -19,6 +19,7 @@ declare module RES {
         size?: number;
         name: string;
         soundType?: string;
+        scale9grid?: string;
         /**
          * 是否被资源管理器进行管理，默认值为 false
          */
