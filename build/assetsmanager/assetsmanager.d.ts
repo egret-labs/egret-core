@@ -1,32 +1,3 @@
-declare module RES {
-    interface File {
-        url: string;
-        type: string;
-        name: string;
-    }
-    interface Dictionary {
-        [file: string]: File | Dictionary;
-    }
-    interface FileSystem {
-        addFile(filename: string, type?: string): any;
-        getFile(filename: string): File | null;
-        profile(): void;
-    }
-    class NewFileSystem {
-        private data;
-        constructor(data: Dictionary);
-        profile(): void;
-        addFile(filename: string, type?: string): void;
-        getFile(filename: string): File | null;
-        private basename(filename);
-        private normalize(filename);
-        private dirname(path);
-        private reslove(dirpath);
-        private mkdir(dirpath);
-        private exists(dirpath);
-    }
-    var fileSystem: FileSystem;
-}
 declare type ResourceRootSelector<T extends string> = () => T;
 declare type ResourceTypeSelector = (file: string) => string;
 declare type ResourceNameSelector = (file: string) => string;
@@ -185,6 +156,48 @@ declare namespace RES {
          */
         onCancel?: () => void;
     }
+}
+declare module RES {
+    let checkNull: MethodDecorator;
+    /**
+     * 功能开关
+     *  LOADING_STATE：处理重复加载
+     */
+    let FEATURE_FLAG: {
+        FIX_DUPLICATE_LOAD: number;
+    };
+    namespace upgrade {
+        function setUpgradeGuideLevel(level: "warning" | "silent"): void;
+    }
+}
+declare module RES {
+    interface File {
+        url: string;
+        type: string;
+        name: string;
+    }
+    interface Dictionary {
+        [file: string]: File | Dictionary;
+    }
+    interface FileSystem {
+        addFile(filename: string, type?: string): any;
+        getFile(filename: string): File | null;
+        profile(): void;
+    }
+    class NewFileSystem {
+        private data;
+        constructor(data: Dictionary);
+        profile(): void;
+        addFile(filename: string, type?: string): void;
+        getFile(filename: string): File | null;
+        private basename(filename);
+        private normalize(filename);
+        private dirname(path);
+        private reslove(dirpath);
+        private mkdir(dirpath);
+        private exists(dirpath);
+    }
+    var fileSystem: FileSystem;
 }
 declare module RES.processor {
     interface Processor {
@@ -553,19 +566,6 @@ declare module RES {
         crc32?: string;
         size?: number;
         soundType?: string;
-    }
-}
-declare module RES {
-    let checkNull: MethodDecorator;
-    /**
-     * 功能开关
-     *  LOADING_STATE：处理重复加载
-     */
-    let FEATURE_FLAG: {
-        FIX_DUPLICATE_LOAD: number;
-    };
-    namespace upgrade {
-        function setUpgradeGuideLevel(level: "warning" | "silent"): void;
     }
 }
 declare namespace RES {
