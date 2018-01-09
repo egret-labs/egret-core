@@ -41,6 +41,7 @@ namespace egret.wxapp {
         constructor() {
             super();
             this.onKeyboardComplete = this.onKeyboardComplete.bind(this);
+            this.onKeyboardInput = this.onKeyboardInput.bind(this);
         }
 
         /**
@@ -83,15 +84,16 @@ namespace egret.wxapp {
                 info.maxLength = this.$textfield.maxChars;
             }
             wx.showKeyboard(info);
-            // let self = this;
-            // wx.onKeyboardInput(function (res) {
-            //     self.textValue = res.value;
-            //     egret.Event.dispatchEvent(self, "updateText", false);
-            // });
             wx.onKeyboardConfirm(this.onKeyboardComplete);
             wx.onKeyboardComplete(this.onKeyboardComplete);
+            wx.onKeyboardInput(this.onKeyboardInput);
 
             this.dispatchEvent(new egret.Event("focus"));
+        }
+
+        private onKeyboardInput(data): void {
+            this.textValue = data.value;
+            egret.Event.dispatchEvent(this, "updateText", false);
         }
 
         private onKeyboardComplete(res): void {
@@ -105,6 +107,7 @@ namespace egret.wxapp {
         $hide(): void {
             wx.offKeyboardComplete();
             wx.offKeyboardConfirm();
+            wx.offKeyboardInput();
             wx.hideKeyboard({});
             this.dispatchEvent(new egret.Event("blur"));
         }
