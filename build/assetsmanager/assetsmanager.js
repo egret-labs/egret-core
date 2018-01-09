@@ -875,52 +875,23 @@ var RES;
         processor_1.FontProcessor = {
             onLoadStart: function (host, resource) {
                 return __awaiter(this, void 0, void 0, function () {
-                    var getTexturePath, data, imageUrl, config, r, texture, font;
+                    var config, imageFileName, r, imagePath, texture, font;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
-                            case 0:
-                                getTexturePath = function (url, fntText) {
-                                    var file = "";
-                                    var lines = fntText.split("\n");
-                                    var pngLine = lines[2];
-                                    var index = pngLine.indexOf("file=\"");
-                                    if (index != -1) {
-                                        pngLine = pngLine.substring(index + 6);
-                                        index = pngLine.indexOf("\"");
-                                        file = pngLine.substring(0, index);
-                                    }
-                                    url = url.split("\\").join("/");
-                                    var index = url.lastIndexOf("/");
-                                    if (index != -1) {
-                                        url = url.substring(0, index + 1) + file;
-                                    }
-                                    else {
-                                        url = file;
-                                    }
-                                    return url;
-                                };
-                                return [4 /*yield*/, host.load(resource, processor_1.TextProcessor)];
+                            case 0: return [4 /*yield*/, host.load(resource, processor_1.JsonProcessor)];
                             case 1:
-                                data = _a.sent();
-                                imageUrl = "";
-                                try {
-                                    config = JSON.parse(data);
-                                    imageUrl = resource.name.replace("fnt", "png");
+                                config = _a.sent();
+                                imageFileName = resource.name.replace("fnt", "png");
+                                r = host.resourceConfig.getResource(imageFileName);
+                                if (!r) {
+                                    imagePath = RES.config.resourceRoot + "/" + getRelativePath(resource.url, config.file);
+                                    r = { name: imagePath, url: imagePath, extra: true, type: 'image' };
                                 }
-                                catch (e) {
-                                    config = data;
-                                    // imageUrl = getTexturePath(resource.name, data);
-                                    imageUrl = resource.name.replace("fnt", "png");
-                                    ;
-                                }
-                                r = host.resourceConfig.getResource(imageUrl);
-                                if (!r) return [3 /*break*/, 3];
                                 return [4 /*yield*/, host.load(r)];
                             case 2:
                                 texture = _a.sent();
                                 font = new egret.BitmapFont(texture, config);
                                 return [2 /*return*/, font];
-                            case 3: return [2 /*return*/, null];
                         }
                     });
                 });

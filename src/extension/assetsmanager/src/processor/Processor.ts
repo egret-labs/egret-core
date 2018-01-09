@@ -240,51 +240,16 @@ module RES.processor {
 
         async onLoadStart(host, resource): Promise<any> {
 
-
-            let getTexturePath = function (url: string, fntText: string): string {
-
-                var file: string = "";
-                var lines = fntText.split("\n");
-                var pngLine = lines[2];
-                var index: number = pngLine.indexOf("file=\"");
-                if (index != -1) {
-                    pngLine = pngLine.substring(index + 6);
-                    index = pngLine.indexOf("\"");
-                    file = pngLine.substring(0, index);
-                }
-
-                url = url.split("\\").join("/");
-                var index: number = url.lastIndexOf("/");
-                if (index != -1) {
-                    url = url.substring(0, index + 1) + file;
-                }
-                else {
-                    url = file;
-                }
-                return url;
+            let config = await host.load(resource, JsonProcessor);
+            let imageFileName = resource.name.replace("fnt", "png");
+            let r = host.resourceConfig.getResource(imageFileName);
+            if (!r) {
+                let imagePath = RES.config.resourceRoot + "/" + getRelativePath(resource.url, config.file);
+                r = { name: imagePath, url: imagePath, extra: true, type: 'image' };
             }
-
-            let data = await host.load(resource, TextProcessor);
-            let imageUrl = "";
-            let config;
-            try {
-                config = JSON.parse(data);
-                imageUrl = resource.name.replace("fnt", "png");
-            }
-            catch (e) {
-                config = data;
-                // imageUrl = getTexturePath(resource.name, data);
-                imageUrl = resource.name.replace("fnt", "png");;
-            }
-            let r = host.resourceConfig.getResource(imageUrl);
-            if (r) {
-                var texture: egret.Texture = await host.load(r);
-                var font = new egret.BitmapFont(texture, config);
-                return font;
-            }
-            else {
-                return null;
-            }
+            var texture: egret.Texture = await host.load(r);
+            var font = new egret.BitmapFont(texture, config);
+            return font;
         },
 
 
