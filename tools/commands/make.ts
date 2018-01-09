@@ -30,6 +30,7 @@ class CompileEgretEngine implements egret.Command {
         let excludeList = [
             FileUtil.escapePath(path.join(outputDir, "promise")),
             FileUtil.escapePath(path.join(outputDir, "resourcemanager")),
+            FileUtil.escapePath(path.join(outputDir, "assetsmanager")),
             FileUtil.escapePath(path.join(outputDir, "egret3d")),
             FileUtil.escapePath(path.join(outputDir, "egret-wasm")),
             FileUtil.escapePath(path.join(outputDir, "eui-wasm")),
