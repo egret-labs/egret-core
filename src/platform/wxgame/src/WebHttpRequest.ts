@@ -130,19 +130,6 @@ namespace egret.wxapp {
 
         /**
          * @private
-         *
-         * @returns
-         */
-        private getXHR(): any {
-            if (window["XMLHttpRequest"]) {
-                return new window["XMLHttpRequest"]();
-            } else {
-                return new ActiveXObject("MSXML2.XMLHTTP");
-            }
-        }
-
-        /**
-         * @private
          * 初始化一个请求.注意，若在已经发出请求的对象上调用此方法，相当于立即调用abort().
          * @param url 该请求所要访问的URL该请求所要访问的URL
          * @param method 请求所使用的HTTP方法， 请使用 HttpMethod 定义的枚举值.
@@ -154,7 +141,7 @@ namespace egret.wxapp {
                 this._xhr.abort();
                 this._xhr = null;
             }
-            this._xhr = this.getXHR();//new XMLHttpRequest();
+            this._xhr = new XMLHttpRequest();
             this._xhr.onreadystatechange = this.onReadyStateChange.bind(this);
             this._xhr.onprogress = this.updateProgress.bind(this);
             this._xhr.open(this._method, this._url, true);
