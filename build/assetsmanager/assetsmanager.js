@@ -263,7 +263,7 @@ var RES;
          * @param folder {string} 加载项的路径前缀。
          */
         ResourceConfig.prototype.parseConfig = function (data) {
-            RES.resourceRoot = data.resourceRoot + "/";
+            RES.resourceRoot = data.resourceRoot;
             this.config = data;
             RES.fileSystem = data.fileSystem;
             // if (!data)

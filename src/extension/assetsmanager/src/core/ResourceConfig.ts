@@ -373,7 +373,7 @@ module RES {
          * @param folder {string} 加载项的路径前缀。
          */
         public parseConfig(data: Data): void {
-            resourceRoot = data.resourceRoot + "/";
+            resourceRoot = data.resourceRoot;
             this.config = data;
             fileSystem = data.fileSystem;
 
