@@ -166,7 +166,7 @@ namespace egret.wxapp {
             if (canvas['userTyping'])
                 return;
             let option = this.playerOption;
-            let screenRect = this.canvas.getBoundingClientRect();
+            let screenRect = canvas.getBoundingClientRect();
             let top = 0;
             let boundingClientWidth = screenRect.width;
             let boundingClientHeight = screenRect.height;
@@ -192,8 +192,6 @@ namespace egret.wxapp {
             let displayWidth = stageSize.displayWidth;
             let displayHeight = stageSize.displayHeight;
             canvas.style[egret.wxapp.getPrefixStyleName("transformOrigin")] = "0% 0% 0px";
-            canvas.style.width = displayWidth + "px";
-            canvas.style.height = displayHeight + "px";
             if (canvas.width != stageWidth) {
                 if (!wxgame.isSubContext) {
                     if (window["sharedCanvas"]) {
@@ -227,13 +225,21 @@ namespace egret.wxapp {
                 canvas.style.top = top + (boundingClientHeight - displayHeight) / 2 + "px";
                 canvas.style.left = (boundingClientWidth - displayWidth) / 2 + "px";
             }
-
-            let transform = `rotate(${rotation}deg)`;
-            canvas.style[egret.wxapp.getPrefixStyleName("transform")] = transform;
             let scalex = displayWidth / stageWidth,
                 scaley = displayHeight / stageHeight;
+            let canvasScaleX = scalex * sys.DisplayList.$canvasScaleFactor;
+            let canvasScaleY = scaley * sys.DisplayList.$canvasScaleFactor;
+            if (egret.Capabilities.$renderMode == "canvas") {
+                canvasScaleX = Math.ceil(canvasScaleX);
+                canvasScaleY = Math.ceil(canvasScaleY);
+            }
 
-            sys.DisplayList.$setCanvasScale(scalex * sys.DisplayList.$canvasScaleFactor, scaley * sys.DisplayList.$canvasScaleFactor);
+            let m = new egret.Matrix();
+            m.scale(scalex / canvasScaleX, scaley / canvasScaleY);
+            m.rotate(rotation * Math.PI / 180);
+            let transform = `matrix(${m.a},${m.b},${m.c},${m.d},${m.tx},${m.ty})`;
+            canvas.style[egret.wxapp.getPrefixStyleName("transform")] = transform;
+            sys.DisplayList.$setCanvasScale(canvasScaleX, canvasScaleY);
             this.webTouchHandler.updateScaleMode(scalex, scaley, rotation);
             this.player.updateStageSize(stageWidth, stageHeight);//不要在这个方法后面修改属性
         }

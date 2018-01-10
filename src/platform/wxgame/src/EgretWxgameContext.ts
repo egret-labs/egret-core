@@ -174,9 +174,7 @@ namespace egret.wxapp {
      * @param renderMode
      */
     function setRenderMode(renderMode: string): void {
-        if (renderMode == "webgl" && !wxgame.isSubContext
-            // && WebGLUtils.checkCanUseWebGL()    wxapp需要重新实现checkCanUseWebGL 
-        ) {
+        if (!wxgame.isSubContext) {
             Capabilities.$renderMode = "webgl";
             sys.RenderBuffer = wxapp.WebGLRenderBuffer;
             sys.systemRenderer = new WebGLRenderer();

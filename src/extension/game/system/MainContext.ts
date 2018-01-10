@@ -159,7 +159,7 @@ namespace egret {
  * @private
  */
 egret["testDeviceType1"] = function () {
-    if (!__global["navigator"]) {
+    if (!window["navigator"]) {
         return true
     }
     let ua = navigator.userAgent.toLowerCase();
@@ -169,7 +169,7 @@ egret["testDeviceType1"] = function () {
  * @private
  */
 egret["testRuntimeType1"] = function () {
-    if (__global["navigator"]) {
+    if (window["navigator"]) {
         return true;
     }
     return false;
