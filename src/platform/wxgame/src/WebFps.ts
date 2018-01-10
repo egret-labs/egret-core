@@ -245,6 +245,12 @@ namespace egret.wxapp {
                 this.log.innerHTML = this.arrLog.join('<br/>');
             }
         }
+        public updateWarn(info:string) {
+            
+        }
+        public updateError(info:string) {
+            
+        }
     }
     egret.FPSDisplay = WebFps;
 }

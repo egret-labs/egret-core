@@ -91,11 +91,11 @@ namespace egret.wxapp {
             let option: PlayerOption = {};
             option.entryClassName = options.entryClassName || "Main";
             option.scaleMode = options.scaleMode || egret.StageScaleMode.FIXED_WIDTH;
-            option.frameRate =  options.frameRate || 30;
+            option.frameRate = options.frameRate || 30;
             option.contentWidth = options.contentWidth || 640;
             option.contentHeight = options.contentHeight || 1136;
             option.orientation = options.orientation || egret.OrientationMode.AUTO;
-            option.maxTouches =  2;
+            option.maxTouches = 2;
             option.textureScaleFactor = 1;
 
             option.showFPS = false;
@@ -195,10 +195,20 @@ namespace egret.wxapp {
             canvas.style.width = displayWidth + "px";
             canvas.style.height = displayHeight + "px";
             if (canvas.width != stageWidth) {
-                canvas.width = stageWidth;
+                if (!wxgame.isSubContext) {
+                    if (window["sharedCanvas"]) {
+                        window["sharedCanvas"].width = stageWidth;
+                    }
+                    canvas.width = stageWidth;
+                }
             }
             if (canvas.height != stageHeight) {
-                canvas.height = stageHeight;
+                if (!wxgame.isSubContext) {
+                    if (window["sharedCanvas"]) {
+                        window["sharedCanvas"].height = stageHeight;
+                    }
+                    canvas.height = stageHeight;
+                }
             }
             let rotation = 0;
             if (shouldRotate) {

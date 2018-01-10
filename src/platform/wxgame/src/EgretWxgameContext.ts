@@ -28,7 +28,15 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 namespace egret.wxgame {
+    /**
+     * 微信小游戏支持库版本号
+     */
     export let version = "1.0.7";
+
+    /**
+     * 运行环境是否为子域
+     */
+    export let isSubContext:boolean = false;
 }
 
 namespace egret.wxapp {
@@ -166,7 +174,7 @@ namespace egret.wxapp {
      * @param renderMode
      */
     function setRenderMode(renderMode: string): void {
-        if (renderMode == "webgl"
+        if (renderMode == "webgl" && !wxgame.isSubContext
             // && WebGLUtils.checkCanUseWebGL()    wxapp需要重新实现checkCanUseWebGL 
         ) {
             Capabilities.$renderMode = "webgl";
