@@ -233,6 +233,17 @@ var egret;
             ;
             WebFps.prototype.updateInfo = function (info) {
                 this.arrLog.push(info);
+                this.updateLogLayout();
+            };
+            WebFps.prototype.updateWarn = function (info) {
+                this.arrLog.push("[Warning]" + info);
+                this.updateLogLayout();
+            };
+            WebFps.prototype.updateError = function (info) {
+                this.arrLog.push("[Error]" + info);
+                this.updateLogLayout();
+            };
+            WebFps.prototype.updateLogLayout = function () {
                 this.log.innerHTML = this.arrLog.join('<br/>');
                 while (document.body.clientHeight < (this.log.offsetHeight + this.fpsHeight + this.panelY + this.fontSize * 2)) {
                     this.arrLog.shift();
