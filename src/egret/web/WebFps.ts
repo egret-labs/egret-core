@@ -31,17 +31,17 @@ namespace egret.web {
      * @private
      */
     export class WebFps extends egret.DisplayObject implements egret.FPSDisplay {
-        private panelX:number;
-        private panelY:number;
-        private fontColor:string;
-        private fontSize:number;
+        private panelX: number;
+        private panelY: number;
+        private fontColor: string;
+        private fontSize: number;
         private container;
         private fps;
         private log;
-        private showPanle:boolean = true;
-        private renderMode:string;
+        private showPanle: boolean = true;
+        private renderMode: string;
 
-        constructor(stage:Stage, showFPS:boolean, showLog:boolean, logFilter:string, styles:Object) {
+        constructor(stage: Stage, showFPS: boolean, showLog: boolean, logFilter: string, styles: Object) {
             super();
             if (showFPS || showLog) {
                 if (egret.Capabilities.renderMode == 'canvas') {
@@ -78,7 +78,7 @@ namespace egret.web {
         }
 
         private containerFps;
-        private fpsHeight:number = 0;
+        private fpsHeight: number = 0;
         private divDatas;
         private divDraw;
         private divCost;
@@ -158,14 +158,14 @@ namespace egret.web {
             this.container.appendChild(log);
         }
 
-        private arrFps:number[] = [];
-        private arrCost:number[][] = [];
+        private arrFps: number[] = [];
+        private arrCost: number[][] = [];
         private lastNumDraw;
 
-        public update(datas:FPSData, showLastData = false) {
-            let numFps:number;
-            let numCostTicker:number;
-            let numCostRender:number;
+        public update(datas: FPSData, showLastData = false) {
+            let numFps: number;
+            let numCostTicker: number;
+            let numCostRender: number;
             if (!showLastData) {
                 numFps = datas.fps;
                 numCostTicker = datas.costTicker;
@@ -202,7 +202,7 @@ namespace egret.web {
             context.fillStyle = this.bgCanvasColor;
             context.fillRect(WIDTH - 1, 0, 1, HEIGHT);
             let lastHeight = Math.floor(numFps / 60 * 20);
-            if (lastHeight < 1)lastHeight = 1;
+            if (lastHeight < 1) lastHeight = 1;
             context.fillStyle = this.fpsFrontColor;
             context.fillRect(WIDTH - 1, 20 - lastHeight, 1, lastHeight);
 
@@ -211,11 +211,11 @@ namespace egret.web {
             context.drawImage(this.canvasCost, 1, 0, WIDTH_COST - 1, HEIGHT, 0, 0, WIDTH_COST - 1, HEIGHT);
             context.drawImage(this.canvasCost, WIDTH_COST + 2, 0, WIDTH_COST - 1, HEIGHT, WIDTH_COST + 1, 0, WIDTH_COST - 1, HEIGHT);
             let c1Height = Math.floor(numCostTicker / 2);
-            if (c1Height < 1)c1Height = 1;
+            if (c1Height < 1) c1Height = 1;
             else if (c1Height > 20) c1Height = 20;
             //todo lcj
             let c2Height = Math.floor(numCostRender / 2);
-            if (c2Height < 1)c2Height = 1;
+            if (c2Height < 1) c2Height = 1;
             else if (c2Height > 20) c2Height = 20;
             context.fillStyle = this.bgCanvasColor;
             context.fillRect(WIDTH_COST - 1, 0, 1, HEIGHT);
@@ -236,10 +236,24 @@ namespace egret.web {
             this.fps.innerHTML = fpsOutput;
         };
 
-        private arrLog:string[] = [];
-        public updateInfo(info:string) {
+        private arrLog: string[] = [];
+        public updateInfo(info: string) {
             this.arrLog.push(info);
-            this.log.innerHTML = this.arrLog.join('<br/>')
+            this.updateLogLayout();
+        }
+
+        public updateWarn(info: string) {
+            this.arrLog.push("[Warning]" + info);
+            this.updateLogLayout();
+        }
+
+        public updateError(info: string) {
+            this.arrLog.push("[Error]" + info);
+            this.updateLogLayout();
+        }
+
+        private updateLogLayout(): void {
+            this.log.innerHTML = this.arrLog.join('<br/>');
             while (document.body.clientHeight < (this.log.offsetHeight + this.fpsHeight + this.panelY + this.fontSize * 2)) {
                 this.arrLog.shift();
                 this.log.innerHTML = this.arrLog.join('<br/>');

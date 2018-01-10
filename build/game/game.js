@@ -4415,7 +4415,7 @@ var egret;
  * @private
  */
 egret["testDeviceType1"] = function () {
-    if (!this["navigator"]) {
+    if (!__global["navigator"]) {
         return true;
     }
     var ua = navigator.userAgent.toLowerCase();
@@ -4425,7 +4425,7 @@ egret["testDeviceType1"] = function () {
  * @private
  */
 egret["testRuntimeType1"] = function () {
-    if (this["navigator"]) {
+    if (__global["navigator"]) {
         return true;
     }
     return false;

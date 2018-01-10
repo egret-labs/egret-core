@@ -614,6 +614,8 @@ namespace egret {
             let lineHeights: number[] = [];
             this.$lineHeights = lineHeights;
             if (!values[sys.BitmapTextKeys.text] || !values[sys.BitmapTextKeys.font]) {
+                values[sys.BitmapTextKeys.textWidth] = 0;
+                values[sys.BitmapTextKeys.textHeight] = 0;
                 return textLines;
             }
             let lineSpacing = values[egret.sys.BitmapTextKeys.lineSpacing]
