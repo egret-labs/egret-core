@@ -37,101 +37,93 @@ namespace egret.wxapp {
         /**
          * @private
          */
-        public constructor(stage:egret.Stage, canvas:HTMLCanvasElement) {
+        public constructor(stage: egret.Stage, canvas: HTMLCanvasElement) {
             super();
             this.canvas = canvas;
             this.touch = new egret.sys.TouchHandler(stage);
-            this.addListeners();
+            this.addTouchListener();
         }
 
         /**
          * @private
          */
-        private canvas:HTMLCanvasElement;
+        private canvas: HTMLCanvasElement;
         /**
          * @private
          */
-        private touch:egret.sys.TouchHandler;
+        private touch: egret.sys.TouchHandler;
 
         /**
          * @private
-         * 添加事件监听
+         * 
          */
-        private addListeners():void {
-            if (window.navigator.msPointerEnabled) {
-                this.canvas.addEventListener("MSPointerDown", (event:any)=> {
-                    event.identifier = event.pointerId;
-                    this.onTouchBegin(event);
-                    this.prevent(event);
-                }, false);
-                this.canvas.addEventListener("MSPointerMove", (event:any)=> {
-                    event.identifier = event.pointerId;
-                    this.onTouchMove(event);
-                    this.prevent(event);
-                }, false);
-                this.canvas.addEventListener("MSPointerUp", (event:any)=> {
-                    event.identifier = event.pointerId;
-                    this.onTouchEnd(event);
-                    this.prevent(event);
-                }, false);
+        private addTouchListener(): void {
+            let self = this;
+            if (wxgame.isSubContext) {
+                wx.onTouchStart((event) => {
+                    var l = event.changedTouches.length;
+                    for (var i = 0; i < l; i++) {
+                        self.onTouchBegin(event.changedTouches[i]);
+                    }
+                });
+
+                wx.onTouchMove((event) => {
+                    var l = event.changedTouches.length;
+                    for (var i = 0; i < l; i++) {
+                        self.onTouchMove(event.changedTouches[i]);
+                    }
+                });
+
+                wx.onTouchEnd((event) => {
+                    var l = event.changedTouches.length;
+                    for (var i = 0; i < l; i++) {
+                        self.onTouchEnd(event.changedTouches[i]);
+                    }
+                });
+
+                wx.onTouchCancel((event) => {
+                    var l = event.changedTouches.length;
+                    for (var i = 0; i < l; i++) {
+                        self.onTouchEnd(event.changedTouches[i]);
+                    }
+                });
             }
             else {
-                if (!Capabilities.$isMobile) {
-                    this.addMouseListener();
-                }
-                this.addTouchListener();
+                self.canvas.addEventListener("touchstart", (event: any) => {
+                    let l = event.changedTouches.length;
+                    for (let i: number = 0; i < l; i++) {
+                        self.onTouchBegin(event.changedTouches[i]);
+                    }
+                    self.prevent(event);
+                }, false);
+                self.canvas.addEventListener("touchmove", (event: any) => {
+                    let l = event.changedTouches.length;
+                    for (let i: number = 0; i < l; i++) {
+                        self.onTouchMove(event.changedTouches[i]);
+                    }
+                    self.prevent(event);
+                }, false);
+                self.canvas.addEventListener("touchend", (event: any) => {
+                    let l = event.changedTouches.length;
+                    for (let i: number = 0; i < l; i++) {
+                        self.onTouchEnd(event.changedTouches[i]);
+                    }
+                    self.prevent(event);
+                }, false);
+                self.canvas.addEventListener("touchcancel", (event: any) => {
+                    let l = event.changedTouches.length;
+                    for (let i: number = 0; i < l; i++) {
+                        self.onTouchEnd(event.changedTouches[i]);
+                    }
+                    self.prevent(event);
+                }, false);
             }
         }
 
         /**
          * @private
-         * 
          */
-        private addMouseListener():void {
-            this.canvas.addEventListener("mousedown", this.onTouchBegin);
-            this.canvas.addEventListener("mousemove", this.onTouchMove);
-            this.canvas.addEventListener("mouseup", this.onTouchEnd);
-        }
-
-        /**
-         * @private
-         * 
-         */
-        private addTouchListener():void {
-            this.canvas.addEventListener("touchstart", (event:any)=> {
-                let l = event.changedTouches.length;
-                for (let i:number = 0; i < l; i++) {
-                    this.onTouchBegin(event.changedTouches[i]);
-                }
-                this.prevent(event);
-            }, false);
-            this.canvas.addEventListener("touchmove", (event:any)=> {
-                let l = event.changedTouches.length;
-                for (let i:number = 0; i < l; i++) {
-                    this.onTouchMove(event.changedTouches[i]);
-                }
-                this.prevent(event);
-            }, false);
-            this.canvas.addEventListener("touchend", (event:any)=> {
-                let l = event.changedTouches.length;
-                for (let i:number = 0; i < l; i++) {
-                    this.onTouchEnd(event.changedTouches[i]);
-                }
-                this.prevent(event);
-            }, false);
-            this.canvas.addEventListener("touchcancel", (event:any)=> {
-                let l = event.changedTouches.length;
-                for (let i:number = 0; i < l; i++) {
-                    this.onTouchEnd(event.changedTouches[i]);
-                }
-                this.prevent(event);
-            }, false);
-        }
-
-        /**
-         * @private
-         */
-        private prevent(event):void {
+        private prevent(event): void {
             event.stopPropagation();
             if (event["isScroll"] != true && !this.canvas['userTyping']) {
                 event.preventDefault();
@@ -141,7 +133,7 @@ namespace egret.wxapp {
         /**
          * @private
          */
-        private onTouchBegin = (event:any):void => {
+        private onTouchBegin = (event: any): void => {
             let location = this.getLocation(event);
             this.touch.onTouchBegin(location.x, location.y, event.identifier);
         }
@@ -149,7 +141,7 @@ namespace egret.wxapp {
         /**
          * @private
          */
-        private onTouchMove = (event:any):void => {
+        private onTouchMove = (event: any): void => {
             let location = this.getLocation(event);
             this.touch.onTouchMove(location.x, location.y, event.identifier);
 
@@ -158,7 +150,7 @@ namespace egret.wxapp {
         /**
          * @private
          */
-        private onTouchEnd = (event:any):void => {
+        private onTouchEnd = (event: any): void => {
             let location = this.getLocation(event);
             this.touch.onTouchEnd(location.x, location.y, event.identifier);
         }
@@ -166,16 +158,16 @@ namespace egret.wxapp {
         /**
          * @private
          */
-        private getLocation(event:any):Point {
-         //   event.identifier = +event.identifier || 0;        wxapp 内核该属性只读
+        private getLocation(event: any): Point {
+            //   event.identifier = +event.identifier || 0;        wxapp 内核该属性只读
             let doc = document.documentElement;
             let box = this.canvas.getBoundingClientRect();
-            let left = box.left 
-            //+ window.pageXOffset - doc.clientLeft              wxapp 不存在
-            ;
-            let top = box.top 
-            //+ window.pageYOffset - doc.clientTop                wxapp 不存在
-            ;
+            let left = box.left
+                //+ window.pageXOffset - doc.clientLeft              wxapp 不存在
+                ;
+            let top = box.top
+                //+ window.pageYOffset - doc.clientTop                wxapp 不存在
+                ;
             let x = event.pageX - left, newx = x;
             let y = event.pageY - top, newy = y;
             if (this.rotation == 90) {
@@ -194,15 +186,15 @@ namespace egret.wxapp {
         /**
          * @private
          */
-        private scaleX:number = 1;
+        private scaleX: number = 1;
         /**
          * @private
          */
-        private scaleY:number = 1;
+        private scaleY: number = 1;
         /**
          * @private
          */
-        private rotation:number = 0;
+        private rotation: number = 0;
 
         /**
          * @private
@@ -210,7 +202,7 @@ namespace egret.wxapp {
          * @param scaleX 水平方向的缩放比例。
          * @param scaleY 垂直方向的缩放比例。
          */
-        public updateScaleMode(scaleX:number, scaleY:number, rotation:number):void {
+        public updateScaleMode(scaleX: number, scaleY: number, rotation: number): void {
             this.scaleX = scaleX;
             this.scaleY = scaleY;
             this.rotation = rotation;
@@ -220,7 +212,7 @@ namespace egret.wxapp {
          * @private
          * 更新同时触摸点的数量
          */
-        public $updateMaxTouches():void {
+        public $updateMaxTouches(): void {
             this.touch.$initMaxTouches();
         }
     }

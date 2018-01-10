@@ -32,9 +32,9 @@ namespace egret.wxapp {
     /**
      * 创建一个canvas。
      */
-    function createCanvas(width?:number, height?:number):HTMLCanvasElement {
+    function createCanvas(width?: number, height?: number): HTMLCanvasElement {
 
-        let canvas:HTMLCanvasElement = document.createElement("canvas");
+        let canvas: HTMLCanvasElement = document.createElement("canvas");
 
         if (!isNaN(width) && !isNaN(height)) {
             canvas.width = width;
@@ -43,7 +43,7 @@ namespace egret.wxapp {
         let context = canvas.getContext("2d");
         if (context["imageSmoothingEnabled"] === undefined) {
             let keys = ["webkitImageSmoothingEnabled", "mozImageSmoothingEnabled", "msImageSmoothingEnabled"];
-            let key:string;
+            let key: string;
             for (let i = keys.length - 1; i >= 0; i--) {
                 key = keys[i];
                 if (context[key] !== void 0) {
@@ -67,7 +67,7 @@ namespace egret.wxapp {
         return canvas;
     }
 
-    let sharedCanvas:HTMLCanvasElement;
+    let sharedCanvas: HTMLCanvasElement;
 
     /**
      * @private
@@ -75,9 +75,14 @@ namespace egret.wxapp {
      */
     export class CanvasRenderBuffer implements sys.RenderBuffer {
 
-        public constructor(width?:number, height?:number, root?:boolean) {
-            if(root) {
-                this.surface = window["canvas"];
+        public constructor(width?: number, height?: number, root?: boolean) {
+            if (root) {
+                if (wxgame.isSubContext) {
+                    this.surface = window["sharedCanvas"];
+                }
+                else {
+                    this.surface = window["canvas"];
+                }
             }
             else {
                 this.surface = createCanvas(width, height);
@@ -92,17 +97,17 @@ namespace egret.wxapp {
         /**
          * 渲染上下文
          */
-        public context:CanvasRenderingContext2D;
+        public context: CanvasRenderingContext2D;
         /**
          * 呈现最终绘图结果的画布
          */
-        public surface:HTMLCanvasElement;
+        public surface: HTMLCanvasElement;
 
         /**
          * 渲染缓冲的宽度，以像素为单位。
          * @readOnly
          */
-        public get width():number {
+        public get width(): number {
             return this.surface.width;
         }
 
@@ -110,7 +115,7 @@ namespace egret.wxapp {
          * 渲染缓冲的高度，以像素为单位。
          * @readOnly
          */
-        public get height():number {
+        public get height(): number {
             return this.surface.height;
         }
 
@@ -120,8 +125,11 @@ namespace egret.wxapp {
          * @param height 改变后的高
          * @param useMaxSize 若传入true，则将改变后的尺寸与已有尺寸对比，保留较大的尺寸。
          */
-        public resize(width:number, height:number, useMaxSize?:boolean):void {
+        public resize(width: number, height: number, useMaxSize?: boolean): void {
             let surface = this.surface;
+            if(surface == window["sharedCanvas"]) {
+                return;
+            }
             if (useMaxSize) {
                 let change = false;
                 if (surface.width < width) {
@@ -133,7 +141,7 @@ namespace egret.wxapp {
                     change = true;
                 }
                 //尺寸没有变化时,将绘制属性重置
-                if(!change) {
+                if (!change) {
                     this.context.globalCompositeOperation = "source-over";
                     this.context.setTransform(1, 0, 0, 1, 0, 0);
                     this.context.globalAlpha = 1;
@@ -153,7 +161,7 @@ namespace egret.wxapp {
         /**
          * 获取指定区域的像素
          */
-        public getPixels(x:number, y:number, width:number = 1, height:number = 1):number[] {
+        public getPixels(x: number, y: number, width: number = 1, height: number = 1): number[] {
             return <number[]><any>this.context.getImageData(x, y, width, height).data;
         }
 
@@ -161,14 +169,14 @@ namespace egret.wxapp {
          * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null
          * @param type 转换的类型，如: "image/png","image/jpeg"
          */
-        public toDataURL(type?:string, encoderOptions?:number):string {
+        public toDataURL(type?: string, encoderOptions?: number): string {
             return this.surface.toDataURL(type, encoderOptions);
         }
 
         /**
          * 清空缓冲区数据
          */
-        public clear():void {
+        public clear(): void {
             this.context.setTransform(1, 0, 0, 1, 0, 0);
             this.context.clearRect(0, 0, this.surface.width, this.surface.height);
         }
@@ -176,7 +184,7 @@ namespace egret.wxapp {
         /**
          * 销毁绘制对象
          */
-        public destroy():void {
+        public destroy(): void {
             this.surface.width = this.surface.height = 0;
         }
     }

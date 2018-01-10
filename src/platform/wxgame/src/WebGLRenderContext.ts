@@ -230,17 +230,29 @@ namespace egret.wxapp {
             if (useMaxSize) {
                 if (surface.width < width) {
                     surface.width = width;
+                    if(wxgame.isSubContext && window["sharedCanvas"]) {
+                        window["sharedCanvas"].width = width;
+                    }
                 }
                 if (surface.height < height) {
                     surface.height = height;
+                    if(wxgame.isSubContext && window["sharedCanvas"]) {
+                        window["sharedCanvas"].height = height;
+                    }
                 }
             }
             else {
                 if (surface.width != width) {
                     surface.width = width;
+                    if(wxgame.isSubContext && window["sharedCanvas"]) {
+                        window["sharedCanvas"].width = width;
+                    }
                 }
                 if (surface.height != height) {
                     surface.height = height;
+                    if(wxgame.isSubContext && window["sharedCanvas"]) {
+                        window["sharedCanvas"].height = height;
+                    }
                 }
             }
 
