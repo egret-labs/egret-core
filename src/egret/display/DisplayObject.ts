@@ -579,11 +579,11 @@ namespace egret {
             self.$scaleX = value;
             self.$matrixDirty = true;
 
+            self.$updateUseTransform();
             if (egret.nativeRender) {
                 self.$nativeDisplayObject.setScaleX(value);
             }
             else {
-                self.$updateUseTransform();
                 let p = self.$parent;
                 if (p && !p.$cacheDirty) {
                     p.$cacheDirty = true;
@@ -640,11 +640,11 @@ namespace egret {
             self.$scaleY = value;
             self.$matrixDirty = true;
 
+            self.$updateUseTransform();
             if (egret.nativeRender) {
                 self.$nativeDisplayObject.setScaleY(value);
             }
             else {
-                self.$updateUseTransform();
                 let p = self.$parent;
                 if (p && !p.$cacheDirty) {
                     p.$cacheDirty = true;
@@ -707,11 +707,11 @@ namespace egret {
             self.$rotation = value;
             self.$matrixDirty = true;
 
+            self.$updateUseTransform();
             if (egret.nativeRender) {
                 self.$nativeDisplayObject.setRotation(value);
             }
             else {
-                self.$updateUseTransform();
                 let p = self.$parent;
                 if (p && !p.$cacheDirty) {
                     p.$cacheDirty = true;
@@ -761,11 +761,11 @@ namespace egret {
             self.$skewX = value;
             self.$matrixDirty = true;
 
+            self.$updateUseTransform();
             if (egret.nativeRender) {
                 self.$nativeDisplayObject.setSkewX(self.$skewXdeg);
             }
             else {
-                self.$updateUseTransform();
                 let p = self.$parent;
                 if (p && !p.$cacheDirty) {
                     p.$cacheDirty = true;
@@ -815,11 +815,11 @@ namespace egret {
             self.$skewY = value;
             self.$matrixDirty = true;
 
+            self.$updateUseTransform();
             if (egret.nativeRender) {
                 self.$nativeDisplayObject.setSkewY(self.$skewYdeg);
             }
             else {
-                self.$updateUseTransform();
                 let p = self.$parent;
                 if (p && !p.$cacheDirty) {
                     p.$cacheDirty = true;
@@ -969,7 +969,7 @@ namespace egret {
         $setAnchorOffsetX(value: number): void {
             let self = this;
             self.$anchorOffsetX = value;
-            if(egret.nativeRender) {
+            if (egret.nativeRender) {
                 self.$nativeDisplayObject.setAnchorOffsetX(value);
             }
         }
@@ -1007,7 +1007,7 @@ namespace egret {
         $setAnchorOffsetY(value: number): void {
             let self = this;
             self.$anchorOffsetY = value;
-            if(egret.nativeRender) {
+            if (egret.nativeRender) {
                 self.$nativeDisplayObject.setAnchorOffsetY(value);
             }
         }
