@@ -403,8 +403,8 @@
       },
       {
         "name": "facebook-instant-demo",
-        "displayName": "Facebook Instant Game Demo 项目",
-        "displayName_en": "Facebook Instant Game Demo project",
+        "displayName": "Facebook Instant Game 项目",
+        "displayName_en": "Facebook Instant Game project",
         "language": "TypeScript",
         "tag": "game,app,TypeScript",
         "description": "Facebook 推出的一种游戏类型",
