@@ -79,8 +79,8 @@ namespace egret.web {
             this.context = WebGLRenderContext.getInstance(width, height);
 
             if (egret.nativeRender) {
-                this.$width = width;
-                this.$height = height;
+                this.$width = width || 1 ;
+                this.$height = height || 1;
                 this.surface = this.context.surface;
                 this.rootRenderTarget = null;
                 if (root) {

@@ -30167,8 +30167,8 @@ var egret;
                 // 获取webglRenderContext
                 _this.context = web.WebGLRenderContext.getInstance(width, height);
                 if (egret.nativeRender) {
-                    _this.$width = width;
-                    _this.$height = height;
+                    _this.$width = width || 1;
+                    _this.$height = height || 1;
                     _this.surface = _this.context.surface;
                     _this.rootRenderTarget = null;
                     if (root) {
