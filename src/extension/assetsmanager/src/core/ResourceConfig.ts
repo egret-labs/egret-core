@@ -91,6 +91,8 @@ module RES {
 
         scale9grid?: string;
 
+        groupName?: string;
+
         /**
          * 是否被资源管理器进行管理，默认值为 false
          */
