@@ -412,7 +412,7 @@ var RES;
             this.dispatcherDic = {};
             this.failedList = new Array();
             this.loadingCount = 0;
-            this.thread = 2;
+            this.thread = 4;
             this.queueIndex = 0;
         }
         ResourceLoader.prototype.load = function (list, groupName, priority, reporter) {

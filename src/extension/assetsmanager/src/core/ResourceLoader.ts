@@ -91,7 +91,7 @@ module RES {
 		}
 
 		private loadingCount: number = 0;
-		public thread: number = 2;
+		public thread: number = 4;
 
 		private next(): void {
 			while (this.loadingCount < this.thread) {
