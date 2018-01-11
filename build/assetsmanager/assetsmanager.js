@@ -445,7 +445,6 @@ var RES;
                 if (!r)
                     return "break";
                 this_1.loadingCount++;
-                console.log("load " + r.name);
                 this_1.loadResource(r)
                     .then(function (response) {
                     _this.loadingCount--;

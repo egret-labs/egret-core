@@ -99,7 +99,6 @@ module RES {
 				if (!r) 
 					break;
 				this.loadingCount++;
-				console.log("load " + r.name);
 				this.loadResource(r)
 					.then(response => {
 						this.loadingCount--;
