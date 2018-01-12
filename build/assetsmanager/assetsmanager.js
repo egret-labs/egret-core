@@ -836,6 +836,9 @@ var RES;
             });
         }
         function getURL(resource) {
+            if (resource.url.indexOf("://") != -1) {
+                return resource.url;
+            }
             var prefix = resource.extra ? "" : RES.resourceRoot;
             var url = prefix + resource.url;
             if (RES['getRealURL']) {
@@ -846,6 +849,9 @@ var RES;
             }
         }
         function getRelativePath(url, file) {
+            if (file.indexOf("://") != -1) {
+                return file;
+            }
             url = url.split("\\").join("/");
             var params = url.match(/#.*|\?.*/);
             var paramUrl = "";
