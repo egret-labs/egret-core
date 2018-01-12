@@ -23,6 +23,154 @@
           {
             "path": "../Defines.release.ts",
             "debug": false
+          },
+          {
+            "path": "web/WebBitmapData.ts",
+            "platform": "web"
+          },
+          {
+            "path": "external/web/WebExternalInterface.ts",
+            "platform": "web"
+          },
+          {
+            "path": "localStorage/web/WebLocalStorage.ts",
+            "platform": "web"
+          },
+          {
+            "path": "media/web/HtmlSound.ts",
+            "platform": "web"
+          },
+          {
+            "path": "media/web/HtmlSoundChannel.ts",
+            "platform": "web"
+          },
+          {
+            "path": "media/web/WebAudioSound.ts",
+            "platform": "web"
+          },
+          {
+            "path": "media/web/WebAudioSoundChannel.ts",
+            "platform": "web"
+          },
+          {
+            "path": "media/web/WebVideo.ts",
+            "platform": "web"
+          },
+          {
+            "path": "net/web/WebHttpRequest.ts",
+            "platform": "web"
+          },
+          {
+            "path": "net/web/WebImageLoader.ts",
+            "platform": "web"
+          },
+          {
+            "path": "text/web/HTML5StageText.ts",
+            "platform": "web"
+          },
+          {
+            "path": "text/web/WebTextMeasurer.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/CanvasRenderBuffer.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/WebTouchHandler.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/WebHideHandler.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/Html5Capatibility.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/EgretWeb.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/WebCapability.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/WebFps.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/WebGetOption.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/WebPlayer.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/WebTexture.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/WebXML.ts",
+            "platform": "web"
+          },
+          {
+            "path": "sensor/web/WebDeviceOrientation.ts",
+            "platform": "web"
+          },
+          {
+            "path": "sensor/web/WebGeolocation.ts",
+            "platform": "web"
+          },
+          {
+            "path": "sensor/web/WebMotion.ts",
+            "platform": "web"
+          },
+          {
+            "path": "utils/web/WebLogger.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/WebGLDrawCmdManager.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/WebGLVertexArrayObject.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/WebGLRenderTarget.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/WebGLRenderContext.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/WebGLRenderBuffer.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/WebGLRenderer.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/EgretWebGLAttribute.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/EgretWebGLProgram.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/EgretWebGLUniform.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/shaders/EgretShaderLib.ts",
+            "platform": "web"
           }
         ],
         "root": "src/egret",
@@ -40,21 +188,11 @@
       },
       {
         "name": "assetsmanager",
-        "description": "资源管理器（新）",
+        "description": "assetsmanager 资源管理器",
         "description_en": "AssetsManager",
         "files": [],
         "root": "",
         "dependencies": []
-      },
-      {
-        "name": "res",
-        "description": "res 资源加载库（不推荐使用）",
-        "description_en": "resource lib",
-        "files": [],
-        "root": "src/extension/resource",
-        "dependencies": [
-          "egret"
-        ]
       },
       {
         "name": "dragonBones",
@@ -157,8 +295,8 @@
       },
       {
         "name": "facebook-instant-demo",
-        "displayName": "Facebook Instant Game Demo 项目",
-        "displayName_en": "Facebook Instant Game Demo project",
+        "displayName": "Facebook Instant Game 项目",
+        "displayName_en": "Facebook Instant Game project",
         "language": "TypeScript",
         "tag": "game,app,TypeScript",
         "description": "Facebook 推出的一种游戏类型",

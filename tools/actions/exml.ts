@@ -102,22 +102,40 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
 
         if (exmlPublishPolicy == "commonjs") {
             let content = `
-            function __extends(d, b) {
-                for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-                function __() {
-                    this.constructor = d;
-                }
-                __.prototype = b.prototype;
-                d.prototype = new __();
-             };
-             `;
-            content += `window.skins = {};window.generateEUI = {};
-            generateEUI.paths = {};
-            generateEUI.skins = ${JSON.stringify(thmData.skins)}
+function __extends(d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+        function __() {
+            this.constructor = d;
+        }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
 `;
+            content += `window.generateEUI = {};
+generateEUI.paths = {};
+generateEUI.skins = ${JSON.stringify(thmData.skins)}
+`;
+
+
+            let namespaces = [];
+
             for (let item of thmData.exmls) {
+                // skins.items = {};
+                //skins.items.EUIComponent
+                //items.EUIComponent;
+                let packages: string[] = item.className.split(".")
+                let temp = '';
+                for (let i = 0; i < packages.length - 1; i++) {
+                    temp = i == 0 ? packages[i] : temp + "." + packages[i];
+                    if (namespaces.indexOf(temp) == -1) {
+                        namespaces.push(temp);
+                    }
+                }
+
                 content += `generateEUI.paths['${item.path}'] = window.${item.className} = ${item.gjs}`;
             }
+            let result = namespaces.map(v => `window.${v}={};`).join("\n");
+            content = result + content;
             path = path.replace("thm.json", "thm.js");
             return { path, content }
         }
@@ -177,32 +195,32 @@ export function generateExmlDTS(exmls: exml.EXMLFile[]) {
     var dts = "";
     for (let source of sourceList) {
         //解析exml并返回className和extendName继承关系
-        var ret = exml.getDtsInfoFromExml(source);
+        var result = exml.getDtsInfoFromExml(source);
         //去掉重复定义
-        if (classDefinations[ret.className]) {
+        if (classDefinations[result.className]) {
             continue;
         } else {
-            classDefinations[ret.className] = ret.extendName;
+            classDefinations[result.className] = result.extendName;
         }
         //var className = p.substring(srcPath.length, p.length - 5);
-        var className = ret.className;
+        var className = result.className;
         //className = className.split("/").join(".");
         if (className != "eui.Skin") {
             var index = className.lastIndexOf(".");
             if (index == -1) {
-                if (ret.extendName == "") {
+                if (result.extendName == "") {
                     dts += "declare class " + className + "{\n}\n";
                 } else {
-                    dts += "declare class " + className + " extends " + ret.extendName + "{\n}\n";
+                    dts += "declare class " + className + " extends " + result.extendName + "{\n}\n";
                 }
             }
             else {
                 var moduleName = className.substring(0, index);
                 className = className.substring(index + 1);
-                if (ret.extendName == "") {
+                if (result.extendName == "") {
                     dts += "declare module " + moduleName + "{\n\tclass " + className + "{\n\t}\n}\n";
                 } else {
-                    dts += "declare module " + moduleName + "{\n\tclass " + className + " extends " + ret.extendName + "{\n\t}\n}\n";
+                    dts += "declare module " + moduleName + "{\n\tclass " + className + " extends " + result.extendName + "{\n\t}\n}\n";
                 }
             }
         }

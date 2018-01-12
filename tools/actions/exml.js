@@ -86,12 +86,26 @@ function publishEXML(exmls, exmlPublishPolicy) {
     var files = themeDatas.map(function (thmData) {
         var path = thmData.path;
         if (exmlPublishPolicy == "commonjs") {
-            var content = "\n            function __extends(d, b) {\n                for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];\n                function __() {\n                    this.constructor = d;\n                }\n                __.prototype = b.prototype;\n                d.prototype = new __();\n             };\n             ";
-            content += "window.skins = {};window.generateEUI = {};\n            generateEUI.paths = {};\n            generateEUI.skins = " + JSON.stringify(thmData.skins) + "\n";
+            var content = "\nfunction __extends(d, b) {\n    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];\n        function __() {\n            this.constructor = d;\n        }\n    __.prototype = b.prototype;\n    d.prototype = new __();\n};\n";
+            content += "window.generateEUI = {};\ngenerateEUI.paths = {};\ngenerateEUI.skins = " + JSON.stringify(thmData.skins) + "\n";
+            var namespaces = [];
             for (var _i = 0, _a = thmData.exmls; _i < _a.length; _i++) {
                 var item = _a[_i];
+                // skins.items = {};
+                //skins.items.EUIComponent
+                //items.EUIComponent;
+                var packages = item.className.split(".");
+                var temp = '';
+                for (var i = 0; i < packages.length - 1; i++) {
+                    temp = i == 0 ? packages[i] : temp + "." + packages[i];
+                    if (namespaces.indexOf(temp) == -1) {
+                        namespaces.push(temp);
+                    }
+                }
                 content += "generateEUI.paths['" + item.path + "'] = window." + item.className + " = " + item.gjs;
             }
+            var result = namespaces.map(function (v) { return "window." + v + "={};"; }).join("\n");
+            content = result + content;
             path = path.replace("thm.json", "thm.js");
             return { path: path, content: content };
         }
@@ -132,35 +146,35 @@ function generateExmlDTS(exmls) {
     for (var _i = 0, sourceList_1 = sourceList; _i < sourceList_1.length; _i++) {
         var source = sourceList_1[_i];
         //解析exml并返回className和extendName继承关系
-        var ret = exml.getDtsInfoFromExml(source);
+        var result = exml.getDtsInfoFromExml(source);
         //去掉重复定义
-        if (classDefinations[ret.className]) {
+        if (classDefinations[result.className]) {
             continue;
         }
         else {
-            classDefinations[ret.className] = ret.extendName;
+            classDefinations[result.className] = result.extendName;
         }
         //var className = p.substring(srcPath.length, p.length - 5);
-        var className = ret.className;
+        var className = result.className;
         //className = className.split("/").join(".");
         if (className != "eui.Skin") {
             var index = className.lastIndexOf(".");
             if (index == -1) {
-                if (ret.extendName == "") {
+                if (result.extendName == "") {
                     dts += "declare class " + className + "{\n}\n";
                 }
                 else {
-                    dts += "declare class " + className + " extends " + ret.extendName + "{\n}\n";
+                    dts += "declare class " + className + " extends " + result.extendName + "{\n}\n";
                 }
             }
             else {
                 var moduleName = className.substring(0, index);
                 className = className.substring(index + 1);
-                if (ret.extendName == "") {
+                if (result.extendName == "") {
                     dts += "declare module " + moduleName + "{\n\tclass " + className + "{\n\t}\n}\n";
                 }
                 else {
-                    dts += "declare module " + moduleName + "{\n\tclass " + className + " extends " + ret.extendName + "{\n\t}\n}\n";
+                    dts += "declare module " + moduleName + "{\n\tclass " + className + " extends " + result.extendName + "{\n\t}\n}\n";
                 }
             }
         }

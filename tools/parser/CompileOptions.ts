@@ -92,7 +92,7 @@ class CompileOptions implements egret.ToolArgs {
     added: string[];
     removed: string[];
     modified: string[];
-    target: egret.target.Type = "web";
+    target: egret.target.Type = "none";
     experimental: boolean;
     version: string;
     compile: boolean;

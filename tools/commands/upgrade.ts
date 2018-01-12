@@ -47,6 +47,7 @@ class UpgradeCommand implements egret.Command {
 
         let upgradeConfigArr: VersionInfo[] = [
             { "v": "5.1.1", command: Upgrade_5_1_1 },
+            { "v": "5.1.2", command: Upgrade_5_1_2 },
         ];
 
         try {
@@ -137,5 +138,11 @@ class Upgrade_5_1_1 {
     }
 }
 
+class Upgrade_5_1_2 {
 
+    async execute() {
+        console.log("【警告】: 如果您尝试发布到微信小游戏，建议您创建一个新项目，而不是使用 egret upgrade 命令")
+        return 0;
+    }
+}
 export = UpgradeCommand;

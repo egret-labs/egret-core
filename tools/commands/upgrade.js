@@ -67,6 +67,7 @@ var UpgradeCommand = (function () {
                         }
                         upgradeConfigArr = [
                             { "v": "5.1.1", command: Upgrade_5_1_1 },
+                            { "v": "5.1.2", command: Upgrade_5_1_2 },
                         ];
                         _a.label = 1;
                     case 1:
@@ -159,5 +160,18 @@ var Upgrade_5_1_1 = (function () {
         });
     };
     return Upgrade_5_1_1;
+}());
+var Upgrade_5_1_2 = (function () {
+    function Upgrade_5_1_2() {
+    }
+    Upgrade_5_1_2.prototype.execute = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                console.log("【警告】: 如果您尝试发布到微信小游戏，建议您创建一个新项目，而不是使用 egret upgrade 命令");
+                return [2 /*return*/, 0];
+            });
+        });
+    };
+    return Upgrade_5_1_2;
 }());
 module.exports = UpgradeCommand;

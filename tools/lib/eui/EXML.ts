@@ -222,8 +222,11 @@ function getClassNameById(id: string, ns: string): string {
     if (ns == NS_W) {
 
     }
-    else if (!ns || ns == NS_S) {
-
+    else if (!ns) {
+        name = id;
+    }
+    else if (ns == NS_S) {
+        name = "eui." + id;
     }
     else {
         name = ns.substring(0, ns.length - 1) + id
@@ -249,5 +252,5 @@ export function getDtsInfoFromExml(exmlFile: EXMLFile): { className: string, ext
         extendName = className;
         className = xml["$class"];
     }
-    return { className: className, extendName: extendName };
+    return { className, extendName };
 }

@@ -566,6 +566,8 @@ namespace egret {
             let lineHeights: number[] = [];
             self.$lineHeights = lineHeights;
             if (!self.$text || !self.$font) {
+                self.$textWidth = 0;
+                self.$textHeight = 0;
                 return textLines;
             }
             let lineSpacing = self.$lineSpacing;

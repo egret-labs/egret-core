@@ -1,6 +1,7 @@
 
 import * as path from 'path';
 import * as FileUtil from '../lib/FileUtil';
+import { checkEgret } from '../lib/utils';
 
 type TargetTemplateConfig = {
 
@@ -10,7 +11,7 @@ type TargetTemplateConfig = {
 
     projectType: string;
 
-    args: { name: string, files: string[] }[]
+    args: { name: string, files: string[], default?: string }[]
 }
 
 
@@ -19,19 +20,24 @@ class Target implements egret.Command {
     async execute() {
         const option = egret.args;
         const options = parseCommandLine();
+        checkEgret();
         const projectName = path.basename(option.projectDir);
         const config: TargetTemplateConfig = await getTargetTemplateConfig();
         const projectRoot = path.resolve(option.projectDir, '../', projectName + "_" + config.projectType);
         await FileUtil.copyAsync(config.templatePath, projectRoot);
-        await FileUtil.copyAsync(config.scriptPath, path.join(option.projectDir, 'scripts', config.projectType));
 
         config.args.forEach((arg) => {
             arg.files.forEach((filename) => {
                 const filepath = path.join(projectRoot, filename);
                 let content = FileUtil.read(filepath);
-                const value = options[arg.name]
+                let value = options[arg.name]
                 if (!value) {
-                    throw `需要传递参数:--${arg.name}`
+                    if (arg.default) {
+                        value = arg.default;
+                    }
+                    else {
+                        throw `需要传递参数:--${arg.name}`
+                    }
                 }
                 var reg = new RegExp("{" + arg.name + "}", "gi")
                 content = content.replace(reg, value)

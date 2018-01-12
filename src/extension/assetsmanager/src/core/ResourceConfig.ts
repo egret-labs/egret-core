@@ -89,6 +89,10 @@ module RES {
 
         soundType?: string;
 
+        scale9grid?: string;
+
+        groupName?: string;
+
         /**
          * 是否被资源管理器进行管理，默认值为 false
          */
@@ -136,7 +140,7 @@ module RES {
         init() {
             if (!this.config) {
                 this.config = {
-                    alias: {}, groups: {}, resourceRoot: "resource",
+                    alias: {}, groups: {}, resourceRoot: this.resourceRoot,
                     typeSelector: () => 'unknown', mergeSelector: null,
                     fileSystem: null as any as FileSystem
                 }
@@ -371,7 +375,7 @@ module RES {
          * @param folder {string} 加载项的路径前缀。
          */
         public parseConfig(data: Data): void {
-            resourceRoot = data.resourceRoot + "/";
+            resourceRoot = data.resourceRoot;
             this.config = data;
             fileSystem = data.fileSystem;
 

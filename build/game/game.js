@@ -4394,25 +4394,14 @@ var egret;
  * @private
  */
 egret["testDeviceType1"] = function () {
-    if (!this["navigator"]) {
+    if (!window["navigator"]) {
         return true;
     }
     var ua = navigator.userAgent.toLowerCase();
     return (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
 };
-/**
- * @private
- */
-// egret["testRuntimeType1"] = function () {
-//     if (this["navigator"]) {
-//         return true;
-//     }
-//     return false;
-// };
 egret.MainContext.deviceType = egret["testDeviceType1"]() ? egret.MainContext.DEVICE_MOBILE : egret.MainContext.DEVICE_PC;
-// egret.MainContext._runtimeType = egret["testRuntimeType1"]() ? egret.MainContext.RUNTIME_HTML5 : egret.MainContext.RUNTIME_NATIVE;
 delete egret["testDeviceType1"];
-// delete egret["testRuntimeType1"]; 
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
