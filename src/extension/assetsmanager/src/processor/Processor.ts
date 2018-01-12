@@ -38,6 +38,9 @@ module RES.processor {
     }
 
     function getURL(resource: ResourceInfo) {
+        if (resource.url.indexOf("://") != -1) {
+            return resource.url;
+        }
         let prefix = resource.extra ? "" : resourceRoot;
         let url = prefix + resource.url;
         if (RES['getRealURL']) { //todo: shim native
@@ -50,6 +53,9 @@ module RES.processor {
 
 
     export function getRelativePath(url: string, file: string): string {
+        if (file.indexOf("://") != -1) {
+            return file;
+        }
         url = url.split("\\").join("/");
 
         var params = url.match(/#.*|\?.*/);
