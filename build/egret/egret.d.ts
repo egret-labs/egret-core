@@ -5059,6 +5059,15 @@ declare namespace egret {
 /**
  * @private
  */
+declare namespace egret {
+    /**
+     * @private
+     */
+    let fontMapping: {};
+}
+/**
+ * @private
+ */
 declare namespace egret_native {
     function sendInfoToPlugin(info: string): void;
     function receivedPluginInfo(info: string): void;

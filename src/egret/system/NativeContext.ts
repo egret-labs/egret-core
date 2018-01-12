@@ -29,6 +29,16 @@
 /**
  * @private
  */
+namespace egret {
+    //todo remove
+    /**
+     * @private
+     */
+    export let fontMapping = {};
+}
+/**
+ * @private
+ */
 declare namespace egret_native {
 
     function sendInfoToPlugin(info: string): void;
