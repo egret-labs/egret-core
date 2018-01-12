@@ -229,10 +229,10 @@ namespace egret.wxapp {
                 scaley = displayHeight / stageHeight;
             let canvasScaleX = scalex * sys.DisplayList.$canvasScaleFactor;
             let canvasScaleY = scaley * sys.DisplayList.$canvasScaleFactor;
-            if (egret.Capabilities.$renderMode == "canvas") {
-                canvasScaleX = Math.ceil(canvasScaleX);
-                canvasScaleY = Math.ceil(canvasScaleY);
-            }
+            // if (egret.Capabilities.$renderMode == "canvas") {
+            //     canvasScaleX = Math.ceil(canvasScaleX);
+            //     canvasScaleY = Math.ceil(canvasScaleY);
+            // }
 
             let m = new egret.Matrix();
             m.scale(scalex / canvasScaleX, scaley / canvasScaleY);
