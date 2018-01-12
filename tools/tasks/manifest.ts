@@ -14,10 +14,14 @@ type ManifestPluginOptions = {
 
     output: string,
 
+    verbose?: boolean
+
     hash?: "crc32"
 }
 
 export class ManifestPlugin {
+
+    private verboseInfo: { filename: string, new_file_path: string }[] = [];
 
     constructor(private options: ManifestPluginOptions) {
         if (!this.options) {
@@ -40,18 +44,19 @@ export class ManifestPlugin {
         //     manifest.configURL = new_file_path;
         // }
         if (extname == ".js") {
+            let new_file_path;
+            const basename = path.basename(filename);
             if (this.options.hash == 'crc32') {
                 const crc32 = globals.getCrc32();
                 const crc32_file_path = crc32(file.contents);
-                const basename = path.basename(filename);
-                const new_file_path = "js/" + basename.substr(0, basename.length - file.extname.length) + "_" + crc32_file_path + file.extname;
-                file.path = path.join(file.base, new_file_path);
+                new_file_path = "js/" + basename.substr(0, basename.length - file.extname.length) + "_" + crc32_file_path + file.extname;
+
             }
             else {
-                const basename = path.basename(filename);
-                const new_file_path = "js/" + basename.substr(0, basename.length - file.extname.length) + file.extname;
-                file.path = path.join(file.base, new_file_path);
+                new_file_path = "js/" + basename.substr(0, basename.length - file.extname.length) + file.extname;
+
             }
+            file.path = path.join(file.base, new_file_path);
 
             const relative = file.relative.split("\\").join('/');
 
@@ -62,8 +67,9 @@ export class ManifestPlugin {
                 manifest.game.push(relative);
             }
 
-
-
+            if (this.options.verbose) {
+                this.verboseInfo.push({ filename, new_file_path })
+            }
         }
         return file;
     }
@@ -79,8 +85,12 @@ export class ManifestPlugin {
                 contents = manifest.initial.concat(manifest.game).map((fileName) => `require("${fileName}")`).join("\n")
                 break;
         }
-        // console.log (this.options.output,)
         pluginContext.createFile(this.options.output, new Buffer(contents));
+        if (this.options.verbose) {
+            this.verboseInfo.forEach((item) => {
+                console.log(`manifest-plugin: ${item.filename} => ${item.new_file_path}`)
+            });
+        }
 
 
     }

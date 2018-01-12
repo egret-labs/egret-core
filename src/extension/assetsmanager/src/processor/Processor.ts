@@ -38,6 +38,9 @@ module RES.processor {
     }
 
     function getURL(resource: ResourceInfo) {
+        if (resource.url.indexOf("://") != -1) {
+            return resource.url;
+        }
         let prefix = resource.extra ? "" : resourceRoot;
         let url = prefix + resource.url;
         if (RES['getRealURL']) { //todo: shim native
@@ -50,6 +53,9 @@ module RES.processor {
 
 
     export function getRelativePath(url: string, file: string): string {
+        if (file.indexOf("://") != -1) {
+            return file;
+        }
         url = url.split("\\").join("/");
 
         var params = url.match(/#.*|\?.*/);
@@ -82,11 +88,14 @@ module RES.processor {
             // var texture = cache[resource.url];
             let texture = new egret.Texture();
             texture._setBitmapData(bitmapData);
+            let r = host.resourceConfig.getResource(resource.name);
+            if (r && r.scale9grid) {
+                var list: Array<string> = r.scale9grid.split(",");
+                texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
+            }
             // var config: any = resItem.data;
             // if (config && config["scale9grid"]) {
-            //     var str: string = config["scale9grid"];
-            //     var list: Array<string> = str.split(",");
-            //     texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
+            //     
             // }
             return texture;
         },
@@ -187,15 +196,15 @@ module RES.processor {
 
     }
 
-    export var SheetProcessor: Processor = {
+    export const SheetProcessor: Processor = {
 
         async onLoadStart(host, resource): Promise<any> {
 
             let data = await host.load(resource, JsonProcessor);
-            let imagePath = getRelativePath(resource.name, data.file);
-            let r = host.resourceConfig.getResource(imagePath);
+            let imagePath = "resource/" + getRelativePath(resource.url, data.file);
+            let r = host.resourceConfig.getResource(data.file);
             if (!r) {
-                throw new ResourceManagerError(1001, imagePath);
+                r = { name: imagePath, url: imagePath, extra: true, type: 'image' };
             }
             var texture: egret.Texture = await host.load(r);
             var frames: any = data.frames;
@@ -234,57 +243,57 @@ module RES.processor {
 
     }
 
+    const fontGetTexturePath = (url: string, fntText: string) => {
+        var file = "";
+        var lines = fntText.split("\n");
+        var pngLine = lines[2];
+        var index = pngLine.indexOf("file=\"");
+        if (index != -1) {
+            pngLine = pngLine.substring(index + 6);
+            index = pngLine.indexOf("\"");
+            file = pngLine.substring(0, index);
+        }
+
+        url = url.split("\\").join("/");
+        var index = url.lastIndexOf("/");
+        if (index != -1) {
+            url = url.substring(0, index + 1) + file;
+        }
+        else {
+            url = file;
+        }
+        return url;
+    }
+
+    type FontJsonFormat = { file: string };
 
     export var FontProcessor: Processor = {
 
-
         async onLoadStart(host, resource): Promise<any> {
 
-
-            let getTexturePath = function (url: string, fntText: string): string {
-
-                var file: string = "";
-                var lines = fntText.split("\n");
-                var pngLine = lines[2];
-                var index: number = pngLine.indexOf("file=\"");
-                if (index != -1) {
-                    pngLine = pngLine.substring(index + 6);
-                    index = pngLine.indexOf("\"");
-                    file = pngLine.substring(0, index);
-                }
-
-                url = url.split("\\").join("/");
-                var index: number = url.lastIndexOf("/");
-                if (index != -1) {
-                    url = url.substring(0, index + 1) + file;
-                }
-                else {
-                    url = file;
-                }
-                return url;
-            }
-
-            let data = await host.load(resource, TextProcessor);
-            let imageUrl = "";
-            let config;
+            let data: string = await host.load(resource, TextProcessor);
+            let config: FontJsonFormat | string;
             try {
-                config = JSON.parse(data);
-                imageUrl = resource.name.replace("fnt", "png");
+                config = JSON.parse(data) as FontJsonFormat;
             }
             catch (e) {
-                config = data;
-                // imageUrl = getTexturePath(resource.name, data);
-                imageUrl = resource.name.replace("fnt", "png");;
+                config = data
             }
-            let r = host.resourceConfig.getResource(imageUrl);
-            if (r) {
-                var texture: egret.Texture = await host.load(r);
-                var font = new egret.BitmapFont(texture, config);
-                return font;
+
+            let imageFileName = resource.name.replace("fnt", "png");
+            let r = host.resourceConfig.getResource(imageFileName);
+            if (!r) {
+                if (typeof config === 'string') {
+                    imageFileName = RES.config.resourceRoot + "/" + fontGetTexturePath(resource.url, config)
+                }
+                else {
+                    imageFileName = RES.config.resourceRoot + "/" + getRelativePath(resource.url, config.file);
+                }
+                r = { name: imageFileName, url: imageFileName, extra: true, type: 'image' };
             }
-            else {
-                return null;
-            }
+            var texture: egret.Texture = await host.load(r);
+            var font = new egret.BitmapFont(texture, config);
+            return font;
         },
 
 
@@ -488,7 +497,7 @@ module RES.processor {
                 for (let resource of data.resources) {
                     fsData[resource.name] = resource;
                     if (resource.subkeys) {
-                        resource.subkeys.split(".").forEach(subkey => {
+                        resource.subkeys.split(",").forEach(subkey => {
                             alias[subkey] = resource.name + "#" + subkey;
                         })
                         // ResourceConfig.

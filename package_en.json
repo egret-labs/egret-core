@@ -288,14 +288,12 @@
         "dependencies": []
       },
       {
-        "name": "res",
-        "description": "resource lib",
-        "description_en": "resource lib",
+        "name": "assetsmanager",
+        "description": "assetsmanager 资源管理器",
+        "description_en": "AssetsManager",
         "files": [],
-        "root": "src/extension/resource",
-        "dependencies": [
-          "egret"
-        ]
+        "root": "",
+        "dependencies": []
       },
       {
         "name": "eui",

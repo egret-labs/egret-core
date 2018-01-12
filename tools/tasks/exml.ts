@@ -16,6 +16,7 @@ export class ExmlPlugin implements Plugin {
 
     constructor(public publishPolicy: string) {
 
+
     }
     async onFile(file) {
         const filename = file.origin;
@@ -27,6 +28,9 @@ export class ExmlPlugin implements Plugin {
     }
 
     async onFinish(pluginContext) {
+        if (this.exmls.length == 0) {
+            return;
+        }
 
         if (this.publishPolicy == "debug") {
             const dtsContents = exml.generateExmlDTS(this.exmls);

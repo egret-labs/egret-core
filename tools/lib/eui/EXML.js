@@ -169,7 +169,11 @@ function getClassNameById(id, ns) {
     }
     if (ns == exports.NS_W) {
     }
-    else if (!ns || ns == exports.NS_S) {
+    else if (!ns) {
+        name = id;
+    }
+    else if (ns == exports.NS_S) {
+        name = "eui." + id;
     }
     else {
         name = ns.substring(0, ns.length - 1) + id;

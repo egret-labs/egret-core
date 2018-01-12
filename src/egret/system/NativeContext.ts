@@ -41,6 +41,9 @@ namespace egret {
  */
 declare namespace egret_native {
 
+    function readUpdateFileSync(filePath):any;
+    function readResourceFileSync(filePath):any;
+
     function sendInfoToPlugin(info: string): void;
 
     function receivedPluginInfo(info: string): void;
@@ -70,7 +73,7 @@ declare namespace egret_native {
  * @private
  */
 declare namespace egret_native {
-    let rootWebGLBuffer: egret.web.WebGLRenderBuffer;
+    let rootWebGLBuffer: egret.sys.RenderBuffer;
     let forHitTest: boolean;
     let addModuleCallback: (callback: Function, thisObj: any) => void;
     let initNativeRender: () => void;

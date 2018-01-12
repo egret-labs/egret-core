@@ -25,6 +25,8 @@ export type File = {
 
     path: string;
 
+    options: any;
+
     readonly relative: string;
 
     readonly base: string;
@@ -38,5 +40,5 @@ export type PluginContext = {
     resourceFolder: string,
     buildConfig: { command: "build" | "publish" },
 
-    createFile: (relativePath: string, content: Buffer) => void
+    createFile: (relativePath: string, content: Buffer, options?: any) => void
 }

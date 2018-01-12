@@ -35,6 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var path = require("path");
 var FileUtil = require("../lib/FileUtil");
+var utils_1 = require("../lib/utils");
 var Target = (function () {
     function Target() {
     }
@@ -46,6 +47,7 @@ var Target = (function () {
                     case 0:
                         option = egret.args;
                         options = parseCommandLine();
+                        utils_1.checkEgret();
                         projectName = path.basename(option.projectDir);
                         return [4 /*yield*/, getTargetTemplateConfig()];
                     case 1:
@@ -54,16 +56,18 @@ var Target = (function () {
                         return [4 /*yield*/, FileUtil.copyAsync(config.templatePath, projectRoot)];
                     case 2:
                         _a.sent();
-                        return [4 /*yield*/, FileUtil.copyAsync(config.scriptPath, path.join(option.projectDir, 'scripts', config.projectType))];
-                    case 3:
-                        _a.sent();
                         config.args.forEach(function (arg) {
                             arg.files.forEach(function (filename) {
                                 var filepath = path.join(projectRoot, filename);
                                 var content = FileUtil.read(filepath);
                                 var value = options[arg.name];
                                 if (!value) {
-                                    throw "\u9700\u8981\u4F20\u9012\u53C2\u6570:--" + arg.name;
+                                    if (arg.default) {
+                                        value = arg.default;
+                                    }
+                                    else {
+                                        throw "\u9700\u8981\u4F20\u9012\u53C2\u6570:--" + arg.name;
+                                    }
                                 }
                                 var reg = new RegExp("{" + arg.name + "}", "gi");
                                 content = content.replace(reg, value);

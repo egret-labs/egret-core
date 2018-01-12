@@ -34,18 +34,24 @@ export class EmitResConfigFilePlugin implements Plugin {
         filters.push(options.output);
     }
 
-    private executeFilter(url: string) {
+    private executeFilter(url: string, fileParams?: { type?: string, subkeys?: string[] | string }) {
         const config = this.config;
         const options = this.options;
         if (filters.indexOf(url) >= 0) {
             return null;
         }
+
         let type = options.typeSelector(url);
         if (!type) {
             return null;
         }
         let name = options.nameSelector(url);
         let groupName = options.groupSelector(url);
+
+
+        if (fileParams && fileParams.subkeys && typeof fileParams.subkeys == 'object') {
+            fileParams.subkeys = fileParams.subkeys.map(p => options.nameSelector(p)).join(",");
+        }
 
         if (groupName) {
             if (!config.groups[groupName]) {
@@ -56,13 +62,14 @@ export class EmitResConfigFilePlugin implements Plugin {
                 group.push(name);
             }
         }
-        return { name, url, type }
+        return { name, url, type, ...fileParams }
     }
 
     async  onFile(file: plugin.File): Promise<plugin.File> {
         const filename = file.origin;
         if (filename.indexOf('resource/') >= 0) {
-            let r = this.executeFilter(filename)
+            let r = this.executeFilter(filename, file.options)
+
             if (r) {
                 this.fileSystem.addFile(r, true);
             }
@@ -263,7 +270,7 @@ namespace vfs {
             }
             let d = this.reslove(folder) as (Dictionary | null);
             if (d) {
-                d[basefilename] = { url, type, name };
+                d[basefilename] = { url, type, name, ...r };
             }
         }
 

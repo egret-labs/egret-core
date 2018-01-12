@@ -75,7 +75,7 @@ function onGotBuildCommandResult(cmd, callback) {
     if (cmd.messages) {
         cmd.messages.forEach(function (m) { return console.log(m); });
     }
-    if (!cmd.exitCode && egret.args.platform) {
+    if (!cmd.exitCode) {
         setTimeout(function () { return callback(0); }, 500);
     }
     else

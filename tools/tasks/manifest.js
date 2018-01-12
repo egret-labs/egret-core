@@ -42,13 +42,14 @@ var manifest = {
 var ManifestPlugin = (function () {
     function ManifestPlugin(options) {
         this.options = options;
+        this.verboseInfo = [];
         if (!this.options) {
             this.options = { output: "manifest.json" };
         }
     }
     ManifestPlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
-            var filename, extname, crc32, crc32_file_path, basename, new_file_path, basename, new_file_path, relative;
+            var filename, extname, new_file_path, basename, crc32, crc32_file_path, relative;
             return __generator(this, function (_a) {
                 filename = file.origin;
                 extname = path.extname(filename);
@@ -61,24 +62,26 @@ var ManifestPlugin = (function () {
                 //     manifest.configURL = new_file_path;
                 // }
                 if (extname == ".js") {
+                    new_file_path = void 0;
+                    basename = path.basename(filename);
                     if (this.options.hash == 'crc32') {
                         crc32 = globals.getCrc32();
                         crc32_file_path = crc32(file.contents);
-                        basename = path.basename(filename);
                         new_file_path = "js/" + basename.substr(0, basename.length - file.extname.length) + "_" + crc32_file_path + file.extname;
-                        file.path = path.join(file.base, new_file_path);
                     }
                     else {
-                        basename = path.basename(filename);
                         new_file_path = "js/" + basename.substr(0, basename.length - file.extname.length) + file.extname;
-                        file.path = path.join(file.base, new_file_path);
                     }
+                    file.path = path.join(file.base, new_file_path);
                     relative = file.relative.split("\\").join('/');
                     if (filename.indexOf('libs/') >= 0) {
                         manifest.initial.push(relative);
                     }
                     else {
                         manifest.game.push(relative);
+                    }
+                    if (this.options.verbose) {
+                        this.verboseInfo.push({ filename: filename, new_file_path: new_file_path });
                     }
                 }
                 return [2 /*return*/, file];
@@ -100,8 +103,12 @@ var ManifestPlugin = (function () {
                         contents = manifest.initial.concat(manifest.game).map(function (fileName) { return "require(\"" + fileName + "\")"; }).join("\n");
                         break;
                 }
-                // console.log (this.options.output,)
                 pluginContext.createFile(this.options.output, new Buffer(contents));
+                if (this.options.verbose) {
+                    this.verboseInfo.forEach(function (item) {
+                        console.log("manifest-plugin: " + item.filename + " => " + item.new_file_path);
+                    });
+                }
                 return [2 /*return*/];
             });
         });

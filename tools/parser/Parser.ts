@@ -144,6 +144,7 @@ export function parseCommandLine(commandLine: string[]) {
     var filenames: string[] = [];
     var errors: string[] = [];
     egret.root = utils.getEgretRoot();
+
     parseStrings(commandLine);
     if (options.target as string === 'html5') {
         options.target = 'web';

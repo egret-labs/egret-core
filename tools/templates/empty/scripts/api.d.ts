@@ -244,7 +244,12 @@ declare module 'built-in' {
 
         output: string,
 
-        hash?: "crc32"
+        hash?: "crc32",
+
+        /**
+         * 是否输出转换过程
+         */
+        verbose?: boolean
 
 
     }

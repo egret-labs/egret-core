@@ -30,20 +30,24 @@ export class TextureMergerPlugin implements Plugin {
 
     private removedList: string[] = [];
 
+    private configs: { [tmprojectFilename: string]: string[] } = {};
+
     constructor(private options: TextureMergerOptions) {
     }
 
     async onFile(file: File): Promise<File | null> {
         const extname = file.extname;
         if (extname == '.tmproject') {
-            this.tmprojects.push(file.origin);
+            const filename = file.origin;
+            this.tmprojects.push(filename);
             const data: TextureMergerProjectConfig = JSON.parse(file.contents.toString());
 
-            const tmprojectDir = path.dirname(file.origin);
+            const tmprojectDir = path.dirname(filename);
             const imageFiles = data.files.map(f => {
                 const globalPath = path.resolve(file.base, tmprojectDir, f);
                 return path.relative(file.base, globalPath).split("\\").join("/");
             })
+            this.configs[filename] = imageFiles;
             this.removedList = this.removedList.concat(imageFiles);
             return null;
         }
@@ -61,6 +65,7 @@ export class TextureMergerPlugin implements Plugin {
         FileUtil.createDirectory(tempDir);
 
         for (let tm of this.tmprojects) {
+            const imageList = this.configs[tm];
             const tmprojectFilePath = path.join(pluginContext.projectRoot, tm)//options.path;
             const tmprojectDir = path.dirname(tm);
             const filename = path.basename(tmprojectFilePath, ".tmproject");
@@ -71,7 +76,7 @@ export class TextureMergerPlugin implements Plugin {
                 const result = await shell(texture_merger_path, ["-cp", tmprojectFilePath, "-o", tempDir]);
                 const jsonBuffer = await FileUtil.readFileAsync(jsonPath, null) as any as NodeBuffer;
                 const pngBuffer = await FileUtil.readFileAsync(pngPath, null) as any as NodeBuffer;
-                pluginContext.createFile(path.join(tmprojectDir, filename + ".json"), jsonBuffer);
+                pluginContext.createFile(path.join(tmprojectDir, filename + ".json"), jsonBuffer, { type: "sheet", subkeys: imageList });
                 pluginContext.createFile(path.join(tmprojectDir, filename + ".png"), pngBuffer);
             }
             catch (e) {

@@ -71,11 +71,12 @@ module RES {
      * @platform Web,Native
      * @language zh_CN
      */
-    export function loadConfig(url?: string, resourceRoot?: string) {
+    export function loadConfig(url: string, resourceRoot: string) {
         if (url) {
             setConfigURL(url);
         }
         if (!instance) instance = new Resource();
+        config.resourceRoot = resourceRoot;
         return instance.loadConfig();
     }
     /**
@@ -324,6 +325,7 @@ module RES {
      * @language zh_CN
      */
     export function setMaxLoadingThread(thread: number): void {
+        if (!instance) instance = new Resource();
         instance.setMaxLoadingThread(thread);
     }
 
@@ -496,7 +498,7 @@ module RES {
         @checkCancelation
         private _loadGroup(name: string, priority: number = 0, reporter?: PromiseTaskReporter): Promise<any> {
             let resources = config.getGroupByName(name, true);
-            return queue.load(resources, reporter);
+            return queue.load(resources, name, priority, reporter);
         }
 
         loadResources(keys: string[], reporter?: PromiseTaskReporter) {
@@ -504,7 +506,7 @@ module RES {
                 let r = config.getResourceWithSubkey(key, true);
                 return r.r;
             })
-            return queue.load(resources, reporter);
+            return queue.load(resources, "name", 0, reporter);
         }
 
         /**
@@ -665,7 +667,7 @@ module RES {
             if (thread < 1) {
                 thread = 1;
             }
-            //todo
+            queue.thread = thread;
         }
 
         /**
@@ -674,7 +676,7 @@ module RES {
          */
         public setMaxRetryTimes(retry: number): void {
             retry = Math.max(retry, 0);
-            //todo
+            queue.maxRetryTimes = retry;
         }
 
         public addResourceData(data: { name: string, type: string, url: string }): void {
