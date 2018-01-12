@@ -20743,7 +20743,7 @@ var eui;
         /**
          * @private
          */
-        BitmapLabel.prototype.$invalidateBitmapText = function () {
+        BitmapLabel.prototype.$invalidateContentBounds = function () {
             _super.prototype.$invalidateContentBounds.call(this);
             this.invalidateSize();
         };
@@ -20797,7 +20797,7 @@ var eui;
         BitmapLabel.prototype.$parseFont = function () {
             var _this = this;
             this.$fontChanged = false;
-            var font = this.$font;
+            var font = this.$fontForBitmapLabel;
             if (typeof font == "string") {
                 eui.getAssets(font, function (bitmapFont) {
                     _this.$setFontData(bitmapFont);

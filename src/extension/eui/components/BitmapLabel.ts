@@ -53,7 +53,7 @@ namespace eui {
         /**
          * @private
          */
-        $invalidateBitmapText(): void {
+        $invalidateContentBounds(): void {
             super.$invalidateContentBounds();
             this.invalidateSize();
         }
@@ -108,7 +108,7 @@ namespace eui {
          */
         private $parseFont(): void {
             this.$fontChanged = false;
-            let font = this.$font;
+            let font = this.$fontForBitmapLabel;
             if (typeof font == "string") {
                 getAssets(font, (bitmapFont) => {
                     this.$setFontData(bitmapFont);

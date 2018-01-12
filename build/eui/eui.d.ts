@@ -12817,7 +12817,7 @@ declare namespace eui {
         /**
          * @private
          */
-        $invalidateBitmapText(): void;
+        $invalidateContentBounds(): void;
         /**
          * @private
          *
