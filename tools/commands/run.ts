@@ -28,29 +28,12 @@ class Run implements egret.Command {
                 return DontExitCode;
                 break;
             case "wxgame":
-                let wxPath = "";
-                switch (os.platform()) {
-                    case "darwin":
-                        wxPath = "/Applications/wechatwebdevtools.app/Contents/Resources/app.nw/bin/cli";
-                        break;
-                    case "win32":
-                        wxPath = "C:\\Program Files (x86)\\Tencent\\微信web开发者工具\\cli.bat";
-                        break;
-                }
-                if (FileUtil.exists(wxPath)) {
-                    let projectPath = egret.args.projectDir;
-                    projectPath = path.resolve(projectPath, "../", path.basename(projectPath) + "_wxgame");
-                    try {
-                        await utils.shell(wxPath, ["-o", projectPath], null, true);
-                    }
-                    catch (e) {
-                        return 1;
-                    }
-                }
-                else {
-                    throw '请安装最新微信开发者工具'
-                }
-                return DontExitCode
+                return (await runWxIde());
+                break;
+            case 'bricks':
+                return (await runBricks());
+                break;
+
         }
     }
 
@@ -187,3 +170,48 @@ class Run implements egret.Command {
 
 
 export = Run;
+
+
+async function runWxIde() {
+    let wxPaths = [];
+    switch (os.platform()) {
+        case "darwin":
+            wxPaths = ["/Applications/wechatwebdevtools.app/Contents/Resources/app.nw/bin/cli"];
+            break;
+        case "win32":
+            wxPaths = [
+                "C:\\Program Files (x86)\\Tencent\\微信web开发者工具\\cli.bat",
+                "C:\\Program Files\\Tencent\\微信web开发者工具\\cli.bat",
+            ];
+            break;
+    }
+    const wxpath = wxPaths.find((wxpath) => FileUtil.exists(wxpath));
+    if (wxpath) {
+        let projectPath = egret.args.projectDir;
+        projectPath = path.resolve(projectPath, "../", path.basename(projectPath) + "_wxgame");
+        try {
+            await utils.shell(wxpath, ["-o", projectPath], null, true);
+        }
+        catch (e) {
+            return 1;
+        }
+    }
+    else {
+        throw '请安装最新微信开发者工具'
+    }
+    return DontExitCode
+}
+
+async function runBricks() {
+    switch (os.platform()) {
+        case "darwin":
+            let projectPath = egret.args.projectDir;
+            projectPath = path.resolve(projectPath, "../", path.basename(projectPath) + "_bricks", "PublicBrickGameEngine.xcodeproj");
+            utils.open(projectPath)
+            break;
+        case "win32":
+            throw '目前玩一玩仅支持 MacOS 平台开发';
+            break;
+    }
+    return 1;
+}

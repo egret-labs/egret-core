@@ -36,6 +36,18 @@ const config: ResourceManagerConfig = {
             }
         }
 
+
+        if (target == 'bricks') {
+            const outputDir = `../${projectName}_bricks/PublicBrickEngineGame/Res`;
+            return {
+                outputDir,
+                commands: [
+                    new CompilePlugin({ libraryType: "debug" }),
+                    new ManifestPlugin({ output: 'manifest.json' })
+                ]
+            }
+        }
+
         if (command == 'build') {
             const outputDir = '.';
             return {
