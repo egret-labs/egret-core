@@ -59,10 +59,39 @@ namespace egret.web {
          */
         private root: boolean;
 
+        /**
+         * @private
+         */
+        private $width: number;
+        /**
+         * @private
+         */
+        private $height: number;
+        /**
+         * @private
+         * render buffer id for wasm 
+         */
+        public bufferIdForWasm: number;
+
         public constructor(width?: number, height?: number, root?: boolean) {
             super();
             // 获取webglRenderContext
             this.context = WebGLRenderContext.getInstance(width, height);
+
+            if (egret.nativeRender) {
+                this.$width = width || 1 ;
+                this.$height = height || 1;
+                this.surface = this.context.surface;
+                this.rootRenderTarget = null;
+                if (root) {
+                    this.bufferIdForWasm = 0;
+                }
+                else {
+                    this.bufferIdForWasm = egret_native.NativeDisplayObject.setValuesToRenderBuffer(this);
+                }
+                return;
+            }
+
             // buffer 对应的 render target
             this.rootRenderTarget = new WebGLRenderTarget(this.context.context, 3, 3);
             if (width && height) {
@@ -95,7 +124,7 @@ namespace egret.web {
          * 模版开关状态
          */
         private stencilState: boolean = false;
-        public $stencilList: { x:number, y:number, width:number, height:number }[] = [];
+        public $stencilList: { x: number, y: number, width: number, height: number }[] = [];
         public stencilHandleCount: number = 0;
 
         public enableStencil(): void {
@@ -157,7 +186,12 @@ namespace egret.web {
          * @readOnly
          */
         public get width(): number {
-            return this.rootRenderTarget.width;
+            if (egret.nativeRender) {
+                return this.$width;
+            }
+            else {
+                return this.rootRenderTarget.width;
+            }
         }
 
         /**
@@ -165,7 +199,12 @@ namespace egret.web {
          * @readOnly
          */
         public get height(): number {
-            return this.rootRenderTarget.height;
+            if (egret.nativeRender) {
+                return this.$height;
+            }
+            else {
+                return this.rootRenderTarget.height;
+            }
         }
 
         /**
@@ -175,11 +214,15 @@ namespace egret.web {
          * @param useMaxSize 若传入true，则将改变后的尺寸与已有尺寸对比，保留较大的尺寸。
          */
         public resize(width: number, height: number, useMaxSize?: boolean): void {
-            this.context.pushBuffer(this);
-
             width = width || 1;
             height = height || 1;
+            if (egret.nativeRender) {
+                this.$width = width;
+                this.$height = height;
+                return;
+            }
 
+            this.context.pushBuffer(this);
             // render target 尺寸重置
             if (width != this.rootRenderTarget.width || height != this.rootRenderTarget.height) {
                 this.context.drawCmdManager.pushResize(this, width, height);
@@ -204,15 +247,21 @@ namespace egret.web {
         public getPixels(x: number, y: number, width: number = 1, height: number = 1): number[] {
             let pixels = new Uint8Array(4 * width * height);
 
-            let useFrameBuffer = this.rootRenderTarget.useFrameBuffer;
-            this.rootRenderTarget.useFrameBuffer = true;
-            this.rootRenderTarget.activate();
+            if (egret.nativeRender) {
+                egret_native.activateBuffer(this);
+                egret_native.nrGetPixels(x, y, width, height, pixels);
+                egret_native.activateBuffer(null);
+            }
+            else {
+                let useFrameBuffer = this.rootRenderTarget.useFrameBuffer;
+                this.rootRenderTarget.useFrameBuffer = true;
+                this.rootRenderTarget.activate();
 
-            this.context.getPixels(x, y, width, height, pixels);
+                this.context.getPixels(x, y, width, height, pixels);
 
-            this.rootRenderTarget.useFrameBuffer = useFrameBuffer;
-            this.rootRenderTarget.activate();
-
+                this.rootRenderTarget.useFrameBuffer = useFrameBuffer;
+                this.rootRenderTarget.activate();
+            }
             //图像反转
             let result = new Uint8Array(4 * width * height);
             for (let i = 0; i < height; i++) {
@@ -346,12 +395,6 @@ namespace egret.web {
             }
             matrix.tx = tx * a1 + ty * c1 + matrix.tx;
             matrix.ty = tx * b1 + ty * d1 + matrix.ty;
-        }
-
-        public translate(dx: number, dy: number): void {
-            let matrix = this.globalMatrix;
-            matrix.tx += dx;
-            matrix.ty += dy;
         }
 
         public useOffset(): void {

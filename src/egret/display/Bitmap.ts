@@ -99,6 +99,9 @@ namespace egret {
         protected $explicitBitmapWidth: number = NaN;
         protected $explicitBitmapHeight: number = NaN;
 
+        protected createNativeDisplayObject(): void {
+            this.$nativeDisplayObject = new egret_native.NativeDisplayObject(egret_native.NativeObjectType.BITMAP);
+        }
 
         /**
          * @private
@@ -181,6 +184,9 @@ namespace egret {
                     maskedObject.$cacheDirty = true;
                     maskedObject.$cacheDirtyUp();
                 }
+                if (egret.nativeRender) {
+                    this.setBitmapDataToWasm(null);
+                }
                 return true;
             }
 
@@ -228,15 +234,30 @@ namespace egret {
         /**
          * @private
          */
+        protected setBitmapDataToWasm(data?: Texture): void {
+            this.$nativeDisplayObject.setBitmapData(data);
+        }
+
+        /**
+         * @private
+         */
         public $refreshImageData(): void {
             let texture: Texture = this.$texture;
             if (texture) {
+                if (egret.nativeRender) {
+                    this.setBitmapDataToWasm(texture);
+                }
                 this.setImageData(texture.$bitmapData,
                     texture.$bitmapX, texture.$bitmapY,
                     texture.$bitmapWidth, texture.$bitmapHeight,
                     texture.$offsetX, texture.$offsetY,
                     texture.$getTextureWidth(), texture.$getTextureHeight(),
                     texture.$sourceWidth, texture.$sourceHeight);
+            }
+            else {
+                if (egret.nativeRender) {
+                    this.setBitmapDataToWasm(null);
+                }
             }
         }
 
@@ -285,18 +306,31 @@ namespace egret {
         }
 
         public set scale9Grid(value: egret.Rectangle) {
+            this.$setScale9Grid(value);
+        }
+
+        protected $setScale9Grid(value: egret.Rectangle): void {
             let self = this;
             self.$scale9Grid = value;
             self.$renderDirty = true;
-            let p = self.$parent;
-            if (p && !p.$cacheDirty) {
-                p.$cacheDirty = true;
-                p.$cacheDirtyUp();
+            if (egret.nativeRender) {
+                if (value) {
+                    self.$nativeDisplayObject.setScale9Grid(value.x, value.y, value.width, value.height);
+                } else {
+                    self.$nativeDisplayObject.setScale9Grid(0, 0, -1, -1);
+                }
             }
-            let maskedObject = self.$maskedObject;
-            if (maskedObject && !maskedObject.$cacheDirty) {
-                maskedObject.$cacheDirty = true;
-                maskedObject.$cacheDirtyUp();
+            else {
+                let p = self.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                let maskedObject = self.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
             }
         }
 
@@ -344,6 +378,10 @@ namespace egret {
             }
             this.$fillMode = value;
 
+            if (egret.nativeRender) {
+                this.$nativeDisplayObject.setBitmapFillMode(this.$fillMode);
+            }
+
             return true;
         }
 
@@ -382,7 +420,6 @@ namespace egret {
         }
 
         public set smoothing(value: boolean) {
-            value = !!value;
             if (value == this.$smoothing) {
                 return;
             }
@@ -401,20 +438,22 @@ namespace egret {
                 return false;
             }
             self.$explicitBitmapWidth = value;
-
             self.$renderDirty = true;
-
-            let p = self.$parent;
-            if (p && !p.$cacheDirty) {
-                p.$cacheDirty = true;
-                p.$cacheDirtyUp();
+            if (egret.nativeRender) {
+                self.$nativeDisplayObject.setWidth(value);
             }
-            let maskedObject = self.$maskedObject;
-            if (maskedObject && !maskedObject.$cacheDirty) {
-                maskedObject.$cacheDirty = true;
-                maskedObject.$cacheDirtyUp();
+            else {
+                let p = self.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                let maskedObject = self.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
             }
-
             return true;
         }
 
@@ -429,20 +468,22 @@ namespace egret {
                 return false;
             }
             self.$explicitBitmapHeight = value;
-
             self.$renderDirty = true;
-
-            let p = self.$parent;
-            if (p && !p.$cacheDirty) {
-                p.$cacheDirty = true;
-                p.$cacheDirtyUp();
+            if (egret.nativeRender) {
+                self.$nativeDisplayObject.setHeight(value);
             }
-            let maskedObject = self.$maskedObject;
-            if (maskedObject && !maskedObject.$cacheDirty) {
-                maskedObject.$cacheDirty = true;
-                maskedObject.$cacheDirtyUp();
+            else {
+                let p = self.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                let maskedObject = self.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
             }
-
             return true;
         }
 
@@ -539,52 +580,12 @@ namespace egret {
         $hitTest(stageX: number, stageY: number): DisplayObject {
             let target = super.$hitTest(stageX, stageY);
             if (target && this._pixelHitTest) {
-                target = this.hitTestPixel(stageX, stageY);
+                let boo = this.hitTestPoint(stageX, stageY, true);
+                if (!boo) {
+                    target = null;
+                }
             }
             return target;
-        }
-
-        /**
-         * @private
-         */
-        private hitTestPixel(stageX: number, stageY: number): DisplayObject {
-            let m = this.$getInvertedConcatenatedMatrix();
-            let localX = m.a * stageX + m.c * stageY + m.tx;
-            let localY = m.b * stageX + m.d * stageY + m.ty;
-            let data: number[];
-            let displayList = this.$displayList;
-            if (displayList) {
-                let buffer = displayList.renderBuffer;
-                try {
-                    data = buffer.getPixels(localX - displayList.offsetX, localY - displayList.offsetY);
-                }
-                catch (e) {
-                    console.log(this.$texture);
-                    throw new Error(sys.tr(1039));
-                }
-            }
-            else {
-                let buffer = sys.customHitTestBuffer;
-                buffer.resize(3, 3);
-                let node = this.$getRenderNode();
-                let matrix = Matrix.create();
-                matrix.identity();
-                matrix.translate(1 - localX, 1 - localY);
-                sys.systemRenderer.drawNodeToBuffer(node, buffer, matrix, true);
-                Matrix.release(matrix);
-
-                try {
-                    data = buffer.getPixels(1, 1);
-                }
-                catch (e) {
-                    console.log(this.$texture);
-                    throw new Error(sys.tr(1039));
-                }
-            }
-            if (data[3] === 0) {
-                return null;
-            }
-            return this;
         }
     }
 }

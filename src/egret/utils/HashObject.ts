@@ -131,17 +131,4 @@ namespace egret {
             return this.$hashCode;
         }
     }
-
-
-
-    /**
-     * @private
-     */
-    export interface AsyncCallback {
-
-        onSuccess: (data: any) => any;
-
-        onFail: (error: number, data: any) => any;
-
-    }
 }

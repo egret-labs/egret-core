@@ -326,6 +326,10 @@ namespace egret {
             };
         }
 
+        protected createNativeDisplayObject(): void {
+            this.$nativeDisplayObject = new egret_native.NativeDisplayObject(egret_native.NativeObjectType.TEXT);
+        }
+
         /**
          * @private
          */
@@ -404,8 +408,6 @@ namespace egret {
         }
 
         $setSize(value: number): boolean {
-            value = +value || 0;
-
             let values = this.$TextField;
             if (values[sys.TextKeys.fontSize] == value) {
                 return false;
@@ -439,7 +441,6 @@ namespace egret {
         }
 
         $setBold(value: boolean): boolean {
-            value = !!value;
             let values = this.$TextField;
             if (value == values[sys.TextKeys.bold]) {
                 return false;
@@ -473,7 +474,6 @@ namespace egret {
         }
 
         $setItalic(value: boolean): boolean {
-            value = !!value;
             let values = this.$TextField;
             if (value == values[sys.TextKeys.italic]) {
                 return false;
@@ -582,8 +582,6 @@ namespace egret {
         }
 
         $setLineSpacing(value: number): boolean {
-            value = +value || 0;
-
             let values = this.$TextField;
             if (values[sys.TextKeys.lineSpacing] == value)
                 return false;
@@ -616,7 +614,6 @@ namespace egret {
         }
 
         $setTextColor(value: number): boolean {
-            value = +value | 0;
             let values = this.$TextField;
             if (values[sys.TextKeys.textColor] == value) {
                 return false;
@@ -654,7 +651,6 @@ namespace egret {
         }
 
         $setWordWrap(value: boolean): void {
-            value = !!value;
             let values = this.$TextField;
             if (value == values[sys.TextKeys.wordWrap]) {
                 return;
@@ -803,7 +799,6 @@ namespace egret {
             if (value == null) {
                 value = "";
             }
-            value = value.toString();
             this.isFlow = false;
             let values = this.$TextField;
             if (values[sys.TextKeys.text] != value) {
@@ -906,7 +901,6 @@ namespace egret {
          * @language zh_CN
          */
         public set strokeColor(value: number) {
-            value = +value || 0;
             this.$setStrokeColor(value);
         }
 
@@ -1315,7 +1309,7 @@ namespace egret {
         /**
          * @private
          */
-        private graphicsNode: sys.GraphicsNode = null;
+        public $graphicsNode: sys.GraphicsNode = null;
 
         /**
          * Specifies whether the text field has a border.
@@ -1450,18 +1444,23 @@ namespace egret {
          *
          */
         private fillBackground(lines?: number[]): void {
-            let graphics = this.graphicsNode;
+            let graphics = this.$graphicsNode;
             if (graphics) {
                 graphics.clear();
             }
             let values = this.$TextField;
             if (values[sys.TextKeys.background] || values[sys.TextKeys.border] || (lines && lines.length > 0)) {
                 if (!graphics) {
-                    graphics = this.graphicsNode = new sys.GraphicsNode();
-                    let groupNode = new sys.GroupNode();
-                    groupNode.addNode(graphics);
-                    groupNode.addNode(this.textNode);
-                    this.$renderNode = groupNode;
+                    graphics = this.$graphicsNode = new sys.GraphicsNode();
+                    if (!egret.nativeRender) {
+                        let groupNode = new sys.GroupNode();
+                        groupNode.addNode(graphics);
+                        groupNode.addNode(this.textNode);
+                        this.$renderNode = groupNode;
+                    }
+                    else {
+                        this.$renderNode = this.textNode;
+                    }
                 }
                 let fillPath: sys.Path2D;
                 let strokePath: sys.Path2D;
@@ -1538,7 +1537,11 @@ namespace egret {
 
             if (this.textNode) {
                 this.textNode.clean();
+                if (egret.nativeRender) {
+                    egret_native.NativeDisplayObject.disposeTextData(this);
+                }
             }
+
         }
 
         /**
@@ -1561,16 +1564,20 @@ namespace egret {
             let self = this;
             self.$renderDirty = true;
             self.$TextField[sys.TextKeys.textLinesChanged] = true;
-
-            let p = self.$parent;
-            if (p && !p.$cacheDirty) {
-                p.$cacheDirty = true;
-                p.$cacheDirtyUp();
+            if (egret.nativeRender) {
+                egret_native.dirtyTextField(this);
             }
-            let maskedObject = self.$maskedObject;
-            if (maskedObject && !maskedObject.$cacheDirty) {
-                maskedObject.$cacheDirty = true;
-                maskedObject.$cacheDirtyUp();
+            else {
+                let p = self.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                let maskedObject = self.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
             }
         }
 
@@ -1604,7 +1611,7 @@ namespace egret {
             let h: number = !isNaN(this.$TextField[sys.TextKeys.textFieldHeight]) ? this.$TextField[sys.TextKeys.textFieldHeight] : TextFieldUtils.$getTextHeight(this);
             bounds.setTo(0, 0, w, h);
         }
-        
+
         $updateRenderNode(): void {
             if (this.$TextField[sys.TextKeys.type] == TextFieldType.INPUT) {
                 this.inputUtils._updateProperties();
@@ -1614,7 +1621,7 @@ namespace egret {
                 }
             }
             else if (this.$TextField[sys.TextKeys.textFieldWidth] == 0) {
-                let graphics = this.graphicsNode;
+                let graphics = this.$graphicsNode;
                 if (graphics) {
                     graphics.clear();
                 }

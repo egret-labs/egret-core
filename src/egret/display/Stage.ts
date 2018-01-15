@@ -67,6 +67,10 @@ namespace egret {
             this.$nestLevel = 1;
         }
 
+        protected createNativeDisplayObject(): void {
+            this.$nativeDisplayObject = new egret_native.NativeDisplayObject(egret_native.NativeObjectType.STAGE);
+        }
+
         /**
          * Gets and sets the frame rate of the stage. The frame rate is defined as frames per second. Valid range for the
          * frame rate is from 0.01 to 1000 frames per second.<br/>
@@ -288,15 +292,6 @@ namespace egret {
             }
             this.$maxTouches = value;
             this.$screen.updateMaxTouches();
-        }
-        /**
-         * @private
-         */
-        public set dirtyRegionPolicy(policy:string) {
-            
-        }
-        public get dirtyRegionPolicy():string{
-            return null;
         }
 
         /**

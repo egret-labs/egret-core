@@ -111,8 +111,7 @@ namespace eui {
         }
 
         public set scale9Grid(value: egret.Rectangle) {
-            this.$scale9Grid = value;
-            this.$renderDirty = true;
+            this.$setScale9Grid(value);
             this.invalidateDisplayList();
         }
 
@@ -281,38 +280,38 @@ namespace eui {
          *
          * @param context
          */
-        $updateRenderNode(): void {
-            let image = this.$bitmapData;
-            if (!image) {
-                return;
-            }
-            let uiValues = this.$UIComponent;
-            let width = uiValues[sys.UIKeys.width];
-            let height = uiValues[sys.UIKeys.height];
-            if (width === 0 || height === 0) {
-                return;
-            }
+        // $updateRenderNode(): void {
+        //     let image = this.$bitmapData;
+        //     if (!image) {
+        //         return;
+        //     }
+        //     let uiValues = this.$UIComponent;
+        //     let width = uiValues[sys.UIKeys.width];
+        //     let height = uiValues[sys.UIKeys.height];
+        //     if (width === 0 || height === 0) {
+        //         return;
+        //     }
 
-            let scale9Grid = this.scale9Grid || this.$texture["scale9Grid"];
-            if (scale9Grid) {
-                if (this.$renderNode instanceof egret.sys.NormalBitmapNode) {
-                    this.$renderNode = new egret.sys.BitmapNode();
-                }
-                egret.sys.BitmapNode.$updateTextureDataWithScale9Grid(<egret.sys.NormalBitmapNode>this.$renderNode, this.$bitmapData, scale9Grid,
-                    this.$bitmapX, this.$bitmapY, this.$bitmapWidth, this.$bitmapHeight,
-                    this.$offsetX, this.$offsetY, this.$textureWidth, this.$textureHeight,
-                    width, height, this.$sourceWidth, this.$sourceHeight, this.$smoothing);
-            }
-            else {
-                if (this.fillMode == egret.BitmapFillMode.REPEAT && this.$renderNode instanceof egret.sys.NormalBitmapNode) {
-                    this.$renderNode = new egret.sys.BitmapNode();
-                }
-                egret.sys.BitmapNode.$updateTextureData(<egret.sys.NormalBitmapNode>this.$renderNode, this.$bitmapData,
-                    this.$bitmapX, this.$bitmapY, this.$bitmapWidth, this.$bitmapHeight,
-                    this.$offsetX, this.$offsetY, this.$textureWidth, this.$textureHeight,
-                    width, height, this.$sourceWidth, this.$sourceHeight, this.$fillMode, this.$smoothing);
-            }
-        }
+        //     let scale9Grid = this.scale9Grid || this.$texture["scale9Grid"];
+        //     if (scale9Grid) {
+        //         if (this.$renderNode instanceof egret.sys.NormalBitmapNode) {
+        //             this.$renderNode = new egret.sys.BitmapNode();
+        //         }
+        //         egret.sys.BitmapNode.$updateTextureDataWithScale9Grid(<egret.sys.NormalBitmapNode>this.$renderNode, this.$bitmapData, scale9Grid,
+        //             this.$bitmapX, this.$bitmapY, this.$bitmapWidth, this.$bitmapHeight,
+        //             this.$offsetX, this.$offsetY, this.$textureWidth, this.$textureHeight,
+        //             width, height, this.$sourceWidth, this.$sourceHeight, this.$smoothing);
+        //     }
+        //     else {
+        //         if (this.fillMode == egret.BitmapFillMode.REPEAT && this.$renderNode instanceof egret.sys.NormalBitmapNode) {
+        //             this.$renderNode = new egret.sys.BitmapNode();
+        //         }
+        //         egret.sys.BitmapNode.$updateTextureData(<egret.sys.NormalBitmapNode>this.$renderNode, this.$bitmapData,
+        //             this.$bitmapX, this.$bitmapY, this.$bitmapWidth, this.$bitmapHeight,
+        //             this.$offsetX, this.$offsetY, this.$textureWidth, this.$textureHeight,
+        //             width, height, this.$sourceWidth, this.$sourceHeight, this.$fillMode, this.$smoothing);
+        //     }
+        // }
 
         //=======================UIComponent接口实现===========================
         /**
@@ -333,6 +332,17 @@ namespace eui {
                 this.parseSource();
             }
         }
+        /**
+         * @private
+         * 设置组件的宽高。此方法不同于直接设置width,height属性，
+         * 不会影响显式标记尺寸属性
+         */
+        protected setActualSize(w: number, h: number): void {
+            sys.UIComponentImpl.prototype["setActualSize"].call(this, w, h);
+            super.$setWidth(w);
+            super.$setHeight(h);
+        }
+
 
         /**
          * @copy eui.UIComponent#childrenCreated
