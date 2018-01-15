@@ -103,8 +103,6 @@ namespace egret.sys {
          */
         public root: DisplayObject;
 
-        public needUpdateRegions: boolean = false;
-
         /**
          * @private
          * 设置剪裁边界，不再绘制完整目标对象，画布尺寸由外部决定，超过边界的节点将跳过绘制。
@@ -199,6 +197,9 @@ namespace egret.sys {
         public static $setCanvasScale(x: number, y: number): void {
             DisplayList.$canvasScaleX = x;
             DisplayList.$canvasScaleY = y;
+            if (egret.nativeRender) {
+                egret_native.nrSetCanvasScaleFactor(DisplayList.$canvasScaleFactor, x, y);
+            }
         }
     }
 }

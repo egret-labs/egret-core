@@ -25,110 +25,6 @@
             "debug": false
           },
           {
-            "path": "text/native/NativeTextMeasurer.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/rendering/canvas/NativeCanvasRenderContext.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/rendering/canvas/OldNativeCanvasRenderContext.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/rendering/canvas/NativeCanvas.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/rendering/canvas/NativeCanvasRenderBuffer.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/NativeTexture.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/NativePlayer.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/EgretNative.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/NativeFps.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/NativeGetOption.ts",
-            "platform": "native"
-          },
-          {
-            "path": "external/native/NativeExternalInterface.ts",
-            "platform": "native"
-          },
-          {
-            "path": "media/native/NativeSound.ts",
-            "platform": "native"
-          },
-          {
-            "path": "media/native/NativeSoundChannel.ts",
-            "platform": "native"
-          },
-          {
-            "path": "media/native/NaSound.ts",
-            "platform": "native"
-          },
-          {
-            "path": "media/native/NaSoundChannel.ts",
-            "platform": "native"
-          },
-          {
-            "path": "media/native/NativeVideo.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/NativeGetOption.ts",
-            "platform": "native"
-          },
-          {
-            "path": "external/native/NativeExternalInterface.ts",
-            "platform": "native"
-          },
-          {
-            "path": "localStorage/native/NativeLocalStorage.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/NativeHideHandler.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/NativeResourceLoader.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/NativeTouchHandler.ts",
-            "platform": "native"
-          },
-          {
-            "path": "net/native/NativeHttpRequest.ts",
-            "platform": "native"
-          },
-          {
-            "path": "net/native/NativeImageLoader.ts",
-            "platform": "native"
-          },
-          {
-            "path": "text/native/NativeStageText.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/NativeXML.ts",
-            "platform": "native"
-          },
-          {
             "path": "web/WebBitmapData.ts",
             "platform": "web"
           },
@@ -231,10 +127,6 @@
           {
             "path": "sensor/web/WebMotion.ts",
             "platform": "web"
-          },
-          {
-            "path": "utils/native/NativeLogger.ts",
-            "platform": "native"
           },
           {
             "path": "utils/web/WebLogger.ts",

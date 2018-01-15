@@ -50,7 +50,7 @@ namespace egret {
     export class MovieClip extends DisplayObject {
 
         //Render Property
-        $bitmapData: Texture = null;
+        $texture: Texture = null;
 
         //Render Property
         private offsetPoint: Point = Point.create(0, 0);
@@ -141,9 +141,14 @@ namespace egret {
         constructor(movieClipData?: MovieClipData) {
             super();
             this.$smoothing = Bitmap.defaultSmoothing;
-            this.$renderNode = new sys.NormalBitmapNode();
-
             this.setMovieClipData(movieClipData);
+            if (!egret.nativeRender) {
+                this.$renderNode = new sys.NormalBitmapNode();
+            }
+        }
+
+        protected createNativeDisplayObject(): void {
+            this.$nativeDisplayObject = new egret_native.NativeDisplayObject(egret_native.NativeObjectType.BITMAP_TEXT);
         }
 
         /**
@@ -167,7 +172,6 @@ namespace egret {
         }
 
         public set smoothing(value: boolean) {
-            value = !!value;
             if (value == this.$smoothing) {
                 return;
             }
@@ -224,7 +228,7 @@ namespace egret {
          * @private
          */
         $updateRenderNode(): void {
-            let texture = this.$bitmapData;
+            let texture = this.$texture;
             if (texture) {
                 let offsetX: number = Math.round(this.offsetPoint.x);
                 let offsetY: number = Math.round(this.offsetPoint.y);
@@ -246,7 +250,7 @@ namespace egret {
          * @private
          */
         $measureContentBounds(bounds: Rectangle): void {
-            let texture = this.$bitmapData;
+            let texture = this.$texture;
             if (texture) {
                 let x: number = this.offsetPoint.x;
                 let y: number = this.offsetPoint.y;
@@ -561,20 +565,32 @@ namespace egret {
                 return;
             }
 
-            self.$bitmapData = self.$movieClipData.getTextureByFrame(currentFrameNum);
+            let texture = self.$movieClipData.getTextureByFrame(currentFrameNum);
+            self.$texture = texture;
             self.$movieClipData.$getOffsetByFrame(currentFrameNum, self.offsetPoint);
 
             self.displayedKeyFrameNum = currentFrameNum;
             self.$renderDirty = true;
-            let p = self.$parent;
-            if (p && !p.$cacheDirty) {
-                p.$cacheDirty = true;
-                p.$cacheDirtyUp();
+            if (egret.nativeRender) {
+                self.$nativeDisplayObject.setDataToBitmapNode(self.$nativeDisplayObject.id, texture,
+                    [texture.$bitmapX, texture.$bitmapY, texture.$bitmapWidth, texture.$bitmapHeight,
+                    self.offsetPoint.x, self.offsetPoint.y, texture.$getScaleBitmapWidth(), texture.$getScaleBitmapHeight(),
+                    texture.$sourceWidth, texture.$sourceHeight]);
+                //todo 负数offsetPoint
+                self.$nativeDisplayObject.setWidth(texture.$getTextureWidth() + self.offsetPoint.x);
+                self.$nativeDisplayObject.setHeight(texture.$getTextureHeight() + self.offsetPoint.y);
             }
-            let maskedObject = self.$maskedObject;
-            if (maskedObject && !maskedObject.$cacheDirty) {
-                maskedObject.$cacheDirty = true;
-                maskedObject.$cacheDirtyUp();
+            else {
+                let p = self.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                let maskedObject = self.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
             }
         }
 
@@ -584,7 +600,7 @@ namespace egret {
          */
         public $renderFrame(): void {
             let self = this;
-            self.$bitmapData = self.$movieClipData.getTextureByFrame(self.$currentFrameNum);
+            self.$texture = self.$movieClipData.getTextureByFrame(self.$currentFrameNum);
             self.$renderDirty = true;
             let p = self.$parent;
             if (p && !p.$cacheDirty) {

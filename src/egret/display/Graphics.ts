@@ -87,18 +87,20 @@ namespace egret {
         /**
          * 绑定到的目标显示对象
          */
-        private targetDisplay: DisplayObject;
+        public $targetDisplay: DisplayObject;
+        $targetIsSprite: boolean;
 
         /**
          * @private
          * 设置绑定到的目标显示对象
          */
         $setTarget(target: DisplayObject): void {
-            if (this.targetDisplay) {
-                this.targetDisplay.$renderNode = null;
+            if (this.$targetDisplay) {
+                this.$targetDisplay.$renderNode = null;
             }
             target.$renderNode = this.$renderNode;
-            this.targetDisplay = target;
+            this.$targetDisplay = target;
+            this.$targetIsSprite = target instanceof Sprite;
         }
 
         /**
@@ -305,7 +307,7 @@ namespace egret {
             strokePath && strokePath.drawRect(x, y, width, height);
             this.extendBoundsByPoint(x + width, y + height);
             this.updatePosition(x, y);
-            this.$renderNode.dirtyRender = true;
+            this.dirty();
         }
 
         /**
@@ -352,7 +354,7 @@ namespace egret {
             this.extendBoundsByPoint(x, y);
             this.extendBoundsByPoint(right, bottom);
             this.updatePosition(right, ybw);
-            this.$renderNode.dirtyRender = true;
+            this.dirty();
         }
 
         /**
@@ -385,7 +387,7 @@ namespace egret {
             this.extendBoundsByPoint(x - radius - 1, y - radius - 1);
             this.extendBoundsByPoint(x + radius + 2, y + radius + 2);
             this.updatePosition(x + radius, y);
-            this.$renderNode.dirtyRender = true;
+            this.dirty();
         }
 
 
@@ -423,7 +425,7 @@ namespace egret {
             this.extendBoundsByPoint(x - 1, y - 1);
             this.extendBoundsByPoint(x + width + 2, y + height + 2);
             this.updatePosition(x + width, y + height * 0.5);
-            this.$renderNode.dirtyRender = true;
+            this.dirty();
         }
 
         /**
@@ -452,7 +454,7 @@ namespace egret {
             this.includeLastPosition = false;
             this.lastX = x;
             this.lastY = y;
-            this.$renderNode.dirtyRender = true;
+            this.dirty();
         }
 
         /**
@@ -479,7 +481,7 @@ namespace egret {
             fillPath && fillPath.lineTo(x, y);
             strokePath && strokePath.lineTo(x, y);
             this.updatePosition(x, y);
-            this.$renderNode.dirtyRender = true;
+            this.dirty();
         }
 
         /**
@@ -518,7 +520,7 @@ namespace egret {
             this.extendBoundsByPoint(controlX, controlY);
             this.extendBoundsByPoint(anchorX, anchorY);
             this.updatePosition(anchorX, anchorY);
-            this.$renderNode.dirtyRender = true;
+            this.dirty();
         }
 
         /**
@@ -561,7 +563,7 @@ namespace egret {
             this.extendBoundsByPoint(controlX2, controlY2);
             this.extendBoundsByPoint(anchorX, anchorY);
             this.updatePosition(anchorX, anchorY);
-            this.$renderNode.dirtyRender = true;
+            this.dirty();
         }
 
         /**
@@ -623,7 +625,15 @@ namespace egret {
             let endX = x + Math.cos(endAngle) * radius;
             let endY = y + Math.sin(endAngle) * radius;
             this.updatePosition(endX, endY);
-            this.$renderNode.dirtyRender = true;
+            this.dirty();
+        }
+
+        private dirty(): void {
+            let self = this;
+            self.$renderNode.dirtyRender = true;
+            if (egret.nativeRender) {
+                egret_native.dirtyGraphics(self);
+            }
         }
 
         /**
@@ -695,6 +705,7 @@ namespace egret {
             this.minY = Infinity;
             this.maxX = -Infinity;
             this.maxY = -Infinity;
+            this.dirty();
         }
 
         /**
@@ -788,7 +799,7 @@ namespace egret {
          *
          */
         $hitTest(stageX: number, stageY: number): DisplayObject {
-            let target = this.targetDisplay;
+            let target = this.$targetDisplay;
             let m = target.$getInvertedConcatenatedMatrix();
             let localX = m.a * stageX + m.c * stageY + m.tx;
             let localY = m.b * stageX + m.d * stageY + m.ty;
@@ -819,6 +830,9 @@ namespace egret {
         public $onRemoveFromStage(): void {
             if (this.$renderNode) {
                 this.$renderNode.clean();
+            }
+            if (egret.nativeRender) {
+                egret_native.NativeDisplayObject.disposeGraphicData(this);
             }
         }
     }

@@ -53,8 +53,8 @@ namespace eui {
         /**
          * @private
          */
-        $invalidateBitmapText(): void {
-            super.$invalidateBitmapText();
+        $invalidateContentBounds(): void {
+            super.$invalidateContentBounds();
             this.invalidateSize();
         }
         /**
@@ -87,19 +87,18 @@ namespace eui {
             PropertyEvent.dispatchPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, "text");
             return result;
         }
-        private $font: string | egret.BitmapFont;
+        private $fontForBitmapLabel: string | egret.BitmapFont;
         $setFont(value: any): boolean {
-            let values = this.$BitmapText;
-            if (this.$font == value) {
+            if (this.$fontForBitmapLabel == value) {
                 return false;
             }
-            this.$font = value;
+            this.$fontForBitmapLabel = value;
             if (this.$createChildrenCalled) {
                 this.$parseFont();
             } else {
                 this.$fontChanged = true;
             }
-            this.$BitmapText[egret.sys.BitmapTextKeys.fontStringChanged] = true;
+            this.$fontStringChanged = true;
             return true;
         }
         private $createChildrenCalled: boolean = false;
@@ -109,7 +108,7 @@ namespace eui {
          */
         private $parseFont(): void {
             this.$fontChanged = false;
-            let font = this.$font;
+            let font = this.$fontForBitmapLabel;
             if (typeof font == "string") {
                 getAssets(font, (bitmapFont) => {
                     this.$setFontData(bitmapFont);
@@ -120,11 +119,11 @@ namespace eui {
         }
 
         $setFontData(value: egret.BitmapFont): boolean {
-            if (value == this.$BitmapText[egret.sys.BitmapTextKeys.font]) {
+            if (value == this.$font) {
                 return false;
             }
-            this.$BitmapText[egret.sys.BitmapTextKeys.font] = value;
-            this.$invalidateBitmapText();
+            this.$font = value;
+            this.$invalidateContentBounds();
             return true;
         }
         /**
@@ -186,9 +185,8 @@ namespace eui {
          */
         protected measure(): void {
             let values = this.$UIComponent;
-            let textValues = this.$BitmapText;
-            let oldWidth = textValues[egret.sys.BitmapTextKeys.textFieldWidth];
-            let oldHeight = textValues[egret.sys.BitmapTextKeys.textFieldHeight];
+            let oldWidth = this.$textFieldWidth;
+            let oldHeight = this.$textFieldHeight;
             let availableWidth = NaN;
             if (!isNaN(this._widthConstraint)) {
                 availableWidth = this._widthConstraint;

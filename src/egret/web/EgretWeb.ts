@@ -28,40 +28,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 namespace egret.web {
-
-    let customContext: CustomContext;
-
-    let context: EgretContext = {
-
-        setAutoClear: function (value: boolean): void {
-            WebGLRenderBuffer.autoClear = value;
-        },
-
-        save: function () {
-            // do nothing
-        },
-
-        restore: function () {
-            let context = WebGLRenderContext.getInstance(0, 0);
-            let gl = context.context;
-            gl.bindBuffer(gl.ARRAY_BUFFER, context["vertexBuffer"]);
-            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, context["indexBuffer"]);
-            gl.activeTexture(gl.TEXTURE0);
-            context.currentProgram = null;
-            context["bindIndices"] = false;
-            let buffer = context.$bufferStack[1];
-            context["activateBuffer"](buffer);
-            gl.enable(gl.BLEND);
-            context["setBlendMode"]("source-over");
-        }
-    }
-
-    function setRendererContext(custom: CustomContext) {
-        custom.onStart(context);
-        customContext = custom;
-    }
-    egret.setRendererContext = setRendererContext;
-
     /**
      * @private
      * 刷新所有Egret播放器的显示区域尺寸。仅当使用外部JavaScript代码动态修改了Egret容器大小时，需要手动调用此方法刷新显示区域。
@@ -94,62 +60,118 @@ namespace egret.web {
         if (!options) {
             options = {};
         }
-        Html5Capatibility._audioType = options.audioType;
-        Html5Capatibility.$init();
+        let ua: string = navigator.userAgent.toLowerCase();
 
-        // WebGL上下文参数自定义
-        if (options.renderMode == "webgl") {
-            // WebGL抗锯齿默认关闭，提升PC及某些平台性能
-            let antialias = options.antialias;
-            WebGLRenderContext.antialias = !!antialias;
-            // WebGLRenderContext.antialias = (typeof antialias == undefined) ? true : antialias;
-        }
 
-        sys.CanvasRenderBuffer = web.CanvasRenderBuffer;
-        setRenderMode(options.renderMode);
+        if (ua.indexOf("egretnative") >= 0 && egret.nativeRender) {// Egret Native
+            egret_native.addModuleCallback(function () {
+                Html5Capatibility.$init();
 
-        let canvasScaleFactor;
-        if (options.canvasScaleFactor) {
-            canvasScaleFactor = options.canvasScaleFactor;
-        }
-        else if(options.calculateCanvasScaleFactor) {
-            canvasScaleFactor = options.calculateCanvasScaleFactor(sys.canvasHitTestBuffer.context);
+                // WebGL上下文参数自定义
+                if (options.renderMode == "webgl") {
+                    // WebGL抗锯齿默认关闭，提升PC及某些平台性能
+                    let antialias = options.antialias;
+                    WebGLRenderContext.antialias = !!antialias;
+                }
+
+                sys.CanvasRenderBuffer = CanvasRenderBuffer;
+                setRenderMode(options.renderMode);
+                egret_native.nrSetRenderMode(2);
+
+                let canvasScaleFactor;
+                if (options.canvasScaleFactor) {
+                    canvasScaleFactor = options.canvasScaleFactor;
+                }
+                else if (options.calculateCanvasScaleFactor) {
+                    canvasScaleFactor = options.calculateCanvasScaleFactor(sys.canvasHitTestBuffer.context);
+                }
+                else {
+                    canvasScaleFactor = window.devicePixelRatio;
+                }
+                sys.DisplayList.$canvasScaleFactor = canvasScaleFactor;
+
+                let ticker = egret.ticker;
+                startTicker(ticker);
+                if (options.screenAdapter) {
+                    egret.sys.screenAdapter = options.screenAdapter;
+                }
+                else if (!egret.sys.screenAdapter) {
+                    egret.sys.screenAdapter = new egret.sys.DefaultScreenAdapter();
+                }
+
+                let list = document.querySelectorAll(".egret-player");
+                let length = list.length;
+                for (let i = 0; i < length; i++) {
+                    let container = <HTMLDivElement>list[i];
+                    let player = new WebPlayer(container, options);
+                    container["egret-player"] = player;
+                }
+                window.addEventListener("resize", function () {
+                    if (isNaN(resizeTimer)) {
+                        resizeTimer = window.setTimeout(doResize, 300);
+                    }
+                });
+            }, null);
+            egret_native.initNativeRender();
         }
         else {
-            //based on : https://github.com/jondavidjohn/hidpi-canvas-polyfill
-            let context = sys.canvasHitTestBuffer.context;
-            let backingStore = context.backingStorePixelRatio ||
-                context.webkitBackingStorePixelRatio ||
-                context.mozBackingStorePixelRatio ||
-                context.msBackingStorePixelRatio ||
-                context.oBackingStorePixelRatio ||
-                context.backingStorePixelRatio || 1;
-            canvasScaleFactor = (window.devicePixelRatio || 1) / backingStore;
-        }
-        sys.DisplayList.$canvasScaleFactor = canvasScaleFactor;
+            Html5Capatibility._audioType = options.audioType;
+            Html5Capatibility.$init();
 
-        let ticker = egret.ticker;
-        startTicker(ticker);
-        if (options.screenAdapter) {
-            egret.sys.screenAdapter = options.screenAdapter;
-        }
-        else if (!egret.sys.screenAdapter) {
-            egret.sys.screenAdapter = new egret.sys.DefaultScreenAdapter();
-        }
-
-        let list = document.querySelectorAll(".egret-player");
-        let length = list.length;
-        for (let i = 0; i < length; i++) {
-            let container = <HTMLDivElement>list[i];
-            let player = new WebPlayer(container, options);
-            container["egret-player"] = player;
-        }
-
-        window.addEventListener("resize", function () {
-            if (isNaN(resizeTimer)) {
-                resizeTimer = window.setTimeout(doResize, 300);
+            // WebGL上下文参数自定义
+            if (options.renderMode == "webgl") {
+                // WebGL抗锯齿默认关闭，提升PC及某些平台性能
+                let antialias = options.antialias;
+                WebGLRenderContext.antialias = !!antialias;
+                // WebGLRenderContext.antialias = (typeof antialias == undefined) ? true : antialias;
             }
-        });
+
+            sys.CanvasRenderBuffer = web.CanvasRenderBuffer;
+            setRenderMode(options.renderMode);
+
+            let canvasScaleFactor;
+            if (options.canvasScaleFactor) {
+                canvasScaleFactor = options.canvasScaleFactor;
+            }
+            else if (options.calculateCanvasScaleFactor) {
+                canvasScaleFactor = options.calculateCanvasScaleFactor(sys.canvasHitTestBuffer.context);
+            }
+            else {
+                //based on : https://github.com/jondavidjohn/hidpi-canvas-polyfill
+                let context = sys.canvasHitTestBuffer.context;
+                let backingStore = context.backingStorePixelRatio ||
+                    context.webkitBackingStorePixelRatio ||
+                    context.mozBackingStorePixelRatio ||
+                    context.msBackingStorePixelRatio ||
+                    context.oBackingStorePixelRatio ||
+                    context.backingStorePixelRatio || 1;
+                canvasScaleFactor = (window.devicePixelRatio || 1) / backingStore;
+            }
+            sys.DisplayList.$canvasScaleFactor = canvasScaleFactor;
+
+            let ticker = egret.ticker;
+            startTicker(ticker);
+            if (options.screenAdapter) {
+                egret.sys.screenAdapter = options.screenAdapter;
+            }
+            else if (!egret.sys.screenAdapter) {
+                egret.sys.screenAdapter = new egret.sys.DefaultScreenAdapter();
+            }
+
+            let list = document.querySelectorAll(".egret-player");
+            let length = list.length;
+            for (let i = 0; i < length; i++) {
+                let container = <HTMLDivElement>list[i];
+                let player = new WebPlayer(container, options);
+                container["egret-player"] = player;
+            }
+
+            window.addEventListener("resize", function () {
+                if (isNaN(resizeTimer)) {
+                    resizeTimer = window.setTimeout(doResize, 300);
+                }
+            });
+        }
     }
 
     /**
@@ -195,11 +217,6 @@ namespace egret.web {
 
         requestAnimationFrame(onTick);
         function onTick(): void {
-
-            if (customContext) {
-                customContext.onRender(context);
-            }
-
             ticker.update();
             requestAnimationFrame(onTick);
         }
@@ -218,12 +235,7 @@ namespace egret.web {
 
     function doResize() {
         resizeTimer = NaN;
-
         egret.updateAllScreens();
-
-        if (customContext) {
-            customContext.onResize(context);
-        }
     }
 }
 

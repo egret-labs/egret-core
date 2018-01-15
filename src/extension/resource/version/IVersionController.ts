@@ -42,7 +42,7 @@ namespace RES {
      * @includeExample extension/version/VersionControl.ts
      * @language zh_CN
      */
-    export interface IVersionController  {
+    export interface IVersionController {
         /**
          * Get the version information data.<br/>
          * Before calling this method requires the application of any resource load, we recommend starting at the application entry class (Main) The first call processing. This method is only responsible for acquiring version information, is not responsible for downloaded resources.
@@ -57,7 +57,13 @@ namespace RES {
          * @platform Web,Native
          * @language zh_CN
          */
-        fetchVersion(callback:egret.AsyncCallback):void;
+        fetchVersion(callback: {
+
+            onSuccess: (data: any) => any;
+
+            onFail: (error: number, data: any) => any;
+
+        }): void;
 
         /**
          * Get all changed files.<br/>
@@ -75,7 +81,7 @@ namespace RES {
          * @platform Web,Native
          * @language zh_CN
          */
-        getChangeList():Array<{url:string; size:number}>;
+        getChangeList(): Array<{ url: string; size: number }>;
 
         /**
          * Get the actual URL of the resource file.<br/>
@@ -97,7 +103,7 @@ namespace RES {
          * @platform Web,Native
          * @language zh_CN
          */
-        getVirtualUrl(url:string):string;
+        getVirtualUrl(url: string): string;
     }
 
     /**
@@ -126,7 +132,7 @@ namespace RES {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    export let VersionController:{
+    export let VersionController: {
         /**
          * Constructor initialization
          * @language en_US
@@ -135,7 +141,7 @@ namespace RES {
          * 初始化构造函数
          * @language zh_CN
          */
-        new():VersionController
+        new (): VersionController
     };
 
 }

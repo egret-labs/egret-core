@@ -57,6 +57,10 @@ namespace egret.sys {
             this.showLog = false;
             this.stageDisplayList = null;
             this.displayFPS = displayFPS;
+
+            if (egret.nativeRender) {
+                egret_native.rootWebGLBuffer = buffer;
+            }
         }
 
         /**
@@ -163,6 +167,12 @@ namespace egret.sys {
          * 渲染屏幕
          */
         $render(triggerByFrame: boolean, costTicker: number): void {
+            if (egret.nativeRender) {
+                egret_native.updateNativeRender();
+                egret_native.nrRender();
+                return;
+            }
+
             if (this.showFPS || this.showLog) {
                 this.stage.addChild(this.fps);
             }
@@ -183,15 +193,17 @@ namespace egret.sys {
          */
         public updateStageSize(stageWidth: number, stageHeight: number): void {
             let stage = this.stage;
-            //if (stageWidth !== stage.$stageWidth || stageHeight !== stage.$stageHeight) {
             stage.$stageWidth = stageWidth;
             stage.$stageHeight = stageHeight;
-            this.screenDisplayList.setClipRect(stageWidth, stageHeight);
-            if (this.stageDisplayList) {
-                this.stageDisplayList.setClipRect(stageWidth, stageHeight);
+            if (egret.nativeRender) {
+                egret_native.nrResize(stageWidth, stageHeight);
+            } else {
+                this.screenDisplayList.setClipRect(stageWidth, stageHeight);
+                if (this.stageDisplayList) {
+                    this.stageDisplayList.setClipRect(stageWidth, stageHeight);
+                }
             }
             stage.dispatchEventWith(Event.RESIZE);
-            //}
         }
 
 

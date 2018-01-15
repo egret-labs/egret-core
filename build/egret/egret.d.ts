@@ -82,13 +82,6 @@ declare namespace egret {
          */
         readonly hashCode: number;
     }
-    /**
-     * @private
-     */
-    interface AsyncCallback {
-        onSuccess: (data: any) => any;
-        onFail: (error: number, data: any) => any;
-    }
 }
 declare namespace egret {
     /**
@@ -337,6 +330,8 @@ declare namespace egret {
          * @language zh_CN
          */
         constructor();
+        $nativeDisplayObject: egret_native.NativeDisplayObject;
+        protected createNativeDisplayObject(): void;
         /**
          * @private
          * 是否添加到舞台上，防止重复发送 removed_from_stage 消息
@@ -1262,12 +1257,39 @@ declare namespace egret {
         /**
          * @private
          */
+        $id: number;
+        /**
+         * @private
+         */
         $uniforms: any;
+        /**
+         * @private
+         */
+        protected paddingTop: number;
+        /**
+         * @private
+         */
+        protected paddingBottom: number;
+        /**
+         * @private
+         */
+        protected paddingLeft: number;
+        /**
+         * @private
+         */
+        protected paddingRight: number;
+        /**
+         * @private
+         * @native Render
+         */
+        $obj: any;
         constructor();
         /**
          * @private
          */
         $toJson(): string;
+        protected updatePadding(): void;
+        onPropertyChange(): void;
     }
 }
 declare namespace egret {
@@ -1708,6 +1730,24 @@ declare namespace egret {
          * @language zh_CN
          */
         constructor();
+        /**
+         * @private
+         * 纹理id
+         */
+        $textureId: number;
+        /**
+         * Whether to destroy the corresponding BitmapData when the texture is destroyed
+         * @version Egret 5.0.8
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 销毁纹理时是否销毁对应BitmapData
+         * @version Egret 5.0.8
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        disposeBitmapData: boolean;
         /**
          * @private
          * 表示这个纹理在 bitmapData 上的 x 起始位置
@@ -2390,6 +2430,7 @@ declare namespace egret {
          * @language zh_CN
          */
         constructor();
+        protected createNativeDisplayObject(): void;
         /**
          * @private
          */
@@ -2611,6 +2652,7 @@ declare namespace egret {
          * @private
          */
         $toJson(): string;
+        protected updatePadding(): void;
     }
 }
 declare namespace egret {
@@ -3322,6 +3364,7 @@ declare namespace egret {
         protected $smoothing: boolean;
         protected $explicitBitmapWidth: number;
         protected $explicitBitmapHeight: number;
+        protected createNativeDisplayObject(): void;
         /**
          * @private
          * 显示对象添加到舞台
@@ -3355,6 +3398,10 @@ declare namespace egret {
         /**
          * @private
          */
+        protected setBitmapDataToWasm(data?: Texture): void;
+        /**
+         * @private
+         */
         $refreshImageData(): void;
         /**
          * @private
@@ -3382,6 +3429,7 @@ declare namespace egret {
          * @language zh_CN
          */
         scale9Grid: egret.Rectangle;
+        protected $setScale9Grid(value: egret.Rectangle): void;
         /**
          * @private
          */
@@ -3495,10 +3543,6 @@ declare namespace egret {
          */
         pixelHitTest: boolean;
         $hitTest(stageX: number, stageY: number): DisplayObject;
-        /**
-         * @private
-         */
-        private hitTestPixel(stageX, stageY);
     }
 }
 declare namespace egret.sys {
@@ -3817,221 +3861,6 @@ declare namespace egret {
 }
 declare namespace egret {
     /**
-     * The Stage class represents the main drawing area.The Stage object is not globally accessible. You need to access
-     * it through the stage property of a DisplayObject instance.<br/>
-     * The Stage class has several ancestor classes — Sprite, DisplayObject, and EventDispatcher — from which it inherits
-     * properties and methods. Many of these properties and methods are inapplicable to Stage objects.
-     * @event egret.Event.RESIZE Dispatched when the stageWidth or stageHeight property of the Stage object is changed.
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/display/Stage.ts
-     * @language en_US
-     */
-    /**
-     * Stage 类代表主绘图区。
-     * 可以利用 DisplayObject 实例的 stage 属性进行访问。<br/>
-     * Stage 类具有多个祖代类: Sprite、DisplayObject 和 EventDispatcher，属性和方法便是从这些类继承而来的。
-     * 从这些继承的许多属性和方法不适用于 Stage 对象。
-     * @event egret.Event.RESIZE 当stageWidth或stageHeight属性发生改变时调度
-     * @event egret.Event.DEACTIVATE 当stage失去焦点后调度
-     * @event egret.Event.ACTIVATE 当stage获得焦点后调度
-     *
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/display/Stage.ts
-     * @language zh_CN
-     */
-    class Stage extends DisplayObjectContainer {
-        /**
-         * @private
-         * Stage不许允许自行实例化
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        constructor();
-        /**
-         * Gets and sets the frame rate of the stage. The frame rate is defined as frames per second. Valid range for the
-         * frame rate is from 0.01 to 1000 frames per second.<br/>
-         * Note: setting the frameRate property of one Stage object changes the frame rate for all Stage objects
-         * @default 30
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 获取并设置舞台的帧速率。帧速率是指每秒显示的帧数。帧速率的有效范围为每秒 0.01 到 60 个帧。<br/>
-         * 注意: 修改任何一个Stage的frameRate属性都会同步修改其他Stage的帧率。
-         * @default 30
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        frameRate: number;
-        /**
-         * @private
-         */
-        $stageWidth: number;
-        /**
-         * Indicates the width of the stage, in pixels.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 舞台的当前宽度（以像素为单位）。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        readonly stageWidth: number;
-        /**
-         * @private
-         */
-        $stageHeight: number;
-        /**
-         * Indicates the height of the stage, in pixels.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 舞台的当前高度（以像素为单位）。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        readonly stageHeight: number;
-        /**
-         * After you call the invalidate() method, when the display list is next rendered, the Egret runtime sends a render
-         * event to each display object that has registered to listen for the render event. You must call the invalidate()
-         * method each time you want the Egret runtime to send render events.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 调用 invalidate() 方法后，在显示列表下次呈现时，Egret 会向每个已注册侦听 Event.RENDER 事件的显示对象发送一个 Event.RENDER 事件。
-         * 每次您希望 Egret 发送 Event.RENDER 事件时，都必须调用 invalidate() 方法。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        invalidate(): void;
-        /**
-         * @deprecated
-         */
-        registerImplementation(interfaceName: string, instance: any): void;
-        /**
-         * @deprecated
-         */
-        getImplementation(interfaceName: string): any;
-        /**
-         * @private
-         * 设备屏幕引用
-         */
-        $screen: egret.sys.Screen;
-        $scaleMode: string;
-        /**
-         * A StageScaleMode class that specifies which scale mode to use. The following are valid values:<br/>
-         * <ul>
-         * <li>StageScaleMode.EXACT_FIT -- The entire application be visible in the specified area without trying to preserve the original aspect ratio. Distortion can occur, the application may be stretched or compressed.</li>
-         * <li>StageScaleMode.SHOW_ALL -- The entire application is visible in the specified area without distortion while maintaining the application of the original aspect ratio. Applications may display border.</li>
-         * <li>StageScaleMode.NO_SCALE -- The size of the entire application is fixed, so that even if the size of the player window changes, it remains unchanged. If the player window is smaller than the content, it may do some trimming.</li>
-         * <li>StageScaleMode.NO_BORDER -- Keep the original aspect ratio scaling application content, after scaling a narrow direction of application content to fill the viewport players on both sides in the other direction may exceed the viewport and the player is cut.</li>
-         * <li>StageScaleMode.FIXED_WIDTH -- Keep the original aspect ratio scaling application content, after scaling application content in the horizontal and vertical directions to fill the viewport player, but only to keep the contents of the original application constant width, height may change.</li>
-         * <li>StageScaleMode.FIXED_HEIGHT -- Keep the original aspect ratio scaling application content, after scaling application content in the horizontal and vertical directions to fill the viewport player, but only to keep the contents of the original application constant height, width may change.</li>
-         * </ul>
-         * @default egret.StageScaleMode.SHOW_ALL
-         * @language en_US
-         */
-        /**
-         * 一个 StageScaleMode 类中指定要使用哪种缩放模式的值。以下是有效值：<br/>
-         * <ul>
-         * <li>StageScaleMode.EXACT_FIT -- 整个应用程序在指定区域中可见，但不尝试保持原始高宽比。可能会发生扭曲，应用程序可能会拉伸或压缩显示。</li>
-         * <li>StageScaleMode.SHOW_ALL -- 整个应用程序在指定区域中可见，且不发生扭曲，同时保持应用程序的原始高宽比。应用程序的可能会显示边框。</li>
-         * <li>StageScaleMode.NO_SCALE -- 整个应用程序的大小固定，因此，即使播放器窗口的大小更改，它也会保持不变。如果播放器窗口比内容小，则可能进行一些裁切。</li>
-         * <li>StageScaleMode.NO_BORDER -- 保持原始宽高比缩放应用程序内容，缩放后应用程序内容的较窄方向填满播放器视口，另一个方向的两侧可能会超出播放器视口而被裁切。</li>
-         * <li>StageScaleMode.FIXED_WIDTH -- 保持原始宽高比缩放应用程序内容，缩放后应用程序内容在水平和垂直方向都填满播放器视口，但只保持应用程序内容的原始宽度不变，高度可能会改变。</li>
-         * <li>StageScaleMode.FIXED_HEIGHT -- 保持原始宽高比缩放应用程序内容，缩放后应用程序内容在水平和垂直方向都填满播放器视口，但只保持应用程序内容的原始高度不变，宽度可能会改变。</li>
-         * </ul>
-         * @default egret.StageScaleMode.SHOW_ALL
-         * @language zh_CN
-         */
-        scaleMode: string;
-        $orientation: string;
-        /**
-         * Horizontal and vertical screen display screen, can only be set under the current Native in the configuration file. A egret.OrientationMode class that specifies which display mode to use. The following are valid values:<br/>
-         * <ul>
-         * <li>egret.OrientationMode.AUTO -- Always follow the direction of application display screen, always guaranteed by the look down.</li>
-         * <li>egret.OrientationMode.PORTRAIT -- Applications remain portrait mode, namely horizontal screen look, the screen from left to right.</li>
-         * <li>egret.OrientationMode.LANDSCAPE -- Applications remain horizontal screen mode, namely vertical screen, the screen from right to left.</li>
-         * <li>egret.OrientationMode.LANDSCAPE_FLIPPED -- Applications remain horizontal screen mode, namely vertical screen, the screen from left to right.</li>
-         * </ul>
-         * @platform Web
-         * @version 2.4
-         * @language en_US
-         */
-        /**
-         * 屏幕横竖屏显示方式，目前 Native 下只能在配置文件里设置。一个 egret.OrientationMode 类中指定要使用哪种显示方式。以下是有效值：<br/>
-         * <ul>
-         * <li>egret.OrientationMode.AUTO -- 应用始终跟随屏幕的方向显示，始终保证由上往下看。</li>
-         * <li>egret.OrientationMode.PORTRAIT -- 应用始终保持竖屏模式，即横屏看时，屏幕由左往右看。</li>
-         * <li>egret.OrientationMode.LANDSCAPE -- 应用始终保持横屏模式，即竖屏看时，屏幕显示由右往左。</li>
-         * <li>egret.OrientationMode.LANDSCAPE_FLIPPED -- 应用始终保持横屏模式，即竖屏看时，屏幕显示由左往右。</li>
-         * </ul>
-         * @platform Web
-         * @version 2.4
-         * @language zh_CN
-         */
-        orientation: string;
-        /**
-         * Draw texture zoom ratio
-         * @default 1
-         * @language en_US
-         */
-        /**
-         * 绘制纹理的缩放比率，默认值为1
-         * @default 1
-         * @language zh_CN
-         */
-        textureScaleFactor: number;
-        $maxTouches: number;
-        /**
-         * Set the number of screens can simultaneously touch. Above this amount will not be triggered in response.
-         * @default 99
-         * @language en_US
-         */
-        /**
-         * 设置屏幕同时可以触摸的数量。高于这个数量将不会被触发响应。
-         * @default 99
-         * @language zh_CN
-         */
-        maxTouches: number;
-        /**
-         * @private
-         */
-        dirtyRegionPolicy: string;
-        /**
-         * Set resolution size
-         * @param width width
-         * @param height height
-         * @version Egret 2.5.5
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 设置分辨率尺寸
-         * @param width 宽度
-         * @param height 高度
-         * @version Egret 2.5.5
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        setContentSize(width: number, height: number): void;
-    }
-}
-declare namespace egret {
-    /**
      * The CapsStyle class is an enumeration of constant values that specify the caps style to use in drawing lines.
      * The constants are provided for use as values in the caps parameter of the egret.Graphics.lineStyle() method.
      * @see egret.Graphics#lineStyle()
@@ -4054,24 +3883,6 @@ declare namespace egret {
 }
 declare namespace egret {
     /**
-     * Values for the dirty region policy
-     * @version Egret 2.5
-     * @platform Web,Native
-     * @language en_US
-     */
-    /**
-     * 脏矩形策略常量。
-     * @version Egret 3.0
-     * @platform Web,Native
-     * @language zh_CN
-     */
-    const DirtyRegionPolicy: {
-        OFF: string;
-        ON: string;
-    };
-}
-declare namespace egret {
-    /**
      * @private
      */
     class WebGLUtils {
@@ -4082,6 +3893,140 @@ declare namespace egret {
         private static canUseWebGL;
         static checkCanUseWebGL(): boolean;
         static deleteWebGLTexture(bitmapData: any): void;
+    }
+}
+declare namespace egret {
+    /**
+     * A BitmapData object contains an array of pixel data. This data can represent either a fully opaque bitmap or a
+     * transparent bitmap that contains alpha channel data. Either type of BitmapData object is stored as a buffer of 32-bit
+     * integers. Each 32-bit integer determines the properties of a single pixel in the bitmap.<br/>
+     * Each 32-bit integer is a combination of four 8-bit channel values (from 0 to 255) that describe the alpha transparency
+     * and the red, green, and blue (ARGB) values of the pixel. (For ARGB values, the most significant byte represents the
+     * alpha channel value, followed by red, green, and blue.)
+     * @see egret.Bitmap
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * BitmapData 对象是一个包含像素数据的数组。此数据可以表示完全不透明的位图，或表示包含 Alpha 通道数据的透明位图。
+     * 以上任一类型的 BitmapData 对象都作为 32 位整数的缓冲区进行存储。每个 32 位整数确定位图中单个像素的属性。<br/>
+     * 每个 32 位整数都是四个 8 位通道值（从 0 到 255）的组合，这些值描述像素的 Alpha 透明度以及红色、绿色、蓝色 (ARGB) 值。
+     * （对于 ARGB 值，最高有效字节代表 Alpha 通道值，其后的有效字节分别代表红色、绿色和蓝色通道值。）
+     * @see egret.Bitmap
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    class BitmapData extends HashObject {
+        /**
+         * The width of the bitmap image in pixels.
+         * @readOnly
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 位图图像的宽度，以像素为单位。
+         * @readOnly
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        width: number;
+        /**
+         * The height of the bitmap image in pixels.
+         * @readOnly
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 位图图像的高度，以像素为单位。
+         * @readOnly
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        height: number;
+        /**
+         * Original bitmap image.
+         * HTMLImageElement|HTMLCanvasElement|HTMLVideoElement
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @private
+         * @language en_US
+         */
+        /**
+         * 原始位图图像。
+         * HTMLImageElement|HTMLCanvasElement|HTMLVideoElement
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @private
+         * @language zh_CN
+         */
+        source: any;
+        /**
+         * WebGL texture.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @private
+         * @language en_US
+         */
+        /**
+         * WebGL纹理。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @private
+         * @language zh_CN
+         */
+        webGLTexture: any;
+        /**
+         * Texture format.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 纹理格式。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        format: string;
+        /**
+         * @private
+         * webgl纹理生成后，是否删掉原始图像数据
+         */
+        $deleteSource: boolean;
+        /**
+         * @private
+         * id
+         */
+        $bitmapDataId: number;
+        /**
+         * Initializes a BitmapData object to refer to the specified source object.
+         * @param source The source object being referenced.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 创建一个引用指定 source 实例的 BitmapData 对象
+         * @param source 被引用的 source 实例
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        constructor(source: any);
+        static create(type: "arraybuffer", data: ArrayBuffer, callback?: (bitmapData: BitmapData) => void): BitmapData;
+        static create(type: "base64", data: string, callback?: (bitmapData: BitmapData) => void): BitmapData;
+        $dispose(): void;
+        private static _displayList;
+        static $addDisplayObject(displayObject: DisplayObject, bitmapData: BitmapData): void;
+        static $removeDisplayObject(displayObject: DisplayObject, bitmapData: BitmapData): void;
+        static $invalidate(bitmapData: BitmapData): void;
+        static $dispose(bitmapData: BitmapData): void;
     }
 }
 declare namespace egret {
@@ -5313,131 +5258,48 @@ declare namespace egret {
 }
 declare namespace egret {
     /**
-     * A BitmapData object contains an array of pixel data. This data can represent either a fully opaque bitmap or a
-     * transparent bitmap that contains alpha channel data. Either type of BitmapData object is stored as a buffer of 32-bit
-     * integers. Each 32-bit integer determines the properties of a single pixel in the bitmap.<br/>
-     * Each 32-bit integer is a combination of four 8-bit channel values (from 0 to 255) that describe the alpha transparency
-     * and the red, green, and blue (ARGB) values of the pixel. (For ARGB values, the most significant byte represents the
-     * alpha channel value, followed by red, green, and blue.)
-     * @see egret.Bitmap
+     * The GradientType class provides values for the type parameter in the beginGradientFill() methods of the egret.Graphics class.
+     *
+     * @see egret.Graphics#beginGradientFill()
      * @version Egret 2.4
      * @platform Web,Native
      * @language en_US
      */
     /**
-     * BitmapData 对象是一个包含像素数据的数组。此数据可以表示完全不透明的位图，或表示包含 Alpha 通道数据的透明位图。
-     * 以上任一类型的 BitmapData 对象都作为 32 位整数的缓冲区进行存储。每个 32 位整数确定位图中单个像素的属性。<br/>
-     * 每个 32 位整数都是四个 8 位通道值（从 0 到 255）的组合，这些值描述像素的 Alpha 透明度以及红色、绿色、蓝色 (ARGB) 值。
-     * （对于 ARGB 值，最高有效字节代表 Alpha 通道值，其后的有效字节分别代表红色、绿色和蓝色通道值。）
-     * @see egret.Bitmap
+     * GradientType 类为 egret.Graphics 类的 beginGradientFill() 方法中的 type 参数提供值。
+     *
+     * @see egret.Graphics#beginGradientFill()
      * @version Egret 2.4
      * @platform Web,Native
      * @language zh_CN
      */
-    class BitmapData extends HashObject {
+    class GradientType {
         /**
-         * The width of the bitmap image in pixels.
-         * @readOnly
+         * Value used to specify a linear gradient fill.
          * @version Egret 2.4
          * @platform Web,Native
          * @language en_US
          */
         /**
-         * 位图图像的宽度，以像素为单位。
-         * @readOnly
+         * 用于指定线性渐变填充的值
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
          */
-        width: number;
+        static LINEAR: string;
         /**
-         * The height of the bitmap image in pixels.
-         * @readOnly
+         * Value used to specify a radial gradient fill.
          * @version Egret 2.4
          * @platform Web,Native
          * @language en_US
          */
         /**
-         * 位图图像的高度，以像素为单位。
-         * @readOnly
+         * 用于指定放射状渐变填充的值
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
          */
-        height: number;
-        /**
-         * Original bitmap image.
-         * HTMLImageElement|HTMLCanvasElement|HTMLVideoElement
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @private
-         * @language en_US
-         */
-        /**
-         * 原始位图图像。
-         * HTMLImageElement|HTMLCanvasElement|HTMLVideoElement
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @private
-         * @language zh_CN
-         */
-        source: any;
-        /**
-         * WebGL texture.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @private
-         * @language en_US
-         */
-        /**
-         * WebGL纹理。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @private
-         * @language zh_CN
-         */
-        webGLTexture: any;
-        /**
-         * Texture format.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 纹理格式。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        format: string;
-        /**
-         * @private
-         * webgl纹理生成后，是否删掉原始图像数据
-         */
-        $deleteSource: boolean;
-        /**
-         * Initializes a BitmapData object to refer to the specified source object.
-         * @param source The source object being referenced.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 创建一个引用指定 source 实例的 BitmapData 对象
-         * @param source 被引用的 source 实例
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        constructor(source: any);
-        static create(type: "arraybuffer", data: ArrayBuffer, callback?: (bitmapData: BitmapData) => void): BitmapData;
-        static create(type: "base64", data: string, callback?: (bitmapData: BitmapData) => void): BitmapData;
-        $dispose(): void;
-        private static _displayList;
-        static $addDisplayObject(displayObject: DisplayObject, bitmapData: BitmapData): void;
-        static $removeDisplayObject(displayObject: DisplayObject, bitmapData: BitmapData): void;
-        static $invalidate(bitmapData: BitmapData): void;
-        static $dispose(bitmapData: BitmapData): void;
+        static RADIAL: string;
     }
 }
 declare namespace egret {
@@ -5897,6 +5759,8 @@ declare namespace egret {
          * @private
          */
         $toJson(): string;
+        protected updatePadding(): void;
+        onPropertyChange(): void;
     }
     /**
      * @private
@@ -6011,6 +5875,7 @@ declare namespace egret {
          * @private
          */
         type: string;
+        private $padding;
         /**
          * The inner margin of the filter.
          * If the desired area of the custom filter is larger than the original area (stroke, etc.), you need to set it manually.
@@ -6058,6 +5923,7 @@ declare namespace egret {
          * @language zh_CN
          */
         constructor(vertexSrc: string, fragmentSrc: string, uniforms?: any);
+        onPropertyChange(): void;
     }
 }
 declare namespace egret {
@@ -6162,52 +6028,7 @@ declare namespace egret {
          * @private
          */
         $toJson(): string;
-    }
-}
-declare namespace egret {
-    /**
-     * The GradientType class provides values for the type parameter in the beginGradientFill() methods of the egret.Graphics class.
-     *
-     * @see egret.Graphics#beginGradientFill()
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language en_US
-     */
-    /**
-     * GradientType 类为 egret.Graphics 类的 beginGradientFill() 方法中的 type 参数提供值。
-     *
-     * @see egret.Graphics#beginGradientFill()
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language zh_CN
-     */
-    class GradientType {
-        /**
-         * Value used to specify a linear gradient fill.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 用于指定线性渐变填充的值
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        static LINEAR: string;
-        /**
-         * Value used to specify a radial gradient fill.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 用于指定放射状渐变填充的值
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        static RADIAL: string;
+        protected updatePadding(): void;
     }
 }
 declare namespace egret {
@@ -6250,7 +6071,8 @@ declare namespace egret {
         /**
          * 绑定到的目标显示对象
          */
-        private targetDisplay;
+        $targetDisplay: DisplayObject;
+        $targetIsSprite: boolean;
         /**
          * @private
          * 设置绑定到的目标显示对象
@@ -6568,6 +6390,7 @@ declare namespace egret {
          * @language zh_CN
          */
         drawArc(x: number, y: number, radius: number, startAngle: number, endAngle: number, anticlockwise?: boolean): void;
+        private dirty();
         /**
          * @private
          * 测量圆弧的矩形大小
@@ -6641,6 +6464,28 @@ declare namespace egret {
          */
         $onRemoveFromStage(): void;
     }
+}
+declare namespace egret {
+    /**
+     * The JointStyle class is an enumeration of constant values that specify the joint style to use in drawing lines.
+     * These constants are provided for use as values in the joints parameter of the egret.Graphics.lineStyle() method.
+     * @see egret.Graphics#lineStyle()
+     * @version Egret 2.5
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * JointStyle 类是指定要在绘制线条中使用的联接点样式的常量值枚举。提供的这些常量用作 egret.Graphics.lineStyle() 方法的 joints 参数中的值。
+     * @see egret.Graphics#lineStyle()
+     * @version Egret 2.5
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    const JointStyle: {
+        BEVEL: string;
+        MITER: string;
+        ROUND: string;
+    };
 }
 declare namespace egret {
     /**
@@ -7714,25 +7559,33 @@ declare namespace egret {
 }
 declare namespace egret {
     /**
-     * The JointStyle class is an enumeration of constant values that specify the joint style to use in drawing lines.
-     * These constants are provided for use as values in the joints parameter of the egret.Graphics.lineStyle() method.
-     * @see egret.Graphics#lineStyle()
-     * @version Egret 2.5
-     * @platform Web,Native
-     * @language en_US
+     * @private
      */
-    /**
-     * JointStyle 类是指定要在绘制线条中使用的联接点样式的常量值枚举。提供的这些常量用作 egret.Graphics.lineStyle() 方法的 joints 参数中的值。
-     * @see egret.Graphics#lineStyle()
-     * @version Egret 2.5
-     * @platform Web,Native
-     * @language zh_CN
-     */
-    const JointStyle: {
-        BEVEL: string;
-        MITER: string;
-        ROUND: string;
-    };
+    class Mesh extends Bitmap {
+        constructor(value?: Texture);
+        protected createNativeDisplayObject(): void;
+        /**
+         * @private
+         */
+        protected setBitmapDataToWasm(data?: Texture): void;
+        /**
+         * @private
+         */
+        $updateRenderNode(): void;
+        /**
+         * @private
+         */
+        private _verticesDirty;
+        private _bounds;
+        /**
+         * @private
+         */
+        $updateVertices(): void;
+        /**
+         * @private
+         */
+        $measureContentBounds(bounds: Rectangle): void;
+    }
 }
 declare namespace egret {
 }
@@ -8253,292 +8106,6 @@ declare namespace egret {
         new (url?: string, cache?: boolean): Video;
     };
 }
-/**
- * @private
- */
-declare namespace egret_native {
-    let nativeType: string;
-    /**
-     * 游戏启动
-     * @private
-     */
-    function startGame(): void;
-    function _selectPhoto(promise: egret.PromiseObject): void;
-    function loglevel(logType: any): void;
-    function callRender(): void;
-    function getVersion(): any;
-    function setScreenCanvas(canvas: Canvas): void;
-    function setFrameRate(frameRate: number): void;
-    function onTouchesBegin(num: number, ids: any[], xs_array: any[], ys_array: any[]): any;
-    function onTouchesMove(num: number, ids: any[], xs_array: any[], ys_array: any[]): any;
-    function onTouchesEnd(num: number, ids: any[], xs_array: any[], ys_array: any[]): any;
-    function onTouchesCancel(num: number, ids: any[], xs_array: any[], ys_array: any[]): any;
-    function sendToC(float32Array: Float32Array, arrayBufferLen: number, array: string[]): void;
-    /**
-     * 启动主循环
-     * @param callback 主循环回调函数
-     * @param thisObject
-     */
-    function executeMainLoop(callback: Function, thisObject: any): void;
-    function pauseApp(): void;
-    function resumeApp(): void;
-    function readXML(filepath: string): any;
-    function xmlStr2JsonStr(text: string): any;
-    function isFileExists(filepath: string): boolean;
-    function isRecordExists(filepath: string): boolean;
-    function readFileSync(filepath: string, type?: string): any;
-    function readResourceFileSync(filepath: string): any;
-    function readUpdateFileSync(filepath: string): any;
-    function deleteUpdateFile(filepath: string): void;
-    function readFileAsync(filepath: string, promise: egret.PromiseObject, type?: string): any;
-    function writeFileSync(filepath: string, fileContent: string): any;
-    function pickPhoto(promise: egret.PromiseObject): void;
-    function requireHttpSync(url: string, callback: Function): void;
-    function requireHttp(url: string, param: any, callback: Function): void;
-    function sendInfoToPlugin(info: string): void;
-    function receivedPluginInfo(info: string): void;
-    function loadRecord(filepath: string): string;
-    function saveRecord(filepath: string, fileContent: string): void;
-    function getOption(type: string): string;
-    namespace Audio {
-        function preloadBackgroundMusic(path: string): void;
-        function playBackgroundMusic(path: string, loop: boolean): void;
-        function setBackgroundMusicVolume(value: number): void;
-        function setEffectsVolume(value: number): void;
-        function getBackgroundMusicVolume(): number;
-        function getEffectsVolume(): number;
-        function stopBackgroundMusic(isRelease: boolean): void;
-        function preloadEffect(path: string): void;
-        function preloadEffectAsync(path: string, promise: egret.PromiseObject): void;
-        function playEffect(path: string, loop: boolean): void;
-        function unloadEffect(path: string): void;
-        function stopEffect(effectId: number): void;
-        function pauseBackgroundMusic(): void;
-        function pauseAllEffects(): void;
-        function resumeBackgroundMusic(): void;
-        function resumeAllEffects(): void;
-    }
-    function download(url: string, savePath: string, promise: any): void;
-    namespace Graphics {
-        function clearScreen(r: number, g: number, b: number): void;
-        function drawImage(texture: any, sourceX: any, sourceY: any, sourceWidth: any, sourceHeight: any, destX: any, destY: any, destWidth: any, destHeight: any): void;
-        function drawImageScale9(texture: any, sourceX: any, sourceY: any, sourceWidth: any, sourceHeight: any, destX: any, destY: any, destWidth: any, destHeight: any, x: any, y: any, width: any, height: any): boolean;
-        function setTransform(a: number, b: number, c: number, d: number, tx: number, ty: number): void;
-        function setGlobalAlpha(alpha: number): void;
-        function pushClip(x: number, y: number, w: number, h: number): void;
-        function popClip(): void;
-        function setGlobalColorTransform(colorTransformMatrix: number[]): void;
-        function setGlobalColorTransformEnabled(bool: boolean): void;
-        function setGlobalShader(filterData: any): void;
-        function lineStyle(thickness: number, color: number): void;
-        function lineTo(x: number, y: number): void;
-        function moveTo(x: number, y: number): void;
-        function beginFill(color: number, alpha: number): void;
-        function endFill(): void;
-        function setBlendArg(src: number, des: number): void;
-        function setTextureScaleFactor(value: number): void;
-    }
-    namespace Label {
-        function createLabel(font: string, size: number, defaultString: string, defaultStroke: number): void;
-        function setTextColor(color: number): void;
-        function setStrokeColor(color: number): void;
-        function drawText(text: string, x: number, y: number): void;
-        function setTextAlignment(type: string): void;
-        function getTextSize(text: string): number[];
-    }
-    namespace EGTXML {
-        function readXML(filepath: string): void;
-    }
-    namespace Texture {
-        function create(filePath: string): any;
-        function addTexture(filePath: string): any;
-        function addTextureAsyn(filePath: string, promise: any): any;
-        function addTextureUnsyn(filePath: string, promise: any): any;
-        function removeTexture(filePath: string): void;
-        function createTextureFromArrayBuffer(arrayBuffer: ArrayBuffer): any;
-    }
-    namespace TextInputOp {
-        function setKeybordOpen(isOpen: boolean, jsonConfig?: Object): void;
-        function isFullScreenKeyBoard(): boolean;
-        function setInputTextMaxLenght(value: number): void;
-        function updateConfig(jsonConfig?: Object): void;
-    }
-    function EGT_TextInput(text: string): void;
-    function EGT_keyboardFinish(): void;
-    function EGT_deleteBackward(): void;
-    function EGT_keyboardDidHide(): void;
-    function EGT_keyboardDidShow(): void;
-    function EGT_getTextEditerContentText(): string;
-    namespace EGTView {
-        function getFrameWidth(): number;
-        function getFrameHeight(): number;
-        function setVisibleRect(x: number, y: number, w: number, h: number): number;
-        function setDesignSize(w: number, h: number): number;
-    }
-    /**
-     * @private
-     */
-    class RenderTexture {
-        constructor(width: number, height: number);
-        begin(): any;
-        end(): any;
-        dispose(): any;
-        toDataURL(type: any): any;
-        saveToFile(type: string, filePath: string): any;
-    }
-    namespace rastergl {
-        function arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, anticlockwise?: boolean): void;
-        function quadraticCurveTo(cpx: number, cpy: number, x: number, y: number): void;
-        function lineTo(x: number, y: number): void;
-        function fill(fillRule?: string): void;
-        function closePath(): void;
-        function rect(x: number, y: number, w: number, h: number): void;
-        function moveTo(x: number, y: number): void;
-        function fillRect(x: number, y: number, w: number, h: number): void;
-        function bezierCurveTo(cp1x: number, cp1y: number, cp2x: number, cp2y: number, x: number, y: number): void;
-        function stroke(): void;
-        function strokeRect(x: number, y: number, w: number, h: number): void;
-        function beginPath(): void;
-        function arcTo(x1: number, y1: number, x2: number, y2: number, radius: number): void;
-        function transform(m11: number, m12: number, m21: number, m22: number, dx: number, dy: number): void;
-        function translate(x: number, y: number): void;
-        function scale(x: number, y: number): void;
-        function rotate(angle: number): void;
-        function save(): void;
-        function restore(): void;
-        function createLinearGradient(x0: number, y0: number, x1: number, y1: number): CanvasGradient;
-        function createRadialGradient(x0: number, y0: number, r0: number, x1: number, y1: number, r1: number): CanvasGradient;
-        /**
-         * @private
-         */
-        let lineWidth: number;
-        /**
-         * @private
-         */
-        let strokeStyle: any;
-        /**
-         * @private
-         */
-        let fillStyle: any;
-    }
-    namespace Game {
-        function listResource(root: any, promise: any): any;
-        function listUpdate(root: any, promise: any): any;
-    }
-    /**
-     * @private
-     */
-    class RenderContext {
-        clearScreen(r: number, g: number, b: number): void;
-        drawImage(texture: any, sourceX: any, sourceY: any, sourceWidth: any, sourceHeight: any, destX: any, destY: any, destWidth: any, destHeight: any): void;
-        setTransform(a: number, b: number, c: number, d: number, tx: number, ty: number): void;
-        setGlobalAlpha(alpha: number): void;
-        pushClip(x: number, y: number, w: number, h: number): void;
-        popClip(): void;
-    }
-    /**
-     * @private
-     */
-    class Canvas {
-        constructor(width: number, height: number);
-        width: number;
-        height: number;
-        getContext(type: string): RenderContext;
-    }
-}
-declare namespace egret {
-    /**
-     * @private
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    class PromiseObject {
-        /**
-         * @private
-         */
-        private static promiseObjectList;
-        /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        onSuccessFunc: Function;
-        /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        onSuccessThisObject: any;
-        /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        onErrorFunc: Function;
-        /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        onErrorThisObject: any;
-        /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        downloadingSizeFunc: Function;
-        /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        downloadingSizeThisObject: any;
-        /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        onResponseHeaderFunc: Function;
-        /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        onResponseHeaderThisObject: any;
-        /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        constructor();
-        /**
-         *
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static create(): any;
-        /**
-         * @private
-         *
-         * @param args
-         */
-        private onSuccess(...args);
-        /**
-         * @private
-         *
-         * @param args
-         */
-        private onError(...args);
-        /**
-         * @private
-         *
-         * @param args
-         */
-        private downloadingSize(...args);
-        /**
-         * @private
-         *
-         * @param args
-         */
-        private onResponseHeader(...args);
-        /**
-         * @private
-         *
-         */
-        private destroy();
-    }
-}
 declare namespace egret {
     /**
      * The HttpMethod class provides values that specify whether the HttpRequest object should use the POST method
@@ -8984,7 +8551,6 @@ declare namespace egret.sys {
          * 显示列表根节点
          */
         root: DisplayObject;
-        needUpdateRegions: boolean;
         /**
          * @private
          * 设置剪裁边界，不再绘制完整目标对象，画布尺寸由外部决定，超过边界的节点将跳过绘制。
@@ -9050,34 +8616,15 @@ declare namespace egret {
      * @language zh_CN
      */
     function updateAllScreens(): void;
+}
+/**
+ * @private
+ */
+declare module egret {
     /**
      * @private
      */
-    type CustomContext = {
-        onStart: (egretContext: EgretContext) => void;
-        onRender: (egretContext: EgretContext) => void;
-        onStop: (egretContext: EgretContext) => void;
-        onResize: (egretContext: EgretContext) => void;
-    };
-    /**
-     * @private
-     */
-    type EgretContext = {
-        setAutoClear: (value: boolean) => void;
-        save: () => void;
-        restore: () => void;
-    };
-    /**
-     * Insert render context, now for egret3d
-     * @private
-     * @language en_US
-     */
-    /**
-     * 插入渲染上下文，目前用于egret3d的混入
-     * @private
-     * @language zh_CN
-     */
-    function setRendererContext(custom: CustomContext): void;
+    var nativeRender: boolean;
 }
 declare namespace egret {
     /**
@@ -9216,128 +8763,69 @@ declare namespace egret.sys {
     let $warnToFPS: (info: string) => void;
     let $errorToFPS: (info: string) => void;
 }
+/**
+ * @private
+ */
+interface PlayerOption {
+    /**
+     * 入口类完整类名
+     */
+    entryClassName?: string;
+    /**
+     * 默认帧率
+     */
+    frameRate?: number;
+    /**
+     * 屏幕适配模式
+     */
+    scaleMode?: string;
+    /**
+     * 初始内容宽度
+     */
+    contentWidth?: number;
+    /**
+     * 初始内容高度
+     */
+    contentHeight?: number;
+    /**
+     * 屏幕方向
+     */
+    orientation?: string;
+    /**
+     * 显示FPS
+     */
+    showFPS?: boolean;
+    /**
+     *
+     */
+    fpsStyles?: Object;
+    /**
+     * 显示日志
+     */
+    showLog?: boolean;
+    /**
+     * 过滤日志的正则表达式
+     */
+    logFilter?: string;
+    /**
+     *
+     */
+    maxTouches?: number;
+    /**
+     *
+     */
+    textureScaleFactor?: number;
+}
 declare namespace egret {
     /**
-     * @private
+     * OrientationMode 类为舞台初始旋转模式提供值。
      */
-    class Mesh extends Bitmap {
-        constructor(value?: Texture);
-        /**
-         * @private
-         */
-        $updateRenderNode(): void;
-        /**
-         * @private
-         */
-        private _verticesDirty;
-        private _bounds;
-        /**
-         * @private
-         */
-        $updateVertices(): void;
-        /**
-         * @private
-         */
-        $measureContentBounds(bounds: Rectangle): void;
-    }
-}
-declare namespace egret.sys {
-    /**
-     * @private
-     * 共享的用于碰撞检测的渲染缓冲
-     */
-    let customHitTestBuffer: sys.RenderBuffer;
-    /**
-     * @private
-     * 共享的用于canvas碰撞检测的渲染缓冲
-     */
-    let canvasHitTestBuffer: sys.RenderBuffer;
-    /**
-     * @private
-     * 渲染缓冲
-     */
-    interface RenderBuffer {
-        /**
-         * 呈现最终绘图结果的画布。
-         * @readOnly
-         */
-        surface: any;
-        /**
-         * 渲染上下文。
-         * @readOnly
-         */
-        context: any;
-        /**
-         * 渲染缓冲的宽度，以像素为单位。
-         * @readOnly
-         */
-        width: number;
-        /**
-         * 渲染缓冲的高度，以像素为单位。
-         * @readOnly
-         */
-        height: number;
-        /**
-         * 改变渲染缓冲的大小并清空缓冲区
-         * @param width 改变后的宽
-         * @param height 改变后的高
-         * @param useMaxSize 若传入true，则将改变后的尺寸与已有尺寸对比，保留较大的尺寸。
-         */
-        resize(width: number, height: number, useMaxSize?: boolean): void;
-        /**
-         * 获取指定区域的像素
-         */
-        getPixels(x: number, y: number, width?: number, height?: number): number[];
-        /**
-         * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null
-         * @param type 转换的类型，如: "image/png","image/jpeg"
-         */
-        toDataURL(type?: string, ...args: any[]): string;
-        /**
-         * 清空缓冲区数据
-         */
-        clear(): void;
-        /**
-         * 销毁渲染缓冲
-         */
-        destroy(): void;
-    }
-    /**
-     * @private
-     */
-    let RenderBuffer: {
-        /**
-         * 创建一个RenderTarget。
-         * 注意：若内存不足或创建缓冲区失败，将会抛出错误异常。
-         * @param width 渲染缓冲的初始宽
-         * @param height 渲染缓冲的初始高
-         * @param root 是否为舞台buffer
-         */
-        new (width?: number, height?: number, root?: boolean): RenderBuffer;
+    const OrientationMode: {
+        AUTO: string;
+        PORTRAIT: string;
+        LANDSCAPE: string;
+        LANDSCAPE_FLIPPED: string;
     };
-    /**
-     * @private
-     */
-    let CanvasRenderBuffer: {
-        /**
-         * 创建一个CanvasRenderBuffer。
-         * 注意：若内存不足或创建缓冲区失败，将会抛出错误异常。
-         * @param width 渲染缓冲的初始宽
-         * @param height 渲染缓冲的初始高
-         */
-        new (width?: number, height?: number): RenderBuffer;
-    };
-}
-declare namespace egret.sys {
-    /**
-     * @private
-     */
-    interface Renderable extends HashObject {
-        /**
-         * 获取渲染节点
-         */
-        $getRenderNode(): RenderNode;
-    }
 }
 declare namespace egret.sys {
     /**
@@ -10092,14 +9580,52 @@ declare namespace egret.sys {
 }
 declare namespace egret {
     /**
-     * OrientationMode 类为舞台初始旋转模式提供值。
+     * RenderTexture is a dynamic texture
+     * @extends egret.Texture
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/display/RenderTexture.ts
+     * @language en_US
      */
-    const OrientationMode: {
-        AUTO: string;
-        PORTRAIT: string;
-        LANDSCAPE: string;
-        LANDSCAPE_FLIPPED: string;
-    };
+    /**
+     * RenderTexture 是动态纹理类，他实现了将显示对象及其子对象绘制成为一个纹理的功能
+     * @extends egret.Texture
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/display/RenderTexture.ts
+     * @language zh_CN
+     */
+    class RenderTexture extends egret.Texture {
+        constructor();
+        $renderBuffer: sys.RenderBuffer;
+        /**
+         * The specified display object is drawn as a texture
+         * @param displayObject {egret.DisplayObject} the display to draw
+         * @param clipBounds {egret.Rectangle} clip rect
+         * @param scale {number} scale factor
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 将指定显示对象绘制为一个纹理
+         * @param displayObject {egret.DisplayObject} 需要绘制的显示对象
+         * @param clipBounds {egret.Rectangle} 绘制矩形区域
+         * @param scale {number} 缩放比例
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        drawToTexture(displayObject: egret.DisplayObject, clipBounds?: Rectangle, scale?: number): boolean;
+        /**
+         * @inheritDoc
+         */
+        getPixel32(x: number, y: number): number[];
+        /**
+         * @inheritDoc
+         */
+        dispose(): void;
+    }
 }
 declare namespace egret.sys {
     /**
@@ -10205,6 +9731,10 @@ declare namespace egret.sys {
          * 清除非绘制的缓存数据
          */
         clean(): void;
+        /**
+         * 在显示对象的$updateRenderNode()方法被调用前，自动清空自身的drawData数据。
+         */
+        cleanBeforeRender(): void;
     }
 }
 declare namespace egret.sys {
@@ -10240,51 +9770,63 @@ declare namespace egret.sys {
 }
 declare namespace egret {
     /**
-     * RenderTexture is a dynamic texture
-     * @extends egret.Texture
+     * This class is used to create lightweight shapes using the drawing application program interface (API). The Shape
+     * class includes a graphics property, which lets you access methods from the Graphics class.
+     * @see egret.Graphics
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/display/RenderTexture.ts
+     * @includeExample egret/display/Shape.ts
      * @language en_US
      */
     /**
-     * RenderTexture 是动态纹理类，他实现了将显示对象及其子对象绘制成为一个纹理的功能
-     * @extends egret.Texture
+     * 此类用于使用绘图应用程序编程接口 (API) 创建简单形状。Shape 类含有 graphics 属性，通过该属性您可以访问各种矢量绘图方法。
+     * @see egret.Graphics
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/display/RenderTexture.ts
+     * @includeExample egret/display/Shape.ts
      * @language zh_CN
      */
-    class RenderTexture extends egret.Texture {
-        constructor();
-        $renderBuffer: sys.RenderBuffer;
+    class Shape extends DisplayObject {
         /**
-         * The specified display object is drawn as a texture
-         * @param displayObject {egret.DisplayObject} the display to draw
-         * @param clipBounds {egret.Rectangle} clip rect
-         * @param scale {number} scale factor
+         * Creates a new Shape object.
          * @version Egret 2.4
          * @platform Web,Native
          * @language en_US
          */
         /**
-         * 将指定显示对象绘制为一个纹理
-         * @param displayObject {egret.DisplayObject} 需要绘制的显示对象
-         * @param clipBounds {egret.Rectangle} 绘制矩形区域
-         * @param scale {number} 缩放比例
+         * 创建一个 Shape 对象
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
          */
-        drawToTexture(displayObject: egret.DisplayObject, clipBounds?: Rectangle, scale?: number): boolean;
+        constructor();
+        protected createNativeDisplayObject(): void;
         /**
-         * @inheritDoc
+         * @private
          */
-        getPixel32(x: number, y: number): number[];
+        $graphics: Graphics;
         /**
-         * @inheritDoc
+         * Specifies the Graphics object belonging to this Shape object, where vector drawing commands can occur.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
          */
-        dispose(): void;
+        /**
+         * 获取 Shape 中的 Graphics 对象。可通过此对象执行矢量绘图命令。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        readonly graphics: Graphics;
+        /**
+         * @private
+         */
+        $measureContentBounds(bounds: Rectangle): void;
+        $hitTest(stageX: number, stageY: number): DisplayObject;
+        /**
+         * @private
+         */
+        $onRemoveFromStage(): void;
     }
 }
 declare namespace egret.sys {
@@ -10333,6 +9875,7 @@ interface CanvasRenderingContext2D {
     $offsetY: number;
 }
 declare namespace egret {
+    let BLACK_COLOR: string;
     class CanvasRenderer {
         private nestLevel;
         render(displayObject: DisplayObject, buffer: sys.RenderBuffer, matrix: Matrix, forRenderTexture?: boolean): number;
@@ -10342,7 +9885,6 @@ declare namespace egret {
          */
         private drawDisplayObject(displayObject, context, offsetX, offsetY, isStage?);
         private drawWithFilter(displayObject, context, offsetX, offsetY);
-        private drawWithFilterNative(displayObject, context, offsetX, offsetY);
         private drawWithClip(displayObject, context, offsetX, offsetY);
         private drawWithScrollRect(displayObject, context, offsetX, offsetY);
         drawNodeToBuffer(node: sys.RenderNode, buffer: sys.RenderBuffer, matrix: Matrix, forHitTest?: boolean): void;
@@ -10367,6 +9909,16 @@ declare namespace egret {
         private renderGroup(groupNode, context);
         private createRenderBuffer(width, height, useForFilters?);
     }
+    /**
+     * @private
+     * 获取字体字符串
+     */
+    function getFontString(node: sys.TextNode, format: sys.TextFormat): string;
+    /**
+     * @private
+     * 获取RGBA字符串
+     */
+    function getRGBAString(color: number, alpha: number): string;
 }
 declare namespace egret {
     /**
@@ -10682,14 +10234,16 @@ declare namespace egret {
      */
     namespace RuntimeType {
         /**
-        * Running on Web
-        * @version Egret 2.4
-        * @platform Web,Native
-        * @language en_US
-        */
+         * Running on Web
+         * @version Egret 2.4
+         * @deprecated
+         * @platform Web,Native
+         * @language en_US
+         */
         /**
          * 运行在Web上
          * @version Egret 2.4
+         * @deprecated
          * @platform Web,Native
          * @language zh_CN
          */
@@ -10697,12 +10251,14 @@ declare namespace egret {
         /**
          * Running on NATIVE
          * @version Egret 2.4
+         * @deprecated
          * @platform Web,Native
          * @language en_US
          */
         /**
          * 运行在NATIVE上
          * @version Egret 2.4
+         * @deprecated
          * @platform Web,Native
          * @language zh_CN
          */
@@ -10820,6 +10376,7 @@ declare namespace egret {
          * <li>Run on Native     egret.RuntimeType.NATIVE</li>
          * </ul>
          * @version Egret 2.4
+         * @deprecated
          * @platform Web,Native
          * @language en_US
          */
@@ -10830,6 +10387,7 @@ declare namespace egret {
          * <li>运行在Native上     egret.RuntimeType.NATIVE</li>
          * </ul>
          * @version Egret 2.4
+         * @deprecated
          * @platform Web,Native
          * @language zh_CN
          */
@@ -10925,63 +10483,28 @@ declare namespace egret {
 }
 declare namespace egret {
     /**
-     * This class is used to create lightweight shapes using the drawing application program interface (API). The Shape
-     * class includes a graphics property, which lets you access methods from the Graphics class.
-     * @see egret.Graphics
+     * The BitmapFillMode class defines the image fill mode of Bitmap.
+     * The BitmapFillMode class defines a pattern enumeration for adjusting size. These patterns determine how Bitmap fill the size designated by the layout system.
+     * @see http://edn.egret.com/cn/docs/page/134 Texture filling way
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/display/Shape.ts
+     * @includeExample egret/display/BitmapFillMode.ts
      * @language en_US
      */
     /**
-     * 此类用于使用绘图应用程序编程接口 (API) 创建简单形状。Shape 类含有 graphics 属性，通过该属性您可以访问各种矢量绘图方法。
-     * @see egret.Graphics
+     * BitmapFillMode 类定义Bitmap的图像填充方式。
+     * BitmapFillMode 类定义了调整大小模式的一个枚举，这些模式确定 Bitmap 如何填充由布局系统指定的尺寸。
+     * @see http://edn.egret.com/cn/docs/page/134 纹理的填充方式
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/display/Shape.ts
+     * @includeExample egret/display/BitmapFillMode.ts
      * @language zh_CN
      */
-    class Shape extends DisplayObject {
-        /**
-         * Creates a new Shape object.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 创建一个 Shape 对象
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        constructor();
-        /**
-         * @private
-         */
-        $graphics: Graphics;
-        /**
-         * Specifies the Graphics object belonging to this Shape object, where vector drawing commands can occur.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 获取 Shape 中的 Graphics 对象。可通过此对象执行矢量绘图命令。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        readonly graphics: Graphics;
-        /**
-         * @private
-         */
-        $measureContentBounds(bounds: Rectangle): void;
-        $hitTest(stageX: number, stageY: number): DisplayObject;
-        /**
-         * @private
-         */
-        $onRemoveFromStage(): void;
-    }
+    const BitmapFillMode: {
+        REPEAT: string;
+        SCALE: string;
+        CLIP: string;
+    };
 }
 declare namespace egret {
     /**
@@ -11019,6 +10542,177 @@ declare namespace egret {
      * @language zh_CN
      */
     function getImplementation(interfaceName: string): any;
+}
+/**
+ * @private
+ */
+declare namespace egret {
+    /**
+     * @private
+     */
+    let fontMapping: {};
+}
+/**
+ * @private
+ */
+declare namespace egret_native {
+    function readUpdateFileSync(filePath: any): any;
+    function readResourceFileSync(filePath: any): any;
+    function sendInfoToPlugin(info: string): void;
+    function receivedPluginInfo(info: string): void;
+    function nrInit(): void;
+    function nrDownloadBuffers(callback: (displayCmdBuffer: Float32Array) => void): void;
+    function nrSetRenderMode(mode: number): void;
+    function nrRenderDisplayObject(id: number, scale: number, useClip: boolean, clipX: number, clipY: number, clipW: number, clipH: number): void;
+    function nrRenderDisplayObject2(id: number, offsetX: number, offsetY: number, forHitTest: boolean): void;
+    function nrLocalToGlobal(id: number, localX: number, localY: number): string;
+    function nrGlobalToLocal(id: number, globalX: number, globalY: number): string;
+    function nrResize(width: number, height: number): void;
+    function nrSetCanvasScaleFactor(factor: number, scalex: number, scaley: number): void;
+    function nrUpdate(): void;
+    function nrRender(): void;
+    function nrSendTextFieldData(textFieldId: number, strData: string): void;
+    function nrUpdateCallbackList(dt: number): void;
+    function nrActiveBuffer(id: number, width: number, height: number): void;
+    function nrGetPixels(x: number, y: number, width: number, height: number, pixels: Uint8Array): void;
+    class NrNode {
+        constructor(id: number, type: number);
+    }
+}
+/**
+ * @private
+ */
+declare namespace egret_native {
+    let rootWebGLBuffer: egret.sys.RenderBuffer;
+    let forHitTest: boolean;
+    let addModuleCallback: (callback: Function, thisObj: any) => void;
+    let initNativeRender: () => void;
+    let updateNativeRender: () => void;
+    let dirtyTextField: (textField: egret.TextField) => void;
+    let dirtyGraphics: (graphics: egret.Graphics) => void;
+    let activateBuffer: (buffer: egret.sys.RenderBuffer) => void;
+    let getJsImage: (key: any) => any;
+    let getJsCustomFilterVertexSrc: (key: any) => any;
+    let getJsCustomFilterFragSrc: (key: any) => any;
+    let getJsCustomFilterUniforms: (key: any) => any;
+}
+declare namespace egret_native {
+    /**
+     * @private
+     */
+    class NativeDisplayObject {
+        static init(buffer: Float32Array, map1: any, map2: any, map3: any): void;
+        id: number;
+        protected $obj: any;
+        static update(): void;
+        constructor(type: number);
+        addChildAt(childId: number, index: number): void;
+        removeChild(childId: number): void;
+        swapChild(index1: number, index2: number): void;
+        setX(value: number): void;
+        setY(value: number): void;
+        setRotation(value: number): void;
+        setScaleX(value: number): void;
+        setScaleY(value: number): void;
+        setSkewX(value: number): void;
+        setSkewY(value: number): void;
+        setAlpha(value: number): void;
+        setAnchorOffsetX(value: number): void;
+        setAnchorOffsetY(value: number): void;
+        setVisible(value: boolean): void;
+        setBlendMode(value: number): void;
+        setMaskRect(x: number, y: number, w: number, h: number): void;
+        setScrollRect(x: number, y: number, w: number, h: number): void;
+        setFilters(filters: Array<egret.Filter>): void;
+        static createFilter(filter: egret.Filter): void;
+        static setFilterPadding(filterId: number, paddingTop: number, paddingBottom: number, paddingLeft: number, paddingRight: number): void;
+        setMask(value: number): void;
+        static setValuesToBitmapData(value: egret.Texture): void;
+        /**
+         * for wasm native
+         * @param private
+         */
+        static setValuesToRenderBuffer(value: egret.sys.RenderBuffer): number;
+        setBitmapData(value: egret.Texture): void;
+        setBitmapDataToMesh(value: egret.Texture): void;
+        setBitmapDataToParticle(value: egret.Texture): void;
+        setStopToParticle(value: boolean): void;
+        setCustomData(config: any): void;
+        setWidth(value: number): void;
+        setHeight(value: number): void;
+        setCacheAsBitmap(value: boolean): void;
+        setBitmapFillMode(fillMode: string): void;
+        setScale9Grid(x: number, y: number, w: number, h: number): void;
+        setMatrix(a: number, b: number, c: number, d: number, tx: number, ty: number): void;
+        setIsTyping(value: boolean): void;
+        setTextRect(x: number, y: number, w: number, h: number): void;
+        setGraphicsRect(x: number, y: number, w: number, h: number, isSprite: boolean): void;
+        setGraphicsRenderData(arr: Array<number>): void;
+        setDataToBitmapNode(id: number, texture: egret.Texture, arr: number[]): void;
+        setDataToMesh(vertexArr: number[], indiceArr: number[], uvArr: number[]): void;
+        static setDataToFilter(currFilter: egret.Filter): void;
+        setDataToTextField(id: number, arr: number[]): void;
+        disposeDisplayObject(): void;
+        static disposeTexture(texture: egret.Texture): void;
+        static disposeBitmapData(bitmapData: egret.BitmapData): void;
+        static disposeTextData(node: egret.TextField): void;
+        static disposeGraphicData(graphic: egret.Graphics): void;
+        static disposeFilter(filter: egret.Filter): void;
+    }
+}
+/**
+ * @private
+ */
+declare namespace egret_native {
+    /**
+     * @private
+     */
+    const enum NativeObjectType {
+        /**
+         * 容器
+         */
+        CONTAINER = 0,
+        /**
+         * 位图
+         */
+        BITMAP = 1,
+        /**
+         * 位图数据
+         */
+        BITMAP_DATA = 2,
+        /**
+         * 滤镜
+         */
+        FILTER = 6,
+        /**
+         * 文本
+         */
+        TEXT = 7,
+        /**
+         * 矢量绘图
+         */
+        GRAPHICS = 8,
+        /**
+         * 含一个适量绘图的容器
+         */
+        SPRITE = 9,
+        /**
+         * 粒子系统
+         */
+        PARTICLE_SYSTEM = 10,
+        /**
+         * 位图文本
+         */
+        BITMAP_TEXT = 11,
+        /**
+         * 网格
+         */
+        MESH = 12,
+        /**
+         * 舞台（根容器）
+         */
+        STAGE = 13,
+    }
 }
 declare namespace egret {
     /**
@@ -11109,65 +10803,6 @@ declare namespace egret {
         private getConfigByKey(configText, key);
     }
 }
-declare namespace egret.sys {
-    /**
-     * @private
-     */
-    const enum BitmapTextKeys {
-        /**
-         * @private 外部设定的值
-         */
-        textFieldWidth = 0,
-        /**
-         * @private 外部设定的值
-         */
-        textFieldHeight = 1,
-        /**
-         * @private
-         */
-        text = 2,
-        /**
-         * @private
-         */
-        lineSpacing = 3,
-        /**
-         * @private
-         */
-        letterSpacing = 4,
-        /**
-         * @private
-         */
-        font = 5,
-        /**
-         * @private
-         */
-        fontStringChanged = 6,
-        /**
-         * @private
-         */
-        textLinesChanged = 7,
-        /**
-         * @private 测量的值
-         */
-        textWidth = 8,
-        /**
-         * @private 测量的值
-         */
-        textHeight = 9,
-        /**
-         * @private
-         */
-        textAlign = 10,
-        /**
-         * @private
-         */
-        verticalAlign = 11,
-        /**
-         * @private
-         */
-        smoothing = 12,
-    }
-}
 declare namespace egret {
     /**
      * Bitmap font adopts the Bitmap+SpriteSheet mode to render text.
@@ -11197,6 +10832,8 @@ declare namespace egret {
          * @language zh_CN
          */
         constructor();
+        protected createNativeDisplayObject(): void;
+        private $smoothing;
         /**
          * Whether or not is smoothed when scaled.
          * @default true。
@@ -11212,10 +10849,7 @@ declare namespace egret {
          * @language zh_CN
          */
         smoothing: boolean;
-        /**
-         * @private
-         */
-        $BitmapText: Object;
+        private $text;
         /**
          * A string to display in the text field.
          * @version Egret 2.4
@@ -11233,6 +10867,7 @@ declare namespace egret {
          * @private
          */
         $setText(value: string): boolean;
+        protected $textFieldWidth: number;
         /**
          * @private
          */
@@ -11241,10 +10876,12 @@ declare namespace egret {
          * @private
          */
         $setWidth(value: number): boolean;
+        private $textLinesChanged;
         /**
          * @private
          */
-        $invalidateBitmapText(): void;
+        $invalidateContentBounds(): void;
+        protected $textFieldHeight: number;
         /**
          * @private
          */
@@ -11253,6 +10890,8 @@ declare namespace egret {
          * @private
          */
         $setHeight(value: number): boolean;
+        protected $font: BitmapFont;
+        protected $fontStringChanged: boolean;
         /**
          * The name of the font to use, or a comma-separated list of font names, the type of value must be BitmapFont.
          * @default null
@@ -11269,6 +10908,7 @@ declare namespace egret {
          */
         font: Object;
         $setFont(value: any): boolean;
+        private $lineSpacing;
         /**
          /**
          * An integer representing the amount of vertical space between lines.
@@ -11286,6 +10926,7 @@ declare namespace egret {
          */
         lineSpacing: number;
         $setLineSpacing(value: number): boolean;
+        private $letterSpacing;
         /**
          * An integer representing the amount of distance between characters.
          * @default 0
@@ -11302,6 +10943,7 @@ declare namespace egret {
          */
         letterSpacing: number;
         $setLetterSpacing(value: number): boolean;
+        private $textAlign;
         /**
          * Horizontal alignment of text.
          * @default：egret.HorizontalAlign.LEFT
@@ -11318,6 +10960,7 @@ declare namespace egret {
          */
         textAlign: string;
         $setTextAlign(value: string): boolean;
+        private $verticalAlign;
         /**
          * Vertical alignment of text.
          * @default：egret.VerticalAlign.TOP
@@ -11357,6 +11000,7 @@ declare namespace egret {
          * @private
          */
         $measureContentBounds(bounds: Rectangle): void;
+        private $textWidth;
         /**
          * Get the BitmapText measured width
          * @version Egret 2.4
@@ -11370,6 +11014,7 @@ declare namespace egret {
          * @language zh_CN
          */
         readonly textWidth: number;
+        private $textHeight;
         /**
          * Get Text BitmapText height
          * @version Egret 2.4
@@ -12266,6 +11911,7 @@ declare namespace egret {
          * @platform Web,Native
          */
         constructor();
+        protected createNativeDisplayObject(): void;
         /**
          * @private
          */
@@ -12737,7 +12383,7 @@ declare namespace egret {
         /**
          * @private
          */
-        private graphicsNode;
+        $graphicsNode: sys.GraphicsNode;
         /**
          * @version Egret 2.4
          * @platform Web,Native
@@ -13930,105 +13576,6 @@ declare namespace egret {
 }
 declare namespace egret {
     /**
-     * The BitmapFillMode class defines the image fill mode of Bitmap.
-     * The BitmapFillMode class defines a pattern enumeration for adjusting size. These patterns determine how Bitmap fill the size designated by the layout system.
-     * @see http://edn.egret.com/cn/docs/page/134 Texture filling way
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/display/BitmapFillMode.ts
-     * @language en_US
-     */
-    /**
-     * BitmapFillMode 类定义Bitmap的图像填充方式。
-     * BitmapFillMode 类定义了调整大小模式的一个枚举，这些模式确定 Bitmap 如何填充由布局系统指定的尺寸。
-     * @see http://edn.egret.com/cn/docs/page/134 纹理的填充方式
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/display/BitmapFillMode.ts
-     * @language zh_CN
-     */
-    const BitmapFillMode: {
-        REPEAT: string;
-        SCALE: string;
-        CLIP: string;
-    };
-}
-declare namespace egret {
-    /**
-     * @private
-     */
-    let fontMapping: {};
-    /**
-     * 兼容旧版本不使用 fontMapping 的情况
-     * @private
-     */
-    let useFontMapping: boolean;
-    /**
-     * Register font mapping.
-     * @param fontFamily The font family name to register.
-     * @param value The font value.
-     * @version Egret 3.2.3
-     * @platform Native
-     * @language en_US
-     */
-    /**
-     * 注册字体映射
-     * @param fontFamily 要注册的字体名称
-     * @param value 注册的字体值
-     * @version Egret 3.2.3
-     * @platform Native
-     * @language zh_CN
-     */
-    function registerFontMapping(fontFamily: string, value: string): void;
-}
-declare namespace egret {
-    /**
-     * Registers the runtime class information for a class.This method adds some strings which represent the class name or
-     * some interface names to the class definition. After the registration,you can use egret.is() method to do the type checking
-     * for the instance of this class.<br/>
-     * Note:If you use the TypeScript programming language, the egret command line tool will automatically generate the registration code line.
-     * You don't need to manually call this method.
-     *
-     * @example the following code shows how to register the runtime class information for the EventDispatcher class and do the type checking:
-     * <pre>
-     *      egret.registerClass(egret.EventDispatcher,"egret.EventDispatcher",["egret.IEventDispatcher"]);
-     *      let dispatcher = new egret.EventDispatcher();
-     *      egret.log(egret.is(dispatcher, "egret.IEventDispatcher"));  //true。
-     *      egret.log(egret.is(dispatcher, "egret.EventDispatcher"));   //true。
-     *      egret.log(egret.is(dispatcher, "egret.Bitmap"));   //false。
-     * </pre>
-     * @param classDefinition the class definition to be registered.
-     * @param className  a unique identification string of the specific class
-     * @param interfaceNames a list of unique identification string of the specific interfaces.
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language en_US
-     */
-    /**
-     * 为一个类定义注册运行时类信息,用此方法往类定义上注册它自身以及所有接口对应的字符串。
-     * 在运行时，这个类的实例将可以使用 egret.is() 方法传入一个字符串来判断实例类型。
-     * @example 以下代码演示了如何为EventDispatcher类注册运行时类信息并判断类型：
-     * <pre>
-     *      //为egret.EventDispatcher类注册运行时类信息，由于它实现了IEventDispatcher接口，这里应同时传入接口名对应的字符串。
-     *      egret.registerClass(egret.EventDispatcher,"egret.EventDispatcher",["egret.IEventDispatcher"]);
-     *      let dispatcher = new egret.EventDispatcher();
-     *      egret.log(egret.is(dispatcher, "egret.IEventDispatcher"));  //true。
-     *      egret.log(egret.is(dispatcher, "egret.EventDispatcher"));   //true。
-     *      egret.log(egret.is(dispatcher, "egret.Bitmap"));   //false。
-     * </pre>
-     * 注意：若您使用 TypeScript 来编写程序，egret 命令行会自动帮您生成类信息注册代码行到最终的 Javascript 文件中。因此您不需要手动调用此方法。
-     *
-     * @param classDefinition 要注册的类定义。
-     * @param className 要注册的类名。
-     * @param interfaceNames 要注册的类所实现的接口名列表。
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language zh_CN
-     */
-    function registerClass(classDefinition: any, className: string, interfaceNames?: string[]): void;
-}
-declare namespace egret {
-    /**
      * A class that provides constant values for visual blend mode effects. These constants are used in the blendMode
      * property of the DisplayObject class.
      * @see egret.DisplayObject#blendMode
@@ -14107,6 +13654,264 @@ declare namespace egret.sys {
      * 转换数字为 blendMode 字符串。
      */
     function numberToBlendMode(blendMode: number): string;
+}
+declare namespace egret {
+    /**
+     * Registers the runtime class information for a class.This method adds some strings which represent the class name or
+     * some interface names to the class definition. After the registration,you can use egret.is() method to do the type checking
+     * for the instance of this class.<br/>
+     * Note:If you use the TypeScript programming language, the egret command line tool will automatically generate the registration code line.
+     * You don't need to manually call this method.
+     *
+     * @example the following code shows how to register the runtime class information for the EventDispatcher class and do the type checking:
+     * <pre>
+     *      egret.registerClass(egret.EventDispatcher,"egret.EventDispatcher",["egret.IEventDispatcher"]);
+     *      let dispatcher = new egret.EventDispatcher();
+     *      egret.log(egret.is(dispatcher, "egret.IEventDispatcher"));  //true。
+     *      egret.log(egret.is(dispatcher, "egret.EventDispatcher"));   //true。
+     *      egret.log(egret.is(dispatcher, "egret.Bitmap"));   //false。
+     * </pre>
+     * @param classDefinition the class definition to be registered.
+     * @param className  a unique identification string of the specific class
+     * @param interfaceNames a list of unique identification string of the specific interfaces.
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * 为一个类定义注册运行时类信息,用此方法往类定义上注册它自身以及所有接口对应的字符串。
+     * 在运行时，这个类的实例将可以使用 egret.is() 方法传入一个字符串来判断实例类型。
+     * @example 以下代码演示了如何为EventDispatcher类注册运行时类信息并判断类型：
+     * <pre>
+     *      //为egret.EventDispatcher类注册运行时类信息，由于它实现了IEventDispatcher接口，这里应同时传入接口名对应的字符串。
+     *      egret.registerClass(egret.EventDispatcher,"egret.EventDispatcher",["egret.IEventDispatcher"]);
+     *      let dispatcher = new egret.EventDispatcher();
+     *      egret.log(egret.is(dispatcher, "egret.IEventDispatcher"));  //true。
+     *      egret.log(egret.is(dispatcher, "egret.EventDispatcher"));   //true。
+     *      egret.log(egret.is(dispatcher, "egret.Bitmap"));   //false。
+     * </pre>
+     * 注意：若您使用 TypeScript 来编写程序，egret 命令行会自动帮您生成类信息注册代码行到最终的 Javascript 文件中。因此您不需要手动调用此方法。
+     *
+     * @param classDefinition 要注册的类定义。
+     * @param className 要注册的类名。
+     * @param interfaceNames 要注册的类所实现的接口名列表。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    function registerClass(classDefinition: any, className: string, interfaceNames?: string[]): void;
+}
+declare namespace egret {
+    /**
+     * The Stage class represents the main drawing area.The Stage object is not globally accessible. You need to access
+     * it through the stage property of a DisplayObject instance.<br/>
+     * The Stage class has several ancestor classes — Sprite, DisplayObject, and EventDispatcher — from which it inherits
+     * properties and methods. Many of these properties and methods are inapplicable to Stage objects.
+     * @event egret.Event.RESIZE Dispatched when the stageWidth or stageHeight property of the Stage object is changed.
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/display/Stage.ts
+     * @language en_US
+     */
+    /**
+     * Stage 类代表主绘图区。
+     * 可以利用 DisplayObject 实例的 stage 属性进行访问。<br/>
+     * Stage 类具有多个祖代类: Sprite、DisplayObject 和 EventDispatcher，属性和方法便是从这些类继承而来的。
+     * 从这些继承的许多属性和方法不适用于 Stage 对象。
+     * @event egret.Event.RESIZE 当stageWidth或stageHeight属性发生改变时调度
+     * @event egret.Event.DEACTIVATE 当stage失去焦点后调度
+     * @event egret.Event.ACTIVATE 当stage获得焦点后调度
+     *
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/display/Stage.ts
+     * @language zh_CN
+     */
+    class Stage extends DisplayObjectContainer {
+        /**
+         * @private
+         * Stage不许允许自行实例化
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        constructor();
+        protected createNativeDisplayObject(): void;
+        /**
+         * Gets and sets the frame rate of the stage. The frame rate is defined as frames per second. Valid range for the
+         * frame rate is from 0.01 to 1000 frames per second.<br/>
+         * Note: setting the frameRate property of one Stage object changes the frame rate for all Stage objects
+         * @default 30
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 获取并设置舞台的帧速率。帧速率是指每秒显示的帧数。帧速率的有效范围为每秒 0.01 到 60 个帧。<br/>
+         * 注意: 修改任何一个Stage的frameRate属性都会同步修改其他Stage的帧率。
+         * @default 30
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        frameRate: number;
+        /**
+         * @private
+         */
+        $stageWidth: number;
+        /**
+         * Indicates the width of the stage, in pixels.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 舞台的当前宽度（以像素为单位）。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        readonly stageWidth: number;
+        /**
+         * @private
+         */
+        $stageHeight: number;
+        /**
+         * Indicates the height of the stage, in pixels.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 舞台的当前高度（以像素为单位）。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        readonly stageHeight: number;
+        /**
+         * After you call the invalidate() method, when the display list is next rendered, the Egret runtime sends a render
+         * event to each display object that has registered to listen for the render event. You must call the invalidate()
+         * method each time you want the Egret runtime to send render events.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 调用 invalidate() 方法后，在显示列表下次呈现时，Egret 会向每个已注册侦听 Event.RENDER 事件的显示对象发送一个 Event.RENDER 事件。
+         * 每次您希望 Egret 发送 Event.RENDER 事件时，都必须调用 invalidate() 方法。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        invalidate(): void;
+        /**
+         * @deprecated
+         */
+        registerImplementation(interfaceName: string, instance: any): void;
+        /**
+         * @deprecated
+         */
+        getImplementation(interfaceName: string): any;
+        /**
+         * @private
+         * 设备屏幕引用
+         */
+        $screen: egret.sys.Screen;
+        $scaleMode: string;
+        /**
+         * A StageScaleMode class that specifies which scale mode to use. The following are valid values:<br/>
+         * <ul>
+         * <li>StageScaleMode.EXACT_FIT -- The entire application be visible in the specified area without trying to preserve the original aspect ratio. Distortion can occur, the application may be stretched or compressed.</li>
+         * <li>StageScaleMode.SHOW_ALL -- The entire application is visible in the specified area without distortion while maintaining the application of the original aspect ratio. Applications may display border.</li>
+         * <li>StageScaleMode.NO_SCALE -- The size of the entire application is fixed, so that even if the size of the player window changes, it remains unchanged. If the player window is smaller than the content, it may do some trimming.</li>
+         * <li>StageScaleMode.NO_BORDER -- Keep the original aspect ratio scaling application content, after scaling a narrow direction of application content to fill the viewport players on both sides in the other direction may exceed the viewport and the player is cut.</li>
+         * <li>StageScaleMode.FIXED_WIDTH -- Keep the original aspect ratio scaling application content, after scaling application content in the horizontal and vertical directions to fill the viewport player, but only to keep the contents of the original application constant width, height may change.</li>
+         * <li>StageScaleMode.FIXED_HEIGHT -- Keep the original aspect ratio scaling application content, after scaling application content in the horizontal and vertical directions to fill the viewport player, but only to keep the contents of the original application constant height, width may change.</li>
+         * </ul>
+         * @default egret.StageScaleMode.SHOW_ALL
+         * @language en_US
+         */
+        /**
+         * 一个 StageScaleMode 类中指定要使用哪种缩放模式的值。以下是有效值：<br/>
+         * <ul>
+         * <li>StageScaleMode.EXACT_FIT -- 整个应用程序在指定区域中可见，但不尝试保持原始高宽比。可能会发生扭曲，应用程序可能会拉伸或压缩显示。</li>
+         * <li>StageScaleMode.SHOW_ALL -- 整个应用程序在指定区域中可见，且不发生扭曲，同时保持应用程序的原始高宽比。应用程序的可能会显示边框。</li>
+         * <li>StageScaleMode.NO_SCALE -- 整个应用程序的大小固定，因此，即使播放器窗口的大小更改，它也会保持不变。如果播放器窗口比内容小，则可能进行一些裁切。</li>
+         * <li>StageScaleMode.NO_BORDER -- 保持原始宽高比缩放应用程序内容，缩放后应用程序内容的较窄方向填满播放器视口，另一个方向的两侧可能会超出播放器视口而被裁切。</li>
+         * <li>StageScaleMode.FIXED_WIDTH -- 保持原始宽高比缩放应用程序内容，缩放后应用程序内容在水平和垂直方向都填满播放器视口，但只保持应用程序内容的原始宽度不变，高度可能会改变。</li>
+         * <li>StageScaleMode.FIXED_HEIGHT -- 保持原始宽高比缩放应用程序内容，缩放后应用程序内容在水平和垂直方向都填满播放器视口，但只保持应用程序内容的原始高度不变，宽度可能会改变。</li>
+         * </ul>
+         * @default egret.StageScaleMode.SHOW_ALL
+         * @language zh_CN
+         */
+        scaleMode: string;
+        $orientation: string;
+        /**
+         * Horizontal and vertical screen display screen, can only be set under the current Native in the configuration file. A egret.OrientationMode class that specifies which display mode to use. The following are valid values:<br/>
+         * <ul>
+         * <li>egret.OrientationMode.AUTO -- Always follow the direction of application display screen, always guaranteed by the look down.</li>
+         * <li>egret.OrientationMode.PORTRAIT -- Applications remain portrait mode, namely horizontal screen look, the screen from left to right.</li>
+         * <li>egret.OrientationMode.LANDSCAPE -- Applications remain horizontal screen mode, namely vertical screen, the screen from right to left.</li>
+         * <li>egret.OrientationMode.LANDSCAPE_FLIPPED -- Applications remain horizontal screen mode, namely vertical screen, the screen from left to right.</li>
+         * </ul>
+         * @platform Web
+         * @version 2.4
+         * @language en_US
+         */
+        /**
+         * 屏幕横竖屏显示方式，目前 Native 下只能在配置文件里设置。一个 egret.OrientationMode 类中指定要使用哪种显示方式。以下是有效值：<br/>
+         * <ul>
+         * <li>egret.OrientationMode.AUTO -- 应用始终跟随屏幕的方向显示，始终保证由上往下看。</li>
+         * <li>egret.OrientationMode.PORTRAIT -- 应用始终保持竖屏模式，即横屏看时，屏幕由左往右看。</li>
+         * <li>egret.OrientationMode.LANDSCAPE -- 应用始终保持横屏模式，即竖屏看时，屏幕显示由右往左。</li>
+         * <li>egret.OrientationMode.LANDSCAPE_FLIPPED -- 应用始终保持横屏模式，即竖屏看时，屏幕显示由左往右。</li>
+         * </ul>
+         * @platform Web
+         * @version 2.4
+         * @language zh_CN
+         */
+        orientation: string;
+        /**
+         * Draw texture zoom ratio
+         * @default 1
+         * @language en_US
+         */
+        /**
+         * 绘制纹理的缩放比率，默认值为1
+         * @default 1
+         * @language zh_CN
+         */
+        textureScaleFactor: number;
+        $maxTouches: number;
+        /**
+         * Set the number of screens can simultaneously touch. Above this amount will not be triggered in response.
+         * @default 99
+         * @language en_US
+         */
+        /**
+         * 设置屏幕同时可以触摸的数量。高于这个数量将不会被触发响应。
+         * @default 99
+         * @language zh_CN
+         */
+        maxTouches: number;
+        /**
+         * Set resolution size
+         * @param width width
+         * @param height height
+         * @version Egret 2.5.5
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 设置分辨率尺寸
+         * @param width 宽度
+         * @param height 高度
+         * @version Egret 2.5.5
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        setContentSize(width: number, height: number): void;
+    }
 }
 declare namespace egret {
     /**
@@ -15029,56 +14834,90 @@ declare namespace egret {
      */
     function toColorString(value: number): string;
 }
-/**
- * @private
- */
-interface PlayerOption {
+declare namespace egret.sys {
     /**
-     * 入口类完整类名
+     * @private
+     * 共享的用于碰撞检测的渲染缓冲
      */
-    entryClassName?: string;
+    let customHitTestBuffer: sys.RenderBuffer;
     /**
-     * 默认帧率
+     * @private
+     * 共享的用于canvas碰撞检测的渲染缓冲
      */
-    frameRate?: number;
+    let canvasHitTestBuffer: sys.RenderBuffer;
     /**
-     * 屏幕适配模式
+     * @private
+     * 渲染缓冲
      */
-    scaleMode?: string;
+    interface RenderBuffer {
+        /**
+         * 呈现最终绘图结果的画布。
+         * @readOnly
+         */
+        surface: any;
+        /**
+         * 渲染上下文。
+         * @readOnly
+         */
+        context: any;
+        /**
+         * 渲染缓冲的宽度，以像素为单位。
+         * @readOnly
+         */
+        width: number;
+        /**
+         * 渲染缓冲的高度，以像素为单位。
+         * @readOnly
+         */
+        height: number;
+        /**
+         * 改变渲染缓冲的大小并清空缓冲区
+         * @param width 改变后的宽
+         * @param height 改变后的高
+         * @param useMaxSize 若传入true，则将改变后的尺寸与已有尺寸对比，保留较大的尺寸。
+         */
+        resize(width: number, height: number, useMaxSize?: boolean): void;
+        /**
+         * 获取指定区域的像素
+         */
+        getPixels(x: number, y: number, width?: number, height?: number): number[];
+        /**
+         * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null
+         * @param type 转换的类型，如: "image/png","image/jpeg"
+         */
+        toDataURL(type?: string, ...args: any[]): string;
+        /**
+         * 清空缓冲区数据
+         */
+        clear(): void;
+        /**
+         * 销毁渲染缓冲
+         */
+        destroy(): void;
+    }
     /**
-     * 初始内容宽度
+     * @private
      */
-    contentWidth?: number;
+    let RenderBuffer: {
+        /**
+         * 创建一个RenderTarget。
+         * 注意：若内存不足或创建缓冲区失败，将会抛出错误异常。
+         * @param width 渲染缓冲的初始宽
+         * @param height 渲染缓冲的初始高
+         * @param root 是否为舞台buffer
+         */
+        new (width?: number, height?: number, root?: boolean): RenderBuffer;
+    };
     /**
-     * 初始内容高度
+     * @private
      */
-    contentHeight?: number;
-    /**
-     * 屏幕方向
-     */
-    orientation?: string;
-    /**
-     * 显示FPS
-     */
-    showFPS?: boolean;
-    /**
-     *
-     */
-    fpsStyles?: Object;
-    /**
-     * 显示日志
-     */
-    showLog?: boolean;
-    /**
-     * 过滤日志的正则表达式
-     */
-    logFilter?: string;
-    /**
-     *
-     */
-    maxTouches?: number;
-    /**
-     *
-     */
-    textureScaleFactor?: number;
+    let CanvasRenderBuffer: {
+        /**
+         * 创建一个CanvasRenderBuffer。
+         * 注意：若内存不足或创建缓冲区失败，将会抛出错误异常。
+         * @param width 渲染缓冲的初始宽
+         * @param height 渲染缓冲的初始高
+         */
+        new (width?: number, height?: number): RenderBuffer;
+    };
 }

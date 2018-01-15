@@ -191,19 +191,6 @@ namespace egret.web {
             let value = Html5Capatibility.ua.toLowerCase().match(/cpu [^\d]*\d.*like mac os x/)[0];
             return parseInt(value.match(/\d+(_\d)*/)[0]) || 0;
         }
-
-        /**
-         * @private
-         *
-         */
-        private static checkHtml5Support() {
-            let language = (navigator.language || navigator["browserLanguage"]).toLowerCase();
-            let strings = language.split("-");
-            if (strings.length > 1) {
-                strings[1] = strings[1].toUpperCase();
-            }
-            egret.Capabilities.$language = strings.join("-");
-        }
     }
 
 

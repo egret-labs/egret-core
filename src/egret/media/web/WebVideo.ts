@@ -550,7 +550,7 @@ namespace egret.web {
          * 设置显示高度
          */
         $setHeight(value: number): void {
-            this.heightSet = +value || 0;
+            this.heightSet = value;
             super.$setHeight(value);
         }
 
@@ -559,7 +559,7 @@ namespace egret.web {
          * 设置显示宽度
          */
         $setWidth(value: number): void {
-            this.widthSet = +value || 0;
+            this.widthSet = value;
             super.$setWidth(value);
         }
 
