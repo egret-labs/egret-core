@@ -50,7 +50,7 @@ var Run = (function () {
     }
     Run.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var exitCode, target, toolsList, _a, port, wxPath, projectPath, e_1;
+            var exitCode, target, toolsList, _a, port;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0: return [4 /*yield*/, new Build().execute()];
@@ -62,40 +62,19 @@ var Run = (function () {
                         switch (_a) {
                             case "web": return [3 /*break*/, 2];
                             case "wxgame": return [3 /*break*/, 4];
+                            case 'bricks': return [3 /*break*/, 6];
                         }
-                        return [3 /*break*/, 11];
+                        return [3 /*break*/, 8];
                     case 2: return [4 /*yield*/, utils.getAvailablePort(egret.args.port)];
                     case 3:
                         port = _b.sent();
                         this.initServer(port);
                         return [2 /*return*/, DontExitCode];
-                    case 4:
-                        wxPath = "";
-                        switch (os.platform()) {
-                            case "darwin":
-                                wxPath = "/Applications/wechatwebdevtools.app/Contents/Resources/app.nw/bin/cli";
-                                break;
-                            case "win32":
-                                wxPath = "C:\\Program Files (x86)\\Tencent\\微信web开发者工具\\cli.bat";
-                                break;
-                        }
-                        if (!FileUtil.exists(wxPath)) return [3 /*break*/, 9];
-                        projectPath = egret.args.projectDir;
-                        projectPath = path.resolve(projectPath, "../", path.basename(projectPath) + "_wxgame");
-                        _b.label = 5;
-                    case 5:
-                        _b.trys.push([5, 7, , 8]);
-                        return [4 /*yield*/, utils.shell(wxPath, ["-o", projectPath], null, true)];
-                    case 6:
-                        _b.sent();
-                        return [3 /*break*/, 8];
-                    case 7:
-                        e_1 = _b.sent();
-                        return [2 /*return*/, 1];
-                    case 8: return [3 /*break*/, 10];
-                    case 9: throw '请安装最新微信开发者工具';
-                    case 10: return [2 /*return*/, DontExitCode];
-                    case 11: return [2 /*return*/];
+                    case 4: return [4 /*yield*/, runWxIde()];
+                    case 5: return [2 /*return*/, (_b.sent())];
+                    case 6: return [4 /*yield*/, runBricks()];
+                    case 7: return [2 /*return*/, (_b.sent())];
+                    case 8: return [2 /*return*/];
                 }
             });
         });
@@ -228,4 +207,61 @@ var Run = (function () {
     };
     return Run;
 }());
+function runWxIde() {
+    return __awaiter(this, void 0, void 0, function () {
+        var wxPaths, wxpath, projectPath, e_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    wxPaths = [];
+                    switch (os.platform()) {
+                        case "darwin":
+                            wxPaths = ["/Applications/wechatwebdevtools.app/Contents/Resources/app.nw/bin/cli"];
+                            break;
+                        case "win32":
+                            wxPaths = [
+                                "C:\\Program Files (x86)\\Tencent\\微信web开发者工具\\cli.bat",
+                                "C:\\Program Files\\Tencent\\微信web开发者工具\\cli.bat",
+                            ];
+                            break;
+                    }
+                    wxpath = wxPaths.find(function (wxpath) { return FileUtil.exists(wxpath); });
+                    if (!wxpath) return [3 /*break*/, 5];
+                    projectPath = egret.args.projectDir;
+                    projectPath = path.resolve(projectPath, "../", path.basename(projectPath) + "_wxgame");
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 3, , 4]);
+                    return [4 /*yield*/, utils.shell(wxpath, ["-o", projectPath], null, true)];
+                case 2:
+                    _a.sent();
+                    return [3 /*break*/, 4];
+                case 3:
+                    e_1 = _a.sent();
+                    return [2 /*return*/, 1];
+                case 4: return [3 /*break*/, 6];
+                case 5: throw '请安装最新微信开发者工具';
+                case 6: return [2 /*return*/, DontExitCode];
+            }
+        });
+    });
+}
+function runBricks() {
+    return __awaiter(this, void 0, void 0, function () {
+        var projectPath;
+        return __generator(this, function (_a) {
+            switch (os.platform()) {
+                case "darwin":
+                    projectPath = egret.args.projectDir;
+                    projectPath = path.resolve(projectPath, "../", path.basename(projectPath) + "_bricks", "PublicBrickGameEngine.xcodeproj");
+                    utils.open(projectPath);
+                    break;
+                case "win32":
+                    throw '目前玩一玩仅支持 MacOS 平台开发';
+                    break;
+            }
+            return [2 /*return*/, 1];
+        });
+    });
+}
 module.exports = Run;

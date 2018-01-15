@@ -6,7 +6,7 @@ declare module egret {
 
     export namespace target {
 
-        export type Type = "web" | "native" | "wxgame" | "any" | "none"
+        export type Type = "web" | "native" | "wxgame" | 'bricks' | "any" | "none"
 
         export interface Info {
             name: Type;
