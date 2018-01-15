@@ -16884,27 +16884,6 @@ var egret;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Capabilities, "supportVersion", {
-            /***
-             * version of the native support.
-             * @type {string}
-             * @version Egret 2.5
-             * @platform Web,Native
-             * @language en_US
-             */
-            /***
-             * native support 的版本号。
-             * @type {string}
-             * @version Egret 2.5
-             * @platform Web,Native
-             * @language zh_CN
-             */
-            get: function () {
-                return Capabilities.$supportVersion;
-            },
-            enumerable: true,
-            configurable: true
-        });
         Object.defineProperty(Capabilities, "engineVersion", {
             /***
              * version of Egret.
@@ -16926,27 +16905,6 @@ var egret;
             enumerable: true,
             configurable: true
         });
-        /**
-         * 设置系统信息
-         */
-        Capabilities.$setNativeCapabilities = function (value) {
-            var arr = value.split("-");
-            if (arr.length <= 4) {
-                //todo 未来去掉数量判断，2.5.4版本之前的参数大于4个
-                var osType = arr[0];
-                switch (osType) {
-                    case "android":
-                        osType = "Android";
-                        break;
-                    case "ios":
-                        osType = 'iOS';
-                        break;
-                }
-                Capabilities.$os = osType;
-                var version = arr[2].substring(1, arr[2].length);
-                Capabilities.$supportVersion = version;
-            }
-        };
         Object.defineProperty(Capabilities, "renderMode", {
             /***
              * current render mode.
@@ -17026,7 +16984,6 @@ var egret;
          * @private
          */
         Capabilities.$runtimeType = egret.RuntimeType.WEB;
-        Capabilities.$supportVersion = "Unknown";
         Capabilities.$renderMode = "Unknown";
         Capabilities.$boundingClientWidth = 0;
         Capabilities.$boundingClientHeight = 0;
