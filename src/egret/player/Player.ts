@@ -509,3 +509,28 @@ namespace egret.sys {
     };
 }
 
+
+/**
+ * @private
+ */
+module egret {
+    /**
+     * @private
+     */
+    export var nativeRender: boolean = __global.nativeRender;
+
+    //检测版本是否匹配，不匹配改用非原生加速渲染方式
+    if (nativeRender) {
+        const nrABIVersion = egret_native.nrABIVersion;
+        const nrMinEgretVersion = egret_native.nrMinEgretVersion;
+        const requiredNrABIVersion = 1;
+        if (nrABIVersion < requiredNrABIVersion) {
+            nativeRender = false;
+            egret.warn("需要升级微端版本到 0.1.2 才可以开启原生渲染加速");
+        }
+        else if (nrABIVersion > requiredNrABIVersion) {
+            nativeRender = false;
+            egret.warn(`需要升级引擎版本到 ${nrMinEgretVersion} 才可以开启原生渲染加速`);
+        }
+    }
+}
