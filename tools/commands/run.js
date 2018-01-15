@@ -253,7 +253,7 @@ function runBricks() {
             switch (os.platform()) {
                 case "darwin":
                     projectPath = egret.args.projectDir;
-                    projectPath = path.resolve(projectPath, "../", path.basename(projectPath) + "_bricks", "PublicBrickGameEngine.xcodeproj");
+                    projectPath = path.resolve(projectPath, "../", path.basename(projectPath) + "_bricks", "PublicBrickEngineGame.xcodeproj");
                     utils.open(projectPath);
                     break;
                 case "win32":
