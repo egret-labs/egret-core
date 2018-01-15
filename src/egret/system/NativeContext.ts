@@ -48,6 +48,9 @@ declare namespace egret_native {
 
     function receivedPluginInfo(info: string): void;
 
+    export let nrABIVersion:number;
+    export let nrMinEgretVersion:string;
+
     function nrInit(): void;
     function nrDownloadBuffers(callback: (displayCmdBuffer: Float32Array) => void): void;
     function nrSetRenderMode(mode: number): void;
