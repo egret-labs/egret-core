@@ -526,11 +526,15 @@ module egret {
         const requiredNrABIVersion = 1;
         if (nrABIVersion < requiredNrABIVersion) {
             nativeRender = false;
-            egret.warn("需要升级微端版本到 0.1.2 才可以开启原生渲染加速");
+            const msg = "需要升级微端版本到 0.1.2 才可以开启原生渲染加速";
+            sys.$warnToFPS(msg);
+            egret.warn(msg);
         }
         else if (nrABIVersion > requiredNrABIVersion) {
             nativeRender = false;
-            egret.warn(`需要升级引擎版本到 ${nrMinEgretVersion} 才可以开启原生渲染加速`);
+            const msg = `需要升级引擎版本到 ${nrMinEgretVersion} 才可以开启原生渲染加速`;
+            sys.$warnToFPS(msg);
+            egret.warn(msg);
         }
     }
 }
