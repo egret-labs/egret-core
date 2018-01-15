@@ -13241,11 +13241,15 @@ var egret;
         var requiredNrABIVersion = 1;
         if (nrABIVersion < requiredNrABIVersion) {
             egret.nativeRender = false;
-            egret.warn("需要升级微端版本到 0.1.2 才可以开启原生渲染加速");
+            var msg = "需要升级微端版本到 0.1.2 才可以开启原生渲染加速";
+            egret.sys.$warnToFPS(msg);
+            egret.warn(msg);
         }
         else if (nrABIVersion > requiredNrABIVersion) {
             egret.nativeRender = false;
-            egret.warn("\u9700\u8981\u5347\u7EA7\u5F15\u64CE\u7248\u672C\u5230 " + nrMinEgretVersion + " \u624D\u53EF\u4EE5\u5F00\u542F\u539F\u751F\u6E32\u67D3\u52A0\u901F");
+            var msg = "\u9700\u8981\u5347\u7EA7\u5F15\u64CE\u7248\u672C\u5230 " + nrMinEgretVersion + " \u624D\u53EF\u4EE5\u5F00\u542F\u539F\u751F\u6E32\u67D3\u52A0\u901F";
+            egret.sys.$warnToFPS(msg);
+            egret.warn(msg);
         }
     }
 })(egret || (egret = {}));
