@@ -16921,7 +16921,7 @@ var egret;
              * @language zh_CN
              */
             get: function () {
-                return "5.1.2";
+                return "5.1.3";
             },
             enumerable: true,
             configurable: true
