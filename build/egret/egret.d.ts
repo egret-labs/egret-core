@@ -10544,22 +10544,6 @@ declare namespace egret {
          */
         static readonly runtimeType: string;
         /***
-         * version of the native support.
-         * @type {string}
-         * @version Egret 2.5
-         * @platform Web,Native
-         * @language en_US
-         */
-        /***
-         * native support 的版本号。
-         * @type {string}
-         * @version Egret 2.5
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        static readonly supportVersion: string;
-        static $supportVersion: string;
-        /***
          * version of Egret.
          * @type {string}
          * @version Egret 3.2.0
@@ -10574,10 +10558,6 @@ declare namespace egret {
          * @language zh_CN
          */
         static readonly engineVersion: string;
-        /**
-         * 设置系统信息
-         */
-        static $setNativeCapabilities(value: string): void;
         /***
          * current render mode.
          * @type {string}

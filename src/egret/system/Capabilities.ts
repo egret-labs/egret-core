@@ -220,26 +220,6 @@ namespace egret {
         }
 
         /***
-         * version of the native support.
-         * @type {string}
-         * @version Egret 2.5
-         * @platform Web,Native
-         * @language en_US
-         */
-        /***
-         * native support 的版本号。
-         * @type {string}
-         * @version Egret 2.5
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        public static get supportVersion(): string {
-            return Capabilities.$supportVersion;
-        }
-
-        static $supportVersion: string = "Unknown";
-
-        /***
          * version of Egret.
          * @type {string}
          * @version Egret 3.2.0
@@ -254,29 +234,7 @@ namespace egret {
          * @language zh_CN
          */
         public static get engineVersion(): string {
-            return "5.1.2";
-        }
-
-        /**
-         * 设置系统信息
-         */
-        public static $setNativeCapabilities(value: string): void {
-            let arr = value.split("-");
-            if (arr.length <= 4) {
-                //todo 未来去掉数量判断，2.5.4版本之前的参数大于4个
-                let osType: string = arr[0];
-                switch (osType) {
-                    case "android":
-                        osType = "Android";
-                        break;
-                    case "ios":
-                        osType = 'iOS';
-                        break;
-                }
-                Capabilities.$os = osType;
-                let version = arr[2].substring(1, arr[2].length);
-                Capabilities.$supportVersion = version;
-            }
+            return "5.1.3";
         }
 
         /***
