@@ -5,6 +5,7 @@ import * as project from '../project';
 import * as Compiler from '../actions/Compiler';
 import * as tasks from '../tasks';
 import * as path from 'path';
+import * as parseConfig from '../actions/ParseConfig'
 
 console.log(utils.tr(1004, 0));
 
@@ -37,13 +38,13 @@ class Build implements egret.Command {
         }
 
 
-
         const res = require('../lib/resourcemanager');
         const command = "build";
         const projectRoot = egret.args.projectDir;
         tasks.run();
         const target = egret.args.target;
-        await res.build({ projectRoot, debug: true, command, target });
+        const projectConfig = parseConfig.parseConfig();
+        await res.build({ projectRoot, debug: true, command, target, projectConfig });
         return 0;
     }
 

@@ -17,6 +17,7 @@ import copyNative = require("../actions/CopyNativeFiles");
 class CreateAppCommand implements egret.Command {
 
     execute(): number {
+        throw '白鹭引擎5.1.2版本开始不再支持 egret create_app 命令创建 iOS / Android 工程，我们即将提供新的机制，敬请期待'
         this.run();
         return DontExitCode;
     }
@@ -102,8 +103,8 @@ class CreateAppCommand implements egret.Command {
         EgretProject.projectData.init(arg_h5_path);
 
 
-        //修改native项目配置
-        new ParseConfigCommand().execute();
+        // //修改native项目配置
+        // new ParseConfigCommand().execute();
         let manifestPath = file.joinPath(egret.args.projectDir, "manifest.json");
         EgretProject.manager.modifyNativeRequire(manifestPath);
 
