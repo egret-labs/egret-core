@@ -4,6 +4,7 @@
 import * as path from 'path';
 import { UglifyPlugin, IncrementCompilePlugin, CompilePlugin, ManifestPlugin, ExmlPlugin, EmitResConfigFilePlugin, TextureMergerPlugin } from 'built-in';
 import { WxgamePlugin } from './wxgame/wxgame';
+import { BricksPlugin } from './bricks/bricks';
 import { CustomPlugin } from './myplugin';
 
 const config: ResourceManagerConfig = {
@@ -44,7 +45,8 @@ const config: ResourceManagerConfig = {
                 commands: [
                     new CompilePlugin({ libraryType: "debug" }),
                     new ExmlPlugin('commonjs'), // 非 EUI 项目关闭此设置
-                    new ManifestPlugin({ output: 'manifest.json' })
+                    new ManifestPlugin({ output: 'manifest.json' }),
+                    new BricksPlugin()
                 ]
             }
         }
