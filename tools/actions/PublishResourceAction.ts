@@ -13,6 +13,8 @@ import * as EgretProject from '../project';
 import ZipCommand = require("./ZipCommand");
 import copyNative = require("./CopyNativeFiles");
 import CompileProject = require('./CompileProject');
+import * as parseConfig from './ParseConfig'
+
 
 
 export async function publishResource(version: string) {
@@ -25,7 +27,8 @@ export async function publishResource(version: string) {
     const command = "publish";
     const debug = true;
     const target = egret.args.target;
-    return await res.build({ projectRoot, debug, command, target, version });
+    const projectConfig = parseConfig.parseConfig();
+    return await res.build({ projectRoot, debug, command, target, version, projectConfig });
 
 }
 

@@ -41,9 +41,10 @@ var path = require("path");
 var EgretProject = require("../project");
 var ZipCommand = require("./ZipCommand");
 var copyNative = require("./CopyNativeFiles");
+var parseConfig = require("./ParseConfig");
 function publishResource(version) {
     return __awaiter(this, void 0, void 0, function () {
-        var _a, releaseDir, projectDir, projectRoot, res, command, debug, target;
+        var _a, releaseDir, projectDir, projectRoot, res, command, debug, target, projectConfig;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
@@ -54,7 +55,8 @@ function publishResource(version) {
                     command = "publish";
                     debug = true;
                     target = egret.args.target;
-                    return [4 /*yield*/, res.build({ projectRoot: projectRoot, debug: debug, command: command, target: target, version: version })];
+                    projectConfig = parseConfig.parseConfig();
+                    return [4 /*yield*/, res.build({ projectRoot: projectRoot, debug: debug, command: command, target: target, version: version, projectConfig: projectConfig })];
                 case 1: return [2 /*return*/, _b.sent()];
             }
         });

@@ -3,7 +3,6 @@
 //import params = require("../ParamsParser");
 var file = require("../lib/FileUtil");
 var EgretProject = require("../project");
-var ParseConfigCommand = require("../actions/ParseConfig");
 var fs = require('fs');
 var cp_exec = require('child_process').exec;
 var copyNative = require("../actions/CopyNativeFiles");
@@ -12,6 +11,7 @@ var CreateAppCommand = (function () {
         this.androidHomeWarnning = "请设置环境变量 ANDROID_HOME ，值为 Android SDK 的根目录。";
     }
     CreateAppCommand.prototype.execute = function () {
+        throw '白鹭引擎5.1.2版本开始不再支持 egret create_app 命令创建 iOS / Android 工程，我们即将提供新的机制，敬请期待';
         this.run();
         return DontExitCode;
     };
@@ -86,8 +86,8 @@ var CreateAppCommand = (function () {
         properties["native"][platform + "_path"] = file.relative(projectPath, nativePath);
         file.save(file.joinPath(projectPath, "egretProperties.json"), JSON.stringify(properties, null, "\t"));
         EgretProject.projectData.init(arg_h5_path);
-        //修改native项目配置
-        new ParseConfigCommand().execute();
+        // //修改native项目配置
+        // new ParseConfigCommand().execute();
         var manifestPath = file.joinPath(egret.args.projectDir, "manifest.json");
         EgretProject.manager.modifyNativeRequire(manifestPath);
         //拷贝项目到native工程中

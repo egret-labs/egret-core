@@ -45,13 +45,14 @@ var project = require("../project");
 var Compiler = require("../actions/Compiler");
 var tasks = require("../tasks");
 var path = require("path");
+var parseConfig = require("../actions/ParseConfig");
 console.log(utils.tr(1004, 0));
 var Build = (function () {
     function Build() {
     }
     Build.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var options, packageJsonContent, packageJson, res, command, projectRoot, target;
+            var options, packageJsonContent, packageJson, res, command, projectRoot, target, projectConfig;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -77,7 +78,8 @@ var Build = (function () {
                         projectRoot = egret.args.projectDir;
                         tasks.run();
                         target = egret.args.target;
-                        return [4 /*yield*/, res.build({ projectRoot: projectRoot, debug: true, command: command, target: target })];
+                        projectConfig = parseConfig.parseConfig();
+                        return [4 /*yield*/, res.build({ projectRoot: projectRoot, debug: true, command: command, target: target, projectConfig: projectConfig })];
                     case 1:
                         _a.sent();
                         return [2 /*return*/, 0];
