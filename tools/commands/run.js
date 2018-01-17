@@ -209,39 +209,65 @@ var Run = (function () {
 }());
 function runWxIde() {
     return __awaiter(this, void 0, void 0, function () {
-        var wxPaths, wxpath, projectPath, e_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var wxPaths, _a, result, stdout_1, iconv, encoding, binaryEncoding, result2, stdout, stdoutArr, exePath, wxpath, projectPath, e_1;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
                     wxPaths = [];
-                    switch (os.platform()) {
-                        case "darwin":
-                            wxPaths = ["/Applications/wechatwebdevtools.app/Contents/Resources/app.nw/bin/cli"];
-                            break;
-                        case "win32":
-                            wxPaths = [
-                                "C:\\Program Files (x86)\\Tencent\\微信web开发者工具\\cli.bat",
-                                "C:\\Program Files\\Tencent\\微信web开发者工具\\cli.bat",
-                            ];
-                            break;
+                    _a = os.platform();
+                    switch (_a) {
+                        case "darwin": return [3 /*break*/, 1];
+                        case "win32": return [3 /*break*/, 3];
                     }
+                    return [3 /*break*/, 5];
+                case 1: return [4 /*yield*/, utils.executeCommand("defaults read com.tencent.wechat.devtools LastRunAppBundlePath")];
+                case 2:
+                    result = _b.sent();
+                    if (result.stdout != '') {
+                        stdout_1 = result.stdout.replace(/\n/g, "");
+                        wxPaths = [FileUtil.joinPath(stdout_1, "/Contents/Resources/app.nw/bin/cli")];
+                    }
+                    // defaults read
+                    wxPaths.push("/Applications/wechatwebdevtools.app/Contents/Resources/app.nw/bin/cli");
+                    return [3 /*break*/, 5];
+                case 3:
+                    // defaults read
+                    wxPaths = [
+                        "C:\\Program Files (x86)\\Tencent\\微信web开发者工具\\cli.bat",
+                        "C:\\Program Files\\Tencent\\微信web开发者工具\\cli.bat"
+                    ];
+                    iconv = require('../lib/iconv-lite');
+                    encoding = 'cp936';
+                    binaryEncoding = 'binary';
+                    return [4 /*yield*/, utils.executeCommand('REG QUERY "HKLM\\SOFTWARE\\Wow6432Node\\Tencent\\微信web开发者工具"', { encoding: binaryEncoding })];
+                case 4:
+                    result2 = _b.sent();
+                    stdout = iconv.decode(new Buffer(result2.stdout, binaryEncoding), encoding);
+                    if (stdout != '') {
+                        stdoutArr = stdout.split("\r\n");
+                        exePath = stdoutArr.find(function (path) { return path.indexOf(".exe") != -1; });
+                        exePath = exePath.split("  ").find(function (path) { return path.indexOf(".exe") != -1; });
+                        wxPaths.unshift(exePath);
+                    }
+                    return [3 /*break*/, 5];
+                case 5:
                     wxpath = wxPaths.find(function (wxpath) { return FileUtil.exists(wxpath); });
-                    if (!wxpath) return [3 /*break*/, 5];
+                    if (!wxpath) return [3 /*break*/, 10];
                     projectPath = egret.args.projectDir;
                     projectPath = path.resolve(projectPath, "../", path.basename(projectPath) + "_wxgame");
-                    _a.label = 1;
-                case 1:
-                    _a.trys.push([1, 3, , 4]);
+                    _b.label = 6;
+                case 6:
+                    _b.trys.push([6, 8, , 9]);
                     return [4 /*yield*/, utils.shell(wxpath, ["-o", projectPath], null, true)];
-                case 2:
-                    _a.sent();
-                    return [3 /*break*/, 4];
-                case 3:
-                    e_1 = _a.sent();
+                case 7:
+                    _b.sent();
+                    return [3 /*break*/, 9];
+                case 8:
+                    e_1 = _b.sent();
                     return [2 /*return*/, 1];
-                case 4: return [3 /*break*/, 6];
-                case 5: throw '请安装最新微信开发者工具';
-                case 6: return [2 /*return*/, DontExitCode];
+                case 9: return [3 /*break*/, 11];
+                case 10: throw '请安装最新微信开发者工具';
+                case 11: return [2 /*return*/, DontExitCode];
             }
         });
     });
