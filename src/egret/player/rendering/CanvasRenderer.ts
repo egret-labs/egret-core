@@ -138,17 +138,17 @@ namespace egret {
                         renderAlpha = node.renderAlpha;
                         m = Matrix.create().copyFrom(node.renderMatrix);
                     }
-                    let a =  m.a * matrix.a;
-                    let b =  0.0;
-                    let c =  0.0;
-                    let d =  m.d * matrix.d;
-                    let tx = m.tx * matrix.a + matrix.tx  * matrix.a;
-                    let ty = m.ty * matrix.d + matrix.ty  * matrix.d;
+                    let a = m.a * matrix.a;
+                    let b = 0.0;
+                    let c = 0.0;
+                    let d = m.d * matrix.d;
+                    let tx = m.tx * matrix.a + matrix.tx * matrix.a;
+                    let ty = m.ty * matrix.d + matrix.ty * matrix.d;
                     if (m.b !== 0.0 || m.c !== 0.0 || matrix.b !== 0.0 || matrix.c !== 0.0) {
-                        a  += m.b * matrix.c;
-                        d  += m.c * matrix.b;
-                        b  += m.a * matrix.b + m.b * matrix.d;
-                        c  += m.c * matrix.a + m.d * matrix.c;
+                        a += m.b * matrix.c;
+                        d += m.c * matrix.b;
+                        b += m.a * matrix.b + m.b * matrix.d;
+                        c += m.c * matrix.a + m.d * matrix.c;
                         tx += m.ty * matrix.c;
                         ty += m.tx * matrix.b;
                     }
@@ -206,7 +206,9 @@ namespace egret {
          */
         private drawWithFilter(displayObject: DisplayObject, context: CanvasRenderingContext2D, dirtyList: egret.sys.Region[],
             matrix: Matrix, clipRegion: sys.Region, root: DisplayObject): number {
-
+            if (displayObject.$children && displayObject.$children.length == 0 && (!displayObject.$renderNode || displayObject.$renderNode.$getRenderCount() == 0)) {
+                return 0;
+            }
             if (Capabilities.runtimeType == RuntimeType.NATIVE) { // for native
                 let drawCalls = 0;
                 let filters = displayObject.$getFilters();

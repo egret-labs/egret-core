@@ -212,7 +212,7 @@ namespace egret.web {
             matrix: Matrix, clipRegion: sys.Region, root: DisplayObject): number {
             let drawCalls = 0;
             if (displayObject.$children && displayObject.$children.length == 0 && (!displayObject.$renderNode || displayObject.$renderNode.$getRenderCount() == 0)) {
-                return;
+                return drawCalls;
             }
             let filters = displayObject.$getFilters();
             let hasBlendMode = (displayObject.$blendMode !== 0);
