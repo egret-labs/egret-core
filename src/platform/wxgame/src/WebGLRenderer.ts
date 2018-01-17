@@ -288,7 +288,23 @@ namespace egret.wxapp {
                 // 绘制结果的时候，应用滤镜
                 buffer.$offsetX = offsetX + displayBounds.x;
                 buffer.$offsetY = offsetY + displayBounds.y;
+                let savedMatrix = Matrix.create();
+                let curMatrix = buffer.globalMatrix;
+                savedMatrix.a = curMatrix.a;
+                savedMatrix.b = curMatrix.b;
+                savedMatrix.c = curMatrix.c;
+                savedMatrix.d = curMatrix.d;
+                savedMatrix.tx = curMatrix.tx;
+                savedMatrix.ty = curMatrix.ty;
+                buffer.useOffset();
                 buffer.context.drawTargetWidthFilters(filters, displayBuffer);
+                curMatrix.a = savedMatrix.a;
+                curMatrix.b = savedMatrix.b;
+                curMatrix.c = savedMatrix.c;
+                curMatrix.d = savedMatrix.d;
+                curMatrix.tx = savedMatrix.tx;
+                curMatrix.ty = savedMatrix.ty;
+                Matrix.release(savedMatrix);
                 if (hasBlendMode) {
                     buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
                 }
@@ -368,9 +384,10 @@ namespace egret.wxapp {
                     let maskMatrix = Matrix.create();
                     maskMatrix.copyFrom(mask.$getConcatenatedMatrix());
                     mask.$getConcatenatedMatrixAt(displayObject, maskMatrix);
+                    maskMatrix.translate(-displayBounds.x, -displayBounds.y);
                     maskBuffer.setTransform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
                     Matrix.release(maskMatrix);
-                    drawCalls += this.drawDisplayObject(mask, maskBuffer, -displayBounds.x, -displayBounds.y);
+                    drawCalls += this.drawDisplayObject(mask, maskBuffer, 0, 0);
                     maskBuffer.context.popBuffer();
                     displayBuffer.context.setGlobalCompositeOperation("destination-in");
                     displayBuffer.setTransform(1, 0, 0, -1, 0, maskBuffer.height);
@@ -405,7 +422,7 @@ namespace egret.wxapp {
                     savedMatrix.d = curMatrix.d;
                     savedMatrix.tx = curMatrix.tx;
                     savedMatrix.ty = curMatrix.ty;
-                    buffer.setTransform(egret.sys.DisplayList.$canvasScaleX, 0, 0, -egret.sys.DisplayList.$canvasScaleY, (offsetX + displayBounds.x) * egret.sys.DisplayList.$canvasScaleX, (offsetY + displayBounds.y + displayBuffer.height) * egret.sys.DisplayList.$canvasScaleY);
+                    curMatrix.append(1, 0, 0, -1, offsetX + displayBounds.x, offsetY + displayBounds.y + displayBuffer.height);
                     let displayBufferWidth = displayBuffer.rootRenderTarget.width;
                     let displayBufferHeight = displayBuffer.rootRenderTarget.height;
                     buffer.context.drawTexture(displayBuffer.rootRenderTarget.texture, 0, 0, displayBufferWidth, displayBufferHeight,
@@ -905,8 +922,15 @@ namespace egret.wxapp {
                 node.$canvasScaleY = canvasScaleY;
                 node.dirtyRender = true;
             }
-            width *= canvasScaleX;
-            height *= canvasScaleY;
+            //缩放叠加 width2 / width 填满整个区域
+            width = width * canvasScaleX;
+            height = height * canvasScaleY;
+            var width2 = Math.ceil(width);
+            var height2 = Math.ceil(height);
+            canvasScaleX *= width2 / width;
+            canvasScaleY *= height2 / height;
+            width = width2;
+            height = height2;
             if (!this.canvasRenderBuffer || !this.canvasRenderBuffer.context) {
                 this.canvasRenderer = new CanvasRenderer();
                 this.canvasRenderBuffer = new CanvasRenderBuffer(width, height);
