@@ -15562,6 +15562,7 @@ var egret;
                 else {
                     this.drawData.push(path);
                 }
+                this.renderCount++;
                 return path;
             };
             /**
@@ -15602,6 +15603,7 @@ var egret;
                 else {
                     this.drawData.push(path);
                 }
+                this.renderCount++;
                 return path;
             };
             /**
@@ -15630,6 +15632,7 @@ var egret;
                 path.joints = joints;
                 path.miterLimit = miterLimit;
                 this.drawData.push(path);
+                this.renderCount++;
                 return path;
             };
             /**
@@ -15638,6 +15641,7 @@ var egret;
             GraphicsNode.prototype.clear = function () {
                 this.drawData.length = 0;
                 this.dirtyRender = true;
+                this.renderCount = 0;
             };
             /**
              * 覆盖父类方法，不自动清空缓存的绘图数据，改为手动调用clear()方法清空。
@@ -16604,6 +16608,9 @@ var egret;
          * @private
          */
         CanvasRenderer.prototype.drawWithFilter = function (displayObject, context, dirtyList, matrix, clipRegion, root) {
+            if (displayObject.$children && displayObject.$children.length == 0 && (!displayObject.$renderNode || displayObject.$renderNode.$getRenderCount() == 0)) {
+                return 0;
+            }
             if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
                 var drawCalls_1 = 0;
                 var filters_1 = displayObject.$getFilters();
