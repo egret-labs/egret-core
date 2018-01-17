@@ -499,6 +499,7 @@ module RES.processor {
                     if (resource.subkeys) {
                         resource.subkeys.split(",").forEach(subkey => {
                             alias[subkey] = resource.name + "#" + subkey;
+                            alias[resource.name + "." + subkey] = resource.name + "#" + subkey;
                         })
                         // ResourceConfig.
                     }
