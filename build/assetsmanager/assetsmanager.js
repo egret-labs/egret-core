@@ -1120,7 +1120,7 @@ var RES;
                             case 2:
                                 texture = _a.sent();
                                 font = new egret.BitmapFont(texture, config);
-                                font["resourceInfo"] = r;
+                                font["$resourceInfo"] = r;
                                 // todo refactor
                                 host.save(r, texture);
                                 return [2 /*return*/, font];

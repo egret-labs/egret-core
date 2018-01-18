@@ -299,7 +299,7 @@ module RES.processor {
             }
             var texture: egret.Texture = await host.load(r);
             var font = new egret.BitmapFont(texture, config);
-            font["resourceInfo"] = r;
+            font["$resourceInfo"] = r;
             // todo refactor
             host.save(r, texture);
             return font;
