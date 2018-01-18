@@ -41,7 +41,38 @@ export class WxgamePlugin implements plugins.Command {
         }
         return file;
     }
-    async onFinish(pluginContext) {
+    async onFinish(pluginContext: plugins.CommandContext) {
+        //同步 index.html 配置到 game.js
+        const gameJSPath = path.join(pluginContext.outputDir, "game.js");
+        let gameJSContent = fs.readFileSync(gameJSPath, { encoding: "utf8" });
+        const projectConfig = pluginContext.buildConfig.projectConfig;
+        const optionStr =
+            `entryClassName: ${projectConfig.entryClassName},\n\t\t` +
+            `orientation: ${projectConfig.orientation},\n\t\t` +
+            `frameRate: ${projectConfig.frameRate},\n\t\t` +
+            `scaleMode: ${projectConfig.scaleMode},\n\t\t` +
+            `contentWidth: ${projectConfig.contentWidth},\n\t\t` +
+            `contentHeight: ${projectConfig.contentHeight},\n\t\t` +
+            `showFPS: ${projectConfig.showFPS},\n\t\t` +
+            `fpsStyles: ${projectConfig.fpsStyles},\n\t\t` +
+            `showLog: ${projectConfig.showLog},\n\t\t` +
+            `maxTouches: ${projectConfig.maxTouches},`;
+        const reg = /\/\/----auto option start----[\s\S]*\/\/----auto option end----/;
+        const replaceStr = '\/\/----auto option start----\n\t\t' + optionStr + '\n\t\t\/\/----auto option end----';
+        gameJSContent = gameJSContent.replace(reg, replaceStr);
+        fs.writeFileSync(gameJSPath, gameJSContent);
 
+        //修改横竖屏
+        let orientation;
+        if (projectConfig.orientation == '"landscape"') {
+            orientation = "landscape";
+        }
+        else {
+            orientation = "portrait";
+        }
+        const gameJSONPath = path.join(pluginContext.outputDir, "game.json");
+        let gameJSONContent = JSON.parse(fs.readFileSync(gameJSONPath, { encoding: "utf8" }));
+        gameJSONContent.deviceOrientation = orientation;
+        fs.writeFileSync(gameJSONPath, JSON.stringify(gameJSONContent, null, "\t"));
     }
 }

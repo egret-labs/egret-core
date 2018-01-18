@@ -8,6 +8,7 @@ let config: any = {};
 export function parseConfig() {
     htmlTxt = FileUtil.read(FileUtil.joinPath(egret.args.projectDir, "index.html"));
     read("data-entry-class", "entryClassName", true, '"Main"');
+    read("data-orientation", "orientation", true, '"auto"');
     read("data-frame-rate", "frameRate", false, "60");
     read("data-scale-mode", "scaleMode", true, '"showAll"');
     read("data-content-width", "contentWidth", false, "480");

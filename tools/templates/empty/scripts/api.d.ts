@@ -40,7 +40,7 @@ type UserConfig = {
     /**
      * 插件
      */
-    commands: (string | plugins.Command) []
+    commands: (string | plugins.Command)[]
 }
 
 type BuildConfigParam = {
@@ -70,6 +70,24 @@ type BuildConfigParam = {
      * 项目路径
      */
     readonly projectRoot: string;
+
+    /**
+     * 项目配置
+     */
+    readonly projectConfig: ProjectConfig;
+}
+
+type ProjectConfig = {
+    entryClassName: string;
+    orientation: string;
+    frameRate: number;
+    scaleMode: string;
+    contentWidth: number;
+    contentHeight: number;
+    showFPS: boolean;
+    fpsStyles: string;
+    showLog: boolean;
+    maxTouches: number;
 }
 
 
