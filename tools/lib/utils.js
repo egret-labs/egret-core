@@ -232,11 +232,12 @@ function open(target, appName) {
     executeCommand(command + ' "' + escape(target) + '"');
 }
 exports.open = open;
-function executeCommand(command) {
+function executeCommand(command, options) {
+    if (options === void 0) { options = {}; }
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             return [2 /*return*/, new Promise(function (reslove, reject) {
-                    cp.exec(command, {}, function (error, stdout, stderr) {
+                    cp.exec(command, options, function (error, stdout, stderr) {
                         reslove({ error: error, stdout: stdout, stderr: stderr });
                     });
                 })];

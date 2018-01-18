@@ -176,13 +176,31 @@ async function runWxIde() {
     let wxPaths = [];
     switch (os.platform()) {
         case "darwin":
-            wxPaths = ["/Applications/wechatwebdevtools.app/Contents/Resources/app.nw/bin/cli"];
+            const result = await utils.executeCommand("defaults read com.tencent.wechat.devtools LastRunAppBundlePath");
+            if (result.stdout != '') {
+                const stdout = result.stdout.replace(/\n/g, "");
+                wxPaths = [FileUtil.joinPath(stdout, "/Contents/Resources/app.nw/bin/cli")];
+            }
+            // defaults read
+            wxPaths.push("/Applications/wechatwebdevtools.app/Contents/Resources/app.nw/bin/cli");
             break;
         case "win32":
+            // defaults read
             wxPaths = [
                 "C:\\Program Files (x86)\\Tencent\\微信web开发者工具\\cli.bat",
-                "C:\\Program Files\\Tencent\\微信web开发者工具\\cli.bat",
+                "C:\\Program Files\\Tencent\\微信web开发者工具\\cli.bat"
             ];
+            const iconv = require('../lib/iconv-lite');
+            const encoding = 'cp936';
+            const binaryEncoding = 'binary';
+            const result2 = await utils.executeCommand('REG QUERY "HKLM\\SOFTWARE\\Wow6432Node\\Tencent\\微信web开发者工具"', { encoding: binaryEncoding });
+            const stdout = iconv.decode(new Buffer(result2.stdout, binaryEncoding), encoding);
+            if (stdout != '') {
+                const stdoutArr = stdout.split("\r\n");
+                let exePath: string = stdoutArr.find((path) => path.indexOf(".exe") != -1);
+                exePath = exePath.split("  ").find((path) => path.indexOf(".exe") != -1);
+                wxPaths.unshift(exePath);
+            }
             break;
     }
     const wxpath = wxPaths.find((wxpath) => FileUtil.exists(wxpath));

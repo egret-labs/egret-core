@@ -209,6 +209,7 @@ module RES.processor {
             var texture: egret.Texture = await host.load(r);
             var frames: any = data.frames;
             var spriteSheet = new egret.SpriteSheet(texture);
+            spriteSheet["$resourceInfo"] = r;
             for (var subkey in frames) {
                 var config: any = frames[subkey];
                 var texture = spriteSheet.createTexture(subkey, config.x, config.y, config.w, config.h, config.offX, config.offY, config.sourceW, config.sourceH);
@@ -221,6 +222,8 @@ module RES.processor {
                 //         this.addSubkey(subkey, name);
                 //     }
             }
+            // todo refactor
+            host.save(r, texture);
             return spriteSheet;
         },
 
@@ -238,6 +241,9 @@ module RES.processor {
 
 
         onRemoveStart(host, resource): Promise<any> {
+            const sheet: egret.SpriteSheet = host.get(resource);
+            const r = sheet["$resourceInfo"];
+            host.unload(r);
             return Promise.resolve();
         }
 
@@ -293,18 +299,18 @@ module RES.processor {
             }
             var texture: egret.Texture = await host.load(r);
             var font = new egret.BitmapFont(texture, config);
+            font["resourceInfo"] = r;
+            // todo refactor
+            host.save(r, texture);
             return font;
         },
 
-
-
-
-
         onRemoveStart(host, resource): Promise<any> {
+            const font: egret.BitmapFont = host.get(resource);
+            const r = font["$resourceInfo"];
+            host.unload(r);
             return Promise.resolve();
         }
-
-
     }
 
 
@@ -335,7 +341,7 @@ module RES.processor {
                     }
                     return host.load(imageResource);
                 }).then((value) => {
-                    host.save(imageResource, value)
+                    host.save(imageResource, value);
                     var mcTexture: egret.Texture = value;
                     var mcDataFactory = new egret.MovieClipDataFactory(mcData, mcTexture);
                     return mcDataFactory;
