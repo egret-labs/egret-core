@@ -3168,7 +3168,7 @@
                             cwd: i,
                             base: i
                         }).pipe(f(n)), g = o.commands.map(function(e) {
-                            return _.createPlugin(e);
+                            return _.createPlugin(e, o.outputDir);
                         }), "." == o.outputDir && g.push(f(t)), g.push(c.dest(d)), h = 0, y = g; h < y.length; h++) v = y[h], 
                         m = m.pipe(v);
                         return [ 2, new Promise(function(e, t) {
@@ -4261,17 +4261,17 @@
         function r(e, t, n) {
             a = e, o = t, s = n;
         }
-        function i(e) {
-            var t = this, r = n(6), i = function(n, r, i) {
-                return c(t, void 0, void 0, function() {
-                    var t, r;
+        function i(e, t) {
+            var r = this, i = n(6), f = function(t, n, i) {
+                return c(r, void 0, void 0, function() {
+                    var n, r;
                     return u(this, function(a) {
                         switch (a.label) {
                           case 0:
-                            return a.trys.push([ 0, 2, , 3 ]), [ 4, e.onFile(n) ];
+                            return a.trys.push([ 0, 2, , 3 ]), [ 4, e.onFile(t) ];
 
                           case 1:
-                            return t = a.sent(), t ? i(null, n) : i(null), [ 3, 3 ];
+                            return n = a.sent(), n ? i(null, t) : i(null), [ 3, 3 ];
 
                           case 2:
                             return r = a.sent(), console.log(r), [ 3, 3 ];
@@ -4281,13 +4281,13 @@
                         }
                     });
                 });
-            }, f = function(t) {
+            }, d = function(n) {
                 return c(this, void 0, void 0, function() {
-                    var n, r, i, c = this;
+                    var r, i, c, f = this;
                     return u(this, function(u) {
                         switch (u.label) {
                           case 0:
-                            n = function(e, t, n) {
+                            r = function(e, t, n) {
                                 e = e.split("\\").join("/");
                                 var r = new l({
                                     cwd: o,
@@ -4298,22 +4298,22 @@
                                     isDirty: !0,
                                     options: n
                                 });
-                                c.push(r);
-                            }, r = {
-                                resourceFolder: o,
+                                f.push(r);
+                            }, t = _.resolve(a, t).split("\\").join("/"), i = {
                                 projectRoot: a,
+                                outputDir: t,
                                 buildConfig: s,
-                                createFile: n
+                                createFile: r
                             }, u.label = 1;
 
                           case 1:
-                            return u.trys.push([ 1, 3, , 4 ]), [ 4, e.onFinish(r) ];
+                            return u.trys.push([ 1, 3, , 4 ]), [ 4, e.onFinish(i) ];
 
                           case 2:
-                            return u.sent(), t(), [ 3, 4 ];
+                            return u.sent(), n(), [ 3, 4 ];
 
                           case 3:
-                            return i = u.sent(), console.log(i), [ 3, 4 ];
+                            return c = u.sent(), console.log(c), [ 3, 4 ];
 
                           case 4:
                             return [ 2 ];
@@ -4321,7 +4321,7 @@
                     });
                 });
             };
-            return r.obj(i, f);
+            return i.obj(f, d);
         }
         var a, o, s, c = this && this.__awaiter || function(e, t, n, r) {
             return new (n || (n = Promise))(function(i, a) {

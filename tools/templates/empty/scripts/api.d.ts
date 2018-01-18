@@ -40,7 +40,7 @@ type UserConfig = {
     /**
      * 插件
      */
-    commands: (string | plugins.Command)[]
+    commands: (string | plugins.Command) []
 }
 
 type BuildConfigParam = {
@@ -85,7 +85,17 @@ declare namespace plugins {
         /**
          * 构建配置
          */
-        buildConfig: BuildConfigParam
+        buildConfig: BuildConfigParam;
+
+        /** 
+         * 项目绝对路径
+         */
+        projectRoot: string;
+
+        /** 
+         * 项目输出绝对路径
+         */
+        outputDir: string;
 
     }
 
