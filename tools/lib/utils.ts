@@ -187,9 +187,9 @@ export function open(target, appName?) {
     executeCommand(command + ' "' + escape(target) + '"')
 }
 
-export async function executeCommand(command: string) {
+export async function executeCommand(command: string, options = {}) {
     return new Promise<{ error: Error, stdout: string, stderr: string }>((reslove, reject) => {
-        cp.exec(command, {}, (error, stdout, stderr) => {
+        cp.exec(command, options, (error, stdout, stderr) => {
             reslove({ error, stdout, stderr })
         });
     })

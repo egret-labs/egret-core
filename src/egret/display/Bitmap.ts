@@ -111,7 +111,7 @@ namespace egret {
             super.$onAddToStage(stage, nestLevel);
 
             let texture = this.$texture;
-            if (texture) {
+            if (texture && texture.$bitmapData) {
                 BitmapData.$addDisplayObject(this, texture.$bitmapData);
             }
         }
@@ -160,8 +160,8 @@ namespace egret {
          */
         $setTexture(value: Texture): boolean {
             let self = this;
-            let oldBitmapData = self.$texture;
-            if (value == oldBitmapData) {
+            let oldTexture = self.$texture;
+            if (value == oldTexture) {
                 return false;
             }
             self.$texture = value;
@@ -169,8 +169,8 @@ namespace egret {
                 self.$refreshImageData();
             }
             else {
-                if (oldBitmapData) {
-                    BitmapData.$removeDisplayObject(self, oldBitmapData.$bitmapData);
+                if (oldTexture) {
+                    BitmapData.$removeDisplayObject(self, oldTexture.$bitmapData);
                 }
                 self.setImageData(null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
                 self.$renderDirty = true;
@@ -191,9 +191,9 @@ namespace egret {
             }
 
             if (self.$stage) {
-                if (oldBitmapData) {
-                    let oldHashCode: number = oldBitmapData.$bitmapData.hashCode;
-                    let newHashCode: number = value.$bitmapData.hashCode;
+                if (oldTexture && oldTexture.$bitmapData) {
+                    let oldHashCode: number = oldTexture.$bitmapData.hashCode;
+                    let newHashCode: number = value.$bitmapData ? value.$bitmapData.hashCode : -1;
                     if (oldHashCode == newHashCode) {
                         self.$renderDirty = true;
                         let p = self.$parent;
@@ -208,7 +208,7 @@ namespace egret {
                         }
                         return true;
                     }
-                    BitmapData.$removeDisplayObject(self, oldBitmapData.$bitmapData);
+                    BitmapData.$removeDisplayObject(self, oldTexture.$bitmapData);
                 }
                 BitmapData.$addDisplayObject(self, value.$bitmapData);
             }

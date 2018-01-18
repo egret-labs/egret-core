@@ -1033,6 +1033,7 @@ var RES;
                                 texture = _a.sent();
                                 frames = data.frames;
                                 spriteSheet = new egret.SpriteSheet(texture);
+                                spriteSheet["$resourceInfo"] = r;
                                 for (subkey in frames) {
                                     config = frames[subkey];
                                     texture = spriteSheet.createTexture(subkey, config.x, config.y, config.w, config.h, config.offX, config.offY, config.sourceW, config.sourceH);
@@ -1045,6 +1046,8 @@ var RES;
                                     //         this.addSubkey(subkey, name);
                                     //     }
                                 }
+                                // todo refactor
+                                host.save(r, texture);
                                 return [2 /*return*/, spriteSheet];
                         }
                     });
@@ -1061,6 +1064,9 @@ var RES;
                 }
             },
             onRemoveStart: function (host, resource) {
+                var sheet = host.get(resource);
+                var r = sheet["$resourceInfo"];
+                host.unload(r);
                 return Promise.resolve();
             }
         };
@@ -1114,12 +1120,18 @@ var RES;
                             case 2:
                                 texture = _a.sent();
                                 font = new egret.BitmapFont(texture, config);
+                                font["resourceInfo"] = r;
+                                // todo refactor
+                                host.save(r, texture);
                                 return [2 /*return*/, font];
                         }
                     });
                 });
             },
             onRemoveStart: function (host, resource) {
+                var font = host.get(resource);
+                var r = font["$resourceInfo"];
+                host.unload(r);
                 return Promise.resolve();
             }
         };
