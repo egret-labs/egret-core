@@ -21,19 +21,35 @@ const config: ResourceManagerConfig = {
 
         if (target == 'wxgame') {
             const outputDir = `../${projectName}_wxgame`;
-            return {
-                outputDir,
-                commands: [
-                    new CompilePlugin({ libraryType: "release" }),
-                    new ExmlPlugin('commonjs'), // 非 EUI 项目关闭此设置
-                    new WxgamePlugin(),
-                    new UglifyPlugin([{
-                        sources: ["main.js"],
-                        target: "main.min.js"
-                    }
-                    ]),
-                    new ManifestPlugin({ output: 'manifest.js' })
-                ]
+            if (command == 'build') {
+                return {
+                    outputDir,
+                    commands: [
+                        new CompilePlugin({ libraryType: "debug" }),
+                        new ExmlPlugin('commonjs'), // 非 EUI 项目关闭此设置
+                        new WxgamePlugin(),
+                        new ManifestPlugin({ output: 'manifest.js' })
+                    ]
+                }
+            }
+            else if (command == 'publish') {
+                return {
+                    outputDir,
+                    commands: [
+                        new CompilePlugin({ libraryType: "release" }),
+                        new ExmlPlugin('commonjs'), // 非 EUI 项目关闭此设置
+                        new WxgamePlugin(),
+                        new UglifyPlugin([{
+                            sources: ["main.js"],
+                            target: "main.min.js"
+                        }
+                        ]),
+                        new ManifestPlugin({ output: 'manifest.js' })
+                    ]
+                }
+            }
+            else {
+                throw `unknown command : ${params.command}`;
             }
         }
 
