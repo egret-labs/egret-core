@@ -3539,7 +3539,7 @@ var egret;
         Bitmap.prototype.$onAddToStage = function (stage, nestLevel) {
             _super.prototype.$onAddToStage.call(this, stage, nestLevel);
             var texture = this.$texture;
-            if (texture) {
+            if (texture && texture.$bitmapData) {
                 egret.BitmapData.$addDisplayObject(this, texture.$bitmapData);
             }
         };
@@ -3587,8 +3587,8 @@ var egret;
          */
         Bitmap.prototype.$setTexture = function (value) {
             var self = this;
-            var oldBitmapData = self.$texture;
-            if (value == oldBitmapData) {
+            var oldTexture = self.$texture;
+            if (value == oldTexture) {
                 return false;
             }
             self.$texture = value;
@@ -3596,8 +3596,8 @@ var egret;
                 self.$refreshImageData();
             }
             else {
-                if (oldBitmapData) {
-                    egret.BitmapData.$removeDisplayObject(self, oldBitmapData.$bitmapData);
+                if (oldTexture) {
+                    egret.BitmapData.$removeDisplayObject(self, oldTexture.$bitmapData);
                 }
                 self.setImageData(null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
                 self.$renderDirty = true;
@@ -3617,9 +3617,9 @@ var egret;
                 return true;
             }
             if (self.$stage) {
-                if (oldBitmapData) {
-                    var oldHashCode = oldBitmapData.$bitmapData.hashCode;
-                    var newHashCode = value.$bitmapData.hashCode;
+                if (oldTexture && oldTexture.$bitmapData) {
+                    var oldHashCode = oldTexture.$bitmapData.hashCode;
+                    var newHashCode = value.$bitmapData ? value.$bitmapData.hashCode : -1;
                     if (oldHashCode == newHashCode) {
                         self.$renderDirty = true;
                         var p_2 = self.$parent;
@@ -3634,7 +3634,7 @@ var egret;
                         }
                         return true;
                     }
-                    egret.BitmapData.$removeDisplayObject(self, oldBitmapData.$bitmapData);
+                    egret.BitmapData.$removeDisplayObject(self, oldTexture.$bitmapData);
                 }
                 egret.BitmapData.$addDisplayObject(self, value.$bitmapData);
             }
