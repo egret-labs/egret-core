@@ -1023,7 +1023,7 @@ var RES;
                             case 0: return [4 /*yield*/, host.load(resource, processor_1.JsonProcessor)];
                             case 1:
                                 data = _a.sent();
-                                imagePath = "resource/" + getRelativePath(resource.url, data.file);
+                                imagePath = RES.config.resourceRoot + "/" + getRelativePath(resource.url, data.file);
                                 r = host.resourceConfig.getResource(data.file);
                                 if (!r) {
                                     r = { name: imagePath, url: imagePath, extra: true, type: 'image' };

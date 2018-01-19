@@ -201,7 +201,7 @@ module RES.processor {
         async onLoadStart(host, resource): Promise<any> {
 
             let data = await host.load(resource, JsonProcessor);
-            let imagePath = "resource/" + getRelativePath(resource.url, data.file);
+            let imagePath = RES.config.resourceRoot + "/" + getRelativePath(resource.url, data.file);
             let r = host.resourceConfig.getResource(data.file);
             if (!r) {
                 r = { name: imagePath, url: imagePath, extra: true, type: 'image' };
