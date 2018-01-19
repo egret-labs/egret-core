@@ -40,14 +40,18 @@ var FileUtil = require("../lib/FileUtil");
 var Compiler = require("../actions/Compiler");
 var utils = require("../lib/utils");
 var compiler = new Compiler.Compiler();
+var defaultDefines = { DEBUG: true, RELEASE: false };
 var CompilePlugin = (function () {
     function CompilePlugin(options) {
         this.options = options;
         if (!this.options) {
-            this.options = { libraryType: "release" };
+            this.options = { libraryType: "release", defines: defaultDefines };
         }
         if (!this.options.libraryType) {
             this.options.libraryType = "release";
+        }
+        if (!this.options.defines) {
+            this.options.defines = defaultDefines;
         }
     }
     CompilePlugin.prototype.onFile = function (file) {
@@ -67,7 +71,7 @@ var CompilePlugin = (function () {
                 scripts.forEach(function (script) {
                     pluginContext.createFile(script, fs.readFileSync(FileUtil.joinPath(pluginContext.projectRoot, script)));
                 });
-                jscode = tinyCompiler();
+                jscode = tinyCompiler(this.options.defines);
                 pluginContext.createFile("main.js", new Buffer(jscode));
                 if (target == 'web') {
                     filepath = FileUtil.joinPath(projectRoot, 'template/web/index.html');
@@ -132,7 +136,7 @@ var UglifyPlugin = (function () {
     return UglifyPlugin;
 }());
 exports.UglifyPlugin = UglifyPlugin;
-function tinyCompiler() {
+function tinyCompiler(defines) {
     var os = require('os');
     var outfile = FileUtil.joinPath(os.tmpdir(), 'main.min.js');
     var options = egret.args;
@@ -145,6 +149,7 @@ function tinyCompiler() {
     compilerOptions.outFile = outfile;
     compilerOptions.allowUnreachableCode = true;
     compilerOptions.emitReflection = true;
+    compilerOptions.defines = defines;
     this.compilerHost = compiler.compile(compilerOptions, fileNames);
     var jscode = fs.readFileSync(outfile);
     return jscode;

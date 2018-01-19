@@ -40,7 +40,7 @@ type UserConfig = {
     /**
      * 插件
      */
-    commands: (string | plugins.Command)[]
+    commands: (string | plugins.Command) []
 }
 
 type BuildConfigParam = {
@@ -226,7 +226,7 @@ declare module 'built-in' {
 
     type LibraryType = "debug" | "release";
 
-    type CompilePluginOptions = { libraryType: LibraryType };
+    type CompilePluginOptions = { libraryType: LibraryType, defines?: any };
     /**
      * 编译命令
      */
