@@ -8,17 +8,22 @@ import { FileChanges } from '../lib/DirectoryState';
 
 const compiler = new Compiler.Compiler();
 
+const defaultDefines = { DEBUG: true, RELEASE: false };
+
 
 type LibraryType = "debug" | "release";
 
 export class CompilePlugin {
 
-    constructor(private options: { libraryType: LibraryType }) {
+    constructor(private options: { libraryType: LibraryType, defines: any }) {
         if (!this.options) {
-            this.options = { libraryType: "release" };
+            this.options = { libraryType: "release", defines: defaultDefines };
         }
         if (!this.options.libraryType) {
             this.options.libraryType = "release";
+        }
+        if (!this.options.defines) {
+            this.options.defines = defaultDefines;
         }
 
     }
@@ -34,7 +39,7 @@ export class CompilePlugin {
         scripts.forEach((script) => {
             pluginContext.createFile(script, fs.readFileSync(FileUtil.joinPath(pluginContext.projectRoot, script)));
         })
-        const jscode = tinyCompiler();
+        const jscode = tinyCompiler(this.options.defines);
         pluginContext.createFile("main.js", new Buffer(jscode));
 
         if (target == 'web') {
@@ -114,7 +119,7 @@ export class UglifyPlugin {
 }
 
 
-function tinyCompiler() {
+function tinyCompiler(defines: any) {
 
     const os = require('os');
     const outfile = FileUtil.joinPath(os.tmpdir(), 'main.min.js');
@@ -129,6 +134,7 @@ function tinyCompiler() {
     compilerOptions.outFile = outfile;
     compilerOptions.allowUnreachableCode = true;
     compilerOptions.emitReflection = true;
+    compilerOptions.defines = defines;
     this.compilerHost = compiler.compile(compilerOptions, fileNames);
     const jscode = fs.readFileSync(outfile);
     return jscode;

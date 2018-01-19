@@ -191,7 +191,7 @@ function listModuleFiles(m: egret.EgretModule) {
         tsFiles = FileUtil.search(FileUtil.joinPath(egret.root, m.root), "ts");
     var specFiles = {};
     m.files.forEach((f, i) => {
-        var fileName = typeof (f) == 'string' ? <string>f : (<egret.ManifestSourceFile>f).path;
+        var fileName = typeof (f) == 'string' ? f : f.path;
         fileName = FileUtil.joinPath(m.root, fileName);
         fileName = FileUtil.joinPath(egret.root, fileName);
         if (f['path'])
