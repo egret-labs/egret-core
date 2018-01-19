@@ -36,7 +36,7 @@ const config: ResourceManagerConfig = {
                 return {
                     outputDir,
                     commands: [
-                        new CompilePlugin({ libraryType: "release" }),
+                        new CompilePlugin({ libraryType: "release", defines: { DEBUG: false, RELEASE: true } }),
                         new ExmlPlugin('commonjs'), // 非 EUI 项目关闭此设置
                         new WxgamePlugin(),
                         new UglifyPlugin([{
