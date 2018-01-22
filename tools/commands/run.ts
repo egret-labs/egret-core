@@ -199,6 +199,7 @@ async function runWxIde() {
                 const stdoutArr = stdout.split("\r\n");
                 let exePath: string = stdoutArr.find((path) => path.indexOf(".exe") != -1);
                 exePath = exePath.split("  ").find((path) => path.indexOf(".exe") != -1);
+                exePath = path.join(path.dirname(exePath), 'cli.bat');
                 wxPaths.unshift(exePath);
             }
             break;
