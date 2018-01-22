@@ -247,6 +247,7 @@ function runWxIde() {
                         stdoutArr = stdout.split("\r\n");
                         exePath = stdoutArr.find(function (path) { return path.indexOf(".exe") != -1; });
                         exePath = exePath.split("  ").find(function (path) { return path.indexOf(".exe") != -1; });
+                        exePath = path.join(path.dirname(exePath), 'cli.bat');
                         wxPaths.unshift(exePath);
                     }
                     return [3 /*break*/, 5];
