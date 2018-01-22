@@ -3105,6 +3105,14 @@ var egret;
                     var location = _this.getLocation(event);
                     _this.touch.onTouchBegin(location.x, location.y, event.identifier);
                 };
+                _this.onMouseMove = function (event) {
+                    if (event.buttons == 0) {
+                        _this.onTouchEnd(event);
+                    }
+                    else {
+                        _this.onTouchMove(event);
+                    }
+                };
                 /**
                  * @private
                  */
@@ -3172,7 +3180,7 @@ var egret;
              */
             WebTouchHandler.prototype.addMouseListener = function () {
                 this.canvas.addEventListener("mousedown", this.onTouchBegin);
-                this.canvas.addEventListener("mousemove", this.onTouchMove);
+                this.canvas.addEventListener("mousemove", this.onMouseMove);
                 this.canvas.addEventListener("mouseup", this.onTouchEnd);
             };
             /**
@@ -7115,7 +7123,7 @@ var egret;
             WebGLRenderer.prototype.drawWithFilter = function (displayObject, buffer, offsetX, offsetY) {
                 var drawCalls = 0;
                 if (displayObject.$children && displayObject.$children.length == 0 && (!displayObject.$renderNode || displayObject.$renderNode.$getRenderCount() == 0)) {
-                    return;
+                    return drawCalls;
                 }
                 var filters = displayObject.$filters;
                 var hasBlendMode = (displayObject.$blendMode !== 0);

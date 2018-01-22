@@ -217,7 +217,7 @@ namespace egret.web {
         private drawWithFilter(displayObject: DisplayObject, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number): number {
             let drawCalls = 0;
             if (displayObject.$children && displayObject.$children.length == 0 && (!displayObject.$renderNode || displayObject.$renderNode.$getRenderCount() == 0)) {
-                return;
+                return drawCalls;
             }
             let filters = displayObject.$filters;
             let hasBlendMode = (displayObject.$blendMode !== 0);
