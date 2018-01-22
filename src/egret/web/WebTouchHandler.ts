@@ -89,7 +89,7 @@ namespace egret.web {
          */
         private addMouseListener():void {
             this.canvas.addEventListener("mousedown", this.onTouchBegin);
-            this.canvas.addEventListener("mousemove", this.onTouchMove);
+            this.canvas.addEventListener("mousemove", this.onMouseMove);
             this.canvas.addEventListener("mouseup", this.onTouchEnd);
         }
 
@@ -144,6 +144,14 @@ namespace egret.web {
         private onTouchBegin = (event:any):void => {
             let location = this.getLocation(event);
             this.touch.onTouchBegin(location.x, location.y, event.identifier);
+        }
+
+        private onMouseMove = (event:MouseEvent) => {
+            if (event.buttons == 0) {//在外面松开按键
+                this.onTouchEnd(event);
+            } else {
+                this.onTouchMove(event);
+            }
         }
 
         /**
