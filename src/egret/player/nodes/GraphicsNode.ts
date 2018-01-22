@@ -59,6 +59,7 @@ namespace egret.sys {
             else {
                 this.drawData.push(path);
             }
+            this.renderCount++;
             return path;
         }
 
@@ -101,6 +102,7 @@ namespace egret.sys {
             else {
                 this.drawData.push(path);
             }
+            this.renderCount++;
             return path;
         }
 
@@ -129,6 +131,7 @@ namespace egret.sys {
             path.joints = joints;
             path.miterLimit = miterLimit;
             this.drawData.push(path);
+            this.renderCount++;
             return path;
         }
 
@@ -138,6 +141,7 @@ namespace egret.sys {
         public clear():void {
             this.drawData.length = 0;
             this.dirtyRender = true;
+            this.renderCount = 0;
         }
 
         /**

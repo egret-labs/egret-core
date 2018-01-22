@@ -7115,7 +7115,7 @@ var egret;
             WebGLRenderer.prototype.drawWithFilter = function (displayObject, buffer, offsetX, offsetY) {
                 var drawCalls = 0;
                 if (displayObject.$children && displayObject.$children.length == 0 && (!displayObject.$renderNode || displayObject.$renderNode.$getRenderCount() == 0)) {
-                    return;
+                    return drawCalls;
                 }
                 var filters = displayObject.$filters;
                 var hasBlendMode = (displayObject.$blendMode !== 0);
