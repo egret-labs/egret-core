@@ -3179,6 +3179,14 @@ var egret;
                     var location = _this.getLocation(event);
                     _this.touch.onTouchBegin(location.x, location.y, event.identifier);
                 };
+                _this.onMouseMove = function (event) {
+                    if (event.buttons == 0) {
+                        _this.onTouchEnd(event);
+                    }
+                    else {
+                        _this.onTouchMove(event);
+                    }
+                };
                 /**
                  * @private
                  */
@@ -3246,7 +3254,7 @@ var egret;
              */
             WebTouchHandler.prototype.addMouseListener = function () {
                 this.canvas.addEventListener("mousedown", this.onTouchBegin);
-                this.canvas.addEventListener("mousemove", this.onTouchMove);
+                this.canvas.addEventListener("mousemove", this.onMouseMove);
                 this.canvas.addEventListener("mouseup", this.onTouchEnd);
             };
             /**
