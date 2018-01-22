@@ -182,6 +182,9 @@ namespace egret {
         }
 
         private drawWithFilter(displayObject: DisplayObject, context: CanvasRenderingContext2D, offsetX: number, offsetY: number): number {
+            if (displayObject.$children && displayObject.$children.length == 0 && (!displayObject.$renderNode || displayObject.$renderNode.$getRenderCount() == 0)) {
+                return 0;
+            }
             let drawCalls = 0;
             let filters = displayObject.$filters;
             let filtersLen: number = filters.length;
