@@ -12839,7 +12839,7 @@ declare namespace eui {
          * 解析source
          */
         private $parseFont();
-        $setFontData(value: egret.BitmapFont): boolean;
+        $setFontData(value: egret.BitmapFont, font?: string): boolean;
         /**
          * @private
          */
