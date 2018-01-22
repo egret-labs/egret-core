@@ -637,7 +637,10 @@ var RES;
         get resourceConfig() {
             return RES.config;
         },
-        load: function (r, processor) { return RES.queue.loadResource(r, processor); },
+        load: function (r, processorName) {
+            var processor = typeof processorName == 'string' ? RES.processor._map[processorName] : processorName;
+            return RES.queue.loadResource(r, processor);
+        },
         unload: function (r) { return RES.queue.unloadResource(r); },
         save: function (resource, data) {
             RES.host.state[resource.name] = 2;
@@ -809,11 +812,11 @@ var RES;
     var processor;
     (function (processor_1) {
         function isSupport(resource) {
-            return _map[resource.type];
+            return processor_1._map[resource.type];
         }
         processor_1.isSupport = isSupport;
         function map(type, processor) {
-            _map[type] = processor;
+            processor_1._map[type] = processor;
         }
         processor_1.map = map;
         function promisify(loader, resource) {
@@ -955,7 +958,7 @@ var RES;
                     var text, data;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
-                            case 0: return [4 /*yield*/, host.load(resource, processor_1.TextProcessor)];
+                            case 0: return [4 /*yield*/, host.load(resource, 'text')];
                             case 1:
                                 text = _a.sent();
                                 data = JSON.parse(text);
@@ -974,7 +977,7 @@ var RES;
                     var text, data;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
-                            case 0: return [4 /*yield*/, host.load(resource, processor_1.TextProcessor)];
+                            case 0: return [4 /*yield*/, host.load(resource, 'text')];
                             case 1:
                                 text = _a.sent();
                                 data = egret.XML.parse(text);
@@ -993,7 +996,7 @@ var RES;
                     var text, f, require, exports;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
-                            case 0: return [4 /*yield*/, host.load(resource, processor_1.TextProcessor)];
+                            case 0: return [4 /*yield*/, host.load(resource, 'text')];
                             case 1:
                                 text = _a.sent();
                                 f = new Function('require', 'exports', text);
@@ -1020,7 +1023,7 @@ var RES;
                     var data, imagePath, r, texture, frames, spriteSheet, subkey, config, texture;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
-                            case 0: return [4 /*yield*/, host.load(resource, processor_1.JsonProcessor)];
+                            case 0: return [4 /*yield*/, host.load(resource, "json")];
                             case 1:
                                 data = _a.sent();
                                 imagePath = RES.config.resourceRoot + "/" + getRelativePath(resource.url, data.file);
@@ -1096,7 +1099,7 @@ var RES;
                     var data, config, imageFileName, r, texture, font;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
-                            case 0: return [4 /*yield*/, host.load(resource, processor_1.TextProcessor)];
+                            case 0: return [4 /*yield*/, host.load(resource, 'text')];
                             case 1:
                                 data = _a.sent();
                                 try {
@@ -1160,7 +1163,7 @@ var RES;
             onLoadStart: function (host, resource) {
                 var mcData;
                 var imageResource;
-                return host.load(resource, processor_1.JsonProcessor)
+                return host.load(resource, 'json')
                     .then(function (value) {
                     mcData = value;
                     var jsonPath = resource.name;
@@ -1194,7 +1197,7 @@ var RES;
                     var data, key;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
-                            case 0: return [4 /*yield*/, host.load(resource, processor_1.JsonProcessor)];
+                            case 0: return [4 /*yield*/, host.load(resource, 'json')];
                             case 1:
                                 data = _a.sent();
                                 for (key in data) {
@@ -1225,7 +1228,7 @@ var RES;
                     var data, fileSystem;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
-                            case 0: return [4 /*yield*/, host.load(resource, processor_1.CommonJSProcessor)];
+                            case 0: return [4 /*yield*/, host.load(resource, 'commonjs')];
                             case 1:
                                 data = _a.sent();
                                 fileSystem = new RES.NewFileSystem(data.resources);
@@ -1248,7 +1251,7 @@ var RES;
         };
         processor_1.LegacyResourceConfigProcessor = {
             onLoadStart: function (host, resource) {
-                return host.load(resource, processor_1.JsonProcessor).then(function (data) {
+                return host.load(resource, 'json').then(function (data) {
                     var resConfigData = RES.config.config;
                     var fileSystem = resConfigData.fileSystem;
                     if (!fileSystem) {
@@ -1449,7 +1452,7 @@ var RES;
                     var arraybuffer, width, height, borderWidth, borderHeight, byteArray, list, pvrDataBuffer, i, buffer, dataLength, self, texture;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
-                            case 0: return [4 /*yield*/, host.load(resource, processor_1.BinaryProcessor)];
+                            case 0: return [4 /*yield*/, host.load(resource, 'bin')];
                             case 1:
                                 arraybuffer = _a.sent();
                                 width = 512;
@@ -1496,7 +1499,7 @@ var RES;
                 return Promise.resolve();
             }
         };
-        var _map = {
+        processor_1._map = {
             "image": processor_1.ImageProcessor,
             "json": processor_1.JsonProcessor,
             "text": processor_1.TextProcessor,

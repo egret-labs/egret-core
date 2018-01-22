@@ -149,7 +149,7 @@ module RES.processor {
     export var JsonProcessor: Processor = {
 
         async onLoadStart(host, resource) {
-            let text = await host.load(resource, TextProcessor);
+            let text = await host.load(resource, 'text');
             let data = JSON.parse(text);
             return data;
         },
@@ -163,7 +163,7 @@ module RES.processor {
     export var XMLProcessor: Processor = {
 
         async onLoadStart(host, resource) {
-            let text = await host.load(resource, TextProcessor);
+            let text = await host.load(resource, 'text');
             let data = egret.XML.parse(text);
             return data;
         },
@@ -176,7 +176,7 @@ module RES.processor {
     export var CommonJSProcessor: Processor = {
 
         async onLoadStart(host, resource) {
-            let text = await host.load(resource, TextProcessor);
+            let text = await host.load(resource, 'text');
             let f = new Function('require', 'exports', text);
             var require = function () { };
             var exports = {};
@@ -200,7 +200,7 @@ module RES.processor {
 
         async onLoadStart(host, resource): Promise<any> {
 
-            let data = await host.load(resource, JsonProcessor);
+            let data = await host.load(resource, "json");
             let imagePath = RES.config.resourceRoot + "/" + getRelativePath(resource.url, data.file);
             let r = host.resourceConfig.getResource(data.file);
             if (!r) {
@@ -277,7 +277,7 @@ module RES.processor {
 
         async onLoadStart(host, resource): Promise<any> {
 
-            let data: string = await host.load(resource, TextProcessor);
+            let data: string = await host.load(resource, 'text');
             let config: FontJsonFormat | string;
             try {
                 config = JSON.parse(data) as FontJsonFormat;
@@ -330,7 +330,7 @@ module RES.processor {
         onLoadStart(host, resource) {
             let mcData;
             let imageResource: ResourceInfo;
-            return host.load(resource, JsonProcessor)
+            return host.load(resource, 'json')
                 .then((value) => {
                     mcData = value;
                     let jsonPath = resource.name;
@@ -364,7 +364,7 @@ module RES.processor {
 
         async onLoadStart(host, resource): Promise<any> {
 
-            let data = await host.load(resource, JsonProcessor);
+            let data = await host.load(resource, 'json');
             for (var key in data) {
                 config.addSubkey(key, resource.name);
             }
@@ -394,7 +394,7 @@ module RES.processor {
 
 
         async onLoadStart(host, resource) {
-            let data = await host.load(resource, CommonJSProcessor);
+            let data = await host.load(resource, 'commonjs');
             let fileSystem = new NewFileSystem(data.resources);
             data.fileSystem = fileSystem;
             delete data.resource;
@@ -467,7 +467,7 @@ module RES.processor {
 
 
 
-            return host.load(resource, JsonProcessor).then((data: LegacyResourceConfig) => {
+            return host.load(resource, 'json').then((data: LegacyResourceConfig) => {
                 const resConfigData = RES.config.config;
                 let fileSystem = resConfigData.fileSystem;
                 if (!fileSystem) {
@@ -706,7 +706,7 @@ module RES.processor {
     export var PVRProcessor: Processor = {
 
         async onLoadStart(host, resource) {
-            let arraybuffer = await host.load(resource, BinaryProcessor);
+            let arraybuffer = await host.load(resource, 'bin');
             let width = 512;
             let height = 512;
             let borderWidth = 0;
@@ -753,7 +753,7 @@ module RES.processor {
         }
     }
 
-    const _map: { [index: string]: Processor } = {
+    export const _map: { [index: string]: Processor } = {
         "image": ImageProcessor,
         "json": JsonProcessor,
         "text": TextProcessor,

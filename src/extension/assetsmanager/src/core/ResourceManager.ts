@@ -47,7 +47,10 @@ module RES {
             return config;
         },
 
-        load: (r: ResourceInfo, processor?: processor.Processor) => queue.loadResource(r, processor),
+        load: (r: ResourceInfo, processorName?: string | processor.Processor) => {
+            const processor = typeof processorName == 'string' ? RES.processor._map[processorName] : processorName;
+            return queue.loadResource(r, processor);
+        },
 
         unload: (r: ResourceInfo) => queue.unloadResource(r),
 
@@ -79,7 +82,7 @@ module RES {
 
         resourceConfig: ResourceConfig;
 
-        load: (resource: ResourceInfo, processor?: processor.Processor) => Promise<any>;
+        load: (resource: ResourceInfo, processor?: string | processor.Processor) => Promise<any>;
 
         unload: (resource: ResourceInfo) => Promise<any>
 
