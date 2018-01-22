@@ -155,7 +155,7 @@ declare module RES {
             [index: string]: number;
         };
         resourceConfig: ResourceConfig;
-        load: (resource: ResourceInfo, processor?: processor.Processor) => Promise<any>;
+        load: (resource: ResourceInfo, processor?: string) => Promise<any>;
         unload: (resource: ResourceInfo) => Promise<any>;
         save: (rexource: ResourceInfo, data: any) => void;
         get: (resource: ResourceInfo) => any;
@@ -261,6 +261,9 @@ declare module RES.processor {
     const ResourceConfigProcessor: Processor;
     const LegacyResourceConfigProcessor: Processor;
     var PVRProcessor: Processor;
+    const _map: {
+        [index: string]: Processor;
+    };
 }
 declare module RES {
     /**
