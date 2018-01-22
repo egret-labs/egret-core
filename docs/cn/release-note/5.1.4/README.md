@@ -69,10 +69,10 @@
 
 ## AssetsManager
 
-* 修复加载图集会导致资源加载器卡住 BUG
+* 修复加载图集会导致资源加载器卡住 BUG（感谢开发者 天行云）
 * 修复用 ```sheet.subkey``` 方式获取图集资源不正确 BUG
 
 ## 2D 渲染 - JavaScript
 
-* 修复 graphics 对象设置滤镜不显示 BUG
-* 修复 Bitmap 设置纹理可能导致报错 BUG
+* 修复 graphics 对象设置滤镜不显示 BUG（感谢开发者 xesxfs）
+* 修复 Bitmap 设置纹理可能导致报错 BUG（感谢开发者 liusilence）
