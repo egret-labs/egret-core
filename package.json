@@ -3,9 +3,6 @@
   "version": "5.0.14",
   "private": true,
   "author": "egret-labs",
-  "scripts": {
-    "start": "node app"
-  },
   "bin": {
     "egret": "./tools/bin/egret"
   },
