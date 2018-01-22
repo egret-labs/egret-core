@@ -20819,14 +20819,17 @@ var eui;
             var font = this.$font;
             if (typeof font == "string") {
                 eui.getAssets(font, function (bitmapFont) {
-                    _this.$setFontData(bitmapFont);
+                    _this.$setFontData(bitmapFont, font);
                 });
             }
             else {
                 this.$setFontData(font);
             }
         };
-        BitmapLabel.prototype.$setFontData = function (value) {
+        BitmapLabel.prototype.$setFontData = function (value, font) {
+            if (font && font != this.$font) {
+                return;
+            }
             if (value == this.$BitmapText[5 /* font */]) {
                 return false;
             }
