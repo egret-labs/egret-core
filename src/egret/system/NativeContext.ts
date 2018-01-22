@@ -90,6 +90,13 @@ declare namespace egret_native {
     let getJsCustomFilterUniforms: (key: any) => any;
 }
 declare namespace egret_native {
+    class NativeRenderSurface {
+        width: number;
+        height: number;
+        $nrRenderTextureId: number;
+        constructor(w: number, h: number);
+        resize(width: number, height: number): void;
+    }
     /**
      * @private
      */
