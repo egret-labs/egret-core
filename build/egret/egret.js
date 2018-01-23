@@ -17574,6 +17574,10 @@ var egret;
             /**
              * @private
              */
+            _this.textLines = [];
+            /**
+             * @private
+             */
             _this.$lineHeights = [];
             if (!egret.nativeRender) {
                 _this.$renderNode = new egret.sys.BitmapNode();
