@@ -76,7 +76,7 @@ namespace egret.web {
                 }, false);
             }
             else {
-                if (!Capabilities.$isMobile) {
+                if (!Capabilities.isMobile) {
                     this.addMouseListener();
                 }
                 this.addTouchListener();

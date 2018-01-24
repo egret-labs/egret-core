@@ -2378,9 +2378,6 @@ var egret;
                 }
             };
             HTML5StageText.prototype.$onBlur = function () {
-                if (web.Html5Capatibility._System_OS == web.SystemOSType.WPHONE) {
-                    egret.Event.dispatchEvent(this, "updateText", false);
-                }
             };
             /**
              * @private
@@ -2388,31 +2385,12 @@ var egret;
              */
             HTML5StageText.prototype._onInput = function () {
                 var self = this;
-                if (web.Html5Capatibility._System_OS == web.SystemOSType.WPHONE) {
-                    var values = this.$textfield.$TextField;
-                    if (values[35 /* restrictAnd */] == null && values[36 /* restrictNot */] == null) {
+                window.setTimeout(function () {
+                    if (self.inputElement && self.inputElement.selectionStart == self.inputElement.selectionEnd) {
                         self.textValue = self.inputElement.value;
                         egret.Event.dispatchEvent(self, "updateText", false);
                     }
-                    else {
-                        window.setTimeout(function () {
-                            if (self.inputElement && self.inputElement.selectionStart && self.inputElement.selectionEnd) {
-                                if (self.inputElement.selectionStart == self.inputElement.selectionEnd) {
-                                    self.textValue = self.inputElement.value;
-                                    egret.Event.dispatchEvent(self, "updateText", false);
-                                }
-                            }
-                        }, 0);
-                    }
-                }
-                else {
-                    window.setTimeout(function () {
-                        if (self.inputElement && self.inputElement.selectionStart == self.inputElement.selectionEnd) {
-                            self.textValue = self.inputElement.value;
-                            egret.Event.dispatchEvent(self, "updateText", false);
-                        }
-                    }, 0);
-                }
+                }, 0);
             };
             HTML5StageText.prototype.setAreaHeight = function () {
                 var textfield = this.$textfield;
@@ -3168,7 +3146,7 @@ var egret;
                     }, false);
                 }
                 else {
-                    if (!egret.Capabilities.$isMobile) {
+                    if (!egret.Capabilities.isMobile) {
                         this.addMouseListener();
                     }
                     this.addTouchListener();
@@ -3423,28 +3401,6 @@ var egret;
         web.AudioType = AudioType;
         __reflect(AudioType.prototype, "egret.web.AudioType");
         /**
-         * @private
-         */
-        var SystemOSType = (function () {
-            function SystemOSType() {
-            }
-            /**
-             * @private
-             */
-            SystemOSType.WPHONE = 1;
-            /**
-             * @private
-             */
-            SystemOSType.IOS = 2;
-            /**
-             * @private
-             */
-            SystemOSType.ADNROID = 3;
-            return SystemOSType;
-        }());
-        web.SystemOSType = SystemOSType;
-        __reflect(SystemOSType.prototype, "egret.web.SystemOSType");
-        /**
          * html5兼容性配置
          * @private
          */
@@ -3463,7 +3419,7 @@ var egret;
             Html5Capatibility.$init = function () {
                 var ua = navigator.userAgent.toLowerCase();
                 Html5Capatibility.ua = ua;
-                egret.Capabilities.$isMobile = (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
+                egret.Capabilities["isMobile" + ""] = (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
                 Html5Capatibility._canUseBlob = false;
                 var canUseWebAudio = window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"];
                 if (canUseWebAudio) {
@@ -3485,33 +3441,17 @@ var egret;
                     checkAudioType = true;
                     Html5Capatibility.setAudioType(AudioType.HTML5_AUDIO);
                 }
-                if (ua.indexOf("windows phone") >= 0) {
-                    Html5Capatibility._System_OS = SystemOSType.WPHONE;
-                    egret.Capabilities.$os = "Windows Phone";
-                }
-                else if (ua.indexOf("android") >= 0) {
-                    egret.Capabilities.$os = "Android";
-                    Html5Capatibility._System_OS = SystemOSType.ADNROID;
+                if (ua.indexOf("android") >= 0) {
                     if (checkAudioType && canUseWebAudio) {
                         Html5Capatibility.setAudioType(AudioType.WEB_AUDIO);
                     }
                 }
                 else if (ua.indexOf("iphone") >= 0 || ua.indexOf("ipad") >= 0 || ua.indexOf("ipod") >= 0) {
-                    egret.Capabilities.$os = "iOS";
-                    Html5Capatibility._System_OS = SystemOSType.IOS;
                     if (Html5Capatibility.getIOSVersion() >= 7) {
                         Html5Capatibility._canUseBlob = true;
                         if (checkAudioType && canUseWebAudio) {
                             Html5Capatibility.setAudioType(AudioType.WEB_AUDIO);
                         }
-                    }
-                }
-                else {
-                    if (ua.indexOf("windows nt") != -1) {
-                        egret.Capabilities.$os = "Windows PC";
-                    }
-                    else if (ua.indexOf("mac os") != -1) {
-                        egret.Capabilities.$os = "Mac OS";
                     }
                 }
                 var winURL = window["URL"] || window["webkitURL"];
@@ -3548,10 +3488,6 @@ var egret;
             Html5Capatibility._canUseBlob = false;
             //当前浏览器版本是否支持webaudio
             Html5Capatibility._audioType = 0;
-            /**
-             * @private
-             */
-            Html5Capatibility._System_OS = 0;
             /**
              * @private
              */
@@ -3668,6 +3604,9 @@ var egret;
                 options = {};
             }
             var ua = navigator.userAgent.toLowerCase();
+            if (ua.indexOf("egretnative") >= 0 && ua.indexOf("egretwebview") == -1) {
+                egret.Capabilities["runtimeType" + ""] = egret.RuntimeType.RUNTIME2;
+            }
             if (ua.indexOf("egretnative") >= 0 && egret.nativeRender) {
                 egret_native.addModuleCallback(function () {
                     web.Html5Capatibility.$init();
@@ -3778,7 +3717,7 @@ var egret;
                 egret.sys.canvasRenderer = new egret.CanvasRenderer();
                 egret.sys.customHitTestBuffer = new web.WebGLRenderBuffer(3, 3);
                 egret.sys.canvasHitTestBuffer = new web.CanvasRenderBuffer(3, 3);
-                egret.Capabilities.$renderMode = "webgl";
+                egret.Capabilities["renderMode" + ""] = "webgl";
             }
             else {
                 egret.sys.RenderBuffer = web.CanvasRenderBuffer;
@@ -3786,7 +3725,7 @@ var egret;
                 egret.sys.canvasRenderer = egret.sys.systemRenderer;
                 egret.sys.customHitTestBuffer = new web.CanvasRenderBuffer(3, 3);
                 egret.sys.canvasHitTestBuffer = egret.sys.customHitTestBuffer;
-                egret.Capabilities.$renderMode = "canvas";
+                egret.Capabilities["renderMode" + ""] = "canvas";
             }
         }
         /**
@@ -3875,24 +3814,24 @@ var egret;
             WebCapability.detect = function () {
                 var capabilities = egret.Capabilities;
                 var ua = navigator.userAgent.toLowerCase();
-                capabilities.$isMobile = (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
-                if (capabilities.$isMobile) {
+                capabilities["isMobile" + ""] = (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
+                if (capabilities.isMobile) {
                     if (ua.indexOf("windows") < 0 && (ua.indexOf("iphone") != -1 || ua.indexOf("ipad") != -1 || ua.indexOf("ipod") != -1)) {
-                        capabilities.$os = "iOS";
+                        capabilities["os" + ""] = "iOS";
                     }
                     else if (ua.indexOf("android") != -1 && ua.indexOf("linux") != -1) {
-                        capabilities.$os = "Android";
+                        capabilities["os" + ""] = "Android";
                     }
                     else if (ua.indexOf("windows") != -1) {
-                        capabilities.$os = "Windows Phone";
+                        capabilities["os" + ""] = "Windows Phone";
                     }
                 }
                 else {
                     if (ua.indexOf("windows nt") != -1) {
-                        capabilities.$os = "Windows PC";
+                        capabilities["os" + ""] = "Windows PC";
                     }
                     else if (ua.indexOf("mac os") != -1) {
-                        capabilities.$os = "Mac OS";
+                        capabilities["os" + ""] = "Mac OS";
                     }
                 }
                 var language = (navigator.language || navigator["browserLanguage"]).toLowerCase();
@@ -3900,7 +3839,7 @@ var egret;
                 if (strings.length > 1) {
                     strings[1] = strings[1].toUpperCase();
                 }
-                capabilities.$language = strings.join("-");
+                capabilities["language" + ""] = strings.join("-");
                 WebCapability.injectUIntFixOnIE9();
             };
             WebCapability.injectUIntFixOnIE9 = function () {
@@ -4299,8 +4238,8 @@ var egret;
                 }
                 var screenWidth = shouldRotate ? boundingClientHeight : boundingClientWidth;
                 var screenHeight = shouldRotate ? boundingClientWidth : boundingClientHeight;
-                egret.Capabilities.$boundingClientWidth = screenWidth;
-                egret.Capabilities.$boundingClientHeight = screenHeight;
+                egret.Capabilities["boundingClientWidth" + ""] = screenWidth;
+                egret.Capabilities["boundingClientHeight" + ""] = screenHeight;
                 var stageSize = egret.sys.screenAdapter.calculateStageSize(this.stage.$scaleMode, screenWidth, screenHeight, option.contentWidth, option.contentHeight);
                 var stageWidth = stageSize.stageWidth;
                 var stageHeight = stageSize.stageHeight;
@@ -4333,7 +4272,7 @@ var egret;
                 var scalex = displayWidth / stageWidth, scaley = displayHeight / stageHeight;
                 var canvasScaleX = scalex * egret.sys.DisplayList.$canvasScaleFactor;
                 var canvasScaleY = scaley * egret.sys.DisplayList.$canvasScaleFactor;
-                if (egret.Capabilities.$renderMode == "canvas") {
+                if (egret.Capabilities.renderMode == "canvas") {
                     canvasScaleX = Math.ceil(canvasScaleX);
                     canvasScaleY = Math.ceil(canvasScaleY);
                 }
@@ -4433,7 +4372,7 @@ var egret;
             surface["style"]["height"] = iHeight + "px";
             sharedCanvas.width = iWidth;
             sharedCanvas.height = iHeight;
-            if (egret.Capabilities.$renderMode == "webgl") {
+            if (egret.Capabilities.renderMode == "webgl") {
                 var renderTexture = void 0;
                 //webgl下非RenderTexture纹理先画到RenderTexture
                 if (!texture.$renderBuffer) {

@@ -188,8 +188,8 @@ namespace egret.web {
             }
             let screenWidth = shouldRotate ? boundingClientHeight : boundingClientWidth;
             let screenHeight = shouldRotate ? boundingClientWidth : boundingClientHeight;
-            Capabilities.$boundingClientWidth = screenWidth;
-            Capabilities.$boundingClientHeight = screenHeight;
+            Capabilities["boundingClientWidth" + ""] = screenWidth;
+            Capabilities["boundingClientHeight" + ""] = screenHeight;
             let stageSize = egret.sys.screenAdapter.calculateStageSize(this.stage.$scaleMode,
                 screenWidth, screenHeight, option.contentWidth, option.contentHeight);
             let stageWidth = stageSize.stageWidth;
@@ -224,7 +224,7 @@ namespace egret.web {
                 scaley = displayHeight / stageHeight;
             let canvasScaleX = scalex * sys.DisplayList.$canvasScaleFactor;
             let canvasScaleY = scaley * sys.DisplayList.$canvasScaleFactor;
-            if (egret.Capabilities.$renderMode == "canvas") {
+            if (egret.Capabilities.renderMode == "canvas") {
                 canvasScaleX = Math.ceil(canvasScaleX);
                 canvasScaleY = Math.ceil(canvasScaleY);
             }
