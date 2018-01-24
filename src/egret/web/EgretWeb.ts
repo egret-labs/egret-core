@@ -61,7 +61,9 @@ namespace egret.web {
             options = {};
         }
         let ua: string = navigator.userAgent.toLowerCase();
-
+        if (ua.indexOf("egretnative") >= 0 && ua.indexOf("egretwebview") == -1) {
+            Capabilities["runtimeType" + ""] = egret.RuntimeType.RUNTIME2;
+        }
 
         if (ua.indexOf("egretnative") >= 0 && egret.nativeRender) {// Egret Native
             egret_native.addModuleCallback(function () {
@@ -185,7 +187,7 @@ namespace egret.web {
             sys.canvasRenderer = new CanvasRenderer();
             sys.customHitTestBuffer = new WebGLRenderBuffer(3, 3);
             sys.canvasHitTestBuffer = new CanvasRenderBuffer(3, 3);
-            Capabilities.$renderMode = "webgl";
+            Capabilities["renderMode" + ""] = "webgl";
         }
         else {
             sys.RenderBuffer = web.CanvasRenderBuffer;
@@ -193,7 +195,7 @@ namespace egret.web {
             sys.canvasRenderer = sys.systemRenderer;
             sys.customHitTestBuffer = new CanvasRenderBuffer(3, 3);
             sys.canvasHitTestBuffer = sys.customHitTestBuffer;
-            Capabilities.$renderMode = "canvas";
+            Capabilities["renderMode" + ""] = "canvas";
         }
     }
 
