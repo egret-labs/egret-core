@@ -6579,14 +6579,15 @@ var egret;
                 if (egret.nativeRender) {
                     _this.$width = width || 1;
                     _this.$height = height || 1;
-                    _this.surface = _this.context.surface;
-                    _this.rootRenderTarget = null;
                     if (root) {
-                        _this.bufferIdForWasm = 0;
+                        _this.surface = _this.context.surface;
+                        _this.$nrRenderBufferId = 0;
                     }
                     else {
-                        _this.bufferIdForWasm = egret_native.NativeDisplayObject.setValuesToRenderBuffer(_this);
+                        _this.surface = new egret_native.NativeRenderSurface(_this.$width, _this.$height);
+                        _this.$nrRenderBufferId = egret_native.NativeDisplayObject.setValuesToRenderBuffer(_this);
                     }
+                    _this.rootRenderTarget = null;
                     return _this;
                 }
                 // buffer 对应的 render target
@@ -6700,6 +6701,7 @@ var egret;
                 if (egret.nativeRender) {
                     this.$width = width;
                     this.$height = height;
+                    this.surface.resize(width, height);
                     return;
                 }
                 this.context.pushBuffer(this);
