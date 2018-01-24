@@ -8,7 +8,7 @@
             return require("module");
         } catch (e) {}
     }()) : e.vendor = t(e.path, e.fs, e.util, e.stream, e.assert, e.os, e.events, e.buffer, e.constants, e.crypto, e.module);
-}(this, function(__WEBPACK_EXTERNAL_MODULE_0__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_4__, __WEBPACK_EXTERNAL_MODULE_9__, __WEBPACK_EXTERNAL_MODULE_12__, __WEBPACK_EXTERNAL_MODULE_21__, __WEBPACK_EXTERNAL_MODULE_26__, __WEBPACK_EXTERNAL_MODULE_30__, __WEBPACK_EXTERNAL_MODULE_80__, __WEBPACK_EXTERNAL_MODULE_141__, __WEBPACK_EXTERNAL_MODULE_150__) {
+}(this, function(__WEBPACK_EXTERNAL_MODULE_0__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_4__, __WEBPACK_EXTERNAL_MODULE_9__, __WEBPACK_EXTERNAL_MODULE_12__, __WEBPACK_EXTERNAL_MODULE_23__, __WEBPACK_EXTERNAL_MODULE_26__, __WEBPACK_EXTERNAL_MODULE_30__, __WEBPACK_EXTERNAL_MODULE_80__, __WEBPACK_EXTERNAL_MODULE_141__, __WEBPACK_EXTERNAL_MODULE_150__) {
     return function(e) {
         function t(r) {
             if (n[r]) return n[r].exports;
@@ -396,12 +396,12 @@
         e.exports = require("util");
     }, function(e, t, n) {
         e.exports = {
-            mkdirs: n(22),
-            mkdirsSync: n(23),
-            mkdirp: n(22),
-            mkdirpSync: n(23),
-            ensureDir: n(22),
-            ensureDirSync: n(23)
+            mkdirs: n(24),
+            mkdirsSync: n(25),
+            mkdirp: n(24),
+            mkdirpSync: n(25),
+            ensureDir: n(24),
+            ensureDirSync: n(25)
         };
     }, function(e, t, n) {
         function r(e) {
@@ -790,131 +790,6 @@
         t.isString = s, t.isSymbol = c, t.isUndefined = u, t.isRegExp = l, t.isObject = _, 
         t.isDate = f, t.isError = d, t.isFunction = p, t.isPrimitive = m, t.isBuffer = Buffer.isBuffer;
     }, function(e, t, n) {
-        "use strict";
-        function r(e) {
-            return "/" === e.charAt(0);
-        }
-        function i(e) {
-            var t = /^([a-zA-Z]:|[\\\/]{2}[^\\\/]+[\\\/]+[^\\\/]+)?([\\\/])?([\s\S]*?)$/, n = t.exec(e), r = n[1] || "", i = Boolean(r && ":" !== r.charAt(1));
-            return Boolean(n[2] || i);
-        }
-        e.exports = "win32" === process.platform ? i : r, e.exports.posix = r, e.exports.win32 = i;
-    }, function(e, t, n) {
-        var r = n(9);
-        "disable" === process.env.READABLE_STREAM && r ? (e.exports = r, t = e.exports = r.Readable, 
-        t.Readable = r.Readable, t.Writable = r.Writable, t.Duplex = r.Duplex, t.Transform = r.Transform, 
-        t.PassThrough = r.PassThrough, t.Stream = r) : (t = e.exports = n(55), t.Stream = r || t, 
-        t.Readable = t, t.Writable = n(31), t.Duplex = n(11), t.Transform = n(60), t.PassThrough = n(158));
-    }, function(e, t, n) {
-        function r(e, t) {
-            for (var n in e) t[n] = e[n];
-        }
-        function i(e, t, n) {
-            return o(e, t, n);
-        }
-        var a = n(30), o = a.Buffer;
-        o.from && o.alloc && o.allocUnsafe && o.allocUnsafeSlow ? e.exports = a : (r(a, t), 
-        t.Buffer = i), r(o, i), i.from = function(e, t, n) {
-            if ("number" == typeof e) throw new TypeError("Argument must not be a number");
-            return o(e, t, n);
-        }, i.alloc = function(e, t, n) {
-            if ("number" != typeof e) throw new TypeError("Argument must be a number");
-            var r = o(e);
-            return void 0 !== t ? "string" == typeof n ? r.fill(t, n) : r.fill(t) : r.fill(0), 
-            r;
-        }, i.allocUnsafe = function(e) {
-            if ("number" != typeof e) throw new TypeError("Argument must be a number");
-            return o(e);
-        }, i.allocUnsafeSlow = function(e) {
-            if ("number" != typeof e) throw new TypeError("Argument must be a number");
-            return a.SlowBuffer(e);
-        };
-    }, function(e, t) {
-        e.exports = function(e) {
-            if ("string" != typeof e || "" === e) return !1;
-            for (var t; t = /(\\).|([@?!+*]\(.*\))/g.exec(e); ) {
-                if (t[2]) return !0;
-                e = e.slice(t.index + t[0].length);
-            }
-            return !1;
-        };
-    }, function(e, t, n) {
-        var r = n(19);
-        e.exports = function(e) {
-            if ("string" != typeof e || "" === e) return !1;
-            if (r(e)) return !0;
-            for (var t, n = /(\\).|([*?]|\[.*\]|\{.*\}|\(.*\|.*\)|^!)/; t = n.exec(e); ) {
-                if (t[2]) return !0;
-                e = e.slice(t.index + t[0].length);
-            }
-            return !1;
-        };
-    }, function(e, t) {
-        e.exports = require("os");
-    }, function(e, t, n) {
-        function r(e, t, n, c) {
-            if ("function" == typeof t ? (n = t, t = {}) : t && "object" == typeof t || (t = {
-                mode: t
-            }), "win32" === process.platform && o(e)) {
-                var u = new Error(e + " contains invalid WIN32 path characters.");
-                return u.code = "EINVAL", n(u);
-            }
-            var l = t.mode, _ = t.fs || i;
-            void 0 === l && (l = s & ~process.umask()), c || (c = null), n = n || function() {}, 
-            e = a.resolve(e), _.mkdir(e, l, function(i) {
-                if (!i) return c = c || e, n(null, c);
-                switch (i.code) {
-                  case "ENOENT":
-                    if (a.dirname(e) === e) return n(i);
-                    r(a.dirname(e), t, function(i, a) {
-                        i ? n(i, a) : r(e, t, n, a);
-                    });
-                    break;
-
-                  default:
-                    _.stat(e, function(e, t) {
-                        e || !t.isDirectory() ? n(i, c) : n(null, c);
-                    });
-                }
-            });
-        }
-        var i = n(1), a = n(0), o = n(41).invalidWin32Path, s = parseInt("0777", 8);
-        e.exports = r;
-    }, function(e, t, n) {
-        function r(e, t, n) {
-            t && "object" == typeof t || (t = {
-                mode: t
-            });
-            var c = t.mode, u = t.fs || i;
-            if ("win32" === process.platform && o(e)) {
-                var l = new Error(e + " contains invalid WIN32 path characters.");
-                throw l.code = "EINVAL", l;
-            }
-            void 0 === c && (c = s & ~process.umask()), n || (n = null), e = a.resolve(e);
-            try {
-                u.mkdirSync(e, c), n = n || e;
-            } catch (i) {
-                switch (i.code) {
-                  case "ENOENT":
-                    if (a.dirname(e) === e) throw i;
-                    n = r(a.dirname(e), t, n), r(e, t, n);
-                    break;
-
-                  default:
-                    var _;
-                    try {
-                        _ = u.statSync(e);
-                    } catch (e) {
-                        throw i;
-                    }
-                    if (!_.isDirectory()) throw i;
-                }
-            }
-            return n;
-        }
-        var i = n(1), a = n(0), o = n(41).invalidWin32Path, s = parseInt("0777", 8);
-        e.exports = r;
-    }, function(e, t, n) {
         function r(e, t, n) {
             if ("function" == typeof t && (n = t, t = {}), t || (t = {}), t.sync) {
                 if (n) throw new TypeError("callback provided to sync glob");
@@ -957,7 +832,7 @@
             };
         }
         e.exports = r;
-        var s = n(3), c = n(44), u = n(25), l = (u.Minimatch, n(7)), _ = n(26).EventEmitter, f = n(0), d = n(12), p = n(16), m = n(93), g = n(45), h = (g.alphasort, 
+        var s = n(3), c = n(44), u = n(17), l = (u.Minimatch, n(7)), _ = n(26).EventEmitter, f = n(0), d = n(12), p = n(18), m = n(93), g = n(45), h = (g.alphasort, 
         g.alphasorti, g.setopts), y = g.ownProp, v = n(94), b = (n(4), g.childrenIgnored), k = g.isIgnored, x = n(27);
         r.sync = m;
         var S = r.GlobSync = m.GlobSync;
@@ -1545,6 +1420,131 @@
             }
             throw new Error("wtf?");
         };
+    }, function(e, t, n) {
+        "use strict";
+        function r(e) {
+            return "/" === e.charAt(0);
+        }
+        function i(e) {
+            var t = /^([a-zA-Z]:|[\\\/]{2}[^\\\/]+[\\\/]+[^\\\/]+)?([\\\/])?([\s\S]*?)$/, n = t.exec(e), r = n[1] || "", i = Boolean(r && ":" !== r.charAt(1));
+            return Boolean(n[2] || i);
+        }
+        e.exports = "win32" === process.platform ? i : r, e.exports.posix = r, e.exports.win32 = i;
+    }, function(e, t, n) {
+        var r = n(9);
+        "disable" === process.env.READABLE_STREAM && r ? (e.exports = r, t = e.exports = r.Readable, 
+        t.Readable = r.Readable, t.Writable = r.Writable, t.Duplex = r.Duplex, t.Transform = r.Transform, 
+        t.PassThrough = r.PassThrough, t.Stream = r) : (t = e.exports = n(55), t.Stream = r || t, 
+        t.Readable = t, t.Writable = n(31), t.Duplex = n(11), t.Transform = n(60), t.PassThrough = n(158));
+    }, function(e, t, n) {
+        function r(e, t) {
+            for (var n in e) t[n] = e[n];
+        }
+        function i(e, t, n) {
+            return o(e, t, n);
+        }
+        var a = n(30), o = a.Buffer;
+        o.from && o.alloc && o.allocUnsafe && o.allocUnsafeSlow ? e.exports = a : (r(a, t), 
+        t.Buffer = i), r(o, i), i.from = function(e, t, n) {
+            if ("number" == typeof e) throw new TypeError("Argument must not be a number");
+            return o(e, t, n);
+        }, i.alloc = function(e, t, n) {
+            if ("number" != typeof e) throw new TypeError("Argument must be a number");
+            var r = o(e);
+            return void 0 !== t ? "string" == typeof n ? r.fill(t, n) : r.fill(t) : r.fill(0), 
+            r;
+        }, i.allocUnsafe = function(e) {
+            if ("number" != typeof e) throw new TypeError("Argument must be a number");
+            return o(e);
+        }, i.allocUnsafeSlow = function(e) {
+            if ("number" != typeof e) throw new TypeError("Argument must be a number");
+            return a.SlowBuffer(e);
+        };
+    }, function(e, t) {
+        e.exports = function(e) {
+            if ("string" != typeof e || "" === e) return !1;
+            for (var t; t = /(\\).|([@?!+*]\(.*\))/g.exec(e); ) {
+                if (t[2]) return !0;
+                e = e.slice(t.index + t[0].length);
+            }
+            return !1;
+        };
+    }, function(e, t, n) {
+        var r = n(21);
+        e.exports = function(e) {
+            if ("string" != typeof e || "" === e) return !1;
+            if (r(e)) return !0;
+            for (var t, n = /(\\).|([*?]|\[.*\]|\{.*\}|\(.*\|.*\)|^!)/; t = n.exec(e); ) {
+                if (t[2]) return !0;
+                e = e.slice(t.index + t[0].length);
+            }
+            return !1;
+        };
+    }, function(e, t) {
+        e.exports = require("os");
+    }, function(e, t, n) {
+        function r(e, t, n, c) {
+            if ("function" == typeof t ? (n = t, t = {}) : t && "object" == typeof t || (t = {
+                mode: t
+            }), "win32" === process.platform && o(e)) {
+                var u = new Error(e + " contains invalid WIN32 path characters.");
+                return u.code = "EINVAL", n(u);
+            }
+            var l = t.mode, _ = t.fs || i;
+            void 0 === l && (l = s & ~process.umask()), c || (c = null), n = n || function() {}, 
+            e = a.resolve(e), _.mkdir(e, l, function(i) {
+                if (!i) return c = c || e, n(null, c);
+                switch (i.code) {
+                  case "ENOENT":
+                    if (a.dirname(e) === e) return n(i);
+                    r(a.dirname(e), t, function(i, a) {
+                        i ? n(i, a) : r(e, t, n, a);
+                    });
+                    break;
+
+                  default:
+                    _.stat(e, function(e, t) {
+                        e || !t.isDirectory() ? n(i, c) : n(null, c);
+                    });
+                }
+            });
+        }
+        var i = n(1), a = n(0), o = n(41).invalidWin32Path, s = parseInt("0777", 8);
+        e.exports = r;
+    }, function(e, t, n) {
+        function r(e, t, n) {
+            t && "object" == typeof t || (t = {
+                mode: t
+            });
+            var c = t.mode, u = t.fs || i;
+            if ("win32" === process.platform && o(e)) {
+                var l = new Error(e + " contains invalid WIN32 path characters.");
+                throw l.code = "EINVAL", l;
+            }
+            void 0 === c && (c = s & ~process.umask()), n || (n = null), e = a.resolve(e);
+            try {
+                u.mkdirSync(e, c), n = n || e;
+            } catch (i) {
+                switch (i.code) {
+                  case "ENOENT":
+                    if (a.dirname(e) === e) throw i;
+                    n = r(a.dirname(e), t, n), r(e, t, n);
+                    break;
+
+                  default:
+                    var _;
+                    try {
+                        _ = u.statSync(e);
+                    } catch (e) {
+                        throw i;
+                    }
+                    if (!_.isDirectory()) throw i;
+                }
+            }
+            return n;
+        }
+        var i = n(1), a = n(0), o = n(41).invalidWin32Path, s = parseInt("0777", 8);
+        e.exports = r;
     }, function(e, t) {
         e.exports = require("events");
     }, function(e, t, n) {
@@ -1774,7 +1774,7 @@
         A.inherits = n(7);
         var N = {
             deprecate: n(157)
-        }, P = n(57), O = n(18).Buffer, F = global.Uint8Array || function() {}, R = n(58);
+        }, P = n(57), O = n(20).Buffer, F = global.Uint8Array || function() {}, R = n(58);
         A.inherits(c, P), s.prototype.getBuffer = function() {
             for (var e = this.bufferedRequest, t = []; e; ) t.push(e), e = e.next;
             return t;
@@ -1832,7 +1832,7 @@
         "use strict";
         var r = process && "win32" === process.platform, i = n(0), a = n(169), o = e.exports;
         o.diff = n(170), o.unique = n(172), o.braces = n(173), o.brackets = n(181), o.extglob = n(183), 
-        o.isExtglob = n(19), o.isGlob = n(20), o.typeOf = n(33), o.normalize = n(184), o.omit = n(185), 
+        o.isExtglob = n(21), o.isGlob = n(22), o.typeOf = n(33), o.normalize = n(184), o.omit = n(185), 
         o.parseGlob = n(188), o.cache = n(192), o.filename = function(e) {
             var t = e.match(a());
             return t && t[0];
@@ -2208,7 +2208,7 @@
                 return: n(2)
             };
         }, o = n(0), s = n(38);
-        r(n(151)), r(n(38)), r(n(54)), r(n(75)), t.handleException = function(e) {
+        r(n(151)), r(n(38)), r(n(54)), r(n(75)), t.minimatch = n(17), t.glob = n(16), t.handleException = function(e) {
             "string" == typeof e ? console.error("错误:" + e) : console.error("错误:" + e.stack);
         };
         var c;
@@ -2744,7 +2744,7 @@
             }
         }
         e.exports = i, i.sync = l;
-        var d = n(12), p = n(0), m = n(3), g = n(24), h = {
+        var d = n(12), p = n(0), m = n(3), g = n(16), h = {
             nosort: !0,
             silent: !0
         }, y = 0, v = "win32" === process.platform;
@@ -2876,7 +2876,7 @@
         }
         t.alphasort = a, t.alphasorti = i, t.setopts = c, t.ownProp = r, t.makeAbs = _, 
         t.finish = u, t.mark = l, t.isIgnored = f, t.childrenIgnored = d;
-        var p = n(0), m = n(25), g = n(16), h = m.Minimatch;
+        var p = n(0), m = n(17), g = n(18), h = m.Minimatch;
     }, function(e, t) {
         function n(e, t) {
             function r() {
@@ -3155,7 +3155,7 @@
                 function n(e, t) {
                     e.origin = e.relative.split("\\").join("/"), t(null, e);
                 }
-                var r, o, d, p, m, g, h, y, v;
+                var r, o, d, p, m, g, h, y, v, b;
                 return s(this, function(s) {
                     switch (s.label) {
                       case 0:
@@ -3163,17 +3163,19 @@
 
                       case 1:
                         for (r = s.sent(), o = u.ResourceConfig.userConfig, i = e.projectRoot, a = l.join(i, u.ResourceConfig.resourceRoot), 
-                        _.init(e.projectRoot, a, e), d = l.join(i, o.outputDir), p = e.matcher ? e.matcher : "resource/**/*.*", 
-                        m = c.src(p, {
+                        _.init(e.projectRoot, a, e), "string" == typeof o.outputDir ? d = l.join(i, o.outputDir) : (p = o.outputDir, 
+                        d = function(e) {
+                            return l.join(i, p(e));
+                        }), m = e.matcher ? e.matcher : "resource/**/*.*", g = c.src(m, {
                             cwd: i,
                             base: i
-                        }).pipe(f(n)), g = o.commands.map(function(e) {
-                            return _.createPlugin(e, o.outputDir);
-                        }), "." == o.outputDir && g.push(f(t)), g.push(c.dest(d)), h = 0, y = g; h < y.length; h++) v = y[h], 
-                        m = m.pipe(v);
+                        }).pipe(f(n)), h = o.commands.map(function(e) {
+                            return _.createPlugin(e, d);
+                        }), "." == o.outputDir && h.push(f(t)), h.push(c.dest(d)), y = 0, v = h; y < v.length; y++) b = v[y], 
+                        g = g.pipe(b);
                         return [ 2, new Promise(function(e, t) {
-                            m.on("end", function() {
-                                e(m);
+                            g.on("end", function() {
+                                e(g);
                             });
                         }) ];
                     }
@@ -3442,7 +3444,7 @@
         s.ReadableState = o;
         var R = (n(26).EventEmitter, function(e, t) {
             return e.listeners(t).length;
-        }), M = n(57), L = n(18).Buffer, I = global.Uint8Array || function() {}, B = n(15);
+        }), M = n(57), L = n(20).Buffer, I = global.Uint8Array || function() {}, B = n(15);
         B.inherits = n(7);
         var j = n(4), z = void 0;
         z = j && j.debuglog ? j.debuglog("stream") : function() {};
@@ -3750,7 +3752,7 @@
         function h(e) {
             return e && e.length ? this.write(e) : "";
         }
-        var y = n(18).Buffer, v = y.isEncoding || function(e) {
+        var y = n(20).Buffer, v = y.isEncoding || function(e) {
             switch ((e = "" + e) && e.toLowerCase()) {
               case "hex":
               case "utf8":
@@ -3909,7 +3911,7 @@
         };
     }, function(e, t, n) {
         "use strict";
-        var r = (n(0), n(20)), i = n(190), a = "win32" === n(21).platform();
+        var r = (n(0), n(22)), i = n(190), a = "win32" === n(23).platform();
         e.exports = function(e) {
             a && e.indexOf("/") < 0 && (e = e.split("\\").join("/")), /[\{\[].*[\/]*.*[\}\]]$/.test(e) && (e += "/"), 
             e += "a";
@@ -3924,7 +3926,7 @@
             return null == e || "function" != typeof e && "object" != typeof e;
         };
     }, function(e, t, n) {
-        var r = n(17), i = n(199), a = n(7), o = n(200), s = new Buffer([ 0 ]), c = function(e, t) {
+        var r = n(19), i = n(199), a = n(7), o = n(200), s = new Buffer([ 0 ]), c = function(e, t) {
             e._corked ? e.once("uncork", t) : t();
         }, u = function(e, t) {
             return function(n) {
@@ -4021,7 +4023,7 @@
             e && this.write(e), this._writableState.ending || this.write(s), r.Writable.prototype.end.call(this, n));
         }, e.exports = f;
     }, function(e, t, n) {
-        e.exports = n(17).PassThrough;
+        e.exports = n(19).PassThrough;
     }, function(e, t, n) {
         "use strict";
         function r(e) {
@@ -4761,7 +4763,7 @@
                 });
             });
         }
-        var s = n(1), c = n(0), u = n(21);
+        var s = n(1), c = n(0), u = n(23);
         e.exports = {
             hasMillisRes: i,
             hasMillisResSync: r,
@@ -5059,7 +5061,7 @@
             this._finish();
         }
         e.exports = r, r.GlobSync = i;
-        var a = n(3), o = n(44), s = n(25), c = (s.Minimatch, n(24).Glob, n(4), n(0)), u = n(12), l = n(16), _ = n(45), f = (_.alphasort, 
+        var a = n(3), o = n(44), s = n(17), c = (s.Minimatch, n(16).Glob, n(4), n(0)), u = n(12), l = n(18), _ = n(45), f = (_.alphasort, 
         _.alphasorti, _.setopts), d = _.ownProp, p = _.childrenIgnored, m = _.isIgnored;
         i.prototype._finish = function() {
             if (u(this instanceof i), this.realpath) {
@@ -5605,7 +5607,7 @@
             };
         }
         var a = n(0);
-        a.isAbsolute = a.isAbsolute ? a.isAbsolute : n(16);
+        a.isAbsolute = a.isAbsolute ? a.isAbsolute : n(18);
         var o = n(1);
         e.exports = {
             symlinkPaths: r,
@@ -9805,7 +9807,7 @@
                                 return c(e.combinePaths(t, n), 1);
                             });
                         }
-                        var f, d = n(3), p = n(0), m = n(21), g = n(141), h = process.env.TSC_NONPOLLING_WATCHER, y = function() {
+                        var f, d = n(3), p = n(0), m = n(23), g = n(141), h = process.env.TSC_NONPOLLING_WATCHER, y = function() {
                             function t(t) {
                                 var n = e.getDirectoryPath(t), r = c[n];
                                 r && (r.referenceCount -= 1, r.referenceCount <= 0 && (r.close(), delete c[n]));
@@ -55277,7 +55279,7 @@
         var i = n(29), a = n(6), o = n(159), s = n(69), c = n(201), u = n(71), l = n(212), _ = n(213), f = n(214), d = n(221);
         e.exports = r;
     }, function(e, t, n) {
-        e.exports = n(17).Transform;
+        e.exports = n(19).Transform;
     }, function(e, t, n) {
         "use strict";
         function r(e, t) {
@@ -55286,7 +55288,7 @@
         function i(e, t, n) {
             e.copy(t, n);
         }
-        var a = n(18).Buffer;
+        var a = n(20).Buffer;
         e.exports = function() {
             function e() {
                 r(this, e), this.head = null, this.tail = null, this.length = 0;
@@ -55363,7 +55365,7 @@
             return n = "/" === r && t && t.root ? g.normalize(t.root) : p(r, t), y.test(n.charAt(n.length - 1)) || (n += g.sep), 
             n;
         }
-        var u = n(6), l = n(160), _ = n(162), f = n(24), d = n(167), p = n(196), m = n(67), g = n(0), h = n(198), y = "win32" === process.platform ? /[\/\\]/ : /\/+/, v = {
+        var u = n(6), l = n(160), _ = n(162), f = n(16), d = n(167), p = n(196), m = n(67), g = n(0), h = n(198), y = "win32" === process.platform ? /[\/\\]/ : /\/+/, v = {
             createStream: function(e, t, n) {
                 function i(e, n, i) {
                     var a = r.bind(null, e);
@@ -55439,7 +55441,7 @@
                 Array.isArray(e) ? e.forEach(n) : n(e);
             });
         }
-        var a = n(17), o = n(161).readable;
+        var a = n(19), o = n(161).readable;
         n(4).inherits(i, a), i.prototype._read = function() {}, e.exports = i;
     }, function(e, t, n) {
         "use strict";
@@ -56338,7 +56340,7 @@
             var r = t ? "^" : "";
             return e = "(?:" + e + ")" + (t ? "$" : ""), n && (e = r + s(e)), new RegExp(r + e);
         }
-        var u, l = (n(19), {});
+        var u, l = (n(21), {});
         e.exports = r;
     }, function(e, t, n) {
         var r = n(65);
@@ -56393,7 +56395,7 @@
         function s(e) {
             return e = e.split("__SLASH__").join("/"), e = e.split("__DOT__").join(".");
         }
-        var c = n(20), u = n(189), l = n(19), _ = n(191), f = e.exports.cache = {};
+        var c = n(22), u = n(189), l = n(21), _ = n(191), f = e.exports.cache = {};
         e.exports = function(e) {
             if (f.hasOwnProperty(e)) return f[e];
             var t = {};
@@ -56425,7 +56427,7 @@
         function r(e) {
             return "/" === e.slice(-1) ? e : i.dirname(e);
         }
-        var i = n(0), a = n(67), o = n(20);
+        var i = n(0), a = n(67), o = n(22);
         e.exports = function(e) {
             if ("string" != typeof e) throw new TypeError("glob-base expects a string.");
             var t = {};
