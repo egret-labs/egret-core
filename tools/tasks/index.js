@@ -13,6 +13,8 @@ var texturemerger_1 = require("./texturemerger");
 exports.TextureMergerPlugin = texturemerger_1.TextureMergerPlugin;
 var resConfig_1 = require("./resConfig");
 exports.EmitResConfigFilePlugin = resConfig_1.EmitResConfigFilePlugin;
+var clean_1 = require("./clean");
+exports.CleanPlugin = clean_1.CleanPlugin;
 function run() {
 }
 exports.run = run;

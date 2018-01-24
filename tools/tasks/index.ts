@@ -5,6 +5,7 @@ export { IncrementCompilePlugin } from './incrementCompile'
 export { CompilePlugin, UglifyPlugin } from './compile';
 export { TextureMergerPlugin } from './texturemerger';
 export { EmitResConfigFilePlugin } from './resConfig';
+export { CleanPlugin } from './clean';
 
 
 export function run() {
@@ -39,6 +40,6 @@ export type PluginContext = {
     projectRoot: string,
     resourceFolder: string,
     buildConfig: { command: "build" | "publish" },
-
+    outputDir: string,
     createFile: (relativePath: string, content: Buffer, options?: any) => void
 }

@@ -69,9 +69,9 @@ namespace egret.web {
         private $height: number;
         /**
          * @private
-         * render buffer id for wasm 
+         * native render buffer id 
          */
-        public bufferIdForWasm: number;
+        public $nrRenderBufferId: number;
 
         public constructor(width?: number, height?: number, root?: boolean) {
             super();
@@ -81,14 +81,15 @@ namespace egret.web {
             if (egret.nativeRender) {
                 this.$width = width || 1 ;
                 this.$height = height || 1;
-                this.surface = this.context.surface;
-                this.rootRenderTarget = null;
-                if (root) {
-                    this.bufferIdForWasm = 0;
+                if(root) {
+                    this.surface = this.context.surface;
+                    this.$nrRenderBufferId = 0;
                 }
                 else {
-                    this.bufferIdForWasm = egret_native.NativeDisplayObject.setValuesToRenderBuffer(this);
+                    this.surface = new egret_native.NativeRenderSurface(this.$width, this.$height);
+                    this.$nrRenderBufferId = egret_native.NativeDisplayObject.setValuesToRenderBuffer(this);
                 }
+                this.rootRenderTarget = null;
                 return;
             }
 
@@ -219,6 +220,7 @@ namespace egret.web {
             if (egret.nativeRender) {
                 this.$width = width;
                 this.$height = height;
+                this.surface.resize(width, height);
                 return;
             }
 
