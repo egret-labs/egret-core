@@ -6516,15 +6516,11 @@ var egret;
                 // 获取webglRenderContext
                 _this.context = web.WebGLRenderContext.getInstance(width, height);
                 if (egret.nativeRender) {
-                    _this.$width = width || 1;
-                    _this.$height = height || 1;
                     if (root) {
                         _this.surface = _this.context.surface;
-                        _this.$nrRenderBufferId = 0;
                     }
                     else {
-                        _this.surface = new egret_native.NativeRenderSurface(_this.$width, _this.$height);
-                        _this.$nrRenderBufferId = egret_native.NativeDisplayObject.setValuesToRenderBuffer(_this);
+                        _this.surface = new egret_native.NativeRenderSurface(_this, width, height, root);
                     }
                     _this.rootRenderTarget = null;
                     return _this;
@@ -6603,7 +6599,7 @@ var egret;
                  */
                 get: function () {
                     if (egret.nativeRender) {
-                        return this.$width;
+                        return this.surface.width;
                     }
                     else {
                         return this.rootRenderTarget.width;
@@ -6619,7 +6615,7 @@ var egret;
                  */
                 get: function () {
                     if (egret.nativeRender) {
-                        return this.$height;
+                        return this.surface.height;
                     }
                     else {
                         return this.rootRenderTarget.height;
@@ -6638,8 +6634,6 @@ var egret;
                 width = width || 1;
                 height = height || 1;
                 if (egret.nativeRender) {
-                    this.$width = width;
-                    this.$height = height;
                     this.surface.resize(width, height);
                     return;
                 }

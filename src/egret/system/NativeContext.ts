@@ -94,7 +94,7 @@ declare namespace egret_native {
         width: number;
         height: number;
         $nrRenderTextureId: number;
-        constructor(w: number, h: number);
+        constructor(buffer: any, w: number, h: number, root: boolean);
         resize(width: number, height: number): void;
     }
     /**
