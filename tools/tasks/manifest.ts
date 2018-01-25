@@ -33,7 +33,7 @@ export class ManifestPlugin {
 
 
 
-        const filename = file.origin;
+        const filename = file.relative;
         const extname = path.extname(filename);
         // if (filename === "config.res.js") {
         //     const crc32 = globals.getCrc32();
@@ -60,7 +60,7 @@ export class ManifestPlugin {
 
             const relative = file.relative.split("\\").join('/');
 
-            if (filename.indexOf('libs/') >= 0) {
+            if (file.origin.indexOf('libs/') >= 0) {
                 manifest.initial.push(relative);
             }
             else {

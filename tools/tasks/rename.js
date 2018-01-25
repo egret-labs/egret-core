@@ -34,6 +34,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var path = require("path");
 var RenamePlugin = (function () {
     function RenamePlugin(options) {
         this.options = options;
@@ -44,19 +45,24 @@ var RenamePlugin = (function () {
     }
     RenamePlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
-            var a, minimatch, _i, _a, match;
+            var a, minimatch, _i, _a, match, name, extname, hash, p, toFilename;
             return __generator(this, function (_b) {
                 a = {
                     matchers: [
                         { from: "**/*.js", to: "js/[name]_[hash].js" },
-                        { from: "resource/**/**", to: "resource/[path][name]_[hash].[ext]" }
+                        { from: "resource/**/**", to: "[path][name]_[hash].[ext]" }
                     ]
                 };
                 minimatch = require('../lib/resourcemanager').minimatch;
                 for (_i = 0, _a = a.matchers; _i < _a.length; _i++) {
                     match = _a[_i];
                     if (minimatch(file.origin, match.from)) {
-                        console.log(file.origin, match.to);
+                        name = path.basename(file.origin, path.extname(file.origin));
+                        extname = path.extname(file.origin).substr(1);
+                        hash = generateCrc32Code(file.contents);
+                        p = path.dirname(file.origin) + "/";
+                        toFilename = match.to.replace('[name]', name).replace('[hash]', hash).replace('[ext]', extname).replace("[path]", p);
+                        file.path = file.base + '/' + toFilename;
                         break;
                     } // true! 
                 }
