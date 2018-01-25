@@ -65,7 +65,7 @@ namespace egret.web {
         sharedCanvas.width = iWidth;
         sharedCanvas.height = iHeight;
 
-        if (Capabilities.$renderMode == "webgl") {
+        if (Capabilities.renderMode == "webgl") {
             let renderTexture: RenderTexture;
             //webgl下非RenderTexture纹理先画到RenderTexture
             if (!(<RenderTexture>texture).$renderBuffer) {
