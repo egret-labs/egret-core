@@ -14,7 +14,7 @@ class CreateLib implements egret.Command {
         const libraryTemplate = FileUtil.joinPath(egret.root, "tools/templates/library");
         FileUtil.copy(libraryTemplate, project.getProjectRoot());
 
-        type Package_JSON = { name: string };
+        type Package_JSON = { name: string, compilerVersion: string };
 
         type TSCONFIG_JSON = {
             compilerOptions: {
@@ -25,6 +25,7 @@ class CreateLib implements egret.Command {
         await convert<Package_JSON>(project.getFilePath("package.json"),
             (data) => {
                 data.name = moduleName;
+                data.compilerVersion = egret.version;
                 return data
             });
 

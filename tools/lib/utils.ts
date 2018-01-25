@@ -33,6 +33,7 @@ import file = require('./FileUtil');
 import UglifyJS = require("./uglify-js/uglifyjs");
 import net = require('net');
 import { setTimeout } from 'timers';
+import { resolve } from 'url';
 
 
 
@@ -360,6 +361,16 @@ export function createMap<T>(template?: MapLike<T>): Map<T> {
     }
 
     return map;
+}
+
+export function sleep(milesecond: number) {
+    return new Promise((resolve, reject) => {
+
+        setTimeout(() => {
+            resolve();
+        }, milesecond);
+
+    });
 }
 
 export function shell(path: string, args: string[], opt?: cp.ExecOptions, verbase?: boolean) {

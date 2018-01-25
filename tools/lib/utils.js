@@ -77,6 +77,7 @@ var path = require("path");
 var file = require("./FileUtil");
 var UglifyJS = require("./uglify-js/uglifyjs");
 var net = require("net");
+var timers_1 = require("timers");
 //第三方调用时，可能不支持颜色显示，可通过添加 -nocoloroutput 移除颜色信息
 var ColorOutputReplacements = {
     "{color_green}": "\033[1;32;1m",
@@ -394,6 +395,14 @@ function createMap(template) {
     return map;
 }
 exports.createMap = createMap;
+function sleep(milesecond) {
+    return new Promise(function (resolve, reject) {
+        timers_1.setTimeout(function () {
+            resolve();
+        }, milesecond);
+    });
+}
+exports.sleep = sleep;
 function shell(path, args, opt, verbase) {
     var stdout = "";
     var stderr = "";
