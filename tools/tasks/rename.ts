@@ -32,30 +32,13 @@ export class RenamePlugin {
             ]
         }
 
-        const filename = file.origin;
-        const extname = path.extname(filename);
-        let new_file_path
-        if (extname == ".js") {
+        var minimatch = require('../lib/resourcemanager').minimatch;
 
-            const basename = path.basename(filename);
-            if (this.options.hash == 'crc32') {
-                const crc32code = generateCrc32Code(file.contents);
-                new_file_path = "js/" + basename.substr(0, basename.length - file.extname.length) + "_" + crc32code + file.extname;
-            }
-        }
-        else {
-            let new_file_path;
-            const basename = path.basename(filename);
-            if (this.options.hash == 'crc32') {
-
-                const crc32code = generateCrc32Code(file.contents);
-                // file.dirname;
-                new_file_path = "resource/" + basename.substr(0, basename.length - file.extname.length) + "_" + crc32code + file.extname;
-            }
-        }
-        file.path = path.join(file.base, new_file_path);
-        if (this.options.verbose) {
-            this.verboseInfo.push({ filename, new_file_path })
+        for (let match of a.matchers) {
+            if (minimatch(file.origin, match.from)) {
+                console.log(file.origin, match.to)
+                break;
+            } // true! 
         }
         return file;
     }

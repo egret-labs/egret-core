@@ -335,4 +335,8 @@ declare module 'built-in' {
         constructor();
     }
 
+    export class RenamePlugin implements plugins.Command {
+        constructor();
+    }
+
 }

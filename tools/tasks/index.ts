@@ -6,6 +6,7 @@ export { CompilePlugin, UglifyPlugin } from './compile';
 export { TextureMergerPlugin } from './texturemerger';
 export { EmitResConfigFilePlugin } from './resConfig';
 export { CleanPlugin } from './clean';
+export { RenamePlugin } from './rename';
 
 
 export function run() {
