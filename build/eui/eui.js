@@ -4551,7 +4551,7 @@ var eui;
          */
         DataGroup.prototype.measureRendererSize = function () {
             var values = this.$DataGroup;
-            if (!values[12 /* typicalItem */]) {
+            if (values[12 /* typicalItem */] == undefined) {
                 this.setTypicalLayoutRect(null);
                 return;
             }
@@ -20802,14 +20802,17 @@ var eui;
             var font = this.$fontForBitmapLabel;
             if (typeof font == "string") {
                 eui.getAssets(font, function (bitmapFont) {
-                    _this.$setFontData(bitmapFont);
+                    _this.$setFontData(bitmapFont, font);
                 });
             }
             else {
                 this.$setFontData(font);
             }
         };
-        BitmapLabel.prototype.$setFontData = function (value) {
+        BitmapLabel.prototype.$setFontData = function (value, font) {
+            if (font && font != this.$fontForBitmapLabel) {
+                return;
+            }
             if (value == this.$font) {
                 return false;
             }

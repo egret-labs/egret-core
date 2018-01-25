@@ -523,10 +523,10 @@ module egret {
     if (nativeRender) {
         const nrABIVersion = egret_native.nrABIVersion;
         const nrMinEgretVersion = egret_native.nrMinEgretVersion;
-        const requiredNrABIVersion = 1;
+        const requiredNrABIVersion = 2;
         if (nrABIVersion < requiredNrABIVersion) {
             nativeRender = false;
-            const msg = "需要升级微端版本到 0.1.2 才可以开启原生渲染加速";
+            const msg = "需要升级微端版本到 0.1.3 才可以开启原生渲染加速";
             sys.$warnToFPS(msg);
             egret.warn(msg);
         }
