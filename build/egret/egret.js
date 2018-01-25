@@ -21894,7 +21894,10 @@ var egret;
                 egret.$error(1025);
                 return;
             }
+            var position = bytes._position;
+            bytes._position = 0;
             bytes.validateBuffer(offset + length);
+            bytes._position = position;
             bytes._bytes.set(this._bytes.subarray(pos, pos + length), offset);
             this.position += length;
         };
