@@ -39,7 +39,6 @@ var FileUtil = require("../lib/FileUtil");
 var CleanPlugin = (function () {
     function CleanPlugin(options) {
         this.options = options;
-        this.verboseInfo = [];
     }
     CleanPlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
@@ -50,12 +49,12 @@ var CleanPlugin = (function () {
     };
     CleanPlugin.prototype.onFinish = function (pluginContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var output, res, matches, list;
+            var output, res, matchers, list;
             return __generator(this, function (_a) {
                 output = pluginContext.outputDir;
                 res = require('../lib/resourcemanager');
-                matches = ['**/*.js', 'resource/**'];
-                list = ['js', 'resource'].map(function (item) { return path.join(output, item); });
+                matchers = this.options.matchers;
+                list = matchers.map(function (item) { return path.join(output, item); });
                 Promise.all(list.map(function (item) { return FileUtil.removeAsync(item); }));
                 return [2 /*return*/];
             });
