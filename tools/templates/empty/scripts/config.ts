@@ -15,10 +15,7 @@ const config: ResourceManagerConfig = {
 
     buildConfig: (params) => {
 
-
-
         const { target, command, projectName, version } = params;
-
 
         if (command == 'build') {
             const outputDir = '.';
