@@ -10232,8 +10232,11 @@ var dragonBones;
                 if (this._tweenState === 2 /* Always */) {
                     if (this._frameIndex === this._frameCount - 1) {
                         valueOffset = this._animationData.frameFloatOffset + this._frameValueOffset; // + 0 * 2
+                        delta.rotation = dragonBones.Transform.normalizeRadian(frameFloatArray[valueOffset++] - current.rotation);
                     }
-                    delta.rotation = frameFloatArray[valueOffset++] - current.rotation;
+                    else {
+                        delta.rotation = frameFloatArray[valueOffset++] - current.rotation;
+                    }
                     delta.skew = frameFloatArray[valueOffset++] - current.skew;
                 }
                 else {
