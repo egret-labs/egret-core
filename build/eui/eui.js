@@ -4557,7 +4557,7 @@ var eui;
          */
         DataGroup.prototype.measureRendererSize = function () {
             var values = this.$DataGroup;
-            if (!values[12 /* typicalItem */]) {
+            if (values[12 /* typicalItem */] == undefined) {
                 this.setTypicalLayoutRect(null);
                 return;
             }
