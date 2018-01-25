@@ -9,9 +9,6 @@ import { CustomPlugin } from './myplugin';
 
 const config: ResourceManagerConfig = {
 
-    configPath: 'config.res.js',
-
-    resourceRoot: () => "resource",
 
     buildConfig: (params) => {
 

@@ -24,10 +24,6 @@ const config: ResourceManagerConfig = {
         }
     },
 
-    resourceRoot: defaultConfig.resourceRoot,
-
-    configPath: defaultConfig.configPath,
-
     mergeSelector: defaultConfig.mergeSelector,
 
     typeSelector: defaultConfig.typeSelector

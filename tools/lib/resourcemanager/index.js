@@ -2264,7 +2264,7 @@
             }
             function _(t, n) {
                 return i(this, void 0, void 0, function() {
-                    var r, i, u, l, _, p;
+                    var r, i, u, l, _, d;
                     return a(this, function(a) {
                         switch (a.label) {
                           case 0:
@@ -2285,13 +2285,12 @@
                             return [ 4, c.getConfigViaFile(i, n) ];
 
                           case 5:
-                            return p = a.sent(), e.typeSelector = p.typeSelector, e.nameSelector = p.nameSelector, 
-                            e.resourceRoot = p.resourceRoot, e.mergeSelector = p.mergeSelector, d = o.resolve(t, e.resourceRoot), 
-                            e.resourceConfigFileName = p.resourceConfigFileName, f = {
+                            return d = a.sent(), e.typeSelector = d.typeSelector, e.nameSelector = d.nameSelector, 
+                            e.mergeSelector = d.mergeSelector, f = {
                                 alias: {},
                                 groups: {},
                                 resources: {}
-                            }, e.userConfig = p.userConfig, e.userConfig || (e.userConfig = {
+                            }, e.userConfig = d.userConfig, e.userConfig || (e.userConfig = {
                                 outputDir: ".",
                                 commands: []
                             }), [ 2 ];
@@ -2300,7 +2299,7 @@
                 });
             }
             e.getConfig = r, e.generateClassicalConfig = u, e.generateConfig = l;
-            var f, d;
+            var f;
             e.init = _;
         }(t.ResourceConfig || (t.ResourceConfig = {}));
     }, function(e, t, n) {
@@ -2871,14 +2870,14 @@
                     return "." == t.charAt(0) ? t = path.join(path.dirname(e), t) + ".ts" : t.indexOf("built-in") >= 0 && (t = path.resolve(__dirname, "../../tasks/index")), 
                     nodeRequire(t);
                 }
-                var r, i, a, o, s, c, u, l, _, f, d, p, m, g;
-                return __generator(this, function(h) {
-                    switch (h.label) {
+                var r, i, a, o, s, c, u, l, _, f, d, p, m;
+                return __generator(this, function(g) {
+                    switch (g.label) {
                       case 0:
                         return [ 4, fs.readFileAsync(e, "utf-8") ];
 
                       case 1:
-                        r = h.sent(), i = ts.transpile(r, {
+                        r = g.sent(), i = ts.transpile(r, {
                             module: ts.ModuleKind.CommonJS,
                             newLine: ts.NewLineKind.LineFeed
                         }), a = new Function("require", "module", i), o = {};
@@ -2888,17 +2887,16 @@
                             throw console.log(e), e;
                         }
                         return s = o.exports, c = "function" == typeof s.resourceRoot ? s.resourceRoot() : s.resourceRoot, 
-                        u = s.configPath, l = s.typeSelector, _ = s.nameSelector ? s.nameSelector : function(e) {
+                        u = s.typeSelector, l = s.nameSelector ? s.nameSelector : function(e) {
                             return e;
-                        }, f = s.buildConfig, d = t.projectRoot, p = path.basename(d), m = f(__assign({
-                            projectName: p
-                        }, t)), g = s.mergeSelector, [ 2, {
+                        }, _ = s.buildConfig, f = t.projectRoot, d = path.basename(f), p = _(__assign({
+                            projectName: d
+                        }, t)), m = s.mergeSelector, [ 2, {
                             resourceRoot: c,
-                            resourceConfigFileName: u,
-                            typeSelector: l,
-                            mergeSelector: g,
-                            nameSelector: _,
-                            userConfig: m
+                            typeSelector: u,
+                            mergeSelector: m,
+                            nameSelector: l,
+                            userConfig: p
                         } ];
                     }
                 });
@@ -3204,7 +3202,7 @@
                         return [ 4, u.ResourceConfig.init(e.projectRoot, e) ];
 
                       case 1:
-                        for (r = s.sent(), o = u.ResourceConfig.userConfig, i = e.projectRoot, a = l.join(i, u.ResourceConfig.resourceRoot), 
+                        for (r = s.sent(), o = u.ResourceConfig.userConfig, i = e.projectRoot, a = l.join(i, "resource/"), 
                         _.init(e.projectRoot, a, e), "string" == typeof o.outputDir ? d = l.join(i, o.outputDir) : (p = o.outputDir, 
                         d = function(e) {
                             return l.join(i, p(e));
