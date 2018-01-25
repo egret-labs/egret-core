@@ -8230,6 +8230,11 @@ declare namespace dragonBones {
  */
 declare namespace dragonBones {
     /**
+     * @internal
+     * @private
+     */
+    const isV5: boolean;
+    /**
      * - The Egret factory.
      * @version DragonBones 3.0
      * @language en_US
@@ -8240,11 +8245,6 @@ declare namespace dragonBones {
      * @language zh_CN
      */
     class EgretFactory extends BaseFactory {
-        /**
-         * @internal
-         * @private
-         */
-        static _isV5: boolean;
         private static _dragonBonesInstance;
         private static _factory;
         private static _clockHandler(time);
