@@ -45,8 +45,14 @@ var RenamePlugin = (function () {
     }
     RenamePlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
-            var filename, extname, new_file_path, basename, crc32code, new_file_path_1, basename, crc32code;
+            var a, filename, extname, new_file_path, basename, crc32code, new_file_path_1, basename, crc32code;
             return __generator(this, function (_a) {
+                a = {
+                    matchers: [
+                        { from: "**/*.js", to: "js/[name]_[hash].js" },
+                        { from: "resource/**/**", to: "resource/[path][name]_[hash].[ext]" }
+                    ]
+                };
                 filename = file.origin;
                 extname = path.extname(filename);
                 if (extname == ".js") {

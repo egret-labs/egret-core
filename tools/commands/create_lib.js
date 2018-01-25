@@ -56,6 +56,7 @@ var CreateLib = (function () {
                         FileUtil.copy(libraryTemplate, project.getProjectRoot());
                         return [4 /*yield*/, convert(project.getFilePath("package.json"), function (data) {
                                 data.name = moduleName;
+                                data.compilerVersion = egret.version;
                                 return data;
                             })];
                     case 1:
