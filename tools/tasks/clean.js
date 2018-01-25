@@ -36,11 +36,19 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var path = require("path");
 var FileUtil = require("../lib/FileUtil");
-var utils = require("../lib/utils");
 var CleanPlugin = (function () {
     function CleanPlugin(options) {
         this.options = options;
     }
+    CleanPlugin.prototype.onStart = function (pluginContext) {
+        var output = pluginContext.outputDir;
+        var res = require('../lib/resourcemanager');
+        var matchers = this.options.matchers;
+        var list = matchers.map(function (item) { return path.join(output, item); });
+        list.forEach(function (item) {
+            FileUtil.remove(item);
+        });
+    };
     CleanPlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -50,35 +58,8 @@ var CleanPlugin = (function () {
     };
     CleanPlugin.prototype.onFinish = function (pluginContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var output, res, matchers, list;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        output = pluginContext.outputDir;
-                        res = require('../lib/resourcemanager');
-                        matchers = this.options.matchers;
-                        list = matchers.map(function (item) { return path.join(output, item); });
-                        list.forEach(function (item) {
-                            FileUtil.remove(item);
-                        });
-                        console.log(1);
-                        return [4 /*yield*/, utils.sleep(1000)
-                            // await Promise.all(list.map((item) => {
-                            //     console.log(item)
-                            //     return 
-                            // }))
-                            // process.exit(0)
-                        ];
-                    case 1:
-                        _a.sent();
-                        // await Promise.all(list.map((item) => {
-                        //     console.log(item)
-                        //     return 
-                        // }))
-                        // process.exit(0)
-                        console.log(2);
-                        return [2 /*return*/];
-                }
+                return [2 /*return*/];
             });
         });
     };
