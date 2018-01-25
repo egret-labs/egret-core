@@ -4,15 +4,14 @@
 import * as path from 'path';
 import { UglifyPlugin, CompilePlugin, ManifestPlugin, ExmlPlugin, EmitResConfigFilePlugin, TextureMergerPlugin } from 'built-in';
 import { WxgamePlugin } from './wxgame/wxgame';
-import { BricksPlugin } from './bricks/bricks';
 import { CustomPlugin } from './myplugin';
 import * as defaultConfig from './config';
 
 const config: ResourceManagerConfig = {
 
     buildConfig: (params) => {
-        const { target, command, projectName, version } = params;
 
+        const { target, command, projectName, version } = params;
         const outputDir = `../${projectName}_wxgame`;
         if (command == 'build') {
             return {
