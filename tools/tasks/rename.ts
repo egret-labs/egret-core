@@ -19,10 +19,18 @@ export class RenamePlugin {
         if (!this.options) {
             this.options = { hash: 'crc32' }
         }
+
     }
 
     async onFile(file: File) {
 
+
+        var a = {
+            matchers: [
+                { from: "**/*.js", to: "js/[name]_[hash].js" },
+                { from: "resource/**/**", to: "resource/[path][name]_[hash].[ext]" }
+            ]
+        }
 
         const filename = file.origin;
         const extname = path.extname(filename);
