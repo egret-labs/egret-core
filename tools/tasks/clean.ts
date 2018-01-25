@@ -5,16 +5,13 @@ import * as FileUtil from '../lib/FileUtil';
 
 type CleanPluginOptions = {
 
-    match: string[]
+    matchers: string[]
 }
-
-
 
 export class CleanPlugin {
 
-    private verboseInfo: { filename: string, new_file_path: string }[] = [];
 
-    constructor(private options: any) {
+    constructor(private options: CleanPluginOptions) {
 
     }
 
@@ -22,13 +19,10 @@ export class CleanPlugin {
         return file;
     }
     async onFinish(pluginContext: PluginContext) {
-        const output
-            = pluginContext.outputDir;
+        const output = pluginContext.outputDir;
         const res = require('../lib/resourcemanager');
-
-        const matches = ['**/*.js', 'resource/**'];
-
-        const list = ['js', 'resource'].map((item) => path.join(output, item));
+        const matchers = this.options.matchers;
+        const list = matchers.map((item) => path.join(output, item));
         Promise.all(list.map((item) => FileUtil.removeAsync(item)))
     }
 }

@@ -325,4 +325,14 @@ declare module 'built-in' {
 
     }
 
+    type CleanPluginOptions = {
+
+        matchers: string[]
+    }
+
+
+    export class CleanPlugin implements plugins.Command {
+        constructor();
+    }
+
 }
