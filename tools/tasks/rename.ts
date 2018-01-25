@@ -28,7 +28,7 @@ export class RenamePlugin {
         var a = {
             matchers: [
                 { from: "**/*.js", to: "js/[name]_[hash].js" },
-                { from: "resource/**/**", to: "resource/[path][name]_[hash].[ext]" }
+                { from: "resource/**/**", to: "[path][name]_[hash].[ext]" }
             ]
         }
 
@@ -36,7 +36,13 @@ export class RenamePlugin {
 
         for (let match of a.matchers) {
             if (minimatch(file.origin, match.from)) {
-                console.log(file.origin, match.to)
+                const name = path.basename(file.origin, path.extname(file.origin));
+                const extname = path.extname(file.origin).substr(1);
+                const hash = generateCrc32Code(file.contents);
+                const p = path.dirname(file.origin) + "/";
+                const toFilename = match.to.replace('[name]', name).replace('[hash]', hash).replace('[ext]', extname).replace("[path]", p);
+                file.path = file.base + '/' + toFilename;
+
                 break;
             } // true! 
         }

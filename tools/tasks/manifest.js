@@ -51,7 +51,7 @@ var ManifestPlugin = (function () {
         return __awaiter(this, void 0, void 0, function () {
             var filename, extname, new_file_path, basename, crc32, crc32_file_path, relative;
             return __generator(this, function (_a) {
-                filename = file.origin;
+                filename = file.relative;
                 extname = path.extname(filename);
                 // if (filename === "config.res.js") {
                 //     const crc32 = globals.getCrc32();
@@ -74,7 +74,7 @@ var ManifestPlugin = (function () {
                     }
                     file.path = path.join(file.base, new_file_path);
                     relative = file.relative.split("\\").join('/');
-                    if (filename.indexOf('libs/') >= 0) {
+                    if (file.origin.indexOf('libs/') >= 0) {
                         manifest.initial.push(relative);
                     }
                     else {
