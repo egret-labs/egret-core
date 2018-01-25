@@ -4,37 +4,35 @@ import { Plugin, File } from './index';
 
 
 
-type ManifestPluginOptions = {
+var minimatch = require('../lib/resourcemanager').minimatch;
+
+type RenamePluginOptions = {
 
     verbose?: boolean
 
     hash?: "crc32"
+
+    matchers: { from: string, to: string }[]
 }
 
 export class RenamePlugin {
 
     private verboseInfo: { filename: string, new_file_path: string }[] = [];
 
-    constructor(private options: ManifestPluginOptions) {
+    constructor(private options: RenamePluginOptions) {
+        // matchers: [
+        //     { from: "**/*.js", to: "js/[name]_[hash].js" },
+        //     { from: "resource/**/**", to: "[path][name]_[hash].[ext]" }
+        // ]
         if (!this.options) {
-            this.options = { hash: 'crc32' }
+            this.options = { hash: 'crc32', matchers: [] }
         }
 
     }
 
     async onFile(file: File) {
 
-
-        var a = {
-            matchers: [
-                { from: "**/*.js", to: "js/[name]_[hash].js" },
-                { from: "resource/**/**", to: "[path][name]_[hash].[ext]" }
-            ]
-        }
-
-        var minimatch = require('../lib/resourcemanager').minimatch;
-
-        for (let match of a.matchers) {
+        for (let match of this.options.matchers) {
             if (minimatch(file.origin, match.from)) {
                 const name = path.basename(file.origin, path.extname(file.origin));
                 const extname = path.extname(file.origin).substr(1);
@@ -42,9 +40,11 @@ export class RenamePlugin {
                 const p = path.dirname(file.origin) + "/";
                 const toFilename = match.to.replace('[name]', name).replace('[hash]', hash).replace('[ext]', extname).replace("[path]", p);
                 file.path = file.base + '/' + toFilename;
-
+                if (this.options.verbose) {
+                    console.log(`RenamePlugin: ${file.relative} => ${toFilename}`)
+                }
                 break;
-            } // true! 
+            }
         }
         return file;
     }

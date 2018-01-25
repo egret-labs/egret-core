@@ -332,11 +332,19 @@ declare module 'built-in' {
 
 
     export class CleanPlugin implements plugins.Command {
-        constructor();
+        constructor(options: CleanPluginOptions);
     }
 
+    type RenamePluginOptions = {
+
+        verbose?: boolean
+
+        hash?: "crc32"
+
+        matchers: { from: string, to: string }[]
+    }
     export class RenamePlugin implements plugins.Command {
-        constructor();
+        constructor(options: RenamePluginOptions);
     }
 
 }
