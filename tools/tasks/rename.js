@@ -35,26 +35,24 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var path = require("path");
+var minimatch = require('../lib/resourcemanager').minimatch;
 var RenamePlugin = (function () {
     function RenamePlugin(options) {
         this.options = options;
         this.verboseInfo = [];
+        // matchers: [
+        //     { from: "**/*.js", to: "js/[name]_[hash].js" },
+        //     { from: "resource/**/**", to: "[path][name]_[hash].[ext]" }
+        // ]
         if (!this.options) {
-            this.options = { hash: 'crc32' };
+            this.options = { hash: 'crc32', matchers: [] };
         }
     }
     RenamePlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
-            var a, minimatch, _i, _a, match, name, extname, hash, p, toFilename;
+            var _i, _a, match, name, extname, hash, p, toFilename;
             return __generator(this, function (_b) {
-                a = {
-                    matchers: [
-                        { from: "**/*.js", to: "js/[name]_[hash].js" },
-                        { from: "resource/**/**", to: "[path][name]_[hash].[ext]" }
-                    ]
-                };
-                minimatch = require('../lib/resourcemanager').minimatch;
-                for (_i = 0, _a = a.matchers; _i < _a.length; _i++) {
+                for (_i = 0, _a = this.options.matchers; _i < _a.length; _i++) {
                     match = _a[_i];
                     if (minimatch(file.origin, match.from)) {
                         name = path.basename(file.origin, path.extname(file.origin));
@@ -63,8 +61,11 @@ var RenamePlugin = (function () {
                         p = path.dirname(file.origin) + "/";
                         toFilename = match.to.replace('[name]', name).replace('[hash]', hash).replace('[ext]', extname).replace("[path]", p);
                         file.path = file.base + '/' + toFilename;
+                        if (this.options.verbose) {
+                            console.log("RenamePlugin: " + file.relative + " => " + toFilename);
+                        }
                         break;
-                    } // true! 
+                    }
                 }
                 return [2 /*return*/, file];
             });
