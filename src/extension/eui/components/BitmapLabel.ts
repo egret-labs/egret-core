@@ -111,14 +111,17 @@ namespace eui {
             let font = this.$fontForBitmapLabel;
             if (typeof font == "string") {
                 getAssets(font, (bitmapFont) => {
-                    this.$setFontData(bitmapFont);
+                    this.$setFontData(bitmapFont, <string>font);
                 })
             } else {
                 this.$setFontData(font);
             }
         }
 
-        $setFontData(value: egret.BitmapFont): boolean {
+        $setFontData(value: egret.BitmapFont, font?: string): boolean {
+            if (font && font != this.$fontForBitmapLabel) {
+                return;
+            }
             if (value == this.$font) {
                 return false;
             }
