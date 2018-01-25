@@ -78,8 +78,6 @@ namespace egret.web {
             let ua: string = navigator.userAgent.toLowerCase();
             Html5Capatibility.ua = ua;
 
-            egret.Capabilities["isMobile" + ""] = (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
-
             Html5Capatibility._canUseBlob = false;
             let canUseWebAudio = window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"];
             if (canUseWebAudio) {

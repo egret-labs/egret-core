@@ -1,4 +1,4 @@
-# Egret Engine 5.1.4 Release Notes
+# Egret Engine 5.1.5 Release Notes
 
 
 ---
@@ -9,27 +9,22 @@ Egret engine was officially released in December 2017 version 5.1. This version 
 
 ## WeChat mini game
 
-* Added index.html After modification, the relevant configuration synchronization to WeChat project, such as horizontal screen
-* Added ```egret build``` command to debug WeChat game,``` egret publish ```command to release WeChat game
-* Added ```egret.getOption``` interface can read the game start parameters
-* Repair ```egret run``` command may not read WeChat developer tool path BUG
+* Repair a bug that individual models will fade back, such as Millet MIX2
+* Increase XML parsing function
 
 ## Bricks
 ### update content
 
 This week, the egret engine has greatly improved the support for playing a game platform, focusing on the following problems:
 
-* Added support for EUI
-* Added support for DragonBones
-* Added support for Graphics
-* Added Mesh support
-* Added support for displaying the blendMode and scrollRect properties of the object
-* Added support for LocalStorage
-* Added support for WebSocket
-* Fixed bug where binary data could not be loaded
-* Fixed a bug in the Jiugong grid rendering bug
-* Fixed bug with multiple text rendering and text layouts
-* Fixed bug where HTTP request could not send post request
+* Support rich text
+* Support font hyperlinks
+* Support font stroke
+* Support MovieClip
+* Fixed localToGlobal / getBounds and other functions caused the problem
+* Optimize Graphics performance
+* Fixed Socket related BUG
+* Fixed HTTP request related bug
 
 
 ### Known issues
@@ -44,10 +39,6 @@ Egret engine currently has the following features not yet support play a play pl
 * Touch related
     * Pixel-level collision detection
     * Click through
-* Text related
-    * Fonts hyperlinks
-    * Rich text
-    * Font stroke
 * Debug related
     * Dirty rectangle debugging display
     * fps monitor
@@ -59,8 +50,6 @@ The above features are expected to be supported in next week's update.
 
 At the same time, there are still some problems due to the fact that the bricks engine playing a play platform is currently under closed beta testing. Currently, we do not recommend developers to use the following functions on a play platform:
 
-* WebSocket binary format
-* Big data binary loading
 * Bezier curve drawing
 * Video playback
 
@@ -68,10 +57,17 @@ The above questions and we play a platform for the engineers to maintain close c
 
 ## AssetsManager
 
-* Fix loading gallery will lead to resource loader stuck BUG
-* Fixed with ```sheet.subkey``` way to get gallery resource is not correct BUG
+* Repair resourceRoot can only set a BUG
 
 ## 2D rendering - JavaScript
 
-* Fix the graphics object settings filter does not show BUG
-* Fix Bitmap settings texture may lead to error BUG
+* Fixed Mesh does not support texture rotation issues
+* Fixed BitmapText may lead to internal engine error
+* Fixed eui virtual layout may create too many object problems
+* Fixed egret.ByteArray.readBytes function will cause bytesAvailable exception
+* Fixed eui.BitmapLabel repeat set font font loading disorder can cause fonts
+
+## Command Line Tools
+
+* Added CleanPlugin plugin
+* Added RenamePlugin plugin
