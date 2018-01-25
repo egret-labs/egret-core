@@ -4,14 +4,6 @@
  */
 type ResourceManagerConfig = {
     /**
-     * 配置文件生成路径
-     */
-    configPath: string,
-    /**
-     * 资源根目录路径
-     */
-    resourceRoot: () => string,
-    /**
      * 构建与发布配置
      */
     buildConfig: (param: BuildConfigParam) => UserConfig,
