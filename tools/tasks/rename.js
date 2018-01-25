@@ -34,7 +34,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var path = require("path");
 var RenamePlugin = (function () {
     function RenamePlugin(options) {
         this.options = options;
@@ -45,34 +44,21 @@ var RenamePlugin = (function () {
     }
     RenamePlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
-            var a, filename, extname, new_file_path, basename, crc32code, new_file_path_1, basename, crc32code;
-            return __generator(this, function (_a) {
+            var a, minimatch, _i, _a, match;
+            return __generator(this, function (_b) {
                 a = {
                     matchers: [
                         { from: "**/*.js", to: "js/[name]_[hash].js" },
                         { from: "resource/**/**", to: "resource/[path][name]_[hash].[ext]" }
                     ]
                 };
-                filename = file.origin;
-                extname = path.extname(filename);
-                if (extname == ".js") {
-                    basename = path.basename(filename);
-                    if (this.options.hash == 'crc32') {
-                        crc32code = generateCrc32Code(file.contents);
-                        new_file_path = "js/" + basename.substr(0, basename.length - file.extname.length) + "_" + crc32code + file.extname;
-                    }
-                }
-                else {
-                    basename = path.basename(filename);
-                    if (this.options.hash == 'crc32') {
-                        crc32code = generateCrc32Code(file.contents);
-                        // file.dirname;
-                        new_file_path_1 = "resource/" + basename.substr(0, basename.length - file.extname.length) + "_" + crc32code + file.extname;
-                    }
-                }
-                file.path = path.join(file.base, new_file_path);
-                if (this.options.verbose) {
-                    this.verboseInfo.push({ filename: filename, new_file_path: new_file_path });
+                minimatch = require('../lib/resourcemanager').minimatch;
+                for (_i = 0, _a = a.matchers; _i < _a.length; _i++) {
+                    match = _a[_i];
+                    if (minimatch(file.origin, match.from)) {
+                        console.log(file.origin, match.to);
+                        break;
+                    } // true! 
                 }
                 return [2 /*return*/, file];
             });
