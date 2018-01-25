@@ -46,7 +46,7 @@ var dragonBones;
             this._objects = [];
             this._eventManager = null;
             this._eventManager = eventManager;
-            console.info("DragonBones: " + DragonBones.VERSION + " 2018/01/05\nWebsite: http://dragonbones.com/\nSource and Demos: https://github.com/DragonBones/");
+            console.info("DragonBones: " + DragonBones.VERSION + "\nWebsite: http://dragonbones.com/\nSource and Demo: https://github.com/DragonBones/");
         }
         DragonBones.prototype.advanceTime = function (passedTime) {
             if (this._objects.length > 0) {
@@ -96,7 +96,7 @@ var dragonBones;
             enumerable: true,
             configurable: true
         });
-        DragonBones.VERSION = "5.6.201";
+        DragonBones.VERSION = "5.6.202";
         DragonBones.yDown = true;
         DragonBones.debug = false;
         DragonBones.debugDraw = false;
@@ -6111,6 +6111,7 @@ var dragonBones;
             if (currentDisplay !== prevDisplay) {
                 this._onUpdateDisplay();
                 this._replaceDisplay(prevDisplay);
+                this._transformDirty = true;
                 this._visibleDirty = true;
                 this._blendModeDirty = true;
                 this._colorDirty = true;
@@ -14600,12 +14601,7 @@ var dragonBones;
                         if (textureData.renderTexture === null) {
                             textureData.renderTexture = new egret.Texture();
                         }
-                        if (dragonBones.EgretFactory._isV5) {
-                            textureData.renderTexture["$bitmapData"] = bitmapData;
-                        }
-                        else {
-                            textureData.renderTexture._bitmapData = bitmapData;
-                        }
+                        textureData.renderTexture.bitmapData = bitmapData;
                         if (textureData.rotated) {
                             textureData.renderTexture.$initData(textureData.region.x * scale, textureData.region.y * scale, subTextureHeight * scale, subTextureWidth * scale, 0, 0, subTextureHeight * scale, subTextureWidth * scale, textureAtlasWidth, textureAtlasHeight, textureData.rotated);
                         }
@@ -15041,7 +15037,7 @@ var dragonBones;
              * @internal
              * @private
              */
-            _this._batchEnabled = !global["nativeRender"]; //
+            _this._batchEnabled = !(global["nativeRender"] || global["bricks"]); //
             /**
              * @internal
              * @private
@@ -15190,7 +15186,7 @@ var dragonBones;
                     this.removeChild(this._debugDrawer);
                 }
             }
-            if (!dragonBones.EgretFactory._isV5 && this._batchEnabled && this._childDirty) {
+            if (!dragonBones.isV5 && this._batchEnabled && this._childDirty) {
                 this.$invalidateContentBounds();
             }
         };
@@ -15373,14 +15369,14 @@ var dragonBones;
                     }
                     bounds.width -= bounds.x;
                     bounds.height -= bounds.y;
-                    if (dragonBones.EgretFactory._isV5) {
+                    if (dragonBones.isV5) {
                         if (this._bounds === null) {
                             this._bounds = new egret.Rectangle();
                         }
                         this._bounds.copyFrom(bounds);
                     }
                 }
-                else if (dragonBones.EgretFactory._isV5) {
+                else if (dragonBones.isV5) {
                     if (this._bounds === null) {
                         this._bounds = new egret.Rectangle();
                     }
@@ -15638,7 +15634,7 @@ var dragonBones;
          */
         EgretSlot.prototype.init = function (slotData, displayDatas, rawDisplay, meshDisplay) {
             _super.prototype.init.call(this, slotData, displayDatas, rawDisplay, meshDisplay);
-            if (dragonBones.EgretFactory._isV5) {
+            if (dragonBones.isV5) {
                 this._updateTransform = this._updateTransformV5;
                 this._identityTransform = this._identityTransformV5;
             }
@@ -15680,7 +15676,7 @@ var dragonBones;
         EgretSlot.prototype._onUpdateDisplay = function () {
             this._armatureDisplay = this._armature.display;
             this._renderDisplay = (this._display !== null ? this._display : this._rawDisplay);
-            if (dragonBones.EgretFactory._isV5) {
+            if (dragonBones.isV5 && this._armatureDisplay._batchEnabled) {
                 if (this._renderDisplay === this._rawDisplay && !(this._renderDisplay.$renderNode instanceof egret.sys.BitmapNode)) {
                     this._renderDisplay.$renderNode = new egret.sys.BitmapNode(); // 默认是 sys.NormalBitmapNode 没有矩阵，需要替换成 egret.sys.BitmapNode。
                 }
@@ -15823,7 +15819,7 @@ var dragonBones;
                     filters.push(this._colorFilter);
                 }
                 this._renderDisplay.filters = filters;
-                this._renderDisplay.$setAlpha(1.0);
+                this._renderDisplay.alpha = 1.0;
             }
             else {
                 if (this._armatureDisplay._batchEnabled) {
@@ -15832,7 +15828,7 @@ var dragonBones;
                     node.alpha = this._colorTransform.alphaMultiplier;
                 }
                 this._renderDisplay.filters = null;
-                this._renderDisplay.$setAlpha(this._colorTransform.alphaMultiplier);
+                this._renderDisplay.alpha = this._colorTransform.alphaMultiplier;
             }
         };
         /**
@@ -15884,20 +15880,13 @@ var dragonBones;
                             var texture = currentTextureData.renderTexture;
                             var node = this._renderDisplay.$renderNode;
                             egret.sys.RenderNode.prototype.cleanBeforeRender.call(node);
-                            if (dragonBones.EgretFactory._isV5) {
-                                node.image = texture["$bitmapData"];
-                            }
-                            else {
-                                node.image = texture._bitmapData;
-                            }
-                            if (dragonBones.EgretFactory._isV5) {
-                                node.image = texture["$bitmapData"];
+                            node.image = texture.bitmapData;
+                            if (dragonBones.isV5) {
                                 node.drawMesh(texture.$bitmapX, texture.$bitmapY, texture.$bitmapWidth, texture.$bitmapHeight, texture.$offsetX, texture.$offsetY, texture.textureWidth, texture.textureHeight);
                                 node.imageWidth = texture.$sourceWidth;
                                 node.imageHeight = texture.$sourceHeight;
                             }
                             else {
-                                node.image = texture._bitmapData;
                                 node.drawMesh(texture._bitmapX, texture._bitmapY, texture._bitmapWidth, texture._bitmapHeight, texture._offsetX, texture._offsetY, texture.textureWidth, texture.textureHeight);
                                 node.imageWidth = texture._sourceWidth;
                                 node.imageHeight = texture._sourceHeight;
@@ -15906,10 +15895,10 @@ var dragonBones;
                             this._colorDirty = true;
                         }
                         meshDisplay.texture = currentTextureData.renderTexture;
-                        meshDisplay.$setAnchorOffsetX(this._pivotX);
-                        meshDisplay.$setAnchorOffsetY(this._pivotY);
+                        meshDisplay.anchorOffsetX = this._pivotX;
+                        meshDisplay.anchorOffsetY = this._pivotY;
                         meshDisplay.$updateVertices();
-                        if (!dragonBones.EgretFactory._isV5) {
+                        if (!dragonBones.isV5) {
                             meshDisplay.$invalidateTransform();
                         }
                         var isSkinned = this._meshData.weight !== null;
@@ -15928,14 +15917,13 @@ var dragonBones;
                         if (this._armatureDisplay._batchEnabled) {
                             var node = this._renderDisplay.$renderNode;
                             egret.sys.RenderNode.prototype.cleanBeforeRender.call(node);
-                            if (dragonBones.EgretFactory._isV5) {
-                                node.image = texture["$bitmapData"];
+                            node.image = texture.bitmapData;
+                            if (dragonBones.isV5) {
                                 node.drawImage(texture.$bitmapX, texture.$bitmapY, texture.$bitmapWidth, texture.$bitmapHeight, texture.$offsetX, texture.$offsetY, textureWidth, textureHeight);
                                 node.imageWidth = texture.$sourceWidth;
                                 node.imageHeight = texture.$sourceHeight;
                             }
                             else {
-                                node.image = texture._bitmapData;
                                 node.drawImage(texture._bitmapX, texture._bitmapY, texture._bitmapWidth, texture._bitmapHeight, texture._offsetX, texture._offsetY, textureWidth, textureHeight);
                                 node.imageWidth = texture._sourceWidth;
                                 node.imageHeight = texture._sourceHeight;
@@ -15947,8 +15935,8 @@ var dragonBones;
                             normalDisplay_1.width = textureWidth;
                             normalDisplay_1.height = textureHeight;
                         }
-                        normalDisplay_1.$setAnchorOffsetX(this._pivotX);
-                        normalDisplay_1.$setAnchorOffsetY(this._pivotY);
+                        normalDisplay_1.anchorOffsetX = this._pivotX;
+                        normalDisplay_1.anchorOffsetY = this._pivotY;
                     }
                     this._visibleDirty = true;
                     return;
@@ -15958,7 +15946,7 @@ var dragonBones;
                 this._renderDisplay.$renderNode.image = null;
             }
             var normalDisplay = this._renderDisplay;
-            normalDisplay.$setBitmapData(null);
+            normalDisplay.texture = null;
             normalDisplay.x = 0.0;
             normalDisplay.y = 0.0;
             normalDisplay.visible = false;
@@ -16005,7 +15993,7 @@ var dragonBones;
                     meshNode.vertices[iD++] = yG;
                 }
                 meshDisplay.$updateVertices();
-                if (!dragonBones.EgretFactory._isV5) {
+                if (!dragonBones.isV5) {
                     meshDisplay.$invalidateTransform();
                 }
             }
@@ -16034,7 +16022,7 @@ var dragonBones;
                     }
                 }
                 meshDisplay.$updateVertices();
-                if (!dragonBones.EgretFactory._isV5) {
+                if (!dragonBones.isV5) {
                     meshDisplay.$invalidateTransform();
                 }
             }
@@ -16074,7 +16062,7 @@ var dragonBones;
                 vertices[iV + 1] = y + vertices[iV + 1] * totalWeight;
             }
             meshDisplay.$updateVertices();
-            if (!dragonBones.EgretFactory._isV5) {
+            if (!dragonBones.isV5) {
                 meshDisplay.$invalidateTransform();
             }
         };
@@ -16183,6 +16171,11 @@ var dragonBones;
 var dragonBones;
 (function (dragonBones) {
     /**
+     * @internal
+     * @private
+     */
+    dragonBones.isV5 = Number(egret.Capabilities.engineVersion.substr(0, 3)) >= 5.1;
+    /**
      * - The Egret factory.
      * @version DragonBones 3.0
      * @language en_US
@@ -16201,7 +16194,6 @@ var dragonBones;
             if (dataParser === void 0) { dataParser = null; }
             var _this = _super.call(this, dataParser) || this;
             if (EgretFactory._dragonBonesInstance === null) {
-                EgretFactory._isV5 = Number(egret.Capabilities.engineVersion.substr(0, 3)) >= 5.1;
                 //
                 var eventManager = new dragonBones.EgretArmatureDisplay();
                 EgretFactory._dragonBonesInstance = new dragonBones.DragonBones(eventManager);
@@ -16513,11 +16505,6 @@ var dragonBones;
             console.warn("已废弃");
             this.clear();
         };
-        /**
-         * @internal
-         * @private
-         */
-        EgretFactory._isV5 = false;
         EgretFactory._dragonBonesInstance = null;
         EgretFactory._factory = null;
         return EgretFactory;
@@ -17143,12 +17130,7 @@ var dragonBones;
                         var width = this._groupConfig.rectangleArray[regionIndex + 2];
                         var height = this._groupConfig.rectangleArray[regionIndex + 3];
                         slot.displayConfig.texture = new egret.Texture();
-                        if (dragonBones.EgretFactory._isV5) {
-                            slot.displayConfig.texture["$bitmapData"] = textureAtlasTexture["$bitmapData"];
-                        }
-                        else {
-                            slot.displayConfig.texture._bitmapData = textureAtlasTexture._bitmapData;
-                        }
+                        slot.displayConfig.texture.bitmapData = textureAtlasTexture._bitmapData;
                         slot.displayConfig.texture.$initData(x, y, Math.min(width, textureAtlasTexture.textureWidth - x), Math.min(height, textureAtlasTexture.textureHeight - y), 0, 0, Math.min(width, textureAtlasTexture.textureWidth - x), Math.min(height, textureAtlasTexture.textureHeight - y), textureAtlasTexture.textureWidth, textureAtlasTexture.textureHeight);
                     }
                     if (this._batchEnabled) {
@@ -17156,14 +17138,13 @@ var dragonBones;
                         var texture = slot.displayConfig.texture;
                         var bitmapNode = slot.rawDisplay.$renderNode;
                         egret.sys.RenderNode.prototype.cleanBeforeRender.call(slot.rawDisplay.$renderNode);
-                        if (dragonBones.EgretFactory._isV5) {
-                            bitmapNode.image = texture["$bitmapData"];
+                        bitmapNode.image = texture.bitmapData;
+                        if (dragonBones.isV5) {
                             bitmapNode.drawImage(texture.$bitmapX, texture.$bitmapY, texture.$bitmapWidth, texture.$bitmapHeight, texture.$offsetX, texture.$offsetY, texture.textureWidth, texture.textureHeight);
                             bitmapNode.imageWidth = texture._sourceWidth;
                             bitmapNode.imageHeight = texture._sourceHeight;
                         }
                         else {
-                            bitmapNode.image = texture._bitmapData;
                             bitmapNode.drawImage(texture._bitmapX, texture._bitmapY, texture._bitmapWidth, texture._bitmapHeight, texture._offsetX, texture._offsetY, texture.textureWidth, texture.textureHeight);
                             bitmapNode.imageWidth = texture._sourceWidth;
                             bitmapNode.imageHeight = texture._sourceHeight;
@@ -17446,7 +17427,7 @@ var dragonBones;
                             this._cacheRectangle.width = prevCacheRectangle.width;
                             this._cacheRectangle.height = prevCacheRectangle.height;
                         }
-                        if (!dragonBones.EgretFactory._isV5) {
+                        if (!dragonBones.isV5) {
                             this.$invalidateContentBounds();
                         }
                     }
