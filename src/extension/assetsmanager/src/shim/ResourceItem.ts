@@ -152,7 +152,7 @@ module RES {
 
 		export function convertToResItem(r: ResourceInfo): ResourceItem {
 
-			let name = "";
+			let name = r.name;
 			if (!config.config) {
 				name = r.url;
 			}

@@ -20,7 +20,7 @@ declare module RES {
         name: string;
         soundType?: string;
         scale9grid?: string;
-        groupName?: string;
+        groupNames?: string[];
         /**
          * 是否被资源管理器进行管理，默认值为 false
          */
@@ -123,6 +123,8 @@ declare module RES {
         private reporterDic;
         private dispatcherDic;
         private failedList;
+        private loadItemErrorDic;
+        private errorDic;
         load(list: ResourceInfo[], groupName: string, priority: number, reporter?: PromiseTaskReporter): Promise<any>;
         private loadingCount;
         thread: number;
@@ -155,7 +157,7 @@ declare module RES {
             [index: string]: number;
         };
         resourceConfig: ResourceConfig;
-        load: (resource: ResourceInfo, processor?: string) => Promise<any>;
+        load: (resource: ResourceInfo, processor?: string | processor.Processor) => Promise<any>;
         unload: (resource: ResourceInfo) => Promise<any>;
         save: (rexource: ResourceInfo, data: any) => void;
         get: (resource: ResourceInfo) => any;
