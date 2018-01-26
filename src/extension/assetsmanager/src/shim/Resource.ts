@@ -490,8 +490,15 @@ module RES {
             return this._loadGroup(name, priority, reporterDelegate).then(data => {
                 ResourceEvent.dispatchResourceEvent(this, ResourceEvent.GROUP_COMPLETE, name);
             }, error => {
+                const itemList:ResourceInfo[] = error.itemList;
+                const length = itemList.length;
+                for(let i = 0 ; i < length ; i++) {
+                    const item = itemList[i];
+                    delete item.promise;
+                    ResourceEvent.dispatchResourceEvent(this, ResourceEvent.ITEM_LOAD_ERROR, name, item);
+                }
                 ResourceEvent.dispatchResourceEvent(this, ResourceEvent.GROUP_LOAD_ERROR, name);
-                return Promise.reject(error);
+                return Promise.reject(error.error);
             })
         }
 
