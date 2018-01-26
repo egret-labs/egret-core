@@ -249,6 +249,13 @@ __decorate([
 var EgretLauncherProxy = (function () {
     function EgretLauncherProxy() {
     }
+    EgretLauncherProxy.prototype.getMinVersion = function () {
+        return {
+            getAllEngineVersions: '1.0.24',
+            getInstalledTools: '1.0.24',
+            getTarget: "1.0.45"
+        };
+    };
     EgretLauncherProxy.prototype.getEgretToolsInstalledByVersion = function (checkVersion) {
         var egretjs = this.getLauncherLibrary();
         var data = egretjs.getAllEngineVersions();
@@ -267,6 +274,7 @@ var EgretLauncherProxy = (function () {
     };
     EgretLauncherProxy.prototype.getLauncherLibrary = function () {
         var egretjspath = file.joinPath(getEgretLauncherPath(), "egret.js");
+        var minVersions = this.getMinVersion();
         var m = require(egretjspath);
         var selector = m.selector;
         if (!this.proxy) {
@@ -274,7 +282,8 @@ var EgretLauncherProxy = (function () {
                 get: function (target, p, receiver) {
                     var result = target[p];
                     if (!result) {
-                        throw "\u627E\u4E0D\u5230 Launcher API: " + p + ",\u8BF7\u5347\u7EA7\u6700\u65B0\u7684 Egret Launcher \u4EE5\u89E3\u51B3\u6B64\u95EE\u9898"; //i18n
+                        var minVersion = minVersions[p];
+                        throw "\u627E\u4E0D\u5230 LauncherAPI:" + p + ",\u8BF7\u5B89\u88C5\u6700\u65B0\u7684\u767D\u9E6D\u5F15\u64CE\u542F\u52A8\u5668\u5BA2\u6237\u7AEF\u89E3\u51B3\u6B64\u95EE\u9898,\u6700\u4F4E\u7248\u672C\u8981\u6C42:" + minVersion + ",\u4E0B\u8F7D\u5730\u5740:https://egret.com/products/engine.html"; //i18n
                     }
                     return result.bind(target);
                 }

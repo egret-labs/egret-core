@@ -122,7 +122,6 @@ function getTargetTemplateConfig() {
                         throw '找不到指定的目标模板 : ' + templatePath;
                     }
                     result.templatePath = path.join(templatePath, 'template');
-                    result.scriptPath = path.join(templatePath, "scripts");
                     return [2 /*return*/, result];
             }
         });
