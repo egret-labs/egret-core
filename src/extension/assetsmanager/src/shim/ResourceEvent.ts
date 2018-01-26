@@ -210,7 +210,7 @@ module RES {
 		 * @private
          */
 		public static dispatchResourceEvent(target: egret.IEventDispatcher, type: string,
-			groupName: string = "", resItem: ResourceItem | undefined = undefined, itemsLoaded: number = 0, itemsTotal: number = 0): boolean {
+			groupName: string = "", resItem: ResourceInfo | undefined = undefined, itemsLoaded: number = 0, itemsTotal: number = 0): boolean {
 			var event: ResourceEvent = egret.Event.create(ResourceEvent, type);
 			event.groupName = groupName;
 			if (resItem) {
