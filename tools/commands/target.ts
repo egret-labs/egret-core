@@ -2,17 +2,9 @@
 import * as path from 'path';
 import * as FileUtil from '../lib/FileUtil';
 import { checkEgret } from '../lib/utils';
+import { TargetTemplateConfig } from '../actions/TargetAction';
 
-type TargetTemplateConfig = {
 
-    templatePath: string;
-
-    scriptPath: string;
-
-    projectType: string;
-
-    args: { name: string, files: string[], default?: string }[]
-}
 
 
 class Target implements egret.Command {
@@ -83,7 +75,6 @@ async function getTargetTemplateConfig(): Promise<TargetTemplateConfig> {
         throw '找不到指定的目标模板 : ' + templatePath
     }
     result.templatePath = path.join(templatePath, 'template');
-    result.scriptPath = path.join(templatePath, "scripts");
     return result;
 }
 

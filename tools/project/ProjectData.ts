@@ -303,10 +303,21 @@ type LauncherAPI = {
 
     getInstalledTools(): { name: string, version: string, path: string }[];
 
-    getTargetRootByName(targetName: string): string
+    getTarget(targetName: string): string
 }
 
+type LauncherAPI_MinVersion = {[P in keyof LauncherAPI]: string }
+
 class EgretLauncherProxy {
+
+    getMinVersion(): LauncherAPI_MinVersion {
+
+        return {
+            getAllEngineVersions: '1.0.24',
+            getInstalledTools: '1.0.24',
+            getTarget: "1.0.45"
+        }
+    }
 
     private proxy: LauncherAPI;
 
@@ -328,6 +339,7 @@ class EgretLauncherProxy {
 
     getLauncherLibrary(): LauncherAPI {
         const egretjspath = file.joinPath(getEgretLauncherPath(), "egret.js");
+        const minVersions = this.getMinVersion();
         const m = require(egretjspath);
         const selector: LauncherAPI = m.selector;
         if (!this.proxy) {
@@ -335,7 +347,8 @@ class EgretLauncherProxy {
                 get: (target, p, receiver) => {
                     const result = target[p];
                     if (!result) {
-                        throw `找不到 Launcher API: ${p},请升级最新的 Egret Launcher 以解决此问题`//i18n
+                        const minVersion = minVersions[p];
+                        throw `找不到 LauncherAPI:${p},请安装最新的白鹭引擎启动器客户端解决此问题,最低版本要求:${minVersion},下载地址:https://egret.com/products/engine.html`//i18n
                     }
                     return result.bind(target)
                 }
