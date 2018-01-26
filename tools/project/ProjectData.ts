@@ -184,7 +184,7 @@ class EgretProjectData {
 
             const engineVersion = m.version || this.egretProperties.engineVersion
             if (engineVersion) {
-                const versions = engineData.getEgretToolsInstalledByVersion(engineVersion);
+                const versions = launcher.getEgretToolsInstalledByVersion(engineVersion);
                 return _path.join(versions, 'build', m.name);
             }
             return _path.join(egret.root, 'build', m.name);
@@ -302,24 +302,29 @@ type LauncherAPI = {
     getAllEngineVersions(): any
 
     getInstalledTools(): { name: string, version: string, path: string }[];
+
+    getTargetRootByName(targetName: string): string
 }
 
-class EngineData {
-
-    private versions: egret.VersionInfo[] = [];
-
+class EgretLauncherProxy {
 
     private proxy: LauncherAPI;
 
     getEgretToolsInstalledByVersion(checkVersion: string) {
-        for (let versionInfo of this.versions) {
+        const egretjs = this.getLauncherLibrary();
+        const data = egretjs.getAllEngineVersions() as any[];
+        const versions: { version: string, path: string }[] = [];
+        for (let key in data) {
+            const item = data[key];
+            versions.push({ version: item.version, path: item.root })
+        }
+        for (let versionInfo of versions) {
             if (versionInfo.version == checkVersion) {
                 return versionInfo.path;
             }
         }
         throw `找不到指定的 egret 版本: ${checkVersion}`;
     }
-
 
     getLauncherLibrary(): LauncherAPI {
         const egretjspath = file.joinPath(getEgretLauncherPath(), "egret.js");
@@ -337,16 +342,6 @@ class EngineData {
             });
         }
         return this.proxy;
-    }
-
-    async init() {
-
-        const egretjs = this.getLauncherLibrary();
-        const data = egretjs.getAllEngineVersions();
-        for (let item in data) {
-            const value = data[item];
-            this.versions.push({ version: value.version, path: value.root })
-        }
     }
 }
 
@@ -403,7 +398,9 @@ function getEgretLauncherPath() {
 
 }
 
+export var launcher = new EgretLauncherProxy();
+
 export var projectData = new EgretProjectData();
 
-export var engineData = new EngineData();
+
 

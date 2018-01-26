@@ -3187,35 +3187,43 @@
         }, t.ArraySet = r;
     }, function(e, t, n) {
         "use strict";
-        function r(e) {
+        function r(e, t) {
             return o(this, void 0, void 0, function() {
-                function t(e, t) {
+                function n(e, t) {
                     e.isDirty ? t(null, e) : t(null);
                 }
-                function n(e, t) {
+                function r(e, t) {
                     e.origin = e.relative.split("\\").join("/"), t(null, e);
                 }
-                var r, o, d, p, m, g, h, y, v, b;
+                var o, d, p, m, g, h, y, v, b, k;
                 return s(this, function(s) {
                     switch (s.label) {
                       case 0:
                         return [ 4, u.ResourceConfig.init(e.projectRoot, e) ];
 
                       case 1:
-                        for (r = s.sent(), o = u.ResourceConfig.userConfig, i = e.projectRoot, a = l.join(i, "resource/"), 
-                        _.init(e.projectRoot, a, e), "string" == typeof o.outputDir ? d = l.join(i, o.outputDir) : (p = o.outputDir, 
-                        d = function(e) {
-                            return l.join(i, p(e));
-                        }), m = e.matcher ? e.matcher : "resource/**/*.*", g = c.src(m, {
+                        return o = s.sent(), d = u.ResourceConfig.userConfig, i = e.projectRoot, a = l.join(i, "resource/"), 
+                        _.init(e.projectRoot, a, e), "string" == typeof d.outputDir ? p = l.join(i, d.outputDir) : (m = d.outputDir, 
+                        p = function(e) {
+                            return l.join(i, m(e));
+                        }), t ? [ 4, t({
+                            outputDir: p
+                        }) ] : [ 3, 3 ];
+
+                      case 2:
+                        s.sent(), s.label = 3;
+
+                      case 3:
+                        for (g = e.matcher ? e.matcher : "resource/**/*.*", h = c.src(g, {
                             cwd: i,
                             base: i
-                        }).pipe(f(n)), h = o.commands.map(function(e) {
-                            return _.createPlugin(e, d);
-                        }), "." == o.outputDir && h.push(f(t)), h.push(c.dest(d)), y = 0, v = h; y < v.length; y++) b = v[y], 
-                        g = g.pipe(b);
+                        }).pipe(f(r)), y = d.commands.map(function(e) {
+                            return _.createPlugin(e, p);
+                        }), "." == d.outputDir && y.push(f(n)), y.push(c.dest(p)), v = 0, b = y; v < b.length; v++) k = b[v], 
+                        h = h.pipe(k);
                         return [ 2, new Promise(function(e, t) {
-                            g.on("end", function() {
-                                e(g);
+                            h.on("end", function() {
+                                e(h);
                             });
                         }) ];
                     }

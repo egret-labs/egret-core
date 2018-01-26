@@ -57,7 +57,7 @@ var Run = (function () {
                     case 1:
                         exitCode = _b.sent();
                         target = egret.args.target;
-                        toolsList = project_1.engineData.getLauncherLibrary().getInstalledTools();
+                        toolsList = project_1.launcher.getLauncherLibrary().getInstalledTools();
                         _a = target;
                         switch (_a) {
                             case "web": return [3 /*break*/, 2];
