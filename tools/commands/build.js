@@ -46,6 +46,7 @@ var Compiler = require("../actions/Compiler");
 var tasks = require("../tasks");
 var path = require("path");
 var parseConfig = require("../actions/ParseConfig");
+var TargetAction_1 = require("../actions/TargetAction");
 console.log(utils.tr(1004, 0));
 var Build = (function () {
     function Build() {
@@ -79,7 +80,7 @@ var Build = (function () {
                         tasks.run();
                         target = egret.args.target;
                         projectConfig = parseConfig.parseConfig();
-                        return [4 /*yield*/, res.build({ projectRoot: projectRoot, debug: true, command: command, target: target, projectConfig: projectConfig })];
+                        return [4 /*yield*/, res.build({ projectRoot: projectRoot, debug: true, command: command, target: target, projectConfig: projectConfig }, TargetAction_1.buildBefore)];
                     case 1:
                         _a.sent();
                         return [2 /*return*/, 0];

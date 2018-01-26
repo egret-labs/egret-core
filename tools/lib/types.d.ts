@@ -103,10 +103,6 @@ declare module egret {
         path?: string;
     }
 
-    export type VersionInfo = {
-        version: string,
-        path: string;
-    }
 
     export type EgretProperty = {
         "engineVersion"?: string,

@@ -135,7 +135,7 @@ var TextureMergerPlugin = (function () {
 }());
 exports.TextureMergerPlugin = TextureMergerPlugin;
 function getTextureMergerPath() {
-    var toolsList = index_1.engineData.getLauncherLibrary().getInstalledTools();
+    var toolsList = index_1.launcher.getLauncherLibrary().getInstalledTools();
     var tm = toolsList.filter(function (m) {
         return m.name == "Texture Merger";
     })[0];

@@ -1,7 +1,7 @@
 import { Plugin, PluginContext, File } from "./index";
 import * as path from 'path';
 import { shell } from "../lib/utils";
-import { engineData } from "../project/index";
+import { launcher } from "../project/index";
 import { tmpdir } from "os";
 import * as FileUtil from '../lib/FileUtil';
 
@@ -101,10 +101,10 @@ export class TextureMergerPlugin implements Plugin {
 
 function getTextureMergerPath() {
 
-    const toolsList = engineData.getLauncherLibrary().getInstalledTools();
+    const toolsList = launcher.getLauncherLibrary().getInstalledTools();
     const tm = toolsList.filter(m => {
         return m.name == "Texture Merger";
-    })[0];
+    }) [0];
     if (!tm) {
         throw '请安装 Texture Merger'; //i18n
     }

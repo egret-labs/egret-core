@@ -6,6 +6,8 @@ import * as Compiler from '../actions/Compiler';
 import * as tasks from '../tasks';
 import * as path from 'path';
 import * as parseConfig from '../actions/ParseConfig'
+import { launcher } from '../project';
+import { buildBefore } from '../actions/TargetAction';
 
 console.log(utils.tr(1004, 0));
 
@@ -44,7 +46,7 @@ class Build implements egret.Command {
         tasks.run();
         const target = egret.args.target;
         const projectConfig = parseConfig.parseConfig();
-        await res.build({ projectRoot, debug: true, command, target, projectConfig });
+        await res.build({ projectRoot, debug: true, command, target, projectConfig }, buildBefore);
         return 0;
     }
 

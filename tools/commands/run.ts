@@ -10,7 +10,7 @@ import Server = require('../server/server');
 import FileUtil = require('../lib/FileUtil');
 import service = require('../service/index');
 import CompileProject = require('../actions/CompileProject');
-import { engineData, projectData } from '../project';
+import { launcher, projectData } from '../project';
 import * as os from 'os';
 
 class Run implements egret.Command {
@@ -19,7 +19,7 @@ class Run implements egret.Command {
     async execute() {
         const exitCode = await new Build().execute();
         const target = egret.args.target;
-        const toolsList = engineData.getLauncherLibrary().getInstalledTools();
+        const toolsList = launcher.getLauncherLibrary().getInstalledTools();
 
         switch (target) {
             case "web":
