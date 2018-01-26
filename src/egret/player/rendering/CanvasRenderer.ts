@@ -197,20 +197,24 @@ namespace egret {
                 }
             }
             let displayBounds = displayObject.$getOriginalBounds();
-            if (displayBounds.width <= 0 || displayBounds.height <= 0) {
+            const displayBoundsX = displayBounds.x;
+            const displayBoundsY = displayBounds.y;
+            const displayBoundsWidth = displayBounds.width;
+            const displayBoundsHeight = displayBounds.height;
+            if (displayBoundsWidth <= 0 || displayBoundsHeight <= 0) {
                 return drawCalls;
             }
             // 为显示对象创建一个新的buffer
-            let displayBuffer = this.createRenderBuffer(displayBounds.width - displayBounds.x, displayBounds.height - displayBounds.y, true);
+            let displayBuffer = this.createRenderBuffer(displayBoundsWidth - displayBoundsX, displayBoundsHeight - displayBoundsY, true);
             let displayContext = displayBuffer.context;
             if (displayObject.$mask) {
-                drawCalls += this.drawWithClip(displayObject, displayContext, -displayBounds.x, -displayBounds.y);
+                drawCalls += this.drawWithClip(displayObject, displayContext, -displayBoundsX, -displayBoundsY);
             }
             else if (displayObject.$scrollRect || displayObject.$maskRect) {
-                drawCalls += this.drawWithScrollRect(displayObject, displayContext, -displayBounds.x, -displayBounds.y);
+                drawCalls += this.drawWithScrollRect(displayObject, displayContext, -displayBoundsX, -displayBoundsY);
             }
             else {
-                drawCalls += this.drawDisplayObject(displayObject, displayContext, -displayBounds.x, -displayBounds.y);
+                drawCalls += this.drawDisplayObject(displayObject, displayContext, -displayBoundsX, -displayBoundsY);
             }
 
             //绘制结果到屏幕
@@ -247,7 +251,7 @@ namespace egret {
                 displayContext.putImageData(imageData, 0, 0);
                 context.globalAlpha = 1;
                 // 绘制结果的时候，应用滤镜
-                context.drawImage(displayBuffer.surface, offsetX + displayBounds.x, offsetY + displayBounds.y);
+                context.drawImage(displayBuffer.surface, offsetX + displayBoundsX, offsetY + displayBoundsY);
                 if (hasBlendMode) {
                     context.globalCompositeOperation = defaultCompositeOp;
                 }
@@ -331,20 +335,24 @@ namespace egret {
 
             //绘制显示对象自身，若有scrollRect，应用clip
             let displayBounds = displayObject.$getOriginalBounds();
-            let displayBuffer = this.createRenderBuffer(displayBounds.width, displayBounds.height);
+            const displayBoundsX = displayBounds.x;
+            const displayBoundsY = displayBounds.y;
+            const displayBoundsWidth = displayBounds.width;
+            const displayBoundsHeight = displayBounds.height;
+            let displayBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
             let displayContext: CanvasRenderingContext2D = displayBuffer.context;
             if (!displayContext) {//RenderContext创建失败，放弃绘制遮罩。
                 drawCalls += this.drawDisplayObject(displayObject, context, offsetX, offsetY);
                 return drawCalls;
             }
 
-            drawCalls += this.drawDisplayObject(displayObject, displayContext, -displayBounds.x, -displayBounds.y);
+            drawCalls += this.drawDisplayObject(displayObject, displayContext, -displayBoundsX, -displayBoundsY);
             //绘制遮罩
             if (mask) {
                 let maskMatrix = Matrix.create();
                 maskMatrix.copyFrom(mask.$getConcatenatedMatrix());
                 mask.$getConcatenatedMatrixAt(displayObject, maskMatrix);
-                maskMatrix.translate(-displayBounds.x, -displayBounds.y);
+                maskMatrix.translate(-displayBoundsX, -displayBoundsY);
                 //如果只有一次绘制或是已经被cache直接绘制到displayContext
                 if (maskRenderNode && maskRenderNode.$getRenderCount() == 1 || mask.$displayList) {
                     displayContext.globalCompositeOperation = "destination-in";
@@ -354,7 +362,7 @@ namespace egret {
                     displayContext.restore();
                 }
                 else {
-                    let maskBuffer = this.createRenderBuffer(displayBounds.width, displayBounds.height);
+                    let maskBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
                     let maskContext = maskBuffer.context;
                     maskContext.setTransform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
                     drawCalls += this.drawDisplayObject(mask, maskContext, 0, 0);
@@ -379,7 +387,7 @@ namespace egret {
                     context.clip();
                 }
                 context.globalAlpha = 1;
-                context.drawImage(<any>displayBuffer.surface, offsetX + displayBounds.x, offsetY + displayBounds.y);
+                context.drawImage(<any>displayBuffer.surface, offsetX + displayBoundsX, offsetY + displayBoundsY);
                 if (scrollRect) {
                     context.restore();
                 }

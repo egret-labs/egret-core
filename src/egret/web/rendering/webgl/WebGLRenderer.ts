@@ -229,8 +229,12 @@ namespace egret.web {
                 }
             }
 
-            let displayBounds = displayObject.$getOriginalBounds();
-            if (displayBounds.width <= 0 || displayBounds.height <= 0) {
+            const displayBounds = displayObject.$getOriginalBounds();
+            const displayBoundsX = displayBounds.x;
+            const displayBoundsY = displayBounds.y;
+            const displayBoundsWidth = displayBounds.width;
+            const displayBoundsHeight = displayBounds.height;
+            if (displayBoundsWidth <= 0 || displayBoundsHeight <= 0) {
                 return drawCalls;
             }
 
@@ -263,18 +267,18 @@ namespace egret.web {
             }
 
             // 为显示对象创建一个新的buffer
-            let displayBuffer = this.createRenderBuffer(displayBounds.width, displayBounds.height);
+            let displayBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
             displayBuffer.context.pushBuffer(displayBuffer);
 
             //todo 可以优化减少draw次数
             if (displayObject.$mask) {
-                drawCalls += this.drawWithClip(displayObject, displayBuffer, -displayBounds.x, -displayBounds.y);
+                drawCalls += this.drawWithClip(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
             }
             else if (displayObject.$scrollRect || displayObject.$maskRect) {
-                drawCalls += this.drawWithScrollRect(displayObject, displayBuffer, -displayBounds.x, -displayBounds.y);
+                drawCalls += this.drawWithScrollRect(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
             }
             else {
-                drawCalls += this.drawDisplayObject(displayObject, displayBuffer, -displayBounds.x, -displayBounds.y);
+                drawCalls += this.drawDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
             }
 
             displayBuffer.context.popBuffer();
@@ -286,8 +290,8 @@ namespace egret.web {
                 }
                 drawCalls++;
                 // 绘制结果的时候，应用滤镜
-                buffer.$offsetX = offsetX + displayBounds.x;
-                buffer.$offsetY = offsetY + displayBounds.y;
+                buffer.$offsetX = offsetX + displayBoundsX;
+                buffer.$offsetY = offsetY + displayBoundsY;
                 let savedMatrix = Matrix.create();
                 let curMatrix = buffer.globalMatrix;
                 savedMatrix.a = curMatrix.a;
@@ -373,18 +377,22 @@ namespace egret.web {
             }
             else {
                 let displayBounds = displayObject.$getOriginalBounds();
+                const displayBoundsX = displayBounds.x;
+                const displayBoundsY = displayBounds.y;
+                const displayBoundsWidth = displayBounds.width;
+                const displayBoundsHeight = displayBounds.height;
                 //绘制显示对象自身，若有scrollRect，应用clip
-                let displayBuffer = this.createRenderBuffer(displayBounds.width, displayBounds.height);
+                let displayBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
                 displayBuffer.context.pushBuffer(displayBuffer);
-                drawCalls += this.drawDisplayObject(displayObject, displayBuffer, -displayBounds.x, -displayBounds.y);
+                drawCalls += this.drawDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
                 //绘制遮罩
                 if (mask) {
-                    let maskBuffer = this.createRenderBuffer(displayBounds.width, displayBounds.height);
+                    let maskBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
                     maskBuffer.context.pushBuffer(maskBuffer);
                     let maskMatrix = Matrix.create();
                     maskMatrix.copyFrom(mask.$getConcatenatedMatrix());
                     mask.$getConcatenatedMatrixAt(displayObject, maskMatrix);
-                    maskMatrix.translate(-displayBounds.x, -displayBounds.y);
+                    maskMatrix.translate(-displayBoundsX, -displayBoundsY);
                     maskBuffer.setTransform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
                     Matrix.release(maskMatrix);
                     drawCalls += this.drawDisplayObject(mask, maskBuffer, 0, 0);
@@ -422,7 +430,7 @@ namespace egret.web {
                     savedMatrix.d = curMatrix.d;
                     savedMatrix.tx = curMatrix.tx;
                     savedMatrix.ty = curMatrix.ty;
-                    curMatrix.append(1, 0, 0, -1, offsetX + displayBounds.x, offsetY + displayBounds.y + displayBuffer.height);
+                    curMatrix.append(1, 0, 0, -1, offsetX + displayBoundsX, offsetY + displayBoundsY + displayBuffer.height);
                     let displayBufferWidth = displayBuffer.rootRenderTarget.width;
                     let displayBufferHeight = displayBuffer.rootRenderTarget.height;
                     buffer.context.drawTexture(displayBuffer.rootRenderTarget.texture, 0, 0, displayBufferWidth, displayBufferHeight,
