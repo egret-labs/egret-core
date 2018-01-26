@@ -15625,20 +15625,24 @@ var egret;
                 }
             }
             var displayBounds = displayObject.$getOriginalBounds();
-            if (displayBounds.width <= 0 || displayBounds.height <= 0) {
+            var displayBoundsX = displayBounds.x;
+            var displayBoundsY = displayBounds.y;
+            var displayBoundsWidth = displayBounds.width;
+            var displayBoundsHeight = displayBounds.height;
+            if (displayBoundsWidth <= 0 || displayBoundsHeight <= 0) {
                 return drawCalls;
             }
             // 为显示对象创建一个新的buffer
-            var displayBuffer = this.createRenderBuffer(displayBounds.width - displayBounds.x, displayBounds.height - displayBounds.y, true);
+            var displayBuffer = this.createRenderBuffer(displayBoundsWidth - displayBoundsX, displayBoundsHeight - displayBoundsY, true);
             var displayContext = displayBuffer.context;
             if (displayObject.$mask) {
-                drawCalls += this.drawWithClip(displayObject, displayContext, -displayBounds.x, -displayBounds.y);
+                drawCalls += this.drawWithClip(displayObject, displayContext, -displayBoundsX, -displayBoundsY);
             }
             else if (displayObject.$scrollRect || displayObject.$maskRect) {
-                drawCalls += this.drawWithScrollRect(displayObject, displayContext, -displayBounds.x, -displayBounds.y);
+                drawCalls += this.drawWithScrollRect(displayObject, displayContext, -displayBoundsX, -displayBoundsY);
             }
             else {
-                drawCalls += this.drawDisplayObject(displayObject, displayContext, -displayBounds.x, -displayBounds.y);
+                drawCalls += this.drawDisplayObject(displayObject, displayContext, -displayBoundsX, -displayBoundsY);
             }
             //绘制结果到屏幕
             if (drawCalls > 0) {
@@ -15676,7 +15680,7 @@ var egret;
                 displayContext.putImageData(imageData, 0, 0);
                 context.globalAlpha = 1;
                 // 绘制结果的时候，应用滤镜
-                context.drawImage(displayBuffer.surface, offsetX + displayBounds.x, offsetY + displayBounds.y);
+                context.drawImage(displayBuffer.surface, offsetX + displayBoundsX, offsetY + displayBoundsY);
                 if (hasBlendMode) {
                     context.globalCompositeOperation = defaultCompositeOp;
                 }
@@ -15753,19 +15757,23 @@ var egret;
             //todo 若显示对象是容器，同时子项有混合模式，则需要先绘制背景到displayBuffer并清除背景区域
             //绘制显示对象自身，若有scrollRect，应用clip
             var displayBounds = displayObject.$getOriginalBounds();
-            var displayBuffer = this.createRenderBuffer(displayBounds.width, displayBounds.height);
+            var displayBoundsX = displayBounds.x;
+            var displayBoundsY = displayBounds.y;
+            var displayBoundsWidth = displayBounds.width;
+            var displayBoundsHeight = displayBounds.height;
+            var displayBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
             var displayContext = displayBuffer.context;
             if (!displayContext) {
                 drawCalls += this.drawDisplayObject(displayObject, context, offsetX, offsetY);
                 return drawCalls;
             }
-            drawCalls += this.drawDisplayObject(displayObject, displayContext, -displayBounds.x, -displayBounds.y);
+            drawCalls += this.drawDisplayObject(displayObject, displayContext, -displayBoundsX, -displayBoundsY);
             //绘制遮罩
             if (mask) {
                 var maskMatrix = egret.Matrix.create();
                 maskMatrix.copyFrom(mask.$getConcatenatedMatrix());
                 mask.$getConcatenatedMatrixAt(displayObject, maskMatrix);
-                maskMatrix.translate(-displayBounds.x, -displayBounds.y);
+                maskMatrix.translate(-displayBoundsX, -displayBoundsY);
                 //如果只有一次绘制或是已经被cache直接绘制到displayContext
                 if (maskRenderNode && maskRenderNode.$getRenderCount() == 1 || mask.$displayList) {
                     displayContext.globalCompositeOperation = "destination-in";
@@ -15775,7 +15783,7 @@ var egret;
                     displayContext.restore();
                 }
                 else {
-                    var maskBuffer = this.createRenderBuffer(displayBounds.width, displayBounds.height);
+                    var maskBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
                     var maskContext = maskBuffer.context;
                     maskContext.setTransform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
                     drawCalls += this.drawDisplayObject(mask, maskContext, 0, 0);
@@ -15799,7 +15807,7 @@ var egret;
                     context.clip();
                 }
                 context.globalAlpha = 1;
-                context.drawImage(displayBuffer.surface, offsetX + displayBounds.x, offsetY + displayBounds.y);
+                context.drawImage(displayBuffer.surface, offsetX + displayBoundsX, offsetY + displayBoundsY);
                 if (scrollRect) {
                     context.restore();
                 }

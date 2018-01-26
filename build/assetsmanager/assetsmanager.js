@@ -411,6 +411,8 @@ var RES;
             this.reporterDic = {};
             this.dispatcherDic = {};
             this.failedList = new Array();
+            this.loadItemErrorDic = {};
+            this.errorDic = {};
             this.loadingCount = 0;
             this.thread = 4;
             this.queueIndex = 0;
@@ -419,7 +421,10 @@ var RES;
             var total = list.length;
             for (var i = 0; i < total; i++) {
                 var resInfo = list[i];
-                resInfo.groupName = groupName;
+                if (!resInfo.groupNames) {
+                    resInfo.groupNames = [];
+                }
+                resInfo.groupNames.push(groupName);
             }
             this.itemListDic[groupName] = list;
             this.groupTotalDic[groupName] = list.length;
@@ -433,7 +438,9 @@ var RES;
             this.dispatcherDic[groupName] = dispatcher;
             var promise = new Promise(function (reslove, reject) {
                 dispatcher.addEventListener("complete", reslove, null);
-                dispatcher.addEventListener("error", reject, null);
+                dispatcher.addEventListener("error", function (e) {
+                    reject(e.data);
+                }, null);
             });
             this.next();
             return promise;
@@ -449,7 +456,10 @@ var RES;
                     .then(function (response) {
                     _this.loadingCount--;
                     RES.host.save(r, response);
-                    var groupName = r.groupName;
+                    var groupName = r.groupNames.shift();
+                    if (r.groupNames.length == 0) {
+                        r.groupNames = undefined;
+                    }
                     var reporter = _this.reporterDic[groupName];
                     _this.numLoadedDic[groupName]++;
                     var current = _this.numLoadedDic[groupName];
@@ -466,19 +476,57 @@ var RES;
                         delete _this.groupErrorDic[groupName];
                         var dispatcher = _this.dispatcherDic[groupName];
                         if (groupError) {
-                            dispatcher.dispatchEventWith("error");
+                            var itemList = _this.loadItemErrorDic[groupName];
+                            delete _this.loadItemErrorDic[groupName];
+                            var error = _this.errorDic[groupName];
+                            delete _this.errorDic[groupName];
+                            dispatcher.dispatchEventWith("error", false, { itemList: itemList, error: error });
                         }
                         else {
                             dispatcher.dispatchEventWith("complete");
                         }
                     }
                     _this.next();
-                }).catch(function () {
+                }).catch(function (error) {
                     _this.loadingCount--;
                     delete RES.host.state[r.name];
                     var times = _this.retryTimesDic[r.name] || 1;
                     if (times > _this.maxRetryTimes) {
                         delete _this.retryTimesDic[r.name];
+                        var groupName = r.groupNames.shift();
+                        if (r.groupNames.length == 0) {
+                            delete r.groupNames;
+                        }
+                        if (!_this.loadItemErrorDic[groupName]) {
+                            _this.loadItemErrorDic[groupName] = [];
+                        }
+                        if (_this.loadItemErrorDic[groupName].indexOf(r) == -1) {
+                            _this.loadItemErrorDic[groupName].push(r);
+                        }
+                        _this.groupErrorDic[groupName] = true;
+                        var reporter = _this.reporterDic[groupName];
+                        _this.numLoadedDic[groupName]++;
+                        var current = _this.numLoadedDic[groupName];
+                        var total = _this.groupTotalDic[groupName];
+                        if (reporter && reporter.onProgress) {
+                            reporter.onProgress(current, total);
+                        }
+                        if (current == total) {
+                            var groupError = _this.groupErrorDic[groupName];
+                            _this.removeGroupName(groupName);
+                            delete _this.groupTotalDic[groupName];
+                            delete _this.numLoadedDic[groupName];
+                            delete _this.itemListDic[groupName];
+                            delete _this.groupErrorDic[groupName];
+                            var itemList = _this.loadItemErrorDic[groupName];
+                            delete _this.loadItemErrorDic[groupName];
+                            var dispatcher = _this.dispatcherDic[groupName];
+                            dispatcher.dispatchEventWith("error", false, { itemList: itemList, error: error });
+                        }
+                        else {
+                            _this.errorDic[groupName] = error;
+                        }
+                        _this.next();
                     }
                     else {
                         _this.retryTimesDic[r.name] = times + 1;
@@ -1886,7 +1934,7 @@ var RES;
          */
         ResourceItem.TYPE_SOUND = "sound";
         function convertToResItem(r) {
-            var name = "";
+            var name = r.name;
             if (!RES.config.config) {
                 name = r.url;
             }
@@ -2430,8 +2478,15 @@ var RES;
             return this._loadGroup(name, priority, reporterDelegate).then(function (data) {
                 RES.ResourceEvent.dispatchResourceEvent(_this, RES.ResourceEvent.GROUP_COMPLETE, name);
             }, function (error) {
+                var itemList = error.itemList;
+                var length = itemList.length;
+                for (var i = 0; i < length; i++) {
+                    var item = itemList[i];
+                    delete item.promise;
+                    RES.ResourceEvent.dispatchResourceEvent(_this, RES.ResourceEvent.ITEM_LOAD_ERROR, name, item);
+                }
                 RES.ResourceEvent.dispatchResourceEvent(_this, RES.ResourceEvent.GROUP_LOAD_ERROR, name);
-                return Promise.reject(error);
+                return Promise.reject(error.error);
             });
         };
         Resource.prototype._loadGroup = function (name, priority, reporter) {
