@@ -218,8 +218,12 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public endFill():void {
-            this.fillPath = null;
+        public endFill(fillRule?:CanvasFillRule):void {
+            let fillPath = this.fillPath;
+            if(fillPath){
+                fillPath.fillRule = fillRule;
+                this.fillPath = null;
+            }
         }
 
         /**

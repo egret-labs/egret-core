@@ -87,6 +87,14 @@ namespace egret.sys {
         public $lastY:number = 0;
 
         /**
+         * 填充方式  
+         * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fill
+         * * "nonzero": [The non-zero winding rule](https://en.wikipedia.org/wiki/Nonzero-rule), which is the default rule.
+         * * "evenodd": [The even-odd winding rule](https://en.wikipedia.org/wiki/Even%E2%80%93odd_rule).
+         */
+        fillRule?:CanvasFillRule;
+
+        /**
          * 将当前绘图位置移动到 (x, y)。如果缺少任何一个参数，则此方法将失败，并且当前绘图位置不改变。
          * @param x 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
          * @param y 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。

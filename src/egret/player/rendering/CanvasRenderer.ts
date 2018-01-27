@@ -1023,16 +1023,17 @@ namespace egret {
             forHitTest = !!forHitTest;
             for (let i = 0; i < length; i++) {
                 let path: sys.Path2D = drawData[i];
+                let rule = path.fillRule;
                 switch (path.type) {
                     case sys.PathType.Fill:
                         let fillPath = <sys.FillPath>path;
                         context.fillStyle = forHitTest ? BLACK_COLOR : getRGBAString(fillPath.fillColor, fillPath.fillAlpha);
                         this.renderPath(path, context);
                         if (this.renderingMask) {
-                            context.clip();
+                            context.clip(rule);
                         }
                         else {
-                            context.fill();
+                            context.fill(rule);
                         }
                         break;
                     case sys.PathType.GradientFill:
@@ -1042,7 +1043,7 @@ namespace egret {
                         let m = g.matrix;
                         this.renderPath(path, context);
                         context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-                        context.fill();
+                        context.fill(rule);
                         context.restore();
                         break;
                     case sys.PathType.Stroke:
