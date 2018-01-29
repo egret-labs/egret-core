@@ -67,6 +67,7 @@
 * 修复 eui 虚拟布局可能创建过多对象问题（感谢开发者 IT学思想）
 * 修复 egret.ByteArray.readBytes 函数会导致 bytesAvailable 异常问题（感谢开发者 efei731）
 * 修复 eui.BitmapLabel 重复设置font因为异步加载会导致字体错乱问题（感谢开发者 lava-hammer）
+* 修复设置滤镜的显示对象渲染会出现偏移问题（感谢 猪来了 研发团队）
 
 ## 命令行
 
