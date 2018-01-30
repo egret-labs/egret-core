@@ -266,10 +266,7 @@ namespace egret {
                 alpha = +alpha || 0;
                 miterLimit = +miterLimit || 0;
                 this.setStrokeWidth(thickness);
-                this.strokePath = this.$renderNode.lineStyle(thickness, color, alpha, caps, joints, miterLimit);
-                if(lineDash) {
-                    this.strokePath.setLineDash(lineDash);
-                }
+                this.strokePath = this.$renderNode.lineStyle(thickness, color, alpha, caps, joints, miterLimit, lineDash);
                 if (this.$renderNode.drawData.length > 1) {
                     this.strokePath.moveTo(this.lastX, this.lastY);
                 }

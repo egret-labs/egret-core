@@ -3628,7 +3628,6 @@ declare namespace egret.sys {
         LineTo = 2,
         CurveTo = 3,
         CubicCurveTo = 4,
-        SetLineDash = 5,
     }
     /**
      * @private
@@ -9561,7 +9560,7 @@ declare namespace egret.sys {
          * @param joints 指定用于拐角的连接外观的类型。默认值：JointStyle.ROUND
          * @param miterLimit 用于表示剪切斜接的极限值的数字。
          */
-        lineStyle(thickness?: number, color?: number, alpha?: number, caps?: string, joints?: string, miterLimit?: number): StrokePath;
+        lineStyle(thickness?: number, color?: number, alpha?: number, caps?: string, joints?: string, miterLimit?: number, lineDash?: number[]): StrokePath;
         /**
          * 清空所有缓存的绘制数据
          */
@@ -10020,7 +10019,10 @@ declare namespace egret.sys {
          * 用于表示剪切斜接的极限值的数字。
          */
         miterLimit: number;
-        setLineDash(segments: number[]): void;
+        /**
+         * 描述交替绘制线段和间距（坐标空间单位）长度的数字。
+         */
+        lineDash: number[];
     }
 }
 /**

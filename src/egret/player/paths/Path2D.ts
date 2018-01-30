@@ -55,8 +55,7 @@ namespace egret.sys {
         MoveTo = 1,
         LineTo,
         CurveTo,
-        CubicCurveTo,
-        SetLineDash
+        CubicCurveTo
     }
 
     /**
