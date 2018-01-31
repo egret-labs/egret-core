@@ -770,93 +770,6 @@ var RES;
 })(RES || (RES = {}));
 var RES;
 (function (RES) {
-    var NewFileSystem = (function () {
-        function NewFileSystem(data) {
-            this.data = data;
-        }
-        NewFileSystem.prototype.profile = function () {
-            console.log(this.data);
-        };
-        NewFileSystem.prototype.addFile = function (filename, type) {
-            if (!type)
-                type = "";
-            filename = this.normalize(filename);
-            var basefilename = this.basename(filename);
-            var folder = this.dirname(filename);
-            if (!this.exists(folder)) {
-                this.mkdir(folder);
-            }
-            var d = this.reslove(folder);
-            d[basefilename] = { url: filename, type: type };
-        };
-        NewFileSystem.prototype.getFile = function (filename) {
-            var result = this.reslove(filename);
-            if (result) {
-                result.name = filename;
-            }
-            return result;
-        };
-        NewFileSystem.prototype.basename = function (filename) {
-            return filename.substr(filename.lastIndexOf("/") + 1);
-        };
-        NewFileSystem.prototype.normalize = function (filename) {
-            return filename.split("/").filter(function (d) { return !!d; }).join("/");
-        };
-        NewFileSystem.prototype.dirname = function (path) {
-            return path.substr(0, path.lastIndexOf("/"));
-        };
-        NewFileSystem.prototype.reslove = function (dirpath) {
-            if (dirpath == "") {
-                return this.data;
-            }
-            dirpath = this.normalize(dirpath);
-            var list = dirpath.split("/");
-            var current = this.data;
-            for (var _i = 0, list_1 = list; _i < list_1.length; _i++) {
-                var f = list_1[_i];
-                if (current) {
-                    current = current[f];
-                }
-                else {
-                    return current;
-                }
-            }
-            return current;
-        };
-        NewFileSystem.prototype.mkdir = function (dirpath) {
-            dirpath = this.normalize(dirpath);
-            var list = dirpath.split("/");
-            var current = this.data;
-            for (var _i = 0, list_2 = list; _i < list_2.length; _i++) {
-                var f = list_2[_i];
-                if (!current[f]) {
-                    current[f] = {};
-                }
-                current = current[f];
-            }
-        };
-        NewFileSystem.prototype.exists = function (dirpath) {
-            if (dirpath == "")
-                return true;
-            dirpath = this.normalize(dirpath);
-            var list = dirpath.split("/");
-            var current = this.data;
-            for (var _i = 0, list_3 = list; _i < list_3.length; _i++) {
-                var f = list_3[_i];
-                if (!current[f]) {
-                    return false;
-                }
-                current = current[f];
-            }
-            return true;
-        };
-        return NewFileSystem;
-    }());
-    RES.NewFileSystem = NewFileSystem;
-    __reflect(NewFileSystem.prototype, "RES.NewFileSystem");
-})(RES || (RES = {}));
-var RES;
-(function (RES) {
     var processor;
     (function (processor_1) {
         function isSupport(resource) {
@@ -1074,7 +987,7 @@ var RES;
                             case 0: return [4 /*yield*/, host.load(resource, "json")];
                             case 1:
                                 data = _a.sent();
-                                imagePath = RES.config.resourceRoot + "/" + getRelativePath(resource.url, data.file);
+                                imagePath = RES.config.resourceRoot + getRelativePath(resource.url, data.file);
                                 r = host.resourceConfig.getResource(data.file);
                                 if (!r) {
                                     r = { name: imagePath, url: imagePath, extra: true, type: 'image' };
@@ -1160,10 +1073,10 @@ var RES;
                                 r = host.resourceConfig.getResource(imageFileName);
                                 if (!r) {
                                     if (typeof config === 'string') {
-                                        imageFileName = RES.config.resourceRoot + "/" + fontGetTexturePath(resource.url, config);
+                                        imageFileName = RES.config.resourceRoot + fontGetTexturePath(resource.url, config);
                                     }
                                     else {
-                                        imageFileName = RES.config.resourceRoot + "/" + getRelativePath(resource.url, config.file);
+                                        imageFileName = RES.config.resourceRoot + getRelativePath(resource.url, config.file);
                                     }
                                     r = { name: imageFileName, url: imageFileName, extra: true, type: 'image' };
                                 }
@@ -1565,6 +1478,84 @@ var RES;
         };
     })(processor = RES.processor || (RES.processor = {}));
 })(RES || (RES = {}));
+var RES;
+(function (RES) {
+    var NewFileSystem = (function () {
+        function NewFileSystem(data) {
+            this.data = data;
+        }
+        NewFileSystem.prototype.profile = function () {
+            console.log(this.data);
+        };
+        NewFileSystem.prototype.addFile = function (filename, type) {
+            if (!type)
+                type = "";
+            filename = RES.path.normalize(filename);
+            var basefilename = RES.path.basename(filename);
+            var folder = RES.path.dirname(filename);
+            if (!this.exists(folder)) {
+                this.mkdir(folder);
+            }
+            var d = this.reslove(folder);
+            d[basefilename] = { url: filename, type: type };
+        };
+        NewFileSystem.prototype.getFile = function (filename) {
+            var result = this.reslove(filename);
+            if (result) {
+                result.name = filename;
+            }
+            return result;
+        };
+        NewFileSystem.prototype.reslove = function (dirpath) {
+            if (dirpath == "") {
+                return this.data;
+            }
+            dirpath = RES.path.normalize(dirpath);
+            var list = dirpath.split("/");
+            var current = this.data;
+            for (var _i = 0, list_1 = list; _i < list_1.length; _i++) {
+                var f = list_1[_i];
+                if (current) {
+                    current = current[f];
+                }
+                else {
+                    return current;
+                }
+            }
+            return current;
+        };
+        NewFileSystem.prototype.mkdir = function (dirpath) {
+            dirpath = RES.path.normalize(dirpath);
+            var list = dirpath.split("/");
+            var current = this.data;
+            for (var _i = 0, list_2 = list; _i < list_2.length; _i++) {
+                var f = list_2[_i];
+                if (!current[f]) {
+                    current[f] = {};
+                }
+                current = current[f];
+            }
+        };
+        NewFileSystem.prototype.exists = function (dirpath) {
+            if (dirpath == "")
+                return true;
+            dirpath = RES.path.normalize(dirpath);
+            var list = dirpath.split("/");
+            var current = this.data;
+            for (var _i = 0, list_3 = list; _i < list_3.length; _i++) {
+                var f = list_3[_i];
+                if (!current[f]) {
+                    return false;
+                }
+                current = current[f];
+            }
+            return true;
+        };
+        return NewFileSystem;
+    }());
+    RES.NewFileSystem = NewFileSystem;
+    __reflect(NewFileSystem.prototype, "RES.NewFileSystem");
+})(RES || (RES = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -1958,6 +1949,22 @@ var RES;
 })(RES || (RES = {}));
 var RES;
 (function (RES) {
+    var path;
+    (function (path_1) {
+        path_1.normalize = function (filename) {
+            var arr = filename.split("/");
+            return arr.filter(function (value, index) { return !!value || index == arr.length - 1; }).join("/");
+        };
+        path_1.basename = function (filename) {
+            return filename.substr(filename.lastIndexOf("/") + 1);
+        };
+        path_1.dirname = function (path) {
+            return path.substr(0, path.lastIndexOf("/"));
+        };
+    })(path = RES.path || (RES.path = {}));
+})(RES || (RES = {}));
+var RES;
+(function (RES) {
     var versionInfo;
     /**
      * @internal
@@ -2068,7 +2075,7 @@ var RES;
         }
         if (!instance)
             instance = new Resource();
-        RES.config.resourceRoot = resourceRoot;
+        RES.config.resourceRoot = RES.path.normalize(resourceRoot + "/");
         return instance.loadConfig();
     }
     RES.loadConfig = loadConfig;

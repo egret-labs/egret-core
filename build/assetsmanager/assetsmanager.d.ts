@@ -211,35 +211,6 @@ declare module RES {
         function setUpgradeGuideLevel(level: "warning" | "silent"): void;
     }
 }
-declare module RES {
-    interface File {
-        url: string;
-        type: string;
-        name: string;
-    }
-    interface Dictionary {
-        [file: string]: File | Dictionary;
-    }
-    interface FileSystem {
-        addFile(filename: string, type?: string): any;
-        getFile(filename: string): File | null;
-        profile(): void;
-    }
-    class NewFileSystem {
-        private data;
-        constructor(data: Dictionary);
-        profile(): void;
-        addFile(filename: string, type?: string): void;
-        getFile(filename: string): File | null;
-        private basename(filename);
-        private normalize(filename);
-        private dirname(path);
-        private reslove(dirpath);
-        private mkdir(dirpath);
-        private exists(dirpath);
-    }
-    var fileSystem: FileSystem;
-}
 declare module RES.processor {
     interface Processor {
         onLoadStart(host: ProcessHost, resource: ResourceInfo): Promise<any>;
@@ -266,6 +237,32 @@ declare module RES.processor {
     const _map: {
         [index: string]: Processor;
     };
+}
+declare module RES {
+    interface File {
+        url: string;
+        type: string;
+        name: string;
+    }
+    interface Dictionary {
+        [file: string]: File | Dictionary;
+    }
+    interface FileSystem {
+        addFile(filename: string, type?: string): any;
+        getFile(filename: string): File | null;
+        profile(): void;
+    }
+    class NewFileSystem {
+        private data;
+        constructor(data: Dictionary);
+        profile(): void;
+        addFile(filename: string, type?: string): void;
+        getFile(filename: string): File | null;
+        private reslove(dirpath);
+        private mkdir(dirpath);
+        private exists(dirpath);
+    }
+    var fileSystem: FileSystem;
 }
 declare module RES {
     /**
@@ -610,6 +607,13 @@ declare module RES {
         crc32?: string;
         size?: number;
         soundType?: string;
+    }
+}
+declare namespace RES {
+    namespace path {
+        const normalize: (filename: string) => string;
+        const basename: (filename: string) => string;
+        const dirname: (path: string) => string;
     }
 }
 declare namespace RES {
