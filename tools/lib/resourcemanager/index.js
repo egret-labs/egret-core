@@ -3207,7 +3207,8 @@
                         p = function(e) {
                             return l.join(i, m(e));
                         }), t ? [ 4, t({
-                            outputDir: p
+                            outputDir: p,
+                            buildConfig: e
                         }) ] : [ 3, 3 ];
 
                       case 2:

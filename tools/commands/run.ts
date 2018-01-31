@@ -139,31 +139,30 @@ class Run implements egret.Command {
         return js["egret_version"];
     }
 
-    __tempP: string;
+
+
     private wrapByParams(url: string): string {
-        if (!this.__tempP) {
-            this.__tempP = this.genParams();
-        }
-        return url + this.__tempP;
+        return url + this.genParams();
     }
 
-    private genParams(): string {
-        var ret: string = "";
-        var propertyFilePath = FileUtil.joinPath(egret.args.projectDir, "egretProperties.json");
+    @utils.cache
+    private genParams() {
+        let result = "";
+        let propertyFilePath = FileUtil.joinPath(egret.args.projectDir, "egretProperties.json");
         if (FileUtil.exists(propertyFilePath)) {
-            var urlParams = JSON.parse(FileUtil.read(propertyFilePath)).urlParams;
+            let urlParams = JSON.parse(FileUtil.read(propertyFilePath)).urlParams;
             if (urlParams) {
-                var hasParams: boolean = false;
+                let hasParams = false;
                 for (let key in urlParams) {
                     hasParams = true;
-                    ret += key + "=" + urlParams[key] + "&";
+                    result += key + "=" + urlParams[key] + "&";
                 }
                 if (hasParams) {
-                    ret = "?" + ret.substr(0, ret.length - 1);
+                    result = "?" + result.substr(0, result.length - 1);
                 }
             }
         }
-        return ret;
+        return result;
     }
 
 }
@@ -226,7 +225,8 @@ async function runBricks() {
         case "darwin":
             let projectPath = egret.args.projectDir;
             projectPath = path.resolve(projectPath, "../", path.basename(projectPath) + "_bricks", "PublicBrickEngineGame.xcodeproj");
-            utils.open(projectPath)
+            utils.open(projectPath);
+            return 0;
             break;
         case "win32":
             throw '目前玩一玩仅支持 MacOS 平台开发';
