@@ -38,9 +38,9 @@ module RES {
 
         addFile(filename: string, type?: string) {
             if (!type) type = "";
-            filename = this.normalize(filename);
-            let basefilename = this.basename(filename);
-            let folder = this.dirname(filename);
+            filename = path.normalize(filename);
+            let basefilename = path.basename(filename);
+            let folder = path.dirname(filename);
             if (!this.exists(folder)) {
                 this.mkdir(folder);
             }
@@ -56,23 +56,11 @@ module RES {
             return result;
         }
 
-        private basename(filename: string) {
-            return filename.substr(filename.lastIndexOf("/") + 1);
-        }
-
-        private normalize(filename: string) {
-            return filename.split("/").filter(d => !!d).join("/");
-        }
-
-        private dirname(path: string) {
-            return path.substr(0, path.lastIndexOf("/"));
-        }
-
         private reslove(dirpath: string) {
             if (dirpath == "") {
                 return this.data;
             }
-            dirpath = this.normalize(dirpath);
+            dirpath = path.normalize(dirpath);
             let list = dirpath.split("/");
             let current: File | Dictionary = this.data;
             for (let f of list) {
@@ -87,7 +75,7 @@ module RES {
         }
 
         private mkdir(dirpath: string) {
-            dirpath = this.normalize(dirpath);
+            dirpath = path.normalize(dirpath);
             let list = dirpath.split("/");
             let current = this.data;
             for (let f of list) {
@@ -100,7 +88,7 @@ module RES {
 
         private exists(dirpath: string) {
             if (dirpath == "") return true;
-            dirpath = this.normalize(dirpath);
+            dirpath = path.normalize(dirpath);
             let list = dirpath.split("/");
             let current = this.data;
             for (let f of list) {

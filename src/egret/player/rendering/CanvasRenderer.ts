@@ -740,6 +740,7 @@ namespace egret {
                         context.lineCap = CAPS_STYLES[strokeFill.caps];
                         context.lineJoin = strokeFill.joints;
                         context.miterLimit = strokeFill.miterLimit;
+                        context.setLineDash(strokeFill.lineDash);
                         //对1像素和3像素特殊处理，向右下角偏移0.5像素，以显示清晰锐利的线条。
                         let isSpecialCaseWidth = lineWidth === 1 || lineWidth === 3;
                         if (isSpecialCaseWidth) {
@@ -776,9 +777,6 @@ namespace egret {
                         break;
                     case sys.PathCommand.MoveTo:
                         context.moveTo(data[pos++] + context.$offsetX, data[pos++] + context.$offsetY);
-                        break;
-                    case sys.PathCommand.SetLineDash:
-                        context.setLineDash(data[pos++]);
                         break;
                 }
             }

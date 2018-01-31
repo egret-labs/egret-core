@@ -65,12 +65,9 @@ namespace egret.sys {
          * 用于表示剪切斜接的极限值的数字。
          */
         public miterLimit: number;
-
-        public setLineDash(segments: number[]): void {
-            this.$commands[this.commandPosition++] = PathCommand.SetLineDash;
-            let pos = this.dataPosition;
-            this.$data[pos++] = segments;
-            this.dataPosition = pos;
-        }
+        /**
+         * 描述交替绘制线段和间距（坐标空间单位）长度的数字。
+         */
+        public lineDash: number[];
     }
 }

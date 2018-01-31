@@ -16,6 +16,7 @@
         ]
     },
     "files": [
+        "src/core/Path.ts",
         "src/core/FileSystem.ts",
         "src/core/ResourceConfig.ts",
         "src/core/ResourceLoader.ts",

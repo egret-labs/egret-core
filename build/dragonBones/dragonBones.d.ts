@@ -4831,6 +4831,7 @@ declare namespace dragonBones {
          * @language zh_CN
          */
         timeScale: number;
+        private _systemTime;
         private readonly _animatebles;
         private _clock;
         /**
@@ -8200,8 +8201,6 @@ declare namespace dragonBones {
          * @inheritDoc
          */
         protected _identityTransform(): void;
-        private _identityTransformV4();
-        private _identityTransformV5();
         private _updateTransformV4();
         private _updateTransformV5();
     }
@@ -8245,6 +8244,7 @@ declare namespace dragonBones {
      * @language zh_CN
      */
     class EgretFactory extends BaseFactory {
+        private static _time;
         private static _dragonBonesInstance;
         private static _factory;
         private static _clockHandler(time);

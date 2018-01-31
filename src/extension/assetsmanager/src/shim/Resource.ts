@@ -76,7 +76,7 @@ module RES {
             setConfigURL(url);
         }
         if (!instance) instance = new Resource();
-        config.resourceRoot = resourceRoot;
+        config.resourceRoot = path.normalize(resourceRoot + "/");
         return instance.loadConfig();
     }
     /**

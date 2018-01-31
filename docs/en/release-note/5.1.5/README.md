@@ -13,6 +13,7 @@ Egret engine was officially released in December 2017 version 5.1. This version 
 * Increase XML parsing function
 
 ## Bricks
+
 ### update content
 
 This week, the egret engine has greatly improved the support for playing a game platform, focusing on the following problems:
@@ -66,6 +67,7 @@ The above questions and we play a platform for the engineers to maintain close c
 * Fixed eui virtual layout may create too many object problems
 * Fixed egret.ByteArray.readBytes function will cause bytesAvailable exception
 * Fixed eui.BitmapLabel repeat set font font loading disorder can cause fonts
+* Fixed the problem of offset in the rendering of the display object of the setup filter
 
 ## Command Line Tools
 
