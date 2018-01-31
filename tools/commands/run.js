@@ -1,4 +1,10 @@
 /// <reference path="../lib/types.d.ts" />
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -182,13 +188,10 @@ var Run = (function () {
         return js["egret_version"];
     };
     Run.prototype.wrapByParams = function (url) {
-        if (!this.__tempP) {
-            this.__tempP = this.genParams();
-        }
-        return url + this.__tempP;
+        return url + this.genParams();
     };
     Run.prototype.genParams = function () {
-        var ret = "";
+        var result = "";
         var propertyFilePath = FileUtil.joinPath(egret.args.projectDir, "egretProperties.json");
         if (FileUtil.exists(propertyFilePath)) {
             var urlParams = JSON.parse(FileUtil.read(propertyFilePath)).urlParams;
@@ -196,17 +199,20 @@ var Run = (function () {
                 var hasParams = false;
                 for (var key in urlParams) {
                     hasParams = true;
-                    ret += key + "=" + urlParams[key] + "&";
+                    result += key + "=" + urlParams[key] + "&";
                 }
                 if (hasParams) {
-                    ret = "?" + ret.substr(0, ret.length - 1);
+                    result = "?" + result.substr(0, result.length - 1);
                 }
             }
         }
-        return ret;
+        return result;
     };
     return Run;
 }());
+__decorate([
+    utils.cache
+], Run.prototype, "genParams", null);
 function runWxIde() {
     return __awaiter(this, void 0, void 0, function () {
         var wxPaths, _a, result, stdout_1, iconv, encoding, binaryEncoding, result2, stdout, stdoutArr, exePath, wxpath, projectPath, e_1;
@@ -282,6 +288,7 @@ function runBricks() {
                     projectPath = egret.args.projectDir;
                     projectPath = path.resolve(projectPath, "../", path.basename(projectPath) + "_bricks", "PublicBrickEngineGame.xcodeproj");
                     utils.open(projectPath);
+                    return [2 /*return*/, 0];
                     break;
                 case "win32":
                     throw '目前玩一玩仅支持 MacOS 平台开发';
