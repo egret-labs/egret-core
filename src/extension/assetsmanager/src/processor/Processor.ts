@@ -201,7 +201,7 @@ module RES.processor {
         async onLoadStart(host, resource): Promise<any> {
 
             let data = await host.load(resource, "json");
-            let imagePath = RES.config.resourceRoot + "/" + getRelativePath(resource.url, data.file);
+            let imagePath = RES.config.resourceRoot + getRelativePath(resource.url, data.file);
             let r = host.resourceConfig.getResource(data.file);
             if (!r) {
                 r = { name: imagePath, url: imagePath, extra: true, type: 'image' };
@@ -290,10 +290,10 @@ module RES.processor {
             let r = host.resourceConfig.getResource(imageFileName);
             if (!r) {
                 if (typeof config === 'string') {
-                    imageFileName = RES.config.resourceRoot + "/" + fontGetTexturePath(resource.url, config)
+                    imageFileName = RES.config.resourceRoot + fontGetTexturePath(resource.url, config)
                 }
                 else {
-                    imageFileName = RES.config.resourceRoot + "/" + getRelativePath(resource.url, config.file);
+                    imageFileName = RES.config.resourceRoot + getRelativePath(resource.url, config.file);
                 }
                 r = { name: imageFileName, url: imageFileName, extra: true, type: 'image' };
             }
