@@ -73,7 +73,7 @@ var CompilePlugin = (function () {
                 });
                 jscode = tinyCompiler(this.options.defines);
                 pluginContext.createFile("main.js", new Buffer(jscode));
-                if (target == 'web') {
+                if (target == 'web' || target == 'ios' || target == 'android') {
                     filepath = FileUtil.joinPath(projectRoot, 'template/web/index.html');
                     htmlContent = fs.readFileSync(filepath);
                     pluginContext.createFile("index.html", htmlContent);
