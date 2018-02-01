@@ -6,7 +6,6 @@ var state = require("../lib/DirectoryState");
 var CompileProject = require("../actions/CompileProject");
 var parser = require("../parser/Parser");
 var EgretProject = require("../project");
-var copyNative = require("../actions/CopyNativeFiles");
 var EngineData_1 = require("../EngineData");
 var AutoCompileCommand = (function () {
     function AutoCompileCommand() {
@@ -70,11 +69,11 @@ var AutoCompileCommand = (function () {
         }
         // exmlActions.updateSetting(egret.args.publish);
         //拷贝项目到native工程中
-        if (egret.args.target == "native") {
-            console.log("----native build-----");
-            EgretProject.manager.modifyNativeRequire(manifestPath);
-            copyNative.refreshNative(true);
-        }
+        // if (egret.args.target == "native") {
+        //     console.log("----native build-----");
+        //     EgretProject.manager.modifyNativeRequire(manifestPath);
+        //     copyNative.refreshNative(true);
+        // }
         this.dirState.init();
         this._scripts = result.files;
         this.exitCode[1] = result.exitStatus;
@@ -156,12 +155,12 @@ var AutoCompileCommand = (function () {
             // exmlActions.updateSetting(egret.args.publish)
         }
         //拷贝项目到native工程中
-        if (egret.args.target == "native") {
-            console.log("----native build-----");
-            var manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
-            EgretProject.manager.modifyNativeRequire(manifestPath);
-            copyNative.refreshNative(true);
-        }
+        // if (egret.args.target == "native") {
+        //     console.log("----native build-----");
+        //     let manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
+        //     EgretProject.manager.modifyNativeRequire(manifestPath);
+        //     copyNative.refreshNative(true);
+        // }
         this.dirState.init();
         this.sendCommand();
         global.gc && global.gc();

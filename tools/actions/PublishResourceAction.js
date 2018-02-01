@@ -39,8 +39,6 @@ var tasks = require("../tasks");
 var FileUtil = require("../lib/FileUtil");
 var path = require("path");
 var EgretProject = require("../project");
-var ZipCommand = require("./ZipCommand");
-var copyNative = require("./CopyNativeFiles");
 var parseConfig = require("./ParseConfig");
 function publishResource(version) {
     return __awaiter(this, void 0, void 0, function () {
@@ -79,10 +77,10 @@ function legacyPublishNative(versionFile) {
     FileUtil.remove(FileUtil.joinPath(options.releaseDir, "main.min.js"));
     // EgretProject.manager.copyLibsForPublish(FileUtil.joinPath(options.releaseDir, "ziptemp"), "native");
     //runtime  打包所有js文件以及all.manifest
-    var zip = new ZipCommand(versionFile);
-    zip.execute(function (code) {
-        copyNative.refreshNative(false, versionFile);
-    });
+    // const zip = new ZipCommand(versionFile);
+    // zip.execute(function (code) {
+    //     copyNative.refreshNative(false, versionFile);
+    // });
 }
 exports.legacyPublishNative = legacyPublishNative;
 function legacyPublishHTML5() {

@@ -44,7 +44,6 @@ var utils = require("../lib/utils");
 var service = require("../service/index");
 var FileUtil = require("../lib/FileUtil");
 var CompileProject = require("../actions/CompileProject");
-var copyNative = require("../actions/CopyNativeFiles");
 var EgretProject = require("../project");
 console.log(utils.tr(1106, 0));
 var Clean = (function () {
@@ -72,11 +71,11 @@ var Clean = (function () {
                     EgretProject.manager.modifyIndex(manifestPath, indexPath);
                 }
                 //拷贝项目到native工程中
-                if (egret.args.target == "native") {
-                    console.log("----native build-----");
-                    EgretProject.manager.modifyNativeRequire(manifestPath);
-                    copyNative.refreshNative(true);
-                }
+                // if (egret.args.target == "native") {
+                //     console.log("----native build-----");
+                //     EgretProject.manager.modifyNativeRequire(manifestPath);
+                //     copyNative.refreshNative(true);
+                // }
                 if (EgretProject.projectData.isWasmProject()) {
                     arr = [
                         "egret.asm.js",
