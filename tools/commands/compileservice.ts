@@ -11,7 +11,6 @@ import state = require('../lib/DirectoryState');
 import CompileProject = require('../actions/CompileProject');
 import parser = require('../parser/Parser');
 import * as EgretProject from '../project';
-import copyNative = require("../actions/CopyNativeFiles");
 import { data as engineData } from "../EngineData";
 
 class AutoCompileCommand implements egret.Command {
@@ -101,11 +100,11 @@ class AutoCompileCommand implements egret.Command {
 
 
         //拷贝项目到native工程中
-        if (egret.args.target == "native") {
-            console.log("----native build-----");
-            EgretProject.manager.modifyNativeRequire(manifestPath);
-            copyNative.refreshNative(true);
-        }
+        // if (egret.args.target == "native") {
+        //     console.log("----native build-----");
+        //     EgretProject.manager.modifyNativeRequire(manifestPath);
+        //     copyNative.refreshNative(true);
+        // }
 
         this.dirState.init();
 
@@ -199,12 +198,12 @@ class AutoCompileCommand implements egret.Command {
         }
 
         //拷贝项目到native工程中
-        if (egret.args.target == "native") {
-            console.log("----native build-----");
-            let manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
-            EgretProject.manager.modifyNativeRequire(manifestPath);
-            copyNative.refreshNative(true);
-        }
+        // if (egret.args.target == "native") {
+        //     console.log("----native build-----");
+        //     let manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
+        //     EgretProject.manager.modifyNativeRequire(manifestPath);
+        //     copyNative.refreshNative(true);
+        // }
         this.dirState.init();
 
         this.sendCommand();

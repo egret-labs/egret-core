@@ -8,10 +8,8 @@ import * as utils from '../lib/utils';
 import FileUtil = require('../lib/FileUtil');
 import * as fs from 'fs';
 import * as path from 'path';
-import CopyFilesCommand = require("../commands/copyfile");
 import * as EgretProject from '../project';
 import ZipCommand = require("./ZipCommand");
-import copyNative = require("./CopyNativeFiles");
 import CompileProject = require('./CompileProject');
 import * as parseConfig from './ParseConfig'
 
@@ -52,10 +50,10 @@ export function legacyPublishNative(versionFile: string) {
     // EgretProject.manager.copyLibsForPublish(FileUtil.joinPath(options.releaseDir, "ziptemp"), "native");
 
     //runtime  打包所有js文件以及all.manifest
-    const zip = new ZipCommand(versionFile);
-    zip.execute(function (code) {
-        copyNative.refreshNative(false, versionFile);
-    });
+    // const zip = new ZipCommand(versionFile);
+    // zip.execute(function (code) {
+    //     copyNative.refreshNative(false, versionFile);
+    // });
 }
 
 export function legacyPublishHTML5() {

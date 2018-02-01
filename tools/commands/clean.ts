@@ -6,7 +6,6 @@ import server = require('../server/server');
 import service = require('../service/index');
 import FileUtil = require('../lib/FileUtil');
 import CompileProject = require('../actions/CompileProject');
-import copyNative = require("../actions/CopyNativeFiles");
 import * as EgretProject from '../project';
 import * as exml from '../actions/exml';
 console.log(utils.tr(1106, 0));
@@ -36,11 +35,11 @@ class Clean implements egret.Command {
         }
 
         //拷贝项目到native工程中
-        if (egret.args.target == "native") {
-            console.log("----native build-----");
-            EgretProject.manager.modifyNativeRequire(manifestPath);
-            copyNative.refreshNative(true);
-        }
+        // if (egret.args.target == "native") {
+        //     console.log("----native build-----");
+        //     EgretProject.manager.modifyNativeRequire(manifestPath);
+        //     copyNative.refreshNative(true);
+        // }
         if (EgretProject.projectData.isWasmProject()) {
             let arr = [
                 "egret.asm.js",
