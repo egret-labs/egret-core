@@ -46,6 +46,9 @@ function buildBefore(context) {
                     target = egret.args.target;
                     if (!(target != 'web')) return [3 /*break*/, 3];
                     targetRoot = project_1.launcher.getLauncherLibrary().getTarget(target);
+                    if (!targetRoot) {
+                        throw "\u627E\u4E0D\u5230 target " + target + ",\u8BF7\u5728 Egret Launcher \u4E2D\u5B89\u88C5";
+                    }
                     return [4 /*yield*/, FileUtil.readJSONAsync(path.join(targetRoot, 'target.json'))];
                 case 1:
                     targetData = _a.sent();

@@ -21,6 +21,9 @@ export async function buildBefore(context) {
     if (target != 'web') {
         // const targetRoot = path.resolve(__dirname, '../../egret-target-wxgame/target');
         const targetRoot = launcher.getLauncherLibrary().getTarget(target);
+        if (!targetRoot) {
+            throw `找不到 target ${target},请在 Egret Launcher 中安装`
+        }
         const targetData = await FileUtil.readJSONAsync(path.join(targetRoot, 'target.json'));
         if (targetData.scripts && targetData.scripts.before) {
             const before = path.join(targetRoot, targetData.scripts.before);
