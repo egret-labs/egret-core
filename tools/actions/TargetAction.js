@@ -34,20 +34,29 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var project_1 = require("../project");
+var path = require("path");
+var FileUtil = require("../lib/FileUtil");
 function buildBefore(context) {
     return __awaiter(this, void 0, void 0, function () {
-        var target;
+        var target, targetRoot, targetData, before;
         return __generator(this, function (_a) {
-            target = egret.args.target;
-            if (target != 'web') {
-                // const targetRoot = path.resolve(__dirname, '../../egret-target-wxgame/target');
-                // const target = await FileUtil.readJSONAsync(path.join(targetRoot, 'target.json'));
-                // if (target.scripts && target.scripts.before) {
-                //     const before = path.join(targetRoot, target.scripts.before);
-                //     await require(before).run(context)
-                // }
+            switch (_a.label) {
+                case 0:
+                    target = egret.args.target;
+                    if (!(target != 'web')) return [3 /*break*/, 3];
+                    targetRoot = project_1.launcher.getLauncherLibrary().getTarget(target);
+                    return [4 /*yield*/, FileUtil.readJSONAsync(path.join(targetRoot, 'target.json'))];
+                case 1:
+                    targetData = _a.sent();
+                    if (!(targetData.scripts && targetData.scripts.before)) return [3 /*break*/, 3];
+                    before = path.join(targetRoot, targetData.scripts.before);
+                    return [4 /*yield*/, require(before).run(context)];
+                case 2:
+                    _a.sent();
+                    _a.label = 3;
+                case 3: return [2 /*return*/];
             }
-            return [2 /*return*/];
         });
     });
 }
