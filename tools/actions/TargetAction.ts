@@ -20,11 +20,12 @@ export async function buildBefore(context) {
     const target = egret.args.target;
     if (target != 'web') {
         // const targetRoot = path.resolve(__dirname, '../../egret-target-wxgame/target');
-        // const target = await FileUtil.readJSONAsync(path.join(targetRoot, 'target.json'));
-        // if (target.scripts && target.scripts.before) {
-        //     const before = path.join(targetRoot, target.scripts.before);
-        //     await require(before).run(context)
-        // }
+        const targetRoot = launcher.getLauncherLibrary().getTarget(target);
+        const targetData = await FileUtil.readJSONAsync(path.join(targetRoot, 'target.json'));
+        if (targetData.scripts && targetData.scripts.before) {
+            const before = path.join(targetRoot, targetData.scripts.before);
+            await require(before).run(context)
+        }
     }
 
 }
