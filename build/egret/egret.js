@@ -19457,6 +19457,9 @@ var egret;
             if (value == null) {
                 value = "";
             }
+            else {
+                value = value.toString();
+            }
             this.isFlow = false;
             var values = this.$TextField;
             if (values[13 /* text */] != value) {

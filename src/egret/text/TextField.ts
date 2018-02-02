@@ -799,6 +799,9 @@ namespace egret {
             if (value == null) {
                 value = "";
             }
+            else {
+                value = value.toString();
+            }
             this.isFlow = false;
             let values = this.$TextField;
             if (values[sys.TextKeys.text] != value) {
