@@ -215,9 +215,9 @@ __decorate([
 ], Run.prototype, "genParams", null);
 function runWxIde() {
     return __awaiter(this, void 0, void 0, function () {
-        var wxPaths, _a, result, stdout_1, iconv, encoding, binaryEncoding, result2, stdout, stdoutArr, exePath, wxpath, projectPath, e_1;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
+        var wxPaths, packagePath, _a, result, stdout_1, iconv, encoding, binaryEncoding, result2, stdout, stdoutArr, exePath, packageJson, _b, _c, _d, wxpath, projectPath, e_1;
+        return __generator(this, function (_e) {
+            switch (_e.label) {
                 case 0:
                     wxPaths = [];
                     _a = os.platform();
@@ -228,13 +228,14 @@ function runWxIde() {
                     return [3 /*break*/, 5];
                 case 1: return [4 /*yield*/, utils.executeCommand("defaults read com.tencent.wechat.devtools LastRunAppBundlePath")];
                 case 2:
-                    result = _b.sent();
+                    result = _e.sent();
                     if (result.stdout != '') {
                         stdout_1 = result.stdout.replace(/\n/g, "");
                         wxPaths = [FileUtil.joinPath(stdout_1, "/Contents/Resources/app.nw/bin/cli")];
                     }
                     // defaults read
                     wxPaths.push("/Applications/wechatwebdevtools.app/Contents/Resources/app.nw/bin/cli");
+                    packagePath = "/Applications/wechatwebdevtools.app/Contents/Resources/app.nw/package.json";
                     return [3 /*break*/, 5];
                 case 3:
                     // defaults read
@@ -247,7 +248,7 @@ function runWxIde() {
                     binaryEncoding = 'binary';
                     return [4 /*yield*/, utils.executeCommand('REG QUERY "HKLM\\SOFTWARE\\Wow6432Node\\Tencent\\微信web开发者工具"', { encoding: binaryEncoding })];
                 case 4:
-                    result2 = _b.sent();
+                    result2 = _e.sent();
                     stdout = iconv.decode(new Buffer(result2.stdout, binaryEncoding), encoding);
                     if (stdout != '') {
                         stdoutArr = stdout.split("\r\n");
@@ -255,29 +256,57 @@ function runWxIde() {
                         exePath = exePath.split("  ").find(function (path) { return path.indexOf(".exe") != -1; });
                         exePath = path.join(path.dirname(exePath), 'cli.bat');
                         wxPaths.unshift(exePath);
+                        packagePath = path.resolve(exePath, "../package.nw/package.json");
                     }
                     return [3 /*break*/, 5];
                 case 5:
+                    if (!(!!packagePath)) return [3 /*break*/, 7];
+                    _d = (_c = JSON).parse;
+                    return [4 /*yield*/, FileUtil.readFileAsync(packagePath, null)];
+                case 6:
+                    _b = _d.apply(_c, [_e.sent()]);
+                    return [3 /*break*/, 8];
+                case 7:
+                    _b = null;
+                    _e.label = 8;
+                case 8:
+                    packageJson = _b;
                     wxpath = wxPaths.find(function (wxpath) { return FileUtil.exists(wxpath); });
-                    if (!wxpath) return [3 /*break*/, 10];
+                    if (!wxpath) return [3 /*break*/, 16];
                     projectPath = egret.args.projectDir;
                     projectPath = path.resolve(projectPath, "../", path.basename(projectPath) + "_wxgame");
-                    _b.label = 6;
-                case 6:
-                    _b.trys.push([6, 8, , 9]);
+                    _e.label = 9;
+                case 9:
+                    _e.trys.push([9, 14, , 15]);
+                    if (!!isNeedUpgrade(packageJson.version)) return [3 /*break*/, 11];
+                    return [4 /*yield*/, utils.shell(wxpath, ["-o", projectPath, "-f", "egret"], null, true)];
+                case 10:
+                    _e.sent();
+                    return [3 /*break*/, 13];
+                case 11:
+                    console.log("当前web开发者工具版本为:", packageJson.version, ", 请升级最新的微信web开发者工具");
                     return [4 /*yield*/, utils.shell(wxpath, ["-o", projectPath], null, true)];
-                case 7:
-                    _b.sent();
-                    return [3 /*break*/, 9];
-                case 8:
-                    e_1 = _b.sent();
+                case 12:
+                    _e.sent();
+                    _e.label = 13;
+                case 13: return [3 /*break*/, 15];
+                case 14:
+                    e_1 = _e.sent();
                     return [2 /*return*/, 1];
-                case 9: return [3 /*break*/, 11];
-                case 10: throw '请安装最新微信开发者工具';
-                case 11: return [2 /*return*/, DontExitCode];
+                case 15: return [3 /*break*/, 17];
+                case 16: throw '请安装最新微信开发者工具';
+                case 17: return [2 /*return*/, DontExitCode];
             }
         });
     });
+}
+function isNeedUpgrade(version) {
+    var defaultVersion = "1.02.1801081";
+    var versionStrs = version.split(".");
+    var defaultStrs = defaultVersion.split(".");
+    return parseInt(versionStrs[0]) <= parseInt(defaultStrs[0]) &&
+        parseInt(versionStrs[1]) <= parseInt(defaultStrs[1]) &&
+        parseInt(versionStrs[2]) <= parseInt(defaultStrs[2]);
 }
 function runBricks() {
     return __awaiter(this, void 0, void 0, function () {
