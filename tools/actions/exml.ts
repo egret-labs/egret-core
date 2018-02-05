@@ -99,7 +99,6 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
     let files = themeDatas.map((thmData) => {
         let path = thmData.path;
 
-
         if (exmlPublishPolicy == "commonjs") {
             let content = `
 function __extends(d, b) {
@@ -113,6 +112,7 @@ function __extends(d, b) {
 `;
             content += `window.generateEUI = {};
 generateEUI.paths = {};
+generateEUI.styles = ${JSON.stringify(thmData.styles)};
 generateEUI.skins = ${JSON.stringify(thmData.skins)}
 `;
 

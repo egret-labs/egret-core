@@ -95,6 +95,7 @@ declare module egret {
         skins?: { [host: string]: string };
         exmls?: Array<any>;
         autoGenerateExmlsList?: boolean;
+        styles?: any;
     }
 
     export type EgretPropertyModule = {
