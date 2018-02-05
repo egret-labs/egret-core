@@ -87,7 +87,7 @@ function publishEXML(exmls, exmlPublishPolicy) {
         var path = thmData.path;
         if (exmlPublishPolicy == "commonjs") {
             var content = "\nfunction __extends(d, b) {\n    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];\n        function __() {\n            this.constructor = d;\n        }\n    __.prototype = b.prototype;\n    d.prototype = new __();\n};\n";
-            content += "window.generateEUI = {};\ngenerateEUI.paths = {};\ngenerateEUI.skins = " + JSON.stringify(thmData.skins) + "\n";
+            content += "window.generateEUI = {};\ngenerateEUI.paths = {};\ngenerateEUI.styles = " + JSON.stringify(thmData.styles) + ";\ngenerateEUI.skins = " + JSON.stringify(thmData.skins) + "\n";
             var namespaces = [];
             for (var _i = 0, _a = thmData.exmls; _i < _a.length; _i++) {
                 var item = _a[_i];
