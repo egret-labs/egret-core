@@ -233,9 +233,12 @@ function isNeedUpgrade(version: string): boolean {
     let defaultVersion = "1.02.1801081";
     let versionStrs = version.split(".");
     let defaultStrs = defaultVersion.split(".");
-    return parseInt(versionStrs[0]) <= parseInt(defaultStrs[0]) &&
-        parseInt(versionStrs[1]) <= parseInt(defaultStrs[1]) &&
-        parseInt(versionStrs[2]) <= parseInt(defaultStrs[2]);
+    if (parseInt(versionStrs[0]) <= parseInt(defaultStrs[0])) {
+        if (parseInt(versionStrs[1]) <= parseInt(defaultStrs[1]))
+            if (parseInt(versionStrs[2]) <= parseInt(defaultStrs[2]))
+                return true;
+    }
+    return false;
 }
 
 async function runBricks() {
