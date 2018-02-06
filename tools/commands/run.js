@@ -215,7 +215,7 @@ __decorate([
 ], Run.prototype, "genParams", null);
 function runWxIde() {
     return __awaiter(this, void 0, void 0, function () {
-        var wxPaths, packagePath, _a, result, stdout_1, iconv, encoding, binaryEncoding, result2, stdout, stdoutArr, exePath, packageJson, _b, _c, _d, wxpath, projectPath, e_1;
+        var wxPaths, packagePath, _a, result, stdout_1, iconv, encoding, binaryEncoding, result2, stdout, stdoutArr, exePath, packageJson, _b, _c, _d, wxpath, projectPath, result, e_1;
         return __generator(this, function (_e) {
             switch (_e.label) {
                 case 0:
@@ -278,7 +278,9 @@ function runWxIde() {
                     _e.label = 9;
                 case 9:
                     _e.trys.push([9, 14, , 15]);
-                    if (!!isNeedUpgrade(packageJson.version)) return [3 /*break*/, 11];
+                    result = globals.compressVersion(packageJson.version, "1.02.1801081");
+                    console.log("result", result);
+                    if (!(result > 0)) return [3 /*break*/, 11];
                     return [4 /*yield*/, utils.shell(wxpath, ["-o", projectPath, "-f", "egret"], null, true)];
                 case 10:
                     _e.sent();
@@ -299,17 +301,6 @@ function runWxIde() {
             }
         });
     });
-}
-function isNeedUpgrade(version) {
-    var defaultVersion = "1.02.1801081";
-    var versionStrs = version.split(".");
-    var defaultStrs = defaultVersion.split(".");
-    if (parseInt(versionStrs[0]) <= parseInt(defaultStrs[0])) {
-        if (parseInt(versionStrs[1]) <= parseInt(defaultStrs[1]))
-            if (parseInt(versionStrs[2]) <= parseInt(defaultStrs[2]))
-                return true;
-    }
-    return false;
 }
 function runBricks() {
     return __awaiter(this, void 0, void 0, function () {
