@@ -131,6 +131,7 @@ namespace egret.web {
 
             let audio = this.audio;
             audio.removeEventListener("ended", this.onPlayEnd);
+            audio.removeEventListener("canplay", this.canPlay);
             audio.volume = 0;
             this._volume = 0;
             this.audio = null;
