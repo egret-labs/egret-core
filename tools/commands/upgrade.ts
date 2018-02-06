@@ -5,7 +5,6 @@ import path = require('path');
 import utils = require('../lib/utils')
 import doT = require('../lib/doT');
 import projectAction = require('../actions/Project');
-import modify = require('./upgrade/ModifyProperties');
 import Clean = require('./clean');
 type VersionInfo = {
 
@@ -48,15 +47,14 @@ class UpgradeCommand implements egret.Command {
         let upgradeConfigArr: VersionInfo[] = [
             { "v": "5.1.1", command: Upgrade_5_1_1 },
             { "v": "5.1.2", command: Upgrade_5_1_2 },
-            { "v": "5.1.5" }
+            { "v": "5.1.6" }
         ];
 
         try {
-            modify.initProperties();
             await series(upgrade, upgradeConfigArr.concat())
-            modify.save(upgradeConfigArr.pop().v);
+            Project.projectData.save(upgradeConfigArr.pop().v);
             globals.log(1702);
-            await service.client.closeServer(Project.projectData.getProjectRoot())
+            service.client.closeServer(Project.projectData.getProjectRoot())
             await new Clean().execute();
             globals.exit(0);
         }
