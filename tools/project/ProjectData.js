@@ -187,6 +187,9 @@ var EgretProjectData = (function () {
     };
     EgretProjectData.prototype.getModulesConfig = function (platform) {
         var _this = this;
+        if (platform == 'ios' || platform == 'android') {
+            platform = 'web';
+        }
         var result = this.egretProperties.modules.map(function (m) {
             var name = m.name;
             var sourceDir = _this.getModulePath(m);
