@@ -160,13 +160,11 @@ var client;
     }
     client_1.requestBuild = requestBuild;
     function closeServer(path) {
-        return new Promise(function (reslove, reject) {
-            execCommand({
-                path: path,
-                command: "shutdown",
-                option: egret.args
-            }, reslove, false);
-        });
+        execCommand({
+            path: path,
+            command: "shutdown",
+            option: egret.args
+        }, null, false);
     }
     client_1.closeServer = closeServer;
     function getServiceURL(params) {
