@@ -36,7 +36,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var service = require("../service/index");
 var Project = require("../project");
 var utils = require("../lib/utils");
-var modify = require("./upgrade/ModifyProperties");
 var Clean = require("./clean");
 var UpgradeCommand = (function () {
     function UpgradeCommand() {
@@ -68,16 +67,15 @@ var UpgradeCommand = (function () {
                         upgradeConfigArr = [
                             { "v": "5.1.1", command: Upgrade_5_1_1 },
                             { "v": "5.1.2", command: Upgrade_5_1_2 },
-                            { "v": "5.1.5" }
+                            { "v": "5.1.6" }
                         ];
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 4, , 5]);
-                        modify.initProperties();
                         return [4 /*yield*/, series(upgrade, upgradeConfigArr.concat())];
                     case 2:
                         _a.sent();
-                        modify.save(upgradeConfigArr.pop().v);
+                        Project.projectData.save(upgradeConfigArr.pop().v);
                         globals.log(1702);
                         service.client.closeServer(Project.projectData.getProjectRoot());
                         return [4 /*yield*/, new Clean().execute()];

@@ -241,6 +241,15 @@ var EgretProjectData = (function () {
         });
         return result;
     };
+    EgretProjectData.prototype.save = function (version) {
+        if (version) {
+            this.egretProperties.engineVersion = version;
+            this.egretProperties.compilerVersion = version;
+        }
+        var egretPropertiesPath = this.getFilePath("egretProperties.json");
+        var content = JSON.stringify(this.egretProperties, null, "\t");
+        file.save(egretPropertiesPath, content);
+    };
     return EgretProjectData;
 }());
 __decorate([
