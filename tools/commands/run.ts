@@ -212,7 +212,8 @@ async function runWxIde() {
         let projectPath = egret.args.projectDir;
         projectPath = path.resolve(projectPath, "../", path.basename(projectPath) + "_wxgame");
         try {
-            if (!isNeedUpgrade(packageJson.version)) {
+            let result = globals.compressVersion(packageJson.version, "1.02.1801081");
+            if (result > 0) {
                 await utils.shell(wxpath, ["-o", projectPath, "-f", "egret"], null, true);
             } else {
                 console.log("当前web开发者工具版本为:", packageJson.version, ", 请升级最新的微信web开发者工具");
@@ -227,18 +228,6 @@ async function runWxIde() {
         throw '请安装最新微信开发者工具'
     }
     return DontExitCode
-}
-
-function isNeedUpgrade(version: string): boolean {
-    let defaultVersion = "1.02.1801081";
-    let versionStrs = version.split(".");
-    let defaultStrs = defaultVersion.split(".");
-    if (parseInt(versionStrs[0]) <= parseInt(defaultStrs[0])) {
-        if (parseInt(versionStrs[1]) <= parseInt(defaultStrs[1]))
-            if (parseInt(versionStrs[2]) <= parseInt(defaultStrs[2]))
-                return true;
-    }
-    return false;
 }
 
 async function runBricks() {
