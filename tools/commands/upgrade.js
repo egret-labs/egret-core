@@ -68,25 +68,23 @@ var UpgradeCommand = (function () {
                         ];
                         _a.label = 1;
                     case 1:
-                        _a.trys.push([1, 4, , 5]);
+                        _a.trys.push([1, 3, , 4]);
                         modify.initProperties();
                         return [4 /*yield*/, series(upgrade, upgradeConfigArr.concat())];
                     case 2:
                         _a.sent();
                         modify.save(upgradeConfigArr.pop().v);
                         globals.log(1702);
-                        return [4 /*yield*/, service.client.closeServer(Project.data.getProjectRoot())];
-                    case 3:
-                        _a.sent();
+                        service.client.closeServer(Project.data.getProjectRoot());
                         globals.exit(0);
-                        return [3 /*break*/, 5];
-                    case 4:
+                        return [3 /*break*/, 4];
+                    case 3:
                         e_1 = _a.sent();
                         globals.log(1717);
                         console.log(e_1);
                         globals.exit(1705);
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
