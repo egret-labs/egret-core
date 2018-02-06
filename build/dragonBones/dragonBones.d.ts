@@ -271,6 +271,7 @@ declare namespace dragonBones {
         readonly eventManager: IEventDispatcher;
     }
 }
+declare var __extends: (t: any, e: any) => void;
 /**
  * The MIT License (MIT)
  *
@@ -3141,7 +3142,7 @@ declare namespace dragonBones {
          * @internal
          * @private
          */
-        _bufferAction(action: ActionData, append: boolean): void;
+        _bufferAction(action: EventObject, append: boolean): void;
         /**
          * - Dispose the armature. (Return to the object pool)
          * @example
@@ -6319,6 +6320,11 @@ declare namespace dragonBones {
          * @language zh_CN
          */
         static readonly SOUND_EVENT: string;
+        /**
+         * @internal
+         * @private
+         */
+        static actionDataToInstance(data: ActionData, instance: EventObject, armature: Armature): void;
         static toString(): string;
         /**
          * - If is a frame event, the value is used to describe the time that the event was in the animation timeline. (In seconds)
@@ -6405,6 +6411,13 @@ declare namespace dragonBones {
          * @language zh_CN
          */
         animationState: AnimationState;
+        /**
+         * @private
+         */
+        actionData: ActionData | null;
+        /**
+         * @private
+         */
         /**
          * - The custom data.
          * @see dragonBones.CustomData
