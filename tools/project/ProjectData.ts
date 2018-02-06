@@ -237,6 +237,9 @@ class EgretProjectData {
 
     @_utils.cache
     getModulesConfig(platform: egret.target.Type) {
+        if (platform == 'ios' || platform == 'android') {
+            platform = 'web';
+        }
         let result = this.egretProperties.modules.map(m => {
             let name = m.name;
             let sourceDir = this.getModulePath(m);
