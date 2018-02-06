@@ -253,7 +253,9 @@ var EgretLauncherProxy = (function () {
         return {
             getAllEngineVersions: '1.0.24',
             getInstalledTools: '1.0.24',
-            getTarget: "1.0.45"
+            getTarget: "1.0.45",
+            getUserID: "1.0.46",
+            sign: "1.0.46"
         };
     };
     EgretLauncherProxy.prototype.getEgretToolsInstalledByVersion = function (checkVersion) {

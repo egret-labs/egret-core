@@ -36,12 +36,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var path = require("path");
 var FileUtil = require("../lib/FileUtil");
 var utils_1 = require("../lib/utils");
+var project_1 = require("../project");
 var Target = (function () {
     function Target() {
     }
     Target.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var option, options, projectName, config, projectRoot;
+            var option, options, projectName, config, projectRoot, userId;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -56,6 +57,13 @@ var Target = (function () {
                         return [4 /*yield*/, FileUtil.copyAsync(config.templatePath, projectRoot)];
                     case 2:
                         _a.sent();
+                        if (config.needSign) {
+                            userId = project_1.launcher.getLauncherLibrary().getUserID();
+                            if (!userId) {
+                                throw '请登录 egret launcher';
+                            }
+                            project_1.launcher.getLauncherLibrary().sign(projectRoot, userId);
+                        }
                         config.args.forEach(function (arg) {
                             arg.files.forEach(function (filename) {
                                 var filepath = path.join(projectRoot, filename);

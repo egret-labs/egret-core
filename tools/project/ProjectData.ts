@@ -304,6 +304,12 @@ type LauncherAPI = {
     getInstalledTools(): { name: string, version: string, path: string }[];
 
     getTarget(targetName: string): string
+
+    getUserID(): string;
+
+    sign(templatePath: string, uid: string): void;
+
+
 }
 
 type LauncherAPI_MinVersion = {[P in keyof LauncherAPI]: string }
@@ -315,7 +321,9 @@ class EgretLauncherProxy {
         return {
             getAllEngineVersions: '1.0.24',
             getInstalledTools: '1.0.24',
-            getTarget: "1.0.45"
+            getTarget: "1.0.45",
+            getUserID: "1.0.46",
+            sign: "1.0.46"
         }
     }
 

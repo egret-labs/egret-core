@@ -4,6 +4,8 @@ import * as FileUtil from '../lib/FileUtil'
 
 export type TargetTemplateConfig = {
 
+    needSign?: boolean,
+
     templatePath: string;
 
     projectType: string;

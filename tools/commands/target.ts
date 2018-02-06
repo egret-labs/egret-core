@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as FileUtil from '../lib/FileUtil';
 import { checkEgret } from '../lib/utils';
 import { TargetTemplateConfig } from '../actions/TargetAction';
+import { launcher } from '../project';
 
 
 
@@ -17,6 +18,13 @@ class Target implements egret.Command {
         const config: TargetTemplateConfig = await getTargetTemplateConfig();
         const projectRoot = path.resolve(option.projectDir, '../', projectName + "_" + config.projectType);
         await FileUtil.copyAsync(config.templatePath, projectRoot);
+        if (config.needSign) {
+            const userId = launcher.getLauncherLibrary().getUserID();
+            if (!userId) {
+                throw '请登录 egret launcher';
+            }
+            launcher.getLauncherLibrary().sign(projectRoot, userId);
+        }
 
         config.args.forEach((arg) => {
             arg.files.forEach((filename) => {
