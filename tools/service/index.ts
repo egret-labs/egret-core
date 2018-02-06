@@ -179,14 +179,11 @@ export namespace client {
 
 
     export function closeServer(path) {
-        return new Promise((reslove, reject) => {
-            execCommand({
-                path,
-                command: "shutdown",
-                option: egret.args
-            }, reslove, false);
-        })
-
+        execCommand({
+            path,
+            command: "shutdown",
+            option: egret.args
+        }, null, false);
     }
 
 

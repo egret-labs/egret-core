@@ -257,7 +257,7 @@ var EXMLConfig = (function () {
         }
         return type;
     };
-    EXMLConfig.__instance = null;
     return EXMLConfig;
 }());
+EXMLConfig.__instance = null;
 exports.EXMLConfig = EXMLConfig;

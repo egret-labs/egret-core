@@ -47,7 +47,7 @@ class UpgradeCommand implements egret.Command {
             await series(upgrade, upgradeConfigArr.concat())
             modify.save(upgradeConfigArr.pop().v);
             globals.log(1702);
-            await service.client.closeServer(Project.data.getProjectRoot())
+            service.client.closeServer(Project.data.getProjectRoot())
             globals.exit(0);
         }
         catch (e) {
