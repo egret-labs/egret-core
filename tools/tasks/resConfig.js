@@ -52,7 +52,12 @@ var EmitResConfigFilePlugin = (function () {
         this.options = options;
         this.config = { alias: {}, groups: {}, resources: {} };
         this.fileSystem = new vfs.FileSystem();
+        //todo
+        this.remoteConfig = { alias: {}, groups: {}, resources: {} };
+        this.remoteFileSystem = new vfs.FileSystem();
+        this.remoteRoot = '';
         this.fileSystem.init(this.config.resources, "resource");
+        this.remoteFileSystem.init(this.remoteConfig.resources, "resource");
         filters.push(options.output);
     }
     EmitResConfigFilePlugin.prototype.executeFilter = function (file) {
@@ -86,13 +91,23 @@ var EmitResConfigFilePlugin = (function () {
     };
     EmitResConfigFilePlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
-            var filename, r;
+            var filename, extname, r;
             return __generator(this, function (_a) {
                 filename = file.origin;
+                extname = file.extname;
+                if (filename.indexOf('.res.json') >= 0) {
+                    return [2 /*return*/, null];
+                }
                 if (filename.indexOf('resource/') >= 0) {
                     r = this.executeFilter(file);
                     if (r) {
-                        this.fileSystem.addFile(r, true);
+                        if (file.outputDir) {
+                            this.remoteRoot = file.outputDir;
+                            this.remoteFileSystem.addFile(r, true);
+                        }
+                        else {
+                            this.fileSystem.addFile(r, true);
+                        }
                     }
                 }
                 return [2 /*return*/, file];
@@ -107,19 +122,15 @@ var EmitResConfigFilePlugin = (function () {
                 var file = "exports.typeSelector = " + options.typeSelector.toString() + ";\nexports.resourceRoot = \"resource\";\nexports.alias = " + JSON.stringify(generateConfig.alias, null, "\t") + ";\nexports.groups = " + JSON.stringify(generateConfig.groups, null, "\t") + ";\nexports.resources = " + JSON.stringify(generateConfig.resources, null, "\t") + ";\n            ";
                 return file;
             }
-            var options, config, configContent, wingConfigContent;
+            var options, config, configContent, remoteConfigContent;
             return __generator(this, function (_a) {
                 options = this.options;
                 config = this.config;
-                // let config = this.config;
-                // await convertResourceJson(pluginContext.projectRoot, config);
-                if (path.extname(options.output) == ".js") {
-                    configContent = emitResourceConfigFile(true);
-                    pluginContext.createFile(options.output, new Buffer(configContent));
-                }
-                else {
-                    wingConfigContent = resourceConfig.generateClassicalConfig(this.config);
-                    pluginContext.createFile(options.output, new Buffer(wingConfigContent));
+                configContent = path.extname(options.output) == ".js" ? emitResourceConfigFile(true) : resourceConfig.generateClassicalConfig(this.config);
+                pluginContext.createFile(options.output, new Buffer(configContent));
+                if (this.remoteRoot) {
+                    remoteConfigContent = resourceConfig.generateClassicalConfig(this.remoteConfig);
+                    pluginContext.createFile(options.output, new Buffer(remoteConfigContent), { outputDir: this.remoteRoot });
                 }
                 return [2 /*return*/];
             });

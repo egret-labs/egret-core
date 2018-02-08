@@ -54,7 +54,7 @@ var ResSplitPlugin = (function () {
                 for (_i = 0, _a = this.options.matchers; _i < _a.length; _i++) {
                     match = _a[_i];
                     if (minimatch(file.origin, match.from)) {
-                        file.outputDir = file.outputDir;
+                        file.outputDir = match.to;
                         if (this.options.verbose) {
                             console.log("ResSplitPlugin: " + file.relative + " => " + file.outputDir);
                         }
