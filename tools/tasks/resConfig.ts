@@ -254,7 +254,6 @@ namespace vfs {
 
 
         addFile(r: File, checkDuplicate: boolean) {
-            console.log(r)
             if (checkDuplicate) {
                 let a = this.getFile(r.name)
                 if (a && this.rootPath + "/" + a.url != r.url) {

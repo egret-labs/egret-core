@@ -234,7 +234,6 @@ var vfs;
             return this.root;
         };
         FileSystem.prototype.addFile = function (r, checkDuplicate) {
-            console.log(r);
             if (checkDuplicate) {
                 var a = this.getFile(r.name);
                 if (a && this.rootPath + "/" + a.url != r.url) {
