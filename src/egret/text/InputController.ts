@@ -297,24 +297,6 @@ namespace egret {
                 return;
             }
 
-            let stage: egret.Stage = this._text.$stage;
-            if (stage == null) {
-            }
-            else {
-                let item: DisplayObject = this._text;
-                let visible: boolean = item.$visible;
-                while (true) {
-                    if (!visible) {
-                        break;
-                    }
-                    item = item.parent;
-                    if (item == stage) {
-                        break;
-                    }
-                    visible = item.$visible;
-                }
-            }
-
             this.stageText.$setText(this._text.$TextField[egret.sys.TextKeys.text]);
 
             //整体修改

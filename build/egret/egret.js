@@ -18795,23 +18795,6 @@ var egret;
                 this.updateInput();
                 return;
             }
-            var stage = this._text.$stage;
-            if (stage == null) {
-            }
-            else {
-                var item = this._text;
-                var visible = item.$visible;
-                while (true) {
-                    if (!visible) {
-                        break;
-                    }
-                    item = item.parent;
-                    if (item == stage) {
-                        break;
-                    }
-                    visible = item.$visible;
-                }
-            }
             this.stageText.$setText(this._text.$TextField[13 /* text */]);
             //整体修改
             this.stageText.$resetStageText();
