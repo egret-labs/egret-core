@@ -143,7 +143,7 @@ module RES {
 						this.next();
 					}).catch((error) => {
 						this.loadingCount--;
-						delete host.state[r.name];
+						delete host.state[r.root + r.name];
 						const times = this.retryTimesDic[r.name] || 1;
 						if (times > this.maxRetryTimes) {
 							delete this.retryTimesDic[r.name];
@@ -255,7 +255,7 @@ module RES {
 
 			if (!p) {
 				if (FEATURE_FLAG.FIX_DUPLICATE_LOAD == 1) {
-					const s = host.state[r.name];
+					const s = host.state[r.root + r.name];
 					if (s == 2) {
 						return Promise.resolve(host.get(r));
 					}
@@ -268,7 +268,7 @@ module RES {
 			if (!p) {
 				throw new ResourceManagerError(2001, r.name, r.type);
 			}
-			host.state[r.name] = 1;
+			host.state[r.root + r.name] = 1;
 			const promise = p.onLoadStart(host, r);
 			r.promise = promise;
 			return promise;
@@ -282,7 +282,7 @@ module RES {
 			}
 			const p = processor.isSupport(r);
 			if (p) {
-				host.state[r.name] = 3;
+				host.state[r.root + r.name] = 3;
 				const promise = p.onRemoveStart(host, r);
 				host.remove(r);
 				return promise;

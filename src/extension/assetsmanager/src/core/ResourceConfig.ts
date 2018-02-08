@@ -66,7 +66,7 @@ module RES {
         else {
             type = "resourceConfig";
         }
-        configItem = { type, root, url, name: url, extra: true };
+        configItem = { type, root, url, name: url };
     }
 
     export interface ResourceInfo {

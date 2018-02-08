@@ -470,8 +470,6 @@ module RES.processor {
             return host.load(resource, 'json').then((data: LegacyResourceConfig) => {
                 const resConfigData = RES.config.config;
                 const root = resource.root;
-                console.log('fuck');
-                console.log(root)
                 let fileSystem = resConfigData.fileSystem;
                 if (!fileSystem) {
                     fileSystem = {

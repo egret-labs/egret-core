@@ -70,7 +70,7 @@ var RES;
         else {
             type = "resourceConfig";
         }
-        configItem = { type: type, root: root, url: url, name: url, extra: true };
+        configItem = { type: type, root: root, url: url, name: url };
     }
     RES.setConfigURL = setConfigURL;
     /**
@@ -488,7 +488,7 @@ var RES;
                     _this.next();
                 }).catch(function (error) {
                     _this.loadingCount--;
-                    delete RES.host.state[r.name];
+                    delete RES.host.state[r.root + r.name];
                     var times = _this.retryTimesDic[r.name] || 1;
                     if (times > _this.maxRetryTimes) {
                         delete _this.retryTimesDic[r.name];
@@ -599,7 +599,7 @@ var RES;
         ResourceLoader.prototype.loadResource = function (r, p) {
             if (!p) {
                 if (RES.FEATURE_FLAG.FIX_DUPLICATE_LOAD == 1) {
-                    var s = RES.host.state[r.name];
+                    var s = RES.host.state[r.root + r.name];
                     if (s == 2) {
                         return Promise.resolve(RES.host.get(r));
                     }
@@ -612,7 +612,7 @@ var RES;
             if (!p) {
                 throw new RES.ResourceManagerError(2001, r.name, r.type);
             }
-            RES.host.state[r.name] = 1;
+            RES.host.state[r.root + r.name] = 1;
             var promise = p.onLoadStart(RES.host, r);
             r.promise = promise;
             return promise;
@@ -625,7 +625,7 @@ var RES;
             }
             var p = RES.processor.isSupport(r);
             if (p) {
-                RES.host.state[r.name] = 3;
+                RES.host.state[r.root + r.name] = 3;
                 var promise = p.onRemoveStart(RES.host, r);
                 RES.host.remove(r);
                 return promise;
@@ -690,7 +690,7 @@ var RES;
         },
         unload: function (r) { return RES.queue.unloadResource(r); },
         save: function (resource, data) {
-            RES.host.state[resource.name] = 2;
+            RES.host.state[resource.root + resource.name] = 2;
             resource.promise = undefined;
             __tempCache[resource.url] = data;
         },
@@ -698,7 +698,7 @@ var RES;
             return __tempCache[resource.url];
         },
         remove: function (resource) {
-            RES.host.state[resource.name] = 0;
+            RES.host.state[resource.root + resource.name] = 0;
             delete __tempCache[resource.url];
         }
     };
@@ -1214,8 +1214,6 @@ var RES;
                 return host.load(resource, 'json').then(function (data) {
                     var resConfigData = RES.config.config;
                     var root = resource.root;
-                    console.log('fuck');
-                    console.log(root);
                     var fileSystem = resConfigData.fileSystem;
                     if (!fileSystem) {
                         fileSystem = {
@@ -2074,10 +2072,15 @@ var RES;
      * @language zh_CN
      */
     function loadConfig(url, resourceRoot) {
-        resourceRoot = RES.path.normalize(resourceRoot + "/");
-        if (url) {
-            RES.setConfigURL(url, resourceRoot);
+        if (resourceRoot.indexOf('://') >= 0) {
+            var temp = resourceRoot.split('://');
+            resourceRoot = temp[0] + '://' + RES.path.normalize(temp[1] + '/');
         }
+        else {
+            resourceRoot = RES.path.normalize(resourceRoot + "/");
+            url = url.replace(resourceRoot, '');
+        }
+        RES.setConfigURL(url, resourceRoot);
         if (!instance)
             instance = new Resource();
         return instance.loadConfig();

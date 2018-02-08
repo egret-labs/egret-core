@@ -72,10 +72,15 @@ module RES {
      * @language zh_CN
      */
     export function loadConfig(url: string, resourceRoot: string) {
-        resourceRoot = path.normalize(resourceRoot + "/");
-        if (url) {
-            setConfigURL(url, resourceRoot);
+        if (resourceRoot.indexOf('://') >= 0) {
+            const temp = resourceRoot.split('://');
+            resourceRoot = temp[0] + '://' + path.normalize(temp[1] + '/');
         }
+        else {
+            resourceRoot = path.normalize(resourceRoot + "/");
+            url = url.replace(resourceRoot, '');
+        }
+        setConfigURL(url, resourceRoot);
         if (!instance) instance = new Resource();
         return instance.loadConfig();
     }
@@ -440,7 +445,7 @@ module RES {
 
         /**
          * 开始加载配置
-		 * @method RES.loadConfig
+         * @method RES.loadConfig
          */
         @checkCancelation
         loadConfig(): Promise<void> {
@@ -455,8 +460,8 @@ module RES {
 
         /**
          * 检查某个资源组是否已经加载完成
-		 * @method RES.isGroupLoaded
-		 * @param name {string}
+         * @method RES.isGroupLoaded
+         * @param name {string}
          */
         public isGroupLoaded(name: string): boolean {
             let resources = config.getGroupByName(name, true);
@@ -464,8 +469,8 @@ module RES {
         }
         /**
          * 根据组名获取组加载项列表
-		 * @method RES.getGroupByName
-		 * @param name {string}
+         * @method RES.getGroupByName
+         * @param name {string}
          */
         getGroupByName(name: string): Array<ResourceInfo> {
             return config.getGroupByName(name, true); //这里不应该传入 true，但是为了老版本的 TypeScriptCompiler 兼容性，暂时这样做
@@ -473,9 +478,9 @@ module RES {
 
         /**
          * 根据组名加载一组资源
-		 * @method RES.loadGroup
-		 * @param name {string}
-		 * @param priority {number}
+         * @method RES.loadGroup
+         * @param name {string}
+         * @param priority {number}
          */
         loadGroup(name: string, priority: number = 0, reporter?: PromiseTaskReporter): Promise<any> {
 
@@ -531,9 +536,9 @@ module RES {
 
         /**
          * 检查配置文件里是否含有指定的资源
-		 * @method RES.hasRes
+         * @method RES.hasRes
          * @param key {string} 对应配置文件里的name属性或subKeys属性的一项。
-		 * @returns {boolean}
+         * @returns {boolean}
          */
         @checkNull
         public hasRes(key: string): boolean {
@@ -542,9 +547,9 @@ module RES {
 
         /**
          * 通过key同步获取资源
-		 * @method RES.getRes
-		 * @param key {string}
-		 * @returns {any}
+         * @method RES.getRes
+         * @param key {string}
+         * @returns {any}
          */
         @checkNull
         public getRes(resKey: string): any {
@@ -597,11 +602,11 @@ module RES {
 
         /**
          * 通过url获取资源
-		 * @method RES.getResByUrl
-		 * @param url {string}
-		 * @param compFunc {Function}
-		 * @param thisObject {any}
-		 * @param type {string}
+         * @method RES.getResByUrl
+         * @param url {string}
+         * @param compFunc {Function}
+         * @param thisObject {any}
+         * @param type {string}
          */
         @checkNull
         @checkCancelation
@@ -632,10 +637,10 @@ module RES {
 
         /**
          * 销毁单个资源文件或一组资源的缓存数据,返回是否删除成功。
-		 * @method RES.destroyRes
+         * @method RES.destroyRes
          * @param name {string} 配置文件中加载项的name属性或资源组名
          * @param force {boolean} 销毁一个资源组时其他资源组有同样资源情况资源是否会被删除，默认值true
-		 * @returns {boolean}
+         * @returns {boolean}
          */
         async destroyRes(name: string, force: boolean = true) {
             var group = config.getGroup(name);
