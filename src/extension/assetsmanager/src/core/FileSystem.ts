@@ -8,6 +8,8 @@ module RES {
 
         name: string;
 
+        root: string;
+
     }
 
     export interface Dictionary {

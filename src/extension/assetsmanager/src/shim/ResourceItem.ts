@@ -168,7 +168,8 @@ module RES {
 				name,
 				url: r.url,
 				type: r.type,
-				data: r
+				data: r,
+				root: r.root
 			}
 
 			return result;

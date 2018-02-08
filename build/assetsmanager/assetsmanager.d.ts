@@ -10,11 +10,11 @@ declare module RES {
     var resourceNameSelector: ResourceNameSelector;
     var resourceMergerSelector: ResourceMergerSelector | null;
     function getResourceInfo(path: string): File | null;
-    function setConfigURL(url: string): void;
-    var resourceRoot: string;
+    function setConfigURL(url: string, root: string): void;
     interface ResourceInfo {
         url: string;
         type: string;
+        root: string;
         crc32?: string;
         size?: number;
         name: string;
@@ -46,7 +46,6 @@ declare module RES {
      */
     class ResourceConfig {
         config: Data;
-        resourceRoot: string;
         constructor();
         init(): Promise<void>;
         __temp__get__type__via__url(url_or_alias: string): string;
@@ -61,13 +60,6 @@ declare module RES {
          * @returns {boolean}
          */
         createGroup(name: string, keys: Array<string>, override?: boolean): boolean;
-        /**
-         * 解析一个配置文件
-         * @method RES.ResourceConfig#parseConfig
-         * @param data {any} 配置文件数据
-         * @param folder {string} 加载项的路径前缀。
-         */
-        parseConfig(data: Data): void;
         /**
          * 添加一个二级键名到配置列表。
          * @method RES.ResourceConfig#addSubkey
@@ -243,6 +235,7 @@ declare module RES {
         url: string;
         type: string;
         name: string;
+        root: string;
     }
     interface Dictionary {
         [file: string]: File | Dictionary;
