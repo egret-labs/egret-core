@@ -55,7 +55,7 @@ module RES {
         unload: (r: ResourceInfo) => queue.unloadResource(r),
 
         save(resource: ResourceInfo, data: any) {
-            host.state[resource.name] = 2;
+            host.state[resource.root + resource.name] = 2;
             resource.promise = undefined;
             __tempCache[resource.url] = data;
         },
@@ -66,7 +66,7 @@ module RES {
         },
 
         remove(resource: ResourceInfo) {
-            host.state[resource.name] = 0;
+            host.state[resource.root + resource.name] = 0;
             delete __tempCache[resource.url];
         }
     }
