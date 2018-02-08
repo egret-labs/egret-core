@@ -31,7 +31,7 @@ export class ResSplitPlugin {
 
         for (let match of this.options.matchers) {
             if (minimatch(file.origin, match.from)) {
-                file.outputDir = file.outputDir;
+                file.outputDir = match.to;
                 if (this.options.verbose) {
                     console.log(`ResSplitPlugin: ${file.relative} => ${file.outputDir}`)
                 }

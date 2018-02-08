@@ -4354,7 +4354,8 @@
                                     origin: e,
                                     contents: t,
                                     isDirty: !0,
-                                    options: n
+                                    options: n,
+                                    outputDir: n && n.outputDir ? n.outputDir : null
                                 });
                                 f.push(r);
                             }, u.label = 1;
