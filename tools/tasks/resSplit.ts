@@ -3,29 +3,26 @@ import * as path from 'path';
 import { Plugin, File } from './index';
 
 
-
 const minimatch = require('../lib/resourcemanager').minimatch;
 
-type RenamePluginOptions = {
+type ResSplitPluginOptions = {
 
     verbose?: boolean
-
-    hash?: "crc32"
 
     matchers: { from: string, to: string }[]
 }
 
-export class RenamePlugin {
+export class ResSplitPlugin {
 
     private verboseInfo: { filename: string, new_file_path: string }[] = [];
 
-    constructor(private options: RenamePluginOptions) {
+    constructor(private options: ResSplitPluginOptions) {
         // matchers: [
         //     { from: "**/*.js", to: "js/[name]_[hash].js" },
         //     { from: "resource/**/**", to: "[path][name]_[hash].[ext]" }
         // ]
         if (!this.options) {
-            this.options = { hash: 'crc32', matchers: [] }
+            this.options = { matchers: [] }
         }
 
     }
@@ -34,14 +31,9 @@ export class RenamePlugin {
 
         for (let match of this.options.matchers) {
             if (minimatch(file.origin, match.from)) {
-                const name = path.basename(file.origin, path.extname(file.origin));
-                const extname = path.extname(file.origin).substr(1);
-                const hash = generateCrc32Code(file.contents);
-                const p = path.dirname(file.origin) + "/";
-                const toFilename = match.to.replace('[name]', name).replace('[hash]', hash).replace('[ext]', extname).replace("[path]", p);
-                file.path = file.base + '/' + toFilename;
+                file.outputDir = file.outputDir;
                 if (this.options.verbose) {
-                    console.log(`RenamePlugin: ${file.relative} => ${toFilename}`)
+                    console.log(`ResSplitPlugin: ${file.relative} => ${file.outputDir}`)
                 }
                 break;
             }

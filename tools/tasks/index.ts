@@ -7,6 +7,7 @@ export { TextureMergerPlugin } from './texturemerger';
 export { EmitResConfigFilePlugin } from './resConfig';
 export { CleanPlugin } from './clean';
 export { RenamePlugin } from './rename';
+export { ResSplitPlugin } from './resSplit';
 
 
 export function run() {
@@ -28,6 +29,8 @@ export type File = {
     path: string;
 
     options: any;
+
+    outputDir?: string
 
     readonly relative: string;
 
