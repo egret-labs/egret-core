@@ -34,25 +34,29 @@ export class EmitResConfigFilePlugin implements Plugin {
         filters.push(options.output);
     }
 
-    private executeFilter(url: string, fileParams?: { type?: string, subkeys?: string[] | string }) {
+    private executeFilter(file: plugin.File) {
+        const fileParams = file.options as { type?: string, subkeys?: string[] | string };
+        const filename = file.origin;
+        const url = file.relative.split('\\').join("/");
         const config = this.config;
         const options = this.options;
-        if (filters.indexOf(url) >= 0) {
+        if (filters.indexOf(filename) >= 0) {
             return null;
         }
 
-        let type = options.typeSelector(url);
+        const type = options.typeSelector(filename);
         if (!type) {
             return null;
         }
-        let name = options.nameSelector(url);
-        let groupName = options.groupSelector(url);
+        const name = options.nameSelector(filename);
+
 
 
         if (fileParams && fileParams.subkeys && typeof fileParams.subkeys == 'object') {
             fileParams.subkeys = fileParams.subkeys.map(p => options.nameSelector(p)).join(",");
         }
 
+        const groupName = options.groupSelector(filename);
         if (groupName) {
             if (!config.groups[groupName]) {
                 config.groups[groupName] = [];
@@ -68,7 +72,7 @@ export class EmitResConfigFilePlugin implements Plugin {
     async  onFile(file: plugin.File): Promise<plugin.File> {
         const filename = file.origin;
         if (filename.indexOf('resource/') >= 0) {
-            let r = this.executeFilter(filename, file.options)
+            let r = this.executeFilter(file)
 
             if (r) {
                 this.fileSystem.addFile(r, true);
@@ -250,6 +254,7 @@ namespace vfs {
 
 
         addFile(r: File, checkDuplicate: boolean) {
+            console.log(r)
             if (checkDuplicate) {
                 let a = this.getFile(r.name)
                 if (a && this.rootPath + "/" + a.url != r.url) {
