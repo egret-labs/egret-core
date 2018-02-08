@@ -25,10 +25,6 @@
             "debug": false
           },
           {
-            "path": "web/WebBitmapData.ts",
-            "platform": "web"
-          },
-          {
             "path": "external/web/WebExternalInterface.ts",
             "platform": "web"
           },
