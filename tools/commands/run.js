@@ -279,7 +279,6 @@ function runWxIde() {
                 case 9:
                     _e.trys.push([9, 14, , 15]);
                     result = globals.compressVersion(packageJson.version, "1.02.1801081");
-                    console.log("result", result);
                     if (!(result > 0)) return [3 /*break*/, 11];
                     return [4 /*yield*/, utils.shell(wxpath, ["-o", projectPath, "-f", "egret"], null, true)];
                 case 10:

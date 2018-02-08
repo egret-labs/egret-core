@@ -55,21 +55,24 @@ var EmitResConfigFilePlugin = (function () {
         this.fileSystem.init(this.config.resources, "resource");
         filters.push(options.output);
     }
-    EmitResConfigFilePlugin.prototype.executeFilter = function (url, fileParams) {
+    EmitResConfigFilePlugin.prototype.executeFilter = function (file) {
+        var fileParams = file.options;
+        var filename = file.origin;
+        var url = file.relative.split('\\').join("/");
         var config = this.config;
         var options = this.options;
-        if (filters.indexOf(url) >= 0) {
+        if (filters.indexOf(filename) >= 0) {
             return null;
         }
-        var type = options.typeSelector(url);
+        var type = options.typeSelector(filename);
         if (!type) {
             return null;
         }
-        var name = options.nameSelector(url);
-        var groupName = options.groupSelector(url);
+        var name = options.nameSelector(filename);
         if (fileParams && fileParams.subkeys && typeof fileParams.subkeys == 'object') {
             fileParams.subkeys = fileParams.subkeys.map(function (p) { return options.nameSelector(p); }).join(",");
         }
+        var groupName = options.groupSelector(filename);
         if (groupName) {
             if (!config.groups[groupName]) {
                 config.groups[groupName] = [];
@@ -87,7 +90,7 @@ var EmitResConfigFilePlugin = (function () {
             return __generator(this, function (_a) {
                 filename = file.origin;
                 if (filename.indexOf('resource/') >= 0) {
-                    r = this.executeFilter(filename, file.options);
+                    r = this.executeFilter(file);
                     if (r) {
                         this.fileSystem.addFile(r, true);
                     }
@@ -231,6 +234,7 @@ var vfs;
             return this.root;
         };
         FileSystem.prototype.addFile = function (r, checkDuplicate) {
+            console.log(r);
             if (checkDuplicate) {
                 var a = this.getFile(r.name);
                 if (a && this.rootPath + "/" + a.url != r.url) {
