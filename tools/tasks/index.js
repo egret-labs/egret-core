@@ -17,6 +17,8 @@ var clean_1 = require("./clean");
 exports.CleanPlugin = clean_1.CleanPlugin;
 var rename_1 = require("./rename");
 exports.RenamePlugin = rename_1.RenamePlugin;
+var resSplit_1 = require("./resSplit");
+exports.ResSplitPlugin = resSplit_1.ResSplitPlugin;
 function run() {
 }
 exports.run = run;
