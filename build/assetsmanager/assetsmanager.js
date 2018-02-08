@@ -62,7 +62,7 @@ var RES;
     }
     RES.getResourceInfo = getResourceInfo;
     var configItem;
-    function setConfigURL(url) {
+    function setConfigURL(url, root) {
         var type;
         if (url.indexOf(".json") >= 0) {
             type = "legacyResourceConfig";
@@ -70,10 +70,9 @@ var RES;
         else {
             type = "resourceConfig";
         }
-        configItem = { type: type, resourceRoot: RES.resourceRoot, url: url, name: url, extra: true };
+        configItem = { type: type, root: root, url: url, name: url, extra: true };
     }
     RES.setConfigURL = setConfigURL;
-    RES.resourceRoot = "";
     /**
      * @class RES.ResourceConfig
      * @classdesc
@@ -86,7 +85,7 @@ var RES;
             var _this = this;
             if (!this.config) {
                 this.config = {
-                    alias: {}, groups: {}, resourceRoot: this.resourceRoot,
+                    alias: {}, groups: {}, resourceRoot: configItem.root,
                     typeSelector: function () { return 'unknown'; }, mergeSelector: null,
                     fileSystem: null
                 };
@@ -258,12 +257,12 @@ var RES;
         };
         /**
          * 解析一个配置文件
+         * @internal
          * @method RES.ResourceConfig#parseConfig
          * @param data {any} 配置文件数据
          * @param folder {string} 加载项的路径前缀。
          */
         ResourceConfig.prototype.parseConfig = function (data) {
-            RES.resourceRoot = data.resourceRoot;
             this.config = data;
             RES.fileSystem = data.fileSystem;
             // if (!data)
@@ -803,7 +802,7 @@ var RES;
             if (resource.url.indexOf("://") != -1) {
                 return resource.url;
             }
-            var prefix = resource.extra ? "" : RES.resourceRoot;
+            var prefix = resource.extra ? "" : resource.root;
             var url = prefix + resource.url;
             if (RES['getRealURL']) {
                 return RES['getRealURL'](url);
@@ -987,10 +986,10 @@ var RES;
                             case 0: return [4 /*yield*/, host.load(resource, "json")];
                             case 1:
                                 data = _a.sent();
-                                imagePath = RES.config.resourceRoot + getRelativePath(resource.url, data.file);
+                                imagePath = resource.root + getRelativePath(resource.url, data.file);
                                 r = host.resourceConfig.getResource(data.file);
                                 if (!r) {
-                                    r = { name: imagePath, url: imagePath, extra: true, type: 'image' };
+                                    r = { name: imagePath, url: imagePath, extra: true, type: 'image', root: resource.root };
                                 }
                                 return [4 /*yield*/, host.load(r)];
                             case 2:
@@ -1073,12 +1072,12 @@ var RES;
                                 r = host.resourceConfig.getResource(imageFileName);
                                 if (!r) {
                                     if (typeof config === 'string') {
-                                        imageFileName = RES.config.resourceRoot + fontGetTexturePath(resource.url, config);
+                                        imageFileName = resource.root + fontGetTexturePath(resource.url, config);
                                     }
                                     else {
-                                        imageFileName = RES.config.resourceRoot + getRelativePath(resource.url, config.file);
+                                        imageFileName = resource.root + getRelativePath(resource.url, config.file);
                                     }
-                                    r = { name: imageFileName, url: imageFileName, extra: true, type: 'image' };
+                                    r = { name: imageFileName, url: imageFileName, extra: true, type: 'image', root: resource.root };
                                 }
                                 return [4 /*yield*/, host.load(r)];
                             case 2:
@@ -1214,6 +1213,9 @@ var RES;
             onLoadStart: function (host, resource) {
                 return host.load(resource, 'json').then(function (data) {
                     var resConfigData = RES.config.config;
+                    var root = resource.root;
+                    console.log('fuck');
+                    console.log(root);
                     var fileSystem = resConfigData.fileSystem;
                     if (!fileSystem) {
                         fileSystem = {
@@ -1224,7 +1226,7 @@ var RES;
                             addFile: function (filename, type) {
                                 if (!type)
                                     type = "";
-                                fsData[filename] = { name: filename, type: type, url: filename };
+                                fsData[filename] = { name: filename, type: type, url: filename, root: root };
                             },
                             profile: function () {
                                 console.log(fsData);
@@ -1241,6 +1243,7 @@ var RES;
                     var fsData = fileSystem['fsData'];
                     var _loop_2 = function (resource_1) {
                         fsData[resource_1.name] = resource_1;
+                        fsData[resource_1.name].root = root;
                         if (resource_1.subkeys) {
                             resource_1.subkeys.split(",").forEach(function (subkey) {
                                 alias[subkey] = resource_1.name + "#" + subkey;
@@ -1940,7 +1943,8 @@ var RES;
                 name: name,
                 url: r.url,
                 type: r.type,
-                data: r
+                data: r,
+                root: r.root
             };
             return result;
         }
@@ -2070,12 +2074,12 @@ var RES;
      * @language zh_CN
      */
     function loadConfig(url, resourceRoot) {
+        resourceRoot = RES.path.normalize(resourceRoot + "/");
         if (url) {
-            RES.setConfigURL(url);
+            RES.setConfigURL(url, resourceRoot);
         }
         if (!instance)
             instance = new Resource();
-        RES.config.resourceRoot = RES.path.normalize(resourceRoot + "/");
         return instance.loadConfig();
     }
     RES.loadConfig = loadConfig;
@@ -2585,7 +2589,7 @@ var RES;
                     type = RES.config.__temp__get__type__via__url(url);
                 }
                 // manager.config.addResourceData({ name: url, url: url });
-                r = { name: url, url: url, type: type, extra: true };
+                r = { name: url, url: url, type: type, extra: true, root: '' };
                 RES.config.addResourceData(r);
                 r = RES.config.getResource(url);
                 if (r) {

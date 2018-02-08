@@ -56,9 +56,9 @@ module RES {
         return result;
     }
 
-    var configItem: ResourceInfo & { resourceRoot: string };
+    var configItem: ResourceInfo;
 
-    export function setConfigURL(url: string) {
+    export function setConfigURL(url: string, root: string) {
         let type;
         if (url.indexOf(".json") >= 0) {
             type = "legacyResourceConfig";
@@ -66,19 +66,16 @@ module RES {
         else {
             type = "resourceConfig";
         }
-        configItem = { type, resourceRoot, url, name: url, extra: true };
+        configItem = { type, root, url, name: url, extra: true };
     }
-
-
-
-    export var resourceRoot = "";
-
 
     export interface ResourceInfo {
 
         url: string;
 
         type: string;
+
+        root: string;
 
         crc32?: string;
 
@@ -132,15 +129,13 @@ module RES {
 
         config: Data;
 
-        resourceRoot: string;
-
         constructor() {
         }
 
         init() {
             if (!this.config) {
                 this.config = {
-                    alias: {}, groups: {}, resourceRoot: this.resourceRoot,
+                    alias: {}, groups: {}, resourceRoot: configItem.root,
                     typeSelector: () => 'unknown', mergeSelector: null,
                     fileSystem: null as any as FileSystem
                 }
@@ -370,12 +365,12 @@ module RES {
 
         /**
          * 解析一个配置文件
+         * @internal
 		 * @method RES.ResourceConfig#parseConfig
          * @param data {any} 配置文件数据
          * @param folder {string} 加载项的路径前缀。
          */
         public parseConfig(data: Data): void {
-            resourceRoot = data.resourceRoot;
             this.config = data;
             fileSystem = data.fileSystem;
 

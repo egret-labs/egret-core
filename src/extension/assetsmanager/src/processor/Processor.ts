@@ -41,7 +41,7 @@ module RES.processor {
         if (resource.url.indexOf("://") != -1) {
             return resource.url;
         }
-        let prefix = resource.extra ? "" : resourceRoot;
+        let prefix = resource.extra ? "" : resource.root;
         let url = prefix + resource.url;
         if (RES['getRealURL']) { //todo: shim native
             return RES['getRealURL'](url);
@@ -201,10 +201,10 @@ module RES.processor {
         async onLoadStart(host, resource): Promise<any> {
 
             let data = await host.load(resource, "json");
-            let imagePath = RES.config.resourceRoot + getRelativePath(resource.url, data.file);
+            let imagePath = resource.root + getRelativePath(resource.url, data.file);
             let r = host.resourceConfig.getResource(data.file);
             if (!r) {
-                r = { name: imagePath, url: imagePath, extra: true, type: 'image' };
+                r = { name: imagePath, url: imagePath, extra: true, type: 'image', root: resource.root };
             }
             var texture: egret.Texture = await host.load(r);
             var frames: any = data.frames;
@@ -290,12 +290,12 @@ module RES.processor {
             let r = host.resourceConfig.getResource(imageFileName);
             if (!r) {
                 if (typeof config === 'string') {
-                    imageFileName = RES.config.resourceRoot + fontGetTexturePath(resource.url, config)
+                    imageFileName = resource.root + fontGetTexturePath(resource.url, config)
                 }
                 else {
-                    imageFileName = RES.config.resourceRoot + getRelativePath(resource.url, config.file);
+                    imageFileName = resource.root + getRelativePath(resource.url, config.file);
                 }
-                r = { name: imageFileName, url: imageFileName, extra: true, type: 'image' };
+                r = { name: imageFileName, url: imageFileName, extra: true, type: 'image', root: resource.root };
             }
             var texture: egret.Texture = await host.load(r);
             var font = new egret.BitmapFont(texture, config);
@@ -469,6 +469,9 @@ module RES.processor {
 
             return host.load(resource, 'json').then((data: LegacyResourceConfig) => {
                 const resConfigData = RES.config.config;
+                const root = resource.root;
+                console.log('fuck');
+                console.log(root)
                 let fileSystem = resConfigData.fileSystem;
                 if (!fileSystem) {
                     fileSystem = {
@@ -481,7 +484,7 @@ module RES.processor {
 
                         addFile: (filename, type) => {
                             if (!type) type = "";
-                            fsData[filename] = { name: filename, type, url: filename };
+                            fsData[filename] = { name: filename, type, url: filename, root };
                         },
 
                         profile: () => {
@@ -499,9 +502,10 @@ module RES.processor {
                     groups[g.name] = g.keys.split(",");
                 }
                 let alias: { [index: string]: string } = resConfigData.alias;
-                let fsData: { [index: string]: LegacyResourceInfo } = fileSystem['fsData'];
+                let fsData: { [index: string]: LegacyResourceInfo & { root?: string } } = fileSystem['fsData'];
                 for (let resource of data.resources) {
                     fsData[resource.name] = resource;
+                    fsData[resource.name].root = root;
                     if (resource.subkeys) {
                         resource.subkeys.split(",").forEach(subkey => {
                             alias[subkey] = resource.name + "#" + subkey;
