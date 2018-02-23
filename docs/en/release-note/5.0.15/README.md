@@ -1,4 +1,4 @@
-Egret Engine 5.0.14 Release Note
+Egret Engine 5.0.15 Release Note
 ===============================
 
 Latest update: February 23, 2018
@@ -17,13 +17,20 @@ This version is the official recommended stable version.
 ## Updates
 
 * 2D rendering - JavaScript
-    * Updated Facebook InstantGame SDK to version 5.0
-    * Added EUI publish mode as commonjs function
-    * New mouse support for releaseOutSide events (thanks to developer 程方)
-    * Repair BitemapText text is empty, the width of the calculation error (thanks to the developer CaiBinQing)
-    * Fix EUI scale is 0, click to judge the wrong question (thanks to the developer qiwucwb)
-    * Fix customFilter parameters wrong (thanks developer wangyn)
-
+    * Added egret.warn and egret.error information can be displayed to the micro-end debug panel
+    * Fixed eui.Rect memory leak issue in WebGL rendering mode
+    * Repair eui.Group the sacle is 0, click anywhere is the click success problem
+    * Fixes There is no reset of textWidth and textHeight when setting the text or font properties of BitmapText to null
+    * Fixed CustomWhite textureWidth and textureHeight not fixed when CustomFilter padding property is 0
+    * Fix getPixels inaccurate problem in WebGL environment
+    * Fix for egret.MainContext.deviceType and egret.MainContext.runtimeType exceptions
+    * Repairing a mouse can not dispatch a releaseOutSide event when it comes back to Stage after it has been loosened
+    * Fixed Graphics object settings filter does not show the problem
+    * Fix eui.BitmapLabel set the font repeatedly because of asynchronous loading will lead to font disorder problem 
+    * Fix egret.ByteArray.readBytes function will cause bytesAvailable exception
+    * Fix eui virtual layout may create too many object problems
+    * Repair audio stops after the event is not emptied registration may lead to error reported
+    * Repair game div set the display property to none, resize exception
 
 ## Known Issues
 
