@@ -35,6 +35,11 @@ export class BricksPlugin implements plugins.Command {
             }
             file.path = file.dirname + '/manifest.js'
             file.contents = new Buffer(content);
+        } else if (filename == 'main.js') {
+            const content = file.contents.toString();
+            let result = content.replace(/resource\//gm, 'GameRes://resource/');
+            file.path = file.dirname + '/main.js'
+            file.contents = new Buffer(result);
         }
         return file;
     }
