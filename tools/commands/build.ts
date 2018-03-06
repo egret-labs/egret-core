@@ -11,9 +11,6 @@ import { buildBefore } from '../actions/TargetAction';
 
 console.log(utils.tr(1004, 0));
 
-
-
-
 class Build implements egret.Command {
     @utils.measure
     async execute() {
@@ -47,7 +44,7 @@ class Build implements egret.Command {
         const target = egret.args.target;
         const projectConfig = parseConfig.parseConfig();
         await res.build({ projectRoot, debug: true, command, target, projectConfig }, buildBefore);
-        return 0;
+        return global.exitCode;
     }
 
     private buildLib2(packageJson: project.Package_JSON) {

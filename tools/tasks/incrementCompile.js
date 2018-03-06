@@ -66,18 +66,30 @@ function executeBuildCommand() {
             path: egret.args.projectDir,
             command: "build",
             option: egret.args
-        }, function (cmd) { return onGotBuildCommandResult(cmd, function () {
+        }, function (cmd) { return onGotBuildCommandResult(cmd, function (errorcode) {
+            global.exitCode = errorcode;
             resolve();
         }); }, true);
     });
 }
 function onGotBuildCommandResult(cmd, callback) {
-    if (cmd.messages) {
-        cmd.messages.forEach(function (m) { return console.log(m); });
-    }
     if (!cmd.exitCode) {
+        if (cmd.messages) {
+            cmd.messages.forEach(function (m) { return console.log(m); });
+        }
         setTimeout(function () { return callback(0); }, 500);
     }
-    else
+    else {
+        if (cmd.exitCode == 0) {
+            if (cmd.messages) {
+                cmd.messages.forEach(function (m) { return console.log(m); });
+            }
+        }
+        else {
+            if (cmd.messages) {
+                cmd.messages.forEach(function (m) { return console.error(m); });
+            }
+        }
         callback(cmd.exitCode || 0);
+    }
 }

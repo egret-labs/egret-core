@@ -83,7 +83,7 @@ var Build = (function () {
                         return [4 /*yield*/, res.build({ projectRoot: projectRoot, debug: true, command: command, target: target, projectConfig: projectConfig }, TargetAction_1.buildBefore)];
                     case 1:
                         _a.sent();
-                        return [2 /*return*/, 0];
+                        return [2 /*return*/, global.exitCode];
                 }
             });
         });

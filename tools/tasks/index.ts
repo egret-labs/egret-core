@@ -11,7 +11,7 @@ export { ResSplitPlugin } from './resSplit';
 
 
 export function run() {
-
+    global.exitCode = 0;
 }
 
 export interface Plugin {

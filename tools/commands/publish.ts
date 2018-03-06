@@ -26,7 +26,7 @@ class Publish implements egret.Command {
         options.releaseDir = FileUtil.joinPath(config.getReleaseRoot(), target, version);
         globals.log(1402, target, "");
         await publishResource(version);
-        return DontExitCode;
+        return global.exitCode;
     }
 }
 
