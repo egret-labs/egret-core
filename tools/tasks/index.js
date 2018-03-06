@@ -20,5 +20,6 @@ exports.RenamePlugin = rename_1.RenamePlugin;
 var resSplit_1 = require("./resSplit");
 exports.ResSplitPlugin = resSplit_1.ResSplitPlugin;
 function run() {
+    global.exitCode = 0;
 }
 exports.run = run;

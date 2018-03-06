@@ -26,7 +26,8 @@ function executeBuildCommand() {
             path: egret.args.projectDir,
             command: "build",
             option: egret.args
-        }, cmd => onGotBuildCommandResult(cmd, () => {
+        }, cmd => onGotBuildCommandResult(cmd, (errorcode) => {
+            global.exitCode = errorcode;
             resolve();
         }), true);
     });
@@ -34,13 +35,25 @@ function executeBuildCommand() {
 
 
 function onGotBuildCommandResult(cmd: egret.ServiceCommandResult, callback: (exitCode: number) => void) {
-    if (cmd.messages) {
-        cmd.messages.forEach(m => console.log(m));
-    }
-
     if (!cmd.exitCode) {
+        if (cmd.messages) {
+            cmd.messages.forEach(m => console.log(m));
+        }
         setTimeout(() => callback(0), 500);
     }
-    else
+    else {
+        if (cmd.exitCode == 0) {
+            if (cmd.messages) {
+                cmd.messages.forEach(m => console.log(m));
+            }
+        }
+        else {
+            if (cmd.messages) {
+                cmd.messages.forEach(m => console.error(m));
+            }
+        }
         callback(cmd.exitCode || 0);
+    }
+
+
 }

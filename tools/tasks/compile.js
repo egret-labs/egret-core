@@ -150,7 +150,10 @@ function tinyCompiler(defines) {
     compilerOptions.allowUnreachableCode = true;
     compilerOptions.emitReflection = true;
     compilerOptions.defines = defines;
-    this.compilerHost = compiler.compile(compilerOptions, fileNames);
+    var compilerHost = compiler.compile(compilerOptions, fileNames);
+    if (compilerHost.messages && compilerHost.messages.length > 0) {
+        global.exitCode = 1;
+    }
     var jscode = fs.readFileSync(outfile);
     return jscode;
 }

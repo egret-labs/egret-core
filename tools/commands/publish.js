@@ -57,7 +57,7 @@ var Publish = (function () {
                         return [4 /*yield*/, PublishResourceAction_1.publishResource(version)];
                     case 1:
                         _a.sent();
-                        return [2 /*return*/, DontExitCode];
+                        return [2 /*return*/, global.exitCode];
                 }
             });
         });
