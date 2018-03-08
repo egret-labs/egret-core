@@ -175,6 +175,9 @@ namespace egret.web {
             let top = 0;
             let boundingClientWidth = screenRect.width;
             let boundingClientHeight = screenRect.height;
+            if (boundingClientWidth == 0 || boundingClientHeight == 0) {
+                return;
+            }
             if (screenRect.top < 0) {
                 boundingClientHeight += screenRect.top;
                 top = -screenRect.top;
