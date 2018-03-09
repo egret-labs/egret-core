@@ -417,6 +417,9 @@ var RES;
             this.queueIndex = 0;
         }
         ResourceLoader.prototype.load = function (list, groupName, priority, reporter) {
+            if (this.itemListDic[groupName]) {
+                return Promise.resolve();
+            }
             var total = list.length;
             for (var i = 0; i < total; i++) {
                 var resInfo = list[i];

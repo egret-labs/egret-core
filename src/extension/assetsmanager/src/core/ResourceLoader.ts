@@ -69,6 +69,9 @@ module RES {
 		private errorDic: any = {};
 
 		load(list: ResourceInfo[], groupName: string, priority: number, reporter?: PromiseTaskReporter): Promise<any> {
+			if(this.itemListDic[groupName]) {
+				return Promise.resolve();
+			}
 			const total = list.length;
 			for (let i: number = 0; i < total; i++) {
 				const resInfo: ResourceInfo = list[i];
