@@ -4172,6 +4172,9 @@ var egret;
                 var top = 0;
                 var boundingClientWidth = screenRect.width;
                 var boundingClientHeight = screenRect.height;
+                if (boundingClientWidth == 0 || boundingClientHeight == 0) {
+                    return;
+                }
                 if (screenRect.top < 0) {
                     boundingClientHeight += screenRect.top;
                     top = -screenRect.top;
