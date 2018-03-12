@@ -231,7 +231,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static readonly engineVersion:string = "5.1.5";
+        public static readonly engineVersion:string = "5.1.6";
 
         /***
          * current render mode.
