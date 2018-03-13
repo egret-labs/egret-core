@@ -79,6 +79,7 @@ declare module RES {
             name: string;
             type?: string;
             url: string;
+            root?: string;
         }): void;
         destory(): void;
     }
@@ -241,7 +242,7 @@ declare module RES {
         [file: string]: File | Dictionary;
     }
     interface FileSystem {
-        addFile(filename: string, type?: string): any;
+        addFile(filename: string, type?: string, root?: string): any;
         getFile(filename: string): File | null;
         profile(): void;
     }
