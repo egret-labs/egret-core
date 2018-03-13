@@ -20,7 +20,7 @@ module RES {
 
     export interface FileSystem {
 
-        addFile(filename: string, type?: string);
+        addFile(filename: string, type?: string, root?:string);
 
         getFile(filename: string): File | null;
 
