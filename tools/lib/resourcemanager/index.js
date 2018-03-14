@@ -2264,33 +2264,24 @@
             }
             function _(t, n) {
                 return i(this, void 0, void 0, function() {
-                    var r, i, u, l, _, d;
+                    var r, i, u;
                     return a(this, function(a) {
                         switch (a.label) {
                           case 0:
-                            r = [ o.join(t, "scripts/config." + n.target + ".ts"), o.join(t, "scripts/config.ts") ], 
-                            u = 0, l = r, a.label = 1;
+                            return r = "web" == n.target ? "scripts/config.ts" : "scripts/config." + n.target + ".ts", 
+                            i = o.join(t, r), [ 4, s.existsAsync(i) ];
 
                           case 1:
-                            return u < l.length ? (_ = l[u], [ 4, s.existsAsync(_) ]) : [ 3, 4 ];
-
-                          case 2:
-                            if (a.sent()) return i = _, [ 3, 4 ];
-                            a.label = 3;
-
-                          case 3:
-                            return u++, [ 3, 1 ];
-
-                          case 4:
+                            if (!a.sent()) throw "scripts 文件夹缺少 " + r;
                             return [ 4, c.getConfigViaFile(i, n) ];
 
-                          case 5:
-                            return d = a.sent(), e.typeSelector = d.typeSelector, e.nameSelector = d.nameSelector, 
-                            e.mergeSelector = d.mergeSelector, f = {
+                          case 2:
+                            return u = a.sent(), e.typeSelector = u.typeSelector, e.nameSelector = u.nameSelector, 
+                            e.mergeSelector = u.mergeSelector, f = {
                                 alias: {},
                                 groups: {},
                                 resources: {}
-                            }, e.userConfig = d.userConfig, e.userConfig || (e.userConfig = {
+                            }, e.userConfig = u.userConfig, e.userConfig || (e.userConfig = {
                                 outputDir: ".",
                                 commands: []
                             }), [ 2 ];
@@ -3223,6 +3214,8 @@
                         return [ 2, new Promise(function(e, t) {
                             g.on("end", function() {
                                 e(g);
+                            }).on("error", function() {
+                                console.log("fuck");
                             });
                         }) ];
                     }
