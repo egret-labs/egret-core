@@ -977,11 +977,6 @@ declare namespace egret {
         $hasAnyFlags(flags: number): boolean;
         /**
          * @private
-         * 是否添加到舞台上，防止重复发送 removed_from_stage 消息
-         */
-        $hasAddToStage: boolean;
-        /**
-         * @private
          * 标记矩阵失效
          */
         $invalidateMatrix(): void;
@@ -1041,9 +1036,13 @@ declare namespace egret {
         $onAddToStage(stage: Stage, nestLevel: number): void;
         /**
          * @private
+         */
+        $dispatchAddedToStageEvent(): void;
+        /**
+         * @private
          * 显示对象从舞台移除
          */
-        $onRemoveFromStage(): void;
+        $onRemoveFromStage(notifyListeners: boolean): void;
         /**
          * @private
          */
@@ -1953,14 +1952,6 @@ declare namespace egret {
      */
     class DisplayObjectContainer extends DisplayObject {
         /**
-         * @private
-         */
-        static $EVENT_ADD_TO_STAGE_LIST: DisplayObject[];
-        /**
-         * @private
-         */
-        static $EVENT_REMOVE_FROM_STAGE_LIST: DisplayObject[];
-        /**
          * Creates a new DisplayObjectContainer instance.
          * @version Egret 2.4
          * @platform Web,Native
@@ -2278,9 +2269,13 @@ declare namespace egret {
         $onAddToStage(stage: Stage, nestLevel: number): void;
         /**
          * @private
+         */
+        $dispatchAddedToStageEvent(): void;
+        /**
+         * @private
          *
          */
-        $onRemoveFromStage(): void;
+        $onRemoveFromStage(notifyListeners: boolean): void;
         /**
          * @private
          */
@@ -3739,7 +3734,7 @@ declare namespace egret {
         /**
          * @private
          */
-        $onRemoveFromStage(): void;
+        $onRemoveFromStage(notifyListeners: boolean): void;
     }
 }
 declare namespace egret {
@@ -4074,7 +4069,7 @@ declare namespace egret {
          * @private
          * 显示对象从舞台移除
          */
-        $onRemoveFromStage(): void;
+        $onRemoveFromStage(notifyListeners: boolean): void;
         /**
          * The BitmapData object being referenced.
          * If you pass the constructor of type Texture or last set for texture, this value returns null.
@@ -10597,7 +10592,7 @@ declare namespace egret {
         /**
          * @private
          */
-        $onRemoveFromStage(): void;
+        $onRemoveFromStage(notifyListeners: boolean): void;
     }
 }
 declare namespace egret.sys {
@@ -13167,7 +13162,7 @@ declare namespace egret {
          * @private
          *
          */
-        $onRemoveFromStage(): void;
+        $onRemoveFromStage(notifyListeners: boolean): void;
         /**
          * @private
          *

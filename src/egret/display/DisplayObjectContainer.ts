@@ -45,15 +45,6 @@ namespace egret {
     export class DisplayObjectContainer extends DisplayObject {
 
         /**
-         * @private
-         */
-        static $EVENT_ADD_TO_STAGE_LIST: DisplayObject[] = [];
-        /**
-         * @private
-         */
-        static $EVENT_REMOVE_FROM_STAGE_LIST: DisplayObject[] = [];
-
-        /**
          * Creates a new DisplayObjectContainer instance.
          * @version Egret 2.4
          * @platform Web,Native
@@ -201,12 +192,8 @@ namespace egret {
                 child.dispatchEventWith(Event.ADDED, true);
             }
             if (stage) {
-                let list = DisplayObjectContainer.$EVENT_ADD_TO_STAGE_LIST;
-                while (list.length) {
-                    let childAddToStage = list.shift();
-                    if (childAddToStage.$stage && notifyListeners) {
-                        childAddToStage.dispatchEventWith(Event.ADDED_TO_STAGE);
-                    }
+                if (notifyListeners) {
+                    child.$dispatchAddedToStageEvent();
                 }
             }
             let displayList = this.$displayList || this.$parentDisplayList;
@@ -409,24 +396,14 @@ namespace egret {
                 child.dispatchEventWith(Event.REMOVED, true);
             }
             if (this.$stage) {//在舞台上
-                child.$onRemoveFromStage();
-                let list = DisplayObjectContainer.$EVENT_REMOVE_FROM_STAGE_LIST;
-                while (list.length > 0) {
-                    let childAddToStage = list.shift();
-                    if (notifyListeners && childAddToStage.$hasAddToStage) {
-                        childAddToStage.$hasAddToStage = false;
-                        childAddToStage.dispatchEventWith(Event.REMOVED_FROM_STAGE);
-                    }
-                    childAddToStage.$hasAddToStage = false;
-                    childAddToStage.$stage = null;
-                }
+                child.$onRemoveFromStage(notifyListeners);
             }
             let displayList = this.$displayList || this.$parentDisplayList;
             this.assignParentDisplayList(child, displayList, null);
             child.$propagateFlagsDown(sys.DisplayObjectFlags.DownOnAddedOrRemoved);
             child.$setParent(null);
             let indexNow = children.indexOf(child);
-            if(indexNow!=-1){
+            if (indexNow != -1) {
                 children.splice(indexNow, 1);
             }
             this.$propagateFlagsUp(sys.DisplayObjectFlags.InvalidBounds);
@@ -627,15 +604,32 @@ namespace egret {
 
         /**
          * @private
+         */
+        $dispatchAddedToStageEvent():void {
+            super.$dispatchAddedToStageEvent();
+            let children = this.$children;
+            let length = children.length;
+            for (let i = 0; i < length; i++) {
+                let child: DisplayObject = this.$children[i];
+                if(child) {
+                    child.$dispatchAddedToStageEvent();
+                }
+            }
+        }
+
+        /**
+         * @private
          *
          */
-        $onRemoveFromStage(): void {
-            super.$onRemoveFromStage();
+        $onRemoveFromStage(notifyListeners: boolean): void {
+            super.$onRemoveFromStage(notifyListeners);
             let children = this.$children;
             let length = children.length;
             for (let i = 0; i < length; i++) {
                 let child: DisplayObject = children[i];
-                child.$onRemoveFromStage();
+                if(child) {
+                    child.$onRemoveFromStage(notifyListeners);
+                }
             }
         }
 
@@ -824,7 +818,7 @@ namespace egret {
             }
             let children = this.$children;
             let found = false;
-            let target:DisplayObject = null;
+            let target: DisplayObject = null;
             for (let i = children.length - 1; i >= 0; i--) {
                 let child = children[i];
                 if (child.$maskedObject) {

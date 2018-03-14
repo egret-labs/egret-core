@@ -119,9 +119,9 @@ namespace eui {
          *
          * @param value
          */
-        $getText():string {
+        $getText(): string {
             let value = super.$getText();
-            if(value == this.$EditableText[sys.EditableTextKeys.promptText]){
+            if (value == this.$EditableText[sys.EditableTextKeys.promptText]) {
                 value = "";
             }
             return value;
@@ -162,7 +162,7 @@ namespace eui {
          * @param nestLevel
          */
         public $onAddToStage(stage: egret.Stage, nestLevel: number): void {
-            sys.UIComponentImpl.prototype["$onAddToStage"].call(this,stage, nestLevel);
+            sys.UIComponentImpl.prototype["$onAddToStage"].call(this, stage, nestLevel);
             this.addEventListener(egret.FocusEvent.FOCUS_IN, this.onfocusIn, this);
             this.addEventListener(egret.FocusEvent.FOCUS_OUT, this.onfocusOut, this);
         }
@@ -170,8 +170,8 @@ namespace eui {
          * @private
          *
          */
-        public $onRemoveFromStage(): void {
-            sys.UIComponentImpl.prototype["$onRemoveFromStage"].call(this);
+        public $onRemoveFromStage(notifyListeners: boolean): void {
+            sys.UIComponentImpl.prototype["$onRemoveFromStage"].call(this, notifyListeners);
             this.removeEventListener(egret.FocusEvent.FOCUS_IN, this.onfocusIn, this);
             this.removeEventListener(egret.FocusEvent.FOCUS_OUT, this.onfocusOut, this);
         }

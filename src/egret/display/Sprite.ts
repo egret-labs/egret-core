@@ -65,7 +65,7 @@ namespace egret {
         /**
          * @private
          */
-        $graphics:Graphics;
+        $graphics: Graphics;
 
         /**
          * Specifies the Graphics object belonging to this Shape object, where vector drawing commands can occur.
@@ -79,11 +79,11 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get graphics():Graphics {
+        public get graphics(): Graphics {
             return this.$graphics;
         }
 
-        $hitTest(stageX:number, stageY:number):DisplayObject {
+        $hitTest(stageX: number, stageY: number): DisplayObject {
             if (!this.$visible) {
                 return null;
             }
@@ -101,7 +101,7 @@ namespace egret {
             }
             let children = this.$children;
             let found = false;
-            let target:DisplayObject = null;
+            let target: DisplayObject = null;
             for (let i = children.length - 1; i >= 0; i--) {
                 let child = children[i];
                 if (child.$maskedObject) {
@@ -110,10 +110,10 @@ namespace egret {
                 target = child.$hitTest(stageX, stageY);
                 if (target) {
                     found = true;
-                    if(target.$touchEnabled){
+                    if (target.$touchEnabled) {
                         break;
                     }
-                    else{
+                    else {
                         target = null;
                     }
                 }
@@ -128,7 +128,7 @@ namespace egret {
                 return this;
             }
 
-            target =  DisplayObject.prototype.$hitTest.call(this, stageX, stageY);
+            target = DisplayObject.prototype.$hitTest.call(this, stageX, stageY);
             if (target) {
                 target = this.$graphics.$hitTest(stageX, stageY);
             }
@@ -139,16 +139,16 @@ namespace egret {
         /**
          * @private
          */
-        $measureContentBounds(bounds:Rectangle):void {
+        $measureContentBounds(bounds: Rectangle): void {
             this.$graphics.$measureContentBounds(bounds);
         }
 
         /**
          * @private
          */
-        public $onRemoveFromStage():void {
-            super.$onRemoveFromStage();
-            if(this.$graphics) {
+        public $onRemoveFromStage(notifyListeners: boolean): void {
+            super.$onRemoveFromStage(notifyListeners);
+            if (this.$graphics) {
                 this.$graphics.$onRemoveFromStage();
             }
         }

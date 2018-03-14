@@ -146,8 +146,8 @@ namespace egret {
          * @private
          * 显示对象从舞台移除
          */
-        $onRemoveFromStage(): void {
-            super.$onRemoveFromStage();
+        $onRemoveFromStage(notifyListeners: boolean): void {
+            super.$onRemoveFromStage(notifyListeners);
 
             let bitmapData = this.$Bitmap[sys.BitmapKeys.bitmapData];
             if (bitmapData) {

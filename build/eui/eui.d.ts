@@ -8404,7 +8404,7 @@ declare namespace eui {
         /**
          * @private
          */
-        $onRemoveFromStage(): void;
+        $onRemoveFromStage(notifyListeners: boolean): void;
     }
 }
 declare namespace eui {
@@ -10602,7 +10602,7 @@ declare namespace eui {
          * @private
          *
          */
-        $onRemoveFromStage(): void;
+        $onRemoveFromStage(notifyListeners: boolean): void;
         /**
          * @private
          */

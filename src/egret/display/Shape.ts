@@ -70,7 +70,7 @@ namespace egret {
         /**
          * @private
          */
-        $graphics:Graphics;
+        $graphics: Graphics;
 
         /**
          * Specifies the Graphics object belonging to this Shape object, where vector drawing commands can occur.
@@ -84,18 +84,18 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get graphics():Graphics {
+        public get graphics(): Graphics {
             return this.$graphics;
         }
 
         /**
          * @private
          */
-        $measureContentBounds(bounds:Rectangle):void {
+        $measureContentBounds(bounds: Rectangle): void {
             this.$graphics.$measureContentBounds(bounds);
         }
 
-        $hitTest(stageX:number, stageY:number):DisplayObject {
+        $hitTest(stageX: number, stageY: number): DisplayObject {
             let target = super.$hitTest(stageX, stageY);
             if (target == this) {
                 target = this.$graphics.$hitTest(stageX, stageY);
@@ -106,9 +106,9 @@ namespace egret {
         /**
          * @private
          */
-        public $onRemoveFromStage():void {
-            super.$onRemoveFromStage();
-            if(this.$graphics) {
+        public $onRemoveFromStage(notifyListeners: boolean): void {
+            super.$onRemoveFromStage(notifyListeners);
+            if (this.$graphics) {
                 this.$graphics.$onRemoveFromStage();
             }
         }

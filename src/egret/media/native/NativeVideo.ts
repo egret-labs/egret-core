@@ -36,25 +36,25 @@ namespace egret.native {
         /**
          * @private
          */
-        private originVideo:HTMLVideoElement;
+        private originVideo: HTMLVideoElement;
         /**
          * @private
          */
-        private loaded:boolean = false;
+        private loaded: boolean = false;
         /**
          * @private
          */
-        private loading:boolean = false;
+        private loading: boolean = false;
         /**
          * @private
          */
-        private cache:boolean;
+        private cache: boolean;
 
         /**
          * @private
          * @inheritDoc
          */
-        constructor(url?:string, cache:boolean = true) {
+        constructor(url?: string, cache: boolean = true) {
             super();
             this.$renderNode = new sys.BitmapNode();
             this.cache = cache;
@@ -69,7 +69,7 @@ namespace egret.native {
         /**
          * @inheritDoc
          */
-        public load(url?:string, cache:boolean = true):void {
+        public load(url?: string, cache: boolean = true): void {
             if (DEBUG && !url) {
                 egret.$error(3002);
                 return;
@@ -77,8 +77,8 @@ namespace egret.native {
             if (this.loading) {
                 return;
             }
-            if(url.indexOf('/')==0){
-                url = url.slice(1,url.length);
+            if (url.indexOf('/') == 0) {
+                url = url.slice(1, url.length);
             }
             this.src = url;
             this.loading = true;
@@ -113,11 +113,11 @@ namespace egret.native {
             video.load();
             let self = this;
 
-            function onCanPlay():void {
+            function onCanPlay(): void {
                 video['setVideoRect'](0, 0, 1, 1);
                 video.play();
             }
-            function onPlaying():void {
+            function onPlaying(): void {
                 video['setVideoRect'](0, 0, 1, 1);
                 __global.setTimeout(() => {
                     video.pause();
@@ -145,12 +145,12 @@ namespace egret.native {
                 }, 1);
             }
 
-            function onVideoError():void {
+            function onVideoError(): void {
                 removeListeners();
                 self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
             }
 
-            function removeListeners():void {
+            function removeListeners(): void {
                 video.removeEventListener("canplaythrough", onCanPlay);
                 video.removeEventListener("error", onVideoError);
                 video.removeEventListener("playing", onPlaying);
@@ -160,16 +160,16 @@ namespace egret.native {
         /**
          * @private
          * */
-        private loop:boolean = false;
+        private loop: boolean = false;
 
         /**
          * @inheritDoc
          */
-        public play(startTime?:number, loop:boolean = false) {
+        public play(startTime?: number, loop: boolean = false) {
             this.loop = loop;
             if (!this.loaded) {
                 this.load(this.src);
-                this.once(egret.Event.COMPLETE, e=>this.play(startTime, loop), this)
+                this.once(egret.Event.COMPLETE, e => this.play(startTime, loop), this)
                 return;
             }
             let haveStartTime = false;
@@ -183,16 +183,16 @@ namespace egret.native {
         /**
          * @private
          * */
-        private isPlayed:boolean = false;
+        private isPlayed: boolean = false;
         /**
          * @private
          * */
-        private firstPlay:boolean = true;
+        private firstPlay: boolean = true;
 
         /**
          * @private
          * */
-        private startPlay(haveStartTime:boolean = false) {
+        private startPlay(haveStartTime: boolean = false) {
             if (!this.isAddToStage || !this.loaded) {
                 return;
             }
@@ -235,42 +235,42 @@ namespace egret.native {
         /**
          * @inheritDoc
          */
-        public src:string = "";
+        public src: string = "";
         /**
          * @private
          * */
-        private posterData:egret.BitmapData;
+        private posterData: egret.BitmapData;
         /**
          * @private
          * */
-        private posterUrl:string;
+        private posterUrl: string;
 
         /**
          * @inheritDoc
          */
-        public get poster():string {
+        public get poster(): string {
             return this.posterUrl;
         }
 
         /**
          * @inheritDoc
          */
-        public set poster(value:string) {
+        public set poster(value: string) {
             this.posterUrl = value;
             let loader = new NativeImageLoader();
             loader.load(value);
-            loader.addEventListener(egret.Event.COMPLETE, ()=> {
+            loader.addEventListener(egret.Event.COMPLETE, () => {
                 this.posterData = loader.data;
                 this.markDirty();
                 this.$invalidateContentBounds();
             }, this);
         }
 
-        private _fullscreen:boolean = true;
+        private _fullscreen: boolean = true;
         /**
          * @inheritDoc
          */
-        public set fullscreen(value:boolean) {
+        public set fullscreen(value: boolean) {
             this._fullscreen = value;
             if (this.originVideo) {
                 this.originVideo['fullScreen'] = value;
@@ -280,7 +280,7 @@ namespace egret.native {
         /**
          * @inheritDoc
          */
-        public get fullscreen():boolean {
+        public get fullscreen(): boolean {
             if (this.originVideo) {
                 return this.originVideo['fullScreen'];
             }
@@ -290,7 +290,7 @@ namespace egret.native {
         /**
          * @inheritDoc
          */
-        public get volume():number {
+        public get volume(): number {
             if (!this.loaded)
                 return 0;
             return this.originVideo.volume;
@@ -299,7 +299,7 @@ namespace egret.native {
         /**
          * @inheritDoc
          */
-        public set volume(value:number) {
+        public set volume(value: number) {
             if (!this.loaded)
                 return;
             this.originVideo.volume = value;
@@ -308,7 +308,7 @@ namespace egret.native {
         /**
          * @inheritDoc
          */
-        public get position():number {
+        public get position(): number {
             return this.originVideo.currentTime;
         }
 
@@ -328,23 +328,23 @@ namespace egret.native {
             this.originVideo.pause();
         }
 
-        private _bitmapData:BitmapData = null;
+        private _bitmapData: BitmapData = null;
         /**
          * @inheritDoc
          */
-        public get bitmapData():BitmapData {
+        public get bitmapData(): BitmapData {
             return this._bitmapData;
         }
 
         /**
          * @inheritDoc
          */
-        public paused:boolean = false;
+        public paused: boolean = false;
 
         /**
          * @inheritDoc
          */
-        public get length():number {
+        public get length(): number {
             if (this.loaded) {
                 return this.originVideo.duration;
             }
@@ -355,12 +355,12 @@ namespace egret.native {
         /**
          * @private
          */
-        private isAddToStage:boolean = false;
+        private isAddToStage: boolean = false;
 
         /**
          * @inheritDoc
          */
-        $onAddToStage(stage:Stage, nestLevel:number):void {
+        $onAddToStage(stage: Stage, nestLevel: number): void {
             this.isAddToStage = true;
             if (this.originVideo) {
                 this.originVideo["setVideoVisible"](true);
@@ -373,19 +373,19 @@ namespace egret.native {
         /**
          * @inheritDoc
          */
-        $onRemoveFromStage():void {
+        $onRemoveFromStage(notifyListeners: boolean): void {
             this.isAddToStage = false;
             if (this.originVideo) {
                 this.stopPlay();
                 this.originVideo["setVideoVisible"](false);
             }
-            super.$onRemoveFromStage();
+            super.$onRemoveFromStage(notifyListeners);
         }
 
         /**
          * @private
          */
-        private getPlayWidth():number {
+        private getPlayWidth(): number {
             if (!isNaN(this.widthSet)) {
                 return this.widthSet;
             }
@@ -401,7 +401,7 @@ namespace egret.native {
         /**
          * @private
          */
-        private getPlayHeight():number {
+        private getPlayHeight(): number {
             if (!isNaN(this.heightSet)) {
                 return this.heightSet;
             }
@@ -417,12 +417,12 @@ namespace egret.native {
         /**
          * @private
          */
-        private heightSet:number = 0;
+        private heightSet: number = 0;
 
         /**
          * @private
          */
-        $setHeight(value:number):boolean {
+        $setHeight(value: number): boolean {
             this.heightSet = +value || 0;
             this.setVideoSize();
             this.$invalidate();
@@ -433,12 +433,12 @@ namespace egret.native {
         /**
          * @private
          */
-        private widthSet:number = 0;
+        private widthSet: number = 0;
 
         /**
          * @private
          */
-        $setWidth(value:number):boolean {
+        $setWidth(value: number): boolean {
             this.widthSet = +value || 0;
             this.setVideoSize();
             this.$invalidate();
@@ -449,7 +449,7 @@ namespace egret.native {
         /**
          * @inheritDoc
          */
-        $setX(value:number):boolean {
+        $setX(value: number): boolean {
             let result = super.$setX(value);
             this.setVideoSize();
             return result;
@@ -458,7 +458,7 @@ namespace egret.native {
         /**
          * @inheritDoc
          */
-        $setY(value:number):boolean {
+        $setY(value: number): boolean {
             let result = super.$setY(value);
             this.setVideoSize();
             return result;
@@ -467,7 +467,7 @@ namespace egret.native {
         /**
          * @private
          */
-        private setVideoSize():void {
+        private setVideoSize(): void {
             let video = this.originVideo;
             if (video && !this.fullscreen) {
                 if (!this.firstPlay) {
@@ -481,7 +481,7 @@ namespace egret.native {
         /**
          * @private
          */
-        $measureContentBounds(bounds:Rectangle) {
+        $measureContentBounds(bounds: Rectangle) {
             let posterData = this.posterData;
             if (posterData) {
                 bounds.setTo(0, 0, this.getPlayWidth(), this.getPlayHeight());
@@ -494,7 +494,7 @@ namespace egret.native {
         /**
          * @private
          */
-        $render():void {
+        $render(): void {
             let node = <sys.BitmapNode>this.$renderNode;
             let posterData = this.posterData;
             let width = this.getPlayWidth();
@@ -510,7 +510,7 @@ namespace egret.native {
             }
         }
 
-        private markDirty():boolean {
+        private markDirty(): boolean {
             this.$invalidate();
             return true;
         }

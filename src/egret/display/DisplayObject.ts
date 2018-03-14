@@ -342,11 +342,6 @@ namespace egret {
         $hasAnyFlags(flags: number): boolean {
             return !!(this.$displayFlags & flags);
         }
-        /**
-         * @private
-         * 是否添加到舞台上，防止重复发送 removed_from_stage 消息
-         */
-        $hasAddToStage: boolean;
 
         /**
          * @private
@@ -441,17 +436,25 @@ namespace egret {
         $onAddToStage(stage: Stage, nestLevel: number): void {
             this.$stage = stage;
             this.$nestLevel = nestLevel;
-            this.$hasAddToStage = true;
-            DisplayObjectContainer.$EVENT_ADD_TO_STAGE_LIST.push(this);
+        }
+
+        /**
+         * @private
+         */
+        $dispatchAddedToStageEvent():void {
+            this.dispatchEventWith(Event.ADDED_TO_STAGE);
         }
 
         /**
          * @private
          * 显示对象从舞台移除
          */
-        $onRemoveFromStage(): void {
+        $onRemoveFromStage(notifyListeners: boolean): void {
             this.$nestLevel = 0;
-            DisplayObjectContainer.$EVENT_REMOVE_FROM_STAGE_LIST.push(this);
+            if (notifyListeners) {
+                this.dispatchEventWith(Event.REMOVED_FROM_STAGE);
+            }
+            this.$stage = null;
         }
 
         /**
@@ -540,7 +543,7 @@ namespace egret {
         $setMatrix(matrix: Matrix, needUpdateProperties: boolean = true): boolean {
             let self = this;
             let values = self.$DisplayObject;
-            let m:egret.Matrix = values[Keys.matrix];
+            let m: egret.Matrix = values[Keys.matrix];
             if (m.equals(matrix)) {
                 return false;
             }
@@ -2091,7 +2094,7 @@ namespace egret {
                                 minY += distanceY;
                                 maxY += distanceY;
                             }
-                        } else if(filter.type == "custom") {
+                        } else if (filter.type == "custom") {
                             let padding = (<CustomFilter>filter).padding;
                             minX -= padding;
                             minY -= padding;

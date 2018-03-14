@@ -1443,16 +1443,23 @@ var egret;
         DisplayObject.prototype.$onAddToStage = function (stage, nestLevel) {
             this.$stage = stage;
             this.$nestLevel = nestLevel;
-            this.$hasAddToStage = true;
-            egret.DisplayObjectContainer.$EVENT_ADD_TO_STAGE_LIST.push(this);
+        };
+        /**
+         * @private
+         */
+        DisplayObject.prototype.$dispatchAddedToStageEvent = function () {
+            this.dispatchEventWith(egret.Event.ADDED_TO_STAGE);
         };
         /**
          * @private
          * 显示对象从舞台移除
          */
-        DisplayObject.prototype.$onRemoveFromStage = function () {
+        DisplayObject.prototype.$onRemoveFromStage = function (notifyListeners) {
             this.$nestLevel = 0;
-            egret.DisplayObjectContainer.$EVENT_REMOVE_FROM_STAGE_LIST.push(this);
+            if (notifyListeners) {
+                this.dispatchEventWith(egret.Event.REMOVED_FROM_STAGE);
+            }
+            this.$stage = null;
         };
         Object.defineProperty(DisplayObject.prototype, "stage", {
             /**
@@ -3483,12 +3490,8 @@ var egret;
                 child.dispatchEventWith(egret.Event.ADDED, true);
             }
             if (stage) {
-                var list = DisplayObjectContainer.$EVENT_ADD_TO_STAGE_LIST;
-                while (list.length) {
-                    var childAddToStage = list.shift();
-                    if (childAddToStage.$stage && notifyListeners) {
-                        childAddToStage.dispatchEventWith(egret.Event.ADDED_TO_STAGE);
-                    }
+                if (notifyListeners) {
+                    child.$dispatchAddedToStageEvent();
                 }
             }
             var displayList = this.$displayList || this.$parentDisplayList;
@@ -3685,17 +3688,7 @@ var egret;
                 child.dispatchEventWith(egret.Event.REMOVED, true);
             }
             if (this.$stage) {
-                child.$onRemoveFromStage();
-                var list = DisplayObjectContainer.$EVENT_REMOVE_FROM_STAGE_LIST;
-                while (list.length > 0) {
-                    var childAddToStage = list.shift();
-                    if (notifyListeners && childAddToStage.$hasAddToStage) {
-                        childAddToStage.$hasAddToStage = false;
-                        childAddToStage.dispatchEventWith(egret.Event.REMOVED_FROM_STAGE);
-                    }
-                    childAddToStage.$hasAddToStage = false;
-                    childAddToStage.$stage = null;
-                }
+                child.$onRemoveFromStage(notifyListeners);
             }
             var displayList = this.$displayList || this.$parentDisplayList;
             this.assignParentDisplayList(child, displayList, null);
@@ -3890,15 +3883,31 @@ var egret;
         };
         /**
          * @private
+         */
+        DisplayObjectContainer.prototype.$dispatchAddedToStageEvent = function () {
+            _super.prototype.$dispatchAddedToStageEvent.call(this);
+            var children = this.$children;
+            var length = children.length;
+            for (var i = 0; i < length; i++) {
+                var child = this.$children[i];
+                if (child) {
+                    child.$dispatchAddedToStageEvent();
+                }
+            }
+        };
+        /**
+         * @private
          *
          */
-        DisplayObjectContainer.prototype.$onRemoveFromStage = function () {
-            _super.prototype.$onRemoveFromStage.call(this);
+        DisplayObjectContainer.prototype.$onRemoveFromStage = function (notifyListeners) {
+            _super.prototype.$onRemoveFromStage.call(this, notifyListeners);
             var children = this.$children;
             var length = children.length;
             for (var i = 0; i < length; i++) {
                 var child = children[i];
-                child.$onRemoveFromStage();
+                if (child) {
+                    child.$onRemoveFromStage(notifyListeners);
+                }
             }
         };
         /**
@@ -4134,14 +4143,6 @@ var egret;
                 }
             }
         };
-        /**
-         * @private
-         */
-        DisplayObjectContainer.$EVENT_ADD_TO_STAGE_LIST = [];
-        /**
-         * @private
-         */
-        DisplayObjectContainer.$EVENT_REMOVE_FROM_STAGE_LIST = [];
         return DisplayObjectContainer;
     }(egret.DisplayObject));
     egret.DisplayObjectContainer = DisplayObjectContainer;
@@ -6080,8 +6081,8 @@ var egret;
         /**
          * @private
          */
-        Sprite.prototype.$onRemoveFromStage = function () {
-            _super.prototype.$onRemoveFromStage.call(this);
+        Sprite.prototype.$onRemoveFromStage = function (notifyListeners) {
+            _super.prototype.$onRemoveFromStage.call(this, notifyListeners);
             if (this.$graphics) {
                 this.$graphics.$onRemoveFromStage();
             }
@@ -6569,8 +6570,8 @@ var egret;
          * @private
          * 显示对象从舞台移除
          */
-        Bitmap.prototype.$onRemoveFromStage = function () {
-            _super.prototype.$onRemoveFromStage.call(this);
+        Bitmap.prototype.$onRemoveFromStage = function (notifyListeners) {
+            _super.prototype.$onRemoveFromStage.call(this, notifyListeners);
             var bitmapData = this.$Bitmap[0 /* bitmapData */];
             if (bitmapData) {
                 egret.BitmapData.$removeDisplayObject(this, bitmapData);
@@ -16356,8 +16357,8 @@ var egret;
         /**
          * @private
          */
-        Shape.prototype.$onRemoveFromStage = function () {
-            _super.prototype.$onRemoveFromStage.call(this);
+        Shape.prototype.$onRemoveFromStage = function (notifyListeners) {
+            _super.prototype.$onRemoveFromStage.call(this, notifyListeners);
             if (this.$graphics) {
                 this.$graphics.$onRemoveFromStage();
             }
@@ -21352,8 +21353,8 @@ var egret;
          * @private
          *
          */
-        TextField.prototype.$onRemoveFromStage = function () {
-            _super.prototype.$onRemoveFromStage.call(this);
+        TextField.prototype.$onRemoveFromStage = function (notifyListeners) {
+            _super.prototype.$onRemoveFromStage.call(this, notifyListeners);
             this.removeEvent();
             if (this.$TextField[24 /* type */] == egret.TextFieldType.INPUT) {
                 this.inputUtils._removeStageText();

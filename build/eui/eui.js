@@ -13914,8 +13914,8 @@ var eui;
         /**
          * @private
          */
-        Rect.prototype.$onRemoveFromStage = function () {
-            _super.prototype.$onRemoveFromStage.call(this);
+        Rect.prototype.$onRemoveFromStage = function (notifyListeners) {
+            _super.prototype.$onRemoveFromStage.call(this, notifyListeners);
             if (this.$graphics) {
                 this.$graphics.$onRemoveFromStage();
             }
@@ -17833,8 +17833,8 @@ var eui;
          * @private
          *
          */
-        EditableText.prototype.$onRemoveFromStage = function () {
-            eui.sys.UIComponentImpl.prototype["$onRemoveFromStage"].call(this);
+        EditableText.prototype.$onRemoveFromStage = function (notifyListeners) {
+            eui.sys.UIComponentImpl.prototype["$onRemoveFromStage"].call(this, notifyListeners);
             this.removeEventListener(egret.FocusEvent.FOCUS_IN, this.onfocusIn, this);
             this.removeEventListener(egret.FocusEvent.FOCUS_OUT, this.onfocusOut, this);
         };

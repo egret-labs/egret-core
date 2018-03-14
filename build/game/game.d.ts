@@ -1636,7 +1636,7 @@ declare namespace egret {
          * @private
          *
          */
-        $onRemoveFromStage(): void;
+        $onRemoveFromStage(notifyListeners: boolean): void;
         /**
          * @private
          * 返回帧标签为指定字符串的FrameLabel对象

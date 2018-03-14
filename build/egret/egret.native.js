@@ -4325,13 +4325,13 @@ var egret;
             /**
              * @inheritDoc
              */
-            NativeVideo.prototype.$onRemoveFromStage = function () {
+            NativeVideo.prototype.$onRemoveFromStage = function (notifyListeners) {
                 this.isAddToStage = false;
                 if (this.originVideo) {
                     this.stopPlay();
                     this.originVideo["setVideoVisible"](false);
                 }
-                _super.prototype.$onRemoveFromStage.call(this);
+                _super.prototype.$onRemoveFromStage.call(this, notifyListeners);
             };
             /**
              * @private
