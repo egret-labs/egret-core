@@ -480,8 +480,11 @@ module RES.processor {
                             return fsData[filename]
                         },
 
-                        addFile: (filename, type) => {
+                        addFile: (filename, type, root) => {
                             if (!type) type = "";
+                            if (root == undefined) {
+                                root = "";
+                            }
                             fsData[filename] = { name: filename, type, url: filename, root };
                         },
 
