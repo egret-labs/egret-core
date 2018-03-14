@@ -652,7 +652,15 @@ namespace egret {
             let xMin = 0, xMax = 0, yMin = 0, yMax = 0;
             let found: boolean = false;
             for (let i = -1; i < length; i++) {
-                let childBounds = i == -1 ? bounds : children[i].$getTransformedBounds(this, $TempRectangle);
+                let childBounds;
+                if(i == -1){
+                    childBounds = bounds;
+                }
+                else {
+                    children[i].getBounds($TempRectangle);
+                    children[i].$getMatrix().$transformBounds($TempRectangle);
+                    childBounds = $TempRectangle;
+                }
                 if (childBounds.isEmpty()) {
                     continue;
                 }
