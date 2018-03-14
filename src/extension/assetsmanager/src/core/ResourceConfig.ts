@@ -435,11 +435,11 @@ module RES {
             return this.getResource(key, true).type;
         }
 
-        public addResourceData(data: { name: string, type?: string, url: string }): void {
+        public addResourceData(data: { name: string, type?: string, url: string, root?:string }): void {
             if (!data.type) {
                 data.type = this.__temp__get__type__via__url(data.url);
             }
-            fileSystem.addFile(data.url, data.type);
+            fileSystem.addFile(data.url, data.type, data.root);
             if (data.name) {
                 this.config.alias[data.name] = data.url;
             }

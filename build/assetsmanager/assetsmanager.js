@@ -325,7 +325,7 @@ var RES;
             if (!data.type) {
                 data.type = this.__temp__get__type__via__url(data.url);
             }
-            RES.fileSystem.addFile(data.url, data.type);
+            RES.fileSystem.addFile(data.url, data.type, data.root);
             if (data.name) {
                 this.config.alias[data.name] = data.url;
             }
@@ -1224,9 +1224,12 @@ var RES;
                             getFile: function (filename) {
                                 return fsData[filename];
                             },
-                            addFile: function (filename, type) {
+                            addFile: function (filename, type, root) {
                                 if (!type)
                                     type = "";
+                                if (root == undefined) {
+                                    root = "";
+                                }
                                 fsData[filename] = { name: filename, type: type, url: filename, root: root };
                             },
                             profile: function () {
