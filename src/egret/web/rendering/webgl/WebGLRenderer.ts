@@ -312,19 +312,30 @@ namespace egret.web {
         }
 
         private getRenderCount(displayObject: DisplayObject): number {
-            let childrenDrawCount = 0;
+            let drawCount = 0;
+            const node = displayObject.$getRenderNode();
+            if (node) {
+                drawCount += node.$getRenderCount();
+            }
             if (displayObject.$children) {
-                for (let child of displayObject.$children) {
-                    let node = child.$getRenderNode();
-                    if (node) {
-                        childrenDrawCount += node.$getRenderCount();
+                for (const child of displayObject.$children) {
+                    const filters = child.$getFilters();
+                    // 特殊处理有滤镜的对象
+                    if (filters && filters.length > 0) {
+                        return 2;
                     }
-                    if (child.$children) {
-                        childrenDrawCount += this.getRenderCount(child);
+                    else if (child.$children) {
+                        drawCount += this.getRenderCount(child);
+                    }
+                    else {
+                        const node = child.$getRenderNode();
+                        if (node) {
+                            drawCount += node.$getRenderCount();
+                        }
                     }
                 }
             }
-            return childrenDrawCount;
+            return drawCount;
         }
 
         /**
