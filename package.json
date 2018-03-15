@@ -237,6 +237,16 @@
         "dependencies": [
           "egret"
         ]
+      },
+      {
+        "name": "egret-facebook",
+        "description": "Facebook Instant Games SDK",
+        "description_en": "Facebook Instant Games SDK",
+        "files": [],
+        "root": "build/egret-facebook",
+        "dependencies": [
+          "egret"
+        ]
       }
     ],
     "platforms": [

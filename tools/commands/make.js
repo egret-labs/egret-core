@@ -21,6 +21,7 @@ var CompileEgretEngine = (function () {
             { name: "release", minify: true }
         ];
         var excludeList = [
+            FileUtil.escapePath(path.join(outputDir, "egret-facebook")),
             FileUtil.escapePath(path.join(outputDir, "promise")),
             FileUtil.escapePath(path.join(outputDir, "resourcemanager")),
             FileUtil.escapePath(path.join(outputDir, "assetsmanager")),
