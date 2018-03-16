@@ -155,8 +155,7 @@ namespace egret {
             if (!this._isFocus) {
                 this._isFocus = true;
                 if (!event["showing"]) {
-                    this._text.$isTyping = true;
-                    this._text.$invalidateTextField();
+                    this._text.$setIsTyping(true);
                 }
 
                 this._text.dispatchEvent(new egret.FocusEvent(egret.FocusEvent.FOCUS_IN, true));
@@ -174,8 +173,7 @@ namespace egret {
                 this._isFocus = false;
                 this.tempStage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
 
-                this._text.$isTyping = false;
-                this._text.$invalidateTextField();
+                this._text.$setIsTyping(false);
                 //失去焦点后调用
                 this.stageText.$onBlur();
 
@@ -204,6 +202,9 @@ namespace egret {
                 this.tempStage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
             }, this);
 
+            if(egret.nativeRender) {
+                this.stageText.$setText(this._text.$TextField[egret.sys.TextKeys.text]);
+            }
 
             //强制更新输入框位置
             this.stageText.$show();
