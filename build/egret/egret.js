@@ -19526,9 +19526,6 @@ var egret;
             else {
                 value = value.toString();
             }
-            if (egret.nativeRender) {
-                this.$nativeDisplayObject.setText(value);
-            }
             this.isFlow = false;
             var values = this.$TextField;
             if (values[13 /* text */] != value) {
@@ -19540,6 +19537,9 @@ var egret;
                 }
                 else {
                     text = value;
+                }
+                if (egret.nativeRender) {
+                    this.$nativeDisplayObject.setText(text);
                 }
                 this.setMiddleStyle([{ text: text }]);
                 return true;
@@ -19592,9 +19592,6 @@ var egret;
             var values = this.$TextField;
             if (values[20 /* displayAsPassword */] != value) {
                 values[20 /* displayAsPassword */] = value;
-                if (egret.nativeRender) {
-                    this.$nativeDisplayObject.setDisplayAsPassword(value);
-                }
                 this.$invalidateTextField();
                 var text = "";
                 if (value) {
@@ -19602,6 +19599,9 @@ var egret;
                 }
                 else {
                     text = values[13 /* text */];
+                }
+                if (egret.nativeRender) {
+                    this.$nativeDisplayObject.setText(text);
                 }
                 this.setMiddleStyle([{ text: text }]);
                 return true;
@@ -20413,15 +20413,15 @@ var egret;
                     var element = textArr[i];
                     text += element.text;
                 }
-                if (egret.nativeRender) {
-                    this.$nativeDisplayObject.setTextFlow(textArr);
-                }
                 if (this.$TextField[20 /* displayAsPassword */]) {
                     this.$setBaseText(text);
                 }
                 else {
                     this.$TextField[13 /* text */] = text;
                     this.setMiddleStyle(textArr);
+                    if (egret.nativeRender) {
+                        this.$nativeDisplayObject.setTextFlow(textArr);
+                    }
                 }
             },
             enumerable: true,
