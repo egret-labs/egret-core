@@ -835,9 +835,7 @@ namespace egret {
             else {
                 value = value.toString();
             }
-            if (egret.nativeRender) {
-                this.$nativeDisplayObject.setText(value);
-            }
+
             this.isFlow = false;
             let values = this.$TextField;
             if (values[sys.TextKeys.text] != value) {
@@ -849,6 +847,10 @@ namespace egret {
                 }
                 else {
                     text = value;
+                }
+
+                if (egret.nativeRender) {
+                    this.$nativeDisplayObject.setText(text);
                 }
 
                 this.setMiddleStyle([<egret.ITextElement>{ text: text }]);
@@ -903,9 +905,7 @@ namespace egret {
             let values = this.$TextField;
             if (values[sys.TextKeys.displayAsPassword] != value) {
                 values[sys.TextKeys.displayAsPassword] = value;
-                if (egret.nativeRender) {
-                    this.$nativeDisplayObject.setDisplayAsPassword(value);
-                }
+
                 this.$invalidateTextField();
 
                 let text: string = "";
@@ -916,6 +916,9 @@ namespace egret {
                     text = values[sys.TextKeys.text];
                 }
 
+                if (egret.nativeRender) {
+                    this.$nativeDisplayObject.setText(text);
+                }
                 this.setMiddleStyle([<egret.ITextElement>{ text: text }]);
 
                 return true;
@@ -1748,16 +1751,15 @@ namespace egret {
                 text += element.text;
             }
 
-            if (egret.nativeRender) {
-                this.$nativeDisplayObject.setTextFlow(textArr);
-            }
-
             if (this.$TextField[sys.TextKeys.displayAsPassword]) {
                 this.$setBaseText(text);
             }
             else {
                 this.$TextField[sys.TextKeys.text] = text;
                 this.setMiddleStyle(textArr);
+                if (egret.nativeRender) {
+                    this.$nativeDisplayObject.setTextFlow(textArr);
+                }
             }
         }
 

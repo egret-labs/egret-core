@@ -156,7 +156,6 @@ declare namespace egret_native {
         setBold(value: boolean): void;
         setItalic(value: boolean): void;
         setWordWrap(value: boolean): void;
-        setDisplayAsPassword(value: boolean): void;
         setMaxChars(value: number): void;
         setType(value: string): void;
         setStrokeColor(value: number): void;
