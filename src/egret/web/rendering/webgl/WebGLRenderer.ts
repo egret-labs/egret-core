@@ -410,7 +410,6 @@ namespace egret.web {
                     maskBuffer.context.popBuffer();
                     displayBuffer.context.setGlobalCompositeOperation("destination-in");
                     displayBuffer.setTransform(1, 0, 0, -1, 0, maskBuffer.height);
-                    displayBuffer.globalAlpha = 1;
                     let maskBufferWidth = maskBuffer.rootRenderTarget.width;
                     let maskBufferHeight = maskBuffer.rootRenderTarget.height;
                     displayBuffer.context.drawTexture(maskBuffer.rootRenderTarget.texture, 0, 0, maskBufferWidth, maskBufferHeight,
@@ -432,7 +431,6 @@ namespace egret.web {
                     if (scrollRect) {
                         buffer.context.pushMask(scrollRect.x + offsetX, scrollRect.y + offsetY, scrollRect.width, scrollRect.height);
                     }
-                    buffer.globalAlpha = 1;
                     let savedMatrix = Matrix.create();
                     let curMatrix = buffer.globalMatrix;
                     savedMatrix.a = curMatrix.a;
