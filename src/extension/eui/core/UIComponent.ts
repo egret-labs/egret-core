@@ -988,8 +988,8 @@ namespace eui.sys {
          * @param stage
          * @param nestLevel
          */
-        $onAddToStage(stage: egret.Stage, nestLevel: number): void {
-            this.$super.$onAddToStage.call(this, stage, nestLevel);
+        $dispatchAddedToStageEvent(): void {
+            this.$super.$dispatchAddedToStageEvent.call(this);
             this.checkInvalidateFlag();
             let values = this.$UIComponent;
             if (!values[sys.UIKeys.initialized]) {

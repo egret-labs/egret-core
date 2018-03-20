@@ -1142,8 +1142,8 @@ var eui;
              * @param stage
              * @param nestLevel
              */
-            UIComponentImpl.prototype.$onAddToStage = function (stage, nestLevel) {
-                this.$super.$onAddToStage.call(this, stage, nestLevel);
+            UIComponentImpl.prototype.$dispatchAddedToStageEvent = function () {
+                this.$super.$dispatchAddedToStageEvent.call(this);
                 this.checkInvalidateFlag();
                 var values = this.$UIComponent;
                 if (!values[29 /* initialized */]) {

@@ -1160,7 +1160,7 @@ declare namespace eui.sys {
          * @param stage
          * @param nestLevel
          */
-        $onAddToStage(stage: egret.Stage, nestLevel: number): void;
+        $dispatchAddedToStageEvent(): void;
         /**
          * @private
          * 检查属性失效标记并应用
