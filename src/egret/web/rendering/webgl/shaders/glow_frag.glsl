@@ -17,9 +17,9 @@ uniform float hideObject;
 
 uniform vec2 uTextureSize;
 
-float random()
+float random(vec2 scale)
 {
-    return fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453);
+    return fract(sin(dot(gl_FragCoord.xy, scale)) * 43758.5453);
 }
 
 void main(void) {
@@ -39,7 +39,7 @@ void main(void) {
     const float PI = 3.14159265358979323846264;
     float cosAngle;
     float sinAngle;
-    float offset = PI * 2.0 / circleSamplingTimes * random();
+    float offset = PI * 2.0 / circleSamplingTimes * random(vec2(12.9898, 78.233));
     float stepX = blurX * px.x / linearSamplingTimes;
     float stepY = blurY * px.y / linearSamplingTimes;
     for (float a = 0.0; a <= PI * 2.0; a += PI * 2.0 / circleSamplingTimes) {
