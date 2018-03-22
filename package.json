@@ -316,22 +316,6 @@
           "eui",
           "tween"
         ]
-      },
-      {
-        "name": "wasm",
-        "displayName": "WebAssembly 示例项目",
-        "displayName_en": "WebAssembly sample project",
-        "language": "TypeScript",
-        "tag": "game,app,TypeScript,WebAssembly",
-        "description": "WebAssembly 示例项目",
-        "description_en": "WebAssembly sample project",
-        "defaultWidth": 640,
-        "defaultHeight": 1136,
-        "modules": [
-          "egret",
-          "media",
-          "res"
-        ]
       }
     ],
     "scaleModes": [
