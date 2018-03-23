@@ -188,7 +188,11 @@ namespace egret.web {
          * @returns {string}
          */
         private static getIOSVersion(): number {
-            let value = Html5Capatibility.ua.toLowerCase().match(/cpu [^\d]*\d.*like mac os x/)[0];
+            let matches = Html5Capatibility.ua.toLowerCase().match(/cpu [^\d]*\d.*like mac os x/);
+            if(! matches || matches.length == 0) {
+                return 0;
+            }
+            let value = matches[0];
             return parseInt(value.match(/\d+(_\d)*/)[0]) || 0;
         }
 
