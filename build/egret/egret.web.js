@@ -3616,7 +3616,11 @@ var egret;
              * @returns {string}
              */
             Html5Capatibility.getIOSVersion = function () {
-                var value = Html5Capatibility.ua.toLowerCase().match(/cpu [^\d]*\d.*like mac os x/)[0];
+                var matches = Html5Capatibility.ua.toLowerCase().match(/cpu [^\d]*\d.*like mac os x/);
+                if (!matches || matches.length == 0) {
+                    return 0;
+                }
+                var value = matches[0];
                 return parseInt(value.match(/\d+(_\d)*/)[0]) || 0;
             };
             /**
