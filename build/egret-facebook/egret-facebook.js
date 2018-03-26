@@ -498,7 +498,7 @@ var egretfb;
          */
         EgretLeaderboardEntry.prototype.getPlayer = function () {
             egretfb.Net.push("FBInstantGetPlayer", "player", this._le.getPlayer());
-            return this._le.getPlayer();
+            return new egretfb.EgretFBPlayer(this._le.getPlayer());
         };
         return EgretLeaderboardEntry;
     }());
@@ -718,7 +718,7 @@ var egretfb;
          * 抛出错误：INVALID_PARAM，NETWORK_FAILURE，PENDING_REQUEST，CLIENT_UNSUPPORTED_OPERATION，INVALID_OPERATION
          */
         EgretFBInstant.shareAsync = function (payload) {
-            egretfb.Net.push("FBInstantShareAsync", "", "");
+            egretfb.Net.push("FBInstantShareAsync", "", payload);
             return FBInstant.shareAsync(payload);
         };
         /**
@@ -1170,72 +1170,20 @@ var egretfb;
      */
     var EgretSharePayload = (function () {
         function EgretSharePayload() {
-            this._intent = "";
-            this._image = "";
-            this._text = "";
-        }
-        Object.defineProperty(EgretSharePayload.prototype, "intent", {
             /**
              * 表示共享的目标
              * "INVITE" | "REQUEST" | "CHALLENGE" | "SHARE"
              */
-            get: function () {
-                egretfb.Net.push("EgretSharePayloadIntent", "intent", this._intent);
-                return this._intent;
-            },
-            set: function (value) {
-                egretfb.Net.push("EgretSharePayloadSetIntent", "intent", value);
-                this._intent = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EgretSharePayload.prototype, "image", {
+            this.intent = "";
             /**
              * 要分享的图像，使用 base64 编码
              */
-            get: function () {
-                egretfb.Net.push("EgretSharePayloadImage", "image", this._image);
-                return this._image;
-            },
-            set: function (value) {
-                egretfb.Net.push("EgretSharePayloadSetImage", "image", value);
-                this._image = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EgretSharePayload.prototype, "text", {
+            this.image = "";
             /**
              * 要分享的文字
              */
-            get: function () {
-                egretfb.Net.push("EgretSharePayloadText", "text", this._text);
-                return this._text;
-            },
-            set: function (value) {
-                egretfb.Net.push("EgretSharePayloadSetText", "text", value);
-                this._text = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EgretSharePayload.prototype, "data", {
-            /**
-             * 一个附加到分享上的数据。
-             * 所有从这个分享启动的游戏都可以通过  EgretFBInstant.getEntryPointData() 方法获取到该数据。
-             */
-            get: function () {
-                egretfb.Net.push("EgretSharePayloadData", "data", this._data);
-                return this._data;
-            },
-            set: function (value) {
-                egretfb.Net.push("EgretSharePayloadSetData", "data", value);
-                this._data = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
+            this.text = "";
+        }
         return EgretSharePayload;
     }());
     egretfb.EgretSharePayload = EgretSharePayload;

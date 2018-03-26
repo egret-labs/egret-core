@@ -13,3 +13,7 @@ The Egret Engine officially released version 5.1 in December 2017. On March 26, 
 * Fix the issue of invalidating the alpha property in some cases
 * Fix GlowFilter display exceptions on iOS devices
 * Fix some user environment problems caused by abnormal user agent
+
+## Facebook Instant Games SDK
+* Fix issue with return type error for getPlayer method in egretfb.EgretLeaderboardEntry
+* Fix shared API compatibility issues
