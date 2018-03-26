@@ -147,7 +147,7 @@ declare namespace egretfb {
         /**
          * 玩家信息
          */
-        getPlayer(): number;
+        getPlayer(): EgretFBPlayer;
     }
 }
 declare namespace egretfb {
@@ -456,23 +456,19 @@ declare namespace egretfb {
      * 要分享的内容
      */
     class EgretSharePayload {
-        private _intent;
         /**
          * 表示共享的目标
          * "INVITE" | "REQUEST" | "CHALLENGE" | "SHARE"
          */
         intent: string;
-        private _image;
         /**
          * 要分享的图像，使用 base64 编码
          */
         image: string;
-        private _text;
         /**
          * 要分享的文字
          */
         text: string;
-        private _data;
         /**
          * 一个附加到分享上的数据。
          * 所有从这个分享启动的游戏都可以通过  EgretFBInstant.getEntryPointData() 方法获取到该数据。
