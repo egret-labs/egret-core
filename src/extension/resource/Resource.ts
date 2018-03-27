@@ -900,6 +900,10 @@ namespace RES {
         private getTypeByUrl(url:string):string{
             let suffix:string = url.substr(url.lastIndexOf(".")+1);
             if(suffix){
+                let queryParamIndex = suffix.lastIndexOf("?");
+                if(queryParamIndex > -1){
+                    suffix = suffix.substring(0,queryParamIndex);
+                }
                 suffix = suffix.toLowerCase();
             }
             let type:string;
