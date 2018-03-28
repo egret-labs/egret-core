@@ -866,6 +866,8 @@ namespace egret {
             skewY = skewY / DEG_TO_RAD;
             let u = egret.NumberUtils.cos(skewX);
             let v = egret.NumberUtils.sin(skewX);
+            if (scaleX < 0) scaleX = -scaleX;
+            if (scaleY < 0) scaleY = -scaleY;
             if (skewX == skewY) {
                 this.a = u * scaleX;
                 this.b = v * scaleX;
