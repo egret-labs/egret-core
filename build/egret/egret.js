@@ -678,7 +678,7 @@ var egret;
         };
         DisplayObject.prototype.$updateUseTransform = function () {
             var self = this;
-            if (self.$scaleX == 1 && self.scaleY == 1 && self.$skewX == 0 && self.$skewY == 0) {
+            if (self.$scaleX == 1 && self.$scaleY == 1 && self.$skewX == 0 && self.$skewY == 0) {
                 self.$useTranslate = false;
             }
             else {
