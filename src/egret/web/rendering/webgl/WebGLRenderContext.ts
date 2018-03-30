@@ -579,7 +579,7 @@ namespace egret.web {
 
             let count = meshIndices ? meshIndices.length / 3 : 2;
             // 应用$filter，因为只可能是colorMatrixFilter，最后两个参数可不传
-            this.drawCmdManager.pushDrawTexture(texture, count, this.$filter,textureWidth,textureHeight);
+            this.drawCmdManager.pushDrawTexture(texture, count, this.$filter, textureWidth, textureHeight, sourceX, sourceY);
 
             this.vao.cacheArrays(transform, alpha, sourceX, sourceY, sourceWidth, sourceHeight,
                 destX, destY, destWidth, destHeight, textureWidth, textureHeight,
@@ -761,7 +761,7 @@ namespace egret.web {
                     }
 
                     this.activeProgram(gl, program);
-                    this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
+                    this.syncUniforms(program, filter, data);
 
                     offset += this.drawTextureElements(data, offset);
                     break;
@@ -769,7 +769,7 @@ namespace egret.web {
 
                     program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.primitive_frag, "primitive");
                     this.activeProgram(gl, program);
-                    this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
+                    this.syncUniforms(program, filter, data);
 
                     offset += this.drawRectElements(data, offset);
                     break;
@@ -777,7 +777,7 @@ namespace egret.web {
 
                     program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.primitive_frag, "primitive");
                     this.activeProgram(gl, program);
-                    this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
+                    this.syncUniforms(program, filter, data);
 
                     offset += this.drawPushMaskElements(data, offset);
                     break;
@@ -785,7 +785,7 @@ namespace egret.web {
 
                     program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.primitive_frag, "primitive");
                     this.activeProgram(gl, program);
-                    this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
+                    this.syncUniforms(program, filter, data);
 
                     offset += this.drawPopMaskElements(data, offset);
                     break;
@@ -865,14 +865,16 @@ namespace egret.web {
             }
         }
 
-        private syncUniforms(program: EgretWebGLProgram, filter: Filter, textureWidth: number, textureHeight: number): void {
+        private syncUniforms(program: EgretWebGLProgram, filter: Filter, data:any): void {
             let uniforms = program.uniforms;
             let isCustomFilter: boolean = filter && filter.type === "custom";
             for (let key in uniforms) {
                 if (key === "projectionVector") {
                     uniforms[key].setValue({ x: this.projectionX, y: this.projectionY });
                 } else if (key === "uTextureSize") {
-                    uniforms[key].setValue({ x: textureWidth, y: textureHeight });
+                    uniforms[key].setValue({ x: data.textureWidth, y: data.textureHeight });
+                } else if (key === "uTextureOffset") {
+                    uniforms[key].setValue({ x: data.sourceX || 0, y: data.sourceY || 0 });
                 } else if (key === "uSampler") {
 
                 } else {

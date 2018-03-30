@@ -81,7 +81,7 @@ namespace egret.web {
         /**
          * 压入绘制texture指令
          */
-        public pushDrawTexture(texture:any, count:number = 2, filter?:any, textureWidth?:number, textureHeight?:number):void {
+        public pushDrawTexture(texture:any, count:number = 2, filter?:any, textureWidth?:number, textureHeight?:number, sourceX?:number, sourceY?:number):void {
             if(filter) {
                 // 目前有滤镜的情况下不会合并绘制
                 let data = this.drawData[this.drawDataLen] || {};
@@ -91,6 +91,8 @@ namespace egret.web {
                 data.count = count;
                 data.textureWidth = textureWidth;
                 data.textureHeight = textureHeight;
+                data.sourceX = sourceX;
+                data.sourceY = sourceY;
                 this.drawData[this.drawDataLen] = data;
                 this.drawDataLen++;
             } else {
