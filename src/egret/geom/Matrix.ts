@@ -854,7 +854,12 @@ namespace egret {
          * @private
          */
         $getSkewY(): number {
-            return Math.atan2(this.b, this.a);
+            if(this.a < 0) {
+                return Math.atan2(this.b, this.a) - PI;
+            }
+            else {
+                return Math.atan2(this.b, this.a);
+            }
         }
 
         /**
