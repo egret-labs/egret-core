@@ -11879,7 +11879,12 @@ var egret;
          * @private
          */
         Matrix.prototype.$getSkewX = function () {
-            return Math.atan2(this.d, this.c) - (PI / 2);
+            if (this.d < 0) {
+                return Math.atan2(this.d, this.c) + (PI / 2);
+            }
+            else {
+                return Math.atan2(this.d, this.c) - (PI / 2);
+            }
         };
         /**
          * @private
