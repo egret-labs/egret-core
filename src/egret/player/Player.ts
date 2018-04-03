@@ -27,8 +27,6 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-/// <reference path="../display/Sprite.ts" />
-
 namespace egret.sys {
 
     export let $TempStage: egret.Stage;
@@ -56,7 +54,6 @@ namespace egret.sys {
             this.showFPS = false;
             this.showLog = false;
             this.stageDisplayList = null;
-            this.displayFPS = displayFPS;
 
             if (egret.nativeRender) {
                 egret_native.rootWebGLBuffer = buffer;
@@ -70,7 +67,6 @@ namespace egret.sys {
             let displayList = new DisplayList(stage);
             displayList.renderBuffer = buffer;
             stage.$displayList = displayList;
-            //displayList.setClipRect(stage.$stageWidth, stage.$stageHeight);
             return displayList;
         }
 
@@ -173,15 +169,12 @@ namespace egret.sys {
                 return;
             }
 
-            if (this.showFPS || this.showLog) {
-                this.stage.addChild(this.fps);
-            }
             let stage = this.stage;
             let t1 = egret.getTimer();
             let drawCalls = stage.$displayList.drawToSurface();
             let t2 = egret.getTimer();
             if (triggerByFrame && this.showFPS) {
-                this.fps.update(drawCalls, t2 - t1, costTicker);
+                fpsDisplay.update(drawCalls, t2 - t1, costTicker);
             }
         }
 
@@ -211,7 +204,61 @@ namespace egret.sys {
          * @private
          * 显示FPS。
          */
-        public displayFPS: (showFPS: boolean, showLog: boolean, logFilter: string, fpsStyles: Object) => void;
+        public displayFPS(showFPS: boolean, showLog: boolean, logFilter: string, styles: Object) {
+            showLog = !!showLog;
+            if (showLog) {
+                egret.log = function () {
+                    let length = arguments.length;
+                    let info = "";
+                    for (let i = 0; i < length; i++) {
+                        info += arguments[i] + " ";
+                    }
+                    sys.$logToFPS(info);
+                    console.log.apply(console, toArray(arguments));
+                };
+                egret.warn = function () {
+                    let length = arguments.length;
+                    let info = "";
+                    for (let i = 0; i < length; i++) {
+                        info += arguments[i] + " ";
+                    }
+                    sys.$warnToFPS(info);
+                    console.warn.apply(console, toArray(arguments));
+                };
+                egret.error = function () {
+                    let length = arguments.length;
+                    let info = "";
+                    for (let i = 0; i < length; i++) {
+                        info += arguments[i] + " ";
+                    }
+                    sys.$errorToFPS(info);
+                    console.error.apply(console, toArray(arguments));
+                };
+            }
+            this.showFPS = !!showFPS;
+            this.showLog = showLog;
+            if (!fpsDisplay) {
+                fpsDisplay = new FPS(this.stage, showFPS, showLog, logFilter, styles);
+
+                let logLength = logLines.length;
+                for (let i = 0; i < logLength; i++) {
+                    fpsDisplay.updateInfo(logLines[i]);
+                }
+                logLines = null;
+
+                let warnLength = warnLines.length;
+                for (let i = 0; i < warnLength; i++) {
+                    fpsDisplay.updateWarn(warnLines[i]);
+                }
+                warnLines = null;
+
+                let errorLength = errorLines.length;
+                for (let i = 0; i < errorLength; i++) {
+                    fpsDisplay.updateError(errorLines[i]);
+                }
+                errorLines = null;
+            }
+        }
         /**
          * @private
          */
@@ -223,10 +270,6 @@ namespace egret.sys {
         /**
          * @private
          */
-        private fps: FPS;
-        /**
-         * @private
-         */
         private stageDisplayList: DisplayList;
     }
 
@@ -235,12 +278,12 @@ namespace egret.sys {
      * @private
      * FPS显示对象
      */
-    interface FPS extends Sprite {
+    interface FPS {
 
         /**
          * 更新FPS信息
          */
-        update(drawCalls: number, costRender, costTicker): void;
+        update(drawCalls: number, costRender: number, costTicker: number): void;
 
         /**
          * 插入一条log信息
@@ -262,7 +305,13 @@ namespace egret.sys {
      * @private
      */
     export let $logToFPS: (info: string) => void;
+    /**
+     * @private
+     */
     export let $warnToFPS: (info: string) => void;
+    /**
+     * @private
+     */
     export let $errorToFPS: (info: string) => void;
 
 
@@ -270,7 +319,6 @@ namespace egret.sys {
     let warnLines: string[] = [];
     let errorLines: string[] = [];
     let fpsDisplay: FPS;
-    let fpsStyle: Object;
 
     $logToFPS = function (info: string): void {
         if (!fpsDisplay) {
@@ -296,69 +344,8 @@ namespace egret.sys {
         fpsDisplay.updateError(info);
     };
 
-    function displayFPS(showFPS: boolean, showLog: boolean, logFilter: string, styles: Object): void {
-        if (showLog) {
-            egret.log = function () {
-                let length = arguments.length;
-                let info = "";
-                for (let i = 0; i < length; i++) {
-                    info += arguments[i] + " ";
-                }
-                sys.$logToFPS(info);
-                console.log.apply(console, toArray(arguments));
-            };
-            egret.warn = function () {
-                let length = arguments.length;
-                let info = "";
-                for (let i = 0; i < length; i++) {
-                    info += arguments[i] + " ";
-                }
-                sys.$warnToFPS(info);
-                console.warn.apply(console, toArray(arguments));
-            };
-            egret.error = function () {
-                let length = arguments.length;
-                let info = "";
-                for (let i = 0; i < length; i++) {
-                    info += arguments[i] + " ";
-                }
-                sys.$errorToFPS(info);
-                console.error.apply(console, toArray(arguments));
-            };
-        }
-        fpsStyle = styles ? {} : styles;
-        showLog = !!showLog;
-        this.showFPS = !!showFPS;
-        this.showLog = showLog;
-        if (!this.fps) {
-            let x = styles["x"] === undefined ? 0 : styles["x"];
-            let y = styles["y"] === undefined ? 0 : styles["y"];
-            fpsDisplay = this.fps = new FPS(this.stage, showFPS, showLog, logFilter, styles);
-            fpsDisplay.x = x;
-            fpsDisplay.y = y;
 
-            let logLength = logLines.length;
-            for (let i = 0; i < logLength; i++) {
-                fpsDisplay.updateInfo(logLines[i]);
-            }
-            logLines = null;
-
-            let warnLength = warnLines.length;
-            for (let i = 0; i < warnLength; i++) {
-                fpsDisplay.updateWarn(warnLines[i]);
-            }
-            warnLines = null;
-
-            let errorLength = errorLines.length;
-            for (let i = 0; i < errorLength; i++) {
-                fpsDisplay.updateError(errorLines[i]);
-            }
-            errorLines = null;
-        }
-    }
-
-
-    class FPSImpl extends egret.Sprite {
+    class FPSImpl {
 
         private infoLines = [];
         private totalTime = 0;
@@ -372,8 +359,6 @@ namespace egret.sys {
         private filter: any;
 
         constructor(stage: egret.Stage, private showFPS: boolean, private showLog: boolean, private logFilter: string, private styles?: Object) {
-            super();
-            this["isFPS"] = true;
             this.infoLines = [];
             this.totalTime = 0;
             this.totalTick = 0;
@@ -385,11 +370,8 @@ namespace egret.sys {
             this.showFPS = showFPS;
             this.showLog = showLog;
             this.logFilter = logFilter;
-            this.touchChildren = false;
-            this.touchEnabled = false;
             this.styles = styles;
             this.fpsDisplay = new FPSDisplay(stage, showFPS, showLog, logFilter, styles);
-            this.addChild(this.fpsDisplay);
             let logFilterRegExp: RegExp;
             try {
                 logFilterRegExp = logFilter ? new RegExp(logFilter) : null;
@@ -409,6 +391,7 @@ namespace egret.sys {
             let current = egret.getTimer();
             this.totalTime += current - this.lastTime;
             this.lastTime = current;
+            //todo 多Player
             this.totalTick++;
             this.drawCalls += drawCalls;
             this.costRender += costRender;

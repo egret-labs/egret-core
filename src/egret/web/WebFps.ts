@@ -30,7 +30,7 @@ namespace egret.web {
     /**
      * @private
      */
-    export class WebFps extends egret.DisplayObject implements egret.FPSDisplay {
+    export class WebFps implements egret.FPSDisplay {
         private panelX: number;
         private panelY: number;
         private fontColor: string;
@@ -42,7 +42,6 @@ namespace egret.web {
         private renderMode: string;
 
         constructor(stage: Stage, showFPS: boolean, showLog: boolean, logFilter: string, styles: Object) {
-            super();
             if (showFPS || showLog) {
                 if (egret.Capabilities.renderMode == 'canvas') {
                     this.renderMode = "Canvas";
