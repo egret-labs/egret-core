@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>FBInstantGame API v6.1</title>
+
+
+<style type="text/css">
+body {
+  font-family: Helvetica, arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: white;
+  padding: 30px; }
+
+body > *:first-child {
+  margin-top: 0 !important; }
+body > *:last-child {
+  margin-bottom: 0 !important; }
+
+a {
+  color: #4183C4; }
+a.absent {
+  color: #cc0000; }
+a.anchor {
+  display: block;
+  padding-left: 30px;
+  margin-left: -30px;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+  cursor: text;
+  position: relative; }
+
+h1:hover a.anchor, h2:hover a.anchor, h3:hover a.anchor, h4:hover a.anchor, h5:hover a.anchor, h6:hover a.anchor {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA09pVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoMTMuMCAyMDEyMDMwNS5tLjQxNSAyMDEyLzAzLzA1OjIxOjAwOjAwKSAgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OUM2NjlDQjI4ODBGMTFFMTg1ODlEODNERDJBRjUwQTQiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OUM2NjlDQjM4ODBGMTFFMTg1ODlEODNERDJBRjUwQTQiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo5QzY2OUNCMDg4MEYxMUUxODU4OUQ4M0REMkFGNTBBNCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo5QzY2OUNCMTg4MEYxMUUxODU4OUQ4M0REMkFGNTBBNCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PsQhXeAAAABfSURBVHjaYvz//z8DJYCRUgMYQAbAMBQIAvEqkBQWXI6sHqwHiwG70TTBxGaiWwjCTGgOUgJiF1J8wMRAIUA34B4Q76HUBelAfJYSA0CuMIEaRP8wGIkGMA54bgQIMACAmkXJi0hKJQAAAABJRU5ErkJggg==) no-repeat 10px center;
+  text-decoration: none; }
+
+h1 tt, h1 code {
+  font-size: inherit; }
+
+h2 tt, h2 code {
+  font-size: inherit; }
+
+h3 tt, h3 code {
+  font-size: inherit; }
+
+h4 tt, h4 code {
+  font-size: inherit; }
+
+h5 tt, h5 code {
+  font-size: inherit; }
+
+h6 tt, h6 code {
+  font-size: inherit; }
+
+h1 {
+  font-size: 28px;
+  color: black; }
+
+h2 {
+  font-size: 24px;
+  border-bottom: 1px solid #cccccc;
+  color: black; }
+
+h3 {
+  font-size: 18px; }
+
+h4 {
+  font-size: 16px; }
+
+h5 {
+  font-size: 14px; }
+
+h6 {
+  color: #777777;
+  font-size: 14px; }
+
+p, blockquote, ul, ol, dl, li, table, pre {
+  margin: 15px 0; }
+
+hr {
+  background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OENDRjNBN0E2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OENDRjNBN0I2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo4Q0NGM0E3ODY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo4Q0NGM0E3OTY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PqqezsUAAAAfSURBVHjaYmRABcYwBiM2QSA4y4hNEKYDQxAEAAIMAHNGAzhkPOlYAAAAAElFTkSuQmCC) repeat-x 0 0;
+  border: 0 none;
+  color: #cccccc;
+  height: 4px;
+  padding: 0;
+}
+
+body > h2:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+body > h1:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+  body > h1:first-child + h2 {
+    margin-top: 0;
+    padding-top: 0; }
+body > h3:first-child, body > h4:first-child, body > h5:first-child, body > h6:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0; }
+
+h1 p, h2 p, h3 p, h4 p, h5 p, h6 p {
+  margin-top: 0; }
+
+li p.first {
+  display: inline-block; }
+li {
+  margin: 0; }
+ul, ol {
+  padding-left: 30px; }
+
+ul :first-child, ol :first-child {
+  margin-top: 0; }
+
+dl {
+  padding: 0; }
+  dl dt {
+    font-size: 14px;
+    font-weight: bold;
+    font-style: italic;
+    padding: 0;
+    margin: 15px 0 5px; }
+    dl dt:first-child {
+      padding: 0; }
+    dl dt > :first-child {
+      margin-top: 0; }
+    dl dt > :last-child {
+      margin-bottom: 0; }
+  dl dd {
+    margin: 0 0 15px;
+    padding: 0 15px; }
+    dl dd > :first-child {
+      margin-top: 0; }
+    dl dd > :last-child {
+      margin-bottom: 0; }
+
+blockquote {
+  border-left: 4px solid #dddddd;
+  padding: 0 15px;
+  color: #777777; }
+  blockquote > :first-child {
+    margin-top: 0; }
+  blockquote > :last-child {
+    margin-bottom: 0; }
+
+table {
+  padding: 0;border-collapse: collapse; }
+  table tr {
+    border-top: 1px solid #cccccc;
+    background-color: white;
+    margin: 0;
+    padding: 0; }
+    table tr:nth-child(2n) {
+      background-color: #f8f8f8; }
+    table tr th {
+      font-weight: bold;
+      border: 1px solid #cccccc;
+      margin: 0;
+      padding: 6px 13px; }
+    table tr td {
+      border: 1px solid #cccccc;
+      margin: 0;
+      padding: 6px 13px; }
+    table tr th :first-child, table tr td :first-child {
+      margin-top: 0; }
+    table tr th :last-child, table tr td :last-child {
+      margin-bottom: 0; }
+
+img {
+  max-width: 100%; }
+
+span.frame {
+  display: block;
+  overflow: hidden; }
+  span.frame > span {
+    border: 1px solid #dddddd;
+    display: block;
+    float: left;
+    overflow: hidden;
+    margin: 13px 0 0;
+    padding: 7px;
+    width: auto; }
+  span.frame span img {
+    display: block;
+    float: left; }
+  span.frame span span {
+    clear: both;
+    color: #333333;
+    display: block;
+    padding: 5px 0 0; }
+span.align-center {
+  display: block;
+  overflow: hidden;
+  clear: both; }
+  span.align-center > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px auto 0;
+    text-align: center; }
+  span.align-center span img {
+    margin: 0 auto;
+    text-align: center; }
+span.align-right {
+  display: block;
+  overflow: hidden;
+  clear: both; }
+  span.align-right > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px 0 0;
+    text-align: right; }
+  span.align-right span img {
+    margin: 0;
+    text-align: right; }
+span.float-left {
+  display: block;
+  margin-right: 13px;
+  overflow: hidden;
+  float: left; }
+  span.float-left span {
+    margin: 13px 0 0; }
+span.float-right {
+  display: block;
+  margin-left: 13px;
+  overflow: hidden;
+  float: right; }
+  span.float-right > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px auto 0;
+    text-align: right; }
+
+code, tt {
+  margin: 0 2px;
+  padding: 0 5px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px; }
+
+pre code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent; }
+
+.highlight pre {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px; }
+
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px; }
+  pre code, pre tt {
+    background-color: transparent;
+    border: none; }
+
+sup {
+    font-size: 0.83em;
+    vertical-align: super;
+    line-height: 0;
+}
+
+kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  font-size: 11px;
+  line-height: 10px;
+  color: #555;
+  vertical-align: middle;
+  background-color: #fcfcfc;
+  border: solid 1px #ccc;
+  border-bottom-color: #bbb;
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 #bbb
+}
+
+* {
+	-webkit-print-color-adjust: exact;
+}
+@media screen and (min-width: 914px) {
+    body {
+        width: 854px;
+        margin:0 auto;
+    }
+}
+@media print {
+	table, pre {
+		page-break-inside: avoid;
+	}
+	pre {
+		word-wrap: break-word;
+	}
+}
+</style>
+
+
+</head>
+
+<body>
+
+<h1 id="toc_0">Facebook InstantGame API v6.1 说明</h1>
+
+<h1 id="toc_1">引用 Facebook InstantGame SDK</h1>
+
+<p>在 index.html 里引入 sdk 的 js 文件。注意：该 js 文件必须像下面这样远程加载，不能放到本地，否则无法通过 Facebook 的审核。
+<code>
+&lt;script src=&quot;https://www.facebook.com/assets.php/en_US/fbinstant.6.1.js&quot;&gt;&lt;/script&gt;
+</code></p>
+
+<h1 id="toc_2">FBInstant</h1>
+
+<p>Instant Games SDK 的顶级命名空间.</p>
+
+<h2 id="toc_3">player</h2>
+
+<p>包含与当前玩家相关的功能和属性</p>
+
+<h3 id="toc_4">getID()</h3>
+
+<p>玩家的唯一标识ID。一个Facebook用户的id是不会改变的。同一个Facebook的用户，在不同的游戏里会有不用的id。
+注意，该方法必须在 FBInstant.initializeAsync() 调用之后使用</p>
+
+<p><strong>代码示例：</strong></p>
+
+<div><pre><code class="language-none">// 该方法必须在 FBInstant.initializeAsync() 调用之后使用
+var playerID = FBInstant.player.getID();</code></pre></div>
+
+<p>返回值：<strong>string</strong>，用户的唯一ID</p>
+
+<h3 id="toc_5">getSignedPlayerInfoAsync( )</h3>
+
+<p>获取玩家的唯一ID和签名，签名用来验证该 ID 来自 Facebook ，并且没有被篡改。该方法必须在 FBInstant.initializeAsync() 调用之后使用</p>
+
+<p><strong>参数</strong></p>
+
+<p>•   requestPayload  <strong>String</strong>  一个由开发者指定的信息，包含在已签名的响应消息里。</p>
+
+<p><strong>代码示例</strong></p>
+
+<div><pre><code class="language-none">该方法必须在 FBInstant.initializeAsync() 调用之后使用
+// resolves.
+FBInstant.player.getSignedPlayerInfoAsync(&#39;my_metadata&#39;)
+  .then(function (result) {
+    // ID和签名的验证应放在服务器端处理。
+    SendToMyServer(
+      result.getPlayerID(), // 和 FBInstant.player.getID() 相同
+      result.getSignature(),
+      &#39;GAIN_COINS&#39;,
+      100);
+  });</code></pre></div>
+
+<p>•   抛出 <strong>INVALID_PARAM</strong></p>
+
+<p>•   抛出 <strong>NETWORK_FAILURE</strong></p>
+
+<p>•   抛出 <strong>CLIENT<em>REQUIRES</em>UPDATE</strong></p>
+
+<p>返回值： <strong>Promise&lt;SignedPlayerInfo&gt;</strong> 一个带有 signedplayerinfo 对象的 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>.</p>
+
+<h3 id="toc_6">canSubscribeBotAsync()</h3>
+
+<p>返回一个 promise，表示玩家是否可以与游戏机器人对战。</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">// 该方法必须在 FBInstant.player.subscribeBotAsync() 之前调用
+FBInstant.player.canSubscribeBotAsync().then(
+  can_subscribe =&gt; console.log(can_subscribe)
+);</code></pre></div>
+
+<p>返回值： <strong>Promise&lt;boolean&gt;</strong> 玩家是否可以与机器人对战。开发者必须在检测 canSubscribeBotAsync() 之后再调用 subscribeBotAsync()。玩家在游戏中只会看到一次订阅机器人的对话框。</p>
+
+<h3 id="toc_7">subscribeBotAsync()</h3>
+
+<p>请求玩家订阅游戏机器人。如果失败，API 将返回 reject,如果成功，玩家将订阅游戏机器人。</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">FBInstant.player.subscribeBotAsync().then(
+  // Player is subscribed to the bot
+).catch(function (e) {
+  // Handle subscription failure
+});</code></pre></div>
+
+<p>•   抛出 <strong>INVALID_PARAM</strong></p>
+
+<p>•   抛出 <strong>PENDING_REQUEST</strong></p>
+
+<p>•   抛出 <strong>CLIENT<em>REQUIRES</em>UPDATE</strong></p>
+
+<p>返回值： <strong>Promise</strong> 如果玩家成功订阅游戏机器人，将返回 resolve；如果失败或玩家选择不订阅，将返回 reject.</p>
+
+<h3 id="toc_8">getName()</h3>
+
+<p>用户在Facebook上的的名字，使用用户的语言种类显示。
+注意，该方法必须在 FBInstant.initializeAsync() 调用之后使用</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">//该方法必须在 FBInstant.initializeAsync() 调用之后使用
+var playerName = FBInstant.player.getName();</code></pre></div>
+
+<p>返回值：<strong>string</strong>，用户的名字</p>
+
+<h3 id="toc_9">getPhoto()</h3>
+
+<p>用户头像的链接地址。头像的图片始终为正方形，尺寸最小为200x200。建议在游戏中使用的时候，先将图像缩放到所需的大小。
+注意，该方法必须在 FBInstant.initializeAsync() 调用之后使用</p>
+
+<p>警告：由于跨域的问题，在 canvas 里使用图片会有问题。要防止此情况，请将图像的 cross-origin 属性设置为 &quot;anonymous&quot;</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">//该方法必须在 FBInstant.initializeAsync() 调用之后使用
+var playerImage = new Image();
+playerImage.crossOrigin = &#39;anonymous&#39;;
+playerImage.src = FBInstant.player.getPhoto();</code></pre></div>
+
+<p>返回值：<strong>string</strong>，用户的头像的链接地址</p>
+
+<h3 id="toc_10">getDataAsync()</h3>
+
+<p>取回当前用户在FB平台储存的数据</p>
+
+<p><strong>参数</strong></p>
+
+<p>•   keys  <strong>Array &lt;String&gt;</strong>  一个用来检索数据的key的数组</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">FBInstant.player
+  .getDataAsync([&#39;achievements&#39;, &#39;currentLife&#39;])
+  .then(function(data) {
+     console.log(&#39;data is loaded&#39;);
+     var achievements = data[&#39;achievements&#39;];
+     var currentLife = data[&#39;currentLife&#39;];
+});</code></pre></div>
+
+<ul>
+<li> Throws <strong>INVALID_PARAM</strong></li>
+<li> Throws <strong>NETWORK_FAILURE</strong></li>
+<li> Throws <strong>CLIENT<em>REQUIRES</em>UPDATE</strong></li>
+</ul>
+
+<p>返回值 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a> &lt;Object&gt; 如果发送的Key存在，则通过Promise 返回储存的数据对象.</p>
+
+<h3 id="toc_11">setDataAsync()</h3>
+
+<p>把当前用户的数据储存在FB平台上。每个用户可以在每个游戏里储存1MB的数据。
+代码示例：</p>
+
+<p><strong>参数</strong></p>
+
+<p>•   data  <strong>Object</strong>  需要储存的数据，包含key-value的数据对象。对象只能包含可以序列化的值，任何不可序列化的值都会导致储存失败。</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">FBInstant.player
+  .setDataAsync({
+    achievements: [&#39;medal1&#39;, &#39;medal2&#39;, &#39;medal3&#39;],
+    currentLife: 300,
+  })
+  .then(function() {
+    console.log(&#39;data is set&#39;);
+});</code></pre></div>
+
+<ul>
+<li> Throws <strong>INVALID_PARAM</strong></li>
+<li> Throws <strong>NETWORK_FAILURE</strong></li>
+<li> Throws <strong>PENDING_REQUEST</strong></li>
+<li> Throws <strong>CLIENT<em>REQUIRES</em>UPDATE</strong></li>
+</ul>
+
+<p>返回值 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a> 当数据提交了以后会返回一个 promise。 注意：这个promise 并不意味着这个数据已经被成功保存。它只是验证了数据的有效性，并且随后会被保存。可以保证的是，在调用 player.getDataAsync 方法时，这些设定的数据会生效。</p>
+
+<h3 id="toc_12">flushDataAsync()</h3>
+
+<p>将用户的数据立刻更新到云存储。这个方法的调用成本较高，应该主要用于关键的更改。非关键的更改应该依赖于平台来将它们储存到后台。注意: 当该方法未完成时，调用 player.setDataAsync 这个方法会被拒绝.</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">FBInstant.player
+  .setDataAsync({
+    achievements: [&#39;medal1&#39;, &#39;medal2&#39;, &#39;medal3&#39;],
+    currentLife: 300,
+  })
+  .then(FBInstant.player.flushDataAsync)
+  .then(function() {
+    console.log(&#39;Data persisted to FB!&#39;);
+});</code></pre></div>
+
+<ul>
+<li> Throws <strong>INVALID_PARAM</strong></li>
+<li> Throws <strong>NETWORK_FAILURE</strong></li>
+<li> Throws <strong>PENDING_REQUEST</strong></li>
+<li> Throws <strong>CLIENT<em>REQUIRES</em>UPDATE</strong></li>
+</ul>
+
+<p>返回值 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a> 数据储存成功会返回一个promise，如果保存失败则返回拒绝</p>
+
+<h3 id="toc_13">getStatsAsync()</h3>
+
+<p>从云存储中获取当前玩家数据。</p>
+
+<p><strong>参数</strong></p>
+
+<p>•   keys  <strong>Array &lt;String&gt;？</strong>  一个用来检索状态数据的key的数组(可选)。如果没有参数，将返回所有状态</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">FBInstant.player
+  .getStatsAsync([&#39;level&#39;, &#39;zombiesSlain&#39;])
+  .then(function(stats) {
+    console.log(&#39;stats are loaded&#39;);
+    var level = stats[&#39;level&#39;];
+    var zombiesSlain = stats[&#39;zombiesSlain&#39;];
+  });</code></pre></div>
+
+<ul>
+<li> Throws <strong>INVALID_PARAM</strong></li>
+<li> Throws <strong>NETWORK_FAILURE</strong></li>
+<li> Throws <strong>CLIENT<em>UNSUPPORTED</em>OPERATION</strong></li>
+</ul>
+
+<p>返回值： <strong>Promise&lt;Object&gt;</strong> 输入的数组作为键值的对象.</p>
+
+<h3 id="toc_14">setStatsAsync()</h3>
+
+<p>把当前玩家数据储存到云空间里。</p>
+
+<p><strong>参数</strong></p>
+
+<p>•   stats  <strong>Object</strong>  一个包含了key-value的对象，将被持久化的存储到云端，它可以在各种方法中使用。该对象只能使用数字作为value，任何非数值类型都会导致存储失败。</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">FBInstant.player
+  .setStatsAsync({
+    level: 5,
+    zombiesSlain: 27,
+  })
+  .then(function() {
+    console.log(&#39;data is set&#39;);
+  });</code></pre></div>
+
+<ul>
+<li> Throws <strong>INVALID_PARAM</strong></li>
+<li> Throws <strong>NETWORK_FAILURE</strong></li>
+<li> Throws <strong>PENDING_REQUEST</strong></li>
+<li> Throws <strong>CLIENT<em>UNSUPPORTED</em>OPERATION</strong></li>
+</ul>
+
+<p>返回值： <strong>Promise</strong> 当数据提交了以后会返回一个 promise。 注意：这个promise 并不意味着这个数据已经被成功保存。它只是验证了数据的有效性，并且随后会被保存。可以保证的是，在调用 player.getStatsAsync 方法时，这些设定的数据会生效。</p>
+
+<h3 id="toc_15">incrementStatsAsync()</h3>
+
+<p>把当前玩家数据增量更新储存到云空间里。</p>
+
+<p><strong>参数</strong></p>
+
+<p>•   increments  <strong>Object</strong>  一个包含了key-value的对象，它表明了哪个 stat 的值会增量更新。该对象只能使用数字作为value，任何非数值类型都会导致存储失败。</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">FBInstant.player
+  .incrementStatsAsync({
+    level: 1,
+    zombiesSlain: 17,
+    rank: -1,
+  })
+ .then(function(stats) {
+    console.log(&#39;increments have been made! New values&#39;);
+    var level = stats[&#39;level&#39;];
+    var zombiesSlain = stats[&#39;zombiesSlain&#39;];
+  });</code></pre></div>
+
+<ul>
+<li> Throws <strong>INVALID_PARAM</strong></li>
+<li> Throws <strong>NETWORK_FAILURE</strong></li>
+<li> Throws <strong>PENDING_REQUEST</strong></li>
+<li> Throws <strong>CLIENT<em>UNSUPPORTED</em>OPERATION</strong></li>
+</ul>
+
+<p>返回值： <strong>Promise</strong> 当数据提交了以后会返回一个 promise。 注意：这个promise 并不意味着这个数据已经被成功保存。它只是验证了数据的有效性，并且随后会被保存。可以保证的是，在调用 player.getStatsAsync 方法时，这些设定的数据会生效。</p>
+
+<h3 id="toc_16">getConnectedPlayersAsync()</h3>
+
+<p>获取和当前玩家有关联的玩家列表信息（即好友列表）。</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">var connectedPlayers = FBInstant.player.getConnectedPlayersAsync()
+  .then(function(players) {
+    console.log(players.map(function(player) {
+      return {
+        id: player.getID(),
+        name: player.getName(),
+      }
+    }));
+  });
+// [{id: &#39;123456789&#39;, name: &#39;Paul Atreides&#39;}, {id: &#39;987654321&#39;, name: &#39;Duncan Idaho&#39;}]
+</code></pre></div>
+
+<ul>
+<li> Throws <strong>NETWORK_FAILURE</strong></li>
+<li> Throws <strong>CLIENT<em>REQUIRES</em>UPDATE</strong></li>
+</ul>
+
+<p>返回值 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a> &lt;Object&lt;ConnectedPlayer&gt;返回一个promise，包含了关联用户对象的数据</p>
+
+<h2 id="toc_17">context</h2>
+
+<p>包含当前游戏环境的一些方法和属性</p>
+
+<h3 id="toc_18">getID()</h3>
+
+<p>当前游戏来源的唯一id。它代表了当前游戏是在哪玩的（例如：是在 messenger 的对话里还是 facebook 的网页里）。如果是在独立页面玩的游戏，这个id值为 null。只有在 FBInstant.startGameAsync 方法被调用后，这个结果才能保证是正确的。</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">//该方法必须放在 FBInstant.startGameAsync() 的回调里。
+var contextID = FBInstant.context.getID();</code></pre></div>
+
+<p>返回值 <strong>string</strong>，当前游戏环境的id。</p>
+
+<h3 id="toc_19">getType()</h3>
+
+<p>当前游戏的环境类型。</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">//该方法必须放在 FBInstant.startGameAsync() 的回调里。
+var contextType = FBInstant.context.getType();</code></pre></div>
+
+<p>返回值 (&quot;POST&quot; | &quot;THREAD&quot; | &quot;GROUP&quot; | &quot;SOLO&quot;) 当前游戏环境的类型。</p>
+
+<h3 id="toc_20">isSizeBetween()</h3>
+
+<p>用这个方法来判断当前游戏环境中游戏参与者的数量是否介于指定的最小值和最大值之间。
+如果其中一个边界为空，则只对另一个边界进行检查。在当前游戏中第一次调用后，以后永远返回这个结果，不管参数如何改变。直到游戏环境发生改变，才会重置查询结果。</p>
+
+<p><strong>参数</strong>
+•   minSize  <strong>number</strong>  要查询的环境值的最小值。
+•   maxSize  <strong>number</strong>  要查询的环境值的最大值。</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">console.log(FBInstant.context.isSizeBetween(3, 5)); //(Context size = 4)
+// {answer: true, minSize: 3, maxSize: 5}</code></pre></div>
+
+<div><pre><code class="language-none">console.log(FBInstant.context.isSizeBetween(5, 7)); //(Context size = 4)
+// {answer: false, minSize: 5, maxSize: 7}</code></pre></div>
+
+<div><pre><code class="language-none">console.log(FBInstant.context.isSizeBetween(2, 10));// (Context size = 3)
+// {answer: true, minSize: 2, maxSize: 10}
+console.log(FBInstant.context.isSizeBetween(4, 8));// (Still in same context)
+// {answer: true, minSize: 2, maxSize: 10}</code></pre></div>
+
+<div><pre><code class="language-none">console.log(FBInstant.context.isSizeBetween(3, null)); //(Context size = 4)
+// {answer: true, minSize: 3, maxSize: null}</code></pre></div>
+
+<div><pre><code class="language-none">console.log(FBInstant.context.isSizeBetween(null, 3)); (Context size = 4)
+// {answer: false, minSize: null, maxSize: 3}</code></pre></div>
+
+<div><pre><code class="language-none">console.log(FBInstant.context.isSizeBetween(&quot;test&quot;, 5)); (Context size = 4)
+// null</code></pre></div>
+
+<div><pre><code class="language-none">console.log(FBInstant.context.isSizeBetween(0, 100)); (Context size = null)
+// null</code></pre></div>
+
+<p>返回值 ContextSizeResponse。</p>
+
+<h3 id="toc_21">switchAsync()</h3>
+
+<p>请求切换到指定的游戏环境。如果玩家没有进入该环境的权限，或者玩家没有提供进入游戏的许可，该方法都会被拒绝。如果成功切换到指定游戏环境，将会返回一个 promise.</p>
+
+<p><strong>参数</strong></p>
+
+<p>•   id <strong>string</strong>  想要进入的环境ID</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">console.log(FBInstant.context.getID());
+// 1122334455
+FBInstant.context
+  .switchAsync(&#39;1234567890&#39;)
+  .then(function() {
+    console.log(FBInstant.context.getID());
+    // 1234567890
+  });</code></pre></div>
+
+<ul>
+<li> Throws INVALID_PARAM</li>
+<li> Throws SAME_CONTEXT</li>
+<li> Throws NETWORK_FAILURE</li>
+<li> Throws USER_INPUT</li>
+<li> Throws PENDING_REQUEST</li>
+<li> Throws CLIENT<em>REQUIRES</em>UPDATE</li>
+</ul>
+
+<p>返回值 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a> 当游戏切换到指定环境，返回一个 promise，失败会被拒绝。</p>
+
+<h3 id="toc_22">chooseAsync()</h3>
+
+<p>为玩家打开一个游戏环境选择列表。如果玩家选择了一个可用的环境，客户端将尝试切到那个环境，如果成功，返回 resolve。如果玩家退出菜单，或者客户端未能切换到新环境，返回 reject.</p>
+
+<p><strong>参数</strong></p>
+
+<p>•   options <strong>Object?</strong>  提供可选择的环境对象。</p>
+
+<p>•   options.filters <strong>Array&lt; ContextFilter&gt;?</strong> 设置一组应用于环境对象的过滤器.</p>
+
+<p>•   options.maxSize <strong>number?</strong> 理想情况下，环境对象的最大值</p>
+
+<p>•   options.minSize <strong>number?</strong> 理想情况下，环境对象的最小值</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">console.log(FBInstant.context.getID());
+// 1122334455
+FBInstant.context
+  .chooseAsync()
+  .then(function() {
+    console.log(FBInstant.context.getID());
+    // 1234567890
+  });</code></pre></div>
+
+<div><pre><code class="language-none">console.log(FBInstant.context.getID());
+// 1122334455
+FBInstant.context
+  .chooseAsync({
+    filters: [&#39;NEW_CONTEXT_ONLY&#39;],
+    minSize: 3,
+  })
+  .then(function() {
+    console.log(FBInstant.context.getID());
+    // 1234567890
+  });</code></pre></div>
+
+<ul>
+<li> Throws INVALID_PARAM</li>
+<li> Throws SAME_CONTEXT</li>
+<li> Throws NETWORK_FAILURE</li>
+<li> Throws USER_INPUT</li>
+<li> Throws PENDING_REQUEST</li>
+<li> Throws CLIENT<em>REQUIRES</em>UPDATE</li>
+</ul>
+
+<p>返回值 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a> 当游戏切换到指定环境，返回一个 promise，失败会返回reject(例如，用户取消了对话框)</p>
+
+<h3 id="toc_23">createAsync()</h3>
+
+<p>在当前玩家和指定玩家之间，尝试创建或切换一个环境。如果指定玩家不能玩这个游戏，或者玩家决绝进入新环境，则返回 recject。如果成功切换到新游戏的环境时，则返回 resolve。</p>
+
+<p><strong>参数</strong></p>
+
+<p>•   playerID <strong>string</strong>  用户的 ID</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">console.log(FBInstant.context.getID());
+// 1122334455
+FBInstant.context
+  .createAsync(&#39;12345678&#39;)
+  .then(function() {
+    console.log(FBInstant.context.getID());
+    // 5544332211
+  });</code></pre></div>
+
+<ul>
+<li> Throws INVALID_PARAM</li>
+<li> Throws SAME_CONTEXT</li>
+<li> Throws NETWORK_FAILURE</li>
+<li> Throws USER_INPUT</li>
+<li> Throws PENDING_REQUEST</li>
+<li> Throws CLIENT<em>REQUIRES</em>UPDATE</li>
+</ul>
+
+<p>返回值 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a> 当游戏成功切换到指定环境，返回一个 promise 的 resolve，失败会返回reject</p>
+
+<h3 id="toc_24">getPlayersAsync()</h3>
+
+<p>获取当前环境中正在玩游戏的玩家列表(在过去 90 天内玩过游戏的用户)，它可能包含当前玩家的信息。</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">var contextPlayers = FBInstant.context.getPlayersAsync()
+  .then(function(players) {
+    console.log(players.map(function(player) {
+      return {
+        id: player.getID(),
+        name: player.getName(),
+      }
+    }));
+  });
+// [{id: &#39;123456789&#39;, name: &#39;Luke&#39;}, {id: &#39;987654321&#39;, name: &#39;Leia&#39;}]</code></pre></div>
+
+<ul>
+<li> Throws NETWORK_FAILURE</li>
+<li> Throws CLIENT<em>REQUIRES</em>UPDATE</li>
+<li> Throws INVALID_OPERATION</li>
+</ul>
+
+<p>返回 <strong><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a> &lt;Array&lt;ContextPlayer&gt;&gt;</strong></p>
+
+<h2 id="toc_25">payments</h2>
+
+<p>【内测】包含与支付和购买游戏产品相关的功能和属性。</p>
+
+<h3 id="toc_26">getCatalogAsync()</h3>
+
+<p>获取游戏的产品目录。</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">FBInstant.payments.getCatalogAsync().then(function (catalog) {
+  console.log(catalog); // [{productID: &#39;12345&#39;, ...}, ...]
+});</code></pre></div>
+
+<ul>
+<li> Throws CLIENT<em>UNSUPPORTED</em>OPERATION</li>
+<li> Throws PAYMENTS<em>NOT</em>INITIALIZED</li>
+<li> Throws NETWORK_FAILURE</li>
+</ul>
+
+<p>返回值 <strong>Promise</strong>，注册到游戏的一组产品</p>
+
+<h3 id="toc_27">purchaseAsync()</h3>
+
+<p>开始特定产品的购买流程。 如果在FBInstant.startGameAsync()解析之前调用，将返回 reject。</p>
+
+<p><strong>参数</strong></p>
+
+<p>•   playerID <strong>purchaseConfig</strong>  购买的配置文件</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">FBInstant.payments.purchaseAsync({
+  productID: &#39;12345&#39;,
+  developerPayload: &#39;foobar&#39;,
+}).then(function (purchase) {
+  console.log(purchase);
+  // {productID: &#39;12345&#39;, purchaseToken: &#39;54321&#39;, developerPayload: &#39;foobar&#39;, ...}
+});</code></pre></div>
+
+<ul>
+<li> Throws CLIENT<em>UNSUPPORTED</em>OPERATION</li>
+<li> Throws PAYMENTS<em>NOT</em>INITIALIZED</li>
+<li> Throws INVALID_PARAM</li>
+<li> Throws NETWORK_FAILURE</li>
+<li> Throws INVALID_OPERATION</li>
+</ul>
+
+<p>返回值 <strong>Promise</strong>，当玩家成功购买产品时返回 resolve。 失败返回 reject。</p>
+
+<h3 id="toc_28">getPurchasesAsync()</h3>
+
+<p>获取玩家未消费的所有购买商品。最佳做法是，游戏在客户端表明已准备好执行支付相关操作时，立即获取当前玩家的购买商品。游戏 随后可处理和消费正在等待被消费的任何购买商品。</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">FBInstant.payments.getPurchasesAsync().then(function (purchases) {
+  console.log(purchase);
+  // [{productID: &#39;12345&#39;, ...}, ...]
+});</code></pre></div>
+
+<ul>
+<li> Throws CLIENT<em>UNSUPPORTED</em>OPERATION</li>
+<li> Throws PAYMENTS<em>NOT</em>INITIALIZED</li>
+<li> Throws NETWORK_FAILURE</li>
+</ul>
+
+<p>返回值 <strong>Promise</strong>，玩家为游戏购买的一组商品。</p>
+
+<h3 id="toc_29">consumePurchaseAsync()</h3>
+
+<p>消费当前玩家拥有的特定购买商品。在为玩家配置商品效果之前，游戏应先请求消费已购买的商品。购买的商品成功消费后，游戏应立即向玩家呈现购买商品的效果。</p>
+
+<p><strong>参数</strong></p>
+
+<p>•   purchaseToken <strong>string</strong>  要使用的购买商品的购买口令。</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">FBInstant.payments.consumePurchaseAsync(&#39;54321&#39;).then(function () {
+  // Purchase successfully consumed!
+  // Game should now provision the product to the player
+});</code></pre></div>
+
+<ul>
+<li> Throws CLIENT<em>UNSUPPORTED</em>OPERATION</li>
+<li> Throws PAYMENTS<em>NOT</em>INITIALIZED</li>
+<li> Throws INVALID_PARAM</li>
+<li> Throws NETWORK_FAILURE</li>
+</ul>
+
+<p>返回值 <strong>Promise</strong>，此 promise 在成功消费已购买的商品时被解析。</p>
+
+<h3 id="toc_30">onReady()</h3>
+
+<p>设置一个回调，在支付操作可进行时触发。</p>
+
+<p><strong>参数</strong></p>
+
+<p>•   callback <strong>Function</strong>  当支付可进行时执行的回调函数。</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">FBInstant.payments.onReady(function () {
+  console.log(&#39;Payments Ready!&#39;)
+});</code></pre></div>
+
+<p>返回值 <strong>void</strong></p>
+
+<h3 id="toc_31">getLocale()</h3>
+
+<p>获取用户的语言设置。 例如 <strong>zh_CN</strong>、 <strong>en_US</strong>
+全部的地域信息数据，请看此链接 https://www.facebook.com/translations/FacebookLocales.xml 。使用这个值用来确定游戏中应该显示那种语言。
+该方法必须在 FBInstant.initializeAsync() 调用之后使用</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">// 该方法必须在 FBInstant.initializeAsync() 调用之后使用
+var locale = FBInstant.getLocale(); // &#39;en_US&#39;</code></pre></div>
+
+<p>返回值 <strong>string</strong>，当前地域信息。</p>
+
+<h3 id="toc_32">getPlatform()</h3>
+
+<p>当前游戏运行在哪个平台。该方法必须在 FBInstant.initializeAsync() 调用之后使用</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">该方法必须在 FBInstant.initializeAsync() 调用之后使用
+var platform = FBInstant.getPlatform(); // &#39;IOS&#39;</code></pre></div>
+
+<p>返回值 <strong>Platform?</strong>，当前游戏运行的平台(&quot;IOS&quot; | &quot;ANDROID&quot; | &quot;WEB&quot; | &quot;MOBILE_WEB&quot;)</p>
+
+<h3 id="toc_33">getSDKVersion()</h3>
+
+<p>获取SDK的版本号,用字符串来表示。</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">var sdkVersion = FBInstant.getSDKVersion(); // &#39;4.1&#39;</code></pre></div>
+
+<p>返回值 <strong>string</strong>，SDK 的版本号。</p>
+
+<h3 id="toc_34">initializeAsync()</h3>
+
+<p>初始化SDK，应当在所有其他的API使用前调用。
+代码示例：</p>
+
+<div><pre><code class="language-none">FBInstant.initializeAsync().then(function() {
+  // 在初始化完成之前，下面这些属性都是无法得到的。必须要放在这个回调方法里。
+  var locale = FBInstant.getLocale(); // &#39;en_US&#39;
+  var platform = FBInstant.getPlatform(); // &#39;IOS&#39;
+  var sdkVersion = FBInstant.getSDKVersion(); // &#39;4.1&#39;
+  var playerID = FBInstant.player.getID();
+});</code></pre></div>
+
+<ul>
+<li> Throws INVALID_OPERATION</li>
+</ul>
+
+<p>返回值 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a> 当sdk 初始化完成后会返回 promise</p>
+
+<h3 id="toc_35">setLoadingProgress()</h3>
+
+<p>通知平台游戏初始化资源加载的进度</p>
+
+<p><strong>参数</strong></p>
+
+<p>•   percentage <strong>number</strong>  0到100之间的数字</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">FBInstant.setLoadingProgress(50); // 50%的资源被加载了</code></pre></div>
+
+<p>返回值 <strong>void</strong></p>
+
+<h3 id="toc_36">getSupportedAPIs()</h3>
+
+<p>提供当前客户端支持的 API 函数列表。</p>
+
+<p>代码示例：该方法必须在 FBInstant.initializeAsync() 调用之后使用</p>
+
+<div><pre><code class="language-none">//该方法必须在 FBInstant.initializeAsync() 调用之后使用
+FBInstant.getSupportedAPIs();
+// [&#39;getLocale&#39;, &#39;initializeAsync&#39;, &#39;player.getID&#39;, &#39;context.getType&#39;, ...]</code></pre></div>
+
+<p>返回值  <strong>Array&lt;string&gt;</strong> 返回客户端支持的 API 函数列表</p>
+
+<h3 id="toc_37">getEntryPointData()</h3>
+
+<p>返回与游戏启动的入口点相关的数据对象。</p>
+
+<p>对象的内容是开发人员定义的，并且可以在不同平台的入口点触发。在老的移动客户端上会返回 null。如果特定的入口点没有数据时，也会返回 null。</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">//该方法必须在 FBInstant.initializeAsync() 调用之后使用
+const entryPointData = FBInstant.getEntryPointData();</code></pre></div>
+
+<p>返回值 <strong>Object</strong> 与当前入口点相关的数据。</p>
+
+<h3 id="toc_38">getEntryPointAsync()</h3>
+
+<p>返回与游戏启动的入口点相关的数据对象。</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">//该方法必须在 FBInstant.initializeAsync() 调用之后使用
+FBInstant.getEntryPointAsync();
+// &#39;admin_message&#39;</code></pre></div>
+
+<p>返回值： <strong>String</strong> 用户从哪个入口进入的游戏</p>
+
+<h3 id="toc_39">setSessionData()</h3>
+
+<p>为当前环境设置游戏的数据。
+每当游戏想要更新当前会话的数据时，可以调用该方法。
+<strong>参数</strong></p>
+
+<p>•   sessionData <strong>Object</strong>  一个任意的数据对象，必须小于1000个字符</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">FBInstant.setSessionData({coinsEarned: 10, eventsSeen: [&#39;start&#39;, ...]});</code></pre></div>
+
+<p>返回值 <strong>void</strong></p>
+
+<h3 id="toc_40">startGameAsync()</h3>
+
+<p>这表明游戏已经加载完资源，可以开始玩了。当返回 promise 的 resolve 时，环境信息将会更新。</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">FBInstant.startGameAsync().then(function() {
+  myGame.start();
+});</code></pre></div>
+
+<ul>
+<li> Throws INVALID_PARAM</li>
+<li> Throws CLIENT<em>REQUIRES</em>UPDATE</li>
+<li> 
+返回值 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a> 当游戏应当开始玩的时候会返回 promise</li>
+</ul>
+
+<h3 id="toc_41">shareAsync()</h3>
+
+<p>这将启动一个对话框，让用户共享指定的内容，可能是一个 Messenger 里的消息，或者是用户时间线上的一个帖子。一个blob数据可以附加在分享上，当游戏通过分享启动时，可以通过 FBInstant.getEntryPointData() 方法获取。这个数据必须少于1000个字符。用户可以选择取消分享，或者关闭对话框，但不论用户是否真的分享了内容，都会返回 promise 的 resolve。</p>
+
+<p><strong>参数</strong></p>
+
+<p>•   payload <strong>SharePayload</strong>  要分享的内容，请看示例代码</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">FBInstant.shareAsync({
+  intent: &#39;REQUEST&#39;,
+  image: base64Picture,
+  text: &#39;X is asking for your help!&#39;,
+  data: { myReplayData: &#39;...&#39; },
+}).then(function() {
+  // 继续游戏
+});</code></pre></div>
+
+<ul>
+<li> 抛出 INVALID_PARAM</li>
+<li> 抛出 NETWORK_FAILURE</li>
+<li> 抛出 PENDING_REQUEST</li>
+<li> 抛出 CLIENT<em>REQUIRES</em>UPDATE</li>
+<li> 抛出 INVALID_OPERATION</li>
+</ul>
+
+<p>返回值 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a> 不管分享成功或失败，都会返回 promise 的 resolve</p>
+
+<h3 id="toc_42">updateAsync()</h3>
+
+<p>通知Facebook在游戏中发生的更新。这将暂时把控制权交给Facebook，而Facebook将决定根据更新的内容来做什么。当Facebook将控制权归还给游戏时，将返回 promise 的 resolve/reject.</p>
+
+<p><strong>参数</strong></p>
+
+<p>•   payload **CustomUpdatePayload **  要更新的内容</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">//这将发送一个自定义更新。如果游戏是运行在一个 messenger 的对话里，
+//它将发送一条带有图文的消息到指定的对话里。
+//如果其他用户通过这条消息启动了游戏，
+//这些游戏会话将可以通过 FBInstant.getEntryPointData() 方法获取附加的 blob 数据。 
+
+FBInstant.updateAsync({
+  action: &#39;CUSTOM&#39;,
+  cta: &#39;Join The Fight&#39;,
+  template:&#39;join_fight&#39;,
+  image: base64Picture,
+  text: {
+    default: &#39;X just invaded Y\&#39;s village!&#39;,
+    localizations: {
+      ar_AR: &#39;X \u0641\u0642\u0637 \u063A\u0632\u062A &#39; +
+      &#39;\u0642\u0631\u064A\u0629 Y!&#39;,
+      en_US: &#39;X just invaded Y\&#39;s village!&#39;,
+      es_LA: &#39;\u00A1X acaba de invadir el pueblo de Y!&#39;,
+    }
+  },
+  template: &#39;VILLAGE_INVASION&#39;,
+  data: { myReplayData: &#39;...&#39; },
+  strategy: &#39;IMMEDIATE&#39;,
+  notification: &#39;NO_PUSH&#39;,
+}).then(function() {
+  //当消息发送后，关闭游戏
+  FBInstant.quit();
+});</code></pre></div>
+
+<ul>
+<li>抛出 INVALID_PARAM</li>
+<li>抛出 PENDING_REQUEST</li>
+<li>抛出 INVALID_OPERATION</li>
+</ul>
+
+<p>返回值 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a> 当Facebook将控制权归还给游戏时返回 promise</p>
+
+<h3 id="toc_43">switchGameAsync()</h3>
+
+<p>请求客户端切换到另一个小游戏。切换 失败时，API 将拒绝；成功时，客户端将加载 新游戏。</p>
+
+<p><strong>参数</strong></p>
+
+<p>•   appID **string **  要切换到的小游戏相应的应用编号。 应用必须为小游戏，且必须和当前游戏 属于同一商家所有。要将不同游戏关联到相同商家， 您可使用商务管理平台：https://developers.facebook.com/docs/apps/business-manager#update-business</p>
+
+<p>•   data <strong>string</strong> 可选的附加数据。会被设置为要切换到的游戏的入口点数据。转变为字符串时，必须小于或等于 1000 个字符。</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">FBInstant.switchGameAsync(&#39;12345678&#39;).catch(function (e) {
+  // Handle game change failure
+});</code></pre></div>
+
+<ul>
+<li>抛出 USER_INPUT</li>
+<li>抛出 INVALID_PARAM</li>
+<li>抛出 PENDING_REQUEST</li>
+<li>抛出 CLIENT<em>REQUIRES</em>UPDATE</li>
+</ul>
+
+<p>返回值 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a> 当Facebook将控制权归还给游戏时返回 promise</p>
+
+<h3 id="toc_44">canCreateShortcutAsync()</h3>
+
+<p>用户是否有资格创建快捷方式。
+如果 createShortcutAsync 已经被调用了或者用户没有资格创建快捷方式，返回 false.</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">FBInstant.canCreateShortcutAsync()
+  .then(function(canCreateShortcut) {
+    if (canCreateShortcut) {
+      FBInstant.createShortcutAsync()
+        .then(function() {
+          // Shortcut created
+        })
+        .catch(function() {
+          // Shortcut not created
+        });
+    }
+  });</code></pre></div>
+
+<ul>
+<li>抛出 PENDING_REQUEST</li>
+<li>抛出 CLIENT<em>REQUIRES</em>UPDATE</li>
+<li>抛出 INVALID_OPERATION</li>
+</ul>
+
+<p>返回值 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a> 如果游戏允许玩家创建快捷方式，返回 true，否则返回 false</p>
+
+<h3 id="toc_45">createShortcutAsync()</h3>
+
+<p>如果用户有资格，提示用户创建游戏的快捷方式。每次会话只能调用一次。</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">FBInstant.canCreateShortcutAsync()
+  .then(function(canCreateShortcut) {
+    if (canCreateShortcut) {
+      FBInstant.createShortcutAsync()
+        .then(function() {
+          // Shortcut created
+        })
+        .catch(function() {
+          // Shortcut not created
+        });
+    }
+  });</code></pre></div>
+
+<ul>
+<li>抛出 USER_INPUT</li>
+<li>抛出 PENDING_REQUEST</li>
+<li>抛出 CLIENT<em>REQUIRES</em>UPDATE</li>
+<li>抛出 INVALID_OPERATION</li>
+</ul>
+
+<p>返回值 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a> </p>
+
+<h3 id="toc_46">quit()</h3>
+
+<p>退出游戏</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">FBInstant.quit();</code></pre></div>
+
+<p>返回值 <strong>void</strong></p>
+
+<h3 id="toc_47">logEvent()</h3>
+
+<p>使用 Facebook 的分析系统来记录一个应用的事件消息，更多细节请参见： https://developers.facebook.com/docs/javascript/reference/v2.8#app_events </p>
+
+<p><strong>参数</strong></p>
+
+<p>•   eventName <strong>string</strong>  事件的名称。必须是2到40个字符，只能包含&#39;_&#39;, &#39;-&#39;, &#39; &#39;和字母数字的字符。</p>
+
+<p>•   valueToSum <strong>number</strong> 一个可选的数字，FB分析可以计算它。</p>
+
+<p>•   parameters <strong>Object</strong> 一个可选的对象，它可以包含多达25个 key-value，以记录事件。key 必须是2-40个字符，只能包含&#39;_&#39;, &#39;-&#39;, &#39; &#39;和字母数字的字符。 Value 必须少于100个字符。</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">var logged = FBInstant.logEvent(
+  &#39;my_custom_event&#39;,
+  42,
+  {custom_property: &#39;custom_value&#39;},
+);</code></pre></div>
+
+<p>返回值 <strong>APIError</strong> 如果事件记录失败，返回错误信息，否则返回 null.</p>
+
+<h3 id="toc_48">onPause()</h3>
+
+<p>设置一个暂停事件触发时调用的方法。</p>
+
+<p><strong>参数</strong></p>
+
+<p>•   func <strong>Function</strong>  当暂停事件触发时调用的方法。</p>
+
+<div><pre><code class="language-none">FBInstant.onPause(function() {
+  console.log(&#39;Pause event was triggered!&#39;);
+})</code></pre></div>
+
+<p>返回值 <strong>void</strong></p>
+
+<h3 id="toc_49">getInterstitialAdAsync()</h3>
+
+<p>尝试创建插屏广告的实例。此实例可在之后预载和显示。</p>
+
+<p><strong>参数</strong></p>
+
+<p>•   placementID  <strong>String</strong>  在 Audience Network 设置的位置ID。</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">FBInstant.getInterstitialAdAsync(
+  &#39;my_placement_id&#39;,
+).then(function(interstitial) {
+  interstitial.getPlacementID(); // &#39;my_placement_id&#39;
+});</code></pre></div>
+
+<ul>
+<li>  抛出 <strong>ADS<em>TOO</em>MANY_INSTANCES</strong></li>
+<li>  抛出 <strong>CLIENT<em>UNSUPPORTED</em>OPERATION</strong></li>
+</ul>
+
+<p>返回值： <strong>Promise</strong> 成功了返回 resolves，失败了返回 reject</p>
+
+<h3 id="toc_50">getRewardedVideoAsync()</h3>
+
+<p>尝试创建一个激励视频广告的实例。此实例可在之后预载和显示。</p>
+
+<p><strong>参数</strong></p>
+
+<p>•   placementID  <strong>string</strong>  在 Audience Network 设置的位置ID。</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">FBInstant.getRewardedVideoAsync(
+  &#39;my_placement_id&#39;,
+).then(function(rewardedVideo) {
+  rewardedVideo.getPlacementID(); // &#39;my_placement_id&#39;
+});</code></pre></div>
+
+<ul>
+<li>  抛出 <strong>ADS<em>TOO</em>MANY_INSTANCES</strong></li>
+<li>  抛出 <strong>CLIENT<em>UNSUPPORTED</em>OPERATION</strong></li>
+</ul>
+
+<p>返回值： <strong>Promise</strong> 成功了返回 resolves，失败了返回 reject</p>
+
+<h3 id="toc_51">matchPlayerAsync()</h3>
+
+<p>[封闭公测] 尝试将当前玩家与等待他人加入游戏的其他玩家进行匹配。如果匹配成功，将为匹配的玩家创建一个新的 Messenger 群聊，且玩家的游戏环境将切换到该群聊。</p>
+
+<p><strong>参数</strong></p>
+
+<ul>
+<li>  matchTag  <strong>string</strong>  玩家的可选额外信息，可用于将玩家 加到具有相似玩家的群聊中。具有完全相同标签的玩家才会加入同一群聊。标签只能包含字母、数字和下划线，且长度不能超过 100 个字符。</li>
+<li>  switchContextWhenMatched <strong>boolean</strong> 可选的额外参数， 指定当找到匹配时，是否将玩家立即切换到新环境。默认设置为 false，亦即玩家在匹配成功后，需要明确点击玩游戏按钮才会切换到新环境。</li>
+</ul>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">FBInstant
+  .matchPlayerAsync(&#39;level1&#39;)
+  .then(function() {
+    console.log(FBInstant.context.getID());
+    // 12345
+  });</code></pre></div>
+
+<div><pre><code class="language-none">FBInstant
+  .matchPlayerAsync()
+  .then(function() {
+    console.log(FBInstant.context.getID());
+    // 3456
+  });</code></pre></div>
+
+<div><pre><code class="language-none">FBInstant
+  .matchPlayerAsync(null, true)
+  .then(function() {
+    console.log(FBInstant.context.getID());
+    // 3456
+  });</code></pre></div>
+
+<ul>
+<li>  抛出 <strong>INVALID_PARAM</strong></li>
+<li>  抛出 <strong>NETWORK_FAILURE</strong></li>
+<li> 抛出 <strong>USER_INPUT</strong></li>
+<li>  抛出 <strong>PENDING_REQUEST</strong></li>
+<li> 抛出 <strong>CLIENT<em>UNSUPPORTED</em>OPERATION</strong></li>
+<li>  抛出 <strong>INVALID_OPERATION</strong></li>
+</ul>
+
+<p>返回值： <strong>Promise</strong> 当玩家已加入群聊并切换到 群聊环境时，此 promise 被解析。</p>
+
+<h3 id="toc_52">checkCanPlayerMatchAsync()</h3>
+
+<p>[封闭公测] 检查当前玩家是否符合 matchPlayerAsync API 的条件。</p>
+
+<p>代码示例：</p>
+
+<div><pre><code class="language-none">FBInstant
+  .checkCanPlayerMatchAsync()
+  .then(canMatch =&gt; {
+    if (canMatch) {
+      FBInstant.matchPlayerAsync(&#39;level1&#39;);
+    }
+  });</code></pre></div>
+
+<ul>
+<li>  抛出 <strong>NETWORK_FAILURE</strong></li>
+<li> 抛出 <strong>CLIENT<em>UNSUPPORTED</em>OPERATION</strong></li>
+</ul>
+
+<p>返回值： <strong>Promise</strong> 当玩家符合与其他玩家匹配的条件时， 此 promise 被解析为 true，否则解析为 false。</p>
+
+<h3 id="toc_53">getLeaderboardAsync()</h3>
+
+<p>获取这款小游戏中的特有排行榜。</p>
+
+<p><strong>参数</strong></p>
+
+<p>•   name  <strong>string</strong>  小游戏的每个排行榜必须具有唯一的名称</p>
+
+<p><strong>代码示例</strong>
+<code>
+FBInstant.getLeaderboardAsync(&#39;my_awesome_leaderboard&#39;)
+  .then(leaderboard =&gt; {
+    console.log(leaderboard.getName()); // &#39;my_awesome_leaderboard&#39;
+  });
+</code></p>
+
+<ul>
+<li>  抛出 <strong>LEADERBOARD<em>NOT</em>FOUND</strong></li>
+<li>  抛出 <strong>NETWORK_FAILURE</strong></li>
+<li>  抛出 <strong>CLIENT<em>UNSUPPORTED</em>OPERATION</strong></li>
+<li>  抛出 <strong>INVALID_OPERATION</strong></li>
+<li>  抛出 <strong>INVALID_PARAM</strong></li>
+</ul>
+
+<p>返回值： <strong>Promise</strong> 此 promise 在获得匹配的排行榜时被解析， 在未找到匹配时被拒绝。</p>
+
+
+
+
+</body>
+
+</html>
