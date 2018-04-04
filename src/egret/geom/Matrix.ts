@@ -819,8 +819,8 @@ namespace egret {
          */
         $getScaleX(): number {
             let m = this;
-            if (m.a == 1 && m.b == 0) {
-                return 1;
+            if (m.b == 0) {
+                return m.a;
             }
             let result = Math.sqrt(m.a * m.a + m.b * m.b);
             return this.getDeterminant() < 0 ? -result : result;
@@ -831,8 +831,8 @@ namespace egret {
          */
         $getScaleY(): number {
             let m = this;
-            if (m.c == 0 && m.d == 1) {
-                return 1;
+            if (m.c == 0) {
+                return m.d;
             }
             let result = Math.sqrt(m.c * m.c + m.d * m.d);
             return this.getDeterminant() < 0 ? -result : result;
