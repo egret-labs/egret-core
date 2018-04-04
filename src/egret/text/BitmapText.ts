@@ -122,6 +122,8 @@ namespace egret {
         $setText(value: string): boolean {
             if (value == null) {
                 value = "";
+            } else {
+                value = String(value);
             }
             let self = this;
             if (value == self.$text)
