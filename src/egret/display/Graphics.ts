@@ -221,7 +221,7 @@ namespace egret {
         public endFill(fillRule?:CanvasFillRule):void {
             let fillPath = this.fillPath;
             if(fillPath){
-                fillPath.fillRule = fillRule;
+                fillPath.fillRule = fillRule || "nonzero";
                 this.fillPath = null;
             }
         }
