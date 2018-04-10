@@ -19,6 +19,8 @@ var rename_1 = require("./rename");
 exports.RenamePlugin = rename_1.RenamePlugin;
 var resSplit_1 = require("./resSplit");
 exports.ResSplitPlugin = resSplit_1.ResSplitPlugin;
+var merge_1 = require("./merge");
+exports.ZipPlugin = merge_1.ZipPlugin;
 function run() {
     global.exitCode = 0;
 }
