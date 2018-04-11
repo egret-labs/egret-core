@@ -32,7 +32,7 @@ type UserConfig = {
     /**
      * 插件
      */
-    commands: (string | plugins.Command) []
+    commands: (string | plugins.Command)[]
 }
 
 type BuildConfigParam = {
@@ -348,6 +348,17 @@ declare module 'built-in' {
 
     export class ResSplitPlugin implements plugins.Command {
         constructor(options: ResSplitPluginOptions);
+    }
+
+
+    type ZipPluginOptions = {
+
+        mergeSelector: (p: string) => string
+    }
+
+    export class ZipPlugin implements plugins.Command {
+
+        constructor(option: ZipPluginOptions);
     }
 
 }
