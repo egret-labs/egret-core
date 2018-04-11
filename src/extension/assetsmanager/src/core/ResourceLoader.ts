@@ -69,7 +69,7 @@ module RES {
 		private errorDic: any = {};
 
 		load(list: ResourceInfo[], groupName: string, priority: number, reporter?: PromiseTaskReporter): Promise<any> {
-			if(this.itemListDic[groupName]) {
+			if (this.itemListDic[groupName]) {
 				return Promise.resolve();
 			}
 			const total = list.length;
@@ -145,6 +145,9 @@ module RES {
 						}
 						this.next();
 					}).catch((error) => {
+						if (!error.__resource_manager_error__) {
+							throw error;
+						}
 						this.loadingCount--;
 						delete host.state[r.root + r.name];
 						const times = this.retryTimesDic[r.name] || 1;
