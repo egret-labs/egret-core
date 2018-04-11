@@ -42,7 +42,7 @@ export class EmitResConfigFilePlugin implements Plugin {
     }
 
     private executeFilter(file: plugin.File) {
-        const fileParams = file.options as { type?: string, subkeys?: string[] | string };
+        const fileOptions = file.options;
         const filename = file.origin;
         const url = file.relative.split('\\').join("/");
         const config = this.config;
@@ -56,8 +56,8 @@ export class EmitResConfigFilePlugin implements Plugin {
             return null;
         }
         const name = options.nameSelector(filename);
-        if (fileParams && fileParams.subkeys && typeof fileParams.subkeys == 'object') {
-            fileParams.subkeys = fileParams.subkeys.map(p => options.nameSelector(p)).join(",");
+        if (fileOptions && fileOptions.subkeys && Array.isArray(fileOptions.subkeys)) {
+            fileOptions.subkeys = fileOptions.subkeys.map(p => options.nameSelector(p)).join(",");
         }
 
         const groupName = options.groupSelector(filename);
@@ -70,7 +70,7 @@ export class EmitResConfigFilePlugin implements Plugin {
                 group.push(name);
             }
         }
-        return { name, url, type, ...fileParams }
+        return { name, url, type, ...fileOptions }
     }
 
     async  onFile(file: plugin.File): Promise<plugin.File> {
