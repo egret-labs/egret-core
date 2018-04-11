@@ -490,6 +490,9 @@ var RES;
                     }
                     _this.next();
                 }).catch(function (error) {
+                    if (!error.__resource_manager_error__) {
+                        throw error;
+                    }
                     _this.loadingCount--;
                     delete RES.host.state[r.root + r.name];
                     var times = _this.retryTimesDic[r.name] || 1;
