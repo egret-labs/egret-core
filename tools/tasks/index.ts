@@ -21,6 +21,13 @@ export interface Plugin {
 
 }
 
+
+export type FileOptions = {
+    outputDir?: string,
+    type?: string,
+    subkeys?: string[] | string
+};
+
 export type File = {
 
     origin: string,
@@ -29,7 +36,7 @@ export type File = {
 
     path: string;
 
-    options: any;
+    options: FileOptions
 
     outputDir?: string
 
@@ -46,5 +53,5 @@ export type PluginContext = {
     resourceFolder: string,
     buildConfig: { command: "build" | "publish" },
     outputDir: string,
-    createFile: (relativePath: string, content: Buffer, options?: any) => void
+    createFile: (relativePath: string, content: Buffer, options?: FileOptions) => void
 }

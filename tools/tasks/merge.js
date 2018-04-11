@@ -81,7 +81,9 @@ var ZipPlugin = (function () {
                         return [4 /*yield*/, zip(files)];
                     case 2:
                         buffer = _c.sent();
-                        pluginContext.createFile(zipFile, buffer);
+                        pluginContext.createFile(zipFile, buffer, {
+                            subkeys: files
+                        });
                         _c.label = 3;
                     case 3:
                         _i++;

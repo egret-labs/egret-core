@@ -46,7 +46,9 @@ export class ZipPlugin implements Plugin {
         for (let zipFile in this._zipCollection) {
             const files = this._zipCollection[zipFile]
             const buffer = await zip(files);
-            pluginContext.createFile(zipFile, buffer)
+            pluginContext.createFile(zipFile, buffer, {
+                subkeys: files
+            })
         }
 
 

@@ -61,7 +61,7 @@ var EmitResConfigFilePlugin = (function () {
         filters.push(options.output);
     }
     EmitResConfigFilePlugin.prototype.executeFilter = function (file) {
-        var fileParams = file.options;
+        var fileOptions = file.options;
         var filename = file.origin;
         var url = file.relative.split('\\').join("/");
         var config = this.config;
@@ -74,8 +74,8 @@ var EmitResConfigFilePlugin = (function () {
             return null;
         }
         var name = options.nameSelector(filename);
-        if (fileParams && fileParams.subkeys && typeof fileParams.subkeys == 'object') {
-            fileParams.subkeys = fileParams.subkeys.map(function (p) { return options.nameSelector(p); }).join(",");
+        if (fileOptions && fileOptions.subkeys && Array.isArray(fileOptions.subkeys)) {
+            fileOptions.subkeys = fileOptions.subkeys.map(function (p) { return options.nameSelector(p); }).join(",");
         }
         var groupName = options.groupSelector(filename);
         if (groupName) {
@@ -87,7 +87,7 @@ var EmitResConfigFilePlugin = (function () {
                 group.push(name);
             }
         }
-        return __assign({ name: name, url: url, type: type }, fileParams);
+        return __assign({ name: name, url: url, type: type }, fileOptions);
     };
     EmitResConfigFilePlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
