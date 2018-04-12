@@ -403,6 +403,21 @@ function sleep(milesecond) {
     });
 }
 exports.sleep = sleep;
+function shell2(command, args) {
+    var cmd = command + " " + args.join(" ");
+    return new Promise(function (resolve, reject) {
+        var shell = cp.exec(cmd, function (error, stdout, stderr) {
+            if (!error) {
+                resolve();
+            }
+            else {
+                console.log(stderr);
+                reject();
+            }
+        });
+    });
+}
+exports.shell2 = shell2;
 function shell(path, args, opt, verbase) {
     var stdout = "";
     var stderr = "";

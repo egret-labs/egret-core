@@ -77,12 +77,17 @@ async function zip(sourceFiles: string[]) {
     const relativePath = path.relative(egret.args.projectDir, process.cwd());
     const zipLibraryPath = path.join(egret.root, "tools/lib/zip/EGTZipTool_v1.0.2.js");
     const outputPath = path.join(tempDir2, 'output.zip');
-    await utils.shell(process.execPath, [
-        zipLibraryPath,
-        "zip",
-        outputPath,
-        tempSourceDir
-    ], null, false)
+    // await utils.shell(process.execPath, [
+    //     zipLibraryPath,
+    //     "zip",
+    //     outputPath,
+    //     tempSourceDir
+    // ], null, false)
+
+    await utils.shell2("cross-zip", [
+        tempSourceDir,
+        outputPath
+    ])
     const contentBuffer = fs.readFileSync(outputPath);
     FileUtil.remove(tempSourceDir);
     FileUtil.remove(outputPath);

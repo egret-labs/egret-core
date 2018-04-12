@@ -373,6 +373,22 @@ export function sleep(milesecond: number) {
     });
 }
 
+export function shell2(command: string, args: string[]) {
+    const cmd = command + " " + args.join(" ");
+    return new Promise((resolve, reject) => {
+        var shell = cp.exec(cmd, (error, stdout, stderr) => {
+            if (!error) {
+                resolve();
+            }
+            else {
+                console.log(stderr);
+                reject();
+            }
+        });
+    })
+
+}
+
 export function shell(path: string, args: string[], opt?: cp.ExecOptions, verbase?: boolean) {
     let stdout = "";
     let stderr = "";
