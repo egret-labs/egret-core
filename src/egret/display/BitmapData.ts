@@ -265,7 +265,7 @@ namespace egret {
             let tempList: Array<DisplayObject> = BitmapData._displayList[hashCode];
             let index: number = tempList.indexOf(displayObject);
             if (index >= 0) {
-                tempList.splice(index);
+                tempList.splice(index, 1);
             }
         }
 
