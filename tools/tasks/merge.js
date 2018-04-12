@@ -114,13 +114,23 @@ function zip(sourceFiles) {
                     relativePath = path.relative(egret.args.projectDir, process.cwd());
                     zipLibraryPath = path.join(egret.root, "tools/lib/zip/EGTZipTool_v1.0.2.js");
                     outputPath = path.join(tempDir2, 'output.zip');
-                    return [4 /*yield*/, utils.shell(process.execPath, [
-                            zipLibraryPath,
-                            "zip",
-                            outputPath,
-                            tempSourceDir
-                        ], null, false)];
+                    // await utils.shell(process.execPath, [
+                    //     zipLibraryPath,
+                    //     "zip",
+                    //     outputPath,
+                    //     tempSourceDir
+                    // ], null, false)
+                    return [4 /*yield*/, utils.shell2("cross-zip", [
+                            tempSourceDir,
+                            outputPath
+                        ])];
                 case 1:
+                    // await utils.shell(process.execPath, [
+                    //     zipLibraryPath,
+                    //     "zip",
+                    //     outputPath,
+                    //     tempSourceDir
+                    // ], null, false)
                     _a.sent();
                     contentBuffer = fs.readFileSync(outputPath);
                     FileUtil.remove(tempSourceDir);
