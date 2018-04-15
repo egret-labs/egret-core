@@ -986,16 +986,16 @@ var RES;
         processor_1.SheetProcessor = {
             onLoadStart: function (host, resource) {
                 return __awaiter(this, void 0, void 0, function () {
-                    var data, imagePath, r, texture, frames, spriteSheet, subkey, config, texture;
+                    var data, imageName, r, texture, frames, spriteSheet, subkey, config, texture;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0: return [4 /*yield*/, host.load(resource, "json")];
                             case 1:
                                 data = _a.sent();
-                                imagePath = resource.root + getRelativePath(resource.url, data.file);
+                                imageName = getRelativePath(resource.url, data.file);
                                 r = host.resourceConfig.getResource(data.file);
                                 if (!r) {
-                                    r = { name: imagePath, url: imagePath, extra: true, type: 'image', root: resource.root };
+                                    r = { name: imageName, url: imageName, extra: true, type: 'image', root: resource.root };
                                 }
                                 return [4 /*yield*/, host.load(r)];
                             case 2:
@@ -1078,10 +1078,10 @@ var RES;
                                 r = host.resourceConfig.getResource(imageFileName);
                                 if (!r) {
                                     if (typeof config === 'string') {
-                                        imageFileName = resource.root + fontGetTexturePath(resource.url, config);
+                                        imageFileName = fontGetTexturePath(resource.url, config);
                                     }
                                     else {
-                                        imageFileName = resource.root + getRelativePath(resource.url, config.file);
+                                        imageFileName = getRelativePath(resource.url, config.file);
                                     }
                                     r = { name: imageFileName, url: imageFileName, extra: true, type: 'image', root: resource.root };
                                 }
