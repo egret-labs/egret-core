@@ -8297,7 +8297,7 @@ var egret;
             var tempList = BitmapData._displayList[hashCode];
             var index = tempList.indexOf(displayObject);
             if (index >= 0) {
-                tempList.splice(index);
+                tempList.splice(index, 1);
             }
         };
         BitmapData.$invalidate = function (bitmapData) {
