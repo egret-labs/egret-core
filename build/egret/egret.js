@@ -1542,7 +1542,7 @@ var egret;
                 self.$nativeDisplayObject.setVisible(value);
             }
             else {
-                self.updateRenderMode();
+                self.$updateRenderMode();
                 var p = self.$parent;
                 if (p && !p.$cacheDirty) {
                     p.$cacheDirty = true;
@@ -1656,7 +1656,7 @@ var egret;
                 self.$nativeDisplayObject.setAlpha(value);
             }
             else {
-                self.updateRenderMode();
+                self.$updateRenderMode();
                 var p = self.$parent;
                 if (p && !p.$cacheDirty) {
                     p.$cacheDirty = true;
@@ -1767,7 +1767,7 @@ var egret;
         DisplayObject.prototype.$setScrollRect = function (value) {
             var self = this;
             if (!value && !self.$scrollRect) {
-                self.updateRenderMode();
+                self.$updateRenderMode();
                 return;
             }
             if (value) {
@@ -1786,7 +1786,7 @@ var egret;
                 }
             }
             if (!egret.nativeRender) {
-                self.updateRenderMode();
+                self.$updateRenderMode();
             }
         };
         Object.defineProperty(DisplayObject.prototype, "blendMode", {
@@ -1820,7 +1820,7 @@ var egret;
                     self.$nativeDisplayObject.setBlendMode(mode);
                 }
                 else {
-                    self.updateRenderMode();
+                    self.$updateRenderMode();
                     var p = self.$parent;
                     if (p && !p.$cacheDirty) {
                         p.$cacheDirty = true;
@@ -1886,7 +1886,7 @@ var egret;
                         value.$maskedObject = self;
                         self.$mask = value;
                         if (!egret.nativeRender) {
-                            value.updateRenderMode();
+                            value.$updateRenderMode();
                         }
                         if (self.$maskRect) {
                             if (egret.nativeRender) {
@@ -1909,7 +1909,7 @@ var egret;
                         if (self.$mask) {
                             self.$mask.$maskedObject = null;
                             if (!egret.nativeRender) {
-                                self.$mask.updateRenderMode();
+                                self.$mask.$updateRenderMode();
                             }
                         }
                         if (self.mask) {
@@ -1924,7 +1924,7 @@ var egret;
                     if (self.$mask) {
                         self.$mask.$maskedObject = null;
                         if (!egret.nativeRender) {
-                            self.$mask.updateRenderMode();
+                            self.$mask.$updateRenderMode();
                         }
                     }
                     if (self.mask) {
@@ -1941,7 +1941,7 @@ var egret;
                     }
                 }
                 if (!egret.nativeRender) {
-                    self.updateRenderMode();
+                    self.$updateRenderMode();
                 }
             },
             enumerable: true,
@@ -1987,7 +1987,7 @@ var egret;
                         self.$nativeDisplayObject.setFilters(null);
                     }
                     else {
-                        self.updateRenderMode();
+                        self.$updateRenderMode();
                     }
                     return;
                 }
@@ -2005,7 +2005,7 @@ var egret;
                     }
                 }
                 if (!egret.nativeRender) {
-                    self.updateRenderMode();
+                    self.$updateRenderMode();
                 }
             },
             enumerable: true,
@@ -2235,7 +2235,7 @@ var egret;
             }
             return node;
         };
-        DisplayObject.prototype.updateRenderMode = function () {
+        DisplayObject.prototype.$updateRenderMode = function () {
             var self = this;
             if (!self.$visible || self.$alpha <= 0 || self.$maskedObject) {
                 self.$renderMode = 1 /* NONE */;
@@ -2243,7 +2243,7 @@ var egret;
             else if (self.filters && self.filters.length > 0) {
                 self.$renderMode = 2 /* FILTER */;
             }
-            else if (self.$blendMode !== 0 || self.$mask) {
+            else if (self.$blendMode !== 0 || (self.$mask && self.$mask.$stage)) {
                 self.$renderMode = 3 /* CLIP */;
             }
             else if (self.$scrollRect || self.$maskRect) {
@@ -4413,6 +4413,9 @@ var egret;
                 self.$nativeDisplayObject.addChildAt(child.$nativeDisplayObject.id, index);
             }
             else {
+                if (child.$maskedObject) {
+                    child.$maskedObject.$updateRenderMode();
+                }
                 if (!self.$cacheDirty) {
                     self.$cacheDirty = true;
                     var p = self.$parent;
@@ -4640,6 +4643,9 @@ var egret;
                 self.$nativeDisplayObject.removeChild(child.$nativeDisplayObject.id);
             }
             else {
+                if (child.$maskedObject) {
+                    child.$maskedObject.$updateRenderMode();
+                }
                 if (!self.$cacheDirty) {
                     self.$cacheDirty = true;
                     var p = self.$parent;

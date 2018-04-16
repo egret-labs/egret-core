@@ -199,6 +199,9 @@ namespace egret {
                 self.$nativeDisplayObject.addChildAt(child.$nativeDisplayObject.id, index);
             }
             else {
+                if (child.$maskedObject) {
+                    child.$maskedObject.$updateRenderMode();
+                }
                 if (!self.$cacheDirty) {
                     self.$cacheDirty = true;
                     let p = self.$parent;
@@ -433,6 +436,9 @@ namespace egret {
                 self.$nativeDisplayObject.removeChild(child.$nativeDisplayObject.id);
             }
             else {
+                if (child.$maskedObject) {
+                    child.$maskedObject.$updateRenderMode();
+                }
                 if (!self.$cacheDirty) {
                     self.$cacheDirty = true;
                     let p = self.$parent;
@@ -600,7 +606,7 @@ namespace egret {
             list[index2] = child1;
             this.$childAdded(child2, index1);
             this.$childAdded(child1, index2);
-            if(egret.nativeRender) {
+            if (egret.nativeRender) {
                 this.$nativeDisplayObject.swapChild(index1, index2);
             }
             else {
@@ -704,7 +710,7 @@ namespace egret {
             let found: boolean = false;
             for (let i = -1; i < length; i++) {
                 let childBounds;
-                if(i == -1){
+                if (i == -1) {
                     childBounds = bounds;
                 }
                 else {
@@ -796,11 +802,11 @@ namespace egret {
             if (this.$mask && !this.$mask.$hitTest(stageX, stageY)) {
                 return null
             }
-            let children = this.$children;
+            const children = this.$children;
             let found = false;
             let target: DisplayObject = null;
             for (let i = children.length - 1; i >= 0; i--) {
-                let child = children[i];
+                const child = children[i];
                 if (child.$maskedObject) {
                     continue;
                 }
