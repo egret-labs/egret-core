@@ -617,13 +617,10 @@ module RES {
                     type = config.__temp__get__type__via__url(url);
                 }
                 // manager.config.addResourceData({ name: url, url: url });
-                r = { name: url, url, type, extra: true, root: '' };
+                r = { name: url, url, type, root: '' };
                 config.addResourceData(r);
                 r = config.getResource(url);
-                if (r) {
-                    r.extra = true;
-                }
-                else {
+                if (!r) {
                     throw 'never';
                 }
             }
