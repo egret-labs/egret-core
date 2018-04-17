@@ -41,7 +41,7 @@ module RES.processor {
         if (resource.url.indexOf("://") != -1) {
             return resource.url;
         }
-        let prefix = resource.extra ? "" : resource.root;
+        let prefix = resource.root;
         let url = prefix + resource.url;
         if (RES['getRealURL']) { //todo: shim native
             return RES['getRealURL'](url);
@@ -204,7 +204,7 @@ module RES.processor {
             let imageName = getRelativePath(resource.url, data.file);
             let r = host.resourceConfig.getResource(data.file);
             if (!r) {
-                r = { name: imageName, url: imageName, extra: true, type: 'image', root: resource.root };
+                r = { name: imageName, url: imageName, type: 'image', root: resource.root };
             }
             var texture: egret.Texture = await host.load(r);
             var frames: any = data.frames;
@@ -295,7 +295,7 @@ module RES.processor {
                 else {
                     imageFileName = getRelativePath(resource.url, config.file);
                 }
-                r = { name: imageFileName, url: imageFileName, extra: true, type: 'image', root: resource.root };
+                r = { name: imageFileName, url: imageFileName, type: 'image', root: resource.root };
             }
             var texture: egret.Texture = await host.load(r);
             var font = new egret.BitmapFont(texture, config);

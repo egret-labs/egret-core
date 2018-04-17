@@ -808,7 +808,7 @@ var RES;
             if (resource.url.indexOf("://") != -1) {
                 return resource.url;
             }
-            var prefix = resource.extra ? "" : resource.root;
+            var prefix = resource.root;
             var url = prefix + resource.url;
             if (RES['getRealURL']) {
                 return RES['getRealURL'](url);
@@ -995,7 +995,7 @@ var RES;
                                 imageName = getRelativePath(resource.url, data.file);
                                 r = host.resourceConfig.getResource(data.file);
                                 if (!r) {
-                                    r = { name: imageName, url: imageName, extra: true, type: 'image', root: resource.root };
+                                    r = { name: imageName, url: imageName, type: 'image', root: resource.root };
                                 }
                                 return [4 /*yield*/, host.load(r)];
                             case 2:
@@ -1083,7 +1083,7 @@ var RES;
                                     else {
                                         imageFileName = getRelativePath(resource.url, config.file);
                                     }
-                                    r = { name: imageFileName, url: imageFileName, extra: true, type: 'image', root: resource.root };
+                                    r = { name: imageFileName, url: imageFileName, type: 'image', root: resource.root };
                                 }
                                 return [4 /*yield*/, host.load(r)];
                             case 2:
@@ -2601,13 +2601,10 @@ var RES;
                     type = RES.config.__temp__get__type__via__url(url);
                 }
                 // manager.config.addResourceData({ name: url, url: url });
-                r = { name: url, url: url, type: type, extra: true, root: '' };
+                r = { name: url, url: url, type: type, root: '' };
                 RES.config.addResourceData(r);
                 r = RES.config.getResource(url);
-                if (r) {
-                    r.extra = true;
-                }
-                else {
+                if (!r) {
                     throw 'never';
                 }
             }

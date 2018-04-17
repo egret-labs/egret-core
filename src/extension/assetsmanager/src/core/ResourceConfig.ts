@@ -90,11 +90,6 @@ module RES {
 
         groupNames?: string[];
 
-        /**
-         * 是否被资源管理器进行管理，默认值为 false
-         */
-        extra?: boolean;
-
         promise?: Promise<any>;
 
     }
