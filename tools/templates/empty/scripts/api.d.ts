@@ -327,14 +327,31 @@ declare module 'built-in' {
         constructor(options: CleanPluginOptions);
     }
 
+
     type RenamePluginOptions = {
 
+        /**
+         * 是否输出日志
+         */
         verbose?: boolean
 
+        /**
+         * 采用何种 hash 算法，目前暂时只支持 crc32
+         */
         hash?: "crc32"
 
+        /**
+         * 匹配机制，将满足 from 的文件输出为 to 格式的文件
+         * from 采用 glob 表达式 , to 包含 [path][name][hash][ext]四个变量
+         * 示例：{ from:"resource/**.*" , to:"[path][name]_[hash].[ext]" }
+         */
         matchers: { from: string, to: string }[]
     }
+
+
+    /**
+     * 修改文件名插件
+     */
     export class RenamePlugin implements plugins.Command {
         constructor(options: RenamePluginOptions);
     }
