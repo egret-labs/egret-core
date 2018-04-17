@@ -1196,7 +1196,7 @@ declare namespace egret {
          * 获取渲染节点
          */
         $getRenderNode(): sys.RenderNode;
-        private updateRenderMode();
+        $updateRenderMode(): void;
         $renderMode: RenderMode;
         /**
          * @private
