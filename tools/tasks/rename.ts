@@ -41,7 +41,7 @@ export class RenamePlugin {
                 const toFilename = match.to.replace('[name]', name).replace('[hash]', hash).replace('[ext]', extname).replace("[path]", p);
                 file.path = file.base + '/' + toFilename;
                 if (this.options.verbose) {
-                    console.log(`RenamePlugin: ${file.relative} => ${toFilename}`)
+                    console.log(`RenamePlugin: ${file.origin} => ${toFilename}`)
                 }
                 break;
             }
