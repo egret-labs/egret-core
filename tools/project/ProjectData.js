@@ -143,7 +143,12 @@ var EgretProjectData = (function () {
             }
             return _path.join(egret.root, 'build', m.name);
         }
-        var egretLibs = getAppDataEnginesRootPath();
+        var egretLibs;
+        if (process.platform === 'linux') {
+            egretLibs = _path.resolve(__dirname, '../../');
+        } else {
+            egretLibs = getAppDataEnginesRootPath();
+        }
         var keyword = '${EGRET_APP_DATA}';
         if (p.indexOf(keyword) >= 0) {
             p = p.replace(keyword, egretLibs);
@@ -271,6 +276,9 @@ var EgretLauncherProxy = (function () {
         };
     };
     EgretLauncherProxy.prototype.getEgretToolsInstalledByVersion = function (checkVersion) {
+        if (process.platform === 'linux') {
+            return _path.resolve(__dirname, '../../');
+        }
         var egretjs = this.getLauncherLibrary();
         var data = egretjs.getAllEngineVersions();
         var versions = [];
