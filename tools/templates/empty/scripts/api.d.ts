@@ -81,6 +81,18 @@ type ProjectConfig = {
     showLog: boolean;
     maxTouches: number;
 }
+/**
+   * 匹配机制，将满足 from 的文件输出为 to 格式的文件
+   * from 采用 glob 表达式 , to 包含 [path][name][hash][ext]四个变量
+   * 示例：{ from:"resource/**.*" , to:"[path][name]_[hash].[ext]" }
+   */
+type Matcher = {
+
+    from: string[],
+
+    to: string
+
+}
 
 
 declare namespace plugins {
@@ -340,12 +352,12 @@ declare module 'built-in' {
          */
         hash?: "crc32"
 
+
         /**
-         * 匹配机制，将满足 from 的文件输出为 to 格式的文件
-         * from 采用 glob 表达式 , to 包含 [path][name][hash][ext]四个变量
-         * 示例：{ from:"resource/**.*" , to:"[path][name]_[hash].[ext]" }
+         * 设置匹配规则，将指定文件进行改名
+         * 该参数是个数组，允许设置多个匹配规则
          */
-        matchers: { from: string, to: string }[]
+        matchers: Matcher[]
     }
 
 
@@ -358,9 +370,16 @@ declare module 'built-in' {
 
     type ResSplitPluginOptions = {
 
+        /**
+         * 是否输出日志
+         */
         verbose?: boolean
 
-        matchers: { from: string, to: string }[]
+        /**
+         * 设置匹配规则，将指定文件拷贝至其他文件夹
+         * 该参数是个数组，允许设置多个匹配规则
+         */
+        matchers: Matcher[]
     }
 
     export class ResSplitPlugin implements plugins.Command {
