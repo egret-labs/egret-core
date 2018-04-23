@@ -41,7 +41,7 @@ namespace egret {
 
     let blendModes = ["source-over", "lighter", "destination-out"];
     let defaultCompositeOp = "source-over";
-    export let BLACK_COLOR = "#000000";
+    let BLACK_COLOR = "#000000";
     let CAPS_STYLES = { none: 'butt', square: 'square', round: 'round' };
     let renderBufferPool: sys.RenderBuffer[] = [];//渲染缓冲区对象池
     let renderBufferPool_Filters: sys.RenderBuffer[] = [];//滤镜缓冲区对象池
