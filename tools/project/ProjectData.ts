@@ -189,7 +189,12 @@ class EgretProjectData {
             }
             return _path.join(egret.root, 'build', m.name);
         }
-        let egretLibs = getAppDataEnginesRootPath();
+        let egretLibs;
+        if (process.platform === 'linux') {
+            egretLibs = _path.resolve(__dirname, '../../');
+        } else {
+            egretLibs = getAppDataEnginesRootPath();
+        }
         let keyword = '${EGRET_APP_DATA}';
         if (p.indexOf(keyword) >= 0) {
             p = p.replace(keyword, egretLibs);
@@ -343,6 +348,9 @@ class EgretLauncherProxy {
     private proxy: LauncherAPI;
 
     getEgretToolsInstalledByVersion(checkVersion: string) {
+        if (process.platform === 'linux') {
+            return _path.resolve(__dirname, '../../');
+        }
         const egretjs = this.getLauncherLibrary();
         const data = egretjs.getAllEngineVersions() as any[];
         const versions: { version: string, path: string }[] = [];
