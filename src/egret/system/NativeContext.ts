@@ -48,9 +48,6 @@ declare namespace egret_native {
 
     function receivedPluginInfo(info: string): void;
 
-    export let nrABIVersion:number;
-    export let nrMinEgretVersion:string;
-
     function nrInit(): void;
     function nrDownloadBuffers(callback: (displayCmdBuffer: Float32Array) => void): void;
     function nrSetRenderMode(mode: number): void;
@@ -58,6 +55,8 @@ declare namespace egret_native {
     function nrRenderDisplayObject2(id: number, offsetX: number, offsetY: number, forHitTest: boolean): void;
     function nrLocalToGlobal(id: number, localX: number, localY: number): string;
     function nrGlobalToLocal(id: number, globalX: number, globalY: number): string;
+    function nrGetTextFieldWidth(id: number): number;
+    function nrGetTextFieldHeight(id: number): number;
     function nrResize(width: number, height: number): void;
     function nrSetCanvasScaleFactor(factor: number, scalex: number, scaley: number): void;
     function nrUpdate(): void;
@@ -81,30 +80,28 @@ declare namespace egret_native {
     let addModuleCallback: (callback: Function, thisObj: any) => void;
     let initNativeRender: () => void;
     let updateNativeRender: () => void;
-    let dirtyTextField: (textField: egret.TextField) => void;
-    let dirtyGraphics: (graphics: egret.Graphics) => void;
     let activateBuffer: (buffer: egret.sys.RenderBuffer) => void;
-    let getJsImage: (key: any) => any;
     let getJsCustomFilterVertexSrc: (key: any) => any;
     let getJsCustomFilterFragSrc: (key: any) => any;
     let getJsCustomFilterUniforms: (key: any) => any;
+    let nrABIVersion: number;
+    let nrMinEgretVersion: string;
 }
 declare namespace egret_native {
+    /**
+     * @private
+     */
     class NativeRenderSurface {
         width: number;
         height: number;
-        $nrRenderTextureId: number;
-        constructor(buffer: any, w: number, h: number, root: boolean);
-        resize(width: number, height: number): void;
+        constructor(currRenderBuffer: any, w?: number, h?: number, root?: boolean);
+        resize(w: number, h: number): void;
     }
     /**
      * @private
      */
     class NativeDisplayObject {
-        static init(buffer: Float32Array, map1: any, map2: any, map3: any): void;
         id: number;
-        protected $obj: any;
-        static update(): void;
         constructor(type: number);
         addChildAt(childId: number, index: number): void;
         removeChild(childId: number): void;
@@ -127,12 +124,6 @@ declare namespace egret_native {
         static createFilter(filter: egret.Filter): void;
         static setFilterPadding(filterId: number, paddingTop: number, paddingBottom: number, paddingLeft: number, paddingRight: number): void;
         setMask(value: number): void;
-        static setValuesToBitmapData(value: egret.Texture): void;
-        /**
-         * for wasm native
-         * @param private
-         */
-        static setValuesToRenderBuffer(value: egret.sys.RenderBuffer): number;
         setBitmapData(value: egret.Texture): void;
         setBitmapDataToMesh(value: egret.Texture): void;
         setBitmapDataToParticle(value: egret.Texture): void;
@@ -145,19 +136,51 @@ declare namespace egret_native {
         setScale9Grid(x: number, y: number, w: number, h: number): void;
         setMatrix(a: number, b: number, c: number, d: number, tx: number, ty: number): void;
         setIsTyping(value: boolean): void;
-        setTextRect(x: number, y: number, w: number, h: number): void;
-        setGraphicsRect(x: number, y: number, w: number, h: number, isSprite: boolean): void;
-        setGraphicsRenderData(arr: Array<number>): void;
         setDataToBitmapNode(id: number, texture: egret.Texture, arr: number[]): void;
         setDataToMesh(vertexArr: number[], indiceArr: number[], uvArr: number[]): void;
         static setDataToFilter(currFilter: egret.Filter): void;
-        setDataToTextField(id: number, arr: number[]): void;
-        disposeDisplayObject(): void;
         static disposeTexture(texture: egret.Texture): void;
         static disposeBitmapData(bitmapData: egret.BitmapData): void;
         static disposeTextData(node: egret.TextField): void;
         static disposeGraphicData(graphic: egret.Graphics): void;
-        static disposeFilter(filter: egret.Filter): void;
+        setFontSize(value: number): void;
+        setLineSpacing(value: number): void;
+        setTextColor(value: number): void;
+        setTextFieldWidth(value: number): void;
+        setTextFieldHeight(value: number): void;
+        setFontFamily(value: string): void;
+        setTextFlow(textArr: Array<egret.ITextElement>): void;
+        setTextAlign(value: string): void;
+        setVerticalAlign(value: string): void;
+        setText(value: string): void;
+        setBold(value: boolean): void;
+        setItalic(value: boolean): void;
+        setWordWrap(value: boolean): void;
+        setMaxChars(value: number): void;
+        setType(value: string): void;
+        setStrokeColor(value: number): void;
+        setStroke(value: number): void;
+        setScrollV(value: number): void;
+        setMultiline(value: boolean): void;
+        setBorder(value: boolean): void;
+        setBorderColor(value: number): void;
+        setBackground(value: boolean): void;
+        setBackgroundColor(value: number): void;
+        setInputType(value: string): void;
+        setBeginFill(color: number, alpha?: number): void;
+        setBeginGradientFill(type: string, colors: number[], alphas: number[], ratios: number[], matrix: egret.Matrix): void;
+        setEndFill(): void;
+        setLineStyle(thickness?: number, color?: number, alpha?: number, pixelHinting?: boolean, scaleMode?: string, caps?: string, joints?: string, miterLimit?: number, lineDash?: number[]): void;
+        setDrawRect(x: number, y: number, width: number, height: number): void;
+        setDrawRoundRect(x: number, y: number, width: number, height: number, ellipseWidth: number, ellipseHeight?: number): void;
+        setDrawCircle(x: number, y: number, radius: number): void;
+        setDrawEllipse(x: number, y: number, width: number, height: number): void;
+        setMoveTo(x: number, y: number): void;
+        setLineTo(x: number, y: number): void;
+        setCurveTo(controlX: number, controlY: number, anchorX: number, anchorY: number): void;
+        setCubicCurveTo(controlX1: number, controlY1: number, controlX2: number, controlY2: number, anchorX: number, anchorY: number): void;
+        setDrawArc(x: number, y: number, radius: number, startAngle: number, endAngle: number, anticlockwise?: boolean): void;
+        setGraphicsClear(): void;
     }
 }
 /**

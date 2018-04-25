@@ -39,10 +39,6 @@ var ResSplitPlugin = (function () {
     function ResSplitPlugin(options) {
         this.options = options;
         this.verboseInfo = [];
-        // matchers: [
-        //     { from: "**/*.js", to: "js/[name]_[hash].js" },
-        //     { from: "resource/**/**", to: "[path][name]_[hash].[ext]" }
-        // ]
         if (!this.options) {
             this.options = { matchers: [] };
         }

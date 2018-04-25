@@ -31,7 +31,7 @@ namespace egret {
     /**
      * @private
      */
-    export interface FPSDisplay extends DisplayObject {
+    export interface FPSDisplay {
         /**
          * 更新FPS信息
          */

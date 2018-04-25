@@ -17,10 +17,6 @@ export class ResSplitPlugin {
     private verboseInfo: { filename: string, new_file_path: string }[] = [];
 
     constructor(private options: ResSplitPluginOptions) {
-        // matchers: [
-        //     { from: "**/*.js", to: "js/[name]_[hash].js" },
-        //     { from: "resource/**/**", to: "[path][name]_[hash].[ext]" }
-        // ]
         if (!this.options) {
             this.options = { matchers: [] }
         }
@@ -28,7 +24,6 @@ export class ResSplitPlugin {
     }
 
     async onFile(file: File) {
-
         for (let match of this.options.matchers) {
             if (minimatch(file.origin, match.from)) {
                 file.outputDir = match.to;

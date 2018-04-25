@@ -3297,7 +3297,11 @@ var egret;
              * @returns {string}
              */
             Html5Capatibility.getIOSVersion = function () {
-                var value = Html5Capatibility.ua.toLowerCase().match(/cpu [^\d]*\d.*like mac os x/)[0];
+                var matches = Html5Capatibility.ua.toLowerCase().match(/cpu [^\d]*\d.*like mac os x/);
+                if (!matches || matches.length == 0) {
+                    return 0;
+                }
+                var value = matches[0];
                 return parseInt(value.match(/\d+(_\d)*/)[0]) || 0;
             };
             //当前浏览器版本是否支持blob
@@ -3735,57 +3739,54 @@ var egret;
         /**
          * @private
          */
-        var WebFps = (function (_super) {
-            __extends(WebFps, _super);
+        var WebFps = (function () {
             function WebFps(stage, showFPS, showLog, logFilter, styles) {
-                var _this = _super.call(this) || this;
-                _this.showPanle = true;
-                _this.fpsHeight = 0;
-                _this.WIDTH = 101;
-                _this.HEIGHT = 20;
-                _this.bgCanvasColor = "#18304b";
-                _this.fpsFrontColor = "#18fefe";
-                _this.WIDTH_COST = 50;
-                _this.cost1Color = "#18fefe";
+                this.showPanle = true;
+                this.fpsHeight = 0;
+                this.WIDTH = 101;
+                this.HEIGHT = 20;
+                this.bgCanvasColor = "#18304b";
+                this.fpsFrontColor = "#18fefe";
+                this.WIDTH_COST = 50;
+                this.cost1Color = "#18fefe";
                 // private cost2Color = "#ffff00";
-                _this.cost3Color = "#ff0000";
-                _this.arrFps = [];
-                _this.arrCost = [];
-                _this.arrLog = [];
+                this.cost3Color = "#ff0000";
+                this.arrFps = [];
+                this.arrCost = [];
+                this.arrLog = [];
                 if (showFPS || showLog) {
                     if (egret.Capabilities.renderMode == 'canvas') {
-                        _this.renderMode = "Canvas";
+                        this.renderMode = "Canvas";
                     }
                     else {
-                        _this.renderMode = "WebGL";
+                        this.renderMode = "WebGL";
                     }
-                    _this.panelX = styles["x"] === undefined ? 0 : parseInt(styles['x']);
-                    _this.panelY = styles["y"] === undefined ? 0 : parseInt(styles['y']);
-                    _this.fontColor = styles["textColor"] === undefined ? '#ffffff' : styles['textColor'].replace("0x", "#");
-                    _this.fontSize = styles["size"] === undefined ? 12 : parseInt(styles['size']);
+                    this.panelX = styles["x"] === undefined ? 0 : parseInt(styles['x']);
+                    this.panelY = styles["y"] === undefined ? 0 : parseInt(styles['y']);
+                    this.fontColor = styles["textColor"] === undefined ? '#ffffff' : styles['textColor'].replace("0x", "#");
+                    this.fontSize = styles["size"] === undefined ? 12 : parseInt(styles['size']);
                     if (egret.Capabilities.isMobile) {
-                        _this.fontSize -= 2;
+                        this.fontSize -= 2;
                     }
                     var all = document.createElement('div');
                     all.style.position = 'absolute';
                     all.style.background = "rgba(0,0,0," + styles['bgAlpha'] + ")";
-                    all.style.left = _this.panelX + 'px';
-                    all.style.top = _this.panelY + 'px';
+                    all.style.left = this.panelX + 'px';
+                    all.style.top = this.panelY + 'px';
                     all.style.pointerEvents = 'none';
                     document.body.appendChild(all);
                     var container = document.createElement('div');
-                    container.style.color = _this.fontColor;
-                    container.style.fontSize = _this.fontSize + 'px';
-                    container.style.lineHeight = _this.fontSize + 'px';
+                    container.style.color = this.fontColor;
+                    container.style.fontSize = this.fontSize + 'px';
+                    container.style.lineHeight = this.fontSize + 'px';
                     container.style.margin = '4px 4px 4px 4px';
-                    _this.container = container;
+                    this.container = container;
                     all.appendChild(container);
                     if (showFPS)
-                        _this.addFps();
+                        this.addFps();
                     if (showLog)
-                        _this.addLog();
+                        this.addLog();
                 }
-                return _this;
             }
             WebFps.prototype.addFps = function () {
                 var div = document.createElement('div');
@@ -3943,9 +3944,9 @@ var egret;
                 }
             };
             return WebFps;
-        }(egret.DisplayObject));
+        }());
         web.WebFps = WebFps;
-        __reflect(WebFps.prototype, "egret.web.WebFps", ["egret.FPSDisplay", "egret.DisplayObject"]);
+        __reflect(WebFps.prototype, "egret.web.WebFps", ["egret.FPSDisplay"]);
         egret.FPSDisplay = WebFps;
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
@@ -7350,20 +7351,31 @@ var egret;
                 return drawCalls;
             };
             WebGLRenderer.prototype.getRenderCount = function (displayObject) {
-                var childrenDrawCount = 0;
+                var drawCount = 0;
+                var node = displayObject.$getRenderNode();
+                if (displayObject.$hasRenderNode) {
+                    drawCount += node.$getRenderCount();
+                }
                 if (displayObject.$children) {
                     for (var _i = 0, _a = displayObject.$children; _i < _a.length; _i++) {
                         var child = _a[_i];
-                        var node = child.$getRenderNode();
-                        if (displayObject.$hasRenderNode) {
-                            childrenDrawCount += node.$getRenderCount();
+                        var filters = child.$filters;
+                        // 特殊处理有滤镜的对象
+                        if (filters && filters.length > 0) {
+                            return 2;
                         }
-                        if (child.$children) {
-                            childrenDrawCount += this.getRenderCount(child);
+                        else if (child.$children) {
+                            drawCount += this.getRenderCount(child);
+                        }
+                        else {
+                            var node_1 = child.$getRenderNode();
+                            if (child.$hasRenderNode) {
+                                drawCount += node_1.$getRenderCount();
+                            }
                         }
                     }
                 }
-                return childrenDrawCount;
+                return drawCount;
             };
             /**
              * @private
@@ -7429,7 +7441,6 @@ var egret;
                         maskBuffer.context.popBuffer();
                         displayBuffer.context.setGlobalCompositeOperation("destination-in");
                         displayBuffer.setTransform(1, 0, 0, -1, 0, maskBuffer.height);
-                        displayBuffer.globalAlpha = 1;
                         var maskBufferWidth = maskBuffer.rootRenderTarget.width;
                         var maskBufferHeight = maskBuffer.rootRenderTarget.height;
                         displayBuffer.context.drawTexture(maskBuffer.rootRenderTarget.texture, 0, 0, maskBufferWidth, maskBufferHeight, 0, 0, maskBufferWidth, maskBufferHeight, maskBufferWidth, maskBufferHeight);
@@ -7448,7 +7459,6 @@ var egret;
                         if (scrollRect) {
                             buffer.context.pushMask(scrollRect.x + offsetX, scrollRect.y + offsetY, scrollRect.width, scrollRect.height);
                         }
-                        buffer.globalAlpha = 1;
                         var savedMatrix = egret.Matrix.create();
                         var curMatrix = buffer.globalMatrix;
                         savedMatrix.a = curMatrix.a;
@@ -8525,7 +8535,7 @@ var egret;
             EgretShaderLib.blur_frag = "precision mediump float;\nuniform vec2 blur;\nuniform sampler2D uSampler;\nvarying vec2 vTextureCoord;\nuniform vec2 uTextureSize;\nvoid main()\n{\n    const int sampleRadius = 5;\n    const int samples = sampleRadius * 2 + 1;\n    vec2 blurUv = blur / uTextureSize;\n    vec4 color = vec4(0, 0, 0, 0);\n    vec2 uv = vec2(0.0, 0.0);\n    blurUv /= float(sampleRadius);\n    for (int i = -sampleRadius; i <= sampleRadius; i++) {\n        uv.x = vTextureCoord.x + float(i) * blurUv.x;\n        uv.y = vTextureCoord.y + float(i) * blurUv.y;\n        color += texture2D(uSampler, uv);\n    }\n    color /= float(samples);\n    gl_FragColor = color;\n}";
             EgretShaderLib.colorTransform_frag = "precision mediump float;\nvarying vec2 vTextureCoord;\nvarying vec4 vColor;\nuniform mat4 matrix;\nuniform vec4 colorAdd;\nuniform sampler2D uSampler;\nvoid main(void) {\n    vec4 texColor = texture2D(uSampler, vTextureCoord);\n    if(texColor.a > 0.) {\n        texColor = vec4(texColor.rgb / texColor.a, texColor.a);\n    }\n    vec4 locColor = clamp(texColor * matrix + colorAdd, 0., 1.);\n    gl_FragColor = vColor * vec4(locColor.rgb * locColor.a, locColor.a);\n}";
             EgretShaderLib.default_vert = "attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\nattribute vec2 aColor;\nuniform vec2 projectionVector;\nvarying vec2 vTextureCoord;\nvarying vec4 vColor;\nconst vec2 center = vec2(-1.0, 1.0);\nvoid main(void) {\n   gl_Position = vec4( (aVertexPosition / projectionVector) + center , 0.0, 1.0);\n   vTextureCoord = aTextureCoord;\n   vColor = vec4(aColor.x, aColor.x, aColor.x, aColor.x);\n}";
-            EgretShaderLib.glow_frag = "precision highp float;\nvarying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform float dist;\nuniform float angle;\nuniform vec4 color;\nuniform float alpha;\nuniform float blurX;\nuniform float blurY;\nuniform float strength;\nuniform float inner;\nuniform float knockout;\nuniform float hideObject;\nuniform vec2 uTextureSize;\nfloat random()\n{\n    return fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453);\n}\nvoid main(void) {\n    vec2 px = vec2(1.0 / uTextureSize.x, 1.0 / uTextureSize.y);\n    const float linearSamplingTimes = 7.0;\n    const float circleSamplingTimes = 12.0;\n    vec4 ownColor = texture2D(uSampler, vTextureCoord);\n    vec4 curColor;\n    float totalAlpha = 0.0;\n    float maxTotalAlpha = 0.0;\n    float curDistanceX = 0.0;\n    float curDistanceY = 0.0;\n    float offsetX = dist * cos(angle) * px.x;\n    float offsetY = dist * sin(angle) * px.y;\n    const float PI = 3.14159265358979323846264;\n    float cosAngle;\n    float sinAngle;\n    float offset = PI * 2.0 / circleSamplingTimes * random();\n    float stepX = blurX * px.x / linearSamplingTimes;\n    float stepY = blurY * px.y / linearSamplingTimes;\n    for (float a = 0.0; a <= PI * 2.0; a += PI * 2.0 / circleSamplingTimes) {\n        cosAngle = cos(a + offset);\n        sinAngle = sin(a + offset);\n        for (float i = 1.0; i <= linearSamplingTimes; i++) {\n            curDistanceX = i * stepX * cosAngle;\n            curDistanceY = i * stepY * sinAngle;\n            \n            curColor = texture2D(uSampler, vec2(vTextureCoord.x + curDistanceX - offsetX, vTextureCoord.y + curDistanceY + offsetY));\n            totalAlpha += (linearSamplingTimes - i) * curColor.a;\n            maxTotalAlpha += (linearSamplingTimes - i);\n        }\n    }\n    ownColor.a = max(ownColor.a, 0.0001);\n    ownColor.rgb = ownColor.rgb / ownColor.a;\n    float outerGlowAlpha = (totalAlpha / maxTotalAlpha) * strength * alpha * (1. - inner) * max(min(hideObject, knockout), 1. - ownColor.a);\n    float innerGlowAlpha = ((maxTotalAlpha - totalAlpha) / maxTotalAlpha) * strength * alpha * inner * ownColor.a;\n    ownColor.a = max(ownColor.a * knockout * (1. - hideObject), 0.0001);\n    vec3 mix1 = mix(ownColor.rgb, color.rgb, innerGlowAlpha / (innerGlowAlpha + ownColor.a));\n    vec3 mix2 = mix(mix1, color.rgb, outerGlowAlpha / (innerGlowAlpha + ownColor.a + outerGlowAlpha));\n    float resultAlpha = min(ownColor.a + outerGlowAlpha + innerGlowAlpha, 1.);\n    gl_FragColor = vec4(mix2 * resultAlpha, resultAlpha);\n}";
+            EgretShaderLib.glow_frag = "precision highp float;\nvarying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform float dist;\nuniform float angle;\nuniform vec4 color;\nuniform float alpha;\nuniform float blurX;\nuniform float blurY;\nuniform float strength;\nuniform float inner;\nuniform float knockout;\nuniform float hideObject;\nuniform vec2 uTextureSize;\nfloat random(vec2 scale)\n{\n    return fract(sin(dot(gl_FragCoord.xy, scale)) * 43758.5453);\n}\nvoid main(void) {\n    vec2 px = vec2(1.0 / uTextureSize.x, 1.0 / uTextureSize.y);\n    const float linearSamplingTimes = 7.0;\n    const float circleSamplingTimes = 12.0;\n    vec4 ownColor = texture2D(uSampler, vTextureCoord);\n    vec4 curColor;\n    float totalAlpha = 0.0;\n    float maxTotalAlpha = 0.0;\n    float curDistanceX = 0.0;\n    float curDistanceY = 0.0;\n    float offsetX = dist * cos(angle) * px.x;\n    float offsetY = dist * sin(angle) * px.y;\n    const float PI = 3.14159265358979323846264;\n    float cosAngle;\n    float sinAngle;\n    float offset = PI * 2.0 / circleSamplingTimes * random(vec2(12.9898, 78.233));\n    float stepX = blurX * px.x / linearSamplingTimes;\n    float stepY = blurY * px.y / linearSamplingTimes;\n    for (float a = 0.0; a <= PI * 2.0; a += PI * 2.0 / circleSamplingTimes) {\n        cosAngle = cos(a + offset);\n        sinAngle = sin(a + offset);\n        for (float i = 1.0; i <= linearSamplingTimes; i++) {\n            curDistanceX = i * stepX * cosAngle;\n            curDistanceY = i * stepY * sinAngle;\n            \n            curColor = texture2D(uSampler, vec2(vTextureCoord.x + curDistanceX - offsetX, vTextureCoord.y + curDistanceY + offsetY));\n            totalAlpha += (linearSamplingTimes - i) * curColor.a;\n            maxTotalAlpha += (linearSamplingTimes - i);\n        }\n    }\n    ownColor.a = max(ownColor.a, 0.0001);\n    ownColor.rgb = ownColor.rgb / ownColor.a;\n    float outerGlowAlpha = (totalAlpha / maxTotalAlpha) * strength * alpha * (1. - inner) * max(min(hideObject, knockout), 1. - ownColor.a);\n    float innerGlowAlpha = ((maxTotalAlpha - totalAlpha) / maxTotalAlpha) * strength * alpha * inner * ownColor.a;\n    ownColor.a = max(ownColor.a * knockout * (1. - hideObject), 0.0001);\n    vec3 mix1 = mix(ownColor.rgb, color.rgb, innerGlowAlpha / (innerGlowAlpha + ownColor.a));\n    vec3 mix2 = mix(mix1, color.rgb, outerGlowAlpha / (innerGlowAlpha + ownColor.a + outerGlowAlpha));\n    float resultAlpha = min(ownColor.a + outerGlowAlpha + innerGlowAlpha, 1.);\n    gl_FragColor = vec4(mix2 * resultAlpha, resultAlpha);\n}";
             EgretShaderLib.primitive_frag = "precision lowp float;\nvarying vec2 vTextureCoord;\nvarying vec4 vColor;\nvoid main(void) {\n    gl_FragColor = vColor;\n}";
             EgretShaderLib.texture_frag = "precision lowp float;\nvarying vec2 vTextureCoord;\nvarying vec4 vColor;\nuniform sampler2D uSampler;\nvoid main(void) {\n    gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor;\n}";
             return EgretShaderLib;

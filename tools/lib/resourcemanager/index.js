@@ -3179,41 +3179,41 @@
     }, function(e, t, n) {
         "use strict";
         function r(e, t) {
-            return o(this, void 0, void 0, function() {
+            return a(this, void 0, void 0, function() {
                 function n(e, t) {
                     e.isDirty ? t(null, e) : t(null);
                 }
                 function r(e, t) {
                     e.origin = e.relative.split("\\").join("/"), t(null, e);
                 }
-                var o, d, p, m, g, h, y, v, b;
-                return s(this, function(s) {
-                    switch (s.label) {
+                var a, f, d, p, m, g, h, y, v;
+                return o(this, function(o) {
+                    switch (o.label) {
                       case 0:
-                        return [ 4, u.ResourceConfig.init(e.projectRoot, e) ];
+                        return [ 4, c.ResourceConfig.init(e.projectRoot, e) ];
 
                       case 1:
-                        return o = s.sent(), d = u.ResourceConfig.userConfig, i = e.projectRoot, a = l.join(i, "resource/"), 
-                        _.init(e.projectRoot, a, e), p = l.join(i, d.outputDir), t ? [ 4, t({
-                            outputDir: p,
+                        return a = o.sent(), f = c.ResourceConfig.userConfig, i = e.projectRoot, l.init(e.projectRoot, e), 
+                        d = u.join(i, f.outputDir), t ? [ 4, t({
+                            outputDir: d,
                             buildConfig: e
                         }) ] : [ 3, 3 ];
 
                       case 2:
-                        s.sent(), s.label = 3;
+                        o.sent(), o.label = 3;
 
                       case 3:
-                        for (m = e.matcher ? e.matcher : "resource/**/*.*", g = c.src(m, {
+                        for (p = f.matcher ? f.matcher : "resource/**/*.*", m = s.src(p, {
                             cwd: i,
                             base: i
-                        }).pipe(f(r)), h = d.commands.map(function(e) {
-                            return _.createPlugin(e, p);
-                        }), "." == d.outputDir && h.push(f(n)), h.push(c.dest(function(e) {
-                            return e.outputDir ? e.outputDir : p;
-                        })), y = 0, v = h; y < v.length; y++) b = v[y], g = g.pipe(b);
+                        }).pipe(_(r)), g = f.commands.map(function(e) {
+                            return l.createPlugin(e, d);
+                        }), "." == f.outputDir && g.push(_(n)), g.push(s.dest(function(e) {
+                            return e.outputDir ? e.outputDir : d;
+                        })), h = 0, y = g; h < y.length; h++) v = y[h], m = m.pipe(v);
                         return [ 2, new Promise(function(e, t) {
-                            g.on("end", function() {
-                                e(g);
+                            m.on("end", function() {
+                                e(m);
                             }).on("error", function() {
                                 console.log("fuck");
                             });
@@ -3222,7 +3222,7 @@
                 });
             });
         }
-        var i, a, o = this && this.__awaiter || function(e, t, n, r) {
+        var i, a = this && this.__awaiter || function(e, t, n, r) {
             return new (n || (n = Promise))(function(i, a) {
                 function o(e) {
                     try {
@@ -3245,7 +3245,7 @@
                 }
                 c((r = r.apply(e, t || [])).next());
             });
-        }, s = this && this.__generator || function(e, t) {
+        }, o = this && this.__generator || function(e, t) {
             function n(e) {
                 return function(t) {
                     return r([ e, t ]);
@@ -3321,7 +3321,7 @@
                 throw: n(1),
                 return: n(2)
             };
-        }, c = n(153), u = n(37), l = n(0), _ = n(76), f = n(234);
+        }, s = n(153), c = n(37), u = n(0), l = n(76), _ = n(234);
         n(235);
         t.build = r;
     }, function(e, t, n) {
@@ -4300,23 +4300,23 @@
         };
     }, function(e, t, n) {
         "use strict";
-        function r(e, t, n) {
-            a = e, o = t, s = n;
+        function r(e, t) {
+            a = e, o = t;
         }
         function i(e, t) {
             var r = this, i = n(6);
-            t = _.resolve(a, t).split("\\").join("/");
-            var f = {
+            t = l.resolve(a, t).split("\\").join("/");
+            var _ = {
                 projectRoot: a,
                 outputDir: t,
-                buildConfig: s,
+                buildConfig: o,
                 createFile: function() {
                     console.error("onStart 中暂不支持 createFile");
                 }
-            }, d = function(t, n, i) {
-                return c(r, void 0, void 0, function() {
+            }, f = function(t, n, i) {
+                return s(r, void 0, void 0, function() {
                     var n, r;
-                    return u(this, function(a) {
+                    return c(this, function(a) {
                         switch (a.label) {
                           case 0:
                             return a.trys.push([ 0, 2, , 3 ]), [ 4, e.onFile(t) ];
@@ -4332,40 +4332,40 @@
                         }
                     });
                 });
-            }, p = function(n) {
-                return c(this, void 0, void 0, function() {
-                    var r, i, c, f = this;
-                    return u(this, function(u) {
-                        switch (u.label) {
+            }, d = function(n) {
+                return s(this, void 0, void 0, function() {
+                    var r, i, s, _ = this;
+                    return c(this, function(c) {
+                        switch (c.label) {
                           case 0:
                             r = function(e, t, n) {
                                 e = e.split("\\").join("/");
-                                var r = new l({
-                                    cwd: o,
-                                    base: o,
-                                    path: _.join(o, e),
+                                var r = new u({
+                                    cwd: a,
+                                    base: a,
+                                    path: l.join(a, e),
                                     origin: e,
                                     contents: t,
                                     isDirty: !0,
                                     options: n,
                                     outputDir: n && n.outputDir ? n.outputDir : null
                                 });
-                                f.push(r);
-                            }, u.label = 1;
+                                _.push(r);
+                            }, c.label = 1;
 
                           case 1:
-                            return u.trys.push([ 1, 3, , 4 ]), i = {
+                            return c.trys.push([ 1, 3, , 4 ]), i = {
                                 projectRoot: a,
                                 outputDir: t,
-                                buildConfig: s,
+                                buildConfig: o,
                                 createFile: r
                             }, [ 4, e.onFinish(i) ];
 
                           case 2:
-                            return u.sent(), n(), [ 3, 4 ];
+                            return c.sent(), n(), [ 3, 4 ];
 
                           case 3:
-                            return c = u.sent(), console.log(c), [ 3, 4 ];
+                            return s = c.sent(), console.log(s), [ 3, 4 ];
 
                           case 4:
                             return [ 2 ];
@@ -4374,12 +4374,12 @@
                 });
             };
             if (e.onStart) {
-                var m = e.onStart(f);
-                m && m.then && console.error("onStart 暂时不支持异步");
+                var p = e.onStart(_);
+                p && p.then && console.error("onStart 暂时不支持异步");
             }
-            return i.obj(d, p);
+            return i.obj(f, d);
         }
-        var a, o, s, c = this && this.__awaiter || function(e, t, n, r) {
+        var a, o, s = this && this.__awaiter || function(e, t, n, r) {
             return new (n || (n = Promise))(function(i, a) {
                 function o(e) {
                     try {
@@ -4402,7 +4402,7 @@
                 }
                 c((r = r.apply(e, t || [])).next());
             });
-        }, u = this && this.__generator || function(e, t) {
+        }, c = this && this.__generator || function(e, t) {
             function n(e) {
                 return function(t) {
                     return r([ e, t ]);
@@ -4478,7 +4478,7 @@
                 throw: n(1),
                 return: n(2)
             };
-        }, l = (n(6), n(34)), _ = n(0);
+        }, u = (n(6), n(34)), l = n(0);
         t.init = r, t.createPlugin = i;
     }, function(e, t, n) {
         var r = n(78), i = {}, a = n(1);

@@ -105,7 +105,7 @@ namespace egret.web {
                     drawCalls += displayList.drawToSurface();
                 }
                 node = displayList.$renderNode;
-                hasRednerNode= true;
+                hasRednerNode = true;
 
             }
             else {
@@ -322,19 +322,30 @@ namespace egret.web {
         }
 
         private getRenderCount(displayObject: DisplayObject): number {
-            let childrenDrawCount = 0;
+            let drawCount = 0;
+            const node = displayObject.$getRenderNode();
+            if (displayObject.$hasRenderNode) {
+                drawCount += node.$getRenderCount();
+            }
             if (displayObject.$children) {
-                for (let child of displayObject.$children) {
-                    let node = child.$getRenderNode();
-                    if (displayObject.$hasRenderNode) {
-                        childrenDrawCount += node.$getRenderCount();
+                for (const child of displayObject.$children) {
+                    const filters = child.$filters;
+                    // 特殊处理有滤镜的对象
+                    if (filters && filters.length > 0) {
+                        return 2;
                     }
-                    if (child.$children) {
-                        childrenDrawCount += this.getRenderCount(child);
+                    else if (child.$children) {
+                        drawCount += this.getRenderCount(child);
+                    }
+                    else {
+                        const node = child.$getRenderNode();
+                        if (child.$hasRenderNode) {
+                            drawCount += node.$getRenderCount();
+                        }
                     }
                 }
             }
-            return childrenDrawCount;
+            return drawCount;
         }
 
         /**
@@ -403,7 +414,6 @@ namespace egret.web {
                     maskBuffer.context.popBuffer();
                     displayBuffer.context.setGlobalCompositeOperation("destination-in");
                     displayBuffer.setTransform(1, 0, 0, -1, 0, maskBuffer.height);
-                    displayBuffer.globalAlpha = 1;
                     let maskBufferWidth = maskBuffer.rootRenderTarget.width;
                     let maskBufferHeight = maskBuffer.rootRenderTarget.height;
                     displayBuffer.context.drawTexture(maskBuffer.rootRenderTarget.texture, 0, 0, maskBufferWidth, maskBufferHeight,
@@ -425,7 +435,6 @@ namespace egret.web {
                     if (scrollRect) {
                         buffer.context.pushMask(scrollRect.x + offsetX, scrollRect.y + offsetY, scrollRect.width, scrollRect.height);
                     }
-                    buffer.globalAlpha = 1;
                     let savedMatrix = Matrix.create();
                     let curMatrix = buffer.globalMatrix;
                     savedMatrix.a = curMatrix.a;

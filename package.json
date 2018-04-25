@@ -1,6 +1,6 @@
 {
   "name": "egret",
-  "version": "5.1.6",
+  "version": "5.1.10",
   "private": true,
   "author": "egret-labs",
   "bin": {
@@ -237,6 +237,16 @@
         "dependencies": [
           "egret"
         ]
+      },
+      {
+        "name": "egret-facebook",
+        "description": "Facebook Instant Games SDK",
+        "description_en": "Facebook Instant Games SDK",
+        "files": [],
+        "root": "",
+        "dependencies": [
+          "egret"
+        ]
       }
     ],
     "platforms": [
@@ -305,22 +315,6 @@
           "res",
           "eui",
           "tween"
-        ]
-      },
-      {
-        "name": "wasm",
-        "displayName": "WebAssembly 示例项目",
-        "displayName_en": "WebAssembly sample project",
-        "language": "TypeScript",
-        "tag": "game,app,TypeScript,WebAssembly",
-        "description": "WebAssembly 示例项目",
-        "description_en": "WebAssembly sample project",
-        "defaultWidth": 640,
-        "defaultHeight": 1136,
-        "modules": [
-          "egret",
-          "media",
-          "res"
         ]
       }
     ],

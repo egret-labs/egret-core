@@ -240,7 +240,7 @@ namespace egret {
 
         protected $updateUseTransform(): void {
             let self = this;
-            if (self.$scaleX == 1 && self.scaleY == 1 && self.$skewX == 0 && self.$skewY == 0) {
+            if (self.$scaleX == 1 && self.$scaleY == 1 && self.$skewX == 0 && self.$skewY == 0) {
                 self.$useTranslate = false;
             }
             else {
@@ -1067,7 +1067,7 @@ namespace egret {
                 self.$nativeDisplayObject.setVisible(value);
             }
             else {
-                self.updateRenderMode();
+                self.$updateRenderMode();
                 let p = self.$parent;
                 if (p && !p.$cacheDirty) {
                     p.$cacheDirty = true;
@@ -1196,7 +1196,7 @@ namespace egret {
                 self.$nativeDisplayObject.setAlpha(value);
             }
             else {
-                self.updateRenderMode();
+                self.$updateRenderMode();
                 let p = self.$parent;
                 if (p && !p.$cacheDirty) {
                     p.$cacheDirty = true;
@@ -1330,7 +1330,7 @@ namespace egret {
         private $setScrollRect(value: Rectangle): void {
             let self = this;
             if (!value && !self.$scrollRect) {
-                self.updateRenderMode();
+                self.$updateRenderMode();
                 return;
             }
             if (value) {
@@ -1349,7 +1349,7 @@ namespace egret {
                 }
             }
             if (!egret.nativeRender) {
-                self.updateRenderMode();
+                self.$updateRenderMode();
             }
         }
 
@@ -1390,7 +1390,7 @@ namespace egret {
                 self.$nativeDisplayObject.setBlendMode(mode);
             }
             else {
-                self.updateRenderMode();
+                self.$updateRenderMode();
                 let p = self.$parent;
                 if (p && !p.$cacheDirty) {
                     p.$cacheDirty = true;
@@ -1471,7 +1471,7 @@ namespace egret {
 
                     self.$mask = value;
                     if (!egret.nativeRender) {
-                        value.updateRenderMode();
+                        value.$updateRenderMode();
                     }
                     if (self.$maskRect) {
                         if (egret.nativeRender) {
@@ -1494,7 +1494,7 @@ namespace egret {
                     if (self.$mask) {
                         self.$mask.$maskedObject = null;
                         if (!egret.nativeRender) {
-                            self.$mask.updateRenderMode();
+                            self.$mask.$updateRenderMode();
                         }
                     }
                     if (self.mask) {
@@ -1509,7 +1509,7 @@ namespace egret {
                 if (self.$mask) {
                     self.$mask.$maskedObject = null;
                     if (!egret.nativeRender) {
-                        self.$mask.updateRenderMode();
+                        self.$mask.$updateRenderMode();
                     }
                 }
                 if (self.mask) {
@@ -1526,7 +1526,7 @@ namespace egret {
                 }
             }
             if (!egret.nativeRender) {
-                self.updateRenderMode();
+                self.$updateRenderMode();
             }
         }
 
@@ -1573,7 +1573,7 @@ namespace egret {
                     self.$nativeDisplayObject.setFilters(null);
                 }
                 else {
-                    self.updateRenderMode();
+                    self.$updateRenderMode();
                 }
                 return;
             }
@@ -1591,7 +1591,7 @@ namespace egret {
                 }
             }
             if (!egret.nativeRender) {
-                self.updateRenderMode();
+                self.$updateRenderMode();
             }
         }
 
@@ -1847,7 +1847,7 @@ namespace egret {
             return node;
         }
 
-        private updateRenderMode(): void {
+        public $updateRenderMode(): void {
             let self = this;
             if (!self.$visible || self.$alpha <= 0 || self.$maskedObject) {
                 self.$renderMode = RenderMode.NONE;
@@ -1855,7 +1855,7 @@ namespace egret {
             else if (self.filters && self.filters.length > 0) {
                 self.$renderMode = RenderMode.FILTER;
             }
-            else if (self.$blendMode !== 0 || self.$mask) {
+            else if (self.$blendMode !== 0 || (self.$mask && self.$mask.$stage)) {
                 self.$renderMode = RenderMode.CLIP;
             }
             else if (self.$scrollRect || self.$maskRect) {

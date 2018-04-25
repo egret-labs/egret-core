@@ -32,7 +32,7 @@ type UserConfig = {
     /**
      * 插件
      */
-    commands: (string | plugins.Command) []
+    commands: (string | plugins.Command)[]
 }
 
 type BuildConfigParam = {
@@ -80,6 +80,18 @@ type ProjectConfig = {
     fpsStyles: string;
     showLog: boolean;
     maxTouches: number;
+}
+/**
+   * 匹配机制，将满足 from 的文件输出为 to 格式的文件
+   * from 采用 glob 表达式 , to 包含 [path][name][hash][ext]四个变量
+   * 示例：{ from:"resource/**.*" , to:"[path][name]_[hash].[ext]" }
+   */
+type Matcher = {
+
+    from: string[],
+
+    to: string
+
 }
 
 
@@ -327,27 +339,62 @@ declare module 'built-in' {
         constructor(options: CleanPluginOptions);
     }
 
+
     type RenamePluginOptions = {
 
+        /**
+         * 是否输出日志
+         */
         verbose?: boolean
 
+        /**
+         * 采用何种 hash 算法，目前暂时只支持 crc32
+         */
         hash?: "crc32"
 
-        matchers: { from: string, to: string }[]
+
+        /**
+         * 设置匹配规则，将指定文件进行改名
+         * 该参数是个数组，允许设置多个匹配规则
+         */
+        matchers: Matcher[]
     }
+
+
+    /**
+     * 修改文件名插件
+     */
     export class RenamePlugin implements plugins.Command {
         constructor(options: RenamePluginOptions);
     }
 
     type ResSplitPluginOptions = {
 
+        /**
+         * 是否输出日志
+         */
         verbose?: boolean
 
-        matchers: { from: string, to: string }[]
+        /**
+         * 设置匹配规则，将指定文件拷贝至其他文件夹
+         * 该参数是个数组，允许设置多个匹配规则
+         */
+        matchers: Matcher[]
     }
 
     export class ResSplitPlugin implements plugins.Command {
         constructor(options: ResSplitPluginOptions);
+    }
+
+
+    type ZipPluginOptions = {
+
+        mergeSelector: (p: string) => string
+    }
+
+    export class ZipPlugin implements plugins.Command {
+
+        constructor(option: ZipPluginOptions);
     }
 
 }

@@ -41,7 +41,7 @@ namespace egret {
 
     let blendModes = ["source-over", "lighter", "destination-out"];
     let defaultCompositeOp = "source-over";
-    export let BLACK_COLOR = "#000000";
+    let BLACK_COLOR = "#000000";
     let CAPS_STYLES = { none: 'butt', square: 'square', round: 'round' };
     let renderBufferPool: sys.RenderBuffer[] = [];//渲染缓冲区对象池
     let renderBufferPool_Filters: sys.RenderBuffer[] = [];//滤镜缓冲区对象池
@@ -251,7 +251,6 @@ namespace egret {
                     }
                 }
                 displayContext.putImageData(imageData, 0, 0);
-                context.globalAlpha = 1;
                 // 绘制结果的时候，应用滤镜
                 context.drawImage(displayBuffer.surface, offsetX + displayBoundsX, offsetY + displayBoundsY);
                 if (hasBlendMode) {
@@ -369,7 +368,6 @@ namespace egret {
                     maskContext.setTransform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
                     drawCalls += this.drawDisplayObject(mask, maskContext, 0, 0);
                     displayContext.globalCompositeOperation = "destination-in";
-                    displayContext.globalAlpha = 1;
                     displayContext.drawImage(maskBuffer.surface, 0, 0);
                     renderBufferPool.push(maskBuffer);
                 }
@@ -388,7 +386,6 @@ namespace egret {
                     context.rect(scrollRect.x + offsetX, scrollRect.y + offsetY, scrollRect.width, scrollRect.height);
                     context.clip();
                 }
-                context.globalAlpha = 1;
                 context.drawImage(<any>displayBuffer.surface, offsetX + displayBoundsX, offsetY + displayBoundsY);
                 if (scrollRect) {
                     context.restore();

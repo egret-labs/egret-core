@@ -490,6 +490,9 @@ var RES;
                     }
                     _this.next();
                 }).catch(function (error) {
+                    if (!error.__resource_manager_error__) {
+                        throw error;
+                    }
                     _this.loadingCount--;
                     delete RES.host.state[r.root + r.name];
                     var times = _this.retryTimesDic[r.name] || 1;
@@ -805,7 +808,7 @@ var RES;
             if (resource.url.indexOf("://") != -1) {
                 return resource.url;
             }
-            var prefix = resource.extra ? "" : resource.root;
+            var prefix = resource.root;
             var url = prefix + resource.url;
             if (RES['getRealURL']) {
                 return RES['getRealURL'](url);
@@ -983,16 +986,16 @@ var RES;
         processor_1.SheetProcessor = {
             onLoadStart: function (host, resource) {
                 return __awaiter(this, void 0, void 0, function () {
-                    var data, imagePath, r, texture, frames, spriteSheet, subkey, config, texture;
+                    var data, imageName, r, texture, frames, spriteSheet, subkey, config, texture;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0: return [4 /*yield*/, host.load(resource, "json")];
                             case 1:
                                 data = _a.sent();
-                                imagePath = resource.root + getRelativePath(resource.url, data.file);
+                                imageName = getRelativePath(resource.url, data.file);
                                 r = host.resourceConfig.getResource(data.file);
                                 if (!r) {
-                                    r = { name: imagePath, url: imagePath, extra: true, type: 'image', root: resource.root };
+                                    r = { name: imageName, url: imageName, type: 'image', root: resource.root };
                                 }
                                 return [4 /*yield*/, host.load(r)];
                             case 2:
@@ -1075,12 +1078,12 @@ var RES;
                                 r = host.resourceConfig.getResource(imageFileName);
                                 if (!r) {
                                     if (typeof config === 'string') {
-                                        imageFileName = resource.root + fontGetTexturePath(resource.url, config);
+                                        imageFileName = fontGetTexturePath(resource.url, config);
                                     }
                                     else {
-                                        imageFileName = resource.root + getRelativePath(resource.url, config.file);
+                                        imageFileName = getRelativePath(resource.url, config.file);
                                     }
-                                    r = { name: imageFileName, url: imageFileName, extra: true, type: 'image', root: resource.root };
+                                    r = { name: imageFileName, url: imageFileName, type: 'image', root: resource.root };
                                 }
                                 return [4 /*yield*/, host.load(r)];
                             case 2:
@@ -2598,13 +2601,10 @@ var RES;
                     type = RES.config.__temp__get__type__via__url(url);
                 }
                 // manager.config.addResourceData({ name: url, url: url });
-                r = { name: url, url: url, type: type, extra: true, root: '' };
+                r = { name: url, url: url, type: type, root: '' };
                 RES.config.addResourceData(r);
                 r = RES.config.getResource(url);
-                if (r) {
-                    r.extra = true;
-                }
-                else {
+                if (!r) {
                     throw 'never';
                 }
             }

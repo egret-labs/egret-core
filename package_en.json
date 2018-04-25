@@ -1,6 +1,6 @@
 {
   "name": "egret",
-  "version": "5.1.6",
+  "version": "5.1.10",
   "private": true,
   "author": "egret-labs",
   "bin": {
@@ -353,6 +353,16 @@
         "dependencies": [
           "egret"
         ]
+      },
+      {
+        "name": "egret-facebook",
+        "description": "Facebook Instant Games SDK",
+        "description_en": "Facebook Instant Games SDK",
+        "files": [],
+        "root": "",
+        "dependencies": [
+          "egret"
+        ]
       }
     ],
     "platforms": [
@@ -371,20 +381,6 @@
       }
     ],
     "templates": [
-      {
-        "name": "empty",
-        "displayName": "Empty Egret project",
-        "displayName_en": "Empty Egret project",
-        "language": "TypeScript",
-        "tag": "game,app,TypeScript",
-        "description": "Create an empty project, add only reference to Egret related modules",
-        "description_en": "Create an empty project, add only reference to Egret related modules",
-        "defaultWidth": 640,
-        "defaultHeight": 1136,
-        "modules": [
-          "egret"
-        ]
-      },
       {
         "name": "game",
         "displayName": "Egret game project",
@@ -420,21 +416,6 @@
         ]
       },
       {
-        "name": "egret3d",
-        "displayName": "Egret 3D project",
-        "displayName_en": "Egret 3D project",
-        "language": "TypeScript",
-        "tag": "game,app,TypeScript",
-        "description": "Create an Egret 3D project",
-        "description_en": "Create an Egret 3D project",
-        "defaultWidth": 640,
-        "defaultHeight": 960,
-        "modules": [
-          "egret",
-          "egret3d"
-        ]
-      },
-      {
         "name": "facebook-instant-demo",
         "displayName": "Facebook Instant Game Demo project",
         "displayName_en": "Facebook Instant Game Demo project",
@@ -450,22 +431,6 @@
           "res",
           "eui",
           "tween"
-        ]
-      },
-      {
-        "name": "wasm",
-        "displayName": "WebAssembly sample project",
-        "displayName_en": "WebAssembly sample project",
-        "language": "TypeScript",
-        "tag": "game,app,TypeScript,WebAssembly",
-        "description": "WebAssembly sample project",
-        "description_en": "WebAssembly sample project",
-        "defaultWidth": 640,
-        "defaultHeight": 1136,
-        "modules": [
-          "egret",
-          "media",
-          "res"
         ]
       }
     ],
