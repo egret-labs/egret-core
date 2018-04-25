@@ -383,6 +383,8 @@ namespace egret {
          * @platform Web,Native
          */
         public play(playTimes: number = 0): void {
+            this.lastTime = egret.getTimer();
+            this.passedTime = 0;
             this.$isPlaying = true;
             this.setPlayTimes(playTimes);
             if (this.$totalFrames > 1 && this.$stage) {
