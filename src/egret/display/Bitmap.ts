@@ -337,7 +337,7 @@ namespace egret {
         /**
          * @private
          */
-        $fillMode: string = "scale";
+        $fillMode: string = egret.BitmapFillMode.SCALE;
         /**
          * Determines how the bitmap fills in the dimensions.
          * <p>When set to <code>BitmapFillMode.REPEAT</code>, the bitmap

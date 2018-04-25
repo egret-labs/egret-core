@@ -591,11 +591,19 @@ var egret;
             _this.$parentDisplayList = null;
             /**
              * @private
-             * 渲染节点,不为空表示自身有绘制到屏幕的内容
+             * 渲染节点,表示自身有绘制到屏幕的内容
              */
             _this.$renderNode = null;
+            /**
+             * @private
+             * 标记当前是否有渲染节点
+             */
+            _this.$hasRenderNode = false;
+            /**
+             * @private
+             */
             _this.$renderDirty = false;
-            _this.$renderMode = null;
+            _this.$renderMode = 1 /* DEFAULT */;
             if (egret.nativeRender) {
                 _this.createNativeDisplayObject();
             }
@@ -1381,6 +1389,7 @@ var egret;
             if (egret.nativeRender) {
                 self.$nativeDisplayObject.setAnchorOffsetX(value);
             }
+            this.$checkAnchorChanged();
         };
         Object.defineProperty(DisplayObject.prototype, "anchorOffsetY", {
             /**
@@ -1417,6 +1426,16 @@ var egret;
             self.$anchorOffsetY = value;
             if (egret.nativeRender) {
                 self.$nativeDisplayObject.setAnchorOffsetY(value);
+            }
+            this.$checkAnchorChanged();
+        };
+        DisplayObject.prototype.$checkAnchorChanged = function () {
+            //
+            if (this.$anchorOffsetX != 0 || this.$anchorOffsetY != 0) {
+                this.$hasAnchor = true;
+            }
+            else {
+                this.$hasAnchor = false;
             }
         };
         Object.defineProperty(DisplayObject.prototype, "visible", {
@@ -2134,6 +2153,7 @@ var egret;
             var self = this;
             var node = self.$renderNode;
             if (!node) {
+                this.$hasRenderNode = false;
                 return null;
             }
             if (self.$renderDirty) {
@@ -2142,24 +2162,25 @@ var egret;
                 self.$renderDirty = false;
                 node = self.$renderNode;
             }
+            this.$hasRenderNode = !!node;
             return node;
         };
         DisplayObject.prototype.updateRenderMode = function () {
             var self = this;
             if (!self.$visible || self.$alpha <= 0 || self.$maskedObject) {
-                self.$renderMode = 1 /* NONE */;
+                self.$renderMode = 2 /* NONE */;
             }
             else if (self.filters && self.filters.length > 0) {
-                self.$renderMode = 2 /* FILTER */;
+                self.$renderMode = 3 /* FILTER */;
             }
             else if (self.$blendMode !== 0 || self.$mask) {
-                self.$renderMode = 3 /* CLIP */;
+                self.$renderMode = 4 /* CLIP */;
             }
             else if (self.$scrollRect || self.$maskRect) {
-                self.$renderMode = 4 /* SCROLLRECT */;
+                self.$renderMode = 5 /* SCROLLRECT */;
             }
             else {
-                self.$renderMode = null;
+                self.$renderMode = 1 /* DEFAULT */;
             }
         };
         /**
@@ -3520,7 +3541,7 @@ var egret;
             /**
              * @private
              */
-            _this.$fillMode = "scale";
+            _this.$fillMode = egret.BitmapFillMode.SCALE;
             _this._pixelHitTest = false;
             _this.$renderNode = new egret.sys.NormalBitmapNode();
             _this.$setTexture(value);
@@ -14864,6 +14885,35 @@ var egret;
                 self.drawW = drawW;
                 self.drawH = drawH;
                 self.renderCount = 1;
+                var _sourceX = self.sourceX / this.imageWidth;
+                var _sourceY = self.sourceY / this.imageHeight;
+                var _sourceWidth;
+                var _sourceHeight;
+                if (this.rotated) {
+                    //逆时针旋转
+                    _sourceWidth = self.sourceH / this.imageWidth;
+                    _sourceHeight = self.sourceW / this.imageHeight;
+                    self.uvX_LT = _sourceX + _sourceWidth;
+                    self.uvY_LT = _sourceY;
+                    self.uvX_RT = _sourceX + _sourceWidth;
+                    self.uvY_RT = _sourceY + _sourceHeight;
+                    self.uvX_RB = _sourceX;
+                    self.uvY_RB = _sourceY + _sourceHeight;
+                    self.uvX_LB = _sourceX;
+                    self.uvY_LB = _sourceY;
+                }
+                else {
+                    _sourceWidth = self.sourceW / this.imageWidth;
+                    _sourceHeight = self.sourceH / this.imageHeight;
+                    self.uvX_LT = _sourceX;
+                    self.uvY_LT = _sourceY;
+                    self.uvX_RT = _sourceX + _sourceWidth;
+                    self.uvY_RT = _sourceY;
+                    self.uvX_RB = _sourceX + _sourceWidth;
+                    self.uvY_RB = _sourceY + _sourceHeight;
+                    self.uvX_LB = _sourceX;
+                    self.uvY_LB = _sourceY + _sourceHeight;
+                }
             };
             /**
              * 在显示对象的$updateRenderNode()方法被调用前，自动清空自身的drawData数据。
@@ -15504,6 +15554,7 @@ var egret;
             var drawCalls = 0;
             var node;
             var displayList = displayObject.$displayList;
+            var hasRednerNode;
             if (displayList && !isStage) {
                 if (displayObject.$cacheDirty || displayObject.$renderDirty ||
                     displayList.$canvasScaleX != egret.sys.DisplayList.$canvasScaleX ||
@@ -15511,6 +15562,7 @@ var egret;
                     drawCalls += displayList.drawToSurface();
                 }
                 node = displayList.$renderNode;
+                hasRednerNode = true;
             }
             else {
                 if (displayObject.$renderDirty) {
@@ -15519,31 +15571,30 @@ var egret;
                 else {
                     node = displayObject.$renderNode;
                 }
+                hasRednerNode = displayObject.$hasRenderNode;
             }
             displayObject.$cacheDirty = false;
-            if (node) {
+            if (hasRednerNode) {
                 drawCalls++;
                 context.$offsetX = offsetX;
                 context.$offsetY = offsetY;
-                switch (node.type) {
-                    case 1 /* BitmapNode */:
-                        this.renderBitmap(node, context);
-                        break;
-                    case 2 /* TextNode */:
-                        this.renderText(node, context);
-                        break;
-                    case 3 /* GraphicsNode */:
-                        this.renderGraphics(node, context);
-                        break;
-                    case 4 /* GroupNode */:
-                        this.renderGroup(node, context);
-                        break;
-                    case 5 /* MeshNode */:
-                        this.renderMesh(node, context);
-                        break;
-                    case 6 /* NormalBitmapNode */:
-                        this.renderNormalBitmap(node, context);
-                        break;
+                if (node.type == 6 /* NormalBitmapNode */) {
+                    this.renderNormalBitmap(node, context);
+                }
+                else if (node.type == 1 /* BitmapNode */) {
+                    this.renderBitmap(node, context);
+                }
+                else if (node.type == 2 /* TextNode */) {
+                    this.renderText(node, context);
+                }
+                else if (node.type == 3 /* GraphicsNode */) {
+                    this.renderGraphics(node, context);
+                }
+                else if (node.type == 4 /* GroupNode */) {
+                    this.renderGroup(node, context);
+                }
+                else if (5 /* MeshNode */) {
+                    this.renderMesh(node, context);
                 }
                 context.$offsetX = 0;
                 context.$offsetY = 0;
@@ -15564,33 +15615,35 @@ var egret;
                         offsetY2 = offsetY + child.$y;
                         context.save();
                         context.transform(m.a, m.b, m.c, m.d, offsetX2, offsetY2);
-                        offsetX2 = -child.$anchorOffsetX;
-                        offsetY2 = -child.$anchorOffsetY;
+                        if (child.$hasAnchor) {
+                            offsetX2 = -child.$anchorOffsetX;
+                            offsetY2 = -child.$anchorOffsetY;
+                        }
                     }
                     else {
-                        offsetX2 = offsetX + child.$x - child.$anchorOffsetX;
-                        offsetY2 = offsetY + child.$y - child.$anchorOffsetY;
+                        offsetX2 = offsetX + child.$x;
+                        offsetY2 = offsetY + child.$y;
+                        if (child.$hasAnchor) {
+                            offsetX2 -= child.$anchorOffsetX;
+                            offsetY2 -= child.$anchorOffsetY;
+                        }
                     }
                     var tempAlpha = void 0;
                     if (child.$alpha != 1) {
                         tempAlpha = context.globalAlpha;
                         context.globalAlpha *= child.$alpha;
                     }
-                    switch (child.$renderMode) {
-                        case 1 /* NONE */:
-                            break;
-                        case 2 /* FILTER */:
-                            drawCalls += this.drawWithFilter(child, context, offsetX2, offsetY2);
-                            break;
-                        case 3 /* CLIP */:
-                            drawCalls += this.drawWithClip(child, context, offsetX2, offsetY2);
-                            break;
-                        case 4 /* SCROLLRECT */:
-                            drawCalls += this.drawWithScrollRect(child, context, offsetX2, offsetY2);
-                            break;
-                        default:
-                            drawCalls += this.drawDisplayObject(child, context, offsetX2, offsetY2);
-                            break;
+                    if (child.$renderMode === 1 /* DEFAULT */) {
+                        drawCalls += this.drawDisplayObject(child, context, offsetX2, offsetY2);
+                    }
+                    else if (child.$renderMode === 3 /* FILTER */) {
+                        drawCalls += this.drawWithFilter(child, context, offsetX2, offsetY2);
+                    }
+                    else if (child.$renderMode === 4 /* CLIP */) {
+                        drawCalls += this.drawWithClip(child, context, offsetX2, offsetY2);
+                    }
+                    else if (child.$renderMode === 5 /* SCROLLRECT */) {
+                        drawCalls += this.drawWithScrollRect(child, context, offsetX2, offsetY2);
                     }
                     if (child.$useTranslate) {
                         context.restore();
@@ -15854,27 +15907,25 @@ var egret;
                 node = displayObject.$renderNode;
             }
             var drawCalls = 0;
-            if (node) {
+            if (displayObject.$hasRenderNode) {
                 drawCalls++;
-                switch (node.type) {
-                    case 1 /* BitmapNode */:
-                        this.renderBitmap(node, context);
-                        break;
-                    case 2 /* TextNode */:
-                        this.renderText(node, context);
-                        break;
-                    case 3 /* GraphicsNode */:
-                        this.renderGraphics(node, context);
-                        break;
-                    case 4 /* GroupNode */:
-                        this.renderGroup(node, context);
-                        break;
-                    case 5 /* MeshNode */:
-                        this.renderMesh(node, context);
-                        break;
-                    case 6 /* NormalBitmapNode */:
-                        this.renderNormalBitmap(node, context);
-                        break;
+                if (node.type == 6 /* NormalBitmapNode */) {
+                    this.renderNormalBitmap(node, context);
+                }
+                else if (node.type == 1 /* BitmapNode */) {
+                    this.renderBitmap(node, context);
+                }
+                else if (node.type == 2 /* TextNode */) {
+                    this.renderText(node, context);
+                }
+                else if (node.type == 3 /* GraphicsNode */) {
+                    this.renderGraphics(node, context);
+                }
+                else if (node.type == 4 /* GroupNode */) {
+                    this.renderGroup(node, context);
+                }
+                else if (node.type == 5 /* MeshNode */) {
+                    this.renderMesh(node, context);
                 }
             }
             var children = displayObject.$children;
@@ -15882,21 +15933,17 @@ var egret;
                 var length_5 = children.length;
                 for (var i = 0; i < length_5; i++) {
                     var child = children[i];
-                    switch (child.$renderMode) {
-                        case 1 /* NONE */:
-                            break;
-                        case 2 /* FILTER */:
-                            drawCalls += this.drawWithFilter(child, context, 0, 0);
-                            break;
-                        case 3 /* CLIP */:
-                            drawCalls += this.drawWithClip(child, context, 0, 0);
-                            break;
-                        case 4 /* SCROLLRECT */:
-                            drawCalls += this.drawWithScrollRect(child, context, 0, 0);
-                            break;
-                        default:
-                            drawCalls += this.drawDisplayObject(child, context, 0, 0);
-                            break;
+                    if (child.$renderMode === 1 /* DEFAULT */) {
+                        drawCalls += this.drawDisplayObject(child, context, 0, 0);
+                    }
+                    else if (child.$renderMode === 3 /* FILTER */) {
+                        drawCalls += this.drawWithFilter(child, context, 0, 0);
+                    }
+                    else if (child.$renderMode === 4 /* CLIP */) {
+                        drawCalls += this.drawWithClip(child, context, 0, 0);
+                    }
+                    else if (child.$renderMode === 5 /* SCROLLRECT */) {
+                        drawCalls += this.drawWithScrollRect(child, context, 0, 0);
                     }
                 }
             }
@@ -15904,26 +15951,24 @@ var egret;
         };
         CanvasRenderer.prototype.renderNode = function (node, context, forHitTest) {
             var drawCalls = 0;
-            switch (node.type) {
-                case 1 /* BitmapNode */:
-                    drawCalls = this.renderBitmap(node, context);
-                    break;
-                case 2 /* TextNode */:
-                    drawCalls = 1;
-                    this.renderText(node, context);
-                    break;
-                case 3 /* GraphicsNode */:
-                    drawCalls = this.renderGraphics(node, context, forHitTest);
-                    break;
-                case 4 /* GroupNode */:
-                    drawCalls = this.renderGroup(node, context);
-                    break;
-                case 5 /* MeshNode */:
-                    drawCalls = this.renderMesh(node, context);
-                    break;
-                case 6 /* NormalBitmapNode */:
-                    drawCalls += this.renderNormalBitmap(node, context);
-                    break;
+            if (node.type == 6 /* NormalBitmapNode */) {
+                drawCalls += this.renderNormalBitmap(node, context);
+            }
+            else if (node.type == 1 /* BitmapNode */) {
+                drawCalls = this.renderBitmap(node, context);
+            }
+            else if (node.type == 2 /* TextNode */) {
+                drawCalls = 1;
+                this.renderText(node, context);
+            }
+            else if (node.type == 3 /* GraphicsNode */) {
+                drawCalls = this.renderGraphics(node, context, forHitTest);
+            }
+            else if (node.type == 4 /* GroupNode */) {
+                drawCalls = this.renderGroup(node, context);
+            }
+            else if (node.type == 5 /* MeshNode */) {
+                drawCalls = this.renderMesh(node, context);
             }
             return drawCalls;
         };

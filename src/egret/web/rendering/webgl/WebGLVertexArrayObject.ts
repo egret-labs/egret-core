@@ -40,14 +40,18 @@ namespace egret.web {
         private indicesMaxSize: number = this.size * 6;
         private vertSize: number = 5;
 
-        private vertices: Float32Array = null;
         private indices: Uint16Array = null;
         private indicesForMesh: Uint16Array = null;
 
-        private vertexIndex: number = 0;
-        private indexIndex: number = 0;
+        //为了实现drawNormalImage绘制，将这三个属性设为public
+        public vertices: Float32Array = null;
+        public vertexIndex: number = 0;
+        public indexIndex: number = 0;
+
 
         private hasMesh: boolean = false;
+
+        private vertexActualSize:number;
 
         public constructor() {
             let numVerts = this.vertexMaxSize * this.vertSize;
@@ -65,6 +69,10 @@ namespace egret.web {
                 this.indices[i + 4] = j + 2;
                 this.indices[i + 5] = j + 3;
             }
+
+
+            //用于drawImageByRenderNode 计算
+            this.vertexActualSize = this.vertexMaxSize - 4;
         }
 
         /**
@@ -74,11 +82,15 @@ namespace egret.web {
             return this.vertexIndex > this.vertexMaxSize - vertexCount || this.indexIndex > this.indicesMaxSize - indexCount;
         }
 
+        public reachVertexMaxSize(): boolean {
+            return this.vertexIndex > this.vertexActualSize;
+        }
+
         /**
          * 获取缓存完成的顶点数组
          */
         public getVertices(): any {
-            let view = this.vertices.subarray(0, this.vertexIndex * this.vertSize);
+            let view = this.vertices;
             return view;
         }
 

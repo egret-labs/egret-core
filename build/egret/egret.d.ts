@@ -256,10 +256,11 @@ declare namespace egret {
      * @private
      */
     const enum RenderMode {
-        NONE = 1,
-        FILTER = 2,
-        CLIP = 3,
-        SCROLLRECT = 4,
+        DEFAULT = 1,
+        NONE = 2,
+        FILTER = 3,
+        CLIP = 4,
+        SCROLLRECT = 5,
     }
     /**
      * The DisplayObject class is the base class for all objects that can be placed on the display list. The display list
@@ -767,6 +768,12 @@ declare namespace egret {
         $setAnchorOffsetY(value: number): void;
         /**
          * @private
+         * 如果有锚点，标记
+         */
+        $hasAnchor: boolean;
+        private $checkAnchorChanged();
+        /**
+         * @private
          */
         $visible: boolean;
         /**
@@ -1137,9 +1144,17 @@ declare namespace egret {
         $parentDisplayList: egret.sys.DisplayList;
         /**
          * @private
-         * 渲染节点,不为空表示自身有绘制到屏幕的内容
+         * 渲染节点,表示自身有绘制到屏幕的内容
          */
         $renderNode: sys.RenderNode;
+        /**
+         * @private
+         * 标记当前是否有渲染节点
+         */
+        $hasRenderNode: boolean;
+        /**
+         * @private
+         */
         $renderDirty: boolean;
         /**
          * @private
@@ -9725,6 +9740,19 @@ declare namespace egret.sys {
         drawY: number;
         drawW: number;
         drawH: number;
+        /**
+         * 存放uv信息,
+         * 会适应rotated进行调整
+         * 存放uv四个顶点的信息
+         */
+        uvX_LT: number;
+        uvX_RT: number;
+        uvX_LB: number;
+        uvX_RB: number;
+        uvY_LT: number;
+        uvY_RT: number;
+        uvY_LB: number;
+        uvY_RB: number;
         /**
          * 绘制一次位图
          */

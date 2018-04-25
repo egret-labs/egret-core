@@ -4870,7 +4870,7 @@ var egret;
                 /**
                  * 用于缓存绘制命令的数组
                  */
-                this.drawData = [];
+                this.drawData = {};
                 this.drawDataLen = 0;
             }
             /**
@@ -4885,6 +4885,7 @@ var egret;
                     this.drawDataLen++;
                 }
                 this.drawData[this.drawDataLen - 1].count += 2;
+                this.lastDrawTextureData = null;
             };
             /**
              * 压入绘制texture指令
@@ -4902,15 +4903,17 @@ var egret;
                     data.textureHeight = textureHeight;
                     this.drawData[this.drawDataLen] = data;
                     this.drawDataLen++;
+                    this.lastDrawTextureData = null;
                 }
                 else {
-                    if (this.drawDataLen == 0 || this.drawData[this.drawDataLen - 1].type != 0 /* TEXTURE */ || texture != this.drawData[this.drawDataLen - 1].texture || this.drawData[this.drawDataLen - 1].filter) {
+                    if (this.lastDrawTextureData == null || texture != this.lastDrawTextureData.texture) {
                         var data = this.drawData[this.drawDataLen] || {};
                         data.type = 0 /* TEXTURE */;
                         data.texture = texture;
                         data.count = 0;
                         this.drawData[this.drawDataLen] = data;
                         this.drawDataLen++;
+                        this.lastDrawTextureData = data;
                     }
                     this.drawData[this.drawDataLen - 1].count += count;
                 }
@@ -4923,6 +4926,7 @@ var egret;
                 data.smoothing = smoothing;
                 this.drawData[this.drawDataLen] = data;
                 this.drawDataLen++;
+                this.lastDrawTextureData = null;
             };
             /**
              * 压入pushMask指令
@@ -4934,6 +4938,7 @@ var egret;
                 data.count = count * 2;
                 this.drawData[this.drawDataLen] = data;
                 this.drawDataLen++;
+                this.lastDrawTextureData = null;
             };
             /**
              * 压入popMask指令
@@ -4945,6 +4950,7 @@ var egret;
                 data.count = count * 2;
                 this.drawData[this.drawDataLen] = data;
                 this.drawDataLen++;
+                this.lastDrawTextureData = null;
             };
             /**
              * 压入混色指令
@@ -4961,8 +4967,7 @@ var egret;
                         }
                         // 如果与上一次blend操作之间无有效绘图，上一次操作无效
                         if (!drawState && data.type == 4 /* BLEND */) {
-                            this.drawData.splice(i, 1);
-                            this.drawDataLen--;
+                            delete this.drawData[i];
                             continue;
                         }
                         // 如果与上一次blend操作重复，本次操作无效
@@ -4981,6 +4986,7 @@ var egret;
                 _data.value = value;
                 this.drawData[this.drawDataLen] = _data;
                 this.drawDataLen++;
+                this.lastDrawTextureData = null;
             };
             /*
              * 压入resize render target命令
@@ -4993,6 +4999,7 @@ var egret;
                 data.height = height;
                 this.drawData[this.drawDataLen] = data;
                 this.drawDataLen++;
+                this.lastDrawTextureData = null;
             };
             /*
              * 压入clear color命令
@@ -5002,6 +5009,7 @@ var egret;
                 data.type = 6 /* CLEAR_COLOR */;
                 this.drawData[this.drawDataLen] = data;
                 this.drawDataLen++;
+                this.lastDrawTextureData = null;
             };
             /**
              * 压入激活buffer命令
@@ -5018,8 +5026,7 @@ var egret;
                         }
                         // 如果与上一次buffer操作之间无有效绘图，上一次操作无效
                         if (!drawState && data.type == 7 /* ACT_BUFFER */) {
-                            this.drawData.splice(i, 1);
-                            this.drawDataLen--;
+                            delete this.drawData[i];
                             continue;
                         }
                         // 如果与上一次buffer操作重复，本次操作无效
@@ -5039,6 +5046,7 @@ var egret;
                 _data.height = buffer.rootRenderTarget.height;
                 this.drawData[this.drawDataLen] = _data;
                 this.drawDataLen++;
+                this.lastDrawTextureData = null;
             };
             /*
              * 压入enabel scissor命令
@@ -5052,6 +5060,7 @@ var egret;
                 data.height = height;
                 this.drawData[this.drawDataLen] = data;
                 this.drawDataLen++;
+                this.lastDrawTextureData = null;
             };
             /*
              * 压入disable scissor命令
@@ -5061,6 +5070,7 @@ var egret;
                 data.type = 9 /* DISABLE_SCISSOR */;
                 this.drawData[this.drawDataLen] = data;
                 this.drawDataLen++;
+                this.lastDrawTextureData = null;
             };
             /**
              * 清空命令数组
@@ -5079,6 +5089,7 @@ var egret;
                     data.height = 0;
                 }
                 this.drawDataLen = 0;
+                this.lastDrawTextureData = null;
             };
             return WebGLDrawCmdManager;
         }());
@@ -5129,9 +5140,10 @@ var egret;
                 this.vertexMaxSize = this.size * 4;
                 this.indicesMaxSize = this.size * 6;
                 this.vertSize = 5;
-                this.vertices = null;
                 this.indices = null;
                 this.indicesForMesh = null;
+                //为了实现drawNormalImage绘制，将这三个属性设为public
+                this.vertices = null;
                 this.vertexIndex = 0;
                 this.indexIndex = 0;
                 this.hasMesh = false;
@@ -5148,6 +5160,8 @@ var egret;
                     this.indices[i + 4] = j + 2;
                     this.indices[i + 5] = j + 3;
                 }
+                //用于drawImageByRenderNode 计算
+                this.vertexActualSize = this.vertexMaxSize - 4;
             }
             /**
              * 是否达到最大缓存数量
@@ -5157,11 +5171,14 @@ var egret;
                 if (indexCount === void 0) { indexCount = 6; }
                 return this.vertexIndex > this.vertexMaxSize - vertexCount || this.indexIndex > this.indicesMaxSize - indexCount;
             };
+            WebGLVertexArrayObject.prototype.reachVertexMaxSize = function () {
+                return this.vertexIndex > this.vertexActualSize;
+            };
             /**
              * 获取缓存完成的顶点数组
              */
             WebGLVertexArrayObject.prototype.getVertices = function () {
-                var view = this.vertices.subarray(0, this.vertexIndex * this.vertSize);
+                var view = this.vertices;
                 return view;
             };
             /**
@@ -5600,6 +5617,7 @@ var egret;
                 this.drawCmdManager = new web.WebGLDrawCmdManager();
                 this.vao = new web.WebGLVertexArrayObject();
                 this.setGlobalCompositeOperation("source-over");
+                this.firstTimeUploadVertices = true;
             }
             WebGLRenderContext.getInstance = function (width, height) {
                 if (this.instance) {
@@ -5656,8 +5674,13 @@ var egret;
              */
             WebGLRenderContext.prototype.uploadVerticesArray = function (array) {
                 var gl = this.context;
-                gl.bufferData(gl.ARRAY_BUFFER, array, gl.STREAM_DRAW);
-                // gl.bufferSubData(gl.ARRAY_BUFFER, 0, array);
+                if (this.firstTimeUploadVertices) {
+                    gl.bufferData(gl.ARRAY_BUFFER, array, gl.DYNAMIC_DRAW);
+                    this.firstTimeUploadVertices = false;
+                }
+                else {
+                    gl.bufferSubData(gl.ARRAY_BUFFER, 0, array);
+                }
             };
             /**
              * 上传索引数据
@@ -5922,6 +5945,141 @@ var egret;
                 }
             };
             /**
+             * 绘制图片，image参数可以是BitmapData或者renderTarget
+             * 同样的功能，单参数，整合drawTexture部分
+             */
+            WebGLRenderContext.prototype.drawImageByRenderNode = function (node) {
+                var buffer = this.currentBuffer;
+                var image = node.image;
+                var destHeight = node.drawH;
+                var destWidth = node.drawW;
+                var destX = node.drawX;
+                var destY = node.drawY;
+                if (this.contextLost || !image || !buffer) {
+                    return;
+                }
+                var texture;
+                var buffer_offsetX;
+                var buffer_offsetY;
+                if (image["texture"] || (image.source && image.source["texture"])) {
+                    // 如果是render target
+                    texture = image["texture"] || image.source["texture"];
+                    buffer.saveTransform();
+                    buffer_offsetX = buffer.$offsetX;
+                    buffer_offsetY = buffer.$offsetY;
+                    buffer.useOffset();
+                    buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2); // 翻转
+                }
+                else if (!image.source && !image.webGLTexture) {
+                    return;
+                }
+                else {
+                    texture = this.getWebGLTexture(image);
+                }
+                if (!texture) {
+                    return;
+                }
+                //drawTexture
+                if (this.vao.reachVertexMaxSize()) {
+                    this.$drawWebGL();
+                }
+                var smoothing = node.smoothing;
+                if (smoothing != undefined && texture["smoothing"] != smoothing) {
+                    this.drawCmdManager.pushChangeSmoothing(texture, smoothing);
+                }
+                var count = 2;
+                var width = node.imageWidth;
+                var height = node.imageHeight;
+                // 应用$filter，因为只可能是colorMatrixFilter，最后两个参数可不传
+                this.drawCmdManager.pushDrawTexture(texture, count, this.$filter, width, height);
+                //cacheArray
+                var locWorldTransform = buffer.globalMatrix;
+                var a = locWorldTransform.a;
+                var b = locWorldTransform.b;
+                var c = locWorldTransform.c;
+                var d = locWorldTransform.d;
+                var tx = locWorldTransform.tx;
+                var ty = locWorldTransform.ty;
+                var offsetX = buffer.$offsetX;
+                var offsetY = buffer.$offsetY;
+                if (offsetX != 0 || offsetY != 0) {
+                    tx = offsetX * a + offsetY * c + tx;
+                    ty = offsetX * b + offsetY * d + ty;
+                }
+                if (destX != 0 || destY != 0) {
+                    tx = destX * a + destY * c + tx;
+                    ty = destX * b + destY * d + ty;
+                }
+                var sourceWidth = node.sourceW;
+                var sourceHeight = node.sourceH;
+                var rotated = node.rotated;
+                var a1 = destWidth / sourceWidth;
+                if (a1 != 1) {
+                    a = a1 * a;
+                    b = a1 * b;
+                }
+                var d1 = destHeight / sourceHeight;
+                if (d1 != 1) {
+                    c = d1 * c;
+                    d = d1 * d;
+                }
+                var vertices = this.vao.vertices;
+                var index = this.vao.vertexIndex * this.vertSize;
+                var alpha = buffer.globalAlpha;
+                var a_w = a * sourceWidth;
+                var b_w = b * sourceWidth;
+                var c_h = c * sourceHeight;
+                var d_h = d * sourceHeight;
+                var uvX_LT = node.uvX_LT;
+                var uvY_LT = node.uvY_LT;
+                var uvX_RT = node.uvX_RT;
+                var uvY_RT = node.uvY_RT;
+                var uvX_RB = node.uvX_RB;
+                var uvY_RB = node.uvY_RB;
+                var uvX_LB = node.uvX_LB;
+                var uvY_LB = node.uvY_LB;
+                // xy
+                vertices[index++] = tx;
+                vertices[index++] = ty;
+                // uv
+                vertices[index++] = uvX_LT;
+                vertices[index++] = uvY_LT;
+                // alpha
+                vertices[index++] = alpha;
+                // xy
+                vertices[index++] = a_w + tx;
+                vertices[index++] = b_w + ty;
+                // uv
+                vertices[index++] = uvX_RT;
+                vertices[index++] = uvY_RT;
+                // alpha
+                vertices[index++] = alpha;
+                // xy
+                vertices[index++] = a_w + c_h + tx;
+                vertices[index++] = d_h + b_w + ty;
+                // uv
+                vertices[index++] = uvX_RB;
+                vertices[index++] = uvY_RB;
+                // alpha
+                vertices[index++] = alpha;
+                // xy
+                vertices[index++] = c_h + tx;
+                vertices[index++] = d_h + ty;
+                // uv
+                vertices[index++] = uvX_LB;
+                vertices[index++] = uvY_LB;
+                // alpha
+                vertices[index++] = alpha;
+                // }
+                this.vao.vertexIndex += 4;
+                this.vao.indexIndex += 6;
+                if (image.source && image.source["texture"]) {
+                    buffer.$offsetX = buffer_offsetX;
+                    buffer.$offsetY = buffer_offsetY;
+                    buffer.restoreTransform();
+                }
+            };
+            /**
              * 绘制Mesh
              */
             WebGLRenderContext.prototype.drawMesh = function (image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, imageSourceWidth, imageSourceHeight, meshUVs, meshVertices, meshIndices, bounds, rotated, smoothing) {
@@ -5985,6 +6143,92 @@ var egret;
                 // 应用$filter，因为只可能是colorMatrixFilter，最后两个参数可不传
                 this.drawCmdManager.pushDrawTexture(texture, count, this.$filter, textureWidth, textureHeight);
                 this.vao.cacheArrays(buffer, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices, rotated);
+            };
+            WebGLRenderContext.prototype.drawTextureByRenderNode = function (node) {
+                var texture = node.$texture;
+                var sourceWidth = node.$textureWidth;
+                var sourceHeight = node.$textureHeight;
+                var canvasScaleX = egret.sys.DisplayList.$canvasScaleX;
+                var canvasScaleY = egret.sys.DisplayList.$canvasScaleY;
+                var destWidth = node.$textureWidth / canvasScaleX;
+                var destHeight = node.$textureHeight / canvasScaleY;
+                var buffer = this.currentBuffer;
+                if (this.contextLost || !texture || !buffer) {
+                    return;
+                }
+                if (this.vao.reachMaxSize()) {
+                    this.$drawWebGL();
+                }
+                var count = 2;
+                // 应用$filter，因为只可能是colorMatrixFilter，最后两个参数可不传
+                this.drawCmdManager.pushDrawTexture(texture, count, this.$filter, sourceWidth, sourceHeight);
+                //cacheArray
+                var locWorldTransform = buffer.globalMatrix;
+                var a = locWorldTransform.a;
+                var b = locWorldTransform.b;
+                var c = locWorldTransform.c;
+                var d = locWorldTransform.d;
+                var tx = locWorldTransform.tx;
+                var ty = locWorldTransform.ty;
+                var offsetX = buffer.$offsetX;
+                var offsetY = buffer.$offsetY;
+                if (offsetX != 0 || offsetY != 0) {
+                    tx = offsetX * a + offsetY * c + tx;
+                    ty = offsetX * b + offsetY * d + ty;
+                }
+                var rotated = false;
+                var a1 = destWidth / sourceWidth;
+                if (a1 != 1) {
+                    a = a1 * a;
+                    b = a1 * b;
+                }
+                var d1 = destHeight / sourceHeight;
+                if (d1 != 1) {
+                    c = d1 * c;
+                    d = d1 * d;
+                }
+                var vertices = this.vao.vertices;
+                var index = this.vao.vertexIndex * this.vertSize;
+                var alpha = buffer.globalAlpha;
+                var a_w = a * sourceWidth;
+                var b_w = b * sourceWidth;
+                var c_h = c * sourceHeight;
+                var d_h = d * sourceHeight;
+                var uvSize = 1;
+                // xy
+                vertices[index++] = tx;
+                vertices[index++] = ty;
+                // uv
+                vertices[index++] = 0;
+                vertices[index++] = 0;
+                // alpha
+                vertices[index++] = alpha;
+                // xy
+                vertices[index++] = a_w + tx;
+                vertices[index++] = b_w + ty;
+                // uv
+                vertices[index++] = uvSize;
+                vertices[index++] = 0;
+                // alpha
+                vertices[index++] = alpha;
+                // xy
+                vertices[index++] = a_w + c_h + tx;
+                vertices[index++] = d_h + b_w + ty;
+                // uv
+                vertices[index++] = uvSize;
+                vertices[index++] = uvSize;
+                // alpha
+                vertices[index++] = alpha;
+                // xy
+                vertices[index++] = c_h + tx;
+                vertices[index++] = d_h + ty;
+                // uv
+                vertices[index++] = 0;
+                vertices[index++] = uvSize;
+                // alpha
+                vertices[index++] = alpha;
+                this.vao.vertexIndex += 4;
+                this.vao.indexIndex += 6;
             };
             /**
              * 绘制矩形（仅用于遮罩擦除等）
@@ -6894,6 +7138,7 @@ var egret;
                 var drawCalls = 0;
                 var node;
                 var displayList = displayObject.$displayList;
+                var hasRednerNode;
                 if (displayList && !isStage) {
                     if (displayObject.$cacheDirty || displayObject.$renderDirty ||
                         displayList.$canvasScaleX != egret.sys.DisplayList.$canvasScaleX ||
@@ -6901,6 +7146,7 @@ var egret;
                         drawCalls += displayList.drawToSurface();
                     }
                     node = displayList.$renderNode;
+                    hasRednerNode = true;
                 }
                 else {
                     if (displayObject.$renderDirty) {
@@ -6909,31 +7155,30 @@ var egret;
                     else {
                         node = displayObject.$renderNode;
                     }
+                    hasRednerNode = displayObject.$hasRenderNode;
                 }
                 displayObject.$cacheDirty = false;
-                if (node) {
+                if (hasRednerNode) {
                     drawCalls++;
                     buffer.$offsetX = offsetX;
                     buffer.$offsetY = offsetY;
-                    switch (node.type) {
-                        case 1 /* BitmapNode */:
-                            this.renderBitmap(node, buffer);
-                            break;
-                        case 2 /* TextNode */:
-                            this.renderText(node, buffer);
-                            break;
-                        case 3 /* GraphicsNode */:
-                            this.renderGraphics(node, buffer);
-                            break;
-                        case 4 /* GroupNode */:
-                            this.renderGroup(node, buffer);
-                            break;
-                        case 5 /* MeshNode */:
-                            this.renderMesh(node, buffer);
-                            break;
-                        case 6 /* NormalBitmapNode */:
-                            this.renderNormalBitmap(node, buffer);
-                            break;
+                    if (node.type == 6 /* NormalBitmapNode */) {
+                        this.renderNormalBitmap(node, buffer);
+                    }
+                    else if (node.type == 1 /* BitmapNode */) {
+                        this.renderBitmap(node, buffer);
+                    }
+                    else if (node.type == 2 /* TextNode */) {
+                        this.renderText(node, buffer);
+                    }
+                    else if (node.type == 3 /* GraphicsNode */) {
+                        this.renderGraphics(node, buffer);
+                    }
+                    else if (node.type == 4 /* GroupNode */) {
+                        this.renderGroup(node, buffer);
+                    }
+                    else if (5 /* MeshNode */) {
+                        this.renderMesh(node, buffer);
                     }
                     buffer.$offsetX = 0;
                     buffer.$offsetY = 0;
@@ -6967,28 +7212,30 @@ var egret;
                             savedMatrix.tx = m2.tx;
                             savedMatrix.ty = m2.ty;
                             buffer.transform(m.a, m.b, m.c, m.d, offsetX2, offsetY2);
-                            offsetX2 = -child.$anchorOffsetX;
-                            offsetY2 = -child.$anchorOffsetY;
+                            if (child.$hasAnchor) {
+                                offsetX2 = -child.$anchorOffsetX;
+                                offsetY2 = -child.$anchorOffsetY;
+                            }
                         }
                         else {
-                            offsetX2 = offsetX + child.$x - child.$anchorOffsetX;
-                            offsetY2 = offsetY + child.$y - child.$anchorOffsetY;
+                            offsetX2 = offsetX + child.$x;
+                            offsetY2 = offsetY + child.$y;
+                            if (child.$hasAnchor) {
+                                offsetX2 -= child.$anchorOffsetX;
+                                offsetY2 -= child.$anchorOffsetY;
+                            }
                         }
-                        switch (child.$renderMode) {
-                            case 1 /* NONE */:
-                                break;
-                            case 2 /* FILTER */:
-                                drawCalls += this.drawWithFilter(child, buffer, offsetX2, offsetY2);
-                                break;
-                            case 3 /* CLIP */:
-                                drawCalls += this.drawWithClip(child, buffer, offsetX2, offsetY2);
-                                break;
-                            case 4 /* SCROLLRECT */:
-                                drawCalls += this.drawWithScrollRect(child, buffer, offsetX2, offsetY2);
-                                break;
-                            default:
-                                drawCalls += this.drawDisplayObject(child, buffer, offsetX2, offsetY2);
-                                break;
+                        if (child.$renderMode === 1 /* DEFAULT */) {
+                            drawCalls += this.drawDisplayObject(child, buffer, offsetX2, offsetY2);
+                        }
+                        else if (child.$renderMode === 3 /* FILTER */) {
+                            drawCalls += this.drawWithFilter(child, buffer, offsetX2, offsetY2);
+                        }
+                        else if (child.$renderMode === 4 /* CLIP */) {
+                            drawCalls += this.drawWithClip(child, buffer, offsetX2, offsetY2);
+                        }
+                        else if (child.$renderMode === 5 /* SCROLLRECT */) {
+                            drawCalls += this.drawWithScrollRect(child, buffer, offsetX2, offsetY2);
                         }
                         if (tempAlpha) {
                             buffer.globalAlpha = tempAlpha;
@@ -7108,7 +7355,7 @@ var egret;
                     for (var _i = 0, _a = displayObject.$children; _i < _a.length; _i++) {
                         var child = _a[_i];
                         var node = child.$getRenderNode();
-                        if (node) {
+                        if (displayObject.$hasRenderNode) {
                             childrenDrawCount += node.$getRenderCount();
                         }
                         if (child.$children) {
@@ -7353,27 +7600,25 @@ var egret;
                     node = displayObject.$renderNode;
                 }
                 var drawCalls = 0;
-                if (node) {
+                if (displayObject.$hasRenderNode) {
                     drawCalls++;
-                    switch (node.type) {
-                        case 1 /* BitmapNode */:
-                            this.renderBitmap(node, buffer);
-                            break;
-                        case 2 /* TextNode */:
-                            this.renderText(node, buffer);
-                            break;
-                        case 3 /* GraphicsNode */:
-                            this.renderGraphics(node, buffer);
-                            break;
-                        case 4 /* GroupNode */:
-                            this.renderGroup(node, buffer);
-                            break;
-                        case 5 /* MeshNode */:
-                            this.renderMesh(node, buffer);
-                            break;
-                        case 6 /* NormalBitmapNode */:
-                            this.renderNormalBitmap(node, buffer);
-                            break;
+                    if (node.type == 6 /* NormalBitmapNode */) {
+                        this.renderNormalBitmap(node, buffer);
+                    }
+                    else if (node.type == 1 /* BitmapNode */) {
+                        this.renderBitmap(node, buffer);
+                    }
+                    else if (node.type == 2 /* TextNode */) {
+                        this.renderText(node, buffer);
+                    }
+                    else if (node.type == 3 /* GraphicsNode */) {
+                        this.renderGraphics(node, buffer);
+                    }
+                    else if (node.type == 4 /* GroupNode */) {
+                        this.renderGroup(node, buffer);
+                    }
+                    else if (node.type == 5 /* MeshNode */) {
+                        this.renderMesh(node, buffer);
                     }
                 }
                 var children = displayObject.$children;
@@ -7381,21 +7626,17 @@ var egret;
                     var length_5 = children.length;
                     for (var i = 0; i < length_5; i++) {
                         var child = children[i];
-                        switch (child.$renderMode) {
-                            case 1 /* NONE */:
-                                break;
-                            case 2 /* FILTER */:
-                                drawCalls += this.drawWithFilter(child, buffer, 0, 0);
-                                break;
-                            case 3 /* CLIP */:
-                                drawCalls += this.drawWithClip(child, buffer, 0, 0);
-                                break;
-                            case 4 /* SCROLLRECT */:
-                                drawCalls += this.drawWithScrollRect(child, buffer, 0, 0);
-                                break;
-                            default:
-                                drawCalls += this.drawDisplayObject(child, buffer, 0, 0);
-                                break;
+                        if (child.$renderMode === 1 /* DEFAULT */) {
+                            drawCalls += this.drawDisplayObject(child, buffer, 0, 0);
+                        }
+                        else if (child.$renderMode === 3 /* FILTER */) {
+                            drawCalls += this.drawWithFilter(child, buffer, 0, 0);
+                        }
+                        else if (child.$renderMode === 4 /* CLIP */) {
+                            drawCalls += this.drawWithClip(child, buffer, 0, 0);
+                        }
+                        else if (child.$renderMode === 5 /* SCROLLRECT */) {
+                            drawCalls += this.drawWithScrollRect(child, buffer, 0, 0);
                         }
                     }
                 }
@@ -7410,25 +7651,23 @@ var egret;
             WebGLRenderer.prototype.renderNode = function (node, buffer, offsetX, offsetY, forHitTest) {
                 buffer.$offsetX = offsetX;
                 buffer.$offsetY = offsetY;
-                switch (node.type) {
-                    case 1 /* BitmapNode */:
-                        this.renderBitmap(node, buffer);
-                        break;
-                    case 2 /* TextNode */:
-                        this.renderText(node, buffer);
-                        break;
-                    case 3 /* GraphicsNode */:
-                        this.renderGraphics(node, buffer, forHitTest);
-                        break;
-                    case 4 /* GroupNode */:
-                        this.renderGroup(node, buffer);
-                        break;
-                    case 5 /* MeshNode */:
-                        this.renderMesh(node, buffer);
-                        break;
-                    case 6 /* NormalBitmapNode */:
-                        this.renderNormalBitmap(node, buffer);
-                        break;
+                if (node.type == 6 /* NormalBitmapNode */) {
+                    this.renderNormalBitmap(node, buffer);
+                }
+                else if (node.type == 1 /* BitmapNode */) {
+                    this.renderBitmap(node, buffer);
+                }
+                else if (node.type == 2 /* TextNode */) {
+                    this.renderText(node, buffer);
+                }
+                else if (node.type == 3 /* GraphicsNode */) {
+                    this.renderGraphics(node, buffer, forHitTest);
+                }
+                else if (node.type == 4 /* GroupNode */) {
+                    this.renderGroup(node, buffer);
+                }
+                else if (node.type == 5 /* MeshNode */) {
+                    this.renderMesh(node, buffer);
                 }
             };
             /**
@@ -7439,7 +7678,7 @@ var egret;
                 if (!image) {
                     return;
                 }
-                buffer.context.drawImage(image, node.sourceX, node.sourceY, node.sourceW, node.sourceH, node.drawX, node.drawY, node.drawW, node.drawH, node.imageWidth, node.imageHeight, node.rotated, node.smoothing);
+                buffer.context.drawImageByRenderNode(node);
             };
             /**
              * @private
@@ -7648,9 +7887,7 @@ var egret;
                     node.$textureWidth = surface.width;
                     node.$textureHeight = surface.height;
                 }
-                var textureWidth = node.$textureWidth;
-                var textureHeight = node.$textureHeight;
-                buffer.context.drawTexture(node.$texture, 0, 0, textureWidth, textureHeight, 0, 0, textureWidth / canvasScaleX, textureHeight / canvasScaleY, textureWidth, textureHeight);
+                buffer.context.drawTextureByRenderNode(node);
                 if (x || y) {
                     if (node.dirtyRender) {
                         this.canvasRenderBuffer.context.setTransform(canvasScaleX, 0, 0, canvasScaleY, 0, 0);
@@ -7730,9 +7967,9 @@ var egret;
                         node.$textureWidth = surface.width;
                         node.$textureHeight = surface.height;
                     }
-                    var textureWidth = node.$textureWidth;
-                    var textureHeight = node.$textureHeight;
-                    buffer.context.drawTexture(node.$texture, 0, 0, textureWidth, textureHeight, 0, 0, textureWidth / canvasScaleX, textureHeight / canvasScaleY, textureWidth, textureHeight);
+                    // buffer.context.drawTexture(node.$texture, 0, 0, node.$textureWidth, node.$textureHeight, 0, 0,
+                    //     node.$textureWidth / canvasScaleX, node.$textureHeight / canvasScaleY, node.$textureWidth, node.$textureHeight);
+                    buffer.context.drawTextureByRenderNode(node);
                 }
                 if (node.x || node.y) {
                     if (node.dirtyRender || forHitTest) {

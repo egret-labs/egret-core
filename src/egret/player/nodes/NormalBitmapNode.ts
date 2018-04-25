@@ -70,6 +70,21 @@ namespace egret.sys {
         public drawY: number;
         public drawW: number;
         public drawH: number;
+        /**
+         * 存放uv信息,
+         * 会适应rotated进行调整
+         * 存放uv四个顶点的信息
+         */
+
+        public uvX_LT: number;
+        public uvX_RT: number;
+        public uvX_LB: number;
+        public uvX_RB: number;
+
+        public uvY_LT: number;
+        public uvY_RT: number;
+        public uvY_LB: number;
+        public uvY_RB: number;
 
         /**
          * 绘制一次位图
@@ -86,6 +101,39 @@ namespace egret.sys {
             self.drawW = drawW;
             self.drawH = drawH;
             self.renderCount = 1;
+
+            let _sourceX = self.sourceX / this.imageWidth;
+            let _sourceY = self.sourceY / this.imageHeight;
+            let _sourceWidth: number;
+            let _sourceHeight: number;
+            if (this.rotated) {
+                //逆时针旋转
+                _sourceWidth = self.sourceH / this.imageWidth;
+                _sourceHeight = self.sourceW / this.imageHeight;
+
+                self.uvX_LT = _sourceX + _sourceWidth;
+                self.uvY_LT = _sourceY;
+                self.uvX_RT = _sourceX + _sourceWidth;
+                self.uvY_RT = _sourceY + _sourceHeight;
+                self.uvX_RB = _sourceX;
+                self.uvY_RB = _sourceY + _sourceHeight;
+                self.uvX_LB = _sourceX;
+                self.uvY_LB = _sourceY;
+
+            } else {
+                _sourceWidth = self.sourceW / this.imageWidth;
+                _sourceHeight = self.sourceH / this.imageHeight;
+
+                self.uvX_LT = _sourceX;
+                self.uvY_LT = _sourceY;
+                self.uvX_RT = _sourceX + _sourceWidth;
+                self.uvY_RT = _sourceY;
+                self.uvX_RB = _sourceX + _sourceWidth;
+                self.uvY_RB = _sourceY + _sourceHeight;
+                self.uvX_LB = _sourceX;
+                self.uvY_LB = _sourceY + _sourceHeight;
+            }
+
         }
 
         /**

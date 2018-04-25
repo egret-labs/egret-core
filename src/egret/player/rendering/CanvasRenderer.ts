@@ -82,6 +82,7 @@ namespace egret {
             let drawCalls = 0;
             let node: sys.RenderNode;
             let displayList = displayObject.$displayList;
+            let hasRednerNode: boolean;
             if (displayList && !isStage) {
                 if (displayObject.$cacheDirty || displayObject.$renderDirty ||
                     displayList.$canvasScaleX != sys.DisplayList.$canvasScaleX ||
@@ -89,6 +90,7 @@ namespace egret {
                     drawCalls += displayList.drawToSurface();
                 }
                 node = displayList.$renderNode;
+                hasRednerNode = true;
             }
             else {
                 if (displayObject.$renderDirty) {
@@ -97,31 +99,26 @@ namespace egret {
                 else {
                     node = displayObject.$renderNode;
                 }
+                hasRednerNode = displayObject.$hasRenderNode;
             }
             displayObject.$cacheDirty = false;
-            if (node) {
+            if (hasRednerNode) {
                 drawCalls++;
                 context.$offsetX = offsetX;
                 context.$offsetY = offsetY;
-                switch (node.type) {
-                    case sys.RenderNodeType.BitmapNode:
-                        this.renderBitmap(<sys.BitmapNode>node, context);
-                        break;
-                    case sys.RenderNodeType.TextNode:
-                        this.renderText(<sys.TextNode>node, context);
-                        break;
-                    case sys.RenderNodeType.GraphicsNode:
-                        this.renderGraphics(<sys.GraphicsNode>node, context);
-                        break;
-                    case sys.RenderNodeType.GroupNode:
-                        this.renderGroup(<sys.GroupNode>node, context);
-                        break;
-                    case sys.RenderNodeType.MeshNode:
-                        this.renderMesh(<sys.MeshNode>node, context);
-                        break;
-                    case sys.RenderNodeType.NormalBitmapNode:
-                        this.renderNormalBitmap(<sys.NormalBitmapNode>node, context);
-                        break;
+
+                if (node.type == sys.RenderNodeType.NormalBitmapNode) {
+                    this.renderNormalBitmap(<sys.NormalBitmapNode>node, context);
+                } else if (node.type == sys.RenderNodeType.BitmapNode) {
+                    this.renderBitmap(<sys.BitmapNode>node, context);
+                } else if (node.type == sys.RenderNodeType.TextNode) {
+                    this.renderText(<sys.TextNode>node, context);
+                } else if (node.type == sys.RenderNodeType.GraphicsNode) {
+                    this.renderGraphics(<sys.GraphicsNode>node, context);
+                } else if (node.type == sys.RenderNodeType.GroupNode) {
+                    this.renderGroup(<sys.GroupNode>node, context);
+                } else if (sys.RenderNodeType.MeshNode) {
+                    this.renderMesh(<sys.MeshNode>node, context);
                 }
                 context.$offsetX = 0;
                 context.$offsetY = 0;
@@ -142,34 +139,39 @@ namespace egret {
                         offsetY2 = offsetY + child.$y;
                         context.save();
                         context.transform(m.a, m.b, m.c, m.d, offsetX2, offsetY2);
-                        offsetX2 = -child.$anchorOffsetX;
-                        offsetY2 = -child.$anchorOffsetY;
+                        if (child.$hasAnchor) {
+                            offsetX2 = -child.$anchorOffsetX;
+                            offsetY2 = -child.$anchorOffsetY;
+                        }
                     }
                     else {
-                        offsetX2 = offsetX + child.$x - child.$anchorOffsetX;
-                        offsetY2 = offsetY + child.$y - child.$anchorOffsetY;
+                        offsetX2 = offsetX + child.$x;
+                        offsetY2 = offsetY + child.$y;
+                        if (child.$hasAnchor) {
+                            offsetX2 -= child.$anchorOffsetX;
+                            offsetY2 -= child.$anchorOffsetY;
+                        }
                     }
                     let tempAlpha;
                     if (child.$alpha != 1) {
                         tempAlpha = context.globalAlpha;
                         context.globalAlpha *= child.$alpha;
                     }
-                    switch (child.$renderMode) {
-                        case RenderMode.NONE:
-                            break;
-                        case RenderMode.FILTER:
-                            drawCalls += this.drawWithFilter(child, context, offsetX2, offsetY2);
-                            break;
-                        case RenderMode.CLIP:
-                            drawCalls += this.drawWithClip(child, context, offsetX2, offsetY2);
-                            break;
-                        case RenderMode.SCROLLRECT:
-                            drawCalls += this.drawWithScrollRect(child, context, offsetX2, offsetY2);
-                            break;
-                        default:
-                            drawCalls += this.drawDisplayObject(child, context, offsetX2, offsetY2);
-                            break;
+
+                    if (child.$renderMode === RenderMode.DEFAULT) {
+                        drawCalls += this.drawDisplayObject(child, context, offsetX2, offsetY2);
                     }
+                    else if (child.$renderMode === RenderMode.FILTER) {
+                        drawCalls += this.drawWithFilter(child, context, offsetX2, offsetY2);
+                    }
+                    else if (child.$renderMode === RenderMode.CLIP) {
+                        drawCalls += this.drawWithClip(child, context, offsetX2, offsetY2);
+                    }
+                    else if (child.$renderMode === RenderMode.SCROLLRECT) {
+                        drawCalls += this.drawWithScrollRect(child, context, offsetX2, offsetY2);
+                    }
+
+
                     if (child.$useTranslate) {
                         context.restore();
                     }
@@ -444,27 +446,20 @@ namespace egret {
                 node = displayObject.$renderNode;
             }
             let drawCalls = 0;
-            if (node) {
+            if (displayObject.$hasRenderNode) {
                 drawCalls++;
-                switch (node.type) {
-                    case sys.RenderNodeType.BitmapNode:
-                        this.renderBitmap(<sys.BitmapNode>node, context);
-                        break;
-                    case sys.RenderNodeType.TextNode:
-                        this.renderText(<sys.TextNode>node, context);
-                        break;
-                    case sys.RenderNodeType.GraphicsNode:
-                        this.renderGraphics(<sys.GraphicsNode>node, context);
-                        break;
-                    case sys.RenderNodeType.GroupNode:
-                        this.renderGroup(<sys.GroupNode>node, context);
-                        break;
-                    case sys.RenderNodeType.MeshNode:
-                        this.renderMesh(<sys.MeshNode>node, context);
-                        break;
-                    case sys.RenderNodeType.NormalBitmapNode:
-                        this.renderNormalBitmap(<sys.NormalBitmapNode>node, context);
-                        break;
+                if (node.type == sys.RenderNodeType.NormalBitmapNode) {
+                    this.renderNormalBitmap(<sys.NormalBitmapNode>node, context);
+                } else if (node.type == sys.RenderNodeType.BitmapNode) {
+                    this.renderBitmap(<sys.BitmapNode>node, context);
+                } else if (node.type == sys.RenderNodeType.TextNode) {
+                    this.renderText(<sys.TextNode>node, context);
+                } else if (node.type == sys.RenderNodeType.GraphicsNode) {
+                    this.renderGraphics(<sys.GraphicsNode>node, context);
+                } else if (node.type == sys.RenderNodeType.GroupNode) {
+                    this.renderGroup(<sys.GroupNode>node, context);
+                } else if (node.type == sys.RenderNodeType.MeshNode) {
+                    this.renderMesh(<sys.MeshNode>node, context);
                 }
             }
             let children = displayObject.$children;
@@ -472,22 +467,20 @@ namespace egret {
                 let length = children.length;
                 for (let i = 0; i < length; i++) {
                     let child = children[i];
-                    switch (child.$renderMode) {
-                        case RenderMode.NONE:
-                            break;
-                        case RenderMode.FILTER:
-                            drawCalls += this.drawWithFilter(child, context, 0, 0);
-                            break;
-                        case RenderMode.CLIP:
-                            drawCalls += this.drawWithClip(child, context, 0, 0);
-                            break;
-                        case RenderMode.SCROLLRECT:
-                            drawCalls += this.drawWithScrollRect(child, context, 0, 0);
-                            break;
-                        default:
-                            drawCalls += this.drawDisplayObject(child, context, 0, 0);
-                            break;
+
+                    if (child.$renderMode === RenderMode.DEFAULT) {
+                        drawCalls += this.drawDisplayObject(child, context, 0, 0);
                     }
+                    else if (child.$renderMode === RenderMode.FILTER) {
+                        drawCalls += this.drawWithFilter(child, context, 0, 0);
+                    }
+                    else if (child.$renderMode === RenderMode.CLIP) {
+                        drawCalls += this.drawWithClip(child, context, 0, 0);
+                    }
+                    else if (child.$renderMode === RenderMode.SCROLLRECT) {
+                        drawCalls += this.drawWithScrollRect(child, context, 0, 0);
+                    }
+
                 }
             }
             return drawCalls;
@@ -495,26 +488,19 @@ namespace egret {
 
         private renderNode(node: sys.RenderNode, context: CanvasRenderingContext2D, forHitTest?: boolean): number {
             let drawCalls = 0;
-            switch (node.type) {
-                case sys.RenderNodeType.BitmapNode:
-                    drawCalls = this.renderBitmap(<sys.BitmapNode>node, context);
-                    break;
-                case sys.RenderNodeType.TextNode:
-                    drawCalls = 1;
-                    this.renderText(<sys.TextNode>node, context);
-                    break;
-                case sys.RenderNodeType.GraphicsNode:
-                    drawCalls = this.renderGraphics(<sys.GraphicsNode>node, context, forHitTest);
-                    break;
-                case sys.RenderNodeType.GroupNode:
-                    drawCalls = this.renderGroup(<sys.GroupNode>node, context);
-                    break;
-                case sys.RenderNodeType.MeshNode:
-                    drawCalls = this.renderMesh(<sys.MeshNode>node, context);
-                    break;
-                case sys.RenderNodeType.NormalBitmapNode:
-                    drawCalls += this.renderNormalBitmap(<sys.NormalBitmapNode>node, context);
-                    break;
+            if (node.type == sys.RenderNodeType.NormalBitmapNode) {
+                drawCalls += this.renderNormalBitmap(<sys.NormalBitmapNode>node, context);
+            } else if (node.type == sys.RenderNodeType.BitmapNode) {
+                drawCalls = this.renderBitmap(<sys.BitmapNode>node, context);
+            } else if (node.type == sys.RenderNodeType.TextNode) {
+                drawCalls = 1;
+                this.renderText(<sys.TextNode>node, context);
+            } else if (node.type == sys.RenderNodeType.GraphicsNode) {
+                drawCalls = this.renderGraphics(<sys.GraphicsNode>node, context, forHitTest);
+            } else if (node.type == sys.RenderNodeType.GroupNode) {
+                drawCalls = this.renderGroup(<sys.GroupNode>node, context);
+            } else if (node.type == sys.RenderNodeType.MeshNode) {
+                drawCalls = this.renderMesh(<sys.MeshNode>node, context);
             }
             return drawCalls;
         }

@@ -33,10 +33,11 @@ namespace egret {
      * @private
      */
     export const enum RenderMode {
-        NONE = 1,
-        FILTER = 2,
-        CLIP = 3,
-        SCROLLRECT = 4
+        DEFAULT = 1,
+        NONE = 2,
+        FILTER = 3,
+        CLIP = 4,
+        SCROLLRECT = 5
     };
 
     /**
@@ -972,7 +973,10 @@ namespace egret {
             if (egret.nativeRender) {
                 self.$nativeDisplayObject.setAnchorOffsetX(value);
             }
+            this.$checkAnchorChanged();
         }
+
+
 
         $anchorOffsetY: number = 0;
 
@@ -1009,6 +1013,22 @@ namespace egret {
             self.$anchorOffsetY = value;
             if (egret.nativeRender) {
                 self.$nativeDisplayObject.setAnchorOffsetY(value);
+            }
+            this.$checkAnchorChanged()
+        }
+
+        /**
+         * @private
+         * 如果有锚点，标记
+         */
+        $hasAnchor: boolean;
+
+        private $checkAnchorChanged() {
+            //
+            if (this.$anchorOffsetX != 0 || this.$anchorOffsetY != 0) {
+                this.$hasAnchor = true;
+            } else {
+                this.$hasAnchor = false;
             }
         }
 
@@ -1792,10 +1812,17 @@ namespace egret {
 
         /**
          * @private
-         * 渲染节点,不为空表示自身有绘制到屏幕的内容
+         * 渲染节点,表示自身有绘制到屏幕的内容
          */
         $renderNode: sys.RenderNode = null;
-
+        /**
+         * @private
+         * 标记当前是否有渲染节点
+         */
+        $hasRenderNode: boolean = false;
+        /**
+         * @private
+         */
         $renderDirty: boolean = false;
 
         /**
@@ -1806,15 +1833,17 @@ namespace egret {
             let self = this;
             let node = self.$renderNode;
             if (!node) {
+                this.$hasRenderNode = false;
                 return null;
             }
-
             if (self.$renderDirty) {
                 node.cleanBeforeRender();
                 self.$updateRenderNode();
+
                 self.$renderDirty = false;
                 node = self.$renderNode;
             }
+            this.$hasRenderNode = !!node;
             return node;
         }
 
@@ -1833,11 +1862,11 @@ namespace egret {
                 self.$renderMode = RenderMode.SCROLLRECT;
             }
             else {
-                self.$renderMode = null;
+                self.$renderMode = RenderMode.DEFAULT;
             }
         }
 
-        $renderMode: RenderMode = null;
+        $renderMode: RenderMode = RenderMode.DEFAULT;
 
         /**
          * @private

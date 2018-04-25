@@ -50,6 +50,8 @@ namespace egret.web {
 
         public static antialias: boolean;
 
+        public firstTimeUploadVertices: boolean;
+
         /**
          * 渲染上下文
          */
@@ -162,8 +164,13 @@ namespace egret.web {
         private uploadVerticesArray(array: any): void {
             let gl: any = this.context;
 
-            gl.bufferData(gl.ARRAY_BUFFER, array, gl.STREAM_DRAW);
-            // gl.bufferSubData(gl.ARRAY_BUFFER, 0, array);
+            if (this.firstTimeUploadVertices) {
+                gl.bufferData(gl.ARRAY_BUFFER, array, gl.DYNAMIC_DRAW);
+                this.firstTimeUploadVertices = false;
+            }
+            else {
+                gl.bufferSubData(gl.ARRAY_BUFFER, 0, array);
+            }
         }
 
         /**
@@ -182,7 +189,7 @@ namespace egret.web {
 
             this.surface = createCanvas(width, height);
 
-            if(egret.nativeRender) {
+            if (egret.nativeRender) {
                 return;
             }
 
@@ -201,6 +208,8 @@ namespace egret.web {
             this.vao = new WebGLVertexArrayObject();
 
             this.setGlobalCompositeOperation("source-over");
+
+            this.firstTimeUploadVertices = true;
         }
 
         /**
@@ -503,6 +512,158 @@ namespace egret.web {
             }
         }
 
+
+
+
+        /**
+         * 绘制图片，image参数可以是BitmapData或者renderTarget
+         * 同样的功能，单参数，整合drawTexture部分
+         */
+        public drawImageByRenderNode(node: sys.NormalBitmapNode) {
+            let buffer = this.currentBuffer;
+            let image = node.image;
+            let destHeight = node.drawH;
+            let destWidth = node.drawW;
+            let destX = node.drawX;
+            let destY = node.drawY;
+            if (this.contextLost || !image || !buffer) {
+                return;
+            }
+
+            let texture: WebGLTexture;
+            let buffer_offsetX;
+            let buffer_offsetY;
+            if (image["texture"] || (image.source && image.source["texture"])) {
+                // 如果是render target
+                texture = image["texture"] || image.source["texture"];
+                buffer.saveTransform();
+                buffer_offsetX = buffer.$offsetX;
+                buffer_offsetY = buffer.$offsetY;
+                buffer.useOffset();
+                buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2);// 翻转
+            } else if (!image.source && !image.webGLTexture) {
+                return;
+            } else {
+                texture = this.getWebGLTexture(image);
+            }
+
+            if (!texture) {
+                return;
+            }
+
+            //drawTexture
+            if (this.vao.reachVertexMaxSize()) {
+                this.$drawWebGL();
+            }
+
+            let smoothing = node.smoothing;
+            if (smoothing != undefined && texture["smoothing"] != smoothing) {
+                this.drawCmdManager.pushChangeSmoothing(texture, smoothing);
+            }
+
+            let count = 2;
+            let width = node.imageWidth;
+            let height = node.imageHeight;
+
+            // 应用$filter，因为只可能是colorMatrixFilter，最后两个参数可不传
+            this.drawCmdManager.pushDrawTexture(texture, count, this.$filter, width, height);
+
+            //cacheArray
+            let locWorldTransform = buffer.globalMatrix;
+            let a = locWorldTransform.a;
+            let b = locWorldTransform.b;
+            let c = locWorldTransform.c;
+            let d = locWorldTransform.d;
+            let tx = locWorldTransform.tx;
+            let ty = locWorldTransform.ty;
+            let offsetX = buffer.$offsetX;
+            let offsetY = buffer.$offsetY;
+            if (offsetX != 0 || offsetY != 0) {
+                tx = offsetX * a + offsetY * c + tx;
+                ty = offsetX * b + offsetY * d + ty;
+            }
+
+            if (destX != 0 || destY != 0) {
+                tx = destX * a + destY * c + tx;
+                ty = destX * b + destY * d + ty;
+            }
+
+            let sourceWidth = node.sourceW;
+            let sourceHeight = node.sourceH;
+            let rotated = node.rotated;
+
+            let a1 = destWidth / sourceWidth;
+            if (a1 != 1) {
+                a = a1 * a;
+                b = a1 * b;
+            }
+            let d1 = destHeight / sourceHeight;
+            if (d1 != 1) {
+                c = d1 * c;
+                d = d1 * d;
+            }
+
+            let vertices = this.vao.vertices;
+            let index = this.vao.vertexIndex * this.vertSize;
+            let alpha = buffer.globalAlpha;
+            let a_w = a * sourceWidth;
+            let b_w = b * sourceWidth;
+            let c_h = c * sourceHeight;
+            let d_h = d * sourceHeight;
+
+            let uvX_LT = node.uvX_LT;
+            let uvY_LT = node.uvY_LT;
+            let uvX_RT = node.uvX_RT;
+            let uvY_RT = node.uvY_RT;
+            let uvX_RB = node.uvX_RB;
+            let uvY_RB = node.uvY_RB;
+            let uvX_LB = node.uvX_LB;
+            let uvY_LB = node.uvY_LB;
+
+            // xy
+            vertices[index++] = tx;
+            vertices[index++] = ty;
+
+            // uv
+            vertices[index++] = uvX_LT;
+            vertices[index++] = uvY_LT;
+            // alpha
+            vertices[index++] = alpha;
+            // xy
+            vertices[index++] = a_w + tx;
+            vertices[index++] = b_w + ty;
+            // uv
+            vertices[index++] = uvX_RT;
+            vertices[index++] = uvY_RT;
+            // alpha
+            vertices[index++] = alpha;
+            // xy
+            vertices[index++] = a_w + c_h + tx;
+            vertices[index++] = d_h + b_w + ty;
+            // uv
+            vertices[index++] = uvX_RB;
+            vertices[index++] = uvY_RB;
+            // alpha
+            vertices[index++] = alpha;
+            // xy
+            vertices[index++] = c_h + tx;
+            vertices[index++] = d_h + ty;
+            // uv
+            vertices[index++] = uvX_LB;
+            vertices[index++] = uvY_LB;
+            // alpha
+            vertices[index++] = alpha;
+            // }
+            this.vao.vertexIndex += 4;
+            this.vao.indexIndex += 6;
+
+            if (image.source && image.source["texture"]) {
+                buffer.$offsetX = buffer_offsetX;
+                buffer.$offsetY = buffer_offsetY;
+                buffer.restoreTransform();
+            }
+        }
+
         /**
          * 绘制Mesh
          */
@@ -582,12 +743,116 @@ namespace egret.web {
 
             let count = meshIndices ? meshIndices.length / 3 : 2;
             // 应用$filter，因为只可能是colorMatrixFilter，最后两个参数可不传
-            this.drawCmdManager.pushDrawTexture(texture, count, this.$filter,textureWidth,textureHeight);
+            this.drawCmdManager.pushDrawTexture(texture, count, this.$filter, textureWidth, textureHeight);
 
             this.vao.cacheArrays(buffer, sourceX, sourceY, sourceWidth, sourceHeight,
                 destX, destY, destWidth, destHeight, textureWidth, textureHeight,
                 meshUVs, meshVertices, meshIndices, rotated);
         }
+
+
+
+
+        public drawTextureByRenderNode(node: sys.TextNode | sys.GraphicsNode): void {
+            let texture = node.$texture;
+            let sourceWidth = node.$textureWidth;
+            let sourceHeight = node.$textureHeight;
+            let canvasScaleX = sys.DisplayList.$canvasScaleX;
+            let canvasScaleY = sys.DisplayList.$canvasScaleY;
+            let destWidth = node.$textureWidth / canvasScaleX;
+            let destHeight = node.$textureHeight / canvasScaleY;
+
+
+            let buffer = this.currentBuffer;
+            if (this.contextLost || !texture || !buffer) {
+                return;
+            }
+
+            if (this.vao.reachMaxSize()) {
+                this.$drawWebGL();
+            }
+
+            let count = 2;
+            // 应用$filter，因为只可能是colorMatrixFilter，最后两个参数可不传
+            this.drawCmdManager.pushDrawTexture(texture, count, this.$filter, sourceWidth, sourceHeight);
+
+            //cacheArray
+            let locWorldTransform = buffer.globalMatrix;
+            let a = locWorldTransform.a;
+            let b = locWorldTransform.b;
+            let c = locWorldTransform.c;
+            let d = locWorldTransform.d;
+            let tx = locWorldTransform.tx;
+            let ty = locWorldTransform.ty;
+            let offsetX = buffer.$offsetX;
+            let offsetY = buffer.$offsetY;
+            if (offsetX != 0 || offsetY != 0) {
+                tx = offsetX * a + offsetY * c + tx;
+                ty = offsetX * b + offsetY * d + ty;
+            }
+
+            let rotated = false;
+
+            let a1 = destWidth / sourceWidth;
+            if (a1 != 1) {
+                a = a1 * a;
+                b = a1 * b;
+            }
+            let d1 = destHeight / sourceHeight;
+            if (d1 != 1) {
+                c = d1 * c;
+                d = d1 * d;
+            }
+
+            let vertices = this.vao.vertices;
+            let index = this.vao.vertexIndex * this.vertSize;
+            let alpha = buffer.globalAlpha;
+            let a_w = a * sourceWidth;
+            let b_w = b * sourceWidth;
+            let c_h = c * sourceHeight;
+            let d_h = d * sourceHeight;
+
+            let uvSize = 1;
+
+            // xy
+            vertices[index++] = tx;
+            vertices[index++] = ty;
+
+            // uv
+            vertices[index++] = 0;
+            vertices[index++] = 0;
+            // alpha
+            vertices[index++] = alpha;
+            // xy
+            vertices[index++] = a_w + tx;
+            vertices[index++] = b_w + ty;
+            // uv
+            vertices[index++] = uvSize;
+            vertices[index++] = 0;
+            // alpha
+            vertices[index++] = alpha;
+            // xy
+            vertices[index++] = a_w + c_h + tx;
+            vertices[index++] = d_h + b_w + ty;
+            // uv
+            vertices[index++] = uvSize;
+            vertices[index++] = uvSize;
+            // alpha
+            vertices[index++] = alpha;
+            // xy
+            vertices[index++] = c_h + tx;
+            vertices[index++] = d_h + ty;
+            // uv
+            vertices[index++] = 0;
+            vertices[index++] = uvSize;
+            // alpha
+            vertices[index++] = alpha;
+
+            this.vao.vertexIndex += 4;
+            this.vao.indexIndex += 6;
+        }
+
+
 
         /**
          * 绘制矩形（仅用于遮罩擦除等）
@@ -610,12 +875,12 @@ namespace egret.web {
         /**
          * 绘制遮罩
          */
-        public pushMask(x:number, y:number, width:number, height:number): void {
+        public pushMask(x: number, y: number, width: number, height: number): void {
             let buffer = this.currentBuffer;
             if (this.contextLost || !buffer) {
                 return;
             }
-            buffer.$stencilList.push({x,y,width,height});
+            buffer.$stencilList.push({ x, y, width, height });
             if (this.vao.reachMaxSize()) {
                 this.$drawWebGL();
             }
