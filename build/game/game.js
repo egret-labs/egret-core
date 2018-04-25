@@ -3236,6 +3236,8 @@ var egret;
          */
         MovieClip.prototype.play = function (playTimes) {
             if (playTimes === void 0) { playTimes = 0; }
+            this.lastTime = egret.getTimer();
+            this.passedTime = 0;
             this.$isPlaying = true;
             this.setPlayTimes(playTimes);
             if (this.$totalFrames > 1 && this.$stage) {
