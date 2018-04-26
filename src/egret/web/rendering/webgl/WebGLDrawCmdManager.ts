@@ -287,7 +287,8 @@ namespace egret.web {
         public clear(): void {
             for (let i = 0; i < this.drawDataLen; i++) {
                 let data = this.drawData[i];
-
+                if (!data)
+                    continue;
                 data.type = 0;
                 data.count = 0;
                 data.texture = null;

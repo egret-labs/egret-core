@@ -101,6 +101,7 @@ namespace egret {
             target.$renderNode = this.$renderNode;
             this.$targetDisplay = target;
             this.$targetIsSprite = target instanceof Sprite;
+            target.$hasRenderNode = !!this.$renderNode;
         }
 
         /**
@@ -265,14 +266,14 @@ namespace egret {
          * @language zh_CN
          */
         public lineStyle(thickness: number = NaN, color: number = 0, alpha: number = 1.0, pixelHinting: boolean = false,
-            scaleMode: string = "normal", caps: string = null, joints: string = null, miterLimit: number = 3, lineDash?:number[]): void {
+            scaleMode: string = "normal", caps: string = null, joints: string = null, miterLimit: number = 3, lineDash?: number[]): void {
             thickness = +thickness || 0;
             color = +color || 0;
             alpha = +alpha || 0;
             miterLimit = +miterLimit || 0;
             if (egret.nativeRender) {
                 this.$targetDisplay.$nativeDisplayObject.setLineStyle(thickness, color,
-                                    alpha, pixelHinting, scaleMode, caps, joints, miterLimit);
+                    alpha, pixelHinting, scaleMode, caps, joints, miterLimit);
             }
             if (thickness <= 0) {
                 this.strokePath = null;
@@ -544,7 +545,7 @@ namespace egret {
             anchorY = +anchorY || 0;
             if (egret.nativeRender) {
                 this.$targetDisplay.$nativeDisplayObject.setCurveTo(controlX, controlY,
-                        anchorX, anchorY);
+                    anchorX, anchorY);
             }
             let fillPath = this.fillPath;
             let strokePath = this.strokePath;
@@ -641,7 +642,7 @@ namespace egret {
             startAngle = clampAngle(startAngle);
             endAngle = clampAngle(endAngle);
             if (egret.nativeRender) {
-                this.$targetDisplay.$nativeDisplayObject.setDrawArc(x, y, radius, 
+                this.$targetDisplay.$nativeDisplayObject.setDrawArc(x, y, radius,
                     startAngle, endAngle, anticlockwise);
             }
 

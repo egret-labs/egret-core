@@ -9767,6 +9767,7 @@ var egret;
             target.$renderNode = this.$renderNode;
             this.$targetDisplay = target;
             this.$targetIsSprite = target instanceof egret.Sprite;
+            target.$hasRenderNode = !!this.$renderNode;
         };
         /**
          * 对1像素和3像素特殊处理，向右下角偏移0.5像素，以显示清晰锐利的线条。
@@ -14252,7 +14253,7 @@ var egret;
                     this.touchDownTarget[touchPointID] = target;
                     this.useTouchesCount++;
                 }
-                egret.TouchEvent.dispatchTouchEvent(target, egret.TouchEvent.TOUCH_BEGIN, true, true, x, y, touchPointID, true);
+                return egret.TouchEvent.dispatchTouchEvent(target, egret.TouchEvent.TOUCH_BEGIN, true, true, x, y, touchPointID, true);
             };
             /**
              * @private
@@ -14271,7 +14272,7 @@ var egret;
                 this.lastTouchX = x;
                 this.lastTouchY = y;
                 var target = this.findTarget(x, y);
-                egret.TouchEvent.dispatchTouchEvent(target, egret.TouchEvent.TOUCH_MOVE, true, true, x, y, touchPointID, true);
+                return egret.TouchEvent.dispatchTouchEvent(target, egret.TouchEvent.TOUCH_MOVE, true, true, x, y, touchPointID, true);
             };
             /**
              * @private
@@ -14288,13 +14289,16 @@ var egret;
                 var oldTarget = this.touchDownTarget[touchPointID];
                 delete this.touchDownTarget[touchPointID];
                 this.useTouchesCount--;
-                egret.TouchEvent.dispatchTouchEvent(target, egret.TouchEvent.TOUCH_END, true, true, x, y, touchPointID, false);
+                var touchend = egret.TouchEvent.dispatchTouchEvent(target, egret.TouchEvent.TOUCH_END, true, true, x, y, touchPointID, false);
+                var touchTap;
+                var touchReleaseOutside;
                 if (oldTarget == target) {
                     egret.TouchEvent.dispatchTouchEvent(target, egret.TouchEvent.TOUCH_TAP, true, true, x, y, touchPointID, false);
                 }
                 else {
                     egret.TouchEvent.dispatchTouchEvent(oldTarget, egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, true, true, x, y, touchPointID, false);
                 }
+                return touchend && (touchTap || touchReleaseOutside);
             };
             /**
              * @private
@@ -23069,6 +23073,7 @@ var egret;
             _this.$maxTouches = 99;
             _this.$stage = _this;
             _this.$nestLevel = 1;
+            _this.$touch = new egret.sys.TouchHandler(_this);
             return _this;
         }
         Stage.prototype.createNativeDisplayObject = function () {
@@ -23309,6 +23314,25 @@ var egret;
          */
         Stage.prototype.setContentSize = function (width, height) {
             this.$screen.setContentSize(width, height);
+        };
+        //3D&2D
+        /**
+         * @private
+         */
+        Stage.prototype.$onTouchBegin = function (x, y, touchPointID) {
+            return this.$touch.onTouchBegin(x, y, touchPointID);
+        };
+        /**
+         * @private
+         */
+        Stage.prototype.$onTouchEnd = function (x, y, touchPointID) {
+            return this.$touch.onTouchEnd(x, y, touchPointID);
+        };
+        /**
+         * @private
+         */
+        Stage.prototype.$onTouchMove = function (x, y, touchPointID) {
+            return this.$touch.onTouchMove(x, y, touchPointID);
         };
         return Stage;
     }(egret.DisplayObjectContainer));

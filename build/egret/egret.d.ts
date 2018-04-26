@@ -9506,7 +9506,7 @@ declare namespace egret.sys {
          * @param y 事件发生处相对于舞台的坐标y
          * @param touchPointID 分配给触摸点的唯一标识号
          */
-        onTouchBegin(x: number, y: number, touchPointID: number): void;
+        onTouchBegin(x: number, y: number, touchPointID: number): boolean;
         /**
          * @private
          */
@@ -9522,7 +9522,7 @@ declare namespace egret.sys {
          * @param y 事件发生处相对于舞台的坐标y
          * @param touchPointID 分配给触摸点的唯一标识号
          */
-        onTouchMove(x: number, y: number, touchPointID: number): void;
+        onTouchMove(x: number, y: number, touchPointID: number): boolean;
         /**
          * @private
          * 触摸结束（弹起）
@@ -9530,7 +9530,7 @@ declare namespace egret.sys {
          * @param y 事件发生处相对于舞台的坐标y
          * @param touchPointID 分配给触摸点的唯一标识号
          */
-        onTouchEnd(x: number, y: number, touchPointID: number): void;
+        onTouchEnd(x: number, y: number, touchPointID: number): boolean;
         /**
          * @private
          * 获取舞台坐标下的触摸对象
@@ -13790,6 +13790,10 @@ declare namespace egret {
         constructor();
         protected createNativeDisplayObject(): void;
         /**
+         * @private
+         */
+        $touch: egret.sys.TouchHandler;
+        /**
          * Gets and sets the frame rate of the stage. The frame rate is defined as frames per second. Valid range for the
          * frame rate is from 0.01 to 1000 frames per second.<br/>
          * Note: setting the frameRate property of one Stage object changes the frame rate for all Stage objects
@@ -13964,6 +13968,18 @@ declare namespace egret {
          * @language zh_CN
          */
         setContentSize(width: number, height: number): void;
+        /**
+         * @private
+         */
+        $onTouchBegin(x: number, y: number, touchPointID: number): boolean;
+        /**
+         * @private
+         */
+        $onTouchEnd(x: number, y: number, touchPointID: number): boolean;
+        /**
+         * @private
+         */
+        $onTouchMove(x: number, y: number, touchPointID: number): boolean;
     }
 }
 declare namespace egret {

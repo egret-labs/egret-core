@@ -5079,6 +5079,8 @@ var egret;
             WebGLDrawCmdManager.prototype.clear = function () {
                 for (var i = 0; i < this.drawDataLen; i++) {
                     var data = this.drawData[i];
+                    if (!data)
+                        continue;
                     data.type = 0;
                     data.count = 0;
                     data.texture = null;
