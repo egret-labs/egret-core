@@ -32,7 +32,7 @@ namespace egret.web {
     /**
      * @private  
      */
-    export enum WEBGL_UNIFORM_TYPE {
+    export const enum WEBGL_UNIFORM_TYPE {
         FLOAT_VEC2 = 0x8B50,
         FLOAT_VEC3 = 0x8B51,
         FLOAT_VEC4 = 0x8B52,
@@ -48,7 +48,7 @@ namespace egret.web {
         FLOAT_MAT4 = 0x8B5C,
         SAMPLER_2D = 0x8B5E,
         SAMPLER_CUBE = 0x8B60,
-        BYTE = 0xffff,
+        BYTE = 0x1400,
         UNSIGNED_BYTE = 0x1401,
         SHORT = 0x1402,
         UNSIGNED_SHORT = 0x1403,
