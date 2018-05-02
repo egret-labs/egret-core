@@ -213,14 +213,11 @@ module RES.processor {
             for (var subkey in frames) {
                 var config: any = frames[subkey];
                 var texture = spriteSheet.createTexture(subkey, config.x, config.y, config.w, config.h, config.offX, config.offY, config.sourceW, config.sourceH);
-                // if (config["scale9grid"]) {
-                //     var str: string = config["scale9grid"];
-                //     var list: Array<string> = str.split(",");
-                //     texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
-                // }
-                //     if (name) {
-                //         this.addSubkey(subkey, name);
-                //     }
+                if (config["scale9grid"]) {
+                    var str: string = config["scale9grid"];
+                    var list: Array<string> = str.split(",");
+                    texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
+                }
             }
             // todo refactor
             host.save(r, texture);
