@@ -350,8 +350,12 @@ namespace egret {
 
         drawToSurface() {
             if (this.$displayList) {
-                this.$displayList.drawToSurface(false);//传入false即可规避buffer.clear 和DisplayList.$canvasScale修改
+                this.$displayList.$stageRenderToSurface();//传入false即可规避buffer.clear 和DisplayList.$canvasScale修改
             }
+        }
+
+        pushResize(width, height) {
+            (this.$displayList.renderBuffer as any).$pushResize(width, height);
         }
 
     }

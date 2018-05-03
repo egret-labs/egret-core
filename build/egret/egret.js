@@ -12700,24 +12700,19 @@ var egret;
              * @private
              * 绘制根节点显示对象到目标画布，返回draw的次数。
              */
-            DisplayList.prototype.drawToSurface = function (activeCall) {
-                if (activeCall === void 0) { activeCall = true; }
+            DisplayList.prototype.drawToSurface = function () {
                 var drawCalls = 0;
                 //for 3D&2D
                 //主动调用时需要清理，通过stage被动调用不需要
-                if (activeCall) {
-                    this.$canvasScaleX = this.offsetMatrix.a = DisplayList.$canvasScaleX;
-                    this.$canvasScaleY = this.offsetMatrix.d = DisplayList.$canvasScaleY;
-                }
+                this.$canvasScaleX = this.offsetMatrix.a = DisplayList.$canvasScaleX;
+                this.$canvasScaleY = this.offsetMatrix.d = DisplayList.$canvasScaleY;
                 if (!this.isStage) {
                     this.changeSurfaceSize();
                 }
                 var buffer = this.renderBuffer;
                 //for 3D&2D
                 //主动调用时需要清理，通过stage被动调用不需要
-                if (activeCall) {
-                    buffer.clear();
-                }
+                buffer.clear();
                 drawCalls = sys.systemRenderer.render(this.root, buffer, this.offsetMatrix);
                 if (!this.isStage) {
                     var surface = buffer.surface;
@@ -12739,6 +12734,13 @@ var egret;
                     renderNode.drawImage(0, 0, width, height, -this.offsetX, -this.offsetY, width / this.$canvasScaleX, height / this.$canvasScaleY);
                 }
                 return drawCalls;
+            };
+            /**
+             * @private
+             * stage渲染
+             */
+            DisplayList.prototype.$stageRenderToSurface = function () {
+                sys.systemRenderer.render(this.root, this.renderBuffer, this.offsetMatrix);
             };
             /**
              * @private
@@ -23356,8 +23358,11 @@ var egret;
         };
         Stage.prototype.drawToSurface = function () {
             if (this.$displayList) {
-                this.$displayList.drawToSurface(false); //传入false即可规避buffer.clear 和DisplayList.$canvasScale修改
+                this.$displayList.$stageRenderToSurface(); //传入false即可规避buffer.clear 和DisplayList.$canvasScale修改
             }
+        };
+        Stage.prototype.pushResize = function (width, height) {
+            this.$displayList.renderBuffer.$pushResize(width, height);
         };
         return Stage;
     }(egret.DisplayObjectContainer));

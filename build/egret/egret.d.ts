@@ -8774,7 +8774,12 @@ declare namespace egret.sys {
          * @private
          * 绘制根节点显示对象到目标画布，返回draw的次数。
          */
-        drawToSurface(activeCall?: boolean): number;
+        drawToSurface(): number;
+        /**
+         * @private
+         * stage渲染
+         */
+        $stageRenderToSurface(): void;
         private bitmapData;
         /**
          * @private
@@ -13982,6 +13987,7 @@ declare namespace egret {
          */
         $onTouchMove(x: number, y: number, touchPointID: number): boolean;
         drawToSurface(): void;
+        pushResize(width: any, height: any): void;
     }
 }
 declare namespace egret {

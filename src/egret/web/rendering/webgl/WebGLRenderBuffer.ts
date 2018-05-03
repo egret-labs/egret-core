@@ -197,7 +197,7 @@ namespace egret.web {
          * @param height 改变后的高
          * @param useMaxSize 若传入true，则将改变后的尺寸与已有尺寸对比，保留较大的尺寸。
          */
-        public resize(width: number, height: number, useMaxSize?: boolean, activeCall = true): void {
+        public resize(width: number, height: number, useMaxSize?: boolean): void {
             width = width || 1;
             height = height || 1;
             if (egret.nativeRender) {
@@ -216,13 +216,18 @@ namespace egret.web {
             //for 3D&2D
             //3D不需要主动resize,而是由3D部分进行修改
             // 如果是舞台的渲染缓冲，执行resize，否则surface大小不随之改变
-            if (this.root && activeCall) {
+            if (this.root) {
                 this.context.resize(width, height, useMaxSize);
             }
 
             this.context.clear();
 
             this.context.popBuffer();
+        }
+
+
+        public $pushResize(width: number, height: number) {
+            this.context.drawCmdManager.pushResize(this, width, height);
         }
 
         /**
