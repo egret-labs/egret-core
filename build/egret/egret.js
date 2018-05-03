@@ -4874,6 +4874,9 @@ var egret;
             for (var i = 0; i < length; i++) {
                 var child = this.$children[i];
                 child.$onAddToStage(stage, nestLevel);
+                if (child.$maskedObject) {
+                    child.$maskedObject.$updateRenderMode();
+                }
             }
         };
         /**
@@ -17628,6 +17631,9 @@ var egret;
         BitmapText.prototype.$setText = function (value) {
             if (value == null) {
                 value = "";
+            }
+            else {
+                value = String(value);
             }
             var self = this;
             if (value == self.$text)
