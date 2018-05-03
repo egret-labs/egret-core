@@ -148,6 +148,8 @@ namespace egret {
          */
         $children: DisplayObject[] = null;
 
+        $hasChildren: boolean = false;
+
         private $name: string = "";
 
         /**

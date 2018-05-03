@@ -50,7 +50,15 @@ namespace egret.web {
 
         public static antialias: boolean;
 
+        /**
+         * 第一次上传顶点数组标记量
+         */
         public firstTimeUploadVertices: boolean;
+
+        /**
+         * 当前program key值
+         */
+        public currentProgramKey: string;
 
         /**
          * 渲染上下文
@@ -210,6 +218,7 @@ namespace egret.web {
             this.setGlobalCompositeOperation("source-over");
 
             this.firstTimeUploadVertices = true;
+
         }
 
         /**
@@ -957,10 +966,11 @@ namespace egret.web {
                 if (data.type == DRAWABLE_TYPE.ACT_BUFFER) {
                     this.activatedBuffer = data.buffer;
                 }
-                if (data.type == DRAWABLE_TYPE.TEXTURE || data.type == DRAWABLE_TYPE.RECT || data.type == DRAWABLE_TYPE.PUSH_MASK || data.type == DRAWABLE_TYPE.POP_MASK) {
-                    if (this.activatedBuffer && this.activatedBuffer.$computeDrawCall) {
-                        this.activatedBuffer.$drawCalls++;
-                    }
+                if (data.type != DRAWABLE_TYPE.TEXTURE && data.type != DRAWABLE_TYPE.RECT && data.type != DRAWABLE_TYPE.PUSH_MASK && data.type != DRAWABLE_TYPE.POP_MASK) {
+                    continue;
+                }
+                if (this.activatedBuffer && this.activatedBuffer.$computeDrawCall) {
+                    this.activatedBuffer.$drawCalls++;
                 }
             }
 
@@ -987,26 +997,35 @@ namespace egret.web {
             let filter = data.filter;
 
             switch (data.type) {
-                case DRAWABLE_TYPE.TEXTURE:
-                    if (filter) {
-                        if (filter.type === "custom") {
-                            program = EgretWebGLProgram.getProgram(gl, filter.$vertexSrc, filter.$fragmentSrc, filter.$shaderKey);
-                        } else if (filter.type === "colorTransform") {
-                            program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.colorTransform_frag, "colorTransform");
-                        } else if (filter.type === "blurX") {
-                            program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.blur_frag, "blur");
-                        } else if (filter.type === "blurY") {
-                            program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.blur_frag, "blur");
-                        } else if (filter.type === "glow") {
-                            program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.glow_frag, "glow");
-                        }
-                    } else {
-                        program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.texture_frag, "texture");
+                case DRAWABLE_TYPE.CHANGE_PROGRAM:
+                    if (this.lastProgramKey !== data.key) {
+                        program = EgretWebGLProgram.getProgram(gl, data.vertSource, data.fragSource, data.key);
+                        this.activeProgram(gl, program);
+                        this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
+                        this.lastProgramKey = data.key;
                     }
+                    break;
 
-                    this.activeProgram(gl, program);
-                    this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
 
+                case DRAWABLE_TYPE.TEXTURE:
+                    // if (filter) {
+                    //     if (filter.type === "custom") {
+                    //         program = EgretWebGLProgram.getProgram(gl, filter.$vertexSrc, filter.$fragmentSrc, filter.$shaderKey);
+                    //     } else if (filter.type === "colorTransform") {
+                    //         program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.colorTransform_frag, "colorTransform");
+                    //     } else if (filter.type === "blurX") {
+                    //         program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.blur_frag, "blur");
+                    //     } else if (filter.type === "blurY") {
+                    //         program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.blur_frag, "blur");
+                    //     } else if (filter.type === "glow") {
+                    //         program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.glow_frag, "glow");
+                    //     }
+                    // } else {
+                    //     program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.texture_frag, "texture");
+                    // }
+                    // program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.texture_frag, "texture");
+                    // this.activeProgram(gl, program);
+                    // this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
                     offset += this.drawTextureElements(data, offset);
                     break;
                 case DRAWABLE_TYPE.RECT:
@@ -1085,6 +1104,7 @@ namespace egret.web {
         }
 
         public currentProgram: EgretWebGLProgram;
+        public lastProgramKey: string;
         private activeProgram(gl: WebGLRenderingContext, program: EgretWebGLProgram): void {
             if (program != this.currentProgram) {
                 gl.useProgram(program.id);

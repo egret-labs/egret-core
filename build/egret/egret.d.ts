@@ -393,6 +393,7 @@ declare namespace egret {
          * 能够含有子项的类将子项列表存储在这个属性里。
          */
         $children: DisplayObject[];
+        $hasChildren: boolean;
         private $name;
         /**
          * Indicates the instance name of the DisplayObject. The object can be identified in the child list of its parent

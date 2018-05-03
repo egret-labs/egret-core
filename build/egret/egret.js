@@ -609,6 +609,7 @@ var egret;
              * 能够含有子项的类将子项列表存储在这个属性里。
              */
             _this.$children = null;
+            _this.$hasChildren = false;
             _this.$name = "";
             /**
              * @private
@@ -4306,6 +4307,7 @@ var egret;
             var _this = _super.call(this) || this;
             _this.$touchChildren = true;
             _this.$children = [];
+            _this.$hasChildren = true;
             return _this;
         }
         Object.defineProperty(DisplayObjectContainer.prototype, "numChildren", {

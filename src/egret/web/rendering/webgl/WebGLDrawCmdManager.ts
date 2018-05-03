@@ -43,7 +43,8 @@ namespace egret.web {
         ACT_BUFFER,
         ENABLE_SCISSOR,
         DISABLE_SCISSOR,
-        SMOOTHING
+        SMOOTHING,
+        CHANGE_PROGRAM
     }
 
     /**
@@ -86,6 +87,8 @@ namespace egret.web {
          */
         public pushDrawTexture(texture: any, count: number = 2, filter?: any, textureWidth?: number, textureHeight?: number): void {
             if (filter) {
+                //根据filter压入切换program
+                this.pushChangeProgram(filter.type,filter);
                 // 目前有滤镜的情况下不会合并绘制
                 let data = this.drawData[this.drawDataLen] || {};
                 data.type = DRAWABLE_TYPE.TEXTURE;
@@ -99,6 +102,7 @@ namespace egret.web {
                 this.lastDrawTextureData = null;
             } else {
                 if (this.lastDrawTextureData == null || texture != this.lastDrawTextureData.texture) {
+                    this.pushChangeProgram("texture");
                     let data = this.drawData[this.drawDataLen] || {};
                     data.type = DRAWABLE_TYPE.TEXTURE;
                     data.texture = texture;
@@ -298,10 +302,50 @@ namespace egret.web {
                 data.buffer = null;
                 data.width = 0;
                 data.height = 0;
+                data.vertSource = null;
+                data.fragSource = null;
+                data.key = null;
             }
             this.drawDataLen = 0;
             this.lastDrawTextureData = null;
         }
 
+
+        /**
+         * 压入切换shader programe命令
+         */
+        public pushChangeProgram(type: string, filter?: any): void {
+            let key: string;
+            let vertSource: string = EgretShaderLib.default_vert;
+            let fragSource: string = EgretShaderLib.blur_frag;
+            if (type === "texture") {
+                key = "texture";
+                fragSource = EgretShaderLib.texture_frag;
+            } else if (type === "custom") {
+                key = filter.$shaderKey;
+                vertSource = filter.$vertexSrc;
+                fragSource = filter.$fragmentSrc;
+            } else if (type === "colorTransform") {
+                key = "colorTransform";
+                vertSource = EgretShaderLib.default_vert;
+                fragSource = EgretShaderLib.colorTransform_frag
+            } else if (type === "blurX" || filter.type === "blurY") {
+                key = "blur";
+            } else if (type === "glow") {
+                key = "glow";
+                fragSource = EgretShaderLib.glow_frag;
+            }
+            if (!key) {
+                return;
+            }
+            let data = this.drawData[this.drawDataLen] || {};
+            data.type = DRAWABLE_TYPE.CHANGE_PROGRAM;
+            data.key = key;
+            data.vertSource = vertSource;
+            data.fragSource = fragSource;
+            this.drawData[this.drawDataLen] = data;
+            this.drawDataLen++;
+            this.lastDrawTextureData = null;
+        }
     }
 }
