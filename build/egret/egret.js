@@ -12700,15 +12700,24 @@ var egret;
              * @private
              * 绘制根节点显示对象到目标画布，返回draw的次数。
              */
-            DisplayList.prototype.drawToSurface = function () {
+            DisplayList.prototype.drawToSurface = function (activeCall) {
+                if (activeCall === void 0) { activeCall = true; }
                 var drawCalls = 0;
-                this.$canvasScaleX = this.offsetMatrix.a = DisplayList.$canvasScaleX;
-                this.$canvasScaleY = this.offsetMatrix.d = DisplayList.$canvasScaleY;
+                //for 3D&2D
+                //主动调用时需要清理，通过stage被动调用不需要
+                if (activeCall) {
+                    this.$canvasScaleX = this.offsetMatrix.a = DisplayList.$canvasScaleX;
+                    this.$canvasScaleY = this.offsetMatrix.d = DisplayList.$canvasScaleY;
+                }
                 if (!this.isStage) {
                     this.changeSurfaceSize();
                 }
                 var buffer = this.renderBuffer;
-                buffer.clear();
+                //for 3D&2D
+                //主动调用时需要清理，通过stage被动调用不需要
+                if (activeCall) {
+                    buffer.clear();
+                }
                 drawCalls = sys.systemRenderer.render(this.root, buffer, this.offsetMatrix);
                 if (!this.isStage) {
                     var surface = buffer.surface;
@@ -14255,7 +14264,9 @@ var egret;
                     this.touchDownTarget[touchPointID] = target;
                     this.useTouchesCount++;
                 }
-                return egret.TouchEvent.dispatchTouchEvent(target, egret.TouchEvent.TOUCH_BEGIN, true, true, x, y, touchPointID, true);
+                egret.TouchEvent.dispatchTouchEvent(target, egret.TouchEvent.TOUCH_BEGIN, true, true, x, y, touchPointID, true);
+                //for 3D&2D
+                return target != this.stage;
             };
             /**
              * @private
@@ -14274,7 +14285,9 @@ var egret;
                 this.lastTouchX = x;
                 this.lastTouchY = y;
                 var target = this.findTarget(x, y);
-                return egret.TouchEvent.dispatchTouchEvent(target, egret.TouchEvent.TOUCH_MOVE, true, true, x, y, touchPointID, true);
+                egret.TouchEvent.dispatchTouchEvent(target, egret.TouchEvent.TOUCH_MOVE, true, true, x, y, touchPointID, true);
+                //for 3D&2D
+                return target != this.stage;
             };
             /**
              * @private
@@ -14291,16 +14304,15 @@ var egret;
                 var oldTarget = this.touchDownTarget[touchPointID];
                 delete this.touchDownTarget[touchPointID];
                 this.useTouchesCount--;
-                var touchend = egret.TouchEvent.dispatchTouchEvent(target, egret.TouchEvent.TOUCH_END, true, true, x, y, touchPointID, false);
-                var touchTap;
-                var touchReleaseOutside;
+                egret.TouchEvent.dispatchTouchEvent(target, egret.TouchEvent.TOUCH_END, true, true, x, y, touchPointID, false);
                 if (oldTarget == target) {
                     egret.TouchEvent.dispatchTouchEvent(target, egret.TouchEvent.TOUCH_TAP, true, true, x, y, touchPointID, false);
                 }
                 else {
                     egret.TouchEvent.dispatchTouchEvent(oldTarget, egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, true, true, x, y, touchPointID, false);
                 }
-                return touchend && (touchTap || touchReleaseOutside);
+                //for 3D&2D
+                return target != this.stage;
             };
             /**
              * @private
@@ -23293,7 +23305,13 @@ var egret;
                     return;
                 }
                 this.$maxTouches = value;
-                this.$screen.updateMaxTouches();
+                //for 3D&2D
+                if (this.$screen) {
+                    this.$screen.updateMaxTouches();
+                }
+                else {
+                    this.$touch.$initMaxTouches();
+                }
             },
             enumerable: true,
             configurable: true
@@ -23317,7 +23335,7 @@ var egret;
         Stage.prototype.setContentSize = function (width, height) {
             this.$screen.setContentSize(width, height);
         };
-        //3D&2D
+        //for 3D&2D
         /**
          * @private
          */
@@ -23335,6 +23353,11 @@ var egret;
          */
         Stage.prototype.$onTouchMove = function (x, y, touchPointID) {
             return this.$touch.onTouchMove(x, y, touchPointID);
+        };
+        Stage.prototype.drawToSurface = function () {
+            if (this.$displayList) {
+                this.$displayList.drawToSurface(false); //传入false即可规避buffer.clear 和DisplayList.$canvasScale修改
+            }
         };
         return Stage;
     }(egret.DisplayObjectContainer));

@@ -4861,6 +4861,7 @@ var egret;
 (function (egret) {
     var web;
     (function (web) {
+        //for 3D&2D
         /**
          * @private
          * 绘制指令管理器
@@ -4878,9 +4879,9 @@ var egret;
              * 压入绘制矩形指令
              */
             WebGLDrawCmdManager.prototype.pushDrawRect = function () {
-                if (this.drawDataLen == 0 || this.drawData[this.drawDataLen - 1].type != 1 /* RECT */) {
+                if (this.drawDataLen == 0 || this.drawData[this.drawDataLen - 1].type != 10 /* RECT */) {
                     var data = this.drawData[this.drawDataLen] || {};
-                    data.type = 1 /* RECT */;
+                    data.type = 10 /* RECT */;
                     data.count = 0;
                     this.drawData[this.drawDataLen] = data;
                     this.drawDataLen++;
@@ -4925,7 +4926,7 @@ var egret;
             WebGLDrawCmdManager.prototype.pushChangeSmoothing = function (texture, smoothing) {
                 texture["smoothing"] = smoothing;
                 var data = this.drawData[this.drawDataLen] || {};
-                data.type = 10 /* SMOOTHING */;
+                data.type = 9 /* SMOOTHING */;
                 data.texture = texture;
                 data.smoothing = smoothing;
                 this.drawData[this.drawDataLen] = data;
@@ -4938,7 +4939,7 @@ var egret;
             WebGLDrawCmdManager.prototype.pushPushMask = function (count) {
                 if (count === void 0) { count = 1; }
                 var data = this.drawData[this.drawDataLen] || {};
-                data.type = 2 /* PUSH_MASK */;
+                data.type = 1 /* PUSH_MASK */;
                 data.count = count * 2;
                 this.drawData[this.drawDataLen] = data;
                 this.drawDataLen++;
@@ -4950,7 +4951,7 @@ var egret;
             WebGLDrawCmdManager.prototype.pushPopMask = function (count) {
                 if (count === void 0) { count = 1; }
                 var data = this.drawData[this.drawDataLen] || {};
-                data.type = 3 /* POP_MASK */;
+                data.type = 2 /* POP_MASK */;
                 data.count = count * 2;
                 this.drawData[this.drawDataLen] = data;
                 this.drawDataLen++;
@@ -4966,16 +4967,16 @@ var egret;
                 for (var i = len - 1; i >= 0; i--) {
                     var data = this.drawData[i];
                     if (data) {
-                        if (data.type == 0 /* TEXTURE */ || data.type == 1 /* RECT */) {
+                        if (data.type == 0 /* TEXTURE */ || data.type == 10 /* RECT */) {
                             drawState = true;
                         }
                         // 如果与上一次blend操作之间无有效绘图，上一次操作无效
-                        if (!drawState && data.type == 4 /* BLEND */) {
+                        if (!drawState && data.type == 3 /* BLEND */) {
                             delete this.drawData[i];
                             continue;
                         }
                         // 如果与上一次blend操作重复，本次操作无效
-                        if (data.type == 4 /* BLEND */) {
+                        if (data.type == 3 /* BLEND */) {
                             if (data.value == value) {
                                 return;
                             }
@@ -4986,7 +4987,7 @@ var egret;
                     }
                 }
                 var _data = this.drawData[this.drawDataLen] || {};
-                _data.type = 4 /* BLEND */;
+                _data.type = 3 /* BLEND */;
                 _data.value = value;
                 this.drawData[this.drawDataLen] = _data;
                 this.drawDataLen++;
@@ -4997,7 +4998,7 @@ var egret;
              */
             WebGLDrawCmdManager.prototype.pushResize = function (buffer, width, height) {
                 var data = this.drawData[this.drawDataLen] || {};
-                data.type = 5 /* RESIZE_TARGET */;
+                data.type = 4 /* RESIZE_TARGET */;
                 data.buffer = buffer;
                 data.width = width;
                 data.height = height;
@@ -5010,7 +5011,7 @@ var egret;
              */
             WebGLDrawCmdManager.prototype.pushClearColor = function () {
                 var data = this.drawData[this.drawDataLen] || {};
-                data.type = 6 /* CLEAR_COLOR */;
+                data.type = 5 /* CLEAR_COLOR */;
                 this.drawData[this.drawDataLen] = data;
                 this.drawDataLen++;
                 this.lastDrawTextureData = null;
@@ -5025,11 +5026,11 @@ var egret;
                 for (var i = len - 1; i >= 0; i--) {
                     var data = this.drawData[i];
                     if (data) {
-                        if (data.type != 4 /* BLEND */ && data.type != 7 /* ACT_BUFFER */) {
+                        if (data.type != 3 /* BLEND */ && data.type != 6 /* ACT_BUFFER */) {
                             drawState = true;
                         }
                         // 如果与上一次buffer操作之间无有效绘图，上一次操作无效
-                        if (!drawState && data.type == 7 /* ACT_BUFFER */) {
+                        if (!drawState && data.type == 6 /* ACT_BUFFER */) {
                             delete this.drawData[i];
                             continue;
                         }
@@ -5044,7 +5045,7 @@ var egret;
                     }
                 }
                 var _data = this.drawData[this.drawDataLen] || {};
-                _data.type = 7 /* ACT_BUFFER */;
+                _data.type = 6 /* ACT_BUFFER */;
                 _data.buffer = buffer;
                 _data.width = buffer.rootRenderTarget.width;
                 _data.height = buffer.rootRenderTarget.height;
@@ -5057,7 +5058,7 @@ var egret;
              */
             WebGLDrawCmdManager.prototype.pushEnableScissor = function (x, y, width, height) {
                 var data = this.drawData[this.drawDataLen] || {};
-                data.type = 8 /* ENABLE_SCISSOR */;
+                data.type = 7 /* ENABLE_SCISSOR */;
                 data.x = x;
                 data.y = y;
                 data.width = width;
@@ -5071,7 +5072,7 @@ var egret;
              */
             WebGLDrawCmdManager.prototype.pushDisableScissor = function () {
                 var data = this.drawData[this.drawDataLen] || {};
-                data.type = 9 /* DISABLE_SCISSOR */;
+                data.type = 8 /* DISABLE_SCISSOR */;
                 this.drawData[this.drawDataLen] = data;
                 this.drawDataLen++;
                 this.lastDrawTextureData = null;
@@ -6346,6 +6347,9 @@ var egret;
                 buffer.$hasScissor = false;
             };
             WebGLRenderContext.prototype.$drawWebGL = function () {
+                //for 3D&2D
+                // (this as any).drawFunc();
+                //for only2D
                 if (this.drawCmdManager.drawDataLen == 0 || this.contextLost) {
                     return;
                 }
@@ -6358,12 +6362,15 @@ var egret;
                 var offset = 0;
                 for (var i = 0; i < length; i++) {
                     var data = this.drawCmdManager.drawData[i];
+                    if (!data) {
+                        continue;
+                    }
                     offset = this.drawData(data, offset);
                     // 计算draw call
-                    if (data.type == 7 /* ACT_BUFFER */) {
+                    if (data.type == 6 /* ACT_BUFFER */) {
                         this.activatedBuffer = data.buffer;
                     }
-                    if (data.type != 0 /* TEXTURE */ && data.type != 1 /* RECT */ && data.type != 2 /* PUSH_MASK */ && data.type != 3 /* POP_MASK */) {
+                    if (data.type != 0 /* TEXTURE */ && data.type != 10 /* RECT */ && data.type != 1 /* PUSH_MASK */ && data.type != 2 /* POP_MASK */) {
                         continue;
                     }
                     if (this.activatedBuffer && this.activatedBuffer.$computeDrawCall) {
@@ -6418,32 +6425,32 @@ var egret;
                         // this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
                         offset += this.drawTextureElements(data, offset);
                         break;
-                    case 1 /* RECT */:
+                    case 10 /* RECT */:
                         program = web.EgretWebGLProgram.getProgram(gl, web.EgretShaderLib.default_vert, web.EgretShaderLib.primitive_frag, "primitive");
                         this.activeProgram(gl, program);
                         this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
                         offset += this.drawRectElements(data, offset);
                         break;
-                    case 2 /* PUSH_MASK */:
+                    case 1 /* PUSH_MASK */:
                         program = web.EgretWebGLProgram.getProgram(gl, web.EgretShaderLib.default_vert, web.EgretShaderLib.primitive_frag, "primitive");
                         this.activeProgram(gl, program);
                         this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
                         offset += this.drawPushMaskElements(data, offset);
                         break;
-                    case 3 /* POP_MASK */:
+                    case 2 /* POP_MASK */:
                         program = web.EgretWebGLProgram.getProgram(gl, web.EgretShaderLib.default_vert, web.EgretShaderLib.primitive_frag, "primitive");
                         this.activeProgram(gl, program);
                         this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
                         offset += this.drawPopMaskElements(data, offset);
                         break;
-                    case 4 /* BLEND */:
+                    case 3 /* BLEND */:
                         this.setBlendMode(data.value);
                         break;
-                    case 5 /* RESIZE_TARGET */:
+                    case 4 /* RESIZE_TARGET */:
                         data.buffer.rootRenderTarget.resize(data.width, data.height);
                         this.onResize(data.width, data.height);
                         break;
-                    case 6 /* CLEAR_COLOR */:
+                    case 5 /* CLEAR_COLOR */:
                         if (this.activatedBuffer) {
                             var target = this.activatedBuffer.rootRenderTarget;
                             if (target.width != 0 || target.height != 0) {
@@ -6451,10 +6458,10 @@ var egret;
                             }
                         }
                         break;
-                    case 7 /* ACT_BUFFER */:
+                    case 6 /* ACT_BUFFER */:
                         this.activateBuffer(data.buffer);
                         break;
-                    case 8 /* ENABLE_SCISSOR */:
+                    case 7 /* ENABLE_SCISSOR */:
                         var buffer = this.activatedBuffer;
                         if (buffer) {
                             if (buffer.rootRenderTarget) {
@@ -6463,13 +6470,13 @@ var egret;
                             buffer.enableScissor(data.x, data.y, data.width, data.height);
                         }
                         break;
-                    case 9 /* DISABLE_SCISSOR */:
+                    case 8 /* DISABLE_SCISSOR */:
                         buffer = this.activatedBuffer;
                         if (buffer) {
                             buffer.disableScissor();
                         }
                         break;
-                    case 10 /* SMOOTHING */:
+                    case 9 /* SMOOTHING */:
                         gl.bindTexture(gl.TEXTURE_2D, data.texture);
                         if (data.smoothing) {
                             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
@@ -6883,7 +6890,8 @@ var egret;
              * @param height 改变后的高
              * @param useMaxSize 若传入true，则将改变后的尺寸与已有尺寸对比，保留较大的尺寸。
              */
-            WebGLRenderBuffer.prototype.resize = function (width, height, useMaxSize) {
+            WebGLRenderBuffer.prototype.resize = function (width, height, useMaxSize, activeCall) {
+                if (activeCall === void 0) { activeCall = true; }
                 width = width || 1;
                 height = height || 1;
                 if (egret.nativeRender) {
@@ -6898,8 +6906,10 @@ var egret;
                     this.rootRenderTarget.width = width;
                     this.rootRenderTarget.height = height;
                 }
+                //for 3D&2D
+                //3D不需要主动resize,而是由3D部分进行修改
                 // 如果是舞台的渲染缓冲，执行resize，否则surface大小不随之改变
-                if (this.root) {
+                if (this.root && activeCall) {
                     this.context.resize(width, height, useMaxSize);
                 }
                 this.context.clear();

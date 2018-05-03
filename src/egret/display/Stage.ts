@@ -298,7 +298,13 @@ namespace egret {
                 return;
             }
             this.$maxTouches = value;
-            this.$screen.updateMaxTouches();
+
+            //for 3D&2D
+            if (this.$screen) {
+                this.$screen.updateMaxTouches();
+            } else {
+                this.$touch.$initMaxTouches();
+            }
         }
 
         /**
@@ -322,7 +328,7 @@ namespace egret {
         }
 
 
-        //3D&2D
+        //for 3D&2D
         /**
          * @private
          */
@@ -341,7 +347,13 @@ namespace egret {
         $onTouchMove(x: number, y: number, touchPointID: number): boolean {
             return this.$touch.onTouchMove(x, y, touchPointID);
         }
-        
+
+        drawToSurface() {
+            if (this.$displayList) {
+                this.$displayList.drawToSurface(false);//传入false即可规避buffer.clear 和DisplayList.$canvasScale修改
+            }
+        }
+
     }
 
     if (DEBUG) {

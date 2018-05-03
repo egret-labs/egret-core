@@ -66,7 +66,7 @@ namespace egret.web {
             this.context = WebGLRenderContext.getInstance(width, height);
 
             if (egret.nativeRender) {
-                if(root) {
+                if (root) {
                     this.surface = this.context.surface;
                 }
                 else {
@@ -197,7 +197,7 @@ namespace egret.web {
          * @param height 改变后的高
          * @param useMaxSize 若传入true，则将改变后的尺寸与已有尺寸对比，保留较大的尺寸。
          */
-        public resize(width: number, height: number, useMaxSize?: boolean): void {
+        public resize(width: number, height: number, useMaxSize?: boolean, activeCall = true): void {
             width = width || 1;
             height = height || 1;
             if (egret.nativeRender) {
@@ -213,9 +213,10 @@ namespace egret.web {
                 this.rootRenderTarget.width = width;
                 this.rootRenderTarget.height = height;
             }
-
+            //for 3D&2D
+            //3D不需要主动resize,而是由3D部分进行修改
             // 如果是舞台的渲染缓冲，执行resize，否则surface大小不随之改变
-            if (this.root) {
+            if (this.root && activeCall) {
                 this.context.resize(width, height, useMaxSize);
             }
 

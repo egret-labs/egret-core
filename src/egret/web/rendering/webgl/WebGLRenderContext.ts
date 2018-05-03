@@ -946,6 +946,11 @@ namespace egret.web {
          */
         public activatedBuffer: WebGLRenderBuffer;
         public $drawWebGL() {
+
+            //for 3D&2D
+            // (this as any).drawFunc();
+
+            //for only2D
             if (this.drawCmdManager.drawDataLen == 0 || this.contextLost) {
                 return;
             }
@@ -961,6 +966,9 @@ namespace egret.web {
             let offset = 0;
             for (let i = 0; i < length; i++) {
                 let data = this.drawCmdManager.drawData[i];
+                if (!data) {
+                    continue;
+                }
                 offset = this.drawData(data, offset);
                 // 计算draw call
                 if (data.type == DRAWABLE_TYPE.ACT_BUFFER) {

@@ -120,15 +120,24 @@ namespace egret.sys {
          * @private
          * 绘制根节点显示对象到目标画布，返回draw的次数。
          */
-        public drawToSurface(): number {
+        public drawToSurface(activeCall = true): number {
             let drawCalls = 0;
-            this.$canvasScaleX = this.offsetMatrix.a = DisplayList.$canvasScaleX;
-            this.$canvasScaleY = this.offsetMatrix.d = DisplayList.$canvasScaleY;
+            //for 3D&2D
+            //主动调用时需要清理，通过stage被动调用不需要
+            if (activeCall) {
+                this.$canvasScaleX = this.offsetMatrix.a = DisplayList.$canvasScaleX;
+                this.$canvasScaleY = this.offsetMatrix.d = DisplayList.$canvasScaleY;
+            }
             if (!this.isStage) {//对非舞台画布要根据目标显示对象尺寸改变而改变。
                 this.changeSurfaceSize();
             }
             let buffer = this.renderBuffer;
-            buffer.clear();
+            //for 3D&2D
+            //主动调用时需要清理，通过stage被动调用不需要
+            if (activeCall) {
+                buffer.clear();
+            }
+
             drawCalls = systemRenderer.render(this.root, buffer, this.offsetMatrix);
 
             if (!this.isStage) {//对非舞台画布要保存渲染节点。

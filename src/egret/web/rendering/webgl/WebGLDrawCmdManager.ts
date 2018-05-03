@@ -33,19 +33,20 @@ namespace egret.web {
      * $renderWebGL方法依据drawable对象的类型，调用不同的绘制方法
      */
     export const enum DRAWABLE_TYPE {
-        TEXTURE,
-        RECT,
-        PUSH_MASK,
-        POP_MASK,
-        BLEND,
-        RESIZE_TARGET,
-        CLEAR_COLOR,
-        ACT_BUFFER,
-        ENABLE_SCISSOR,
-        DISABLE_SCISSOR,
-        SMOOTHING,
-        CHANGE_PROGRAM
+        TEXTURE = 0,
+        PUSH_MASK = 1,
+        POP_MASK = 2,
+        BLEND = 3,
+        RESIZE_TARGET = 4,
+        CLEAR_COLOR = 5,
+        ACT_BUFFER = 6,
+        ENABLE_SCISSOR = 7,
+        DISABLE_SCISSOR = 8,
+        SMOOTHING = 9,
+        RECT = 10,
+        CHANGE_PROGRAM = 11
     }
+    //for 3D&2D
 
     /**
      * @private
@@ -88,7 +89,7 @@ namespace egret.web {
         public pushDrawTexture(texture: any, count: number = 2, filter?: any, textureWidth?: number, textureHeight?: number): void {
             if (filter) {
                 //根据filter压入切换program
-                this.pushChangeProgram(filter.type,filter);
+                this.pushChangeProgram(filter.type, filter);
                 // 目前有滤镜的情况下不会合并绘制
                 let data = this.drawData[this.drawDataLen] || {};
                 data.type = DRAWABLE_TYPE.TEXTURE;

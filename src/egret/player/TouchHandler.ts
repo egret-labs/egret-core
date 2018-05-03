@@ -83,7 +83,9 @@ namespace egret.sys {
                 this.touchDownTarget[touchPointID] = target;
                 this.useTouchesCount++;
             }
-            return TouchEvent.dispatchTouchEvent(target, TouchEvent.TOUCH_BEGIN, true, true, x, y, touchPointID, true);
+            egret.TouchEvent.dispatchTouchEvent(target, TouchEvent.TOUCH_BEGIN, true, true, x, y, touchPointID, true);
+            //for 3D&2D
+            return target != this.stage;
         }
 
         /**
@@ -115,7 +117,9 @@ namespace egret.sys {
             this.lastTouchY = y;
 
             let target = this.findTarget(x, y);
-            return TouchEvent.dispatchTouchEvent(target, TouchEvent.TOUCH_MOVE, true, true, x, y, touchPointID, true);
+            egret.TouchEvent.dispatchTouchEvent(target, TouchEvent.TOUCH_MOVE, true, true, x, y, touchPointID, true);
+            //for 3D&2D
+            return target != this.stage;
         }
 
         /**
@@ -135,16 +139,15 @@ namespace egret.sys {
             delete this.touchDownTarget[touchPointID];
             this.useTouchesCount--;
 
-            let touchend = TouchEvent.dispatchTouchEvent(target, TouchEvent.TOUCH_END, true, true, x, y, touchPointID, false);
-            let touchTap: boolean;
-            let touchReleaseOutside: boolean;
+            egret.TouchEvent.dispatchTouchEvent(target, TouchEvent.TOUCH_END, true, true, x, y, touchPointID, false);
             if (oldTarget == target) {
-                TouchEvent.dispatchTouchEvent(target, TouchEvent.TOUCH_TAP, true, true, x, y, touchPointID, false);
+                egret.TouchEvent.dispatchTouchEvent(target, TouchEvent.TOUCH_TAP, true, true, x, y, touchPointID, false);
             }
             else {
-                TouchEvent.dispatchTouchEvent(oldTarget, TouchEvent.TOUCH_RELEASE_OUTSIDE, true, true, x, y, touchPointID, false);
+                egret.TouchEvent.dispatchTouchEvent(oldTarget, TouchEvent.TOUCH_RELEASE_OUTSIDE, true, true, x, y, touchPointID, false);
             }
-            return touchend && (touchTap || touchReleaseOutside);
+            //for 3D&2D
+            return target != this.stage;
         }
 
         /**
