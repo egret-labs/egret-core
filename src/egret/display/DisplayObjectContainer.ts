@@ -679,6 +679,9 @@ namespace egret {
             for (let i = 0; i < length; i++) {
                 let child: DisplayObject = this.$children[i];
                 child.$onAddToStage(stage, nestLevel);
+                if (child.$maskedObject) {
+                    child.$maskedObject.$updateRenderMode();
+                }
             }
         }
 
