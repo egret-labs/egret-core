@@ -147,7 +147,6 @@ module egret {
     locale_strings[1717] = "升级中断，具体原因如下";
     locale_strings[1718] = "5.0.8以后版本将删除 template/debug/index.html 模板文件，直接使用 index.html";
     locale_strings[1719] = "5.1为新功能体验版，只能创建新项目，老项目无法升级";
-    locale_strings[1720] = "【警告】: 该版本优化了 eui commonjs 发布模式文件体积，请新建eui项目比对ThemeAdapter.ts中变化内容，并将相应内容同步到项目中";
     //info
     locale_strings[1801] = "当前Egret版本：{0}";
     locale_strings[1802] = "Egret安装路径：{0}";

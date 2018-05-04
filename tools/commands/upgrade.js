@@ -67,7 +67,7 @@ var UpgradeCommand = /** @class */ (function () {
                         upgradeConfigArr = [
                             { "v": "5.1.1", command: Upgrade_5_1_1 },
                             { "v": "5.1.2", command: Upgrade_5_1_2 },
-                            { "v": "5.1.11", command: Upgrade_5_1_11 }
+                            { "v": "5.1.11" }
                         ];
                         _a.label = 1;
                     case 1:
@@ -170,18 +170,5 @@ var Upgrade_5_1_2 = /** @class */ (function () {
         });
     };
     return Upgrade_5_1_2;
-}());
-var Upgrade_5_1_11 = /** @class */ (function () {
-    function Upgrade_5_1_11() {
-    }
-    Upgrade_5_1_11.prototype.execute = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                console.log(utils.tr(1720));
-                return [2 /*return*/, 0];
-            });
-        });
-    };
-    return Upgrade_5_1_11;
 }());
 module.exports = UpgradeCommand;
