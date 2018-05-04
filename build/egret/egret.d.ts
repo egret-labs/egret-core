@@ -11914,6 +11914,10 @@ declare namespace egret.sys {
          * @private
          */
         inputType = 37,
+        /**
+         * @private
+         */
+        textLinesChangedForNativeRender = 38,
     }
 }
 declare namespace egret {
@@ -12665,12 +12669,13 @@ declare namespace egret {
          * @private
          */
         private linesArr;
+        $getLinesArr(): Array<egret.ILineElement>;
         /**
          * @private
          *
          * @returns
          */
-        $getLinesArr(): Array<egret.ILineElement>;
+        $getLinesArr2(): Array<egret.ILineElement>;
         /**
          * @private
          */
