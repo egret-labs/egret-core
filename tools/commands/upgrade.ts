@@ -56,6 +56,9 @@ class UpgradeCommand implements egret.Command {
             globals.log(1702);
             service.client.closeServer(Project.projectData.getProjectRoot())
             await new Clean().execute();
+            let source = path.join(egret.root, "tools/templates/empty/scripts/api.d.ts");
+            let target = path.join(egret.args.projectDir, "scripts/api.d.ts");
+            file.copy(source, target);
             globals.exit(0);
         }
         catch (e) {

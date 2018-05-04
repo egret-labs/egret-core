@@ -33,8 +33,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var file = require("../lib/FileUtil");
 var service = require("../service/index");
 var Project = require("../project");
+var path = require("path");
 var utils = require("../lib/utils");
 var Clean = require("./clean");
 var UpgradeCommand = /** @class */ (function () {
@@ -56,7 +58,7 @@ var UpgradeCommand = /** @class */ (function () {
     };
     UpgradeCommand.prototype.run = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var version, upgradeConfigArr, e_1;
+            var version, upgradeConfigArr, source, target, e_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -81,6 +83,9 @@ var UpgradeCommand = /** @class */ (function () {
                         return [4 /*yield*/, new Clean().execute()];
                     case 3:
                         _a.sent();
+                        source = path.join(egret.root, "tools/templates/empty/scripts/api.d.ts");
+                        target = path.join(egret.args.projectDir, "scripts/api.d.ts");
+                        file.copy(source, target);
                         globals.exit(0);
                         return [3 /*break*/, 5];
                     case 4:

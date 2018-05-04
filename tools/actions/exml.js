@@ -64,13 +64,13 @@ function publishEXML(exmls, exmlPublishPolicy) {
                 var result = parser.parse(e.contents);
                 exmlEl = { path: e.filename, gjs: result.code, className: result.className };
                 break;
-            case "commonjsLegacy":
+            case "commonjs":
                 var parser1 = new exmlParser.EXMLParser();
                 var result1 = parser1.parse(e.contents);
                 exmlEl = { path: e.filename, gjs: result1.code, className: result1.className };
                 break;
             //todo
-            case "commonjs":
+            case "commonjs2":
                 var parser2 = new jsonParser.JSONParser();
                 var result2 = parser2.parse(e.contents);
                 exmlEl = { path: e.filename, gjs: result2.code, json: result2.json, className: result2.className };
@@ -96,9 +96,9 @@ function publishEXML(exmls, exmlPublishPolicy) {
     });
     var files = themeDatas.map(function (thmData) {
         var path = thmData.path;
-        if (exmlPublishPolicy == "commonjsLegacy") {
+        if (exmlPublishPolicy == "commonjs") {
             var content = "\nfunction __extends(d, b) {\n    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];\n        function __() {\n            this.constructor = d;\n        }\n    __.prototype = b.prototype;\n    d.prototype = new __();\n};\n";
-            content += "window.generateEUILegacy = {};\n            generateEUILegacy.paths = {};\n            generateEUILegacy.styles = " + JSON.stringify(thmData.styles) + ";\n            generateEUILegacy.skins = " + JSON.stringify(thmData.skins) + "\n";
+            content += "window.generateEUI = {};\n            generateEUI.paths = {};\n            generateEUI.styles = " + JSON.stringify(thmData.styles) + ";\n            generateEUI.skins = " + JSON.stringify(thmData.skins) + "\n";
             var namespaces = [];
             for (var _i = 0, _a = thmData.exmls; _i < _a.length; _i++) {
                 var item = _a[_i];
@@ -113,17 +113,17 @@ function publishEXML(exmls, exmlPublishPolicy) {
                         namespaces.push(temp);
                     }
                 }
-                content += "generateEUILegacy.paths['" + item.path + "'] = window." + item.className + " = " + item.gjs;
+                content += "generateEUI.paths['" + item.path + "'] = window." + item.className + " = " + item.gjs;
             }
             var result = namespaces.map(function (v) { return "window." + v + "={};"; }).join("\n");
             content = result + content;
             path = path.replace("thm.json", "thm.js");
             return { path: path, content: content };
         }
-        else if (exmlPublishPolicy == "commonjs") {
+        else if (exmlPublishPolicy == "commonjs2") {
             var jsonParserStr = file.read(Path.join(egret.root, "tools/lib/eui/JsonParserFactory.js"));
             var content = jsonParserStr + "\n            function __extends(d, b) {\n                for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];\n                    function __() {\n                        this.constructor = d;\n                    }\n                __.prototype = b.prototype;\n                d.prototype = new __();\n            };\n            ";
-            content += "window.generateEUI = {};\n            generateEUI.paths = {};\n            generateEUI.styles = " + JSON.stringify(thmData.styles) + ";\n            generateEUI.skins = " + JSON.stringify(thmData.skins) + "\n            ";
+            content += "window.generateEUI2 = {};\n            generateEUI2.paths = {};\n            generateEUI2.styles = " + JSON.stringify(thmData.styles) + ";\n            generateEUI2.skins = " + JSON.stringify(thmData.skins) + "\n            ";
             var namespaces = [];
             for (var _b = 0, _c = thmData.exmls; _b < _c.length; _b++) {
                 var item = _c[_b];
@@ -138,7 +138,7 @@ function publishEXML(exmls, exmlPublishPolicy) {
                         namespaces.push(temp);
                     }
                 }
-                content += "generateEUI.paths['" + item.path + "'] = window." + item.className + " = " + item.gjs;
+                content += "generateEUI2.paths['" + item.path + "'] = window." + item.className + " = " + item.gjs;
             }
             var result = namespaces.map(function (v) { return "window." + v + "={};"; }).join("\n");
             content = result + content;
