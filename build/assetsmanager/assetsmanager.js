@@ -1012,7 +1012,6 @@ var RES;
                                         texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
                                     }
                                 }
-                                // todo refactor
                                 host.save(r, texture);
                                 return [2 /*return*/, spriteSheet];
                         }
@@ -1032,6 +1031,7 @@ var RES;
             onRemoveStart: function (host, resource) {
                 var sheet = host.get(resource);
                 var r = sheet["$resourceInfo"];
+                sheet.dispose();
                 host.unload(r);
                 return Promise.resolve();
             }
