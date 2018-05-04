@@ -463,7 +463,7 @@ function shell(path, args, opt, verbase) {
 }
 exports.shell = shell;
 ;
-var CliException = (function (_super) {
+var CliException = /** @class */ (function (_super) {
     __extends(CliException, _super);
     function CliException(errorId, param) {
         var _this = _super.call(this) || this;

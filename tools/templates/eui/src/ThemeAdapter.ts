@@ -49,10 +49,19 @@ class ThemeAdapter implements eui.IThemeAdapter {
             }
         }
 
-        if (typeof generateEUI !== 'undefined') {
+        if (typeof generateEUILegacy !== 'undefined') {
             egret.callLater(() => {
-                onSuccess.call(thisObject, generateEUI);
+                onSuccess.call(thisObject, generateEUILegacy);
             }, this);
+        }
+        else if (typeof generateEUI !== 'undefined') {
+            RES.getResByUrl("resource/gameEui.bin", (data, url) => {
+                window["JSONParseClass"]["setData"](data);
+                onResGet(data);
+                egret.callLater(() => {
+                    onSuccess.call(thisObject, generateEUI);
+                }, this);
+            }, this, RES.ResourceItem.TYPE_BIN);
         }
         else {
             RES.addEventListener(RES.ResourceEvent.ITEM_LOAD_ERROR, onResError, null);
@@ -62,3 +71,4 @@ class ThemeAdapter implements eui.IThemeAdapter {
 }
 
 declare var generateEUI: { paths: string[], skins: any }
+declare var generateEUILegacy: { paths: string[], skins: any }

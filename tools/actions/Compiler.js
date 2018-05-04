@@ -24,7 +24,7 @@ var cachedFileExists = function (fileName) {
         ? cachedExistingFiles[fileName]
         : cachedExistingFiles[fileName] = hostFileExists(fileName);
 };
-var Compiler = (function () {
+var Compiler = /** @class */ (function () {
     function Compiler() {
         this.errors = [];
     }

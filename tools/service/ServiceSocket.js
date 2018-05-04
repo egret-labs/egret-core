@@ -9,7 +9,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 var events = require("events");
-var ServiceSocket = (function (_super) {
+var ServiceSocket = /** @class */ (function (_super) {
     __extends(ServiceSocket, _super);
     function ServiceSocket(socket) {
         var _this = _super.call(this) || this;

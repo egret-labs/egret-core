@@ -37,7 +37,7 @@ var service = require("../service/index");
 var Project = require("../project");
 var utils = require("../lib/utils");
 var Clean = require("./clean");
-var UpgradeCommand = (function () {
+var UpgradeCommand = /** @class */ (function () {
     function UpgradeCommand() {
     }
     UpgradeCommand.prototype.execute = function () {
@@ -67,7 +67,7 @@ var UpgradeCommand = (function () {
                         upgradeConfigArr = [
                             { "v": "5.1.1", command: Upgrade_5_1_1 },
                             { "v": "5.1.2", command: Upgrade_5_1_2 },
-                            { "v": "5.1.10" }
+                            { "v": "5.1.11", command: Upgrade_5_1_11 }
                         ];
                         _a.label = 1;
                     case 1:
@@ -146,7 +146,7 @@ function upgrade(info) {
         return Promise.resolve(0);
     }
 }
-var Upgrade_5_1_1 = (function () {
+var Upgrade_5_1_1 = /** @class */ (function () {
     function Upgrade_5_1_1() {
     }
     Upgrade_5_1_1.prototype.execute = function () {
@@ -158,7 +158,7 @@ var Upgrade_5_1_1 = (function () {
     };
     return Upgrade_5_1_1;
 }());
-var Upgrade_5_1_2 = (function () {
+var Upgrade_5_1_2 = /** @class */ (function () {
     function Upgrade_5_1_2() {
     }
     Upgrade_5_1_2.prototype.execute = function () {
@@ -170,5 +170,18 @@ var Upgrade_5_1_2 = (function () {
         });
     };
     return Upgrade_5_1_2;
+}());
+var Upgrade_5_1_11 = /** @class */ (function () {
+    function Upgrade_5_1_11() {
+    }
+    Upgrade_5_1_11.prototype.execute = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                console.log(utils.tr(1720));
+                return [2 /*return*/, 0];
+            });
+        });
+    };
+    return Upgrade_5_1_11;
 }());
 module.exports = UpgradeCommand;
