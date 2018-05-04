@@ -11,30 +11,30 @@ var space = ' ';
 var newLine = '\n';
 var indent = '    ';
 /// 常量集合类 分析器 键集类
-var HelpDefParserKey = (function () {
+var HelpDefParserKey = /** @class */ (function () {
     function HelpDefParserKey() {
     }
+    HelpDefParserKey.COMMAND = "command";
+    HelpDefParserKey.DESC = "desc";
+    HelpDefParserKey.PARAMETERS = "parameters";
+    HelpDefParserKey.PLACEHOLDER = "placeholder";
+    HelpDefParserKey.OPTIONAL = "optional";
+    HelpDefParserKey.CONFIGS = "configs";
+    HelpDefParserKey.NAME = "name";
+    HelpDefParserKey.PREFIX = "prefix";
+    HelpDefParserKey.CONFIG_PARAS = "config-paras";
+    HelpDefParserKey.TYPE = "type";
+    HelpDefParserKey.ENUM_LIST = "enum-list";
     return HelpDefParserKey;
 }());
-HelpDefParserKey.COMMAND = "command";
-HelpDefParserKey.DESC = "desc";
-HelpDefParserKey.PARAMETERS = "parameters";
-HelpDefParserKey.PLACEHOLDER = "placeholder";
-HelpDefParserKey.OPTIONAL = "optional";
-HelpDefParserKey.CONFIGS = "configs";
-HelpDefParserKey.NAME = "name";
-HelpDefParserKey.PREFIX = "prefix";
-HelpDefParserKey.CONFIG_PARAS = "config-paras";
-HelpDefParserKey.TYPE = "type";
-HelpDefParserKey.ENUM_LIST = "enum-list";
-var CfgParaType = (function () {
+var CfgParaType = /** @class */ (function () {
     function CfgParaType() {
     }
+    CfgParaType.STRING = "string";
+    CfgParaType.ENUM = "enum";
     return CfgParaType;
 }());
-CfgParaType.STRING = "string";
-CfgParaType.ENUM = "enum";
-var DetailBody = (function () {
+var DetailBody = /** @class */ (function () {
     function DetailBody(word, desc) {
         this.word = word;
         this.desc = desc;

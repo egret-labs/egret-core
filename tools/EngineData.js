@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 Object.defineProperty(exports, "__esModule", { value: true });
 var FileUtil = require("./lib/FileUtil");
-var EngineData = (function () {
+var EngineData = /** @class */ (function () {
     function EngineData() {
     }
     EngineData.prototype.init = function () {

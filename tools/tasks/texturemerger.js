@@ -39,7 +39,7 @@ var utils_1 = require("../lib/utils");
 var index_1 = require("../project/index");
 var os_1 = require("os");
 var FileUtil = require("../lib/FileUtil");
-var TextureMergerPlugin = (function () {
+var TextureMergerPlugin = /** @class */ (function () {
     function TextureMergerPlugin(options) {
         this.options = options;
         this.tmprojects = [];

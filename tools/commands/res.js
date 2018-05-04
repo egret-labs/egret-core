@@ -33,7 +33,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var EgretResourceManager = (function () {
+var EgretResourceManager = /** @class */ (function () {
     function EgretResourceManager() {
     }
     EgretResourceManager.prototype.execute = function () {
