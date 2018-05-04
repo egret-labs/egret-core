@@ -50,7 +50,7 @@ var basicTypes = [TYPE_ARRAY, TYPE_STexture, "boolean", "string", "number"];
 var wingKeys = ["id", "locked", "includeIn", "excludeFrom"];
 var htmlEntities = [["<", "&lt;"], [">", "&gt;"], ["&", "&amp;"], ["\"", "&quot;"], ["'", "&apos;"]];
 var jsKeyWords = ["null", "NaN", "undefined", "true", "false"];
-var EXMLFileSystem = (function () {
+var EXMLFileSystem = /** @class */ (function () {
     function EXMLFileSystem() {
         this.root = {};
         this.fileList = [];
@@ -75,7 +75,7 @@ exports.fileSystem = new EXMLFileSystem();
 /**
  * @private
  */
-var EXMLParser = (function () {
+var EXMLParser = /** @class */ (function () {
     /**
      * @private
      */
@@ -271,7 +271,7 @@ var EXMLParser = (function () {
                         this.skinParts.push(id);
                     }
                     this.createVarForNode(node);
-                    if (this.isStateNode(node))
+                    if (this.isStateNode(node)) //检查节点是否只存在于一个状态里，需要单独实例化
                         this.stateIds.push(id);
                 }
                 else {
@@ -491,7 +491,7 @@ var EXMLParser = (function () {
             if (!value) {
                 continue;
             }
-            if (this.currentClass.getVariableByName(value)) {
+            if (this.currentClass.getVariableByName(value)) { //赋的值对象是一个id
                 var THIS = "this.";
                 var id = attributes.id;
                 var codeLine = THIS + id + " = t;";

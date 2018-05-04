@@ -101,7 +101,7 @@ function legacyPublishHTML5() {
     // EgretProject.manager.copyLibsForPublish(options.releaseDir, "web");
 }
 exports.legacyPublishHTML5 = legacyPublishHTML5;
-var CopyAction = (function () {
+var CopyAction = /** @class */ (function () {
     function CopyAction(from, to) {
         this.from = from;
         this.to = to;

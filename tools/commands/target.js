@@ -37,7 +37,7 @@ var path = require("path");
 var FileUtil = require("../lib/FileUtil");
 var utils_1 = require("../lib/utils");
 var project_1 = require("../project");
-var Target = (function () {
+var Target = /** @class */ (function () {
     function Target() {
     }
     Target.prototype.execute = function () {

@@ -35,7 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var minimatch = require('../lib/resourcemanager').minimatch;
-var ResSplitPlugin = (function () {
+var ResSplitPlugin = /** @class */ (function () {
     function ResSplitPlugin(options) {
         this.options = options;
         this.verboseInfo = [];
