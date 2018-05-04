@@ -41,7 +41,7 @@ var doT = require("../lib/doT");
 var EgretProject = require("../project");
 var Clean = require("../commands/clean");
 var TemplatesRoot = "tools/templates/";
-var Create = (function () {
+var Create = /** @class */ (function () {
     function Create() {
     }
     Create.prototype.execute = function () {

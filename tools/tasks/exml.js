@@ -35,7 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var exml = require("../actions/exml");
-var ExmlPlugin = (function () {
+var ExmlPlugin = /** @class */ (function () {
     function ExmlPlugin(publishPolicy) {
         this.publishPolicy = publishPolicy;
         this.name = 'exml';
@@ -66,7 +66,10 @@ var ExmlPlugin = (function () {
                     pluginContext.createFile('libs/exml.e.d.ts', new Buffer(dtsContents));
                 }
                 result = exml.publishEXML(this.exmls, this.publishPolicy);
-                result.forEach(function (item) {
+                if (result.EuiJson !== undefined) {
+                    pluginContext.createFile("resource/gameEui.bin", new Buffer("" + result.EuiJson));
+                }
+                result.files.forEach(function (item) {
                     var filename = item.path.split("\\").join("/");
                     pluginContext.createFile(filename, new Buffer(item.content));
                 });

@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var path = require("path");
 var FileUtil = require("../lib/FileUtil");
-var CleanPlugin = (function () {
+var CleanPlugin = /** @class */ (function () {
     function CleanPlugin(options) {
         this.options = options;
     }
