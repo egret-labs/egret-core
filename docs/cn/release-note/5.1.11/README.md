@@ -30,3 +30,6 @@
 * 修复 Texture.saveToFile 报错问题
 * 修复 HttpRequest 在真机环境加载失败不派发事件问题
 * 修复安卓真机上加载一张图片后卸载然后第二次加载会导致无法正确派发事件的问题
+
+## Facebook Instant Games SDK
+升级 SDK 到6.2版本
