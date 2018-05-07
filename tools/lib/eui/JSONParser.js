@@ -51,6 +51,39 @@ var basicTypes = [TYPE_ARRAY, TYPE_STexture, "boolean", "string", "number"];
 var wingKeys = ["id", "locked", "includeIn", "excludeFrom"];
 var htmlEntities = [["<", "&lt;"], [">", "&gt;"], ["&", "&amp;"], ["\"", "&quot;"], ["'", "&apos;"]];
 var jsKeyWords = ["null", "NaN", "undefined", "true", "false"];
+/** 常用的关键字进行缩短设置，压缩体积6% */
+var euiShorten = {
+    "eui.BitmapLabel": "$eBL",
+    "eui.Button": "$eB",
+    "eui.CheckBox": "$eCB",
+    "eui.Component": "$eC",
+    "eui.DataGroup": "$eDG",
+    "eui.EditableText": "$eET",
+    "eui.Group": "$eG",
+    "eui.HorizontalLayout": "$eHL",
+    "eui.HScrollBar": "$eHSB",
+    "eui.HSlider": "$eHS",
+    "eui.Image": "$eI",
+    "eui.Label": "$eL",
+    "eui.List": "$eLs",
+    "eui.Panel": "$eP",
+    "eui.ProgressBar": "$ePB",
+    "eui.RadioButton": "$eRB",
+    "eui.RadioButtonGroup": "$eRBG",
+    "eui.Range": "$eRa",
+    "eui.Rect": "$eR",
+    "eui.RowAlign": "$eRAl",
+    "eui.Scroller": "$eS",
+    "eui.TabBar": "$eT",
+    "eui.TextInput": "$eTI",
+    "eui.TileLayout": "$eTL",
+    "eui.ToggleButton": "$eTB",
+    "eui.ToggleSwitch": "$eTS",
+    "eui.VerticalLayout": "$eVL",
+    "eui.ViewStack": "$eV",
+    "eui.VScrollBar": "$eVSB",
+    "eui.VSlider": "$eVS"
+};
 /**
  * @private
  */
@@ -369,7 +402,7 @@ var JSONParser = /** @class */ (function () {
             }
         }
         var name = exports.exmlConfig.getClassNameById(node.localName, node.namespace);
-        config["$t"] = name;
+        config["$t"] = euiShorten[name] == undefined ? name : euiShorten[name];
         JSONClass_1.jsonFactory.addContent(config, this.currentClass.className, func.name);
         // 赋值skin的属性
         this.addConfig(func.name, node, configName, moduleName);
@@ -455,7 +488,7 @@ var JSONParser = /** @class */ (function () {
             jsonProperty[key] = value;
         }
         if (type)
-            jsonProperty["$t"] = type;
+            jsonProperty["$t"] = euiShorten[type] == undefined ? type : euiShorten[type];
         JSONClass_1.jsonFactory.addContent(jsonProperty, this.currentClass.className, configName == undefined ? "$bs" : configName);
     };
     /**
@@ -560,6 +593,7 @@ var JSONParser = /** @class */ (function () {
                         values.push(nodeName);
                 }
                 elementsContentForJson = values;
+                prop = "$eleC";
             }
             else {
                 var values = [];
@@ -600,6 +634,7 @@ var JSONParser = /** @class */ (function () {
                         nodeName = this.addToCodeBlockForNode(firstChild);
                         var childClassName = this.getClassNameOfNode(firstChild);
                         elementsContentForJson = [nodeName];
+                        prop = "$eleC";
                     }
                     else {
                         nodeName = this.addNodeConfig(firstChild);
@@ -902,7 +937,9 @@ var JSONParser = /** @class */ (function () {
         }
         this.initlizeChildNode(this.currentXML, varName);
         var skinConfig = this.skinParts;
-        JSONClass_1.jsonFactory.addContent(skinConfig, this.currentClass.className, "skinParts");
+        if (skinConfig.length > 0) {
+            JSONClass_1.jsonFactory.addContent(skinConfig, this.currentClass.className, "$sP");
+        }
         this.currentXML.attributes.id = "";
         //生成视图状态代码
         this.createStates(this.currentXML);
@@ -962,10 +999,17 @@ var JSONParser = /** @class */ (function () {
             for (var _b = 0, bindings_1 = bindings; _b < bindings_1.length; _b++) {
                 var binding = bindings_1[_b];
                 var config = {};
-                config["$bd"] = binding.templates; //data
-                config["$bt"] = binding.target; //target
-                config["$bc"] = binding.chainIndex; //chainIndex
-                config["$bp"] = binding.property; //property
+                if (binding.templates.length == 1 && binding.chainIndex.length == 1) {
+                    config["$bd"] = binding.templates; //data
+                    config["$bt"] = binding.target; //target
+                    config["$bp"] = binding.property; //property
+                }
+                else {
+                    config["$bd"] = binding.templates; //data
+                    config["$bt"] = binding.target; //target
+                    config["$bc"] = binding.chainIndex; //chainIndex
+                    config["$bp"] = binding.property; //property
+                }
                 bindingConfig.push(config);
             }
             JSONClass_1.jsonFactory.addContent(bindingConfig, this.currentClass.className, "$b");
