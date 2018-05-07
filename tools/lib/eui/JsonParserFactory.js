@@ -4,6 +4,38 @@ var JSONParseClass = /** @class */ (function () {
         this.skinClass = {};
         this.skinNameList = []; //因为是单例，操作的都是一个解析，所以这个保存皮肤
         this.targetList = []; //因为是单例，操作的都是一个解析，所以这个保存对象池
+        this.euiNormalize = {
+            "$eBL": "eui.BitmapLabel",
+            "$eB": "eui.Button",
+            "$eCB": "eui.CheckBox",
+            "$eC": "eui.Component",
+            "$eDG": "eui.DataGroup",
+            "$eET": "eui.EditableText",
+            "$eG": "eui.Group",
+            "$eHL": "eui.HorizontalLayout",
+            "$eHSB": "eui.HScrollBar",
+            "$eHS": "eui.HSlider",
+            "$eI": "eui.Image",
+            "$eL": "eui.Label",
+            "$eLs": "eui.List",
+            "$eP": "eui.Panel",
+            "$ePB": "eui.ProgressBar",
+            "$eRB": "eui.RadioButton",
+            "$eRBG": "eui.RadioButtonGroup",
+            "$eRa": "eui.Range",
+            "$eR": "eui.Rect",
+            "$eRAl": "eui.RowAlign",
+            "$eS": "eui.Scroller",
+            "$eT": "eui.TabBar",
+            "$eTI": "eui.TextInput",
+            "$eTL": "eui.TileLayout",
+            "$eTB": "eui.ToggleButton",
+            "$eTS": "eui.ToggleSwitch",
+            "$eVL": "eui.VerticalLayout",
+            "$eV": "eui.ViewStack",
+            "$eVSB": "eui.VScrollBar",
+            "$eVS": "eui.VSlider"
+        };
     }
     JSONParseClass.prototype.setData = function (data) {
         var readtool = new egret.ByteArray();
@@ -23,10 +55,10 @@ var JSONParseClass = /** @class */ (function () {
         this.creatState();
         this.creatBinding();
         //skinParts 只能最后赋值，在comp中引用问题
-        this.target["skinParts"] = this.skinClass["skinParts"];
+        this.target["skinParts"] = this.skinClass["$sP"];
     };
     JSONParseClass.prototype.creatSkinParts = function () {
-        for (var _i = 0, _a = this.skinClass["skinParts"]; _i < _a.length; _i++) {
+        for (var _i = 0, _a = this.skinClass["$sP"]; _i < _a.length; _i++) {
             var component = _a[_i];
             if (this.target[component] == undefined)
                 this.createElementContentOrViewport(component);
@@ -37,12 +69,13 @@ var JSONParseClass = /** @class */ (function () {
     };
     JSONParseClass.prototype.createElementContentOrViewport = function (component) {
         var temp;
-        if (this.skinClass[component].$t == "egret.tween.TweenGroup") {
+        var typestr = this.getNormalizeEui(this.skinClass[component].$t);
+        if (typestr == "egret.tween.TweenGroup") {
             temp = this.creatsEgretTweenGroup(component);
         }
         else {
             /** 有可能对象是从外面一定义的皮肤 */
-            var type_1 = egret.getDefinitionByName(this.skinClass[component].$t);
+            var type_1 = egret.getDefinitionByName(typestr);
             this.$createNewObject(function () {
                 temp = new type_1();
             });
@@ -68,7 +101,8 @@ var JSONParseClass = /** @class */ (function () {
      * @param component 名字索引
      */
     JSONParseClass.prototype.creatsEgretTweenGroup = function (component) {
-        var type = egret.getDefinitionByName(this.skinClass[component].$t);
+        var typestr = this.getNormalizeEui(this.skinClass[component].$t);
+        var type = egret.getDefinitionByName(typestr);
         var temp = new type();
         var items = [];
         for (var _i = 0, _a = this.skinClass[component]["items"]; _i < _a.length; _i++) {
@@ -84,7 +118,8 @@ var JSONParseClass = /** @class */ (function () {
      */
     JSONParseClass.prototype.createEgretTweenItem = function (tweenItem) {
         var _this = this;
-        var type = egret.getDefinitionByName(this.skinClass[tweenItem].$t);
+        var typestr = this.getNormalizeEui(this.skinClass[tweenItem].$t);
+        var type = egret.getDefinitionByName(typestr);
         var temp = new type();
         var paths = [];
         var _loop_1 = function (proper) {
@@ -114,18 +149,19 @@ var JSONParseClass = /** @class */ (function () {
         this.target[tweenItem] = temp;
         return temp;
     };
-    JSONParseClass.prototype.createSetOrTo = function (tweenItem) {
-        var type = egret.getDefinitionByName(this.skinClass[tweenItem].$t);
+    JSONParseClass.prototype.createSetOrTo = function (key) {
+        var typestr = this.getNormalizeEui(this.skinClass[key].$t);
+        var type = egret.getDefinitionByName(typestr);
         var temp = new type();
-        for (var proper in this.skinClass[tweenItem]) {
+        for (var proper in this.skinClass[key]) {
             if (proper == "$t" || proper == "target") {
             }
             else if (proper == "props") {
-                temp[proper] = this.createEgretObject(this.skinClass[tweenItem][proper]);
-                this.target[this.skinClass[tweenItem][proper]] = temp[proper];
+                temp[proper] = this.createEgretObject(this.skinClass[key][proper]);
+                this.target[this.skinClass[key][proper]] = temp[proper];
             }
             else {
-                temp[proper] = this.skinClass[tweenItem][proper];
+                temp[proper] = this.skinClass[key][proper];
             }
         }
         return temp;
@@ -142,7 +178,7 @@ var JSONParseClass = /** @class */ (function () {
     };
     JSONParseClass.prototype.addCommonProperty = function (component, target) {
         var _this = this;
-        var elementsContent = [];
+        var eleC = [];
         var layout;
         var viewport;
         var _loop_2 = function (property) {
@@ -151,8 +187,8 @@ var JSONParseClass = /** @class */ (function () {
             else if (property == "layout") {
                 layout = this_2.skinClass[component][property];
             }
-            else if (property == "elementsContent") {
-                elementsContent = this_2.skinClass[component]["elementsContent"];
+            else if (property == "$eleC") {
+                eleC = this_2.skinClass[component]["$eleC"];
             }
             else if (property == "scale9Grid") {
                 var data = this_2.skinClass[component][property].split(",");
@@ -173,14 +209,14 @@ var JSONParseClass = /** @class */ (function () {
         for (var property in this.skinClass[component]) {
             _loop_2(property);
         }
-        if (elementsContent.length > 0) {
-            var elementsContentlist = [];
-            for (var _i = 0, elementsContent_1 = elementsContent; _i < elementsContent_1.length; _i++) {
-                var element = elementsContent_1[_i];
+        if (eleC.length > 0) {
+            var eleCs = [];
+            for (var _i = 0, eleC_1 = eleC; _i < eleC_1.length; _i++) {
+                var element = eleC_1[_i];
                 var e = this.createElementContentOrViewport(element);
-                elementsContentlist.push(e);
+                eleCs.push(e);
             }
-            target["elementsContent"] = elementsContentlist;
+            target["elementsContent"] = eleCs;
         }
         if (layout !== undefined) {
             var l = this.createLayout(layout);
@@ -193,7 +229,8 @@ var JSONParseClass = /** @class */ (function () {
         return target;
     };
     JSONParseClass.prototype.createLayout = function (component) {
-        var type = egret.getDefinitionByName(this.skinClass[component].$t);
+        var typestr = this.getNormalizeEui(this.skinClass[component].$t);
+        var type = egret.getDefinitionByName(typestr);
         var temp = new type();
         for (var property in this.skinClass[component]) {
             if (property == "$t") {
@@ -225,8 +262,15 @@ var JSONParseClass = /** @class */ (function () {
             return;
         for (var _i = 0, _a = this.skinClass["$b"]; _i < _a.length; _i++) {
             var bindingDate = _a[_i];
-            eui.Binding.$bindProperties(this.target, bindingDate["$bd"], bindingDate["$bc"], this.target[bindingDate["$bt"]], bindingDate["$bp"]);
+            if (bindingDate["$bc"] !== undefined)
+                eui.Binding.$bindProperties(this.target, bindingDate["$bd"], bindingDate["$bc"], this.target[bindingDate["$bt"]], bindingDate["$bp"]);
+            else
+                eui.Binding.bindProperty(this.target, bindingDate["$bd"][0].split("."), this.target[bindingDate["$bt"]], bindingDate["$bp"]);
         }
+    };
+    JSONParseClass.prototype.getNormalizeEui = function (str) {
+        return this.euiNormalize[str] == undefined ? str : this.euiNormalize[str];
+        ;
     };
     return JSONParseClass;
 }());
