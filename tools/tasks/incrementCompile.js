@@ -35,7 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var service = require("../service/index");
-var IncrementCompilePlugin = (function () {
+var IncrementCompilePlugin = /** @class */ (function () {
     function IncrementCompilePlugin() {
     }
     IncrementCompilePlugin.prototype.onFile = function (file) {

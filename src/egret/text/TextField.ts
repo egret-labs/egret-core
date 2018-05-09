@@ -183,7 +183,11 @@ namespace egret.sys {
         /**
          * @private
          */
-        inputType
+        inputType,
+        /**
+         * @private
+         */
+        textLinesChangedForNativeRender
     }
 }
 
@@ -322,7 +326,8 @@ namespace egret {
                 34: 0xffffff,              //backgroundColor
                 35: null,           //restrictAnd
                 36: null,           //restrictNot
-                37: TextFieldInputType.TEXT            //inputType
+                37: TextFieldInputType.TEXT,            //inputType
+                38: false            //textLinesChangedForNativeRender
             };
         }
 
@@ -1644,6 +1649,7 @@ namespace egret {
             let self = this;
             self.$renderDirty = true;
             self.$TextField[sys.TextKeys.textLinesChanged] = true;
+            self.$TextField[sys.TextKeys.textLinesChangedForNativeRender] = true;
             if (egret.nativeRender) {
                 // egret_native.dirtyTextField(this);
             }
@@ -1808,6 +1814,7 @@ namespace egret {
          */
         private setMiddleStyle(textArr: Array<egret.ITextElement>): void {
             this.$TextField[sys.TextKeys.textLinesChanged] = true;
+            this.$TextField[sys.TextKeys.textLinesChangedForNativeRender] = true;
             this.textArr = textArr;
             this.$invalidateTextField();
         }
@@ -1875,6 +1882,7 @@ namespace egret {
                 this.textArr.push(element);
                 this.$TextField[sys.TextKeys.text] = text;
                 this.$TextField[sys.TextKeys.textLinesChanged] = true;
+                this.$TextField[sys.TextKeys.textLinesChangedForNativeRender] = true;
                 this.$nativeDisplayObject.setTextFlow(this.textArr);
                 return;
             }
@@ -1895,18 +1903,25 @@ namespace egret {
          */
         private linesArr: Array<egret.ILineElement> = [];
 
+        $getLinesArr(): Array<egret.ILineElement> {
+            let values = this.$TextField;
+            if (nativeRender && values[sys.TextKeys.textLinesChangedForNativeRender]) {
+                egret_native.updateNativeRender();
+                values[sys.TextKeys.textLinesChangedForNativeRender] = false;
+                return;
+            }
+            else {
+                return this.$getLinesArr2();
+            }
+        }
+
         /**
          * @private
          *
          * @returns
          */
-        $getLinesArr(): Array<egret.ILineElement> {
+        $getLinesArr2(): Array<egret.ILineElement> {
             let values = this.$TextField;
-            if (nativeRender && values[sys.TextKeys.textLinesChanged]) {
-                egret_native.updateNativeRender();
-                values[sys.TextKeys.textLinesChanged] = false;
-                return;
-            }
 
             if (!values[sys.TextKeys.textLinesChanged]) {
                 return this.linesArr;

@@ -32,6 +32,7 @@ var XMLParser = require("../xml/index");
 var CodeFactory_1 = require("./CodeFactory");
 var DEBUG = false;
 var egretbridge_1 = require("./egretbridge");
+var JSONClass_1 = require("./JSONClass");
 var exmlParserPool = [];
 var parsedClasses = {};
 var innerClassCount = 1;
@@ -50,36 +51,47 @@ var basicTypes = [TYPE_ARRAY, TYPE_STexture, "boolean", "string", "number"];
 var wingKeys = ["id", "locked", "includeIn", "excludeFrom"];
 var htmlEntities = [["<", "&lt;"], [">", "&gt;"], ["&", "&amp;"], ["\"", "&quot;"], ["'", "&apos;"]];
 var jsKeyWords = ["null", "NaN", "undefined", "true", "false"];
-var EXMLFileSystem = /** @class */ (function () {
-    function EXMLFileSystem() {
-        this.root = {};
-        this.fileList = [];
-    }
-    EXMLFileSystem.prototype.getList = function () {
-        return this.fileList;
-    };
-    EXMLFileSystem.prototype.set = function (filename, content) {
-        this.fileList.push(filename);
-        this.root[filename] = content;
-    };
-    EXMLFileSystem.prototype.get = function (filename) {
-        var result = this.root[filename];
-        if (!result) {
-            console.warn("找不到资源", filename);
-        }
-        return result;
-    };
-    return EXMLFileSystem;
-}());
-exports.fileSystem = new EXMLFileSystem();
+/** 常用的关键字进行缩短设置，压缩体积6% */
+var euiShorten = {
+    "eui.BitmapLabel": "$eBL",
+    "eui.Button": "$eB",
+    "eui.CheckBox": "$eCB",
+    "eui.Component": "$eC",
+    "eui.DataGroup": "$eDG",
+    "eui.EditableText": "$eET",
+    "eui.Group": "$eG",
+    "eui.HorizontalLayout": "$eHL",
+    "eui.HScrollBar": "$eHSB",
+    "eui.HSlider": "$eHS",
+    "eui.Image": "$eI",
+    "eui.Label": "$eL",
+    "eui.List": "$eLs",
+    "eui.Panel": "$eP",
+    "eui.ProgressBar": "$ePB",
+    "eui.RadioButton": "$eRB",
+    "eui.RadioButtonGroup": "$eRBG",
+    "eui.Range": "$eRa",
+    "eui.Rect": "$eR",
+    "eui.RowAlign": "$eRAl",
+    "eui.Scroller": "$eS",
+    "eui.TabBar": "$eT",
+    "eui.TextInput": "$eTI",
+    "eui.TileLayout": "$eTL",
+    "eui.ToggleButton": "$eTB",
+    "eui.ToggleSwitch": "$eTS",
+    "eui.VerticalLayout": "$eVL",
+    "eui.ViewStack": "$eV",
+    "eui.VScrollBar": "$eVSB",
+    "eui.VSlider": "$eVS"
+};
 /**
  * @private
  */
-var EXMLParser = /** @class */ (function () {
+var JSONParser = /** @class */ (function () {
     /**
      * @private
      */
-    function EXMLParser() {
+    function JSONParser() {
         /**
          * @private
          * 延迟赋值字典
@@ -92,14 +104,14 @@ var EXMLParser = /** @class */ (function () {
             this.checkDeclarations = checkDeclarations;
         }
     }
-    Object.defineProperty(EXMLParser.prototype, "topNode", {
+    Object.defineProperty(JSONParser.prototype, "topNode", {
         get: function () {
             return this._topNode;
         },
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(EXMLParser.prototype, "className", {
+    Object.defineProperty(JSONParser.prototype, "className", {
         get: function () {
             return this._className;
         },
@@ -108,17 +120,18 @@ var EXMLParser = /** @class */ (function () {
     });
     /**
      * @private
-     * 编译指定的XML对象为JavaScript代码。
+     * 编译指定的XML对象为json。
      * @param xmlData 要编译的EXML文件内容
      *
      */
-    EXMLParser.prototype.parse = function (text) {
+    JSONParser.prototype.parse = function (text) {
         if (DEBUG) {
             if (!text) {
                 egretbridge_1.egretbridge.$error(1003, "text");
             }
         }
         var xmlData = null;
+        /** 解析exml文件 */
         if (DEBUG) {
             try {
                 xmlData = XMLParser.parse(text);
@@ -143,14 +156,15 @@ var EXMLParser = /** @class */ (function () {
         }
         this._className = className;
         var exClass = this.parseClass(xmlData, className);
-        var code = exClass.toCode();
-        return { code: code, className: className };
+        var code = exClass.toCode(true);
+        var json = JSONClass_1.jsonFactory.toCode();
+        return { code: code, json: json, className: className };
     };
     /**
      * @private
      * 编译指定的XML对象为CpClass对象。
      */
-    EXMLParser.prototype.parseClass = function (xmlData, className) {
+    JSONParser.prototype.parseClass = function (xmlData, className) {
         if (!exports.exmlConfig) {
             exports.exmlConfig = new EXMLConfig2_1.EXMLConfig();
         }
@@ -182,7 +196,7 @@ var EXMLParser = /** @class */ (function () {
      * @private
      * 开始编译
      */
-    EXMLParser.prototype.startCompile = function () {
+    JSONParser.prototype.startCompile = function () {
         if (DEBUG) {
             var result = this.getRepeatedIds(this.currentXML);
             if (result.length > 0) {
@@ -225,7 +239,7 @@ var EXMLParser = /** @class */ (function () {
      * @private
      * 添加必须的id
      */
-    EXMLParser.prototype.addIds = function (items) {
+    JSONParser.prototype.addIds = function (items) {
         if (!items) {
             return;
         }
@@ -271,13 +285,9 @@ var EXMLParser = /** @class */ (function () {
                         this.skinParts.push(id);
                     }
                     this.createVarForNode(node);
-                    if (this.isStateNode(node)) //检查节点是否只存在于一个状态里，需要单独实例化
-                        this.stateIds.push(id);
                 }
                 else {
                     this.createIdForNode(node);
-                    if (this.isStateNode(node))
-                        this.stateIds.push(node.attributes.id);
                 }
             }
         }
@@ -286,7 +296,7 @@ var EXMLParser = /** @class */ (function () {
      * @private
      * 是否为内部类。
      */
-    EXMLParser.prototype.isInnerClass = function (node) {
+    JSONParser.prototype.isInnerClass = function (node) {
         if (node.hasOwnProperty("isInnerClass")) {
             return node["isInnerClass"];
         }
@@ -321,7 +331,7 @@ var EXMLParser = /** @class */ (function () {
      * @private
      * 检测指定节点的属性是否含有视图状态
      */
-    EXMLParser.prototype.containsState = function (node) {
+    JSONParser.prototype.containsState = function (node) {
         var attributes = node.attributes;
         if (attributes["includeIn"] || attributes["excludeFrom"]) {
             return true;
@@ -340,7 +350,7 @@ var EXMLParser = /** @class */ (function () {
      * @private
      * 为指定节点创建id属性
      */
-    EXMLParser.prototype.createIdForNode = function (node) {
+    JSONParser.prototype.createIdForNode = function (node) {
         var idName = this.getNodeId(node);
         if (!this.idDic[idName])
             this.idDic[idName] = 1;
@@ -353,7 +363,7 @@ var EXMLParser = /** @class */ (function () {
      * @private
      * 获取节点ID
      */
-    EXMLParser.prototype.getNodeId = function (node) {
+    JSONParser.prototype.getNodeId = function (node) {
         if (node.attributes["id"])
             return node.attributes.id;
         return "_" + node.localName;
@@ -362,7 +372,7 @@ var EXMLParser = /** @class */ (function () {
      * @private
      * 为指定节点创建变量
      */
-    EXMLParser.prototype.createVarForNode = function (node) {
+    JSONParser.prototype.createVarForNode = function (node) {
         var moduleName = this.getClassNameOfNode(node);
         if (moduleName == "")
             return;
@@ -371,57 +381,46 @@ var EXMLParser = /** @class */ (function () {
     };
     /**
      * @private
-     * 为指定节点创建初始化函数,返回函数名引用
+     * 对子节点进行config的提取，返回节点名字id
      */
-    EXMLParser.prototype.createFuncForNode = function (node) {
+    JSONParser.prototype.addNodeConfig = function (node) {
         var className = node.localName;
         var isBasicType = this.isBasicTypeData(className);
         if (isBasicType)
             return this.createBasicTypeForNode(node);
         var moduleName = this.getClassNameOfNode(node);
         var func = new CodeFactory_1.EXFunction();
-        var tailName = "_i";
         var id = node.attributes.id;
-        func.name = id + tailName;
-        this.currentClass.addFunction(func);
-        var cb = new CodeFactory_1.EXCodeBlock();
-        func.codeBlock = cb;
-        var varName = "t";
-        if (className == "Object") {
-            cb.addVar(varName, "{}");
-        }
-        else {
-            cb.addVar(varName, "new " + moduleName + "()");
-        }
-        var containsId = !!this.currentClass.getVariableByName(id);
-        if (containsId) {
-            cb.addAssignment("this." + id, varName);
-        }
-        this.addAttributesToCodeBlock(cb, varName, node);
-        this.initlizeChildNode(node, cb, varName);
-        var delayAssignments = this.delayAssignmentDic[id];
-        if (delayAssignments) {
-            var length = delayAssignments.length;
-            for (var i = 0; i < length; i++) {
-                var codeBlock = delayAssignments[i];
-                cb.concat(codeBlock);
+        func.name = id;
+        //保存的名字
+        var configName = func.name;
+        var config = {};
+        for (var i in node.attributes) {
+            if (i != "id") {
+                var value = node.attributes[i];
+                config[i] = value;
             }
         }
-        cb.addReturn(varName);
-        return "this." + func.name + "()";
+        var name = exports.exmlConfig.getClassNameById(node.localName, node.namespace);
+        config["$t"] = euiShorten[name] == undefined ? name : euiShorten[name];
+        JSONClass_1.jsonFactory.addContent(config, this.currentClass.className, func.name);
+        // 赋值skin的属性
+        this.addConfig(func.name, node, configName, moduleName);
+        this.initlizeChildNode(node, func.name);
+        return func.name;
     };
     /**
      * @private
      * 检查目标类名是否是基本数据类型
      */
-    EXMLParser.prototype.isBasicTypeData = function (className) {
+    JSONParser.prototype.isBasicTypeData = function (className) {
         return basicTypes.indexOf(className) != -1;
     };
     /**
      * @private
      * 为指定基本数据类型节点实例化,返回实例化后的值。
      */
-    EXMLParser.prototype.createBasicTypeForNode = function (node) {
+    JSONParser.prototype.createBasicTypeForNode = function (node) {
         var className = node.localName;
         var returnValue = "";
         var varItem = this.currentClass.getVariableByName(node.attributes.id);
@@ -441,7 +440,7 @@ var EXMLParser = /** @class */ (function () {
                     for (var i = 0; i < length; i++) {
                         var child = children[i];
                         if (child.nodeType == 1) {
-                            values.push(this.createFuncForNode(child));
+                            values.push(this.addNodeConfig(child));
                         }
                     }
                 }
@@ -455,9 +454,6 @@ var EXMLParser = /** @class */ (function () {
                 if (returnValue.indexOf("%") != -1)
                     returnValue = returnValue.substring(0, returnValue.length - 1);
                 break;
-            case "string":
-                returnValue = this.formatString(text);
-                break;
         }
         if (varItem)
             varItem.defaultValue = returnValue;
@@ -467,10 +463,11 @@ var EXMLParser = /** @class */ (function () {
      * @private
      * 将节点属性赋值语句添加到代码块
      */
-    EXMLParser.prototype.addAttributesToCodeBlock = function (cb, varName, node) {
+    JSONParser.prototype.addConfig = function (varName, node, configName, type) {
         var key;
         var value;
         var attributes = node.attributes;
+        var jsonProperty = {};
         var keyList = Object.keys(attributes);
         keyList.sort(); //排序一下防止出现随机顺序
         //对 style 属性先行赋值
@@ -488,41 +485,17 @@ var EXMLParser = /** @class */ (function () {
             value = attributes[key];
             key = this.formatKey(key, value);
             value = this.formatValue(key, value, node);
-            if (!value) {
-                continue;
-            }
-            if (this.currentClass.getVariableByName(value)) { //赋的值对象是一个id
-                var THIS = "this.";
-                var id = attributes.id;
-                var codeLine = THIS + id + " = t;";
-                if (!this.currentClass.getVariableByName(id))
-                    this.createVarForNode(node);
-                if (!cb.containsCodeLine(codeLine)) {
-                    cb.addCodeLineAt(codeLine, 1);
-                }
-                var delayCb = new CodeFactory_1.EXCodeBlock();
-                if (varName == "this") {
-                    delayCb.addAssignment(varName, THIS + value, key);
-                }
-                else {
-                    delayCb.startIf(THIS + id);
-                    delayCb.addAssignment(THIS + id, THIS + value, key);
-                    delayCb.endBlock();
-                }
-                if (!this.delayAssignmentDic[value]) {
-                    this.delayAssignmentDic[value] = [];
-                }
-                this.delayAssignmentDic[value].push(delayCb);
-                value = THIS + value;
-            }
-            cb.addAssignment(varName, value, key);
+            jsonProperty[key] = value;
         }
+        if (type)
+            jsonProperty["$t"] = euiShorten[type] == undefined ? type : euiShorten[type];
+        JSONClass_1.jsonFactory.addContent(jsonProperty, this.currentClass.className, configName == undefined ? "$bs" : configName);
     };
     /**
      * @private
      * 初始化子项
      */
-    EXMLParser.prototype.initlizeChildNode = function (node, cb, varName) {
+    JSONParser.prototype.initlizeChildNode = function (node, varName) {
         var children = node.children;
         if (!children || children.length == 0)
             return;
@@ -534,19 +507,6 @@ var EXMLParser = /** @class */ (function () {
         for (var i = 0; i < length; i++) {
             var child = children[i];
             if (child.nodeType != 1 || child.namespace == EXMLConfig2_1.NS_W) {
-                continue;
-            }
-            if (this.isInnerClass(child)) {
-                if (child.localName == "Skin") {
-                    var innerClassName = this.parseInnerClass(child);
-                    var type = exports.exmlConfig.getPropertyType(SKIN_NAME, className);
-                    if (type) {
-                        cb.addAssignment(varName, innerClassName, SKIN_NAME);
-                    }
-                    else {
-                        egretbridge_1.egretbridge.$error(2005, this.currentClassName, SKIN_NAME, getPropertyStr(child));
-                    }
-                }
                 continue;
             }
             var prop = child.localName;
@@ -570,7 +530,7 @@ var EXMLParser = /** @class */ (function () {
                 if (DEBUG) {
                     var errorInfo_1 = getPropertyStr(child);
                 }
-                this.addChildrenToProp(child.children, type, prop, cb, varName, errorInfo, propList, node);
+                this.addChildrenToProp(child.children, type, prop, varName, errorInfo, propList, node);
             }
             else {
                 directChild.push(child);
@@ -589,16 +549,16 @@ var EXMLParser = /** @class */ (function () {
             }
             return;
         }
-        this.addChildrenToProp(directChild, defaultType, defaultProp, cb, varName, errorInfo, propList, node);
+        this.addChildrenToProp(directChild, defaultType, defaultProp, varName, errorInfo, propList, node);
     };
     /**
      * @private
      * 解析内部类节点，并返回类名。
      */
-    EXMLParser.prototype.parseInnerClass = function (node) {
+    JSONParser.prototype.parseInnerClass = function (node) {
         var parser = exmlParserPool.pop();
         if (!parser) {
-            parser = new EXMLParser();
+            parser = new JSONParser();
         }
         var innerClassName = this.currentClass.className + "$" + node.localName + innerClassCount++;
         var innerClass = parser.parseClass(node, innerClassName);
@@ -610,9 +570,10 @@ var EXMLParser = /** @class */ (function () {
      * @private
      * 添加多个子节点到指定的属性
      */
-    EXMLParser.prototype.addChildrenToProp = function (children, type, prop, cb, varName, errorInfo, propList, node) {
-        var childFunc = "";
+    JSONParser.prototype.addChildrenToProp = function (children, type, prop, varName, errorInfo, propList, node) {
+        var nodeName = "";
         var childLength = children.length;
+        var elementsContentForJson;
         if (childLength > 1) {
             if (type != TYPE_ARRAY) {
                 if (DEBUG) {
@@ -620,18 +581,33 @@ var EXMLParser = /** @class */ (function () {
                 }
                 return;
             }
-            var values = [];
-            for (var j = 0; j < childLength; j++) {
-                var item = children[j];
-                if (item.nodeType != 1) {
-                    continue;
+            if (prop == ELEMENTS_CONTENT) {
+                var values = [];
+                for (var j = 0; j < childLength; j++) {
+                    var item = children[j];
+                    if (item.nodeType != 1) {
+                        continue;
+                    }
+                    nodeName = this.addToCodeBlockForNode(item);
+                    if (!this.isStateNode(item))
+                        values.push(nodeName);
                 }
-                childFunc = this.createFuncForNode(item);
-                var childClassName = this.getClassNameOfNode(item);
-                if (!this.isStateNode(item))
-                    values.push(childFunc);
+                elementsContentForJson = values;
+                prop = "$eleC";
             }
-            childFunc = "[" + values.join(",") + "]";
+            else {
+                var values = [];
+                for (var j = 0; j < childLength; j++) {
+                    var item = children[j];
+                    if (item.nodeType != 1) {
+                        continue;
+                    }
+                    nodeName = this.addNodeConfig(item);
+                    if (!this.isStateNode(item))
+                        values.push(nodeName);
+                }
+                elementsContentForJson = values;
+            }
         }
         else {
             var firstChild = children[0];
@@ -645,21 +621,28 @@ var EXMLParser = /** @class */ (function () {
                             if (item.nodeType != 1) {
                                 continue;
                             }
-                            childFunc = this.createFuncForNode(item);
+                            nodeName = this.addNodeConfig(item);
                             var childClassName = this.getClassNameOfNode(item);
                             if (!this.isStateNode(item))
-                                values.push(childFunc);
+                                values.push(nodeName);
                         }
                     }
-                    childFunc = "[" + values.join(",") + "]";
+                    elementsContentForJson = values;
                 }
                 else {
-                    childFunc = this.createFuncForNode(firstChild);
-                    var childClassName = this.getClassNameOfNode(firstChild);
-                    if (!this.isStateNode(firstChild))
-                        childFunc = "[" + childFunc + "]";
-                    else
-                        childFunc = "[]";
+                    if (prop == ELEMENTS_CONTENT && !this.isStateNode(firstChild)) {
+                        nodeName = this.addToCodeBlockForNode(firstChild);
+                        var childClassName = this.getClassNameOfNode(firstChild);
+                        elementsContentForJson = [nodeName];
+                        prop = "$eleC";
+                    }
+                    else {
+                        nodeName = this.addNodeConfig(firstChild);
+                        var childClassName = this.getClassNameOfNode(firstChild);
+                        if (!this.isStateNode(firstChild)) {
+                            elementsContentForJson = [nodeName];
+                        }
+                    }
                 }
             }
             else if (firstChild.nodeType == 1) {
@@ -670,34 +653,48 @@ var EXMLParser = /** @class */ (function () {
                         }
                         return;
                     }
-                    childFunc = this.parseInnerClass(children[0]);
+                    nodeName = this.parseInnerClass(children[0]);
+                    elementsContentForJson = nodeName;
                 }
                 else {
                     var targetClass = this.getClassNameOfNode(firstChild);
-                    childFunc = this.createFuncForNode(firstChild);
+                    nodeName = this.addNodeConfig(firstChild);
+                    elementsContentForJson = nodeName;
                 }
             }
             else {
-                childFunc = this.formatValue(prop, firstChild.text, node);
+                nodeName = this.formatValue(prop, firstChild.text, node);
+                elementsContentForJson = nodeName;
             }
         }
-        if (childFunc != "") {
-            if (childFunc.indexOf("()") == -1)
-                prop = this.formatKey(prop, childFunc);
+        if (nodeName != "") {
+            if (nodeName.indexOf("()") == -1)
+                prop = this.formatKey(prop, nodeName);
             if (propList.indexOf(prop) == -1) {
                 propList.push(prop);
             }
             else if (DEBUG) {
                 egretbridge_1.egretbridge.$warn(2103, this.currentClassName, prop, errorInfo);
             }
-            cb.addAssignment(varName, childFunc, prop);
+            var tar = varName == "this" ? "$bs" : varName;
+            JSONClass_1.jsonFactory.addContent(elementsContentForJson, this.currentClass.className + "." + tar, prop);
         }
+    };
+    JSONParser.prototype.addToCodeBlockForNode = function (node) {
+        var className = node.localName;
+        var moduleName = this.getClassNameOfNode(node);
+        var id = node.attributes.id;
+        var varName = id;
+        //赋值基本属性
+        this.addConfig(varName, node, varName, moduleName);
+        this.initlizeChildNode(node, varName);
+        return varName;
     };
     /**
      * @private
      * 指定节点是否是属性节点
      */
-    EXMLParser.prototype.isProperty = function (node) {
+    JSONParser.prototype.isProperty = function (node) {
         if (node.hasOwnProperty("isProperty")) {
             return node["isProperty"];
         }
@@ -722,7 +719,7 @@ var EXMLParser = /** @class */ (function () {
      * @private
      * 是否是普通赋值的key
      */
-    EXMLParser.prototype.isNormalKey = function (key) {
+    JSONParser.prototype.isNormalKey = function (key) {
         if (!key || key.indexOf(".") != -1
             || key.indexOf(":") != -1 || wingKeys.indexOf(key) != -1)
             return false;
@@ -732,7 +729,7 @@ var EXMLParser = /** @class */ (function () {
      * @private
      * 格式化key
      */
-    EXMLParser.prototype.formatKey = function (key, value) {
+    JSONParser.prototype.formatKey = function (key, value) {
         if (value.indexOf("%") != -1) {
             if (key == "height")
                 key = "percentHeight";
@@ -744,8 +741,11 @@ var EXMLParser = /** @class */ (function () {
     /**
      * @private
      * 格式化值
+     *
+     * $$$$$$   这里需要注意，在skin的基本属性和动画都要在这里格式化值，
+     *          主要是对数字的一些操作，色号还有百分比之类的进行换算
      */
-    EXMLParser.prototype.formatValue = function (key, value, node) {
+    JSONParser.prototype.formatValue = function (key, value, node) {
         if (!value) {
             value = "";
         }
@@ -761,59 +761,47 @@ var EXMLParser = /** @class */ (function () {
             this.checkIdForState(node);
             var target = "this";
             if (node !== this.currentXML) {
-                target += "." + node.attributes["id"];
+                target = node.attributes["id"];
             }
             this.bindings.push(new CodeFactory_1.EXBinding(target, key, bindingValue.templates, bindingValue.chainIndex));
             value = "";
         }
-        else if (type == RECTANGLE) {
-            if (DEBUG) {
-                var rect = value.split(",");
-                if (rect.length != 4 || isNaN(parseInt(rect[0])) || isNaN(parseInt(rect[1])) ||
-                    isNaN(parseInt(rect[2])) || isNaN(parseInt(rect[3]))) {
-                    egretbridge_1.egretbridge.$error(2016, this.currentClassName, toXMLString(node));
-                }
-            }
-            value = "new " + RECTANGLE + "(" + value + ")";
-        }
         else if (type == TYPE_PERCENTAGE) {
             if (value.indexOf("%") != -1) {
-                value = this.formatString(value);
-                ;
+                value = this.unescapeHTMLEntity(value);
             }
+            if (key == "percentHeight" || key == "percentWidth" || !value.includes("%"))
+                value = parseFloat(value);
         }
         else {
             var orgValue = value;
             switch (type) {
-                case TYPE_CLASS:
-                    if (key == SKIN_NAME) {
-                        value = this.formatString(stringValue);
-                    }
-                    break;
                 case "number":
                     if (value.indexOf("#") == 0) {
                         if (DEBUG && isNaN(value.substring(1))) {
                             egretbridge_1.egretbridge.$warn(2021, this.currentClassName, key, value);
                         }
                         value = "0x" + value.substring(1);
+                        value = parseInt(value, 0);
                     }
                     else if (value.indexOf("%") != -1) {
                         if (DEBUG && isNaN(value.substr(0, value.length - 1))) {
                             egretbridge_1.egretbridge.$warn(2021, this.currentClassName, key, value);
                         }
-                        value = (parseFloat(value.substr(0, value.length - 1))).toString();
+                        value = parseFloat(value.substr(0, value.length - 1));
                     }
                     else if (DEBUG && isNaN(value)) {
                         egretbridge_1.egretbridge.$warn(2021, this.currentClassName, key, value);
                     }
+                    else if (value.indexOf("x") != -1 || value.indexOf("X") != -1) {
+                        value = parseInt(value, 0);
+                    }
+                    else {
+                        value = parseFloat(value);
+                    }
                     break;
                 case "boolean":
-                    value = (value == "false" || !value) ? "false" : "true";
-                    break;
-                case "string":
-                case TYPE_STexture:
-                case "any":
-                    value = this.formatString(stringValue);
+                    value = (value == "false" || !value) ? false : true;
                     break;
                 default:
                     if (DEBUG) {
@@ -824,19 +812,7 @@ var EXMLParser = /** @class */ (function () {
         }
         return value;
     };
-    /**
-     * @private
-     * 格式化字符串
-     */
-    EXMLParser.prototype.formatString = function (value) {
-        value = this.unescapeHTMLEntity(value);
-        value = value.split("\n").join("\\n");
-        value = value.split("\r").join("\\n");
-        value = value.split("\"").join("\\\"");
-        value = "\"" + value + "\"";
-        return value;
-    };
-    EXMLParser.prototype.formatBinding = function (key, value, node) {
+    JSONParser.prototype.formatBinding = function (key, value, node) {
         if (!value) {
             return null;
         }
@@ -857,7 +833,12 @@ var EXMLParser = /** @class */ (function () {
                 continue;
             }
             var first = item.charAt(0);
-            if (first == "'" || first == "\"" || first >= "0" && first <= "9" || first == "-") {
+            if (first == "'" || first == "\"") {
+                continue;
+            }
+            //在动画或是绑定数据的时候进行类型转换
+            if (first >= "0" && first <= "9" || first == "-") {
+                templates[i] = parseFloat(templates[i]);
                 continue;
             }
             if (item.indexOf(".") == -1 && jsKeyWords.indexOf(item) != -1) {
@@ -870,12 +851,12 @@ var EXMLParser = /** @class */ (function () {
             if (firstKey != HOST_COMPONENT && this.skinParts.indexOf(firstKey) == -1) {
                 item = HOST_COMPONENT + "." + item;
             }
-            templates[i] = "\"" + item + "\"";
+            templates[i] = item;
             chainIndex.push(i);
         }
         return { templates: templates, chainIndex: chainIndex };
     };
-    EXMLParser.prototype.parseTemplates = function (value) {
+    JSONParser.prototype.parseTemplates = function (value) {
         //仅仅是表达式相加 如:{a.b+c.d}
         if (value.indexOf("'") == -1) {
             return value.split("+");
@@ -920,7 +901,7 @@ var EXMLParser = /** @class */ (function () {
      /**
      * 转换HTML实体字符为普通字符
      */
-    EXMLParser.prototype.unescapeHTMLEntity = function (str) {
+    JSONParser.prototype.unescapeHTMLEntity = function (str) {
         if (!str)
             return "";
         var length = htmlEntities.length;
@@ -936,11 +917,11 @@ var EXMLParser = /** @class */ (function () {
      * @private
      * 创建构造函数
      */
-    EXMLParser.prototype.createConstructFunc = function () {
+    JSONParser.prototype.createConstructFunc = function () {
         var cb = new CodeFactory_1.EXCodeBlock;
-        cb.addEmptyLine();
         var varName = "this";
-        this.addAttributesToCodeBlock(cb, varName, this.currentXML);
+        this.addConfig(varName, this.currentXML, "$bs");
+        cb.addCodeLine("window[\"JSONParseClass\"].create(\"" + this.currentClass.className + "\", " + varName + ");");
         if (this.declarations) {
             var children = this.declarations.children;
             if (children && children.length > 0) {
@@ -950,30 +931,15 @@ var EXMLParser = /** @class */ (function () {
                     if (decl.nodeType != 1) {
                         continue;
                     }
-                    var funcName = this.createFuncForNode(decl);
-                    if (funcName) {
-                        cb.addCodeLine(funcName + ";");
-                    }
+                    this.addNodeConfig(decl);
                 }
             }
         }
-        this.initlizeChildNode(this.currentXML, cb, varName);
-        for (var _i = 0, _a = this.stateIds; _i < _a.length; _i++) {
-            var id = _a[_i];
-            cb.addCodeLine("this." + id + "_i();");
-            cb.addEmptyLine();
+        this.initlizeChildNode(this.currentXML, varName);
+        var skinConfig = this.skinParts;
+        if (skinConfig.length > 0) {
+            JSONClass_1.jsonFactory.addContent(skinConfig, this.currentClass.className, "$sP");
         }
-        var skinpartsArray = new CodeFactory_1.EXArray(this.skinParts);
-        var skinPartStr = skinpartsArray.toCode();
-        // let skinPartFunc: EXFunction = new EXFunction();
-        // skinPartFunc.name = "skinParts";
-        // skinPartFunc.isGet = true;
-        // let skinPartCB: EXCodeBlock = new EXCodeBlock();
-        // skinPartCB.addReturn(skinPartStr);
-        // skinPartFunc.codeBlock = skinPartCB;
-        // this.currentClass.addFunction(skinPartFunc)
-        var skinpartsVaribale = new CodeFactory_1.EXVariable('skinParts', skinpartsArray.toCode());
-        this.currentClass.addVariable(skinpartsVaribale);
         this.currentXML.attributes.id = "";
         //生成视图状态代码
         this.createStates(this.currentXML);
@@ -1005,39 +971,48 @@ var EXMLParser = /** @class */ (function () {
                 }
             }
         }
-        //打印视图状态初始化代码
+        //生成视图配置
         var stateCode = this.stateCode;
         var length = stateCode.length;
+        var stateConfig = {};
         if (length > 0) {
-            var indentStr = "	";
-            cb.addCodeLine("this.states = [");
-            var first = true;
             for (var i = 0; i < length; i++) {
-                var state = stateCode[i];
-                if (first)
-                    first = false;
-                else
-                    cb.addCodeLine(indentStr + ",");
-                var codes = state.toCode().split("\n");
-                var codeIndex = 0;
-                while (codeIndex < codes.length) {
-                    var code = codes[codeIndex];
-                    if (code)
-                        cb.addCodeLine(indentStr + code);
-                    codeIndex++;
+                stateConfig[stateCode[i].name] = [];
+                for (var _i = 0, _a = stateCode[i].setProperty; _i < _a.length; _i++) {
+                    var property = _a[_i];
+                    var tempProp = {};
+                    for (var prop in property) {
+                        if (prop != "indent") {
+                            tempProp[prop] = property[prop];
+                        }
+                    }
+                    stateConfig[stateCode[i].name].push(tempProp);
                 }
             }
-            cb.addCodeLine("];");
+            JSONClass_1.jsonFactory.addContent(stateConfig, this.currentClass.className, "$s");
         }
-        //生成绑定代码
+        //生成绑定配置
         var bindings = this.bindings;
         length = bindings.length;
+        var bindingConfig = [];
         if (length > 0) {
-            cb.addEmptyLine();
-            for (var i = 0; i < length; i++) {
-                var binding = bindings[i];
-                cb.addCodeLine(binding.toCode());
+            for (var _b = 0, bindings_1 = bindings; _b < bindings_1.length; _b++) {
+                var binding = bindings_1[_b];
+                var config = {};
+                if (binding.templates.length == 1 && binding.chainIndex.length == 1) {
+                    config["$bd"] = binding.templates; //data
+                    config["$bt"] = binding.target; //target
+                    config["$bp"] = binding.property; //property
+                }
+                else {
+                    config["$bd"] = binding.templates; //data
+                    config["$bt"] = binding.target; //target
+                    config["$bc"] = binding.chainIndex; //chainIndex
+                    config["$bp"] = binding.property; //property
+                }
+                bindingConfig.push(config);
             }
+            JSONClass_1.jsonFactory.addContent(bindingConfig, this.currentClass.className, "$b");
         }
         this.currentClass.constructCode = cb;
     };
@@ -1045,7 +1020,7 @@ var EXMLParser = /** @class */ (function () {
      * @private
      * 是否含有includeIn和excludeFrom属性
      */
-    EXMLParser.prototype.isStateNode = function (node) {
+    JSONParser.prototype.isStateNode = function (node) {
         var attributes = node.attributes;
         return attributes.hasOwnProperty("includeIn") || attributes.hasOwnProperty("excludeFrom");
     };
@@ -1053,7 +1028,7 @@ var EXMLParser = /** @class */ (function () {
      * @private
      * 获取视图状态名称列表
      */
-    EXMLParser.prototype.getStateNames = function () {
+    JSONParser.prototype.getStateNames = function () {
         var root = this.currentXML;
         var className = exports.exmlConfig.getClassNameById(root.localName, root.namespace);
         var type = exports.exmlConfig.getPropertyType("states", className);
@@ -1138,7 +1113,7 @@ var EXMLParser = /** @class */ (function () {
      * @private
      * 解析视图状态代码
      */
-    EXMLParser.prototype.createStates = function (parentNode) {
+    JSONParser.prototype.createStates = function (parentNode) {
         var items = parentNode.children;
         if (!items) {
             return;
@@ -1175,7 +1150,7 @@ var EXMLParser = /** @class */ (function () {
                 var firstChild = children[0];
                 var value = void 0;
                 if (firstChild.nodeType == 1) {
-                    this.createFuncForNode(firstChild);
+                    this.addNodeConfig(firstChild);
                     this.checkIdForState(firstChild);
                     value = "this." + firstChild.attributes.id;
                 }
@@ -1284,29 +1259,20 @@ var EXMLParser = /** @class */ (function () {
      * @private
      * 检查指定的ID是否创建了类成员变量，若没创建则为其创建。
      */
-    EXMLParser.prototype.checkIdForState = function (node) {
+    JSONParser.prototype.checkIdForState = function (node) {
         if (!node || this.currentClass.getVariableByName(node.attributes.id)) {
             return;
         }
         this.createVarForNode(node);
         var id = node.attributes.id;
-        var funcName = id + "_i";
+        var funcName = id;
         var func = this.currentClass.getFuncByName(funcName);
-        if (!func)
-            return;
-        var codeLine = "this." + id + " = t;";
-        var cb = func.codeBlock;
-        if (!cb)
-            return;
-        if (!cb.containsCodeLine(codeLine)) {
-            cb.addCodeLineAt(codeLine, 1);
-        }
     };
     /**
      * @private
      * 通过视图状态名称获取对应的视图状态
      */
-    EXMLParser.prototype.getStateByName = function (name, node) {
+    JSONParser.prototype.getStateByName = function (name, node) {
         var states = [];
         var stateCode = this.stateCode;
         var length = stateCode.length;
@@ -1341,7 +1307,7 @@ var EXMLParser = /** @class */ (function () {
      * @private
      * 寻找节点的临近节点ID和位置
      */
-    EXMLParser.prototype.findNearNodeId = function (node) {
+    JSONParser.prototype.findNearNodeId = function (node) {
         var parentNode = node.parent;
         var targetId = "";
         var position;
@@ -1389,16 +1355,16 @@ var EXMLParser = /** @class */ (function () {
      * @private
      * 获取节点的完整类名，包括模块名
      */
-    EXMLParser.prototype.getClassNameOfNode = function (node) {
+    JSONParser.prototype.getClassNameOfNode = function (node) {
         var className = exports.exmlConfig.getClassNameById(node.localName, node.namespace);
         if (DEBUG && !className) {
             egretbridge_1.egretbridge.$error(2003, this.currentClassName, toXMLString(node));
         }
         return className;
     };
-    return EXMLParser;
+    return JSONParser;
 }());
-exports.EXMLParser = EXMLParser;
+exports.JSONParser = JSONParser;
 /**
  * 获取重复的ID名
  */

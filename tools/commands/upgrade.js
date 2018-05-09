@@ -33,11 +33,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var file = require("../lib/FileUtil");
 var service = require("../service/index");
 var Project = require("../project");
+var path = require("path");
 var utils = require("../lib/utils");
 var Clean = require("./clean");
-var UpgradeCommand = (function () {
+var UpgradeCommand = /** @class */ (function () {
     function UpgradeCommand() {
     }
     UpgradeCommand.prototype.execute = function () {
@@ -56,7 +58,7 @@ var UpgradeCommand = (function () {
     };
     UpgradeCommand.prototype.run = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var version, upgradeConfigArr, e_1;
+            var version, upgradeConfigArr, source, target, e_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -67,7 +69,7 @@ var UpgradeCommand = (function () {
                         upgradeConfigArr = [
                             { "v": "5.1.1", command: Upgrade_5_1_1 },
                             { "v": "5.1.2", command: Upgrade_5_1_2 },
-                            { "v": "5.1.10" }
+                            { "v": "5.1.11" }
                         ];
                         _a.label = 1;
                     case 1:
@@ -81,6 +83,9 @@ var UpgradeCommand = (function () {
                         return [4 /*yield*/, new Clean().execute()];
                     case 3:
                         _a.sent();
+                        source = path.join(egret.root, "tools/templates/empty/scripts/api.d.ts");
+                        target = path.join(egret.args.projectDir, "scripts/api.d.ts");
+                        file.copy(source, target);
                         globals.exit(0);
                         return [3 /*break*/, 5];
                     case 4:
@@ -146,7 +151,7 @@ function upgrade(info) {
         return Promise.resolve(0);
     }
 }
-var Upgrade_5_1_1 = (function () {
+var Upgrade_5_1_1 = /** @class */ (function () {
     function Upgrade_5_1_1() {
     }
     Upgrade_5_1_1.prototype.execute = function () {
@@ -158,7 +163,7 @@ var Upgrade_5_1_1 = (function () {
     };
     return Upgrade_5_1_1;
 }());
-var Upgrade_5_1_2 = (function () {
+var Upgrade_5_1_2 = /** @class */ (function () {
     function Upgrade_5_1_2() {
     }
     Upgrade_5_1_2.prototype.execute = function () {

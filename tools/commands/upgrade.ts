@@ -47,7 +47,7 @@ class UpgradeCommand implements egret.Command {
         let upgradeConfigArr: VersionInfo[] = [
             { "v": "5.1.1", command: Upgrade_5_1_1 },
             { "v": "5.1.2", command: Upgrade_5_1_2 },
-            { "v": "5.1.10" }
+            { "v": "5.1.11" }
         ];
 
         try {
@@ -56,6 +56,9 @@ class UpgradeCommand implements egret.Command {
             globals.log(1702);
             service.client.closeServer(Project.projectData.getProjectRoot())
             await new Clean().execute();
+            let source = path.join(egret.root, "tools/templates/empty/scripts/api.d.ts");
+            let target = path.join(egret.args.projectDir, "scripts/api.d.ts");
+            file.copy(source, target);
             globals.exit(0);
         }
         catch (e) {
@@ -144,4 +147,5 @@ class Upgrade_5_1_2 {
         return 0;
     }
 }
+
 export = UpgradeCommand;

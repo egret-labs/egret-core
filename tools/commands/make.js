@@ -3,7 +3,7 @@ var Compiler_1 = require("../actions/Compiler");
 var FileUtil = require("../lib/FileUtil");
 var path = require("path");
 var ANY = 'any';
-var CompileEgretEngine = (function () {
+var CompileEgretEngine = /** @class */ (function () {
     function CompileEgretEngine() {
     }
     CompileEgretEngine.prototype.execute = function () {

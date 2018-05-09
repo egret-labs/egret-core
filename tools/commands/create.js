@@ -1,7 +1,7 @@
 /// <reference path="../lib/types.d.ts" />
 var createAction = require("../actions/Create");
 var FileUtil = require("../lib/FileUtil");
-var Create = (function () {
+var Create = /** @class */ (function () {
     function Create() {
     }
     Create.prototype.execute = function () {

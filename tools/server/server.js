@@ -24,7 +24,7 @@ var mine = {
     "wmv": "video/x-ms-wmv",
     "xml": "text/xml"
 };
-var Server = (function () {
+var Server = /** @class */ (function () {
     function Server() {
     }
     Server.prototype.use = function (middleware) {
