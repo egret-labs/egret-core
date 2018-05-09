@@ -74,7 +74,7 @@ namespace egret {
          * @private
          */
         static $getHalign(textfield:egret.TextField):number {
-            let lineArr:Array<egret.ILineElement>  = textfield.$getLinesArr();
+            let lineArr:Array<egret.ILineElement>  = textfield.$getLinesArr2();
             let halign:number = 0;
             if (textfield.$TextField[sys.TextKeys.textAlign] == HorizontalAlign.CENTER) {
                 halign = 0.5;
@@ -142,7 +142,7 @@ namespace egret {
         static $getTextElement(textfield:egret.TextField, x:number, y:number):ITextElement {
             let hitTextEle:IHitTextElement = TextFieldUtils.$getHit(textfield, x, y);
 
-            let lineArr:Array<egret.ILineElement>  = textfield.$getLinesArr();
+            let lineArr:Array<egret.ILineElement>  = textfield.$getLinesArr2();
             if (hitTextEle && lineArr[hitTextEle.lineIndex] && lineArr[hitTextEle.lineIndex].elements[hitTextEle.textElementIndex]) {
                 return lineArr[hitTextEle.lineIndex].elements[hitTextEle.textElementIndex];
             }
@@ -158,7 +158,7 @@ namespace egret {
          * @private
          */
         static $getHit(textfield:egret.TextField, x:number, y:number):IHitTextElement {
-            let lineArr:Array<egret.ILineElement>  = textfield.$getLinesArr();
+            let lineArr:Array<egret.ILineElement>  = textfield.$getLinesArr2();
             if (textfield.$TextField[sys.TextKeys.textFieldWidth] == 0) {//文本可点击区域
                 return null;
             }

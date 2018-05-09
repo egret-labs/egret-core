@@ -31,7 +31,7 @@ var CodeUtil = require("./code_util");
 var create_manifest = require("./createManifest");
 var properties = {};
 var stylesMap = {};
-var EXMLConfig = (function () {
+var EXMLConfig = /** @class */ (function () {
     /**
      * 构造函数
      */
@@ -530,17 +530,17 @@ var EXMLConfig = (function () {
         }
         return this.isInstanceOf(dataA["super"], classNameB);
     };
+    /**
+     * Egret命名空间
+     */
+    EXMLConfig.E = "http://ns.egret-labs.org/egret";
+    /**
+     * Wing命名空间
+     */
+    EXMLConfig.W = "http://ns.egret-labs.org/wing";
     return EXMLConfig;
 }());
-/**
- * Egret命名空间
- */
-EXMLConfig.E = "http://ns.egret-labs.org/egret";
-/**
- * Wing命名空间
- */
-EXMLConfig.W = "http://ns.egret-labs.org/wing";
-var Component = (function () {
+var Component = /** @class */ (function () {
     /**
      * 构造函数
      */

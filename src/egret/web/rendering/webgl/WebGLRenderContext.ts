@@ -86,7 +86,7 @@ namespace egret.web {
         /**
          * 顶点数组管理器
          */
-        private vao: WebGLVertexArrayObject;
+        public vao: WebGLVertexArrayObject;
 
         /**
          * 绘制命令管理器
@@ -319,7 +319,7 @@ namespace egret.web {
             this.setContext(gl);
         }
 
-        private setContext(gl: any) {
+        public setContext(gl: any) {
             this.context = gl;
             gl.id = WebGLRenderContext.glContextId++;
             this.glID = gl.id;

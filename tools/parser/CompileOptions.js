@@ -2,7 +2,7 @@
 var os = require("os");
 var crypto = require("crypto");
 var FileUtil = require("../lib/FileUtil");
-var CompileOptions = (function () {
+var CompileOptions = /** @class */ (function () {
     function CompileOptions() {
         this._host = null;
         this._port = NaN;

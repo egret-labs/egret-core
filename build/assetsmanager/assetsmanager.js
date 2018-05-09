@@ -986,7 +986,7 @@ var RES;
         processor_1.SheetProcessor = {
             onLoadStart: function (host, resource) {
                 return __awaiter(this, void 0, void 0, function () {
-                    var data, imageName, r, texture, frames, spriteSheet, subkey, config, texture;
+                    var data, imageName, r, texture, frames, spriteSheet, subkey, config, texture, str, list;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0: return [4 /*yield*/, host.load(resource, "json")];
@@ -1006,16 +1006,12 @@ var RES;
                                 for (subkey in frames) {
                                     config = frames[subkey];
                                     texture = spriteSheet.createTexture(subkey, config.x, config.y, config.w, config.h, config.offX, config.offY, config.sourceW, config.sourceH);
-                                    // if (config["scale9grid"]) {
-                                    //     var str: string = config["scale9grid"];
-                                    //     var list: Array<string> = str.split(",");
-                                    //     texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
-                                    // }
-                                    //     if (name) {
-                                    //         this.addSubkey(subkey, name);
-                                    //     }
+                                    if (config["scale9grid"]) {
+                                        str = config["scale9grid"];
+                                        list = str.split(",");
+                                        texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
+                                    }
                                 }
-                                // todo refactor
                                 host.save(r, texture);
                                 return [2 /*return*/, spriteSheet];
                         }
@@ -1035,6 +1031,7 @@ var RES;
             onRemoveStart: function (host, resource) {
                 var sheet = host.get(resource);
                 var r = sheet["$resourceInfo"];
+                sheet.dispose();
                 host.unload(r);
                 return Promise.resolve();
             }

@@ -50,7 +50,7 @@ var FileUtil = require("../lib/FileUtil");
 var service = require("../service/index");
 var project_1 = require("../project");
 var os = require("os");
-var Run = (function () {
+var Run = /** @class */ (function () {
     function Run() {
         this.initVersion = ""; //初始化的 egret 版本，如果版本变化了，关掉当前的进程
     }
@@ -208,11 +208,11 @@ var Run = (function () {
         }
         return result;
     };
+    __decorate([
+        utils.cache
+    ], Run.prototype, "genParams", null);
     return Run;
 }());
-__decorate([
-    utils.cache
-], Run.prototype, "genParams", null);
 function runWxIde() {
     return __awaiter(this, void 0, void 0, function () {
         var wxPaths, packagePath, _a, result, stdout_1, iconv, encoding, binaryEncoding, result2, stdout, stdoutArr, exePath, packageJson, _b, _c, _d, wxpath, projectPath, result, e_1;
