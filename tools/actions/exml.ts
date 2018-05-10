@@ -54,7 +54,7 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
     exmls = exml.sort(exmls);
 
     themeDatas.forEach(theme => theme.exmls = []);
-    let EuiJson: {};
+    let EuiJson: {} = {};
     exmls.forEach(e => {
         exmlParser.fileSystem.set(e.filename, e);
         var epath = e.filename;
@@ -90,7 +90,14 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
                 exmlEl = { path: e.filename, content: e.contents };
                 break;
         }
-        EuiJson = exmlEl.json;
+        if (exmlEl.className) {
+            let className = exmlEl.className.split(".")[exmlEl.className.split(".").length - 1];
+            if (exmlEl.path.indexOf(className) < 0)
+                console.log(utils.tr(2104, exmlEl.path, exmlEl.className));
+        }
+        for (let e in exmlEl.json) {
+            EuiJson[e] = exmlEl.json[e];
+        }
         themeDatas.forEach((thm) => {
             if (epath in oldEXMLS) {
                 const exmlFile = oldEXMLS[epath];
@@ -190,7 +197,7 @@ function __extends(d, b) {
             return { path, content: JSON.stringify(thmData, null, '\t') }
         }
     });
-    return { "files": files, "EuiJson": EuiJson };
+    return { "files": files, "EuiJson": JSON.stringify(EuiJson) };
 
 }
 

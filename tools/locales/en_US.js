@@ -173,6 +173,7 @@ locale_strings[2019] = "{0}: error the container’s child item must be visible 
 locale_strings[2020] = "{0}: error error for child nodes in w: Declarations, the includeIn and excludeFrom properties are not allowed to use \n {1}";
 locale_strings[2102] = "{0}: warning no child node can be found on the property code \n {1}";
 locale_strings[2103] = "{0}: warning the same property '{1}' on the node is assigned multiple times \n {2}";
+locale_strings[2104] = "warning: the class name defined by the{0} file{1} is inconsistent";
 // android sdk install
 locale_strings[2201] = "{0} file(s) will be downloaded!";
 locale_strings[2202] = "The total size is {0}MB";

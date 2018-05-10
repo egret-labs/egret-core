@@ -181,7 +181,7 @@ module egret {
     locale_strings[2020] = "{0}: error 在w:Declarations内的子节点，不允许使用includeIn和excludeFrom属性\n{1}";
     locale_strings[2102] = "{0}: warning 在属性节点上找不到任何子节点\n{1}";
     locale_strings[2103] = "{0}: warning 节点上的同一个属性'{1}'被多次赋值\n{2}";
-
+    locale_strings[2104] = "warning: {0}文件所定义的类名{1}不一致"
     // android sdk install
     locale_strings[2201] = "{0}个文件需要下载！";
     locale_strings[2202] = "文件总大小为{0}MB";

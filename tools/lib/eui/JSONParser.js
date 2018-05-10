@@ -88,9 +88,6 @@ var euiShorten = {
  * @private
  */
 var JSONParser = /** @class */ (function () {
-    /**
-     * @private
-     */
     function JSONParser() {
         /**
          * @private
@@ -103,6 +100,7 @@ var JSONParser = /** @class */ (function () {
             this.getIds = getIds;
             this.checkDeclarations = checkDeclarations;
         }
+        this.jsonFactory = new JSONClass_1.JSONClass();
     }
     Object.defineProperty(JSONParser.prototype, "topNode", {
         get: function () {
@@ -157,7 +155,7 @@ var JSONParser = /** @class */ (function () {
         this._className = className;
         var exClass = this.parseClass(xmlData, className);
         var code = exClass.toCode(true);
-        var json = JSONClass_1.jsonFactory.toCode();
+        var json = this.jsonFactory.Json;
         return { code: code, json: json, className: className };
     };
     /**
@@ -403,7 +401,7 @@ var JSONParser = /** @class */ (function () {
         }
         var name = exports.exmlConfig.getClassNameById(node.localName, node.namespace);
         config["$t"] = euiShorten[name] == undefined ? name : euiShorten[name];
-        JSONClass_1.jsonFactory.addContent(config, this.currentClass.className, func.name);
+        this.jsonFactory.addContent(config, this.currentClass.className, func.name);
         // 赋值skin的属性
         this.addConfig(func.name, node, configName, moduleName);
         this.initlizeChildNode(node, func.name);
@@ -489,7 +487,7 @@ var JSONParser = /** @class */ (function () {
         }
         if (type)
             jsonProperty["$t"] = euiShorten[type] == undefined ? type : euiShorten[type];
-        JSONClass_1.jsonFactory.addContent(jsonProperty, this.currentClass.className, configName == undefined ? "$bs" : configName);
+        this.jsonFactory.addContent(jsonProperty, this.currentClass.className, configName == undefined ? "$bs" : configName);
     };
     /**
      * @private
@@ -677,7 +675,7 @@ var JSONParser = /** @class */ (function () {
                 egretbridge_1.egretbridge.$warn(2103, this.currentClassName, prop, errorInfo);
             }
             var tar = varName == "this" ? "$bs" : varName;
-            JSONClass_1.jsonFactory.addContent(elementsContentForJson, this.currentClass.className + "." + tar, prop);
+            this.jsonFactory.addContent(elementsContentForJson, this.currentClass.className + "." + tar, prop);
         }
     };
     JSONParser.prototype.addToCodeBlockForNode = function (node) {
@@ -938,7 +936,7 @@ var JSONParser = /** @class */ (function () {
         this.initlizeChildNode(this.currentXML, varName);
         var skinConfig = this.skinParts;
         if (skinConfig.length > 0) {
-            JSONClass_1.jsonFactory.addContent(skinConfig, this.currentClass.className, "$sP");
+            this.jsonFactory.addContent(skinConfig, this.currentClass.className, "$sP");
         }
         this.currentXML.attributes.id = "";
         //生成视图状态代码
@@ -989,7 +987,7 @@ var JSONParser = /** @class */ (function () {
                     stateConfig[stateCode[i].name].push(tempProp);
                 }
             }
-            JSONClass_1.jsonFactory.addContent(stateConfig, this.currentClass.className, "$s");
+            this.jsonFactory.addContent(stateConfig, this.currentClass.className, "$s");
         }
         //生成绑定配置
         var bindings = this.bindings;
@@ -1012,7 +1010,7 @@ var JSONParser = /** @class */ (function () {
                 }
                 bindingConfig.push(config);
             }
-            JSONClass_1.jsonFactory.addContent(bindingConfig, this.currentClass.className, "$b");
+            this.jsonFactory.addContent(bindingConfig, this.currentClass.className, "$b");
         }
         this.currentClass.constructCode = cb;
     };
