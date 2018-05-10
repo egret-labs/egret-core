@@ -28,8 +28,22 @@ function publishEXML(exmls, exmlPublishPolicy) {
     }
     var themeDatas = generateThemeData();
     var oldEXMLS = [];
-    //3.主题文件的exmls是一个列表，列表项是一个{path:string,content:string}的格式
+    //3.对于autoGenerateExmlsList属性的支持
+    var themeConfigs = [];
+    themeDatas.forEach(function (theme) {
+        if (theme.autoGenerateExmlsList) {
+            theme.exmls = [];
+            for (var _i = 0, exmls_1 = exmls; _i < exmls_1.length; _i++) {
+                var exml_1 = exmls_1[_i];
+                theme.exmls.push(exml_1.filename);
+            }
+            themeConfigs.push({ path: theme.path, content: JSON.stringify(theme, null, '\t') });
+            file.save(Path.join(egret.args.projectDir, theme.path), JSON.stringify(theme, null, '\t'));
+        }
+    });
+    //4.主题文件的exmls是一个列表，列表项是一个{path:string,content:string}的格式
     //由于存在一个exml存在于多个主题的情况 把 主题1－>N文件 建立 文件1->N主题的一对多关系表oldEXMLS(数组＋快表)
+    var paths = [];
     themeDatas.forEach(function (theme) {
         theme.exmls && theme.exmls.forEach(function (e) {
             var path = e.path ? e.path : e;
@@ -43,13 +57,25 @@ function publishEXML(exmls, exmlPublishPolicy) {
             };
             oldEXMLS[path] = exmlFile;
             oldEXMLS.push(exmlFile);
+            paths.push(path);
         });
     });
-    //4.获得排序后的所有exml文件列表
+    //5.获得排序后的所有exml文件列表
     exmls = exml.sort(exmls);
+    //6.对exml文件列表进行筛选
+    var screenExmls = [];
+    for (var _i = 0, exmls_2 = exmls; _i < exmls_2.length; _i++) {
+        var exml_2 = exmls_2[_i];
+        for (var _a = 0, paths_1 = paths; _a < paths_1.length; _a++) {
+            var path = paths_1[_a];
+            if (path === exml_2.filename) {
+                screenExmls.push(exml_2);
+            }
+        }
+    }
     themeDatas.forEach(function (theme) { return theme.exmls = []; });
     var EuiJson = {};
-    exmls.forEach(function (e) {
+    screenExmls.forEach(function (e) {
         exmlParser.fileSystem.set(e.filename, e);
         var epath = e.filename;
         var exmlEl;
@@ -91,17 +117,16 @@ function publishEXML(exmls, exmlPublishPolicy) {
         for (var e_1 in exmlEl.json) {
             EuiJson[e_1] = exmlEl.json[e_1];
         }
+        exmlEl.json = JSON.stringify(exmlEl.json);
         themeDatas.forEach(function (thm) {
             if (epath in oldEXMLS) {
                 var exmlFile = oldEXMLS[epath];
                 if (exmlFile.theme.indexOf("," + thm.path + ",") >= 0)
                     thm.exmls.push(exmlEl);
             }
-            else if (thm.autoGenerateExmlsList) {
-                thm.exmls.push(exmlEl);
-            }
         });
     });
+    EuiJson = JSON.stringify(EuiJson);
     var files = themeDatas.map(function (thmData) {
         var path = thmData.path;
         if (exmlPublishPolicy == "commonjs") {
@@ -110,9 +135,6 @@ function publishEXML(exmls, exmlPublishPolicy) {
             var namespaces = [];
             for (var _i = 0, _a = thmData.exmls; _i < _a.length; _i++) {
                 var item = _a[_i];
-                // skins.items = {};
-                //skins.items.EUIComponent
-                //items.EUIComponent;
                 var packages = item.className.split(".");
                 var temp = '';
                 for (var i = 0; i < packages.length - 1; i++) {
@@ -135,9 +157,6 @@ function publishEXML(exmls, exmlPublishPolicy) {
             var namespaces = [];
             for (var _b = 0, _c = thmData.exmls; _b < _c.length; _b++) {
                 var item = _c[_b];
-                // skins.items = {};
-                //skins.items.EUIComponent
-                //items.EUIComponent;
                 var packages = item.className.split(".");
                 var temp = '';
                 for (var i = 0; i < packages.length - 1; i++) {
@@ -157,7 +176,8 @@ function publishEXML(exmls, exmlPublishPolicy) {
             return { path: path, content: JSON.stringify(thmData, null, '\t') };
         }
     });
-    return { "files": files, "EuiJson": JSON.stringify(EuiJson) };
+    var lastfile = files.concat(themeConfigs);
+    return { "files": lastfile, "EuiJson": EuiJson };
 }
 exports.publishEXML = publishEXML;
 function searchTheme() {

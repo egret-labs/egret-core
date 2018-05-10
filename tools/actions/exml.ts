@@ -32,8 +32,21 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
     const themeDatas = generateThemeData();
 
     var oldEXMLS: EXMLFile[] = [];
-    //3.主题文件的exmls是一个列表，列表项是一个{path:string,content:string}的格式
+    //3.对于autoGenerateExmlsList属性的支持
+    let themeConfigs: { path: string, content: string }[] = [];
+    themeDatas.forEach((theme) => {
+        if (theme.autoGenerateExmlsList) {
+            theme.exmls = [];
+            for (let exml of exmls) {
+                theme.exmls.push(exml.filename);
+            }
+            themeConfigs.push({ path: theme.path, content: JSON.stringify(theme, null, '\t') });
+            file.save(Path.join(egret.args.projectDir, theme.path), JSON.stringify(theme, null, '\t'));
+        }
+    })
+    //4.主题文件的exmls是一个列表，列表项是一个{path:string,content:string}的格式
     //由于存在一个exml存在于多个主题的情况 把 主题1－>N文件 建立 文件1->N主题的一对多关系表oldEXMLS(数组＋快表)
+    let paths: string[] = []
     themeDatas.forEach((theme) => {
         theme.exmls && theme.exmls.forEach(e => {
             var path = e.path ? e.path : e;
@@ -47,15 +60,25 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
             }
             oldEXMLS[path] = exmlFile;
             oldEXMLS.push(exmlFile);
+            paths.push(path);
         });
     });
 
-    //4.获得排序后的所有exml文件列表
+    //5.获得排序后的所有exml文件列表
     exmls = exml.sort(exmls);
+    //6.对exml文件列表进行筛选
+    let screenExmls = []
+    for (let exml of exmls) {
+        for (let path of paths) {
+            if (path === exml.filename) {
+                screenExmls.push(exml);
+            }
+        }
+    }
 
     themeDatas.forEach(theme => theme.exmls = []);
     let EuiJson: {} = {};
-    exmls.forEach(e => {
+    screenExmls.forEach(e => {
         exmlParser.fileSystem.set(e.filename, e);
         var epath = e.filename;
         var exmlEl;
@@ -98,17 +121,17 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
         for (let e in exmlEl.json) {
             EuiJson[e] = exmlEl.json[e];
         }
+        exmlEl.json = JSON.stringify(exmlEl.json);
+
         themeDatas.forEach((thm) => {
             if (epath in oldEXMLS) {
                 const exmlFile = oldEXMLS[epath];
                 if (exmlFile.theme.indexOf("," + thm.path + ",") >= 0)
                     thm.exmls.push(exmlEl);
             }
-            else if (thm.autoGenerateExmlsList) {
-                thm.exmls.push(exmlEl);
-            }
         });
     });
+    EuiJson = JSON.stringify(EuiJson);
     let files = themeDatas.map((thmData) => {
         let path = thmData.path;
 
@@ -131,11 +154,7 @@ function __extends(d, b) {
 
 
             let namespaces = [];
-
             for (let item of thmData.exmls) {
-                // skins.items = {};
-                //skins.items.EUIComponent
-                //items.EUIComponent;
                 let packages: string[] = item.className.split(".")
                 let temp = '';
                 for (let i = 0; i < packages.length - 1; i++) {
@@ -172,11 +191,7 @@ function __extends(d, b) {
 
 
             let namespaces = [];
-
             for (let item of thmData.exmls) {
-                // skins.items = {};
-                //skins.items.EUIComponent
-                //items.EUIComponent;
                 let packages: string[] = item.className.split(".")
                 let temp = '';
                 for (let i = 0; i < packages.length - 1; i++) {
@@ -197,7 +212,8 @@ function __extends(d, b) {
             return { path, content: JSON.stringify(thmData, null, '\t') }
         }
     });
-    return { "files": files, "EuiJson": JSON.stringify(EuiJson) };
+    let lastfile = files.concat(themeConfigs);
+    return { "files": lastfile, "EuiJson": EuiJson };
 
 }
 
