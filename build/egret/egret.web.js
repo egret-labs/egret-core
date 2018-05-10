@@ -4861,7 +4861,6 @@ var egret;
 (function (egret) {
     var web;
     (function (web) {
-        //for 3D&2D
         /**
          * @private
          * 绘制指令管理器
@@ -4876,27 +4875,16 @@ var egret;
                 this.drawDataLen = 0;
             }
             /**
-             * 压入绘制矩形指令
-             */
-            WebGLDrawCmdManager.prototype.pushDrawRect = function () {
-                if (this.drawDataLen == 0 || this.drawData[this.drawDataLen - 1].type != 10 /* RECT */) {
-                    var data = this.drawData[this.drawDataLen] || {};
-                    data.type = 10 /* RECT */;
-                    data.count = 0;
-                    this.drawData[this.drawDataLen] = data;
-                    this.drawDataLen++;
-                }
-                this.drawData[this.drawDataLen - 1].count += 2;
-                this.lastDrawTextureData = null;
-            };
-            /**
              * 压入绘制texture指令
              */
             WebGLDrawCmdManager.prototype.pushDrawTexture = function (texture, count, filter, textureWidth, textureHeight) {
                 if (count === void 0) { count = 2; }
                 if (filter) {
                     //根据filter压入切换program
-                    this.pushChangeProgram(filter.type, filter);
+                    var programeKey = filter.type;
+                    if (this.lastProgramKey !== programeKey) {
+                        this.pushChangeProgram(programeKey, filter);
+                    }
                     // 目前有滤镜的情况下不会合并绘制
                     var data = this.drawData[this.drawDataLen] || {};
                     data.type = 0 /* TEXTURE */;
@@ -4911,7 +4899,9 @@ var egret;
                 }
                 else {
                     if (this.lastDrawTextureData == null || texture != this.lastDrawTextureData.texture) {
-                        this.pushChangeProgram("texture");
+                        if (this.lastProgramKey !== "texture") {
+                            this.pushChangeProgram("texture");
+                        }
                         var data = this.drawData[this.drawDataLen] || {};
                         data.type = 0 /* TEXTURE */;
                         data.texture = texture;
@@ -4967,7 +4957,7 @@ var egret;
                 for (var i = len - 1; i >= 0; i--) {
                     var data = this.drawData[i];
                     if (data) {
-                        if (data.type == 0 /* TEXTURE */ || data.type == 10 /* RECT */) {
+                        if (data.type == 0 /* TEXTURE */) {
                             drawState = true;
                         }
                         // 如果与上一次blend操作之间无有效绘图，上一次操作无效
@@ -5100,6 +5090,7 @@ var egret;
                 }
                 this.drawDataLen = 0;
                 this.lastDrawTextureData = null;
+                this.lastProgramKey = null;
             };
             /**
              * 压入切换shader programe命令
@@ -5119,21 +5110,19 @@ var egret;
                 }
                 else if (type === "colorTransform") {
                     key = "colorTransform";
-                    vertSource = web.EgretShaderLib.default_vert;
                     fragSource = web.EgretShaderLib.colorTransform_frag;
                 }
-                else if (type === "blurX" || filter.type === "blurY") {
+                else if (type === "blurX" || type === "blurY") {
                     key = "blur";
                 }
                 else if (type === "glow") {
                     key = "glow";
                     fragSource = web.EgretShaderLib.glow_frag;
                 }
-                if (!key) {
-                    return;
-                }
+                //记录上一次的Programe类型
+                this.lastProgramKey = key;
                 var data = this.drawData[this.drawDataLen] || {};
-                data.type = 11 /* CHANGE_PROGRAM */;
+                data.type = 10 /* CHANGE_PROGRAM */;
                 data.key = key;
                 data.vertSource = vertSource;
                 data.fragSource = fragSource;
@@ -5922,12 +5911,12 @@ var egret;
             /**
              * 清除矩形区域
              */
+            //目前没有引用
             WebGLRenderContext.prototype.clearRect = function (x, y, width, height) {
                 if (x != 0 || y != 0 || width != this.surface.width || height != this.surface.height) {
                     var buffer = this.currentBuffer;
                     if (buffer.$hasScissor) {
                         this.setGlobalCompositeOperation("destination-out");
-                        this.drawRect(x, y, width, height);
                         this.setGlobalCompositeOperation("source-over");
                     }
                     else {
@@ -5943,7 +5932,7 @@ var egret;
                         }
                         else {
                             this.setGlobalCompositeOperation("destination-out");
-                            this.drawRect(x, y, width, height);
+                            // this.drawRect(x, y, width, height);
                             this.setGlobalCompositeOperation("source-over");
                         }
                     }
@@ -6281,20 +6270,6 @@ var egret;
                 this.vao.indexIndex += 6;
             };
             /**
-             * 绘制矩形（仅用于遮罩擦除等）
-             */
-            WebGLRenderContext.prototype.drawRect = function (x, y, width, height) {
-                var buffer = this.currentBuffer;
-                if (this.contextLost || !buffer) {
-                    return;
-                }
-                if (this.vao.reachMaxSize()) {
-                    this.$drawWebGL();
-                }
-                this.drawCmdManager.pushDrawRect();
-                this.vao.cacheArrays(buffer, 0, 0, width, height, x, y, width, height, width, height);
-            };
-            /**
              * 绘制遮罩
              */
             WebGLRenderContext.prototype.pushMask = function (x, y, width, height) {
@@ -6370,7 +6345,7 @@ var egret;
                     if (data.type == 6 /* ACT_BUFFER */) {
                         this.activatedBuffer = data.buffer;
                     }
-                    if (data.type != 0 /* TEXTURE */ && data.type != 10 /* RECT */ && data.type != 1 /* PUSH_MASK */ && data.type != 2 /* POP_MASK */) {
+                    if (data.type != 0 /* TEXTURE */ && data.type != 1 /* PUSH_MASK */ && data.type != 2 /* POP_MASK */) {
                         continue;
                     }
                     if (this.activatedBuffer && this.activatedBuffer.$computeDrawCall) {
@@ -6396,40 +6371,13 @@ var egret;
                 var program;
                 var filter = data.filter;
                 switch (data.type) {
-                    case 11 /* CHANGE_PROGRAM */:
-                        if (this.lastProgramKey !== data.key) {
-                            program = web.EgretWebGLProgram.getProgram(gl, data.vertSource, data.fragSource, data.key);
-                            this.activeProgram(gl, program);
-                            this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
-                            this.lastProgramKey = data.key;
-                        }
-                        break;
-                    case 0 /* TEXTURE */:
-                        // if (filter) {
-                        //     if (filter.type === "custom") {
-                        //         program = EgretWebGLProgram.getProgram(gl, filter.$vertexSrc, filter.$fragmentSrc, filter.$shaderKey);
-                        //     } else if (filter.type === "colorTransform") {
-                        //         program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.colorTransform_frag, "colorTransform");
-                        //     } else if (filter.type === "blurX") {
-                        //         program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.blur_frag, "blur");
-                        //     } else if (filter.type === "blurY") {
-                        //         program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.blur_frag, "blur");
-                        //     } else if (filter.type === "glow") {
-                        //         program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.glow_frag, "glow");
-                        //     }
-                        // } else {
-                        //     program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.texture_frag, "texture");
-                        // }
-                        // program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.texture_frag, "texture");
-                        // this.activeProgram(gl, program);
-                        // this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
-                        offset += this.drawTextureElements(data, offset);
-                        break;
-                    case 10 /* RECT */:
-                        program = web.EgretWebGLProgram.getProgram(gl, web.EgretShaderLib.default_vert, web.EgretShaderLib.primitive_frag, "primitive");
+                    case 10 /* CHANGE_PROGRAM */:
+                        program = web.EgretWebGLProgram.getProgram(gl, data.vertSource, data.fragSource, data.key);
                         this.activeProgram(gl, program);
                         this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
-                        offset += this.drawRectElements(data, offset);
+                        break;
+                    case 0 /* TEXTURE */:
+                        offset += this.drawTextureElements(data, offset);
                         break;
                     case 1 /* PUSH_MASK */:
                         program = web.EgretWebGLProgram.getProgram(gl, web.EgretShaderLib.default_vert, web.EgretShaderLib.primitive_frag, "primitive");
@@ -6543,17 +6491,6 @@ var egret;
             WebGLRenderContext.prototype.drawTextureElements = function (data, offset) {
                 var gl = this.context;
                 gl.bindTexture(gl.TEXTURE_2D, data.texture);
-                var size = data.count * 3;
-                gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
-                return size;
-            };
-            /**
-             * @private
-             * 画rect
-             **/
-            WebGLRenderContext.prototype.drawRectElements = function (data, offset) {
-                var gl = this.context;
-                // gl.bindTexture(gl.TEXTURE_2D, null);
                 var size = data.count * 3;
                 gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
                 return size;
