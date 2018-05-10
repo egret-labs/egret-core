@@ -1,5 +1,6 @@
 /// <reference path="../lib/types.d.ts" />
 Object.defineProperty(exports, "__esModule", { value: true });
+var utils = require("../lib/utils");
 var Path = require("path");
 var file = require("../lib/FileUtil");
 var exml = require("../lib/eui/EXML");
@@ -47,7 +48,7 @@ function publishEXML(exmls, exmlPublishPolicy) {
     //4.获得排序后的所有exml文件列表
     exmls = exml.sort(exmls);
     themeDatas.forEach(function (theme) { return theme.exmls = []; });
-    var EuiJson;
+    var EuiJson = {};
     exmls.forEach(function (e) {
         exmlParser.fileSystem.set(e.filename, e);
         var epath = e.filename;
@@ -82,7 +83,14 @@ function publishEXML(exmls, exmlPublishPolicy) {
                 exmlEl = { path: e.filename, content: e.contents };
                 break;
         }
-        EuiJson = exmlEl.json;
+        if (exmlEl.className) {
+            var className = exmlEl.className.split(".")[exmlEl.className.split(".").length - 1];
+            if (exmlEl.path.indexOf(className) < 0)
+                console.log(utils.tr(2104, exmlEl.path, exmlEl.className));
+        }
+        for (var e_1 in exmlEl.json) {
+            EuiJson[e_1] = exmlEl.json[e_1];
+        }
         themeDatas.forEach(function (thm) {
             if (epath in oldEXMLS) {
                 var exmlFile = oldEXMLS[epath];
@@ -149,7 +157,7 @@ function publishEXML(exmls, exmlPublishPolicy) {
             return { path: path, content: JSON.stringify(thmData, null, '\t') };
         }
     });
-    return { "files": files, "EuiJson": EuiJson };
+    return { "files": files, "EuiJson": JSON.stringify(EuiJson) };
 }
 exports.publishEXML = publishEXML;
 function searchTheme() {

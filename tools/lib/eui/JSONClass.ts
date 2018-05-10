@@ -1,7 +1,7 @@
-class JSONClass {
+export class JSONClass {
     private json = {};
-    public toCode(): string {
-        return JSON.stringify(this.json);
+    public get Json() {
+        return this.json;
     }
     public addContent(value: any, path: string, name = "elementsContent") {
         let paths = path.split(".");
@@ -16,5 +16,4 @@ class JSONClass {
         }
         target[name] = value;
     }
-}
-export let jsonFactory = new JSONClass();
+} 

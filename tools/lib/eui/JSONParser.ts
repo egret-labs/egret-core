@@ -32,7 +32,7 @@ import { EXAddItems, EXBinding, EXClass, EXCodeBlock, EXFunction, EXSetProperty,
 let DEBUG = false;
 import { egretbridge } from "./egretbridge";
 import { EXMLFile } from "./EXML";
-import { jsonFactory } from './JSONClass'
+import { JSONClass } from './JSONClass'
 /**
  * @private
  * EXML配置管理器实例
@@ -103,6 +103,7 @@ export class JSONParser {
     /**
      * @private
      */
+    private jsonFactory: JSONClass;
     public constructor() {
         if (DEBUG) {
             this.repeatedIdMap = {};
@@ -110,6 +111,7 @@ export class JSONParser {
             this.getIds = getIds;
             this.checkDeclarations = checkDeclarations;
         }
+        this.jsonFactory = new JSONClass();
     }
     private _topNode: egretbridge.XML;
     public get topNode(): egretbridge.XML {
@@ -203,7 +205,7 @@ export class JSONParser {
      * @param xmlData 要编译的EXML文件内容
      *
      */
-    public parse(text: string): { code: string, json: string, className: string } {
+    public parse(text: string): { code: string, json: Object, className: string } {
         if (DEBUG) {
             if (!text) {
                 egretbridge.$error(1003, "text");
@@ -237,8 +239,7 @@ export class JSONParser {
 
         let code = exClass.toCode(true);
 
-        let json = jsonFactory.toCode();
-
+        let json = this.jsonFactory.Json;
         return { code, json, className };
     }
 
@@ -503,7 +504,7 @@ export class JSONParser {
         }
         let name = exmlConfig.getClassNameById(node.localName, node.namespace);
         config["$t"] = euiShorten[name] == undefined ? name : euiShorten[name];
-        jsonFactory.addContent(config, this.currentClass.className, func.name);
+        this.jsonFactory.addContent(config, this.currentClass.className, func.name);
         // 赋值skin的属性
         this.addConfig(func.name, node, configName, moduleName);
         this.initlizeChildNode(node, func.name);
@@ -596,7 +597,7 @@ export class JSONParser {
         }
         if (type)
             jsonProperty["$t"] = euiShorten[type] == undefined ? type : euiShorten[type];
-        jsonFactory.addContent(jsonProperty, this.currentClass.className, configName == undefined ? "$bs" : configName);
+        this.jsonFactory.addContent(jsonProperty, this.currentClass.className, configName == undefined ? "$bs" : configName);
     }
 
     /**
@@ -792,7 +793,7 @@ export class JSONParser {
                 egretbridge.$warn(2103, this.currentClassName, prop, errorInfo);
             }
             let tar = varName == "this" ? "$bs" : varName;
-            jsonFactory.addContent(elementsContentForJson, this.currentClass.className + "." + tar, prop);
+            this.jsonFactory.addContent(elementsContentForJson, this.currentClass.className + "." + tar, prop);
         }
     }
 
@@ -1063,7 +1064,7 @@ export class JSONParser {
         this.initlizeChildNode(this.currentXML, varName);
         let skinConfig = this.skinParts;
         if (skinConfig.length > 0) {
-            jsonFactory.addContent(skinConfig, this.currentClass.className, "$sP");
+            this.jsonFactory.addContent(skinConfig, this.currentClass.className, "$sP");
         }
         this.currentXML.attributes.id = "";
         //生成视图状态代码
@@ -1114,7 +1115,7 @@ export class JSONParser {
                     stateConfig[stateCode[i].name].push(tempProp);
                 }
             }
-            jsonFactory.addContent(stateConfig, this.currentClass.className, "$s");
+            this.jsonFactory.addContent(stateConfig, this.currentClass.className, "$s");
         }
         //生成绑定配置
         let bindings = this.bindings;
@@ -1138,7 +1139,7 @@ export class JSONParser {
                 }
                 bindingConfig.push(config);
             }
-            jsonFactory.addContent(bindingConfig, this.currentClass.className, "$b");
+            this.jsonFactory.addContent(bindingConfig, this.currentClass.className, "$b");
         }
         this.currentClass.constructCode = cb;
     }
