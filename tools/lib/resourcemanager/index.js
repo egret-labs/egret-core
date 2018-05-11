@@ -3214,8 +3214,8 @@
                         return [ 2, new Promise(function(e, t) {
                             m.on("end", function() {
                                 e(m);
-                            }).on("error", function() {
-                                console.log("fuck");
+                            }).on("error", function(e) {
+                                console.log(e);
                             });
                         }) ];
                     }
