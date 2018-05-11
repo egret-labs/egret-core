@@ -3,16 +3,12 @@ var JSONClass = /** @class */ (function () {
     function JSONClass() {
         this.json = {};
     }
-    Object.defineProperty(JSONClass.prototype, "Json", {
-        get: function () {
-            return this.json;
-        },
-        enumerable: true,
-        configurable: true
-    });
+    JSONClass.prototype.toCode = function () {
+        return JSON.stringify(this.json);
+    };
     JSONClass.prototype.addContent = function (value, path, name) {
         if (name === void 0) { name = "elementsContent"; }
-        var paths = path.split(".");
+        var paths = path.split("/");
         var target = this.json;
         for (var _i = 0, paths_1 = paths; _i < paths_1.length; _i++) {
             var p = paths_1[_i];
@@ -27,4 +23,4 @@ var JSONClass = /** @class */ (function () {
     };
     return JSONClass;
 }());
-exports.JSONClass = JSONClass;
+exports.jsonFactory = new JSONClass();

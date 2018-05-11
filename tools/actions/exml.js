@@ -114,10 +114,7 @@ function publishEXML(exmls, exmlPublishPolicy) {
             if (exmlEl.path.indexOf(className) < 0)
                 console.log(utils.tr(2104, exmlEl.path, exmlEl.className));
         }
-        for (var e_1 in exmlEl.json) {
-            EuiJson[e_1] = exmlEl.json[e_1];
-        }
-        exmlEl.json = JSON.stringify(exmlEl.json);
+        EuiJson = exmlEl.json;
         themeDatas.forEach(function (thm) {
             if (epath in oldEXMLS) {
                 var exmlFile = oldEXMLS[epath];
@@ -126,12 +123,11 @@ function publishEXML(exmls, exmlPublishPolicy) {
             }
         });
     });
-    EuiJson = JSON.stringify(EuiJson);
     var files = themeDatas.map(function (thmData) {
         var path = thmData.path;
         if (exmlPublishPolicy == "commonjs") {
-            var content = "\nfunction __extends(d, b) {\n    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];\n        function __() {\n            this.constructor = d;\n        }\n    __.prototype = b.prototype;\n    d.prototype = new __();\n};\n";
-            content += "window.generateEUI = {};\n            generateEUI.paths = {};\n            generateEUI.styles = " + JSON.stringify(thmData.styles) + ";\n            generateEUI.skins = " + JSON.stringify(thmData.skins) + "\n";
+            var content = "\n                function __extends(d, b) {\n                    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];\n                        function __() {\n                            this.constructor = d;\n                        }\n                    __.prototype = b.prototype;\n                    d.prototype = new __();\n                };";
+            content += "\n                window.generateEUI = {};\n                generateEUI.paths = {};\n                generateEUI.styles = " + JSON.stringify(thmData.styles) + ";\n                generateEUI.skins = " + JSON.stringify(thmData.skins) + ";";
             var namespaces = [];
             for (var _i = 0, _a = thmData.exmls; _i < _a.length; _i++) {
                 var item = _a[_i];
@@ -152,8 +148,8 @@ function publishEXML(exmls, exmlPublishPolicy) {
         }
         else if (exmlPublishPolicy == "commonjs2") {
             var jsonParserStr = file.read(Path.join(egret.root, "tools/lib/eui/JsonParserFactory.js"));
-            var content = jsonParserStr + "\n            function __extends(d, b) {\n                for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];\n                    function __() {\n                        this.constructor = d;\n                    }\n                __.prototype = b.prototype;\n                d.prototype = new __();\n            };\n            ";
-            content += "window.generateEUI2 = {};\n            generateEUI2.paths = {};\n            generateEUI2.styles = " + JSON.stringify(thmData.styles) + ";\n            generateEUI2.skins = " + JSON.stringify(thmData.skins) + "\n            ";
+            var content = jsonParserStr + "\n                function __extends(d, b) {\n                    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];\n                        function __() {\n                            this.constructor = d;\n                        }\n                    __.prototype = b.prototype;\n                    d.prototype = new __();\n                };";
+            content += "\n                window.generateEUI2 = {};\n                generateEUI2.paths = {};\n                generateEUI2.styles = " + JSON.stringify(thmData.styles) + ";\n                generateEUI2.skins = " + JSON.stringify(thmData.skins) + ";";
             var namespaces = [];
             for (var _b = 0, _c = thmData.exmls; _b < _c.length; _b++) {
                 var item = _c[_b];
