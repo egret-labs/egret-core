@@ -4,7 +4,9 @@ var JSONClass = /** @class */ (function () {
         this.json = {};
     }
     JSONClass.prototype.toCode = function () {
-        return JSON.stringify(this.json);
+        var str = JSON.stringify(this.json);
+        str = str.replace(/\\\\n/g, "\\n");
+        return str;
     };
     JSONClass.prototype.addContent = function (value, path, name) {
         if (name === void 0) { name = "elementsContent"; }
