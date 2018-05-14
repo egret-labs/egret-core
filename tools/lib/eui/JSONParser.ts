@@ -1381,11 +1381,10 @@ export class JSONParser {
                         let bindingValue = this.formatBinding(key, value, node);
                         if (!bindingValue) {
                             value = this.formatValue(key, value, node);
-                            if (!value) {
+                            if (value == undefined) {
                                 continue;
                             }
                         }
-
                         stateName = name.substr(index + 1);
                         states = this.getStateByName(stateName, node);
                         let l = states.length;
