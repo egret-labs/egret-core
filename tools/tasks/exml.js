@@ -67,10 +67,7 @@ var ExmlPlugin = /** @class */ (function () {
                 }
                 result = exml.publishEXML(this.exmls, this.publishPolicy);
                 if (result.EuiJson !== undefined) {
-                    if (result.EuiJson !== {})
-                        pluginContext.createFile("resource/gameEui.bin", new Buffer("{}"));
-                    else
-                        pluginContext.createFile("resource/gameEui.bin", new Buffer("" + result.EuiJson));
+                    pluginContext.createFile("resource/gameEui.bin", new Buffer("" + result.EuiJson));
                 }
                 result.files.forEach(function (item) {
                     var filename = item.path.split("\\").join("/");
