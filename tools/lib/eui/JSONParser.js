@@ -1240,7 +1240,7 @@ var JSONParser = /** @class */ (function () {
                         var bindingValue = this.formatBinding(key, value, node);
                         if (!bindingValue) {
                             value = this.formatValue(key, value, node);
-                            if (!value) {
+                            if (value == undefined) {
                                 continue;
                             }
                         }
