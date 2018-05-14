@@ -74,7 +74,7 @@ function publishEXML(exmls, exmlPublishPolicy) {
         }
     }
     themeDatas.forEach(function (theme) { return theme.exmls = []; });
-    var EuiJson = {};
+    var EuiJson = "";
     screenExmls.forEach(function (e) {
         exmlParser.fileSystem.set(e.filename, e);
         var epath = e.filename;
@@ -173,6 +173,8 @@ function publishEXML(exmls, exmlPublishPolicy) {
         }
     });
     var lastfile = files.concat(themeConfigs);
+    if (EuiJson == "")
+        EuiJson = "{}";
     return { "files": lastfile, "EuiJson": EuiJson };
 }
 exports.publishEXML = publishEXML;

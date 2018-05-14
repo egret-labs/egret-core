@@ -77,7 +77,7 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
     }
 
     themeDatas.forEach(theme => theme.exmls = []);
-    let EuiJson: {} = {};
+    let EuiJson = "";
     screenExmls.forEach(e => {
         exmlParser.fileSystem.set(e.filename, e);
         var epath = e.filename;
@@ -206,6 +206,8 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
         }
     });
     let lastfile = files.concat(themeConfigs);
+    if (EuiJson == "")
+        EuiJson = "{}"
     return { "files": lastfile, "EuiJson": EuiJson };
 
 }
