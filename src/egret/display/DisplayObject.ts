@@ -445,6 +445,7 @@ namespace egret {
          * 设置x坐标
          */
         $setX(value: number): boolean {
+            value = +value || 0;
             let self = this;
             if (self.$x == value) {
                 return false;
@@ -512,6 +513,7 @@ namespace egret {
          * 设置y坐标
          */
         $setY(value: number): boolean {
+            value = +value || 0;
             let self = this;
             if (self.$y == value) {
                 return false;
