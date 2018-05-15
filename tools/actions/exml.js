@@ -31,14 +31,16 @@ function publishEXML(exmls, exmlPublishPolicy) {
     //3.对于autoGenerateExmlsList属性的支持
     var themeConfigs = [];
     themeDatas.forEach(function (theme) {
-        if (theme.autoGenerateExmlsList) {
+        if (!theme.exmls || theme.autoGenerateExmlsList) {
             theme.exmls = [];
             for (var _i = 0, exmls_1 = exmls; _i < exmls_1.length; _i++) {
                 var exml_1 = exmls_1[_i];
                 theme.exmls.push(exml_1.filename);
             }
             themeConfigs.push({ path: theme.path, content: JSON.stringify(theme, null, '\t') });
-            file.save(Path.join(egret.args.projectDir, theme.path), JSON.stringify(theme, null, '\t'));
+            if (theme.autoGenerateExmlsList) {
+                file.save(Path.join(egret.args.projectDir, theme.path), JSON.stringify(theme, null, '\t'));
+            }
         }
     });
     //4.主题文件的exmls是一个列表，列表项是一个{path:string,content:string}的格式

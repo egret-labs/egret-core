@@ -35,13 +35,15 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
     //3.对于autoGenerateExmlsList属性的支持
     let themeConfigs: { path: string, content: string }[] = [];
     themeDatas.forEach((theme) => {
-        if (theme.autoGenerateExmlsList) {
+        if (!theme.exmls || theme.autoGenerateExmlsList) {
             theme.exmls = [];
             for (let exml of exmls) {
                 theme.exmls.push(exml.filename);
             }
             themeConfigs.push({ path: theme.path, content: JSON.stringify(theme, null, '\t') });
-            file.save(Path.join(egret.args.projectDir, theme.path), JSON.stringify(theme, null, '\t'));
+            if (theme.autoGenerateExmlsList) {
+                file.save(Path.join(egret.args.projectDir, theme.path), JSON.stringify(theme, null, '\t'));
+            }
         }
     })
     //4.主题文件的exmls是一个列表，列表项是一个{path:string,content:string}的格式
