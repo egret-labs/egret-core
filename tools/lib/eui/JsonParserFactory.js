@@ -180,6 +180,7 @@ var JSONParseClass = /** @class */ (function () {
     JSONParseClass.prototype.addCommonProperty = function (component, target) {
         var _this = this;
         var eleC = [];
+        var sId = [];
         var _loop_2 = function (property) {
             if (property == "$t") {
             }
@@ -189,6 +190,9 @@ var JSONParseClass = /** @class */ (function () {
             }
             else if (property == "$eleC") {
                 eleC = this_2.skinClass[component]["$eleC"];
+            }
+            else if (property == "$sId") {
+                sId = this_2.skinClass[component]["$sId"];
             }
             else if (property == "scale9Grid") {
                 var data = this_2.skinClass[component][property].split(",");
@@ -224,15 +228,22 @@ var JSONParseClass = /** @class */ (function () {
         for (var property in this.skinClass[component]) {
             _loop_2(property);
         }
+        var ele = [];
         if (eleC.length > 0) {
-            var eleCs = [];
             for (var _i = 0, eleC_1 = eleC; _i < eleC_1.length; _i++) {
                 var element = eleC_1[_i];
                 var e = this.createElementContentOrViewport(element);
-                eleCs.push(e);
+                ele.push(e);
             }
-            target["elementsContent"] = eleCs;
         }
+        if (sId.length > 0) {
+            for (var _a = 0, sId_1 = sId; _a < sId_1.length; _a++) {
+                var element = sId_1[_a];
+                var e = this.createElementContentOrViewport(element);
+                ele.push(e);
+            }
+        }
+        target["elementsContent"] = ele;
         return target;
     };
     JSONParseClass.prototype.createLayout = function (component) {
@@ -253,10 +264,20 @@ var JSONParseClass = /** @class */ (function () {
         var states = [];
         for (var state in this.skinClass["$s"]) {
             var setProperty_1 = [];
-            for (var _i = 0, _a = this.skinClass["$s"][state]; _i < _a.length; _i++) {
-                var property = _a[_i];
-                var p = this.skinClass["$s"][state][property];
-                setProperty_1.push(new eui.SetProperty(property["target"], property["name"], property["value"]));
+            var tempState = this.skinClass["$s"][state];
+            for (var group in tempState) {
+                if (group == "$ssP") {
+                    for (var _i = 0, _a = tempState[group]; _i < _a.length; _i++) {
+                        var property = _a[_i];
+                        setProperty_1.push(new eui.SetProperty(property["target"], property["name"], property["value"]));
+                    }
+                }
+                else if (group == "$saI") {
+                    for (var _b = 0, _c = tempState[group]; _b < _c.length; _b++) {
+                        var property = _c[_b];
+                        setProperty_1.push(new eui.AddItems(property["target"], property["property"], property["position"], property["relativeTo"]));
+                    }
+                }
             }
             states.push(new eui.State(state, setProperty_1));
         }
