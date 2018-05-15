@@ -367,7 +367,8 @@ export class JSONParser {
             }
             else if (node.nodeType === 1) {
                 let id = node.attributes["id"];
-                if (id) {
+                let stateGroups = node.attributes["stateGroups"];
+                if (id && stateGroups == undefined) {//区分是组件的id还是stateGroup的id
                     let e = new RegExp("^[a-zA-Z_$]{1}[a-z0-9A-Z_$]*");
                     if (id.match(e) == null) {
                         egretbridge.$warn(2022, id);
@@ -379,9 +380,13 @@ export class JSONParser {
                         this.skinParts.push(id);
                     }
                     this.createVarForNode(node);
+                    if (this.isStateNode(node))//检查节点是否只存在于一个状态里，需要单独实例化
+                        this.stateIds.push(id);
                 }
                 else {
                     this.createIdForNode(node);
+                    if (this.isStateNode(node))
+                        this.stateIds.push(node.attributes.id);
                 }
             }
         }
@@ -1068,6 +1073,12 @@ export class JSONParser {
             }
         }
         this.initlizeChildNode(this.currentXML, varName);
+        var id;
+        var stateIds = this.stateIds;
+        if (stateIds.length > 0) {
+            jsonFactory.addContent(stateIds, this.currentClassName + "/$bs", "$sId");
+        }
+
         let skinConfig = this.skinParts;
         if (skinConfig.length > 0) {
             jsonFactory.addContent(skinConfig, this.currentClassName, "$sP");
@@ -1107,10 +1118,10 @@ export class JSONParser {
         //生成视图配置
         let stateCode = this.stateCode;
         let length = stateCode.length;
-        let stateConfig = {};
         if (length > 0) {
+            let stateConfig = {};
             for (let i = 0; i < length; i++) {
-                stateConfig[stateCode[i].name] = [];
+                let setPropertyConfig = [];
                 for (let property of stateCode[i].setProperty) {
                     let tempProp = {};
                     for (let prop in property) {
@@ -1118,8 +1129,24 @@ export class JSONParser {
                             tempProp[prop] = property[prop];
                         }
                     }
-                    stateConfig[stateCode[i].name].push(tempProp);
+                    setPropertyConfig.push(tempProp);
                 }
+
+                let addItemsConfig = [];
+                for (let property of stateCode[i].addItems) {
+                    let tempProp = {};
+                    for (let prop in property) {
+                        if (prop != "indent") {
+                            tempProp[prop] = property[prop];
+                        }
+                    }
+                    addItemsConfig.push(tempProp);
+                }
+                stateConfig[stateCode[i].name] = {};
+                if (setPropertyConfig.length > 0)
+                    stateConfig[stateCode[i].name]["$ssP"] = setPropertyConfig;
+                if (addItemsConfig.length > 0)
+                    stateConfig[stateCode[i].name]["$saI"] = addItemsConfig;
             }
             jsonFactory.addContent(stateConfig, this.currentClassName, "$s");
         }

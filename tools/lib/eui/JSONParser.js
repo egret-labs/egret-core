@@ -274,7 +274,8 @@ var JSONParser = /** @class */ (function () {
             }
             else if (node.nodeType === 1) {
                 var id = node.attributes["id"];
-                if (id) {
+                var stateGroups = node.attributes["stateGroups"];
+                if (id && stateGroups == undefined) { //区分是组件的id还是stateGroup的id
                     var e = new RegExp("^[a-zA-Z_$]{1}[a-z0-9A-Z_$]*");
                     if (id.match(e) == null) {
                         egretbridge_1.egretbridge.$warn(2022, id);
@@ -286,9 +287,13 @@ var JSONParser = /** @class */ (function () {
                         this.skinParts.push(id);
                     }
                     this.createVarForNode(node);
+                    if (this.isStateNode(node)) //检查节点是否只存在于一个状态里，需要单独实例化
+                        this.stateIds.push(id);
                 }
                 else {
                     this.createIdForNode(node);
+                    if (this.isStateNode(node))
+                        this.stateIds.push(node.attributes.id);
                 }
             }
         }
@@ -944,6 +949,11 @@ var JSONParser = /** @class */ (function () {
             }
         }
         this.initlizeChildNode(this.currentXML, varName);
+        var id;
+        var stateIds = this.stateIds;
+        if (stateIds.length > 0) {
+            JSONClass_1.jsonFactory.addContent(stateIds, this.currentClassName + "/$bs", "$sId");
+        }
         var skinConfig = this.skinParts;
         if (skinConfig.length > 0) {
             JSONClass_1.jsonFactory.addContent(skinConfig, this.currentClassName, "$sP");
@@ -982,10 +992,10 @@ var JSONParser = /** @class */ (function () {
         //生成视图配置
         var stateCode = this.stateCode;
         var length = stateCode.length;
-        var stateConfig = {};
         if (length > 0) {
+            var stateConfig = {};
             for (var i = 0; i < length; i++) {
-                stateConfig[stateCode[i].name] = [];
+                var setPropertyConfig = [];
                 for (var _i = 0, _a = stateCode[i].setProperty; _i < _a.length; _i++) {
                     var property = _a[_i];
                     var tempProp = {};
@@ -994,8 +1004,24 @@ var JSONParser = /** @class */ (function () {
                             tempProp[prop] = property[prop];
                         }
                     }
-                    stateConfig[stateCode[i].name].push(tempProp);
+                    setPropertyConfig.push(tempProp);
                 }
+                var addItemsConfig = [];
+                for (var _b = 0, _c = stateCode[i].addItems; _b < _c.length; _b++) {
+                    var property = _c[_b];
+                    var tempProp = {};
+                    for (var prop in property) {
+                        if (prop != "indent") {
+                            tempProp[prop] = property[prop];
+                        }
+                    }
+                    addItemsConfig.push(tempProp);
+                }
+                stateConfig[stateCode[i].name] = {};
+                if (setPropertyConfig.length > 0)
+                    stateConfig[stateCode[i].name]["$ssP"] = setPropertyConfig;
+                if (addItemsConfig.length > 0)
+                    stateConfig[stateCode[i].name]["$saI"] = addItemsConfig;
             }
             JSONClass_1.jsonFactory.addContent(stateConfig, this.currentClassName, "$s");
         }
@@ -1004,8 +1030,8 @@ var JSONParser = /** @class */ (function () {
         length = bindings.length;
         var bindingConfig = [];
         if (length > 0) {
-            for (var _b = 0, bindings_1 = bindings; _b < bindings_1.length; _b++) {
-                var binding = bindings_1[_b];
+            for (var _d = 0, bindings_1 = bindings; _d < bindings_1.length; _d++) {
+                var binding = bindings_1[_d];
                 var config = {};
                 if (binding.templates.length == 1 && binding.chainIndex.length == 1) {
                     config["$bd"] = binding.templates; //data
