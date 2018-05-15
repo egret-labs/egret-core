@@ -5,7 +5,7 @@ import { Plugin, File } from './index';
 const manifest = {
     initial: [],
     game: [],
-    // configURL: ""
+// configURL: ""
 }
 
 
@@ -27,22 +27,14 @@ export class ManifestPlugin {
         if (!this.options) {
             this.options = { output: "manifest.json" }
         }
+        if (options.hash) {
+            console.log('ManifestPlugin 在未来的 5.3.x 版本中将不再支持 hash 参数，请使用 RenamePlugin 代替')
+        }
     }
 
     async onFile(file: File) {
-
-
-
         const filename = file.relative;
         const extname = path.extname(filename);
-        // if (filename === "config.res.js") {
-        //     const crc32 = globals.getCrc32();
-        //     const crc32_file_path = crc32(file.contents);
-        //     const origin_path = file.original_relative;
-        //     const new_file_path = "js/" + origin_path.substr(0, origin_path.length - file.extname.length) + "_" + crc32_file_path + file.extname;
-        //     file.path = path.join(file.base, new_file_path);
-        //     manifest.configURL = new_file_path;
-        // }
         if (extname == ".js") {
             let new_file_path;
             const basename = path.basename(filename);
