@@ -29,7 +29,6 @@ function publishEXML(exmls, exmlPublishPolicy) {
     var themeDatas = generateThemeData();
     var oldEXMLS = [];
     //3.对于autoGenerateExmlsList属性的支持
-    var themeConfigs = [];
     themeDatas.forEach(function (theme) {
         if (!theme.exmls || theme.autoGenerateExmlsList) {
             theme.exmls = [];
@@ -37,7 +36,6 @@ function publishEXML(exmls, exmlPublishPolicy) {
                 var exml_1 = exmls_1[_i];
                 theme.exmls.push(exml_1.filename);
             }
-            themeConfigs.push({ path: theme.path, content: JSON.stringify(theme, null, '\t') });
             if (theme.autoGenerateExmlsList) {
                 file.save(Path.join(egret.args.projectDir, theme.path), JSON.stringify(theme, null, '\t'));
             }
@@ -174,10 +172,9 @@ function publishEXML(exmls, exmlPublishPolicy) {
             return { path: path, content: JSON.stringify(thmData, null, '\t') };
         }
     });
-    var lastfile = files.concat(themeConfigs);
     if (EuiJson == "")
         EuiJson = "{}";
-    return { "files": lastfile, "EuiJson": EuiJson };
+    return { "files": files, "EuiJson": EuiJson };
 }
 exports.publishEXML = publishEXML;
 function searchTheme() {

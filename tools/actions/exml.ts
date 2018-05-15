@@ -33,14 +33,12 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
 
     var oldEXMLS: EXMLFile[] = [];
     //3.对于autoGenerateExmlsList属性的支持
-    let themeConfigs: { path: string, content: string }[] = [];
     themeDatas.forEach((theme) => {
         if (!theme.exmls || theme.autoGenerateExmlsList) {
             theme.exmls = [];
             for (let exml of exmls) {
                 theme.exmls.push(exml.filename);
             }
-            themeConfigs.push({ path: theme.path, content: JSON.stringify(theme, null, '\t') });
             if (theme.autoGenerateExmlsList) {
                 file.save(Path.join(egret.args.projectDir, theme.path), JSON.stringify(theme, null, '\t'));
             }
@@ -207,10 +205,9 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
             return { path, content: JSON.stringify(thmData, null, '\t') }
         }
     });
-    let lastfile = files.concat(themeConfigs);
     if (EuiJson == "")
         EuiJson = "{}"
-    return { "files": lastfile, "EuiJson": EuiJson };
+    return { "files": files, "EuiJson": EuiJson };
 
 }
 
