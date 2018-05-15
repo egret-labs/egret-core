@@ -239,8 +239,7 @@ var JSONParseClass = /** @class */ (function () {
         if (sId.length > 0) {
             for (var _a = 0, sId_1 = sId; _a < sId_1.length; _a++) {
                 var element = sId_1[_a];
-                var e = this.createElementContentOrViewport(element);
-                ele.push(e);
+                this.createElementContentOrViewport(element);
             }
         }
         target["elementsContent"] = ele;
@@ -265,18 +264,16 @@ var JSONParseClass = /** @class */ (function () {
         for (var state in this.skinClass["$s"]) {
             var setProperty_1 = [];
             var tempState = this.skinClass["$s"][state];
-            for (var group in tempState) {
-                if (group == "$ssP") {
-                    for (var _i = 0, _a = tempState[group]; _i < _a.length; _i++) {
-                        var property = _a[_i];
-                        setProperty_1.push(new eui.SetProperty(property["target"], property["name"], property["value"]));
-                    }
+            if (this.skinClass["$s"][state]["$saI"]) {
+                for (var _i = 0, _a = tempState["$saI"]; _i < _a.length; _i++) {
+                    var property = _a[_i];
+                    setProperty_1.push(new eui.AddItems(property["target"], property["property"], property["position"], property["relativeTo"]));
                 }
-                else if (group == "$saI") {
-                    for (var _b = 0, _c = tempState[group]; _b < _c.length; _b++) {
-                        var property = _c[_b];
-                        setProperty_1.push(new eui.AddItems(property["target"], property["property"], property["position"], property["relativeTo"]));
-                    }
+            }
+            if (this.skinClass["$s"][state]["$ssP"]) {
+                for (var _b = 0, _c = tempState["$ssP"]; _b < _c.length; _b++) {
+                    var property = _c[_b];
+                    setProperty_1.push(new eui.SetProperty(property["target"], property["name"], property["value"]));
                 }
             }
             states.push(new eui.State(state, setProperty_1));
