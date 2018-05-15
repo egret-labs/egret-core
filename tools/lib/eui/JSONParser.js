@@ -1000,9 +1000,17 @@ var JSONParser = /** @class */ (function () {
                     var property = _a[_i];
                     var tempProp = {};
                     for (var prop in property) {
-                        if (prop != "indent") {
-                            tempProp[prop] = property[prop];
+                        if (prop == "indent") { }
+                        else if (prop == "target") {
+                            if (property[prop].search("this.") > -1) {
+                                var temp = property[prop].slice("this.".length, property[prop].length);
+                                tempProp[prop] = temp;
+                            }
+                            else
+                                tempProp[prop] = property[prop];
                         }
+                        else
+                            tempProp[prop] = property[prop];
                     }
                     setPropertyConfig.push(tempProp);
                 }

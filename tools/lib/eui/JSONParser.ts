@@ -1125,9 +1125,15 @@ export class JSONParser {
                 for (let property of stateCode[i].setProperty) {
                     let tempProp = {};
                     for (let prop in property) {
-                        if (prop != "indent") {
+                        if (prop == "indent") { }
+                        else if (prop == "target") {
+                            if (property[prop].search("this.") > -1) {
+                                let temp = property[prop].slice("this.".length, property[prop].length)
+                                tempProp[prop] = temp;
+                            } else
+                                tempProp[prop] = property[prop];
+                        } else
                             tempProp[prop] = property[prop];
-                        }
                     }
                     setPropertyConfig.push(tempProp);
                 }
@@ -1157,8 +1163,6 @@ export class JSONParser {
         if (length > 0) {
             for (let binding of bindings) {
                 let config = {};
-
-
                 if (binding.templates.length == 1 && binding.chainIndex.length == 1) {
                     config["$bd"] = binding.templates;//data
                     config["$bt"] = binding.target;//target
