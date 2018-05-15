@@ -311,6 +311,20 @@ declare module 'built-in' {
 
     }
 
+    export type ConvertResourceConfigPluginOption = {
+
+        resourceConfigFiles: { filename: string, root: string }[];
+
+        nameSelector: (url: string) => string
+
+
+    }
+
+    export class ConvertResConfigFilePlugin implements plugins.Command {
+
+        constructor(options: ConvertResourceConfigPluginOption);
+    }
+
 
     /**
      * 增量编译
