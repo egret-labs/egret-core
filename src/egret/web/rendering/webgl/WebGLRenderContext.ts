@@ -440,12 +440,12 @@ namespace egret.web {
         /**
          * 清除矩形区域
          */
+        //目前没有引用
         public clearRect(x: number, y: number, width: number, height: number): void {
             if (x != 0 || y != 0 || width != this.surface.width || height != this.surface.height) {
                 let buffer = this.currentBuffer;
                 if (buffer.$hasScissor) {
                     this.setGlobalCompositeOperation("destination-out");
-                    this.drawRect(x, y, width, height);
                     this.setGlobalCompositeOperation("source-over");
                 } else {
                     let m = buffer.globalMatrix;
@@ -459,7 +459,7 @@ namespace egret.web {
                         this.disableScissor();
                     } else {
                         this.setGlobalCompositeOperation("destination-out");
-                        this.drawRect(x, y, width, height);
+                        // this.drawRect(x, y, width, height);
                         this.setGlobalCompositeOperation("source-over");
                     }
                 }
@@ -861,26 +861,6 @@ namespace egret.web {
             this.vao.indexIndex += 6;
         }
 
-
-
-        /**
-         * 绘制矩形（仅用于遮罩擦除等）
-         */
-        public drawRect(x: number, y: number, width: number, height: number): void {
-            let buffer = this.currentBuffer;
-            if (this.contextLost || !buffer) {
-                return;
-            }
-
-            if (this.vao.reachMaxSize()) {
-                this.$drawWebGL();
-            }
-
-            this.drawCmdManager.pushDrawRect();
-
-            this.vao.cacheArrays(buffer, 0, 0, width, height, x, y, width, height, width, height);
-        }
-
         /**
          * 绘制遮罩
          */
@@ -974,7 +954,7 @@ namespace egret.web {
                 if (data.type == DRAWABLE_TYPE.ACT_BUFFER) {
                     this.activatedBuffer = data.buffer;
                 }
-                if (data.type != DRAWABLE_TYPE.TEXTURE && data.type != DRAWABLE_TYPE.RECT && data.type != DRAWABLE_TYPE.PUSH_MASK && data.type != DRAWABLE_TYPE.POP_MASK) {
+                if (data.type != DRAWABLE_TYPE.TEXTURE && data.type != DRAWABLE_TYPE.PUSH_MASK && data.type != DRAWABLE_TYPE.POP_MASK) {
                     continue;
                 }
                 if (this.activatedBuffer && this.activatedBuffer.$computeDrawCall) {
@@ -1006,44 +986,16 @@ namespace egret.web {
 
             switch (data.type) {
                 case DRAWABLE_TYPE.CHANGE_PROGRAM:
-                    if (this.lastProgramKey !== data.key) {
-                        program = EgretWebGLProgram.getProgram(gl, data.vertSource, data.fragSource, data.key);
-                        this.activeProgram(gl, program);
-                        this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
-                        this.lastProgramKey = data.key;
-                    }
+                    program = EgretWebGLProgram.getProgram(gl, data.vertSource, data.fragSource, data.key);
+                    this.activeProgram(gl, program);
+                    this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
                     break;
 
 
                 case DRAWABLE_TYPE.TEXTURE:
-                    // if (filter) {
-                    //     if (filter.type === "custom") {
-                    //         program = EgretWebGLProgram.getProgram(gl, filter.$vertexSrc, filter.$fragmentSrc, filter.$shaderKey);
-                    //     } else if (filter.type === "colorTransform") {
-                    //         program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.colorTransform_frag, "colorTransform");
-                    //     } else if (filter.type === "blurX") {
-                    //         program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.blur_frag, "blur");
-                    //     } else if (filter.type === "blurY") {
-                    //         program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.blur_frag, "blur");
-                    //     } else if (filter.type === "glow") {
-                    //         program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.glow_frag, "glow");
-                    //     }
-                    // } else {
-                    //     program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.texture_frag, "texture");
-                    // }
-                    // program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.texture_frag, "texture");
-                    // this.activeProgram(gl, program);
-                    // this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
                     offset += this.drawTextureElements(data, offset);
                     break;
-                case DRAWABLE_TYPE.RECT:
 
-                    program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.primitive_frag, "primitive");
-                    this.activeProgram(gl, program);
-                    this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
-
-                    offset += this.drawRectElements(data, offset);
-                    break;
                 case DRAWABLE_TYPE.PUSH_MASK:
 
                     program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.primitive_frag, "primitive");
@@ -1112,7 +1064,6 @@ namespace egret.web {
         }
 
         public currentProgram: EgretWebGLProgram;
-        public lastProgramKey: string;
         private activeProgram(gl: WebGLRenderingContext, program: EgretWebGLProgram): void {
             if (program != this.currentProgram) {
                 gl.useProgram(program.id);
@@ -1164,18 +1115,6 @@ namespace egret.web {
         private drawTextureElements(data: any, offset: number): number {
             let gl: any = this.context;
             gl.bindTexture(gl.TEXTURE_2D, data.texture);
-            let size = data.count * 3;
-            gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
-            return size;
-        }
-
-        /**
-         * @private
-         * 画rect
-         **/
-        private drawRectElements(data: any, offset: number): number {
-            let gl: any = this.context;
-            // gl.bindTexture(gl.TEXTURE_2D, null);
             let size = data.count * 3;
             gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
             return size;

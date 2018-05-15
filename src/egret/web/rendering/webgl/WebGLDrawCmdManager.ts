@@ -31,6 +31,9 @@ namespace egret.web {
      * draw类型，所有的绘图操作都会缓存在drawData中，每个drawData都是一个drawable对象
      * $renderWebGL方法依据drawable对象的类型，调用不同的绘制方法
      */
+    //for 3D&2D
+    //2D与3D的DRAWABLE_TYPE有区别，且3D是写死的
+    //暂时不要更改
     export const enum DRAWABLE_TYPE {
         TEXTURE = 0,
         PUSH_MASK = 1,
@@ -42,10 +45,9 @@ namespace egret.web {
         ENABLE_SCISSOR = 7,
         DISABLE_SCISSOR = 8,
         SMOOTHING = 9,
-        RECT = 10,
-        CHANGE_PROGRAM = 11
+        CHANGE_PROGRAM = 10
     }
-    //for 3D&2D
+
 
     /**
      * @private
@@ -61,25 +63,12 @@ namespace egret.web {
 
         private lastDrawTextureData: any;
 
+        private lastProgramKey: string;
+
         public drawDataLen = 0;
 
         public constructor() {
 
-        }
-
-        /**
-         * 压入绘制矩形指令
-         */
-        public pushDrawRect(): void {
-            if (this.drawDataLen == 0 || this.drawData[this.drawDataLen - 1].type != DRAWABLE_TYPE.RECT) {
-                let data = this.drawData[this.drawDataLen] || {};
-                data.type = DRAWABLE_TYPE.RECT;
-                data.count = 0;
-                this.drawData[this.drawDataLen] = data;
-                this.drawDataLen++;
-            }
-            this.drawData[this.drawDataLen - 1].count += 2;
-            this.lastDrawTextureData = null;
         }
 
         /**
@@ -88,7 +77,10 @@ namespace egret.web {
         public pushDrawTexture(texture: any, count: number = 2, filter?: any, textureWidth?: number, textureHeight?: number): void {
             if (filter) {
                 //根据filter压入切换program
-                this.pushChangeProgram(filter.type, filter);
+                let programeKey = filter.type;
+                if (this.lastProgramKey !== programeKey) {
+                    this.pushChangeProgram(programeKey, filter);
+                }
                 // 目前有滤镜的情况下不会合并绘制
                 let data = this.drawData[this.drawDataLen] || {};
                 data.type = DRAWABLE_TYPE.TEXTURE;
@@ -102,7 +94,9 @@ namespace egret.web {
                 this.lastDrawTextureData = null;
             } else {
                 if (this.lastDrawTextureData == null || texture != this.lastDrawTextureData.texture) {
-                    this.pushChangeProgram("texture");
+                    if (this.lastProgramKey !== "texture") {
+                        this.pushChangeProgram("texture");
+                    }
                     let data = this.drawData[this.drawDataLen] || {};
                     data.type = DRAWABLE_TYPE.TEXTURE;
                     data.texture = texture;
@@ -163,7 +157,7 @@ namespace egret.web {
                 let data = this.drawData[i];
 
                 if (data) {
-                    if (data.type == DRAWABLE_TYPE.TEXTURE || data.type == DRAWABLE_TYPE.RECT) {
+                    if (data.type == DRAWABLE_TYPE.TEXTURE ) {
                         drawState = true;
                     }
 
@@ -308,13 +302,14 @@ namespace egret.web {
             }
             this.drawDataLen = 0;
             this.lastDrawTextureData = null;
+            this.lastProgramKey = null;
         }
 
 
         /**
          * 压入切换shader programe命令
          */
-        public pushChangeProgram(type: string, filter?: any): void {
+        public pushChangeProgram(type: string, filter?: egret.Filter): void {
             let key: string;
             let vertSource: string = EgretShaderLib.default_vert;
             let fragSource: string = EgretShaderLib.blur_frag;
@@ -322,22 +317,20 @@ namespace egret.web {
                 key = "texture";
                 fragSource = EgretShaderLib.texture_frag;
             } else if (type === "custom") {
-                key = filter.$shaderKey;
-                vertSource = filter.$vertexSrc;
-                fragSource = filter.$fragmentSrc;
+                key = (filter as egret.CustomFilter).$shaderKey;
+                vertSource = (filter as egret.CustomFilter).$vertexSrc;
+                fragSource = (filter as egret.CustomFilter).$fragmentSrc;
             } else if (type === "colorTransform") {
                 key = "colorTransform";
-                vertSource = EgretShaderLib.default_vert;
                 fragSource = EgretShaderLib.colorTransform_frag
-            } else if (type === "blurX" || filter.type === "blurY") {
+            } else if (type === "blurX" || type === "blurY") {
                 key = "blur";
             } else if (type === "glow") {
                 key = "glow";
                 fragSource = EgretShaderLib.glow_frag;
             }
-            if (!key) {
-                return;
-            }
+            //记录上一次的Programe类型
+            this.lastProgramKey = key;
             let data = this.drawData[this.drawDataLen] || {};
             data.type = DRAWABLE_TYPE.CHANGE_PROGRAM;
             data.key = key;
