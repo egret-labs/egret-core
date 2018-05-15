@@ -88,7 +88,7 @@ type ProjectConfig = {
    */
 type Matcher = {
 
-    from: string[],
+    from: string,
 
     to: string
 
