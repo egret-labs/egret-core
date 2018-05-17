@@ -128,6 +128,83 @@ exports.resources = ${JSON.stringify(generateConfig.resources, null, "\t")};
 
 
 
+export type ConvertResourceConfigPluginOption = {
+
+    resourceConfigFiles: { filename: string, root: string }[];
+
+    nameSelector: (url: string) => string
+
+
+}
+
+type R = { url: string, type: string, subkeys: string[] | string, name: string };
+
+export class ConvertResConfigFilePlugin implements plugin.Plugin {
+
+
+
+    private files: { [url: string]: R } = {};
+    private resourceConfigFiles: string[] = [];
+    private resourceConfig: { [filename: string]: { resources: any[] } } = {};
+    constructor(private options: ConvertResourceConfigPluginOption) {
+        this.resourceConfigFiles = this.options.resourceConfigFiles.map((item) => path.posix.join(item.root, item.filename))
+    }
+    async onFile(file: plugin.File) {
+        let subkeys;
+        let type;
+        if (file.options) {
+            subkeys = file.options.subkeys;
+            type = file.options.type;
+        }
+        const url = file.relative.split("\\").join("/");
+        const name = this.options.nameSelector(file.origin);
+        if (this.resourceConfigFiles.indexOf(file.origin) >= 0) {
+            this.resourceConfig[file.origin] = JSON.parse(file.contents.toString())
+        }
+        else {
+            const r = { url, subkeys, type, name }
+            this.files[url] = r;
+        }
+
+        return file;
+    }
+
+    async onFinish(commandContext: plugin.PluginContext) {
+
+        // const { root, outputDir } = resourceConfig;
+
+        for (let filename in this.resourceConfig) {
+            const resourceConfig = this.resourceConfig[filename];
+
+            for (let r of resourceConfig.resources) {
+                const realURL = this.files["resource" + "/" + r.url];
+                // if (realURL) {
+                //     r.url = realURL;
+                // }
+            }
+
+
+        }
+
+        // for (let item of this.files) {
+        //     if (item.url.indexOf(root) == 0) {
+        //         item.url = item.url.replace(root + "/", "");
+        //         item.subkeys = (item.subkeys as string[]).join(",")
+        //         resourceConfig.resources.push(item)
+        //     }
+        // }
+
+        // delete resourceConfig.root;
+        // delete resourceConfig.outputDir;
+        // const content = JSON.stringify(resourceConfig, null, '\t');
+
+        // console.log(this.files);
+        // console.log(this.resourceConfig)
+        // commandContext.createFile(resourceFile, new Buffer(content), { outputDir });
+
+    }
+}
+
 
 
 namespace resourceConfig {

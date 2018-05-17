@@ -49,6 +49,9 @@ var ExmlPlugin = /** @class */ (function () {
                 if (filename.indexOf('.exml') >= 0) {
                     contents = file.contents.toString();
                     this.exmls.push({ filename: filename, contents: contents });
+                    if (this.publishPolicy != "debug") {
+                        return [2 /*return*/, null];
+                    }
                 }
                 return [2 /*return*/, file];
             });

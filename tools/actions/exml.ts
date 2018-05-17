@@ -33,15 +33,15 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
 
     var oldEXMLS: EXMLFile[] = [];
     //3.对于autoGenerateExmlsList属性的支持
-    let themeConfigs: { path: string, content: string }[] = [];
     themeDatas.forEach((theme) => {
-        if (theme.autoGenerateExmlsList) {
+        if (!theme.exmls || theme.autoGenerateExmlsList) {
             theme.exmls = [];
             for (let exml of exmls) {
                 theme.exmls.push(exml.filename);
             }
-            themeConfigs.push({ path: theme.path, content: JSON.stringify(theme, null, '\t') });
-            file.save(Path.join(egret.args.projectDir, theme.path), JSON.stringify(theme, null, '\t'));
+            if (theme.autoGenerateExmlsList) {
+                file.save(Path.join(egret.args.projectDir, theme.path), JSON.stringify(theme, null, '\t'));
+            }
         }
     })
     //4.主题文件的exmls是一个列表，列表项是一个{path:string,content:string}的格式
@@ -77,7 +77,7 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
     }
 
     themeDatas.forEach(theme => theme.exmls = []);
-    let EuiJson: {} = {};
+    let EuiJson = "";
     screenExmls.forEach(e => {
         exmlParser.fileSystem.set(e.filename, e);
         var epath = e.filename;
@@ -118,11 +118,7 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
             if (exmlEl.path.indexOf(className) < 0)
                 console.log(utils.tr(2104, exmlEl.path, exmlEl.className));
         }
-        for (let e in exmlEl.json) {
-            EuiJson[e] = exmlEl.json[e];
-        }
-        exmlEl.json = JSON.stringify(exmlEl.json);
-
+        EuiJson = exmlEl.json;
         themeDatas.forEach((thm) => {
             if (epath in oldEXMLS) {
                 const exmlFile = oldEXMLS[epath];
@@ -131,26 +127,24 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
             }
         });
     });
-    EuiJson = JSON.stringify(EuiJson);
     let files = themeDatas.map((thmData) => {
         let path = thmData.path;
 
         if (exmlPublishPolicy == "commonjs") {
             let content = `
-function __extends(d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-        function __() {
-            this.constructor = d;
-        }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-`;
-            content += `window.generateEUI = {};
-            generateEUI.paths = {};
-            generateEUI.styles = ${JSON.stringify(thmData.styles)};
-            generateEUI.skins = ${JSON.stringify(thmData.skins)}
-`;
+                function __extends(d, b) {
+                    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+                        function __() {
+                            this.constructor = d;
+                        }
+                    __.prototype = b.prototype;
+                    d.prototype = new __();
+                };`;
+            content += `
+                window.generateEUI = {};
+                generateEUI.paths = {};
+                generateEUI.styles = ${JSON.stringify(thmData.styles)};
+                generateEUI.skins = ${JSON.stringify(thmData.skins)};`;
 
 
             let namespaces = [];
@@ -174,20 +168,19 @@ function __extends(d, b) {
         else if (exmlPublishPolicy == "commonjs2") {
             let jsonParserStr = file.read(Path.join(egret.root, "tools/lib/eui/JsonParserFactory.js"));
             let content = `${jsonParserStr}
-            function __extends(d, b) {
-                for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-                    function __() {
-                        this.constructor = d;
-                    }
-                __.prototype = b.prototype;
-                d.prototype = new __();
-            };
-            `;
-            content += `window.generateEUI2 = {};
-            generateEUI2.paths = {};
-            generateEUI2.styles = ${JSON.stringify(thmData.styles)};
-            generateEUI2.skins = ${JSON.stringify(thmData.skins)}
-            `;
+                function __extends(d, b) {
+                    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+                        function __() {
+                            this.constructor = d;
+                        }
+                    __.prototype = b.prototype;
+                    d.prototype = new __();
+                };`;
+            content += `
+                window.generateEUI2 = {};
+                generateEUI2.paths = {};
+                generateEUI2.styles = ${JSON.stringify(thmData.styles)};
+                generateEUI2.skins = ${JSON.stringify(thmData.skins)};`;
 
 
             let namespaces = [];
@@ -212,8 +205,9 @@ function __extends(d, b) {
             return { path, content: JSON.stringify(thmData, null, '\t') }
         }
     });
-    let lastfile = files.concat(themeConfigs);
-    return { "files": lastfile, "EuiJson": EuiJson };
+    if (EuiJson == "")
+        EuiJson = "{}"
+    return { "files": files, "EuiJson": EuiJson };
 
 }
 
