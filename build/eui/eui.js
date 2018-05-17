@@ -18986,8 +18986,9 @@ var eui;
             }
             var paths = data.paths;
             for (var path in paths) {
-                window[path] = EXML.update(path, paths[path]);
+                EXML.update(path, paths[path]);
             }
+            //commonjs|commonjs2
             if (!data.exmls || data.exmls.length == 0) {
                 this.onLoaded();
             }
