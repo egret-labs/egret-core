@@ -91,6 +91,11 @@ var EXClass = /** @class */ (function (_super) {
          */
         _this.className = "";
         /**
+          * @private
+          * 全名包括模块名
+          */
+        _this.allName = "";
+        /**
          * @private
          * 父类类名,包括完整模块名
          */
@@ -198,7 +203,7 @@ var EXClass = /** @class */ (function (_super) {
                 returnStr += indent1Str + "var " + clazz.className + " = " + clazz.toCode() + "\n\n";
             else {
                 returnStr += indent1Str + "var " + clazz.className + " = " + clazz.toCode() + "\n";
-                returnStr += indent1Str + ("window." + clazz.className + "=" + clazz.className + ";\n");
+                returnStr += indent1Str + ("window." + clazz.allName + "=" + clazz.className + ";\n");
             }
         }
         returnStr += indent1Str + "function " + this.className + "() {\n";

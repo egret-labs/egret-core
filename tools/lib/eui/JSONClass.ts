@@ -1,10 +1,12 @@
-export class JSONClass {
+class JSONClass {
     private json = {};
-    public get Json() {
-        return this.json;
+    public toCode(): string {
+        let str = JSON.stringify(this.json);
+        str = str.replace(/\\\\n/g, "\\n");
+        return str;
     }
     public addContent(value: any, path: string, name = "elementsContent") {
-        let paths = path.split(".");
+        let paths = path.split("/");
         let target = this.json;
         for (let p of paths) {
             let tempParent = target;
@@ -16,4 +18,5 @@ export class JSONClass {
         }
         target[name] = value;
     }
-} 
+}
+export let jsonFactory = new JSONClass();

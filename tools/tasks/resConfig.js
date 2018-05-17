@@ -139,6 +139,54 @@ var EmitResConfigFilePlugin = /** @class */ (function () {
     return EmitResConfigFilePlugin;
 }());
 exports.EmitResConfigFilePlugin = EmitResConfigFilePlugin;
+var ConvertResConfigFilePlugin = /** @class */ (function () {
+    function ConvertResConfigFilePlugin(options) {
+        this.options = options;
+        this.files = {};
+        this.resourceConfigFiles = [];
+        this.resourceConfig = {};
+        this.resourceConfigFiles = this.options.resourceConfigFiles.map(function (item) { return path.posix.join(item.root, item.filename); });
+    }
+    ConvertResConfigFilePlugin.prototype.onFile = function (file) {
+        return __awaiter(this, void 0, void 0, function () {
+            var subkeys, type, url, name, r;
+            return __generator(this, function (_a) {
+                if (file.options) {
+                    subkeys = file.options.subkeys;
+                    type = file.options.type;
+                }
+                url = file.relative.split("\\").join("/");
+                name = this.options.nameSelector(file.origin);
+                if (this.resourceConfigFiles.indexOf(file.origin) >= 0) {
+                    this.resourceConfig[file.origin] = JSON.parse(file.contents.toString());
+                }
+                else {
+                    r = { url: url, subkeys: subkeys, type: type, name: name };
+                    this.files[url] = r;
+                }
+                return [2 /*return*/, file];
+            });
+        });
+    };
+    ConvertResConfigFilePlugin.prototype.onFinish = function (commandContext) {
+        return __awaiter(this, void 0, void 0, function () {
+            var filename, resourceConfig_1, _i, _a, r, realURL;
+            return __generator(this, function (_b) {
+                // const { root, outputDir } = resourceConfig;
+                for (filename in this.resourceConfig) {
+                    resourceConfig_1 = this.resourceConfig[filename];
+                    for (_i = 0, _a = resourceConfig_1.resources; _i < _a.length; _i++) {
+                        r = _a[_i];
+                        realURL = this.files["resource" + "/" + r.url];
+                    }
+                }
+                return [2 /*return*/];
+            });
+        });
+    };
+    return ConvertResConfigFilePlugin;
+}());
+exports.ConvertResConfigFilePlugin = ConvertResConfigFilePlugin;
 var resourceConfig;
 (function (resourceConfig) {
     function loop(r, callback) {

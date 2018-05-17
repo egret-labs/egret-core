@@ -86,7 +86,11 @@ export class EXClass extends CodeBase {
      * 类名,不包括模块名
      */
     public className: string = "";
-
+    /**
+      * @private
+      * 全名包括模块名
+      */
+    public allName: string = "";
     /**
      * @private
      * 父类类名,包括完整模块名
@@ -204,7 +208,7 @@ export class EXClass extends CodeBase {
                 returnStr += indent1Str + "var " + clazz.className + " = " + clazz.toCode() + "\n\n";
             else {
                 returnStr += indent1Str + "var " + clazz.className + " = " + clazz.toCode() + "\n";
-                returnStr += indent1Str + `window.${clazz.className}=${clazz.className};\n`;
+                returnStr += indent1Str + `window.${clazz.allName}=${clazz.className};\n`;
             }
         }
 
