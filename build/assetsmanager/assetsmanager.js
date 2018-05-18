@@ -2606,6 +2606,7 @@ var RES;
                 }
             }
             return RES.queue.loadResource(r).then(function (value) {
+                RES.host.save(r, value);
                 if (compFunc && r) {
                     compFunc.call(thisObject, value, r.url);
                 }
