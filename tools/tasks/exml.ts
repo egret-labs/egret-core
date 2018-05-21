@@ -14,7 +14,7 @@ export class ExmlPlugin implements Plugin {
 
     exmls: { filename: string, contents: string }[] = [];
 
-    constructor(public publishPolicy: string) {
+    constructor(private publishPolicy: string) {
 
 
     }
@@ -22,7 +22,10 @@ export class ExmlPlugin implements Plugin {
         const filename = file.origin;
         if (filename.indexOf('.exml') >= 0) {
             const contents = file.contents.toString()
-            this.exmls.push({ filename, contents })
+            this.exmls.push({ filename, contents });
+            if (this.publishPolicy != "debug") {
+                return null;
+            }
         }
         return file;
     }

@@ -88,7 +88,7 @@ type ProjectConfig = {
    */
 type Matcher = {
 
-    from: string[],
+    from: string,
 
     to: string
 
@@ -309,6 +309,20 @@ declare module 'built-in' {
 
         constructor(options: EmitResConfigFilePluginOptions)
 
+    }
+
+    export type ConvertResourceConfigPluginOption = {
+
+        resourceConfigFiles: { filename: string, root: string }[];
+
+        nameSelector: (url: string) => string
+
+
+    }
+
+    export class ConvertResConfigFilePlugin implements plugins.Command {
+
+        constructor(options: ConvertResourceConfigPluginOption);
     }
 
 
