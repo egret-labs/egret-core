@@ -55,9 +55,14 @@ var JSONParseClass = /** @class */ (function () {
         this.creatState();
         this.creatBinding();
         //skinParts 只能最后赋值，在comp中引用问题
-        this.target["skinParts"] = this.skinClass["$sP"];
+        if (this.skinClass["$sP"] == undefined)
+            this.target["skinParts"] = [];
+        else
+            this.target["skinParts"] = this.skinClass["$sP"];
     };
     JSONParseClass.prototype.creatSkinParts = function () {
+        if (this.skinClass["$sP"] == undefined)
+            return;
         for (var _i = 0, _a = this.skinClass["$sP"]; _i < _a.length; _i++) {
             var component = _a[_i];
             if (this.target[component] == undefined)
@@ -65,6 +70,8 @@ var JSONParseClass = /** @class */ (function () {
         }
     };
     JSONParseClass.prototype.createBase = function () {
+        if (this.skinClass["$bs"] == undefined)
+            return;
         this.addCommonProperty("$bs", this.target);
     };
     JSONParseClass.prototype.createElementContentOrViewport = function (component) {
@@ -101,9 +108,7 @@ var JSONParseClass = /** @class */ (function () {
      * @param component 名字索引
      */
     JSONParseClass.prototype.creatsEgretTweenGroup = function (component) {
-        var typestr = this.getNormalizeEui(this.skinClass[component].$t);
-        var type = egret.getDefinitionByName(typestr);
-        var temp = new type();
+        var temp = this.createTypeObject(component);
         var items = [];
         for (var _i = 0, _a = this.skinClass[component]["items"]; _i < _a.length; _i++) {
             var item = _a[_i];
@@ -118,9 +123,7 @@ var JSONParseClass = /** @class */ (function () {
      */
     JSONParseClass.prototype.createEgretTweenItem = function (tweenItem) {
         var _this = this;
-        var typestr = this.getNormalizeEui(this.skinClass[tweenItem].$t);
-        var type = egret.getDefinitionByName(typestr);
-        var temp = new type();
+        var temp = this.createTypeObject(tweenItem);
         var paths = [];
         var _loop_1 = function (proper) {
             if (proper == "$t" || proper == "target") {
@@ -150,9 +153,7 @@ var JSONParseClass = /** @class */ (function () {
         return temp;
     };
     JSONParseClass.prototype.createSetOrTo = function (key) {
-        var typestr = this.getNormalizeEui(this.skinClass[key].$t);
-        var type = egret.getDefinitionByName(typestr);
-        var temp = new type();
+        var temp = this.createTypeObject(key);
         for (var proper in this.skinClass[key]) {
             if (proper == "$t" || proper == "target") {
             }
@@ -179,16 +180,19 @@ var JSONParseClass = /** @class */ (function () {
     JSONParseClass.prototype.addCommonProperty = function (component, target) {
         var _this = this;
         var eleC = [];
-        var layout;
-        var viewport;
+        var sId = [];
         var _loop_2 = function (property) {
             if (property == "$t") {
             }
             else if (property == "layout") {
-                layout = this_2.skinClass[component][property];
+                var layout = this_2.skinClass[component][property];
+                target["layout"] = this_2.createLayout(layout);
             }
             else if (property == "$eleC") {
                 eleC = this_2.skinClass[component]["$eleC"];
+            }
+            else if (property == "$sId") {
+                sId = this_2.skinClass[component]["$sId"];
             }
             else if (property == "scale9Grid") {
                 var data = this_2.skinClass[component][property].split(",");
@@ -199,8 +203,23 @@ var JSONParseClass = /** @class */ (function () {
                     target[property] = _this.skinClass[component][property];
                 });
             }
+            else if (property == "itemRendererSkinName") {
+                this_2.$createNewObject(function () {
+                    var dirPath = _this.skinClass[component][property].split(".");
+                    var t = window;
+                    for (var _i = 0, dirPath_1 = dirPath; _i < dirPath_1.length; _i++) {
+                        var p = dirPath_1[_i];
+                        t = t[p];
+                    }
+                    target[property] = t;
+                });
+            }
+            else if (property == "dataProvider") {
+                target[property] = this_2.createDataProvider(this_2.skinClass[component][property]);
+            }
             else if (property == "viewport") {
-                viewport = this_2.skinClass[component][property];
+                var viewport = this_2.skinClass[component][property];
+                target["viewport"] = this_2.createElementContentOrViewport(viewport);
             }
             else
                 target[property] = this_2.skinClass[component][property];
@@ -209,29 +228,25 @@ var JSONParseClass = /** @class */ (function () {
         for (var property in this.skinClass[component]) {
             _loop_2(property);
         }
+        var ele = [];
         if (eleC.length > 0) {
-            var eleCs = [];
             for (var _i = 0, eleC_1 = eleC; _i < eleC_1.length; _i++) {
                 var element = eleC_1[_i];
                 var e = this.createElementContentOrViewport(element);
-                eleCs.push(e);
+                ele.push(e);
             }
-            target["elementsContent"] = eleCs;
         }
-        if (layout !== undefined) {
-            var l = this.createLayout(layout);
-            target["layout"] = l;
+        if (sId.length > 0) {
+            for (var _a = 0, sId_1 = sId; _a < sId_1.length; _a++) {
+                var element = sId_1[_a];
+                this.createElementContentOrViewport(element);
+            }
         }
-        if (viewport !== undefined) {
-            var v = this.createElementContentOrViewport(viewport);
-            target["viewport"] = v;
-        }
+        target["elementsContent"] = ele;
         return target;
     };
     JSONParseClass.prototype.createLayout = function (component) {
-        var typestr = this.getNormalizeEui(this.skinClass[component].$t);
-        var type = egret.getDefinitionByName(typestr);
-        var temp = new type();
+        var temp = this.createTypeObject(component);
         for (var property in this.skinClass[component]) {
             if (property == "$t") {
             }
@@ -248,10 +263,21 @@ var JSONParseClass = /** @class */ (function () {
         var states = [];
         for (var state in this.skinClass["$s"]) {
             var setProperty_1 = [];
-            for (var _i = 0, _a = this.skinClass["$s"][state]; _i < _a.length; _i++) {
-                var property = _a[_i];
-                var p = this.skinClass["$s"][state][property];
-                setProperty_1.push(new eui.SetProperty(property["target"], property["name"], property["value"]));
+            var tempState = this.skinClass["$s"][state];
+            if (this.skinClass["$s"][state]["$saI"]) {
+                for (var _i = 0, _a = tempState["$saI"]; _i < _a.length; _i++) {
+                    var property = _a[_i];
+                    setProperty_1.push(new eui.AddItems(property["target"], property["property"], property["position"], property["relativeTo"]));
+                }
+            }
+            if (this.skinClass["$s"][state]["$ssP"]) {
+                for (var _b = 0, _c = tempState["$ssP"]; _b < _c.length; _b++) {
+                    var property = _c[_b];
+                    if (property["name"])
+                        setProperty_1.push(new eui.SetProperty(property["target"], property["name"], property["value"]));
+                    else
+                        setProperty_1.push(new eui.SetStateProperty(this.target, property["templates"], property["chainIndex"], this.target[property["target"]], property["property"]));
+                }
             }
             states.push(new eui.State(state, setProperty_1));
         }
@@ -268,9 +294,37 @@ var JSONParseClass = /** @class */ (function () {
                 eui.Binding.bindProperty(this.target, bindingDate["$bd"][0].split("."), this.target[bindingDate["$bt"]], bindingDate["$bp"]);
         }
     };
+    JSONParseClass.prototype.createDataProvider = function (component) {
+        if (component == "")
+            return undefined;
+        var temp = this.createTypeObject(component);
+        var source = [];
+        for (var _i = 0, _a = this.skinClass[component]["source"]; _i < _a.length; _i++) {
+            var sour = _a[_i];
+            source.push(this.createdataItem(sour));
+        }
+        temp["source"] = source;
+        return temp;
+    };
+    JSONParseClass.prototype.createdataItem = function (itemName) {
+        var temp = this.createTypeObject(itemName);
+        for (var property in this.skinClass[itemName]) {
+            if (property == "$t") {
+            }
+            else {
+                temp[property] = this.skinClass[itemName][property];
+            }
+        }
+        return temp;
+    };
     JSONParseClass.prototype.getNormalizeEui = function (str) {
         return this.euiNormalize[str] == undefined ? str : this.euiNormalize[str];
         ;
+    };
+    JSONParseClass.prototype.createTypeObject = function (component) {
+        var typestr = this.getNormalizeEui(this.skinClass[component].$t);
+        var type = egret.getDefinitionByName(typestr);
+        return new type();
     };
     return JSONParseClass;
 }());

@@ -141,6 +141,21 @@ namespace egret.web {
     }
 
     function getPixels(x: number, y: number, width: number = 1, height: number = 1): number[] {
+        //webgl环境下不需要转换成canvas获取像素信息
+        if (Capabilities.renderMode == "webgl") {
+            let renderTexture: RenderTexture;
+            //webgl下非RenderTexture纹理先画到RenderTexture
+            if (!(<RenderTexture>this).$renderBuffer) {
+                renderTexture = new egret.RenderTexture();
+                renderTexture.drawToTexture(new egret.Bitmap(this));
+            }
+            else {
+                renderTexture = <RenderTexture>this;
+            }
+            //从RenderTexture中读取像素数据
+            let pixels = renderTexture.$renderBuffer.getPixels(x, y, width, height);
+            return pixels;
+        }
         try {
             let surface = convertImageToCanvas(this);
             let result = sharedContext.getImageData(x, y, width, height).data;

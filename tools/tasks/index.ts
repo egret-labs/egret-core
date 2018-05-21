@@ -4,7 +4,7 @@ export { ExmlPlugin } from './exml';
 export { IncrementCompilePlugin } from './incrementCompile'
 export { CompilePlugin, UglifyPlugin } from './compile';
 export { TextureMergerPlugin } from './texturemerger';
-export { EmitResConfigFilePlugin } from './resConfig';
+export { EmitResConfigFilePlugin, ConvertResConfigFilePlugin } from './resConfig';
 export { CleanPlugin } from './clean';
 export { RenamePlugin } from './rename';
 export { ResSplitPlugin } from './resSplit';
