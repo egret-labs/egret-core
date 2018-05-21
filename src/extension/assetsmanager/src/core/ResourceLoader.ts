@@ -70,7 +70,18 @@ module RES {
 
 		load(list: ResourceInfo[], groupName: string, priority: number, reporter?: PromiseTaskReporter): Promise<any> {
 			if (this.itemListDic[groupName]) {
-				return Promise.resolve();
+				if(!this.dispatcherDic[groupName])
+				{
+					const dispatcher = new egret.EventDispatcher();
+					this.dispatcherDic[groupName] = dispatcher;
+				}
+				const promise = new Promise((reslove, reject) => {
+					this.dispatcherDic[groupName].addEventListener("complete", reslove, null);
+					this.dispatcherDic[groupName].addEventListener("error", function (e: egret.Event) {
+						reject(e.data);
+					}, null);
+				});
+				return promise;
 			}
 			const total = list.length;
 			for (let i: number = 0; i < total; i++) {
