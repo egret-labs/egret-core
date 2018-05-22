@@ -55,13 +55,13 @@ class ThemeAdapter implements eui.IThemeAdapter {
             }, this);
         }
         else if (typeof generateEUI2 !== 'undefined') {
-            RES.getResByUrl("resource/gameEui.bin", (data, url) => {
+            RES.getResByUrl("resource/gameEui.json", (data, url) => {
                 window["JSONParseClass"]["setData"](data);
                 onResGet(data);
                 egret.callLater(() => {
                     onSuccess.call(thisObject, generateEUI2);
                 }, this);
-            }, this, RES.ResourceItem.TYPE_BIN);
+            }, this, RES.ResourceItem.TYPE_JSON);
         }
         else {
             RES.addEventListener(RES.ResourceEvent.ITEM_LOAD_ERROR, onResError, null);
