@@ -41,7 +41,7 @@ export class ExmlPlugin implements Plugin {
         }
         const result = exml.publishEXML(this.exmls, this.publishPolicy);
         if (result.EuiJson !== undefined) {
-            pluginContext.createFile("resource/gameEui.bin", new Buffer(`${result.EuiJson}`));
+            pluginContext.createFile("resource/gameEui.json", new Buffer(`${result.EuiJson}`));
         }
         result.files.forEach(item => {
             const filename = item.path.split("\\").join("/");

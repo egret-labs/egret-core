@@ -38,11 +38,7 @@ var JSONParseClass = /** @class */ (function () {
         };
     }
     JSONParseClass.prototype.setData = function (data) {
-        var readtool = new egret.ByteArray();
-        readtool._writeUint8Array(new Uint8Array(data));
-        readtool.position = 0;
-        var d = readtool.readUTFBytes(data.byteLength);
-        this.json = JSON.parse(d);
+        this.json = data;
     };
     JSONParseClass.prototype.create = function (skinName, target) {
         /** 先解析对应名字的的 */
