@@ -99,7 +99,7 @@ function publishEXML(exmls, exmlPublishPolicy) {
             //todo
             case "commonjs2":
                 var parser2 = new jsonParser.JSONParser();
-                var result2 = parser2.parse(e.contents);
+                var result2 = parser2.parse(e.contents, e.filename);
                 exmlEl = { path: e.filename, gjs: result2.code, json: result2.json, className: result2.className };
                 break;
             //todo
@@ -150,21 +150,20 @@ function publishEXML(exmls, exmlPublishPolicy) {
             var jsonParserStr = file.read(Path.join(egret.root, "tools/lib/eui/JsonParserFactory.js"));
             var content = jsonParserStr + "\n                function __extends(d, b) {\n                    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];\n                        function __() {\n                            this.constructor = d;\n                        }\n                    __.prototype = b.prototype;\n                    d.prototype = new __();\n                };";
             content += "\n                window.generateEUI2 = {};\n                generateEUI2.paths = {};\n                generateEUI2.styles = " + JSON.stringify(thmData.styles) + ";\n                generateEUI2.skins = " + JSON.stringify(thmData.skins) + ";";
-            var namespaces = [];
-            for (var _b = 0, _c = thmData.exmls; _b < _c.length; _b++) {
-                var item = _c[_b];
-                var packages = item.className.split(".");
-                var temp = '';
-                for (var i = 0; i < packages.length - 1; i++) {
-                    temp = i == 0 ? packages[i] : temp + "." + packages[i];
-                    if (namespaces.indexOf(temp) == -1) {
-                        namespaces.push(temp);
-                    }
-                }
-                content += "generateEUI2.paths['" + item.path + "'] = window." + item.className + " = " + item.gjs;
-            }
-            var result = namespaces.map(function (v) { return "window." + v + "={};"; }).join("\n");
-            content = result + content;
+            // let namespaces = [];
+            // for (let item of thmData.exmls) {
+            //     let packages: string[] = item.className.split(".")
+            //     let temp = '';
+            //     for (let i = 0; i < packages.length - 1; i++) {
+            //         temp = i == 0 ? packages[i] : temp + "." + packages[i];
+            //         if (namespaces.indexOf(temp) == -1) {
+            //             namespaces.push(temp);
+            //         }
+            //     }
+            //     content += `generateEUI2.paths['${item.path}'] = window.${item.className} = ${item.gjs}`;
+            // }
+            // let result = namespaces.map(v => `window.${v}={};`).join("\n");
+            // content = result + content;
             path = path.replace("thm.json", "thm.js");
             return { path: path, content: content };
         }
