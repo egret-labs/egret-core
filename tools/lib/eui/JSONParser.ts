@@ -204,7 +204,7 @@ export class JSONParser {
      * @param xmlData 要编译的EXML文件内容
      *
      */
-    public parse(text: string, path?: string): { code: string, json: string, className: string } {
+    public parse(text: string, path?: string): { json: string, className: string } {
         if (DEBUG) {
             if (!text) {
                 egretbridge.$error(1003, "text");
@@ -234,24 +234,23 @@ export class JSONParser {
             className = "$exmlClass" + innerClassCount++;
         }
         this._className = className;
-        if (path) { 
+        if (path) {
             jsonFactory.addContent(path, this.className, "$path");
         }
 
-        let exClass = this.parseClass(xmlData, className);
+        this.parseClass(xmlData, className);
 
-        let code = exClass.toCode(true);
 
         let json = jsonFactory.toCode();
 
-        return { code, json, className };
+        return { json, className };
     }
 
     /**
      * @private
      * 编译指定的XML对象为CpClass对象。
      */
-    private parseClass(xmlData: egretbridge.XML, className: string): EXClass {
+    private parseClass(xmlData: egretbridge.XML, className: string) {
         if (!exmlConfig) {
             exmlConfig = new EXMLConfig();
         }
@@ -279,9 +278,6 @@ export class JSONParser {
         }
 
         this.startCompile();
-        let clazz = this.currentClass;
-        this.currentClass = null;
-        return clazz;
     }
 
     /**
@@ -691,7 +687,6 @@ export class JSONParser {
         }
         let innerClassName = this.currentClassName + "$" + node.localName + innerClassCount++;
         let innerClass = parser.parseClass(node, innerClassName);
-        this.currentClass.addInnerClass(innerClass);
         exmlParserPool.push(parser);
         return innerClassName;
     }
@@ -1060,10 +1055,8 @@ export class JSONParser {
      * 创建构造函数
      */
     private createConstructFunc(): void {
-        let cb: EXCodeBlock = new EXCodeBlock;
         let varName: string = "this";
         this.addConfig(varName, this.currentXML, "$bs");
-        cb.addCodeLine(`window["JSONParseClass"].create("${this.currentClassName}", ${varName});`)
         if (this.declarations) {
             let children: Array<any> = this.declarations.children;
             if (children && children.length > 0) {
@@ -1183,8 +1176,6 @@ export class JSONParser {
             }
             jsonFactory.addContent(bindingConfig, this.currentClassName, "$b");
         }
-        this.currentClass.constructCode = cb;
-
         jsonFactory.addContent(euiShorten[nodeClassName] != undefined ? euiShorten[nodeClassName] : nodeClassName, this.currentClassName, "$sC");
     }
 

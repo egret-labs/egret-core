@@ -159,10 +159,9 @@ var JSONParser = /** @class */ (function () {
         if (path) {
             JSONClass_1.jsonFactory.addContent(path, this.className, "$path");
         }
-        var exClass = this.parseClass(xmlData, className);
-        var code = exClass.toCode(true);
+        this.parseClass(xmlData, className);
         var json = JSONClass_1.jsonFactory.toCode();
-        return { code: code, json: json, className: className };
+        return { json: json, className: className };
     };
     /**
      * @private
@@ -193,9 +192,6 @@ var JSONParser = /** @class */ (function () {
             this.currentClass.className = className;
         }
         this.startCompile();
-        var clazz = this.currentClass;
-        this.currentClass = null;
-        return clazz;
     };
     /**
      * @private
@@ -579,7 +575,6 @@ var JSONParser = /** @class */ (function () {
         }
         var innerClassName = this.currentClassName + "$" + node.localName + innerClassCount++;
         var innerClass = parser.parseClass(node, innerClassName);
-        this.currentClass.addInnerClass(innerClass);
         exmlParserPool.push(parser);
         return innerClassName;
     };
@@ -935,10 +930,8 @@ var JSONParser = /** @class */ (function () {
      * 创建构造函数
      */
     JSONParser.prototype.createConstructFunc = function () {
-        var cb = new CodeFactory_1.EXCodeBlock;
         var varName = "this";
         this.addConfig(varName, this.currentXML, "$bs");
-        cb.addCodeLine("window[\"JSONParseClass\"].create(\"" + this.currentClassName + "\", " + varName + ");");
         if (this.declarations) {
             var children = this.declarations.children;
             if (children && children.length > 0) {
@@ -1060,7 +1053,6 @@ var JSONParser = /** @class */ (function () {
             }
             JSONClass_1.jsonFactory.addContent(bindingConfig, this.currentClassName, "$b");
         }
-        this.currentClass.constructCode = cb;
         JSONClass_1.jsonFactory.addContent(euiShorten[nodeClassName] != undefined ? euiShorten[nodeClassName] : nodeClassName, this.currentClassName, "$sC");
     };
     /**
