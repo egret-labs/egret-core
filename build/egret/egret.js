@@ -2002,7 +2002,7 @@ var egret;
                 var self = this;
                 var filters = self.$filters;
                 if (!filters && !value) {
-                    self.$filters = null;
+                    self.$filters = value;
                     if (egret.nativeRender) {
                         self.$nativeDisplayObject.setFilters(null);
                     }
@@ -2019,7 +2019,7 @@ var egret;
                     }
                 }
                 else {
-                    self.$filters = null;
+                    self.$filters = value;
                     if (egret.nativeRender) {
                         self.$nativeDisplayObject.setFilters(null);
                     }
@@ -12420,9 +12420,8 @@ var egret;
      * @platform Web,Native
      * @language zh_CN
      */
-    var HttpMethod = (function () {
-        function HttpMethod() {
-        }
+    var HttpMethod;
+    (function (HttpMethod) {
         /**
          * Specifies that the HttpRequest object is a GET.
          * @version Egret 2.4
@@ -12449,10 +12448,7 @@ var egret;
          * @language zh_CN
          */
         HttpMethod.POST = "POST";
-        return HttpMethod;
-    }());
-    egret.HttpMethod = HttpMethod;
-    __reflect(HttpMethod.prototype, "egret.HttpMethod");
+    })(HttpMethod = egret.HttpMethod || (egret.HttpMethod = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -16961,7 +16957,7 @@ var egret;
          * @platform Web,Native
          * @language zh_CN
          */
-        Capabilities.engineVersion = "5.1.11";
+        Capabilities.engineVersion = "5.1.12";
         /***
          * current render mode.
          * @type {string}

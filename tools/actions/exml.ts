@@ -32,8 +32,21 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
     const themeDatas = generateThemeData();
 
     var oldEXMLS: EXMLFile[] = [];
-    //3.主题文件的exmls是一个列表，列表项是一个{path:string,content:string}的格式
+    //3.对于autoGenerateExmlsList属性的支持
+    themeDatas.forEach((theme) => {
+        if (!theme.exmls || theme.autoGenerateExmlsList) {
+            theme.exmls = [];
+            for (let exml of exmls) {
+                theme.exmls.push(exml.filename);
+            }
+            if (theme.autoGenerateExmlsList) {
+                file.save(Path.join(egret.args.projectDir, theme.path), JSON.stringify(theme, null, '\t'));
+            }
+        }
+    })
+    //4.主题文件的exmls是一个列表，列表项是一个{path:string,content:string}的格式
     //由于存在一个exml存在于多个主题的情况 把 主题1－>N文件 建立 文件1->N主题的一对多关系表oldEXMLS(数组＋快表)
+    let paths: string[] = []
     themeDatas.forEach((theme) => {
         theme.exmls && theme.exmls.forEach(e => {
             var path = e.path ? e.path : e;
@@ -47,15 +60,25 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
             }
             oldEXMLS[path] = exmlFile;
             oldEXMLS.push(exmlFile);
+            paths.push(path);
         });
     });
 
-    //4.获得排序后的所有exml文件列表
+    //5.获得排序后的所有exml文件列表
     exmls = exml.sort(exmls);
+    //6.对exml文件列表进行筛选
+    let screenExmls = []
+    for (let exml of exmls) {
+        for (let path of paths) {
+            if (path === exml.filename) {
+                screenExmls.push(exml);
+            }
+        }
+    }
 
     themeDatas.forEach(theme => theme.exmls = []);
-    let EuiJson: {};
-    exmls.forEach(e => {
+    let EuiJson = "";
+    screenExmls.forEach(e => {
         exmlParser.fileSystem.set(e.filename, e);
         var epath = e.filename;
         var exmlEl;
@@ -90,15 +113,17 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
                 exmlEl = { path: e.filename, content: e.contents };
                 break;
         }
+        if (exmlEl.className) {
+            let className = exmlEl.className.split(".")[exmlEl.className.split(".").length - 1];
+            if (exmlEl.path.indexOf(className) < 0)
+                console.log(utils.tr(2104, exmlEl.path, exmlEl.className));
+        }
         EuiJson = exmlEl.json;
         themeDatas.forEach((thm) => {
             if (epath in oldEXMLS) {
                 const exmlFile = oldEXMLS[epath];
                 if (exmlFile.theme.indexOf("," + thm.path + ",") >= 0)
                     thm.exmls.push(exmlEl);
-            }
-            else if (thm.autoGenerateExmlsList) {
-                thm.exmls.push(exmlEl);
             }
         });
     });
@@ -107,28 +132,23 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
 
         if (exmlPublishPolicy == "commonjs") {
             let content = `
-function __extends(d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-        function __() {
-            this.constructor = d;
-        }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-`;
-            content += `window.generateEUI = {};
-            generateEUI.paths = {};
-            generateEUI.styles = ${JSON.stringify(thmData.styles)};
-            generateEUI.skins = ${JSON.stringify(thmData.skins)}
-`;
+                function __extends(d, b) {
+                    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+                        function __() {
+                            this.constructor = d;
+                        }
+                    __.prototype = b.prototype;
+                    d.prototype = new __();
+                };`;
+            content += `
+                window.generateEUI = {};
+                generateEUI.paths = {};
+                generateEUI.styles = ${JSON.stringify(thmData.styles)};
+                generateEUI.skins = ${JSON.stringify(thmData.skins)};`;
 
 
             let namespaces = [];
-
             for (let item of thmData.exmls) {
-                // skins.items = {};
-                //skins.items.EUIComponent
-                //items.EUIComponent;
                 let packages: string[] = item.className.split(".")
                 let temp = '';
                 for (let i = 0; i < packages.length - 1; i++) {
@@ -148,28 +168,23 @@ function __extends(d, b) {
         else if (exmlPublishPolicy == "commonjs2") {
             let jsonParserStr = file.read(Path.join(egret.root, "tools/lib/eui/JsonParserFactory.js"));
             let content = `${jsonParserStr}
-            function __extends(d, b) {
-                for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-                    function __() {
-                        this.constructor = d;
-                    }
-                __.prototype = b.prototype;
-                d.prototype = new __();
-            };
-            `;
-            content += `window.generateEUI2 = {};
-            generateEUI2.paths = {};
-            generateEUI2.styles = ${JSON.stringify(thmData.styles)};
-            generateEUI2.skins = ${JSON.stringify(thmData.skins)}
-            `;
+                function __extends(d, b) {
+                    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+                        function __() {
+                            this.constructor = d;
+                        }
+                    __.prototype = b.prototype;
+                    d.prototype = new __();
+                };`;
+            content += `
+                window.generateEUI2 = {};
+                generateEUI2.paths = {};
+                generateEUI2.styles = ${JSON.stringify(thmData.styles)};
+                generateEUI2.skins = ${JSON.stringify(thmData.skins)};`;
 
 
             let namespaces = [];
-
             for (let item of thmData.exmls) {
-                // skins.items = {};
-                //skins.items.EUIComponent
-                //items.EUIComponent;
                 let packages: string[] = item.className.split(".")
                 let temp = '';
                 for (let i = 0; i < packages.length - 1; i++) {
@@ -190,6 +205,8 @@ function __extends(d, b) {
             return { path, content: JSON.stringify(thmData, null, '\t') }
         }
     });
+    if (EuiJson == "")
+        EuiJson = "{}"
     return { "files": files, "EuiJson": EuiJson };
 
 }

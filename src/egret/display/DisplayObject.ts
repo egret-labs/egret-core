@@ -1570,7 +1570,7 @@ namespace egret {
             let self = this;
             let filters: Filter[] = self.$filters;
             if (!filters && !value) {
-                self.$filters = null;
+                self.$filters = value;
                 if (egret.nativeRender) {
                     self.$nativeDisplayObject.setFilters(null);
                 }
@@ -1587,7 +1587,7 @@ namespace egret {
                 }
             }
             else {
-                self.$filters = null;
+                self.$filters = value;
                 if (egret.nativeRender) {
                     self.$nativeDisplayObject.setFilters(null);
                 }

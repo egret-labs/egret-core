@@ -262,6 +262,7 @@ export class JSONParser {
         this.bindings = [];
         this.declarations = null;
         this.currentClass = new EXClass();
+        this.currentClass.allName = this.currentClassName;
         this.stateIds = [];
 
         let index = className.lastIndexOf(".");
@@ -366,7 +367,8 @@ export class JSONParser {
             }
             else if (node.nodeType === 1) {
                 let id = node.attributes["id"];
-                if (id) {
+                let stateGroups = node.attributes["stateGroups"];
+                if (id && stateGroups == undefined) {//区分是组件的id还是stateGroup的id
                     let e = new RegExp("^[a-zA-Z_$]{1}[a-z0-9A-Z_$]*");
                     if (id.match(e) == null) {
                         egretbridge.$warn(2022, id);
@@ -378,9 +380,13 @@ export class JSONParser {
                         this.skinParts.push(id);
                     }
                     this.createVarForNode(node);
+                    if (this.isStateNode(node))//检查节点是否只存在于一个状态里，需要单独实例化
+                        this.stateIds.push(id);
                 }
                 else {
                     this.createIdForNode(node);
+                    if (this.isStateNode(node))
+                        this.stateIds.push(node.attributes.id);
                 }
             }
         }
@@ -503,7 +509,7 @@ export class JSONParser {
         }
         let name = exmlConfig.getClassNameById(node.localName, node.namespace);
         config["$t"] = euiShorten[name] == undefined ? name : euiShorten[name];
-        jsonFactory.addContent(config, this.currentClass.className, func.name);
+        jsonFactory.addContent(config, this.currentClassName, func.name);
         // 赋值skin的属性
         this.addConfig(func.name, node, configName, moduleName);
         this.initlizeChildNode(node, func.name);
@@ -596,7 +602,7 @@ export class JSONParser {
         }
         if (type)
             jsonProperty["$t"] = euiShorten[type] == undefined ? type : euiShorten[type];
-        jsonFactory.addContent(jsonProperty, this.currentClass.className, configName == undefined ? "$bs" : configName);
+        jsonFactory.addContent(jsonProperty, this.currentClassName, configName == undefined ? "$bs" : configName);
     }
 
     /**
@@ -617,6 +623,14 @@ export class JSONParser {
             if (child.nodeType != 1 || child.namespace == NS_W) {
                 continue;
             }
+            if (this.isInnerClass(child)) {
+                if (child.localName == "Skin") {
+                    let innerClassName = this.parseInnerClass(child);
+                    jsonFactory.addContent(innerClassName, this.currentClassName + "/$bs", "skinName")
+                }
+                continue;
+            }
+
             let prop = child.localName;
             if (this.isProperty(child)) {
                 if (!this.isNormalKey(prop)) {
@@ -670,7 +684,7 @@ export class JSONParser {
         if (!parser) {
             parser = new JSONParser();
         }
-        let innerClassName = this.currentClass.className + "$" + node.localName + innerClassCount++;
+        let innerClassName = this.currentClassName + "$" + node.localName + innerClassCount++;
         let innerClass = parser.parseClass(node, innerClassName);
         this.currentClass.addInnerClass(innerClass);
         exmlParserPool.push(parser);
@@ -687,7 +701,6 @@ export class JSONParser {
         let nodeName = "";
         let childLength = children.length;
         let elementsContentForJson;
-
         if (childLength > 1) {
             if (type != TYPE_ARRAY) {
                 if (DEBUG) {
@@ -792,7 +805,7 @@ export class JSONParser {
                 egretbridge.$warn(2103, this.currentClassName, prop, errorInfo);
             }
             let tar = varName == "this" ? "$bs" : varName;
-            jsonFactory.addContent(elementsContentForJson, this.currentClass.className + "." + tar, prop);
+            jsonFactory.addContent(elementsContentForJson, this.currentClassName + "/" + tar, prop);
         }
     }
 
@@ -1037,7 +1050,6 @@ export class JSONParser {
         }
         return str;
     }
-
     /**
      * @private
      * 创建构造函数
@@ -1046,7 +1058,7 @@ export class JSONParser {
         let cb: EXCodeBlock = new EXCodeBlock;
         let varName: string = "this";
         this.addConfig(varName, this.currentXML, "$bs");
-        cb.addCodeLine(`window["JSONParseClass"].create("${this.currentClass.className}", ${varName});`)
+        cb.addCodeLine(`window["JSONParseClass"].create("${this.currentClassName}", ${varName});`)
         if (this.declarations) {
             let children: Array<any> = this.declarations.children;
             if (children && children.length > 0) {
@@ -1061,9 +1073,15 @@ export class JSONParser {
             }
         }
         this.initlizeChildNode(this.currentXML, varName);
+        var id;
+        var stateIds = this.stateIds;
+        if (stateIds.length > 0) {
+            jsonFactory.addContent(stateIds, this.currentClassName + "/$bs", "$sId");
+        }
+
         let skinConfig = this.skinParts;
         if (skinConfig.length > 0) {
-            jsonFactory.addContent(skinConfig, this.currentClass.className, "$sP");
+            jsonFactory.addContent(skinConfig, this.currentClassName, "$sP");
         }
         this.currentXML.attributes.id = "";
         //生成视图状态代码
@@ -1100,21 +1118,43 @@ export class JSONParser {
         //生成视图配置
         let stateCode = this.stateCode;
         let length = stateCode.length;
-        let stateConfig = {};
         if (length > 0) {
+            let stateConfig = {};
             for (let i = 0; i < length; i++) {
-                stateConfig[stateCode[i].name] = [];
+                let setPropertyConfig = [];
                 for (let property of stateCode[i].setProperty) {
+                    let tempProp = {};
+                    for (let prop in property) {
+                        if (prop == "indent") { }
+                        else if (prop == "target") {
+                            if (property[prop].search("this.") > -1) {
+                                let temp = property[prop].slice("this.".length, property[prop].length)
+                                tempProp[prop] = temp;
+                            } else
+                                tempProp[prop] = property[prop];
+                        } else
+                            tempProp[prop] = property[prop];
+                    }
+                    setPropertyConfig.push(tempProp);
+                }
+
+                let addItemsConfig = [];
+                for (let property of stateCode[i].addItems) {
                     let tempProp = {};
                     for (let prop in property) {
                         if (prop != "indent") {
                             tempProp[prop] = property[prop];
                         }
                     }
-                    stateConfig[stateCode[i].name].push(tempProp);
+                    addItemsConfig.push(tempProp);
                 }
+                stateConfig[stateCode[i].name] = {};
+                if (setPropertyConfig.length > 0)
+                    stateConfig[stateCode[i].name]["$ssP"] = setPropertyConfig;
+                if (addItemsConfig.length > 0)
+                    stateConfig[stateCode[i].name]["$saI"] = addItemsConfig;
             }
-            jsonFactory.addContent(stateConfig, this.currentClass.className, "$s");
+            jsonFactory.addContent(stateConfig, this.currentClassName, "$s");
         }
         //生成绑定配置
         let bindings = this.bindings;
@@ -1123,8 +1163,6 @@ export class JSONParser {
         if (length > 0) {
             for (let binding of bindings) {
                 let config = {};
-
-
                 if (binding.templates.length == 1 && binding.chainIndex.length == 1) {
                     config["$bd"] = binding.templates;//data
                     config["$bt"] = binding.target;//target
@@ -1138,7 +1176,7 @@ export class JSONParser {
                 }
                 bindingConfig.push(config);
             }
-            jsonFactory.addContent(bindingConfig, this.currentClass.className, "$b");
+            jsonFactory.addContent(bindingConfig, this.currentClassName, "$b");
         }
         this.currentClass.constructCode = cb;
     }
@@ -1374,11 +1412,10 @@ export class JSONParser {
                         let bindingValue = this.formatBinding(key, value, node);
                         if (!bindingValue) {
                             value = this.formatValue(key, value, node);
-                            if (!value) {
+                            if (value == undefined) {
                                 continue;
                             }
                         }
-
                         stateName = name.substr(index + 1);
                         states = this.getStateByName(stateName, node);
                         let l = states.length;

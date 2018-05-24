@@ -12,7 +12,7 @@
              alt="stars">
     </a>
     <a href="https://github.com/egret-labs/egret-core">
-        <img src="https://img.shields.io/badge/version-5.1.11-green.svg"
+        <img src="https://img.shields.io/badge/version-5.1.12-green.svg"
              alt="version">
     </a>
     <a href="./LICENSE.md">
@@ -25,9 +25,7 @@
 
 # Egret Engine
 
-The Egret Engine includes a game engine that follows the HTML5 standard developed by the Egret. It includes a common module for game engines such as 2D / 3D rendering cores, EUI systems, audio management, and resource management.
-Through the use of Egrets engine, developers can do as much as possible not concerned about the bottom of the browser to achieve, to solve the HTML5 game performance problems and fragmentation issues, flexibility to meet the developer to develop 2D or 3D game needs.
-
+The Egret Engine is a HTML5 game engine. It provides modules to handle common game development tasks such as 2D and 3D rendering, GUI systems, and audio and resource management. The Egret engine is flexible and suitable for 2D or 3D projects. It allows developers to work without worrying about low-level browser impelementation, HTML5 performance, or fragmentation issues.
 
 ## Platform Coverage 
 
@@ -47,33 +45,35 @@ Through the use of Egrets engine, developers can do as much as possible not conc
 
 # Installation
 
-Install Egret Engine
+To Install the Egret Engine:
 
-* [Download](https://egret.com/products/engine.html) the Egret Engine Manager first.
+* [Download](https://egret.com/products/engine.html) the Egret Engine Manager.
 
-* After download successful, follow the [installation and deployment](http://developer.egret.com/cn/github/egret-docs/Engine2D/projectConfig/installation/index.html) 
+* Then, follow the [installation and deployment instructions](http://developer.egret.com/cn/github/egret-docs/Engine2D/projectConfig/installation/index.html) 
 
-After installation, we can easily manage the Egret engine and tools.
+Once installation is complete, Egret's engine and tools are easy to manage.
 
 # Getting Started
 
 #### TypeScript
 
-An Egret project should be developed by TypeScirpt language. TypeScript is a superset of JavaScript, the specific content can refer to the TyptScript language manual. Egret API and AS3 have a lot of similarities. It will be certainly easy to get started if you are familiar with it.
+Egret projects are developed using TypeScript, which is a superset of JavaScript. Please refer to the TypeScript manual for more information. The Egret API and ActionScript3 (AS3) are very similar. It will be easy to get started with Egret if you are familiar with AS3.
 
 #### Create a project by command line
 
-You can use following command to create a default item for the game
+Use following command to create a default game object:
 
     egret create HelloWorld
 
-If you have special needs you can add parameters - type empty | game | gui | eui to specify different projects. After creating a game you can see a folder named 'HelloWorld'.
+You may also add parameters if required: Use `empty` | `game` | `gui` | `eui` to specify different projects. 
 
-#### Write the first line of code
+After running this command, you should now see a folder called 'HelloWorld'.
 
-The entry for the game project is src / Main.ts by default. Write the first line of code for our project below, find the createGameScene () function in the default code, add console.log ("Hello World");
+#### Write your first line of code
 
-Become following:
+By default, the entry point for an Egret game projects is src / Main.ts. To make write the first line of code for your project, find the createGameScene () function, and add console.log ("Hello World");
+
+After making your changes, the code should now look like this:
 
     private createGameScene():void {
             // log
@@ -87,25 +87,23 @@ Become following:
             //...
         }
 
-Here we call a commonly used debugging command, console.log ("need to display the log content"). It will display our log in the browser's developer tool.
+Here, we've called `console.log("log content that we'd like to display")`. This will display our log message in the browser's developer tool.
 
     We recommend using Chrome to debug the Egret project.
 
-We use the following command to build the project:
+Use the following command to build Egret projects:
 
     egret build
 
-Then use the following command line to run the project:
+Use the following command to run Egret projects:
 
     egret startserver
 
 ![](./docs/img/console.png)
 
-Done.
+For more information, please refer to the Learning Module documentation.
 
-For more information, please refer to the Learning Module to view the documentation.
-
-# Demo
+# Demos
 
 Tower Defence Demo
 ![](./docs/img/3d_demo_1.png)
@@ -153,8 +151,8 @@ Click here to see [Show Case](https://egret.com/case)<br/>
 
 # Contributing
 
-Raising a good question is the first step to participate a open source community. You can report issues [here](https://github.com/egret-labs/egret-core/issues).
-Issue discussion in [official community](http://bbs.egret.com/portal.php) is recommended. It can help the latters solve problems more efficiently.
+Asking a question is the first step to participating in an open-source community. You can report Egret issues [here](https://github.com/egret-labs/egret-core/issues).
+It is recommended that issues be discussed in the [official community portal](http://bbs.egret.com/portal.php), as it can help with solving problems efficiently.
 
 # License
 

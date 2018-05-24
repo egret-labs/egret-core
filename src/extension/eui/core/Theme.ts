@@ -232,12 +232,14 @@ namespace eui {
             }
             let paths = data.paths;
             for (let path in paths) {
-                window[path] = EXML.update(path, paths[path])
+                EXML.update(path, paths[path])
             }
 
+            //commonjs|commonjs2
             if (!data.exmls || data.exmls.length == 0) {
                 this.onLoaded();
             }
+            //gjs
             else if (data.exmls[0]['gjs']) {
                 data.exmls.forEach((exml) => EXML.$parseURLContentAsJs((<EXMLFile>exml).path, (<EXMLFile>exml).gjs, (<EXMLFile>exml).className));
                 this.onLoaded();

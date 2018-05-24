@@ -625,6 +625,7 @@ module RES {
                 }
             }
             return queue.loadResource(r).then(value => {
+                host.save(r as ResourceInfo, value);
                 if (compFunc && r) {
                     compFunc.call(thisObject, value, r.url);
                 }

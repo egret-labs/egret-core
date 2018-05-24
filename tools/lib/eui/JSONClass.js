@@ -4,11 +4,13 @@ var JSONClass = /** @class */ (function () {
         this.json = {};
     }
     JSONClass.prototype.toCode = function () {
-        return JSON.stringify(this.json);
+        var str = JSON.stringify(this.json);
+        str = str.replace(/\\\\n/g, "\\n");
+        return str;
     };
     JSONClass.prototype.addContent = function (value, path, name) {
         if (name === void 0) { name = "elementsContent"; }
-        var paths = path.split(".");
+        var paths = path.split("/");
         var target = this.json;
         for (var _i = 0, paths_1 = paths; _i < paths_1.length; _i++) {
             var p = paths_1[_i];

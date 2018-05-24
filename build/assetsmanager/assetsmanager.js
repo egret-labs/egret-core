@@ -417,8 +417,19 @@ var RES;
             this.queueIndex = 0;
         }
         ResourceLoader.prototype.load = function (list, groupName, priority, reporter) {
+            var _this = this;
             if (this.itemListDic[groupName]) {
-                return Promise.resolve();
+                if (!this.dispatcherDic[groupName]) {
+                    var dispatcher_1 = new egret.EventDispatcher();
+                    this.dispatcherDic[groupName] = dispatcher_1;
+                }
+                var promise_1 = new Promise(function (reslove, reject) {
+                    _this.dispatcherDic[groupName].addEventListener("complete", reslove, null);
+                    _this.dispatcherDic[groupName].addEventListener("error", function (e) {
+                        reject(e.data);
+                    }, null);
+                });
+                return promise_1;
             }
             var total = list.length;
             for (var i = 0; i < total; i++) {
@@ -2606,6 +2617,7 @@ var RES;
                 }
             }
             return RES.queue.loadResource(r).then(function (value) {
+                RES.host.save(r, value);
                 if (compFunc && r) {
                     compFunc.call(thisObject, value, r.url);
                 }
