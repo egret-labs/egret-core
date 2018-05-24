@@ -103,7 +103,7 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
             //todo
             case "commonjs2":
                 var parser2 = new jsonParser.JSONParser();
-                let result2 = parser2.parse(e.contents);
+                let result2 = parser2.parse(e.contents, e.filename);
                 exmlEl = { path: e.filename, gjs: result2.code, json: result2.json, className: result2.className };
                 break;
             //todo
@@ -183,21 +183,21 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
                 generateEUI2.skins = ${JSON.stringify(thmData.skins)};`;
 
 
-            let namespaces = [];
-            for (let item of thmData.exmls) {
-                let packages: string[] = item.className.split(".")
-                let temp = '';
-                for (let i = 0; i < packages.length - 1; i++) {
-                    temp = i == 0 ? packages[i] : temp + "." + packages[i];
-                    if (namespaces.indexOf(temp) == -1) {
-                        namespaces.push(temp);
-                    }
-                }
+            // let namespaces = [];
+            // for (let item of thmData.exmls) {
+            //     let packages: string[] = item.className.split(".")
+            //     let temp = '';
+            //     for (let i = 0; i < packages.length - 1; i++) {
+            //         temp = i == 0 ? packages[i] : temp + "." + packages[i];
+            //         if (namespaces.indexOf(temp) == -1) {
+            //             namespaces.push(temp);
+            //         }
+            //     }
 
-                content += `generateEUI2.paths['${item.path}'] = window.${item.className} = ${item.gjs}`;
-            }
-            let result = namespaces.map(v => `window.${v}={};`).join("\n");
-            content = result + content;
+            //     content += `generateEUI2.paths['${item.path}'] = window.${item.className} = ${item.gjs}`;
+            // }
+            // let result = namespaces.map(v => `window.${v}={};`).join("\n");
+            // content = result + content;
             path = path.replace("thm.json", "thm.js");
             return { path, content }
         }

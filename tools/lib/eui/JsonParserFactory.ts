@@ -36,13 +36,60 @@ class JSONParseClass {
         "$eVL": "eui.VerticalLayout",
         "$eV": "eui.ViewStack",
         "$eVSB": "eui.VScrollBar",
-        "$eVS": "eui.VSlider"
+        "$eVS": "eui.VSlider",
+        "$eSk": "eui.Skin"
     }
 
 
     setData(data: any) {
         this.json = data;
+        this.parseSkinMap(this.json);
     }
+    private generateSkinClass(skinData: any, className: string, superName: string): any {
+        if (!skinData) return null;
+        let paths = superName.split(".");
+        let target = window;
+        for (let p of paths) {
+            target = target[p];
+        }
+        function __SkinClass() {
+            target.call(this);
+            window["JSONParseClass"].create(className, this);
+            // this.parseData(skinData);// 这里是关键，eui.Skin里面提供一个关键性的parseData接口
+        }
+        (<any>__extends)(__SkinClass, target);
+        (<any>__reflect)(__SkinClass, className, [superName]);
+        return __SkinClass;
+    }
+
+    parseSkinMap(skinMap): any {
+        let skinResult = {};
+        for (let exml in skinMap) {
+            let skinData = skinMap[exml];
+            if (!skinData) continue;
+
+            let paths = exml.split(".");
+            let target = window;
+            for (let p of paths) {
+                let parent = target;
+                if (p !== paths[paths.length - 1]) {
+                    target = target[p];
+                    if (target == undefined) {
+                        target = {};
+                        parent[p] = target;
+                    }
+                }
+            }
+
+            let superName = this.euiNormalize[skinData["$sC"]] == undefined ? skinData["$sC"] : this.euiNormalize[skinData["$sC"]];
+            skinResult[exml] = target[paths[paths.length - 1]] = this.generateSkinClass(skinData, exml, superName);
+            if (skinMap[exml]["$path"]) {
+                generateEUI2["paths"][skinMap[exml]["$path"]] = skinResult[exml];
+            }
+        }
+        return skinResult;
+    }
+
 
     create(skinName: string, target: any) {
         /** 先解析对应名字的的 */

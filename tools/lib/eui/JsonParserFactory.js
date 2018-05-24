@@ -34,11 +34,58 @@ var JSONParseClass = /** @class */ (function () {
             "$eVL": "eui.VerticalLayout",
             "$eV": "eui.ViewStack",
             "$eVSB": "eui.VScrollBar",
-            "$eVS": "eui.VSlider"
+            "$eVS": "eui.VSlider",
+            "$eSk": "eui.Skin"
         };
     }
     JSONParseClass.prototype.setData = function (data) {
         this.json = data;
+        this.parseSkinMap(this.json);
+    };
+    JSONParseClass.prototype.generateSkinClass = function (skinData, className, superName) {
+        if (!skinData)
+            return null;
+        var paths = superName.split(".");
+        var target = window;
+        for (var _i = 0, paths_1 = paths; _i < paths_1.length; _i++) {
+            var p = paths_1[_i];
+            target = target[p];
+        }
+        function __SkinClass() {
+            target.call(this);
+            window["JSONParseClass"].create(className, this);
+            // this.parseData(skinData);// 这里是关键，eui.Skin里面提供一个关键性的parseData接口
+        }
+        __extends(__SkinClass, target);
+        __reflect(__SkinClass, className, [superName]);
+        return __SkinClass;
+    };
+    JSONParseClass.prototype.parseSkinMap = function (skinMap) {
+        var skinResult = {};
+        for (var exml in skinMap) {
+            var skinData = skinMap[exml];
+            if (!skinData)
+                continue;
+            var paths = exml.split(".");
+            var target = window;
+            for (var _i = 0, paths_2 = paths; _i < paths_2.length; _i++) {
+                var p = paths_2[_i];
+                var parent = target;
+                if (p !== paths[paths.length - 1]) {
+                    target = target[p];
+                    if (target == undefined) {
+                        target = {};
+                        parent[p] = target;
+                    }
+                }
+            }
+            var superName = this.euiNormalize[skinData["$sC"]] == undefined ? skinData["$sC"] : this.euiNormalize[skinData["$sC"]];
+            skinResult[exml] = target[paths[paths.length - 1]] = this.generateSkinClass(skinData, exml, superName);
+            if (skinMap[exml]["$path"]) {
+                generateEUI2["paths"][skinMap[exml]["$path"]] = skinResult[exml];
+            }
+        }
+        return skinResult;
     };
     JSONParseClass.prototype.create = function (skinName, target) {
         /** 先解析对应名字的的 */

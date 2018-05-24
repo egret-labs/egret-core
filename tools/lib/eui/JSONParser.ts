@@ -90,7 +90,8 @@ let euiShorten = {
     "eui.VerticalLayout": "$eVL",
     "eui.ViewStack": "$eV",
     "eui.VScrollBar": "$eVSB",
-    "eui.VSlider": "$eVS"
+    "eui.VSlider": "$eVS",
+    "eui.Skin": "$eSk"
 }
 
 
@@ -203,7 +204,7 @@ export class JSONParser {
      * @param xmlData 要编译的EXML文件内容
      *
      */
-    public parse(text: string): { code: string, json: string, className: string } {
+    public parse(text: string, path?: string): { code: string, json: string, className: string } {
         if (DEBUG) {
             if (!text) {
                 egretbridge.$error(1003, "text");
@@ -233,6 +234,10 @@ export class JSONParser {
             className = "$exmlClass" + innerClassCount++;
         }
         this._className = className;
+        if (path) { 
+            jsonFactory.addContent(path, this.className, "$path");
+        }
+
         let exClass = this.parseClass(xmlData, className);
 
         let code = exClass.toCode(true);
@@ -1179,6 +1184,8 @@ export class JSONParser {
             jsonFactory.addContent(bindingConfig, this.currentClassName, "$b");
         }
         this.currentClass.constructCode = cb;
+
+        jsonFactory.addContent(euiShorten[nodeClassName] != undefined ? euiShorten[nodeClassName] : nodeClassName, this.currentClassName, "$sC");
     }
 
     /**
