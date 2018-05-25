@@ -307,8 +307,7 @@ export function getAvailablePort(port = 0) {
 
 export function checkEgret() {
     var options = egret.args;
-    if (file.exists(options.srcDir) == false ||
-        file.exists(options.templateDir) == false) {
+    if (file.exists(options.srcDir) == false) {
         exit(10015, options.projectDir);
     }
 }
