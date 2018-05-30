@@ -724,7 +724,10 @@ namespace egret {
          */
         public static create<T extends Event>(EventClass:{new (type:string, bubbles?:boolean, cancelable?:boolean): T;eventPool?:Event[]},
                                               type:string, bubbles?:boolean, cancelable?:boolean):T {
-            let eventPool:Event[] = EventClass.eventPool;
+            let eventPool:Event[];
+			if(EventClass.hasOwnProperty("eventPool")){
+				eventPool = EventClass.eventPool;
+			}
             if (!eventPool) {
                 eventPool = EventClass.eventPool = [];
             }
