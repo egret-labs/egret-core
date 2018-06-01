@@ -28,9 +28,10 @@
 //////////////////////////////////////////////////////////////////////////////////////
 import { EXMLConfig, NS_S, NS_W } from "./EXMLConfig2";
 import XMLParser = require("../xml/index");
-import { EXAddItems, EXBinding, EXClass, EXCodeBlock, EXFunction, EXSetProperty, EXState, EXVariable, EXSetStateProperty } from "./CodeFactory";
+import { EXAddItems, EXBinding, EXClass, EXCodeBlock, EXFunction, EXSetProperty, EXState, EXVariable, EXSetStateProperty, EXArray } from "./CodeFactory";
 let DEBUG = false;
 import { egretbridge } from "./egretbridge";
+import { EXMLFile } from "./EXML";
 /**
  * @private
  * EXML配置管理器实例
@@ -57,6 +58,33 @@ let wingKeys: string[] = ["id", "locked", "includeIn", "excludeFrom"];
 let htmlEntities: string[][] = [["<", "&lt;"], [">", "&gt;"], ["&", "&amp;"], ["\"", "&quot;"], ["'", "&apos;"]];
 let jsKeyWords: string[] = ["null", "NaN", "undefined", "true", "false"];
 
+
+
+class EXMLFileSystem {
+
+    private root: { [index: string]: EXMLFile } = {};
+
+    private fileList: string[] = [];
+
+    getList() {
+        return this.fileList;
+    }
+
+    set(filename: string, content: EXMLFile) {
+        this.fileList.push(filename)
+        this.root[filename] = content;
+    }
+
+    get(filename: string) {
+        const result = this.root[filename];
+        if (!result) {
+            console.warn("找不到资源", filename);
+        }
+        return result;
+    }
+}
+
+export const fileSystem = new EXMLFileSystem();
 
 /**
  * @private
@@ -167,7 +195,7 @@ export class EXMLParser {
      * @param xmlData 要编译的EXML文件内容
      *
      */
-    public parse(text: string): {code:string, className:string} {
+    public parse(text: string): { code: string, className: string } {
         if (DEBUG) {
             if (!text) {
                 egretbridge.$error(1003, "text");
@@ -198,7 +226,7 @@ export class EXMLParser {
         this._className = className;
         let exClass = this.parseClass(xmlData, className);
         let code = exClass.toCode();
-        return {code, className};
+        return { code, className };
     }
 
     /**
@@ -209,6 +237,7 @@ export class EXMLParser {
         if (!exmlConfig) {
             exmlConfig = new EXMLConfig();
         }
+
         exmlConfig.dirPath = egret.args.projectDir;
         this.currentXML = xmlData;
         this.currentClassName = className;
@@ -329,7 +358,7 @@ export class EXMLParser {
                     if (id.match(e) == null) {
                         egretbridge.$warn(2022, id);
                     }
-                    if(id.match(new RegExp(/ /g)) != null) {
+                    if (id.match(new RegExp(/ /g)) != null) {
                         egretbridge.$warn(2022, id);
                     }
                     if (this.skinParts.indexOf(id) == -1) {
@@ -1062,33 +1091,25 @@ export class EXMLParser {
         }
 
         this.initlizeChildNode(this.currentXML, cb, varName);
-        let id: string;
-        let stateIds = this.stateIds;
-        if (stateIds.length > 0) {
-            let length = stateIds.length;
-            for (let i = 0; i < length; i++) {
-                id = stateIds[i];
-                cb.addCodeLine("this." + id + "_i();");
-            }
+
+        for (let id of this.stateIds) {
+            cb.addCodeLine("this." + id + "_i();");
             cb.addEmptyLine();
         }
 
-        let skinParts = this.skinParts;
-        let skinPartStr: string = "[]";
-        let length = skinParts.length;
-        if (length > 0) {
-            for (let i = 0; i < length; i++) {
-                skinParts[i] = "\"" + skinParts[i] + "\"";
-            }
-            skinPartStr = "[" + skinParts.join(",") + "]";
-        }
-        let skinPartFunc: EXFunction = new EXFunction();
-        skinPartFunc.name = "skinParts";
-        skinPartFunc.isGet = true;
-        let skinPartCB: EXCodeBlock = new EXCodeBlock();
-        skinPartCB.addReturn(skinPartStr);
-        skinPartFunc.codeBlock = skinPartCB;
-        this.currentClass.addFunction(skinPartFunc);
+        const skinpartsArray = new EXArray(this.skinParts);
+        let skinPartStr = skinpartsArray.toCode();
+
+        // let skinPartFunc: EXFunction = new EXFunction();
+        // skinPartFunc.name = "skinParts";
+        // skinPartFunc.isGet = true;
+        // let skinPartCB: EXCodeBlock = new EXCodeBlock();
+        // skinPartCB.addReturn(skinPartStr);
+        // skinPartFunc.codeBlock = skinPartCB;
+        // this.currentClass.addFunction(skinPartFunc)
+
+        var skinpartsVaribale = new EXVariable('skinParts', skinpartsArray.toCode())
+        this.currentClass.addVariable(skinpartsVaribale);
 
 
         this.currentXML.attributes.id = "";
@@ -1125,7 +1146,7 @@ export class EXMLParser {
 
         //打印视图状态初始化代码
         let stateCode = this.stateCode;
-        length = stateCode.length;
+        let length = stateCode.length;
         if (length > 0) {
             let indentStr = "	";
             cb.addCodeLine("this.states = [");

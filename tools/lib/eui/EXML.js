@@ -31,7 +31,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var __global = global;
 var xml = require("../xml/index");
 var utils = require("../utils");
-var config = require("./EXMLConfig");
 egret.XML = xml;
 /**
  * @private
@@ -56,25 +55,25 @@ function sort(exmlFiles) {
         insert(e);
     });
     function insert(file) {
-        if (file.path in sortedMap)
+        if (file.filename in sortedMap)
             return;
         for (var i in file.depends)
             insert(allEXMLs[i]);
         sorted.push(file);
-        sortedMap[file.path] = true;
+        sortedMap[file.filename] = true;
     }
     return sorted;
 }
 exports.sort = sort;
 function parseEXML(exmlFiles) {
     exmlFiles.forEach(function (file) {
-        var xml = egret.XML.parse(file.content);
+        var xml = egret.XML.parse(file.contents);
         file.className = parseClassName(xml);
         file.usedClasses = parseUsedClass(xml);
         file.usedEXML = parseUsedEXML(xml);
         allClasses[file.className] = allClasses[file.className] || [];
         allClasses[file.className].push(file);
-        allEXMLs[file.path] = file;
+        allEXMLs[file.filename] = file;
     });
 }
 function addDepends(file) {
@@ -91,7 +90,7 @@ function addDepends(file) {
                     addDepends(it);
                 for (var i in it.depends)
                     depends[i] = true;
-                depends[it.path] = true;
+                depends[it.filename] = true;
             }
         });
     });
@@ -102,7 +101,7 @@ function addDepends(file) {
                 addDepends(it);
             for (var i in it.depends)
                 depends[i] = true;
-            depends[it.path] = true;
+            depends[it.filename] = true;
         }
     });
     file.depends = depends;
@@ -170,7 +169,11 @@ function getClassNameById(id, ns) {
     }
     if (ns == exports.NS_W) {
     }
-    else if (!ns || ns == exports.NS_S) {
+    else if (!ns) {
+        name = id;
+    }
+    else if (ns == exports.NS_S) {
+        name = "eui." + id;
     }
     else {
         name = ns.substring(0, ns.length - 1) + id;
@@ -180,16 +183,16 @@ function getClassNameById(id, ns) {
 function getDtsInfoFromExml(exmlFile) {
     var xml;
     try {
-        xml = egret.XML.parse(require("../FileUtil").read(exmlFile));
+        xml = egret.XML.parse(exmlFile.contents);
     }
     catch (e) {
         console.log(e);
-        utils.exit(2002, exmlFile);
+        utils.exit(2002, exmlFile.filename);
     }
     if (!xml) {
-        utils.exit(2002, exmlFile);
+        utils.exit(2002, exmlFile.filename);
     }
-    var className = config.EXMLConfig.getInstance().getClassNameById(xml.localName, xml.namespace);
+    var className = getClassNameById(xml.localName, xml.namespace);
     var extendName = "";
     if (xml["$class"]) {
         extendName = className;

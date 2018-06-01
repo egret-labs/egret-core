@@ -29,16 +29,18 @@
 
 /// <reference path="registerClass.ts" />
 
-function __extends(d, b) {
-    for (let p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() {
-        this.constructor = d;
-    }
 
-    __.prototype = b.prototype;
-    d.prototype = new __();
+
+declare var global;
+declare var __global;
+if (typeof global == 'undefined') {
+    var global: any = window;
 }
-let __define = this.__define || function (o, p, g, s) {   Object.defineProperty(o, p, { configurable:true, enumerable:true, get:g,set:s }) };
+if (typeof __global == 'undefined') {
+    var __global = global;
+}
+
+let __define = this && this.__define || function (o, p, g, s) { Object.defineProperty(o, p, { configurable: true, enumerable: true, get: g, set: s }) };
 
 namespace egret {
     /**
@@ -69,14 +71,14 @@ namespace egret {
          * @readOnly
          * @language zh_CN
          */
-        hashCode:number;
+        hashCode: number;
     }
 
     /**
      * @private
      * 哈希计数
      */
-    export let $hashCount:number = 1;
+    export let $hashCount: number = 1;
 
     /**
      * The HashObject class is the base class for all objects in the Egret framework.The HashObject
@@ -91,7 +93,7 @@ namespace egret {
      * @platform Web,Native
      * @language zh_CN
      */
-    export class HashObject implements IHashObject{
+    export class HashObject implements IHashObject {
 
         /**
          * Initializes a HashObject
@@ -112,7 +114,7 @@ namespace egret {
         /**
          * @private
          */
-        $hashCode:number;
+        $hashCode: number;
         /**
          * a unique identification number assigned to this instance.
          * @version Egret 2.4
@@ -125,21 +127,8 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get hashCode():number {
+        public get hashCode(): number {
             return this.$hashCode;
         }
-    }
-
-
-
-    /**
-     * @private
-     */
-    export interface AsyncCallback {
-
-        onSuccess: (data:any) => any;
-
-        onFail: (error:number,data:any) => any;
-
     }
 }

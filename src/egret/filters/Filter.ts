@@ -41,41 +41,44 @@ namespace egret {
         public type:string = null;
 
         /**
+         * @private
+         */
+        public $id: number = null;
+
+
+        /**
          * @private 
          */
         public $uniforms:any;
+
+        /**
+         * @private 
+         */
+        protected paddingTop: number = 0;
+        /**
+         * @private 
+         */
+        protected paddingBottom: number = 0;
+        /**
+         * @private 
+         */
+        protected paddingLeft: number = 0;
+        /**
+         * @private 
+         */
+        protected paddingRight: number = 0;
         
-        private $targets:DisplayObject[] = [];
+        /**
+         * @private
+         * @native Render
+         */
+        public $obj: any;
 
         constructor() {
             super();
             this.$uniforms = {};
-        }
-        
-        public $addTarget(target:DisplayObject):void {
-            let length:number = this.$targets.length;
-            for(let i:number = 0 ; i < length ; i++) {
-                if(this.$targets[i].$hashCode == target.$hashCode) {
-                    return;
-                }
-            }
-            this.$targets.push(target);
-        }
-        
-        public $removeTarget(target:DisplayObject):void {
-            let length:number = this.$targets.length;
-            for(let i:number = 0 ; i < length ; i++) {
-                if(this.$targets[i].$hashCode == target.$hashCode) {
-                    this.$targets.splice(i, 1);
-                    return;
-                }
-            }
-        }
-        
-        protected invalidate():void {
-            let length:number = this.$targets.length;
-            for(let i:number = 0 ; i < length ; i++) {
-                this.$targets[i].$invalidateContentBounds();
+            if (egret.nativeRender) {
+               egret_native.NativeDisplayObject.createFilter(this);
             }
         }
 
@@ -84,6 +87,19 @@ namespace egret {
          */
         public $toJson():string {
             return '';
+        }
+
+        protected updatePadding(): void {
+
+        }
+
+        public onPropertyChange(): void {
+            let self = this;
+            self.updatePadding();
+            if (egret.nativeRender) {
+                egret_native.NativeDisplayObject.setFilterPadding(self.$id, self.paddingTop, self.paddingBottom, self.paddingLeft, self.paddingRight);
+                egret_native.NativeDisplayObject.setDataToFilter(self);
+            }
         }
     }
 }

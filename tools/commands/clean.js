@@ -1,4 +1,10 @@
 /// <reference path="../lib/types.d.ts" />
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -38,16 +44,14 @@ var utils = require("../lib/utils");
 var service = require("../service/index");
 var FileUtil = require("../lib/FileUtil");
 var CompileProject = require("../actions/CompileProject");
-var copyNative = require("../actions/CopyNativeFiles");
-var EgretProject = require("../project/EgretProject");
+var EgretProject = require("../project");
 console.log(utils.tr(1106, 0));
-var timeBuildStart = (new Date()).getTime();
-var Clean = (function () {
+var Clean = /** @class */ (function () {
     function Clean() {
     }
     Clean.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var options, compileProject, result, manifestPath, indexPath, arr, moduleName_1, timeBuildEnd, timeBuildUsed;
+            var options, compileProject, result, manifestPath, indexPath, arr, moduleName_1;
             return __generator(this, function (_a) {
                 utils.checkEgret();
                 options = egret.args;
@@ -62,17 +66,17 @@ var Clean = (function () {
                 }
                 manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
                 indexPath = FileUtil.joinPath(egret.args.projectDir, "index.html");
-                EgretProject.manager.generateManifest(result.files, manifestPath);
-                if (!EgretProject.data.useTemplate) {
+                EgretProject.manager.generateManifest(result.files, { debug: true, platform: 'web' }, manifestPath);
+                if (!EgretProject.projectData.useTemplate) {
                     EgretProject.manager.modifyIndex(manifestPath, indexPath);
                 }
                 //拷贝项目到native工程中
-                if (egret.args.runtime == "native") {
-                    console.log("----native build-----");
-                    EgretProject.manager.modifyNativeRequire(manifestPath);
-                    copyNative.refreshNative(true);
-                }
-                if (EgretProject.data.isWasmProject()) {
+                // if (egret.args.target == "native") {
+                //     console.log("----native build-----");
+                //     EgretProject.manager.modifyNativeRequire(manifestPath);
+                //     copyNative.refreshNative(true);
+                // }
+                if (EgretProject.projectData.isWasmProject()) {
                     arr = [
                         "egret.asm.js",
                         "egret.asm.js.mem",
@@ -80,21 +84,21 @@ var Clean = (function () {
                         "egret.webassembly.wasm"
                     ];
                     moduleName_1 = "egret";
-                    if (EgretProject.data.hasModule("dragonBones")) {
+                    if (EgretProject.projectData.hasModule("dragonBones")) {
                         moduleName_1 = "egretWithDragonBones";
                     }
                     arr.forEach(function (item) {
                         FileUtil.copy(FileUtil.joinPath(egret.root, "build", "wasm_libs", moduleName_1, item), FileUtil.joinPath(options.projectDir, "libs", item));
                     });
                 }
-                timeBuildEnd = new Date().getTime();
-                timeBuildUsed = (timeBuildEnd - timeBuildStart) / 1000;
-                console.log(utils.tr(1108, timeBuildUsed));
                 //Wait for 'shutdown' command, node will exit when there are no tasks.
                 return [2 /*return*/, DontExitCode];
             });
         });
     };
+    __decorate([
+        utils.measure
+    ], Clean.prototype, "execute", null);
     return Clean;
 }());
 module.exports = Clean;

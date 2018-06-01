@@ -34,7 +34,6 @@
 var __global = global;
 var xml = require("../xml/index");
 var utils = require("../utils");
-import config = require("./EXMLConfig");
 egret.XML = xml;
 
 
@@ -52,8 +51,8 @@ var allClasses: { [name: string]: EXMLFile[] } = {};
 var allEXMLs: { [name: string]: EXMLFile } = {};
 
 export interface EXMLFile {
-    path: string;
-    content: string;
+    filename: string;
+    contents: string;
     className?: string;
     usedClasses?: string[];
     usedEXML?: string[];
@@ -66,79 +65,78 @@ interface EXMLDepends {
     [name: string]: boolean;
 }
 
-export function sort(exmlFiles: EXMLFile[]): EXMLFile[]{
+export function sort(exmlFiles: EXMLFile[]): EXMLFile[] {
 
     parseEXML(exmlFiles);
-
-    exmlFiles.forEach(file=> addDepends(file));
+    exmlFiles.forEach(file => addDepends(file));
 
     var sorted: EXMLFile[] = []
     var sortedMap: any = {};
 
-    var preloads = exmlFiles.filter(e=> e.preload);
+    var preloads = exmlFiles.filter(e => e.preload);
 
-    preloads.forEach(e=> {
+    preloads.forEach(e => {
         insert(e);
     });
 
-    exmlFiles.forEach(e=> {
+    exmlFiles.forEach(e => {
         insert(e);
     });
-    
+
 
     function insert(file: EXMLFile) {
-        if (file.path in sortedMap)
+        if (file.filename in sortedMap)
             return;
         for (var i in file.depends)
             insert(allEXMLs[i]);
         sorted.push(file);
-        sortedMap[file.path] = true;
+        sortedMap[file.filename] = true;
     }
-    
-    
+
+
     return sorted;
 }
 
 function parseEXML(exmlFiles: EXMLFile[]) {
 
-    exmlFiles.forEach((file:EXMLFile)=> {
-        var xml = egret.XML.parse(file.content);
+    exmlFiles.forEach((file: EXMLFile) => {
+        var xml = egret.XML.parse(file.contents);
         file.className = parseClassName(xml);
         file.usedClasses = parseUsedClass(xml);
         file.usedEXML = parseUsedEXML(xml);
         allClasses[file.className] = allClasses[file.className] || [];
         allClasses[file.className].push(file);
-        allEXMLs[file.path] = file;
+        allEXMLs[file.filename] = file;
     });
 }
 
 function addDepends(file: EXMLFile) {
     var depends: EXMLDepends = {};
-    file.usedClasses && file.usedClasses.forEach(className=> {
+    file.usedClasses && file.usedClasses.forEach(className => {
         var files = allClasses[className];
         if (!files) {
             //console.log("Cannot find:", className);
             return;
         }
-        files.forEach(it=> {
-            if(it){
+        files.forEach(it => {
+            if (it) {
                 if (!it.depends)
                     addDepends(it);
                 for (var i in it.depends)
                     depends[i] = true;
-                depends[it.path] = true;
+                depends[it.filename] = true;
             }
         })
     });
 
-    file.usedEXML && file.usedEXML.forEach(path=> {
+    file.usedEXML && file.usedEXML.forEach(path => {
         var it = allEXMLs[path];
-        if(it){
+        if (it) {
             if (!it.depends)
                 addDepends(it);
             for (var i in it.depends)
                 depends[i] = true;
-            depends[it.path] = true;
+            depends[it.filename] = true;
         }
     });
 
@@ -151,11 +149,11 @@ function parseClassName(xml: egret.XML): string {
     return xml["$class"];
 }
 
-function parseUsedClass(xml: egret.XML): string[]{
+function parseUsedClass(xml: egret.XML): string[] {
     var classes: string[] = [];
     visitNodes(xml,
-        node=> parseNodeClassName(<egret.XML>node),
-        classNames=> classNames.forEach(className=> classes.push(className)));
+        node => parseNodeClassName(<egret.XML>node),
+        classNames => classNames.forEach(className => classes.push(className)));
     return classes;
 
     function parseNodeClassName(xml: egret.XML): string[] {
@@ -175,11 +173,11 @@ function parseUsedClass(xml: egret.XML): string[]{
     }
 }
 
-function parseUsedEXML(xml: egret.XML): string[]{
+function parseUsedEXML(xml: egret.XML): string[] {
     var files: string[] = [];
     visitNodes(xml,
-        node=> parseEXMLPathInAttributes(<egret.XML>node),
-        path=> files.push(path));
+        node => parseEXMLPathInAttributes(<egret.XML>node),
+        path => files.push(path));
     return files;
 
     function parseEXMLPathInAttributes(xml: egret.XML): string {
@@ -201,18 +199,18 @@ function visitNodes(xml: egret.XML, condition: (node: egret.XMLNode) => any, cal
         callback(result);
     if (!xml.children || xml.children.length < 1)
         return;
-    xml.children.forEach(node=> {
+    xml.children.forEach(node => {
         visitNodes(<egret.XML>node, condition, callback);
     });
 }
 
 
-        /**
-         * @private
-         * 根据类的短名ID和命名空间获取完整类名(以"."分隔)
-         * @param id 类的短名ID
-         * @param ns 命名空间
-         */
+/**
+ * @private
+ * 根据类的短名ID和命名空间获取完整类名(以"."分隔)
+ * @param id 类的短名ID
+ * @param ns 命名空间
+ */
 function getClassNameById(id: string, ns: string): string {
     if (id == "Object" && ns == NS_S) {
 
@@ -224,8 +222,11 @@ function getClassNameById(id: string, ns: string): string {
     if (ns == NS_W) {
 
     }
-    else if (!ns || ns == NS_S) {
-
+    else if (!ns) {
+        name = id;
+    }
+    else if (ns == NS_S) {
+        name = "eui." + id;
     }
     else {
         name = ns.substring(0, ns.length - 1) + id
@@ -233,23 +234,23 @@ function getClassNameById(id: string, ns: string): string {
     return name;
 }
 
-export function getDtsInfoFromExml(exmlFile:string):{className:string,extendName:string}{
-    var xml:egret.XML;
+export function getDtsInfoFromExml(exmlFile: EXMLFile): { className: string, extendName: string } {
+    var xml: egret.XML;
     try {
-        xml = egret.XML.parse(require("../FileUtil").read(exmlFile))
+        xml = egret.XML.parse(exmlFile.contents)
     }
-    catch(e) {
+    catch (e) {
         console.log(e);
-        utils.exit(2002, exmlFile);
+        utils.exit(2002, exmlFile.filename);
     }
-    if(!xml) {
-        utils.exit(2002, exmlFile);
+    if (!xml) {
+        utils.exit(2002, exmlFile.filename);
     }
-    var className = config.EXMLConfig.getInstance().getClassNameById(xml.localName, xml.namespace);
+    var className = getClassNameById(xml.localName, xml.namespace);
     var extendName = "";
-    if(xml["$class"]){
+    if (xml["$class"]) {
         extendName = className;
         className = xml["$class"];
     }
-    return{className:className,extendName:extendName};
+    return { className, extendName };
 }

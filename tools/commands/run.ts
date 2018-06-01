@@ -10,38 +10,40 @@ import Server = require('../server/server');
 import FileUtil = require('../lib/FileUtil');
 import service = require('../service/index');
 import CompileProject = require('../actions/CompileProject');
+import { launcher, projectData } from '../project';
+import * as os from 'os';
 
 class Run implements egret.Command {
 
-    private serverStarted = false;
     private initVersion = "";//初始化的 egret 版本，如果版本变化了，关掉当前的进程
-    execute(): number {
-        var build = new Build();
-        build.execute(this.onBuildFinish);
-        return DontExitCode;
+    async execute() {
+        const exitCode = await new Build().execute();
+        const target = egret.args.target;
+        const toolsList = launcher.getLauncherLibrary().getInstalledTools();
+
+        switch (target) {
+            case "web":
+                const port = await utils.getAvailablePort(egret.args.port);
+                this.initServer(port);
+                return DontExitCode;
+                break;
+            case "wxgame":
+                return (await runWxIde());
+                break;
+            case 'bricks':
+                return (await runBricks());
+                break;
+
+        }
     }
 
-    private onBuildFinish = (exitCode: number) => {
-        if (this.serverStarted)
-            return;
-        if (exitCode != 0) {
-            process.exit(exitCode);
-        }
-        if (egret.args.platform == undefined || egret.args.platform == 'web') {
-            utils.getAvailablePort(port => this.onGotPort(port), egret.args.port);
-        }
-        else {
-            process.exit(0);
-        }
-    }
 
-    private onGotPort(port: number) {
+    private initServer(port: number) {
         egret.args.port = port;
         var addresses = utils.getNetworkAddress();
         if (addresses.length > 0) {
             egret.args.host = addresses[0];
         }
-        this.serverStarted = true;
         let openWithBrowser = !egret.args.serverOnly;
         let server = new Server();
         let projectDir = egret.args.projectDir;
@@ -137,34 +139,108 @@ class Run implements egret.Command {
         return js["egret_version"];
     }
 
-    __tempP: string;
+
+
     private wrapByParams(url: string): string {
-        if (!this.__tempP) {
-            this.__tempP = this.genParams();
-        }
-        return url + this.__tempP;
+        return url + this.genParams();
     }
 
-    private genParams(): string {
-        var ret: string = "";
-        var propertyFilePath = FileUtil.joinPath(egret.args.projectDir, "egretProperties.json");
+    @utils.cache
+    private genParams() {
+        let result = "";
+        let propertyFilePath = FileUtil.joinPath(egret.args.projectDir, "egretProperties.json");
         if (FileUtil.exists(propertyFilePath)) {
-            var urlParams = JSON.parse(FileUtil.read(propertyFilePath)).urlParams;
+            let urlParams = JSON.parse(FileUtil.read(propertyFilePath)).urlParams;
             if (urlParams) {
-                var hasParams: boolean = false;
+                let hasParams = false;
                 for (let key in urlParams) {
                     hasParams = true;
-                    ret += key + "=" + urlParams[key] + "&";
+                    result += key + "=" + urlParams[key] + "&";
                 }
                 if (hasParams) {
-                    ret = "?" + ret.substr(0, ret.length - 1);
+                    result = "?" + result.substr(0, result.length - 1);
                 }
             }
         }
-        return ret;
+        return result;
     }
 
 }
 
 
 export = Run;
+
+
+async function runWxIde() {
+    let wxPaths = [];
+    let packagePath: string;
+    switch (os.platform()) {
+        case "darwin":
+            const result = await utils.executeCommand("defaults read com.tencent.wechat.devtools LastRunAppBundlePath");
+            if (result.stdout != '') {
+                const stdout = result.stdout.replace(/\n/g, "");
+                wxPaths = [FileUtil.joinPath(stdout, "/Contents/Resources/app.nw/bin/cli")];
+            }
+            // defaults read
+            wxPaths.push("/Applications/wechatwebdevtools.app/Contents/Resources/app.nw/bin/cli");
+            packagePath = "/Applications/wechatwebdevtools.app/Contents/Resources/app.nw/package.json";
+            break;
+        case "win32":
+            // defaults read
+            wxPaths = [
+                "C:\\Program Files (x86)\\Tencent\\微信web开发者工具\\cli.bat",
+                "C:\\Program Files\\Tencent\\微信web开发者工具\\cli.bat"
+            ];
+            const iconv = require('../lib/iconv-lite');
+            const encoding = 'cp936';
+            const binaryEncoding = 'binary';
+            const result2 = await utils.executeCommand('REG QUERY "HKLM\\SOFTWARE\\Wow6432Node\\Tencent\\微信web开发者工具"', { encoding: binaryEncoding });
+            const stdout = iconv.decode(new Buffer(result2.stdout, binaryEncoding), encoding);
+            if (stdout != '') {
+                const stdoutArr = stdout.split("\r\n");
+                let exePath: string = stdoutArr.find((path) => path.indexOf(".exe") != -1);
+                exePath = exePath.split("  ").find((path) => path.indexOf(".exe") != -1);
+                exePath = path.join(path.dirname(exePath), 'cli.bat');
+                wxPaths.unshift(exePath);
+                packagePath = path.resolve(exePath, "../package.nw/package.json");
+            }
+            break;
+    }
+    const packageJson: { "version": string } = (!!packagePath) ? JSON.parse(await FileUtil.readFileAsync(packagePath, null)) : null;
+    const wxpath = wxPaths.find((wxpath) => FileUtil.exists(wxpath));
+    if (wxpath) {
+        let projectPath = egret.args.projectDir;
+        projectPath = path.resolve(projectPath, "../", path.basename(projectPath) + "_wxgame");
+        try {
+            let result = globals.compressVersion(packageJson.version, "1.02.1801081");
+            if (result > 0) {
+                await utils.shell(wxpath, ["-o", projectPath, "-f", "egret"], null, true);
+            } else {
+                console.log("当前web开发者工具版本为:", packageJson.version, ", 请升级最新的微信web开发者工具");
+                await utils.shell(wxpath, ["-o", projectPath], null, true);
+            }
+        }
+        catch (e) {
+            return 1;
+        }
+    }
+    else {
+        throw '请安装最新微信开发者工具'
+    }
+    return DontExitCode
+}
+
+async function runBricks() {
+    switch (os.platform()) {
+        case "darwin":
+            let projectPath = egret.args.projectDir;
+            projectPath = path.resolve(projectPath, "../", path.basename(projectPath) + "_bricks", "PublicBrickEngineGame.xcodeproj");
+            utils.open(projectPath);
+            return 0;
+            break;
+        case "win32":
+            throw '目前玩一玩仅支持 MacOS 平台开发';
+            break;
+    }
+    return 1;
+}

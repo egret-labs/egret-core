@@ -50,17 +50,13 @@ namespace egret.sys {
          */
         GroupNode,
         /**
-         * 设置矩阵节点
-         */
-        SetTransformNode,
-        /**
-         * 设置透明度节点
-         */
-        SetAlphaNode,
-        /**
          * Mesh 节点
          */
-        MeshNode
+        MeshNode,
+        /**
+         * 普通位图渲染节点
+         */
+        NormalBitmapNode
     }
 
     /**
@@ -74,30 +70,6 @@ namespace egret.sys {
          */
         public type:number = 0;
         /**
-         * 是否需要重绘的标志。
-         */
-        public needRedraw:boolean = false;
-        /**
-         * 这个对象在舞台上的整体透明度
-         */
-        public renderAlpha:number = 1;
-        /**
-         * 这个对象在舞台上的透明度
-         */
-        public renderVisible:boolean = true;
-        /**
-         * 相对于显示列表根节点或位图缓存根节点上的矩阵对象
-         */
-        public renderMatrix:Matrix = new Matrix();
-        /**
-         * 此显示对象自身（不包括子项）在显示列表根节点或位图缓存根节点上的显示尺寸。
-         */
-        public renderRegion:sys.Region = new sys.Region();
-        /**
-         * 是否发生移动
-         */
-        public moved:boolean = false;
-        /**
          * 绘制数据
          */
         public drawData:any[] = [];
@@ -106,7 +78,7 @@ namespace egret.sys {
          */
         protected renderCount:number = 0;
         /**
-         * 在显示对象的$render()方法被调用前，自动清空自身的drawData数据。
+         * 在显示对象的$updateRenderNode()方法被调用前，自动清空自身的drawData数据。
          */
         public cleanBeforeRender():void{
             this.drawData.length = 0;

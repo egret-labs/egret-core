@@ -3,7 +3,7 @@ var os = require("os");
 var cprocess = require("child_process");
 var utils = require("../lib/utils");
 var FileUtil = require("../lib/FileUtil");
-var Project = (function () {
+var Project = /** @class */ (function () {
     function Project() {
         this.buildProcessOutputs = [];
     }
@@ -59,8 +59,8 @@ var Project = (function () {
             'compileservice', this.path,
             (this.option.sourceMap ? "-sourcemap" : "")
         ];
-        if (this.option && this.option.runtime) {
-            params.push("--runtime", this.option.runtime);
+        if (this.option && this.option.target) {
+            params.push("--runtime", this.option.target);
         }
         if (this.option && this.option.experimental) {
             params.push("-exp");

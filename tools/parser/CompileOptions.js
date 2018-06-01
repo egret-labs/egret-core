@@ -2,12 +2,12 @@
 var os = require("os");
 var crypto = require("crypto");
 var FileUtil = require("../lib/FileUtil");
-var CompileOptions = (function () {
+var CompileOptions = /** @class */ (function () {
     function CompileOptions() {
         this._host = null;
         this._port = NaN;
         this.esTarget = 'ES5';
-        this.runtime = "web";
+        this.target = "none";
         this._tmpDir = null;
     }
     Object.defineProperty(CompileOptions.prototype, "srcDir", {

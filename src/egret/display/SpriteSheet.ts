@@ -74,8 +74,8 @@ namespace egret {
             super();
             this.$texture = texture;
 
-            this._bitmapX = texture._bitmapX - texture._offsetX;
-            this._bitmapY = texture._bitmapY - texture._offsetY;
+            this._bitmapX = texture.$bitmapX - texture.$offsetX;
+            this._bitmapY = texture.$bitmapY - texture.$offsetY;
         }
 
         /**
@@ -159,8 +159,9 @@ namespace egret {
                 textureHeight = offsetY + bitmapHeight;
             }
             let texture:Texture = new egret.Texture();
-            texture._bitmapData = this.$texture._bitmapData;
-            texture.$initData(this._bitmapX + bitmapX, this._bitmapY + bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, this.$texture._sourceWidth, this.$texture._sourceHeight);
+            texture.disposeBitmapData = false;
+            texture.$bitmapData = this.$texture.$bitmapData;
+            texture.$initData(this._bitmapX + bitmapX, this._bitmapY + bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, this.$texture.$sourceWidth, this.$texture.$sourceHeight);
 
             this._textureMap[name] = texture;
             return texture;

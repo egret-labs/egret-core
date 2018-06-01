@@ -1,26 +1,27 @@
-import { data } from './ProjectData';
+import { projectData } from './ProjectData';
 import * as FileUtil from '../lib/FileUtil';
 import * as project from "../actions/Project";
 
 export namespace manager {
 
     export function copyToLibs() {
-        let moduleDir = data.getLibraryFolder();
+        let moduleDir = projectData.getLibraryFolder();
         FileUtil.remove(moduleDir);
-        data.getModulesConfig("web").forEach(m => {
-            FileUtil.copy(m.sourceDir, data.getFilePath(m.targetDir));
+        projectData.getModulesConfig("web").forEach(m => {
+            FileUtil.copy(m.sourceDir, projectData.getFilePath(m.targetDir));
         })
     }
-
-    export function generateManifest(gameFileList: string[], manifestPath?: string, isDebug: boolean = true, platform: "web" | "native" = "web") {
-        let initial = [];
-        let game = [];
-        data.getModulesConfig(platform).forEach(m => {
+    export function generateManifest(gameFileList: string[], options: { debug: boolean, platform: "web" | "native" }): { initial: string[], game: string[] }
+    export function generateManifest(gameFileList: string[], options: { debug: boolean, platform: "web" | "native" }, manifestPath?: string): void
+    export function generateManifest(gameFileList: string[], options: { debug: boolean, platform: "web" | "native" }, manifestPath?: string) {
+        let initial: string[] = [];
+        let game: string[] = [];
+        projectData.getModulesConfig(options.platform).forEach(m => {
             m.target.forEach(m => {
-                initial.push(isDebug ? m.debug : m.release);
+                initial.push(options.debug ? m.debug : m.release);
             });
         });
-        if (isDebug) {
+        if (options.debug) {
             gameFileList.forEach(m => {
                 game.push("bin-debug/" + m);
             });
@@ -30,21 +31,24 @@ export namespace manager {
         }
 
         let manifest = { initial, game };
-        if (!manifestPath) {
-            manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
+        if (manifestPath) {
+            FileUtil.save(manifestPath, JSON.stringify(manifest, undefined, "\t"));
         }
-        FileUtil.save(manifestPath, JSON.stringify(manifest, undefined, "\t"));
+        else {
+            return manifest;
+        }
+
     }
 
     export function modifyNativeRequire(manifestPath: string) {
         let options = egret.args;
-        let indexPath = data.getFilePath('index.html');
+        let indexPath = projectData.getFilePath('index.html');
         let requirePath = FileUtil.joinPath(options.templateDir, "runtime", "native_require.js");
         let requireContent = FileUtil.read(requirePath);
         if (requireContent == "") {
             globals.exit(10021);
         }
-        if (!data.useTemplate) {
+        if (!projectData.useTemplate) {
             let manifest = JSON.parse(FileUtil.read(manifestPath));
             let fileList: Array<string> = manifest.initial.concat(manifest.game);
             let listStr = "\n";
@@ -63,16 +67,16 @@ export namespace manager {
         FileUtil.save(requirePath, requireContent);
     }
 
-    export function copyLibsForPublish(manifestPath: string, toPath: string, platform: "web" | "native"): void {
-        let options = egret.args;
-        let manifest = JSON.parse(FileUtil.read(manifestPath));
-        data.getModulesConfig(platform).forEach(m => {
+    export function copyLibsForPublish(target: egret.target.Type, mode: "debug" | "release" = 'debug'): string[] {
+        const result: string[] = [];
+        const options = egret.args;
+        projectData.getModulesConfig(target).forEach(m => {
             m.target.forEach(m => {
-                FileUtil.copy(FileUtil.joinPath(options.projectDir, m.release),
-                    FileUtil.joinPath(toPath, m.release));
+                const filename = mode == 'debug' ? m.debug : m.release;
+                result.push(filename);
             });
         });
-        if (data.isWasmProject()) {
+        if (projectData.isWasmProject()) {
             let arr = [
                 "egret.asm.js",
                 "egret.asm.js.mem",
@@ -80,10 +84,10 @@ export namespace manager {
                 "egret.webassembly.wasm"
             ];
             arr.forEach(function (item) {
-                FileUtil.copy(FileUtil.joinPath(options.projectDir, "libs", item),
-                    FileUtil.joinPath(toPath, "libs", item));
+                result.push(FileUtil.joinPath("libs", item));
             });
         }
+        return result;
     }
 
     export function copyManifestForNative(toPath: string): void {
@@ -99,7 +103,7 @@ export namespace manager {
     }
 
     export function modifyIndex(manifestPath: string, indexPath: string) {
-        if (!data.useTemplate) {
+        if (!projectData.useTemplate) {
             let manifest = JSON.parse(FileUtil.read(manifestPath, true));
             let libs = manifest.initial;
             var libsScriptsStr = "";

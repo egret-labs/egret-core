@@ -75,14 +75,15 @@ namespace egret {
          */
         constructor(distance:number = 4.0, angle:number = 45, color:number = 0, alpha:number = 1.0, blurX:number = 4.0, blurY:number = 4.0, strength:number = 1.0, quality:number = 1, inner:boolean = false, knockout:boolean = false, hideObject:boolean = false) {
             super(color, alpha, blurX, blurY, strength, quality, inner, knockout);
+            let self = this;
+            self.$distance = distance;
+            self.$angle = angle;
+            self.$hideObject = hideObject;
 
-            this.$distance = distance;
-            this.$angle = angle;
-            this.$hideObject = hideObject;
-
-            this.$uniforms.dist = distance;
-            this.$uniforms.angle = angle / 180 * Math.PI;
-            this.$uniforms.hideObject = hideObject ? 1 : 0;
+            self.$uniforms.dist = distance;
+            self.$uniforms.angle = angle / 180 * Math.PI;
+            self.$uniforms.hideObject = hideObject ? 1 : 0;
+            self.onPropertyChange();
         }
 
         /**
@@ -107,12 +108,13 @@ namespace egret {
         }
 
         public set distance(value:number) {
-            if(this.$distance == value) {
+            let self = this;
+            if(self.$distance == value) {
                 return;
             }
-            this.$distance = value;
-            this.$uniforms.dist = value;
-            this.invalidate();
+            self.$distance = value;
+            self.$uniforms.dist = value;
+            self.onPropertyChange();
         }
 
         /**
@@ -137,12 +139,13 @@ namespace egret {
         }
 
         public set angle(value:number) {
-            if(this.$angle == value) {
+            let self = this;
+            if(self.$angle == value) {
                 return;
             }
-            this.$angle = value;
-            this.$uniforms.angle = value / 180 * Math.PI;
-            this.invalidate();
+            self.$angle = value;
+            self.$uniforms.angle = value / 180 * Math.PI;
+            self.onPropertyChange();
         }
 
         /**
@@ -172,7 +175,6 @@ namespace egret {
             }
             this.$hideObject = value;
             this.$uniforms.hideObject = value ? 1 : 0;
-            this.invalidate();
         }
 
         /**
@@ -180,6 +182,38 @@ namespace egret {
          */
         public $toJson():string {
             return '{"distance": ' + this.$distance + ', "angle": ' + this.$angle + ', "color": ' + this.$color + ', "red": ' + this.$red + ', "green": ' + this.$green + ', "blue": ' + this.$blue + ', "alpha": ' + this.$alpha + ', "blurX": ' + this.$blurX + ', "blurY": ' + this.blurY + ', "strength": ' + this.$strength + ', "quality": ' + this.$quality + ', "inner": ' + this.$inner + ', "knockout": ' + this.$knockout + ', "hideObject": ' + this.$hideObject + '}';
+        }
+
+        protected updatePadding():void {
+            let self = this;
+            self.paddingLeft = self.blurX;
+            self.paddingRight = self.blurX;
+            self.paddingTop = self.blurY;
+            self.paddingBottom = self.blurY;
+            let distance: number = self.distance || 0;
+            let angle: number = self.angle || 0;
+            let distanceX = 0;
+            let distanceY = 0;
+            if (distance != 0) {
+                distanceX = distance * egret.NumberUtils.cos(angle);
+                if (distanceX > 0) {
+                    distanceX = Math.ceil(distanceX);
+                }
+                else {
+                    distanceX = Math.floor(distanceX);
+                }
+                distanceY = distance * egret.NumberUtils.sin(angle);
+                if (distanceY > 0) {
+                    distanceY = Math.ceil(distanceY);
+                }
+                else {
+                    distanceY = Math.floor(distanceY);
+                }
+                self.paddingLeft += distanceX;
+                self.paddingRight += distanceX;
+                self.paddingTop += distanceY;
+                self.paddingBottom += distanceY;
+            }
         }
     }
 }

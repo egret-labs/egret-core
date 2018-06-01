@@ -100,29 +100,29 @@ namespace egret {
         public static DEVICE_MOBILE:string = "native";
 
 
-        /**
-         * @private
-         */
-        public static _runtimeType:string;
+        // /**
+        //  * @private
+        //  */
+        // public static _runtimeType:string;
 
-        /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        public static get runtimeType():string {
-            egret.$warn(1041, "egret.MainContext.runtimeType", "egret.Capabilities.runtimeType");
-            return MainContext._runtimeType;
-        }
-        /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        public static RUNTIME_HTML5:string = "runtimeHtml5";
-        /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        public static RUNTIME_NATIVE:string = "runtimeNative";
+        // /**
+        //  * @version Egret 2.4
+        //  * @platform Web,Native
+        //  */
+        // public static get runtimeType():string {
+        //     egret.$warn(1041, "egret.MainContext.runtimeType", "egret.Capabilities.runtimeType");
+        //     return MainContext._runtimeType;
+        // }
+        // /**
+        //  * @version Egret 2.4
+        //  * @platform Web,Native
+        //  */
+        // public static RUNTIME_HTML5:string = "runtimeHtml5";
+        // /**
+        //  * @version Egret 2.4
+        //  * @platform Web,Native
+        //  */
+        // public static RUNTIME_NATIVE:string = "runtimeNative";
 
 
 
@@ -132,8 +132,8 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public run() {
-        }
+        // public run() {
+        // }
 
         /**
          * @private
@@ -159,24 +159,11 @@ namespace egret {
  * @private
  */
 egret["testDeviceType1"] = function () {
-    if (!__global["navigator"]) {
-        return true
+    if (!window["navigator"]) {
+        return true;
     }
     let ua = navigator.userAgent.toLowerCase();
     return (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
 };
-/**
- * @private
- */
-egret["testRuntimeType1"] = function () {
-    if (__global["navigator"]) {
-        return true;
-    }
-    return false;
-};
-
 egret.MainContext.deviceType = egret["testDeviceType1"]() ? egret.MainContext.DEVICE_MOBILE : egret.MainContext.DEVICE_PC;
-egret.MainContext._runtimeType = egret["testRuntimeType1"]() ? egret.MainContext.RUNTIME_HTML5 : egret.MainContext.RUNTIME_NATIVE;
-
 delete egret["testDeviceType1"];
-delete egret["testRuntimeType1"];
