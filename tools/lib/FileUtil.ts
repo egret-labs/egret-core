@@ -31,6 +31,7 @@ import FS = require("fs");
 import Path = require("path");
 import { resolve } from "url";
 import { Stats } from "fs";
+import { encode } from "punycode";
 
 var charset = "utf-8";
 
@@ -63,12 +64,11 @@ export function writeFileAsync(path: string, content: string, charset: string): 
 /**
  * 创建文件夹
  */
-export function createDirectory(path: string, mode?: any, made?: any): void {
+export function createDirectory(path: string, mode?: any): void {
     path = escapePath(path);
     if (mode === undefined) {
         mode = 511 & (~process.umask());
     }
-    if (!made) made = null;
 
     if (typeof mode === 'string')
         mode = parseInt(mode, 8);
@@ -76,13 +76,12 @@ export function createDirectory(path: string, mode?: any, made?: any): void {
 
     try {
         FS.mkdirSync(path, mode);
-        made = made || path;
     }
     catch (err0) {
         switch (err0.code) {
             case 'ENOENT':
-                made = createDirectory(Path.dirname(path), mode, made);
-                createDirectory(path, mode, made);
+                createDirectory(Path.dirname(path), mode);
+                createDirectory(path, mode);
                 break;
 
             default:
@@ -97,7 +96,6 @@ export function createDirectory(path: string, mode?: any, made?: any): void {
                 break;
         }
     }
-    return made;
 }
 
 var textTemp = {};
@@ -551,9 +549,9 @@ export function readJSONAsync(file: string, options?: { encoding: string; flag?:
     });
 }
 
-export async function readJSONSync(file: string, options?: { encoding: string; flag?: string; }) {
-    let ret = await readJSONAsync(file, options);
-    return ret;
+export function readJSONSync(file: string) {
+    let content = readFileSync(file, 'utf-8')
+    return JSON.parse(content);
 }
 
 

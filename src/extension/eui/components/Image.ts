@@ -111,8 +111,7 @@ namespace eui {
         }
 
         public set scale9Grid(value: egret.Rectangle) {
-            this.$scale9Grid = value;
-            this.$invalidateContentBounds();
+            this.$setScale9Grid(value);
             this.invalidateDisplayList();
         }
 
@@ -210,11 +209,11 @@ namespace eui {
             }
         }
 
-        $setBitmapData(value: egret.Texture): boolean {
-            if (value == this.$Bitmap[egret.sys.BitmapKeys.bitmapData]) {
+        $setTexture(value: egret.Texture): boolean {
+            if (value == this.$texture) {
                 return false;
             }
-            let result: boolean = super.$setBitmapData(value);
+            let result: boolean = super.$setTexture(value);
             this.sourceChanged = false;
             this.invalidateSize();
             this.invalidateDisplayList();
@@ -237,7 +236,7 @@ namespace eui {
                     if (!egret.is(data, "egret.Texture")) {
                         return;
                     }
-                    this.$setBitmapData(data);
+                    this.$setTexture(data);
                     if (data) {
                         this.dispatchEventWith(egret.Event.COMPLETE);
                     }
@@ -247,13 +246,12 @@ namespace eui {
                 })
             }
             else {
-                this.$setBitmapData(<egret.Texture>source);
+                this.$setTexture(<egret.Texture>source);
             }
         }
 
         $measureContentBounds(bounds: egret.Rectangle): void {
-            let values = this.$Bitmap;
-            let image = this.$Bitmap[egret.sys.BitmapKeys.bitmapData];
+            let image = this.$texture;
             if (image) {
                 let uiValues = this.$UIComponent;
                 let width = uiValues[sys.UIKeys.width];
@@ -282,24 +280,38 @@ namespace eui {
          *
          * @param context
          */
-        $render(): void {
-            let image = this.$Bitmap[egret.sys.BitmapKeys.bitmapData];
-            if (!image) {
-                return;
-            }
-            let uiValues = this.$UIComponent;
-            let width = uiValues[sys.UIKeys.width];
-            let height = uiValues[sys.UIKeys.height];
-            if (width === 0 || height === 0) {
-                return;
-            }
+        // $updateRenderNode(): void {
+        //     let image = this.$bitmapData;
+        //     if (!image) {
+        //         return;
+        //     }
+        //     let uiValues = this.$UIComponent;
+        //     let width = uiValues[sys.UIKeys.width];
+        //     let height = uiValues[sys.UIKeys.height];
+        //     if (width === 0 || height === 0) {
+        //         return;
+        //     }
 
-            let values = this.$Bitmap;
-            egret.sys.BitmapNode.$updateTextureData(<egret.sys.BitmapNode>this.$renderNode, values[egret.sys.BitmapKeys.image],
-                values[egret.sys.BitmapKeys.bitmapX], values[egret.sys.BitmapKeys.bitmapY], values[egret.sys.BitmapKeys.bitmapWidth], values[egret.sys.BitmapKeys.bitmapHeight],
-                values[egret.sys.BitmapKeys.offsetX], values[egret.sys.BitmapKeys.offsetY], values[egret.sys.BitmapKeys.textureWidth], values[egret.sys.BitmapKeys.textureHeight],
-                width, height, values[egret.sys.BitmapKeys.sourceWidth], values[egret.sys.BitmapKeys.sourceHeight], this.scale9Grid || values[egret.sys.BitmapKeys.bitmapData]["scale9Grid"], this.$fillMode, values[egret.sys.BitmapKeys.smoothing]);
-        }
+        //     let scale9Grid = this.scale9Grid || this.$texture["scale9Grid"];
+        //     if (scale9Grid) {
+        //         if (this.$renderNode instanceof egret.sys.NormalBitmapNode) {
+        //             this.$renderNode = new egret.sys.BitmapNode();
+        //         }
+        //         egret.sys.BitmapNode.$updateTextureDataWithScale9Grid(<egret.sys.NormalBitmapNode>this.$renderNode, this.$bitmapData, scale9Grid,
+        //             this.$bitmapX, this.$bitmapY, this.$bitmapWidth, this.$bitmapHeight,
+        //             this.$offsetX, this.$offsetY, this.$textureWidth, this.$textureHeight,
+        //             width, height, this.$sourceWidth, this.$sourceHeight, this.$smoothing);
+        //     }
+        //     else {
+        //         if (this.fillMode == egret.BitmapFillMode.REPEAT && this.$renderNode instanceof egret.sys.NormalBitmapNode) {
+        //             this.$renderNode = new egret.sys.BitmapNode();
+        //         }
+        //         egret.sys.BitmapNode.$updateTextureData(<egret.sys.NormalBitmapNode>this.$renderNode, this.$bitmapData,
+        //             this.$bitmapX, this.$bitmapY, this.$bitmapWidth, this.$bitmapHeight,
+        //             this.$offsetX, this.$offsetY, this.$textureWidth, this.$textureHeight,
+        //             width, height, this.$sourceWidth, this.$sourceHeight, this.$fillMode, this.$smoothing);
+        //     }
+        // }
 
         //=======================UIComponent接口实现===========================
         /**
@@ -320,6 +332,17 @@ namespace eui {
                 this.parseSource();
             }
         }
+        /**
+         * @private
+         * 设置组件的宽高。此方法不同于直接设置width,height属性，
+         * 不会影响显式标记尺寸属性
+         */
+        protected setActualSize(w: number, h: number): void {
+            sys.UIComponentImpl.prototype["setActualSize"].call(this, w, h);
+            super.$setWidth(w);
+            super.$setHeight(h);
+        }
+
 
         /**
          * @copy eui.UIComponent#childrenCreated
@@ -354,9 +377,9 @@ namespace eui {
          * @platform Web,Native
          */
         protected measure(): void {
-            let bitmapData = this.$Bitmap[egret.sys.BitmapKeys.bitmapData];
-            if (bitmapData) {
-                this.setMeasuredSize(bitmapData.$getTextureWidth(), bitmapData.$getTextureHeight());
+            let texture = this.$texture;
+            if (texture) {
+                this.setMeasuredSize(texture.$getTextureWidth(), texture.$getTextureHeight());
             }
             else {
                 this.setMeasuredSize(0, 0);
@@ -371,7 +394,7 @@ namespace eui {
          * @platform Web,Native
          */
         protected updateDisplayList(unscaledWidth: number, unscaledHeight: number): void {
-            this.$invalidateContentBounds();
+            this.$renderDirty = true;
         }
 
         /**

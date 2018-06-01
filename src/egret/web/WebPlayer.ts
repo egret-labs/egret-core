@@ -33,13 +33,13 @@ namespace egret.web {
      */
     export class WebPlayer extends egret.HashObject implements egret.sys.Screen {
 
-        public constructor(container: HTMLDivElement, options: { renderMode?: string; screenAdapter?: sys.IScreenAdapter }) {
+        public constructor(container: HTMLDivElement, options: runEgretOptions) {
             super();
             this.init(container, options);
             this.initOrientation();
         }
 
-        private init(container: HTMLDivElement, options: { renderMode?: string; screenAdapter?: sys.IScreenAdapter }): void {
+        private init(container: HTMLDivElement, options: runEgretOptions): void {
             let option = this.readOption(container, options);
             let stage = new egret.Stage();
             stage.$screen = this;
@@ -61,9 +61,10 @@ namespace egret.web {
 
             let webInput = new HTMLInput();
 
-            player.showPaintRect(option.showPaintRect);
             if (option.showFPS || option.showLog) {
-                player.displayFPS(option.showFPS, option.showLog, option.logFilter, option.fpsStyles);
+                if (!egret.nativeRender) {
+                    player.displayFPS(option.showFPS, option.showLog, option.logFilter, option.fpsStyles);
+                }
             }
             this.playerOption = option;
             this.container = container;
@@ -92,7 +93,7 @@ namespace egret.web {
         /**
          * 读取初始化参数
          */
-        private readOption(container: HTMLDivElement, options: { renderMode?: string; screenAdapter?: sys.IScreenAdapter }): PlayerOption {
+        private readOption(container: HTMLDivElement, options: runEgretOptions): PlayerOption {
             let option: PlayerOption = {};
             option.entryClassName = container.getAttribute("data-entry-class");
             option.scaleMode = container.getAttribute("data-scale-mode") || egret.StageScaleMode.NO_SCALE;
@@ -103,12 +104,6 @@ namespace egret.web {
             option.maxTouches = +container.getAttribute("data-multi-fingered") || 2;
             option.textureScaleFactor = +container.getAttribute("texture-scale-factor") || 1;
 
-            if (options.renderMode == "webgl") {
-                option.showPaintRect = false;
-            }
-            else {
-                option.showPaintRect = container.getAttribute("data-show-paint-rect") == "true";
-            }
             option.showFPS = container.getAttribute("data-show-fps") == "true";
 
             let styleStr = container.getAttribute("data-show-fps-style") || "";
@@ -196,8 +191,8 @@ namespace egret.web {
             }
             let screenWidth = shouldRotate ? boundingClientHeight : boundingClientWidth;
             let screenHeight = shouldRotate ? boundingClientWidth : boundingClientHeight;
-            Capabilities.$boundingClientWidth = screenWidth;
-            Capabilities.$boundingClientHeight = screenHeight;
+            Capabilities["boundingClientWidth" + ""] = screenWidth;
+            Capabilities["boundingClientHeight" + ""] = screenHeight;
             let stageSize = egret.sys.screenAdapter.calculateStageSize(this.stage.$scaleMode,
                 screenWidth, screenHeight, option.contentWidth, option.contentHeight);
             let stageWidth = stageSize.stageWidth;
@@ -232,7 +227,7 @@ namespace egret.web {
                 scaley = displayHeight / stageHeight;
             let canvasScaleX = scalex * sys.DisplayList.$canvasScaleFactor;
             let canvasScaleY = scaley * sys.DisplayList.$canvasScaleFactor;
-            if (egret.Capabilities.$renderMode == "canvas") {
+            if (egret.Capabilities.renderMode == "canvas") {
                 canvasScaleX = Math.ceil(canvasScaleX);
                 canvasScaleY = Math.ceil(canvasScaleY);
             }
@@ -246,6 +241,11 @@ namespace egret.web {
             this.webTouchHandler.updateScaleMode(scalex, scaley, rotation);
             this.webInput.$updateSize();
             this.player.updateStageSize(stageWidth, stageHeight);//不要在这个方法后面修改属性
+            // todo
+            if(egret.nativeRender) {
+                canvas.width = stageWidth * canvasScaleX;
+                canvas.height = stageHeight * canvasScaleY;
+            }
         }
 
         public setContentSize(width: number, height: number): void {

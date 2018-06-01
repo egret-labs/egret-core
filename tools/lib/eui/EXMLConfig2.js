@@ -3,6 +3,7 @@ var file = require("../FileUtil");
 var path = require("path");
 var XMLTool = require("../xml/index");
 var componentScanner = require("../exml/exml-service/componentScanner");
+var EXMLParser_1 = require("./EXMLParser");
 /**
  * @private
  * EUI 命名空间
@@ -21,14 +22,13 @@ var stylesMap = {};
 /**
  * @private
  */
-var EXMLConfig = (function () {
+var EXMLConfig = /** @class */ (function () {
     function EXMLConfig() {
         /**
          * 组件清单列表
          */
         //public componentDic:any = {};
         this.config = {};
-        this.idMap = {};
         var configStr = file.read(path.join(egret.root, "tools", "lib", "eui", "default.json"));
         configStr = configStr.replace(/^\uFEFF/, '');
         var configObj = JSON.parse(configStr);
@@ -50,9 +50,9 @@ var EXMLConfig = (function () {
     });
     EXMLConfig.prototype.getClassToPathInfo = function (dirPath) {
         var _this = this;
-        var exmls = file.search(dirPath, 'exml');
-        exmls.forEach(function (exml) {
-            var str = file.read(exml);
+        var exmls = EXMLParser_1.fileSystem.getList();
+        exmls.forEach(function (filename) {
+            var str = EXMLParser_1.fileSystem.get(filename).contents;
             var xml = XMLTool.parse(str);
             var className = null;
             if (xml["$class"]) {
@@ -61,7 +61,7 @@ var EXMLConfig = (function () {
             else {
                 className = _this.getClassNameById(xml.localName, xml.namespace);
             }
-            exmls[className] = exml;
+            exmls[className] = filename;
         });
         return exmls;
     };
@@ -77,12 +77,6 @@ var EXMLConfig = (function () {
         for (var className in this.config) {
             var component = this.config[className];
             var dotIndex = className.lastIndexOf(".");
-            //解析id
-            if (dotIndex !== -1) {
-                var id = className.substring(dotIndex + 1);
-                // console.log(className,"[id]:"+id);
-                this.idMap[id] = className;
-            }
             //查找并设置默认属性
             if (!component.default) {
                 this._findProp(component);
@@ -148,9 +142,11 @@ var EXMLConfig = (function () {
         //忽略wing的命名空间
         if (ns == exports.NS_W) {
         }
+        //省略命名空间和命名空间是eui的去表中查
         else if (!ns || ns == exports.NS_S) {
-            name = this.idMap[id];
+            name = "eui." + id;
         }
+        //自定义命名空间形如mrj.*要去掉＊
         else {
             name = ns.substring(0, ns.length - 1) + id;
             // if (!this.classNameToExmlFilePath[name]) {
@@ -257,7 +253,7 @@ var EXMLConfig = (function () {
         }
         return type;
     };
+    EXMLConfig.__instance = null;
     return EXMLConfig;
 }());
-EXMLConfig.__instance = null;
 exports.EXMLConfig = EXMLConfig;

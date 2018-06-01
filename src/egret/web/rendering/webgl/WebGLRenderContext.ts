@@ -182,6 +182,10 @@ namespace egret.web {
 
             this.surface = createCanvas(width, height);
 
+            if(egret.nativeRender) {
+                return;
+            }
+
             this.initWebGL();
 
             this.$bufferStack = [];
@@ -243,18 +247,6 @@ namespace egret.web {
 
             this.onResize();
         }
-
-        /**
-         * 改变渲染缓冲为指定大小，但保留原始图像数据
-         * @param width 改变后的宽
-         * @param height 改变后的高
-         * @param offsetX 原始图像数据在改变后缓冲区的绘制起始位置x
-         * @param offsetY 原始图像数据在改变后缓冲区的绘制起始位置y
-         */
-        // public resizeTo(width:number, height:number, offsetX:number, offsetY:number):void {
-        //     this.surface.width = width;
-        //     this.surface.height = height;
-        // }
 
         public static glContextId: number = 0;
         public glID: number = null;
@@ -478,10 +470,15 @@ namespace egret.web {
             }
 
             let texture: WebGLTexture;
+            let offsetX;
+            let offsetY;
             if (image["texture"] || (image.source && image.source["texture"])) {
                 // 如果是render target
                 texture = image["texture"] || image.source["texture"];
                 buffer.saveTransform();
+                offsetX = buffer.$offsetX;
+                offsetY = buffer.$offsetY;
+                buffer.useOffset();
                 buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2);// 翻转
             } else if (!image.source && !image.webGLTexture) {
                 return;
@@ -500,6 +497,8 @@ namespace egret.web {
                 undefined, undefined, undefined, undefined, rotated, smoothing);
 
             if (image.source && image.source["texture"]) {
+                buffer.$offsetX = offsetX;
+                buffer.$offsetY = offsetY;
                 buffer.restoreTransform();
             }
         }
@@ -519,10 +518,15 @@ namespace egret.web {
             }
 
             let texture: WebGLTexture;
+            let offsetX;
+            let offsetY;
             if (image["texture"] || (image.source && image.source["texture"])) {
                 // 如果是render target
                 texture = image["texture"] || image.source["texture"];
                 buffer.saveTransform();
+                offsetX = buffer.$offsetX;
+                offsetY = buffer.$offsetY;
+                buffer.useOffset();
                 buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2);// 翻转
             } else if (!image.source && !image.webGLTexture) {
                 return;
@@ -540,6 +544,8 @@ namespace egret.web {
                 imageSourceWidth, imageSourceHeight, meshUVs, meshVertices, meshIndices, bounds, rotated, smoothing);
 
             if (image["texture"] || (image.source && image.source["texture"])) {
+                buffer.$offsetX = offsetX;
+                buffer.$offsetY = offsetY;
                 buffer.restoreTransform();
             }
         }
@@ -574,14 +580,11 @@ namespace egret.web {
                 this.vao.changeToMeshIndices();
             }
 
-            let transform = buffer.globalMatrix;
-            let alpha = buffer.globalAlpha;
-
             let count = meshIndices ? meshIndices.length / 3 : 2;
             // 应用$filter，因为只可能是colorMatrixFilter，最后两个参数可不传
             this.drawCmdManager.pushDrawTexture(texture, count, this.$filter,textureWidth,textureHeight);
 
-            this.vao.cacheArrays(transform, alpha, sourceX, sourceY, sourceWidth, sourceHeight,
+            this.vao.cacheArrays(buffer, sourceX, sourceY, sourceWidth, sourceHeight,
                 destX, destY, destWidth, destHeight, textureWidth, textureHeight,
                 meshUVs, meshVertices, meshIndices, rotated);
         }
@@ -601,36 +604,23 @@ namespace egret.web {
 
             this.drawCmdManager.pushDrawRect();
 
-            this.vao.cacheArrays(buffer.globalMatrix, buffer.globalAlpha, 0, 0, width, height, x, y, width, height, width, height);
+            this.vao.cacheArrays(buffer, 0, 0, width, height, x, y, width, height, width, height);
         }
 
         /**
          * 绘制遮罩
          */
-        public pushMask(mask): void {
+        public pushMask(x:number, y:number, width:number, height:number): void {
             let buffer = this.currentBuffer;
             if (this.contextLost || !buffer) {
                 return;
             }
-
-            buffer.$stencilList.push(mask);
-
+            buffer.$stencilList.push({x,y,width,height});
             if (this.vao.reachMaxSize()) {
                 this.$drawWebGL();
             }
-
-            let length = mask.length;
-            if (length) {
-                this.drawCmdManager.pushPushMask(length);
-                for (let i = 0; i < length; i++) {
-                    let item: sys.Region = mask[i];
-                    this.vao.cacheArrays(buffer.globalMatrix, buffer.globalAlpha, 0, 0, item.width, item.height, item.minX, item.minY, item.width, item.height, item.width, item.height);
-                }
-            }
-            else {
-                this.drawCmdManager.pushPushMask();
-                this.vao.cacheArrays(buffer.globalMatrix, buffer.globalAlpha, 0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
-            }
+            this.drawCmdManager.pushPushMask();
+            this.vao.cacheArrays(buffer, 0, 0, width, height, x, y, width, height, width, height);
         }
 
         /**
@@ -647,19 +637,8 @@ namespace egret.web {
             if (this.vao.reachMaxSize()) {
                 this.$drawWebGL();
             }
-
-            let length = mask.length;
-            if (length) {
-                this.drawCmdManager.pushPopMask(length);
-                for (let i = 0; i < length; i++) {
-                    let item: sys.Region = mask[i];
-                    this.vao.cacheArrays(buffer.globalMatrix, buffer.globalAlpha, 0, 0, item.width, item.height, item.minX, item.minY, item.width, item.height, item.width, item.height);
-                }
-            }
-            else {
-                this.drawCmdManager.pushPopMask();
-                this.vao.cacheArrays(buffer.globalMatrix, buffer.globalAlpha, 0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
-            }
+            this.drawCmdManager.pushPopMask();
+            this.vao.cacheArrays(buffer, 0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
         }
 
         /**
@@ -1074,7 +1053,7 @@ namespace egret.web {
             // 绘制input结果到舞台
             output.saveTransform();
             output.transform(1, 0, 0, -1, 0, height);
-            this.vao.cacheArrays(output.globalMatrix, output.globalAlpha, 0, 0, width, height, 0, 0, width, height, width, height);
+            this.vao.cacheArrays(output, 0, 0, width, height, 0, 0, width, height, width, height);
             output.restoreTransform();
 
             this.drawCmdManager.pushDrawTexture(input.rootRenderTarget.texture, 2, filter, width, height);

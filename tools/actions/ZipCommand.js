@@ -5,7 +5,7 @@
 var file = require("../lib/FileUtil");
 var FileUtil = require("../lib/FileUtil");
 var utils = require("../lib/utils");
-var ZipCommand = (function () {
+var ZipCommand = /** @class */ (function () {
     function ZipCommand(versionFile) {
         this.versionFile = versionFile;
     }

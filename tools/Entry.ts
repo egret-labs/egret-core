@@ -40,6 +40,8 @@ require('./globals');
 import Parser = require("./parser/Parser");
 import earlyParams = require("./parser/ParseEarlyVersionParams");
 import utils = require('./lib/utils');
+import { shell } from "./lib/utils";
+import { projectData } from "./project/index";
 
 
 var fs = require('fs')
@@ -93,7 +95,7 @@ function getEgretPath() {
 
 function getLanguageInfo() {
     let osLocal = require("./lib/os-local.js");
-    let i18n:string = osLocal();
+    let i18n: string = osLocal();
     i18n = i18n.toLowerCase();
     if (i18n == "zh_cn" || i18n == "zh_tw" || i18n == "zh_hk") {
         require('./locales/zh_CN');
@@ -105,33 +107,62 @@ function getLanguageInfo() {
 getLanguageInfo();//引用语言包
 
 
-export function executeCommandLine(args: string[]): void {
+export function executeCommandLine(args: string[]) {
     var options = Parser.parseCommandLine(args);
     egret.args = options;
 
+    const version = getPackageJsonConfig().version;
+    console.log(`您正在使用白鹭编译器 ${version} 版本`)
+    let currentTarget = projectData.getCurrentTarget();
+    if (egret.args.target == "none") {
+        egret.args.target = currentTarget as egret.target.Type;
+    }
     earlyParams.parse(options, args);
     var exitcode = entry.executeOption(options);
     if (typeof exitcode == "number") {
         entry.exit(exitcode);
     }
     else {
-        exitcode.then(value => entry.exit(value)).catch(e => console.log(e))
+        exitcode.then(value => {
+            entry.exit(value);
+        }).catch(e => {
+            if (e instanceof Error) {
+                console.error(e.toString());
+                entry.exit(9999)
+            }
+            else if (typeof e == 'string') {
+                console.error(e)
+                entry.exit(1)
+            }
+            else if (typeof e == 'number') {
+                entry.exit(e)
+            }
+            else {
+                console.error(e);
+                entry.exit(9998)
+            }
+        })
     }
+
+
+
 }
+
 class Entry {
 
     executeOption(options: egret.ToolArgs) {
         var self = this;
         options.command = options.command || "help";
         try {
-            var CommandClass: { new (): egret.Command } = require("./commands/" + options.command);
+            var CommandClass: { new(): egret.Command } = require("./commands/" + options.command);
         }
         catch (e) {
             console.log(utils.tr(10002, options.command));
             return 10002;
         }
         var command = new CommandClass();
-        return command.execute();
+        let result = command.execute();
+        return result;
     }
 
     exit(exitCode) {

@@ -70,7 +70,7 @@ function compile(exmlPath, srcPath) {
 }
 exports.compile = compile;
 ;
-var EXMLCompiler = (function () {
+var EXMLCompiler = /** @class */ (function () {
     /**
      * 构造函数
      */
@@ -261,7 +261,7 @@ var EXMLCompiler = (function () {
                     this.skinParts.push(node.$id);
                 }
                 this.createVarForNode(node);
-                if (this.isStateNode(node))
+                if (this.isStateNode(node)) //检查节点是否只存在于一个状态里，需要单独实例化
                     this.stateIds.push(node.$id);
             }
             else if (node.localName) {
@@ -442,7 +442,7 @@ var EXMLCompiler = (function () {
             if (!value) {
                 continue;
             }
-            if (this.currentClass.containsVar(value)) {
+            if (this.currentClass.containsVar(value)) { //赋的值对象是一个id
                 var id = node.$id;
                 var codeLine = "this." + id + " = t;";
                 if (!this.currentClass.containsVar(id))
@@ -710,7 +710,7 @@ var EXMLCompiler = (function () {
                     if (!this.exmlConfig.checkClassName(orgValue)) {
                         this.exit(2015, this.exmlPath, orgValue, this.toXMLString(node));
                     }
-                    if (value == this.currentClassName) {
+                    if (value == this.currentClassName) { //防止无限循环。
                         this.exit(2014, this.exmlPath, this.toXMLString(node));
                     }
                     break;
@@ -1206,23 +1206,23 @@ var EXMLCompiler = (function () {
     EXMLCompiler.prototype.isPackageName = function (name) {
         return name.indexOf(".") != -1;
     };
+    /**
+     * Egret命名空间
+     */
+    EXMLCompiler.E = "http://ns.egret-labs.org/egret";
+    /**
+     * Wing命名空间
+     */
+    EXMLCompiler.W = "http://ns.egret-labs.org/wing";
+    EXMLCompiler.DECLARATIONS = "Declarations";
+    /**
+     * 命名空间为fs的属性名列表
+     */
+    EXMLCompiler.wingKeys = ["$id", "$locked", "$includeIn", "$excludeFrom", "id", "locked", "includeIn", "excludeFrom"];
     return EXMLCompiler;
 }());
-/**
- * Egret命名空间
- */
-EXMLCompiler.E = "http://ns.egret-labs.org/egret";
-/**
- * Wing命名空间
- */
-EXMLCompiler.W = "http://ns.egret-labs.org/wing";
-EXMLCompiler.DECLARATIONS = "Declarations";
-/**
- * 命名空间为fs的属性名列表
- */
-EXMLCompiler.wingKeys = ["$id", "$locked", "$includeIn", "$excludeFrom", "id", "locked", "includeIn", "excludeFrom"];
 //=================代码生成工具类===================
-var CodeBase = (function () {
+var CodeBase = /** @class */ (function () {
     function CodeBase() {
         this.indent = 0;
     }
@@ -1244,7 +1244,7 @@ var CodeBase = (function () {
     };
     return CodeBase;
 }());
-var CpArguments = (function (_super) {
+var CpArguments = /** @class */ (function (_super) {
     __extends(CpArguments, _super);
     function CpArguments(name, type) {
         if (name === void 0) { name = ""; }
@@ -1261,7 +1261,7 @@ var CpArguments = (function (_super) {
     };
     return CpArguments;
 }(CodeBase));
-var CpClass = (function (_super) {
+var CpClass = /** @class */ (function (_super) {
     __extends(CpClass, _super);
     function CpClass() {
         var _this = _super.call(this) || this;
@@ -1565,7 +1565,7 @@ var CpClass = (function (_super) {
     };
     return CpClass;
 }(CodeBase));
-var CpCodeBlock = (function (_super) {
+var CpCodeBlock = /** @class */ (function (_super) {
     __extends(CpCodeBlock, _super);
     function CpCodeBlock() {
         var _this = _super.call(this) || this;
@@ -1696,7 +1696,7 @@ var CpCodeBlock = (function (_super) {
     };
     return CpCodeBlock;
 }(CodeBase));
-var CpFunction = (function (_super) {
+var CpFunction = /** @class */ (function (_super) {
     __extends(CpFunction, _super);
     function CpFunction() {
         var _this = _super.call(this) || this;
@@ -1780,7 +1780,7 @@ var CpFunction = (function (_super) {
     };
     return CpFunction;
 }(CodeBase));
-var CpNotation = (function (_super) {
+var CpNotation = /** @class */ (function (_super) {
     __extends(CpNotation, _super);
     function CpNotation(notation) {
         if (notation === void 0) { notation = ""; }
@@ -1805,7 +1805,7 @@ var CpNotation = (function (_super) {
     return CpNotation;
 }(CodeBase));
 //=================常量定义===================
-var CpVariable = (function (_super) {
+var CpVariable = /** @class */ (function (_super) {
     __extends(CpVariable, _super);
     function CpVariable(name, modifierName, type, defaultValue, isStatic) {
         if (name === void 0) { name = "varName"; }
@@ -1854,7 +1854,7 @@ var CpVariable = (function (_super) {
     };
     return CpVariable;
 }(CodeBase));
-var CpState = (function (_super) {
+var CpState = /** @class */ (function (_super) {
     __extends(CpState, _super);
     function CpState(name, stateGroups) {
         if (stateGroups === void 0) { stateGroups = null; }
@@ -1906,7 +1906,7 @@ var CpState = (function (_super) {
     };
     return CpState;
 }(CodeBase));
-var CpAddItems = (function (_super) {
+var CpAddItems = /** @class */ (function (_super) {
     __extends(CpAddItems, _super);
     function CpAddItems(target, propertyName, position, relativeTo) {
         var _this = _super.call(this) || this;
@@ -1923,7 +1923,7 @@ var CpAddItems = (function (_super) {
     };
     return CpAddItems;
 }(CodeBase));
-var CpSetProperty = (function (_super) {
+var CpSetProperty = /** @class */ (function (_super) {
     __extends(CpSetProperty, _super);
     function CpSetProperty(target, name, value) {
         var _this = _super.call(this) || this;
@@ -1938,7 +1938,7 @@ var CpSetProperty = (function (_super) {
     };
     return CpSetProperty;
 }(CodeBase));
-var CpSetStyle = (function (_super) {
+var CpSetStyle = /** @class */ (function (_super) {
     __extends(CpSetStyle, _super);
     function CpSetStyle(target, name, value) {
         var _this = _super.call(this) || this;
@@ -1953,40 +1953,40 @@ var CpSetStyle = (function (_super) {
     };
     return CpSetStyle;
 }(CodeBase));
-var DataType = (function () {
+var DataType = /** @class */ (function () {
     function DataType() {
     }
+    DataType.DT_VOID = "void";
+    DataType.DT_NUMBER = "number";
+    DataType.DT_BOOLEAN = "boolean";
+    DataType.DT_ARRAY = "Array";
+    DataType.DT_STRING = "string";
+    DataType.DT_OBJECT = "Object";
+    DataType.DT_FUNCTION = "Function";
     return DataType;
 }());
-DataType.DT_VOID = "void";
-DataType.DT_NUMBER = "number";
-DataType.DT_BOOLEAN = "boolean";
-DataType.DT_ARRAY = "Array";
-DataType.DT_STRING = "string";
-DataType.DT_OBJECT = "Object";
-DataType.DT_FUNCTION = "Function";
-var KeyWords = (function () {
+var KeyWords = /** @class */ (function () {
     function KeyWords() {
     }
+    KeyWords.KW_CLASS = "class";
+    KeyWords.KW_FUNCTION = "function";
+    KeyWords.KW_VAR = "var";
+    KeyWords.KW_INTERFACE = "interface";
+    KeyWords.KW_EXTENDS = "extends";
+    KeyWords.KW_IMPLEMENTS = "implements";
+    KeyWords.KW_MODULE = "module";
+    KeyWords.KW_SUPER = "super";
+    KeyWords.KW_THIS = "this";
+    KeyWords.KW_OVERRIDE = "override";
+    KeyWords.KW_RETURN = "return";
+    KeyWords.KW_EXPORT = "export";
     return KeyWords;
 }());
-KeyWords.KW_CLASS = "class";
-KeyWords.KW_FUNCTION = "function";
-KeyWords.KW_VAR = "var";
-KeyWords.KW_INTERFACE = "interface";
-KeyWords.KW_EXTENDS = "extends";
-KeyWords.KW_IMPLEMENTS = "implements";
-KeyWords.KW_MODULE = "module";
-KeyWords.KW_SUPER = "super";
-KeyWords.KW_THIS = "this";
-KeyWords.KW_OVERRIDE = "override";
-KeyWords.KW_RETURN = "return";
-KeyWords.KW_EXPORT = "export";
-var Modifiers = (function () {
+var Modifiers = /** @class */ (function () {
     function Modifiers() {
     }
+    Modifiers.M_PUBLIC = "public";
+    Modifiers.M_PRIVATE = "private";
+    Modifiers.M_STATIC = "static";
     return Modifiers;
 }());
-Modifiers.M_PUBLIC = "public";
-Modifiers.M_PRIVATE = "private";
-Modifiers.M_STATIC = "static";

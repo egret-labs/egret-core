@@ -34,7 +34,7 @@ namespace egret {
      * @private
      * 格式化弧线角度的值
      */
-    function clampAngle(value):number {
+    function clampAngle(value): number {
         value %= Math.PI * 2;
         if (value < 0) {
             value += Math.PI * 2;
@@ -83,40 +83,42 @@ namespace egret {
         /**
          * @private
          */
-        $renderNode:sys.GraphicsNode;
+        $renderNode: sys.GraphicsNode;
         /**
          * 绑定到的目标显示对象
          */
-        private targetDisplay:DisplayObject;
+        public $targetDisplay: DisplayObject;
+        $targetIsSprite: boolean;
 
         /**
          * @private
          * 设置绑定到的目标显示对象
          */
-        $setTarget(target:DisplayObject):void {
-            if (this.targetDisplay) {
-                this.targetDisplay.$renderNode = null;
+        $setTarget(target: DisplayObject): void {
+            if (this.$targetDisplay) {
+                this.$targetDisplay.$renderNode = null;
             }
             target.$renderNode = this.$renderNode;
-            this.targetDisplay = target;
+            this.$targetDisplay = target;
+            this.$targetIsSprite = target instanceof Sprite;
         }
 
         /**
          * 当前移动到的坐标X
          */
-        private lastX:number = 0;
+        private lastX: number = 0;
         /**
          * 当前移动到的坐标Y
          */
-        private lastY:number = 0;
+        private lastY: number = 0;
         /**
          * 当前正在绘制的填充
          */
-        private fillPath:sys.Path2D = null;
+        private fillPath: sys.Path2D = null;
         /**
          * 当前正在绘制的线条
          */
-        private strokePath:sys.Path2D = null;
+        private strokePath: sys.StrokePath = null;
         /**
          * 线条的左上方宽度
          */
@@ -129,7 +131,7 @@ namespace egret {
         /**
          * 对1像素和3像素特殊处理，向右下角偏移0.5像素，以显示清晰锐利的线条。
          */
-        private setStrokeWidth(width:number) {
+        private setStrokeWidth(width: number) {
             switch (width) {
                 case 1:
                     this.topLeftStrokeWidth = 0;
@@ -165,9 +167,12 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public beginFill(color:number, alpha:number = 1):void {
+        public beginFill(color: number, alpha: number = 1): void {
             color = +color || 0;
             alpha = +alpha || 0;
+            if (egret.nativeRender) {
+                this.$targetDisplay.$nativeDisplayObject.setBeginFill(color, alpha);
+            }
             this.fillPath = this.$renderNode.beginFill(color, alpha, this.strokePath);
             if (this.$renderNode.drawData.length > 1) {
                 this.fillPath.moveTo(this.lastX, this.lastY);
@@ -199,7 +204,11 @@ namespace egret {
          * @version Egret 2.4
          * @language zh_CN
          */
-        public beginGradientFill(type:string, colors:number[], alphas:number[], ratios:number[], matrix:egret.Matrix = null):void {
+        public beginGradientFill(type: string, colors: number[], alphas: number[], ratios: number[], matrix: egret.Matrix = null): void {
+            if (egret.nativeRender) {
+                this.$targetDisplay.$nativeDisplayObject.setBeginGradientFill(type, colors, alphas, ratios, matrix);
+            }
+
             this.fillPath = this.$renderNode.beginGradientFill(type, colors, alphas, ratios, matrix, this.strokePath);
             if (this.$renderNode.drawData.length > 1) {
                 this.fillPath.moveTo(this.lastX, this.lastY);
@@ -218,7 +227,10 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public endFill():void {
+        public endFill(): void {
+            if (egret.nativeRender) {
+                this.$targetDisplay.$nativeDisplayObject.setEndFill();
+            }
             this.fillPath = null;
         }
 
@@ -232,6 +244,7 @@ namespace egret {
          * @param caps Specifies the value of the CapsStyle class of the endpoint type at the end of the line. (default = CapsStyle.ROUND)
          * @param joints Specifies the type of joint appearance of corner.  (default = JointStyle.ROUND)
          * @param miterLimit Indicates the limit number of cut miter.
+         * @param lineDash set the line dash.
          * @version Egret 2.4
          * @platform Web,Native
          * @language en_US
@@ -246,22 +259,28 @@ namespace egret {
          * @param caps 用于指定线条末端处端点类型的 CapsStyle 类的值。默认值：CapsStyle.ROUND
          * @param joints 指定用于拐角的连接外观的类型。默认值：JointStyle.ROUND
          * @param miterLimit 用于表示剪切斜接的极限值的数字。
+         * @param lineDash 设置虚线样式。
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
          */
-        public lineStyle(thickness:number = NaN, color:number = 0, alpha:number = 1.0, pixelHinting:boolean = false, scaleMode:string = "normal", caps:string = null, joints:string = null, miterLimit:number = 3):void {
+        public lineStyle(thickness: number = NaN, color: number = 0, alpha: number = 1.0, pixelHinting: boolean = false,
+            scaleMode: string = "normal", caps: string = null, joints: string = null, miterLimit: number = 3, lineDash?:number[]): void {
             thickness = +thickness || 0;
+            color = +color || 0;
+            alpha = +alpha || 0;
+            miterLimit = +miterLimit || 0;
+            if (egret.nativeRender) {
+                this.$targetDisplay.$nativeDisplayObject.setLineStyle(thickness, color,
+                                    alpha, pixelHinting, scaleMode, caps, joints, miterLimit);
+            }
             if (thickness <= 0) {
                 this.strokePath = null;
                 this.setStrokeWidth(0);
             }
             else {
-                color = +color || 0;
-                alpha = +alpha || 0;
-                miterLimit = +miterLimit || 0;
                 this.setStrokeWidth(thickness);
-                this.strokePath = this.$renderNode.lineStyle(thickness, color, alpha, caps, joints, miterLimit);
+                this.strokePath = this.$renderNode.lineStyle(thickness, color, alpha, caps, joints, miterLimit, lineDash);
                 if (this.$renderNode.drawData.length > 1) {
                     this.strokePath.moveTo(this.lastX, this.lastY);
                 }
@@ -288,18 +307,21 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public drawRect(x:number, y:number, width:number, height:number):void {
+        public drawRect(x: number, y: number, width: number, height: number): void {
             x = +x || 0;
             y = +y || 0;
             width = +width || 0;
             height = +height || 0;
+            if (egret.nativeRender) {
+                this.$targetDisplay.$nativeDisplayObject.setDrawRect(x, y, width, height);
+            }
             let fillPath = this.fillPath;
             let strokePath = this.strokePath;
             fillPath && fillPath.drawRect(x, y, width, height);
             strokePath && strokePath.drawRect(x, y, width, height);
             this.extendBoundsByPoint(x + width, y + height);
             this.updatePosition(x, y);
-            this.$renderNode.dirtyRender = true;
+            this.dirty();
         }
 
         /**
@@ -326,13 +348,16 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public drawRoundRect(x:number, y:number, width:number, height:number, ellipseWidth:number, ellipseHeight?:number):void {
+        public drawRoundRect(x: number, y: number, width: number, height: number, ellipseWidth: number, ellipseHeight?: number): void {
             x = +x || 0;
             y = +y || 0;
             width = +width || 0;
             height = +height || 0;
             ellipseWidth = +ellipseWidth || 0;
             ellipseHeight = +ellipseHeight || 0;
+            if (egret.nativeRender) {
+                this.$targetDisplay.$nativeDisplayObject.setDrawRoundRect(x, y, width, height, ellipseWidth, ellipseHeight);
+            }
             let fillPath = this.fillPath;
             let strokePath = this.strokePath;
             fillPath && fillPath.drawRoundRect(x, y, width, height, ellipseWidth, ellipseHeight);
@@ -346,7 +371,7 @@ namespace egret {
             this.extendBoundsByPoint(x, y);
             this.extendBoundsByPoint(right, bottom);
             this.updatePosition(right, ybw);
-            this.$renderNode.dirtyRender = true;
+            this.dirty();
         }
 
         /**
@@ -367,10 +392,13 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public drawCircle(x:number, y:number, radius:number):void {
+        public drawCircle(x: number, y: number, radius: number): void {
             x = +x || 0;
             y = +y || 0;
             radius = +radius || 0;
+            if (egret.nativeRender) {
+                this.$targetDisplay.$nativeDisplayObject.setDrawCircle(x, y, radius);
+            }
             let fillPath = this.fillPath;
             let strokePath = this.strokePath;
             fillPath && fillPath.drawCircle(x, y, radius);
@@ -379,7 +407,7 @@ namespace egret {
             this.extendBoundsByPoint(x - radius - 1, y - radius - 1);
             this.extendBoundsByPoint(x + radius + 2, y + radius + 2);
             this.updatePosition(x + radius, y);
-            this.$renderNode.dirtyRender = true;
+            this.dirty();
         }
 
 
@@ -403,12 +431,15 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public drawEllipse(x:number, y:number, width:number, height:number):void {
+        public drawEllipse(x: number, y: number, width: number, height: number): void {
             x = +x || 0;
             y = +y || 0;
             width = +width || 0;
             height = +height || 0;
 
+            if (egret.nativeRender) {
+                this.$targetDisplay.$nativeDisplayObject.setDrawEllipse(x, y, width, height);
+            }
             let fillPath = this.fillPath;
             let strokePath = this.strokePath;
             fillPath && fillPath.drawEllipse(x, y, width, height);
@@ -417,7 +448,7 @@ namespace egret {
             this.extendBoundsByPoint(x - 1, y - 1);
             this.extendBoundsByPoint(x + width + 2, y + height + 2);
             this.updatePosition(x + width, y + height * 0.5);
-            this.$renderNode.dirtyRender = true;
+            this.dirty();
         }
 
         /**
@@ -436,9 +467,12 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public moveTo(x:number, y:number):void {
+        public moveTo(x: number, y: number): void {
             x = +x || 0;
             y = +y || 0;
+            if (egret.nativeRender) {
+                this.$targetDisplay.$nativeDisplayObject.setMoveTo(x, y);
+            }
             let fillPath = this.fillPath;
             let strokePath = this.strokePath;
             fillPath && fillPath.moveTo(x, y);
@@ -446,7 +480,7 @@ namespace egret {
             this.includeLastPosition = false;
             this.lastX = x;
             this.lastY = y;
-            this.$renderNode.dirtyRender = true;
+            this.dirty();
         }
 
         /**
@@ -465,15 +499,18 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public lineTo(x:number, y:number):void {
+        public lineTo(x: number, y: number): void {
             x = +x || 0;
             y = +y || 0;
+            if (egret.nativeRender) {
+                this.$targetDisplay.$nativeDisplayObject.setLineTo(x, y);
+            }
             let fillPath = this.fillPath;
             let strokePath = this.strokePath;
             fillPath && fillPath.lineTo(x, y);
             strokePath && strokePath.lineTo(x, y);
             this.updatePosition(x, y);
-            this.$renderNode.dirtyRender = true;
+            this.dirty();
         }
 
         /**
@@ -500,11 +537,15 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public curveTo(controlX:number, controlY:number, anchorX:number, anchorY:number):void {
+        public curveTo(controlX: number, controlY: number, anchorX: number, anchorY: number): void {
             controlX = +controlX || 0;
             controlY = +controlY || 0;
             anchorX = +anchorX || 0;
             anchorY = +anchorY || 0;
+            if (egret.nativeRender) {
+                this.$targetDisplay.$nativeDisplayObject.setCurveTo(controlX, controlY,
+                        anchorX, anchorY);
+            }
             let fillPath = this.fillPath;
             let strokePath = this.strokePath;
             fillPath && fillPath.curveTo(controlX, controlY, anchorX, anchorY);
@@ -512,7 +553,7 @@ namespace egret {
             this.extendBoundsByPoint(controlX, controlY);
             this.extendBoundsByPoint(anchorX, anchorY);
             this.updatePosition(anchorX, anchorY);
-            this.$renderNode.dirtyRender = true;
+            this.dirty();
         }
 
         /**
@@ -539,14 +580,18 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public cubicCurveTo(controlX1:number, controlY1:number, controlX2:number,
-                            controlY2:number, anchorX:number, anchorY:number):void {
+        public cubicCurveTo(controlX1: number, controlY1: number, controlX2: number,
+            controlY2: number, anchorX: number, anchorY: number): void {
             controlX1 = +controlX1 || 0;
             controlY1 = +controlY1 || 0;
             controlX2 = +controlX2 || 0;
             controlY2 = +controlY2 || 0;
             anchorX = +anchorX || 0;
             anchorY = +anchorY || 0;
+            if (egret.nativeRender) {
+                this.$targetDisplay.$nativeDisplayObject.setCubicCurveTo(controlX1,
+                    controlY1, controlX2, controlY2, anchorX, anchorY);
+            }
             let fillPath = this.fillPath;
             let strokePath = this.strokePath;
             fillPath && fillPath.cubicCurveTo(controlX1, controlY1, controlX2, controlY2, anchorX, anchorY);
@@ -555,7 +600,7 @@ namespace egret {
             this.extendBoundsByPoint(controlX2, controlY2);
             this.extendBoundsByPoint(anchorX, anchorY);
             this.updatePosition(anchorX, anchorY);
-            this.$renderNode.dirtyRender = true;
+            this.dirty();
         }
 
         /**
@@ -583,7 +628,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public drawArc(x:number, y:number, radius:number, startAngle:number, endAngle:number, anticlockwise?:boolean):void {
+        public drawArc(x: number, y: number, radius: number, startAngle: number, endAngle: number, anticlockwise?: boolean): void {
             if (radius < 0 || startAngle === endAngle) {
                 return;
             }
@@ -595,6 +640,10 @@ namespace egret {
             anticlockwise = !!anticlockwise;
             startAngle = clampAngle(startAngle);
             endAngle = clampAngle(endAngle);
+            if (egret.nativeRender) {
+                this.$targetDisplay.$nativeDisplayObject.setDrawArc(x, y, radius, 
+                    startAngle, endAngle, anticlockwise);
+            }
 
             let fillPath = this.fillPath;
             let strokePath = this.strokePath;
@@ -617,14 +666,19 @@ namespace egret {
             let endX = x + Math.cos(endAngle) * radius;
             let endY = y + Math.sin(endAngle) * radius;
             this.updatePosition(endX, endY);
-            this.$renderNode.dirtyRender = true;
+            this.dirty();
+        }
+
+        private dirty(): void {
+            let self = this;
+            self.$renderNode.dirtyRender = true;
         }
 
         /**
          * @private
          * 测量圆弧的矩形大小
          */
-        private arcBounds(x:number, y:number, radius:number, startAngle:number, endAngle:number):void {
+        private arcBounds(x: number, y: number, radius: number, startAngle: number, endAngle: number): void {
             let PI = Math.PI;
             if (Math.abs(startAngle - endAngle) < 0.01) {
                 this.extendBoundsByPoint(x - radius, y - radius);
@@ -682,36 +736,40 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public clear():void {
+        public clear(): void {
+            if (egret.nativeRender) {
+                this.$targetDisplay.$nativeDisplayObject.setGraphicsClear();
+            }
             this.$renderNode.clear();
             this.updatePosition(0, 0);
             this.minX = Infinity;
             this.minY = Infinity;
             this.maxX = -Infinity;
             this.maxY = -Infinity;
+            this.dirty();
         }
 
         /**
          * @private
          */
-        private minX:number = Infinity;
+        private minX: number = Infinity;
         /**
          * @private
          */
-        private minY:number = Infinity;
+        private minY: number = Infinity;
         /**
          * @private
          */
-        private maxX:number = -Infinity;
+        private maxX: number = -Infinity;
         /**
          * @private
          */
-        private maxY:number = -Infinity;
+        private maxY: number = -Infinity;
 
         /**
          * @private
          */
-        private extendBoundsByPoint(x:number, y:number):void {
+        private extendBoundsByPoint(x: number, y: number): void {
             this.extendBoundsByX(x);
             this.extendBoundsByY(y);
         }
@@ -719,7 +777,7 @@ namespace egret {
         /**
          * @private
          */
-        private extendBoundsByX(x:number):void {
+        private extendBoundsByX(x: number): void {
             this.minX = Math.min(this.minX, x - this.topLeftStrokeWidth);
             this.maxX = Math.max(this.maxX, x + this.bottomRightStrokeWidth);
             this.updateNodeBounds();
@@ -728,7 +786,7 @@ namespace egret {
         /**
          * @private
          */
-        private extendBoundsByY(y:number):void {
+        private extendBoundsByY(y: number): void {
             this.minY = Math.min(this.minY, y - this.topLeftStrokeWidth);
             this.maxY = Math.max(this.maxY, y + this.bottomRightStrokeWidth);
             this.updateNodeBounds();
@@ -737,7 +795,7 @@ namespace egret {
         /**
          * @private
          */
-        private updateNodeBounds():void {
+        private updateNodeBounds(): void {
             let node = this.$renderNode;
             node.x = this.minX;
             node.y = this.minY;
@@ -748,13 +806,13 @@ namespace egret {
         /**
          * 是否已经包含上一次moveTo的坐标点
          */
-        private includeLastPosition:boolean = true;
+        private includeLastPosition: boolean = true;
 
         /**
          * 更新当前的lineX和lineY值，并标记尺寸失效。
          * @private
          */
-        private updatePosition(x:number, y:number):void {
+        private updatePosition(x: number, y: number): void {
             if (!this.includeLastPosition) {
                 this.extendBoundsByPoint(this.lastX, this.lastY);
                 this.includeLastPosition = true;
@@ -762,14 +820,13 @@ namespace egret {
             this.lastX = x;
             this.lastY = y;
             this.extendBoundsByPoint(x, y);
-            this.targetDisplay.$invalidateContentBounds();
         }
 
 
         /**
          * @private
          */
-        $measureContentBounds(bounds:Rectangle):void {
+        $measureContentBounds(bounds: Rectangle): void {
             if (this.minX === Infinity) {
                 bounds.setEmpty();
             }
@@ -782,8 +839,8 @@ namespace egret {
          * @private
          *
          */
-        $hitTest(stageX:number, stageY:number):DisplayObject {
-            let target = this.targetDisplay;
+        $hitTest(stageX: number, stageY: number): DisplayObject {
+            let target = this.$targetDisplay;
             let m = target.$getInvertedConcatenatedMatrix();
             let localX = m.a * stageX + m.c * stageY + m.tx;
             let localY = m.b * stageX + m.d * stageY + m.ty;
@@ -811,9 +868,12 @@ namespace egret {
         /**
          * @private
          */
-        public $onRemoveFromStage():void {
+        public $onRemoveFromStage(): void {
             if (this.$renderNode) {
                 this.$renderNode.clean();
+            }
+            if (egret.nativeRender) {
+                egret_native.NativeDisplayObject.disposeGraphicData(this);
             }
         }
     }

@@ -37,7 +37,7 @@ class Project {
 
     }
 
-    fileChanged(socket: ServiceSocket, task: egret.ServiceCommand, path?: string, changeType?: string) {
+    fileChanged(socket: ServiceSocket, task: egret.ServiceCommand, path?: string, changeType?: 'added' | 'removed' | 'modified') {
         //console.log("--project.fileChanged--")
         if (this.pendingRequest)
             this.pendingRequest.end({ command: "build", exitCode: 0 });
@@ -71,8 +71,8 @@ class Project {
             'compileservice', this.path,
             (this.option.sourceMap ? "-sourcemap" : "")
         ];
-        if (this.option && this.option.runtime) {
-            params.push("--runtime", this.option.runtime);
+        if (this.option && this.option.target) {
+            params.push("--runtime", this.option.target);
         }
         if (this.option && this.option.experimental) {
             params.push("-exp");

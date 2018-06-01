@@ -129,27 +129,12 @@ namespace egret.web {
         /**
          * 缓存一组顶点
          */
-        public cacheArrays(transform: Matrix, alpha: number, sourceX: number, sourceY: number, sourceWidth: number, sourceHeight: number,
+        public cacheArrays(buffer: WebGLRenderBuffer, sourceX: number, sourceY: number, sourceWidth: number, sourceHeight: number,
             destX: number, destY: number, destWidth: number, destHeight: number, textureSourceWidth: number, textureSourceHeight: number,
             meshUVs?: number[], meshVertices?: number[], meshIndices?: number[], rotated?: boolean): void {
-
+            let alpha = buffer.globalAlpha;
             //计算出绘制矩阵，之后把矩阵还原回之前的
-            let locWorldTransform = transform;
-            let originalA = locWorldTransform.a;
-            let originalB = locWorldTransform.b;
-            let originalC = locWorldTransform.c;
-            let originalD = locWorldTransform.d;
-            let originalTx = locWorldTransform.tx;
-            let originalTy = locWorldTransform.ty;
-            // Only scale unmeshed texture.
-            if (!meshVertices) {
-                if (destX != 0 || destY != 0) {
-                    locWorldTransform.append(1, 0, 0, 1, destX, destY);
-                }
-                if (sourceWidth / destWidth != 1 || sourceHeight / destHeight != 1) {
-                    locWorldTransform.append(destWidth / sourceWidth, 0, 0, destHeight / sourceHeight, 0, 0);
-                }
-            }
+            let locWorldTransform = buffer.globalMatrix;
 
             let a = locWorldTransform.a;
             let b = locWorldTransform.b;
@@ -157,12 +142,31 @@ namespace egret.web {
             let d = locWorldTransform.d;
             let tx = locWorldTransform.tx;
             let ty = locWorldTransform.ty;
-            locWorldTransform.a = originalA;
-            locWorldTransform.b = originalB;
-            locWorldTransform.c = originalC;
-            locWorldTransform.d = originalD;
-            locWorldTransform.tx = originalTx;
-            locWorldTransform.ty = originalTy;
+
+            let offsetX = buffer.$offsetX;
+            let offsetY = buffer.$offsetY;
+            if (offsetX != 0 || offsetY != 0) {
+                tx = offsetX * a + offsetY * c + tx;
+                ty = offsetX * b + offsetY * d + ty;
+            }
+
+            if (!meshVertices) {
+                if (destX != 0 || destY != 0) {
+                    tx = destX * a + destY * c + tx;
+                    ty = destX * b + destY * d + ty;
+                }
+
+                let a1 = destWidth / sourceWidth;
+                if (a1 != 1) {
+                    a = a1 * a;
+                    b = a1 * b;
+                }
+                let d1 = destHeight / sourceHeight;
+                if (d1 != 1) {
+                    c = d1 * c;
+                    d = d1 * d;
+                }
+            }
 
             if (meshVertices) {
                 // 计算索引位置与赋值

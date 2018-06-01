@@ -192,7 +192,7 @@ function saveSDKInfoToConfigFile() {
     var filePath = getAndroidSDKConfigFilePath();
     writeJSONObjectToFile(filePath, config);
 }
-var Downloader = (function () {
+var Downloader = /** @class */ (function () {
     function Downloader() {
     }
     Downloader.prototype.download = function (url, dest, cb) {
@@ -244,7 +244,7 @@ function getSDKInstallDir() {
     }
     return sdkInstallDir;
 }
-var MultiTaskManager = (function (_super) {
+var MultiTaskManager = /** @class */ (function (_super) {
     __extends(MultiTaskManager, _super);
     function MultiTaskManager() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
@@ -331,7 +331,7 @@ var MultiTaskManager = (function (_super) {
     };
     return MultiTaskManager;
 }(events.EventEmitter));
-var DownloadManager = (function (_super) {
+var DownloadManager = /** @class */ (function (_super) {
     __extends(DownloadManager, _super);
     function DownloadManager(list, dlDir) {
         var _this = _super.call(this) || this;
@@ -358,7 +358,7 @@ var DownloadManager = (function (_super) {
     };
     return DownloadManager;
 }(MultiTaskManager));
-var UnzipManager = (function (_super) {
+var UnzipManager = /** @class */ (function (_super) {
     __extends(UnzipManager, _super);
     function UnzipManager(list) {
         var _this = _super.call(this) || this;
@@ -453,7 +453,7 @@ function startToDownload() {
     print(startMsg);
     dlm.start();
 }
-var InstallSDK = (function () {
+var InstallSDK = /** @class */ (function () {
     function InstallSDK() {
     }
     InstallSDK.prototype.execute = function () {

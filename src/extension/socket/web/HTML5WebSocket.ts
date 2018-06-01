@@ -109,7 +109,5 @@ namespace egret.web {
         }
     }
 
-    if (egret.Capabilities.runtimeType == RuntimeType.WEB) {
-        ISocket = HTML5WebSocket;
-    }
+    ISocket = HTML5WebSocket;
 }

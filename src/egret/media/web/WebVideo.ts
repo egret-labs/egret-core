@@ -309,7 +309,6 @@ namespace egret.web {
         private onVideoEnded() {
             this.pause();
             this.isPlayed = false;
-            this.$invalidateContentBounds();
 
             this.dispatchEventWith(egret.Event.ENDED);
         }
@@ -354,7 +353,6 @@ namespace egret.web {
             this.userPause = false;
 
             egret.stopTick(this.markDirty, this);
-            this.$invalidate();
         }
 
 
@@ -440,11 +438,10 @@ namespace egret.web {
             imageLoader.once(egret.Event.COMPLETE, e => {
                 let posterData = <HTMLImageElement><any>imageLoader.data;
                 this.posterData = imageLoader.data;
-
+                this.$renderDirty = true;
                 this.posterData.width = this.getPlayWidth();
                 this.posterData.height = this.getPlayHeight();
 
-                this.$invalidateContentBounds();
             }, this);
             imageLoader.load(poster);
         }
@@ -464,7 +461,6 @@ namespace egret.web {
             }
             video.width = video.videoWidth;
             video.height = video.videoHeight;
-            this.$invalidateContentBounds();
             window.setTimeout(() => {
                 this.dispatchEventWith(egret.Event.COMPLETE);
             }, 200);
@@ -522,7 +518,7 @@ namespace egret.web {
         /**
          * @private
          */
-        $render(): void {
+        $updateRenderNode(): void {
             let node = <sys.BitmapNode>this.$renderNode;
             let bitmapData = this.bitmapData;
             let posterData = this.posterData;
@@ -545,7 +541,7 @@ namespace egret.web {
         }
 
         private markDirty(): boolean {
-            this.$invalidate();
+            this.$renderDirty = true;
             return true;
         }
 
@@ -553,22 +549,18 @@ namespace egret.web {
          * @private
          * 设置显示高度
          */
-        $setHeight(value: number): boolean {
-            this.heightSet = +value || 0;
-            this.$invalidate();
-            this.$invalidateContentBounds();
-            return super.$setHeight(value);
+        $setHeight(value: number): void {
+            this.heightSet = value;
+            super.$setHeight(value);
         }
 
         /**
          * @private
          * 设置显示宽度
          */
-        $setWidth(value: number): boolean {
-            this.widthSet = +value || 0;
-            this.$invalidate();
-            this.$invalidateContentBounds();
-            return super.$setWidth(value);
+        $setWidth(value: number): void {
+            this.widthSet = value;
+            super.$setWidth(value);
         }
 
         public get paused(): boolean {
