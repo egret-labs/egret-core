@@ -5,7 +5,7 @@ import { Plugin, File } from './index';
 const manifest = {
     initial: [],
     game: [],
-// configURL: ""
+    // configURL: ""
 }
 
 

@@ -330,7 +330,7 @@ type LauncherAPI = {
 
 }
 
-type LauncherAPI_MinVersion = {[P in keyof LauncherAPI]: string }
+type LauncherAPI_MinVersion = { [P in keyof LauncherAPI]: string }
 
 class EgretLauncherProxy {
 
@@ -373,7 +373,7 @@ class EgretLauncherProxy {
         const selector: LauncherAPI = m.selector;
         if (!this.proxy) {
             this.proxy = new Proxy(selector, {
-                get: (target, p, receiver) => {
+                get: (target, p: string, receiver) => {
                     const result = target[p];
                     if (!result) {
                         const minVersion = minVersions[p];

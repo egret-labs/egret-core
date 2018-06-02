@@ -178,6 +178,9 @@ var ConvertResConfigFilePlugin = /** @class */ (function () {
                     for (_i = 0, _a = resourceConfig_1.resources; _i < _a.length; _i++) {
                         r = _a[_i];
                         realURL = this.files["resource" + "/" + r.url];
+                        // if (realURL) {
+                        //     r.url = realURL;
+                        // }
                     }
                 }
                 return [2 /*return*/];
