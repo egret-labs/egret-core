@@ -1,3 +1,13 @@
+var __reflect = (this && this.__reflect) || function (p, c, t) {
+    p.__class__ = c, t ? t.push(c) : t = [c], p.__types__ = p.__types__ ? t.concat(p.__types__) : t;
+};
+var __extends = this && this.__extends || function __extends(t, e) {
+    function r() {
+        this.constructor = t;
+    }
+    for (var i in e) e.hasOwnProperty(i) && (t[i] = e[i]);
+    r.prototype = e.prototype, t.prototype = new r();
+};
 class JSONParseClass {
     private json = {};
     private skinClass = {};
@@ -301,7 +311,7 @@ class JSONParseClass {
                     if (property["name"]) {
                         let value = property["value"];
                         if (property["name"] == "scale9Grid") {
-                            value = this.getScale9Grid(this.skinClass[component][property])
+                            value = this.getScale9Grid(property["value"])
                         }
                         setProperty.push(new eui.SetProperty(property["target"], property["name"], value));
                     } else {
