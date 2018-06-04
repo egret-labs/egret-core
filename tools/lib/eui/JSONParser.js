@@ -85,6 +85,7 @@ var euiShorten = {
     "eui.VSlider": "$eVS",
     "eui.Skin": "$eSk"
 };
+exports.euiJson = "";
 /**
  * @private
  */

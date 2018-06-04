@@ -93,7 +93,7 @@ let euiShorten = {
     "eui.VSlider": "$eVS",
     "eui.Skin": "$eSk"
 }
-export let euiJson: string;
+export let euiJson: string="";
 /**
  * @private
  */
