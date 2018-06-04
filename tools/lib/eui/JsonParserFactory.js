@@ -210,6 +210,9 @@ var JSONParseClass = /** @class */ (function () {
                     target[property] = t;
                 });
             }
+            else if(property == "itemRenderer"){
+                target[property] = egret.getDefinitionByName(this_2.skinClass[component][property]);
+            }
             else if (property == "dataProvider") {
                 target[property] = this_2.createDataProvider(this_2.skinClass[component][property]);
             }
