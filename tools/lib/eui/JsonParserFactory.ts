@@ -55,7 +55,6 @@ class JSONParseClass {
         function __SkinClass() {
             target.call(this);
             window["JSONParseClass"].create(className, this);
-            // this.parseData(skinData);// 这里是关键，eui.Skin里面提供一个关键性的parseData接口
         }
         (<any>__extends)(__SkinClass, target);
         (<any>__reflect)(__SkinClass, className, [superName]);
@@ -247,7 +246,10 @@ class JSONParseClass {
                     }
                     target[property] = t;
                 })
-            } else if (property == "dataProvider") {
+            } else if (property == "itemRenderer") {
+                target[property] = egret.getDefinitionByName(this.skinClass[component][property]);
+            }
+            else if (property == "dataProvider") {
                 target[property] = this.createDataProvider(this.skinClass[component][property]);
             }
             else if (property == "viewport") {
