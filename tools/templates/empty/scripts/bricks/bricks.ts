@@ -21,7 +21,7 @@ export class BricksPlugin implements plugins.Command {
             const jsonData: ManifestConfig = JSON.parse(contents);
 
             let content = '';
-
+            content += `BK.Script.loadlib("GameRes://js/promise.js");\n`;
             for (let item of jsonData.initial) {
                 if (item != 'js/promise.js' && item != 'js/promise.min.js') {
                     content += `BK.Script.loadlib("GameRes://${item}");\n`
@@ -39,6 +39,7 @@ export class BricksPlugin implements plugins.Command {
             const content = file.contents.toString();
             let result = content.replace(/RES\.loadConfig\("resource\/default\.res\.json", "resource\/"\)/gm, 'RES.loadConfig("GameRes://resource/default.res.json", "GameRes://resource/")');
             result = result.replace(/eui\.Theme\("resource\/default\.thm\.json", _this\.stage\)/gm, 'eui.Theme("GameRes://resource/default.thm.json", _this.stage)');
+            result += ";global.Main = Main;";
             file.path = file.dirname + '/main.js'
             file.contents = new Buffer(result);
         }
