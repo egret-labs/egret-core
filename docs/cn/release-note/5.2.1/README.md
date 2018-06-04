@@ -14,7 +14,7 @@
 
 ## 微信小游戏支持库
 
-微信小游戏支持库请通过 Egret Launcher 将您的项目发布一次微信小游戏的方式进行更新，版本号 1.1.0
+微信小游戏支持库请通过 Egret Launcher 将您的项目发布一次微信小游戏的方式进行更新，版本号 1.1.1
 
 * 支持[本地文件缓存](http://developer.egret.com/cn/github/egret-docs/Engine2D/minigame/usingcache/index.html)
 * 修复音频文件从指定位置播放异常问题（感谢开发者 姜加一）
