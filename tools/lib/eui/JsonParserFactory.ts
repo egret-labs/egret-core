@@ -230,8 +230,7 @@ class JSONParseClass {
                 sId = this.skinClass[component]["$sId"];
             }
             else if (property == "scale9Grid") {
-                let data = (this.skinClass[component][property] as string).split(",");
-                target[property] = new egret.Rectangle(parseFloat(data[0]), parseFloat(data[1]), parseFloat(data[2]), parseFloat(data[3]));
+                target[property] = this.getScale9Grid(this.skinClass[component][property])
             }
             else if (property == "skinName") {
                 this.$createNewObject(() => {
@@ -298,17 +297,22 @@ class JSONParseClass {
                     setProperty.push(new eui.AddItems(property["target"], property["property"], property["position"], property["relativeTo"]));
             }
             if (this.skinClass["$s"][state]["$ssP"]) {
-                for (let property of tempState["$ssP"])
-                    if (property["name"])
-                        setProperty.push(new eui.SetProperty(property["target"], property["name"], property["value"]));
-                    else
+                for (let property of tempState["$ssP"]) {
+                    if (property["name"]) {
+                        let value = property["value"];
+                        if (property["name"] == "scale9Grid") {
+                            value = this.getScale9Grid(this.skinClass[component][property])
+                        }
+                        setProperty.push(new eui.SetProperty(property["target"], property["name"], value));
+                    } else {
                         setProperty.push(new eui.SetStateProperty(this.target, property["templates"], property["chainIndex"], this.target[property["target"]], property["property"]));
+                    }
+                }
+                states.push(new eui.State(state, setProperty))
             }
-            states.push(new eui.State(state, setProperty))
+            this.target["states"] = states;
         }
-        this.target["states"] = states;
     }
-
     private creatBinding() {
         if (this.skinClass["$b"] == undefined) return;
         for (let bindingDate of this.skinClass["$b"]) {
@@ -345,6 +349,10 @@ class JSONParseClass {
         let typestr = this.getNormalizeEui(this.skinClass[component].$t);
         let type = egret.getDefinitionByName(typestr);
         return new type();
+    }
+    private getScale9Grid(data: string) {
+        let datalist = data.split(",");
+        return new egret.Rectangle(parseFloat(datalist[0]), parseFloat(datalist[1]), parseFloat(datalist[2]), parseFloat(datalist[3]));
     }
 }
 window["JSONParseClass"] = new JSONParseClass();
