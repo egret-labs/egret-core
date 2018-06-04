@@ -17,3 +17,4 @@ Egret Engine was officially released on May 25, 2018 5.2 stable version. On June
 Wechat mini-game support library Please update your project with a WeChat mini-game via Egret Launcher. Version number 1.1.0
 
 * Supports local file caching
+* Fixed an issue where the audio file played abnormally from the specified location
