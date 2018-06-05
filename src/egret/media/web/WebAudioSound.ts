@@ -186,7 +186,7 @@ namespace egret.web {
             request.responseType = "arraybuffer";
             request.onreadystatechange = function () {
                 if (request.readyState == 4) {// 4 = "loaded"
-                    let ioError = (request.status >= 400 || request.status == 0);
+                    let ioError = (request.status >= 400);
                     if (ioError) {//请求错误
                         self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
                     } else {

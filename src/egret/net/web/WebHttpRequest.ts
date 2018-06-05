@@ -229,7 +229,7 @@ namespace egret.web {
         private onReadyStateChange():void {
             let xhr = this._xhr;
             if (xhr.readyState == 4) {// 4 = "loaded"
-                let ioError = (xhr.status >= 400 || xhr.status == 0);
+                let ioError = (xhr.status >= 400);
                 let url = this._url;
                 let self = this;
                 window.setTimeout(function ():void {
