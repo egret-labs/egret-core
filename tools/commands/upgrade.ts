@@ -26,7 +26,7 @@ class UpgradeCommand implements egret.Command {
         const versionArr = version.split(".");
         let majorVersion = parseInt(versionArr[0]);
         let middleVersion = parseInt(versionArr[1]);
-        if (majorVersion == 5 && middleVersion == 1) {
+        if (majorVersion == 5 && middleVersion != 0) {
             this.run();
         }
         else {
