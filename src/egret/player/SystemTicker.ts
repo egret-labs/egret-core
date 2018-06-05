@@ -301,9 +301,6 @@ namespace egret.sys {
         private render(triggerByFrame: boolean, costTicker: number): void {
             let playerList = this.playerList;
             let length = playerList.length;
-            if (length == 0) {
-                return;
-            }
             this.callLaters();
             if ($invalidateRenderFlag) {
                 this.broadcastRender();

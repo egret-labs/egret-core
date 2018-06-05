@@ -14039,9 +14039,6 @@ var egret;
             SystemTicker.prototype.render = function (triggerByFrame, costTicker) {
                 var playerList = this.playerList;
                 var length = playerList.length;
-                if (length == 0) {
-                    return;
-                }
                 this.callLaters();
                 if (sys.$invalidateRenderFlag) {
                     this.broadcastRender();
