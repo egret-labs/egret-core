@@ -138,6 +138,7 @@ namespace egret {
                     j++;
                 }
             }
+            this.onPropertyChange();
         }
 
         /**

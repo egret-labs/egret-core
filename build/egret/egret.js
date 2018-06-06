@@ -9166,6 +9166,7 @@ var egret;
                     j++;
                 }
             }
+            this.onPropertyChange();
         };
         /**
          * @private
