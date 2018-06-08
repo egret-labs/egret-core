@@ -363,6 +363,16 @@
         "dependencies": [
           "egret"
         ]
+      },
+      {
+        "name": "egretia-sdk",
+        "description": "Egretia SDK",
+        "description_en": "Egretia SDK",
+        "files": [],
+        "root": "",
+        "dependencies": [
+          "egret"
+        ]
       }
     ],
     "platforms": [
