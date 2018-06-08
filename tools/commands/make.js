@@ -21,6 +21,7 @@ var CompileEgretEngine = /** @class */ (function () {
             { name: "release", minify: true }
         ];
         var excludeList = [
+            FileUtil.escapePath(path.join(outputDir, "egretia-sdk")),
             FileUtil.escapePath(path.join(outputDir, "egret-facebook")),
             FileUtil.escapePath(path.join(outputDir, "promise")),
             FileUtil.escapePath(path.join(outputDir, "resourcemanager")),
