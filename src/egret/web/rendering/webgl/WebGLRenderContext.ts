@@ -521,9 +521,6 @@ namespace egret.web {
             }
         }
 
-
-
-
         /**
          * 绘制图片，image参数可以是BitmapData或者renderTarget
          * 同样的功能，单参数，整合drawTexture部分
@@ -612,57 +609,44 @@ namespace egret.web {
                 d = d1 * d;
             }
 
-            let vertices = this.vao.vertices;
-            let index = this.vao.vertexIndex * this.vertSize;
+            let float32Array = this.vao.float32Array;
+            let uint32Array = this.vao.uint32Array;
+            let index = this.vao.vertexIndex * this.vao.vertSize;
             let alpha = buffer.globalAlpha;
             let a_w = a * sourceWidth;
             let b_w = b * sourceWidth;
             let c_h = c * sourceHeight;
             let d_h = d * sourceHeight;
 
-            let uvX_LT = node.uvX_LT;
-            let uvY_LT = node.uvY_LT;
-            let uvX_RT = node.uvX_RT;
-            let uvY_RT = node.uvY_RT;
-            let uvX_RB = node.uvX_RB;
-            let uvY_RB = node.uvY_RB;
-            let uvX_LB = node.uvX_LB;
-            let uvY_LB = node.uvY_LB;
+            // xy
+            float32Array[index++] = tx;
+            float32Array[index++] = ty;
+            // uv
+            uint32Array[index++] = node.uvs[0];
+            // alpha
+            float32Array[index++] = alpha;
+            // xy
+            float32Array[index++] = a_w + tx;
+            float32Array[index++] = b_w + ty;
+            // uv
+            uint32Array[index++] = node.uvs[1];
+            // alpha
+            float32Array[index++] = alpha;
+            // xy
+            float32Array[index++] = a_w + c_h + tx;
+            float32Array[index++] = d_h + b_w + ty;
+            // uv
+            uint32Array[index++] = node.uvs[2];
+            // alpha
+            float32Array[index++] = alpha;
+            // xy
+            float32Array[index++] = c_h + tx;
+            float32Array[index++] = d_h + ty;
+            // uv
+            uint32Array[index++] = node.uvs[3];
+            // alpha
+            float32Array[index++] = alpha;
 
-            // xy
-            vertices[index++] = tx;
-            vertices[index++] = ty;
-
-            // uv
-            vertices[index++] = uvX_LT;
-            vertices[index++] = uvY_LT;
-            // alpha
-            vertices[index++] = alpha;
-            // xy
-            vertices[index++] = a_w + tx;
-            vertices[index++] = b_w + ty;
-            // uv
-            vertices[index++] = uvX_RT;
-            vertices[index++] = uvY_RT;
-            // alpha
-            vertices[index++] = alpha;
-            // xy
-            vertices[index++] = a_w + c_h + tx;
-            vertices[index++] = d_h + b_w + ty;
-            // uv
-            vertices[index++] = uvX_RB;
-            vertices[index++] = uvY_RB;
-            // alpha
-            vertices[index++] = alpha;
-            // xy
-            vertices[index++] = c_h + tx;
-            vertices[index++] = d_h + ty;
-            // uv
-            vertices[index++] = uvX_LB;
-            vertices[index++] = uvY_LB;
-            // alpha
-            vertices[index++] = alpha;
-            // }
             this.vao.vertexIndex += 4;
             this.vao.indexIndex += 6;
 
@@ -759,9 +743,6 @@ namespace egret.web {
                 meshUVs, meshVertices, meshIndices, rotated);
         }
 
-
-
-
         public drawTextureByRenderNode(node: sys.TextNode | sys.GraphicsNode): void {
             let texture = node.$texture;
             let sourceWidth = node.$textureWidth;
@@ -800,8 +781,6 @@ namespace egret.web {
                 ty = offsetX * b + offsetY * d + ty;
             }
 
-            let rotated = false;
-
             let a1 = destWidth / sourceWidth;
             if (a1 != 1) {
                 a = a1 * a;
@@ -813,49 +792,43 @@ namespace egret.web {
                 d = d1 * d;
             }
 
-            let vertices = this.vao.vertices;
-            let index = this.vao.vertexIndex * this.vertSize;
+            let float32Array = this.vao.float32Array;
+            let uint32Array = this.vao.uint32Array;
+            let index = this.vao.vertexIndex * this.vao.vertSize;
             let alpha = buffer.globalAlpha;
             let a_w = a * sourceWidth;
             let b_w = b * sourceWidth;
             let c_h = c * sourceHeight;
             let d_h = d * sourceHeight;
 
-            let uvSize = 1;
-
             // xy
-            vertices[index++] = tx;
-            vertices[index++] = ty;
-
+            float32Array[index++] = tx;
+            float32Array[index++] = ty;
             // uv
-            vertices[index++] = 0;
-            vertices[index++] = 0;
+            uint32Array[index++] = 0;
             // alpha
-            vertices[index++] = alpha;
+            float32Array[index++] = alpha;
             // xy
-            vertices[index++] = a_w + tx;
-            vertices[index++] = b_w + ty;
+            float32Array[index++] = a_w + tx;
+            float32Array[index++] = b_w + ty;
             // uv
-            vertices[index++] = uvSize;
-            vertices[index++] = 0;
+            uint32Array[index++] = 65535;
             // alpha
-            vertices[index++] = alpha;
+            float32Array[index++] = alpha;
             // xy
-            vertices[index++] = a_w + c_h + tx;
-            vertices[index++] = d_h + b_w + ty;
+            float32Array[index++] = a_w + c_h + tx;
+            float32Array[index++] = d_h + b_w + ty;
             // uv
-            vertices[index++] = uvSize;
-            vertices[index++] = uvSize;
+            uint32Array[index++] = 65535 << 16 | 65535;
             // alpha
-            vertices[index++] = alpha;
+            float32Array[index++] = alpha;
             // xy
-            vertices[index++] = c_h + tx;
-            vertices[index++] = d_h + ty;
+            float32Array[index++] = c_h + tx;
+            float32Array[index++] = d_h + ty;
             // uv
-            vertices[index++] = 0;
-            vertices[index++] = uvSize;
+            uint32Array[index++] = 65535 << 16;
             // alpha
-            vertices[index++] = alpha;
+            float32Array[index++] = alpha;
 
             this.vao.vertexIndex += 4;
             this.vao.indexIndex += 6;
@@ -1070,13 +1043,13 @@ namespace egret.web {
 
                 for (let key in attribute) {
                     if (key === "aVertexPosition") {
-                        gl.vertexAttribPointer(attribute["aVertexPosition"].location, 2, gl.FLOAT, false, 5 * 4, 0);
+                        gl.vertexAttribPointer(attribute["aVertexPosition"].location, 2, gl.FLOAT, false, 4 * 4, 0);
                         gl.enableVertexAttribArray(attribute["aVertexPosition"].location);
                     } else if (key === "aTextureCoord") {
-                        gl.vertexAttribPointer(attribute["aTextureCoord"].location, 2, gl.FLOAT, false, 5 * 4, 2 * 4);
+                        gl.vertexAttribPointer(attribute["aTextureCoord"].location, 2, gl.UNSIGNED_SHORT, true, 4 * 4, 2 * 4);
                         gl.enableVertexAttribArray(attribute["aTextureCoord"].location);
                     } else if (key === "aColor") {
-                        gl.vertexAttribPointer(attribute["aColor"].location, 1, gl.FLOAT, false, 5 * 4, 4 * 4);
+                        gl.vertexAttribPointer(attribute["aColor"].location, 1, gl.FLOAT, false, 4 * 4, 3 * 4);
                         gl.enableVertexAttribArray(attribute["aColor"].location);
                     }
                 }
@@ -1184,8 +1157,6 @@ namespace egret.web {
 
             return size;
         }
-
-        private vertSize: number = 5;
 
         /**
          * 设置混色

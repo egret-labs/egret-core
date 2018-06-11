@@ -14952,6 +14952,8 @@ var egret;
                  */
                 _this.rotated = false;
                 _this.type = 6 /* NormalBitmapNode */;
+                //todo 保存到 Texture
+                _this.uvs = new Uint32Array(4);
                 return _this;
             }
             /**
@@ -14972,31 +14974,43 @@ var egret;
                 var _sourceY = self.sourceY / this.imageHeight;
                 var _sourceWidth;
                 var _sourceHeight;
+                var x0;
+                var x1;
+                var x2;
+                var x3;
+                var y0;
+                var y1;
+                var y2;
+                var y3;
                 if (this.rotated) {
                     //逆时针旋转
                     _sourceWidth = self.sourceH / this.imageWidth;
                     _sourceHeight = self.sourceW / this.imageHeight;
-                    self.uvX_LT = _sourceX + _sourceWidth;
-                    self.uvY_LT = _sourceY;
-                    self.uvX_RT = _sourceX + _sourceWidth;
-                    self.uvY_RT = _sourceY + _sourceHeight;
-                    self.uvX_RB = _sourceX;
-                    self.uvY_RB = _sourceY + _sourceHeight;
-                    self.uvX_LB = _sourceX;
-                    self.uvY_LB = _sourceY;
+                    x0 = _sourceX + _sourceWidth;
+                    y0 = _sourceY;
+                    x1 = _sourceX + _sourceWidth;
+                    y1 = _sourceY + _sourceHeight;
+                    x2 = _sourceX;
+                    y2 = _sourceY + _sourceHeight;
+                    x3 = _sourceX;
+                    y3 = _sourceY;
                 }
                 else {
                     _sourceWidth = self.sourceW / this.imageWidth;
                     _sourceHeight = self.sourceH / this.imageHeight;
-                    self.uvX_LT = _sourceX;
-                    self.uvY_LT = _sourceY;
-                    self.uvX_RT = _sourceX + _sourceWidth;
-                    self.uvY_RT = _sourceY;
-                    self.uvX_RB = _sourceX + _sourceWidth;
-                    self.uvY_RB = _sourceY + _sourceHeight;
-                    self.uvX_LB = _sourceX;
-                    self.uvY_LB = _sourceY + _sourceHeight;
+                    x0 = _sourceX;
+                    y0 = _sourceY;
+                    x1 = _sourceX + _sourceWidth;
+                    y1 = _sourceY;
+                    x2 = _sourceX + _sourceWidth;
+                    y2 = _sourceY + _sourceHeight;
+                    x3 = _sourceX;
+                    y3 = _sourceY + _sourceHeight;
                 }
+                this.uvs[0] = ((y0 * 65535) << 16) | (x0 * 65535);
+                this.uvs[1] = ((y1 * 65535) << 16) | (x1 * 65535);
+                this.uvs[2] = ((y2 * 65535) << 16) | (x2 * 65535);
+                this.uvs[3] = ((y3 * 65535) << 16) | (x3 * 65535);
             };
             /**
              * 在显示对象的$updateRenderNode()方法被调用前，自动清空自身的drawData数据。

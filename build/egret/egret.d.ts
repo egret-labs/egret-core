@@ -9811,14 +9811,7 @@ declare namespace egret.sys {
          * 会适应rotated进行调整
          * 存放uv四个顶点的信息
          */
-        uvX_LT: number;
-        uvX_RT: number;
-        uvX_LB: number;
-        uvX_RB: number;
-        uvY_LT: number;
-        uvY_RT: number;
-        uvY_LB: number;
-        uvY_RB: number;
+        uvs: Uint32Array;
         /**
          * 绘制一次位图
          */

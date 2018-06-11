@@ -38,16 +38,16 @@ namespace egret.web {
         private size: number = 2000;
         private vertexMaxSize: number = this.size * 4;
         private indicesMaxSize: number = this.size * 6;
-        private vertSize: number = 5;
+        public vertSize: number = 4;
 
-        private indices: Uint16Array = null;
-        private indicesForMesh: Uint16Array = null;
+        private indices: Uint16Array;
+        private indicesForMesh: Uint16Array;
 
         //为了实现drawNormalImage绘制，将这三个属性设为public
-        public vertices: Float32Array = null;
+        public float32Array: Float32Array;
+        public uint32Array: Uint32Array;
         public vertexIndex: number = 0;
         public indexIndex: number = 0;
-
 
         private hasMesh: boolean = false;
 
@@ -57,7 +57,9 @@ namespace egret.web {
             let numVerts = this.vertexMaxSize * this.vertSize;
             let numIndices = this.indicesMaxSize;
 
-            this.vertices = new Float32Array(numVerts);
+            const buffer = new ArrayBuffer(numVerts * 4);
+            this.float32Array = new Float32Array(buffer);
+            this.uint32Array = new Uint32Array(buffer);
             this.indices = new Uint16Array(numIndices);
             this.indicesForMesh = new Uint16Array(numIndices);
 
@@ -90,7 +92,7 @@ namespace egret.web {
          * 获取缓存完成的顶点数组
          */
         public getVertices(): any {
-            let view = this.vertices;
+            let view = this.float32Array;
             return view;
         }
 
@@ -182,7 +184,8 @@ namespace egret.web {
 
             if (meshVertices) {
                 // 计算索引位置与赋值
-                let vertices = this.vertices;
+                let float32Array = this.float32Array;
+                let uint32Array = this.uint32Array;
                 let index = this.vertexIndex * this.vertSize;
                 // 缓存顶点数组
                 let i = 0, iD = 0, l = 0;
@@ -194,19 +197,17 @@ namespace egret.web {
                     u = meshUVs[i];
                     v = meshUVs[i + 1];
                     // xy
-                    vertices[iD + 0] = a * x + c * y + tx;
-                    vertices[iD + 1] = b * x + d * y + ty;
+                    float32Array[iD + 0] = a * x + c * y + tx;
+                    float32Array[iD + 1] = b * x + d * y + ty;
                     // uv
                     if (rotated) {
-                        vertices[iD + 2] = (sourceX + (1.0 - v) * sourceHeight) / textureSourceWidth;
-                        vertices[iD + 3] = (sourceY + u * sourceWidth) / textureSourceHeight;
+                        uint32Array[iD + 2] = (((sourceY + u * sourceWidth) / textureSourceHeight * 65535) << 16) | ((sourceX + (1.0 - v) * sourceHeight) / textureSourceWidth * 65535)
                     }
                     else {
-                        vertices[iD + 2] = (sourceX + u * sourceWidth) / textureSourceWidth;
-                        vertices[iD + 3] = (sourceY + v * sourceHeight) / textureSourceHeight;
+                        uint32Array[iD + 2] = (((sourceY + v * sourceHeight) / textureSourceHeight * 65535) << 16) | ((sourceX + u * sourceWidth) / textureSourceWidth * 65535);
                     }
                     // alpha
-                    vertices[iD + 4] = alpha;
+                    float32Array[iD + 3] = alpha;
                 }
                 // 缓存索引数组
                 if (this.hasMesh) {
@@ -223,80 +224,73 @@ namespace egret.web {
                 let h = sourceHeight;
                 sourceX = sourceX / width;
                 sourceY = sourceY / height;
-                let vertices = this.vertices;
+                let float32Array = this.float32Array;
+                let uint32Array = this.uint32Array;
                 let index = this.vertexIndex * this.vertSize;
                 if (rotated) {
                     let temp = sourceWidth;
                     sourceWidth = sourceHeight / width;
                     sourceHeight = temp / height;
                     // xy
-                    vertices[index++] = tx;
-                    vertices[index++] = ty;
+                    float32Array[index++] = tx;
+                    float32Array[index++] = ty;
                     // uv
-                    vertices[index++] = sourceWidth + sourceX;
-                    vertices[index++] = sourceY;
+                    uint32Array[index++] = ((sourceY * 65535) << 16) | ((sourceWidth + sourceX) * 65535);
                     // alpha
-                    vertices[index++] = alpha;
+                    float32Array[index++] = alpha;
                     // xy
-                    vertices[index++] = a * w + tx;
-                    vertices[index++] = b * w + ty;
+                    float32Array[index++] = a * w + tx;
+                    float32Array[index++] = b * w + ty;
                     // uv
-                    vertices[index++] = sourceWidth + sourceX;
-                    vertices[index++] = sourceHeight + sourceY;
+                    uint32Array[index++] = (((sourceHeight + sourceY) * 65535) << 16) | ((sourceWidth + sourceX) * 65535);
                     // alpha
-                    vertices[index++] = alpha;
+                    float32Array[index++] = alpha;
                     // xy
-                    vertices[index++] = a * w + c * h + tx;
-                    vertices[index++] = d * h + b * w + ty;
+                    float32Array[index++] = a * w + c * h + tx;
+                    float32Array[index++] = d * h + b * w + ty;
                     // uv
-                    vertices[index++] = sourceX;
-                    vertices[index++] = sourceHeight + sourceY;
+                    uint32Array[index++] = (((sourceHeight + sourceY) * 65535) << 16) | (sourceX * 65535);
                     // alpha
-                    vertices[index++] = alpha;
+                    float32Array[index++] = alpha;
                     // xy
-                    vertices[index++] = c * h + tx;
-                    vertices[index++] = d * h + ty;
+                    float32Array[index++] = c * h + tx;
+                    float32Array[index++] = d * h + ty;
                     // uv
-                    vertices[index++] = sourceX;
-                    vertices[index++] = sourceY;
+                    uint32Array[index++] = ((sourceY * 65535) << 16) | (sourceX * 65535);
                     // alpha
-                    vertices[index++] = alpha;
+                    float32Array[index++] = alpha;
                 }
                 else {
                     sourceWidth = sourceWidth / width;
                     sourceHeight = sourceHeight / height;
                     // xy
-                    vertices[index++] = tx;
-                    vertices[index++] = ty;
+                    float32Array[index++] = tx;
+                    float32Array[index++] = ty;
                     // uv
-                    vertices[index++] = sourceX;
-                    vertices[index++] = sourceY;
+                    uint32Array[index++] = ((sourceY * 65535) << 16) | (sourceX * 65535);
                     // alpha
-                    vertices[index++] = alpha;
+                    float32Array[index++] = alpha;
                     // xy
-                    vertices[index++] = a * w + tx;
-                    vertices[index++] = b * w + ty;
+                    float32Array[index++] = a * w + tx;
+                    float32Array[index++] = b * w + ty;
                     // uv
-                    vertices[index++] = sourceWidth + sourceX;
-                    vertices[index++] = sourceY;
+                    uint32Array[index++] = ((sourceY * 65535) << 16) | ((sourceWidth + sourceX) * 65535);
                     // alpha
-                    vertices[index++] = alpha;
+                    float32Array[index++] = alpha;
                     // xy
-                    vertices[index++] = a * w + c * h + tx;
-                    vertices[index++] = d * h + b * w + ty;
+                    float32Array[index++] = a * w + c * h + tx;
+                    float32Array[index++] = d * h + b * w + ty;
                     // uv
-                    vertices[index++] = sourceWidth + sourceX;
-                    vertices[index++] = sourceHeight + sourceY;
+                    uint32Array[index++] = (((sourceHeight + sourceY) * 65535) << 16) | ((sourceWidth + sourceX) * 65535);
                     // alpha
-                    vertices[index++] = alpha;
+                    float32Array[index++] = alpha;
                     // xy
-                    vertices[index++] = c * h + tx;
-                    vertices[index++] = d * h + ty;
+                    float32Array[index++] = c * h + tx;
+                    float32Array[index++] = d * h + ty;
                     // uv
-                    vertices[index++] = sourceX;
-                    vertices[index++] = sourceHeight + sourceY;
+                    uint32Array[index++] = (((sourceHeight + sourceY) * 65535) << 16) | (sourceX * 65535);
                     // alpha
-                    vertices[index++] = alpha;
+                    float32Array[index++] = alpha;
                 }
                 // 缓存索引数组
                 if (this.hasMesh) {
