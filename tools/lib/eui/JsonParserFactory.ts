@@ -303,8 +303,9 @@ class JSONParseClass {
             let setProperty = [];
             let tempState = this.skinClass["$s"][state];
             if (this.skinClass["$s"][state]["$saI"]) {
-                for (let property of tempState["$saI"])
+                for (let property of tempState["$saI"]) {
                     setProperty.push(new eui.AddItems(property["target"], property["property"], property["position"], property["relativeTo"]));
+                }
             }
             if (this.skinClass["$s"][state]["$ssP"]) {
                 for (let property of tempState["$ssP"]) {
@@ -318,10 +319,10 @@ class JSONParseClass {
                         setProperty.push(new eui.SetStateProperty(this.target, property["templates"], property["chainIndex"], this.target[property["target"]], property["property"]));
                     }
                 }
-                states.push(new eui.State(state, setProperty))
             }
-            this.target["states"] = states;
+            states.push(new eui.State(state, setProperty))
         }
+        this.target["states"] = states;
     }
     private creatBinding() {
         if (this.skinClass["$b"] == undefined) return;

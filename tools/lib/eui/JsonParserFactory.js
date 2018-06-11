@@ -339,10 +339,10 @@ var JSONParseClass = /** @class */ (function () {
                         setProperty_1.push(new eui.SetStateProperty(this.target, property["templates"], property["chainIndex"], this.target[property["target"]], property["property"]));
                     }
                 }
-                states.push(new eui.State(state, setProperty_1));
             }
-            this.target["states"] = states;
+            states.push(new eui.State(state, setProperty_1));
         }
+        this.target["states"] = states;
     };
     JSONParseClass.prototype.creatBinding = function () {
         if (this.skinClass["$b"] == undefined)
