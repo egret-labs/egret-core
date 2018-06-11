@@ -4904,7 +4904,6 @@ var egret;
                     var data = this.drawData[this.drawDataLen] || {};
                     data.type = 0 /* TEXTURE */;
                     data.texture = texture;
-                    data.filter = filter;
                     data.count = count;
                     data.textureWidth = textureWidth;
                     data.textureHeight = textureHeight;
@@ -5141,6 +5140,7 @@ var egret;
                 data.key = key;
                 data.vertSource = vertSource;
                 data.fragSource = fragSource;
+                data.filter = filter;
                 this.drawData[this.drawDataLen] = data;
                 this.drawDataLen++;
                 this.lastDrawTextureData = null;
@@ -6384,9 +6384,9 @@ var egret;
                 }
                 var gl = this.context;
                 var program;
-                var filter = data.filter;
                 switch (data.type) {
                     case 10 /* CHANGE_PROGRAM */:
+                        var filter = data.filter;
                         program = web.EgretWebGLProgram.getProgram(gl, data.vertSource, data.fragSource, data.key);
                         this.activeProgram(gl, program);
                         this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
@@ -6397,13 +6397,11 @@ var egret;
                     case 1 /* PUSH_MASK */:
                         program = web.EgretWebGLProgram.getProgram(gl, web.EgretShaderLib.default_vert, web.EgretShaderLib.primitive_frag, "primitive");
                         this.activeProgram(gl, program);
-                        this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
                         offset += this.drawPushMaskElements(data, offset);
                         break;
                     case 2 /* POP_MASK */:
                         program = web.EgretWebGLProgram.getProgram(gl, web.EgretShaderLib.default_vert, web.EgretShaderLib.primitive_frag, "primitive");
                         this.activeProgram(gl, program);
-                        this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
                         offset += this.drawPopMaskElements(data, offset);
                         break;
                     case 3 /* BLEND */:
@@ -7233,10 +7231,8 @@ var egret;
                             savedMatrix.tx = m2.tx;
                             savedMatrix.ty = m2.ty;
                             buffer.transform(m.a, m.b, m.c, m.d, offsetX2, offsetY2);
-                            if (child.$hasAnchor) {
-                                offsetX2 = -child.$anchorOffsetX;
-                                offsetY2 = -child.$anchorOffsetY;
-                            }
+                            offsetX2 = -child.$anchorOffsetX;
+                            offsetY2 = -child.$anchorOffsetY;
                         }
                         else {
                             offsetX2 = offsetX + child.$x;
