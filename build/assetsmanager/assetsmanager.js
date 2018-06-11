@@ -322,6 +322,9 @@ var RES;
             return this.getResource(key, true).type;
         };
         ResourceConfig.prototype.addResourceData = function (data) {
+            if (RES.hasRes(data.name)) {
+                return;
+            }
             if (!data.type) {
                 data.type = this.__temp__get__type__via__url(data.url);
             }
