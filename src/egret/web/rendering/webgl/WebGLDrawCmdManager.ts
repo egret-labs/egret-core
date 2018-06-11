@@ -85,7 +85,6 @@ namespace egret.web {
                 let data = this.drawData[this.drawDataLen] || {};
                 data.type = DRAWABLE_TYPE.TEXTURE;
                 data.texture = texture;
-                data.filter = filter;
                 data.count = count;
                 data.textureWidth = textureWidth;
                 data.textureHeight = textureHeight;
@@ -157,7 +156,7 @@ namespace egret.web {
                 let data = this.drawData[i];
 
                 if (data) {
-                    if (data.type == DRAWABLE_TYPE.TEXTURE ) {
+                    if (data.type == DRAWABLE_TYPE.TEXTURE) {
                         drawState = true;
                     }
 
@@ -336,6 +335,7 @@ namespace egret.web {
             data.key = key;
             data.vertSource = vertSource;
             data.fragSource = fragSource;
+            data.filter = filter;
             this.drawData[this.drawDataLen] = data;
             this.drawDataLen++;
             this.lastDrawTextureData = null;

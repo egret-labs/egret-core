@@ -40,7 +40,7 @@ namespace egret.web {
      */
     export class WebGLRenderer implements sys.SystemRenderer {
 
-        public $currentBuffer:WebGLRenderBuffer;
+        public $currentBuffer: WebGLRenderBuffer;
 
         public constructor() {
 
@@ -96,7 +96,7 @@ namespace egret.web {
          * @private
          * 绘制一个显示对象
          */
-        private drawDisplayObject(displayObject: DisplayObject,  offsetX: number, offsetY: number, isStage?: boolean): number {
+        private drawDisplayObject(displayObject: DisplayObject, offsetX: number, offsetY: number, isStage?: boolean): number {
             let buffer = this.$currentBuffer;
             let drawCalls = 0;
             let node: sys.RenderNode;
@@ -175,10 +175,8 @@ namespace egret.web {
                         savedMatrix.tx = m2.tx;
                         savedMatrix.ty = m2.ty;
                         buffer.transform(m.a, m.b, m.c, m.d, offsetX2, offsetY2);
-                        if (child.$hasAnchor) {
-                            offsetX2 = -child.$anchorOffsetX;
-                            offsetY2 = -child.$anchorOffsetY;
-                        }
+                        offsetX2 = -child.$anchorOffsetX;
+                        offsetY2 = -child.$anchorOffsetY;
                     }
                     else {
                         offsetX2 = offsetX + child.$x;

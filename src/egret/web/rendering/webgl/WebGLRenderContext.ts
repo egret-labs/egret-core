@@ -982,10 +982,11 @@ namespace egret.web {
 
             let gl = this.context;
             let program: EgretWebGLProgram;
-            let filter = data.filter;
+
 
             switch (data.type) {
                 case DRAWABLE_TYPE.CHANGE_PROGRAM:
+                    let filter = data.filter;
                     program = EgretWebGLProgram.getProgram(gl, data.vertSource, data.fragSource, data.key);
                     this.activeProgram(gl, program);
                     this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
@@ -1000,16 +1001,12 @@ namespace egret.web {
 
                     program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.primitive_frag, "primitive");
                     this.activeProgram(gl, program);
-                    this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
-
                     offset += this.drawPushMaskElements(data, offset);
                     break;
                 case DRAWABLE_TYPE.POP_MASK:
 
                     program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.primitive_frag, "primitive");
                     this.activeProgram(gl, program);
-                    this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
-
                     offset += this.drawPopMaskElements(data, offset);
                     break;
                 case DRAWABLE_TYPE.BLEND:
