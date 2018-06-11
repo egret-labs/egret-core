@@ -28,6 +28,7 @@ class CompileEgretEngine implements egret.Command {
         ];
 
         let excludeList = [
+            FileUtil.escapePath(path.join(outputDir, "egretia-sdk")),
             FileUtil.escapePath(path.join(outputDir, "egret-facebook")),
             FileUtil.escapePath(path.join(outputDir, "promise")),
             FileUtil.escapePath(path.join(outputDir, "resourcemanager")),

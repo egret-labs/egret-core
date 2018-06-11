@@ -48,7 +48,7 @@ var UpgradeCommand = /** @class */ (function () {
         var versionArr = version.split(".");
         var majorVersion = parseInt(versionArr[0]);
         var middleVersion = parseInt(versionArr[1]);
-        if (majorVersion == 5 && middleVersion == 1) {
+        if (majorVersion == 5 && middleVersion != 0) {
             this.run();
         }
         else {
@@ -69,7 +69,7 @@ var UpgradeCommand = /** @class */ (function () {
                         upgradeConfigArr = [
                             { "v": "5.1.1", command: Upgrade_5_1_1 },
                             { "v": "5.1.2", command: Upgrade_5_1_2 },
-                            { "v": "5.2.1" }
+                            { "v": "5.2.2" }
                         ];
                         _a.label = 1;
                     case 1:
