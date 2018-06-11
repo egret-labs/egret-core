@@ -35,6 +35,8 @@ export class WxgamePlugin implements plugins.Command {
                 content = "var egret = window.egret;" + content;
                 if (filename.indexOf('egret3d.js') >= 0 || filename.indexOf("egret3d.min.js") >= 0) {
                     content = " var RES = window.RES;" + content;
+                    if (filename.indexOf("egret3d.min.js") >= 0)
+                        content = content.replace(new RegExp("e.web", 'g'), "e.wxgame");
                     content = content.replace(new RegExp('egret.web', 'g'), "egret.wxgame");
                 }
                 if (filename == 'main.js') {
