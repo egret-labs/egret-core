@@ -28,27 +28,30 @@ export class TextureMergerPlugin implements Plugin {
 
     private tmprojects: string[] = [];
 
-    private removedList: string[] = [];
+    private removedList: {} = {};
 
     private configs: { [tmprojectFilename: string]: string[] } = {};
 
     constructor(private options: TextureMergerOptions) {
     }
-
+    onStart(pluginContext: PluginContext) {
+        let projectDir = pluginContext.projectRoot;
+        this.tmprojects = FileUtil.search(projectDir, 'tmproject');
+        for (let temprojectUrl of this.tmprojects) {
+            let temProject = FileUtil.readJSONSync(temprojectUrl);
+            const tmprojectDir = path.dirname(temprojectUrl);
+            const imageFiles = temProject.files.map(f => {
+                const globalPath = path.resolve(pluginContext.projectRoot, tmprojectDir, f);
+                let pa = path.relative(pluginContext.projectRoot, globalPath).split("\\").join("/");
+                this.removedList[pa] = true;
+                return pa;
+            })
+            this.configs[temprojectUrl] = imageFiles;
+        }
+    }
     async onFile(file: File): Promise<File | null> {
         const extname = file.extname;
-        if (extname == '.tmproject') {
-            const filename = file.origin;
-            this.tmprojects.push(filename);
-            const data: TextureMergerProjectConfig = JSON.parse(file.contents.toString());
-
-            const tmprojectDir = path.dirname(filename);
-            const imageFiles = data.files.map(f => {
-                const globalPath = path.resolve(file.base, tmprojectDir, f);
-                return path.relative(file.base, globalPath).split("\\").join("/");
-            })
-            this.configs[filename] = imageFiles;
-            this.removedList = this.removedList.concat(imageFiles);
+        if (this.removedList[file.origin] || extname == ".tmproject") {
             return null;
         }
         else {
@@ -58,21 +61,17 @@ export class TextureMergerPlugin implements Plugin {
 
     async onFinish(pluginContext: PluginContext): Promise<void> {
         const options = this.options;
-
         let texture_merger_path = await getTextureMergerPath()
         const projectRoot = egret.args.projectDir;
         const tempDir = path.join(tmpdir(), 'egret/texturemerger', Math.random().toString());
         FileUtil.createDirectory(tempDir);
-
-        for (let tm of this.tmprojects) {
-            const imageList = this.configs[tm];
-            const tmprojectFilePath = path.join(pluginContext.projectRoot, tm)//options.path;
-            const tmprojectDir = path.dirname(tm);
+        for (let tmprojectFilePath of this.tmprojects) {
+            const imageList = this.configs[tmprojectFilePath];
+            const tmprojectDir = path.dirname(tmprojectFilePath);
             const filename = path.basename(tmprojectFilePath, ".tmproject");
             const jsonPath = path.join(tempDir, filename + ".json");
             const pngPath = path.join(tempDir, filename + ".png");
             try {
-                // const result = await shell(texture_merger_path, ["-p", folder, "-o", jsonPath]);
                 const result = await shell(texture_merger_path, ["-cp", tmprojectFilePath, "-o", tempDir]);
                 const jsonBuffer = await FileUtil.readFileAsync(jsonPath, null) as any as NodeBuffer;
                 const pngBuffer = await FileUtil.readFileAsync(pngPath, null) as any as NodeBuffer;
@@ -82,16 +81,15 @@ export class TextureMergerPlugin implements Plugin {
             catch (e) {
                 if (e.code) {
                     console.error(`TextureMerger 执行错误，错误码：${e.code}`);
+                    // console.log(`${e.message}`)
                     console.error(`执行命令:${e.path} ${e.args.join(" ")}`)
                 }
                 else {
                     console.error(e);
                 }
-
             }
         }
         FileUtil.remove(tempDir);
-
     }
 
 
@@ -104,7 +102,7 @@ function getTextureMergerPath() {
     const toolsList = launcher.getLauncherLibrary().getInstalledTools();
     const tm = toolsList.filter(m => {
         return m.name == "Texture Merger";
-    }) [0];
+    })[0];
     if (!tm) {
         throw '请安装 Texture Merger'; //i18n
     }
