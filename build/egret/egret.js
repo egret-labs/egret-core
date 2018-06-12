@@ -15649,10 +15649,8 @@ var egret;
                         offsetY2 = offsetY + child.$y;
                         context.save();
                         context.transform(m.a, m.b, m.c, m.d, offsetX2, offsetY2);
-                        if (child.$hasAnchor) {
-                            offsetX2 = -child.$anchorOffsetX;
-                            offsetY2 = -child.$anchorOffsetY;
-                        }
+                        offsetX2 = -child.$anchorOffsetX;
+                        offsetY2 = -child.$anchorOffsetY;
                     }
                     else {
                         offsetX2 = offsetX + child.$x;
