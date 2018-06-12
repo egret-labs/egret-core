@@ -430,7 +430,10 @@ module RES {
             return this.getResource(key, true).type;
         }
 
-        public addResourceData(data: { name: string, type?: string, url: string, root?:string }): void {
+        public addResourceData(data: { name: string, type?: string, url: string, root?: string }): void {
+            if (RES.hasRes(data.name)) {
+                return;
+            }
             if (!data.type) {
                 data.type = this.__temp__get__type__via__url(data.url);
             }

@@ -9189,6 +9189,7 @@ var egret;
                     j++;
                 }
             }
+            this.onPropertyChange();
         };
         /**
          * @private
@@ -16968,7 +16969,7 @@ var egret;
          * @platform Web,Native
          * @language zh_CN
          */
-        Capabilities.engineVersion = "5.1.12";
+        Capabilities.engineVersion = "5.2.2";
         /***
          * current render mode.
          * @type {string}

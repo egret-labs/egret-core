@@ -48,7 +48,7 @@ var UpgradeCommand = /** @class */ (function () {
         var versionArr = version.split(".");
         var majorVersion = parseInt(versionArr[0]);
         var middleVersion = parseInt(versionArr[1]);
-        if (majorVersion == 5 && middleVersion == 1) {
+        if (majorVersion == 5 && middleVersion != 0) {
             this.run();
         }
         else {
