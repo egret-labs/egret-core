@@ -1,6 +1,6 @@
 /// <reference path="../lib/types.d.ts" />
 var service = require("../service/index");
-var Quit = /** @class */ (function () {
+var Quit = (function () {
     function Quit() {
     }
     Quit.prototype.execute = function () {

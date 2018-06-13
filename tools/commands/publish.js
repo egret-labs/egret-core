@@ -38,7 +38,7 @@ var utils = require("../lib/utils");
 var FileUtil = require("../lib/FileUtil");
 var PublishResourceAction_1 = require("../actions/PublishResourceAction");
 var EgretProject = require("../project");
-var Publish = /** @class */ (function () {
+var Publish = (function () {
     function Publish() {
     }
     Publish.prototype.execute = function () {

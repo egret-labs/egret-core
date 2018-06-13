@@ -41,7 +41,7 @@ var Compiler = require("../actions/Compiler");
 var utils = require("../lib/utils");
 var compiler = new Compiler.Compiler();
 var defaultDefines = { DEBUG: true, RELEASE: false };
-var CompilePlugin = /** @class */ (function () {
+var CompilePlugin = (function () {
     function CompilePlugin(options) {
         this.options = options;
         if (!this.options) {
@@ -89,7 +89,7 @@ var CompilePlugin = /** @class */ (function () {
     return CompilePlugin;
 }());
 exports.CompilePlugin = CompilePlugin;
-var UglifyPlugin = /** @class */ (function () {
+var UglifyPlugin = (function () {
     function UglifyPlugin(param) {
         this.codes = {};
         this.matchers = param;
