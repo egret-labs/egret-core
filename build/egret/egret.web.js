@@ -4876,6 +4876,89 @@ var egret;
 (function (egret) {
     var web;
     (function (web) {
+        var MultiTextureShader;
+        (function (MultiTextureShader) {
+            MultiTextureShader.vertexSrc = "attribute vec2 aVertexPosition;" +
+                "attribute vec2 aTextureCoord;" +
+                "attribute float aColor;" +
+                "attribute float aTextureId;" +
+                "uniform vec2 projectionVector;" +
+                "varying vec2 vTextureCoord;" +
+                "varying vec4 vColor;" +
+                "varying float vTextureId;" +
+                "const vec2 center = vec2(-1.0, 1.0);" +
+                "void main(void) {" +
+                "   gl_Position = vec4( (aVertexPosition / projectionVector) + center , 0.0, 1.0);" +
+                "   vTextureCoord = aTextureCoord;" +
+                "   vTextureId = aTextureId;" +
+                "   vColor = vec4(aColor, aColor, aColor, aColor);" +
+                "}";
+            var frag = "precision lowp float;" +
+                "varying vec2 vTextureCoord;" +
+                "varying vec4 vColor;" +
+                "varying float vTextureId;" +
+                "uniform sampler2D uSamplers[%numTextures%];" +
+                "void main(void) {" +
+                "    vec4 color;" +
+                "    float textureId = vTextureId;" +
+                "    %loop%" +
+                "    gl_FragColor = color * vColor;" +
+                "}";
+            MultiTextureShader.init = function (numTextures) {
+                MultiTextureShader.fragmentSrc = frag.replace(/%numTextures%/gi, numTextures + "");
+                var loop = "";
+                for (var i = 0; i < numTextures; ++i) {
+                    if (i > 0) {
+                        loop += "else ";
+                    }
+                    if (i < numTextures - 1) {
+                        loop += "if(textureId == " + i + ".0)";
+                    }
+                    loop += " {";
+                    loop += "color = texture2D(uSamplers[" + i + "], vTextureCoord);";
+                    loop += "}";
+                }
+                MultiTextureShader.fragmentSrc = MultiTextureShader.fragmentSrc.replace(/%loop%/gi, loop);
+                MultiTextureShader.sampleValues = [];
+                for (var i = 0; i < numTextures; i++) {
+                    MultiTextureShader.sampleValues.push(i);
+                }
+            };
+        })(MultiTextureShader = web.MultiTextureShader || (web.MultiTextureShader = {}));
+    })(web = egret.web || (egret.web = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var web;
+    (function (web) {
         /**
          * @private
          * 绘制指令管理器
@@ -4888,6 +4971,7 @@ var egret;
                  */
                 this.drawData = {};
                 this.drawDataLen = 0;
+                this.currentGroupLength = egret.WebGLUtils.$multiTextureSize;
             }
             /**
              * 压入绘制texture指令
@@ -4910,8 +4994,58 @@ var egret;
                     this.drawData[this.drawDataLen] = data;
                     this.drawDataLen++;
                     this.lastDrawTextureData = null;
+                    this.currentGroupLength = egret.WebGLUtils.$multiTextureSize;
+                    if (this.lastTextureGroupData) {
+                        var textureGroup = this.lastTextureGroupData.textureGroup;
+                        var textureGroupLength = textureGroup.length;
+                        for (var i = 0; i < textureGroupLength; ++i) {
+                            delete textureGroup[i].groupIndex;
+                        }
+                    }
+                    this.lastTextureGroupData = null;
+                    this.lastDrawElementsData = null;
                 }
                 else {
+                    if (egret.WebGLUtils.$multiTextureSize > 1) {
+                        if (this.lastProgramKey !== "texture") {
+                            this.pushChangeProgram("texture");
+                        }
+                        //添加提交纹理命令
+                        if (this.currentGroupLength == egret.WebGLUtils.$multiTextureSize || !this.lastTextureGroupData) {
+                            this.currentGroupLength = 0;
+                            var data = this.drawData[this.drawDataLen] || {};
+                            data.type = 11 /* ACTIVE_TEXTURE */;
+                            data.textureGroup = [];
+                            this.drawData[this.drawDataLen] = data;
+                            if (this.lastTextureGroupData) {
+                                var textureGroup = this.lastTextureGroupData.textureGroup;
+                                var textureGroupLength = textureGroup.length;
+                                for (var i = 0; i < textureGroupLength; ++i) {
+                                    delete textureGroup[i].groupIndex;
+                                }
+                            }
+                            this.lastTextureGroupData = data;
+                            this.lastDrawElementsData = null;
+                            this.drawDataLen++;
+                        }
+                        if (texture["groupIndex"] == undefined) {
+                            var data = this.lastTextureGroupData;
+                            texture["groupIndex"] = this.currentGroupLength;
+                            this.currentGroupLength++;
+                            data.textureGroup.push(texture);
+                        }
+                        //添加绘制命令
+                        if (!this.lastDrawElementsData) {
+                            var data = this.drawData[this.drawDataLen] || {};
+                            data.type = 12 /* DRAW_ELEMENTS */;
+                            data.count = 0;
+                            this.drawData[this.drawDataLen] = data;
+                            this.lastDrawElementsData = data;
+                            this.drawDataLen++;
+                        }
+                        this.lastDrawElementsData.count += count;
+                        return;
+                    }
                     if (this.lastDrawTextureData == null || texture != this.lastDrawTextureData.texture) {
                         if (this.lastProgramKey !== "texture") {
                             this.pushChangeProgram("texture");
@@ -4936,6 +5070,16 @@ var egret;
                 this.drawData[this.drawDataLen] = data;
                 this.drawDataLen++;
                 this.lastDrawTextureData = null;
+                this.currentGroupLength = egret.WebGLUtils.$multiTextureSize;
+                if (this.lastTextureGroupData) {
+                    var textureGroup = this.lastTextureGroupData.textureGroup;
+                    var textureGroupLength = textureGroup.length;
+                    for (var i = 0; i < textureGroupLength; ++i) {
+                        delete textureGroup[i].groupIndex;
+                    }
+                }
+                this.lastTextureGroupData = null;
+                this.lastDrawElementsData = null;
             };
             /**
              * 压入pushMask指令
@@ -4948,6 +5092,16 @@ var egret;
                 this.drawData[this.drawDataLen] = data;
                 this.drawDataLen++;
                 this.lastDrawTextureData = null;
+                this.currentGroupLength = egret.WebGLUtils.$multiTextureSize;
+                if (this.lastTextureGroupData) {
+                    var textureGroup = this.lastTextureGroupData.textureGroup;
+                    var textureGroupLength = textureGroup.length;
+                    for (var i = 0; i < textureGroupLength; ++i) {
+                        delete textureGroup[i].groupIndex;
+                    }
+                }
+                this.lastTextureGroupData = null;
+                this.lastDrawElementsData = null;
             };
             /**
              * 压入popMask指令
@@ -4960,6 +5114,16 @@ var egret;
                 this.drawData[this.drawDataLen] = data;
                 this.drawDataLen++;
                 this.lastDrawTextureData = null;
+                this.currentGroupLength = egret.WebGLUtils.$multiTextureSize;
+                if (this.lastTextureGroupData) {
+                    var textureGroup = this.lastTextureGroupData.textureGroup;
+                    var textureGroupLength = textureGroup.length;
+                    for (var i = 0; i < textureGroupLength; ++i) {
+                        delete textureGroup[i].groupIndex;
+                    }
+                }
+                this.lastTextureGroupData = null;
+                this.lastDrawElementsData = null;
             };
             /**
              * 压入混色指令
@@ -4971,7 +5135,7 @@ var egret;
                 for (var i = len - 1; i >= 0; i--) {
                     var data = this.drawData[i];
                     if (data) {
-                        if (data.type == 0 /* TEXTURE */) {
+                        if (data.type == 0 /* TEXTURE */ || data.type == 12 /* DRAW_ELEMENTS */) {
                             drawState = true;
                         }
                         // 如果与上一次blend操作之间无有效绘图，上一次操作无效
@@ -4996,6 +5160,16 @@ var egret;
                 this.drawData[this.drawDataLen] = _data;
                 this.drawDataLen++;
                 this.lastDrawTextureData = null;
+                this.currentGroupLength = egret.WebGLUtils.$multiTextureSize;
+                if (this.lastTextureGroupData) {
+                    var textureGroup = this.lastTextureGroupData.textureGroup;
+                    var textureGroupLength = textureGroup.length;
+                    for (var i = 0; i < textureGroupLength; ++i) {
+                        delete textureGroup[i].groupIndex;
+                    }
+                }
+                this.lastTextureGroupData = null;
+                this.lastDrawElementsData = null;
             };
             /*
              * 压入resize render target命令
@@ -5009,6 +5183,16 @@ var egret;
                 this.drawData[this.drawDataLen] = data;
                 this.drawDataLen++;
                 this.lastDrawTextureData = null;
+                this.currentGroupLength = egret.WebGLUtils.$multiTextureSize;
+                if (this.lastTextureGroupData) {
+                    var textureGroup = this.lastTextureGroupData.textureGroup;
+                    var textureGroupLength = textureGroup.length;
+                    for (var i = 0; i < textureGroupLength; ++i) {
+                        delete textureGroup[i].groupIndex;
+                    }
+                }
+                this.lastTextureGroupData = null;
+                this.lastDrawElementsData = null;
             };
             /*
              * 压入clear color命令
@@ -5019,6 +5203,16 @@ var egret;
                 this.drawData[this.drawDataLen] = data;
                 this.drawDataLen++;
                 this.lastDrawTextureData = null;
+                this.currentGroupLength = egret.WebGLUtils.$multiTextureSize;
+                if (this.lastTextureGroupData) {
+                    var textureGroup = this.lastTextureGroupData.textureGroup;
+                    var textureGroupLength = textureGroup.length;
+                    for (var i = 0; i < textureGroupLength; ++i) {
+                        delete textureGroup[i].groupIndex;
+                    }
+                }
+                this.lastTextureGroupData = null;
+                this.lastDrawElementsData = null;
             };
             /**
              * 压入激活buffer命令
@@ -5056,6 +5250,16 @@ var egret;
                 this.drawData[this.drawDataLen] = _data;
                 this.drawDataLen++;
                 this.lastDrawTextureData = null;
+                this.currentGroupLength = egret.WebGLUtils.$multiTextureSize;
+                if (this.lastTextureGroupData) {
+                    var textureGroup = this.lastTextureGroupData.textureGroup;
+                    var textureGroupLength = textureGroup.length;
+                    for (var i = 0; i < textureGroupLength; ++i) {
+                        delete textureGroup[i].groupIndex;
+                    }
+                }
+                this.lastTextureGroupData = null;
+                this.lastDrawElementsData = null;
             };
             /*
              * 压入enabel scissor命令
@@ -5070,6 +5274,16 @@ var egret;
                 this.drawData[this.drawDataLen] = data;
                 this.drawDataLen++;
                 this.lastDrawTextureData = null;
+                this.currentGroupLength = egret.WebGLUtils.$multiTextureSize;
+                if (this.lastTextureGroupData) {
+                    var textureGroup = this.lastTextureGroupData.textureGroup;
+                    var textureGroupLength = textureGroup.length;
+                    for (var i = 0; i < textureGroupLength; ++i) {
+                        delete textureGroup[i].groupIndex;
+                    }
+                }
+                this.lastTextureGroupData = null;
+                this.lastDrawElementsData = null;
             };
             /*
              * 压入disable scissor命令
@@ -5080,42 +5294,75 @@ var egret;
                 this.drawData[this.drawDataLen] = data;
                 this.drawDataLen++;
                 this.lastDrawTextureData = null;
+                this.currentGroupLength = egret.WebGLUtils.$multiTextureSize;
+                if (this.lastTextureGroupData) {
+                    var textureGroup = this.lastTextureGroupData.textureGroup;
+                    var textureGroupLength = textureGroup.length;
+                    for (var i = 0; i < textureGroupLength; ++i) {
+                        delete textureGroup[i].groupIndex;
+                    }
+                }
+                this.lastTextureGroupData = null;
+                this.lastDrawElementsData = null;
             };
             /**
              * 清空命令数组
              */
             WebGLDrawCmdManager.prototype.clear = function () {
+                if (this.lastTextureGroupData) {
+                    var textureGroup = this.lastTextureGroupData.textureGroup;
+                    var textureGroupLength = textureGroup.length;
+                    for (var i = 0; i < textureGroupLength; ++i) {
+                        delete textureGroup[i].groupIndex;
+                    }
+                }
                 for (var i = 0; i < this.drawDataLen; i++) {
                     var data = this.drawData[i];
                     if (!data)
                         continue;
-                    data.type = 0;
-                    data.count = 0;
+                    data.type = null;
+                    data.count = null;
                     data.texture = null;
                     data.filter = null;
                     data.uv = null;
-                    data.value = "";
+                    data.value = null;
                     data.buffer = null;
-                    data.width = 0;
-                    data.height = 0;
+                    data.width = null;
+                    data.height = null;
                     data.vertSource = null;
                     data.fragSource = null;
                     data.key = null;
+                    data.textureGroup = null;
                 }
                 this.drawDataLen = 0;
                 this.lastDrawTextureData = null;
                 this.lastProgramKey = null;
+                this.currentGroupLength = egret.WebGLUtils.$multiTextureSize;
+                this.lastTextureGroupData = null;
+                this.lastDrawElementsData = null;
             };
             /**
              * 压入切换shader programe命令
              */
             WebGLDrawCmdManager.prototype.pushChangeProgram = function (type, filter) {
                 var key;
-                var vertSource = web.EgretShaderLib.default_vert;
+                var useMultiTexture = egret.WebGLUtils.$multiTextureSize > 1;
+                var vertSource;
+                if (useMultiTexture) {
+                    vertSource = web.MultiTextureShader.vertexSrc;
+                }
+                else {
+                    vertSource = web.EgretShaderLib.default_vert;
+                }
                 var fragSource = web.EgretShaderLib.blur_frag;
                 if (type === "texture") {
                     key = "texture";
-                    fragSource = web.EgretShaderLib.texture_frag;
+                    if (useMultiTexture) {
+                        fragSource = web.MultiTextureShader.fragmentSrc;
+                    }
+                    else {
+                        fragSource = web.EgretShaderLib.texture_frag;
+                    }
                 }
                 else if (type === "custom") {
                     key = filter.$shaderKey;
@@ -5144,6 +5391,16 @@ var egret;
                 this.drawData[this.drawDataLen] = data;
                 this.drawDataLen++;
                 this.lastDrawTextureData = null;
+                this.currentGroupLength = egret.WebGLUtils.$multiTextureSize;
+                if (this.lastTextureGroupData) {
+                    var textureGroup = this.lastTextureGroupData.textureGroup;
+                    var textureGroupLength = textureGroup.length;
+                    for (var i = 0; i < textureGroupLength; ++i) {
+                        delete textureGroup[i].groupIndex;
+                    }
+                }
+                this.lastTextureGroupData = null;
+                this.lastDrawElementsData = null;
             };
             return WebGLDrawCmdManager;
         }());
@@ -5197,6 +5454,9 @@ var egret;
                 this.vertexIndex = 0;
                 this.indexIndex = 0;
                 this.hasMesh = false;
+                if (egret.WebGLUtils.$multiTextureSize > 1) {
+                    this.vertSize = 5;
+                }
                 var numVerts = this.vertexMaxSize * this.vertSize;
                 var numIndices = this.indicesMaxSize;
                 var buffer = new ArrayBuffer(numVerts * 4);
@@ -5274,7 +5534,8 @@ var egret;
             /**
              * 缓存一组顶点
              */
-            WebGLVertexArrayObject.prototype.cacheArrays = function (buffer, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices, rotated) {
+            WebGLVertexArrayObject.prototype.cacheArrays = function (buffer, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices, rotated, groupIndex) {
+                if (groupIndex === void 0) { groupIndex = 0; }
                 var alpha = buffer.globalAlpha;
                 //计算出绘制矩阵，之后把矩阵还原回之前的
                 var locWorldTransform = buffer.globalMatrix;
@@ -5363,6 +5624,10 @@ var egret;
                         uint32Array[index++] = ((sourceY * 65535) << 16) | ((sourceWidth + sourceX) * 65535);
                         // alpha
                         float32Array[index++] = alpha;
+                        if (egret.WebGLUtils.$multiTextureSize > 1) {
+                            // groupIndex
+                            float32Array[index++] = groupIndex;
+                        }
                         // xy
                         float32Array[index++] = a * w + tx;
                         float32Array[index++] = b * w + ty;
@@ -5370,6 +5635,10 @@ var egret;
                         uint32Array[index++] = (((sourceHeight + sourceY) * 65535) << 16) | ((sourceWidth + sourceX) * 65535);
                         // alpha
                         float32Array[index++] = alpha;
+                        if (egret.WebGLUtils.$multiTextureSize > 1) {
+                            // groupIndex
+                            float32Array[index++] = groupIndex;
+                        }
                         // xy
                         float32Array[index++] = a * w + c * h + tx;
                         float32Array[index++] = d * h + b * w + ty;
@@ -5377,6 +5646,10 @@ var egret;
                         uint32Array[index++] = (((sourceHeight + sourceY) * 65535) << 16) | (sourceX * 65535);
                         // alpha
                         float32Array[index++] = alpha;
+                        if (egret.WebGLUtils.$multiTextureSize > 1) {
+                            // groupIndex
+                            float32Array[index++] = groupIndex;
+                        }
                         // xy
                         float32Array[index++] = c * h + tx;
                         float32Array[index++] = d * h + ty;
@@ -5384,6 +5657,10 @@ var egret;
                         uint32Array[index++] = ((sourceY * 65535) << 16) | (sourceX * 65535);
                         // alpha
                         float32Array[index++] = alpha;
+                        if (egret.WebGLUtils.$multiTextureSize > 1) {
+                            // groupIndex
+                            float32Array[index++] = groupIndex;
+                        }
                     }
                     else {
                         sourceWidth = sourceWidth / width;
@@ -5395,6 +5672,10 @@ var egret;
                         uint32Array[index++] = ((sourceY * 65535) << 16) | (sourceX * 65535);
                         // alpha
                         float32Array[index++] = alpha;
+                        if (egret.WebGLUtils.$multiTextureSize > 1) {
+                            // groupIndex
+                            float32Array[index++] = groupIndex;
+                        }
                         // xy
                         float32Array[index++] = a * w + tx;
                         float32Array[index++] = b * w + ty;
@@ -5402,6 +5683,10 @@ var egret;
                         uint32Array[index++] = ((sourceY * 65535) << 16) | ((sourceWidth + sourceX) * 65535);
                         // alpha
                         float32Array[index++] = alpha;
+                        if (egret.WebGLUtils.$multiTextureSize > 1) {
+                            // groupIndex
+                            float32Array[index++] = groupIndex;
+                        }
                         // xy
                         float32Array[index++] = a * w + c * h + tx;
                         float32Array[index++] = d * h + b * w + ty;
@@ -5409,6 +5694,10 @@ var egret;
                         uint32Array[index++] = (((sourceHeight + sourceY) * 65535) << 16) | ((sourceWidth + sourceX) * 65535);
                         // alpha
                         float32Array[index++] = alpha;
+                        if (egret.WebGLUtils.$multiTextureSize > 1) {
+                            // groupIndex
+                            float32Array[index++] = groupIndex;
+                        }
                         // xy
                         float32Array[index++] = c * h + tx;
                         float32Array[index++] = d * h + ty;
@@ -5416,6 +5705,10 @@ var egret;
                         uint32Array[index++] = (((sourceHeight + sourceY) * 65535) << 16) | (sourceX * 65535);
                         // alpha
                         float32Array[index++] = alpha;
+                        if (egret.WebGLUtils.$multiTextureSize > 1) {
+                            // groupIndex
+                            float32Array[index++] = groupIndex;
+                        }
                     }
                     // 缓存索引数组
                     if (this.hasMesh) {
@@ -5502,6 +5795,9 @@ var egret;
                 this.height = height;
                 if (this.frameBuffer) {
                     // 设置texture尺寸
+                    if (egret.WebGLUtils.$multiTextureSize > 1) {
+                        gl.activeTexture(gl.TEXTURE0);
+                    }
                     gl.bindTexture(gl.TEXTURE_2D, this.texture);
                     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
                     // gl.bindTexture(gl.TEXTURE_2D, null);
@@ -5547,6 +5843,9 @@ var egret;
                 var gl = this.gl;
                 var texture = gl.createTexture();
                 texture["glContext"] = gl;
+                if (egret.WebGLUtils.$multiTextureSize > 1) {
+                    gl.activeTexture(gl.TEXTURE0);
+                }
                 gl.bindTexture(gl.TEXTURE_2D, texture);
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.width, this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
@@ -5781,6 +6080,11 @@ var egret;
                 this.getWebGLContext();
                 var gl = this.context;
                 this.$maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+                var maxNumTextures = Math.min(gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS), egret.WebGLUtils.$multiTextureSize);
+                egret.WebGLUtils.$multiTextureSize = maxNumTextures;
+                if (maxNumTextures > 1) {
+                    web.MultiTextureShader.init(maxNumTextures);
+                }
             };
             WebGLRenderContext.prototype.handleContextLost = function () {
                 this.contextLost = true;
@@ -5823,6 +6127,20 @@ var egret;
                 gl.colorMask(true, true, true, true);
                 // 目前只使用0号材质单元，默认开启
                 gl.activeTexture(gl.TEXTURE0);
+                if (egret.WebGLUtils.$multiTextureSize > 1) {
+                    this.emptyTexture = gl.createTexture();
+                    gl.bindTexture(gl.TEXTURE_2D, this.emptyTexture);
+                    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
+                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+                    for (var i = 1; i < egret.WebGLUtils.$multiTextureSize; ++i) {
+                        gl.activeTexture(gl.TEXTURE0 + i);
+                        gl.bindTexture(gl.TEXTURE_2D, this.emptyTexture);
+                    }
+                }
             };
             /**
              * 开启模版检测
@@ -5889,6 +6207,9 @@ var egret;
              */
             WebGLRenderContext.prototype.updateTexture = function (texture, bitmapData) {
                 var gl = this.context;
+                if (egret.WebGLUtils.$multiTextureSize > 1) {
+                    gl.activeTexture(gl.TEXTURE0);
+                }
                 gl.bindTexture(gl.TEXTURE_2D, texture);
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, bitmapData);
             };
@@ -6081,6 +6402,10 @@ var egret;
                 uint32Array[index++] = node.uvs[0];
                 // alpha
                 float32Array[index++] = alpha;
+                if (egret.WebGLUtils.$multiTextureSize > 1) {
+                    // groupIndex
+                    float32Array[index++] = texture["groupIndex"];
+                }
                 // xy
                 float32Array[index++] = a_w + tx;
                 float32Array[index++] = b_w + ty;
@@ -6088,6 +6413,10 @@ var egret;
                 uint32Array[index++] = node.uvs[1];
                 // alpha
                 float32Array[index++] = alpha;
+                if (egret.WebGLUtils.$multiTextureSize > 1) {
+                    // groupIndex
+                    float32Array[index++] = texture["groupIndex"];
+                }
                 // xy
                 float32Array[index++] = a_w + c_h + tx;
                 float32Array[index++] = d_h + b_w + ty;
@@ -6095,6 +6424,10 @@ var egret;
                 uint32Array[index++] = node.uvs[2];
                 // alpha
                 float32Array[index++] = alpha;
+                if (egret.WebGLUtils.$multiTextureSize > 1) {
+                    // groupIndex
+                    float32Array[index++] = texture["groupIndex"];
+                }
                 // xy
                 float32Array[index++] = c_h + tx;
                 float32Array[index++] = d_h + ty;
@@ -6102,6 +6435,10 @@ var egret;
                 uint32Array[index++] = node.uvs[3];
                 // alpha
                 float32Array[index++] = alpha;
+                if (egret.WebGLUtils.$multiTextureSize > 1) {
+                    // groupIndex
+                    float32Array[index++] = texture["groupIndex"];
+                }
                 this.vao.vertexIndex += 4;
                 this.vao.indexIndex += 6;
                 if (image.source && image.source["texture"]) {
@@ -6171,9 +6508,9 @@ var egret;
                     this.vao.changeToMeshIndices();
                 }
                 var count = meshIndices ? meshIndices.length / 3 : 2;
-                // 应用$filter，因为只可能是colorMatrixFilter，最后两个参数可不传
+                // 应用$filter，因为只可能是colorMatrixFilter
                 this.drawCmdManager.pushDrawTexture(texture, count, this.$filter, textureWidth, textureHeight);
-                this.vao.cacheArrays(buffer, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices, rotated);
+                this.vao.cacheArrays(buffer, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices, rotated, texture["groupIndex"] || 0);
             };
             WebGLRenderContext.prototype.drawTextureByRenderNode = function (node) {
                 var texture = node.$texture;
@@ -6232,6 +6569,10 @@ var egret;
                 uint32Array[index++] = 0;
                 // alpha
                 float32Array[index++] = alpha;
+                if (egret.WebGLUtils.$multiTextureSize > 1) {
+                    // groupIndex
+                    float32Array[index++] = texture["groupIndex"];
+                }
                 // xy
                 float32Array[index++] = a_w + tx;
                 float32Array[index++] = b_w + ty;
@@ -6239,6 +6580,10 @@ var egret;
                 uint32Array[index++] = 65535;
                 // alpha
                 float32Array[index++] = alpha;
+                if (egret.WebGLUtils.$multiTextureSize > 1) {
+                    // groupIndex
+                    float32Array[index++] = texture["groupIndex"];
+                }
                 // xy
                 float32Array[index++] = a_w + c_h + tx;
                 float32Array[index++] = d_h + b_w + ty;
@@ -6246,6 +6591,10 @@ var egret;
                 uint32Array[index++] = 65535 << 16 | 65535;
                 // alpha
                 float32Array[index++] = alpha;
+                if (egret.WebGLUtils.$multiTextureSize > 1) {
+                    // groupIndex
+                    float32Array[index++] = texture["groupIndex"];
+                }
                 // xy
                 float32Array[index++] = c_h + tx;
                 float32Array[index++] = d_h + ty;
@@ -6253,6 +6602,10 @@ var egret;
                 uint32Array[index++] = 65535 << 16;
                 // alpha
                 float32Array[index++] = alpha;
+                if (egret.WebGLUtils.$multiTextureSize > 1) {
+                    // groupIndex
+                    float32Array[index++] = texture["groupIndex"];
+                }
                 this.vao.vertexIndex += 4;
                 this.vao.indexIndex += 6;
             };
@@ -6332,7 +6685,7 @@ var egret;
                     if (data.type == 6 /* ACT_BUFFER */) {
                         this.activatedBuffer = data.buffer;
                     }
-                    if (data.type != 0 /* TEXTURE */ && data.type != 1 /* PUSH_MASK */ && data.type != 2 /* POP_MASK */) {
+                    if (data.type != 12 /* DRAW_ELEMENTS */ && data.type != 0 /* TEXTURE */ && data.type != 1 /* PUSH_MASK */ && data.type != 2 /* POP_MASK */) {
                         continue;
                     }
                     if (this.activatedBuffer && this.activatedBuffer.$computeDrawCall) {
@@ -6346,6 +6699,13 @@ var egret;
                 // 清空数据
                 this.drawCmdManager.clear();
                 this.vao.clear();
+                if (egret.WebGLUtils.$multiTextureSize > 1) {
+                    var gl = this.context;
+                    for (var i = 1; i < egret.WebGLUtils.$multiTextureSize; ++i) {
+                        gl.activeTexture(gl.TEXTURE0 + i);
+                        gl.bindTexture(gl.TEXTURE_2D, this.emptyTexture);
+                    }
+                }
             };
             /**
              * 执行绘制命令
@@ -6357,6 +6717,12 @@ var egret;
                 var gl = this.context;
                 var program;
                 switch (data.type) {
+                    case 11 /* ACTIVE_TEXTURE */:
+                        this.activeTexture(data);
+                        break;
+                    case 12 /* DRAW_ELEMENTS */:
+                        offset += this.drawElements(data, offset);
+                        break;
                     case 10 /* CHANGE_PROGRAM */:
                         var filter = data.filter;
                         program = web.EgretWebGLProgram.getProgram(gl, data.vertSource, data.fragSource, data.key);
@@ -6431,17 +6797,37 @@ var egret;
                     // 目前所有attribute buffer的绑定方法都是一致的
                     var attribute = program.attributes;
                     for (var key in attribute) {
-                        if (key === "aVertexPosition") {
-                            gl.vertexAttribPointer(attribute["aVertexPosition"].location, 2, gl.FLOAT, false, 4 * 4, 0);
-                            gl.enableVertexAttribArray(attribute["aVertexPosition"].location);
+                        if (egret.WebGLUtils.$multiTextureSize > 1) {
+                            if (key === "aVertexPosition") {
+                                gl.vertexAttribPointer(attribute["aVertexPosition"].location, 2, gl.FLOAT, false, 5 * 4, 0);
+                                gl.enableVertexAttribArray(attribute["aVertexPosition"].location);
+                            }
+                            else if (key === "aTextureCoord") {
+                                gl.vertexAttribPointer(attribute["aTextureCoord"].location, 2, gl.UNSIGNED_SHORT, true, 5 * 4, 2 * 4);
+                                gl.enableVertexAttribArray(attribute["aTextureCoord"].location);
+                            }
+                            else if (key === "aColor") {
+                                gl.vertexAttribPointer(attribute["aColor"].location, 1, gl.FLOAT, false, 5 * 4, 3 * 4);
+                                gl.enableVertexAttribArray(attribute["aColor"].location);
+                            }
+                            else if (key === "aTextureId") {
+                                gl.vertexAttribPointer(attribute["aTextureId"].location, 1, gl.FLOAT, false, 5 * 4, 4 * 4);
+                                gl.enableVertexAttribArray(attribute["aTextureId"].location);
+                            }
                         }
-                        else if (key === "aTextureCoord") {
-                            gl.vertexAttribPointer(attribute["aTextureCoord"].location, 2, gl.UNSIGNED_SHORT, true, 4 * 4, 2 * 4);
-                            gl.enableVertexAttribArray(attribute["aTextureCoord"].location);
-                        }
-                        else if (key === "aColor") {
-                            gl.vertexAttribPointer(attribute["aColor"].location, 1, gl.FLOAT, false, 4 * 4, 3 * 4);
-                            gl.enableVertexAttribArray(attribute["aColor"].location);
+                        else {
+                            if (key === "aVertexPosition") {
+                                gl.vertexAttribPointer(attribute["aVertexPosition"].location, 2, gl.FLOAT, false, 4 * 4, 0);
+                                gl.enableVertexAttribArray(attribute["aVertexPosition"].location);
+                            }
+                            else if (key === "aTextureCoord") {
+                                gl.vertexAttribPointer(attribute["aTextureCoord"].location, 2, gl.UNSIGNED_SHORT, true, 4 * 4, 2 * 4);
+                                gl.enableVertexAttribArray(attribute["aTextureCoord"].location);
+                            }
+                            else if (key === "aColor") {
+                                gl.vertexAttribPointer(attribute["aColor"].location, 1, gl.FLOAT, false, 4 * 4, 3 * 4);
+                                gl.enableVertexAttribArray(attribute["aColor"].location);
+                            }
                         }
                     }
                     this.currentProgram = program;
@@ -6459,6 +6845,12 @@ var egret;
                     }
                     else if (key === "uSampler") {
                     }
+                    else if (key === "uSamplers[0]") {
+                        if (web.MultiTextureShader.sampleValues) {
+                            uniforms[key].setValue(web.MultiTextureShader.sampleValues);
+                            delete web.MultiTextureShader.sampleValues;
+                        }
+                    }
                     else {
                         var value = filter.$uniforms[key];
                         if (value !== undefined) {
@@ -6470,11 +6862,30 @@ var egret;
                     }
                 }
             };
+            WebGLRenderContext.prototype.activeTexture = function (data) {
+                var gl = this.context;
+                var group = data.textureGroup;
+                var length = group.length;
+                for (var i = 0; i < length; ++i) {
+                    gl.activeTexture(gl.TEXTURE0 + i);
+                    var texture = group[i];
+                    gl.bindTexture(gl.TEXTURE_2D, texture);
+                }
+            };
+            WebGLRenderContext.prototype.drawElements = function (data, offset) {
+                var gl = this.context;
+                var size = data.count * 3;
+                gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
+                return size;
+            };
             /**
              * 画texture
              **/
             WebGLRenderContext.prototype.drawTextureElements = function (data, offset) {
                 var gl = this.context;
+                if (egret.WebGLUtils.$multiTextureSize > 1) {
+                    gl.activeTexture(gl.TEXTURE0);
+                }
                 gl.bindTexture(gl.TEXTURE_2D, data.texture);
                 var size = data.count * 3;
                 gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
@@ -8325,8 +8736,14 @@ var egret;
             EgretWebGLUniform.prototype.setDefaultValue = function () {
                 var type = this.type;
                 switch (type) {
-                    case WEBGL_UNIFORM_TYPE.FLOAT:
                     case WEBGL_UNIFORM_TYPE.SAMPLER_2D:
+                        if (egret.WebGLUtils.$multiTextureSize > 1) {
+                        }
+                        else {
+                            this.value = 0;
+                        }
+                        break;
+                    case WEBGL_UNIFORM_TYPE.FLOAT:
                     case WEBGL_UNIFORM_TYPE.SAMPLER_CUBE:
                     case WEBGL_UNIFORM_TYPE.BOOL:
                     case WEBGL_UNIFORM_TYPE.INT:
@@ -8455,6 +8872,19 @@ var egret;
                         };
                         break;
                     case WEBGL_UNIFORM_TYPE.SAMPLER_2D:
+                        if (egret.WebGLUtils.$multiTextureSize > 1) {
+                            this.upload = function () {
+                                var value = this.value;
+                                gl.uniform1iv(location, value);
+                            };
+                        }
+                        else {
+                            this.upload = function () {
+                                var value = this.value;
+                                gl.uniform1i(location, value);
+                            };
+                        }
+                        break;
                     case WEBGL_UNIFORM_TYPE.SAMPLER_CUBE:
                     case WEBGL_UNIFORM_TYPE.BOOL:
                     case WEBGL_UNIFORM_TYPE.INT:

@@ -26,69 +26,41 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-namespace egret {
-    /**
-     * @private
-     */
-    export class WebGLUtils {
-        public static compileProgram(gl: WebGLRenderingContext, vertexSrc: string, fragmentSrc: string): WebGLProgram {
-            let fragmentShader: WebGLShader = WebGLUtils.compileFragmentShader(gl, fragmentSrc);
-            let vertexShader: WebGLShader = WebGLUtils.compileVertexShader(gl, vertexSrc);
 
-            let shaderProgram: WebGLProgram = gl.createProgram();
-            gl.attachShader(shaderProgram, vertexShader);
-            gl.attachShader(shaderProgram, fragmentShader);
-            gl.linkProgram(shaderProgram);
 
-            if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-                $warn(1020);
+/**
+ * @private
+ */
+namespace egret.WebGLUtils {
+
+    let canUseWebGL: boolean;
+
+    export const checkCanUseWebGL = function (): boolean {
+        if (canUseWebGL == undefined) {
+            try {
+                let canvas = document.createElement("canvas");
+                canUseWebGL = !!window["WebGLRenderingContext"]
+                    && !!(canvas.getContext("webgl") || canvas.getContext("experimental-webgl"));
             }
-            return shaderProgram;
-        }
-
-        public static compileFragmentShader(gl: WebGLRenderingContext, shaderSrc: string): WebGLShader {
-            return WebGLUtils._compileShader(gl, shaderSrc, gl.FRAGMENT_SHADER);
-        }
-
-        public static compileVertexShader(gl: WebGLRenderingContext, shaderSrc: string): WebGLShader {
-            return WebGLUtils._compileShader(gl, shaderSrc, gl.VERTEX_SHADER);
-        }
-
-        private static _compileShader(gl: WebGLRenderingContext, shaderSrc: string, shaderType: number): WebGLShader {
-            let shader: WebGLShader = gl.createShader(shaderType);
-            gl.shaderSource(shader, shaderSrc);
-            gl.compileShader(shader);
-
-            if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-                //egret.info(gl.getShaderInfoLog(shader));
-                return null;
+            catch (e) {
+                canUseWebGL = false;
             }
-            return shader;
         }
+        return canUseWebGL;
+    }
 
-        private static canUseWebGL: boolean;
-
-        public static checkCanUseWebGL(): boolean {
-            if (WebGLUtils.canUseWebGL == undefined) {
-                try {
-                    let canvas = document.createElement("canvas");
-                    WebGLUtils.canUseWebGL = !!window["WebGLRenderingContext"]
-                        && !!(canvas.getContext("webgl") || canvas.getContext("experimental-webgl"));
-                }
-                catch (e) {
-                    WebGLUtils.canUseWebGL = false;
-                }
-            }
-            return WebGLUtils.canUseWebGL;
-        }
-
-        public static deleteWebGLTexture(bitmapData): void {
-            if (bitmapData) {
-                let gl = bitmapData.glContext;
-                if (gl) {
-                    gl.deleteTexture(bitmapData);
-                }
+    export const deleteWebGLTexture = function (bitmapData): void {
+        if (bitmapData) {
+            let gl = bitmapData.glContext;
+            if (gl) {
+                gl.deleteTexture(bitmapData);
             }
         }
     }
+
+    export let $multiTextureSize = 4;
+
+    // export const setMultiTextureSize = function (num: number): void {
+    //     $multiTextureSize = Math.ceil(num);
+    // }
 }

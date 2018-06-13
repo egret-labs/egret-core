@@ -129,6 +129,10 @@
             "platform": "web"
           },
           {
+            "path": "web/rendering/webgl/shaders/MultiTextureShader.ts",
+            "platform": "web"
+          },
+          {
             "path": "web/rendering/webgl/WebGLDrawCmdManager.ts",
             "platform": "web"
           },

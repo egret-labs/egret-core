@@ -51,9 +51,12 @@ namespace egret.web {
 
         private hasMesh: boolean = false;
 
-        private vertexActualSize:number;
+        private vertexActualSize: number;
 
         public constructor() {
+            if (WebGLUtils.$multiTextureSize > 1) {
+                this.vertSize = 5;
+            }
             let numVerts = this.vertexMaxSize * this.vertSize;
             let numIndices = this.indicesMaxSize;
 
@@ -145,7 +148,7 @@ namespace egret.web {
          */
         public cacheArrays(buffer: WebGLRenderBuffer, sourceX: number, sourceY: number, sourceWidth: number, sourceHeight: number,
             destX: number, destY: number, destWidth: number, destHeight: number, textureSourceWidth: number, textureSourceHeight: number,
-            meshUVs?: number[], meshVertices?: number[], meshIndices?: number[], rotated?: boolean): void {
+            meshUVs?: number[], meshVertices?: number[], meshIndices?: number[], rotated?: boolean, groupIndex: number = 0): void {
             let alpha = buffer.globalAlpha;
             //计算出绘制矩阵，之后把矩阵还原回之前的
             let locWorldTransform = buffer.globalMatrix;
@@ -238,6 +241,10 @@ namespace egret.web {
                     uint32Array[index++] = ((sourceY * 65535) << 16) | ((sourceWidth + sourceX) * 65535);
                     // alpha
                     float32Array[index++] = alpha;
+                    if (WebGLUtils.$multiTextureSize > 1) {
+                        // groupIndex
+                        float32Array[index++] = groupIndex;
+                    }
                     // xy
                     float32Array[index++] = a * w + tx;
                     float32Array[index++] = b * w + ty;
@@ -245,6 +252,10 @@ namespace egret.web {
                     uint32Array[index++] = (((sourceHeight + sourceY) * 65535) << 16) | ((sourceWidth + sourceX) * 65535);
                     // alpha
                     float32Array[index++] = alpha;
+                    if (WebGLUtils.$multiTextureSize > 1) {
+                        // groupIndex
+                        float32Array[index++] = groupIndex;
+                    }
                     // xy
                     float32Array[index++] = a * w + c * h + tx;
                     float32Array[index++] = d * h + b * w + ty;
@@ -252,6 +263,10 @@ namespace egret.web {
                     uint32Array[index++] = (((sourceHeight + sourceY) * 65535) << 16) | (sourceX * 65535);
                     // alpha
                     float32Array[index++] = alpha;
+                    if (WebGLUtils.$multiTextureSize > 1) {
+                        // groupIndex
+                        float32Array[index++] = groupIndex;
+                    }
                     // xy
                     float32Array[index++] = c * h + tx;
                     float32Array[index++] = d * h + ty;
@@ -259,6 +274,10 @@ namespace egret.web {
                     uint32Array[index++] = ((sourceY * 65535) << 16) | (sourceX * 65535);
                     // alpha
                     float32Array[index++] = alpha;
+                    if (WebGLUtils.$multiTextureSize > 1) {
+                        // groupIndex
+                        float32Array[index++] = groupIndex;
+                    }
                 }
                 else {
                     sourceWidth = sourceWidth / width;
@@ -270,6 +289,10 @@ namespace egret.web {
                     uint32Array[index++] = ((sourceY * 65535) << 16) | (sourceX * 65535);
                     // alpha
                     float32Array[index++] = alpha;
+                    if (WebGLUtils.$multiTextureSize > 1) {
+                        // groupIndex
+                        float32Array[index++] = groupIndex;
+                    }
                     // xy
                     float32Array[index++] = a * w + tx;
                     float32Array[index++] = b * w + ty;
@@ -277,6 +300,10 @@ namespace egret.web {
                     uint32Array[index++] = ((sourceY * 65535) << 16) | ((sourceWidth + sourceX) * 65535);
                     // alpha
                     float32Array[index++] = alpha;
+                    if (WebGLUtils.$multiTextureSize > 1) {
+                        // groupIndex
+                        float32Array[index++] = groupIndex;
+                    }
                     // xy
                     float32Array[index++] = a * w + c * h + tx;
                     float32Array[index++] = d * h + b * w + ty;
@@ -284,6 +311,10 @@ namespace egret.web {
                     uint32Array[index++] = (((sourceHeight + sourceY) * 65535) << 16) | ((sourceWidth + sourceX) * 65535);
                     // alpha
                     float32Array[index++] = alpha;
+                    if (WebGLUtils.$multiTextureSize > 1) {
+                        // groupIndex
+                        float32Array[index++] = groupIndex;
+                    }
                     // xy
                     float32Array[index++] = c * h + tx;
                     float32Array[index++] = d * h + ty;
@@ -291,6 +322,10 @@ namespace egret.web {
                     uint32Array[index++] = (((sourceHeight + sourceY) * 65535) << 16) | (sourceX * 65535);
                     // alpha
                     float32Array[index++] = alpha;
+                    if (WebGLUtils.$multiTextureSize > 1) {
+                        // groupIndex
+                        float32Array[index++] = groupIndex;
+                    }
                 }
                 // 缓存索引数组
                 if (this.hasMesh) {

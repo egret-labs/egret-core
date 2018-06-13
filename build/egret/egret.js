@@ -6920,54 +6920,26 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+/**
+ * @private
+ */
 var egret;
 (function (egret) {
-    /**
-     * @private
-     */
-    var WebGLUtils = (function () {
-        function WebGLUtils() {
-        }
-        WebGLUtils.compileProgram = function (gl, vertexSrc, fragmentSrc) {
-            var fragmentShader = WebGLUtils.compileFragmentShader(gl, fragmentSrc);
-            var vertexShader = WebGLUtils.compileVertexShader(gl, vertexSrc);
-            var shaderProgram = gl.createProgram();
-            gl.attachShader(shaderProgram, vertexShader);
-            gl.attachShader(shaderProgram, fragmentShader);
-            gl.linkProgram(shaderProgram);
-            if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-                egret.$warn(1020);
-            }
-            return shaderProgram;
-        };
-        WebGLUtils.compileFragmentShader = function (gl, shaderSrc) {
-            return WebGLUtils._compileShader(gl, shaderSrc, gl.FRAGMENT_SHADER);
-        };
-        WebGLUtils.compileVertexShader = function (gl, shaderSrc) {
-            return WebGLUtils._compileShader(gl, shaderSrc, gl.VERTEX_SHADER);
-        };
-        WebGLUtils._compileShader = function (gl, shaderSrc, shaderType) {
-            var shader = gl.createShader(shaderType);
-            gl.shaderSource(shader, shaderSrc);
-            gl.compileShader(shader);
-            if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-                //egret.info(gl.getShaderInfoLog(shader));
-                return null;
-            }
-            return shader;
-        };
+    var WebGLUtils;
+    (function (WebGLUtils) {
+        var canUseWebGL;
         WebGLUtils.checkCanUseWebGL = function () {
-            if (WebGLUtils.canUseWebGL == undefined) {
+            if (canUseWebGL == undefined) {
                 try {
                     var canvas = document.createElement("canvas");
-                    WebGLUtils.canUseWebGL = !!window["WebGLRenderingContext"]
+                    canUseWebGL = !!window["WebGLRenderingContext"]
                         && !!(canvas.getContext("webgl") || canvas.getContext("experimental-webgl"));
                 }
                 catch (e) {
-                    WebGLUtils.canUseWebGL = false;
+                    canUseWebGL = false;
                 }
             }
-            return WebGLUtils.canUseWebGL;
+            return canUseWebGL;
         };
         WebGLUtils.deleteWebGLTexture = function (bitmapData) {
             if (bitmapData) {
@@ -6977,10 +6949,11 @@ var egret;
                 }
             }
         };
-        return WebGLUtils;
-    }());
-    egret.WebGLUtils = WebGLUtils;
-    __reflect(WebGLUtils.prototype, "egret.WebGLUtils");
+        WebGLUtils.$multiTextureSize = 4;
+        // export const setMultiTextureSize = function (num: number): void {
+        //     $multiTextureSize = Math.ceil(num);
+        // }
+    })(WebGLUtils = egret.WebGLUtils || (egret.WebGLUtils = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //

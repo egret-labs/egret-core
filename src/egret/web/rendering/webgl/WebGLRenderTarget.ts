@@ -72,6 +72,9 @@ namespace egret.web {
 
             if (this.frameBuffer) {
                 // 设置texture尺寸
+                if (WebGLUtils.$multiTextureSize > 1) {
+                    gl.activeTexture(gl.TEXTURE0);
+                }
                 gl.bindTexture(gl.TEXTURE_2D, this.texture);
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
                 // gl.bindTexture(gl.TEXTURE_2D, null);
@@ -127,6 +130,9 @@ namespace egret.web {
 
             let texture: WebGLTexture = gl.createTexture();
             texture["glContext"] = gl;
+            if (WebGLUtils.$multiTextureSize > 1) {
+                gl.activeTexture(gl.TEXTURE0);
+            }
             gl.bindTexture(gl.TEXTURE_2D, texture);
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.width, this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
@@ -170,7 +176,7 @@ namespace egret.web {
             // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         }
 
-        public dispose():void {
+        public dispose(): void {
             WebGLUtils.deleteWebGLTexture(this.texture);
         }
     }

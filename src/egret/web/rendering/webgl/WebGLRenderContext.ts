@@ -284,6 +284,11 @@ namespace egret.web {
 
             let gl = this.context;
             this.$maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+            const maxNumTextures = Math.min(gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS), WebGLUtils.$multiTextureSize);
+            WebGLUtils.$multiTextureSize = maxNumTextures;
+            if (maxNumTextures > 1) {
+                MultiTextureShader.init(maxNumTextures);
+            }
         }
 
         private handleContextLost() {
@@ -319,6 +324,8 @@ namespace egret.web {
             this.setContext(gl);
         }
 
+        private emptyTexture: WebGLTexture;
+
         public setContext(gl: any) {
             this.context = gl;
             gl.id = WebGLRenderContext.glContextId++;
@@ -331,6 +338,22 @@ namespace egret.web {
 
             // 目前只使用0号材质单元，默认开启
             gl.activeTexture(gl.TEXTURE0);
+
+            if (WebGLUtils.$multiTextureSize > 1) {
+                this.emptyTexture = gl.createTexture();
+                gl.bindTexture(gl.TEXTURE_2D, this.emptyTexture);
+                gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+                for (let i = 1; i < WebGLUtils.$multiTextureSize; ++i) {
+                    gl.activeTexture(gl.TEXTURE0 + i);
+                    gl.bindTexture(gl.TEXTURE_2D, this.emptyTexture);
+                }
+            }
         }
 
         /**
@@ -412,6 +435,9 @@ namespace egret.web {
          */
         public updateTexture(texture: WebGLTexture, bitmapData: BitmapData): void {
             let gl: any = this.context;
+            if (WebGLUtils.$multiTextureSize > 1) {
+                gl.activeTexture(gl.TEXTURE0);
+            }
             gl.bindTexture(gl.TEXTURE_2D, texture);
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, bitmapData);
         }
@@ -625,6 +651,10 @@ namespace egret.web {
             uint32Array[index++] = node.uvs[0];
             // alpha
             float32Array[index++] = alpha;
+            if (WebGLUtils.$multiTextureSize > 1) {
+                // groupIndex
+                float32Array[index++] = texture["groupIndex"];
+            }
             // xy
             float32Array[index++] = a_w + tx;
             float32Array[index++] = b_w + ty;
@@ -632,6 +662,10 @@ namespace egret.web {
             uint32Array[index++] = node.uvs[1];
             // alpha
             float32Array[index++] = alpha;
+            if (WebGLUtils.$multiTextureSize > 1) {
+                // groupIndex
+                float32Array[index++] = texture["groupIndex"];
+            }
             // xy
             float32Array[index++] = a_w + c_h + tx;
             float32Array[index++] = d_h + b_w + ty;
@@ -639,6 +673,10 @@ namespace egret.web {
             uint32Array[index++] = node.uvs[2];
             // alpha
             float32Array[index++] = alpha;
+            if (WebGLUtils.$multiTextureSize > 1) {
+                // groupIndex
+                float32Array[index++] = texture["groupIndex"];
+            }
             // xy
             float32Array[index++] = c_h + tx;
             float32Array[index++] = d_h + ty;
@@ -646,6 +684,10 @@ namespace egret.web {
             uint32Array[index++] = node.uvs[3];
             // alpha
             float32Array[index++] = alpha;
+            if (WebGLUtils.$multiTextureSize > 1) {
+                // groupIndex
+                float32Array[index++] = texture["groupIndex"];
+            }
 
             this.vao.vertexIndex += 4;
             this.vao.indexIndex += 6;
@@ -735,12 +777,12 @@ namespace egret.web {
             }
 
             let count = meshIndices ? meshIndices.length / 3 : 2;
-            // 应用$filter，因为只可能是colorMatrixFilter，最后两个参数可不传
+            // 应用$filter，因为只可能是colorMatrixFilter
             this.drawCmdManager.pushDrawTexture(texture, count, this.$filter, textureWidth, textureHeight);
 
             this.vao.cacheArrays(buffer, sourceX, sourceY, sourceWidth, sourceHeight,
                 destX, destY, destWidth, destHeight, textureWidth, textureHeight,
-                meshUVs, meshVertices, meshIndices, rotated);
+                meshUVs, meshVertices, meshIndices, rotated, texture["groupIndex"] || 0);
         }
 
         public drawTextureByRenderNode(node: sys.TextNode | sys.GraphicsNode): void {
@@ -808,6 +850,10 @@ namespace egret.web {
             uint32Array[index++] = 0;
             // alpha
             float32Array[index++] = alpha;
+            if (WebGLUtils.$multiTextureSize > 1) {
+                // groupIndex
+                float32Array[index++] = texture["groupIndex"];
+            }
             // xy
             float32Array[index++] = a_w + tx;
             float32Array[index++] = b_w + ty;
@@ -815,6 +861,10 @@ namespace egret.web {
             uint32Array[index++] = 65535;
             // alpha
             float32Array[index++] = alpha;
+            if (WebGLUtils.$multiTextureSize > 1) {
+                // groupIndex
+                float32Array[index++] = texture["groupIndex"];
+            }
             // xy
             float32Array[index++] = a_w + c_h + tx;
             float32Array[index++] = d_h + b_w + ty;
@@ -822,6 +872,10 @@ namespace egret.web {
             uint32Array[index++] = 65535 << 16 | 65535;
             // alpha
             float32Array[index++] = alpha;
+            if (WebGLUtils.$multiTextureSize > 1) {
+                // groupIndex
+                float32Array[index++] = texture["groupIndex"];
+            }
             // xy
             float32Array[index++] = c_h + tx;
             float32Array[index++] = d_h + ty;
@@ -829,6 +883,10 @@ namespace egret.web {
             uint32Array[index++] = 65535 << 16;
             // alpha
             float32Array[index++] = alpha;
+            if (WebGLUtils.$multiTextureSize > 1) {
+                // groupIndex
+                float32Array[index++] = texture["groupIndex"];
+            }
 
             this.vao.vertexIndex += 4;
             this.vao.indexIndex += 6;
@@ -927,7 +985,7 @@ namespace egret.web {
                 if (data.type == DRAWABLE_TYPE.ACT_BUFFER) {
                     this.activatedBuffer = data.buffer;
                 }
-                if (data.type != DRAWABLE_TYPE.TEXTURE && data.type != DRAWABLE_TYPE.PUSH_MASK && data.type != DRAWABLE_TYPE.POP_MASK) {
+                if (data.type != DRAWABLE_TYPE.DRAW_ELEMENTS && data.type != DRAWABLE_TYPE.TEXTURE && data.type != DRAWABLE_TYPE.PUSH_MASK && data.type != DRAWABLE_TYPE.POP_MASK) {
                     continue;
                 }
                 if (this.activatedBuffer && this.activatedBuffer.$computeDrawCall) {
@@ -943,6 +1001,14 @@ namespace egret.web {
             // 清空数据
             this.drawCmdManager.clear();
             this.vao.clear();
+
+            if (WebGLUtils.$multiTextureSize > 1) {
+                const gl = this.context;
+                for (let i = 1; i < WebGLUtils.$multiTextureSize; ++i) {
+                    gl.activeTexture(gl.TEXTURE0 + i);
+                    gl.bindTexture(gl.TEXTURE_2D, this.emptyTexture);
+                }
+            }
         }
 
         /**
@@ -958,6 +1024,12 @@ namespace egret.web {
 
 
             switch (data.type) {
+                case DRAWABLE_TYPE.ACTIVE_TEXTURE:
+                    this.activeTexture(data);
+                    break;
+                case DRAWABLE_TYPE.DRAW_ELEMENTS:
+                    offset += this.drawElements(data, offset);
+                    break;
                 case DRAWABLE_TYPE.CHANGE_PROGRAM:
                     let filter = data.filter;
                     program = EgretWebGLProgram.getProgram(gl, data.vertSource, data.fragSource, data.key);
@@ -1042,15 +1114,32 @@ namespace egret.web {
                 let attribute = program.attributes;
 
                 for (let key in attribute) {
-                    if (key === "aVertexPosition") {
-                        gl.vertexAttribPointer(attribute["aVertexPosition"].location, 2, gl.FLOAT, false, 4 * 4, 0);
-                        gl.enableVertexAttribArray(attribute["aVertexPosition"].location);
-                    } else if (key === "aTextureCoord") {
-                        gl.vertexAttribPointer(attribute["aTextureCoord"].location, 2, gl.UNSIGNED_SHORT, true, 4 * 4, 2 * 4);
-                        gl.enableVertexAttribArray(attribute["aTextureCoord"].location);
-                    } else if (key === "aColor") {
-                        gl.vertexAttribPointer(attribute["aColor"].location, 1, gl.FLOAT, false, 4 * 4, 3 * 4);
-                        gl.enableVertexAttribArray(attribute["aColor"].location);
+                    if (WebGLUtils.$multiTextureSize > 1) {
+                        if (key === "aVertexPosition") {
+                            gl.vertexAttribPointer(attribute["aVertexPosition"].location, 2, gl.FLOAT, false, 5 * 4, 0);
+                            gl.enableVertexAttribArray(attribute["aVertexPosition"].location);
+                        } else if (key === "aTextureCoord") {
+                            gl.vertexAttribPointer(attribute["aTextureCoord"].location, 2, gl.UNSIGNED_SHORT, true, 5 * 4, 2 * 4);
+                            gl.enableVertexAttribArray(attribute["aTextureCoord"].location);
+                        } else if (key === "aColor") {
+                            gl.vertexAttribPointer(attribute["aColor"].location, 1, gl.FLOAT, false, 5 * 4, 3 * 4);
+                            gl.enableVertexAttribArray(attribute["aColor"].location);
+                        } else if (key === "aTextureId") {
+                            gl.vertexAttribPointer(attribute["aTextureId"].location, 1, gl.FLOAT, false, 5 * 4, 4 * 4);
+                            gl.enableVertexAttribArray(attribute["aTextureId"].location);
+                        }
+                    }
+                    else {
+                        if (key === "aVertexPosition") {
+                            gl.vertexAttribPointer(attribute["aVertexPosition"].location, 2, gl.FLOAT, false, 4 * 4, 0);
+                            gl.enableVertexAttribArray(attribute["aVertexPosition"].location);
+                        } else if (key === "aTextureCoord") {
+                            gl.vertexAttribPointer(attribute["aTextureCoord"].location, 2, gl.UNSIGNED_SHORT, true, 4 * 4, 2 * 4);
+                            gl.enableVertexAttribArray(attribute["aTextureCoord"].location);
+                        } else if (key === "aColor") {
+                            gl.vertexAttribPointer(attribute["aColor"].location, 1, gl.FLOAT, false, 4 * 4, 3 * 4);
+                            gl.enableVertexAttribArray(attribute["aColor"].location);
+                        }
                     }
                 }
 
@@ -1068,6 +1157,11 @@ namespace egret.web {
                     uniforms[key].setValue({ x: textureWidth, y: textureHeight });
                 } else if (key === "uSampler") {
 
+                } else if (key === "uSamplers[0]") {
+                    if (MultiTextureShader.sampleValues) {
+                        uniforms[key].setValue(MultiTextureShader.sampleValues);
+                        delete MultiTextureShader.sampleValues;
+                    }
                 } else {
                     let value = filter.$uniforms[key];
                     if (value !== undefined) {
@@ -1079,11 +1173,32 @@ namespace egret.web {
             }
         }
 
+        private activeTexture(data: any): void {
+            let gl: WebGLRenderingContext = this.context;
+            const group = data.textureGroup;
+            const length = group.length;
+            for (let i = 0; i < length; ++i) {
+                gl.activeTexture(gl.TEXTURE0 + i);
+                const texture = group[i];
+                gl.bindTexture(gl.TEXTURE_2D, texture);
+            }
+        }
+
+        private drawElements(data: any, offset: number): number {
+            let gl: any = this.context;
+            let size = data.count * 3;
+            gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
+            return size;
+        }
+
         /**
          * 画texture
          **/
         private drawTextureElements(data: any, offset: number): number {
-            let gl: any = this.context;
+            let gl = this.context;
+            if (WebGLUtils.$multiTextureSize > 1) {
+                gl.activeTexture(gl.TEXTURE0);
+            }
             gl.bindTexture(gl.TEXTURE_2D, data.texture);
             let size = data.count * 3;
             gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);

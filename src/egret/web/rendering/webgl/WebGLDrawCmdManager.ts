@@ -45,7 +45,9 @@ namespace egret.web {
         ENABLE_SCISSOR = 7,
         DISABLE_SCISSOR = 8,
         SMOOTHING = 9,
-        CHANGE_PROGRAM = 10
+        CHANGE_PROGRAM = 10,
+        ACTIVE_TEXTURE = 11,
+        DRAW_ELEMENTS = 12
     }
 
 
@@ -67,14 +69,18 @@ namespace egret.web {
 
         public drawDataLen = 0;
 
-        public constructor() {
+        private currentGroupLength: number;
+        private lastTextureGroupData: any;
+        private lastDrawElementsData: any;
 
+        public constructor() {
+            this.currentGroupLength = WebGLUtils.$multiTextureSize;
         }
 
         /**
          * 压入绘制texture指令
          */
-        public pushDrawTexture(texture: any, count: number = 2, filter?: any, textureWidth?: number, textureHeight?: number): void {
+        public pushDrawTexture(texture: WebGLTexture, count: number = 2, filter?: any, textureWidth?: number, textureHeight?: number): void {
             if (filter) {
                 //根据filter压入切换program
                 let programeKey = filter.type;
@@ -91,7 +97,58 @@ namespace egret.web {
                 this.drawData[this.drawDataLen] = data;
                 this.drawDataLen++;
                 this.lastDrawTextureData = null;
-            } else {
+                this.currentGroupLength = WebGLUtils.$multiTextureSize;
+                if (this.lastTextureGroupData) {
+                    const textureGroup = this.lastTextureGroupData.textureGroup;
+                    const textureGroupLength = textureGroup.length;
+                    for (let i = 0; i < textureGroupLength; ++i) {
+                        delete textureGroup[i].groupIndex;
+                    }
+                }
+                this.lastTextureGroupData = null;
+                this.lastDrawElementsData = null;
+            }
+            else {
+                if (WebGLUtils.$multiTextureSize > 1) {
+                    if (this.lastProgramKey !== "texture") {
+                        this.pushChangeProgram("texture");
+                    }
+                    //添加提交纹理命令
+                    if (this.currentGroupLength == WebGLUtils.$multiTextureSize || !this.lastTextureGroupData) {
+                        this.currentGroupLength = 0;
+                        let data = this.drawData[this.drawDataLen] || {};
+                        data.type = DRAWABLE_TYPE.ACTIVE_TEXTURE;
+                        data.textureGroup = [];
+                        this.drawData[this.drawDataLen] = data;
+                        if (this.lastTextureGroupData) {
+                            const textureGroup = this.lastTextureGroupData.textureGroup;
+                            const textureGroupLength = textureGroup.length;
+                            for (let i = 0; i < textureGroupLength; ++i) {
+                                delete textureGroup[i].groupIndex;
+                            }
+                        }
+                        this.lastTextureGroupData = data;
+                        this.lastDrawElementsData = null;
+                        this.drawDataLen++;
+                    }
+                    if (texture["groupIndex"] == undefined) {
+                        let data = this.lastTextureGroupData;
+                        texture["groupIndex"] = this.currentGroupLength;
+                        this.currentGroupLength++;
+                        data.textureGroup.push(texture);
+                    }
+                    //添加绘制命令
+                    if (!this.lastDrawElementsData) {
+                        let data = this.drawData[this.drawDataLen] || {};
+                        data.type = DRAWABLE_TYPE.DRAW_ELEMENTS;
+                        data.count = 0;
+                        this.drawData[this.drawDataLen] = data;
+                        this.lastDrawElementsData = data;
+                        this.drawDataLen++;
+                    }
+                    this.lastDrawElementsData.count += count;
+                    return;
+                }
                 if (this.lastDrawTextureData == null || texture != this.lastDrawTextureData.texture) {
                     if (this.lastProgramKey !== "texture") {
                         this.pushChangeProgram("texture");
@@ -119,6 +176,16 @@ namespace egret.web {
             this.drawData[this.drawDataLen] = data;
             this.drawDataLen++;
             this.lastDrawTextureData = null;
+            this.currentGroupLength = WebGLUtils.$multiTextureSize;
+            if (this.lastTextureGroupData) {
+                const textureGroup = this.lastTextureGroupData.textureGroup;
+                const textureGroupLength = textureGroup.length;
+                for (let i = 0; i < textureGroupLength; ++i) {
+                    delete textureGroup[i].groupIndex;
+                }
+            }
+            this.lastTextureGroupData = null;
+            this.lastDrawElementsData = null;
         }
 
         /**
@@ -131,6 +198,16 @@ namespace egret.web {
             this.drawData[this.drawDataLen] = data;
             this.drawDataLen++;
             this.lastDrawTextureData = null;
+            this.currentGroupLength = WebGLUtils.$multiTextureSize;
+            if (this.lastTextureGroupData) {
+                const textureGroup = this.lastTextureGroupData.textureGroup;
+                const textureGroupLength = textureGroup.length;
+                for (let i = 0; i < textureGroupLength; ++i) {
+                    delete textureGroup[i].groupIndex;
+                }
+            }
+            this.lastTextureGroupData = null;
+            this.lastDrawElementsData = null;
         }
 
         /**
@@ -143,6 +220,16 @@ namespace egret.web {
             this.drawData[this.drawDataLen] = data;
             this.drawDataLen++;
             this.lastDrawTextureData = null;
+            this.currentGroupLength = WebGLUtils.$multiTextureSize;
+            if (this.lastTextureGroupData) {
+                const textureGroup = this.lastTextureGroupData.textureGroup;
+                const textureGroupLength = textureGroup.length;
+                for (let i = 0; i < textureGroupLength; ++i) {
+                    delete textureGroup[i].groupIndex;
+                }
+            }
+            this.lastTextureGroupData = null;
+            this.lastDrawElementsData = null;
         }
 
         /**
@@ -156,7 +243,7 @@ namespace egret.web {
                 let data = this.drawData[i];
 
                 if (data) {
-                    if (data.type == DRAWABLE_TYPE.TEXTURE) {
+                    if (data.type == DRAWABLE_TYPE.TEXTURE || data.type == DRAWABLE_TYPE.DRAW_ELEMENTS) {
                         drawState = true;
                     }
 
@@ -183,6 +270,16 @@ namespace egret.web {
             this.drawData[this.drawDataLen] = _data;
             this.drawDataLen++;
             this.lastDrawTextureData = null;
+            this.currentGroupLength = WebGLUtils.$multiTextureSize;
+            if (this.lastTextureGroupData) {
+                const textureGroup = this.lastTextureGroupData.textureGroup;
+                const textureGroupLength = textureGroup.length;
+                for (let i = 0; i < textureGroupLength; ++i) {
+                    delete textureGroup[i].groupIndex;
+                }
+            }
+            this.lastTextureGroupData = null;
+            this.lastDrawElementsData = null;
         }
 
         /*
@@ -197,6 +294,16 @@ namespace egret.web {
             this.drawData[this.drawDataLen] = data;
             this.drawDataLen++;
             this.lastDrawTextureData = null;
+            this.currentGroupLength = WebGLUtils.$multiTextureSize;
+            if (this.lastTextureGroupData) {
+                const textureGroup = this.lastTextureGroupData.textureGroup;
+                const textureGroupLength = textureGroup.length;
+                for (let i = 0; i < textureGroupLength; ++i) {
+                    delete textureGroup[i].groupIndex;
+                }
+            }
+            this.lastTextureGroupData = null;
+            this.lastDrawElementsData = null;
         }
 
         /*
@@ -208,6 +315,16 @@ namespace egret.web {
             this.drawData[this.drawDataLen] = data;
             this.drawDataLen++;
             this.lastDrawTextureData = null;
+            this.currentGroupLength = WebGLUtils.$multiTextureSize;
+            if (this.lastTextureGroupData) {
+                const textureGroup = this.lastTextureGroupData.textureGroup;
+                const textureGroupLength = textureGroup.length;
+                for (let i = 0; i < textureGroupLength; ++i) {
+                    delete textureGroup[i].groupIndex;
+                }
+            }
+            this.lastTextureGroupData = null;
+            this.lastDrawElementsData = null;
         }
 
         /**
@@ -250,6 +367,16 @@ namespace egret.web {
             this.drawData[this.drawDataLen] = _data;
             this.drawDataLen++;
             this.lastDrawTextureData = null;
+            this.currentGroupLength = WebGLUtils.$multiTextureSize;
+            if (this.lastTextureGroupData) {
+                const textureGroup = this.lastTextureGroupData.textureGroup;
+                const textureGroupLength = textureGroup.length;
+                for (let i = 0; i < textureGroupLength; ++i) {
+                    delete textureGroup[i].groupIndex;
+                }
+            }
+            this.lastTextureGroupData = null;
+            this.lastDrawElementsData = null;
         }
 
         /*
@@ -265,6 +392,16 @@ namespace egret.web {
             this.drawData[this.drawDataLen] = data;
             this.drawDataLen++;
             this.lastDrawTextureData = null;
+            this.currentGroupLength = WebGLUtils.$multiTextureSize;
+            if (this.lastTextureGroupData) {
+                const textureGroup = this.lastTextureGroupData.textureGroup;
+                const textureGroupLength = textureGroup.length;
+                for (let i = 0; i < textureGroupLength; ++i) {
+                    delete textureGroup[i].groupIndex;
+                }
+            }
+            this.lastTextureGroupData = null;
+            this.lastDrawElementsData = null;
         }
 
         /*
@@ -276,32 +413,53 @@ namespace egret.web {
             this.drawData[this.drawDataLen] = data;
             this.drawDataLen++;
             this.lastDrawTextureData = null;
+            this.currentGroupLength = WebGLUtils.$multiTextureSize;
+            if (this.lastTextureGroupData) {
+                const textureGroup = this.lastTextureGroupData.textureGroup;
+                const textureGroupLength = textureGroup.length;
+                for (let i = 0; i < textureGroupLength; ++i) {
+                    delete textureGroup[i].groupIndex;
+                }
+            }
+            this.lastTextureGroupData = null;
+            this.lastDrawElementsData = null;
         }
 
         /**
          * 清空命令数组
          */
         public clear(): void {
+            if (this.lastTextureGroupData) {
+                const textureGroup = this.lastTextureGroupData.textureGroup;
+                const textureGroupLength = textureGroup.length;
+                for (let i = 0; i < textureGroupLength; ++i) {
+                    delete textureGroup[i].groupIndex;
+                }
+            }
             for (let i = 0; i < this.drawDataLen; i++) {
                 let data = this.drawData[i];
                 if (!data)
                     continue;
-                data.type = 0;
-                data.count = 0;
+                data.type = null;
+                data.count = null;
                 data.texture = null;
                 data.filter = null;
                 data.uv = null;
-                data.value = "";
+                data.value = null;
                 data.buffer = null;
-                data.width = 0;
-                data.height = 0;
+                data.width = null;
+                data.height = null;
                 data.vertSource = null;
                 data.fragSource = null;
                 data.key = null;
+                data.textureGroup = null;
             }
             this.drawDataLen = 0;
             this.lastDrawTextureData = null;
             this.lastProgramKey = null;
+            this.currentGroupLength = WebGLUtils.$multiTextureSize;
+            this.lastTextureGroupData = null;
+            this.lastDrawElementsData = null;
         }
 
 
@@ -310,11 +468,23 @@ namespace egret.web {
          */
         public pushChangeProgram(type: string, filter?: egret.Filter): void {
             let key: string;
-            let vertSource: string = EgretShaderLib.default_vert;
+            const useMultiTexture = WebGLUtils.$multiTextureSize > 1;
+            let vertSource: string;
+            if (useMultiTexture) {
+                vertSource = MultiTextureShader.vertexSrc;
+            }
+            else {
+                vertSource = EgretShaderLib.default_vert;
+            }
             let fragSource: string = EgretShaderLib.blur_frag;
             if (type === "texture") {
                 key = "texture";
-                fragSource = EgretShaderLib.texture_frag;
+                if (useMultiTexture) {
+                    fragSource = MultiTextureShader.fragmentSrc;
+                }
+                else {
+                    fragSource = EgretShaderLib.texture_frag;
+                }
             } else if (type === "custom") {
                 key = (filter as egret.CustomFilter).$shaderKey;
                 vertSource = (filter as egret.CustomFilter).$vertexSrc;
@@ -339,6 +509,16 @@ namespace egret.web {
             this.drawData[this.drawDataLen] = data;
             this.drawDataLen++;
             this.lastDrawTextureData = null;
+            this.currentGroupLength = WebGLUtils.$multiTextureSize;
+            if (this.lastTextureGroupData) {
+                const textureGroup = this.lastTextureGroupData.textureGroup;
+                const textureGroupLength = textureGroup.length;
+                for (let i = 0; i < textureGroupLength; ++i) {
+                    delete textureGroup[i].groupIndex;
+                }
+            }
+            this.lastTextureGroupData = null;
+            this.lastDrawElementsData = null;
         }
     }
 }
