@@ -39,7 +39,7 @@ var FileUtil = require("../lib/FileUtil");
 var utils = require("../lib/utils");
 var os = require("os");
 var fs = require("fs");
-var ZipPlugin = /** @class */ (function () {
+var ZipPlugin = (function () {
     function ZipPlugin(options) {
         this.options = options;
         this._zipCollection = {};

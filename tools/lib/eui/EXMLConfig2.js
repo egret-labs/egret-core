@@ -22,7 +22,7 @@ var stylesMap = {};
 /**
  * @private
  */
-var EXMLConfig = /** @class */ (function () {
+var EXMLConfig = (function () {
     function EXMLConfig() {
         /**
          * 组件清单列表
@@ -142,11 +142,9 @@ var EXMLConfig = /** @class */ (function () {
         //忽略wing的命名空间
         if (ns == exports.NS_W) {
         }
-        //省略命名空间和命名空间是eui的去表中查
         else if (!ns || ns == exports.NS_S) {
             name = "eui." + id;
         }
-        //自定义命名空间形如mrj.*要去掉＊
         else {
             name = ns.substring(0, ns.length - 1) + id;
             // if (!this.classNameToExmlFilePath[name]) {
@@ -253,7 +251,7 @@ var EXMLConfig = /** @class */ (function () {
         }
         return type;
     };
-    EXMLConfig.__instance = null;
     return EXMLConfig;
 }());
+EXMLConfig.__instance = null;
 exports.EXMLConfig = EXMLConfig;

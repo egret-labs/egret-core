@@ -1,5 +1,5 @@
 /// <reference path="../lib/types.d.ts" />
-var info = /** @class */ (function () {
+var info = (function () {
     function info() {
     }
     info.prototype.execute = function () {

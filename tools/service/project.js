@@ -3,7 +3,7 @@ var os = require("os");
 var cprocess = require("child_process");
 var utils = require("../lib/utils");
 var FileUtil = require("../lib/FileUtil");
-var Project = /** @class */ (function () {
+var Project = (function () {
     function Project() {
         this.buildProcessOutputs = [];
     }

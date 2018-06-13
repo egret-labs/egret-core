@@ -1,5 +1,5 @@
 var InstallSDK = require("./installsdk");
-var SDKConfig = /** @class */ (function () {
+var SDKConfig = (function () {
     function SDKConfig() {
     }
     SDKConfig.prototype.execute = function () {

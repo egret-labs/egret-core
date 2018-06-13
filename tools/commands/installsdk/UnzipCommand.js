@@ -1,5 +1,5 @@
 var FileUtil = require("../../lib/FileUtil");
-var UnzipCommand = /** @class */ (function () {
+var UnzipCommand = (function () {
     function UnzipCommand() {
     }
     UnzipCommand.unzip = function (srcPath, destPath, callback) {

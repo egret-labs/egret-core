@@ -39,7 +39,7 @@ var manifest = {
     initial: [],
     game: [],
 };
-var ManifestPlugin = /** @class */ (function () {
+var ManifestPlugin = (function () {
     function ManifestPlugin(options) {
         this.options = options;
         this.verboseInfo = [];

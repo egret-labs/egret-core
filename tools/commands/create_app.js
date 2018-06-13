@@ -1,4 +1,4 @@
-var CreateAppCommand = /** @class */ (function () {
+var CreateAppCommand = (function () {
     function CreateAppCommand() {
     }
     CreateAppCommand.prototype.execute = function () {
