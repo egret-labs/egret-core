@@ -953,35 +953,26 @@ namespace egret.web {
                 return;
             }
 
-            let gl = this.context;
+            const gl = this.context;
             let program: EgretWebGLProgram;
-
+            const filter = data.filter;
 
             switch (data.type) {
                 case DRAWABLE_TYPE.CHANGE_PROGRAM:
-
                     program = EgretWebGLProgram.getProgram(gl, data.vertSource, data.fragSource, data.key);
                     this.activeProgram(gl, program);
-
                     break;
-
-
                 case DRAWABLE_TYPE.TEXTURE:
-                    let filter = data.filter;
                     this.syncUniforms(this.currentProgram, filter, data.textureWidth, data.textureHeight);
                     offset += this.drawTextureElements(data, offset);
                     break;
 
                 case DRAWABLE_TYPE.PUSH_MASK:
-
-                    program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.primitive_frag, "primitive");
-                    this.activeProgram(gl, program);
+                    this.syncUniforms(this.currentProgram, filter, data.textureWidth, data.textureHeight);
                     offset += this.drawPushMaskElements(data, offset);
                     break;
                 case DRAWABLE_TYPE.POP_MASK:
-
-                    program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.primitive_frag, "primitive");
-                    this.activeProgram(gl, program);
+                    this.syncUniforms(this.currentProgram, filter, data.textureWidth, data.textureHeight);
                     offset += this.drawPopMaskElements(data, offset);
                     break;
                 case DRAWABLE_TYPE.BLEND:

@@ -126,6 +126,9 @@ namespace egret.web {
          * 压入pushMask指令
          */
         public pushPushMask(count: number = 1): void {
+            if (this.lastProgramKey !== "primitive") {
+                this.pushChangeProgram("primitive");
+            }
             let data = this.drawData[this.drawDataLen] || {};
             data.type = DRAWABLE_TYPE.PUSH_MASK;
             data.count = count * 2;
@@ -138,6 +141,9 @@ namespace egret.web {
          * 压入popMask指令
          */
         public pushPopMask(count: number = 1): void {
+            if (this.lastProgramKey !== "primitive") {
+                this.pushChangeProgram("primitive");
+            }
             let data = this.drawData[this.drawDataLen] || {};
             data.type = DRAWABLE_TYPE.POP_MASK;
             data.count = count * 2;
@@ -328,6 +334,10 @@ namespace egret.web {
             } else if (type === "glow") {
                 key = "glow";
                 fragSource = EgretShaderLib.glow_frag;
+            } else if (type === "primitive") {
+                key = "primitive";
+                fragSource = EgretShaderLib.primitive_frag;
+                vertSource = EgretShaderLib.default_vert;
             }
             //记录上一次的Programe类型
             this.lastProgramKey = key;

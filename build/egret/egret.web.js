@@ -4943,6 +4943,9 @@ var egret;
              */
             WebGLDrawCmdManager.prototype.pushPushMask = function (count) {
                 if (count === void 0) { count = 1; }
+                if (this.lastProgramKey !== "primitive") {
+                    this.pushChangeProgram("primitive");
+                }
                 var data = this.drawData[this.drawDataLen] || {};
                 data.type = 1 /* PUSH_MASK */;
                 data.count = count * 2;
@@ -4955,6 +4958,9 @@ var egret;
              */
             WebGLDrawCmdManager.prototype.pushPopMask = function (count) {
                 if (count === void 0) { count = 1; }
+                if (this.lastProgramKey !== "primitive") {
+                    this.pushChangeProgram("primitive");
+                }
                 var data = this.drawData[this.drawDataLen] || {};
                 data.type = 2 /* POP_MASK */;
                 data.count = count * 2;
@@ -5133,6 +5139,11 @@ var egret;
                 else if (type === "glow") {
                     key = "glow";
                     fragSource = web.EgretShaderLib.glow_frag;
+                }
+                else if (type === "primitive") {
+                    key = "primitive";
+                    fragSource = web.EgretShaderLib.primitive_frag;
+                    vertSource = web.EgretShaderLib.default_vert;
                 }
                 //记录上一次的Programe类型
                 this.lastProgramKey = key;
@@ -6356,24 +6367,22 @@ var egret;
                 }
                 var gl = this.context;
                 var program;
+                var filter = data.filter;
                 switch (data.type) {
                     case 10 /* CHANGE_PROGRAM */:
                         program = web.EgretWebGLProgram.getProgram(gl, data.vertSource, data.fragSource, data.key);
                         this.activeProgram(gl, program);
                         break;
                     case 0 /* TEXTURE */:
-                        var filter = data.filter;
                         this.syncUniforms(this.currentProgram, filter, data.textureWidth, data.textureHeight);
                         offset += this.drawTextureElements(data, offset);
                         break;
                     case 1 /* PUSH_MASK */:
-                        program = web.EgretWebGLProgram.getProgram(gl, web.EgretShaderLib.default_vert, web.EgretShaderLib.primitive_frag, "primitive");
-                        this.activeProgram(gl, program);
+                        this.syncUniforms(this.currentProgram, filter, data.textureWidth, data.textureHeight);
                         offset += this.drawPushMaskElements(data, offset);
                         break;
                     case 2 /* POP_MASK */:
-                        program = web.EgretWebGLProgram.getProgram(gl, web.EgretShaderLib.default_vert, web.EgretShaderLib.primitive_frag, "primitive");
-                        this.activeProgram(gl, program);
+                        this.syncUniforms(this.currentProgram, filter, data.textureWidth, data.textureHeight);
                         offset += this.drawPopMaskElements(data, offset);
                         break;
                     case 3 /* BLEND */:
