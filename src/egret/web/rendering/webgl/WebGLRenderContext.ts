@@ -959,14 +959,16 @@ namespace egret.web {
 
             switch (data.type) {
                 case DRAWABLE_TYPE.CHANGE_PROGRAM:
-                    let filter = data.filter;
+
                     program = EgretWebGLProgram.getProgram(gl, data.vertSource, data.fragSource, data.key);
                     this.activeProgram(gl, program);
-                    this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
+
                     break;
 
 
                 case DRAWABLE_TYPE.TEXTURE:
+                    let filter = data.filter;
+                    this.syncUniforms(this.currentProgram, filter, data.textureWidth, data.textureHeight);
                     offset += this.drawTextureElements(data, offset);
                     break;
 

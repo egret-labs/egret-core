@@ -88,6 +88,7 @@ namespace egret.web {
                 data.count = count;
                 data.textureWidth = textureWidth;
                 data.textureHeight = textureHeight;
+                data.filter = filter;
                 this.drawData[this.drawDataLen] = data;
                 this.drawDataLen++;
                 this.lastDrawTextureData = null;
@@ -335,7 +336,6 @@ namespace egret.web {
             data.key = key;
             data.vertSource = vertSource;
             data.fragSource = fragSource;
-            data.filter = filter;
             this.drawData[this.drawDataLen] = data;
             this.drawDataLen++;
             this.lastDrawTextureData = null;

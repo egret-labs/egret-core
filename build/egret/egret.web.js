@@ -4907,6 +4907,7 @@ var egret;
                     data.count = count;
                     data.textureWidth = textureWidth;
                     data.textureHeight = textureHeight;
+                    data.filter = filter;
                     this.drawData[this.drawDataLen] = data;
                     this.drawDataLen++;
                     this.lastDrawTextureData = null;
@@ -5140,7 +5141,6 @@ var egret;
                 data.key = key;
                 data.vertSource = vertSource;
                 data.fragSource = fragSource;
-                data.filter = filter;
                 this.drawData[this.drawDataLen] = data;
                 this.drawDataLen++;
                 this.lastDrawTextureData = null;
@@ -6358,12 +6358,12 @@ var egret;
                 var program;
                 switch (data.type) {
                     case 10 /* CHANGE_PROGRAM */:
-                        var filter = data.filter;
                         program = web.EgretWebGLProgram.getProgram(gl, data.vertSource, data.fragSource, data.key);
                         this.activeProgram(gl, program);
-                        this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
                         break;
                     case 0 /* TEXTURE */:
+                        var filter = data.filter;
+                        this.syncUniforms(this.currentProgram, filter, data.textureWidth, data.textureHeight);
                         offset += this.drawTextureElements(data, offset);
                         break;
                     case 1 /* PUSH_MASK */:
@@ -7096,8 +7096,7 @@ var egret;
                 webglBufferContext.pushBuffer(webglBuffer);
                 //绘制显示对象
                 webglBuffer.transform(matrix.a, matrix.b, matrix.c, matrix.d, 0, 0);
-                this.$currentBuffer = webglBuffer;
-                this.drawDisplayObject(displayObject, matrix.tx, matrix.ty, true);
+                this.drawDisplayObject(displayObject, webglBuffer, matrix.tx, matrix.ty, true);
                 webglBufferContext.$drawWebGL();
                 var drawCall = webglBuffer.$drawCalls;
                 webglBuffer.onRenderFinish();
@@ -7123,8 +7122,7 @@ var egret;
              * @private
              * 绘制一个显示对象
              */
-            WebGLRenderer.prototype.drawDisplayObject = function (displayObject, offsetX, offsetY, isStage) {
-                var buffer = this.$currentBuffer;
+            WebGLRenderer.prototype.drawDisplayObject = function (displayObject, buffer, offsetX, offsetY, isStage) {
                 var drawCalls = 0;
                 var node;
                 var displayList = displayObject.$displayList;
@@ -7215,7 +7213,7 @@ var egret;
                             }
                         }
                         if (child.$renderMode === 1 /* DEFAULT */) {
-                            drawCalls += this.drawDisplayObject(child, offsetX2, offsetY2);
+                            drawCalls += this.drawDisplayObject(child, buffer, offsetX2, offsetY2);
                         }
                         else if (child.$renderMode === 3 /* FILTER */) {
                             drawCalls += this.drawWithFilter(child, buffer, offsetX2, offsetY2);
@@ -7282,7 +7280,7 @@ var egret;
                             drawCalls += this.drawWithScrollRect(displayObject, buffer, offsetX, offsetY);
                         }
                         else {
-                            drawCalls += this.drawDisplayObject(displayObject, offsetX, offsetY);
+                            drawCalls += this.drawDisplayObject(displayObject, buffer, offsetX, offsetY);
                         }
                         buffer.context.$filter = null;
                         if (hasBlendMode) {
@@ -7302,7 +7300,7 @@ var egret;
                     drawCalls += this.drawWithScrollRect(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
                 }
                 else {
-                    drawCalls += this.drawDisplayObject(displayObject, -displayBoundsX, -displayBoundsY);
+                    drawCalls += this.drawDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
                 }
                 displayBuffer.context.popBuffer();
                 //绘制结果到屏幕
@@ -7396,7 +7394,7 @@ var egret;
                     if (hasBlendMode) {
                         buffer.context.setGlobalCompositeOperation(compositeOp);
                     }
-                    drawCalls += this.drawDisplayObject(displayObject, offsetX, offsetY);
+                    drawCalls += this.drawDisplayObject(displayObject, buffer, offsetX, offsetY);
                     if (hasBlendMode) {
                         buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
                     }
@@ -7414,7 +7412,7 @@ var egret;
                     //绘制显示对象自身，若有scrollRect，应用clip
                     var displayBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
                     displayBuffer.context.pushBuffer(displayBuffer);
-                    drawCalls += this.drawDisplayObject(displayObject, -displayBoundsX, -displayBoundsY);
+                    drawCalls += this.drawDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
                     //绘制遮罩
                     if (mask) {
                         var maskBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
@@ -7425,7 +7423,7 @@ var egret;
                         maskMatrix.translate(-displayBoundsX, -displayBoundsY);
                         maskBuffer.setTransform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
                         egret.Matrix.release(maskMatrix);
-                        drawCalls += this.drawDisplayObject(mask, 0, 0);
+                        drawCalls += this.drawDisplayObject(mask, maskBuffer, 0, 0);
                         maskBuffer.context.popBuffer();
                         displayBuffer.context.setGlobalCompositeOperation("destination-in");
                         displayBuffer.setTransform(1, 0, 0, -1, 0, maskBuffer.height);
@@ -7553,7 +7551,7 @@ var egret;
                     context.enableScissor(minX, -maxY + buffer.height, maxX - minX, maxY - minY);
                     scissor = true;
                 }
-                drawCalls += this.drawDisplayObject(displayObject, offsetX, offsetY);
+                drawCalls += this.drawDisplayObject(displayObject, buffer, offsetX, offsetY);
                 if (scissor) {
                     context.disableScissor();
                 }
@@ -7626,7 +7624,7 @@ var egret;
                     for (var i = 0; i < length_5; i++) {
                         var child = children[i];
                         if (child.$renderMode === 1 /* DEFAULT */) {
-                            drawCalls += this.drawDisplayObject(child, 0, 0);
+                            drawCalls += this.drawDisplayObject(child, buffer, 0, 0);
                         }
                         else if (child.$renderMode === 3 /* FILTER */) {
                             drawCalls += this.drawWithFilter(child, buffer, 0, 0);

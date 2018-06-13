@@ -40,7 +40,6 @@ namespace egret.web {
      */
     export class WebGLRenderer implements sys.SystemRenderer {
 
-        public $currentBuffer: WebGLRenderBuffer;
 
         public constructor() {
 
@@ -66,8 +65,7 @@ namespace egret.web {
 
             //绘制显示对象
             webglBuffer.transform(matrix.a, matrix.b, matrix.c, matrix.d, 0, 0);
-            this.$currentBuffer = webglBuffer;
-            this.drawDisplayObject(displayObject, matrix.tx, matrix.ty, true);
+            this.drawDisplayObject(displayObject, webglBuffer, matrix.tx, matrix.ty, true);
             webglBufferContext.$drawWebGL();
             let drawCall = webglBuffer.$drawCalls;
             webglBuffer.onRenderFinish();
@@ -96,8 +94,7 @@ namespace egret.web {
          * @private
          * 绘制一个显示对象
          */
-        private drawDisplayObject(displayObject: DisplayObject, offsetX: number, offsetY: number, isStage?: boolean): number {
-            let buffer = this.$currentBuffer;
+        private drawDisplayObject(displayObject: DisplayObject, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number, isStage?: boolean): number {
             let drawCalls = 0;
             let node: sys.RenderNode;
             let displayList = displayObject.$displayList;
@@ -188,7 +185,7 @@ namespace egret.web {
                     }
 
                     if (child.$renderMode === RenderMode.DEFAULT) {
-                        drawCalls += this.drawDisplayObject(child, offsetX2, offsetY2);
+                        drawCalls += this.drawDisplayObject(child, buffer, offsetX2, offsetY2);
                     }
                     else if (child.$renderMode === RenderMode.FILTER) {
                         drawCalls += this.drawWithFilter(child, buffer, offsetX2, offsetY2);
@@ -260,7 +257,7 @@ namespace egret.web {
                         drawCalls += this.drawWithScrollRect(displayObject, buffer, offsetX, offsetY);
                     }
                     else {
-                        drawCalls += this.drawDisplayObject(displayObject, offsetX, offsetY);
+                        drawCalls += this.drawDisplayObject(displayObject, buffer, offsetX, offsetY);
                     }
 
                     buffer.context.$filter = null;
@@ -285,7 +282,7 @@ namespace egret.web {
                 drawCalls += this.drawWithScrollRect(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
             }
             else {
-                drawCalls += this.drawDisplayObject(displayObject, -displayBoundsX, -displayBoundsY);
+                drawCalls += this.drawDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
             }
 
             displayBuffer.context.popBuffer();
@@ -384,7 +381,7 @@ namespace egret.web {
                 if (hasBlendMode) {
                     buffer.context.setGlobalCompositeOperation(compositeOp);
                 }
-                drawCalls += this.drawDisplayObject(displayObject, offsetX, offsetY);
+                drawCalls += this.drawDisplayObject(displayObject, buffer, offsetX, offsetY);
                 if (hasBlendMode) {
                     buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
                 }
@@ -402,7 +399,7 @@ namespace egret.web {
                 //绘制显示对象自身，若有scrollRect，应用clip
                 let displayBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
                 displayBuffer.context.pushBuffer(displayBuffer);
-                drawCalls += this.drawDisplayObject(displayObject, -displayBoundsX, -displayBoundsY);
+                drawCalls += this.drawDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
                 //绘制遮罩
                 if (mask) {
                     let maskBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
@@ -413,7 +410,7 @@ namespace egret.web {
                     maskMatrix.translate(-displayBoundsX, -displayBoundsY);
                     maskBuffer.setTransform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
                     Matrix.release(maskMatrix);
-                    drawCalls += this.drawDisplayObject(mask, 0, 0);
+                    drawCalls += this.drawDisplayObject(mask, maskBuffer, 0, 0);
                     maskBuffer.context.popBuffer();
                     displayBuffer.context.setGlobalCompositeOperation("destination-in");
                     displayBuffer.setTransform(1, 0, 0, -1, 0, maskBuffer.height);
@@ -550,7 +547,7 @@ namespace egret.web {
                 context.enableScissor(minX, -maxY + buffer.height, maxX - minX, maxY - minY);
                 scissor = true;
             }
-            drawCalls += this.drawDisplayObject(displayObject, offsetX, offsetY);
+            drawCalls += this.drawDisplayObject(displayObject, buffer, offsetX, offsetY);
             if (scissor) {
                 context.disableScissor();
             } else {
@@ -623,7 +620,7 @@ namespace egret.web {
                     let child = children[i];
 
                     if (child.$renderMode === RenderMode.DEFAULT) {
-                        drawCalls += this.drawDisplayObject(child, 0, 0);
+                        drawCalls += this.drawDisplayObject(child, buffer, 0, 0);
                     }
                     else if (child.$renderMode === RenderMode.FILTER) {
                         drawCalls += this.drawWithFilter(child, buffer, 0, 0);
