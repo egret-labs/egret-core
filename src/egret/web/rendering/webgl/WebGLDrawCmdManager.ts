@@ -114,24 +114,24 @@ namespace egret.web {
                         this.pushChangeProgram("texture");
                     }
                     //添加提交纹理命令
-                    if (this.currentGroupLength == WebGLUtils.$multiTextureSize || !this.lastTextureGroupData) {
-                        this.currentGroupLength = 0;
-                        let data = this.drawData[this.drawDataLen] || {};
-                        data.type = DRAWABLE_TYPE.ACTIVE_TEXTURE;
-                        data.textureGroup = [];
-                        this.drawData[this.drawDataLen] = data;
-                        if (this.lastTextureGroupData) {
-                            const textureGroup = this.lastTextureGroupData.textureGroup;
-                            const textureGroupLength = textureGroup.length;
-                            for (let i = 0; i < textureGroupLength; ++i) {
-                                delete textureGroup[i].groupIndex;
-                            }
-                        }
-                        this.lastTextureGroupData = data;
-                        this.lastDrawElementsData = null;
-                        this.drawDataLen++;
-                    }
                     if (texture["groupIndex"] == undefined) {
+                        if (this.currentGroupLength == WebGLUtils.$multiTextureSize || !this.lastTextureGroupData) {
+                            this.currentGroupLength = 0;
+                            let data = this.drawData[this.drawDataLen] || {};
+                            data.type = DRAWABLE_TYPE.ACTIVE_TEXTURE;
+                            data.textureGroup = [];
+                            this.drawData[this.drawDataLen] = data;
+                            if (this.lastTextureGroupData) {
+                                const textureGroup = this.lastTextureGroupData.textureGroup;
+                                const textureGroupLength = textureGroup.length;
+                                for (let i = 0; i < textureGroupLength; ++i) {
+                                    delete textureGroup[i].groupIndex;
+                                }
+                            }
+                            this.lastTextureGroupData = data;
+                            this.lastDrawElementsData = null;
+                            this.drawDataLen++;
+                        }
                         let data = this.lastTextureGroupData;
                         texture["groupIndex"] = this.currentGroupLength;
                         this.currentGroupLength++;

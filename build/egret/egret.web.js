@@ -5011,24 +5011,24 @@ var egret;
                             this.pushChangeProgram("texture");
                         }
                         //添加提交纹理命令
-                        if (this.currentGroupLength == egret.WebGLUtils.$multiTextureSize || !this.lastTextureGroupData) {
-                            this.currentGroupLength = 0;
-                            var data = this.drawData[this.drawDataLen] || {};
-                            data.type = 11 /* ACTIVE_TEXTURE */;
-                            data.textureGroup = [];
-                            this.drawData[this.drawDataLen] = data;
-                            if (this.lastTextureGroupData) {
-                                var textureGroup = this.lastTextureGroupData.textureGroup;
-                                var textureGroupLength = textureGroup.length;
-                                for (var i = 0; i < textureGroupLength; ++i) {
-                                    delete textureGroup[i].groupIndex;
-                                }
-                            }
-                            this.lastTextureGroupData = data;
-                            this.lastDrawElementsData = null;
-                            this.drawDataLen++;
-                        }
                         if (texture["groupIndex"] == undefined) {
+                            if (this.currentGroupLength == egret.WebGLUtils.$multiTextureSize || !this.lastTextureGroupData) {
+                                this.currentGroupLength = 0;
+                                var data_1 = this.drawData[this.drawDataLen] || {};
+                                data_1.type = 11 /* ACTIVE_TEXTURE */;
+                                data_1.textureGroup = [];
+                                this.drawData[this.drawDataLen] = data_1;
+                                if (this.lastTextureGroupData) {
+                                    var textureGroup = this.lastTextureGroupData.textureGroup;
+                                    var textureGroupLength = textureGroup.length;
+                                    for (var i = 0; i < textureGroupLength; ++i) {
+                                        delete textureGroup[i].groupIndex;
+                                    }
+                                }
+                                this.lastTextureGroupData = data_1;
+                                this.lastDrawElementsData = null;
+                                this.drawDataLen++;
+                            }
                             var data = this.lastTextureGroupData;
                             texture["groupIndex"] = this.currentGroupLength;
                             this.currentGroupLength++;
