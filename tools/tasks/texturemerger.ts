@@ -62,12 +62,13 @@ export class TextureMergerPlugin implements Plugin {
     async onFinish(pluginContext: PluginContext): Promise<void> {
         const options = this.options;
         let texture_merger_path = await getTextureMergerPath()
-        const projectRoot = egret.args.projectDir;
+        let projectRoot = egret.args.projectDir;
         const tempDir = path.join(tmpdir(), 'egret/texturemerger', Math.random().toString());
         FileUtil.createDirectory(tempDir);
         for (let tmprojectFilePath of this.tmprojects) {
             const imageList = this.configs[tmprojectFilePath];
-            const tmprojectDir = path.dirname(tmprojectFilePath);
+            let tmprojectDir = path.dirname(tmprojectFilePath);
+            tmprojectDir = tmprojectDir.replace(projectRoot, "");
             const filename = path.basename(tmprojectFilePath, ".tmproject");
             const jsonPath = path.join(tempDir, filename + ".json");
             const pngPath = path.join(tempDir, filename + ".png");
@@ -75,8 +76,8 @@ export class TextureMergerPlugin implements Plugin {
                 const result = await shell(texture_merger_path, ["-cp", tmprojectFilePath, "-o", tempDir]);
                 const jsonBuffer = await FileUtil.readFileAsync(jsonPath, null) as any as NodeBuffer;
                 const pngBuffer = await FileUtil.readFileAsync(pngPath, null) as any as NodeBuffer;
-                pluginContext.createFile(path.join(tmprojectDir, filename + ".json"), jsonBuffer, { type: "sheet", subkeys: imageList });
-                pluginContext.createFile(path.join(tmprojectDir, filename + ".png"), pngBuffer);
+                pluginContext.createFile(path.join(pluginContext.outputDir, tmprojectDir, filename + ".json"), jsonBuffer, { type: "sheet", subkeys: imageList });
+                pluginContext.createFile(path.join(pluginContext.outputDir, tmprojectDir, filename + ".png"), pngBuffer);
             }
             catch (e) {
                 if (e.code) {

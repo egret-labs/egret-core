@@ -48,7 +48,6 @@ var TextureMergerPlugin = /** @class */ (function () {
     }
     TextureMergerPlugin.prototype.onStart = function (pluginContext) {
         var _this = this;
-        // console.log(pluginContext);
         var projectDir = pluginContext.projectRoot;
         this.tmprojects = FileUtil.search(projectDir, 'tmproject');
         var _loop_1 = function (temprojectUrl) {
@@ -103,6 +102,7 @@ var TextureMergerPlugin = /** @class */ (function () {
                         tmprojectFilePath = _a[_i];
                         imageList = this.configs[tmprojectFilePath];
                         tmprojectDir = path.dirname(tmprojectFilePath);
+                        tmprojectDir = tmprojectDir.replace(projectRoot, "");
                         filename = path.basename(tmprojectFilePath, ".tmproject");
                         jsonPath = path.join(tempDir, filename + ".json");
                         pngPath = path.join(tempDir, filename + ".png");
@@ -118,8 +118,8 @@ var TextureMergerPlugin = /** @class */ (function () {
                         return [4 /*yield*/, FileUtil.readFileAsync(pngPath, null)];
                     case 6:
                         pngBuffer = _b.sent();
-                        pluginContext.createFile(path.join(tmprojectDir, filename + ".json"), jsonBuffer, { type: "sheet", subkeys: imageList });
-                        pluginContext.createFile(path.join(tmprojectDir, filename + ".png"), pngBuffer);
+                        pluginContext.createFile(path.join(pluginContext.outputDir, tmprojectDir, filename + ".json"), jsonBuffer, { type: "sheet", subkeys: imageList });
+                        pluginContext.createFile(path.join(pluginContext.outputDir, tmprojectDir, filename + ".png"), pngBuffer);
                         return [3 /*break*/, 8];
                     case 7:
                         e_1 = _b.sent();

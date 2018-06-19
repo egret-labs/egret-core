@@ -1,7 +1,8 @@
 import * as plugin from './';
 import * as path from 'path';
 import { Plugin } from './';
-
+import * as FileUtil from '../lib/FileUtil';
+import { strictEqual } from 'assert';
 
 
 const wing_res_json = "wing.res.json";
@@ -143,11 +144,43 @@ export class ConvertResConfigFilePlugin implements plugin.Plugin {
 
 
 
+    /**
+     * 合图插件暂时没有使用
+     */
     private files: { [url: string]: R } = {};
+    /**
+     * {
+     *  'C:/Users/王恒尊/Desktop/22222/textureMerger2_wxgame/resource/temp2.json':
+            { url: 'C:/Users/王恒尊/Desktop/22222/textureMerger2_wxgame/resource/temp2.json',
+            subkeys:
+            [   'resource/assets/checkbox_unselect.png',
+                'resource/assets/blackBg.png',
+                'resource/assets/close.png',
+                'resource/assets/red.jpg',
+                'resource/assets/whiteBg.png',
+                'resource/assets/redDown.png' ],
+            type: 'sheet',
+            name: 'temp2_json' }
+        }
+     */
+    private subKeysFiles: { [url: string]: R } = {};
+    /**
+     * { 
+     *      'resource/default.res.json': 'resource/',
+     *      'resource/de.res.json': 'resource/' 
+    *  }
+     */
+    private subkeysRoot: { [url: string]: string } = {};
+    //从用户读取到的要修改的文件url
     private resourceConfigFiles: string[] = [];
+    /** 存储要修改的文件 */
     private resourceConfig: { [filename: string]: { resources: any[] } } = {};
     constructor(private options: ConvertResourceConfigPluginOption) {
-        this.resourceConfigFiles = this.options.resourceConfigFiles.map((item) => path.posix.join(item.root, item.filename))
+        this.resourceConfigFiles = this.options.resourceConfigFiles.map((item) => {
+            let resourceConfigFile = path.posix.join(item.root, item.filename);
+            this.subkeysRoot[resourceConfigFile] = item.root;
+            return resourceConfigFile;
+        })
     }
     async onFile(file: plugin.File) {
         let subkeys;
@@ -156,35 +189,133 @@ export class ConvertResConfigFilePlugin implements plugin.Plugin {
             subkeys = file.options.subkeys;
             type = file.options.type;
         }
-        const url = file.relative.split("\\").join("/");
+        const url = this.normalizeUrl(file.origin.split("\\").join("/"), file.origin.split("\\").join("/"));
         const name = this.options.nameSelector(file.origin);
+        /** 存储要修改的文件 */
         if (this.resourceConfigFiles.indexOf(file.origin) >= 0) {
-            this.resourceConfig[file.origin] = JSON.parse(file.contents.toString())
+            this.resourceConfig[url] = JSON.parse(file.contents.toString())
         }
         else {
             const r = { url, subkeys, type, name }
             this.files[url] = r;
         }
 
+        if (subkeys != undefined) {
+            const r = { url, subkeys, type, name }
+            this.subKeysFiles[url] = r;
+        }
         return file;
     }
+    /**
+     * 返回resource/asset/A.png的格式
+     * file 和 subkeys 都以这种方式存储
+     * @param url url地址
+     */
+    private normalizeUrl(url: string, root: string) {
+        if (root == undefined) return url;
+        if (url.indexOf(egret.args.projectDir) > -1) {
+            return url.slice(egret.args.projectDir.length, url.length);
+        }
+        if (url.indexOf(root) > -1)
+            return url;
+        else
+            return path.join(root, url);
+    }
+    /**
+     * 返回asset/A.png 的格式
+     * 在default.res.json中以无root的格式存储
+     * @param url url地址
+     */
+    private spliceRoot(url: string, sliceStr: string) {
+        if (url.indexOf(sliceStr) > -1)
+            return url.slice(sliceStr.length, url.length);
+        else
+            return url;
+    }
 
+
+    private subkeyToRes(subs: string[]) {
+        let last: string = "";
+        for (let sub of subs) {
+            last += path.basename(sub).split(".").join("_") + ","
+        }
+        last = last.slice(0, last.length - 1);
+        return last;
+    }
+
+    private async parseTestureMerger(pluginContext: plugin.PluginContext) {
+        for (let subkeysFileName in this.subKeysFiles) {
+            let subkeysFile = this.subKeysFiles[subkeysFileName];
+            /** 创建哈希，减少一层for遍历 */
+            let subkeyHash = {}
+            for (let subkeyItem of subkeysFile.subkeys) {
+                subkeyHash[path.normalize(subkeyItem)] = true;
+            }
+            this.modifyRES(subkeysFile, subkeyHash, pluginContext);
+        }
+    }
+    private modifyRES(subkeysFile: R, subkeyHash: {}, pluginContext: plugin.PluginContext) {
+        for (let filename in this.resourceConfig) {
+            // 一个res.json
+            let resourceConfig = this.resourceConfig[filename];
+            let root = this.subkeysRoot[filename];
+            let ishas = this.normalResBySubkey(subkeyHash, resourceConfig, root)
+            //增加最后的图集和json配置
+            if (ishas) {
+                //先直接抹去前方的路径，如果没有任何变化，说明资源在res.json的文件上级
+                let relativeJson = this.spliceRoot(subkeysFile.url, pluginContext.outputDir + "/" + root)
+                if (relativeJson == subkeysFile.url) {
+                    relativeJson = path.relative(subkeysFile.url, pluginContext.outputDir + "/" + root)
+                    relativeJson = relativeJson.split("\\").join("/")
+                }
+                let json = {
+                    name: subkeysFile.name,
+                    type: subkeysFile.type,
+                    subkeys: this.subkeyToRes(subkeysFile.subkeys as string[]),
+                    url: relativeJson
+                }
+                let imageUrl = subkeysFile.url.replace("json", "png");
+                let relativeImage = this.spliceRoot(imageUrl, pluginContext.outputDir + "/" + root)
+                if (relativeImage == imageUrl) {
+                    relativeImage = path.relative(imageUrl, pluginContext.outputDir + "/" + root)
+                    relativeImage = relativeImage.split("\\").join("/")
+                }
+                let image = {
+                    name: subkeysFile.name.replace("json", "png"),
+                    type: "image",
+                    url: relativeImage.split("\\").join("/")
+                }
+                resourceConfig.resources.push(json);
+                resourceConfig.resources.push(image);
+            }
+
+            let buffer = new Buffer(JSON.stringify(resourceConfig));
+            pluginContext.createFile(path.join(pluginContext.outputDir, filename), buffer);
+            // await FileUtil.writeJSONAsync(path.join(pluginContext.outputDir, filename), resourceConfig);
+        }
+    }
+    private normalResBySubkey(subkeyHash: {}, resourceConfig: { resources: any[] }, root: string): boolean {
+        let ishas = false;
+        let newConfig = resourceConfig.resources.concat();
+
+        for (let r of newConfig) {
+            if (subkeyHash[this.normalizeUrl(r.url, root)]) {
+                let index = resourceConfig.resources.indexOf(r);
+                console.log("delete：  " + r.url)
+                resourceConfig.resources.splice(index, 1);
+                ishas = true;
+                continue;
+            }
+        }
+        return ishas;
+    }
     async onFinish(commandContext: plugin.PluginContext) {
 
         // const { root, outputDir } = resourceConfig;
+        // console.log(this.subKeysFiles);
+        // console.log("------------------------------")
+        this.parseTestureMerger(commandContext);
 
-        for (let filename in this.resourceConfig) {
-            const resourceConfig = this.resourceConfig[filename];
-
-            for (let r of resourceConfig.resources) {
-                const realURL = this.files["resource" + "/" + r.url];
-                // if (realURL) {
-                //     r.url = realURL;
-                // }
-            }
-
-
-        }
 
         // for (let item of this.files) {
         //     if (item.url.indexOf(root) == 0) {
@@ -201,6 +332,7 @@ export class ConvertResConfigFilePlugin implements plugin.Plugin {
         // console.log(this.files);
         // console.log(this.resourceConfig)
         // commandContext.createFile(resourceFile, new Buffer(content), { outputDir });
+        console.log("finish")
 
     }
 }
