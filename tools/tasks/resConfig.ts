@@ -1,8 +1,7 @@
 import * as plugin from './';
 import * as path from 'path';
 import { Plugin } from './';
-import * as FileUtil from '../lib/FileUtil';
-import { strictEqual } from 'assert';
+import utils = require('../lib/utils');
 
 
 const wing_res_json = "wing.res.json";
@@ -140,14 +139,7 @@ export type ConvertResourceConfigPluginOption = {
 
 type R = { url: string, type: string, subkeys: string[] | string, name: string };
 
-export class ConvertResConfigFilePlugin implements plugin.Plugin {
-
-
-
-    /**
-     * 合图插件暂时没有使用
-     */
-    private files: { [url: string]: R } = {};
+class textureMergerResConfigPlugin {
     /**
      * {
      *  'C:/Users/王恒尊/Desktop/22222/textureMerger2_wxgame/resource/temp2.json':
@@ -163,18 +155,18 @@ export class ConvertResConfigFilePlugin implements plugin.Plugin {
             name: 'temp2_json' }
         }
      */
-    private subKeysFiles: { [url: string]: R } = {};
+    subKeysFiles: { [url: string]: R } = {};
     /**
      * { 
      *      'resource/default.res.json': 'resource/',
      *      'resource/de.res.json': 'resource/' 
     *  }
      */
-    private subkeysRoot: { [url: string]: string } = {};
+    subkeysRoot: { [url: string]: string } = {};
     //从用户读取到的要修改的文件url
-    private resourceConfigFiles: string[] = [];
+    resourceConfigFiles: string[] = [];
     /** 存储要修改的文件 */
-    private resourceConfig: { [filename: string]: { resources: any[] } } = {};
+    resourceConfig: { [filename: string]: { resources: any[] } } = {};
     constructor(private options: ConvertResourceConfigPluginOption) {
         this.resourceConfigFiles = this.options.resourceConfigFiles.map((item) => {
             let resourceConfigFile = path.posix.join(item.root, item.filename);
@@ -189,15 +181,11 @@ export class ConvertResConfigFilePlugin implements plugin.Plugin {
             subkeys = file.options.subkeys;
             type = file.options.type;
         }
-        const url = this.normalizeUrl(file.origin.split("\\").join("/"), file.origin.split("\\").join("/"));
+        const url = file.origin.split("\\").join("/");
         const name = this.options.nameSelector(file.origin);
         /** 存储要修改的文件 */
         if (this.resourceConfigFiles.indexOf(file.origin) >= 0) {
             this.resourceConfig[url] = JSON.parse(file.contents.toString())
-        }
-        else {
-            const r = { url, subkeys, type, name }
-            this.files[url] = r;
         }
 
         if (subkeys != undefined) {
@@ -243,7 +231,7 @@ export class ConvertResConfigFilePlugin implements plugin.Plugin {
         return last;
     }
 
-    private async parseTestureMerger(pluginContext: plugin.PluginContext) {
+    async parseTestureMerger(pluginContext: plugin.PluginContext) {
         for (let subkeysFileName in this.subKeysFiles) {
             let subkeysFile = this.subKeysFiles[subkeysFileName];
             /** 创建哈希，减少一层for遍历 */
@@ -265,8 +253,8 @@ export class ConvertResConfigFilePlugin implements plugin.Plugin {
                 //先直接抹去前方的路径，如果没有任何变化，说明资源在res.json的文件上级
                 let relativeJson = this.spliceRoot(subkeysFile.url, pluginContext.outputDir + "/" + root)
                 if (relativeJson == subkeysFile.url) {
-                    relativeJson = path.relative(subkeysFile.url, pluginContext.outputDir + "/" + root)
-                    relativeJson = relativeJson.split("\\").join("/")
+                    console.log(utils.tr(1422, filename, subkeysFile.name));
+                    global.exists();
                 }
                 let json = {
                     name: subkeysFile.name,
@@ -277,8 +265,8 @@ export class ConvertResConfigFilePlugin implements plugin.Plugin {
                 let imageUrl = subkeysFile.url.replace("json", "png");
                 let relativeImage = this.spliceRoot(imageUrl, pluginContext.outputDir + "/" + root)
                 if (relativeImage == imageUrl) {
-                    relativeImage = path.relative(imageUrl, pluginContext.outputDir + "/" + root)
-                    relativeImage = relativeImage.split("\\").join("/")
+                    console.log(utils.tr(1422, filename, subkeysFile.name));
+                    global.exists();
                 }
                 let image = {
                     name: subkeysFile.name.replace("json", "png"),
@@ -291,7 +279,6 @@ export class ConvertResConfigFilePlugin implements plugin.Plugin {
 
             let buffer = new Buffer(JSON.stringify(resourceConfig));
             pluginContext.createFile(path.join(pluginContext.outputDir, filename), buffer);
-            // await FileUtil.writeJSONAsync(path.join(pluginContext.outputDir, filename), resourceConfig);
         }
     }
     private normalResBySubkey(subkeyHash: {}, resourceConfig: { resources: any[] }, root: string): boolean {
@@ -301,7 +288,6 @@ export class ConvertResConfigFilePlugin implements plugin.Plugin {
         for (let r of newConfig) {
             if (subkeyHash[this.normalizeUrl(r.url, root)]) {
                 let index = resourceConfig.resources.indexOf(r);
-                console.log("delete：  " + r.url)
                 resourceConfig.resources.splice(index, 1);
                 ishas = true;
                 continue;
@@ -309,31 +295,26 @@ export class ConvertResConfigFilePlugin implements plugin.Plugin {
         }
         return ishas;
     }
+}
+
+export class ConvertResConfigFilePlugin implements plugin.Plugin {
+
+
+
+    /**
+     * 合图插件暂时没有使用
+     */
+    private files: { [url: string]: R } = {};
+    private tMResConfigPlugin: textureMergerResConfigPlugin;
+    constructor(private options: ConvertResourceConfigPluginOption) {
+        this.tMResConfigPlugin = new textureMergerResConfigPlugin(options);
+    }
+    async onFile(file: plugin.File) {
+        file = await this.tMResConfigPlugin.onFile(file);
+        return file;
+    }
     async onFinish(commandContext: plugin.PluginContext) {
-
-        // const { root, outputDir } = resourceConfig;
-        // console.log(this.subKeysFiles);
-        // console.log("------------------------------")
-        this.parseTestureMerger(commandContext);
-
-
-        // for (let item of this.files) {
-        //     if (item.url.indexOf(root) == 0) {
-        //         item.url = item.url.replace(root + "/", "");
-        //         item.subkeys = (item.subkeys as string[]).join(",")
-        //         resourceConfig.resources.push(item)
-        //     }
-        // }
-
-        // delete resourceConfig.root;
-        // delete resourceConfig.outputDir;
-        // const content = JSON.stringify(resourceConfig, null, '\t');
-
-        // console.log(this.files);
-        // console.log(this.resourceConfig)
-        // commandContext.createFile(resourceFile, new Buffer(content), { outputDir });
-        console.log("finish")
-
+        await this.tMResConfigPlugin.parseTestureMerger(commandContext);
     }
 }
 

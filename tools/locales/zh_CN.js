@@ -103,6 +103,7 @@ var egret;
     locale_strings[1419] = "转换WebP格式 : {0} / {1}";
     locale_strings[1420] = "打包失败，请检查路径中是否有中文或特殊的字符";
     locale_strings[1421] = "打zip包出现异常！";
+    locale_strings[1422] = "合图插件运行后，{0}中存在对上级{1}的引用！";
     //run
     locale_strings[1501] = "无法启动服务器，请检查权限或端口是否被占用";
     //create_app

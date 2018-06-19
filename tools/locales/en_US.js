@@ -100,6 +100,7 @@ locale_strings[1418] = "WebP format fail : {0}";
 locale_strings[1419] = "Format WebP : {0} / {1}";
 locale_strings[1420] = "Zip package failed, there may be special characters in the path";
 locale_strings[1421] = "Playing zip package exception!";
+locale_strings[1422] = "After the TextureMerger Plugin runs, there is a reference to superior {1} in {0}!";
 //startserver
 locale_strings[1501] = "Unable to start the server, please check the authority or whether the port is occupied";
 //create_app
