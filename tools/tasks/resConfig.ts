@@ -254,7 +254,7 @@ class textureMergerResConfigPlugin {
                 let relativeJson = this.spliceRoot(subkeysFile.url, pluginContext.outputDir + "/" + root)
                 if (relativeJson == subkeysFile.url) {
                     console.log(utils.tr(1422, filename, subkeysFile.name));
-                    global.exists();
+                    global.globals.exit()
                 }
                 let json = {
                     name: subkeysFile.name,
@@ -266,7 +266,7 @@ class textureMergerResConfigPlugin {
                 let relativeImage = this.spliceRoot(imageUrl, pluginContext.outputDir + "/" + root)
                 if (relativeImage == imageUrl) {
                     console.log(utils.tr(1422, filename, subkeysFile.name));
-                    global.exists();
+                    global.globals.exit()
                 }
                 let image = {
                     name: subkeysFile.name.replace("json", "png"),
