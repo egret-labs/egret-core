@@ -125,8 +125,8 @@ var TextureMergerPlugin = /** @class */ (function () {
                         e_1 = _b.sent();
                         if (e_1.code) {
                             console.error("TextureMerger \u6267\u884C\u9519\u8BEF\uFF0C\u9519\u8BEF\u7801\uFF1A" + e_1.code);
-                            // console.log(`${e.message}`)
-                            console.error("\u6267\u884C\u547D\u4EE4:" + e_1.path + " " + e_1.args.join(" "));
+                            console.log("" + e_1.message);
+                            // console.error(`执行命令:${e.path} ${e.args.join(" ")}`)
                         }
                         else {
                             console.error(e_1);

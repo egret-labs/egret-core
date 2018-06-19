@@ -82,8 +82,8 @@ export class TextureMergerPlugin implements Plugin {
             catch (e) {
                 if (e.code) {
                     console.error(`TextureMerger 执行错误，错误码：${e.code}`);
-                    // console.log(`${e.message}`)
-                    console.error(`执行命令:${e.path} ${e.args.join(" ")}`)
+                    console.log(`${e.message}`)
+                    // console.error(`执行命令:${e.path} ${e.args.join(" ")}`)
                 }
                 else {
                     console.error(e);
