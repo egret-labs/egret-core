@@ -12,6 +12,10 @@ Egret Engine was officially released on May 25, 2018 5.2 stable version. On June
 
 * 修复```egret run```命令无法正常打开新版微信开发者工具问题
 
+## Third-party libraries
+
+* matchvs library upgrade to 3.7.2.1
+
 ## WeChat Games Support Library
 
 WeChat Mini Game Support Library Please update your project with the release of a WeChat minigame by Egret Launcher. Version number 1.1.2
