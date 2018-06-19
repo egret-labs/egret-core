@@ -69,7 +69,7 @@ var UpgradeCommand = (function () {
                         upgradeConfigArr = [
                             { "v": "5.1.1", command: Upgrade_5_1_1 },
                             { "v": "5.1.2", command: Upgrade_5_1_2 },
-                            { "v": "5.2.2" }
+                            { "v": "5.2.3" }
                         ];
                         _a.label = 1;
                     case 1:
