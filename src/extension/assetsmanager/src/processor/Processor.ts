@@ -230,7 +230,6 @@ module RES.processor {
                 return data.getTexture(subkey);
             }
             else {
-                console.error(`missing resource : ${key}#${subkey}`);
                 return null;
             }
         },
