@@ -258,69 +258,59 @@ var TextureMergerResConfigPlugin = /** @class */ (function () {
             // 一个res.json
             var resourceConfig_1 = this.resourceConfig[filename];
             var root = this.subkeysRoot[filename];
-            var ishasFile = this.hasFileInRes(shortName, resourceConfig_1);
-            if (!ishasFile) {
-                var ishas = this.normalResBySubkey(subkeyHash, resourceConfig_1, root);
-                //增加最后的图集和json配置
-                if (ishas) {
-                    //先直接抹去前方的路径，如果没有任何变化，说明资源在res.json的文件上级
-                    var relativeJson = this.spliceRoot(subkeysFile.url, pluginContext.outputDir + "/" + root);
-                    if (relativeJson == subkeysFile.url) {
-                        console.log(utils.tr(1422, filename, subkeysFile.name));
-                        global.globals.exit();
-                    }
-                    var json = {
-                        name: subkeysFile.name,
-                        type: subkeysFile.type,
-                        subkeys: this.subkeyToRes(subkeysFile.subkeys),
-                        url: relativeJson
-                    };
-                    var imageUrl = subkeysFile.url.replace("json", "png");
-                    var relativeImage = this.spliceRoot(imageUrl, pluginContext.outputDir + "/" + root);
-                    if (relativeImage == imageUrl) {
-                        console.log(utils.tr(1422, filename, subkeysFile.name));
-                        global.globals.exit();
-                    }
-                    var image = {
-                        name: subkeysFile.name.replace("json", "png"),
-                        type: "image",
-                        url: relativeImage.split("\\").join("/")
-                    };
-                    resourceConfig_1.resources.push(json);
-                    resourceConfig_1.resources.push(image);
+            var ishas = this.normalResBySubkey(shortName, subkeyHash, resourceConfig_1, root);
+            //增加最后的图集和json配置
+            if (!ishas) {
+                //先直接抹去前方的路径，如果没有任何变化，说明资源在res.json的文件上级
+                var relativeJson = this.spliceRoot(subkeysFile.url, pluginContext.outputDir + "/" + root);
+                if (relativeJson == subkeysFile.url) {
+                    console.log(utils.tr(1422, filename, subkeysFile.name));
+                    global.globals.exit();
                 }
-                var buffer = new Buffer(JSON.stringify(resourceConfig_1));
-                pluginContext.createFile(path.join(pluginContext.outputDir, filename), buffer);
+                var json = {
+                    name: subkeysFile.name,
+                    type: subkeysFile.type,
+                    subkeys: this.subkeyToRes(subkeysFile.subkeys),
+                    url: relativeJson
+                };
+                var imageUrl = subkeysFile.url.replace("json", "png");
+                var relativeImage = this.spliceRoot(imageUrl, pluginContext.outputDir + "/" + root);
+                if (relativeImage == imageUrl) {
+                    console.log(utils.tr(1422, filename, subkeysFile.name));
+                    global.globals.exit();
+                }
+                var image = {
+                    name: subkeysFile.name.replace("json", "png"),
+                    type: "image",
+                    url: relativeImage.split("\\").join("/")
+                };
+                resourceConfig_1.resources.push(json);
+                resourceConfig_1.resources.push(image);
             }
+            var buffer = new Buffer(JSON.stringify(resourceConfig_1));
+            pluginContext.createFile(path.join(pluginContext.outputDir, filename), buffer);
         }
     };
-    TextureMergerResConfigPlugin.prototype.normalResBySubkey = function (subkeyHash, resourceConfig, root) {
+    /**
+   * 判断是否在res.json中被引用
+   * @param name 传入的名字应该是preload_0_json格式
+   * @param resourceConfig 对应的res.json数据
+   */
+    TextureMergerResConfigPlugin.prototype.normalResBySubkey = function (name, subkeyHash, resourceConfig, root) {
         var ishas = false;
         var newConfig = resourceConfig.resources.concat();
         for (var _i = 0, newConfig_1 = newConfig; _i < newConfig_1.length; _i++) {
             var r = newConfig_1[_i];
+            if (r.name == name) {
+                ishas = true;
+            }
             if (subkeyHash[this.normalizeUrl(r.url, root)]) {
                 var index = resourceConfig.resources.indexOf(r);
                 resourceConfig.resources.splice(index, 1);
-                ishas = true;
                 continue;
             }
         }
         return ishas;
-    };
-    /**
-     * 判断是否在res.json中被引用
-     * @param name 传入的名字应该是preload_0_json格式
-     * @param resourceConfig 对应的res.json数据
-     */
-    TextureMergerResConfigPlugin.prototype.hasFileInRes = function (name, resourceConfig) {
-        for (var _i = 0, _a = resourceConfig.resources; _i < _a.length; _i++) {
-            var r = _a[_i];
-            if (r.name == name) {
-                return true;
-            }
-        }
-        return false;
     };
     return TextureMergerResConfigPlugin;
 }());
