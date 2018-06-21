@@ -201,9 +201,9 @@ module RES.processor {
         async onLoadStart(host, resource): Promise<any> {
 
             let data = await host.load(resource, "json");
-            let imageName = getRelativePath(resource.url, data.file);
-            let r = host.resourceConfig.getResource(data.file);
+            let r = host.resourceConfig.getResource(RES.nameSelector(data.file));
             if (!r) {
+                let imageName = getRelativePath(resource.url, data.file);
                 r = { name: imageName, url: imageName, type: 'image', root: resource.root };
             }
             var texture: egret.Texture = await host.load(r);
@@ -282,16 +282,16 @@ module RES.processor {
                 config = data
             }
 
-            let imageFileName = resource.name.replace("fnt", "png");
-            let r = host.resourceConfig.getResource(imageFileName);
+            let imageName;
+            if (typeof config === 'string') {
+                imageName = fontGetTexturePath(resource.url, config)
+            }
+            else {
+                imageName = getRelativePath(resource.url, config.file);
+            }
+            let r = host.resourceConfig.getResource(RES.nameSelector(imageName));
             if (!r) {
-                if (typeof config === 'string') {
-                    imageFileName = fontGetTexturePath(resource.url, config)
-                }
-                else {
-                    imageFileName = getRelativePath(resource.url, config.file);
-                }
-                r = { name: imageFileName, url: imageFileName, type: 'image', root: resource.root };
+                r = { name: imageName, url: imageName, type: 'image', root: resource.root };
             }
             var texture: egret.Texture = await host.load(r);
             var font = new egret.BitmapFont(texture, config);
