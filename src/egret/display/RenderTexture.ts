@@ -121,11 +121,11 @@ namespace egret {
             else {
                 let matrix = Matrix.create();
                 matrix.identity();
+                matrix.scale(scale, scale);
                 //应用裁切
                 if (clipBounds) {
                     matrix.translate(-clipBounds.x, -clipBounds.y);
                 }
-                matrix.scale(scale, scale);
                 sys.systemRenderer.render(displayObject, renderBuffer, matrix, true);
                 Matrix.release(matrix);
             }
