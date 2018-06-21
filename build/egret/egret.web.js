@@ -4227,6 +4227,7 @@ var egret;
                     canvasScaleY = Math.ceil(canvasScaleY);
                 }
                 var m = egret.Matrix.create();
+                m.identity();
                 m.scale(scalex / canvasScaleX, scaley / canvasScaleY);
                 m.rotate(rotation * Math.PI / 180);
                 var transform = "matrix(" + m.a + "," + m.b + "," + m.c + "," + m.d + "," + m.tx + "," + m.ty + ")";
