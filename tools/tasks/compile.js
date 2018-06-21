@@ -115,8 +115,8 @@ var UglifyPlugin = /** @class */ (function () {
     };
     UglifyPlugin.prototype.onFinish = function (pluginContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var _i, _a, matcher, jscode;
             var _this = this;
+            var _i, _a, matcher, jscode;
             return __generator(this, function (_b) {
                 for (_i = 0, _a = this.matchers; _i < _a.length; _i++) {
                     matcher = _a[_i];

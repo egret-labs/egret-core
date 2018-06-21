@@ -43,25 +43,36 @@ var TextureMergerPlugin = /** @class */ (function () {
     function TextureMergerPlugin(options) {
         this.options = options;
         this.tmprojects = [];
-        this.removedList = [];
+        this.removedList = {};
         this.configs = {};
     }
+    TextureMergerPlugin.prototype.onStart = function (pluginContext) {
+        var _this = this;
+        var projectDir = pluginContext.projectRoot;
+        this.tmprojects = FileUtil.search(projectDir, 'tmproject');
+        var _loop_1 = function (temprojectUrl) {
+            var temProject = FileUtil.readJSONSync(temprojectUrl);
+            var tmprojectDir = path.dirname(temprojectUrl);
+            var imageFiles = temProject.files.map(function (f) {
+                var globalPath = path.resolve(pluginContext.projectRoot, tmprojectDir, f);
+                var pa = path.relative(pluginContext.projectRoot, globalPath).split("\\").join("/");
+                _this.removedList[pa] = true;
+                return pa;
+            });
+            this_1.configs[temprojectUrl] = imageFiles;
+        };
+        var this_1 = this;
+        for (var _i = 0, _a = this.tmprojects; _i < _a.length; _i++) {
+            var temprojectUrl = _a[_i];
+            _loop_1(temprojectUrl);
+        }
+    };
     TextureMergerPlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
-            var extname, filename, data, tmprojectDir_1, imageFiles;
+            var extname;
             return __generator(this, function (_a) {
                 extname = file.extname;
-                if (extname == '.tmproject') {
-                    filename = file.origin;
-                    this.tmprojects.push(filename);
-                    data = JSON.parse(file.contents.toString());
-                    tmprojectDir_1 = path.dirname(filename);
-                    imageFiles = data.files.map(function (f) {
-                        var globalPath = path.resolve(file.base, tmprojectDir_1, f);
-                        return path.relative(file.base, globalPath).split("\\").join("/");
-                    });
-                    this.configs[filename] = imageFiles;
-                    this.removedList = this.removedList.concat(imageFiles);
+                if (this.removedList[file.origin] || extname == ".tmproject") {
                     return [2 /*return*/, null];
                 }
                 else {
@@ -73,7 +84,7 @@ var TextureMergerPlugin = /** @class */ (function () {
     };
     TextureMergerPlugin.prototype.onFinish = function (pluginContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var options, texture_merger_path, projectRoot, tempDir, _i, _a, tm, imageList, tmprojectFilePath, tmprojectDir, filename, jsonPath, pngPath, result, jsonBuffer, pngBuffer, e_1;
+            var options, texture_merger_path, projectRoot, tempDir, _i, _a, tmprojectFilePath, imageList, tmprojectDir, filename, jsonPath, pngPath, result, jsonBuffer, pngBuffer, e_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -88,11 +99,10 @@ var TextureMergerPlugin = /** @class */ (function () {
                         _b.label = 2;
                     case 2:
                         if (!(_i < _a.length)) return [3 /*break*/, 9];
-                        tm = _a[_i];
-                        imageList = this.configs[tm];
-                        tmprojectFilePath = path.join(pluginContext.projectRoot, tm) //options.path;
-                        ;
-                        tmprojectDir = path.dirname(tm);
+                        tmprojectFilePath = _a[_i];
+                        imageList = this.configs[tmprojectFilePath];
+                        tmprojectDir = path.dirname(tmprojectFilePath);
+                        tmprojectDir = tmprojectDir.replace(projectRoot, "");
                         filename = path.basename(tmprojectFilePath, ".tmproject");
                         jsonPath = path.join(tempDir, filename + ".json");
                         pngPath = path.join(tempDir, filename + ".png");
@@ -108,14 +118,15 @@ var TextureMergerPlugin = /** @class */ (function () {
                         return [4 /*yield*/, FileUtil.readFileAsync(pngPath, null)];
                     case 6:
                         pngBuffer = _b.sent();
-                        pluginContext.createFile(path.join(tmprojectDir, filename + ".json"), jsonBuffer, { type: "sheet", subkeys: imageList });
-                        pluginContext.createFile(path.join(tmprojectDir, filename + ".png"), pngBuffer);
+                        pluginContext.createFile(path.join(pluginContext.outputDir, tmprojectDir, filename + ".json"), jsonBuffer, { type: "sheet", subkeys: imageList });
+                        pluginContext.createFile(path.join(pluginContext.outputDir, tmprojectDir, filename + ".png"), pngBuffer);
                         return [3 /*break*/, 8];
                     case 7:
                         e_1 = _b.sent();
                         if (e_1.code) {
                             console.error("TextureMerger \u6267\u884C\u9519\u8BEF\uFF0C\u9519\u8BEF\u7801\uFF1A" + e_1.code);
-                            console.error("\u6267\u884C\u547D\u4EE4:" + e_1.path + " " + e_1.args.join(" "));
+                            console.log("" + e_1.message);
+                            // console.error(`执行命令:${e.path} ${e.args.join(" ")}`)
                         }
                         else {
                             console.error(e_1);
