@@ -32,7 +32,9 @@ module RES {
 
     export type GetResAsyncCallback = (value?: any, key?: string) => any;
 
-
+    export let nameSelector = function (url) {
+        return path.basename(url).split(".").join("_");
+    }
 
     /**
      * Conduct mapping injection with class definition as the value.

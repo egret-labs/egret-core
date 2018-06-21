@@ -1000,15 +1000,15 @@ var RES;
         processor_1.SheetProcessor = {
             onLoadStart: function (host, resource) {
                 return __awaiter(this, void 0, void 0, function () {
-                    var data, imageName, r, texture, frames, spriteSheet, subkey, config, texture, str, list;
+                    var data, r, imageName, texture, frames, spriteSheet, subkey, config, texture, str, list;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0: return [4 /*yield*/, host.load(resource, "json")];
                             case 1:
                                 data = _a.sent();
-                                imageName = getRelativePath(resource.url, data.file);
-                                r = host.resourceConfig.getResource(data.file);
+                                r = host.resourceConfig.getResource(RES.nameSelector(data.file));
                                 if (!r) {
+                                    imageName = getRelativePath(resource.url, data.file);
                                     r = { name: imageName, url: imageName, type: 'image', root: resource.root };
                                 }
                                 return [4 /*yield*/, host.load(r)];
@@ -1072,7 +1072,7 @@ var RES;
         processor_1.FontProcessor = {
             onLoadStart: function (host, resource) {
                 return __awaiter(this, void 0, void 0, function () {
-                    var data, config, imageFileName, r, texture, font;
+                    var data, config, imageName, r, texture, font;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0: return [4 /*yield*/, host.load(resource, 'text')];
@@ -1084,16 +1084,15 @@ var RES;
                                 catch (e) {
                                     config = data;
                                 }
-                                imageFileName = resource.name.replace("fnt", "png");
-                                r = host.resourceConfig.getResource(imageFileName);
+                                if (typeof config === 'string') {
+                                    imageName = fontGetTexturePath(resource.url, config);
+                                }
+                                else {
+                                    imageName = getRelativePath(resource.url, config.file);
+                                }
+                                r = host.resourceConfig.getResource(RES.nameSelector(imageName));
                                 if (!r) {
-                                    if (typeof config === 'string') {
-                                        imageFileName = fontGetTexturePath(resource.url, config);
-                                    }
-                                    else {
-                                        imageFileName = getRelativePath(resource.url, config.file);
-                                    }
-                                    r = { name: imageFileName, url: imageFileName, type: 'image', root: resource.root };
+                                    r = { name: imageName, url: imageName, type: 'image', root: resource.root };
                                 }
                                 return [4 /*yield*/, host.load(r)];
                             case 2:
@@ -2054,6 +2053,9 @@ var RES;
 //////////////////////////////////////////////////////////////////////////////////////
 var RES;
 (function (RES) {
+    RES.nameSelector = function (url) {
+        return RES.path.basename(url).split(".").join("_");
+    };
     /**
      * Conduct mapping injection with class definition as the value.
      * @param type Injection type.

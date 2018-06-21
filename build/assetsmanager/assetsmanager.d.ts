@@ -610,6 +610,7 @@ declare namespace RES {
 }
 declare module RES {
     type GetResAsyncCallback = (value?: any, key?: string) => any;
+    let nameSelector: (url: any) => string;
     /**
      * Conduct mapping injection with class definition as the value.
      * @param type Injection type.
