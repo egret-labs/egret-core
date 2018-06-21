@@ -140,14 +140,14 @@ var EmitResConfigFilePlugin = /** @class */ (function () {
     return EmitResConfigFilePlugin;
 }());
 exports.EmitResConfigFilePlugin = EmitResConfigFilePlugin;
-var textureMergerResConfigPlugin = /** @class */ (function () {
-    function textureMergerResConfigPlugin(options) {
+var TextureMergerResConfigPlugin = /** @class */ (function () {
+    function TextureMergerResConfigPlugin(options) {
         var _this = this;
         this.options = options;
         /**
          * {
-         *  'C:/Users/王恒尊/Desktop/22222/textureMerger2_wxgame/resource/temp2.json':
-                { url: 'C:/Users/王恒尊/Desktop/22222/textureMerger2_wxgame/resource/temp2.json',
+         *  'textureMerger_wxgame/resource/example.json':
+                { url: 'textureMerger_wxgame/resource/example.json',
                 subkeys:
                 [   'resource/assets/checkbox_unselect.png',
                     'resource/assets/blackBg.png',
@@ -156,7 +156,7 @@ var textureMergerResConfigPlugin = /** @class */ (function () {
                     'resource/assets/whiteBg.png',
                     'resource/assets/redDown.png' ],
                 type: 'sheet',
-                name: 'temp2_json' }
+                name: 'example_json' }
             }
          */
         this.subKeysFiles = {};
@@ -177,7 +177,7 @@ var textureMergerResConfigPlugin = /** @class */ (function () {
             return resourceConfigFile;
         });
     }
-    textureMergerResConfigPlugin.prototype.onFile = function (file) {
+    TextureMergerResConfigPlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
             var subkeys, type, url, name, r;
             return __generator(this, function (_a) {
@@ -204,7 +204,7 @@ var textureMergerResConfigPlugin = /** @class */ (function () {
      * file 和 subkeys 都以这种方式存储
      * @param url url地址
      */
-    textureMergerResConfigPlugin.prototype.normalizeUrl = function (url, root) {
+    TextureMergerResConfigPlugin.prototype.normalizeUrl = function (url, root) {
         if (root == undefined)
             return url;
         if (url.indexOf(egret.args.projectDir) > -1) {
@@ -220,13 +220,13 @@ var textureMergerResConfigPlugin = /** @class */ (function () {
      * 在default.res.json中以无root的格式存储
      * @param url url地址
      */
-    textureMergerResConfigPlugin.prototype.spliceRoot = function (url, sliceStr) {
+    TextureMergerResConfigPlugin.prototype.spliceRoot = function (url, sliceStr) {
         if (url.indexOf(sliceStr) > -1)
             return url.slice(sliceStr.length, url.length);
         else
             return url;
     };
-    textureMergerResConfigPlugin.prototype.subkeyToRes = function (subs) {
+    TextureMergerResConfigPlugin.prototype.subkeyToRes = function (subs) {
         var last = "";
         for (var _i = 0, subs_1 = subs; _i < subs_1.length; _i++) {
             var sub = subs_1[_i];
@@ -235,62 +235,66 @@ var textureMergerResConfigPlugin = /** @class */ (function () {
         last = last.slice(0, last.length - 1);
         return last;
     };
-    textureMergerResConfigPlugin.prototype.parseTestureMerger = function (pluginContext) {
+    TextureMergerResConfigPlugin.prototype.parseTestureMerger = function (pluginContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var subkeysFileName, subkeysFile, subkeyHash, _i, _a, subkeyItem;
+            var subkeysFileName, subkeysFile, shortName, subkeyHash, _i, _a, subkeyItem;
             return __generator(this, function (_b) {
                 for (subkeysFileName in this.subKeysFiles) {
                     subkeysFile = this.subKeysFiles[subkeysFileName];
+                    shortName = subkeysFile.name;
                     subkeyHash = {};
                     for (_i = 0, _a = subkeysFile.subkeys; _i < _a.length; _i++) {
                         subkeyItem = _a[_i];
                         subkeyHash[path.normalize(subkeyItem)] = true;
                     }
-                    this.modifyRES(subkeysFile, subkeyHash, pluginContext);
+                    this.modifyRES(subkeysFile, subkeyHash, pluginContext, shortName);
                 }
                 return [2 /*return*/];
             });
         });
     };
-    textureMergerResConfigPlugin.prototype.modifyRES = function (subkeysFile, subkeyHash, pluginContext) {
+    TextureMergerResConfigPlugin.prototype.modifyRES = function (subkeysFile, subkeyHash, pluginContext, shortName) {
         for (var filename in this.resourceConfig) {
             // 一个res.json
             var resourceConfig_1 = this.resourceConfig[filename];
             var root = this.subkeysRoot[filename];
-            var ishas = this.normalResBySubkey(subkeyHash, resourceConfig_1, root);
-            //增加最后的图集和json配置
-            if (ishas) {
-                //先直接抹去前方的路径，如果没有任何变化，说明资源在res.json的文件上级
-                var relativeJson = this.spliceRoot(subkeysFile.url, pluginContext.outputDir + "/" + root);
-                if (relativeJson == subkeysFile.url) {
-                    console.log(utils.tr(1422, filename, subkeysFile.name));
-                    global.globals.exit();
+            var ishasFile = this.hasFileInRes(shortName, resourceConfig_1);
+            if (!ishasFile) {
+                var ishas = this.normalResBySubkey(subkeyHash, resourceConfig_1, root);
+                //增加最后的图集和json配置
+                if (ishas) {
+                    //先直接抹去前方的路径，如果没有任何变化，说明资源在res.json的文件上级
+                    var relativeJson = this.spliceRoot(subkeysFile.url, pluginContext.outputDir + "/" + root);
+                    if (relativeJson == subkeysFile.url) {
+                        console.log(utils.tr(1422, filename, subkeysFile.name));
+                        global.globals.exit();
+                    }
+                    var json = {
+                        name: subkeysFile.name,
+                        type: subkeysFile.type,
+                        subkeys: this.subkeyToRes(subkeysFile.subkeys),
+                        url: relativeJson
+                    };
+                    var imageUrl = subkeysFile.url.replace("json", "png");
+                    var relativeImage = this.spliceRoot(imageUrl, pluginContext.outputDir + "/" + root);
+                    if (relativeImage == imageUrl) {
+                        console.log(utils.tr(1422, filename, subkeysFile.name));
+                        global.globals.exit();
+                    }
+                    var image = {
+                        name: subkeysFile.name.replace("json", "png"),
+                        type: "image",
+                        url: relativeImage.split("\\").join("/")
+                    };
+                    resourceConfig_1.resources.push(json);
+                    resourceConfig_1.resources.push(image);
                 }
-                var json = {
-                    name: subkeysFile.name,
-                    type: subkeysFile.type,
-                    subkeys: this.subkeyToRes(subkeysFile.subkeys),
-                    url: relativeJson
-                };
-                var imageUrl = subkeysFile.url.replace("json", "png");
-                var relativeImage = this.spliceRoot(imageUrl, pluginContext.outputDir + "/" + root);
-                if (relativeImage == imageUrl) {
-                    console.log(utils.tr(1422, filename, subkeysFile.name));
-                    global.globals.exit();
-                }
-                var image = {
-                    name: subkeysFile.name.replace("json", "png"),
-                    type: "image",
-                    url: relativeImage.split("\\").join("/")
-                };
-                resourceConfig_1.resources.push(json);
-                resourceConfig_1.resources.push(image);
+                var buffer = new Buffer(JSON.stringify(resourceConfig_1));
+                pluginContext.createFile(path.join(pluginContext.outputDir, filename), buffer);
             }
-            var buffer = new Buffer(JSON.stringify(resourceConfig_1));
-            pluginContext.createFile(path.join(pluginContext.outputDir, filename), buffer);
         }
     };
-    textureMergerResConfigPlugin.prototype.normalResBySubkey = function (subkeyHash, resourceConfig, root) {
+    TextureMergerResConfigPlugin.prototype.normalResBySubkey = function (subkeyHash, resourceConfig, root) {
         var ishas = false;
         var newConfig = resourceConfig.resources.concat();
         for (var _i = 0, newConfig_1 = newConfig; _i < newConfig_1.length; _i++) {
@@ -304,7 +308,21 @@ var textureMergerResConfigPlugin = /** @class */ (function () {
         }
         return ishas;
     };
-    return textureMergerResConfigPlugin;
+    /**
+     * 判断是否在res.json中被引用
+     * @param name 传入的名字应该是preload_0_json格式
+     * @param resourceConfig 对应的res.json数据
+     */
+    TextureMergerResConfigPlugin.prototype.hasFileInRes = function (name, resourceConfig) {
+        for (var _i = 0, _a = resourceConfig.resources; _i < _a.length; _i++) {
+            var r = _a[_i];
+            if (r.name == name) {
+                return true;
+            }
+        }
+        return false;
+    };
+    return TextureMergerResConfigPlugin;
 }());
 var ConvertResConfigFilePlugin = /** @class */ (function () {
     function ConvertResConfigFilePlugin(options) {
@@ -313,7 +331,7 @@ var ConvertResConfigFilePlugin = /** @class */ (function () {
          * 合图插件暂时没有使用
          */
         this.files = {};
-        this.tMResConfigPlugin = new textureMergerResConfigPlugin(options);
+        this.tMResConfigPlugin = new TextureMergerResConfigPlugin(options);
     }
     ConvertResConfigFilePlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
