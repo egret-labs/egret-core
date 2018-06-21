@@ -139,11 +139,11 @@ export type ConvertResourceConfigPluginOption = {
 
 type R = { url: string, type: string, subkeys: string[] | string, name: string };
 
-class textureMergerResConfigPlugin {
+class TextureMergerResConfigPlugin {
     /**
      * {
-     *  'C:/Users/王恒尊/Desktop/22222/textureMerger2_wxgame/resource/temp2.json':
-            { url: 'C:/Users/王恒尊/Desktop/22222/textureMerger2_wxgame/resource/temp2.json',
+     *  'textureMerger_wxgame/resource/example.json':
+            { url: 'textureMerger_wxgame/resource/example.json',
             subkeys:
             [   'resource/assets/checkbox_unselect.png',
                 'resource/assets/blackBg.png',
@@ -152,7 +152,7 @@ class textureMergerResConfigPlugin {
                 'resource/assets/whiteBg.png',
                 'resource/assets/redDown.png' ],
             type: 'sheet',
-            name: 'temp2_json' }
+            name: 'example_json' }
         }
      */
     subKeysFiles: { [url: string]: R } = {};
@@ -302,12 +302,12 @@ export class ConvertResConfigFilePlugin implements plugin.Plugin {
 
 
     /**
-     * 合图插件暂时没有使用
+     * 合图插件暂时没有使用files属性
      */
     private files: { [url: string]: R } = {};
-    private tMResConfigPlugin: textureMergerResConfigPlugin;
+    private tMResConfigPlugin: TextureMergerResConfigPlugin;
     constructor(private options: ConvertResourceConfigPluginOption) {
-        this.tMResConfigPlugin = new textureMergerResConfigPlugin(options);
+        this.tMResConfigPlugin = new TextureMergerResConfigPlugin(options);
     }
     async onFile(file: plugin.File) {
         file = await this.tMResConfigPlugin.onFile(file);
