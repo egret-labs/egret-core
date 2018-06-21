@@ -504,6 +504,9 @@ var RES;
                     }
                     _this.next();
                 }).catch(function (error) {
+                    if (!error) {
+                        throw r.name + " load fail";
+                    }
                     if (!error.__resource_manager_error__) {
                         throw error;
                     }
