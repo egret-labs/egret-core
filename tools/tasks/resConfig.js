@@ -159,21 +159,21 @@ var TextureMergerResConfigPlugin = /** @class */ (function () {
                 name: 'example_json' }
             }
          */
-        this.subKeysFiles = {};
+        this.sheetFiles = {};
         /**
          * {
          *      'resource/default.res.json': 'resource/',
          *      'resource/de.res.json': 'resource/'
         *  }
          */
-        this.subkeysRoot = {};
+        this.sheetRoot = {};
         //从用户读取到的要修改的文件url
         this.resourceConfigFiles = [];
         /** 存储要修改的文件 */
         this.resourceConfig = {};
         this.resourceConfigFiles = this.options.resourceConfigFiles.map(function (item) {
             var resourceConfigFile = path.posix.join(item.root, item.filename);
-            _this.subkeysRoot[resourceConfigFile] = item.root;
+            _this.sheetRoot[resourceConfigFile] = item.root;
             return resourceConfigFile;
         });
     }
@@ -191,9 +191,9 @@ var TextureMergerResConfigPlugin = /** @class */ (function () {
                 if (this.resourceConfigFiles.indexOf(file.origin) >= 0) {
                     this.resourceConfig[url] = JSON.parse(file.contents.toString());
                 }
-                if (subkeys != undefined) {
+                if (type == "sheet") {
                     r = { url: url, subkeys: subkeys, type: type, name: name };
-                    this.subKeysFiles[url] = r;
+                    this.sheetFiles[url] = r;
                 }
                 return [2 /*return*/, file];
             });
@@ -226,7 +226,7 @@ var TextureMergerResConfigPlugin = /** @class */ (function () {
         else
             return url;
     };
-    TextureMergerResConfigPlugin.prototype.subkeyToRes = function (subs) {
+    TextureMergerResConfigPlugin.prototype.sheetToRes = function (subs) {
         var last = "";
         for (var _i = 0, subs_1 = subs; _i < subs_1.length; _i++) {
             var sub = subs_1[_i];
@@ -237,29 +237,30 @@ var TextureMergerResConfigPlugin = /** @class */ (function () {
     };
     TextureMergerResConfigPlugin.prototype.parseTestureMerger = function (pluginContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var subkeysFileName, subkeysFile, subkeyHash, _i, _a, subkeyItem;
+            var sheetFileName, subkeysFile, shortName, subkeyHash, _i, _a, subkeyItem;
             return __generator(this, function (_b) {
-                for (subkeysFileName in this.subKeysFiles) {
-                    subkeysFile = this.subKeysFiles[subkeysFileName];
+                for (sheetFileName in this.sheetFiles) {
+                    subkeysFile = this.sheetFiles[sheetFileName];
+                    shortName = subkeysFile.name;
                     subkeyHash = {};
                     for (_i = 0, _a = subkeysFile.subkeys; _i < _a.length; _i++) {
                         subkeyItem = _a[_i];
                         subkeyHash[path.normalize(subkeyItem)] = true;
                     }
-                    this.modifyRES(subkeysFile, subkeyHash, pluginContext);
+                    this.modifyRES(subkeysFile, subkeyHash, pluginContext, shortName);
                 }
                 return [2 /*return*/];
             });
         });
     };
-    TextureMergerResConfigPlugin.prototype.modifyRES = function (subkeysFile, subkeyHash, pluginContext) {
+    TextureMergerResConfigPlugin.prototype.modifyRES = function (subkeysFile, subkeyHash, pluginContext, shortName) {
         for (var filename in this.resourceConfig) {
             // 一个res.json
             var resourceConfig_1 = this.resourceConfig[filename];
-            var root = this.subkeysRoot[filename];
-            var ishas = this.normalResBySubkey(subkeyHash, resourceConfig_1, root);
+            var root = this.sheetRoot[filename];
+            var ishas = this.normalResBySubkey(shortName, subkeyHash, resourceConfig_1, root);
             //增加最后的图集和json配置
-            if (ishas) {
+            if (!ishas) {
                 //先直接抹去前方的路径，如果没有任何变化，说明资源在res.json的文件上级
                 var relativeJson = this.spliceRoot(subkeysFile.url, pluginContext.outputDir + "/" + root);
                 if (relativeJson == subkeysFile.url) {
@@ -269,7 +270,7 @@ var TextureMergerResConfigPlugin = /** @class */ (function () {
                 var json = {
                     name: subkeysFile.name,
                     type: subkeysFile.type,
-                    subkeys: this.subkeyToRes(subkeysFile.subkeys),
+                    subkeys: this.sheetToRes(subkeysFile.subkeys),
                     url: relativeJson
                 };
                 var imageUrl = subkeysFile.url.replace("json", "png");
@@ -290,15 +291,22 @@ var TextureMergerResConfigPlugin = /** @class */ (function () {
             pluginContext.createFile(path.join(pluginContext.outputDir, filename), buffer);
         }
     };
-    TextureMergerResConfigPlugin.prototype.normalResBySubkey = function (subkeyHash, resourceConfig, root) {
+    /**
+   * 判断是否在res.json中被引用
+   * @param name 传入的名字应该是preload_0_json格式
+   * @param resourceConfig 对应的res.json数据
+   */
+    TextureMergerResConfigPlugin.prototype.normalResBySubkey = function (name, sheetHash, resourceConfig, root) {
         var ishas = false;
         var newConfig = resourceConfig.resources.concat();
         for (var _i = 0, newConfig_1 = newConfig; _i < newConfig_1.length; _i++) {
             var r = newConfig_1[_i];
-            if (subkeyHash[this.normalizeUrl(r.url, root)]) {
+            if (r.name == name) {
+                ishas = true;
+            }
+            if (sheetHash[this.normalizeUrl(r.url, root)]) {
                 var index = resourceConfig.resources.indexOf(r);
                 resourceConfig.resources.splice(index, 1);
-                ishas = true;
                 continue;
             }
         }
@@ -310,7 +318,7 @@ var ConvertResConfigFilePlugin = /** @class */ (function () {
     function ConvertResConfigFilePlugin(options) {
         this.options = options;
         /**
-         * 合图插件暂时没有使用files属性
+         * 合图插件暂时没有使用
          */
         this.files = {};
         this.tMResConfigPlugin = new TextureMergerResConfigPlugin(options);
