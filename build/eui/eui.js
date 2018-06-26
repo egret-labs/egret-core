@@ -6664,6 +6664,9 @@ var eui;
          * @language zh_CN
          */
         ListBase.prototype.onRendererTouchBegin = function (event) {
+            if (!this.$stage) {
+                return;
+            }
             var values = this.$ListBase;
             if (event.$isDefaultPrevented)
                 return;
@@ -10991,6 +10994,9 @@ var eui;
          * @language zh_CN
          */
         ItemRenderer.prototype.onTouchBegin = function (event) {
+            if (!this.$stage) {
+                return;
+            }
             this.$stage.addEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancle, this);
             this.$stage.addEventListener(egret.TouchEvent.TOUCH_END, this.onStageTouchEnd, this);
             this.touchCaptured = true;
@@ -14371,6 +14377,9 @@ var eui;
          * @param event
          */
         Scroller.prototype.onTouchBeginCapture = function (event) {
+            if (!this.$stage) {
+                return;
+            }
             this.$Scroller[12 /* touchCancle */] = false;
             var canScroll = this.checkScrollPolicy();
             if (!canScroll) {
