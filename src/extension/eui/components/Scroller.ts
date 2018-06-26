@@ -504,6 +504,9 @@ namespace eui {
          * @param event
          */
         private onTouchBeginCapture(event:egret.TouchEvent):void {
+            if(!this.$stage) {
+                return;
+            }
             this.$Scroller[Keys.touchCancle] = false;
             let canScroll:boolean = this.checkScrollPolicy();
             if (!canScroll) {
