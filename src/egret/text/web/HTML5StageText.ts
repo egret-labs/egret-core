@@ -659,6 +659,7 @@ namespace egret.web {
                     this._inputElement.blur();
                 }
             }
+            this._needShow = false;
         }
 
         /**
