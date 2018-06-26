@@ -181,10 +181,11 @@ class TextureMergerResConfigPlugin {
             subkeys = file.options.subkeys;
             type = file.options.type;
         }
-        const url = file.origin.split("\\").join("/");
-        const name = this.options.nameSelector(file.origin);
+        const origin = file.origin;
+        const url = origin.split("\\").join("/");
+        const name = this.options.nameSelector(origin);
         /** 存储要修改的文件 */
-        if (this.resourceConfigFiles.indexOf(file.origin) >= 0) {
+        if (this.resourceConfigFiles.indexOf(origin) >= 0) {
             this.resourceConfig[url] = JSON.parse(file.contents.toString())
         }
 
@@ -199,7 +200,7 @@ class TextureMergerResConfigPlugin {
      * file 和 subkeys 都以这种方式存储
      * @param url url地址
      */
-    private normalizeUrl(url: string, root: string) {
+    private getNormalizeUrl(url: string, root: string): string {
         if (root == undefined) return url;
         if (url.indexOf(egret.args.projectDir) > -1) {
             return url.slice(egret.args.projectDir.length, url.length);
@@ -214,7 +215,7 @@ class TextureMergerResConfigPlugin {
      * 在default.res.json中以无root的格式存储
      * @param url url地址
      */
-    private spliceRoot(url: string, sliceStr: string) {
+    private getSpliceRoot(url: string, sliceStr: string): string {
         if (url.indexOf(sliceStr) > -1)
             return url.slice(sliceStr.length, url.length);
         else
@@ -223,74 +224,88 @@ class TextureMergerResConfigPlugin {
 
 
     private sheetToRes(subs: string[]) {
-        let last: string = "";
+        let result: string = "";
         for (let sub of subs) {
-            last += path.basename(sub).split(".").join("_") + ","
+            result += path.basename(sub).split(".").join("_") + ","
         }
-        last = last.slice(0, last.length - 1);
-        return last;
+        result = result.slice(0, result.length - 1);
+        return result;
     }
 
     async parseTestureMerger(pluginContext: plugin.PluginContext) {
         for (let sheetFileName in this.sheetFiles) {
-            let subkeysFile = this.sheetFiles[sheetFileName];
-            let shortName = subkeysFile.name;
+            const subkeysFile = this.sheetFiles[sheetFileName];
             /** 创建哈希，减少一层for遍历 */
             let subkeyHash = {}
             for (let subkeyItem of subkeysFile.subkeys) {
                 subkeyHash[path.normalize(subkeyItem)] = true;
             }
-            this.modifyRES(subkeysFile, subkeyHash, pluginContext, shortName);
+            this.modifyRES(subkeysFile, subkeyHash, pluginContext);
         }
     }
-    private modifyRES(subkeysFile: R, subkeyHash: {}, pluginContext: plugin.PluginContext, shortName: string) {
+    private modifyRES(subkeysFile: R, subkeyHash: {}, pluginContext: plugin.PluginContext) {
         for (let filename in this.resourceConfig) {
-            // 一个res.json
-            let resourceConfig = this.resourceConfig[filename];
-            let root = this.sheetRoot[filename];
-            this.deleteReference(shortName, subkeyHash, resourceConfig, root)
-            //增加最后的图集和json配置
+            const resourceConfig = this.resourceConfig[filename];
+            const root = this.sheetRoot[filename];
+            this.deleteFragmentReference(subkeyHash, resourceConfig, root);
 
+            //增加最后的图集和json配置
             //先直接抹去前方的路径，如果没有任何变化，说明资源在res.json的文件上级
-            let relativeJson = this.spliceRoot(subkeysFile.url, pluginContext.outputDir + "/" + root)
+            const relativeJson = this.getSpliceRoot(subkeysFile.url, pluginContext.outputDir + "/" + root)
             if (relativeJson == subkeysFile.url) {
                 console.log(utils.tr(1422, filename, subkeysFile.name));
                 global.globals.exit()
             }
-            let json = {
+            //json
+            const json = {
                 name: subkeysFile.name,
                 type: subkeysFile.type,
                 subkeys: this.sheetToRes(subkeysFile.subkeys as string[]),
                 url: relativeJson
             }
-            let imageUrl = subkeysFile.url.replace("json", "png");
-            let relativeImage = this.spliceRoot(imageUrl, pluginContext.outputDir + "/" + root)
-            if (relativeImage == imageUrl) {
-                console.log(utils.tr(1422, filename, subkeysFile.name));
-                global.globals.exit()
-            }
-            let image = {
-                name: subkeysFile.name.replace("json", "png"),
-                type: "image",
-                url: relativeImage.split("\\").join("/")
-            }
+            this.deleteReferenceByName(subkeysFile.name, resourceConfig, root);
             resourceConfig.resources.push(json);
+
+            //png
+            const imageUrl = subkeysFile.url.replace("json", "png");
+            const imgName = subkeysFile.name.replace("json", "png");
+            const relativeImage = this.getSpliceRoot(imageUrl, pluginContext.outputDir + "/" + root)
+            const image = {
+                name: imgName,
+                type: "image",
+                url: relativeImage
+            }
+            this.deleteReferenceByName(imgName, resourceConfig, root);
             resourceConfig.resources.push(image);
 
-            let buffer = new Buffer(JSON.stringify(resourceConfig));
+            const buffer = new Buffer(JSON.stringify(resourceConfig));
             pluginContext.createFile(path.join(pluginContext.outputDir, filename), buffer);
         }
     }
     /**
-   * 删除碎图和可能存在合图的引用，以tmproject新生成的为主
-   * @param name 传入的名字应该是preload_0_json格式
+   * 删除碎图的引用，以tmproject新生成的为主
    * @param resourceConfig 对应的res.json数据
    */
-    private deleteReference(name: string, sheetHash: {}, resourceConfig: { resources: any[] }, root: string) {
-        let newConfig = resourceConfig.resources.concat();
+    private deleteFragmentReference(sheetHash: {}, resourceConfig: { resources: any[] }, root: string) {
+        const newConfig = resourceConfig.resources.concat();
         for (let r of newConfig) {
-            if (r.name == name || sheetHash[this.normalizeUrl(r.url, root)]) {
-                let index = resourceConfig.resources.indexOf(r);
+            if (sheetHash[this.getNormalizeUrl(r.url, root)]) {
+                const index = resourceConfig.resources.indexOf(r);
+                resourceConfig.resources.splice(index, 1);
+                continue;
+            }
+        }
+    }
+    /**
+      * 删除可能存在图集的引用，以tmproject新生成的为主
+      * @param name 传入的名字应该是preload_0_json格式
+      * @param resourceConfig 对应的res.json数据
+      */
+    private deleteReferenceByName(name: string, resourceConfig: { resources: any[] }, root: string) {
+        const newConfig = resourceConfig.resources.concat();
+        for (let r of newConfig) {
+            if (r.name == name) {
+                const index = resourceConfig.resources.indexOf(r);
                 resourceConfig.resources.splice(index, 1);
                 continue;
             }
