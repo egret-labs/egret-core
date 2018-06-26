@@ -248,58 +248,53 @@ class TextureMergerResConfigPlugin {
             // 一个res.json
             let resourceConfig = this.resourceConfig[filename];
             let root = this.sheetRoot[filename];
-            let ishas = this.normalResBySubkey(shortName, subkeyHash, resourceConfig, root)
+            this.deleteReference(shortName, subkeyHash, resourceConfig, root)
             //增加最后的图集和json配置
-            if (!ishas) {
-                //先直接抹去前方的路径，如果没有任何变化，说明资源在res.json的文件上级
-                let relativeJson = this.spliceRoot(subkeysFile.url, pluginContext.outputDir + "/" + root)
-                if (relativeJson == subkeysFile.url) {
-                    console.log(utils.tr(1422, filename, subkeysFile.name));
-                    global.globals.exit()
-                }
-                let json = {
-                    name: subkeysFile.name,
-                    type: subkeysFile.type,
-                    subkeys: this.sheetToRes(subkeysFile.subkeys as string[]),
-                    url: relativeJson
-                }
-                let imageUrl = subkeysFile.url.replace("json", "png");
-                let relativeImage = this.spliceRoot(imageUrl, pluginContext.outputDir + "/" + root)
-                if (relativeImage == imageUrl) {
-                    console.log(utils.tr(1422, filename, subkeysFile.name));
-                    global.globals.exit()
-                }
-                let image = {
-                    name: subkeysFile.name.replace("json", "png"),
-                    type: "image",
-                    url: relativeImage.split("\\").join("/")
-                }
-                resourceConfig.resources.push(json);
-                resourceConfig.resources.push(image);
+
+            //先直接抹去前方的路径，如果没有任何变化，说明资源在res.json的文件上级
+            let relativeJson = this.spliceRoot(subkeysFile.url, pluginContext.outputDir + "/" + root)
+            if (relativeJson == subkeysFile.url) {
+                console.log(utils.tr(1422, filename, subkeysFile.name));
+                global.globals.exit()
             }
+            let json = {
+                name: subkeysFile.name,
+                type: subkeysFile.type,
+                subkeys: this.sheetToRes(subkeysFile.subkeys as string[]),
+                url: relativeJson
+            }
+            let imageUrl = subkeysFile.url.replace("json", "png");
+            let relativeImage = this.spliceRoot(imageUrl, pluginContext.outputDir + "/" + root)
+            if (relativeImage == imageUrl) {
+                console.log(utils.tr(1422, filename, subkeysFile.name));
+                global.globals.exit()
+            }
+            let image = {
+                name: subkeysFile.name.replace("json", "png"),
+                type: "image",
+                url: relativeImage.split("\\").join("/")
+            }
+            resourceConfig.resources.push(json);
+            resourceConfig.resources.push(image);
+
             let buffer = new Buffer(JSON.stringify(resourceConfig));
             pluginContext.createFile(path.join(pluginContext.outputDir, filename), buffer);
         }
     }
     /**
-   * 判断是否在res.json中被引用
+   * 删除碎图和可能存在合图的引用，以tmproject新生成的为主
    * @param name 传入的名字应该是preload_0_json格式
    * @param resourceConfig 对应的res.json数据
    */
-    private normalResBySubkey(name: string, sheetHash: {}, resourceConfig: { resources: any[] }, root: string): boolean {
-        let ishas = false;
+    private deleteReference(name: string, sheetHash: {}, resourceConfig: { resources: any[] }, root: string) {
         let newConfig = resourceConfig.resources.concat();
         for (let r of newConfig) {
-            if (r.name == name) {
-                ishas = true;
-            }
-            if (sheetHash[this.normalizeUrl(r.url, root)]) {
+            if (r.name == name || sheetHash[this.normalizeUrl(r.url, root)]) {
                 let index = resourceConfig.resources.indexOf(r);
                 resourceConfig.resources.splice(index, 1);
                 continue;
             }
         }
-        return ishas;
     }
 }
 
