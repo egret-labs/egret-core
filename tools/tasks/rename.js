@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var path = require("path");
 var minimatch = require('../lib/resourcemanager').minimatch;
-var RenamePlugin = (function () {
+var RenamePlugin = /** @class */ (function () {
     function RenamePlugin(options) {
         this.options = options;
         this.verboseInfo = [];

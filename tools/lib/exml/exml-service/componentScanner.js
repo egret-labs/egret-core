@@ -10,9 +10,9 @@ function watch() {
     var program = ts.createProgram(config.fileNames, config.options);
     var sourceCodes = program.getSourceFiles();
     sourceCodes.forEach(function (source) {
-        if (source.fileName.indexOf("lib.d.ts") >= 0) {
-            return;
-        }
+        // if (source.fileName.indexOf("lib.d.ts") >= 0) {
+        //     return;
+        // }
         // if (source.fileName.indexOf("egret.d.ts") >= 0) {
         //     return;
         // }

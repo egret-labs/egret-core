@@ -1,5 +1,5 @@
 Object.defineProperty(exports, "__esModule", { value: true });
-var JSONClass = (function () {
+var JSONClass = /** @class */ (function () {
     function JSONClass() {
         this.json = {};
     }

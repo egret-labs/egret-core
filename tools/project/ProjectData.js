@@ -8,7 +8,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var file = require("../lib/FileUtil");
 var _utils = require("../lib/utils");
 var _path = require("path");
-var EgretProjectData = (function () {
+var EgretProjectData = /** @class */ (function () {
     function EgretProjectData() {
         this.egretProperties = {
             modules: [],
@@ -201,7 +201,7 @@ var EgretProjectData = (function () {
             var sourceDir = _this.getModulePath(m);
             var targetDir = _path.join(_this.getLibraryFolder(), name);
             var relative = _path.relative(_this.getProjectRoot(), sourceDir);
-            if (relative.indexOf("..") == -1 && !_path.isAbsolute(relative)) {
+            if (relative.indexOf("..") == -1 && !_path.isAbsolute(relative)) { // source 在项目中
                 targetDir = sourceDir;
             }
             targetDir = file.escapePath(_path.relative(_this.getProjectRoot(), targetDir)) + _path.sep;
@@ -259,12 +259,12 @@ var EgretProjectData = (function () {
         var content = JSON.stringify(this.egretProperties, null, "\t");
         file.save(egretPropertiesPath, content);
     };
+    __decorate([
+        _utils.cache
+    ], EgretProjectData.prototype, "getModulesConfig", null);
     return EgretProjectData;
 }());
-__decorate([
-    _utils.cache
-], EgretProjectData.prototype, "getModulesConfig", null);
-var EgretLauncherProxy = (function () {
+var EgretLauncherProxy = /** @class */ (function () {
     function EgretLauncherProxy() {
     }
     EgretLauncherProxy.prototype.getMinVersion = function () {
@@ -348,7 +348,7 @@ function getEgretLauncherPath() {
     var npmEgretPath;
     if (process.platform === 'darwin') {
         var basicPath = '/usr/local';
-        if (!file.existsSync(basicPath)) {
+        if (!file.existsSync(basicPath)) { //some mac doesn't have path '/usr/local'
             basicPath = '/usr';
         }
         npmEgretPath = file.joinPath(basicPath, 'lib/node_modules/egret/EgretEngine');
