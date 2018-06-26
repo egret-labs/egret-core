@@ -46,7 +46,7 @@ var FileUtil = require("../lib/FileUtil");
 var CompileProject = require("../actions/CompileProject");
 var EgretProject = require("../project");
 console.log(utils.tr(1106, 0));
-var Clean = (function () {
+var Clean = /** @class */ (function () {
     function Clean() {
     }
     Clean.prototype.execute = function () {
@@ -96,9 +96,9 @@ var Clean = (function () {
             });
         });
     };
+    __decorate([
+        utils.measure
+    ], Clean.prototype, "execute", null);
     return Clean;
 }());
-__decorate([
-    utils.measure
-], Clean.prototype, "execute", null);
 module.exports = Clean;

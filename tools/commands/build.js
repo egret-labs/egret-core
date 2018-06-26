@@ -48,7 +48,7 @@ var path = require("path");
 var parseConfig = require("../actions/ParseConfig");
 var TargetAction_1 = require("../actions/TargetAction");
 console.log(utils.tr(1004, 0));
-var Build = (function () {
+var Build = /** @class */ (function () {
     function Build() {
     }
     Build.prototype.execute = function () {
@@ -60,7 +60,7 @@ var Build = (function () {
                         options = egret.args;
                         if (packageJsonContent = FileUtil.read(project.projectData.getFilePath("package.json"))) {
                             packageJson = JSON.parse(packageJsonContent);
-                            if (packageJson.modules) {
+                            if (packageJson.modules) { //通过有modules来识别是egret库项目
                                 globals.log(1119);
                                 globals.exit(1120);
                                 return [2 /*return*/, 0];
@@ -166,9 +166,9 @@ var Build = (function () {
             _loop_1(m);
         }
     };
+    __decorate([
+        utils.measure
+    ], Build.prototype, "execute", null);
     return Build;
 }());
-__decorate([
-    utils.measure
-], Build.prototype, "execute", null);
 module.exports = Build;

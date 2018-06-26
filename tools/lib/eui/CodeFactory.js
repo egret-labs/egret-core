@@ -47,7 +47,7 @@ var BINDING_PROPERTIES = "eui.Binding.$bindProperties";
  * @private
  * 代码生成工具基类
  */
-var CodeBase = (function () {
+var CodeBase = /** @class */ (function () {
     function CodeBase() {
         /**
          * @private
@@ -81,7 +81,7 @@ exports.CodeBase = CodeBase;
 /**
  * @private
  */
-var EXClass = (function (_super) {
+var EXClass = /** @class */ (function (_super) {
     __extends(EXClass, _super);
     function EXClass() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
@@ -254,7 +254,7 @@ exports.EXClass = EXClass;
 /**
  * @private
  */
-var EXCodeBlock = (function (_super) {
+var EXCodeBlock = /** @class */ (function (_super) {
     __extends(EXCodeBlock, _super);
     function EXCodeBlock() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
@@ -391,7 +391,7 @@ exports.EXCodeBlock = EXCodeBlock;
 /**
  * @private
  */
-var EXFunction = (function (_super) {
+var EXFunction = /** @class */ (function (_super) {
     __extends(EXFunction, _super);
     function EXFunction() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
@@ -453,7 +453,7 @@ exports.EXFunction = EXFunction;
 /**
  * @private
  */
-var EXVariable = (function (_super) {
+var EXVariable = /** @class */ (function (_super) {
     __extends(EXVariable, _super);
     /**
      * @private
@@ -479,7 +479,7 @@ var EXVariable = (function (_super) {
     return EXVariable;
 }(CodeBase));
 exports.EXVariable = EXVariable;
-var EXArray = (function (_super) {
+var EXArray = /** @class */ (function (_super) {
     __extends(EXArray, _super);
     function EXArray(array) {
         var _this = _super.call(this) || this;
@@ -495,7 +495,7 @@ exports.EXArray = EXArray;
 /**
  * @private
  */
-var EXState = (function (_super) {
+var EXState = /** @class */ (function (_super) {
     __extends(EXState, _super);
     /**
      * @private
@@ -569,7 +569,7 @@ exports.EXState = EXState;
 /**
  * @private
  */
-var EXAddItems = (function (_super) {
+var EXAddItems = /** @class */ (function (_super) {
     __extends(EXAddItems, _super);
     /**
      * @private
@@ -597,7 +597,7 @@ exports.EXAddItems = EXAddItems;
 /**
  * @private
  */
-var EXSetProperty = (function (_super) {
+var EXSetProperty = /** @class */ (function (_super) {
     __extends(EXSetProperty, _super);
     /**
      * @private
@@ -623,7 +623,7 @@ exports.EXSetProperty = EXSetProperty;
 /**
  * @private
  */
-var EXSetStateProperty = (function (_super) {
+var EXSetStateProperty = /** @class */ (function (_super) {
     __extends(EXSetStateProperty, _super);
     /**
      * @private
@@ -659,7 +659,7 @@ exports.EXSetStateProperty = EXSetStateProperty;
 /**
  * @private
  */
-var EXBinding = (function (_super) {
+var EXBinding = /** @class */ (function (_super) {
     __extends(EXBinding, _super);
     /**
      * @private
@@ -686,4 +686,4 @@ var EXBinding = (function (_super) {
     return EXBinding;
 }(CodeBase));
 exports.EXBinding = EXBinding;
-// } 
+// }

@@ -87,7 +87,7 @@ var euiShorten = {
 /**
  * @private
  */
-var JSONParser = (function () {
+var JSONParser = /** @class */ (function () {
     /**
      * @private
      */
@@ -275,7 +275,7 @@ var JSONParser = (function () {
             else if (node.nodeType === 1) {
                 var id = node.attributes["id"];
                 var stateGroups = node.attributes["stateGroups"];
-                if (id && stateGroups == undefined) {
+                if (id && stateGroups == undefined) { //区分是组件的id还是stateGroup的id
                     var e = new RegExp("^[a-zA-Z_$]{1}[a-z0-9A-Z_$]*");
                     if (id.match(e) == null) {
                         egretbridge_1.egretbridge.$warn(2022, id);
@@ -287,7 +287,7 @@ var JSONParser = (function () {
                         this.skinParts.push(id);
                     }
                     this.createVarForNode(node);
-                    if (this.isStateNode(node))
+                    if (this.isStateNode(node)) //检查节点是否只存在于一个状态里，需要单独实例化
                         this.stateIds.push(id);
                 }
                 else {

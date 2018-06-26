@@ -35,7 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var exml = require("../actions/exml");
-var ExmlPlugin = (function () {
+var ExmlPlugin = /** @class */ (function () {
     function ExmlPlugin(publishPolicy) {
         this.publishPolicy = publishPolicy;
         this.name = 'exml';

@@ -39,7 +39,7 @@ var Project = require("../project");
 var path = require("path");
 var utils = require("../lib/utils");
 var Clean = require("./clean");
-var UpgradeCommand = (function () {
+var UpgradeCommand = /** @class */ (function () {
     function UpgradeCommand() {
     }
     UpgradeCommand.prototype.execute = function () {
@@ -151,7 +151,7 @@ function upgrade(info) {
         return Promise.resolve(0);
     }
 }
-var Upgrade_5_1_1 = (function () {
+var Upgrade_5_1_1 = /** @class */ (function () {
     function Upgrade_5_1_1() {
     }
     Upgrade_5_1_1.prototype.execute = function () {
@@ -163,7 +163,7 @@ var Upgrade_5_1_1 = (function () {
     };
     return Upgrade_5_1_1;
 }());
-var Upgrade_5_1_2 = (function () {
+var Upgrade_5_1_2 = /** @class */ (function () {
     function Upgrade_5_1_2() {
     }
     Upgrade_5_1_2.prototype.execute = function () {
