@@ -166,21 +166,33 @@ var TextureMergerResConfigPlugin = /** @class */ (function () {
          *      'resource/de.res.json': 'resource/'
         *  }
          */
-        this.sheetRoot = {};
+        this.resRootHash = {};
         //从用户读取到的要修改的文件url
         this.resourceConfigFiles = [];
         /** 存储要修改的文件 */
         this.resourceConfig = {};
+        /** 要打包的文件夹 */
+        this.rootHash = {};
         this.resourceConfigFiles = this.options.resourceConfigFiles.map(function (item) {
             var resourceConfigFile = path.posix.join(item.root, item.filename);
-            _this.sheetRoot[resourceConfigFile] = item.root;
+            _this.resRootHash[resourceConfigFile] = item.root;
+            _this.rootHash[item.root] = true;
             return resourceConfigFile;
         });
     }
     TextureMergerResConfigPlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
-            var subkeys, type, origin, url, name, r;
+            var isRes, root, subkeys, type, origin, url, name, r;
             return __generator(this, function (_a) {
+                isRes = false;
+                for (root in this.rootHash) {
+                    if (path.normalize(file.origin).indexOf(path.join(egret.args.projectDir, root)) >= 0) {
+                        isRes = true;
+                    }
+                }
+                if (!isRes) {
+                    return [2 /*return*/];
+                }
                 if (file.options) {
                     subkeys = file.options.subkeys;
                     type = file.options.type;
@@ -256,7 +268,7 @@ var TextureMergerResConfigPlugin = /** @class */ (function () {
     TextureMergerResConfigPlugin.prototype.modifyRES = function (subkeysFile, subkeyHash, pluginContext) {
         for (var filename in this.resourceConfig) {
             var resourceConfig_1 = this.resourceConfig[filename];
-            var root = this.sheetRoot[filename];
+            var root = this.resRootHash[filename];
             this.deleteFragmentReference(subkeyHash, resourceConfig_1, root);
             //增加最后的图集和json配置
             //先直接抹去前方的路径，如果没有任何变化，说明资源在res.json的文件上级
