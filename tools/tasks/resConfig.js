@@ -171,16 +171,28 @@ var TextureMergerResConfigPlugin = /** @class */ (function () {
         this.resourceConfigFiles = [];
         /** 存储要修改的文件 */
         this.resourceConfig = {};
+        /** 要打包的文件夹 */
+        this.resourceDirs = {};
         this.resourceConfigFiles = this.options.resourceConfigFiles.map(function (item) {
             var resourceConfigFile = path.posix.join(item.root, item.filename);
             _this.sheetRoot[resourceConfigFile] = item.root;
+            _this.resourceDirs[item.root] = true;
             return resourceConfigFile;
         });
     }
     TextureMergerResConfigPlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
-            var subkeys, type, origin, url, name, r;
+            var isRes, root, subkeys, type, origin, url, name, r;
             return __generator(this, function (_a) {
+                isRes = false;
+                for (root in this.resourceDirs) {
+                    if (path.normalize(file.origin).indexOf(path.join(egret.args.projectDir, root)) >= 0) {
+                        isRes = true;
+                    }
+                }
+                if (!isRes) {
+                    return [2 /*return*/];
+                }
                 if (file.options) {
                     subkeys = file.options.subkeys;
                     type = file.options.type;

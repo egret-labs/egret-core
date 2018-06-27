@@ -130,6 +130,10 @@ exports.resources = ${JSON.stringify(generateConfig.resources, null, "\t")};
 
 export type ConvertResourceConfigPluginOption = {
 
+    /** 
+     * filename 会修改里面的资源引用
+     * root 扫描这个文件夹下面的资源
+     */
     resourceConfigFiles: { filename: string, root: string }[];
 
     nameSelector: (url: string) => string
@@ -155,26 +159,39 @@ class TextureMergerResConfigPlugin {
             name: 'example_json' }
         }
      */
-    sheetFiles: { [url: string]: R } = {};
+    private sheetFiles: { [url: string]: R } = {};
     /**
      * { 
      *      'resource/default.res.json': 'resource/',
      *      'resource/de.res.json': 'resource/' 
     *  }
      */
-    sheetRoot: { [url: string]: string } = {};
+    private sheetRoot: { [url: string]: string } = {};
     //从用户读取到的要修改的文件url
-    resourceConfigFiles: string[] = [];
+    private resourceConfigFiles: string[] = [];
     /** 存储要修改的文件 */
-    resourceConfig: { [filename: string]: { resources: any[] } } = {};
+    private resourceConfig: { [filename: string]: { resources: any[] } } = {};
+    /** 要打包的文件夹 */
+    private resourceDirs: { [filename: string]: boolean } = {};
     constructor(private options: ConvertResourceConfigPluginOption) {
         this.resourceConfigFiles = this.options.resourceConfigFiles.map((item) => {
             let resourceConfigFile = path.posix.join(item.root, item.filename);
             this.sheetRoot[resourceConfigFile] = item.root;
+            this.resourceDirs[item.root] = true;
             return resourceConfigFile;
-        })
+        });
     }
     async onFile(file: plugin.File) {
+        let isRes = false;
+        for (let root in this.resourceDirs) {
+            if (path.normalize(file.origin).indexOf(path.join(egret.args.projectDir, root)) >= 0) {
+                isRes = true;
+            }
+        }
+        if (!isRes) {
+            return;
+        }
+
         let subkeys;
         let type;
         if (file.options) {
