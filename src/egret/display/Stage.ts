@@ -65,8 +65,6 @@ namespace egret {
             super();
             this.$stage = this;
             this.$nestLevel = 1;
-
-            this.$touch = new egret.sys.TouchHandler(this);
         }
 
         protected createNativeDisplayObject(): void {
@@ -302,8 +300,13 @@ namespace egret {
             //for 3D&2D
             if (this.$screen) {
                 this.$screen.updateMaxTouches();
-            } else {
-                this.$touch.$initMaxTouches();
+            }
+            else {
+                if (!this.$touch) {
+                    this.$touch = new egret.sys.TouchHandler(this);
+                    this.$touch.$updateMaxTouches();
+                }
+                this.$touch.$updateMaxTouches();
             }
         }
 
@@ -333,18 +336,30 @@ namespace egret {
          * @private
          */
         $onTouchBegin(x: number, y: number, touchPointID: number): boolean {
+            if (!this.$touch) {
+                this.$touch = new egret.sys.TouchHandler(this);
+                this.$touch.$updateMaxTouches();
+            }
             return this.$touch.onTouchBegin(x, y, touchPointID);
         }
         /**
          * @private
          */
         $onTouchEnd(x: number, y: number, touchPointID: number): boolean {
+            if (!this.$touch) {
+                this.$touch = new egret.sys.TouchHandler(this);
+                this.$touch.$updateMaxTouches();
+            }
             return this.$touch.onTouchEnd(x, y, touchPointID);
         }
         /**
          * @private
          */
         $onTouchMove(x: number, y: number, touchPointID: number): boolean {
+            if (!this.$touch) {
+                this.$touch = new egret.sys.TouchHandler(this);
+                this.$touch.$updateMaxTouches();
+            }
             return this.$touch.onTouchMove(x, y, touchPointID);
         }
 

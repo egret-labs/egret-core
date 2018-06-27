@@ -50,7 +50,7 @@ namespace egret.sys {
          * @private
          * 设置同时触摸数量
          */
-        $initMaxTouches(): void {
+        $updateMaxTouches(): void {
             this.maxTouches = this.stage.$maxTouches;
         }
 
