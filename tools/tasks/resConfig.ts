@@ -184,8 +184,18 @@ class TextureMergerResConfigPlugin {
     async onFile(file: plugin.File) {
         let isRes = false;
         for (let root in this.resourceDirs) {
-            if (path.normalize(file.origin).indexOf(path.join(egret.args.projectDir, root)) >= 0) {
-                isRes = true;
+            let fileOrigin = path.normalize(file.origin);
+            //绝对路径
+            if (fileOrigin.indexOf(path.join(egret.args.projectDir)) >= 0) {
+                if (fileOrigin.indexOf(path.join(egret.args.projectDir, root)) >= 0) {
+                    isRes = true;
+                }
+            }
+            //相对路径
+            else {
+                if (fileOrigin.indexOf(path.normalize(root)) >= 0) {
+                    isRes = true;
+                }
             }
         }
         if (!isRes) {

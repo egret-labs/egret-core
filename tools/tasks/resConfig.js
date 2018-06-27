@@ -182,12 +182,22 @@ var TextureMergerResConfigPlugin = /** @class */ (function () {
     }
     TextureMergerResConfigPlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
-            var isRes, root, subkeys, type, origin, url, name, r;
+            var isRes, root, fileOrigin, subkeys, type, origin, url, name, r;
             return __generator(this, function (_a) {
                 isRes = false;
                 for (root in this.resourceDirs) {
-                    if (path.normalize(file.origin).indexOf(path.join(egret.args.projectDir, root)) >= 0) {
-                        isRes = true;
+                    fileOrigin = path.normalize(file.origin);
+                    //绝对路径
+                    if (fileOrigin.indexOf(path.join(egret.args.projectDir)) >= 0) {
+                        if (fileOrigin.indexOf(path.join(egret.args.projectDir, root)) >= 0) {
+                            isRes = true;
+                        }
+                    }
+                    //相对路径
+                    else {
+                        if (fileOrigin.indexOf(path.normalize(root)) >= 0) {
+                            isRes = true;
+                        }
                     }
                 }
                 if (!isRes) {
