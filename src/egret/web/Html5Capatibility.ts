@@ -44,24 +44,6 @@ namespace egret.web {
     }
 
     /**
-     * @private
-     */
-    export class SystemOSType {
-        /**
-         * @private
-         */
-        static WPHONE: number = 1;
-        /**
-         * @private
-         */
-        static IOS: number = 2;
-        /**
-         * @private
-         */
-        static ADNROID: number = 3;
-    }
-
-    /**
      * html5兼容性配置
      * @private
      */
@@ -75,11 +57,6 @@ namespace egret.web {
          * @private
          */
         public static _AudioClass;
-
-        /**
-         * @private
-         */
-        public static _System_OS: number = 0;
 
         /**
          * @private
@@ -100,8 +77,6 @@ namespace egret.web {
         public static $init(): void {
             let ua: string = navigator.userAgent.toLowerCase();
             Html5Capatibility.ua = ua;
-
-            egret.Capabilities.$isMobile = (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
 
             Html5Capatibility._canUseBlob = false;
             let canUseWebAudio = window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"];
@@ -125,35 +100,17 @@ namespace egret.web {
                 Html5Capatibility.setAudioType(AudioType.HTML5_AUDIO);
             }
 
-            if (ua.indexOf("windows phone") >= 0) {//wphone windows
-                Html5Capatibility._System_OS = SystemOSType.WPHONE;
-
-                egret.Capabilities.$os = "Windows Phone";
-            }
-            else if (ua.indexOf("android") >= 0) {//android
-                egret.Capabilities.$os = "Android";
-                Html5Capatibility._System_OS = SystemOSType.ADNROID;
+            if (ua.indexOf("android") >= 0) {//android
                 if (checkAudioType && canUseWebAudio) {
                     Html5Capatibility.setAudioType(AudioType.WEB_AUDIO);
                 }
             }
             else if (ua.indexOf("iphone") >= 0 || ua.indexOf("ipad") >= 0 || ua.indexOf("ipod") >= 0) {//ios
-                egret.Capabilities.$os = "iOS";
-
-                Html5Capatibility._System_OS = SystemOSType.IOS;
                 if (Html5Capatibility.getIOSVersion() >= 7) {
                     Html5Capatibility._canUseBlob = true;
                     if (checkAudioType && canUseWebAudio) {
                         Html5Capatibility.setAudioType(AudioType.WEB_AUDIO);
                     }
-                }
-            }
-            else {
-                if (ua.indexOf("windows nt") != -1) {
-                    egret.Capabilities.$os = "Windows PC";
-                }
-                else if (ua.indexOf("mac os") != -1) {
-                    egret.Capabilities.$os = "Mac OS";
                 }
             }
 
@@ -188,21 +145,12 @@ namespace egret.web {
          * @returns {string}
          */
         private static getIOSVersion(): number {
-            let value = Html5Capatibility.ua.toLowerCase().match(/cpu [^\d]*\d.*like mac os x/)[0];
-            return parseInt(value.match(/\d+(_\d)*/)[0]) || 0;
-        }
-
-        /**
-         * @private
-         *
-         */
-        private static checkHtml5Support() {
-            let language = (navigator.language || navigator["browserLanguage"]).toLowerCase();
-            let strings = language.split("-");
-            if (strings.length > 1) {
-                strings[1] = strings[1].toUpperCase();
+            let matches = Html5Capatibility.ua.toLowerCase().match(/cpu [^\d]*\d.*like mac os x/);
+            if(! matches || matches.length == 0) {
+                return 0;
             }
-            egret.Capabilities.$language = strings.join("-");
+            let value = matches[0];
+            return parseInt(value.match(/\d+(_\d)*/)[0]) || 0;
         }
     }
 

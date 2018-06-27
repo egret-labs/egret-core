@@ -46,20 +46,20 @@ export class CodeBase {
      *
      * @returns
      */
-    public toCode():string {
+    public toCode(): string {
         return "";
     }
 
     /**
      * @private
      */
-    public indent:number = 0;
+    public indent: number = 0;
 
     /**
      * @private
      * 获取缩进字符串
      */
-    public getIndent(indent?:number):string {
+    public getIndent(indent?: number): string {
         if (indent === void 0)
             indent = this.indent;
         let str = "";
@@ -80,30 +80,34 @@ export class EXClass extends CodeBase {
      * @private
      * 构造函数代码块
      */
-    public constructCode:EXCodeBlock;
+    public constructCode: EXCodeBlock;
     /**
      * @private
      * 类名,不包括模块名
      */
-    public className:string = "";
-
+    public className: string = "";
+    /**
+      * @private
+      * 全名包括模块名
+      */
+    public allName: string = "";
     /**
      * @private
      * 父类类名,包括完整模块名
      */
-    public superClass:string = "";
+    public superClass: string = "";
 
     /**
      * @private
      * 内部类区块
      */
-    private innerClassBlock:EXClass[] = [];
+    private innerClassBlock: EXClass[] = [];
 
     /**
      * @private
      * 添加一个内部类
      */
-    public addInnerClass(clazz:EXClass):void {
+    public addInnerClass(clazz: EXClass): void {
         if (this.innerClassBlock.indexOf(clazz) == -1) {
             this.innerClassBlock.push(clazz);
         }
@@ -113,13 +117,13 @@ export class EXClass extends CodeBase {
      * @private
      * 变量定义区块
      */
-    private variableBlock:EXVariable[] = [];
+    private variableBlock: EXVariable[] = [];
 
     /**
      * @private
      * 添加变量
      */
-    public addVariable(variableItem:EXVariable):void {
+    public addVariable(variableItem: EXVariable): void {
         if (this.variableBlock.indexOf(variableItem) == -1) {
             this.variableBlock.push(variableItem);
         }
@@ -129,7 +133,7 @@ export class EXClass extends CodeBase {
      * @private
      * 根据变量名获取变量定义
      */
-    public getVariableByName(name:string):EXVariable {
+    public getVariableByName(name: string): EXVariable {
         let list = this.variableBlock;
         let length = list.length;
         for (let i = 0; i < length; i++) {
@@ -145,13 +149,13 @@ export class EXClass extends CodeBase {
      * @private
      * 函数定义区块
      */
-    private functionBlock:EXFunction[] = [];
+    private functionBlock: EXFunction[] = [];
 
     /**
      * @private
      * 添加函数
      */
-    public addFunction(functionItem:EXFunction):void {
+    public addFunction(functionItem: EXFunction): void {
         if (this.functionBlock.indexOf(functionItem) == -1) {
             this.functionBlock.push(functionItem);
         }
@@ -161,7 +165,7 @@ export class EXClass extends CodeBase {
      * @private
      * 根据函数名返回函数定义块
      */
-    public getFuncByName(name:string):EXFunction {
+    public getFuncByName(name: string): EXFunction {
         let list = this.functionBlock;
         let length = list.length;
         for (let i = 0; i < length; i++) {
@@ -178,7 +182,7 @@ export class EXClass extends CodeBase {
      *
      * @returns
      */
-    public toCode():string {
+    public toCode(isAssignWindow = false): string {
 
         let indent = this.indent;
         let indentStr = this.getIndent(indent);
@@ -199,8 +203,13 @@ export class EXClass extends CodeBase {
         let length = innerClasses.length;
         for (let i = 0; i < length; i++) {
             let clazz = innerClasses[i];
-            clazz.indent = indent+1;
-            returnStr += indent1Str+"var "+clazz.className+" = "+clazz.toCode()+"\n\n";
+            clazz.indent = indent + 1;
+            if (!isAssignWindow)
+                returnStr += indent1Str + "var " + clazz.className + " = " + clazz.toCode() + "\n\n";
+            else {
+                returnStr += indent1Str + "var " + clazz.className + " = " + clazz.toCode() + "\n";
+                returnStr += indent1Str + `window.${clazz.allName}=${clazz.className};\n`;
+            }
         }
 
         returnStr += indent1Str + "function " + this.className + "() {\n";
@@ -263,7 +272,7 @@ export class EXCodeBlock extends CodeBase {
      * @param name 变量名
      * @param value 变量初始值
      */
-    public addVar(name:string, value?:string):void {
+    public addVar(name: string, value?: string): void {
         let valueStr = value ? " = " + value : "";
         this.addCodeLine("var " + name + valueStr + ";");
     }
@@ -275,7 +284,7 @@ export class EXCodeBlock extends CodeBase {
      * @param value 值
      * @param prop 目标的属性(用“.”访问)，不填则是对目标赋值
      */
-    public addAssignment(target:string, value:string, prop?:string):void {
+    public addAssignment(target: string, value: string, prop?: string): void {
         let propStr = prop ? "." + prop : "";
         this.addCodeLine(target + propStr + " = " + value + ";");
     }
@@ -284,7 +293,7 @@ export class EXCodeBlock extends CodeBase {
      * @private
      * 添加返回值语句
      */
-    public addReturn(data:string):void {
+    public addReturn(data: string): void {
         this.addCodeLine("return " + data + ";");
     }
 
@@ -292,7 +301,7 @@ export class EXCodeBlock extends CodeBase {
      * @private
      * 添加一条空行
      */
-    public addEmptyLine():void {
+    public addEmptyLine(): void {
         this.addCodeLine("");
     }
 
@@ -300,7 +309,7 @@ export class EXCodeBlock extends CodeBase {
      * @private
      * 开始添加if语句块,自动调用startBlock();
      */
-    public startIf(expression:string):void {
+    public startIf(expression: string): void {
         this.addCodeLine("if(" + expression + ")");
         this.startBlock();
     }
@@ -309,7 +318,7 @@ export class EXCodeBlock extends CodeBase {
      * @private
      * 开始else语句块,自动调用startBlock();
      */
-    public startElse():void {
+    public startElse(): void {
         this.addCodeLine("else");
         this.startBlock();
     }
@@ -318,7 +327,7 @@ export class EXCodeBlock extends CodeBase {
      * @private
      * 开始else if语句块,自动调用startBlock();
      */
-    public startElseIf(expression:string):void {
+    public startElseIf(expression: string): void {
         this.addCodeLine("else if(" + expression + ")");
         this.startBlock();
     }
@@ -327,7 +336,7 @@ export class EXCodeBlock extends CodeBase {
      * @private
      * 添加一个左大括号，开始新的语句块
      */
-    public startBlock():void {
+    public startBlock(): void {
         this.addCodeLine("{");
         this.indent++;
     }
@@ -336,7 +345,7 @@ export class EXCodeBlock extends CodeBase {
      * @private
      * 添加一个右大括号,结束当前的语句块
      */
-    public endBlock():void {
+    public endBlock(): void {
         this.indent--;
         this.addCodeLine("}");
     }
@@ -347,7 +356,7 @@ export class EXCodeBlock extends CodeBase {
      * @param functionName 要执行的函数名称
      * @param args 函数参数列表
      */
-    public doFunction(functionName:string, args:string[]):void {
+    public doFunction(functionName: string, args: string[]): void {
         let argsStr = args.join(",");
         this.addCodeLine(functionName + "(" + argsStr + ")");
     }
@@ -355,13 +364,13 @@ export class EXCodeBlock extends CodeBase {
     /**
      * @private
      */
-    private lines:string[] = [];
+    private lines: string[] = [];
 
     /**
      * @private
      * 添加一行代码
      */
-    public addCodeLine(code:string):void {
+    public addCodeLine(code: string): void {
         this.lines.push(this.getIndent() + code);
     }
 
@@ -369,7 +378,7 @@ export class EXCodeBlock extends CodeBase {
      * @private
      * 添加一行代码到指定行
      */
-    public addCodeLineAt(code:string, index:number):void {
+    public addCodeLineAt(code: string, index: number): void {
         this.lines.splice(index, 0, this.getIndent() + code);
     }
 
@@ -377,7 +386,7 @@ export class EXCodeBlock extends CodeBase {
      * @private
      * 是否存在某行代码内容
      */
-    public containsCodeLine(code:string):boolean {
+    public containsCodeLine(code: string): boolean {
         return this.lines.indexOf(code) != -1;
     }
 
@@ -385,7 +394,7 @@ export class EXCodeBlock extends CodeBase {
      * @private
      * 在结尾追加另一个代码块的内容
      */
-    public concat(cb:EXCodeBlock):void {
+    public concat(cb: EXCodeBlock): void {
         this.lines = this.lines.concat(cb.lines);
     }
 
@@ -394,7 +403,7 @@ export class EXCodeBlock extends CodeBase {
      *
      * @returns
      */
-    public toCode():string {
+    public toCode(): string {
         return this.lines.join("\n");
     }
 }
@@ -408,28 +417,28 @@ export class EXFunction extends CodeBase {
      * @private
      * 代码块
      */
-    public codeBlock:EXCodeBlock = null;
+    public codeBlock: EXCodeBlock = null;
 
     /**
      * @private
      */
-    public isGet:boolean = false;
+    public isGet: boolean = false;
 
     /**
      * @private
      * 函数名
      */
-    public name:string = "";
+    public name: string = "";
 
     /**
      * @private
      *
      * @returns
      */
-    public toCode():string {
-        let indentStr:string = this.getIndent();
-        let indent1Str:string = this.getIndent(this.indent + 1);
-        let codeIndent:string;
+    public toCode(): string {
+        let indentStr: string = this.getIndent();
+        let indent1Str: string = this.getIndent(this.indent + 1);
+        let codeIndent: string;
         let returnStr = indentStr;
         if (this.isGet) {
             codeIndent = this.getIndent(this.indent + 2);
@@ -469,7 +478,7 @@ export class EXVariable extends CodeBase {
     /**
      * @private
      */
-    public constructor(name:string, defaultValue?:string) {
+    public constructor(name: string, defaultValue?: string) {
         super();
         this.indent = 2;
         this.name = name;
@@ -480,23 +489,34 @@ export class EXVariable extends CodeBase {
      * @private
      * 变量名
      */
-    public name:string;
+    public name: string;
     /**
      * @private
      * 默认值
      */
-    public defaultValue:string;
+    public defaultValue: string;
 
     /**
      * @private
      *
      * @returns
      */
-    public toCode():string {
+    public toCode(): string {
         if (!this.defaultValue) {
             return "";
         }
         return "this." + this.name + " = " + this.defaultValue + ";";
+    }
+}
+
+export class EXArray extends CodeBase {
+
+    constructor(private array: string[]) {
+        super();
+    }
+
+    toCode() {
+        return "[" + this.array.map(v => "\"" + v + "\"").join(",") + "]"
     }
 }
 
@@ -509,7 +529,7 @@ export class EXState extends CodeBase {
     /**
      * @private
      */
-    public constructor(name:string, stateGroups?:Array<any>) {
+    public constructor(name: string, stateGroups?: Array<any>) {
         super();
         this.name = name;
         if (stateGroups)
@@ -520,28 +540,28 @@ export class EXState extends CodeBase {
      * @private
      * 视图状态名称
      */
-    public name:string = "";
+    public name: string = "";
 
     /**
      * @private
      */
-    public stateGroups:Array<any> = [];
+    public stateGroups: Array<any> = [];
 
     /**
      * @private
      */
-    public addItems:Array<any> = [];
+    public addItems: Array<any> = [];
 
     /**
      * @private
      */
-    public setProperty:Array<any> = [];
+    public setProperty: Array<any> = [];
 
     /**
      * @private
      * 添加一个覆盖
      */
-    public addOverride(item:CodeBase):void {
+    public addOverride(item: CodeBase): void {
         if (item instanceof EXAddItems)
             this.addItems.push(item);
         else
@@ -553,22 +573,22 @@ export class EXState extends CodeBase {
      *
      * @returns
      */
-    public toCode():string {
-        let indentStr:string = this.getIndent(1);
-        let returnStr:string = "new " + STATE + " (\"" + this.name + "\",\n" + indentStr + "[\n";
-        let index:number = 0;
-        let isFirst:boolean = true;
-        let overrides:Array<any> = this.addItems.concat(this.setProperty);
+    public toCode(): string {
+        let indentStr: string = this.getIndent(1);
+        let returnStr: string = "new " + STATE + " (\"" + this.name + "\",\n" + indentStr + "[\n";
+        let index: number = 0;
+        let isFirst: boolean = true;
+        let overrides: Array<any> = this.addItems.concat(this.setProperty);
         while (index < overrides.length) {
             if (isFirst)
                 isFirst = false;
             else
                 returnStr += ",\n";
-            let item:CodeBase = overrides[index];
-            let codes:Array<any> = item.toCode().split("\n");
-            let length:number = codes.length;
-            for (let i:number = 0; i < length; i++) {
-                let code:string = codes[i];
+            let item: CodeBase = overrides[index];
+            let codes: Array<any> = item.toCode().split("\n");
+            let length: number = codes.length;
+            for (let i: number = 0; i < length; i++) {
+                let code: string = codes[i];
                 codes[i] = indentStr + indentStr + code;
             }
             returnStr += codes.join("\n");
@@ -586,7 +606,7 @@ export class EXAddItems extends CodeBase {
     /**
      * @private
      */
-    public constructor(target:string, property:string, position:number, relativeTo:string) {
+    public constructor(target: string, property: string, position: number, relativeTo: string) {
         super();
         this.target = target;
         this.property = property;
@@ -598,33 +618,33 @@ export class EXAddItems extends CodeBase {
      * @private
      * 要添加的实例
      */
-    public target:string;
+    public target: string;
 
     /**
      * @private
      * 要添加到的属性
      */
-    public property:string;
+    public property: string;
 
     /**
      * @private
      * 添加的位置
      */
-    public position:number;
+    public position: number;
 
     /**
      * @private
      * 相对的显示元素
      */
-    public relativeTo:string;
+    public relativeTo: string;
 
     /**
      * @private
      *
      * @returns
      */
-    public toCode():string {
-        let returnStr:string = "new " + ADD_ITEMS + "(\"" + this.target + "\",\"" + this.property + "\"," + this.position + ",\"" + this.relativeTo + "\")";
+    public toCode(): string {
+        let returnStr: string = "new " + ADD_ITEMS + "(\"" + this.target + "\",\"" + this.property + "\"," + this.position + ",\"" + this.relativeTo + "\")";
         return returnStr;
     }
 }
@@ -636,7 +656,7 @@ export class EXSetProperty extends CodeBase {
     /**
      * @private
      */
-    public constructor(target:string, name:string, value:string) {
+    public constructor(target: string, name: string, value: string) {
         super();
         this.target = target;
         this.name = name;
@@ -647,26 +667,26 @@ export class EXSetProperty extends CodeBase {
      * @private
      * 要修改的属性名
      */
-    public name:string;
+    public name: string;
 
     /**
      * @private
      * 目标实例名
      */
-    public target:string;
+    public target: string;
 
     /**
      * @private
      * 属性值
      */
-    public value:string;
+    public value: string;
 
     /**
      * @private
      *
      * @returns
      */
-    public toCode():string {
+    public toCode(): string {
         return "new " + SET_PROPERTY + "(\"" + this.target + "\",\"" + this.name + "\"," + this.value + ")";
     }
 }
@@ -677,7 +697,7 @@ export class EXSetStateProperty extends CodeBase {
     /**
      * @private
      */
-    public constructor(target:string, property:string, templates:string[], chainIndex:number[]) {
+    public constructor(target: string, property: string, templates: string[], chainIndex: number[]) {
         super();
         if (target) {
             target = "this." + target;
@@ -693,31 +713,31 @@ export class EXSetStateProperty extends CodeBase {
      * @private
      * 目标实例名
      */
-    public target:string;
+    public target: string;
     /**
      * @private
      * 目标属性名
      */
-    public property:string;
+    public property: string;
 
     /**
      * @private
      * 绑定的模板列表
      */
-    public templates:string[];
+    public templates: string[];
 
     /**
      * @private
      * chainIndex是一个索引列表，每个索引指向templates中的一个值，该值是代表属性链。
      */
-    public chainIndex:number[];
+    public chainIndex: number[];
 
     /**
      * @private
      *
      * @returns
      */
-    public toCode():string {
+    public toCode(): string {
         let expression = this.templates.join(",");
         let chain = this.chainIndex.join(",");
         return "new " + SET_STATEPROPERTY + "(this, [" + expression + "]," + "[" + chain + "]," +
@@ -733,7 +753,7 @@ export class EXBinding extends CodeBase {
     /**
      * @private
      */
-    public constructor(target:string, property:string, templates:string[], chainIndex:number[]) {
+    public constructor(target: string, property: string, templates: string[], chainIndex: number[]) {
         super();
         this.target = target;
         this.property = property;
@@ -745,23 +765,23 @@ export class EXBinding extends CodeBase {
      * @private
      * 目标实例名
      */
-    public target:string;
+    public target: string;
     /**
      * @private
      * 目标属性名
      */
-    public property:string;
+    public property: string;
     /**
      * @private
      * 绑定的模板列表
      */
-    public templates:string[];
+    public templates: string[];
 
     /**
      * @private
      * chainIndex是一个索引列表，每个索引指向templates中的一个值，该值是代表属性链。
      */
-    public chainIndex:number[];
+    public chainIndex: number[];
 
 
     /**
@@ -769,11 +789,11 @@ export class EXBinding extends CodeBase {
      *
      * @returns
      */
-    public toCode():string {
+    public toCode(): string {
         let expression = this.templates.join(",");
         let chain = this.chainIndex.join(",");
         return BINDING_PROPERTIES + "(this, [" + expression + "]," + "[" + chain + "]," +
-            this.target + ",\"" + this.property + "\")";
+            this.target + ",\"" + this.property + "\");";
 
     }
 }

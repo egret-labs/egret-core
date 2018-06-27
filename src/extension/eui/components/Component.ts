@@ -431,15 +431,12 @@ namespace eui {
          *
          * @param value
          */
-        $setTouchEnabled(value:boolean):boolean {
+        $setTouchEnabled(value:boolean):void {
             value = !!value;
             let values = this.$Component;
             values[sys.ComponentKeys.explicitTouchEnabled] = value;
             if (values[sys.ComponentKeys.enabled]) {
-                return super.$setTouchEnabled(value);
-            }
-            else {
-                return true;
+                super.$setTouchEnabled(value);
             }
         }
 

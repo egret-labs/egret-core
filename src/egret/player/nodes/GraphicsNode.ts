@@ -59,6 +59,7 @@ namespace egret.sys {
             else {
                 this.drawData.push(path);
             }
+            this.renderCount++;
             return path;
         }
 
@@ -101,6 +102,7 @@ namespace egret.sys {
             else {
                 this.drawData.push(path);
             }
+            this.renderCount++;
             return path;
         }
 
@@ -114,7 +116,7 @@ namespace egret.sys {
          * @param miterLimit 用于表示剪切斜接的极限值的数字。
          */
         public lineStyle(thickness?:number, color?:number, alpha:number = 1, caps?:string,
-                         joints?:string, miterLimit:number = 3):Path2D {
+                         joints?:string, miterLimit:number = 3, lineDash:number[] = []):StrokePath {
             if (CAPS_STYLES.indexOf(caps) == -1) {
                 caps = "round";
             }
@@ -128,7 +130,9 @@ namespace egret.sys {
             path.caps = caps || CapsStyle.ROUND;
             path.joints = joints;
             path.miterLimit = miterLimit;
+            path.lineDash = lineDash;
             this.drawData.push(path);
+            this.renderCount++;
             return path;
         }
 
@@ -138,6 +142,7 @@ namespace egret.sys {
         public clear():void {
             this.drawData.length = 0;
             this.dirtyRender = true;
+            this.renderCount = 0;
         }
 
         /**

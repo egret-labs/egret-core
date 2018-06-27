@@ -71,16 +71,16 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public constructor(delay:number, repeatCount:number = 0) {
+        public constructor(delay: number, repeatCount: number = 0) {
             super();
             this.delay = delay;
-            this.repeatCount = +repeatCount|0;
+            this.repeatCount = +repeatCount | 0;
         }
 
         /**
          * @private
          */
-        private _delay:number = 0;
+        private _delay: number = 0;
 		/**
          * The delay between timer events, in milliseconds. A delay lower than 20 milliseconds is not recommended.<br/>
          * Note: Timer frequency is limited to 60 frames per second, meaning a delay lower than 16.6 milliseconds causes runtime problems.
@@ -95,19 +95,18 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get delay():number{
+        public get delay(): number {
             return this._delay;
         }
-        public set delay(value:number){
-            //value = +value||0;
-            if(value<1){
+        public set delay(value: number) {
+            if (value < 1) {
                 value = 1;
             }
-            if(this._delay==value){
+            if (this._delay == value) {
                 return;
             }
             this._delay = value;
-            this.lastCount = this.updateInterval = Math.round(60*value);
+            this.lastCount = this.updateInterval = Math.round(60 * value);
         }
 
 		/**
@@ -125,12 +124,12 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public repeatCount:number;
+        public repeatCount: number;
 
         /**
          * @private
          */
-        private _currentCount:number = 0;
+        private _currentCount: number = 0;
 
 		/**
          * The total number of times the timer has fired since it started at zero. If the timer has been reset, only the fires since the reset are counted.
@@ -144,14 +143,14 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get currentCount():number {
+        public get currentCount(): number {
             return this._currentCount;
         }
 
         /**
          * @private
          */
-        private _running:boolean = false;
+        private _running: boolean = false;
 
 		/**
          * The timer's current state; true if the timer is running, otherwise false.
@@ -165,7 +164,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get running():boolean{
+        public get running(): boolean {
             return this._running;
         }
 
@@ -182,7 +181,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public reset():void{
+        public reset(): void {
             this.stop();
             this._currentCount = 0;
         }
@@ -200,11 +199,11 @@ namespace egret {
          * @language zh_CN
          */
         public start() {
-            if(this._running)
+            if (this._running)
                 return;
             this.lastCount = this.updateInterval;
             this.lastTimeStamp = getTimer();
-            ticker.$startTick(this.$update,this);
+            ticker.$startTick(this.$update, this);
             this._running = true;
         }
 
@@ -222,30 +221,30 @@ namespace egret {
          * @language zh_CN
          */
         public stop() {
-            if(!this._running)
+            if (!this._running)
                 return;
-            stopTick(this.$update,this);
+            stopTick(this.$update, this);
             this._running = false;
         }
 
         /**
          * @private
          */
-        private updateInterval:number = 1000;
+        private updateInterval: number = 1000;
         /**
          * @private
          */
-        private lastCount:number = 1000;
+        private lastCount: number = 1000;
         /**
          * @private
          */
-        private lastTimeStamp:number = 0;
+        private lastTimeStamp: number = 0;
 
         /**
          * @private
          * Ticker以60FPS频率刷新此方法
          */
-        $update(timeStamp:number):boolean {
+        $update(timeStamp: number): boolean {
             let deltaTime = timeStamp - this.lastTimeStamp;
             if (deltaTime >= this._delay) {
                 this.lastCount = this.updateInterval;

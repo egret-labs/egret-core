@@ -1,16 +1,13 @@
 var __reflect = (this && this.__reflect) || function (p, c, t) {
     p.__class__ = c, t ? t.push(c) : t = [c], p.__types__ = p.__types__ ? t.concat(p.__types__) : t;
 };
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+var __extends = this && this.__extends || function __extends(t, e) { 
+ function r() { 
+ this.constructor = t;
+}
+for (var i in e) e.hasOwnProperty(i) && (t[i] = e[i]);
+r.prototype = e.prototype, t.prototype = new r();
+};
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -1552,8 +1549,8 @@ var eui;
             /**
              * @private
              */
-            UIComponentImpl.prototype.$invalidateMatrix = function () {
-                this.$super.$invalidateMatrix.call(this);
+            UIComponentImpl.prototype.$updateUseTransform = function () {
+                this.$super.$updateUseTransform.call(this);
                 this.invalidateParentLayout();
             };
             /**
@@ -2576,7 +2573,9 @@ var eui;
             if (target || this.$Group[5 /* touchThrough */]) {
                 return target;
             }
-            if (!this.$visible || !this.touchEnabled) {
+            //Bug: 当 group.sacleX or scaleY ==0 的时候，随便点击那里都点击成功
+            //虽然 super.$hitTest里面检测过一次 宽高大小，但是没有直接退出这个函数，所以要再判断一次;（width,height可以不判断）
+            if (!this.$visible || !this.touchEnabled || this.scaleX === 0 || this.scaleY === 0 || this.width === 0 || this.height === 0) {
                 return null;
             }
             var point = this.globalToLocal(stageX, stageY, egret.$TempPoint);
@@ -3301,10 +3300,7 @@ var eui;
             var values = this.$Component;
             values[7 /* explicitTouchEnabled */] = value;
             if (values[3 /* enabled */]) {
-                return _super.prototype.$setTouchEnabled.call(this, value);
-            }
-            else {
-                return true;
+                _super.prototype.$setTouchEnabled.call(this, value);
             }
         };
         Object.defineProperty(Component.prototype, "enabled", {
@@ -4555,7 +4551,7 @@ var eui;
          */
         DataGroup.prototype.measureRendererSize = function () {
             var values = this.$DataGroup;
-            if (!values[12 /* typicalItem */]) {
+            if (values[12 /* typicalItem */] == undefined) {
                 this.setTypicalLayoutRect(null);
                 return;
             }
@@ -6668,6 +6664,9 @@ var eui;
          * @language zh_CN
          */
         ListBase.prototype.onRendererTouchBegin = function (event) {
+            if (!this.$stage) {
+                return;
+            }
             var values = this.$ListBase;
             if (event.$isDefaultPrevented)
                 return;
@@ -10422,8 +10421,7 @@ var eui;
                 return this.$scale9Grid;
             },
             set: function (value) {
-                this.$scale9Grid = value;
-                this.$invalidateContentBounds();
+                this.$setScale9Grid(value);
                 this.invalidateDisplayList();
             },
             enumerable: true,
@@ -10515,11 +10513,11 @@ var eui;
             enumerable: true,
             configurable: true
         });
-        Image.prototype.$setBitmapData = function (value) {
-            if (value == this.$Bitmap[0 /* bitmapData */]) {
+        Image.prototype.$setTexture = function (value) {
+            if (value == this.$texture) {
                 return false;
             }
-            var result = _super.prototype.$setBitmapData.call(this, value);
+            var result = _super.prototype.$setTexture.call(this, value);
             this.sourceChanged = false;
             this.invalidateSize();
             this.invalidateDisplayList();
@@ -10540,7 +10538,7 @@ var eui;
                     if (!egret.is(data, "egret.Texture")) {
                         return;
                     }
-                    _this.$setBitmapData(data);
+                    _this.$setTexture(data);
                     if (data) {
                         _this.dispatchEventWith(egret.Event.COMPLETE);
                     }
@@ -10550,12 +10548,11 @@ var eui;
                 });
             }
             else {
-                this.$setBitmapData(source);
+                this.$setTexture(source);
             }
         };
         Image.prototype.$measureContentBounds = function (bounds) {
-            var values = this.$Bitmap;
-            var image = this.$Bitmap[0 /* bitmapData */];
+            var image = this.$texture;
             if (image) {
                 var uiValues = this.$UIComponent;
                 var width = uiValues[10 /* width */];
@@ -10579,25 +10576,6 @@ var eui;
             }
         };
         /**
-         * @private
-         *
-         * @param context
-         */
-        Image.prototype.$render = function () {
-            var image = this.$Bitmap[0 /* bitmapData */];
-            if (!image) {
-                return;
-            }
-            var uiValues = this.$UIComponent;
-            var width = uiValues[10 /* width */];
-            var height = uiValues[11 /* height */];
-            if (width === 0 || height === 0) {
-                return;
-            }
-            var values = this.$Bitmap;
-            egret.sys.BitmapNode.$updateTextureData(this.$renderNode, values[1 /* image */], values[2 /* bitmapX */], values[3 /* bitmapY */], values[4 /* bitmapWidth */], values[5 /* bitmapHeight */], values[6 /* offsetX */], values[7 /* offsetY */], values[8 /* textureWidth */], values[9 /* textureHeight */], width, height, values[13 /* sourceWidth */], values[14 /* sourceHeight */], this.scale9Grid || values[0 /* bitmapData */]["scale9Grid"], this.$fillMode, values[10 /* smoothing */]);
-        };
-        /**
          * @copy eui.UIComponent#createChildren
          *
          * @version Egret 2.4
@@ -10608,6 +10586,16 @@ var eui;
             if (this.sourceChanged) {
                 this.parseSource();
             }
+        };
+        /**
+         * @private
+         * 设置组件的宽高。此方法不同于直接设置width,height属性，
+         * 不会影响显式标记尺寸属性
+         */
+        Image.prototype.setActualSize = function (w, h) {
+            eui.sys.UIComponentImpl.prototype["setActualSize"].call(this, w, h);
+            _super.prototype.$setWidth.call(this, w);
+            _super.prototype.$setHeight.call(this, h);
         };
         /**
          * @copy eui.UIComponent#childrenCreated
@@ -10639,9 +10627,9 @@ var eui;
          * @platform Web,Native
          */
         Image.prototype.measure = function () {
-            var bitmapData = this.$Bitmap[0 /* bitmapData */];
-            if (bitmapData) {
-                this.setMeasuredSize(bitmapData.$getTextureWidth(), bitmapData.$getTextureHeight());
+            var texture = this.$texture;
+            if (texture) {
+                this.setMeasuredSize(texture.$getTextureWidth(), texture.$getTextureHeight());
             }
             else {
                 this.setMeasuredSize(0, 0);
@@ -10655,7 +10643,7 @@ var eui;
          * @platform Web,Native
          */
         Image.prototype.updateDisplayList = function (unscaledWidth, unscaledHeight) {
-            this.$invalidateContentBounds();
+            this.$renderDirty = true;
         };
         /**
          * @copy eui.UIComponent#invalidateParentLayout
@@ -11006,6 +10994,9 @@ var eui;
          * @language zh_CN
          */
         ItemRenderer.prototype.onTouchBegin = function (event) {
+            if (!this.$stage) {
+                return;
+            }
             this.$stage.addEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancle, this);
             this.$stage.addEventListener(egret.TouchEvent.TOUCH_END, this.onStageTouchEnd, this);
             this.touchCaptured = true;
@@ -11369,8 +11360,8 @@ var eui;
          * @private
          *
          */
-        Label.prototype.$invalidateContentBounds = function () {
-            _super.prototype.$invalidateContentBounds.call(this);
+        Label.prototype.$invalidateTextField = function () {
+            _super.prototype.$invalidateTextField.call(this);
             this.invalidateSize();
         };
         /**
@@ -13673,6 +13664,9 @@ var eui;
             _this.fillColor = fillColor;
             return _this;
         }
+        Rect.prototype.createNativeDisplayObject = function () {
+            this.$nativeDisplayObject = new egret_native.NativeDisplayObject(8 /* GRAPHICS */);
+        };
         Object.defineProperty(Rect.prototype, "graphics", {
             get: function () {
                 return this.$graphics;
@@ -13907,7 +13901,6 @@ var eui;
                 g.drawRoundRect(this.$strokeWeight, this.$strokeWeight, unscaledWidth - this.$strokeWeight * 2, unscaledHeight - this.$strokeWeight * 2, this.$ellipseWidth, this.$ellipseHeight);
             }
             g.endFill();
-            this.$invalidateContentBounds();
         };
         /**
          * @private
@@ -14384,6 +14377,9 @@ var eui;
          * @param event
          */
         Scroller.prototype.onTouchBeginCapture = function (event) {
+            if (!this.$stage) {
+                return;
+            }
             this.$Scroller[12 /* touchCancle */] = false;
             var canScroll = this.checkScrollPolicy();
             if (!canScroll) {
@@ -16696,7 +16692,7 @@ var eui;
                 if (isEnded && this.endFunction) {
                     this.endFunction.call(this.thisObject, this);
                 }
-                return false;
+                return true;
             };
             return Animation;
         }());
@@ -17756,8 +17752,8 @@ var eui;
          * @private
          *
          */
-        EditableText.prototype.$invalidateContentBounds = function () {
-            _super.prototype.$invalidateContentBounds.call(this);
+        EditableText.prototype.$invalidateTextField = function () {
+            _super.prototype.$invalidateTextField.call(this);
             this.invalidateSize();
         };
         /**
@@ -18999,8 +18995,9 @@ var eui;
             }
             var paths = data.paths;
             for (var path in paths) {
-                window[path] = EXML.update(path, paths[path]);
+                EXML.update(path, paths[path]);
             }
+            //commonjs|commonjs2
             if (!data.exmls || data.exmls.length == 0) {
                 this.onLoaded();
             }
@@ -20757,7 +20754,6 @@ var eui;
         }
         /**
          * @private
-         *
          */
         BitmapLabel.prototype.$invalidateContentBounds = function () {
             _super.prototype.$invalidateContentBounds.call(this);
@@ -20794,18 +20790,17 @@ var eui;
             return result;
         };
         BitmapLabel.prototype.$setFont = function (value) {
-            var values = this.$BitmapText;
-            if (this.$font == value) {
+            if (this.$fontForBitmapLabel == value) {
                 return false;
             }
-            this.$font = value;
+            this.$fontForBitmapLabel = value;
             if (this.$createChildrenCalled) {
                 this.$parseFont();
             }
             else {
                 this.$fontChanged = true;
             }
-            this.$BitmapText[6 /* fontStringChanged */] = true;
+            this.$fontStringChanged = true;
             return true;
         };
         /**
@@ -20814,21 +20809,24 @@ var eui;
         BitmapLabel.prototype.$parseFont = function () {
             var _this = this;
             this.$fontChanged = false;
-            var font = this.$font;
+            var font = this.$fontForBitmapLabel;
             if (typeof font == "string") {
                 eui.getAssets(font, function (bitmapFont) {
-                    _this.$setFontData(bitmapFont);
+                    _this.$setFontData(bitmapFont, font);
                 });
             }
             else {
                 this.$setFontData(font);
             }
         };
-        BitmapLabel.prototype.$setFontData = function (value) {
-            if (value == this.$BitmapText[5 /* font */]) {
+        BitmapLabel.prototype.$setFontData = function (value, font) {
+            if (font && font != this.$fontForBitmapLabel) {
+                return;
+            }
+            if (value == this.$font) {
                 return false;
             }
-            this.$BitmapText[5 /* font */] = value;
+            this.$font = value;
             this.$invalidateContentBounds();
             return true;
         };
@@ -20872,9 +20870,8 @@ var eui;
          */
         BitmapLabel.prototype.measure = function () {
             var values = this.$UIComponent;
-            var textValues = this.$BitmapText;
-            var oldWidth = textValues[0 /* textFieldWidth */];
-            var oldHeight = textValues[1 /* textFieldHeight */];
+            var oldWidth = this.$textFieldWidth;
+            var oldHeight = this.$textFieldHeight;
             var availableWidth = NaN;
             if (!isNaN(this._widthConstraint)) {
                 availableWidth = this._widthConstraint;

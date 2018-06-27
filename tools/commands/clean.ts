@@ -6,12 +6,12 @@ import server = require('../server/server');
 import service = require('../service/index');
 import FileUtil = require('../lib/FileUtil');
 import CompileProject = require('../actions/CompileProject');
-import copyNative = require("../actions/CopyNativeFiles");
-import * as EgretProject from '../project/EgretProject';
-
+import * as EgretProject from '../project';
+import * as exml from '../actions/exml';
 console.log(utils.tr(1106, 0));
-var timeBuildStart: number = (new Date()).getTime();
 class Clean implements egret.Command {
+
+    @utils.measure
     async execute() {
         utils.checkEgret();
 
@@ -29,18 +29,18 @@ class Clean implements egret.Command {
         }
         let manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
         let indexPath = FileUtil.joinPath(egret.args.projectDir, "index.html");
-        EgretProject.manager.generateManifest(result.files, manifestPath);
-        if (!EgretProject.data.useTemplate) {
+        EgretProject.manager.generateManifest(result.files, { debug: true, platform: 'web' }, manifestPath);
+        if (!EgretProject.projectData.useTemplate) {
             EgretProject.manager.modifyIndex(manifestPath, indexPath);
         }
 
         //拷贝项目到native工程中
-        if (egret.args.runtime == "native") {
-            console.log("----native build-----");
-            EgretProject.manager.modifyNativeRequire(manifestPath);
-            copyNative.refreshNative(true);
-        }
-        if (EgretProject.data.isWasmProject()) {
+        // if (egret.args.target == "native") {
+        //     console.log("----native build-----");
+        //     EgretProject.manager.modifyNativeRequire(manifestPath);
+        //     copyNative.refreshNative(true);
+        // }
+        if (EgretProject.projectData.isWasmProject()) {
             let arr = [
                 "egret.asm.js",
                 "egret.asm.js.mem",
@@ -48,7 +48,7 @@ class Clean implements egret.Command {
                 "egret.webassembly.wasm"
             ];
             let moduleName = "egret";
-            if (EgretProject.data.hasModule("dragonBones")) {
+            if (EgretProject.projectData.hasModule("dragonBones")) {
                 moduleName = "egretWithDragonBones";
             }
             arr.forEach(function (item) {
@@ -56,10 +56,6 @@ class Clean implements egret.Command {
                     FileUtil.joinPath(options.projectDir, "libs", item));
             });
         }
-
-        var timeBuildEnd = new Date().getTime();
-        var timeBuildUsed = (timeBuildEnd - timeBuildStart) / 1000;
-        console.log(utils.tr(1108, timeBuildUsed));
         //Wait for 'shutdown' command, node will exit when there are no tasks.
         return DontExitCode;
     }

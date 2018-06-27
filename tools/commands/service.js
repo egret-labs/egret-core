@@ -1,5 +1,5 @@
 var service = require("../service/index");
-var Service = (function () {
+var Service = /** @class */ (function () {
     function Service() {
     }
     Service.prototype.execute = function () {

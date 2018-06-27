@@ -32,9 +32,9 @@ namespace egret {
 
     let PI = Math.PI;
     let TwoPI = PI * 2;
-    let DEG_TO_RAD:number = PI / 180;
+    let DEG_TO_RAD: number = PI / 180;
 
-    let matrixPool:Matrix[] = [];
+    let matrixPool: Matrix[] = [];
     /**
      * The Matrix class represents a transformation matrix that determines how to map points from one coordinate space to
      * another. You can perform various graphical transformations on a display object by setting the properties of a Matrix
@@ -70,8 +70,8 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static release(matrix:Matrix):void {
-            if(!matrix){
+        public static release(matrix: Matrix): void {
+            if (!matrix) {
                 return;
             }
             matrixPool.push(matrix);
@@ -89,7 +89,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static create():Matrix {
+        public static create(): Matrix {
             let matrix = matrixPool.pop();
             if (!matrix) {
                 matrix = new Matrix();
@@ -121,7 +121,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        constructor(a:number = 1, b:number = 0, c:number = 0, d:number = 1, tx:number = 0, ty:number = 0) {
+        constructor(a: number = 1, b: number = 0, c: number = 0, d: number = 1, tx: number = 0, ty: number = 0) {
             super();
             this.a = a;
             this.b = b;
@@ -145,7 +145,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public a:number;
+        public a: number;
         /**
          * The value that affects the positioning of pixels along the y axis when rotating or skewing an image.
          * @default 0
@@ -160,7 +160,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public b:number;
+        public b: number;
         /**
          * The value that affects the positioning of pixels along the x axis when rotating or skewing an image.
          * @default 0
@@ -175,7 +175,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public c:number;
+        public c: number;
         /**
          * The value that affects the positioning of pixels along the y axis when scaling or rotating an image.
          * @default 1
@@ -190,7 +190,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public d:number;
+        public d: number;
         /**
          * The distance by which to translate each point along the x axis.
          * @default 0
@@ -205,7 +205,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public tx:number;
+        public tx: number;
 
         /**
          * The distance by which to translate each point along the y axis.
@@ -221,7 +221,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public ty:number;
+        public ty: number;
 
         /**
          * Returns a new Matrix object that is a clone of this matrix, with an exact copy of the contained object.
@@ -235,7 +235,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public clone():Matrix {
+        public clone(): Matrix {
             return new Matrix(this.a, this.b, this.c, this.d, this.tx, this.ty);
         }
 
@@ -254,19 +254,19 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public concat(other:Matrix):void {
-            let a =  this.a * other.a;
-            let b =  0.0;
-            let c =  0.0;
-            let d =  this.d * other.d;
+        public concat(other: Matrix): void {
+            let a = this.a * other.a;
+            let b = 0.0;
+            let c = 0.0;
+            let d = this.d * other.d;
             let tx = this.tx * other.a + other.tx;
             let ty = this.ty * other.d + other.ty;
 
             if (this.b !== 0.0 || this.c !== 0.0 || other.b !== 0.0 || other.c !== 0.0) {
-                a  += this.b * other.c;
-                d  += this.c * other.b;
-                b  += this.a * other.b + this.b * other.d;
-                c  += this.c * other.a + this.d * other.c;
+                a += this.b * other.c;
+                d += this.c * other.b;
+                b += this.a * other.b + this.b * other.d;
+                c += this.c * other.a + this.d * other.c;
                 tx += this.ty * other.c;
                 ty += this.tx * other.b;
             }
@@ -293,7 +293,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public copyFrom(other:Matrix):Matrix {
+        public copyFrom(other: Matrix): Matrix {
             this.a = other.a;
             this.b = other.b;
             this.c = other.c;
@@ -318,7 +318,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public identity():void {
+        public identity(): void {
             this.a = this.d = 1;
             this.b = this.c = this.tx = this.ty = 0;
         }
@@ -337,26 +337,26 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public invert():void {
+        public invert(): void {
             this.$invertInto(this);
         }
 
         /**
          * @private
          */
-        $invertInto(target:Matrix):void {
+        $invertInto(target: Matrix): void {
             let a = this.a;
-            let b  = this.b;
-            let c  = this.c;
+            let b = this.b;
+            let c = this.c;
             let d = this.d;
             let tx = this.tx;
             let ty = this.ty;
             if (b == 0 && c == 0) {
                 target.b = target.c = 0;
-                if(a==0||d==0){
+                if (a == 0 || d == 0) {
                     target.a = target.d = target.tx = target.ty = 0;
                 }
-                else{
+                else {
                     a = target.a = 1 / a;
                     d = target.d = 1 / d;
                     target.tx = -a * tx;
@@ -371,10 +371,10 @@ namespace egret {
                 return;
             }
             determinant = 1 / determinant;
-            let k = target.a =  d * determinant;
+            let k = target.a = d * determinant;
             b = target.b = -b * determinant;
             c = target.c = -c * determinant;
-            d = target.d =  a * determinant;
+            d = target.d = a * determinant;
             target.tx = -(k * tx + c * ty);
             target.ty = -(b * tx + d * ty);
         }
@@ -395,7 +395,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public rotate(angle:number):void {
+        public rotate(angle: number): void {
             angle = +angle;
             if (angle !== 0) {
                 angle = angle / DEG_TO_RAD;
@@ -407,10 +407,10 @@ namespace egret {
                 let td = this.d;
                 let ttx = this.tx;
                 let tty = this.ty;
-                this.a = ta  * u - tb  * v;
-                this.b = ta  * v + tb  * u;
-                this.c = tc  * u - td  * v;
-                this.d = tc  * v + td  * u;
+                this.a = ta * u - tb * v;
+                this.b = ta * v + tb * u;
+                this.c = tc * u - td * v;
+                this.d = tc * v + td * u;
                 this.tx = ttx * u - tty * v;
                 this.ty = ttx * v + tty * u;
             }
@@ -434,7 +434,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public scale(sx:number, sy:number):void {
+        public scale(sx: number, sy: number): void {
             if (sx !== 1) {
                 this.a *= sx;
                 this.c *= sx;
@@ -471,7 +471,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public setTo(a:number, b:number, c:number, d:number, tx:number, ty:number):Matrix {
+        public setTo(a: number, b: number, c: number, d: number, tx: number, ty: number): Matrix {
             this.a = a;
             this.b = b;
             this.c = c;
@@ -502,7 +502,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public transformPoint(pointX:number, pointY:number, resultPoint?:Point):Point {
+        public transformPoint(pointX: number, pointY: number, resultPoint?: Point): Point {
             let x = this.a * pointX + this.c * pointY + this.tx;
             let y = this.b * pointX + this.d * pointY + this.ty;
             if (resultPoint) {
@@ -528,7 +528,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public translate(dx:number, dy:number):void {
+        public translate(dx: number, dy: number): void {
             this.tx += dx;
             this.ty += dy;
         }
@@ -549,7 +549,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public equals(other:Matrix):boolean {
+        public equals(other: Matrix): boolean {
             return this.a == other.a && this.b == other.b &&
                 this.c == other.c && this.d == other.d &&
                 this.tx == other.tx && this.ty == other.ty;
@@ -581,7 +581,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public prepend(a:number, b:number, c:number, d:number, tx:number, ty:number):Matrix {
+        public prepend(a: number, b: number, c: number, d: number, tx: number, ty: number): Matrix {
             let tx1 = this.tx;
             if (a != 1 || b != 0 || c != 0 || d != 1) {
                 let a1 = this.a;
@@ -622,7 +622,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public append(a:number, b:number, c:number, d:number, tx:number, ty:number):Matrix {
+        public append(a: number, b: number, c: number, d: number, tx: number, ty: number): Matrix {
             let a1 = this.a;
             let b1 = this.b;
             let c1 = this.c;
@@ -656,7 +656,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public deltaTransformPoint(point:Point):Point {
+        public deltaTransformPoint(point: Point): Point {
             let self = this;
             let x = self.a * point.x + self.c * point.y;
             let y = self.b * point.x + self.d * point.y;
@@ -677,7 +677,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public toString():string {
+        public toString(): string {
             return "(a=" + this.a + ", b=" + this.b + ", c=" + this.c + ", d=" + this.d + ", tx=" + this.tx + ", ty=" + this.ty + ")";
         }
 
@@ -703,7 +703,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public createBox(scaleX:number, scaleY:number, rotation:number = 0, tx:number = 0, ty:number = 0):void {
+        public createBox(scaleX: number, scaleY: number, rotation: number = 0, tx: number = 0, ty: number = 0): void {
             let self = this;
             if (rotation !== 0) {
                 rotation = rotation / DEG_TO_RAD;
@@ -747,18 +747,18 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public createGradientBox(width:number, height:number, rotation:number = 0, tx:number = 0, ty:number = 0):void {
+        public createGradientBox(width: number, height: number, rotation: number = 0, tx: number = 0, ty: number = 0): void {
             this.createBox(width / 1638.4, height / 1638.4, rotation, tx + width / 2, ty + height / 2);
         }
 
         /**
          * @private
          */
-        $transformBounds(bounds:Rectangle):void {
-            let a  = this.a;
-            let b  = this.b;
-            let c  = this.c;
-            let d  = this.d;
+        $transformBounds(bounds: Rectangle): void {
+            let a = this.a;
+            let b = this.b;
+            let c = this.c;
+            let d = this.d;
             let tx = this.tx;
             let ty = this.ty;
 
@@ -817,10 +817,10 @@ namespace egret {
         /**
          * @private
          */
-        $getScaleX():number {
+        $getScaleX(): number {
             let m = this;
-            if (m.a == 1 && m.b == 0) {
-                return 1;
+            if (m.b == 0) {
+                return m.a;
             }
             let result = Math.sqrt(m.a * m.a + m.b * m.b);
             return this.getDeterminant() < 0 ? -result : result;
@@ -829,10 +829,10 @@ namespace egret {
         /**
          * @private
          */
-        $getScaleY():number {
+        $getScaleY(): number {
             let m = this;
-            if (m.c == 0 && m.d == 1) {
-                return 1;
+            if (m.c == 0) {
+                return m.d;
             }
             let result = Math.sqrt(m.c * m.c + m.d * m.d);
             return this.getDeterminant() < 0 ? -result : result;
@@ -841,21 +841,31 @@ namespace egret {
         /**
          * @private
          */
-        $getSkewX():number {
-            return Math.atan2(this.d, this.c) - (PI / 2);
+        $getSkewX(): number {
+            if (this.d < 0) {
+                return Math.atan2(this.d, this.c) + (PI / 2);
+            }
+            else {
+                return Math.atan2(this.d, this.c) - (PI / 2);
+            }
         }
 
         /**
          * @private
          */
-        $getSkewY():number {
-            return Math.atan2(this.b, this.a);
+        $getSkewY(): number {
+            if(this.a < 0) {
+                return Math.atan2(this.b, this.a) - PI;
+            }
+            else {
+                return Math.atan2(this.b, this.a);
+            }
         }
 
         /**
          * @private
          */
-        $updateScaleAndRotation(scaleX:number, scaleY:number, skewX:number, skewY:number) {
+        $updateScaleAndRotation(scaleX: number, scaleY: number, skewX: number, skewY: number) {
             if ((skewX == 0 || skewX == TwoPI) && (skewY == 0 || skewY == TwoPI)) {
                 this.a = scaleX;
                 this.b = this.c = 0;
@@ -881,19 +891,19 @@ namespace egret {
          * @private
          * target = other * this
          */
-        $preMultiplyInto(other:Matrix, target:Matrix):void {
-            let a =  other.a * this.a;
-            let b =  0.0;
-            let c =  0.0;
-            let d =  other.d * this.d;
+        $preMultiplyInto(other: Matrix, target: Matrix): void {
+            let a = other.a * this.a;
+            let b = 0.0;
+            let c = 0.0;
+            let d = other.d * this.d;
             let tx = other.tx * this.a + this.tx;
             let ty = other.ty * this.d + this.ty;
 
             if (other.b !== 0.0 || other.c !== 0.0 || this.b !== 0.0 || this.c !== 0.0) {
-                a  += other.b * this.c;
-                d  += other.c * this.b;
-                b  += other.a * this.b + other.b * this.d;
-                c  += other.c * this.a + other.d * this.c;
+                a += other.b * this.c;
+                d += other.c * this.b;
+                b += other.a * this.b + other.b * this.d;
+                c += other.c * this.a + other.d * this.c;
                 tx += other.ty * this.c;
                 ty += other.tx * this.b;
             }

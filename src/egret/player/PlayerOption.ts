@@ -56,10 +56,6 @@ interface PlayerOption {
      */
     orientation?:string;
     /**
-     * 是否显示重绘区域
-     */
-    showPaintRect?:boolean;
-    /**
      * 显示FPS
      */
     showFPS?:boolean;

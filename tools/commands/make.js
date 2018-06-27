@@ -3,7 +3,7 @@ var Compiler_1 = require("../actions/Compiler");
 var FileUtil = require("../lib/FileUtil");
 var path = require("path");
 var ANY = 'any';
-var CompileEgretEngine = (function () {
+var CompileEgretEngine = /** @class */ (function () {
     function CompileEgretEngine() {
     }
     CompileEgretEngine.prototype.execute = function () {
@@ -21,6 +21,11 @@ var CompileEgretEngine = (function () {
             { name: "release", minify: true }
         ];
         var excludeList = [
+            FileUtil.escapePath(path.join(outputDir, "egretia-sdk")),
+            FileUtil.escapePath(path.join(outputDir, "egret-facebook")),
+            FileUtil.escapePath(path.join(outputDir, "promise")),
+            FileUtil.escapePath(path.join(outputDir, "resourcemanager")),
+            FileUtil.escapePath(path.join(outputDir, "assetsmanager")),
             FileUtil.escapePath(path.join(outputDir, "egret3d")),
             FileUtil.escapePath(path.join(outputDir, "egret-wasm")),
             FileUtil.escapePath(path.join(outputDir, "eui-wasm")),
@@ -29,17 +34,18 @@ var CompileEgretEngine = (function () {
             FileUtil.escapePath(path.join(outputDir, "wasm_libs")),
             FileUtil.escapePath(path.join(outputDir, "media")),
             FileUtil.escapePath(path.join(outputDir, "nest")),
+            FileUtil.escapePath(path.join(outputDir, "res")),
             FileUtil.escapePath(path.join(outputDir, "dragonBones"))
         ];
         utils.clean(outputDir, excludeList);
-        for (var i = 0; i < manifest.modules.length; i++) {
-            var m = manifest.modules[i];
+        for (var _i = 0, _a = manifest.modules; _i < _a.length; _i++) {
+            var m = _a[_i];
             preduceSwanModule(m);
             listModuleFiles(m);
-            for (var j = 0; j < configurations.length; j++) {
-                var config = configurations[j];
-                for (var k = 0; k < manifest.platforms.length; k++) {
-                    var platform = manifest.platforms[k];
+            for (var _b = 0, configurations_1 = configurations; _b < configurations_1.length; _b++) {
+                var config = configurations_1[_b];
+                for (var _c = 0, _d = manifest.platforms; _c < _d.length; _c++) {
+                    var platform = _d[_c];
                     code = this.buildModule(m, platform, config);
                     if (code != 0) {
                         delSwanTemp(m);
@@ -47,6 +53,7 @@ var CompileEgretEngine = (function () {
                     }
                 }
             }
+            // break;
             delSwanTemp(m);
         }
         // this.hideInternalMethods();
@@ -70,6 +77,7 @@ var CompileEgretEngine = (function () {
         var outDir = this.getModuleOutputPath(null, null, m.outFile);
         var declareFile = this.getModuleOutputPath(m.name, fileName + ".d.ts", m.outFile);
         var singleFile = this.getModuleOutputPath(m.name, fileName + ".js", m.outFile);
+        //var modFile = this.getModuleOutputPath(m.name, fileName + ".mod.js", m.outFile);
         var moduleRoot = FileUtil.joinPath(egret.root, m.root);
         if (!m.root) {
             return 0;
@@ -99,6 +107,7 @@ var CompileEgretEngine = (function () {
         var tsconfig = path.join(egret.root, 'src/egret/');
         var isPublish = configuration.name != "debug";
         var compileOptions = this.compiler.parseTsconfig(tsconfig, isPublish).options;
+        // com
         //make 使用引擎的配置,必须用下面的参数
         compileOptions.declaration = dts;
         compileOptions.out = singleFile;

@@ -271,9 +271,7 @@ namespace egret.web {
 
 
         $onBlur(): void {
-            if (Html5Capatibility._System_OS == SystemOSType.WPHONE) {
-                egret.Event.dispatchEvent(this, "updateText", false);
-            }
+
         }
 
         /**
@@ -283,34 +281,13 @@ namespace egret.web {
         public _onInput(): void {
             let self = this;
 
-            if (Html5Capatibility._System_OS == SystemOSType.WPHONE) {
-                let values = this.$textfield.$TextField;
-                if (values[sys.TextKeys.restrictAnd] == null && values[sys.TextKeys.restrictNot] == null) {
+            window.setTimeout(function () {
+                if (self.inputElement && self.inputElement.selectionStart == self.inputElement.selectionEnd) {
                     self.textValue = self.inputElement.value;
 
                     egret.Event.dispatchEvent(self, "updateText", false);
                 }
-                else {
-                    window.setTimeout(function () {
-                        if (self.inputElement && self.inputElement.selectionStart && self.inputElement.selectionEnd) {
-                            if (self.inputElement.selectionStart == self.inputElement.selectionEnd) {
-                                self.textValue = self.inputElement.value;
-
-                                egret.Event.dispatchEvent(self, "updateText", false);
-                            }
-                        }
-                    }, 0);
-                }
-            }
-            else {
-                window.setTimeout(function () {
-                    if (self.inputElement && self.inputElement.selectionStart == self.inputElement.selectionEnd) {
-                        self.textValue = self.inputElement.value;
-
-                        egret.Event.dispatchEvent(self, "updateText", false);
-                    }
-                }, 0);
-            }
+            }, 0);
         }
 
         private setAreaHeight() {
@@ -682,6 +659,7 @@ namespace egret.web {
                     this._inputElement.blur();
                 }
             }
+            this._needShow = false;
         }
 
         /**

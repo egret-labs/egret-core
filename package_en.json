@@ -1,11 +1,8 @@
 {
   "name": "egret",
-  "version": "5.0.14",
+  "version": "5.2.3",
   "private": true,
   "author": "egret-labs",
-  "scripts": {
-    "start": "node app"
-  },
   "bin": {
     "egret": "./tools/bin/egret"
   },
@@ -130,10 +127,6 @@
           {
             "path": "native/NativeXML.ts",
             "platform": "native"
-          },
-          {
-            "path": "web/WebBitmapData.ts",
-            "platform": "web"
           },
           {
             "path": "external/web/WebExternalInterface.ts",
@@ -288,14 +281,12 @@
         "dependencies": []
       },
       {
-        "name": "res",
-        "description": "resource lib",
-        "description_en": "resource lib",
+        "name": "assetsmanager",
+        "description": "assetsmanager 资源管理器",
+        "description_en": "AssetsManager",
         "files": [],
-        "root": "src/extension/resource",
-        "dependencies": [
-          "egret"
-        ]
+        "root": "",
+        "dependencies": []
       },
       {
         "name": "eui",
@@ -362,6 +353,26 @@
         "dependencies": [
           "egret"
         ]
+      },
+      {
+        "name": "egret-facebook",
+        "description": "Facebook Instant Games SDK",
+        "description_en": "Facebook Instant Games SDK",
+        "files": [],
+        "root": "",
+        "dependencies": [
+          "egret"
+        ]
+      },
+      {
+        "name": "egretia-sdk",
+        "description": "Egretia SDK",
+        "description_en": "Egretia SDK",
+        "files": [],
+        "root": "",
+        "dependencies": [
+          "egret"
+        ]
       }
     ],
     "platforms": [
@@ -380,20 +391,6 @@
       }
     ],
     "templates": [
-      {
-        "name": "empty",
-        "displayName": "Empty Egret project",
-        "displayName_en": "Empty Egret project",
-        "language": "TypeScript",
-        "tag": "game,app,TypeScript",
-        "description": "Create an empty project, add only reference to Egret related modules",
-        "description_en": "Create an empty project, add only reference to Egret related modules",
-        "defaultWidth": 640,
-        "defaultHeight": 1136,
-        "modules": [
-          "egret"
-        ]
-      },
       {
         "name": "game",
         "displayName": "Egret game project",
@@ -429,21 +426,6 @@
         ]
       },
       {
-        "name": "egret3d",
-        "displayName": "Egret 3D project",
-        "displayName_en": "Egret 3D project",
-        "language": "TypeScript",
-        "tag": "game,app,TypeScript",
-        "description": "Create an Egret 3D project",
-        "description_en": "Create an Egret 3D project",
-        "defaultWidth": 640,
-        "defaultHeight": 960,
-        "modules": [
-          "egret",
-          "egret3d"
-        ]
-      },
-      {
         "name": "facebook-instant-demo",
         "displayName": "Facebook Instant Game Demo project",
         "displayName_en": "Facebook Instant Game Demo project",
@@ -459,40 +441,6 @@
           "res",
           "eui",
           "tween"
-        ]
-      },
-      {
-        "name": "res-examples",
-        "displayName": "ResourceManager sample project",
-        "displayName_en": "ResourceManager sample project",
-        "language": "TypeScript",
-        "tag": "game,app,TypeScript",
-        "description": "ResourceManager sample project",
-        "description_en": "ResourceManager sample project",
-        "defaultWidth": 640,
-        "defaultHeight": 1136,
-        "modules": [
-          "egret",
-          "game",
-          "res",
-          "eui",
-          "tween"
-        ]
-      },
-      {
-        "name": "wasm",
-        "displayName": "WebAssembly sample project",
-        "displayName_en": "WebAssembly sample project",
-        "language": "TypeScript",
-        "tag": "game,app,TypeScript,WebAssembly",
-        "description": "WebAssembly sample project",
-        "description_en": "WebAssembly sample project",
-        "defaultWidth": 640,
-        "defaultHeight": 1136,
-        "modules": [
-          "egret",
-          "media",
-          "res"
         ]
       }
     ],

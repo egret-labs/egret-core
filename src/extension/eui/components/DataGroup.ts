@@ -903,7 +903,7 @@ namespace eui {
          */
         private measureRendererSize():void {
             let values = this.$DataGroup;
-            if (!values[Keys.typicalItem]) {
+            if (values[Keys.typicalItem] == undefined) {
                 this.setTypicalLayoutRect(null);
                 return;
             }

@@ -3,16 +3,6 @@ import file = require('../lib/FileUtil');
 import ts = require("../lib/typescript-plus/lib/typescript");
 import * as path from 'path';
 
-interface CompileOption {
-    args: egret.ToolArgs;
-    files?: string[];
-    out?: string;
-    outDir?: string;
-    def?: boolean;
-    forSortFile?: boolean;
-    debug?: boolean;
-}
-
 export interface EgretCompilerHost {
     program: ts.Program;
     files?: string[];
@@ -94,7 +84,7 @@ export class Compiler {
                 msg = `  Error: ${message}`;
             }
             console.log(msg);
-            if(this.errors.length < 100) {
+            if (this.errors.length < 100) {
                 this.errors.push(msg);
             }
         });
@@ -102,7 +92,7 @@ export class Compiler {
 
     private fileNames: Array<string>;
 
-    private compileWithChanges(filesChanged: egret.FileChanges, sourceMap?: boolean): EgretCompilerHost {
+    compileWithChanges(filesChanged: egret.FileChanges, sourceMap?: boolean): EgretCompilerHost {
         this.errors = [];
         changedFileNames = [];
         let hasAddOrRemoved = false;

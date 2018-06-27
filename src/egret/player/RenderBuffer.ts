@@ -76,27 +76,6 @@ namespace egret.sys {
         resize(width:number,height:number,useMaxSize?:boolean):void;
 
         /**
-         * 改变渲染缓冲为指定大小，但保留原始图像数据
-         * @param width 改变后的宽
-         * @param height 改变后的高
-         * @param offsetX 原始图像数据在改变后缓冲区的绘制起始位置x
-         * @param offsetY 原始图像数据在改变后缓冲区的绘制起始位置y
-         */
-        resizeTo(width:number,height:number,offsetX:number,offsetY:number):void;
-
-        /**
-         * 清空并设置裁切区域
-         * @param regions 矩形列表
-         * @param offsetX 矩形偏移量x
-         * @param offsetY 矩形偏移量y
-         */
-        beginClip(regions:sys.Region[], offsetX?:number, offsetY?:number):void;
-        /**
-         * 取消上一次设置的clip。
-         */
-        endClip():void;
-
-        /**
          * 获取指定区域的像素
          */
         getPixels(x:number,y:number,width?:number,height?:number):number[];
@@ -116,11 +95,6 @@ namespace egret.sys {
          * 销毁渲染缓冲
          */
         destroy():void;
-
-        /**
-         * 设置脏矩形策略
-         */
-        setDirtyRegionPolicy(state:string):void;
     }
 
     /**

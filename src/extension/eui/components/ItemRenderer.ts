@@ -223,6 +223,9 @@ namespace eui {
          * @language zh_CN
          */
         protected onTouchBegin(event: egret.TouchEvent): void {
+            if(!this.$stage) {
+                return;
+            }
             this.$stage.addEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancle, this);
             this.$stage.addEventListener(egret.TouchEvent.TOUCH_END, this.onStageTouchEnd, this);
             this.touchCaptured = true;

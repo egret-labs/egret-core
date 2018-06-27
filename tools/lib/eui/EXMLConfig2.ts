@@ -3,6 +3,7 @@ import path = require("path");
 import XMLTool = require("../xml/index");
 import egretbridge = require("./egretbridge");
 import componentScanner = require("../exml/exml-service/componentScanner");
+import { fileSystem } from "./EXMLParser";
 /**
  * @private
  * EUI 命名空间
@@ -34,7 +35,6 @@ export class EXMLConfig {
     //public componentDic:any = {};
 
     public config: any = {};
-    public idMap: any = {};
 
     /**
      * 项目目录路径
@@ -61,9 +61,9 @@ export class EXMLConfig {
     }
 
     private getClassToPathInfo(dirPath: string): any {
-        let exmls: string[] = file.search(dirPath, 'exml');
-        exmls.forEach(exml => {
-            let str: string = file.read(exml);
+        const exmls = fileSystem.getList();
+        exmls.forEach(filename => {
+            const str = fileSystem.get(filename).contents;
             let xml = XMLTool.parse(str);
             let className: string = null;
             if (xml["$class"]) {
@@ -71,7 +71,7 @@ export class EXMLConfig {
             } else {
                 className = this.getClassNameById(xml.localName, xml.namespace);
             }
-            exmls[className] = exml;
+            exmls[className] = filename;
         });
         return exmls;
     }
@@ -94,12 +94,6 @@ export class EXMLConfig {
         for (let className in this.config) {
             let component = this.config[className];
             let dotIndex = className.lastIndexOf(".");
-            //解析id
-            if (dotIndex !== -1) {
-                let id = className.substring(dotIndex + 1);
-                // console.log(className,"[id]:"+id);
-                this.idMap[id] = className;
-            }
             //查找并设置默认属性
             if (!component.default) {
                 this._findProp(component);
@@ -170,7 +164,7 @@ export class EXMLConfig {
         }
         //省略命名空间和命名空间是eui的去表中查
         else if (!ns || ns == NS_S) {
-            name = this.idMap[id];
+            name = "eui." + id;
         }
         //自定义命名空间形如mrj.*要去掉＊
         else {
