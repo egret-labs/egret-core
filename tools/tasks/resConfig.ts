@@ -166,26 +166,36 @@ class TextureMergerResConfigPlugin {
      *      'resource/de.res.json': 'resource/' 
     *  }
      */
-    private resRootHash: { [url: string]: string } = {};
+    private sheetRoot: { [url: string]: string } = {};
     //从用户读取到的要修改的文件url
     private resourceConfigFiles: string[] = [];
     /** 存储要修改的文件 */
     private resourceConfig: { [filename: string]: { resources: any[] } } = {};
     /** 要打包的文件夹 */
-    private rootHash: { [filename: string]: boolean } = {};
+    private resourceDirs: { [filename: string]: boolean } = {};
     constructor(private options: ConvertResourceConfigPluginOption) {
         this.resourceConfigFiles = this.options.resourceConfigFiles.map((item) => {
             let resourceConfigFile = path.posix.join(item.root, item.filename);
-            this.resRootHash[resourceConfigFile] = item.root;
-            this.rootHash[item.root] = true;
+            this.sheetRoot[resourceConfigFile] = item.root;
+            this.resourceDirs[item.root] = true;
             return resourceConfigFile;
         });
     }
     async onFile(file: plugin.File) {
         let isRes = false;
-        for (let root in this.rootHash) {
-            if (path.normalize(file.origin).indexOf(path.join(egret.args.projectDir, root)) >= 0) {
-                isRes = true;
+        for (let root in this.resourceDirs) {
+            let fileOrigin = path.normalize(file.origin);
+            //绝对路径
+            if (fileOrigin.indexOf(path.join(egret.args.projectDir)) >= 0) {
+                if (fileOrigin.indexOf(path.join(egret.args.projectDir, root)) >= 0) {
+                    isRes = true;
+                }
+            }
+            //相对路径
+            else {
+                if (fileOrigin.indexOf(path.normalize(root)) >= 0) {
+                    isRes = true;
+                }
             }
         }
         if (!isRes) {
@@ -263,7 +273,7 @@ class TextureMergerResConfigPlugin {
     private modifyRES(subkeysFile: R, subkeyHash: {}, pluginContext: plugin.PluginContext) {
         for (let filename in this.resourceConfig) {
             const resourceConfig = this.resourceConfig[filename];
-            const root = this.resRootHash[filename];
+            const root = this.sheetRoot[filename];
             this.deleteFragmentReference(subkeyHash, resourceConfig, root);
 
             //增加最后的图集和json配置
