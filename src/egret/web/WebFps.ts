@@ -30,7 +30,7 @@ namespace egret.web {
     /**
      * @private
      */
-    export class WebFps extends egret.DisplayObject implements egret.FPSDisplay {
+    export class WebFps implements egret.FPSDisplay {
         private panelX: number;
         private panelY: number;
         private fontColor: string;
@@ -42,7 +42,6 @@ namespace egret.web {
         private renderMode: string;
 
         constructor(stage: Stage, showFPS: boolean, showLog: boolean, logFilter: string, styles: Object) {
-            super();
             if (showFPS || showLog) {
                 if (egret.Capabilities.renderMode == 'canvas') {
                     this.renderMode = "Canvas";
@@ -90,9 +89,9 @@ namespace egret.web {
         private fpsFrontColor = "#18fefe";
         private contextCost;
         private canvasCost;
-        private WIDTH_COST = 33;
+        private WIDTH_COST = 50;
         private cost1Color = "#18fefe";
-        private cost2Color = "#ffff00";
+        // private cost2Color = "#ffff00";
         private cost3Color = "#ff0000";
 
         private addFps() {
@@ -121,7 +120,7 @@ namespace egret.web {
             this.containerFps.appendChild(divDatas);
             let left = document.createElement('div');
             left.style['float'] = 'left';
-            left.innerHTML = `Draw<br/>Dirty<br/>Cost`
+            left.innerHTML = `Draw<br/>Cost`
             divDatas.appendChild(left);
             let right = document.createElement('div');
             right.style.paddingLeft = left.offsetWidth + 20 + "px";
@@ -129,11 +128,11 @@ namespace egret.web {
             divDatas.appendChild(right);
             let draw = document.createElement('div');
             this.divDraw = draw;
-            draw.innerHTML = `0<br/>0<br/>`;
+            draw.innerHTML = `0<br/>`;
             right.appendChild(draw);
             let cost = document.createElement('div');
             this.divCost = cost;
-            cost.innerHTML = `<font  style="color:${this.cost1Color}">0<font/> <font  style="color:${this.cost2Color}">0<font/> <font  style="color:${this.cost3Color}">0<font/>`
+            cost.innerHTML = `<font  style="color:${this.cost1Color}">0<font/> <font  style="color:${this.cost3Color}">0<font/>`
             right.appendChild(cost);
 
             canvas = document.createElement('canvas');
@@ -147,7 +146,6 @@ namespace egret.web {
             context.fillRect(0, 0, this.WIDTH, this.HEIGHT);
             context.fillStyle = "#000000";
             context.fillRect(this.WIDTH_COST, 0, 1, this.HEIGHT);
-            context.fillRect(this.WIDTH_COST * 2 + 1, 0, 1, this.HEIGHT);
             this.fpsHeight = this.container.offsetHeight;
         }
 
@@ -162,27 +160,22 @@ namespace egret.web {
         private arrFps: number[] = [];
         private arrCost: number[][] = [];
         private lastNumDraw;
-        private lastNumDirty;
 
         public update(datas: FPSData, showLastData = false) {
             let numFps: number;
             let numCostTicker: number;
-            let numCostDirty: number;
             let numCostRender: number;
             if (!showLastData) {
                 numFps = datas.fps;
                 numCostTicker = datas.costTicker;
-                numCostDirty = datas.costDirty;
                 numCostRender = datas.costRender;
                 this.lastNumDraw = datas.draw;
-                this.lastNumDirty = datas.dirty;
                 this.arrFps.push(numFps);
-                this.arrCost.push([numCostTicker, numCostDirty, numCostRender]);
+                this.arrCost.push([numCostTicker, numCostRender]);
             } else {
                 numFps = this.arrFps[this.arrFps.length - 1];
                 numCostTicker = this.arrCost[this.arrCost.length - 1][0];
-                numCostDirty = this.arrCost[this.arrCost.length - 1][1];
-                numCostRender = this.arrCost[this.arrCost.length - 1][2];
+                numCostRender = this.arrCost[this.arrCost.length - 1][1];
             }
 
             let fpsTotal = 0;
@@ -216,33 +209,28 @@ namespace egret.web {
             context = this.contextCost;
             context.drawImage(this.canvasCost, 1, 0, WIDTH_COST - 1, HEIGHT, 0, 0, WIDTH_COST - 1, HEIGHT);
             context.drawImage(this.canvasCost, WIDTH_COST + 2, 0, WIDTH_COST - 1, HEIGHT, WIDTH_COST + 1, 0, WIDTH_COST - 1, HEIGHT);
-            context.drawImage(this.canvasCost, WIDTH_COST * 2 + 3, 0, WIDTH_COST - 1, HEIGHT, WIDTH_COST * 2 + 2, 0, WIDTH_COST - 1, HEIGHT);
             let c1Height = Math.floor(numCostTicker / 2);
             if (c1Height < 1) c1Height = 1;
             else if (c1Height > 20) c1Height = 20;
-            let c2Height = Math.floor(numCostDirty / 2);
+            //todo lcj
+            let c2Height = Math.floor(numCostRender / 2);
             if (c2Height < 1) c2Height = 1;
             else if (c2Height > 20) c2Height = 20;
-            let c3Height = Math.floor(numCostRender / 2);
-            if (c3Height < 1) c3Height = 1;
-            else if (c3Height > 20) c3Height = 20;
             context.fillStyle = this.bgCanvasColor;
             context.fillRect(WIDTH_COST - 1, 0, 1, HEIGHT);
             context.fillRect(WIDTH_COST * 2, 0, 1, HEIGHT);
             context.fillRect(WIDTH_COST * 3 + 1, 0, 1, HEIGHT);
             context.fillStyle = this.cost1Color;
             context.fillRect(WIDTH_COST - 1, 20 - c1Height, 1, c1Height);
-            context.fillStyle = this.cost2Color;
-            context.fillRect(WIDTH_COST * 2, 20 - c2Height, 1, c2Height);
             context.fillStyle = this.cost3Color;
-            context.fillRect(WIDTH_COST * 3 + 1, 20 - c3Height, 1, c3Height);
+            context.fillRect(WIDTH_COST * 2, 20 - c2Height, 1, c2Height);
 
             let fpsAvg = Math.floor(fpsTotal / lenFps);
             let fpsOutput = `${numFps} FPS ${this.renderMode}`;
             if (this.showPanle) {
                 fpsOutput += `<br/>min${fpsMin} max${fpsMax} avg${fpsAvg}`;
-                this.divDraw.innerHTML = `${this.lastNumDraw}<br/>${this.lastNumDirty}%<br/>`;
-                this.divCost.innerHTML = `<font  style="color:#18fefe">${numCostTicker}<font/> <font  style="color:#ffff00">${numCostDirty}<font/> <font  style="color:#ff0000">${numCostRender}<font/>`
+                this.divDraw.innerHTML = `${this.lastNumDraw}<br/>`;
+                this.divCost.innerHTML = `<font  style="color:#18fefe">${numCostTicker}<font/> <font  style="color:#ff0000">${numCostRender}<font/>`
             }
             this.fps.innerHTML = fpsOutput;
         };

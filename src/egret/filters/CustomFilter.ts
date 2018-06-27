@@ -97,6 +97,8 @@ namespace egret {
          * @private  
          */
         public type:string;
+        
+        private $padding:number = 0;
 
         /**
          * The inner margin of the filter.
@@ -112,7 +114,18 @@ namespace egret {
          * @platform Web
          * @language zh_CN
          */
-        public padding:number = 0;
+        public get padding(): number {
+            return this.$padding;
+        }
+
+        public set padding(value: number) {
+            let self = this;
+            if (self.$padding == value) {
+                return;
+            }
+            self.$padding = value;
+            self.onPropertyChange();
+        }
 
         /**
          * The initial value of the uniform in the shader (key, value one-to-one correspondence), currently only supports numbers and arrays.
@@ -166,6 +179,14 @@ namespace egret {
             this.$uniforms = uniforms;
 
             this.type = "custom";
+        }
+
+        public onPropertyChange(): void {
+            if (egret.nativeRender) {
+                let self = this;
+                egret_native.NativeDisplayObject.setFilterPadding(self.$id, self.$padding, self.$padding, self.$padding, self.$padding);
+                egret_native.NativeDisplayObject.setDataToFilter(self);
+            }
         }
     }
 }

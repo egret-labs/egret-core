@@ -55,7 +55,7 @@ namespace egret {
             this._setBitmapData(bitmapData);
         }
 
-        public $renderBuffer:sys.RenderBuffer;
+        public $renderBuffer: sys.RenderBuffer;
         /**
          * The specified display object is drawn as a texture
          * @param displayObject {egret.DisplayObject} the display to draw
@@ -74,7 +74,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public drawToTexture(displayObject:egret.DisplayObject, clipBounds?:Rectangle, scale:number = 1):boolean {
+        public drawToTexture(displayObject: egret.DisplayObject, clipBounds?: Rectangle, scale: number = 1): boolean {
             if (clipBounds && (clipBounds.width == 0 || clipBounds.height == 0)) {
                 return false;
             }
@@ -97,30 +97,50 @@ namespace egret {
                 return false;
             }
             renderBuffer.resize(width, height);
-            this._bitmapData.width = width;
-            this._bitmapData.height = height;
+            this.$bitmapData.width = width;
+            this.$bitmapData.height = height;
 
-            let matrix = Matrix.create();
-            matrix.identity();
-            //应用裁切
-            if (clipBounds) {
-                matrix.translate(-clipBounds.x, -clipBounds.y);
+            if (egret.nativeRender) {
+                egret_native.activateBuffer(this.$renderBuffer);
+                let useClip = false;
+                let clipX = 0;
+                let clipY = 0;
+                let clipW = 0;
+                let clipH = 0;
+                if (clipBounds) {
+                    useClip = true;
+                    clipX = clipBounds.x;
+                    clipY = clipBounds.y;
+                    clipW = clipBounds.width;
+                    clipH = clipBounds.height;
+                }
+                egret_native.updateNativeRender();
+                egret_native.nrRenderDisplayObject(displayObject.$nativeDisplayObject.id, scale, useClip, clipX, clipY, clipW, clipH);
+                egret_native.activateBuffer(null);
             }
-            matrix.scale(scale, scale);
-            sys.systemRenderer.render(displayObject, renderBuffer, matrix, null, true);
-            Matrix.release(matrix);
+            else {
+                let matrix = Matrix.create();
+                matrix.identity();
+                matrix.scale(scale, scale);
+                //应用裁切
+                if (clipBounds) {
+                    matrix.translate(-clipBounds.x, -clipBounds.y);
+                }
+                sys.systemRenderer.render(displayObject, renderBuffer, matrix, true);
+                Matrix.release(matrix);
+            }
 
             //设置纹理参数
             this.$initData(0, 0, width, height, 0, 0, width, height, width, height);
-            
+
             return true;
         }
 
         /**
          * @inheritDoc
          */
-        public getPixel32(x:number, y:number):number[] {
-            let data:number[];
+        public getPixel32(x: number, y: number): number[] {
+            let data: number[];
             if (this.$renderBuffer) {
                 let scale = $TextureScaleFactor;
                 x = Math.round(x / scale);
@@ -133,7 +153,7 @@ namespace egret {
         /**
          * @inheritDoc
          */
-        public dispose():void {
+        public dispose(): void {
             super.dispose();
             this.$renderBuffer = null;
         }

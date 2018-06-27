@@ -43,7 +43,7 @@ namespace eui {
      * @language zh_CN
      */
     export class Rect extends Component {
-        constructor(width?:number, height?:number, fillColor?:number) {
+        constructor(width?: number, height?: number, fillColor?: number) {
             super();
             this.touchChildren = false;
             this.$graphics = new egret.Graphics();
@@ -53,25 +53,30 @@ namespace eui {
             this.fillColor = fillColor;
         }
 
+        protected createNativeDisplayObject(): void {
+            this.$nativeDisplayObject = new egret_native.NativeDisplayObject(egret_native.NativeObjectType.GRAPHICS);
+        }
+
+
         /**
          * @private
          */
-        $graphics:egret.Graphics;
+        $graphics: egret.Graphics;
 
-        public get graphics():egret.Graphics {
+        public get graphics(): egret.Graphics {
             return this.$graphics;
         }
 
         /**
          * @private
          */
-        $measureContentBounds(bounds:egret.Rectangle):void {
+        $measureContentBounds(bounds: egret.Rectangle): void {
             if (this.$graphics) {
                 bounds.setTo(0, 0, this.width, this.height);
             }
         }
 
-        private $fillColor:number = 0x000000;
+        private $fillColor: number = 0x000000;
         /**
          * Fill color
          * @version Egret 2.5.5
@@ -86,18 +91,18 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get fillColor():number {
+        public get fillColor(): number {
             return this.$fillColor;
         }
 
-        public set fillColor(value:number) {
+        public set fillColor(value: number) {
             if (value == undefined || this.$fillColor == value)
                 return;
             this.$fillColor = value;
             this.invalidateDisplayList();
         }
 
-        private $fillAlpha:number = 1;
+        private $fillAlpha: number = 1;
         /**
          * Fill alpha
          * @version Egret 2.5.5
@@ -112,18 +117,18 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get fillAlpha():number {
+        public get fillAlpha(): number {
             return this.$fillAlpha;
         }
 
-        public set fillAlpha(value:number) {
+        public set fillAlpha(value: number) {
             if (this.$fillAlpha == value)
                 return;
             this.$fillAlpha = value;
             this.invalidateDisplayList();
         }
 
-        private $strokeColor:number = 0x444444;
+        private $strokeColor: number = 0x444444;
         /**
          * The line's color inside the rect border. Caution: when the strokeWeight is 0, a line is not drawn
          * @version Egret 2.5.5
@@ -138,18 +143,18 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get strokeColor():number {
+        public get strokeColor(): number {
             return this.$strokeColor;
         }
 
-        public set strokeColor(value:number) {
+        public set strokeColor(value: number) {
             if (this.$strokeColor == value)
                 return;
             this.$strokeColor = value;
             this.invalidateDisplayList();
         }
 
-        private $strokeAlpha:number = 1;
+        private $strokeAlpha: number = 1;
         /**
          * The line's alpha inside the rect border. Caution: when the strokeWeight is 0, a line is not drawn
          * @version Egret 2.5.5
@@ -164,18 +169,18 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get strokeAlpha():number {
+        public get strokeAlpha(): number {
             return this.$strokeAlpha;
         }
 
-        public set strokeAlpha(value:number) {
+        public set strokeAlpha(value: number) {
             if (this.$strokeAlpha == value)
                 return;
             this.$strokeAlpha = value;
             this.invalidateDisplayList();
         }
 
-        private $strokeWeight:number = 0;
+        private $strokeWeight: number = 0;
         /**
          * The line's thickness inside the rect border. Caution: when the strokeWeight is 0, a line is not drawn
          * @version Egret 2.5.5
@@ -190,18 +195,18 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get strokeWeight():number {
+        public get strokeWeight(): number {
             return this.$strokeWeight;
         }
 
-        public set strokeWeight(value:number) {
+        public set strokeWeight(value: number) {
             if (this.$strokeWeight == value)
                 return;
             this.$strokeWeight = value;
             this.invalidateDisplayList();
         }
 
-        private $ellipseWidth:number = 0;
+        private $ellipseWidth: number = 0;
         /**
          * Width used to draw an ellipse with rounded corners (in pixels).
          * @version Egret 2.5.5
@@ -216,18 +221,18 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get ellipseWidth():number {
+        public get ellipseWidth(): number {
             return this.$ellipseWidth;
         }
 
-        public set ellipseWidth(value:number) {
+        public set ellipseWidth(value: number) {
             if (this.$ellipseWidth == value)
                 return;
             this.$ellipseWidth = value;
             this.invalidateDisplayList();
         }
 
-        private $ellipseHeight:number = 0;
+        private $ellipseHeight: number = 0;
         /**
          * Height used to draw an ellipse with rounded corners (in pixels). If no value is specified, the default value matches the value of the ellipseWidth parameter.
          * @version Egret 2.5.5
@@ -242,11 +247,11 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get ellipseHeight():number {
+        public get ellipseHeight(): number {
             return this.$ellipseHeight;
         }
 
-        public set ellipseHeight(value:number) {
+        public set ellipseHeight(value: number) {
             if (this.$ellipseHeight == value)
                 return;
             this.$ellipseHeight = value;
@@ -260,7 +265,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        protected updateDisplayList(unscaledWidth:number, unscaledHeight:number):void {
+        protected updateDisplayList(unscaledWidth: number, unscaledHeight: number): void {
             let g = this.graphics;
             g.clear();
             if (this.$strokeWeight > 0) {
@@ -281,15 +286,14 @@ namespace eui {
                 g.drawRoundRect(this.$strokeWeight, this.$strokeWeight, unscaledWidth - this.$strokeWeight * 2, unscaledHeight - this.$strokeWeight * 2, this.$ellipseWidth, this.$ellipseHeight);
             }
             g.endFill();
-            this.$invalidateContentBounds();
         }
 
         /**
          * @private
          */
-        public $onRemoveFromStage():void {
+        public $onRemoveFromStage(): void {
             super.$onRemoveFromStage();
-            if(this.$graphics) {
+            if (this.$graphics) {
                 this.$graphics.$onRemoveFromStage();
             }
         }

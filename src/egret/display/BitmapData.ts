@@ -138,6 +138,12 @@ namespace egret {
         $deleteSource: boolean = true;
 
         /**
+         * @private
+         * id
+         */
+        public $bitmapDataId: number;
+
+        /**
          * Initializes a BitmapData object to refer to the specified source object.
          * @param source The source object being referenced.
          * @version Egret 2.4
@@ -158,59 +164,42 @@ namespace egret {
             this.height = source.height;
         }
 
-        public static create(type: "arraybuffer", data: ArrayBuffer, callback?:(bitmapData: BitmapData)=>void): BitmapData;
-        public static create(type: "base64", data: string, callback?:(bitmapData: BitmapData)=>void): BitmapData;
-        public static create(type: "arraybuffer" | "base64", data: ArrayBuffer | string, callback?:(bitmapData: BitmapData)=>void): BitmapData {
-            if (Capabilities.runtimeType === RuntimeType.WEB) {
-                let base64 = "";
-                if (type === "arraybuffer") {
-                    base64 = egret.Base64Util.encode(data as ArrayBuffer);
-                }
-                else {
-                    base64 = data as string;
-                }
-                let imageType = "image/png";//default value
-                if (base64.charAt(0) === '/') {
-                    imageType = "image/jpeg";
-                } else if (base64.charAt(0) === 'R') {
-                    imageType = "image/gif";
-                } else if (base64.charAt(0) === 'i') {
-                    imageType = "image/png";
-                }
-                let img: HTMLImageElement = new Image();
-                img.src = "data:" + imageType + ";base64," + base64;
-                img.crossOrigin = '*';
-                let bitmapData = new BitmapData(img);
-                img.onload = function () {
-                    img.onload = undefined;
-                    bitmapData.source = img;
-                    bitmapData.height = img.height;
-                    bitmapData.width = img.width;
-                    if(callback){
-                        callback(bitmapData);
-                    }
-                }
-                return bitmapData;
+        public static create(type: "arraybuffer", data: ArrayBuffer, callback?: (bitmapData: BitmapData) => void): BitmapData;
+        public static create(type: "base64", data: string, callback?: (bitmapData: BitmapData) => void): BitmapData;
+        public static create(type: "arraybuffer" | "base64", data: ArrayBuffer | string, callback?: (bitmapData: BitmapData) => void): BitmapData {
+            let base64 = "";
+            if (type === "arraybuffer") {
+                base64 = egret.Base64Util.encode(data as ArrayBuffer);
             }
             else {
-                let buffer: ArrayBuffer = null;
-                if (type === "arraybuffer") {
-                    buffer = data as ArrayBuffer;
-                }
-                else {
-                    buffer = egret.Base64Util.decode(data as string);
-                }
-                let native_texture = egret_native.Texture.createTextureFromArrayBuffer(buffer);
-                let bitmapData = new BitmapData(native_texture);
-                if(callback){
+                base64 = data as string;
+            }
+            let imageType = "image/png";//default value
+            if (base64.charAt(0) === '/') {
+                imageType = "image/jpeg";
+            } else if (base64.charAt(0) === 'R') {
+                imageType = "image/gif";
+            } else if (base64.charAt(0) === 'i') {
+                imageType = "image/png";
+            }
+            let img: HTMLImageElement = new Image();
+            img.src = "data:" + imageType + ";base64," + base64;
+            img.crossOrigin = '*';
+            let bitmapData = new BitmapData(img);
+            img.onload = function () {
+                img.onload = undefined;
+                bitmapData.source = img;
+                bitmapData.height = img.height;
+                bitmapData.width = img.width;
+                if (callback) {
                     callback(bitmapData);
                 }
-                return bitmapData;
             }
+            return bitmapData;
         }
 
         public $dispose(): void {
-            if (Capabilities.runtimeType == RuntimeType.WEB && Capabilities.renderMode == "webgl" && this.webGLTexture) {
+            if (Capabilities.renderMode == "webgl" && this.webGLTexture) {
                 egret.WebGLUtils.deleteWebGLTexture(this.webGLTexture);
                 this.webGLTexture = null;
             }
@@ -225,14 +214,11 @@ namespace egret {
 
 
         private static _displayList = egret.createMap<DisplayObject[]>();
-        static $addDisplayObject(displayObject: DisplayObject, bitmapData: BitmapData | Texture): void {
-            let hashCode: number;
-            if ((<Texture>bitmapData)._bitmapData && (<Texture>bitmapData)._bitmapData.hashCode) {
-                hashCode = (<Texture>bitmapData)._bitmapData.hashCode;
+        static $addDisplayObject(displayObject: DisplayObject, bitmapData: BitmapData): void {
+            if (!bitmapData) {
+                return;
             }
-            else {
-                hashCode = bitmapData.hashCode;
-            }
+            let hashCode: number = bitmapData.hashCode;
             if (!hashCode) {
                 return;
             }
@@ -240,47 +226,38 @@ namespace egret {
                 BitmapData._displayList[hashCode] = [displayObject];
                 return;
             }
-
             let tempList: Array<DisplayObject> = BitmapData._displayList[hashCode];
             if (tempList.indexOf(displayObject) < 0) {
                 tempList.push(displayObject);
             }
         }
 
-        static $removeDisplayObject(displayObject: DisplayObject, bitmapData: BitmapData | Texture): void {
-            let hashCode: number;
-            if ((<Texture>bitmapData)._bitmapData && (<Texture>bitmapData)._bitmapData.hashCode) {
-                hashCode = (<Texture>bitmapData)._bitmapData.hashCode;
+        static $removeDisplayObject(displayObject: DisplayObject, bitmapData: BitmapData): void {
+            if (!bitmapData) {
+                return;
             }
-            else {
-                hashCode = bitmapData.hashCode;
-            }
+            let hashCode: number = bitmapData.hashCode;
             if (!hashCode) {
                 return;
             }
             if (!BitmapData._displayList[hashCode]) {
                 return;
             }
-
             let tempList: Array<DisplayObject> = BitmapData._displayList[hashCode];
             let index: number = tempList.indexOf(displayObject);
             if (index >= 0) {
-                tempList.splice(index);
+                tempList.splice(index, 1);
             }
         }
 
-        static $invalidate(bitmapData: BitmapData | Texture): void {
-            let hashCode: number;
-            if ((<Texture>bitmapData)._bitmapData && (<Texture>bitmapData)._bitmapData.hashCode) {
-                hashCode = (<Texture>bitmapData)._bitmapData.hashCode;
+        static $invalidate(bitmapData: BitmapData): void {
+            if (!bitmapData) {
+                return;
             }
-            else {
-                hashCode = bitmapData.hashCode;
-            }
+            let hashCode: number = bitmapData.hashCode;
             if (!hashCode) {
                 return;
             }
-
             if (!BitmapData._displayList[hashCode]) {
                 return;
             }
@@ -289,31 +266,51 @@ namespace egret {
                 if (tempList[i] instanceof egret.Bitmap) {
                     (<egret.Bitmap>tempList[i]).$refreshImageData();
                 }
-                tempList[i].$invalidateContentBounds();
+                let bitmap = tempList[i];
+                bitmap.$renderDirty = true;
+                let p = bitmap.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                let maskedObject = bitmap.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
             }
         }
 
-        static $dispose(bitmapData: BitmapData | Texture): void {
-            let hashCode: number;
-            if ((<Texture>bitmapData)._bitmapData && (<Texture>bitmapData)._bitmapData.hashCode) {
-                hashCode = (<Texture>bitmapData)._bitmapData.hashCode;
+        static $dispose(bitmapData: BitmapData): void {
+            if (!bitmapData) {
+                return;
             }
-            else {
-                hashCode = bitmapData.hashCode;
-            }
+            let hashCode: number = bitmapData.hashCode;
             if (!hashCode) {
                 return;
             }
-
             if (!BitmapData._displayList[hashCode]) {
                 return;
             }
             let tempList = BitmapData._displayList[hashCode];
             for (let node of tempList) {
                 if (node instanceof egret.Bitmap) {
-                    node.$Bitmap[sys.BitmapKeys.image] = null;
+                    node.$bitmapData = null;
                 }
-                node.$invalidateContentBounds();
+                node.$renderDirty = true;
+                let p = node.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                let maskedObject = node.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
+            }
+            if (egret.nativeRender) {
+                egret_native.NativeDisplayObject.disposeBitmapData(bitmapData);
             }
             delete BitmapData._displayList[hashCode];
         }

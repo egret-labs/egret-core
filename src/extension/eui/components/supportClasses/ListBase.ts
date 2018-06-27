@@ -829,6 +829,9 @@ namespace eui {
          * @language zh_CN
          */
         protected onRendererTouchBegin(event:egret.TouchEvent):void {
+            if(!this.$stage) {
+                return;
+            }
             let values = this.$ListBase;
             if (event.$isDefaultPrevented)
                 return;

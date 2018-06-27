@@ -1,6 +1,6 @@
 /// <reference path="../lib/types.d.ts" />
 var helpParser = require("./help/helpParser");
-var Help = (function () {
+var Help = /** @class */ (function () {
     function Help() {
     }
     Help.prototype.execute = function () {

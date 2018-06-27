@@ -50,10 +50,32 @@ var basicTypes = [TYPE_ARRAY, TYPE_STexture, "boolean", "string", "number"];
 var wingKeys = ["id", "locked", "includeIn", "excludeFrom"];
 var htmlEntities = [["<", "&lt;"], [">", "&gt;"], ["&", "&amp;"], ["\"", "&quot;"], ["'", "&apos;"]];
 var jsKeyWords = ["null", "NaN", "undefined", "true", "false"];
+var EXMLFileSystem = /** @class */ (function () {
+    function EXMLFileSystem() {
+        this.root = {};
+        this.fileList = [];
+    }
+    EXMLFileSystem.prototype.getList = function () {
+        return this.fileList;
+    };
+    EXMLFileSystem.prototype.set = function (filename, content) {
+        this.fileList.push(filename);
+        this.root[filename] = content;
+    };
+    EXMLFileSystem.prototype.get = function (filename) {
+        var result = this.root[filename];
+        if (!result) {
+            console.warn("找不到资源", filename);
+        }
+        return result;
+    };
+    return EXMLFileSystem;
+}());
+exports.fileSystem = new EXMLFileSystem();
 /**
  * @private
  */
-var EXMLParser = (function () {
+var EXMLParser = /** @class */ (function () {
     /**
      * @private
      */
@@ -249,7 +271,7 @@ var EXMLParser = (function () {
                         this.skinParts.push(id);
                     }
                     this.createVarForNode(node);
-                    if (this.isStateNode(node))
+                    if (this.isStateNode(node)) //检查节点是否只存在于一个状态里，需要单独实例化
                         this.stateIds.push(id);
                 }
                 else {
@@ -469,7 +491,7 @@ var EXMLParser = (function () {
             if (!value) {
                 continue;
             }
-            if (this.currentClass.getVariableByName(value)) {
+            if (this.currentClass.getVariableByName(value)) { //赋的值对象是一个id
                 var THIS = "this.";
                 var id = attributes.id;
                 var codeLine = THIS + id + " = t;";
@@ -936,32 +958,22 @@ var EXMLParser = (function () {
             }
         }
         this.initlizeChildNode(this.currentXML, cb, varName);
-        var id;
-        var stateIds = this.stateIds;
-        if (stateIds.length > 0) {
-            var length_2 = stateIds.length;
-            for (var i = 0; i < length_2; i++) {
-                id = stateIds[i];
-                cb.addCodeLine("this." + id + "_i();");
-            }
+        for (var _i = 0, _a = this.stateIds; _i < _a.length; _i++) {
+            var id = _a[_i];
+            cb.addCodeLine("this." + id + "_i();");
             cb.addEmptyLine();
         }
-        var skinParts = this.skinParts;
-        var skinPartStr = "[]";
-        var length = skinParts.length;
-        if (length > 0) {
-            for (var i = 0; i < length; i++) {
-                skinParts[i] = "\"" + skinParts[i] + "\"";
-            }
-            skinPartStr = "[" + skinParts.join(",") + "]";
-        }
-        var skinPartFunc = new CodeFactory_1.EXFunction();
-        skinPartFunc.name = "skinParts";
-        skinPartFunc.isGet = true;
-        var skinPartCB = new CodeFactory_1.EXCodeBlock();
-        skinPartCB.addReturn(skinPartStr);
-        skinPartFunc.codeBlock = skinPartCB;
-        this.currentClass.addFunction(skinPartFunc);
+        var skinpartsArray = new CodeFactory_1.EXArray(this.skinParts);
+        var skinPartStr = skinpartsArray.toCode();
+        // let skinPartFunc: EXFunction = new EXFunction();
+        // skinPartFunc.name = "skinParts";
+        // skinPartFunc.isGet = true;
+        // let skinPartCB: EXCodeBlock = new EXCodeBlock();
+        // skinPartCB.addReturn(skinPartStr);
+        // skinPartFunc.codeBlock = skinPartCB;
+        // this.currentClass.addFunction(skinPartFunc)
+        var skinpartsVaribale = new CodeFactory_1.EXVariable('skinParts', skinpartsArray.toCode());
+        this.currentClass.addVariable(skinpartsVaribale);
         this.currentXML.attributes.id = "";
         //生成视图状态代码
         this.createStates(this.currentXML);
@@ -995,7 +1007,7 @@ var EXMLParser = (function () {
         }
         //打印视图状态初始化代码
         var stateCode = this.stateCode;
-        length = stateCode.length;
+        var length = stateCode.length;
         if (length > 0) {
             var indentStr = "	";
             cb.addCodeLine("this.states = [");
@@ -1057,8 +1069,8 @@ var EXMLParser = (function () {
         var children = root.children;
         var item;
         if (children) {
-            var length_3 = children.length;
-            for (var i = 0; i < length_3; i++) {
+            var length_2 = children.length;
+            for (var i = 0; i < length_2; i++) {
                 item = children[i];
                 if (item.nodeType == 1 &&
                     item.localName == "states") {
@@ -1081,8 +1093,8 @@ var EXMLParser = (function () {
         }
         if (statesValue) {
             var states = statesValue.split(",");
-            var length_4 = states.length;
-            for (var i = 0; i < length_4; i++) {
+            var length_3 = states.length;
+            for (var i = 0; i < length_3; i++) {
                 var stateName = states[i].trim();
                 if (!stateName) {
                     continue;

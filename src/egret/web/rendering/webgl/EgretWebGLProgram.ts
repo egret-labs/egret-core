@@ -86,11 +86,20 @@ namespace egret.web {
         return uniforms;
     }
 
-    type ProgramCache = {[index:string]:EgretWebGLProgram};
+    /**
+     * @private
+     */
+    export type ProgramCache = {[index:string]:EgretWebGLProgram};
 
-    type Uniforms = {[index:string]:EgretWebGLUniform};
+    /**
+     * @private
+     */
+    export type Uniforms = {[index:string]:EgretWebGLUniform};
 
-    type Attributes = {[index:string]:EgretWebGLAttribute};
+    /**
+     * @private
+     */
+    export type Attributes = {[index:string]:EgretWebGLAttribute};
 
     /**
      * @private

@@ -5,24 +5,22 @@ var project = require("../actions/Project");
 var manager;
 (function (manager) {
     function copyToLibs() {
-        var moduleDir = ProjectData_1.data.getLibraryFolder();
+        var moduleDir = ProjectData_1.projectData.getLibraryFolder();
         FileUtil.remove(moduleDir);
-        ProjectData_1.data.getModulesConfig("web").forEach(function (m) {
-            FileUtil.copy(m.sourceDir, ProjectData_1.data.getFilePath(m.targetDir));
+        ProjectData_1.projectData.getModulesConfig("web").forEach(function (m) {
+            FileUtil.copy(m.sourceDir, ProjectData_1.projectData.getFilePath(m.targetDir));
         });
     }
     manager.copyToLibs = copyToLibs;
-    function generateManifest(gameFileList, manifestPath, isDebug, platform) {
-        if (isDebug === void 0) { isDebug = true; }
-        if (platform === void 0) { platform = "web"; }
+    function generateManifest(gameFileList, options, manifestPath) {
         var initial = [];
         var game = [];
-        ProjectData_1.data.getModulesConfig(platform).forEach(function (m) {
+        ProjectData_1.projectData.getModulesConfig(options.platform).forEach(function (m) {
             m.target.forEach(function (m) {
-                initial.push(isDebug ? m.debug : m.release);
+                initial.push(options.debug ? m.debug : m.release);
             });
         });
-        if (isDebug) {
+        if (options.debug) {
             gameFileList.forEach(function (m) {
                 game.push("bin-debug/" + m);
             });
@@ -31,21 +29,23 @@ var manager;
             game.push("main.min.js");
         }
         var manifest = { initial: initial, game: game };
-        if (!manifestPath) {
-            manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
+        if (manifestPath) {
+            FileUtil.save(manifestPath, JSON.stringify(manifest, undefined, "\t"));
         }
-        FileUtil.save(manifestPath, JSON.stringify(manifest, undefined, "\t"));
+        else {
+            return manifest;
+        }
     }
     manager.generateManifest = generateManifest;
     function modifyNativeRequire(manifestPath) {
         var options = egret.args;
-        var indexPath = ProjectData_1.data.getFilePath('index.html');
+        var indexPath = ProjectData_1.projectData.getFilePath('index.html');
         var requirePath = FileUtil.joinPath(options.templateDir, "runtime", "native_require.js");
         var requireContent = FileUtil.read(requirePath);
         if (requireContent == "") {
             globals.exit(10021);
         }
-        if (!ProjectData_1.data.useTemplate) {
+        if (!ProjectData_1.projectData.useTemplate) {
             var manifest = JSON.parse(FileUtil.read(manifestPath));
             var fileList = manifest.initial.concat(manifest.game);
             var listStr_1 = "\n";
@@ -64,15 +64,17 @@ var manager;
         FileUtil.save(requirePath, requireContent);
     }
     manager.modifyNativeRequire = modifyNativeRequire;
-    function copyLibsForPublish(manifestPath, toPath, platform) {
+    function copyLibsForPublish(target, mode) {
+        if (mode === void 0) { mode = 'debug'; }
+        var result = [];
         var options = egret.args;
-        var manifest = JSON.parse(FileUtil.read(manifestPath));
-        ProjectData_1.data.getModulesConfig(platform).forEach(function (m) {
+        ProjectData_1.projectData.getModulesConfig(target).forEach(function (m) {
             m.target.forEach(function (m) {
-                FileUtil.copy(FileUtil.joinPath(options.projectDir, m.release), FileUtil.joinPath(toPath, m.release));
+                var filename = mode == 'debug' ? m.debug : m.release;
+                result.push(filename);
             });
         });
-        if (ProjectData_1.data.isWasmProject()) {
+        if (ProjectData_1.projectData.isWasmProject()) {
             var arr = [
                 "egret.asm.js",
                 "egret.asm.js.mem",
@@ -80,9 +82,10 @@ var manager;
                 "egret.webassembly.wasm"
             ];
             arr.forEach(function (item) {
-                FileUtil.copy(FileUtil.joinPath(options.projectDir, "libs", item), FileUtil.joinPath(toPath, "libs", item));
+                result.push(FileUtil.joinPath("libs", item));
             });
         }
+        return result;
     }
     manager.copyLibsForPublish = copyLibsForPublish;
     function copyManifestForNative(toPath) {
@@ -98,7 +101,7 @@ var manager;
     }
     manager.copyManifestForNative = copyManifestForNative;
     function modifyIndex(manifestPath, indexPath) {
-        if (!ProjectData_1.data.useTemplate) {
+        if (!ProjectData_1.projectData.useTemplate) {
             var manifest = JSON.parse(FileUtil.read(manifestPath, true));
             var libs = manifest.initial;
             var libsScriptsStr = "";

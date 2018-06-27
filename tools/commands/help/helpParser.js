@@ -11,7 +11,7 @@ var space = ' ';
 var newLine = '\n';
 var indent = '    ';
 /// 常量集合类 分析器 键集类
-var HelpDefParserKey = (function () {
+var HelpDefParserKey = /** @class */ (function () {
     function HelpDefParserKey() {
     }
     HelpDefParserKey.COMMAND = "command";
@@ -27,14 +27,14 @@ var HelpDefParserKey = (function () {
     HelpDefParserKey.ENUM_LIST = "enum-list";
     return HelpDefParserKey;
 }());
-var CfgParaType = (function () {
+var CfgParaType = /** @class */ (function () {
     function CfgParaType() {
     }
     CfgParaType.STRING = "string";
     CfgParaType.ENUM = "enum";
     return CfgParaType;
 }());
-var DetailBody = (function () {
+var DetailBody = /** @class */ (function () {
     function DetailBody(word, desc) {
         this.word = word;
         this.desc = desc;
