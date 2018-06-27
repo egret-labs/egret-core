@@ -225,7 +225,7 @@ namespace egret.web {
          * 更新同时触摸点的数量
          */
         public $updateMaxTouches():void {
-            this.touch.$initMaxTouches();
+            this.touch.$updateMaxTouches();
         }
     }
 }
