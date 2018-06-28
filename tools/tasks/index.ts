@@ -5,6 +5,7 @@ export { IncrementCompilePlugin } from './incrementCompile'
 export { CompilePlugin, UglifyPlugin } from './compile';
 export { TextureMergerPlugin } from './texturemerger';
 export { EmitResConfigFilePlugin, ConvertResConfigFilePlugin } from './resConfig';
+export { MergeJSONPlugin, MergeBinaryPlugin } from './MergeJSONPlugin';
 export { CleanPlugin } from './clean';
 export { RenamePlugin } from './rename';
 export { ResSplitPlugin } from './resSplit';

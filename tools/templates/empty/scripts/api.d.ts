@@ -7,19 +7,6 @@ type ResourceManagerConfig = {
      * 构建与发布配置
      */
     buildConfig: (param: BuildConfigParam) => UserConfig,
-    /**
-     * 设置资源类型
-     */
-    typeSelector: (path: string) => (string | null | undefined)
-    /**
-     * 设置资源的合并策略
-     */
-    mergeSelector?: (path: string) => (string | null | undefined),
-    /**
-     * 设置资源的命名策略
-     * beta 功能，请勿随意使用
-     */
-    nameSelector?: (path: string) => (string | null | undefined)
 }
 /**
  * 构建配置
@@ -102,7 +89,7 @@ declare namespace plugins {
         /**
          * 可以用此接口进行文件创建
          */
-        createFile(relativeFilePath: string, contents: Buffer);
+        createFile(relativeFilePath: string, contents: Buffer, options: any);
 
         /**
          * 构建配置
@@ -287,6 +274,54 @@ declare module 'built-in' {
 
     }
 
+    /** 
+    * MergeJSONPlugin 的参数
+    * * nameSelector  将资源的名字转换为游戏内的引用名字，例：a.png=>a_png 
+    * * mergeSelector  将json合并为一个zipjson的规则
+    * 例：
+    * mergeSelector: (p: string) => string | null = (p: string) => {
+            if (p.indexOf("default.res.json") >= 0) {
+                return null;
+            }
+            if (p.indexOf(".json") >= 0) {
+                return "resource/1.zipjson"
+            }
+            else {
+                return null;
+            }
+    }
+        
+    */
+    type MergeJSONOption = {
+        /** 将资源的名字转换为游戏内的引用名字，例：a.png=>a_png */
+        nameSelector: (p: string) => string;
+
+        mergeSelector: (p: string) => string | null;
+    }
+
+    export class MergeJSONPlugin implements plugins.Command {
+        constructor(options: MergeJSONOption)
+    }
+    /** 
+    * MergeBinaryPlugin 的参数
+    * * mergeSelector: (p: string) => string | null;  将Binary合并为一个bin的规则
+    * 例：
+    *  mergeSelector: (p: string) => string | null = (p: string) => {
+        if (p.indexOf(".gltf.bin") >= 0) {
+            return "resource/1.bin"
+        }
+        else {
+            return null;
+        }
+    }
+    */
+    type MergeBinaryOption = {
+        mergeSelector: (p: string) => string | null;
+    }
+
+    export class MergeBinaryPlugin implements plugins.Command {
+        constructor(options: MergeBinaryOption)
+    }
     /** 
      * EmitResConfigFilePlugin 的参数
      * * output: 生成路径，可以指定生成为 *.res.js 文件或者 *.res.json 文件
