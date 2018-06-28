@@ -52,15 +52,14 @@ var MergeJSONPlugin = /** @class */ (function () {
                     }
                     filename = this.options.nameSelector(file.origin.replace("resource/", ""));
                     this.mergeList[mergeResult].push({ filename: filename, content: file.contents.toString() });
-                    return [2 /*return*/, null];
+                    // return null;
                 }
-                else {
-                    return [2 /*return*/, file];
-                }
-                return [2 /*return*/];
+                // else {
+                return [2 /*return*/, file];
             });
         });
     };
+    //加上subkeys
     MergeJSONPlugin.prototype.onFinish = function (commandContext) {
         return __awaiter(this, void 0, void 0, function () {
             var _loop_1, this_1, _a, _b, _i, mergeFilename;
@@ -68,12 +67,17 @@ var MergeJSONPlugin = /** @class */ (function () {
                 switch (_c.label) {
                     case 0:
                         _loop_1 = function (mergeFilename) {
-                            var mergeItem, json, content, jsonBuffer;
+                            var mergeItem, json, subkeys, _i, mergeItem_1, item, content, jsonBuffer;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0:
                                         mergeItem = this_1.mergeList[mergeFilename];
                                         json = {};
+                                        subkeys = [];
+                                        for (_i = 0, mergeItem_1 = mergeItem; _i < mergeItem_1.length; _i++) {
+                                            item = mergeItem_1[_i];
+                                            subkeys.push(item.filename);
+                                        }
                                         mergeItem.forEach(function (item) {
                                             json[item.filename] = JSON.parse(item.content);
                                         });
@@ -81,7 +85,7 @@ var MergeJSONPlugin = /** @class */ (function () {
                                         return [4 /*yield*/, zip(content)];
                                     case 1:
                                         jsonBuffer = _a.sent();
-                                        commandContext.createFile(mergeFilename, jsonBuffer, { type: "zipjson" });
+                                        commandContext.createFile(mergeFilename, jsonBuffer, { type: "zipjson", subkeys: subkeys });
                                         return [2 /*return*/];
                                 }
                             });
@@ -138,15 +142,17 @@ var MergeBinaryPlugin = /** @class */ (function () {
                 switch (_c.label) {
                     case 0:
                         _loop_2 = function (mergeFilename) {
-                            var mergeItem, totalLength, json, bufferList, b, indexJson, indexJsonBuffer, gltfContent;
+                            var mergeItem, totalLength, json, subkeys, bufferList, b, indexJson, indexJsonBuffer, gltfContent;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0:
                                         mergeItem = this_2.mergeList[mergeFilename];
                                         totalLength = 0;
                                         json = {};
+                                        subkeys = [];
                                         mergeItem.forEach(function (item) {
                                             json[item.filename] = { s: totalLength, l: item.content.byteLength };
+                                            subkeys.push(item.filename);
                                             totalLength += item.content.byteLength;
                                         });
                                         bufferList = mergeItem.map(function (item) { return item.content; });
@@ -158,7 +164,7 @@ var MergeBinaryPlugin = /** @class */ (function () {
                                         return [4 /*yield*/, zip(b)];
                                     case 2:
                                         gltfContent = _a.sent();
-                                        commandContext.createFile(mergeFilename + ".zipjson", indexJsonBuffer, { type: "zipjson" });
+                                        commandContext.createFile(mergeFilename + ".zipjson", indexJsonBuffer, { type: "zipjson", subkeys: subkeys });
                                         commandContext.createFile(mergeFilename, gltfContent, { type: "bin" });
                                         return [2 /*return*/];
                                 }

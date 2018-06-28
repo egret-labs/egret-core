@@ -125,6 +125,32 @@ exports.resources = ${JSON.stringify(generateConfig.resources, null, "\t")};
     }
 }
 
+/**
+ * 返回resource/asset/A.png的格式
+ * file 和 subkeys 都以这种方式存储
+ * @param url url地址
+ */
+function getNormalizeUrl(url: string, root: string): string {
+    if (root == undefined) return url;
+    if (url.indexOf(egret.args.projectDir) > -1) {
+        return url.slice(egret.args.projectDir.length, url.length);
+    }
+    if (url.indexOf(root) > -1)
+        return url;
+    else
+        return path.join(root, url);
+}
+/**
+ * 返回asset/A.png 的格式
+ * 在default.res.json中以无root的格式存储
+ * @param url url地址
+ */
+function getSpliceRoot(url: string, sliceStr: string): string {
+    if (url.indexOf(sliceStr) > -1)
+        return url.slice(sliceStr.length, url.length);
+    else
+        return url;
+}
 
 
 
@@ -166,42 +192,19 @@ class TextureMergerResConfigPlugin {
      *      'resource/de.res.json': 'resource/' 
     *  }
      */
-    private sheetRoot: { [url: string]: string } = {};
+    private resJsonRoot: { [url: string]: string } = {};
     //从用户读取到的要修改的文件url
     private resourceConfigFiles: string[] = [];
     /** 存储要修改的文件 */
     private resourceConfig: { [filename: string]: { resources: any[] } } = {};
-    /** 要打包的文件夹 */
-    private resourceDirs: { [filename: string]: boolean } = {};
     constructor(private options: ConvertResourceConfigPluginOption) {
         this.resourceConfigFiles = this.options.resourceConfigFiles.map((item) => {
             let resourceConfigFile = path.posix.join(item.root, item.filename);
-            this.sheetRoot[resourceConfigFile] = item.root;
-            this.resourceDirs[item.root] = true;
+            this.resJsonRoot[resourceConfigFile] = item.root;
             return resourceConfigFile;
         });
     }
     async onFile(file: plugin.File) {
-        let isRes = false;
-        for (let root in this.resourceDirs) {
-            let fileOrigin = path.normalize(file.origin);
-            //绝对路径
-            if (fileOrigin.indexOf(path.join(egret.args.projectDir)) >= 0) {
-                if (fileOrigin.indexOf(path.join(egret.args.projectDir, root)) >= 0) {
-                    isRes = true;
-                }
-            }
-            //相对路径
-            else {
-                if (fileOrigin.indexOf(path.normalize(root)) >= 0) {
-                    isRes = true;
-                }
-            }
-        }
-        if (!isRes) {
-            return;
-        }
-
         let subkeys;
         let type;
         if (file.options) {
@@ -221,32 +224,6 @@ class TextureMergerResConfigPlugin {
             this.sheetFiles[url] = r;
         }
         return file;
-    }
-    /**
-     * 返回resource/asset/A.png的格式
-     * file 和 subkeys 都以这种方式存储
-     * @param url url地址
-     */
-    private getNormalizeUrl(url: string, root: string): string {
-        if (root == undefined) return url;
-        if (url.indexOf(egret.args.projectDir) > -1) {
-            return url.slice(egret.args.projectDir.length, url.length);
-        }
-        if (url.indexOf(root) > -1)
-            return url;
-        else
-            return path.join(root, url);
-    }
-    /**
-     * 返回asset/A.png 的格式
-     * 在default.res.json中以无root的格式存储
-     * @param url url地址
-     */
-    private getSpliceRoot(url: string, sliceStr: string): string {
-        if (url.indexOf(sliceStr) > -1)
-            return url.slice(sliceStr.length, url.length);
-        else
-            return url;
     }
 
 
@@ -273,12 +250,12 @@ class TextureMergerResConfigPlugin {
     private modifyRES(subkeysFile: R, subkeyHash: {}, pluginContext: plugin.PluginContext) {
         for (let filename in this.resourceConfig) {
             const resourceConfig = this.resourceConfig[filename];
-            const root = this.sheetRoot[filename];
+            const root = this.resJsonRoot[filename];
             this.deleteFragmentReference(subkeyHash, resourceConfig, root);
 
             //增加最后的图集和json配置
             //先直接抹去前方的路径，如果没有任何变化，说明资源在res.json的文件上级
-            const relativeJson = this.getSpliceRoot(subkeysFile.url, pluginContext.outputDir + "/" + root)
+            const relativeJson = getSpliceRoot(subkeysFile.url, pluginContext.outputDir + "/" + root)
             if (relativeJson == subkeysFile.url) {
                 console.log(utils.tr(1422, filename, subkeysFile.name));
                 global.globals.exit()
@@ -296,7 +273,7 @@ class TextureMergerResConfigPlugin {
             //png
             const imageUrl = subkeysFile.url.replace("json", "png");
             const imgName = subkeysFile.name.replace("json", "png");
-            const relativeImage = this.getSpliceRoot(imageUrl, pluginContext.outputDir + "/" + root)
+            const relativeImage = getSpliceRoot(imageUrl, pluginContext.outputDir + "/" + root)
             const image = {
                 name: imgName,
                 type: "image",
@@ -316,7 +293,7 @@ class TextureMergerResConfigPlugin {
     private deleteFragmentReference(sheetHash: {}, resourceConfig: { resources: any[] }, root: string) {
         const newConfig = resourceConfig.resources.concat();
         for (let r of newConfig) {
-            if (sheetHash[this.getNormalizeUrl(r.url, root)]) {
+            if (sheetHash[getNormalizeUrl(r.url, root)]) {
                 const index = resourceConfig.resources.indexOf(r);
                 resourceConfig.resources.splice(index, 1);
                 continue;
@@ -340,6 +317,104 @@ class TextureMergerResConfigPlugin {
     }
 }
 
+
+class JSONMergerResConfigPlugin {
+    /**
+     * { 'resource/1.zipjson':
+            { url: 'resource/1.zipjson',
+                subkeys:
+                [ 'paper.pro.json',
+                    'default_thm_json',
+                    ... 237 more items ],
+                type: 'zipjson',
+                name: '1_zipjson' },
+        'resource/1.bin.zipjson':
+            { url: 'resource/1.bin.zipjson',
+                subkeys: ['Library/unity_default_resources_Quad.gltf.bin,
+                        Library/unity_default_resources_Sphere.gltf.bin]
+                type: 'zipjson',
+                name: '1_bin_zipjson' } }
+     */
+    private zipJsonFiles: { [url: string]: R } = {};
+    /**
+     * { 
+     *      'resource/default.res.json': 'resource/',
+     *      'resource/de.res.json': 'resource/' 
+    *  }
+     */
+
+    //从用户读取到的要修改的文件url
+    private resourceConfigFiles: string[] = [];
+    /** 存储要修改的文件 */
+    private resourceConfig: { [filename: string]: { resources: any[] } } = {};
+    /**
+    * { 
+    *      'resource/default.res.json': 'resource/',
+    *      'resource/de.res.json': 'resource/' 
+   *  }
+    */
+    private resJsonRoot: { [url: string]: string } = {};
+    constructor(private options: ConvertResourceConfigPluginOption) {
+        this.resourceConfigFiles = this.options.resourceConfigFiles.map((item) => {
+            let resourceConfigFile = path.posix.join(item.root, item.filename);
+            this.resJsonRoot[resourceConfigFile] = item.root;
+            return resourceConfigFile;
+        });
+    }
+    async onFile(file: plugin.File) {
+        let subkeys;
+        let type;
+        if (file.options) {
+            subkeys = file.options.subkeys;
+            type = file.options.type;
+        }
+        const origin = file.origin;
+        const url = origin.split("\\").join("/");
+        const name = this.options.nameSelector(origin);
+        /** 存储要修改的文件 */
+        if (this.resourceConfigFiles.indexOf(origin) >= 0) {
+            this.resourceConfig[url] = JSON.parse(file.contents.toString())
+        }
+
+        if (type == "zipjson") {
+            const r = { url, subkeys, type, name }
+            this.zipJsonFiles[url] = r;
+        }
+
+        return file;
+    }
+    parseJSONMerger(pluginContext: plugin.PluginContext) {
+        for (let zipJsonFileName in this.zipJsonFiles) {
+            const zipJsonItem = this.zipJsonFiles[zipJsonFileName];
+            this.modifyRES(zipJsonItem, pluginContext);
+        }
+
+    }
+    private modifyRES(zipJsonItem: R, pluginContext: plugin.PluginContext) {
+        for (let filename in this.resourceConfig) {
+            let resourceConfig = this.resourceConfig[filename];
+            for (let resourceItem of resourceConfig.resources) {
+                if (resourceItem.url == getSpliceRoot(zipJsonItem.url, this.resJsonRoot[filename])) {
+                    // 前面存在EmitResConfigFilePlugin会自动转换
+                    if (typeof (zipJsonItem.subkeys) == "string") {
+                        resourceItem.subkeys = zipJsonItem.subkeys;
+                    }
+                    else {
+                        resourceItem.subkeys = zipJsonItem.subkeys.join(",");
+                    }
+                    break;
+                }
+            }
+            const buffer = new Buffer(JSON.stringify(resourceConfig));
+            pluginContext.createFile(path.join(pluginContext.outputDir, filename), buffer);
+        }
+    }
+}
+
+
+
+
+
 export class ConvertResConfigFilePlugin implements plugin.Plugin {
 
 
@@ -349,15 +424,42 @@ export class ConvertResConfigFilePlugin implements plugin.Plugin {
      */
     private files: { [url: string]: R } = {};
     private tMResConfigPlugin: TextureMergerResConfigPlugin;
+    private jsonResConfigPlugin: JSONMergerResConfigPlugin;
+    /** 要打包的文件夹 */
+    private resourceDirs: { [filename: string]: boolean } = {};
     constructor(private options: ConvertResourceConfigPluginOption) {
         this.tMResConfigPlugin = new TextureMergerResConfigPlugin(options);
+        this.jsonResConfigPlugin = new JSONMergerResConfigPlugin(options);
+        this.options.resourceConfigFiles.map((item) => {
+            this.resourceDirs[item.root] = true;
+        });
     }
     async onFile(file: plugin.File) {
-        file = await this.tMResConfigPlugin.onFile(file);
+        let isRes = false;
+        for (let root in this.resourceDirs) {
+            let fileOrigin = path.normalize(file.origin);
+            //绝对路径
+            if (fileOrigin.indexOf(path.join(egret.args.projectDir)) >= 0) {
+                if (fileOrigin.indexOf(path.join(egret.args.projectDir, root)) >= 0) {
+                    isRes = true;
+                }
+            }
+            //相对路径
+            else {
+                if (fileOrigin.indexOf(path.normalize(root)) >= 0) {
+                    isRes = true;
+                }
+            }
+        }
+        if (isRes) {
+            file = await this.tMResConfigPlugin.onFile(file);
+            file = await this.jsonResConfigPlugin.onFile(file);
+        }
         return file;
     }
     async onFinish(commandContext: plugin.PluginContext) {
         await this.tMResConfigPlugin.parseTestureMerger(commandContext);
+        await this.jsonResConfigPlugin.parseJSONMerger(commandContext);
     }
 }
 

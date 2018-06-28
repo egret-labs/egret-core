@@ -22,24 +22,28 @@ export class MergeJSONPlugin implements Plugin {
             }
             const filename = this.options.nameSelector(file.origin.replace("resource/", ""))
             this.mergeList[mergeResult].push({ filename, content: file.contents.toString() })
-            return null;
+
+            // return null;
         }
-        else {
+        // else {
             return file;
-        }
+        // }
     }
-//加上subkeys
+    //加上subkeys
     async onFinish(commandContext: plugin.PluginContext) {
         for (let mergeFilename in this.mergeList) {
             const mergeItem = this.mergeList[mergeFilename];
             const json = {};
-
+            let subkeys = [];
+            for (let item of mergeItem) {
+                subkeys.push(item.filename);
+            }
             mergeItem.forEach((item) => {
                 json[item.filename] = JSON.parse(item.content)
             })
             const content = JSON.stringify(json, null, '\t');
             const jsonBuffer = await zip(content)
-            commandContext.createFile(mergeFilename, jsonBuffer, { type: "zipjson",subkeys:"" })
+            commandContext.createFile(mergeFilename, jsonBuffer, { type: "zipjson", subkeys: subkeys })
         }
     }
 }
@@ -75,8 +79,10 @@ export class MergeBinaryPlugin implements Plugin {
 
             let totalLength = 0;
             const json = {};
+            let subkeys = [];
             mergeItem.forEach((item) => {
-                json[item.filename] = { s: totalLength, l: item.content.byteLength }
+                json[item.filename] = { s: totalLength, l: item.content.byteLength };
+                subkeys.push(item.filename);
                 totalLength += item.content.byteLength;
             })
             const bufferList = mergeItem.map(item => item.content);
@@ -87,7 +93,7 @@ export class MergeBinaryPlugin implements Plugin {
 
             const gltfContent = await zip(b);
 
-            commandContext.createFile(mergeFilename + ".zipjson", indexJsonBuffer, { type: "zipjson" });
+            commandContext.createFile(mergeFilename + ".zipjson", indexJsonBuffer, { type: "zipjson", subkeys: subkeys });
             commandContext.createFile(mergeFilename, gltfContent, { type: "bin" });
         }
     }
