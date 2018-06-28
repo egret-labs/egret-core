@@ -2586,6 +2586,7 @@ var RES;
             }
         };
         Resource.prototype.getResAsync = function (key, compFunc, thisObject) {
+            var _this = this;
             var paramKey = key;
             var _a = RES.config.getResourceWithSubkey(key, true), r = _a.r, subkey = _a.subkey;
             return RES.queue.loadResource(r).then(function (value) {
@@ -2598,6 +2599,9 @@ var RES;
                     compFunc.call(thisObject, value, paramKey);
                 }
                 return value;
+            }, function (error) {
+                RES.ResourceEvent.dispatchResourceEvent(_this, RES.ResourceEvent.ITEM_LOAD_ERROR, "", r);
+                return Promise.reject(error);
             });
         };
         /**
@@ -2609,6 +2613,7 @@ var RES;
          * @param type {string}
          */
         Resource.prototype.getResByUrl = function (url, compFunc, thisObject, type) {
+            var _this = this;
             if (type === void 0) { type = ""; }
             var r = RES.config.getResource(url);
             if (!r) {
@@ -2629,6 +2634,9 @@ var RES;
                     compFunc.call(thisObject, value, r.url);
                 }
                 return value;
+            }, function (error) {
+                RES.ResourceEvent.dispatchResourceEvent(_this, RES.ResourceEvent.ITEM_LOAD_ERROR, "", r);
+                return Promise.reject(error);
             });
         };
         /**
