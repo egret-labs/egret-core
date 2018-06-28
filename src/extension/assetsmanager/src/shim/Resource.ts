@@ -599,6 +599,9 @@ module RES {
                     compFunc.call(thisObject, value, paramKey);
                 }
                 return value;
+            }, error => {
+                ResourceEvent.dispatchResourceEvent(this, ResourceEvent.ITEM_LOAD_ERROR, "", r as ResourceInfo);
+                return Promise.reject(error);
             })
         }
 
@@ -632,6 +635,9 @@ module RES {
                     compFunc.call(thisObject, value, r.url);
                 }
                 return value;
+            }, error => {
+                ResourceEvent.dispatchResourceEvent(this, ResourceEvent.ITEM_LOAD_ERROR, "", r as ResourceInfo);
+                return Promise.reject(error);
             })
         }
 
