@@ -1594,6 +1594,16 @@ namespace egret {
             }
             if (!egret.nativeRender) {
                 self.$updateRenderMode();
+                let p = self.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                let maskedObject = self.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
             }
         }
 

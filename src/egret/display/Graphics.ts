@@ -673,6 +673,20 @@ namespace egret {
         private dirty(): void {
             let self = this;
             self.$renderNode.dirtyRender = true;
+            if (!egret.nativeRender) {
+                const target = self.$targetDisplay;
+                target.$cacheDirty = true;
+                let p = target.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                let maskedObject = target.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
+            }
         }
 
         /**

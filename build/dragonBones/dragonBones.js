@@ -16295,9 +16295,10 @@ var dragonBones;
                                 node.imageHeight = texture.$sourceHeight;
                             }
                             else {
-                                node.drawMesh(texture._bitmapX, texture._bitmapY, texture._bitmapWidth, texture._bitmapHeight, texture._offsetX, texture._offsetY, texture.textureWidth, texture.textureHeight);
-                                node.imageWidth = texture._sourceWidth;
-                                node.imageHeight = texture._sourceHeight;
+                                var textureV4 = texture;
+                                node.drawMesh(textureV4._bitmapX, textureV4._bitmapY, textureV4._bitmapWidth, textureV4._bitmapHeight, textureV4._offsetX, textureV4._offsetY, textureV4.textureWidth, textureV4.textureHeight);
+                                node.imageWidth = textureV4._sourceWidth;
+                                node.imageHeight = textureV4._sourceHeight;
                             }
                             this._blendModeDirty = true;
                             this._colorDirty = true;
@@ -16332,9 +16333,10 @@ var dragonBones;
                                 node.imageHeight = texture.$sourceHeight;
                             }
                             else {
-                                node.drawImage(texture._bitmapX, texture._bitmapY, texture._bitmapWidth, texture._bitmapHeight, texture._offsetX, texture._offsetY, textureWidth, textureHeight);
-                                node.imageWidth = texture._sourceWidth;
-                                node.imageHeight = texture._sourceHeight;
+                                var textureV4 = texture;
+                                node.drawImage(textureV4._bitmapX, textureV4._bitmapY, textureV4._bitmapWidth, textureV4._bitmapHeight, textureV4._offsetX, textureV4._offsetY, textureWidth, textureHeight);
+                                node.imageWidth = textureV4._sourceWidth;
+                                node.imageHeight = textureV4._sourceHeight;
                             }
                             this._blendModeDirty = true;
                             this._colorDirty = true;
@@ -16858,28 +16860,6 @@ var dragonBones;
     }(dragonBones.BaseFactory));
     dragonBones.EgretFactory = EgretFactory;
 })(dragonBones || (dragonBones = {}));
-/**
- * The MIT License (MIT)
- *
- * Copyright (c) 2012-2018 DragonBones team and other contributors
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
 var dragonBones;
 (function (dragonBones) {
     /**
@@ -17488,9 +17468,10 @@ var dragonBones;
                             bitmapNode.imageHeight = texture._sourceHeight;
                         }
                         else {
-                            bitmapNode.drawImage(texture._bitmapX, texture._bitmapY, texture._bitmapWidth, texture._bitmapHeight, texture._offsetX, texture._offsetY, texture.textureWidth, texture.textureHeight);
-                            bitmapNode.imageWidth = texture._sourceWidth;
-                            bitmapNode.imageHeight = texture._sourceHeight;
+                            var textureV4 = texture;
+                            bitmapNode.drawImage(textureV4._bitmapX, textureV4._bitmapY, textureV4._bitmapWidth, textureV4._bitmapHeight, textureV4._offsetX, textureV4._offsetY, texture.textureWidth, texture.textureHeight);
+                            bitmapNode.imageWidth = textureV4._sourceWidth;
+                            bitmapNode.imageHeight = textureV4._sourceHeight;
                         }
                     }
                     else {
@@ -17549,6 +17530,18 @@ var dragonBones;
             else {
                 // Classic display.
                 _super.prototype.$render.call(this);
+            }
+        };
+        /**
+         * @inheritDoc
+         */
+        Movie.prototype.$updateRenderNode = function () {
+            if (this._batchEnabled) {
+                // RenderNode display.
+            }
+            else {
+                // Classic display.
+                _super.prototype.$updateRenderNode.call(this);
             }
         };
         /**

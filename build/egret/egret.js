@@ -2026,6 +2026,16 @@ var egret;
                 }
                 if (!egret.nativeRender) {
                     self.$updateRenderMode();
+                    var p = self.$parent;
+                    if (p && !p.$cacheDirty) {
+                        p.$cacheDirty = true;
+                        p.$cacheDirtyUp();
+                    }
+                    var maskedObject = self.$maskedObject;
+                    if (maskedObject && !maskedObject.$cacheDirty) {
+                        maskedObject.$cacheDirty = true;
+                        maskedObject.$cacheDirtyUp();
+                    }
                 }
             },
             enumerable: true,
@@ -5641,7 +5651,6 @@ var egret;
              * @default <code>BitmapFillMode.SCALE</code>
              *
              * @version Egret 2.4
-             * @version eui 1.0
              * @platform Web
              * @language en_US
              */
@@ -5653,7 +5662,6 @@ var egret;
              * @default <code>BitmapFillMode.SCALE</code>
              *
              * @version Egret 2.4
-             * @version eui 1.0
              * @platform Web
              * @language zh_CN
              */
@@ -10303,6 +10311,20 @@ var egret;
         Graphics.prototype.dirty = function () {
             var self = this;
             self.$renderNode.dirtyRender = true;
+            if (!egret.nativeRender) {
+                var target = self.$targetDisplay;
+                target.$cacheDirty = true;
+                var p = target.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                var maskedObject = target.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
+            }
         };
         /**
          * @private
@@ -15428,11 +15450,11 @@ var egret;
             else {
                 var matrix = egret.Matrix.create();
                 matrix.identity();
+                matrix.scale(scale, scale);
                 //应用裁切
                 if (clipBounds) {
                     matrix.translate(-clipBounds.x, -clipBounds.y);
                 }
-                matrix.scale(scale, scale);
                 egret.sys.systemRenderer.render(displayObject, renderBuffer, matrix, true);
                 egret.Matrix.release(matrix);
             }

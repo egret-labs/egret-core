@@ -173,7 +173,6 @@ export = Run;
 
 async function runWxIde() {
     let wxPaths = [];
-    let packagePath: string;
     switch (os.platform()) {
         case "darwin":
             const result = await utils.executeCommand("defaults read com.tencent.wechat.devtools LastRunAppBundlePath");
@@ -183,7 +182,6 @@ async function runWxIde() {
             }
             // defaults read
             wxPaths.push("/Applications/wechatwebdevtools.app/Contents/Resources/app.nw/bin/cli");
-            packagePath = "/Applications/wechatwebdevtools.app/Contents/Resources/app.nw/package.json";
             break;
         case "win32":
             // defaults read
@@ -202,26 +200,18 @@ async function runWxIde() {
                 exePath = exePath.split("  ").find((path) => path.indexOf(".exe") != -1);
                 exePath = path.join(path.dirname(exePath), 'cli.bat');
                 wxPaths.unshift(exePath);
-                packagePath = path.resolve(exePath, "../package.nw/package.json");
             }
             break;
     }
-    const packageJson: { "version": string } = (!!packagePath) ? JSON.parse(await FileUtil.readFileAsync(packagePath, null)) : null;
     const wxpath = wxPaths.find((wxpath) => FileUtil.exists(wxpath));
     if (wxpath) {
         let projectPath = egret.args.projectDir;
         projectPath = path.resolve(projectPath, "../", path.basename(projectPath) + "_wxgame");
         try {
-            let result = globals.compressVersion(packageJson.version, "1.02.1801081");
-            if (result > 0) {
-                await utils.shell(wxpath, ["-o", projectPath, "-f", "egret"], null, true);
-            } else {
-                console.log("当前web开发者工具版本为:", packageJson.version, ", 请升级最新的微信web开发者工具");
-                await utils.shell(wxpath, ["-o", projectPath], null, true);
-            }
+            await utils.shell(wxpath, ["-o", projectPath, "-f", "egret"], null, true);
         }
         catch (e) {
-            return 1;
+            await utils.shell(wxpath, ["-o", projectPath], null, true);
         }
     }
     else {

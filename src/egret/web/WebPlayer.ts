@@ -232,10 +232,12 @@ namespace egret.web {
                 canvasScaleY = Math.ceil(canvasScaleY);
             }
 
-            let m = new egret.Matrix();
+            let m = egret.Matrix.create();
+            m.identity();
             m.scale(scalex / canvasScaleX, scaley / canvasScaleY);
             m.rotate(rotation * Math.PI / 180);
             let transform = `matrix(${m.a},${m.b},${m.c},${m.d},${m.tx},${m.ty})`;
+            egret.Matrix.release(m);
             canvas.style[egret.web.getPrefixStyleName("transform")] = transform;
             sys.DisplayList.$setCanvasScale(canvasScaleX, canvasScaleY);
             this.webTouchHandler.updateScaleMode(scalex, scaley, rotation);

@@ -3250,7 +3250,6 @@ declare namespace egret {
          * @default <code>BitmapFillMode.SCALE</code>
          *
          * @version Egret 2.4
-         * @version eui 1.0
          * @platform Web
          * @language en_US
          */
@@ -3262,7 +3261,6 @@ declare namespace egret {
          * @default <code>BitmapFillMode.SCALE</code>
          *
          * @version Egret 2.4
-         * @version eui 1.0
          * @platform Web
          * @language zh_CN
          */

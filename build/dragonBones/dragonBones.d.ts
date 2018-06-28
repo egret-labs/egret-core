@@ -8111,6 +8111,7 @@ declare namespace dragonBones {
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+declare const _super: any;
 declare namespace dragonBones {
     /**
      * 是否包含指定名称的动画组。
@@ -8299,6 +8300,10 @@ declare namespace dragonBones {
          * @inheritDoc
          */
         $render(): void;
+        /**
+         * @inheritDoc
+         */
+        $updateRenderNode(): void;
         /**
          * @inheritDoc
          */

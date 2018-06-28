@@ -2503,6 +2503,7 @@ var egret;
                         this._inputElement.blur();
                     }
                 }
+                this._needShow = false;
             };
             /**
              * @private
@@ -4226,10 +4227,12 @@ var egret;
                     canvasScaleX = Math.ceil(canvasScaleX);
                     canvasScaleY = Math.ceil(canvasScaleY);
                 }
-                var m = new egret.Matrix();
+                var m = egret.Matrix.create();
+                m.identity();
                 m.scale(scalex / canvasScaleX, scaley / canvasScaleY);
                 m.rotate(rotation * Math.PI / 180);
                 var transform = "matrix(" + m.a + "," + m.b + "," + m.c + "," + m.d + "," + m.tx + "," + m.ty + ")";
+                egret.Matrix.release(m);
                 canvas.style[egret.web.getPrefixStyleName("transform")] = transform;
                 egret.sys.DisplayList.$setCanvasScale(canvasScaleX, canvasScaleY);
                 this.webTouchHandler.updateScaleMode(scalex, scaley, rotation);
@@ -5714,14 +5717,14 @@ var egret;
             /**
              * 启用RenderBuffer
              */
-            WebGLRenderContext.prototype.activateBuffer = function (buffer) {
+            WebGLRenderContext.prototype.activateBuffer = function (buffer, width, height) {
                 buffer.rootRenderTarget.activate();
                 if (!this.bindIndices) {
                     this.uploadIndicesArray(this.vao.getIndices());
                 }
                 buffer.restoreStencil();
                 buffer.restoreScissor();
-                this.onResize(buffer.width, buffer.height);
+                this.onResize(width, height);
             };
             /**
              * 上传顶点数据
@@ -5918,8 +5921,10 @@ var egret;
                     if (bitmapData.$deleteSource && bitmapData.webGLTexture) {
                         bitmapData.source = null;
                     }
-                    //todo 默认值
-                    bitmapData.webGLTexture["smoothing"] = true;
+                    if (bitmapData.webGLTexture) {
+                        //todo 默认值
+                        bitmapData.webGLTexture["smoothing"] = true;
+                    }
                 }
                 return bitmapData.webGLTexture;
             };
@@ -6401,7 +6406,7 @@ var egret;
                         }
                         break;
                     case 6 /* ACT_BUFFER */:
-                        this.activateBuffer(data.buffer);
+                        this.activateBuffer(data.buffer, data.width, data.height);
                         break;
                     case 7 /* ENABLE_SCISSOR */:
                         var buffer = this.activatedBuffer;
@@ -6828,7 +6833,6 @@ var egret;
                     this.surface.resize(width, height);
                     return;
                 }
-                this.context.pushBuffer(this);
                 // render target 尺寸重置
                 if (width != this.rootRenderTarget.width || height != this.rootRenderTarget.height) {
                     this.context.drawCmdManager.pushResize(this, width, height);
@@ -6842,6 +6846,7 @@ var egret;
                 if (this.root) {
                     this.context.resize(width, height, useMaxSize);
                 }
+                this.context.pushBuffer(this);
                 this.context.clear();
                 this.context.popBuffer();
             };
