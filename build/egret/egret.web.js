@@ -5661,14 +5661,14 @@ var egret;
             /**
              * 启用RenderBuffer
              */
-            WebGLRenderContext.prototype.activateBuffer = function (buffer) {
+            WebGLRenderContext.prototype.activateBuffer = function (buffer, width, height) {
                 buffer.rootRenderTarget.activate();
                 if (!this.bindIndices) {
                     this.uploadIndicesArray(this.vao.getIndices());
                 }
                 buffer.restoreStencil();
                 buffer.restoreScissor();
-                this.onResize(buffer.width, buffer.height);
+                this.onResize(width, height);
             };
             /**
              * 上传顶点数据
@@ -6175,7 +6175,7 @@ var egret;
                         }
                         break;
                     case 7 /* ACT_BUFFER */:
-                        this.activateBuffer(data.buffer);
+                        this.activateBuffer(data.buffer, data.width, data.height);
                         break;
                     case 8 /* ENABLE_SCISSOR */:
                         var buffer = this.activatedBuffer;
@@ -6613,7 +6613,6 @@ var egret;
                     this.surface.resize(width, height);
                     return;
                 }
-                this.context.pushBuffer(this);
                 // render target 尺寸重置
                 if (width != this.rootRenderTarget.width || height != this.rootRenderTarget.height) {
                     this.context.drawCmdManager.pushResize(this, width, height);
@@ -6625,6 +6624,7 @@ var egret;
                 if (this.root) {
                     this.context.resize(width, height, useMaxSize);
                 }
+                this.context.pushBuffer(this);
                 this.context.clear();
                 this.context.popBuffer();
             };
