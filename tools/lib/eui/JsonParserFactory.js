@@ -269,10 +269,15 @@ var JSONParseClass = /** @class */ (function () {
             if (this.skinClass["$s"][state]["$ssP"]) {
                 for (var _b = 0, _c = tempState["$ssP"]; _b < _c.length; _b++) {
                     var property = _c[_b];
-                    if (property["name"])
+                    if (property["name"]) {
+                        if(property["name"] === "scale9Grid" && typeof property["value"] == 'string' ){
+                            var data = property["value"].split(",");
+                            property["value"] = new egret.Rectangle(parseFloat(data[0]), parseFloat(data[1]), parseFloat(data[2]), parseFloat(data[3]));
+                        }
                         setProperty_1.push(new eui.SetProperty(property["target"], property["name"], property["value"]));
-                    else
+                    } else {
                         setProperty_1.push(new eui.SetStateProperty(this.target, property["templates"], property["chainIndex"], this.target[property["target"]], property["property"]));
+                    }
                 }
             }
             states.push(new eui.State(state, setProperty_1));
