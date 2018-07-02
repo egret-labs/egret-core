@@ -15,6 +15,7 @@ Egret Engine was officially released on May 25, 2018 5.2 stable version. On July
 * Fixed an issue that caused WebGLTexture creation to fail
 * Fixed an error in the input text
 * Fix cacheAsBitmap and filters used with drawing exceptions
+* Fixed native display list textWidth and textHeight calculation exceptions
 
 ## Command Line
 
