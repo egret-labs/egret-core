@@ -15,6 +15,7 @@
 * 修复 WebGLTexture 创建失败导致报错问题（感谢开发者 pilihou）
 * 修复输入文本可能报错问题（感谢开发者 pilihou）
 * 修复 cacheAsBitmap 和滤镜一起使用绘制异常问题（感谢开发者 陪笑）
+* 修复原生显示列表 textWidth 和 textHeight 计算异常问题
 
 ## 命令行
 
