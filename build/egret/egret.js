@@ -13239,10 +13239,10 @@ var egret;
     if (egret.nativeRender) {
         var nrABIVersion = egret_native.nrABIVersion;
         var nrMinEgretVersion = egret_native.nrMinEgretVersion;
-        var requiredNrABIVersion = 3;
+        var requiredNrABIVersion = 4;
         if (nrABIVersion < requiredNrABIVersion) {
             egret.nativeRender = false;
-            var msg = "需要升级微端版本到 0.1.6 才可以开启原生渲染加速";
+            var msg = "需要升级微端版本到 0.1.8 才可以开启原生渲染加速";
             egret.sys.$warnToFPS(msg);
             egret.warn(msg);
         }
@@ -20501,7 +20501,7 @@ var egret;
             get: function () {
                 this.$getLinesArr();
                 if (egret.nativeRender) {
-                    return egret_native.nrGetTextFieldWidth(this.$nativeDisplayObject.id);
+                    return egret_native.nrGetTextWidth(this.$nativeDisplayObject.id);
                 }
                 return this.$TextField[5 /* textWidth */];
             },
@@ -20524,7 +20524,7 @@ var egret;
             get: function () {
                 this.$getLinesArr();
                 if (egret.nativeRender) {
-                    return egret_native.nrGetTextFieldHeight(this.$nativeDisplayObject.id);
+                    return egret_native.nrGetTextHeight(this.$nativeDisplayObject.id);
                 }
                 return egret.TextFieldUtils.$getTextHeight(this);
             },
