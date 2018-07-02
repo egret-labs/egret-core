@@ -33,6 +33,8 @@ let DEBUG = false;
 import { egretbridge } from "./egretbridge";
 import { EXMLFile } from "./EXML";
 import { jsonFactory } from './JSONClass'
+
+export const eui = jsonFactory;
 /**
  * @private
  * EXML配置管理器实例
@@ -93,7 +95,7 @@ let euiShorten = {
     "eui.VSlider": "$eVS",
     "eui.Skin": "$eSk"
 }
-export let euiJson: string="";
+
 /**
  * @private
  */
@@ -236,10 +238,6 @@ export class JSONParser {
         }
 
         this.parseClass(xmlData, className);
-
-
-        let json = jsonFactory.toCode();
-        euiJson = json;
         return { className };
     }
 
