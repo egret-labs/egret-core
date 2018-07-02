@@ -72,6 +72,7 @@ var ExmlPlugin = /** @class */ (function () {
                 if (result.EuiJson !== undefined) {
                     pluginContext.createFile("resource/gameEui.json", new Buffer("" + result.EuiJson));
                 }
+                //写入解析规则和定义
                 result.files.forEach(function (item) {
                     var filename = item.path.split("\\").join("/");
                     pluginContext.createFile(filename, new Buffer(item.content));

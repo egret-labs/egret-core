@@ -33,6 +33,7 @@ var CodeFactory_1 = require("./CodeFactory");
 var DEBUG = false;
 var egretbridge_1 = require("./egretbridge");
 var JSONClass_1 = require("./JSONClass");
+exports.eui = JSONClass_1.jsonFactory;
 var exmlParserPool = [];
 var parsedClasses = {};
 var innerClassCount = 1;
@@ -85,7 +86,6 @@ var euiShorten = {
     "eui.VSlider": "$eVS",
     "eui.Skin": "$eSk"
 };
-exports.euiJson = "";
 /**
  * @private
  */
@@ -161,8 +161,6 @@ var JSONParser = /** @class */ (function () {
             JSONClass_1.jsonFactory.addContent(path, this.className, "$path");
         }
         this.parseClass(xmlData, className);
-        var json = JSONClass_1.jsonFactory.toCode();
-        exports.euiJson = json;
         return { className: className };
     };
     /**

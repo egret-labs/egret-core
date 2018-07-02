@@ -156,7 +156,7 @@ function publishEXML(exmls, exmlPublishPolicy) {
             return { path: path, content: JSON.stringify(thmData, null, '\t') };
         }
     });
-    var EuiJson = jsonParser.euiJson;
+    var EuiJson = jsonParser.eui.toCode();
     if (EuiJson == "")
         EuiJson = "{}";
     return { "files": files, "EuiJson": EuiJson };

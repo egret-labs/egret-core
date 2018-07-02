@@ -43,6 +43,7 @@ export class ExmlPlugin implements Plugin {
         if (result.EuiJson !== undefined) {
             pluginContext.createFile("resource/gameEui.json", new Buffer(`${result.EuiJson}`));
         }
+        //写入解析规则和定义
         result.files.forEach(item => {
             const filename = item.path.split("\\").join("/");
             pluginContext.createFile(filename, new Buffer(item.content))
