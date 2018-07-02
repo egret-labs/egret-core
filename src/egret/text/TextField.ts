@@ -1834,7 +1834,7 @@ namespace egret {
         public get textWidth(): number {
             this.$getLinesArr();
             if (nativeRender) {
-                return egret_native.nrGetTextFieldWidth(this.$nativeDisplayObject.id);
+                return egret_native.nrGetTextWidth(this.$nativeDisplayObject.id);
             }
             return this.$TextField[sys.TextKeys.textWidth];
         }
@@ -1854,7 +1854,7 @@ namespace egret {
         public get textHeight(): number {
             this.$getLinesArr();
             if (nativeRender) {
-                return egret_native.nrGetTextFieldHeight(this.$nativeDisplayObject.id);
+                return egret_native.nrGetTextHeight(this.$nativeDisplayObject.id);
             }
             return TextFieldUtils.$getTextHeight(this);
         }

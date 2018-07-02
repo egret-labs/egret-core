@@ -57,6 +57,8 @@ declare namespace egret_native {
     function nrGlobalToLocal(id: number, globalX: number, globalY: number): string;
     function nrGetTextFieldWidth(id: number): number;
     function nrGetTextFieldHeight(id: number): number;
+    function nrGetTextWidth(id: number): number;
+    function nrGetTextHeight(id: number): number;
     function nrResize(width: number, height: number): void;
     function nrSetCanvasScaleFactor(factor: number, scalex: number, scaley: number): void;
     function nrUpdate(): void;
