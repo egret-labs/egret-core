@@ -74,7 +74,6 @@ function publishEXML(exmls, exmlPublishPolicy) {
         }
     }
     themeDatas.forEach(function (theme) { return theme.exmls = []; });
-    var EuiJson = "";
     screenExmls.forEach(function (e) {
         exmlParser.fileSystem.set(e.filename, e);
         var epath = e.filename;
@@ -99,8 +98,8 @@ function publishEXML(exmls, exmlPublishPolicy) {
             //todo
             case "commonjs2":
                 var parser2 = new jsonParser.JSONParser();
-                var result2 = parser2.parse(e.contents);
-                exmlEl = { path: e.filename, gjs: result2.code, json: result2.json, className: result2.className };
+                var result2 = parser2.parse(e.contents, e.filename);
+                exmlEl = { path: e.filename, className: result2.className };
                 break;
             //todo
             case "bin":
@@ -114,7 +113,6 @@ function publishEXML(exmls, exmlPublishPolicy) {
             if (exmlEl.path.indexOf(className) < 0)
                 console.log(utils.tr(2104, exmlEl.path, exmlEl.className));
         }
-        EuiJson = exmlEl.json;
         themeDatas.forEach(function (thm) {
             if (epath in oldEXMLS) {
                 var exmlFile = oldEXMLS[epath];
@@ -148,23 +146,9 @@ function publishEXML(exmls, exmlPublishPolicy) {
         }
         else if (exmlPublishPolicy == "commonjs2") {
             var jsonParserStr = file.read(Path.join(egret.root, "tools/lib/eui/JsonParserFactory.js"));
-            var content = jsonParserStr + "\n                function __extends(d, b) {\n                    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];\n                        function __() {\n                            this.constructor = d;\n                        }\n                    __.prototype = b.prototype;\n                    d.prototype = new __();\n                };";
-            content += "\n                window.generateEUI2 = {};\n                generateEUI2.paths = {};\n                generateEUI2.styles = " + JSON.stringify(thmData.styles) + ";\n                generateEUI2.skins = " + JSON.stringify(thmData.skins) + ";";
-            var namespaces = [];
-            for (var _b = 0, _c = thmData.exmls; _b < _c.length; _b++) {
-                var item = _c[_b];
-                var packages = item.className.split(".");
-                var temp = '';
-                for (var i = 0; i < packages.length - 1; i++) {
-                    temp = i == 0 ? packages[i] : temp + "." + packages[i];
-                    if (namespaces.indexOf(temp) == -1) {
-                        namespaces.push(temp);
-                    }
-                }
-                content += "generateEUI2.paths['" + item.path + "'] = window." + item.className + " = " + item.gjs;
-            }
-            var result = namespaces.map(function (v) { return "window." + v + "={};"; }).join("\n");
-            content = result + content;
+            var content = "" + jsonParserStr;
+            content +=
+                "window.generateEUI2 = {};\ngenerateEUI2.paths = {};\ngenerateEUI2.styles = " + JSON.stringify(thmData.styles) + ";\ngenerateEUI2.skins = " + JSON.stringify(thmData.skins) + ";";
             path = path.replace("thm.json", "thm.js");
             return { path: path, content: content };
         }
@@ -172,6 +156,7 @@ function publishEXML(exmls, exmlPublishPolicy) {
             return { path: path, content: JSON.stringify(thmData, null, '\t') };
         }
     });
+    var EuiJson = jsonParser.euiJson;
     if (EuiJson == "")
         EuiJson = "{}";
     return { "files": files, "EuiJson": EuiJson };
