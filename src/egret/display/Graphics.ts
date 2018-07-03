@@ -44,6 +44,69 @@ namespace egret {
 
 
     /**
+     * @private
+     * 根据传入的锚点组返回贝塞尔曲线上的一组点,返回类型为egret.Point[];
+     * @param anchorpoints 锚点组
+     * @param pointsAmount 要获取的点的总个数，实际返回点数不一定等于该属性，与范围有关
+     * @param range 要获取的点与中心锚点的范围值，0~1之间
+     * @returns egret.Point[];
+     */
+    function createBezierPoints(anchorpoints: { x: number, y: number }[], pointsAmount: number): egret.Point[] {
+        var points = [];
+        //默认二维，只有三个点
+        let point0 = anchorpoints[0];
+        let point1 = anchorpoints[1];
+        let point2 = anchorpoints[2];
+        let line01 = Math.sqrt(Math.pow(point0.x - point1.x, 2) + Math.pow(point0.y - point1.y, 2));
+        let line12 = Math.sqrt(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2));
+
+        let m = line01 / (line01 + line12);
+        // let half_range = range / 2;
+
+        for (var i = 0; i < pointsAmount; i++) {
+            let t = i / pointsAmount;
+            // if (t < m - half_range || t > m + half_range) {
+            //     continue;
+            // }
+            var point = multiPointBezier(anchorpoints, i / pointsAmount);
+            if (point)
+                points.push(point);
+        }
+        return points;
+    }
+
+    /**
+     * @private
+     * 根据锚点组与取值系数获取贝塞尔曲线上的一点
+     * @param points 锚点组
+     * @param t 取值系数
+     * @returns egret.Point
+     */
+    function multiPointBezier(points: { x: number, y: number }[], t: number): egret.Point {
+        var len = points.length;
+        var x = 0, y = 0;
+        var binomial = function (start, end) {
+            var cs = 1, bcs = 1;
+            while (end > 0) {
+                cs *= start;
+                bcs *= end;
+                start--;
+                end--;
+            }
+            return (cs / bcs);
+        };
+        for (var i = 0; i < len; i++) {
+            var point = points[i];
+            x += point.x * Math.pow((1 - t), (len - 1 - i)) * Math.pow(t, i) * (binomial(len - 1, i));
+            y += point.y * Math.pow((1 - t), (len - 1 - i)) * Math.pow(t, i) * (binomial(len - 1, i));
+        }
+        return egret.Point.create(x, y);
+    }
+
+
+
+
+    /**
      * The Graphics class contains a set of methods for creating vector shape. Display objects that support drawing include Sprite and Shape objects. Each class in these classes includes the graphics attribute that is a Graphics object.
      * The following auxiliary functions are provided for ease of use: drawRect(), drawRoundRect(), drawCircle(), and drawEllipse().
      * @see http://edn.egret.com/cn/docs/page/136 Draw Rectangle
@@ -550,7 +613,22 @@ namespace egret {
             let strokePath = this.strokePath;
             fillPath && fillPath.curveTo(controlX, controlY, anchorX, anchorY);
             strokePath && strokePath.curveTo(controlX, controlY, anchorX, anchorY);
-            this.extendBoundsByPoint(controlX, controlY);
+
+            //
+            let lastX = this.lastX || 0;
+            let lastY = this.lastY || 0;
+            let anchorPoints = [];
+            anchorPoints.push(egret.Point.create(lastX, lastY));
+            anchorPoints.push(egret.Point.create(controlX, controlY));
+            anchorPoints.push(egret.Point.create(anchorX, anchorY));
+            let bezierPoints = createBezierPoints(anchorPoints, 50);
+            for (let i = 0; i < bezierPoints.length; i++) {
+                let point = bezierPoints[i];
+                this.extendBoundsByPoint(point.x, point.y);
+                egret.Point.release(point);
+            }
+            //
+
             this.extendBoundsByPoint(anchorX, anchorY);
             this.updatePosition(anchorX, anchorY);
             this.dirty();
