@@ -112,11 +112,11 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
                 exmlEl = { path: e.filename, content: e.contents };
                 break;
         }
-        if (exmlEl.className) {
-            let className = exmlEl.className.split(".")[exmlEl.className.split(".").length - 1];
-            if (exmlEl.path.indexOf(className) < 0)
-                console.log(utils.tr(2104, exmlEl.path, exmlEl.className));
-        }
+        // if (exmlEl.className) {
+        //     let className = exmlEl.className.split(".")[exmlEl.className.split(".").length - 1];
+        //     if (exmlEl.path.indexOf(className) < 0)
+        //         console.log(utils.tr(2104, exmlEl.path, exmlEl.className));
+        // }
         themeDatas.forEach((thm) => {
             if (epath in oldEXMLS) {
                 const exmlFile = oldEXMLS[epath];

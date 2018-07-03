@@ -18,5 +18,13 @@ class JSONClass {
         }
         target[name] = value;
     }
+
+    public hasClassName(className: string) {
+        for (let name in this.json) {
+            if (name == className)
+                return true;
+        }
+        return false;
+    }
 }
 export let jsonFactory = new JSONClass();

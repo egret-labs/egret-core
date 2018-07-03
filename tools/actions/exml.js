@@ -1,6 +1,5 @@
 /// <reference path="../lib/types.d.ts" />
 Object.defineProperty(exports, "__esModule", { value: true });
-var utils = require("../lib/utils");
 var Path = require("path");
 var file = require("../lib/FileUtil");
 var exml = require("../lib/eui/EXML");
@@ -108,11 +107,11 @@ function publishEXML(exmls, exmlPublishPolicy) {
                 exmlEl = { path: e.filename, content: e.contents };
                 break;
         }
-        if (exmlEl.className) {
-            var className = exmlEl.className.split(".")[exmlEl.className.split(".").length - 1];
-            if (exmlEl.path.indexOf(className) < 0)
-                console.log(utils.tr(2104, exmlEl.path, exmlEl.className));
-        }
+        // if (exmlEl.className) {
+        //     let className = exmlEl.className.split(".")[exmlEl.className.split(".").length - 1];
+        //     if (exmlEl.path.indexOf(className) < 0)
+        //         console.log(utils.tr(2104, exmlEl.path, exmlEl.className));
+        // }
         themeDatas.forEach(function (thm) {
             if (epath in oldEXMLS) {
                 var exmlFile = oldEXMLS[epath];

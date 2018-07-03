@@ -33,7 +33,7 @@ let DEBUG = false;
 import { egretbridge } from "./egretbridge";
 import { EXMLFile } from "./EXML";
 import { jsonFactory } from './JSONClass'
-
+import utils = require('../../lib/utils');
 export const eui = jsonFactory;
 /**
  * @private
@@ -236,7 +236,10 @@ export class JSONParser {
         if (path) {
             jsonFactory.addContent(path, this.className, "$path");
         }
-
+        if (jsonFactory.hasClassName(className)) {
+            console.log(utils.tr(2104, path, className));
+            global.globals.exit()
+        }
         this.parseClass(xmlData, className);
         return { className };
     }

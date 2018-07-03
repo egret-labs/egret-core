@@ -23,6 +23,13 @@ var JSONClass = /** @class */ (function () {
         }
         target[name] = value;
     };
+    JSONClass.prototype.hasClassName = function (className) {
+        for (var name in this.json) {
+            if (name == className)
+                return true;
+        }
+        return false;
+    };
     return JSONClass;
 }());
 exports.jsonFactory = new JSONClass();
