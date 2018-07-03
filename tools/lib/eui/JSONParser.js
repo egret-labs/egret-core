@@ -33,6 +33,7 @@ var CodeFactory_1 = require("./CodeFactory");
 var DEBUG = false;
 var egretbridge_1 = require("./egretbridge");
 var JSONClass_1 = require("./JSONClass");
+var utils = require("../../lib/utils");
 exports.eui = JSONClass_1.jsonFactory;
 var exmlParserPool = [];
 var parsedClasses = {};
@@ -159,6 +160,10 @@ var JSONParser = /** @class */ (function () {
         this._className = className;
         if (path) {
             JSONClass_1.jsonFactory.addContent(path, this.className, "$path");
+        }
+        if (JSONClass_1.jsonFactory.hasClassName(className)) {
+            console.log(utils.tr(2104, path, className));
+            global.globals.exit();
         }
         this.parseClass(xmlData, className);
         return { className: className };
