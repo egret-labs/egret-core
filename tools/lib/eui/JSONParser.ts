@@ -233,12 +233,12 @@ export class JSONParser {
             className = "$exmlClass" + innerClassCount++;
         }
         this._className = className;
-        if (path) {
-            jsonFactory.addContent(path, this.className, "$path");
-        }
         if (jsonFactory.hasClassName(className)) {
             console.log(utils.tr(2104, path, className));
             global.globals.exit()
+        }
+        if (path) {
+            jsonFactory.addContent(path, this.className, "$path");
         }
         this.parseClass(xmlData, className);
         return { className };

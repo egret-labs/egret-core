@@ -158,12 +158,12 @@ var JSONParser = /** @class */ (function () {
             className = "$exmlClass" + innerClassCount++;
         }
         this._className = className;
-        if (path) {
-            JSONClass_1.jsonFactory.addContent(path, this.className, "$path");
-        }
         if (JSONClass_1.jsonFactory.hasClassName(className)) {
             console.log(utils.tr(2104, path, className));
             global.globals.exit();
+        }
+        if (path) {
+            JSONClass_1.jsonFactory.addContent(path, this.className, "$path");
         }
         this.parseClass(xmlData, className);
         return { className: className };
