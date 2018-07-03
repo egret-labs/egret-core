@@ -35,6 +35,7 @@ var egretbridge_1 = require("./egretbridge");
 var JSONClass_1 = require("./JSONClass");
 var utils = require("../../lib/utils");
 exports.eui = JSONClass_1.jsonFactory;
+exports.isError = false;
 var exmlParserPool = [];
 var parsedClasses = {};
 var innerClassCount = 1;
@@ -160,7 +161,7 @@ var JSONParser = /** @class */ (function () {
         this._className = className;
         if (JSONClass_1.jsonFactory.hasClassName(className)) {
             console.log(utils.tr(2104, path, className));
-            global.globals.exit();
+            exports.isError = true;
         }
         if (path) {
             JSONClass_1.jsonFactory.addContent(path, this.className, "$path");

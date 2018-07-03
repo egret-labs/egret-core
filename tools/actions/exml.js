@@ -107,11 +107,6 @@ function publishEXML(exmls, exmlPublishPolicy) {
                 exmlEl = { path: e.filename, content: e.contents };
                 break;
         }
-        // if (exmlEl.className) {
-        //     let className = exmlEl.className.split(".")[exmlEl.className.split(".").length - 1];
-        //     if (exmlEl.path.indexOf(className) < 0)
-        //         console.log(utils.tr(2104, exmlEl.path, exmlEl.className));
-        // }
         themeDatas.forEach(function (thm) {
             if (epath in oldEXMLS) {
                 var exmlFile = oldEXMLS[epath];
@@ -144,6 +139,10 @@ function publishEXML(exmls, exmlPublishPolicy) {
             return { path: path, content: content };
         }
         else if (exmlPublishPolicy == "commonjs2") {
+            if (jsonParser.isError) {
+                //已经存在错误了终止
+                global.globals.exit();
+            }
             var jsonParserStr = file.read(Path.join(egret.root, "tools/lib/eui/JsonParserFactory.js"));
             var content = "" + jsonParserStr;
             content +=
