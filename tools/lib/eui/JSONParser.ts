@@ -40,6 +40,7 @@ export const eui = jsonFactory;
  * EXML配置管理器实例
  */
 export let exmlConfig: EXMLConfig;
+export let isError: boolean = false;
 
 let exmlParserPool: JSONParser[] = [];
 let parsedClasses: any = {};
@@ -235,7 +236,7 @@ export class JSONParser {
         this._className = className;
         if (jsonFactory.hasClassName(className)) {
             console.log(utils.tr(2104, path, className));
-            global.globals.exit()
+            isError = true;
         }
         if (path) {
             jsonFactory.addContent(path, this.className, "$path");
