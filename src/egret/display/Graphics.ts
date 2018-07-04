@@ -46,29 +46,15 @@ namespace egret {
     /**
      * @private
      * 根据传入的锚点组返回贝塞尔曲线上的一组点,返回类型为egret.Point[];
-     * @param anchorpoints 锚点组
+     * @param pointsData 锚点组,保存着所有控制点的x和y坐标,格式为[x0,y0,x1,y1,x2,y2...]
      * @param pointsAmount 要获取的点的总个数，实际返回点数不一定等于该属性，与范围有关
      * @param range 要获取的点与中心锚点的范围值，0~1之间
      * @returns egret.Point[];
      */
-    function createBezierPoints(anchorpoints: { x: number, y: number }[], pointsAmount: number): egret.Point[] {
-        var points = [];
-        //默认二维，只有三个点
-        let point0 = anchorpoints[0];
-        let point1 = anchorpoints[1];
-        let point2 = anchorpoints[2];
-        let line01 = Math.sqrt(Math.pow(point0.x - point1.x, 2) + Math.pow(point0.y - point1.y, 2));
-        let line12 = Math.sqrt(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2));
-
-        let m = line01 / (line01 + line12);
-        // let half_range = range / 2;
-
-        for (var i = 0; i < pointsAmount; i++) {
-            let t = i / pointsAmount;
-            // if (t < m - half_range || t > m + half_range) {
-            //     continue;
-            // }
-            var point = multiPointBezier(anchorpoints, i / pointsAmount);
+    function createBezierPoints(pointsData: number[], pointsAmount: number): egret.Point[] {
+        let points = [];
+        for (let i = 0; i < pointsAmount; i++) {
+            const point = getBezierPointByFactor(pointsData, i / pointsAmount);
             if (point)
                 points.push(point);
         }
@@ -78,29 +64,66 @@ namespace egret {
     /**
      * @private
      * 根据锚点组与取值系数获取贝塞尔曲线上的一点
-     * @param points 锚点组
+     * @param pointsData 锚点组,保存着所有控制点的x和y坐标,格式为[x0,y0,x1,y1,x2,y2...]
      * @param t 取值系数
      * @returns egret.Point
      */
-    function multiPointBezier(points: { x: number, y: number }[], t: number): egret.Point {
-        var len = points.length;
-        var x = 0, y = 0;
-        var binomial = function (start, end) {
-            var cs = 1, bcs = 1;
-            while (end > 0) {
-                cs *= start;
-                bcs *= end;
-                start--;
-                end--;
-            }
-            return (cs / bcs);
-        };
-        for (var i = 0; i < len; i++) {
-            var point = points[i];
-            x += point.x * Math.pow((1 - t), (len - 1 - i)) * Math.pow(t, i) * (binomial(len - 1, i));
-            y += point.y * Math.pow((1 - t), (len - 1 - i)) * Math.pow(t, i) * (binomial(len - 1, i));
+    function getBezierPointByFactor(pointsData: number[], t: number): egret.Point {
+        let i = 0;
+        let x = 0, y = 0;
+        const len = pointsData.length;
+        //根据传入的数据数量判断是二次贝塞尔还是三次贝塞尔
+        if (len / 2 == 3) {
+            //二次
+            const x0 = pointsData[i++];
+            const y0 = pointsData[i++];
+            const x1 = pointsData[i++];
+            const y1 = pointsData[i++];
+            const x2 = pointsData[i++];
+            const y2 = pointsData[i++];
+            x = getCurvePoint(x0, x1, x2, t);
+            y = getCurvePoint(y0, y1, y2, t);
+        } else if (len / 2 == 4) {
+            //三次
+            const x0 = pointsData[i++];
+            const y0 = pointsData[i++];
+            const x1 = pointsData[i++];
+            const y1 = pointsData[i++];
+            const x2 = pointsData[i++];
+            const y2 = pointsData[i++];
+            const x3 = pointsData[i++];
+            const y3 = pointsData[i++];
+            x = getCubicCurvePoint(x0, x1, x2, x3, t);
+            y = getCubicCurvePoint(y0, y1, y2, y3, t);
         }
         return egret.Point.create(x, y);
+    }
+
+    /**
+     * 通过factor参数获取二次贝塞尔曲线上的位置
+     * 公式为B(t) = (1-t)^2 * P0 + 2t(1-t) * P1 + t^2 * P2 
+     * @param value0 P0
+     * @param value1 P1
+     * @param value2 P2
+     * @param factor t，从0到1的闭区间
+     */
+    function getCurvePoint(value0: number, value1: number, value2: number, factor: number): number {
+        const result = Math.pow((1 - factor), 2) * value0 + 2 * factor * (1 - factor) * value1 + Math.pow(factor, 2) * value2;
+        return result;
+    }
+
+    /**
+     * 通过factor参数获取三次贝塞尔曲线上的位置
+     * 公式为B(t) = (1-t)^3 * P0 + 3t(1-t)^2 * P1 + 3t^2 * (1-t) t^2 * P2 + t^3 *P3 
+     * @param value0 P0
+     * @param value1 P1
+     * @param value2 P2
+     * @param value3 P3
+     * @param factor t，从0到1的闭区间
+     */
+    function getCubicCurvePoint(value0: number, value1: number, value2: number, value3: number, factor: number): number {
+        const result = Math.pow((1 - factor), 3) * value0 + 3 * factor * Math.pow((1 - factor), 2) * value1 + 3 * (1 - factor) * Math.pow(factor, 2) * value2 + Math.pow(factor, 3) * value3;
+        return result;
     }
 
 
@@ -614,20 +637,14 @@ namespace egret {
             fillPath && fillPath.curveTo(controlX, controlY, anchorX, anchorY);
             strokePath && strokePath.curveTo(controlX, controlY, anchorX, anchorY);
 
-            //
             let lastX = this.lastX || 0;
             let lastY = this.lastY || 0;
-            let anchorPoints = [];
-            anchorPoints.push(egret.Point.create(lastX, lastY));
-            anchorPoints.push(egret.Point.create(controlX, controlY));
-            anchorPoints.push(egret.Point.create(anchorX, anchorY));
-            let bezierPoints = createBezierPoints(anchorPoints, 50);
+            let bezierPoints = createBezierPoints([lastX, lastY, controlX, controlY, anchorX, anchorY], 50);
             for (let i = 0; i < bezierPoints.length; i++) {
                 let point = bezierPoints[i];
                 this.extendBoundsByPoint(point.x, point.y);
                 egret.Point.release(point);
             }
-            //
 
             this.extendBoundsByPoint(anchorX, anchorY);
             this.updatePosition(anchorX, anchorY);
@@ -674,8 +691,16 @@ namespace egret {
             let strokePath = this.strokePath;
             fillPath && fillPath.cubicCurveTo(controlX1, controlY1, controlX2, controlY2, anchorX, anchorY);
             strokePath && strokePath.cubicCurveTo(controlX1, controlY1, controlX2, controlY2, anchorX, anchorY);
-            this.extendBoundsByPoint(controlX1, controlY1);
-            this.extendBoundsByPoint(controlX2, controlY2);
+
+            let lastX = this.lastX || 0;
+            let lastY = this.lastY || 0;
+            let bezierPoints = createBezierPoints([lastX, lastY, controlX1, controlY1, controlX2, controlY2, anchorX, anchorY], 50);
+            for (let i = 0; i < bezierPoints.length; i++) {
+                let point = bezierPoints[i];
+                this.extendBoundsByPoint(point.x, point.y);
+                egret.Point.release(point);
+            }
+
             this.extendBoundsByPoint(anchorX, anchorY);
             this.updatePosition(anchorX, anchorY);
             this.dirty();
