@@ -265,11 +265,18 @@ var TextureMergerResConfigPlugin = /** @class */ (function () {
                 console.log(utils.tr(1422, filename, subkeysFile.name));
                 global.globals.exit();
             }
+            var subkeys = "";
             //json
+            if (typeof (subkeysFile.subkeys) == "string") {
+                subkeys = subkeysFile.subkeys;
+            }
+            else {
+                subkeys = this.sheetToRes(subkeysFile.subkeys);
+            }
             var json = {
                 name: subkeysFile.name,
                 type: subkeysFile.type,
-                subkeys: this.sheetToRes(subkeysFile.subkeys),
+                subkeys: subkeys,
                 url: relativeJson
             };
             this.deleteReferenceByName(subkeysFile.name, resourceConfig_1, root);
@@ -425,10 +432,11 @@ var ConvertResConfigFilePlugin = /** @class */ (function () {
          * 合图插件暂时没有使用
          */
         this.files = {};
+        // private jsonResConfigPlugin: JSONMergerResConfigPlugin;
         /** 要打包的文件夹 */
         this.resourceDirs = {};
         this.tMResConfigPlugin = new TextureMergerResConfigPlugin(options);
-        this.jsonResConfigPlugin = new JSONMergerResConfigPlugin(options);
+        // this.jsonResConfigPlugin = new JSONMergerResConfigPlugin(options);
         this.options.resourceConfigFiles.map(function (item) {
             _this.resourceDirs[item.root] = true;
         });
@@ -455,15 +463,12 @@ var ConvertResConfigFilePlugin = /** @class */ (function () {
                                 }
                             }
                         }
-                        if (!isRes) return [3 /*break*/, 3];
+                        if (!isRes) return [3 /*break*/, 2];
                         return [4 /*yield*/, this.tMResConfigPlugin.onFile(file)];
                     case 1:
                         file = _a.sent();
-                        return [4 /*yield*/, this.jsonResConfigPlugin.onFile(file)];
-                    case 2:
-                        file = _a.sent();
-                        _a.label = 3;
-                    case 3: return [2 /*return*/, file];
+                        _a.label = 2;
+                    case 2: return [2 /*return*/, file];
                 }
             });
         });
@@ -474,9 +479,6 @@ var ConvertResConfigFilePlugin = /** @class */ (function () {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.tMResConfigPlugin.parseTestureMerger(commandContext)];
                     case 1:
-                        _a.sent();
-                        return [4 /*yield*/, this.jsonResConfigPlugin.parseJSONMerger(commandContext)];
-                    case 2:
                         _a.sent();
                         return [2 /*return*/];
                 }

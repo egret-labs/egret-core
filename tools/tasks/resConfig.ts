@@ -260,11 +260,17 @@ class TextureMergerResConfigPlugin {
                 console.log(utils.tr(1422, filename, subkeysFile.name));
                 global.globals.exit()
             }
+            let subkeys = "";
             //json
+            if (typeof (subkeysFile.subkeys) == "string") {
+                subkeys = subkeysFile.subkeys;
+            } else {
+                subkeys = this.sheetToRes(subkeysFile.subkeys as string[]);
+            }
             const json = {
                 name: subkeysFile.name,
                 type: subkeysFile.type,
-                subkeys: this.sheetToRes(subkeysFile.subkeys as string[]),
+                subkeys: subkeys,
                 url: relativeJson
             }
             this.deleteReferenceByName(subkeysFile.name, resourceConfig, root);
@@ -424,12 +430,12 @@ export class ConvertResConfigFilePlugin implements plugin.Plugin {
      */
     private files: { [url: string]: R } = {};
     private tMResConfigPlugin: TextureMergerResConfigPlugin;
-    private jsonResConfigPlugin: JSONMergerResConfigPlugin;
+    // private jsonResConfigPlugin: JSONMergerResConfigPlugin;
     /** 要打包的文件夹 */
     private resourceDirs: { [filename: string]: boolean } = {};
     constructor(private options: ConvertResourceConfigPluginOption) {
         this.tMResConfigPlugin = new TextureMergerResConfigPlugin(options);
-        this.jsonResConfigPlugin = new JSONMergerResConfigPlugin(options);
+        // this.jsonResConfigPlugin = new JSONMergerResConfigPlugin(options);
         this.options.resourceConfigFiles.map((item) => {
             this.resourceDirs[item.root] = true;
         });
@@ -453,13 +459,13 @@ export class ConvertResConfigFilePlugin implements plugin.Plugin {
         }
         if (isRes) {
             file = await this.tMResConfigPlugin.onFile(file);
-            file = await this.jsonResConfigPlugin.onFile(file);
+            // file = await this.jsonResConfigPlugin.onFile(file);
         }
         return file;
     }
     async onFinish(commandContext: plugin.PluginContext) {
         await this.tMResConfigPlugin.parseTestureMerger(commandContext);
-        await this.jsonResConfigPlugin.parseJSONMerger(commandContext);
+        // await this.jsonResConfigPlugin.parseJSONMerger(commandContext);
     }
 }
 
