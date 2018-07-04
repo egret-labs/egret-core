@@ -287,11 +287,18 @@ var TextureMergerResConfigPlugin = /** @class */ (function () {
                 console.log(utils.tr(1422, filename, subkeysFile.name));
                 global.globals.exit();
             }
+            var subkeys = "";
             //json
+            if (typeof (subkeysFile.subkeys) == "string") {
+                subkeys = subkeysFile.subkeys;
+            }
+            else {
+                subkeys = this.sheetToRes(subkeysFile.subkeys);
+            }
             var json = {
                 name: subkeysFile.name,
                 type: subkeysFile.type,
-                subkeys: this.sheetToRes(subkeysFile.subkeys),
+                subkeys: subkeys,
                 url: relativeJson
             };
             this.deleteReferenceByName(subkeysFile.name, resourceConfig_1, root);
