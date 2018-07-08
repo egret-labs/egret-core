@@ -798,6 +798,9 @@ namespace RES {
         public getRes(key:string):any{
             let type:string = this.resConfig.getType(key);
             if(type==""){
+		type = this.getTypeByUrl(key);
+            }
+	    if(type==""){
                 let prefix:string = RES.AnalyzerBase.getStringPrefix(key);
                 type = this.resConfig.getType(prefix);
                 if(type==""){
