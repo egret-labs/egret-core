@@ -1290,6 +1290,10 @@ var egret;
                     return;
                 }
                 this.userPause = false;
+
+                // video无法暂停bug
+                this.video.pause();
+
                 egret.stopTick(this.markDirty, this);
             };
             Object.defineProperty(WebVideo.prototype, "volume", {
@@ -1461,6 +1465,13 @@ var egret;
              */
             WebVideo.prototype.$setHeight = function (value) {
                 this.heightSet = value;
+                if (this.paused) { // 在暂停和播放结束后，修改视频大小时，没有重绘导致的bug
+                    var _this = this;
+                    this.$renderDirty = true;
+                    window.setTimeout(function() {
+                        _this.$renderDirty = false;
+                    }, 200);
+                }
                 _super.prototype.$setHeight.call(this, value);
             };
             /**
@@ -1469,6 +1480,13 @@ var egret;
              */
             WebVideo.prototype.$setWidth = function (value) {
                 this.widthSet = value;
+                if (this.paused) { // 在暂停和播放结束后，修改视频大小时，没有重绘导致的bug
+                    var _this = this;
+                    this.$renderDirty = true;
+                    window.setTimeout(function() {
+                        _this.$renderDirty = false;
+                    }, 200);
+                }
                 _super.prototype.$setWidth.call(this, value);
             };
             Object.defineProperty(WebVideo.prototype, "paused", {
