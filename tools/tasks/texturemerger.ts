@@ -6,22 +6,7 @@ import { tmpdir } from "os";
 import * as FileUtil from '../lib/FileUtil';
 
 type TextureMergerOptions = {
-
-    path: string;
-
-    output: string;
-
-}
-
-type TextureMergerProjectConfig = {
-
-    projectName: string,
-
-    files: string[],
-
-    version: string,
-
-    options: any
+    textureMergerRoot: string[];
 }
 
 export class TextureMergerPlugin implements Plugin {
@@ -31,12 +16,28 @@ export class TextureMergerPlugin implements Plugin {
     private removedList: {} = {};
 
     private configs: { [tmprojectFilename: string]: string[] } = {};
-
+    /** 要打包的文件夹 */
+    private resourceDirs: { [filename: string]: boolean } = {};
     constructor(private options: TextureMergerOptions) {
+        for (let res of this.options.textureMergerRoot) {
+            if (res.indexOf(egret.args.projectDir) > -1) {
+                this.resourceDirs[path.normalize(res)] = true;
+            } else {
+                this.resourceDirs[path.join(egret.args.projectDir, res)] = true;
+            }
+        }
     }
     onStart(pluginContext: PluginContext) {
         let projectDir = pluginContext.projectRoot;
-        this.tmprojects = FileUtil.search(projectDir, 'tmproject');
+        this.tmprojects = []
+        let tmprojectDirs = FileUtil.search(projectDir, 'tmproject');
+        for (let tmpUrl of tmprojectDirs) {
+            for (let resourceDir in this.resourceDirs) {
+                if (path.normalize(tmpUrl).indexOf(resourceDir) > -1) {
+                    this.tmprojects.push(tmpUrl);
+                }
+            }
+        }
         for (let temprojectUrl of this.tmprojects) {
             let temProject = FileUtil.readJSONSync(temprojectUrl);
             const tmprojectDir = path.dirname(temprojectUrl);
@@ -50,6 +51,25 @@ export class TextureMergerPlugin implements Plugin {
         }
     }
     async onFile(file: File): Promise<File | null> {
+        let isRes = false;
+        for (let root in this.resourceDirs) {
+            let fileOrigin = path.normalize(file.origin);
+            //绝对路径
+            if (fileOrigin.indexOf(path.join(egret.args.projectDir)) >= 0) {
+                if (fileOrigin.indexOf(path.join(egret.args.projectDir, root)) >= 0) {
+                    isRes = true;
+                }
+            }
+            //相对路径
+            else {
+                if (fileOrigin.indexOf(path.normalize(root)) >= 0) {
+                    isRes = true;
+                }
+            }
+        }
+        if (!isRes) {
+            return;
+        }
         const extname = file.extname;
         if (this.removedList[file.origin] || extname == ".tmproject") {
             return null;

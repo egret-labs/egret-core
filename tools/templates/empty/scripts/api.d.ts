@@ -334,13 +334,16 @@ declare module 'built-in' {
     export class IncrementCompilePlugin implements plugins.Command {
 
     }
+    type TextureMergerOptions = {
+        textureMergerRoot: string[];
+    }
 
     /**
      * 使用 TextureMerger 实现纹理自动合并，依赖 TextureMerger 1.7 以上的版本
      */
     export class TextureMergerPlugin implements plugins.Command {
 
-        constructor();
+        constructor(options: TextureMergerOptions);
 
     }
 
