@@ -45,11 +45,31 @@ var TextureMergerPlugin = /** @class */ (function () {
         this.tmprojects = [];
         this.removedList = {};
         this.configs = {};
+        /** 要打包的文件夹 */
+        this.resourceDirs = {};
+        for (var _i = 0, _a = this.options.textureMergerRoot; _i < _a.length; _i++) {
+            var res = _a[_i];
+            if (res.indexOf(egret.args.projectDir) > -1) {
+                this.resourceDirs[path.normalize(res)] = true;
+            }
+            else {
+                this.resourceDirs[path.join(egret.args.projectDir, res)] = true;
+            }
+        }
     }
     TextureMergerPlugin.prototype.onStart = function (pluginContext) {
         var _this = this;
         var projectDir = pluginContext.projectRoot;
-        this.tmprojects = FileUtil.search(projectDir, 'tmproject');
+        this.tmprojects = [];
+        var tmprojectDirs = FileUtil.search(projectDir, 'tmproject');
+        for (var _i = 0, tmprojectDirs_1 = tmprojectDirs; _i < tmprojectDirs_1.length; _i++) {
+            var tmpUrl = tmprojectDirs_1[_i];
+            for (var resourceDir in this.resourceDirs) {
+                if (path.normalize(tmpUrl).indexOf(resourceDir) > -1) {
+                    this.tmprojects.push(tmpUrl);
+                }
+            }
+        }
         var _loop_1 = function (temprojectUrl) {
             var temProject = FileUtil.readJSONSync(temprojectUrl);
             var tmprojectDir = path.dirname(temprojectUrl);
@@ -62,15 +82,34 @@ var TextureMergerPlugin = /** @class */ (function () {
             this_1.configs[temprojectUrl] = imageFiles;
         };
         var this_1 = this;
-        for (var _i = 0, _a = this.tmprojects; _i < _a.length; _i++) {
-            var temprojectUrl = _a[_i];
+        for (var _a = 0, _b = this.tmprojects; _a < _b.length; _a++) {
+            var temprojectUrl = _b[_a];
             _loop_1(temprojectUrl);
         }
     };
     TextureMergerPlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
-            var extname;
+            var isRes, root, fileOrigin, extname;
             return __generator(this, function (_a) {
+                isRes = false;
+                for (root in this.resourceDirs) {
+                    fileOrigin = path.normalize(file.origin);
+                    //绝对路径
+                    if (fileOrigin.indexOf(path.join(egret.args.projectDir)) >= 0) {
+                        if (fileOrigin.indexOf(path.join(egret.args.projectDir, root)) >= 0) {
+                            isRes = true;
+                        }
+                    }
+                    //相对路径
+                    else {
+                        if (fileOrigin.indexOf(path.normalize(root)) >= 0) {
+                            isRes = true;
+                        }
+                    }
+                }
+                if (!isRes) {
+                    return [2 /*return*/];
+                }
                 extname = file.extname;
                 if (this.removedList[file.origin] || extname == ".tmproject") {
                     return [2 /*return*/, null];
