@@ -68,7 +68,7 @@ export class TextureMergerPlugin implements Plugin {
             }
         }
         if (!isRes) {
-            return;
+            return file;
         }
         const extname = file.extname;
         if (this.removedList[file.origin] || extname == ".tmproject") {

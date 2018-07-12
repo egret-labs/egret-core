@@ -108,7 +108,7 @@ var TextureMergerPlugin = /** @class */ (function () {
                     }
                 }
                 if (!isRes) {
-                    return [2 /*return*/];
+                    return [2 /*return*/, file];
                 }
                 extname = file.extname;
                 if (this.removedList[file.origin] || extname == ".tmproject") {
