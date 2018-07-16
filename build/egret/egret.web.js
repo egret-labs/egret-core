@@ -6613,6 +6613,7 @@ var egret;
                     this.surface.resize(width, height);
                     return;
                 }
+                this.context.pushBuffer(this);
                 // render target 尺寸重置
                 if (width != this.rootRenderTarget.width || height != this.rootRenderTarget.height) {
                     this.context.drawCmdManager.pushResize(this, width, height);
@@ -6624,7 +6625,6 @@ var egret;
                 if (this.root) {
                     this.context.resize(width, height, useMaxSize);
                 }
-                this.context.pushBuffer(this);
                 this.context.clear();
                 this.context.popBuffer();
             };
