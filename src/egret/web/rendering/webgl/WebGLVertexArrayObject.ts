@@ -35,9 +35,9 @@ namespace egret.web {
      */
     export class WebGLVertexArrayObject {
 
-        private size: number = 2000;
-        private vertexMaxSize: number = this.size * 4;
-        private indicesMaxSize: number = this.size * 6;
+        private size: number;
+        private vertexMaxSize: number;
+        private indicesMaxSize: number;
         public vertSize: number = 4;
 
         private indices: Uint16Array;
@@ -51,41 +51,38 @@ namespace egret.web {
 
         private hasMesh: boolean = false;
 
-        private vertexActualSize:number;
+        private vertexActualSize: number;
 
         public constructor() {
-            let numVerts = this.vertexMaxSize * this.vertSize;
-            let numIndices = this.indicesMaxSize;
 
-            const buffer = new ArrayBuffer(numVerts * 4);
-            this.float32Array = new Float32Array(buffer);
-            this.uint32Array = new Uint32Array(buffer);
-            this.indices = new Uint16Array(numIndices);
-            this.indicesForMesh = new Uint16Array(numIndices);
+        }
 
-            for (let i = 0, j = 0; i < numIndices; i += 6, j += 4) {
-                this.indices[i + 0] = j + 0;
-                this.indices[i + 1] = j + 1;
-                this.indices[i + 2] = j + 2;
-                this.indices[i + 3] = j + 0;
-                this.indices[i + 4] = j + 2;
-                this.indices[i + 5] = j + 3;
+        public setBatchSize(size: number): boolean {
+            if (this.size != size) {
+                this.size = size;
+                this.vertexMaxSize = this.size * 4;
+                this.indicesMaxSize = this.size * 6;
+                let numVerts = this.vertexMaxSize * this.vertSize;
+                let numIndices = this.indicesMaxSize;
+
+                const buffer = new ArrayBuffer(numVerts * 4);
+                this.float32Array = new Float32Array(buffer);
+                this.uint32Array = new Uint32Array(buffer);
+                this.indices = new Uint16Array(numIndices);
+                this.indicesForMesh = new Uint16Array(numIndices);
+                for (let i = 0, j = 0; i < numIndices; i += 6, j += 4) {
+                    this.indices[i + 0] = j + 0;
+                    this.indices[i + 1] = j + 1;
+                    this.indices[i + 2] = j + 2;
+                    this.indices[i + 3] = j + 0;
+                    this.indices[i + 4] = j + 2;
+                    this.indices[i + 5] = j + 3;
+                }
+                //用于drawImageByRenderNode 计算
+                this.vertexActualSize = this.vertexMaxSize - 4;
+                return true;
             }
-
-
-            //用于drawImageByRenderNode 计算
-            this.vertexActualSize = this.vertexMaxSize - 4;
-        }
-
-        /**
-         * 是否达到最大缓存数量
-         */
-        public reachMaxSize(vertexCount: number = 4, indexCount: number = 6): boolean {
-            return this.vertexIndex > this.vertexMaxSize - vertexCount || this.indexIndex > this.indicesMaxSize - indexCount;
-        }
-
-        public reachVertexMaxSize(): boolean {
-            return this.vertexIndex > this.vertexActualSize;
+            return false;
         }
 
         /**
@@ -127,18 +124,6 @@ namespace egret.web {
         public isMesh(): boolean {
             return this.hasMesh;
         }
-
-        /**
-         * 默认构成矩形
-         */
-        // private defaultMeshVertices = [0, 0, 1, 0, 1, 1, 0, 1];
-        // private defaultMeshUvs = [
-        //     0, 0,
-        //     1, 0,
-        //     1, 1,
-        //     0, 1
-        // ];
-        // private defaultMeshIndices = [0, 1, 2, 0, 2, 3];
 
         /**
          * 缓存一组顶点

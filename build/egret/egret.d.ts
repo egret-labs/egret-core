@@ -4125,19 +4125,13 @@ declare namespace egret {
         SQUARE: string;
     };
 }
-declare namespace egret {
-    /**
-     * @private
-     */
-    class WebGLUtils {
-        static compileProgram(gl: WebGLRenderingContext, vertexSrc: string, fragmentSrc: string): WebGLProgram;
-        static compileFragmentShader(gl: WebGLRenderingContext, shaderSrc: string): WebGLShader;
-        static compileVertexShader(gl: WebGLRenderingContext, shaderSrc: string): WebGLShader;
-        private static _compileShader(gl, shaderSrc, shaderType);
-        private static canUseWebGL;
-        static checkCanUseWebGL(): boolean;
-        static deleteWebGLTexture(bitmapData: any): void;
-    }
+/**
+ * @private
+ */
+declare namespace egret.WebGLUtils {
+    const checkCanUseWebGL: () => boolean;
+    const deleteWebGLTexture: (bitmapData: any) => void;
+    const setBatchSize: (size: number) => void;
 }
 declare namespace egret {
     /**

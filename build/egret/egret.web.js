@@ -5233,41 +5233,36 @@ var egret;
          */
         var WebGLVertexArrayObject = (function () {
             function WebGLVertexArrayObject() {
-                this.size = 2000;
-                this.vertexMaxSize = this.size * 4;
-                this.indicesMaxSize = this.size * 6;
                 this.vertSize = 4;
                 this.vertexIndex = 0;
                 this.indexIndex = 0;
                 this.hasMesh = false;
-                var numVerts = this.vertexMaxSize * this.vertSize;
-                var numIndices = this.indicesMaxSize;
-                var buffer = new ArrayBuffer(numVerts * 4);
-                this.float32Array = new Float32Array(buffer);
-                this.uint32Array = new Uint32Array(buffer);
-                this.indices = new Uint16Array(numIndices);
-                this.indicesForMesh = new Uint16Array(numIndices);
-                for (var i = 0, j = 0; i < numIndices; i += 6, j += 4) {
-                    this.indices[i + 0] = j + 0;
-                    this.indices[i + 1] = j + 1;
-                    this.indices[i + 2] = j + 2;
-                    this.indices[i + 3] = j + 0;
-                    this.indices[i + 4] = j + 2;
-                    this.indices[i + 5] = j + 3;
-                }
-                //用于drawImageByRenderNode 计算
-                this.vertexActualSize = this.vertexMaxSize - 4;
             }
-            /**
-             * 是否达到最大缓存数量
-             */
-            WebGLVertexArrayObject.prototype.reachMaxSize = function (vertexCount, indexCount) {
-                if (vertexCount === void 0) { vertexCount = 4; }
-                if (indexCount === void 0) { indexCount = 6; }
-                return this.vertexIndex > this.vertexMaxSize - vertexCount || this.indexIndex > this.indicesMaxSize - indexCount;
-            };
-            WebGLVertexArrayObject.prototype.reachVertexMaxSize = function () {
-                return this.vertexIndex > this.vertexActualSize;
+            WebGLVertexArrayObject.prototype.setBatchSize = function (size) {
+                if (this.size != size) {
+                    this.size = size;
+                    this.vertexMaxSize = this.size * 4;
+                    this.indicesMaxSize = this.size * 6;
+                    var numVerts = this.vertexMaxSize * this.vertSize;
+                    var numIndices = this.indicesMaxSize;
+                    var buffer = new ArrayBuffer(numVerts * 4);
+                    this.float32Array = new Float32Array(buffer);
+                    this.uint32Array = new Uint32Array(buffer);
+                    this.indices = new Uint16Array(numIndices);
+                    this.indicesForMesh = new Uint16Array(numIndices);
+                    for (var i = 0, j = 0; i < numIndices; i += 6, j += 4) {
+                        this.indices[i + 0] = j + 0;
+                        this.indices[i + 1] = j + 1;
+                        this.indices[i + 2] = j + 2;
+                        this.indices[i + 3] = j + 0;
+                        this.indices[i + 4] = j + 2;
+                        this.indices[i + 5] = j + 3;
+                    }
+                    //用于drawImageByRenderNode 计算
+                    this.vertexActualSize = this.vertexMaxSize - 4;
+                    return true;
+                }
+                return false;
             };
             /**
              * 获取缓存完成的顶点数组
@@ -5303,17 +5298,6 @@ var egret;
             WebGLVertexArrayObject.prototype.isMesh = function () {
                 return this.hasMesh;
             };
-            /**
-             * 默认构成矩形
-             */
-            // private defaultMeshVertices = [0, 0, 1, 0, 1, 1, 0, 1];
-            // private defaultMeshUvs = [
-            //     0, 0,
-            //     1, 0,
-            //     1, 1,
-            //     0, 1
-            // ];
-            // private defaultMeshIndices = [0, 1, 2, 0, 2, 3];
             /**
              * 缓存一组顶点
              */
@@ -5702,6 +5686,7 @@ var egret;
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
                 this.drawCmdManager = new web.WebGLDrawCmdManager();
                 this.vao = new web.WebGLVertexArrayObject();
+                this.setBatchSize(2000);
                 this.setGlobalCompositeOperation("source-over");
                 this.firstTimeUploadVertices = true;
             }
@@ -5748,9 +5733,6 @@ var egret;
              */
             WebGLRenderContext.prototype.activateBuffer = function (buffer, width, height) {
                 buffer.rootRenderTarget.activate();
-                if (!this.bindIndices) {
-                    this.uploadIndicesArray(this.vao.getIndices());
-                }
                 buffer.restoreStencil();
                 buffer.restoreScissor();
                 this.onResize(width, height);
@@ -5774,7 +5756,12 @@ var egret;
             WebGLRenderContext.prototype.uploadIndicesArray = function (array) {
                 var gl = this.context;
                 gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, gl.STATIC_DRAW);
-                this.bindIndices = true;
+            };
+            WebGLRenderContext.prototype.setBatchSize = function (size) {
+                var result = this.vao.setBatchSize(size);
+                if (result) {
+                    this.uploadIndicesArray(this.vao.getIndices());
+                }
             };
             /**
              * 销毁绘制对象
@@ -6067,10 +6054,6 @@ var egret;
                 if (!texture) {
                     return;
                 }
-                //drawTexture
-                if (this.vao.reachVertexMaxSize()) {
-                    this.$drawWebGL();
-                }
                 var smoothing = node.smoothing;
                 if (smoothing != undefined && texture["smoothing"] != smoothing) {
                     this.drawCmdManager.pushChangeSmoothing(texture, smoothing);
@@ -6199,16 +6182,6 @@ var egret;
                 if (this.contextLost || !texture || !buffer) {
                     return;
                 }
-                if (meshVertices && meshIndices) {
-                    if (this.vao.reachMaxSize(meshVertices.length / 2, meshIndices.length)) {
-                        this.$drawWebGL();
-                    }
-                }
-                else {
-                    if (this.vao.reachMaxSize()) {
-                        this.$drawWebGL();
-                    }
-                }
                 if (smoothing != undefined && texture["smoothing"] != smoothing) {
                     this.drawCmdManager.pushChangeSmoothing(texture, smoothing);
                 }
@@ -6231,9 +6204,6 @@ var egret;
                 var buffer = this.currentBuffer;
                 if (this.contextLost || !texture || !buffer) {
                     return;
-                }
-                if (this.vao.reachMaxSize()) {
-                    this.$drawWebGL();
                 }
                 var count = 2;
                 // 应用$filter，因为只可能是colorMatrixFilter，最后两个参数可不传
@@ -6314,9 +6284,6 @@ var egret;
                 if (!texture) {
                     return;
                 }
-                if (this.vao.reachVertexMaxSize()) {
-                    this.$drawWebGL();
-                }
                 var count = node.numParticles * 2;
                 this.drawCmdManager.pushDrawTexture(texture, count, this.$filter, image.width, image.height);
                 var float32Array = this.vao.float32Array;
@@ -6334,9 +6301,6 @@ var egret;
                     return;
                 }
                 buffer.$stencilList.push({ x: x, y: y, width: width, height: height });
-                if (this.vao.reachMaxSize()) {
-                    this.$drawWebGL();
-                }
                 this.drawCmdManager.pushPushMask();
                 this.vao.cacheArrays(buffer, 0, 0, width, height, x, y, width, height, width, height);
             };
@@ -6349,9 +6313,6 @@ var egret;
                     return;
                 }
                 var mask = buffer.$stencilList.pop();
-                if (this.vao.reachMaxSize()) {
-                    this.$drawWebGL();
-                }
                 this.drawCmdManager.pushPopMask();
                 this.vao.cacheArrays(buffer, 0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
             };
@@ -6698,9 +6659,6 @@ var egret;
             WebGLRenderContext.prototype.drawToRenderTarget = function (filter, input, output) {
                 if (this.contextLost) {
                     return;
-                }
-                if (this.vao.reachMaxSize()) {
-                    this.$drawWebGL();
                 }
                 this.pushBuffer(output);
                 var originInput = input, temp, width = input.rootRenderTarget.width, height = input.rootRenderTarget.height;

@@ -146,18 +146,12 @@ namespace egret.web {
 
             this.currentBuffer = lastBuffer;
         }
-
-        private bindIndices: boolean;
         /**
          * 启用RenderBuffer
          */
         private activateBuffer(buffer: WebGLRenderBuffer, width: number, height: number): void {
 
             buffer.rootRenderTarget.activate();
-
-            if (!this.bindIndices) {
-                this.uploadIndicesArray(this.vao.getIndices());
-            }
 
             buffer.restoreStencil();
 
@@ -187,7 +181,6 @@ namespace egret.web {
         private uploadIndicesArray(array: any): void {
             let gl: any = this.context;
             gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, gl.STATIC_DRAW);
-            this.bindIndices = true;
         }
 
         private vertexBuffer;
@@ -214,11 +207,19 @@ namespace egret.web {
             this.drawCmdManager = new WebGLDrawCmdManager();
 
             this.vao = new WebGLVertexArrayObject();
+            this.setBatchSize(2000);
 
             this.setGlobalCompositeOperation("source-over");
 
             this.firstTimeUploadVertices = true;
 
+        }
+
+        public setBatchSize(size: number): void {
+            const result = this.vao.setBatchSize(size);
+            if (result) {
+                this.uploadIndicesArray(this.vao.getIndices());
+            }
         }
 
         /**
@@ -559,11 +560,6 @@ namespace egret.web {
                 return;
             }
 
-            //drawTexture
-            if (this.vao.reachVertexMaxSize()) {
-                this.$drawWebGL();
-            }
-
             let smoothing = node.smoothing;
             if (smoothing != undefined && texture["smoothing"] != smoothing) {
                 this.drawCmdManager.pushChangeSmoothing(texture, smoothing);
@@ -718,16 +714,6 @@ namespace egret.web {
                 return;
             }
 
-            if (meshVertices && meshIndices) {
-                if (this.vao.reachMaxSize(meshVertices.length / 2, meshIndices.length)) {
-                    this.$drawWebGL();
-                }
-            } else {
-                if (this.vao.reachMaxSize()) {
-                    this.$drawWebGL();
-                }
-            }
-
             if (smoothing != undefined && texture["smoothing"] != smoothing) {
                 this.drawCmdManager.pushChangeSmoothing(texture, smoothing);
             }
@@ -758,10 +744,6 @@ namespace egret.web {
             let buffer = this.currentBuffer;
             if (this.contextLost || !texture || !buffer) {
                 return;
-            }
-
-            if (this.vao.reachMaxSize()) {
-                this.$drawWebGL();
             }
 
             let count = 2;
@@ -851,10 +833,6 @@ namespace egret.web {
                 return;
             }
 
-            if (this.vao.reachVertexMaxSize()) {
-                this.$drawWebGL();
-            }
-
             let count = node.numParticles * 2;
             this.drawCmdManager.pushDrawTexture(texture, count, this.$filter, image.width, image.height);
 
@@ -876,9 +854,6 @@ namespace egret.web {
                 return;
             }
             buffer.$stencilList.push({ x, y, width, height });
-            if (this.vao.reachMaxSize()) {
-                this.$drawWebGL();
-            }
             this.drawCmdManager.pushPushMask();
             this.vao.cacheArrays(buffer, 0, 0, width, height, x, y, width, height, width, height);
         }
@@ -894,9 +869,6 @@ namespace egret.web {
 
             let mask = buffer.$stencilList.pop();
 
-            if (this.vao.reachMaxSize()) {
-                this.$drawWebGL();
-            }
             this.drawCmdManager.pushPopMask();
             this.vao.cacheArrays(buffer, 0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
         }
@@ -1299,10 +1271,6 @@ namespace egret.web {
         private drawToRenderTarget(filter: Filter, input: WebGLRenderBuffer, output: WebGLRenderBuffer): void {
             if (this.contextLost) {
                 return;
-            }
-
-            if (this.vao.reachMaxSize()) {
-                this.$drawWebGL();
             }
 
             this.pushBuffer(output);
