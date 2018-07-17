@@ -13232,9 +13232,6 @@ var egret;
         egret.error = function () {
             console.error.apply(console, toArray(arguments));
         };
-        egret.assert = function () {
-            console.assert.apply(console, toArray(arguments));
-        };
         egret.log = function () {
             console.log.apply(console, toArray(arguments));
         };
