@@ -4911,6 +4911,28 @@ var egret;
                     data.textureWidth = textureWidth;
                     data.textureHeight = textureHeight;
                     data.filter = filter;
+                    if (filter.$uniforms) {
+                        if (filter.$uniforms.uGlobalMatrix === null) {
+                            var context = web.WebGLRenderContext.getInstance(0, 0);
+                            var buffer = context["currentBuffer"];
+                            var globalMatrix = buffer.globalMatrix;
+                            var m = egret.Matrix.create();
+                            m.copyFrom(globalMatrix);
+                            m.append(1, 0, 0, 1, buffer.$offsetX, buffer.$offsetY);
+                            data.a = m.a;
+                            data.b = m.b;
+                            data.c = m.c;
+                            data.d = m.d;
+                            data.tx = m.tx;
+                            data.ty = m.ty;
+                            egret.Matrix.release(m);
+                        }
+                        if (filter.$uniforms.uGlobalAlpha === null) {
+                            var context = web.WebGLRenderContext.getInstance(0, 0);
+                            var globalAlpha = context["currentBuffer"].globalAlpha;
+                            data.alpha = globalAlpha;
+                        }
+                    }
                     this.drawData[this.drawDataLen] = data;
                     this.drawDataLen++;
                     this.lastDrawTextureData = null;
@@ -5111,6 +5133,13 @@ var egret;
                     data.vertSource = null;
                     data.fragSource = null;
                     data.key = null;
+                    data.alpha = null;
+                    data.a = null;
+                    data.b = null;
+                    data.c = null;
+                    data.d = null;
+                    data.tx = null;
+                    data.ty = null;
                 }
                 this.drawDataLen = 0;
                 this.lastDrawTextureData = null;
@@ -6273,6 +6302,30 @@ var egret;
                 this.vao.indexIndex += 6;
             };
             /**
+             * 绘制粒子
+             */
+            WebGLRenderContext.prototype.drawParticle = function (node) {
+                var buffer = this.currentBuffer;
+                var image = node.image;
+                if (this.contextLost || !image || !buffer) {
+                    return;
+                }
+                var texture = this.getWebGLTexture(image);
+                if (!texture) {
+                    return;
+                }
+                if (this.vao.reachVertexMaxSize()) {
+                    this.$drawWebGL();
+                }
+                var count = node.numParticles * 2;
+                this.drawCmdManager.pushDrawTexture(texture, count, this.$filter, image.width, image.height);
+                var float32Array = this.vao.float32Array;
+                var index = this.vao.vertexIndex * this.vao.vertSize;
+                float32Array.set(node.vertices, index);
+                this.vao.vertexIndex += node.numProperties * node.numParticles;
+                this.vao.indexIndex += 6 * node.numParticles;
+            };
+            /**
              * 绘制遮罩
              */
             WebGLRenderContext.prototype.pushMask = function (x, y, width, height) {
@@ -6379,15 +6432,15 @@ var egret;
                         this.activeProgram(gl, program);
                         break;
                     case 0 /* TEXTURE */:
-                        this.syncUniforms(this.currentProgram, filter, data.textureWidth, data.textureHeight);
+                        this.syncUniforms(this.currentProgram, filter, data);
                         offset += this.drawTextureElements(data, offset);
                         break;
                     case 1 /* PUSH_MASK */:
-                        this.syncUniforms(this.currentProgram, filter, data.textureWidth, data.textureHeight);
+                        this.syncUniforms(this.currentProgram, filter, data);
                         offset += this.drawPushMaskElements(data, offset);
                         break;
                     case 2 /* POP_MASK */:
-                        this.syncUniforms(this.currentProgram, filter, data.textureWidth, data.textureHeight);
+                        this.syncUniforms(this.currentProgram, filter, data);
                         offset += this.drawPopMaskElements(data, offset);
                         break;
                     case 3 /* BLEND */:
@@ -6457,11 +6510,56 @@ var egret;
                             gl.vertexAttribPointer(attribute["aColor"].location, 1, gl.FLOAT, false, 4 * 4, 3 * 4);
                             gl.enableVertexAttribArray(attribute["aColor"].location);
                         }
+                        else if (key === "aParticlePosition") {
+                            gl.vertexAttribPointer(attribute["aParticlePosition"].location, 2, gl.FLOAT, false, 22 * 4, 0);
+                            gl.enableVertexAttribArray(attribute["aParticlePosition"].location);
+                        }
+                        else if (key === "aParticleTextureCoord") {
+                            gl.vertexAttribPointer(attribute["aParticleTextureCoord"].location, 2, gl.FLOAT, false, 22 * 4, 2 * 4);
+                            gl.enableVertexAttribArray(attribute["aParticleTextureCoord"].location);
+                        }
+                        else if (key === "aParticleScale") {
+                            gl.vertexAttribPointer(attribute["aParticleScale"].location, 2, gl.FLOAT, false, 22 * 4, 4 * 4);
+                            gl.enableVertexAttribArray(attribute["aParticleScale"].location);
+                        }
+                        else if (key === "aParticleRotation") {
+                            gl.vertexAttribPointer(attribute["aParticleRotation"].location, 2, gl.FLOAT, false, 22 * 4, 6 * 4);
+                            gl.enableVertexAttribArray(attribute["aParticleRotation"].location);
+                        }
+                        else if (key === "aParticleRed") {
+                            gl.vertexAttribPointer(attribute["aParticleRed"].location, 2, gl.FLOAT, false, 22 * 4, 8 * 4);
+                            gl.enableVertexAttribArray(attribute["aParticleRed"].location);
+                        }
+                        else if (key === "aParticleGreen") {
+                            gl.vertexAttribPointer(attribute["aParticleGreen"].location, 2, gl.FLOAT, false, 22 * 4, 10 * 4);
+                            gl.enableVertexAttribArray(attribute["aParticleGreen"].location);
+                        }
+                        else if (key === "aParticleBlue") {
+                            gl.vertexAttribPointer(attribute["aParticleBlue"].location, 2, gl.FLOAT, false, 22 * 4, 12 * 4);
+                            gl.enableVertexAttribArray(attribute["aParticleBlue"].location);
+                        }
+                        else if (key === "aParticleAlpha") {
+                            gl.vertexAttribPointer(attribute["aParticleAlpha"].location, 2, gl.FLOAT, false, 22 * 4, 14 * 4);
+                            gl.enableVertexAttribArray(attribute["aParticleAlpha"].location);
+                        }
+                        else if (key === "aParticleEmitRotation") {
+                            gl.vertexAttribPointer(attribute["aParticleEmitRotation"].location, 2, gl.FLOAT, false, 22 * 4, 16 * 4);
+                            gl.enableVertexAttribArray(attribute["aParticleEmitRotation"].location);
+                        }
+                        else if (key === "aParticleEmitRadius") {
+                            gl.vertexAttribPointer(attribute["aParticleEmitRadius"].location, 2, gl.FLOAT, false, 22 * 4, 18 * 4);
+                            gl.enableVertexAttribArray(attribute["aParticleEmitRadius"].location);
+                        }
+                        else if (key === "aParticleTime") {
+                            gl.vertexAttribPointer(attribute["aParticleTime"].location, 2, gl.FLOAT, false, 22 * 4, 20 * 4);
+                            gl.enableVertexAttribArray(attribute["aParticleTime"].location);
+                        }
+                        //===== particle end =====
                     }
                     this.currentProgram = program;
                 }
             };
-            WebGLRenderContext.prototype.syncUniforms = function (program, filter, textureWidth, textureHeight) {
+            WebGLRenderContext.prototype.syncUniforms = function (program, filter, data) {
                 var uniforms = program.uniforms;
                 var isCustomFilter = filter && filter.type === "custom";
                 for (var key in uniforms) {
@@ -6469,9 +6567,15 @@ var egret;
                         uniforms[key].setValue({ x: this.projectionX, y: this.projectionY });
                     }
                     else if (key === "uTextureSize") {
-                        uniforms[key].setValue({ x: textureWidth, y: textureHeight });
+                        uniforms[key].setValue({ x: data.textureWidth, y: data.textureHeight });
                     }
                     else if (key === "uSampler") {
+                    }
+                    else if (key === "uGlobalMatrix") {
+                        uniforms[key].setValue([data.a, data.c, data.tx, data.b, data.d, data.ty, 0, 0, 1]);
+                    }
+                    else if (key === "uGlobalAlpha") {
+                        uniforms[key].setValue(data.alpha);
                     }
                     else {
                         var value = filter.$uniforms[key];
@@ -7180,8 +7284,11 @@ var egret;
                     else if (node.type == 4 /* GroupNode */) {
                         this.renderGroup(node, buffer);
                     }
-                    else if (5 /* MeshNode */) {
+                    else if (node.type == 5 /* MeshNode */) {
                         this.renderMesh(node, buffer);
+                    }
+                    else if (node.type == 7 /* ParticleNode */) {
+                        this.renderParticle(node, buffer);
                     }
                     buffer.$offsetX = 0;
                     buffer.$offsetY = 0;
@@ -7280,17 +7387,14 @@ var egret;
                 if (displayBoundsWidth <= 0 || displayBoundsHeight <= 0) {
                     return drawCalls;
                 }
-                if (!displayObject.mask && filters.length == 1 && (filters[0].type == "colorTransform" || (filters[0].type === "custom" && filters[0].padding === 0))) {
+                if (!displayObject.$mask && filters.length == 1 && (filters[0].type == "colorTransform" || (filters[0].type === "custom" && filters[0].padding === 0))) {
                     var childrenDrawCount = this.getRenderCount(displayObject);
                     if (!displayObject.$children || childrenDrawCount == 1) {
                         if (hasBlendMode) {
                             buffer.context.setGlobalCompositeOperation(compositeOp);
                         }
                         buffer.context.$filter = filters[0];
-                        if (displayObject.$mask) {
-                            drawCalls += this.drawWithClip(displayObject, buffer, offsetX, offsetY);
-                        }
-                        else if (displayObject.$scrollRect || displayObject.$maskRect) {
+                        if (displayObject.$scrollRect || displayObject.$maskRect) {
                             drawCalls += this.drawWithScrollRect(displayObject, buffer, offsetX, offsetY);
                         }
                         else {
@@ -7631,6 +7735,9 @@ var egret;
                     else if (node.type == 5 /* MeshNode */) {
                         this.renderMesh(node, buffer);
                     }
+                    else if (node.type == 7 /* ParticleNode */) {
+                        this.renderParticle(node, buffer);
+                    }
                 }
                 var children = displayObject.$children;
                 if (children) {
@@ -7679,6 +7786,9 @@ var egret;
                 }
                 else if (node.type == 5 /* MeshNode */) {
                     this.renderMesh(node, buffer);
+                }
+                else if (node.type == 7 /* ParticleNode */) {
+                    this.renderParticle(node, buffer);
                 }
             };
             /**
@@ -7991,6 +8101,25 @@ var egret;
                 if (!forHitTest) {
                     node.dirtyRender = false;
                 }
+            };
+            /**
+             * @private
+             */
+            WebGLRenderer.prototype.renderParticle = function (node, buffer) {
+                var image = node.image;
+                if (!image) {
+                    return;
+                }
+                buffer.context.$drawWebGL();
+                var blendMode = node.blendMode;
+                if (blendMode) {
+                    buffer.context.setGlobalCompositeOperation(blendModes[blendMode]);
+                }
+                buffer.context.drawParticle(node);
+                if (blendMode) {
+                    buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
+                }
+                buffer.context.$drawWebGL();
             };
             WebGLRenderer.prototype.renderGroup = function (groupNode, buffer) {
                 var m = groupNode.matrix;

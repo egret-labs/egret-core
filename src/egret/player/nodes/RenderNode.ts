@@ -56,7 +56,11 @@ namespace egret.sys {
         /**
          * 普通位图渲染节点
          */
-        NormalBitmapNode
+        NormalBitmapNode,
+        /**
+         * 粒子节点
+         */
+        ParticleNode
     }
 
     /**

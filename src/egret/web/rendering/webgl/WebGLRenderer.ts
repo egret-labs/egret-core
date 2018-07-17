@@ -128,16 +128,24 @@ namespace egret.web {
 
                 if (node.type == sys.RenderNodeType.NormalBitmapNode) {
                     this.renderNormalBitmap(<sys.NormalBitmapNode>node, buffer);
-                } else if (node.type == sys.RenderNodeType.BitmapNode) {
+                }
+                else if (node.type == sys.RenderNodeType.BitmapNode) {
                     this.renderBitmap(<sys.BitmapNode>node, buffer);
-                } else if (node.type == sys.RenderNodeType.TextNode) {
+                }
+                else if (node.type == sys.RenderNodeType.TextNode) {
                     this.renderText(<sys.TextNode>node, buffer);
-                } else if (node.type == sys.RenderNodeType.GraphicsNode) {
+                }
+                else if (node.type == sys.RenderNodeType.GraphicsNode) {
                     this.renderGraphics(<sys.GraphicsNode>node, buffer);
-                } else if (node.type == sys.RenderNodeType.GroupNode) {
+                }
+                else if (node.type == sys.RenderNodeType.GroupNode) {
                     this.renderGroup(<sys.GroupNode>node, buffer);
-                } else if (sys.RenderNodeType.MeshNode) {
+                }
+                else if (node.type == sys.RenderNodeType.MeshNode) {
                     this.renderMesh(<sys.MeshNode>node, buffer);
+                }
+                else if (node.type == sys.RenderNodeType.ParticleNode) {
+                    this.renderParticle(<sys.ParticleNode>node, buffer);
                 }
 
                 buffer.$offsetX = 0;
@@ -242,7 +250,7 @@ namespace egret.web {
                 return drawCalls;
             }
 
-            if (!displayObject.mask && filters.length == 1 && (filters[0].type == "colorTransform" || (filters[0].type === "custom" && (<CustomFilter>filters[0]).padding === 0))) {
+            if (!displayObject.$mask && filters.length == 1 && (filters[0].type == "colorTransform" || (filters[0].type === "custom" && (<CustomFilter>filters[0]).padding === 0))) {
                 let childrenDrawCount = this.getRenderCount(displayObject);
                 if (!displayObject.$children || childrenDrawCount == 1) {
                     if (hasBlendMode) {
@@ -250,10 +258,7 @@ namespace egret.web {
                     }
 
                     buffer.context.$filter = <ColorMatrixFilter>filters[0];
-                    if (displayObject.$mask) {
-                        drawCalls += this.drawWithClip(displayObject, buffer, offsetX, offsetY);
-                    }
-                    else if (displayObject.$scrollRect || displayObject.$maskRect) {
+                    if (displayObject.$scrollRect || displayObject.$maskRect) {
                         drawCalls += this.drawWithScrollRect(displayObject, buffer, offsetX, offsetY);
                     }
                     else {
@@ -601,16 +606,24 @@ namespace egret.web {
                 drawCalls++;
                 if (node.type == sys.RenderNodeType.NormalBitmapNode) {
                     this.renderNormalBitmap(<sys.NormalBitmapNode>node, buffer);
-                } else if (node.type == sys.RenderNodeType.BitmapNode) {
+                }
+                else if (node.type == sys.RenderNodeType.BitmapNode) {
                     this.renderBitmap(<sys.BitmapNode>node, buffer);
-                } else if (node.type == sys.RenderNodeType.TextNode) {
+                }
+                else if (node.type == sys.RenderNodeType.TextNode) {
                     this.renderText(<sys.TextNode>node, buffer);
-                } else if (node.type == sys.RenderNodeType.GraphicsNode) {
+                }
+                else if (node.type == sys.RenderNodeType.GraphicsNode) {
                     this.renderGraphics(<sys.GraphicsNode>node, buffer);
-                } else if (node.type == sys.RenderNodeType.GroupNode) {
+                }
+                else if (node.type == sys.RenderNodeType.GroupNode) {
                     this.renderGroup(<sys.GroupNode>node, buffer);
-                } else if (node.type == sys.RenderNodeType.MeshNode) {
+                }
+                else if (node.type == sys.RenderNodeType.MeshNode) {
                     this.renderMesh(<sys.MeshNode>node, buffer);
+                }
+                else if (node.type == sys.RenderNodeType.ParticleNode) {
+                    this.renderParticle(<sys.ParticleNode>node, buffer);
                 }
             }
             let children = displayObject.$children;
@@ -650,16 +663,24 @@ namespace egret.web {
             buffer.$offsetY = offsetY;
             if (node.type == sys.RenderNodeType.NormalBitmapNode) {
                 this.renderNormalBitmap(<sys.NormalBitmapNode>node, buffer);
-            } else if (node.type == sys.RenderNodeType.BitmapNode) {
+            }
+            else if (node.type == sys.RenderNodeType.BitmapNode) {
                 this.renderBitmap(<sys.BitmapNode>node, buffer);
-            } else if (node.type == sys.RenderNodeType.TextNode) {
+            }
+            else if (node.type == sys.RenderNodeType.TextNode) {
                 this.renderText(<sys.TextNode>node, buffer);
-            } else if (node.type == sys.RenderNodeType.GraphicsNode) {
+            }
+            else if (node.type == sys.RenderNodeType.GraphicsNode) {
                 this.renderGraphics(<sys.GraphicsNode>node, buffer, forHitTest);
-            } else if (node.type == sys.RenderNodeType.GroupNode) {
+            }
+            else if (node.type == sys.RenderNodeType.GroupNode) {
                 this.renderGroup(<sys.GroupNode>node, buffer);
-            } else if (node.type == sys.RenderNodeType.MeshNode) {
+            }
+            else if (node.type == sys.RenderNodeType.MeshNode) {
                 this.renderMesh(<sys.MeshNode>node, buffer);
+            }
+            else if (node.type == sys.RenderNodeType.ParticleNode) {
+                this.renderParticle(<sys.ParticleNode>node, buffer);
             }
 
         }
@@ -991,6 +1012,26 @@ namespace egret.web {
             if (!forHitTest) {
                 node.dirtyRender = false;
             }
+        }
+
+        /**
+         * @private
+         */
+        private renderParticle(node: sys.ParticleNode, buffer: WebGLRenderBuffer): void {
+            let image = node.image;
+            if (!image) {
+                return;
+            }
+            buffer.context.$drawWebGL();
+            const blendMode = node.blendMode;
+            if (blendMode) {
+                buffer.context.setGlobalCompositeOperation(blendModes[blendMode]);
+            }
+            buffer.context.drawParticle(node);
+            if (blendMode) {
+                buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
+            }
+            buffer.context.$drawWebGL();
         }
 
         private renderGroup(groupNode: sys.GroupNode, buffer: WebGLRenderBuffer): void {

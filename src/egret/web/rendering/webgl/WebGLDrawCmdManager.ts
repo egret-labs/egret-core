@@ -74,7 +74,7 @@ namespace egret.web {
         /**
          * 压入绘制texture指令
          */
-        public pushDrawTexture(texture: any, count: number = 2, filter?: any, textureWidth?: number, textureHeight?: number): void {
+        public pushDrawTexture(texture: any, count: number = 2, filter?: egret.Filter, textureWidth?: number, textureHeight?: number): void {
             if (filter) {
                 //根据filter压入切换program
                 let programeKey = filter.type;
@@ -89,6 +89,28 @@ namespace egret.web {
                 data.textureWidth = textureWidth;
                 data.textureHeight = textureHeight;
                 data.filter = filter;
+                if (filter.$uniforms) {
+                    if (filter.$uniforms.uGlobalMatrix === null) {
+                        const context = WebGLRenderContext.getInstance(0, 0);
+                        const buffer = context["currentBuffer"];
+                        const globalMatrix = buffer.globalMatrix;
+                        const m = Matrix.create();
+                        m.copyFrom(globalMatrix);
+                        m.append(1, 0, 0, 1, buffer.$offsetX, buffer.$offsetY);
+                        data.a = m.a;
+                        data.b = m.b;
+                        data.c = m.c;
+                        data.d = m.d;
+                        data.tx = m.tx;
+                        data.ty = m.ty;
+                        Matrix.release(m);
+                    }
+                    if (filter.$uniforms.uGlobalAlpha === null) {
+                        const context = WebGLRenderContext.getInstance(0, 0);
+                        const globalAlpha = context["currentBuffer"].globalAlpha;
+                        data.alpha = globalAlpha;
+                    }
+                }
                 this.drawData[this.drawDataLen] = data;
                 this.drawDataLen++;
                 this.lastDrawTextureData = null;
@@ -305,6 +327,13 @@ namespace egret.web {
                 data.vertSource = null;
                 data.fragSource = null;
                 data.key = null;
+                data.alpha = null;
+                data.a = null;
+                data.b = null;
+                data.c = null;
+                data.d = null;
+                data.tx = null;
+                data.ty = null;
             }
             this.drawDataLen = 0;
             this.lastDrawTextureData = null;

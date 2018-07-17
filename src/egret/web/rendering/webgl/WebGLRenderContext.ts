@@ -151,7 +151,7 @@ namespace egret.web {
         /**
          * 启用RenderBuffer
          */
-        private activateBuffer(buffer: WebGLRenderBuffer, width:number, height:number): void {
+        private activateBuffer(buffer: WebGLRenderBuffer, width: number, height: number): void {
 
             buffer.rootRenderTarget.activate();
 
@@ -837,6 +837,37 @@ namespace egret.web {
         }
 
         /**
+         * 绘制粒子
+         */
+        public drawParticle(node: sys.ParticleNode) {
+            let buffer = this.currentBuffer;
+            let image = node.image;
+            if (this.contextLost || !image || !buffer) {
+                return;
+            }
+
+            let texture: WebGLTexture = this.getWebGLTexture(image);
+            if (!texture) {
+                return;
+            }
+
+            if (this.vao.reachVertexMaxSize()) {
+                this.$drawWebGL();
+            }
+
+            let count = node.numParticles * 2;
+            this.drawCmdManager.pushDrawTexture(texture, count, this.$filter, image.width, image.height);
+
+
+            let float32Array = this.vao.float32Array;
+            let index = this.vao.vertexIndex * this.vao.vertSize;
+            float32Array.set(node.vertices, index);
+
+            this.vao.vertexIndex += node.numProperties * node.numParticles;
+            this.vao.indexIndex += 6 * node.numParticles;
+        }
+
+        /**
          * 绘制遮罩
          */
         public pushMask(x: number, y: number, width: number, height: number): void {
@@ -965,16 +996,16 @@ namespace egret.web {
                     this.activeProgram(gl, program);
                     break;
                 case DRAWABLE_TYPE.TEXTURE:
-                    this.syncUniforms(this.currentProgram, filter, data.textureWidth, data.textureHeight);
+                    this.syncUniforms(this.currentProgram, filter, data);
                     offset += this.drawTextureElements(data, offset);
                     break;
 
                 case DRAWABLE_TYPE.PUSH_MASK:
-                    this.syncUniforms(this.currentProgram, filter, data.textureWidth, data.textureHeight);
+                    this.syncUniforms(this.currentProgram, filter, data);
                     offset += this.drawPushMaskElements(data, offset);
                     break;
                 case DRAWABLE_TYPE.POP_MASK:
-                    this.syncUniforms(this.currentProgram, filter, data.textureWidth, data.textureHeight);
+                    this.syncUniforms(this.currentProgram, filter, data);
                     offset += this.drawPopMaskElements(data, offset);
                     break;
                 case DRAWABLE_TYPE.BLEND:
@@ -1040,30 +1071,87 @@ namespace egret.web {
                     if (key === "aVertexPosition") {
                         gl.vertexAttribPointer(attribute["aVertexPosition"].location, 2, gl.FLOAT, false, 4 * 4, 0);
                         gl.enableVertexAttribArray(attribute["aVertexPosition"].location);
-                    } else if (key === "aTextureCoord") {
+                    }
+                    else if (key === "aTextureCoord") {
                         gl.vertexAttribPointer(attribute["aTextureCoord"].location, 2, gl.UNSIGNED_SHORT, true, 4 * 4, 2 * 4);
                         gl.enableVertexAttribArray(attribute["aTextureCoord"].location);
-                    } else if (key === "aColor") {
+                    }
+                    else if (key === "aColor") {
                         gl.vertexAttribPointer(attribute["aColor"].location, 1, gl.FLOAT, false, 4 * 4, 3 * 4);
                         gl.enableVertexAttribArray(attribute["aColor"].location);
                     }
+                    //===== particle begin =====
+                    else if (key === "aParticlePosition") {
+                        gl.vertexAttribPointer(attribute["aParticlePosition"].location, 2, gl.FLOAT, false, 22 * 4, 0);
+                        gl.enableVertexAttribArray(attribute["aParticlePosition"].location);
+                    }
+                    else if (key === "aParticleTextureCoord") {
+                        gl.vertexAttribPointer(attribute["aParticleTextureCoord"].location, 2, gl.FLOAT, false, 22 * 4, 2 * 4);
+                        gl.enableVertexAttribArray(attribute["aParticleTextureCoord"].location);
+                    }
+                    else if (key === "aParticleScale") {
+                        gl.vertexAttribPointer(attribute["aParticleScale"].location, 2, gl.FLOAT, false, 22 * 4, 4 * 4);
+                        gl.enableVertexAttribArray(attribute["aParticleScale"].location);
+                    }
+                    else if (key === "aParticleRotation") {
+                        gl.vertexAttribPointer(attribute["aParticleRotation"].location, 2, gl.FLOAT, false, 22 * 4, 6 * 4);
+                        gl.enableVertexAttribArray(attribute["aParticleRotation"].location);
+                    }
+                    else if (key === "aParticleRed") {
+                        gl.vertexAttribPointer(attribute["aParticleRed"].location, 2, gl.FLOAT, false, 22 * 4, 8 * 4);
+                        gl.enableVertexAttribArray(attribute["aParticleRed"].location);
+                    }
+                    else if (key === "aParticleGreen") {
+                        gl.vertexAttribPointer(attribute["aParticleGreen"].location, 2, gl.FLOAT, false, 22 * 4, 10 * 4);
+                        gl.enableVertexAttribArray(attribute["aParticleGreen"].location);
+                    }
+                    else if (key === "aParticleBlue") {
+                        gl.vertexAttribPointer(attribute["aParticleBlue"].location, 2, gl.FLOAT, false, 22 * 4, 12 * 4);
+                        gl.enableVertexAttribArray(attribute["aParticleBlue"].location);
+                    }
+                    else if (key === "aParticleAlpha") {
+                        gl.vertexAttribPointer(attribute["aParticleAlpha"].location, 2, gl.FLOAT, false, 22 * 4, 14 * 4);
+                        gl.enableVertexAttribArray(attribute["aParticleAlpha"].location);
+                    }
+                    else if (key === "aParticleEmitRotation") {
+                        gl.vertexAttribPointer(attribute["aParticleEmitRotation"].location, 2, gl.FLOAT, false, 22 * 4, 16 * 4);
+                        gl.enableVertexAttribArray(attribute["aParticleEmitRotation"].location);
+                    }
+                    else if (key === "aParticleEmitRadius") {
+                        gl.vertexAttribPointer(attribute["aParticleEmitRadius"].location, 2, gl.FLOAT, false, 22 * 4, 18 * 4);
+                        gl.enableVertexAttribArray(attribute["aParticleEmitRadius"].location);
+                    }
+                    else if (key === "aParticleTime") {
+                        gl.vertexAttribPointer(attribute["aParticleTime"].location, 2, gl.FLOAT, false, 22 * 4, 20 * 4);
+                        gl.enableVertexAttribArray(attribute["aParticleTime"].location);
+                    }
+                    //===== particle end =====
                 }
 
                 this.currentProgram = program;
             }
         }
 
-        private syncUniforms(program: EgretWebGLProgram, filter: Filter, textureWidth: number, textureHeight: number): void {
+        private syncUniforms(program: EgretWebGLProgram, filter: Filter, data): void {
             let uniforms = program.uniforms;
             let isCustomFilter: boolean = filter && filter.type === "custom";
             for (let key in uniforms) {
                 if (key === "projectionVector") {
                     uniforms[key].setValue({ x: this.projectionX, y: this.projectionY });
-                } else if (key === "uTextureSize") {
-                    uniforms[key].setValue({ x: textureWidth, y: textureHeight });
-                } else if (key === "uSampler") {
+                }
+                else if (key === "uTextureSize") {
+                    uniforms[key].setValue({ x: data.textureWidth, y: data.textureHeight });
+                }
+                else if (key === "uSampler") {
 
-                } else {
+                }
+                else if (key === "uGlobalMatrix") {
+                    uniforms[key].setValue([data.a, data.c, data.tx, data.b, data.d, data.ty, 0, 0, 1]);
+                }
+                else if (key === "uGlobalAlpha") {
+                    uniforms[key].setValue(data.alpha);
+                }
+                else {
                     let value = filter.$uniforms[key];
                     if (value !== undefined) {
                         uniforms[key].setValue(value);
