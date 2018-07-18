@@ -97,6 +97,10 @@ namespace egret.web {
             }
         }
 
+        protected createNativeDisplayObject(): void {
+            this.$nativeDisplayObject = new egret_native.NativeDisplayObject(egret_native.NativeObjectType.BITMAP);
+        }
+
         /**
          * @inheritDoc
          */
@@ -441,6 +445,12 @@ namespace egret.web {
                 this.$renderDirty = true;
                 this.posterData.width = this.getPlayWidth();
                 this.posterData.height = this.getPlayHeight();
+
+                if (egret.nativeRender) {
+                    const texture = new egret.Texture();
+                    texture._setBitmapData(this.posterData);
+                    this.$nativeDisplayObject.setBitmapData(texture);
+                }
 
             }, this);
             imageLoader.load(poster);
