@@ -626,7 +626,7 @@ export class JSONParser {
             if (this.isInnerClass(child)) {
                 if (child.localName == "Skin") {
                     let innerClassName = this.parseInnerClass(child);
-                    jsonFactory.addContent(innerClassName, this.currentClassName + "/$bs", "skinName")
+                    jsonFactory.addContent(innerClassName, this.currentClassName + "/" + this.getNodeId(node) , "skinName")
                 }
                 continue;
             }

@@ -524,7 +524,7 @@ var JSONParser = /** @class */ (function () {
             if (this.isInnerClass(child)) {
                 if (child.localName == "Skin") {
                     var innerClassName = this.parseInnerClass(child);
-                    JSONClass_1.jsonFactory.addContent(innerClassName, this.currentClassName + "/$bs", "skinName");
+                    JSONClass_1.jsonFactory.addContent(innerClassName, this.currentClassName + "/" + this.getNodeId(node), "skinName");
                 }
                 continue;
             }
