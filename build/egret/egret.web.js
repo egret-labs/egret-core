@@ -1068,6 +1068,9 @@ var egret;
                 }
                 return _this;
             }
+            WebVideo.prototype.createNativeDisplayObject = function () {
+                this.$nativeDisplayObject = new egret_native.NativeDisplayObject(1 /* BITMAP */);
+            };
             /**
              * @inheritDoc
              */
@@ -1384,6 +1387,11 @@ var egret;
                     _this.$renderDirty = true;
                     _this.posterData.width = _this.getPlayWidth();
                     _this.posterData.height = _this.getPlayHeight();
+                    if (egret.nativeRender) {
+                        var texture = new egret.Texture();
+                        texture._setBitmapData(_this.posterData);
+                        _this.$nativeDisplayObject.setBitmapData(texture);
+                    }
                 }, this);
                 imageLoader.load(poster);
             };
