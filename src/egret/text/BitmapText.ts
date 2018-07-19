@@ -390,6 +390,12 @@ namespace egret {
             let textLines: string[] = this.$getTextLines();
             let length: number = textLines.length;
             if (length == 0) {
+                if (egret.nativeRender) {
+                    self.$nativeDisplayObject.setDataToBitmapNode(self.$nativeDisplayObject.id, self.$font.$texture, []);
+                    let bounds = self.$getContentBounds();
+                    self.$nativeDisplayObject.setWidth(bounds.width);
+                    self.$nativeDisplayObject.setHeight(bounds.height);
+                }
                 return;
             }
             let drawArr = [];
