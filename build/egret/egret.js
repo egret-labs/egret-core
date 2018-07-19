@@ -17987,6 +17987,12 @@ var egret;
             var textLines = this.$getTextLines();
             var length = textLines.length;
             if (length == 0) {
+                if (egret.nativeRender) {
+                    self.$nativeDisplayObject.setDataToBitmapNode(self.$nativeDisplayObject.id, self.$font.$texture, []);
+                    var bounds = self.$getContentBounds();
+                    self.$nativeDisplayObject.setWidth(bounds.width);
+                    self.$nativeDisplayObject.setHeight(bounds.height);
+                }
                 return;
             }
             var drawArr = [];
