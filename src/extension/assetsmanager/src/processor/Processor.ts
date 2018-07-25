@@ -511,6 +511,7 @@ module RES.processor {
                         // ResourceConfig.
                     }
                 }
+                host.save(resource, resConfigData)
                 return resConfigData;
             })
 
