@@ -90,14 +90,15 @@ var RES;
                     fileSystem: null
                 };
             }
-            return RES.queue.loadResource(configItem).then(function (data) {
-                return _this.parseConfig(data);
-            }).catch(function (e) {
+            return RES.queue.loadResource(configItem).catch(function (e) {
                 if (!e.__resource_manager_error__) {
                     console.error(e.stack);
                     e = new RES.ResourceManagerError(1002);
                 }
+                RES.host.remove(configItem);
                 return Promise.reject(e);
+            }).then(function (data) {
+                return _this.parseConfig(data);
             });
         };
         /**
@@ -1275,6 +1276,7 @@ var RES;
                         var resource_1 = _c[_b];
                         _loop_2(resource_1);
                     }
+                    host.save(resource, resConfigData);
                     return resConfigData;
                 });
             },
