@@ -135,14 +135,15 @@ module RES {
                     fileSystem: null as any as FileSystem
                 }
             }
-            return queue.loadResource(configItem).then((data) => {
-                return this.parseConfig(data)
-            }).catch(e => {
+            return queue.loadResource(configItem).catch(e => {
                 if (!e.__resource_manager_error__) {
                     console.error(e.stack)
                     e = new ResourceManagerError(1002);
                 }
+                host.remove(configItem);
                 return Promise.reject(e);
+            }).then((data) => {
+                return this.parseConfig(data)
             })
         }
 

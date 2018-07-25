@@ -154,10 +154,15 @@ function publishEXML(exmls, exmlPublishPolicy) {
             return { path: path, content: JSON.stringify(thmData, null, '\t') };
         }
     });
-    var EuiJson = jsonParser.eui.toCode();
-    if (EuiJson == "")
-        EuiJson = "{}";
-    return { "files": files, "EuiJson": EuiJson };
+    if (exmlPublishPolicy == "commonjs2") {
+        var EuiJson = jsonParser.eui.toCode();
+        if (EuiJson == "")
+            EuiJson = "{}";
+        return { "files": files, "EuiJson": EuiJson };
+    }
+    else {
+        return { "files": files };
+    }
 }
 exports.publishEXML = publishEXML;
 function searchTheme() {

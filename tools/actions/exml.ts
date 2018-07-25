@@ -177,10 +177,14 @@ generateEUI2.skins = ${JSON.stringify(thmData.skins)};`;
             return { path, content: JSON.stringify(thmData, null, '\t') }
         }
     });
-    let EuiJson = jsonParser.eui.toCode();
-    if (EuiJson == "")
-        EuiJson = "{}"
-    return { "files": files, "EuiJson": EuiJson };
+    if (exmlPublishPolicy == "commonjs2") {
+        let EuiJson = jsonParser.eui.toCode();
+        if (EuiJson == "")
+            EuiJson = "{}"
+        return { "files": files, "EuiJson": EuiJson };
+    } else {
+        return { "files": files };
+    }
 
 }
 
