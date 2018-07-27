@@ -141,6 +141,7 @@ module RES {
 							delete this.groupTotalDic[groupName];
 							delete this.numLoadedDic[groupName];
 							delete this.itemListDic[groupName];
+							delete this.reporterDic[groupName];
 							delete this.groupErrorDic[groupName];
 							const dispatcher: egret.EventDispatcher = this.dispatcherDic[groupName];
 							if (groupError) {
@@ -192,6 +193,7 @@ module RES {
 								delete this.numLoadedDic[groupName];
 								delete this.itemListDic[groupName];
 								delete this.groupErrorDic[groupName];
+								delete this.reporterDic[groupName];
 								const itemList = this.loadItemErrorDic[groupName];
 								delete this.loadItemErrorDic[groupName];
 								const dispatcher = this.dispatcherDic[groupName];

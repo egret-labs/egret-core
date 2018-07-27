@@ -490,6 +490,7 @@ var RES;
                         delete _this.groupTotalDic[groupName];
                         delete _this.numLoadedDic[groupName];
                         delete _this.itemListDic[groupName];
+                        delete _this.reporterDic[groupName];
                         delete _this.groupErrorDic[groupName];
                         var dispatcher = _this.dispatcherDic[groupName];
                         if (groupError) {
@@ -541,6 +542,7 @@ var RES;
                             delete _this.numLoadedDic[groupName];
                             delete _this.itemListDic[groupName];
                             delete _this.groupErrorDic[groupName];
+                            delete _this.reporterDic[groupName];
                             var itemList = _this.loadItemErrorDic[groupName];
                             delete _this.loadItemErrorDic[groupName];
                             var dispatcher = _this.dispatcherDic[groupName];
