@@ -13656,18 +13656,20 @@ var egret;
                         stageHeight = screenHeight;
                         break;
                 }
-                //宽高不是2的整数倍会导致图片绘制出现问题
-                if (stageWidth % 2 != 0) {
-                    stageWidth += 1;
-                }
-                if (stageHeight % 2 != 0) {
-                    stageHeight += 1;
-                }
-                if (displayWidth % 2 != 0) {
-                    displayWidth += 1;
-                }
-                if (displayHeight % 2 != 0) {
-                    displayHeight += 1;
+                if (egret.Capabilities.runtimeType != egret.RuntimeType.WXGAME) {
+                    //宽高不是2的整数倍会导致图片绘制出现问题
+                    if (stageWidth % 2 != 0) {
+                        stageWidth += 1;
+                    }
+                    if (stageHeight % 2 != 0) {
+                        stageHeight += 1;
+                    }
+                    if (displayWidth % 2 != 0) {
+                        displayWidth += 1;
+                    }
+                    if (displayHeight % 2 != 0) {
+                        displayHeight += 1;
+                    }
                 }
                 return {
                     stageWidth: stageWidth,
@@ -15847,32 +15849,34 @@ var egret;
                 }
                 return drawCalls;
             }
-            var maskRenderNode = mask.$getRenderNode();
             //遮罩是单纯的填充图形,且alpha为1,性能优化
-            if (mask && (!mask.$children || mask.$children.length == 0) &&
-                maskRenderNode && maskRenderNode.type == 3 /* GraphicsNode */ &&
-                maskRenderNode.drawData.length == 1 &&
-                maskRenderNode.drawData[0].type == 1 /* Fill */ &&
-                maskRenderNode.drawData[0].fillAlpha == 1) {
-                this.renderingMask = true;
-                context.save();
-                var maskMatrix = egret.Matrix.create();
-                maskMatrix.copyFrom(mask.$getConcatenatedMatrix());
-                mask.$getConcatenatedMatrixAt(displayObject, maskMatrix);
-                context.transform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
-                var calls = this.drawDisplayObject(mask, context, offsetX, offsetY);
-                this.renderingMask = false;
-                maskMatrix.$invertInto(maskMatrix);
-                context.transform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
-                egret.Matrix.release(maskMatrix);
-                if (scrollRect) {
-                    context.beginPath();
-                    context.rect(scrollRect.x + offsetX, scrollRect.y + offsetY, scrollRect.width, scrollRect.height);
-                    context.clip();
+            if (mask) {
+                var maskRenderNode = mask.$getRenderNode();
+                if ((!mask.$children || mask.$children.length == 0) &&
+                    maskRenderNode && maskRenderNode.type == 3 /* GraphicsNode */ &&
+                    maskRenderNode.drawData.length == 1 &&
+                    maskRenderNode.drawData[0].type == 1 /* Fill */ &&
+                    maskRenderNode.drawData[0].fillAlpha == 1) {
+                    this.renderingMask = true;
+                    context.save();
+                    var maskMatrix = egret.Matrix.create();
+                    maskMatrix.copyFrom(mask.$getConcatenatedMatrix());
+                    mask.$getConcatenatedMatrixAt(displayObject, maskMatrix);
+                    context.transform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
+                    var calls = this.drawDisplayObject(mask, context, offsetX, offsetY);
+                    this.renderingMask = false;
+                    maskMatrix.$invertInto(maskMatrix);
+                    context.transform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
+                    egret.Matrix.release(maskMatrix);
+                    if (scrollRect) {
+                        context.beginPath();
+                        context.rect(scrollRect.x + offsetX, scrollRect.y + offsetY, scrollRect.width, scrollRect.height);
+                        context.clip();
+                    }
+                    calls += this.drawDisplayObject(displayObject, context, offsetX, offsetY);
+                    context.restore();
+                    return calls;
                 }
-                calls += this.drawDisplayObject(displayObject, context, offsetX, offsetY);
-                context.restore();
-                return calls;
             }
             //todo 若显示对象是容器，同时子项有混合模式，则需要先绘制背景到displayBuffer并清除背景区域
             //绘制显示对象自身，若有scrollRect，应用clip
@@ -15890,6 +15894,7 @@ var egret;
             drawCalls += this.drawDisplayObject(displayObject, displayContext, -displayBoundsX, -displayBoundsY);
             //绘制遮罩
             if (mask) {
+                var maskRenderNode = mask.$getRenderNode();
                 var maskMatrix = egret.Matrix.create();
                 maskMatrix.copyFrom(mask.$getConcatenatedMatrix());
                 mask.$getConcatenatedMatrixAt(displayObject, maskMatrix);
