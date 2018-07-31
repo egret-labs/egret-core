@@ -66,7 +66,7 @@ module RES {
         },
 
         remove(resource: ResourceInfo) {
-            host.state[resource.root + resource.name] = 0;
+            delete host.state[resource.root + resource.name];
             delete __tempCache[resource.url];
         }
     }

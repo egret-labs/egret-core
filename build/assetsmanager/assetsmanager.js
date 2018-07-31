@@ -329,9 +329,18 @@ var RES;
             if (!data.type) {
                 data.type = this.__temp__get__type__via__url(data.url);
             }
-            RES.fileSystem.addFile(data.url, data.type, data.root);
+            RES.fileSystem.addFile(data.url, data.type, data.root, data.extra);
             if (data.name) {
                 this.config.alias[data.name] = data.url;
+            }
+        };
+        ResourceConfig.prototype.removeResourceData = function (data) {
+            if (!RES.hasRes(data.name)) {
+                return;
+            }
+            RES.fileSystem.removeFile(data.url);
+            if (this.config.alias[data.name]) {
+                delete this.config.alias[data.name];
             }
         };
         ResourceConfig.prototype.destory = function () {
@@ -343,6 +352,8 @@ var RES;
                 addFile: function () {
                 },
                 profile: function () {
+                },
+                removeFile: function () {
                 }
             };
             this.config = { groups: {}, alias: {}, fileSystem: emptyFileSystem, typeSelector: function (p) { return p; }, resourceRoot: "resources", mergeSelector: null };
@@ -651,9 +662,12 @@ var RES;
             }
             var p = RES.processor.isSupport(r);
             if (p) {
-                RES.host.state[r.root + r.name] = 3;
+                // host.state[r.root + r.name] = 3;
                 var promise = p.onRemoveStart(RES.host, r);
                 RES.host.remove(r);
+                if (r.extra == 1) {
+                    RES.config.removeResourceData(r);
+                }
                 return promise;
             }
             else {
@@ -724,7 +738,7 @@ var RES;
             return __tempCache[resource.url];
         },
         remove: function (resource) {
-            RES.host.state[resource.root + resource.name] = 0;
+            delete RES.host.state[resource.root + resource.name];
             delete __tempCache[resource.url];
         }
     };
@@ -1242,16 +1256,19 @@ var RES;
                             getFile: function (filename) {
                                 return fsData[filename];
                             },
-                            addFile: function (filename, type, root) {
+                            addFile: function (filename, type, root, extra) {
                                 if (!type)
                                     type = "";
                                 if (root == undefined) {
                                     root = "";
                                 }
-                                fsData[filename] = { name: filename, type: type, url: filename, root: root };
+                                fsData[filename] = { name: filename, type: type, url: filename, root: root, extra: extra };
                             },
                             profile: function () {
                                 console.log(fsData);
+                            },
+                            removeFile: function (filename) {
+                                delete fsData[filename];
                             }
                         };
                         resConfigData.fileSystem = fileSystem;
@@ -2625,7 +2642,7 @@ var RES;
                     type = RES.config.__temp__get__type__via__url(url);
                 }
                 // manager.config.addResourceData({ name: url, url: url });
-                r = { name: url, url: url, type: type, root: '' };
+                r = { name: url, url: url, type: type, root: '', extra: 1 };
                 RES.config.addResourceData(r);
                 r = RES.config.getResource(url);
                 if (!r) {

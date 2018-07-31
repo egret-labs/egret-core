@@ -452,7 +452,8 @@ module RES.processor {
         name: string;
         type: string;
         url: string;
-        subkeys?: string
+        subkeys?: string;
+        extra?: 1 | undefined;
     }
 
     export const LegacyResourceConfigProcessor: Processor = {
@@ -476,18 +477,20 @@ module RES.processor {
                             return fsData[filename]
                         },
 
-                        addFile: (filename, type, root) => {
+                        addFile: (filename, type, root, extra) => {
                             if (!type) type = "";
                             if (root == undefined) {
                                 root = "";
                             }
-                            fsData[filename] = { name: filename, type, url: filename, root };
+                            fsData[filename] = { name: filename, type, url: filename, root, extra };
                         },
 
                         profile: () => {
                             console.log(fsData);
+                        },
+                        removeFile: (filename) => {
+                            delete fsData[filename];
                         }
-
                     } as FileSystem;
                     resConfigData.fileSystem = fileSystem;
                 }

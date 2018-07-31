@@ -20,12 +20,13 @@ module RES {
 
     export interface FileSystem {
 
-        addFile(filename: string, type?: string, root?:string);
+        addFile(filename: string, type?: string, root?: string, extra?: 1 | undefined);
 
         getFile(filename: string): File | null;
 
         profile(): void;
 
+        removeFile(filename: string);
     }
 
     export class NewFileSystem {

@@ -70,8 +70,7 @@ module RES {
 
 		load(list: ResourceInfo[], groupName: string, priority: number, reporter?: PromiseTaskReporter): Promise<any> {
 			if (this.itemListDic[groupName]) {
-				if(!this.dispatcherDic[groupName])
-				{
+				if (!this.dispatcherDic[groupName]) {
 					const dispatcher = new egret.EventDispatcher();
 					this.dispatcherDic[groupName] = dispatcher;
 				}
@@ -304,9 +303,12 @@ module RES {
 			}
 			const p = processor.isSupport(r);
 			if (p) {
-				host.state[r.root + r.name] = 3;
+				// host.state[r.root + r.name] = 3;
 				const promise = p.onRemoveStart(host, r);
 				host.remove(r);
+				if (r.extra == 1) {
+					config.removeResourceData(r);
+				}
 				return promise;
 			}
 			else {

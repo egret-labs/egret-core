@@ -100,6 +100,7 @@ locale_strings[1418] = "WebP format fail : {0}";
 locale_strings[1419] = "Format WebP : {0} / {1}";
 locale_strings[1420] = "Zip package failed, there may be special characters in the path";
 locale_strings[1421] = "Playing zip package exception!";
+locale_strings[1422] = "After the TextureMerger Plugin runs, there is a reference to superior {1} in {0}!";
 //startserver
 locale_strings[1501] = "Unable to start the server, please check the authority or whether the port is occupied";
 //create_app
@@ -173,7 +174,7 @@ locale_strings[2019] = "{0}: error the container’s child item must be visible 
 locale_strings[2020] = "{0}: error error for child nodes in w: Declarations, the includeIn and excludeFrom properties are not allowed to use \n {1}";
 locale_strings[2102] = "{0}: warning no child node can be found on the property code \n {1}";
 locale_strings[2103] = "{0}: warning the same property '{1}' on the node is assigned multiple times \n {2}";
-locale_strings[2104] = "warning: The node class name {1} defined by the {0} file is repeatedly defined";
+locale_strings[2104] = "warning: the class name defined by the{0} file{1} is inconsistent";
 // android sdk install
 locale_strings[2201] = "{0} file(s) will be downloaded!";
 locale_strings[2202] = "The total size is {0}MB";
