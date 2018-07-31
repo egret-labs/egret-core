@@ -600,6 +600,7 @@ module RES {
                 }
                 return value;
             }, error => {
+                host.remove(r as ResourceInfo);
                 ResourceEvent.dispatchResourceEvent(this, ResourceEvent.ITEM_LOAD_ERROR, "", r as ResourceInfo);
                 return Promise.reject(error);
             })
@@ -636,6 +637,7 @@ module RES {
                 }
                 return value;
             }, error => {
+                host.remove(r as ResourceInfo);
                 ResourceEvent.dispatchResourceEvent(this, ResourceEvent.ITEM_LOAD_ERROR, "", r as ResourceInfo);
                 return Promise.reject(error);
             })
