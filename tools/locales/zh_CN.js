@@ -103,6 +103,7 @@ var egret;
     locale_strings[1419] = "转换WebP格式 : {0} / {1}";
     locale_strings[1420] = "打包失败，请检查路径中是否有中文或特殊的字符";
     locale_strings[1421] = "打zip包出现异常！";
+    locale_strings[1422] = "合图插件运行后，{0}中存在对上级{1}的引用！";
     //run
     locale_strings[1501] = "无法启动服务器，请检查权限或端口是否被占用";
     //create_app
@@ -176,7 +177,7 @@ var egret;
     locale_strings[2020] = "{0}: error 在w:Declarations内的子节点，不允许使用includeIn和excludeFrom属性\n{1}";
     locale_strings[2102] = "{0}: warning 在属性节点上找不到任何子节点\n{1}";
     locale_strings[2103] = "{0}: warning 节点上的同一个属性'{1}'被多次赋值\n{2}";
-    locale_strings[2104] = "warning: {0}文件所定义的节点类名{1}重复定义";
+    locale_strings[2104] = "warning: {0}文件所定义的类名{1}不一致";
     // android sdk install
     locale_strings[2201] = "{0}个文件需要下载！";
     locale_strings[2202] = "文件总大小为{0}MB";

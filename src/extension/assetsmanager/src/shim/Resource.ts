@@ -622,7 +622,7 @@ module RES {
                     type = config.__temp__get__type__via__url(url);
                 }
                 // manager.config.addResourceData({ name: url, url: url });
-                r = { name: url, url, type, root: '' };
+                r = { name: url, url, type, root: '', extra: 1 };
                 config.addResourceData(r);
                 r = config.getResource(url);
                 if (!r) {

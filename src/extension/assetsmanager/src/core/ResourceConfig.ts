@@ -81,6 +81,7 @@ module RES {
 
         size?: number;
 
+        extra?: 1 | undefined;
         //todo remove
         name: string;
 
@@ -431,19 +432,27 @@ module RES {
             return this.getResource(key, true).type;
         }
 
-        public addResourceData(data: { name: string, type?: string, url: string, root?: string }): void {
+        public addResourceData(data: { name: string, type?: string, url: string, root?: string, extra?: 1 | undefined }): void {
             if (RES.hasRes(data.name)) {
                 return;
             }
             if (!data.type) {
                 data.type = this.__temp__get__type__via__url(data.url);
             }
-            fileSystem.addFile(data.url, data.type, data.root);
+            fileSystem.addFile(data.url, data.type, data.root, data.extra);
             if (data.name) {
                 this.config.alias[data.name] = data.url;
             }
+        }
 
-
+        public removeResourceData(data: { name: string, type?: string, url: string, root?: string, extra?: 1 | undefined }): void {
+            if (!RES.hasRes(data.name)) {
+                return;
+            }
+            fileSystem.removeFile(data.url);
+            if (this.config.alias[data.name]) {
+                delete this.config.alias[data.name];
+            }
         }
 
         public destory() {
@@ -457,6 +466,9 @@ module RES {
 
                 },
                 profile: () => {
+
+                },
+                removeFile: () => {
 
                 }
             }
