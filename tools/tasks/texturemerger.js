@@ -87,31 +87,34 @@ var TextureMergerPlugin = /** @class */ (function () {
                         _i = 0, _a = this.tmprojects;
                         _b.label = 2;
                     case 2:
-                        if (!(_i < _a.length)) return [3 /*break*/, 9];
+                        if (!(_i < _a.length)) return [3 /*break*/, 10];
                         tm = _a[_i];
                         imageList = this.configs[tm];
                         tmprojectFilePath = path.join(pluginContext.projectRoot, tm) //options.path;
                         ;
+                        return [4 /*yield*/, this.checkTmproject(tmprojectFilePath)];
+                    case 3:
+                        _b.sent();
                         tmprojectDir = path.dirname(tm);
                         filename = path.basename(tmprojectFilePath, ".tmproject");
                         jsonPath = path.join(tempDir, filename + ".json");
                         pngPath = path.join(tempDir, filename + ".png");
-                        _b.label = 3;
-                    case 3:
-                        _b.trys.push([3, 7, , 8]);
-                        return [4 /*yield*/, utils_1.shell(texture_merger_path, ["-cp", tmprojectFilePath, "-o", tempDir])];
+                        _b.label = 4;
                     case 4:
+                        _b.trys.push([4, 8, , 9]);
+                        return [4 /*yield*/, utils_1.shell(texture_merger_path, ["-cp", tmprojectFilePath, "-o", tempDir])];
+                    case 5:
                         result = _b.sent();
                         return [4 /*yield*/, FileUtil.readFileAsync(jsonPath, null)];
-                    case 5:
+                    case 6:
                         jsonBuffer = _b.sent();
                         return [4 /*yield*/, FileUtil.readFileAsync(pngPath, null)];
-                    case 6:
+                    case 7:
                         pngBuffer = _b.sent();
                         pluginContext.createFile(path.join(tmprojectDir, filename + ".json"), jsonBuffer, { type: "sheet", subkeys: imageList });
                         pluginContext.createFile(path.join(tmprojectDir, filename + ".png"), pngBuffer);
-                        return [3 /*break*/, 8];
-                    case 7:
+                        return [3 /*break*/, 9];
+                    case 8:
                         e_1 = _b.sent();
                         if (e_1.code) {
                             console.error("TextureMerger \u6267\u884C\u9519\u8BEF\uFF0C\u9519\u8BEF\u7801\uFF1A" + e_1.code);
@@ -120,12 +123,35 @@ var TextureMergerPlugin = /** @class */ (function () {
                         else {
                             console.error(e_1);
                         }
-                        return [3 /*break*/, 8];
-                    case 8:
+                        return [3 /*break*/, 9];
+                    case 9:
                         _i++;
                         return [3 /*break*/, 2];
-                    case 9:
+                    case 10:
                         FileUtil.remove(tempDir);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    TextureMergerPlugin.prototype.checkTmproject = function (url) {
+        return __awaiter(this, void 0, void 0, function () {
+            var data, tmp;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        data = FileUtil.readFileSync(url, 'utf-8');
+                        tmp = JSON.parse(data);
+                        if (tmp["options"]["useExtension"] == 1) {
+                            return [2 /*return*/];
+                        }
+                        else {
+                            tmp["options"]["useExtension"] = 1;
+                            console.log(url + "所对应的textureMerger项目没有设置后缀名，已自动添加，请检查代码");
+                        }
+                        return [4 /*yield*/, FileUtil.writeFileAsync(url, JSON.stringify(tmp), 'utf-8')];
+                    case 1:
+                        _a.sent();
                         return [2 /*return*/];
                 }
             });
