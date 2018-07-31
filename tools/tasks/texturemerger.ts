@@ -63,10 +63,10 @@ export class TextureMergerPlugin implements Plugin {
         const projectRoot = egret.args.projectDir;
         const tempDir = path.join(tmpdir(), 'egret/texturemerger', Math.random().toString());
         FileUtil.createDirectory(tempDir);
-
         for (let tm of this.tmprojects) {
             const imageList = this.configs[tm];
             const tmprojectFilePath = path.join(pluginContext.projectRoot, tm)//options.path;
+            await this.checkTmproject(tmprojectFilePath);
             const tmprojectDir = path.dirname(tm);
             const filename = path.basename(tmprojectFilePath, ".tmproject");
             const jsonPath = path.join(tempDir, filename + ".json");
@@ -94,7 +94,18 @@ export class TextureMergerPlugin implements Plugin {
 
     }
 
-
+    private async checkTmproject(url: string) {
+        const data = FileUtil.readFileSync(url, 'utf-8');
+        let tmp = JSON.parse(data);
+        if (tmp["options"]["useExtension"] == 1) {
+            return;
+        }
+        else {
+            tmp["options"]["useExtension"] = 1;
+            console.log(url+"所对应的textureMerger项目没有设置后缀名，已自动添加，请检查代码");
+        }
+        await FileUtil.writeFileAsync(url, JSON.stringify(tmp), 'utf-8')
+    }
 }
 
 
@@ -104,7 +115,7 @@ function getTextureMergerPath() {
     const toolsList = launcher.getLauncherLibrary().getInstalledTools();
     const tm = toolsList.filter(m => {
         return m.name == "Texture Merger";
-    }) [0];
+    })[0];
     if (!tm) {
         throw '请安装 Texture Merger'; //i18n
     }

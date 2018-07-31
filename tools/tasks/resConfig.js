@@ -296,7 +296,6 @@ var TextureMergerResConfigPlugin = /** @class */ (function () {
             else {
                 subkeys = this.sheetToRes(subkeysFile.subkeys);
             }
-            console.log(relativeJson);
             var json = {
                 name: subkeysFile.name,
                 type: subkeysFile.type,
