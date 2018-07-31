@@ -2621,6 +2621,7 @@ var RES;
                 }
                 return value;
             }, function (error) {
+                RES.host.remove(r);
                 RES.ResourceEvent.dispatchResourceEvent(_this, RES.ResourceEvent.ITEM_LOAD_ERROR, "", r);
                 return Promise.reject(error);
             });
@@ -2656,6 +2657,7 @@ var RES;
                 }
                 return value;
             }, function (error) {
+                RES.host.remove(r);
                 RES.ResourceEvent.dispatchResourceEvent(_this, RES.ResourceEvent.ITEM_LOAD_ERROR, "", r);
                 return Promise.reject(error);
             });
