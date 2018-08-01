@@ -38,6 +38,7 @@ var path = require("path");
 var utils_1 = require("../lib/utils");
 var index_1 = require("../project/index");
 var os_1 = require("os");
+var utils = require("../lib/utils");
 var FileUtil = require("../lib/FileUtil");
 var TextureMergerPlugin = /** @class */ (function () {
     function TextureMergerPlugin(options) {
@@ -73,7 +74,7 @@ var TextureMergerPlugin = /** @class */ (function () {
     };
     TextureMergerPlugin.prototype.onFinish = function (pluginContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var options, texture_merger_path, projectRoot, tempDir, _i, _a, tm, imageList, tmprojectFilePath, tmprojectDir, filename, jsonPath, pngPath, result, jsonBuffer, pngBuffer, e_1;
+            var options, texture_merger_path, projectRoot, tempDir, _i, _a, tm, imageList, tmprojectFilePath, tmprojectDir, filename, jsonPath, pngPath, jsonBuffer, pngBuffer, e_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -102,9 +103,11 @@ var TextureMergerPlugin = /** @class */ (function () {
                         _b.label = 4;
                     case 4:
                         _b.trys.push([4, 8, , 9]);
+                        // const result = await shell(texture_merger_path, ["-p", folder, "-o", jsonPath]);
                         return [4 /*yield*/, utils_1.shell(texture_merger_path, ["-cp", tmprojectFilePath, "-o", tempDir])];
                     case 5:
-                        result = _b.sent();
+                        // const result = await shell(texture_merger_path, ["-p", folder, "-o", jsonPath]);
+                        _b.sent();
                         return [4 /*yield*/, FileUtil.readFileAsync(jsonPath, null)];
                     case 6:
                         jsonBuffer = _b.sent();
@@ -117,8 +120,8 @@ var TextureMergerPlugin = /** @class */ (function () {
                     case 8:
                         e_1 = _b.sent();
                         if (e_1.code) {
-                            console.error("TextureMerger \u6267\u884C\u9519\u8BEF\uFF0C\u9519\u8BEF\u7801\uFF1A" + e_1.code);
-                            console.error("\u6267\u884C\u547D\u4EE4:" + e_1.path + " " + e_1.args.join(" "));
+                            console.error(utils.tr(1423, e_1.code));
+                            console.error(utils.tr(1424, e_1.path, e_1.args.join(" ")));
                         }
                         else {
                             console.error(e_1);
@@ -147,7 +150,7 @@ var TextureMergerPlugin = /** @class */ (function () {
                         }
                         else {
                             tmp["options"]["useExtension"] = 1;
-                            console.log(url + "所对应的textureMerger项目没有设置后缀名，已自动添加，请检查代码");
+                            console.log(utils.tr(1425, url));
                         }
                         return [4 /*yield*/, FileUtil.writeFileAsync(url, JSON.stringify(tmp), 'utf-8')];
                     case 1:
@@ -166,11 +169,11 @@ function getTextureMergerPath() {
         return m.name == "Texture Merger";
     })[0];
     if (!tm) {
-        throw '请安装 Texture Merger'; //i18n
+        throw utils.tr(1426);
     }
     var isUpperVersion = globals.compressVersion(tm.version, "1.7.0");
     if (isUpperVersion < 0) {
-        throw '请将 Texture Merger 升级至 1.7.0 以上版本';
+        throw utils.tr(1427);
     }
     switch (process.platform) {
         case 'darwin':
@@ -180,5 +183,5 @@ function getTextureMergerPath() {
             return tm.path + "/TextureMerger.exe";
             break;
     }
-    throw '不支持的平台';
+    throw utils.tr(1428);
 }
