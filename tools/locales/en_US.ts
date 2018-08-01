@@ -108,6 +108,14 @@ locale_strings[1419] = "Format WebP : {0} / {1}";
 locale_strings[1420] = "Zip package failed, there may be special characters in the path";
 locale_strings[1421] = "Playing zip package exception!";
 locale_strings[1422] = "After the TextureMerger Plugin runs, there is a reference to superior {1} in {0}!";
+locale_strings[1423] = "TextureMerger execution error, error code: {0}";
+locale_strings[1424] = "Execute command: {0}{1}";
+locale_strings[1425] = "The textureMerger item corresponding to {0} does not have a suffix name set, it has been added automatically, please check the code";
+locale_strings[1426] = "Please install Texture Merger";
+locale_strings[1427] = "Please upgrade Texture Merger to 1.7.0 or later";
+locale_strings[1428] = "Unsupported platforms";
+
+
 //startserver
 locale_strings[1501] = "Unable to start the server, please check the authority or whether the port is occupied";
 //create_app
