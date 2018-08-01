@@ -4913,7 +4913,7 @@ var egret;
                     data.filter = filter;
                     if (filter.$uniforms) {
                         if (filter.$uniforms.uGlobalMatrix === null) {
-                            var context = web.WebGLRenderContext.getInstance(0, 0);
+                            var context = web.WebGLRenderContext.getInstance();
                             var buffer = context["currentBuffer"];
                             var globalMatrix = buffer.globalMatrix;
                             var m = egret.Matrix.create();
@@ -4928,7 +4928,7 @@ var egret;
                             egret.Matrix.release(m);
                         }
                         if (filter.$uniforms.uGlobalAlpha === null) {
-                            var context = web.WebGLRenderContext.getInstance(0, 0);
+                            var context = web.WebGLRenderContext.getInstance();
                             var globalAlpha = context["currentBuffer"].globalAlpha;
                             data.alpha = globalAlpha;
                         }
@@ -5653,12 +5653,8 @@ var egret;
         /**
          * 创建一个canvas。
          */
-        function createCanvas(width, height) {
+        function createCanvas() {
             var canvas = document.createElement("canvas");
-            if (!isNaN(width) && !isNaN(height)) {
-                canvas.width = width;
-                canvas.height = height;
-            }
             return canvas;
         }
         /**
@@ -5667,13 +5663,13 @@ var egret;
          * 抽象出此类，以实现共用一个context
          */
         var WebGLRenderContext = (function () {
-            function WebGLRenderContext(width, height) {
+            function WebGLRenderContext() {
                 this.glID = null;
                 this.projectionX = NaN;
                 this.projectionY = NaN;
                 this.contextLost = false;
                 this.$scissorState = false;
-                this.surface = createCanvas(width, height);
+                this.surface = createCanvas();
                 if (egret.nativeRender) {
                     return;
                 }
@@ -5690,11 +5686,11 @@ var egret;
                 this.setGlobalCompositeOperation("source-over");
                 this.firstTimeUploadVertices = true;
             }
-            WebGLRenderContext.getInstance = function (width, height) {
+            WebGLRenderContext.getInstance = function () {
                 if (this.instance) {
                     return this.instance;
                 }
-                this.instance = new WebGLRenderContext(width, height);
+                this.instance = new WebGLRenderContext();
                 return this.instance;
             };
             /**
@@ -6771,7 +6767,7 @@ var egret;
                 _this.$offsetX = 0;
                 _this.$offsetY = 0;
                 // 获取webglRenderContext
-                _this.context = web.WebGLRenderContext.getInstance(width, height);
+                _this.context = web.WebGLRenderContext.getInstance();
                 if (egret.nativeRender) {
                     if (root) {
                         _this.surface = _this.context.surface;

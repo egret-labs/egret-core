@@ -63,7 +63,7 @@ namespace egret.web {
         public constructor(width?: number, height?: number, root?: boolean) {
             super();
             // 获取webglRenderContext
-            this.context = WebGLRenderContext.getInstance(width, height);
+            this.context = WebGLRenderContext.getInstance();
 
             if (egret.nativeRender) {
                 if (root) {

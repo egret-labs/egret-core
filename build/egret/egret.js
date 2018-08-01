@@ -6960,7 +6960,7 @@ var egret;
         WebGLUtils.setBatchSize = function (size) {
             if (egret.Capabilities.renderMode == "webgl") {
                 var web = egret["web"];
-                var context = web.WebGLRenderContext.getInstance(0, 0);
+                var context = web.WebGLRenderContext.getInstance();
                 size = +size | 0;
                 size = Math.max(1, size);
                 context.setBatchSize(size);
@@ -6969,23 +6969,22 @@ var egret;
         WebGLUtils.bindTexture = function (target, texture) {
             if (egret.Capabilities.renderMode == "webgl") {
                 var web = egret["web"];
-                var context = web.WebGLRenderContext.getInstance(0, 0);
+                var context = web.WebGLRenderContext.getInstance();
                 var gl = context.context;
                 if (texture && texture.$bitmapData) {
-                    gl.activeTexture(gl.TEXTURE0 + target);
                     var webglTexture = context.getWebGLTexture(texture.$bitmapData);
                     if (webglTexture) {
+                        gl.activeTexture(gl.TEXTURE0 + target);
                         gl.bindTexture(gl.TEXTURE_2D, webglTexture);
                         gl.activeTexture(gl.TEXTURE0);
-                        return true;
                     }
                 }
                 else {
                     gl.activeTexture(gl.TEXTURE0 + target);
                     gl.bindTexture(gl.TEXTURE_2D, null);
+                    gl.activeTexture(gl.TEXTURE0);
                 }
             }
-            return false;
         };
     })(WebGLUtils = egret.WebGLUtils || (egret.WebGLUtils = {}));
 })(egret || (egret = {}));

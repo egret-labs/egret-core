@@ -59,7 +59,7 @@ namespace egret.WebGLUtils {
     export const setBatchSize = function (size: number): void {
         if (Capabilities.renderMode == "webgl") {
             const web = egret["web"];
-            const context = web.WebGLRenderContext.getInstance(0, 0);
+            const context = web.WebGLRenderContext.getInstance();
             size = +size | 0;
             size = Math.max(1, size);
             context.setBatchSize(size);
@@ -69,12 +69,12 @@ namespace egret.WebGLUtils {
     export const bindTexture = function (target: number, texture: Texture): void {
         if (Capabilities.renderMode == "webgl") {
             const web = egret["web"];
-            const context = web.WebGLRenderContext.getInstance(0, 0);
+            const context = web.WebGLRenderContext.getInstance();
             const gl = context.context;
             if (texture && texture.$bitmapData) {
-                gl.activeTexture(gl.TEXTURE0 + target);
                 const webglTexture = context.getWebGLTexture(texture.$bitmapData);
                 if (webglTexture) {
+                    gl.activeTexture(gl.TEXTURE0 + target);
                     gl.bindTexture(gl.TEXTURE_2D, webglTexture);
                     gl.activeTexture(gl.TEXTURE0);
                 }

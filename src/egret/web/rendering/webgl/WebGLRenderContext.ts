@@ -32,12 +32,8 @@ namespace egret.web {
     /**
      * 创建一个canvas。
      */
-    function createCanvas(width?: number, height?: number): HTMLCanvasElement {
+    function createCanvas(): HTMLCanvasElement {
         let canvas: HTMLCanvasElement = document.createElement("canvas");
-        if (!isNaN(width) && !isNaN(height)) {
-            canvas.width = width;
-            canvas.height = height;
-        }
         return canvas;
     }
 
@@ -73,11 +69,11 @@ namespace egret.web {
          * WebGLRenderContext单例
          */
         private static instance: WebGLRenderContext;
-        public static getInstance(width: number, height: number): WebGLRenderContext {
+        public static getInstance(): WebGLRenderContext {
             if (this.instance) {
                 return this.instance;
             }
-            this.instance = new WebGLRenderContext(width, height);
+            this.instance = new WebGLRenderContext();
             return this.instance;
         }
 
@@ -186,9 +182,9 @@ namespace egret.web {
         private vertexBuffer;
         private indexBuffer;
 
-        public constructor(width?: number, height?: number) {
+        public constructor() {
 
-            this.surface = createCanvas(width, height);
+            this.surface = createCanvas();
 
             if (egret.nativeRender) {
                 return;

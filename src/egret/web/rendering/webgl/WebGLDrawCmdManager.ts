@@ -91,7 +91,7 @@ namespace egret.web {
                 data.filter = filter;
                 if (filter.$uniforms) {
                     if (filter.$uniforms.uGlobalMatrix === null) {
-                        const context = WebGLRenderContext.getInstance(0, 0);
+                        const context = WebGLRenderContext.getInstance();
                         const buffer = context["currentBuffer"];
                         const globalMatrix = buffer.globalMatrix;
                         const m = Matrix.create();
@@ -106,7 +106,7 @@ namespace egret.web {
                         Matrix.release(m);
                     }
                     if (filter.$uniforms.uGlobalAlpha === null) {
-                        const context = WebGLRenderContext.getInstance(0, 0);
+                        const context = WebGLRenderContext.getInstance();
                         const globalAlpha = context["currentBuffer"].globalAlpha;
                         data.alpha = globalAlpha;
                     }
