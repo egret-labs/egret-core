@@ -114,6 +114,7 @@ module egret {
     locale_strings[1426] = "请安装 Texture Merger";
     locale_strings[1427] = "请将 Texture Merger 升级至 1.7.0 以上版本";
     locale_strings[1428] = "不支持的平台";
+    locale_strings[1429] = "{0}引入了一个相同的TextureMerger合图结果，请检查";
     //run
     locale_strings[1501] = "无法启动服务器，请检查权限或端口是否被占用";
     //create_app

@@ -114,7 +114,7 @@ locale_strings[1425] = "The textureMerger item corresponding to {0} does not hav
 locale_strings[1426] = "Please install Texture Merger";
 locale_strings[1427] = "Please upgrade Texture Merger to 1.7.0 or later";
 locale_strings[1428] = "Unsupported platforms";
-
+locale_strings[1429] = "{0} Introduced an identical TextureMerger result, please check";
 
 //startserver
 locale_strings[1501] = "Unable to start the server, please check the authority or whether the port is occupied";

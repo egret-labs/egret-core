@@ -315,9 +315,9 @@ declare module 'built-in' {
 
         resourceConfigFiles: { filename: string, root: string }[];
 
-        nameSelector: (url: string) => string
+        nameSelector: (url: string) => string;
 
-
+        TM_Verbose:boolean;
     }
 
     export class ConvertResConfigFilePlugin implements plugins.Command {

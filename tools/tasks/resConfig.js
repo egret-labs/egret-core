@@ -173,6 +173,11 @@ var TextureMergerResConfigPlugin = /** @class */ (function () {
         this.resourceConfig = {};
         /** 要打包的文件夹 */
         this.resourceDirs = {};
+        /**
+         * 检查是否一个json插入到不同的res.json中
+         * @param url
+         */
+        this.verboseHash = {};
         this.resourceConfigFiles = this.options.resourceConfigFiles.map(function (item) {
             var resourceConfigFile = path.posix.join(item.root, item.filename);
             _this.sheetRoot[resourceConfigFile] = item.root;
@@ -302,6 +307,7 @@ var TextureMergerResConfigPlugin = /** @class */ (function () {
                 subkeys: subkeys,
                 url: this.getSpliceRoot(relativeJson, root)
             };
+            this.checkVerbose(json.url, filename);
             this.deleteReferenceByName(subkeysFile.name, resourceConfig_1, root);
             resourceConfig_1.resources.push(json);
             //png
@@ -349,6 +355,18 @@ var TextureMergerResConfigPlugin = /** @class */ (function () {
                 continue;
             }
         }
+    };
+    TextureMergerResConfigPlugin.prototype.checkVerbose = function (tmjson, resjson) {
+        if (!this.options.TM_Verbose)
+            return;
+        if (this.verboseHash[tmjson] == undefined) {
+            this.verboseHash[tmjson] = [];
+            this.verboseHash[tmjson].push(resjson);
+            return;
+        }
+        this.verboseHash[tmjson].push(resjson);
+        // console.log(this.verboseHash[tmjson].join(",    "));
+        console.log(utils.tr(1429, this.verboseHash[tmjson].join(",    ")));
     };
     return TextureMergerResConfigPlugin;
 }());
