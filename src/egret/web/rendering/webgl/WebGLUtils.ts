@@ -65,4 +65,25 @@ namespace egret.WebGLUtils {
             context.setBatchSize(size);
         }
     }
+
+    export const bindTexture = function (target: number, texture: Texture): void {
+        if (Capabilities.renderMode == "webgl") {
+            const web = egret["web"];
+            const context = web.WebGLRenderContext.getInstance(0, 0);
+            const gl = context.context;
+            if (texture && texture.$bitmapData) {
+                gl.activeTexture(gl.TEXTURE0 + target);
+                const webglTexture = context.getWebGLTexture(texture.$bitmapData);
+                if (webglTexture) {
+                    gl.bindTexture(gl.TEXTURE_2D, webglTexture);
+                    gl.activeTexture(gl.TEXTURE0);
+                }
+            }
+            else {
+                gl.activeTexture(gl.TEXTURE0 + target);
+                gl.bindTexture(gl.TEXTURE_2D, null);
+                gl.activeTexture(gl.TEXTURE0);
+            }
+        }
+    }
 }

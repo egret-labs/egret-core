@@ -4117,6 +4117,7 @@ declare namespace egret.WebGLUtils {
     const checkCanUseWebGL: () => boolean;
     const deleteWebGLTexture: (bitmapData: any) => void;
     const setBatchSize: (size: number) => void;
+    const bindTexture: (target: number, texture: Texture) => boolean;
 }
 declare namespace egret {
     /**

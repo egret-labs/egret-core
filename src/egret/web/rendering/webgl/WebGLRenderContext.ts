@@ -1106,7 +1106,6 @@ namespace egret.web {
 
         private syncUniforms(program: EgretWebGLProgram, filter: Filter, data): void {
             let uniforms = program.uniforms;
-            let isCustomFilter: boolean = filter && filter.type === "custom";
             for (let key in uniforms) {
                 if (key === "projectionVector") {
                     uniforms[key].setValue({ x: this.projectionX, y: this.projectionY });

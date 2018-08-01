@@ -6522,7 +6522,6 @@ var egret;
             };
             WebGLRenderContext.prototype.syncUniforms = function (program, filter, data) {
                 var uniforms = program.uniforms;
-                var isCustomFilter = filter && filter.type === "custom";
                 for (var key in uniforms) {
                     if (key === "projectionVector") {
                         uniforms[key].setValue({ x: this.projectionX, y: this.projectionY });

@@ -6966,6 +6966,27 @@ var egret;
                 context.setBatchSize(size);
             }
         };
+        WebGLUtils.bindTexture = function (target, texture) {
+            if (egret.Capabilities.renderMode == "webgl") {
+                var web = egret["web"];
+                var context = web.WebGLRenderContext.getInstance(0, 0);
+                var gl = context.context;
+                if (texture && texture.$bitmapData) {
+                    gl.activeTexture(gl.TEXTURE0 + target);
+                    var webglTexture = context.getWebGLTexture(texture.$bitmapData);
+                    if (webglTexture) {
+                        gl.bindTexture(gl.TEXTURE_2D, webglTexture);
+                        gl.activeTexture(gl.TEXTURE0);
+                        return true;
+                    }
+                }
+                else {
+                    gl.activeTexture(gl.TEXTURE0 + target);
+                    gl.bindTexture(gl.TEXTURE_2D, null);
+                }
+            }
+            return false;
+        };
     })(WebGLUtils = egret.WebGLUtils || (egret.WebGLUtils = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
