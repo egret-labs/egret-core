@@ -48,39 +48,55 @@ module RES {
 		 */
 		private numLoadedDic: any = {};
 		/**
-		 * 正在加载的组列表,key为groupName
-		 */
-		private itemListDic: any = {};
-		/**
 		 * 加载失败的组,key为groupName
 		 */
 		private groupErrorDic: any = {};
-
 		private retryTimesDic: any = {};
 		public maxRetryTimes = 3;
-		/**
-		 * 优先级队列,key为priority，value为groupName列表
-		 */
-		private priorityQueue: any = {};
 		private reporterDic: any = {};
 		private dispatcherDic: any = {};
 		private failedList: Array<ResourceInfo> = new Array<ResourceInfo>();
 		private loadItemErrorDic: any = {};
 		private errorDic: any = {};
-
-		load(list: ResourceInfo[], groupName: string, priority: number, reporter?: PromiseTaskReporter): Promise<any> {
-			if (this.itemListDic[groupName]) {
-				if (!this.dispatcherDic[groupName]) {
-					const dispatcher = new egret.EventDispatcher();
-					this.dispatcherDic[groupName] = dispatcher;
+		/**
+		 * 资源优先级队列，key为资源，value为优先级
+		 */
+		private itemListPriorityDic: { [priority: number]: ResourceInfo[] } = {};
+		/**
+		 * 资源是否在加载
+		 */
+		private itemLoadDic: { [name: string]: 1 } = {};
+		private promiseHash: any = {};
+		private findPriorityInDic(item: ResourceInfo) {
+			for (let priority in this.itemListPriorityDic) {
+				if (this.itemListPriorityDic[priority].indexOf(item) > -1)
+					return parseInt(priority);
+			}
+			return undefined;
+		}
+		private updatelistPriority(list: ResourceInfo[], priority: number) {
+			if (this.itemListPriorityDic[priority] == undefined) {
+				this.itemListPriorityDic[priority] = [];
+			}
+			for (let item of list) {
+				if (this.itemLoadDic[item.name] == 1) {
+					continue;
 				}
-				const promise = new Promise((reslove, reject) => {
-					this.dispatcherDic[groupName].addEventListener("complete", reslove, null);
-					this.dispatcherDic[groupName].addEventListener("error", function (e: egret.Event) {
-						reject(e.data);
-					}, null);
-				});
-				return promise;
+				let oldPriority = this.findPriorityInDic(item);
+				if (oldPriority == undefined) {
+					this.itemListPriorityDic[priority].push(item);
+				} else {
+					if (oldPriority < priority) {
+						this.itemListPriorityDic[priority].push(item);
+						const index = this.itemListPriorityDic[oldPriority].indexOf(item);
+						this.itemListPriorityDic[oldPriority].splice(index, 1);
+					}
+				}
+			}
+		}
+		load(list: ResourceInfo[], groupName: string, priority: number, reporter?: PromiseTaskReporter): Promise<any> {
+			if (this.promiseHash[groupName]) {
+				return this.promiseHash[groupName];
 			}
 			const total = list.length;
 			for (let i: number = 0; i < total; i++) {
@@ -90,13 +106,9 @@ module RES {
 				}
 				resInfo.groupNames.push(groupName);
 			}
-			this.itemListDic[groupName] = list;
 			this.groupTotalDic[groupName] = list.length;
 			this.numLoadedDic[groupName] = 0;
-			if (this.priorityQueue[priority])
-				this.priorityQueue[priority].push(groupName);
-			else
-				this.priorityQueue[priority] = [groupName];
+			this.updatelistPriority(list, priority);
 			this.reporterDic[groupName] = reporter;
 			const dispatcher = new egret.EventDispatcher();
 			this.dispatcherDic[groupName] = dispatcher;
@@ -106,6 +118,7 @@ module RES {
 					reject(e.data);
 				}, null);
 			});
+			this.promiseHash[groupName] = promise;
 			this.next();
 			return promise;
 		}
@@ -118,40 +131,45 @@ module RES {
 				const r: ResourceInfo = <ResourceInfo>this.getOneResourceInfo();
 				if (!r)
 					break;
+				this.itemLoadDic[r.name] = 1;
 				this.loadingCount++;
 				this.loadResource(r)
 					.then(response => {
 						this.loadingCount--;
+						delete this.itemLoadDic[r.name];
 						host.save(r, response);
-						const groupName: string = <string>(<string[]>r.groupNames).shift();
-						if ((<string[]>r.groupNames).length == 0) {
-							r.groupNames = undefined;
+						const groupNames: string[] = [];
+						for (let groupName of <string[]>r.groupNames) {
+							groupNames.push(groupName);
 						}
-						const reporter = this.reporterDic[groupName];
-						this.numLoadedDic[groupName]++;
-						const current = this.numLoadedDic[groupName];
-						const total = this.groupTotalDic[groupName];
-						if (reporter && reporter.onProgress) {
-							reporter.onProgress(current, total);
-						}
-						if (current == total) {
-							const groupError: boolean = this.groupErrorDic[groupName];
-							this.removeGroupName(groupName);
-							delete this.groupTotalDic[groupName];
-							delete this.numLoadedDic[groupName];
-							delete this.itemListDic[groupName];
-							delete this.reporterDic[groupName];
-							delete this.groupErrorDic[groupName];
-							const dispatcher: egret.EventDispatcher = this.dispatcherDic[groupName];
-							if (groupError) {
-								const itemList = this.loadItemErrorDic[groupName];
-								delete this.loadItemErrorDic[groupName];
-								const error = this.errorDic[groupName];
-								delete this.errorDic[groupName];
-								dispatcher.dispatchEventWith("error", false, { itemList, error });
+						delete r.groupNames;
+						for (let groupName of groupNames) {
+							const reporter = this.reporterDic[groupName];
+							this.numLoadedDic[groupName]++;
+							const current = this.numLoadedDic[groupName];
+							const total = this.groupTotalDic[groupName];
+							if (reporter && reporter.onProgress) {
+								reporter.onProgress(current, total);
 							}
-							else {
-								dispatcher.dispatchEventWith("complete");
+							if (current == total) {
+								const groupError: boolean = this.groupErrorDic[groupName];
+								delete this.groupTotalDic[groupName];
+								delete this.numLoadedDic[groupName];
+								delete this.reporterDic[groupName];
+								delete this.groupErrorDic[groupName];
+								delete this.promiseHash[groupName];
+								const dispatcher: egret.EventDispatcher = this.dispatcherDic[groupName];
+								delete this.dispatcherDic[groupName];
+								if (groupError) {
+									const itemList = this.loadItemErrorDic[groupName];
+									delete this.loadItemErrorDic[groupName];
+									const error = this.errorDic[groupName];
+									delete this.errorDic[groupName];
+									dispatcher.dispatchEventWith("error", false, { itemList, error });
+								}
+								else {
+									dispatcher.dispatchEventWith("complete");
+								}
 							}
 						}
 						this.next();
@@ -162,44 +180,47 @@ module RES {
 						if (!error.__resource_manager_error__) {
 							throw error;
 						}
+						delete this.itemLoadDic[r.name];
 						this.loadingCount--;
 						delete host.state[r.root + r.name];
 						const times = this.retryTimesDic[r.name] || 1;
 						if (times > this.maxRetryTimes) {
 							delete this.retryTimesDic[r.name];
-							const groupName: string = <string>(<string[]>r.groupNames).shift();
-							if ((<string[]>r.groupNames).length == 0) {
-								delete r.groupNames;
+							const groupNames: string[] = [];
+							for (let groupName of <string[]>r.groupNames) {
+								groupNames.push(groupName);
 							}
-							if (!this.loadItemErrorDic[groupName]) {
-								this.loadItemErrorDic[groupName] = [];
-							}
-							if (this.loadItemErrorDic[groupName].indexOf(r) == -1) {
-								this.loadItemErrorDic[groupName].push(r);
-							}
-							this.groupErrorDic[groupName] = true;
-							const reporter = this.reporterDic[groupName];
-							this.numLoadedDic[groupName]++;
-							const current = this.numLoadedDic[groupName];
-							const total = this.groupTotalDic[groupName];
-							if (reporter && reporter.onProgress) {
-								reporter.onProgress(current, total);
-							}
-							if (current == total) {
-								const groupError = this.groupErrorDic[groupName];
-								this.removeGroupName(groupName);
-								delete this.groupTotalDic[groupName];
-								delete this.numLoadedDic[groupName];
-								delete this.itemListDic[groupName];
-								delete this.groupErrorDic[groupName];
-								delete this.reporterDic[groupName];
-								const itemList = this.loadItemErrorDic[groupName];
-								delete this.loadItemErrorDic[groupName];
-								const dispatcher = this.dispatcherDic[groupName];
-								dispatcher.dispatchEventWith("error", false, { itemList, error });
-							}
-							else {
-								this.errorDic[groupName] = error;
+							delete r.groupNames;
+							for (let groupName of groupNames) {
+								if (!this.loadItemErrorDic[groupName]) {
+									this.loadItemErrorDic[groupName] = [];
+								}
+								if (this.loadItemErrorDic[groupName].indexOf(r) == -1) {
+									this.loadItemErrorDic[groupName].push(r);
+								}
+								this.groupErrorDic[groupName] = true;
+								const reporter = this.reporterDic[groupName];
+								this.numLoadedDic[groupName]++;
+								const current = this.numLoadedDic[groupName];
+								const total = this.groupTotalDic[groupName];
+								if (reporter && reporter.onProgress) {
+									reporter.onProgress(current, total);
+								}
+								if (current == total) {
+									delete this.groupTotalDic[groupName];
+									delete this.numLoadedDic[groupName];
+									delete this.groupErrorDic[groupName];
+									delete this.reporterDic[groupName];
+									delete this.promiseHash[groupName];
+									const itemList = this.loadItemErrorDic[groupName];
+									delete this.loadItemErrorDic[groupName];
+									const dispatcher = this.dispatcherDic[groupName];
+									delete this.dispatcherDic[groupName];
+									dispatcher.dispatchEventWith("error", false, { itemList, error });
+								}
+								else {
+									this.errorDic[groupName] = error;
+								}
 							}
 							this.next();
 						}
@@ -214,60 +235,23 @@ module RES {
 		}
 
 		/**
-		 * 从优先级队列中移除指定的组名
-		 */
-		private removeGroupName(groupName: string): void {
-			for (let p in this.priorityQueue) {
-				const queue: any[] = this.priorityQueue[p];
-				let index: number = 0;
-				let found: boolean = false;
-				const length: number = queue.length;
-				for (let i: number = 0; i < length; i++) {
-					const name: string = queue[i];
-					if (name == groupName) {
-						queue.splice(index, 1);
-						found = true;
-						break;
-					}
-					index++;
-				}
-				if (found) {
-					if (queue.length == 0) {
-						delete this.priorityQueue[p];
-					}
-					break;
-				}
-			}
-		}
-
-		private queueIndex: number = 0;
-
-		/**
 		 * 获取下一个待加载项
 		 */
 		private getOneResourceInfo(): ResourceInfo | undefined {
 			if (this.failedList.length > 0)
 				return this.failedList.shift();
 			let maxPriority: number = Number.NEGATIVE_INFINITY;
-			for (let p in this.priorityQueue) {
+			for (let p in this.itemListPriorityDic) {
 				maxPriority = Math.max(maxPriority, <number><any>p);
 			}
-			const queue: any[] = this.priorityQueue[maxPriority];
-			if (!queue || queue.length == 0) {
+			const list: any[] = this.itemListPriorityDic[maxPriority];
+			if(!list){ 
 				return undefined;
 			}
-			const length: number = queue.length;
-			let list: Array<ResourceInfo> = [];
-			for (let i: number = 0; i < length; i++) {
-				if (this.queueIndex >= length)
-					this.queueIndex = 0;
-				list = this.itemListDic[queue[this.queueIndex]];
-				if (list.length > 0)
-					break;
-				this.queueIndex++;
+			if (list.length == 0) {
+				delete this.itemListPriorityDic[maxPriority];
+				return this.getOneResourceInfo();
 			}
-			if (list.length == 0)
-				return undefined;
 			return list.shift();
 		}
 

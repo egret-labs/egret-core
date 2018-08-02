@@ -409,42 +409,60 @@ var RES;
              */
             this.numLoadedDic = {};
             /**
-             * 正在加载的组列表,key为groupName
-             */
-            this.itemListDic = {};
-            /**
              * 加载失败的组,key为groupName
              */
             this.groupErrorDic = {};
             this.retryTimesDic = {};
             this.maxRetryTimes = 3;
-            /**
-             * 优先级队列,key为priority，value为groupName列表
-             */
-            this.priorityQueue = {};
             this.reporterDic = {};
             this.dispatcherDic = {};
             this.failedList = new Array();
             this.loadItemErrorDic = {};
             this.errorDic = {};
+            /**
+             * 资源优先级队列，key为资源，value为优先级
+             */
+            this.itemListPriorityDic = {};
+            /**
+             * 资源是否在加载
+             */
+            this.itemLoadDic = {};
+            this.promiseHash = {};
             this.loadingCount = 0;
             this.thread = 4;
-            this.queueIndex = 0;
         }
-        ResourceLoader.prototype.load = function (list, groupName, priority, reporter) {
-            var _this = this;
-            if (this.itemListDic[groupName]) {
-                if (!this.dispatcherDic[groupName]) {
-                    var dispatcher_1 = new egret.EventDispatcher();
-                    this.dispatcherDic[groupName] = dispatcher_1;
+        ResourceLoader.prototype.findPriorityInDic = function (item) {
+            for (var priority in this.itemListPriorityDic) {
+                if (this.itemListPriorityDic[priority].indexOf(item) > -1)
+                    return parseInt(priority);
+            }
+            return undefined;
+        };
+        ResourceLoader.prototype.updatelistPriority = function (list, priority) {
+            if (this.itemListPriorityDic[priority] == undefined) {
+                this.itemListPriorityDic[priority] = [];
+            }
+            for (var _i = 0, list_1 = list; _i < list_1.length; _i++) {
+                var item = list_1[_i];
+                if (this.itemLoadDic[item.name] == 1) {
+                    continue;
                 }
-                var promise_1 = new Promise(function (reslove, reject) {
-                    _this.dispatcherDic[groupName].addEventListener("complete", reslove, null);
-                    _this.dispatcherDic[groupName].addEventListener("error", function (e) {
-                        reject(e.data);
-                    }, null);
-                });
-                return promise_1;
+                var oldPriority = this.findPriorityInDic(item);
+                if (oldPriority == undefined) {
+                    this.itemListPriorityDic[priority].push(item);
+                }
+                else {
+                    if (oldPriority < priority) {
+                        this.itemListPriorityDic[priority].push(item);
+                        var index = this.itemListPriorityDic[oldPriority].indexOf(item);
+                        this.itemListPriorityDic[oldPriority].splice(index, 1);
+                    }
+                }
+            }
+        };
+        ResourceLoader.prototype.load = function (list, groupName, priority, reporter) {
+            if (this.promiseHash[groupName]) {
+                return this.promiseHash[groupName];
             }
             var total = list.length;
             for (var i = 0; i < total; i++) {
@@ -454,13 +472,9 @@ var RES;
                 }
                 resInfo.groupNames.push(groupName);
             }
-            this.itemListDic[groupName] = list;
             this.groupTotalDic[groupName] = list.length;
             this.numLoadedDic[groupName] = 0;
-            if (this.priorityQueue[priority])
-                this.priorityQueue[priority].push(groupName);
-            else
-                this.priorityQueue[priority] = [groupName];
+            this.updatelistPriority(list, priority);
             this.reporterDic[groupName] = reporter;
             var dispatcher = new egret.EventDispatcher();
             this.dispatcherDic[groupName] = dispatcher;
@@ -470,6 +484,7 @@ var RES;
                     reject(e.data);
                 }, null);
             });
+            this.promiseHash[groupName] = promise;
             this.next();
             return promise;
         };
@@ -479,40 +494,47 @@ var RES;
                 var r = this_1.getOneResourceInfo();
                 if (!r)
                     return "break";
+                this_1.itemLoadDic[r.name] = 1;
                 this_1.loadingCount++;
                 this_1.loadResource(r)
                     .then(function (response) {
                     _this.loadingCount--;
+                    delete _this.itemLoadDic[r.name];
                     RES.host.save(r, response);
-                    var groupName = r.groupNames.shift();
-                    if (r.groupNames.length == 0) {
-                        r.groupNames = undefined;
+                    var groupNames = [];
+                    for (var _i = 0, _a = r.groupNames; _i < _a.length; _i++) {
+                        var groupName = _a[_i];
+                        groupNames.push(groupName);
                     }
-                    var reporter = _this.reporterDic[groupName];
-                    _this.numLoadedDic[groupName]++;
-                    var current = _this.numLoadedDic[groupName];
-                    var total = _this.groupTotalDic[groupName];
-                    if (reporter && reporter.onProgress) {
-                        reporter.onProgress(current, total);
-                    }
-                    if (current == total) {
-                        var groupError = _this.groupErrorDic[groupName];
-                        _this.removeGroupName(groupName);
-                        delete _this.groupTotalDic[groupName];
-                        delete _this.numLoadedDic[groupName];
-                        delete _this.itemListDic[groupName];
-                        delete _this.reporterDic[groupName];
-                        delete _this.groupErrorDic[groupName];
-                        var dispatcher = _this.dispatcherDic[groupName];
-                        if (groupError) {
-                            var itemList = _this.loadItemErrorDic[groupName];
-                            delete _this.loadItemErrorDic[groupName];
-                            var error = _this.errorDic[groupName];
-                            delete _this.errorDic[groupName];
-                            dispatcher.dispatchEventWith("error", false, { itemList: itemList, error: error });
+                    delete r.groupNames;
+                    for (var _b = 0, groupNames_1 = groupNames; _b < groupNames_1.length; _b++) {
+                        var groupName = groupNames_1[_b];
+                        var reporter = _this.reporterDic[groupName];
+                        _this.numLoadedDic[groupName]++;
+                        var current = _this.numLoadedDic[groupName];
+                        var total = _this.groupTotalDic[groupName];
+                        if (reporter && reporter.onProgress) {
+                            reporter.onProgress(current, total);
                         }
-                        else {
-                            dispatcher.dispatchEventWith("complete");
+                        if (current == total) {
+                            var groupError = _this.groupErrorDic[groupName];
+                            delete _this.groupTotalDic[groupName];
+                            delete _this.numLoadedDic[groupName];
+                            delete _this.reporterDic[groupName];
+                            delete _this.groupErrorDic[groupName];
+                            delete _this.promiseHash[groupName];
+                            var dispatcher = _this.dispatcherDic[groupName];
+                            delete _this.dispatcherDic[groupName];
+                            if (groupError) {
+                                var itemList = _this.loadItemErrorDic[groupName];
+                                delete _this.loadItemErrorDic[groupName];
+                                var error = _this.errorDic[groupName];
+                                delete _this.errorDic[groupName];
+                                dispatcher.dispatchEventWith("error", false, { itemList: itemList, error: error });
+                            }
+                            else {
+                                dispatcher.dispatchEventWith("complete");
+                            }
                         }
                     }
                     _this.next();
@@ -523,44 +545,49 @@ var RES;
                     if (!error.__resource_manager_error__) {
                         throw error;
                     }
+                    delete _this.itemLoadDic[r.name];
                     _this.loadingCount--;
                     delete RES.host.state[r.root + r.name];
                     var times = _this.retryTimesDic[r.name] || 1;
                     if (times > _this.maxRetryTimes) {
                         delete _this.retryTimesDic[r.name];
-                        var groupName = r.groupNames.shift();
-                        if (r.groupNames.length == 0) {
-                            delete r.groupNames;
+                        var groupNames = [];
+                        for (var _i = 0, _a = r.groupNames; _i < _a.length; _i++) {
+                            var groupName = _a[_i];
+                            groupNames.push(groupName);
                         }
-                        if (!_this.loadItemErrorDic[groupName]) {
-                            _this.loadItemErrorDic[groupName] = [];
-                        }
-                        if (_this.loadItemErrorDic[groupName].indexOf(r) == -1) {
-                            _this.loadItemErrorDic[groupName].push(r);
-                        }
-                        _this.groupErrorDic[groupName] = true;
-                        var reporter = _this.reporterDic[groupName];
-                        _this.numLoadedDic[groupName]++;
-                        var current = _this.numLoadedDic[groupName];
-                        var total = _this.groupTotalDic[groupName];
-                        if (reporter && reporter.onProgress) {
-                            reporter.onProgress(current, total);
-                        }
-                        if (current == total) {
-                            var groupError = _this.groupErrorDic[groupName];
-                            _this.removeGroupName(groupName);
-                            delete _this.groupTotalDic[groupName];
-                            delete _this.numLoadedDic[groupName];
-                            delete _this.itemListDic[groupName];
-                            delete _this.groupErrorDic[groupName];
-                            delete _this.reporterDic[groupName];
-                            var itemList = _this.loadItemErrorDic[groupName];
-                            delete _this.loadItemErrorDic[groupName];
-                            var dispatcher = _this.dispatcherDic[groupName];
-                            dispatcher.dispatchEventWith("error", false, { itemList: itemList, error: error });
-                        }
-                        else {
-                            _this.errorDic[groupName] = error;
+                        delete r.groupNames;
+                        for (var _b = 0, groupNames_2 = groupNames; _b < groupNames_2.length; _b++) {
+                            var groupName = groupNames_2[_b];
+                            if (!_this.loadItemErrorDic[groupName]) {
+                                _this.loadItemErrorDic[groupName] = [];
+                            }
+                            if (_this.loadItemErrorDic[groupName].indexOf(r) == -1) {
+                                _this.loadItemErrorDic[groupName].push(r);
+                            }
+                            _this.groupErrorDic[groupName] = true;
+                            var reporter = _this.reporterDic[groupName];
+                            _this.numLoadedDic[groupName]++;
+                            var current = _this.numLoadedDic[groupName];
+                            var total = _this.groupTotalDic[groupName];
+                            if (reporter && reporter.onProgress) {
+                                reporter.onProgress(current, total);
+                            }
+                            if (current == total) {
+                                delete _this.groupTotalDic[groupName];
+                                delete _this.numLoadedDic[groupName];
+                                delete _this.groupErrorDic[groupName];
+                                delete _this.reporterDic[groupName];
+                                delete _this.promiseHash[groupName];
+                                var itemList = _this.loadItemErrorDic[groupName];
+                                delete _this.loadItemErrorDic[groupName];
+                                var dispatcher = _this.dispatcherDic[groupName];
+                                delete _this.dispatcherDic[groupName];
+                                dispatcher.dispatchEventWith("error", false, { itemList: itemList, error: error });
+                            }
+                            else {
+                                _this.errorDic[groupName] = error;
+                            }
                         }
                         _this.next();
                     }
@@ -580,57 +607,23 @@ var RES;
             }
         };
         /**
-         * 从优先级队列中移除指定的组名
-         */
-        ResourceLoader.prototype.removeGroupName = function (groupName) {
-            for (var p in this.priorityQueue) {
-                var queue_1 = this.priorityQueue[p];
-                var index = 0;
-                var found = false;
-                var length_1 = queue_1.length;
-                for (var i = 0; i < length_1; i++) {
-                    var name_1 = queue_1[i];
-                    if (name_1 == groupName) {
-                        queue_1.splice(index, 1);
-                        found = true;
-                        break;
-                    }
-                    index++;
-                }
-                if (found) {
-                    if (queue_1.length == 0) {
-                        delete this.priorityQueue[p];
-                    }
-                    break;
-                }
-            }
-        };
-        /**
          * 获取下一个待加载项
          */
         ResourceLoader.prototype.getOneResourceInfo = function () {
             if (this.failedList.length > 0)
                 return this.failedList.shift();
             var maxPriority = Number.NEGATIVE_INFINITY;
-            for (var p in this.priorityQueue) {
+            for (var p in this.itemListPriorityDic) {
                 maxPriority = Math.max(maxPriority, p);
             }
-            var queue = this.priorityQueue[maxPriority];
-            if (!queue || queue.length == 0) {
+            var list = this.itemListPriorityDic[maxPriority];
+            if (!list) {
                 return undefined;
             }
-            var length = queue.length;
-            var list = [];
-            for (var i = 0; i < length; i++) {
-                if (this.queueIndex >= length)
-                    this.queueIndex = 0;
-                list = this.itemListDic[queue[this.queueIndex]];
-                if (list.length > 0)
-                    break;
-                this.queueIndex++;
+            if (list.length == 0) {
+                delete this.itemListPriorityDic[maxPriority];
+                return this.getOneResourceInfo();
             }
-            if (list.length == 0)
-                return undefined;
             return list.shift();
         };
         ResourceLoader.prototype.loadResource = function (r, p) {
@@ -1556,8 +1549,8 @@ var RES;
             dirpath = RES.path.normalize(dirpath);
             var list = dirpath.split("/");
             var current = this.data;
-            for (var _i = 0, list_1 = list; _i < list_1.length; _i++) {
-                var f = list_1[_i];
+            for (var _i = 0, list_2 = list; _i < list_2.length; _i++) {
+                var f = list_2[_i];
                 if (current) {
                     current = current[f];
                 }
@@ -1571,8 +1564,8 @@ var RES;
             dirpath = RES.path.normalize(dirpath);
             var list = dirpath.split("/");
             var current = this.data;
-            for (var _i = 0, list_2 = list; _i < list_2.length; _i++) {
-                var f = list_2[_i];
+            for (var _i = 0, list_3 = list; _i < list_3.length; _i++) {
+                var f = list_3[_i];
                 if (!current[f]) {
                     current[f] = {};
                 }
@@ -1585,8 +1578,8 @@ var RES;
             dirpath = RES.path.normalize(dirpath);
             var list = dirpath.split("/");
             var current = this.data;
-            for (var _i = 0, list_3 = list; _i < list_3.length; _i++) {
-                var f = list_3[_i];
+            for (var _i = 0, list_4 = list; _i < list_4.length; _i++) {
+                var f = list_4[_i];
                 if (!current[f]) {
                     return false;
                 }
