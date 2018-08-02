@@ -38,6 +38,11 @@ namespace egret.sys {
          * 相对偏移矩阵。
          */
         public matrix: egret.Matrix;
+
+        /**
+         * 使用的混合模式
+         */
+        public blendMode: number = null;
         
         public constructor() {
             super();

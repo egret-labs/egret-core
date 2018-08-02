@@ -9738,6 +9738,10 @@ declare namespace egret.sys {
          * 相对偏移矩阵。
          */
         matrix: egret.Matrix;
+        /**
+         * 使用的混合模式
+         */
+        blendMode: number;
         constructor();
         addNode(node: RenderNode): void;
         /**

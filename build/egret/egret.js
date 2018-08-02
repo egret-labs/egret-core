@@ -14798,6 +14798,10 @@ var egret;
             __extends(GroupNode, _super);
             function GroupNode() {
                 var _this = _super.call(this) || this;
+                /**
+                 * 使用的混合模式
+                 */
+                _this.blendMode = null;
                 _this.type = 4 /* GroupNode */;
                 return _this;
             }
@@ -16362,6 +16366,10 @@ var egret;
                 }
                 context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             }
+            var blendMode = groupNode.blendMode;
+            if (blendMode) {
+                context.globalCompositeOperation = blendModes[blendMode];
+            }
             var drawCalls = 0;
             var children = groupNode.drawData;
             var length = children.length;
@@ -16371,6 +16379,11 @@ var egret;
             }
             if (saved) {
                 context.restore();
+            }
+            else {
+                if (blendMode) {
+                    context.globalCompositeOperation = defaultCompositeOp;
+                }
             }
             if (offsetX) {
                 context.$offsetX = offsetX;

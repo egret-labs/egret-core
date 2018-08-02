@@ -1054,11 +1054,18 @@ namespace egret.web {
                 buffer.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             }
 
+            const blendMode = groupNode.blendMode;
+            if (blendMode) {
+                buffer.context.setGlobalCompositeOperation(blendModes[blendMode]);
+            }
             let children = groupNode.drawData;
             let length = children.length;
             for (let i = 0; i < length; i++) {
                 let node: sys.RenderNode = children[i];
                 this.renderNode(node, buffer, buffer.$offsetX, buffer.$offsetY);
+            }
+            if (blendMode) {
+                buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
             }
             if (m) {
                 let matrix = buffer.globalMatrix;

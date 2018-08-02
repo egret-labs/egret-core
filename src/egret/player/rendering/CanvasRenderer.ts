@@ -781,6 +781,10 @@ namespace egret {
                 }
                 context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             }
+            const blendMode = groupNode.blendMode;
+            if (blendMode) {
+                context.globalCompositeOperation = blendModes[blendMode];
+            }
 
             let drawCalls: number = 0;
             let children = groupNode.drawData;
@@ -792,6 +796,11 @@ namespace egret {
 
             if (saved) {
                 context.restore();
+            }
+            else {
+                if (blendMode) {
+                    context.globalCompositeOperation = defaultCompositeOp;
+                }
             }
             if (offsetX) {
                 context.$offsetX = offsetX;

@@ -8093,11 +8093,18 @@ var egret;
                     buffer.useOffset();
                     buffer.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
                 }
+                var blendMode = groupNode.blendMode;
+                if (blendMode) {
+                    buffer.context.setGlobalCompositeOperation(blendModes[blendMode]);
+                }
                 var children = groupNode.drawData;
                 var length = children.length;
                 for (var i = 0; i < length; i++) {
                     var node = children[i];
                     this.renderNode(node, buffer, buffer.$offsetX, buffer.$offsetY);
+                }
+                if (blendMode) {
+                    buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
                 }
                 if (m) {
                     var matrix = buffer.globalMatrix;
