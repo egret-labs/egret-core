@@ -105,33 +105,31 @@ declare module RES {
          */
         private numLoadedDic;
         /**
-         * 正在加载的组列表,key为groupName
-         */
-        private itemListDic;
-        /**
          * 加载失败的组,key为groupName
          */
         private groupErrorDic;
         private retryTimesDic;
         maxRetryTimes: number;
-        /**
-         * 优先级队列,key为priority，value为groupName列表
-         */
-        private priorityQueue;
         private reporterDic;
         private dispatcherDic;
         private failedList;
         private loadItemErrorDic;
         private errorDic;
+        /**
+         * 资源优先级队列，key为资源，value为优先级
+         */
+        private itemListPriorityDic;
+        /**
+         * 资源是否在加载
+         */
+        private itemLoadDic;
+        private promiseHash;
+        private findPriorityInDic(item);
+        private updatelistPriority(list, priority);
         load(list: ResourceInfo[], groupName: string, priority: number, reporter?: PromiseTaskReporter): Promise<any>;
         private loadingCount;
         thread: number;
         private next();
-        /**
-         * 从优先级队列中移除指定的组名
-         */
-        private removeGroupName(groupName);
-        private queueIndex;
         /**
          * 获取下一个待加载项
          */
