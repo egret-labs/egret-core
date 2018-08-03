@@ -187,7 +187,7 @@ declare namespace RES {
         /**
          * 进度回调
          */
-        onProgress?: (current: number, total: number) => void;
+        onProgress?: (current: number, total: number, resItem: ResourceInfo | undefined) => void;
         /**
          * 取消回调
          */
