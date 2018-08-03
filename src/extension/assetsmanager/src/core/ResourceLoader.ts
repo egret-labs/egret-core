@@ -149,7 +149,7 @@ module RES {
 							const current = this.numLoadedDic[groupName];
 							const total = this.groupTotalDic[groupName];
 							if (reporter && reporter.onProgress) {
-								reporter.onProgress(current, total);
+								reporter.onProgress(current, total,r);
 							}
 							if (current == total) {
 								const groupError: boolean = this.groupErrorDic[groupName];
@@ -204,7 +204,7 @@ module RES {
 								const current = this.numLoadedDic[groupName];
 								const total = this.groupTotalDic[groupName];
 								if (reporter && reporter.onProgress) {
-									reporter.onProgress(current, total);
+									reporter.onProgress(current, total,r);
 								}
 								if (current == total) {
 									delete this.groupTotalDic[groupName];

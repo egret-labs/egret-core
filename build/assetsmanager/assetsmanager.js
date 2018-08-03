@@ -514,7 +514,7 @@ var RES;
                         var current = _this.numLoadedDic[groupName];
                         var total = _this.groupTotalDic[groupName];
                         if (reporter && reporter.onProgress) {
-                            reporter.onProgress(current, total);
+                            reporter.onProgress(current, total, r);
                         }
                         if (current == total) {
                             var groupError = _this.groupErrorDic[groupName];
@@ -571,7 +571,7 @@ var RES;
                             var current = _this.numLoadedDic[groupName];
                             var total = _this.groupTotalDic[groupName];
                             if (reporter && reporter.onProgress) {
-                                reporter.onProgress(current, total);
+                                reporter.onProgress(current, total, r);
                             }
                             if (current == total) {
                                 delete _this.groupTotalDic[groupName];
@@ -2520,11 +2520,11 @@ var RES;
             var _this = this;
             if (priority === void 0) { priority = 0; }
             var reporterDelegate = {
-                onProgress: function (current, total) {
+                onProgress: function (current, total, resItem) {
                     if (reporter && reporter.onProgress) {
-                        reporter.onProgress(current, total);
+                        reporter.onProgress(current, total, resItem);
                     }
-                    RES.ResourceEvent.dispatchResourceEvent(_this, RES.ResourceEvent.GROUP_PROGRESS, name, undefined, current, total);
+                    RES.ResourceEvent.dispatchResourceEvent(_this, RES.ResourceEvent.GROUP_PROGRESS, name, resItem, current, total);
                 }
             };
             return this._loadGroup(name, priority, reporterDelegate).then(function (data) {
