@@ -175,7 +175,7 @@ class TextureMergerResConfigPlugin {
     private resourceDirs: { [filename: string]: boolean } = {};
     constructor(private options: ConvertResourceConfigPluginOption) {
         this.resourceConfigFiles = this.options.resourceConfigFiles.map((item) => {
-            let resourceConfigFile = path.posix.join(item.root, item.filename);
+            let resourceConfigFile = path.posix.join(item.filename);
             this.sheetRoot[resourceConfigFile] = item.root;
             this.resourceDirs[item.root] = true;
             return resourceConfigFile;
@@ -260,6 +260,14 @@ class TextureMergerResConfigPlugin {
     }
 
     async parseTestureMerger(pluginContext: plugin.PluginContext) {
+        let hasConfig = false;
+        for (let i in this.resourceConfig) {
+            hasConfig = true;
+        }
+        if (!hasConfig) {
+            console.log(utils.tr(1430));
+            global.globals.exit()
+        }
         for (let sheetFileName in this.sheetFiles) {
             const subkeysFile = this.sheetFiles[sheetFileName];
             /** 创建哈希，减少一层for遍历 */
@@ -312,7 +320,6 @@ class TextureMergerResConfigPlugin {
             }
             this.deleteReferenceByName(imgName, resourceConfig, root);
             resourceConfig.resources.push(image);
-
             const buffer = new Buffer(JSON.stringify(resourceConfig));
             pluginContext.createFile(path.join(pluginContext.outputDir, filename), buffer);
         }

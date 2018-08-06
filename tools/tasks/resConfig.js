@@ -179,7 +179,7 @@ var TextureMergerResConfigPlugin = /** @class */ (function () {
          */
         this.verboseHash = {};
         this.resourceConfigFiles = this.options.resourceConfigFiles.map(function (item) {
-            var resourceConfigFile = path.posix.join(item.root, item.filename);
+            var resourceConfigFile = path.posix.join(item.filename);
             _this.sheetRoot[resourceConfigFile] = item.root;
             _this.resourceDirs[item.root] = true;
             return resourceConfigFile;
@@ -265,8 +265,16 @@ var TextureMergerResConfigPlugin = /** @class */ (function () {
     };
     TextureMergerResConfigPlugin.prototype.parseTestureMerger = function (pluginContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var sheetFileName, subkeysFile, subkeyHash, _i, _a, subkeyItem;
+            var hasConfig, i, sheetFileName, subkeysFile, subkeyHash, _i, _a, subkeyItem;
             return __generator(this, function (_b) {
+                hasConfig = false;
+                for (i in this.resourceConfig) {
+                    hasConfig = true;
+                }
+                if (!hasConfig) {
+                    console.log(utils.tr(1430));
+                    global.globals.exit();
+                }
                 for (sheetFileName in this.sheetFiles) {
                     subkeysFile = this.sheetFiles[sheetFileName];
                     subkeyHash = {};
