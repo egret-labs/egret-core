@@ -28,10 +28,9 @@
 //////////////////////////////////////////////////////////////////////////////////////
 import { EXMLConfig, NS_S, NS_W } from "./EXMLConfig2";
 import XMLParser = require("../xml/index");
-import { EXAddItems, EXBinding, EXClass, EXCodeBlock, EXFunction, EXSetProperty, EXState, EXVariable, EXSetStateProperty, EXArray } from "./CodeFactory";
+import { EXAddItems, EXBinding, EXClass, EXFunction, EXSetProperty, EXState, EXVariable, EXSetStateProperty } from "./CodeFactory";
 let DEBUG = false;
 import { egretbridge } from "./egretbridge";
-import { EXMLFile } from "./EXML";
 import { jsonFactory } from './JSONClass'
 import utils = require('../../lib/utils');
 export const eui = jsonFactory;
@@ -43,19 +42,15 @@ export let exmlConfig: EXMLConfig;
 export let isError: boolean = false;
 
 let exmlParserPool: JSONParser[] = [];
-let parsedClasses: any = {};
 let innerClassCount = 1;
 
 let HOST_COMPONENT = "hostComponent";
-let SKIN_CLASS = "eui.Skin";
 let DECLARATIONS = "Declarations";
-let RECTANGLE = "egret.Rectangle";
 let TYPE_CLASS = "Class";
 let TYPE_ARRAY = "Array";
 let TYPE_PERCENTAGE = "Percentage";
 let TYPE_STexture = "string | Texture";
 let TYPE_STATE = "State[]";
-let SKIN_NAME = "skinName";
 let ELEMENTS_CONTENT = "elementsContent";
 let basicTypes: string[] = [TYPE_ARRAY, TYPE_STexture, "boolean", "string", "number"];
 let wingKeys: string[] = ["id", "locked", "includeIn", "excludeFrom"];
@@ -105,12 +100,6 @@ export class JSONParser {
      * @private
      */
     public constructor() {
-        if (DEBUG) {
-            this.repeatedIdMap = {};
-            this.getRepeatedIds = getRepeatedIds;
-            this.getIds = getIds;
-            this.checkDeclarations = checkDeclarations;
-        }
     }
     private _topNode: egretbridge.XML;
     public get topNode(): egretbridge.XML {
@@ -122,31 +111,13 @@ export class JSONParser {
     }
     /**
      * @private
-     * 获取重复的ID名
-     */
-    public getRepeatedIds: (xml: egretbridge.XML) => string[];
-    /**
-     * @private
-     */
-    private getIds: (xml: any, result: string[]) => void;
-    /**
-     * @private
      */
     private repeatedIdMap: any;
-    /**
-     * @private
-     */
-    private checkDeclarations: (declarations: egretbridge.XML, list: string[]) => void;
-
     /**
      * @private
      * 当前类
      */
     private currentClass: EXClass;
-    /**
-     * 当前exml的根节点是否为Skin
-     */
-    private isSkinClass: boolean;
     /**
      * @private
      * 当前编译的类名
@@ -194,12 +165,6 @@ export class JSONParser {
     private declarations: any;
     /**
      * @private
-     * 延迟赋值字典
-     */
-    private delayAssignmentDic: any = {};
-
-    /**
-     * @private
      * 编译指定的XML对象为json。
      * @param xmlData 要编译的EXML文件内容
      *
@@ -223,12 +188,10 @@ export class JSONParser {
             xmlData = XMLParser.parse(text);
         }
         this._topNode = xmlData;
-        let hasClass: boolean = false;
         let className: string = "";
         if (xmlData.attributes["class"]) {
             className = xmlData.attributes["class"];
             delete xmlData.attributes["class"];
-            hasClass = !!className;
         }
         else {
             className = "$exmlClass" + innerClassCount++;
@@ -253,11 +216,9 @@ export class JSONParser {
         if (!exmlConfig) {
             exmlConfig = new EXMLConfig();
         }
-
         exmlConfig.dirPath = egret.args.projectDir;
         this.currentXML = xmlData;
         this.currentClassName = className;
-        this.delayAssignmentDic = {};
         this.idDic = {};
         this.stateCode = [];
         this.stateNames = [];
@@ -267,7 +228,6 @@ export class JSONParser {
         this.currentClass = new EXClass();
         this.currentClass.allName = this.currentClassName;
         this.stateIds = [];
-
         let index = className.lastIndexOf(".");
         if (index != -1) {
             this.currentClass.className = className.substring(index + 1);
@@ -275,7 +235,6 @@ export class JSONParser {
         else {
             this.currentClass.className = className;
         }
-
         this.startCompile();
     }
 
@@ -291,11 +250,8 @@ export class JSONParser {
             }
         }
         let superClass = this.getClassNameOfNode(this.currentXML);
-        this.isSkinClass = (superClass == SKIN_CLASS);
         this.currentClass.superClass = superClass;
-
         this.getStateNames();
-
         let children = this.currentXML.children;
         if (children) {
             let length = children.length;
@@ -308,25 +264,21 @@ export class JSONParser {
                 }
             }
         }
-
         if (DEBUG) {
             let list: string[] = [];
             this.checkDeclarations(this.declarations, list);
-
             if (list.length > 0) {
                 egretbridge.$error(2020, this.currentClassName, list.join("\n"));
             }
         }
-
-
         if (!this.currentXML.namespace) {
             if (DEBUG) {
-                egretbridge.$error(2017, this.currentClassName, toXMLString(this.currentXML));
+                egretbridge.$error(2017, this.currentClassName, this.toXMLString(this.currentXML));
             }
             return;
         }
         this.addIds(this.currentXML.children);
-        this.createConstructFunc();
+        this.addBaseConfig();
     }
 
     /**
@@ -345,7 +297,7 @@ export class JSONParser {
             }
             if (!node.namespace) {
                 if (DEBUG) {
-                    egretbridge.$error(2017, this.currentClassName, toXMLString(node));
+                    egretbridge.$error(2017, this.currentClassName, this.toXMLString(node));
                 }
                 continue;
             }
@@ -412,11 +364,9 @@ export class JSONParser {
                     prop = parent.localName;
                     let index = prop.indexOf(".");
                     if (index != -1) {
-                        let stateName = prop.substring(index + 1);
                         prop = prop.substring(0, index);
                     }
                     parent = parent.parent;
-
                 }
                 else {
                     prop = exmlConfig.getDefaultPropById(parent.localName, parent.namespace);
@@ -455,10 +405,12 @@ export class JSONParser {
      */
     private createIdForNode(node: egretbridge.XML): void {
         let idName = this.getNodeId(node);
-        if (!this.idDic[idName])
+        if (!this.idDic[idName]) {
             this.idDic[idName] = 1;
-        else
+        }
+        else {
             this.idDic[idName]++;
+        }
         idName += this.idDic[idName];
         node.attributes.id = idName;
     }
@@ -468,8 +420,9 @@ export class JSONParser {
      * 获取节点ID
      */
     private getNodeId(node: egretbridge.XML): string {
-        if (node.attributes["id"])
+        if (node.attributes["id"]) {
             return node.attributes.id;
+        }
         return "_" + node.localName;
     }
 
@@ -479,10 +432,12 @@ export class JSONParser {
      */
     private createVarForNode(node: egretbridge.XML): void {
         let moduleName = this.getClassNameOfNode(node);
-        if (moduleName == "")
+        if (moduleName == "") {
             return;
-        if (!this.currentClass.getVariableByName(node.attributes.id))
+        }
+        if (!this.currentClass.getVariableByName(node.attributes.id)) {
             this.currentClass.addVariable(new EXVariable(node.attributes.id));
+        }
     }
 
     /**
@@ -492,8 +447,9 @@ export class JSONParser {
     private addNodeConfig(node: egretbridge.XML): string {
         let className = node.localName;
         let isBasicType = this.isBasicTypeData(className);
-        if (isBasicType)
+        if (isBasicType) {
             return this.createBasicTypeForNode(node);
+        }
         let moduleName = this.getClassNameOfNode(node);
         let func = new EXFunction();
         let id = node.attributes.id;
@@ -511,7 +467,7 @@ export class JSONParser {
         config["$t"] = euiShorten[name] == undefined ? name : euiShorten[name];
         jsonFactory.addContent(config, this.currentClassName, func.name);
         // 赋值skin的属性
-        this.addConfig(func.name, node, configName, moduleName);
+        this.addConfig(node, configName, moduleName);
         this.initlizeChildNode(node, func.name);
         return func.name;
     }
@@ -559,8 +515,9 @@ export class JSONParser {
                 break;
             case "number":
                 returnValue = text;
-                if (returnValue.indexOf("%") != -1)
+                if (returnValue.indexOf("%") != -1) {
                     returnValue = returnValue.substring(0, returnValue.length - 1);
+                }
                 break;
         }
         if (varItem)
@@ -572,23 +529,19 @@ export class JSONParser {
      * @private
      * 将节点属性赋值语句添加到代码块
      */
-    private addConfig(varName: string, node: egretbridge.XML, configName: string, type?: string): void {
+    private addConfig(node: egretbridge.XML, configName: string, type?: string): void {
         let key: string;
         let value: string;
         let attributes = node.attributes;
         let jsonProperty = {};
-
-
         let keyList: string[] = Object.keys(attributes);
         keyList.sort();//排序一下防止出现随机顺序
-
         //对 style 属性先行赋值
         let styleIndex = keyList.indexOf("style");
         if (styleIndex > 0) {
             keyList.splice(styleIndex, 1);
             keyList.unshift("style");
         }
-
         let length = keyList.length;
         for (let i = 0; i < length; i++) {
             key = keyList[i];
@@ -600,8 +553,9 @@ export class JSONParser {
             value = this.formatValue(key, value, node);
             jsonProperty[key] = value;
         }
-        if (type)
+        if (type) {
             jsonProperty["$t"] = euiShorten[type] == undefined ? type : euiShorten[type];
+        }
         jsonFactory.addContent(jsonProperty, this.currentClassName, configName == undefined ? "$bs" : configName);
     }
 
@@ -611,8 +565,9 @@ export class JSONParser {
      */
     private initlizeChildNode(node: egretbridge.XML, varName: string): void {
         let children: Array<any> = node.children;
-        if (!children || children.length == 0)
+        if (!children || children.length == 0) {
             return;
+        }
         let className = exmlConfig.getClassNameById(node.localName, node.namespace);
         let directChild: egretbridge.XML[] = [];
         let length = children.length;
@@ -626,7 +581,7 @@ export class JSONParser {
             if (this.isInnerClass(child)) {
                 if (child.localName == "Skin") {
                     let innerClassName = this.parseInnerClass(child);
-                    jsonFactory.addContent(innerClassName, this.currentClassName + "/" + this.getNodeId(node) , "skinName")
+                    jsonFactory.addContent(innerClassName, this.currentClassName + "/" + this.getNodeId(node), "skinName")
                 }
                 continue;
             }
@@ -639,18 +594,18 @@ export class JSONParser {
                 let type = exmlConfig.getPropertyType(child.localName, className);
                 if (!type) {
                     if (DEBUG) {
-                        egretbridge.$error(2005, this.currentClassName, child.localName, getPropertyStr(child));
+                        egretbridge.$error(2005, this.currentClassName, child.localName, this.getPropertyStr(child));
                     }
                     continue;
                 }
                 if (!child.children || child.children.length == 0) {
                     if (DEBUG) {
-                        egretbridge.$warn(2102, this.currentClassName, getPropertyStr(child));
+                        egretbridge.$warn(2102, this.currentClassName, this.getPropertyStr(child));
                     }
                     continue;
                 }
                 if (DEBUG) {
-                    let errorInfo = getPropertyStr(child);
+                    errorInfo = this.getPropertyStr(child);
                 }
                 this.addChildrenToProp(child.children, type, prop, varName, errorInfo, propList, node);
             }
@@ -664,7 +619,7 @@ export class JSONParser {
         let defaultProp = exmlConfig.getDefaultPropById(node.localName, node.namespace);
         let defaultType = exmlConfig.getPropertyType(defaultProp, className);
         if (DEBUG) {
-            errorInfo = getPropertyStr(directChild[0]);
+            errorInfo = this.getPropertyStr(directChild[0]);
         }
         if (!defaultProp || !defaultType) {
             if (DEBUG) {
@@ -685,7 +640,7 @@ export class JSONParser {
             parser = new JSONParser();
         }
         let innerClassName = this.currentClassName + "$" + node.localName + innerClassCount++;
-        let innerClass = parser.parseClass(node, innerClassName);
+        parser.parseClass(node, innerClassName);
         exmlParserPool.push(parser);
         return innerClassName;
     }
@@ -748,8 +703,7 @@ export class JSONParser {
                                 continue;
                             }
                             nodeName = this.addNodeConfig(item);
-                            let childClassName = this.getClassNameOfNode(item);
-
+                            this.getClassNameOfNode(item);
                             if (!this.isStateNode(item))
                                 values.push(nodeName);
                         }
@@ -759,13 +713,13 @@ export class JSONParser {
                 else {
                     if (prop == ELEMENTS_CONTENT && !this.isStateNode(firstChild)) {
                         nodeName = this.addToCodeBlockForNode(firstChild);
-                        let childClassName = this.getClassNameOfNode(firstChild);
+                        this.getClassNameOfNode(firstChild);
                         elementsContentForJson = [nodeName];
                         prop = "$eleC";
                     }
                     else {
                         nodeName = this.addNodeConfig(firstChild);
-                        let childClassName = this.getClassNameOfNode(firstChild);
+                        this.getClassNameOfNode(firstChild);
                         if (!this.isStateNode(firstChild)) {
                             elementsContentForJson = [nodeName];
                         }
@@ -784,7 +738,7 @@ export class JSONParser {
                     elementsContentForJson = nodeName;
                 }
                 else {
-                    let targetClass = this.getClassNameOfNode(firstChild);
+                    this.getClassNameOfNode(firstChild);
                     nodeName = this.addNodeConfig(firstChild);
                     elementsContentForJson = nodeName;
                 }
@@ -809,13 +763,11 @@ export class JSONParser {
     }
 
     private addToCodeBlockForNode(node: egret.XML): string {
-        let className = node.localName;
         let moduleName = this.getClassNameOfNode(node);
         let id = node.attributes.id;
         let varName: string = id;
         //赋值基本属性
-        this.addConfig(varName, node, varName, moduleName);
-
+        this.addConfig(node, varName, moduleName);
         this.initlizeChildNode(node, varName);
         return varName;
     }
@@ -853,8 +805,9 @@ export class JSONParser {
      */
     private isNormalKey(key: string): boolean {
         if (!key || key.indexOf(".") != -1
-            || key.indexOf(":") != -1 || wingKeys.indexOf(key) != -1)
+            || key.indexOf(":") != -1 || wingKeys.indexOf(key) != -1) {
             return false;
+        }
         return true;
     }
 
@@ -864,10 +817,12 @@ export class JSONParser {
      */
     private formatKey(key: string, value: string): string {
         if (value.indexOf("%") != -1) {
-            if (key == "height")
+            if (key == "height") {
                 key = "percentHeight";
-            else if (key == "width")
+            }
+            else if (key == "width") {
                 key = "percentWidth";
+            }
         }
         return key;
     }
@@ -883,14 +838,13 @@ export class JSONParser {
         if (!value) {
             value = "";
         }
-        let stringValue = value;//除了字符串，其他类型都去除两端多余空格。
         value = value.trim();
         let className = this.getClassNameOfNode(node);
         let type: string = exmlConfig.getPropertyType(key, className);
         if (DEBUG && !type) {
-            egretbridge.$error(2005, this.currentClassName, key, toXMLString(node));
+            egretbridge.$error(2005, this.currentClassName, key, this.toXMLString(node));
         }
-        let bindingValue = this.formatBinding(key, value, node);
+        let bindingValue = this.formatBinding(value);
         if (bindingValue) {
             this.checkIdForState(node);
             let target = "this";
@@ -908,7 +862,6 @@ export class JSONParser {
                 value = parseFloat(value);
         }
         else {
-            let orgValue: string = value;
             switch (type) {
                 case "number":
                     if (value.indexOf("#") == 0) {
@@ -939,14 +892,14 @@ export class JSONParser {
                     break;
                 default:
                     if (DEBUG) {
-                        egretbridge.$error(2008, this.currentClassName, "string", key + ":" + type, toXMLString(node));
+                        egretbridge.$error(2008, this.currentClassName, "string", key + ":" + type, this.toXMLString(node));
                     }
                     break;
             }
         }
         return value;
     }
-    private formatBinding(key: string, value: string, node: egretbridge.XML): { templates: string[], chainIndex: number[] } {
+    private formatBinding(value: string): { templates: string[], chainIndex: number[] } {
         if (!value) {
             return null;
         }
@@ -1038,8 +991,9 @@ export class JSONParser {
      * 转换HTML实体字符为普通字符
      */
     private unescapeHTMLEntity(str: string): string {
-        if (!str)
+        if (!str) {
             return "";
+        }
         let length = htmlEntities.length;
         for (let i: number = 0; i < length; i++) {
             let arr = htmlEntities[i];
@@ -1051,11 +1005,12 @@ export class JSONParser {
     }
     /**
      * @private
-     * 创建构造函数
+     * 复制基本属性
+     * 
      */
-    private createConstructFunc(): void {
+    private addBaseConfig(): void {
         let varName: string = "this";
-        this.addConfig(varName, this.currentXML, "$bs");
+        this.addConfig(this.currentXML, "$bs");
         if (this.declarations) {
             let children: Array<any> = this.declarations.children;
             if (children && children.length > 0) {
@@ -1070,7 +1025,6 @@ export class JSONParser {
             }
         }
         this.initlizeChildNode(this.currentXML, varName);
-        var id;
         var stateIds = this.stateIds;
         if (stateIds.length > 0) {
             jsonFactory.addContent(stateIds, this.currentClassName + "/$bs", "$sId");
@@ -1225,15 +1179,14 @@ export class JSONParser {
 
         if (DEBUG) {
             if (stateChildren && stateChildren.length == 0) {
-                egretbridge.$warn(2102, this.currentClassName, getPropertyStr(item));
+                egretbridge.$warn(2102, this.currentClassName, this.getPropertyStr(item));
             }
             if (stateChildren && statesValue) {
-                egretbridge.$warn(2103, this.currentClassName, "states", getPropertyStr(item));
+                egretbridge.$warn(2103, this.currentClassName, "states", this.getPropertyStr(item));
             }
         }
 
         if (statesValue) {
-
             let states = statesValue.split(",");
             let length = states.length;
             for (let i = 0; i < length; i++) {
@@ -1310,10 +1263,10 @@ export class JSONParser {
                 let type = exmlConfig.getPropertyType(prop, className);
                 if (DEBUG) {
                     if (type == TYPE_ARRAY) {
-                        egretbridge.$error(2013, this.currentClassName, getPropertyStr(node));
+                        egretbridge.$error(2013, this.currentClassName, this.getPropertyStr(node));
                     }
                     if (children.length > 1) {
-                        egretbridge.$error(2011, this.currentClassName, prop, getPropertyStr(node));
+                        egretbridge.$error(2011, this.currentClassName, prop, this.getPropertyStr(node));
                     }
                 }
 
@@ -1340,7 +1293,7 @@ export class JSONParser {
             else if (this.containsState(node)) {
                 let attributes = node.attributes;
                 let id = attributes.id;
-                let nodeClassName = this.getClassNameOfNode(node);
+                this.getClassNameOfNode(node);
                 this.checkIdForState(node);
                 let stateName: string;
                 let states: Array<EXState>;
@@ -1366,7 +1319,6 @@ export class JSONParser {
                     }
                     else {
                         let excludeNames = attributes.excludeFrom.split(",");
-
                         let stateLength = excludeNames.length;
                         for (let j = 0; j < stateLength; j++) {
                             let name: string = excludeNames[j];
@@ -1378,10 +1330,8 @@ export class JSONParser {
                             if (excludeNames.indexOf(state.name) == -1) {
                                 stateNames.push(state.name);
                             }
-
                         }
                     }
-
                     let len = stateNames.length;
                     for (let k = 0; k < len; k++) {
                         stateName = stateNames[k];
@@ -1406,7 +1356,7 @@ export class JSONParser {
                     if (index != -1) {
                         let key = name.substring(0, index);
                         key = this.formatKey(key, value);
-                        let bindingValue = this.formatBinding(key, value, node);
+                        let bindingValue = this.formatBinding(value);
                         if (!bindingValue) {
                             value = this.formatValue(key, value, node);
                             if (value == undefined) {
@@ -1444,7 +1394,7 @@ export class JSONParser {
         this.createVarForNode(node);
         let id: string = node.attributes.id;
         let funcName = id;
-        let func = this.currentClass.getFuncByName(funcName);
+        this.currentClass.getFuncByName(funcName);
     }
 
     /**
@@ -1478,7 +1428,7 @@ export class JSONParser {
             }
         }
         if (DEBUG && states.length == 0) {
-            egretbridge.$error(2006, this.currentClassName, name, toXMLString(node));
+            egretbridge.$error(2006, this.currentClassName, name, this.toXMLString(node));
         }
         return states;
     }
@@ -1528,7 +1478,6 @@ export class JSONParser {
                 this.checkIdForState(afterItem);
                 return { position: position, relativeTo: targetId };
             }
-
         }
         return { position: sys.AddPosition.LAST, relativeTo: targetId };
     }
@@ -1541,102 +1490,101 @@ export class JSONParser {
     private getClassNameOfNode(node: egretbridge.XML): string {
         let className = exmlConfig.getClassNameById(node.localName, node.namespace);
         if (DEBUG && !className) {
-            egretbridge.$error(2003, this.currentClassName, toXMLString(node));
+            egretbridge.$error(2003, this.currentClassName, this.toXMLString(node));
         }
         return className;
     }
 
-}
+    /**
+     * 获取重复的ID名
+     */
+    private getRepeatedIds(xml: egretbridge.XML): string[] {
+        let result: string[] = [];
+        this.repeatedIdMap = {};
+        this.getIds(xml, result);
+        return result;
+    }
 
-/**
- * 获取重复的ID名
- */
-function getRepeatedIds(xml: egretbridge.XML): string[] {
-    let result: string[] = [];
-    this.repeatedIdMap = {};
-    this.getIds(xml, result);
-    return result;
-}
+    private getIds(xml: any, result: Array<any>): void {
+        if (xml.namespace != NS_W && xml.attributes.id) {
+            let id: string = xml.attributes.id;
+            if (this.repeatedIdMap[id]) {
+                result.push(this.toXMLString(xml));
+            }
+            else {
+                this.repeatedIdMap[id] = true;
+            }
+        }
+        let children: Array<any> = xml.children;
+        if (children) {
+            let length: number = children.length;
+            for (let i: number = 0; i < length; i++) {
+                let node: any = children[i];
+                if (node.nodeType !== 1 || this.isInnerClass(node)) {
+                    continue;
+                }
+                this.getIds(node, result);
+            }
+        }
+    }
 
-function getIds(xml: any, result: Array<any>): void {
-    if (xml.namespace != NS_W && xml.attributes.id) {
-        let id: string = xml.attributes.id;
-        if (this.repeatedIdMap[id]) {
-            result.push(toXMLString(xml));
+    private toXMLString(node: egretbridge.XML): string {
+        if (!node) {
+            return "";
+        }
+        let str: string = "  at <" + node.name;
+        let attributes = node.attributes;
+        let keys = Object.keys(attributes);
+        let length = keys.length;
+        for (let i = 0; i < length; i++) {
+            let key = keys[i];
+            let value: string = attributes[key];
+            if (key == "id" && value.substring(0, 2) == "__") {
+                continue;
+            }
+            str += " " + key + "=\"" + value + "\"";
+        }
+        if (node.children.length == 0) {
+            str += "/>";
         }
         else {
-            this.repeatedIdMap[id] = true;
+            str += ">";
+        }
+        return str;
+    }
+
+    /**
+     * 清理声明节点里的状态标志
+     */
+    private checkDeclarations(declarations: egretbridge.XML, list: string[]): void {
+        if (!declarations) {
+            return;
+        }
+        let children = declarations.children;
+        if (children) {
+            let length = children.length;
+            for (let i = 0; i < length; i++) {
+                let node: any = children[i];
+                if (node.nodeType != 1) {
+                    continue;
+                }
+                if (node.attributes.includeIn) {
+                    list.push(this.toXMLString(node));
+                }
+                if (node.attributes.excludeFrom) {
+                    list.push(this.toXMLString(node))
+                }
+                this.checkDeclarations(node, list);
+            }
         }
     }
-    let children: Array<any> = xml.children;
-    if (children) {
-        let length: number = children.length;
-        for (let i: number = 0; i < length; i++) {
-            let node: any = children[i];
-            if (node.nodeType !== 1 || this.isInnerClass(node)) {
-                continue;
-            }
-            this.getIds(node, result);
-        }
+    private getPropertyStr(child: any): string {
+        let parentStr = this.toXMLString(child.parent);
+        let childStr = this.toXMLString(child).substring(5);
+        return parentStr + "\n      \t" + childStr;
     }
 }
 
-function toXMLString(node: egretbridge.XML): string {
-    if (!node) {
-        return "";
-    }
-    let str: string = "  at <" + node.name;
-    let attributes = node.attributes;
-    let keys = Object.keys(attributes);
-    let length = keys.length;
-    for (let i = 0; i < length; i++) {
-        let key = keys[i];
-        let value: string = attributes[key];
-        if (key == "id" && value.substring(0, 2) == "__") {
-            continue;
-        }
-        str += " " + key + "=\"" + value + "\"";
-    }
-    if (node.children.length == 0) {
-        str += "/>";
-    }
-    else {
-        str += ">";
-    }
-    return str;
-}
-
-/**
- * 清理声明节点里的状态标志
- */
-function checkDeclarations(declarations: egretbridge.XML, list: string[]): void {
-    if (!declarations) {
-        return;
-    }
-    let children = declarations.children;
-    if (children) {
-        let length = children.length;
-        for (let i = 0; i < length; i++) {
-            let node: any = children[i];
-            if (node.nodeType != 1) {
-                continue;
-            }
-            if (node.attributes.includeIn) {
-                list.push(toXMLString(node));
-            }
-            if (node.attributes.excludeFrom) {
-                list.push(toXMLString(node))
-            }
-            checkDeclarations(node, list);
-        }
-    }
-}
-
-function getPropertyStr(child: any): string {
-    let parentStr = toXMLString(child.parent);
-    let childStr = toXMLString(child).substring(5);
-    return parentStr + "\n      \t" + childStr;
-}
 
 module sys {
     export const enum AddPosition {

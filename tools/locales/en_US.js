@@ -108,6 +108,7 @@ locale_strings[1426] = "Please install Texture Merger";
 locale_strings[1427] = "Please upgrade Texture Merger to 1.7.0 or later";
 locale_strings[1428] = "Unsupported platforms";
 locale_strings[1429] = "{0} Introduced an identical TextureMerger result, please check";
+locale_strings[1430] = "The configured fileName does not have a resource";
 //startserver
 locale_strings[1501] = "Unable to start the server, please check the authority or whether the port is occupied";
 //create_app
@@ -181,7 +182,7 @@ locale_strings[2019] = "{0}: error the container’s child item must be visible 
 locale_strings[2020] = "{0}: error error for child nodes in w: Declarations, the includeIn and excludeFrom properties are not allowed to use \n {1}";
 locale_strings[2102] = "{0}: warning no child node can be found on the property code \n {1}";
 locale_strings[2103] = "{0}: warning the same property '{1}' on the node is assigned multiple times \n {2}";
-locale_strings[2104] = "warning: the class name defined by the{0} file{1} is inconsistent";
+locale_strings[2104] = "Warning: There is a duplicate definition for the class name {1} defined by the {0} file.";
 // android sdk install
 locale_strings[2201] = "{0} file(s) will be downloaded!";
 locale_strings[2202] = "The total size is {0}MB";
