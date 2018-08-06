@@ -3481,7 +3481,11 @@ var egret;
          * @language zh_CN
          */
         Event.create = function (EventClass, type, bubbles, cancelable) {
-            var eventPool = EventClass.eventPool;
+            var eventPool;
+            var hasEventPool = EventClass.hasOwnProperty("eventPool");
+            if (hasEventPool) {
+                eventPool = EventClass.eventPool;
+            }
             if (!eventPool) {
                 eventPool = EventClass.eventPool = [];
             }
