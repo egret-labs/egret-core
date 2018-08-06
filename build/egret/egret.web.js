@@ -7204,6 +7204,9 @@ var egret;
                     var displayBoundsY = displayBounds.y;
                     var displayBoundsWidth = displayBounds.width;
                     var displayBoundsHeight = displayBounds.height;
+                    if (displayBoundsWidth <= 0 || displayBoundsHeight <= 0) {
+                        return drawCalls;
+                    }
                     //绘制显示对象自身，若有scrollRect，应用clip
                     var displayBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
                     displayBuffer.context.pushBuffer(displayBuffer);
