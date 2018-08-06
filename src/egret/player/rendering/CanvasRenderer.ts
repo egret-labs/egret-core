@@ -340,6 +340,9 @@ namespace egret {
             const displayBoundsY = displayBounds.y;
             const displayBoundsWidth = displayBounds.width;
             const displayBoundsHeight = displayBounds.height;
+            if (displayBoundsWidth <= 0 || displayBoundsHeight <= 0) {
+                return drawCalls;
+            }
             let displayBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
             let displayContext: CanvasRenderingContext2D = displayBuffer.context;
             if (!displayContext) {//RenderContext创建失败，放弃绘制遮罩。

@@ -15899,6 +15899,9 @@ var egret;
             var displayBoundsY = displayBounds.y;
             var displayBoundsWidth = displayBounds.width;
             var displayBoundsHeight = displayBounds.height;
+            if (displayBoundsWidth <= 0 || displayBoundsHeight <= 0) {
+                return drawCalls;
+            }
             var displayBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
             var displayContext = displayBuffer.context;
             if (!displayContext) {

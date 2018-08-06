@@ -392,6 +392,9 @@ namespace egret.web {
                 const displayBoundsY = displayBounds.y;
                 const displayBoundsWidth = displayBounds.width;
                 const displayBoundsHeight = displayBounds.height;
+                if (displayBoundsWidth <= 0 || displayBoundsHeight <= 0) {
+                    return drawCalls;
+                }
                 //绘制显示对象自身，若有scrollRect，应用clip
                 let displayBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
                 displayBuffer.context.pushBuffer(displayBuffer);
