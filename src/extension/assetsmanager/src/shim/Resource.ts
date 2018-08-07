@@ -497,12 +497,14 @@ module RES {
             return this._loadGroup(name, priority, reporterDelegate).then(data => {
                 ResourceEvent.dispatchResourceEvent(this, ResourceEvent.GROUP_COMPLETE, name);
             }, error => {
-                const itemList: ResourceInfo[] = error.itemList;
-                const length = itemList.length;
-                for (let i = 0; i < length; i++) {
-                    const item = itemList[i];
-                    delete item.promise;
-                    ResourceEvent.dispatchResourceEvent(this, ResourceEvent.ITEM_LOAD_ERROR, name, item);
+                if (error.itemList) {
+                    const itemList: ResourceInfo[] = error.itemList;
+                    const length = itemList.length;
+                    for (let i = 0; i < length; i++) {
+                        const item = itemList[i];
+                        delete item.promise;
+                        ResourceEvent.dispatchResourceEvent(this, ResourceEvent.ITEM_LOAD_ERROR, name, item);
+                    }
                 }
                 ResourceEvent.dispatchResourceEvent(this, ResourceEvent.GROUP_LOAD_ERROR, name);
                 return Promise.reject(error.error);
@@ -512,6 +514,11 @@ module RES {
         @checkCancelation
         private _loadGroup(name: string, priority: number = 0, reporter?: PromiseTaskReporter): Promise<any> {
             let resources = config.getGroupByName(name, true);
+            if (resources.length == 0) {
+                return new Promise((reslove, reject) => {
+                    reject({ error: new ResourceManagerError(2006, name) });
+                })
+            }
             return queue.load(resources, name, priority, reporter);
         }
 
