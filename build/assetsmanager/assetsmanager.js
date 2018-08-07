@@ -1269,7 +1269,12 @@ var RES;
                     var groups = resConfigData.groups;
                     for (var _i = 0, _a = data.groups; _i < _a.length; _i++) {
                         var g = _a[_i];
-                        groups[g.name] = g.keys.split(",");
+                        if (g.keys == "") {
+                            groups[g.name] = [];
+                        }
+                        else {
+                            groups[g.name] = g.keys.split(",");
+                        }
                     }
                     var alias = resConfigData.alias;
                     var fsData = fileSystem['fsData'];
@@ -2530,12 +2535,14 @@ var RES;
             return this._loadGroup(name, priority, reporterDelegate).then(function (data) {
                 RES.ResourceEvent.dispatchResourceEvent(_this, RES.ResourceEvent.GROUP_COMPLETE, name);
             }, function (error) {
-                var itemList = error.itemList;
-                var length = itemList.length;
-                for (var i = 0; i < length; i++) {
-                    var item = itemList[i];
-                    delete item.promise;
-                    RES.ResourceEvent.dispatchResourceEvent(_this, RES.ResourceEvent.ITEM_LOAD_ERROR, name, item);
+                if (error.itemList) {
+                    var itemList = error.itemList;
+                    var length_1 = itemList.length;
+                    for (var i = 0; i < length_1; i++) {
+                        var item = itemList[i];
+                        delete item.promise;
+                        RES.ResourceEvent.dispatchResourceEvent(_this, RES.ResourceEvent.ITEM_LOAD_ERROR, name, item);
+                    }
                 }
                 RES.ResourceEvent.dispatchResourceEvent(_this, RES.ResourceEvent.GROUP_LOAD_ERROR, name);
                 return Promise.reject(error.error);
@@ -2544,6 +2551,11 @@ var RES;
         Resource.prototype._loadGroup = function (name, priority, reporter) {
             if (priority === void 0) { priority = 0; }
             var resources = RES.config.getGroupByName(name, true);
+            if (resources.length == 0) {
+                return new Promise(function (reslove, reject) {
+                    reject({ error: new RES.ResourceManagerError(2006, name) });
+                });
+            }
             return RES.queue.load(resources, name, priority, reporter);
         };
         Resource.prototype.loadResources = function (keys, reporter) {

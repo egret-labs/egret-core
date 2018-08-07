@@ -499,7 +499,11 @@ module RES.processor {
 
                 let groups = resConfigData.groups;
                 for (let g of data.groups) {
-                    groups[g.name] = g.keys.split(",");
+                    if (g.keys == "") {
+                        groups[g.name] = [];
+                    } else {
+                        groups[g.name] = g.keys.split(",");
+                    }
                 }
                 let alias: { [index: string]: string } = resConfigData.alias;
                 let fsData: { [index: string]: LegacyResourceInfo & { root?: string } } = fileSystem['fsData'];
