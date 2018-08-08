@@ -390,7 +390,7 @@ namespace egret {
             let textLines: string[] = this.$getTextLines();
             let length: number = textLines.length;
             if (length == 0) {
-                if (egret.nativeRender) {
+                if (egret.nativeRender && self.$font) {
                     self.$nativeDisplayObject.setDataToBitmapNode(self.$nativeDisplayObject.id, self.$font.$texture, []);
                     self.$nativeDisplayObject.setWidth(0);
                     self.$nativeDisplayObject.setHeight(0);
