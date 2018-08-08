@@ -330,7 +330,7 @@ var TextureMergerResConfigPlugin = /** @class */ (function () {
             this.deleteReferenceByName(imgName, resourceConfig_1, root);
             resourceConfig_1.resources.push(image);
             var buffer = new Buffer(JSON.stringify(resourceConfig_1));
-            pluginContext.createFile(path.join(pluginContext.outputDir, filename), buffer);
+            pluginContext.createFile(filename, buffer);
         }
     };
     /**
