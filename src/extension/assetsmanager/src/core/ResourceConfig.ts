@@ -112,7 +112,7 @@ module RES {
         alias: {
             [aliasName: string]: string;
         }
-
+        loadGroup: string[];
     }
 
 	/**
@@ -125,6 +125,7 @@ module RES {
 
         config: Data;
 
+
         constructor() {
         }
 
@@ -133,7 +134,8 @@ module RES {
                 this.config = {
                     alias: {}, groups: {}, resourceRoot: configItem.root,
                     typeSelector: () => 'unknown', mergeSelector: null,
-                    fileSystem: null as any as FileSystem
+                    fileSystem: null as any as FileSystem,
+                    loadGroup:[]
                 }
             }
             return queue.loadResource(configItem).catch(e => {
@@ -472,7 +474,7 @@ module RES {
 
                 }
             }
-            this.config = { groups: {}, alias: {}, fileSystem: emptyFileSystem, typeSelector: (p) => p, resourceRoot: "resources", mergeSelector: null };
+            this.config = { groups: {}, alias: {},loadGroup:[], fileSystem: emptyFileSystem, typeSelector: (p) => p, resourceRoot: "resources", mergeSelector: null };
         }
     }
 }

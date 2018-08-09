@@ -312,7 +312,7 @@ module RES {
      * @platform Web,Native
      * @language zh_CN
      */
-    export function destroyRes(name: string, force?: boolean): Promise<boolean> {
+    export function destroyRes(name: string, force?: boolean): boolean {
         return instance.destroyRes(name, force);
     }
     /**
@@ -495,8 +495,15 @@ module RES {
                 }
             }
             return this._loadGroup(name, priority, reporterDelegate).then(data => {
+                if (config.config.loadGroup.indexOf(name) == -1) {
+                    config.config.loadGroup.push(name);
+                }
                 ResourceEvent.dispatchResourceEvent(this, ResourceEvent.GROUP_COMPLETE, name);
+
             }, error => {
+                if (config.config.loadGroup.indexOf(name) == -1) {
+                    config.config.loadGroup.push(name);
+                }
                 if (error.itemList) {
                     const itemList: ResourceInfo[] = error.itemList;
                     const length = itemList.length;
@@ -513,6 +520,7 @@ module RES {
 
         @checkCancelation
         private _loadGroup(name: string, priority: number = 0, reporter?: PromiseTaskReporter): Promise<any> {
+
             let resources = config.getGroupByName(name, true);
             if (resources.length == 0) {
                 return new Promise((reslove, reject) => {
@@ -657,31 +665,49 @@ module RES {
          * @param force {boolean} 销毁一个资源组时其他资源组有同样资源情况资源是否会被删除，默认值true
          * @returns {boolean}
          */
-        async destroyRes(name: string, force: boolean = true) {
+        destroyRes(name: string, force: boolean = true) {
             var group = config.getGroup(name);
-            let remove = (r: ResourceInfo) => {
-                return queue.unloadResource(r);
-            }
-
             if (group && group.length > 0) {
-                for (let item of group) {
-                    await remove(item);
+                if (force || (config.config.loadGroup.length == 1 && config.config.loadGroup[0] == name)) {
+                    for (let item of group) {
+                        queue.unloadResource(item)
+                    }
+                    let index = config.config.loadGroup.indexOf(name);
+                    config.config.loadGroup.splice(index, 1);
+                } else {
+                    let removeItemHash = {};
+                    for (let groupName of config.config.loadGroup) {
+                        for (let key in config.config.groups[groupName]) {
+                            const tmpname = config.config.groups[groupName][key];
+                            if (removeItemHash[tmpname]) {
+                                removeItemHash[tmpname]++;
+                            } else {
+                                removeItemHash[tmpname] = 1;
+                            }
+                        }
+                    }
+                    for (let tmpname in removeItemHash) {
+                        if (removeItemHash[tmpname] && removeItemHash[tmpname] == 1) {
+                            let item = config.getResource(tmpname);
+                            if (item) {
+                                queue.unloadResource(item)
+                            }
+                        }
+                    }
+                    let index = config.config.loadGroup.indexOf(name);
+                    config.config.loadGroup.splice(index, 1);
                 }
                 return true;
             }
             else {
                 let item = config.getResource(name);
                 if (item) {
-                    await remove(item);
-                    return true;
+                    return queue.unloadResource(item);
                 }
                 else {
                     console.warn(`无法删除指定组:${name}`);
                     return false;
                 }
-
-
-
             }
         }
 

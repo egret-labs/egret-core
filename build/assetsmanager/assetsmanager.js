@@ -87,7 +87,8 @@ var RES;
                 this.config = {
                     alias: {}, groups: {}, resourceRoot: configItem.root,
                     typeSelector: function () { return 'unknown'; }, mergeSelector: null,
-                    fileSystem: null
+                    fileSystem: null,
+                    loadGroup: []
                 };
             }
             return RES.queue.loadResource(configItem).catch(function (e) {
@@ -356,7 +357,7 @@ var RES;
                 removeFile: function () {
                 }
             };
-            this.config = { groups: {}, alias: {}, fileSystem: emptyFileSystem, typeSelector: function (p) { return p; }, resourceRoot: "resources", mergeSelector: null };
+            this.config = { groups: {}, alias: {}, loadGroup: [], fileSystem: emptyFileSystem, typeSelector: function (p) { return p; }, resourceRoot: "resources", mergeSelector: null };
         };
         return ResourceConfig;
     }());
@@ -651,20 +652,20 @@ var RES;
             var data = RES.host.get(r);
             if (!data) {
                 console.warn("尝试释放不存在的资源:", r.name);
-                return Promise.resolve();
+                return false;
             }
             var p = RES.processor.isSupport(r);
             if (p) {
                 // host.state[r.root + r.name] = 3;
-                var promise = p.onRemoveStart(RES.host, r);
+                p.onRemoveStart(RES.host, r);
                 RES.host.remove(r);
                 if (r.extra == 1) {
                     RES.config.removeResourceData(r);
                 }
-                return promise;
+                return true;
             }
             else {
-                return Promise.resolve();
+                return true;
             }
         };
         return ResourceLoader;
@@ -896,7 +897,6 @@ var RES;
             onRemoveStart: function (host, resource) {
                 var texture = host.get(resource);
                 texture.dispose();
-                return Promise.resolve();
             }
         };
         processor_1.BinaryProcessor = {
@@ -919,7 +919,6 @@ var RES;
                 });
             },
             onRemoveStart: function (host, resource) {
-                return Promise.resolve();
             }
         };
         processor_1.TextProcessor = {
@@ -942,7 +941,7 @@ var RES;
                 });
             },
             onRemoveStart: function (host, resource) {
-                return Promise.resolve();
+                return true;
             }
         };
         processor_1.JsonProcessor = {
@@ -961,7 +960,6 @@ var RES;
                 });
             },
             onRemoveStart: function (host, request) {
-                return Promise.resolve();
             }
         };
         processor_1.XMLProcessor = {
@@ -980,7 +978,7 @@ var RES;
                 });
             },
             onRemoveStart: function (host, resource) {
-                return Promise.resolve();
+                return true;
             }
         };
         processor_1.CommonJSProcessor = {
@@ -1007,7 +1005,6 @@ var RES;
                 });
             },
             onRemoveStart: function (host, resource) {
-                return Promise.resolve();
             }
         };
         processor_1.SheetProcessor = {
@@ -1059,7 +1056,6 @@ var RES;
                 var r = sheet["$resourceInfo"];
                 sheet.dispose();
                 host.unload(r);
-                return Promise.resolve();
             }
         };
         var fontGetTexturePath = function (url, fntText) {
@@ -1123,7 +1119,6 @@ var RES;
                 var font = host.get(resource);
                 var r = font["$resourceInfo"];
                 host.unload(r);
-                return Promise.resolve();
             }
         };
         processor_1.SoundProcessor = {
@@ -1144,7 +1139,6 @@ var RES;
                 });
             },
             onRemoveStart: function (host, resource) {
-                return Promise.resolve();
             }
         };
         processor_1.MovieClipProcessor = {
@@ -1176,7 +1170,7 @@ var RES;
                 var jsonPath = resource.name;
                 var imagePath = jsonPath.substring(0, jsonPath.lastIndexOf(".")) + ".png";
                 var imageResource = host.resourceConfig.getResource(imagePath, true);
-                return host.unload(imageResource);
+                host.unload(imageResource);
             }
         };
         processor_1.MergeJSONProcessor = {
@@ -1207,7 +1201,6 @@ var RES;
                 }
             },
             onRemoveStart: function (host, resource) {
-                return Promise.resolve();
             }
         };
         processor_1.ResourceConfigProcessor = {
@@ -1230,11 +1223,6 @@ var RES;
                 });
             },
             onRemoveStart: function () {
-                return __awaiter(this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        return [2 /*return*/];
-                    });
-                });
             }
         };
         processor_1.LegacyResourceConfigProcessor = {
@@ -1298,9 +1286,6 @@ var RES;
                 });
             },
             onRemoveStart: function () {
-                return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
-                    return [2 /*return*/];
-                }); });
             }
         };
         var PVRParser = (function () {
@@ -1497,9 +1482,7 @@ var RES;
                     });
                 });
             },
-            onRemoveStart: function (host, resource) {
-                return Promise.resolve();
-            }
+            onRemoveStart: function (host, resource) { }
         };
         processor_1._map = {
             "image": processor_1.ImageProcessor,
@@ -2533,8 +2516,14 @@ var RES;
                 }
             };
             return this._loadGroup(name, priority, reporterDelegate).then(function (data) {
+                if (RES.config.config.loadGroup.indexOf(name) == -1) {
+                    RES.config.config.loadGroup.push(name);
+                }
                 RES.ResourceEvent.dispatchResourceEvent(_this, RES.ResourceEvent.GROUP_COMPLETE, name);
             }, function (error) {
+                if (RES.config.config.loadGroup.indexOf(name) == -1) {
+                    RES.config.config.loadGroup.push(name);
+                }
                 if (error.itemList) {
                     var itemList = error.itemList;
                     var length_1 = itemList.length;
@@ -2676,42 +2665,53 @@ var RES;
          */
         Resource.prototype.destroyRes = function (name, force) {
             if (force === void 0) { force = true; }
-            return __awaiter(this, void 0, void 0, function () {
-                var group, remove, _i, group_2, item, item;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            group = RES.config.getGroup(name);
-                            remove = function (r) {
-                                return RES.queue.unloadResource(r);
-                            };
-                            if (!(group && group.length > 0)) return [3 /*break*/, 5];
-                            _i = 0, group_2 = group;
-                            _a.label = 1;
-                        case 1:
-                            if (!(_i < group_2.length)) return [3 /*break*/, 4];
-                            item = group_2[_i];
-                            return [4 /*yield*/, remove(item)];
-                        case 2:
-                            _a.sent();
-                            _a.label = 3;
-                        case 3:
-                            _i++;
-                            return [3 /*break*/, 1];
-                        case 4: return [2 /*return*/, true];
-                        case 5:
-                            item = RES.config.getResource(name);
-                            if (!item) return [3 /*break*/, 7];
-                            return [4 /*yield*/, remove(item)];
-                        case 6:
-                            _a.sent();
-                            return [2 /*return*/, true];
-                        case 7:
-                            console.warn("\u65E0\u6CD5\u5220\u9664\u6307\u5B9A\u7EC4:" + name);
-                            return [2 /*return*/, false];
+            var group = RES.config.getGroup(name);
+            if (group && group.length > 0) {
+                if (force || (RES.config.config.loadGroup.length == 1 && RES.config.config.loadGroup[0] == name)) {
+                    for (var _i = 0, group_2 = group; _i < group_2.length; _i++) {
+                        var item = group_2[_i];
+                        RES.queue.unloadResource(item);
                     }
-                });
-            });
+                    var index = RES.config.config.loadGroup.indexOf(name);
+                    RES.config.config.loadGroup.splice(index, 1);
+                }
+                else {
+                    var removeItemHash = {};
+                    for (var _a = 0, _b = RES.config.config.loadGroup; _a < _b.length; _a++) {
+                        var groupName = _b[_a];
+                        for (var key in RES.config.config.groups[groupName]) {
+                            var tmpname = RES.config.config.groups[groupName][key];
+                            if (removeItemHash[tmpname]) {
+                                removeItemHash[tmpname]++;
+                            }
+                            else {
+                                removeItemHash[tmpname] = 1;
+                            }
+                        }
+                    }
+                    for (var tmpname in removeItemHash) {
+                        if (removeItemHash[tmpname] && removeItemHash[tmpname] == 1) {
+                            var item = RES.config.getResource(tmpname);
+                            if (item) {
+                                RES.queue.unloadResource(item);
+                            }
+                        }
+                    }
+                    var index = RES.config.config.loadGroup.indexOf(name);
+                    RES.config.config.loadGroup.splice(index, 1);
+                }
+                return true;
+            }
+            else {
+                var item = RES.config.getResource(name);
+                if (item) {
+                    return RES.queue.unloadResource(item);
+                }
+                else {
+                    console.warn("\u65E0\u6CD5\u5220\u9664\u6307\u5B9A\u7EC4:" + name);
+                    return false;
+                }
+            }
         };
         /**
          * 设置最大并发加载线程数量，默认值是2.
