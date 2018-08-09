@@ -149,7 +149,7 @@ module RES {
 							const current = this.numLoadedDic[groupName];
 							const total = this.groupTotalDic[groupName];
 							if (reporter && reporter.onProgress) {
-								reporter.onProgress(current, total,r);
+								reporter.onProgress(current, total, r);
 							}
 							if (current == total) {
 								const groupError: boolean = this.groupErrorDic[groupName];
@@ -204,7 +204,7 @@ module RES {
 								const current = this.numLoadedDic[groupName];
 								const total = this.groupTotalDic[groupName];
 								if (reporter && reporter.onProgress) {
-									reporter.onProgress(current, total,r);
+									reporter.onProgress(current, total, r);
 								}
 								if (current == total) {
 									delete this.groupTotalDic[groupName];
@@ -245,7 +245,7 @@ module RES {
 				maxPriority = Math.max(maxPriority, <number><any>p);
 			}
 			const list: any[] = this.itemListPriorityDic[maxPriority];
-			if(!list){ 
+			if (!list) {
 				return undefined;
 			}
 			if (list.length == 0) {
@@ -283,20 +283,20 @@ module RES {
 			const data = host.get(r);
 			if (!data) {
 				console.warn("尝试释放不存在的资源:", r.name);
-				return Promise.resolve();
+				return false;
 			}
 			const p = processor.isSupport(r);
 			if (p) {
 				// host.state[r.root + r.name] = 3;
-				const promise = p.onRemoveStart(host, r);
+				p.onRemoveStart(host, r);
 				host.remove(r);
 				if (r.extra == 1) {
 					config.removeResourceData(r);
 				}
-				return promise;
+				return true;
 			}
 			else {
-				return Promise.resolve();
+				return true;
 			}
 		}
 	}

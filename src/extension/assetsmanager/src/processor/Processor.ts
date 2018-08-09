@@ -5,7 +5,7 @@ module RES.processor {
 
         onLoadStart(host: ProcessHost, resource: ResourceInfo): Promise<any>;
 
-        onRemoveStart(host: ProcessHost, resource: ResourceInfo): Promise<any>;
+        onRemoveStart(host: ProcessHost, resource: ResourceInfo): void;
 
         getData?(host: ProcessHost, resource: ResourceInfo, key: string, subkey: string): any;
 
@@ -104,7 +104,6 @@ module RES.processor {
 
             let texture = host.get(resource);
             texture.dispose();
-            return Promise.resolve();
         }
 
     }
@@ -123,7 +122,6 @@ module RES.processor {
         },
 
         onRemoveStart(host, resource) {
-            return Promise.resolve();
         }
 
     }
@@ -142,7 +140,7 @@ module RES.processor {
         },
 
         onRemoveStart(host, resource) {
-            return Promise.resolve();
+            return true;
         }
     }
 
@@ -155,7 +153,6 @@ module RES.processor {
         },
 
         onRemoveStart(host, request) {
-            return Promise.resolve();
         }
 
     }
@@ -169,7 +166,7 @@ module RES.processor {
         },
 
         onRemoveStart(host, resource) {
-            return Promise.resolve();
+            return true;
         }
     }
 
@@ -191,7 +188,6 @@ module RES.processor {
         },
 
         onRemoveStart(host, resource) {
-            return Promise.resolve();
         }
 
     }
@@ -235,12 +231,11 @@ module RES.processor {
         },
 
 
-        onRemoveStart(host, resource): Promise<any> {
+        onRemoveStart(host, resource) {
             const sheet: egret.SpriteSheet = host.get(resource);
             const r = sheet["$resourceInfo"];
             sheet.dispose();
             host.unload(r);
-            return Promise.resolve();
         }
 
     }
@@ -301,11 +296,10 @@ module RES.processor {
             return font;
         },
 
-        onRemoveStart(host, resource): Promise<any> {
+        onRemoveStart(host, resource) {
             const font: egret.BitmapFont = host.get(resource);
             const r = font["$resourceInfo"];
             host.unload(r);
-            return Promise.resolve();
         }
     }
 
@@ -318,7 +312,6 @@ module RES.processor {
             return sound;
         },
         onRemoveStart(host, resource) {
-            return Promise.resolve();
         }
     }
     export var MovieClipProcessor: Processor = {
@@ -351,8 +344,7 @@ module RES.processor {
             let jsonPath = resource.name;
             let imagePath = jsonPath.substring(0, jsonPath.lastIndexOf(".")) + ".png";
             let imageResource = host.resourceConfig.getResource(imagePath, true);
-            return host.unload(imageResource);
-
+            host.unload(imageResource);
         }
     }
 
@@ -380,8 +372,7 @@ module RES.processor {
         },
 
 
-        onRemoveStart(host, resource): Promise<any> {
-            return Promise.resolve();
+        onRemoveStart(host, resource) {
         }
     }
 
@@ -433,8 +424,7 @@ module RES.processor {
             // return data;
         },
 
-        async onRemoveStart() {
-
+        onRemoveStart() {
         }
     }
 
@@ -524,7 +514,8 @@ module RES.processor {
 
         },
 
-        async onRemoveStart() { }
+        onRemoveStart() {
+        }
 
     }
 
@@ -757,9 +748,7 @@ module RES.processor {
 
         },
 
-        onRemoveStart(host, resource) {
-            return Promise.resolve();
-        }
+        onRemoveStart(host, resource) { }
     }
 
     export const _map: { [index: string]: Processor } = {

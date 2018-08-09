@@ -84,7 +84,7 @@ module RES {
 
         load: (resource: ResourceInfo, processor?: string | processor.Processor) => Promise<any>;
 
-        unload: (resource: ResourceInfo) => Promise<any>
+        unload: (resource: ResourceInfo) => void
 
         save: (rexource: ResourceInfo, data: any) => void;
 
@@ -136,7 +136,7 @@ namespace RES {
         /**
          * 进度回调
          */
-        onProgress?: (current: number, total: number,resItem:ResourceInfo | undefined) => void;
+        onProgress?: (current: number, total: number, resItem: ResourceInfo | undefined) => void;
 
         /**
          * 取消回调

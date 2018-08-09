@@ -35,6 +35,7 @@ declare module RES {
         alias: {
             [aliasName: string]: string;
         };
+        loadGroup: string[];
     }
     /**
      * @class RES.ResourceConfig
@@ -135,7 +136,7 @@ declare module RES {
          */
         private getOneResourceInfo();
         loadResource(r: ResourceInfo, p?: RES.processor.Processor): Promise<any>;
-        unloadResource(r: ResourceInfo): Promise<any>;
+        unloadResource(r: ResourceInfo): boolean;
     }
 }
 declare module RES {
@@ -154,7 +155,7 @@ declare module RES {
         };
         resourceConfig: ResourceConfig;
         load: (resource: ResourceInfo, processor?: string | processor.Processor) => Promise<any>;
-        unload: (resource: ResourceInfo) => Promise<any>;
+        unload: (resource: ResourceInfo) => void;
         save: (rexource: ResourceInfo, data: any) => void;
         get: (resource: ResourceInfo) => any;
         remove: (resource: ResourceInfo) => void;
@@ -210,7 +211,7 @@ declare module RES {
 declare module RES.processor {
     interface Processor {
         onLoadStart(host: ProcessHost, resource: ResourceInfo): Promise<any>;
-        onRemoveStart(host: ProcessHost, resource: ResourceInfo): Promise<any>;
+        onRemoveStart(host: ProcessHost, resource: ResourceInfo): void;
         getData?(host: ProcessHost, resource: ResourceInfo, key: string, subkey: string): any;
     }
     function isSupport(resource: ResourceInfo): Processor;
@@ -861,7 +862,7 @@ declare module RES {
      * @platform Web,Native
      * @language zh_CN
      */
-    function destroyRes(name: string, force?: boolean): Promise<boolean>;
+    function destroyRes(name: string, force?: boolean): boolean;
     /**
      * Sets the maximum number of concurrent load threads, the default value is 2.
      * @param thread The number of concurrent loads to be set.
@@ -1051,7 +1052,7 @@ declare module RES {
          * @param force {boolean} 销毁一个资源组时其他资源组有同样资源情况资源是否会被删除，默认值true
          * @returns {boolean}
          */
-        destroyRes(name: string, force?: boolean): Promise<boolean>;
+        destroyRes(name: string, force?: boolean): boolean;
         /**
          * 设置最大并发加载线程数量，默认值是2.
          * @method RES.setMaxLoadingThread
