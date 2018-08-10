@@ -8791,6 +8791,7 @@ declare namespace egret {
         contentWidth?: number;
         contentHeight?: number;
         orientation?: string;
+        maxTouches?: number;
     };
     /**
      * egret project entry function
