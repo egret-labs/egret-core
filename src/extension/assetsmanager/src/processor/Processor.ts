@@ -20,7 +20,7 @@ module RES.processor {
         _map[type] = processor;
     }
 
-    async function promisify(loader: egret.ImageLoader | egret.HttpRequest | egret.Sound, resource: ResourceInfo): Promise<any> {
+     function promisify(loader: egret.ImageLoader | egret.HttpRequest | egret.Sound, resource: ResourceInfo): Promise<any> {
 
         return new Promise((reslove, reject) => {
             let onSuccess = () => {
