@@ -868,30 +868,18 @@ var RES;
         // var cache: {[index:string]:egret.Texture} = {};
         processor_1.ImageProcessor = {
             onLoadStart: function (host, resource) {
-                return __awaiter(this, void 0, void 0, function () {
-                    var loader, bitmapData, texture, r, list;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0:
-                                loader = new egret.ImageLoader();
-                                loader.load(getURL(resource));
-                                return [4 /*yield*/, promisify(loader, resource)];
-                            case 1:
-                                bitmapData = _a.sent();
-                                texture = new egret.Texture();
-                                texture._setBitmapData(bitmapData);
-                                r = host.resourceConfig.getResource(resource.name);
-                                if (r && r.scale9grid) {
-                                    list = r.scale9grid.split(",");
-                                    texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
-                                }
-                                // var config: any = resItem.data;
-                                // if (config && config["scale9grid"]) {
-                                //     
-                                // }
-                                return [2 /*return*/, texture];
-                        }
-                    });
+                var loader = new egret.ImageLoader();
+                loader.load(getURL(resource));
+                return promisify(loader, resource)
+                    .then(function (bitmapData) {
+                    var texture = new egret.Texture();
+                    texture._setBitmapData(bitmapData);
+                    var r = host.resourceConfig.getResource(resource.name);
+                    if (r && r.scale9grid) {
+                        var list = r.scale9grid.split(",");
+                        texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
+                    }
+                    return texture;
                 });
             },
             onRemoveStart: function (host, resource) {
@@ -901,44 +889,26 @@ var RES;
         };
         processor_1.BinaryProcessor = {
             onLoadStart: function (host, resource) {
-                return __awaiter(this, void 0, void 0, function () {
-                    var request, arraybuffer;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0:
-                                request = new egret.HttpRequest();
-                                request.responseType = egret.HttpResponseType.ARRAY_BUFFER;
-                                request.open(getURL(resource), "get");
-                                request.send();
-                                return [4 /*yield*/, promisify(request, resource)];
-                            case 1:
-                                arraybuffer = _a.sent();
-                                return [2 /*return*/, arraybuffer];
-                        }
-                    });
-                });
+                var request = new egret.HttpRequest();
+                request.responseType = egret.HttpResponseType.ARRAY_BUFFER;
+                request.open(getURL(resource), "get");
+                request.send();
+                return promisify(request, resource);
+                // let arraybuffer = await promisify(request, resource);
+                // return arraybuffer;
             },
             onRemoveStart: function (host, resource) {
             }
         };
         processor_1.TextProcessor = {
             onLoadStart: function (host, resource) {
-                return __awaiter(this, void 0, void 0, function () {
-                    var request, text;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0:
-                                request = new egret.HttpRequest();
-                                request.responseType = egret.HttpResponseType.TEXT;
-                                request.open(getURL(resource), "get");
-                                request.send();
-                                return [4 /*yield*/, promisify(request, resource)];
-                            case 1:
-                                text = _a.sent();
-                                return [2 /*return*/, text];
-                        }
-                    });
-                });
+                var request = new egret.HttpRequest();
+                request.responseType = egret.HttpResponseType.TEXT;
+                request.open(getURL(resource), "get");
+                request.send();
+                return promisify(request, resource);
+                // let text = await promisify(request, resource);
+                // return text;
             },
             onRemoveStart: function (host, resource) {
                 return true;
@@ -946,17 +916,10 @@ var RES;
         };
         processor_1.JsonProcessor = {
             onLoadStart: function (host, resource) {
-                return __awaiter(this, void 0, void 0, function () {
-                    var text, data;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, host.load(resource, 'text')];
-                            case 1:
-                                text = _a.sent();
-                                data = JSON.parse(text);
-                                return [2 /*return*/, data];
-                        }
-                    });
+                // let text = await host.load(resource, 'text');
+                return host.load(resource, 'text').then(function (text) {
+                    var data = JSON.parse(text);
+                    return data;
                 });
             },
             onRemoveStart: function (host, request) {
@@ -964,17 +927,9 @@ var RES;
         };
         processor_1.XMLProcessor = {
             onLoadStart: function (host, resource) {
-                return __awaiter(this, void 0, void 0, function () {
-                    var text, data;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, host.load(resource, 'text')];
-                            case 1:
-                                text = _a.sent();
-                                data = egret.XML.parse(text);
-                                return [2 /*return*/, data];
-                        }
-                    });
+                return host.load(resource, 'text').then(function (text) {
+                    var data = egret.XML.parse(text);
+                    return data;
                 });
             },
             onRemoveStart: function (host, resource) {
@@ -983,25 +938,18 @@ var RES;
         };
         processor_1.CommonJSProcessor = {
             onLoadStart: function (host, resource) {
-                return __awaiter(this, void 0, void 0, function () {
-                    var text, f, require, exports;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, host.load(resource, 'text')];
-                            case 1:
-                                text = _a.sent();
-                                f = new Function('require', 'exports', text);
-                                require = function () { };
-                                exports = {};
-                                try {
-                                    f(require, exports);
-                                }
-                                catch (e) {
-                                    throw new RES.ResourceManagerError(2003, resource.name, e.message);
-                                }
-                                return [2 /*return*/, exports];
-                        }
-                    });
+                // let text = await host.load(resource, 'text');
+                return host.load(resource, 'text').then(function (text) {
+                    var f = new Function('require', 'exports', text);
+                    var require = function () { };
+                    var exports = {};
+                    try {
+                        f(require, exports);
+                    }
+                    catch (e) {
+                        throw new RES.ResourceManagerError(2003, resource.name, e.message);
+                    }
+                    return exports;
                 });
             },
             onRemoveStart: function (host, resource) {
@@ -1009,36 +957,29 @@ var RES;
         };
         processor_1.SheetProcessor = {
             onLoadStart: function (host, resource) {
-                return __awaiter(this, void 0, void 0, function () {
-                    var data, r, imageName, texture, frames, spriteSheet, subkey, config, texture, str, list;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, host.load(resource, "json")];
-                            case 1:
-                                data = _a.sent();
-                                r = host.resourceConfig.getResource(RES.nameSelector(data.file));
-                                if (!r) {
-                                    imageName = getRelativePath(resource.url, data.file);
-                                    r = { name: imageName, url: imageName, type: 'image', root: resource.root };
-                                }
-                                return [4 /*yield*/, host.load(r)];
-                            case 2:
-                                texture = _a.sent();
-                                frames = data.frames;
-                                spriteSheet = new egret.SpriteSheet(texture);
-                                spriteSheet["$resourceInfo"] = r;
-                                for (subkey in frames) {
-                                    config = frames[subkey];
-                                    texture = spriteSheet.createTexture(subkey, config.x, config.y, config.w, config.h, config.offX, config.offY, config.sourceW, config.sourceH);
-                                    if (config["scale9grid"]) {
-                                        str = config["scale9grid"];
-                                        list = str.split(",");
-                                        texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
-                                    }
-                                }
-                                host.save(r, texture);
-                                return [2 /*return*/, spriteSheet];
+                // let data = await host.load(resource, "json");
+                return host.load(resource, "json").then(function (data) {
+                    var r = host.resourceConfig.getResource(RES.nameSelector(data.file));
+                    if (!r) {
+                        var imageName = getRelativePath(resource.url, data.file);
+                        r = { name: imageName, url: imageName, type: 'image', root: resource.root };
+                    }
+                    return host.load(r)
+                        .then(function (bitmapData) {
+                        var frames = data.frames;
+                        var spriteSheet = new egret.SpriteSheet(bitmapData);
+                        spriteSheet["$resourceInfo"] = r;
+                        for (var subkey in frames) {
+                            var config = frames[subkey];
+                            var texture = spriteSheet.createTexture(subkey, config.x, config.y, config.w, config.h, config.offX, config.offY, config.sourceW, config.sourceH);
+                            if (config["scale9grid"]) {
+                                var str = config["scale9grid"];
+                                var list = str.split(",");
+                                texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
+                            }
                         }
+                        host.save(r, bitmapData);
+                        return spriteSheet;
                     });
                 });
             },
@@ -1080,38 +1021,33 @@ var RES;
         };
         processor_1.FontProcessor = {
             onLoadStart: function (host, resource) {
-                return __awaiter(this, void 0, void 0, function () {
-                    var data, config, imageName, r, texture, font;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, host.load(resource, 'text')];
-                            case 1:
-                                data = _a.sent();
-                                try {
-                                    config = JSON.parse(data);
-                                }
-                                catch (e) {
-                                    config = data;
-                                }
-                                if (typeof config === 'string') {
-                                    imageName = fontGetTexturePath(resource.url, config);
-                                }
-                                else {
-                                    imageName = getRelativePath(resource.url, config.file);
-                                }
-                                r = host.resourceConfig.getResource(RES.nameSelector(imageName));
-                                if (!r) {
-                                    r = { name: imageName, url: imageName, type: 'image', root: resource.root };
-                                }
-                                return [4 /*yield*/, host.load(r)];
-                            case 2:
-                                texture = _a.sent();
-                                font = new egret.BitmapFont(texture, config);
-                                font["$resourceInfo"] = r;
-                                // todo refactor
-                                host.save(r, texture);
-                                return [2 /*return*/, font];
-                        }
+                // let data: string = await host.load(resource, 'text');
+                return host.load(resource, 'text').then(function (data) {
+                    var config;
+                    try {
+                        config = JSON.parse(data);
+                    }
+                    catch (e) {
+                        config = data;
+                    }
+                    var imageName;
+                    if (typeof config === 'string') {
+                        imageName = fontGetTexturePath(resource.url, config);
+                    }
+                    else {
+                        imageName = getRelativePath(resource.url, config.file);
+                    }
+                    var r = host.resourceConfig.getResource(RES.nameSelector(imageName));
+                    if (!r) {
+                        r = { name: imageName, url: imageName, type: 'image', root: resource.root };
+                    }
+                    // var texture: egret.Texture = await host.load(r);
+                    return host.load(r).then(function (texture) {
+                        var font = new egret.BitmapFont(texture, config);
+                        font["$resourceInfo"] = r;
+                        // todo refactor
+                        host.save(r, texture);
+                        return font;
                     });
                 });
             },
@@ -1123,20 +1059,12 @@ var RES;
         };
         processor_1.SoundProcessor = {
             onLoadStart: function (host, resource) {
-                return __awaiter(this, void 0, void 0, function () {
-                    var sound;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0:
-                                sound = new egret.Sound();
-                                sound.load(getURL(resource));
-                                return [4 /*yield*/, promisify(sound, resource)];
-                            case 1:
-                                _a.sent();
-                                return [2 /*return*/, sound];
-                        }
-                    });
+                var sound = new egret.Sound();
+                sound.load(getURL(resource));
+                return promisify(sound, resource).then(function () {
+                    return sound;
                 });
+                // return sound;
             },
             onRemoveStart: function (host, resource) {
             }
@@ -1175,19 +1103,12 @@ var RES;
         };
         processor_1.MergeJSONProcessor = {
             onLoadStart: function (host, resource) {
-                return __awaiter(this, void 0, void 0, function () {
-                    var data, key;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, host.load(resource, 'json')];
-                            case 1:
-                                data = _a.sent();
-                                for (key in data) {
-                                    RES.config.addSubkey(key, resource.name);
-                                }
-                                return [2 /*return*/, data];
-                        }
-                    });
+                // let data = await host.load(resource, 'json');
+                return host.load(resource, 'json').then(function (data) {
+                    for (var key in data) {
+                        RES.config.addSubkey(key, resource.name);
+                    }
+                    return data;
                 });
             },
             getData: function (host, resource, key, subkey) {
@@ -1201,28 +1122,6 @@ var RES;
                 }
             },
             onRemoveStart: function (host, resource) {
-            }
-        };
-        processor_1.ResourceConfigProcessor = {
-            onLoadStart: function (host, resource) {
-                return __awaiter(this, void 0, void 0, function () {
-                    var data, fileSystem;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, host.load(resource, 'commonjs')];
-                            case 1:
-                                data = _a.sent();
-                                fileSystem = new RES.NewFileSystem(data.resources);
-                                data.fileSystem = fileSystem;
-                                delete data.resource;
-                                RES.resourceTypeSelector = data.typeSelector;
-                                RES.resourceNameSelector = data.nameSelector ? data.nameSelector : function (p) { return p; };
-                                return [2 /*return*/, data];
-                        }
-                    });
-                });
-            },
-            onRemoveStart: function () {
             }
         };
         processor_1.LegacyResourceConfigProcessor = {
@@ -1288,202 +1187,6 @@ var RES;
             onRemoveStart: function () {
             }
         };
-        var PVRParser = (function () {
-            function PVRParser() {
-            }
-            PVRParser.parse = function (arrayBuffer, callback, errorCallback) {
-                // the header length of int32
-                var headerIntLength = 13;
-                // get header part of arrayBuffer
-                var header = new Uint32Array(arrayBuffer, 0, headerIntLength);
-                // separate buffer and header
-                var pvrDatas = {
-                    buffer: arrayBuffer,
-                    header: header
-                };
-                // PVR v3
-                if (header[0] === 0x03525650) {
-                    PVRParser._parseV3(pvrDatas, callback, errorCallback);
-                }
-                else if (header[11] === 0x21525650) {
-                    PVRParser._parseV2(pvrDatas, callback, errorCallback);
-                }
-                else {
-                    errorCallback(pvrDatas, "pvr parse error!");
-                }
-            };
-            PVRParser._parseV2 = function (pvrDatas, callback, errorCallback) {
-                var header = pvrDatas.header;
-                var headerLength = header[0], height = header[1], width = header[2], numMipmaps = header[3], flags = header[4], dataLength = header[5], bpp = header[6], bitmaskRed = header[7], bitmaskGreen = header[8], bitmaskBlue = header[9], bitmaskAlpha = header[10], pvrTag = header[11], numSurfs = header[12];
-                var TYPE_MASK = 0xff;
-                var PVRTC_2 = 24, PVRTC_4 = 25;
-                var formatFlags = flags & TYPE_MASK;
-                var bpp, format;
-                var _hasAlpha = bitmaskAlpha > 0;
-                if (formatFlags === PVRTC_4) {
-                    format = _hasAlpha ? PVRParser.COMPRESSED_RGBA_PVRTC_4BPPV1_IMG : PVRParser.COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
-                    bpp = 4;
-                }
-                else if (formatFlags === PVRTC_2) {
-                    format = _hasAlpha ? PVRParser.COMPRESSED_RGBA_PVRTC_2BPPV1_IMG : PVRParser.COMPRESSED_RGB_PVRTC_2BPPV1_IMG;
-                    bpp = 2;
-                }
-                else {
-                    errorCallback(pvrDatas, "pvr v2 parse error");
-                    console.log("unknow format flags::" + formatFlags);
-                }
-                var dataOffset = headerLength;
-                pvrDatas.pvrtcData = new Uint8Array(pvrDatas.buffer, dataOffset);
-                pvrDatas.bpp = bpp;
-                pvrDatas.format = format;
-                pvrDatas.width = width;
-                pvrDatas.height = height;
-                pvrDatas.surfacesCount = numSurfs;
-                pvrDatas.mipmapsCount = numMipmaps + 1;
-                // guess cubemap type seems tricky in v2
-                // it juste a pvr containing 6 surface (no explicit cubemap type)
-                pvrDatas.isCubemap = (pvrDatas.surfacesCount === 6);
-                callback(pvrDatas);
-            };
-            PVRParser._parseV3 = function (pvrDatas, callback, errorCallback) {
-                var header = pvrDatas.header;
-                var bpp, format;
-                var pixelFormat = header[2];
-                switch (pixelFormat) {
-                    case 0:// PVRTC 2bpp RGB
-                        bpp = 2;
-                        format = PVRParser.COMPRESSED_RGB_PVRTC_2BPPV1_IMG;
-                        break;
-                    case 1:// PVRTC 2bpp RGBA
-                        bpp = 2;
-                        format = PVRParser.COMPRESSED_RGBA_PVRTC_2BPPV1_IMG;
-                        break;
-                    case 2:// PVRTC 4bpp RGB
-                        bpp = 4;
-                        format = PVRParser.COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
-                        break;
-                    case 3:// PVRTC 4bpp RGBA
-                        bpp = 4;
-                        format = PVRParser.COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
-                        break;
-                    default:
-                        errorCallback(pvrDatas, "pvr v3 parse error");
-                        console.log("unknow pixel format::" + pixelFormat);
-                }
-                var dataOffset = 52 + header[12];
-                pvrDatas.pvrtcData = new Uint8Array(pvrDatas.buffer, dataOffset);
-                pvrDatas.bpp = bpp;
-                pvrDatas.format = format;
-                pvrDatas.width = header[7];
-                pvrDatas.height = header[6];
-                pvrDatas.surfacesCount = header[10];
-                pvrDatas.mipmapsCount = header[11];
-                pvrDatas.isCubemap = (pvrDatas.surfacesCount === 6);
-                callback(pvrDatas);
-            };
-            PVRParser.COMPRESSED_RGB_PVRTC_4BPPV1_IMG = 0x8C00;
-            PVRParser.COMPRESSED_RGB_PVRTC_2BPPV1_IMG = 0x8C01;
-            PVRParser.COMPRESSED_RGBA_PVRTC_4BPPV1_IMG = 0x8C02;
-            PVRParser.COMPRESSED_RGBA_PVRTC_2BPPV1_IMG = 0x8C03;
-            return PVRParser;
-        }());
-        __reflect(PVRParser.prototype, "PVRParser");
-        if (typeof egret != 'undefined' && egret && egret["web"] && egret["web"].WebGLRenderContext) {
-            // Calcualates the size of a compressed texture level in bytes
-            function textureLevelSize(format, width, height) {
-                switch (format) {
-                    case PVRParser.COMPRESSED_RGB_PVRTC_4BPPV1_IMG:
-                    case PVRParser.COMPRESSED_RGBA_PVRTC_4BPPV1_IMG:
-                        return Math.floor((Math.max(width, 8) * Math.max(height, 8) * 4 + 7) / 8);
-                    case PVRParser.COMPRESSED_RGB_PVRTC_2BPPV1_IMG:
-                    case PVRParser.COMPRESSED_RGBA_PVRTC_2BPPV1_IMG:
-                        return Math.floor((Math.max(width, 16) * Math.max(height, 8) * 2 + 7) / 8);
-                    default:
-                        return 0;
-                }
-            }
-            egret["web"].WebGLRenderContext.prototype.createTextureFromCompressedData = function (data, width, height, levels, internalFormat) {
-                var gl = this.context;
-                if (!this.pvrtcExt) {
-                    this.pvrtcExt = gl.getExtension("WEBKIT_WEBGL_compressed_texture_pvrtc");
-                }
-                var texture = gl.createTexture();
-                gl.bindTexture(gl.TEXTURE_2D, texture);
-                var offset = 0;
-                // Loop through each mip level of compressed texture data provided and upload it to the given texture.
-                for (var i = 0; i < levels; ++i) {
-                    // Determine how big this level of compressed texture data is in bytes.
-                    var levelSize = textureLevelSize(internalFormat, width, height);
-                    // Get a view of the bytes for this level of DXT data.
-                    var dxtLevel = new Uint8Array(data.buffer, data.byteOffset + offset, levelSize);
-                    // Upload!
-                    gl.compressedTexImage2D(gl.TEXTURE_2D, i, internalFormat, width, height, 0, dxtLevel);
-                    // The next mip level will be half the height and width of this one.
-                    width = width >> 1;
-                    if (width < 1)
-                        width = 1;
-                    height = height >> 1;
-                    if (height < 1)
-                        height = 1;
-                    // Advance the offset into the compressed texture data past the current mip level's data.
-                    offset += levelSize;
-                }
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-                return texture;
-            };
-        }
-        processor_1.PVRProcessor = {
-            onLoadStart: function (host, resource) {
-                return __awaiter(this, void 0, void 0, function () {
-                    var arraybuffer, width, height, borderWidth, borderHeight, byteArray, list, pvrDataBuffer, i, buffer, dataLength, self, texture;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, host.load(resource, 'bin')];
-                            case 1:
-                                arraybuffer = _a.sent();
-                                width = 512;
-                                height = 512;
-                                borderWidth = 0;
-                                borderHeight = 0;
-                                byteArray = new egret.ByteArray(arraybuffer);
-                                byteArray.position = 7;
-                                list = ["body", "ext"];
-                                for (i = 0; i < list.length; i++) {
-                                    buffer = void 0;
-                                    switch (list[i]) {
-                                        case "body":
-                                            byteArray.position += 2;
-                                            dataLength = byteArray.readUnsignedInt();
-                                            pvrDataBuffer = byteArray.buffer.slice(byteArray.position, byteArray.position + dataLength);
-                                            byteArray.position += dataLength;
-                                            break;
-                                        case "ext":
-                                            byteArray.position += 6;
-                                            width = byteArray.readUnsignedShort();
-                                            height = byteArray.readUnsignedShort();
-                                            borderWidth = byteArray.readUnsignedShort();
-                                            borderHeight = byteArray.readUnsignedShort();
-                                            break;
-                                    }
-                                }
-                                self = this;
-                                PVRParser.parse(pvrDataBuffer, function (pvrData) {
-                                    var bitmapData = new egret.BitmapData(pvrData);
-                                    bitmapData.format = "pvr";
-                                    texture = new egret.Texture();
-                                    texture._setBitmapData(bitmapData);
-                                    texture.$initData(borderWidth, borderHeight, width, height, 0, 0, width, height, bitmapData.width, bitmapData.height);
-                                }, function () {
-                                    console.log("pvr error");
-                                });
-                                return [2 /*return*/, texture];
-                        }
-                    });
-                });
-            },
-            onRemoveStart: function (host, resource) { }
-        };
         processor_1._map = {
             "image": processor_1.ImageProcessor,
             "json": processor_1.JsonProcessor,
@@ -1495,9 +1198,7 @@ var RES;
             "commonjs": processor_1.CommonJSProcessor,
             "sound": processor_1.SoundProcessor,
             "movieclip": processor_1.MovieClipProcessor,
-            "pvr": processor_1.PVRProcessor,
             "mergeJson": processor_1.MergeJSONProcessor,
-            "resourceConfig": processor_1.ResourceConfigProcessor,
             "legacyResourceConfig": processor_1.LegacyResourceConfigProcessor,
         };
     })(processor = RES.processor || (RES.processor = {}));

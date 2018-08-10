@@ -228,9 +228,7 @@ declare module RES.processor {
     var SoundProcessor: Processor;
     var MovieClipProcessor: Processor;
     const MergeJSONProcessor: Processor;
-    const ResourceConfigProcessor: Processor;
     const LegacyResourceConfigProcessor: Processor;
-    var PVRProcessor: Processor;
     const _map: {
         [index: string]: Processor;
     };
