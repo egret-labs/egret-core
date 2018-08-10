@@ -78,26 +78,20 @@ module RES.processor {
 
     export var ImageProcessor: Processor = {
 
-        async onLoadStart(host, resource) {
+        onLoadStart(host, resource) {
             var loader = new egret.ImageLoader();
             loader.load(getURL(resource));
-            var bitmapData = await promisify(loader, resource);
-            // if (!cache[resource.url]){
-            //     cache[resource.url] = new egret.Texture();
-            // }
-            // var texture = cache[resource.url];
-            let texture = new egret.Texture();
-            texture._setBitmapData(bitmapData);
-            let r = host.resourceConfig.getResource(resource.name);
-            if (r && r.scale9grid) {
-                var list: Array<string> = r.scale9grid.split(",");
-                texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
-            }
-            // var config: any = resItem.data;
-            // if (config && config["scale9grid"]) {
-            //     
-            // }
-            return texture;
+            return promisify(loader, resource)
+                .then((bitmapData) => {
+                    let texture = new egret.Texture();
+                    texture._setBitmapData(bitmapData);
+                    let r = host.resourceConfig.getResource(resource.name);
+                    if (r && r.scale9grid) {
+                        var list: Array<string> = r.scale9grid.split(",");
+                        texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
+                    }
+                    return texture;
+                })
         },
 
         onRemoveStart(host, resource) {
@@ -110,15 +104,14 @@ module RES.processor {
 
     export var BinaryProcessor: Processor = {
 
-        async onLoadStart(host, resource) {
-
+        onLoadStart(host, resource) {
             var request: egret.HttpRequest = new egret.HttpRequest();
             request.responseType = egret.HttpResponseType.ARRAY_BUFFER;
             request.open(getURL(resource), "get");
             request.send();
-            let arraybuffer = await promisify(request, resource);
-            return arraybuffer;
-
+            return promisify(request, resource)
+            // let arraybuffer = await promisify(request, resource);
+            // return arraybuffer;
         },
 
         onRemoveStart(host, resource) {
@@ -128,15 +121,14 @@ module RES.processor {
 
     export var TextProcessor: Processor = {
 
-        async onLoadStart(host, resource) {
-
+        onLoadStart(host, resource) {
             var request: egret.HttpRequest = new egret.HttpRequest();
             request.responseType = egret.HttpResponseType.TEXT;
             request.open(getURL(resource), "get");
             request.send();
-            let text = await promisify(request, resource);
-            return text;
-
+            return promisify(request, resource)
+            // let text = await promisify(request, resource);
+            // return text;
         },
 
         onRemoveStart(host, resource) {
@@ -146,10 +138,13 @@ module RES.processor {
 
     export var JsonProcessor: Processor = {
 
-        async onLoadStart(host, resource) {
-            let text = await host.load(resource, 'text');
-            let data = JSON.parse(text);
-            return data;
+        onLoadStart(host, resource) {
+            // let text = await host.load(resource, 'text');
+            return host.load(resource, 'text').then(text => {
+                let data = JSON.parse(text);
+                return data;
+            })
+
         },
 
         onRemoveStart(host, request) {
@@ -159,10 +154,11 @@ module RES.processor {
 
     export var XMLProcessor: Processor = {
 
-        async onLoadStart(host, resource) {
-            let text = await host.load(resource, 'text');
-            let data = egret.XML.parse(text);
-            return data;
+        onLoadStart(host, resource) {
+            return host.load(resource, 'text').then((text) => {
+                let data = egret.XML.parse(text);
+                return data;
+            })
         },
 
         onRemoveStart(host, resource) {
@@ -172,19 +168,20 @@ module RES.processor {
 
     export var CommonJSProcessor: Processor = {
 
-        async onLoadStart(host, resource) {
-            let text = await host.load(resource, 'text');
-            let f = new Function('require', 'exports', text);
-            var require = function () { };
-            var exports = {};
-            try {
-                f(require, exports);
-            }
-            catch (e) {
-                throw new ResourceManagerError(2003, resource.name, e.message)
-            }
-
-            return exports;
+        onLoadStart(host, resource) {
+            // let text = await host.load(resource, 'text');
+            return host.load(resource, 'text').then((text) => {
+                let f = new Function('require', 'exports', text);
+                var require = function () { };
+                var exports = {};
+                try {
+                    f(require, exports);
+                }
+                catch (e) {
+                    throw new ResourceManagerError(2003, resource.name, e.message)
+                }
+                return exports;
+            })
         },
 
         onRemoveStart(host, resource) {
@@ -194,29 +191,32 @@ module RES.processor {
 
     export const SheetProcessor: Processor = {
 
-        async onLoadStart(host, resource): Promise<any> {
-
-            let data = await host.load(resource, "json");
-            let r = host.resourceConfig.getResource(RES.nameSelector(data.file));
-            if (!r) {
-                let imageName = getRelativePath(resource.url, data.file);
-                r = { name: imageName, url: imageName, type: 'image', root: resource.root };
-            }
-            var texture: egret.Texture = await host.load(r);
-            var frames: any = data.frames;
-            var spriteSheet = new egret.SpriteSheet(texture);
-            spriteSheet["$resourceInfo"] = r;
-            for (var subkey in frames) {
-                var config: any = frames[subkey];
-                var texture = spriteSheet.createTexture(subkey, config.x, config.y, config.w, config.h, config.offX, config.offY, config.sourceW, config.sourceH);
-                if (config["scale9grid"]) {
-                    var str: string = config["scale9grid"];
-                    var list: Array<string> = str.split(",");
-                    texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
+        onLoadStart(host, resource): Promise<any> {
+            // let data = await host.load(resource, "json");
+            return host.load(resource, "json").then((data) => {
+                let r = host.resourceConfig.getResource(RES.nameSelector(data.file));
+                if (!r) {
+                    let imageName = getRelativePath(resource.url, data.file);
+                    r = { name: imageName, url: imageName, type: 'image', root: resource.root };
                 }
-            }
-            host.save(r, texture);
-            return spriteSheet;
+                return host.load(r)
+                    .then((bitmapData) => {
+                        var frames: any = data.frames;
+                        var spriteSheet = new egret.SpriteSheet(bitmapData);
+                        spriteSheet["$resourceInfo"] = r;
+                        for (var subkey in frames) {
+                            var config: any = frames[subkey];
+                            var texture = spriteSheet.createTexture(subkey, config.x, config.y, config.w, config.h, config.offX, config.offY, config.sourceW, config.sourceH);
+                            if (config["scale9grid"]) {
+                                var str: string = config["scale9grid"];
+                                var list: Array<string> = str.split(",");
+                                texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
+                            }
+                        }
+                        host.save(r as ResourceInfo, bitmapData);
+                        return spriteSheet;
+                    })
+            })
         },
 
 
@@ -266,34 +266,37 @@ module RES.processor {
 
     export var FontProcessor: Processor = {
 
-        async onLoadStart(host, resource): Promise<any> {
+        onLoadStart(host, resource): Promise<any> {
+            // let data: string = await host.load(resource, 'text');
+            return host.load(resource, 'text').then((data) => {
+                let config: FontJsonFormat | string;
+                try {
+                    config = JSON.parse(data) as FontJsonFormat;
+                }
+                catch (e) {
+                    config = data
+                }
 
-            let data: string = await host.load(resource, 'text');
-            let config: FontJsonFormat | string;
-            try {
-                config = JSON.parse(data) as FontJsonFormat;
-            }
-            catch (e) {
-                config = data
-            }
-
-            let imageName;
-            if (typeof config === 'string') {
-                imageName = fontGetTexturePath(resource.url, config)
-            }
-            else {
-                imageName = getRelativePath(resource.url, config.file);
-            }
-            let r = host.resourceConfig.getResource(RES.nameSelector(imageName));
-            if (!r) {
-                r = { name: imageName, url: imageName, type: 'image', root: resource.root };
-            }
-            var texture: egret.Texture = await host.load(r);
-            var font = new egret.BitmapFont(texture, config);
-            font["$resourceInfo"] = r;
-            // todo refactor
-            host.save(r, texture);
-            return font;
+                let imageName;
+                if (typeof config === 'string') {
+                    imageName = fontGetTexturePath(resource.url, config)
+                }
+                else {
+                    imageName = getRelativePath(resource.url, config.file);
+                }
+                let r = host.resourceConfig.getResource(RES.nameSelector(imageName));
+                if (!r) {
+                    r = { name: imageName, url: imageName, type: 'image', root: resource.root };
+                }
+                // var texture: egret.Texture = await host.load(r);
+                return host.load(r).then((texture) => {
+                    var font = new egret.BitmapFont(texture, config);
+                    font["$resourceInfo"] = r;
+                    // todo refactor
+                    host.save(r as ResourceInfo, texture);
+                    return font;
+                })
+            })
         },
 
         onRemoveStart(host, resource) {
@@ -305,11 +308,13 @@ module RES.processor {
 
 
     export var SoundProcessor: Processor = {
-        async onLoadStart(host, resource) {
+        onLoadStart(host, resource) {
             var sound: egret.Sound = new egret.Sound();
             sound.load(getURL(resource));
-            await promisify(sound, resource);
-            return sound;
+            return promisify(sound, resource).then(() => {
+                return sound;
+            });
+            // return sound;
         },
         onRemoveStart(host, resource) {
         }
@@ -350,13 +355,15 @@ module RES.processor {
 
     export const MergeJSONProcessor: Processor = {
 
-        async onLoadStart(host, resource): Promise<any> {
+        onLoadStart(host, resource): Promise<any> {
 
-            let data = await host.load(resource, 'json');
-            for (var key in data) {
-                config.addSubkey(key, resource.name);
-            }
-            return data;
+            // let data = await host.load(resource, 'json');
+            return host.load(resource, 'json').then(data => {
+                for (var key in data) {
+                    config.addSubkey(key, resource.name);
+                }
+                return data;
+            })
         },
 
 
@@ -373,58 +380,6 @@ module RES.processor {
 
 
         onRemoveStart(host, resource) {
-        }
-    }
-
-
-    export const ResourceConfigProcessor: Processor = {
-
-
-        async onLoadStart(host, resource) {
-            let data = await host.load(resource, 'commonjs');
-            let fileSystem = new NewFileSystem(data.resources);
-            data.fileSystem = fileSystem;
-            delete data.resource;
-            resourceTypeSelector = data.typeSelector;
-            resourceNameSelector = data.nameSelector ? data.nameSelector : (p) => p;
-            return data;
-            // let resources = data.resources;
-            // let loop = (r, prefix, walk: (r: ResourceInfo) => void) => {
-            //     for (var key in r) {
-            //         let p = prefix ? prefix + "/" + key : key;
-            //         var f = r[key];
-            //         if (isFile(f)) {
-
-            //             if (typeof f === 'string') {
-            //                 f = { url: f, name: p };
-            //                 r[key] = f;
-            //             }
-            //             else {
-            //                 f['name'] = p;
-            //             }
-            //             walk(f);
-            //         }
-            //         else {
-            //             loop(f, p, walk);
-            //         }
-
-            //     }
-            // }
-
-            // let isFile = (r) => {
-            //     return typeof r === "string" || r.url != null;
-            // }
-
-            // loop(resources, "", value => {
-            //     if (!value.type) {
-            //         value.type = resourceTypeSelector(value.url);
-            //     }
-            // })
-
-            // return data;
-        },
-
-        onRemoveStart() {
         }
     }
 
@@ -520,237 +475,6 @@ module RES.processor {
     }
 
 
-
-
-    class PVRParser {
-
-        public static COMPRESSED_RGB_PVRTC_4BPPV1_IMG = 0x8C00;
-        public static COMPRESSED_RGB_PVRTC_2BPPV1_IMG = 0x8C01;
-        public static COMPRESSED_RGBA_PVRTC_4BPPV1_IMG = 0x8C02;
-        public static COMPRESSED_RGBA_PVRTC_2BPPV1_IMG = 0x8C03;
-
-        public static parse(arrayBuffer, callback, errorCallback) {
-            // the header length of int32
-            var headerIntLength = 13;
-            // get header part of arrayBuffer
-            var header = new Uint32Array(arrayBuffer, 0, headerIntLength);
-
-            // separate buffer and header
-            var pvrDatas = {
-                buffer: arrayBuffer,
-                header: header
-            };
-
-            // PVR v3
-            if (header[0] === 0x03525650) {
-                PVRParser._parseV3(pvrDatas, callback, errorCallback);
-            }
-            // PVR v2
-            else if (header[11] === 0x21525650) {
-                PVRParser._parseV2(pvrDatas, callback, errorCallback);
-            }
-            // error
-            else {
-                errorCallback(pvrDatas, "pvr parse error!");
-            }
-        }
-
-        private static _parseV2(pvrDatas, callback, errorCallback) {
-            var header = pvrDatas.header;
-
-            var headerLength = header[0],
-                height = header[1],
-                width = header[2],
-                numMipmaps = header[3],
-                flags = header[4],
-                dataLength = header[5],
-                bpp = header[6],
-                bitmaskRed = header[7],
-                bitmaskGreen = header[8],
-                bitmaskBlue = header[9],
-                bitmaskAlpha = header[10],
-                pvrTag = header[11],
-                numSurfs = header[12];
-
-            var TYPE_MASK = 0xff;
-            var PVRTC_2 = 24,
-                PVRTC_4 = 25;
-
-            var formatFlags = flags & TYPE_MASK;
-
-            var bpp, format;
-            var _hasAlpha = bitmaskAlpha > 0;
-
-            if (formatFlags === PVRTC_4) {
-                format = _hasAlpha ? PVRParser.COMPRESSED_RGBA_PVRTC_4BPPV1_IMG : PVRParser.COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
-                bpp = 4;
-            } else if (formatFlags === PVRTC_2) {
-                format = _hasAlpha ? PVRParser.COMPRESSED_RGBA_PVRTC_2BPPV1_IMG : PVRParser.COMPRESSED_RGB_PVRTC_2BPPV1_IMG;
-                bpp = 2;
-            } else {
-                errorCallback(pvrDatas, "pvr v2 parse error");
-                console.log("unknow format flags::" + formatFlags);
-            }
-
-            var dataOffset = headerLength;
-            pvrDatas.pvrtcData = new Uint8Array(pvrDatas.buffer, dataOffset);
-            pvrDatas.bpp = bpp;
-            pvrDatas.format = format;
-            pvrDatas.width = width;
-            pvrDatas.height = height;
-            pvrDatas.surfacesCount = numSurfs;
-            pvrDatas.mipmapsCount = numMipmaps + 1;
-
-            // guess cubemap type seems tricky in v2
-            // it juste a pvr containing 6 surface (no explicit cubemap type)
-            pvrDatas.isCubemap = (pvrDatas.surfacesCount === 6);
-
-            callback(pvrDatas);
-        }
-
-        private static _parseV3(pvrDatas, callback, errorCallback): void {
-            var header = pvrDatas.header;
-            var bpp, format;
-
-            var pixelFormat = header[2];
-
-            switch (pixelFormat) {
-                case 0: // PVRTC 2bpp RGB
-                    bpp = 2;
-                    format = PVRParser.COMPRESSED_RGB_PVRTC_2BPPV1_IMG;
-                    break;
-                case 1: // PVRTC 2bpp RGBA
-                    bpp = 2;
-                    format = PVRParser.COMPRESSED_RGBA_PVRTC_2BPPV1_IMG;
-                    break;
-                case 2: // PVRTC 4bpp RGB
-                    bpp = 4;
-                    format = PVRParser.COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
-                    break;
-                case 3: // PVRTC 4bpp RGBA
-                    bpp = 4;
-                    format = PVRParser.COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
-                    break;
-                default:
-                    errorCallback(pvrDatas, "pvr v3 parse error");
-                    console.log("unknow pixel format::" + pixelFormat)
-            }
-
-            var dataOffset = 52 + header[12];
-            pvrDatas.pvrtcData = new Uint8Array(pvrDatas.buffer, dataOffset);
-            pvrDatas.bpp = bpp;
-            pvrDatas.format = format;
-            pvrDatas.width = header[7];
-            pvrDatas.height = header[6];
-            pvrDatas.surfacesCount = header[10];
-            pvrDatas.mipmapsCount = header[11];
-
-            pvrDatas.isCubemap = (pvrDatas.surfacesCount === 6);
-
-            callback(pvrDatas);
-        }
-    }
-
-    if (typeof egret != 'undefined' && egret && egret["web"] && egret["web"].WebGLRenderContext) {
-        // Calcualates the size of a compressed texture level in bytes
-        function textureLevelSize(format, width, height) {
-            switch (format) {
-                case PVRParser.COMPRESSED_RGB_PVRTC_4BPPV1_IMG:
-                case PVRParser.COMPRESSED_RGBA_PVRTC_4BPPV1_IMG:
-                    return Math.floor((Math.max(width, 8) * Math.max(height, 8) * 4 + 7) / 8);
-
-                case PVRParser.COMPRESSED_RGB_PVRTC_2BPPV1_IMG:
-                case PVRParser.COMPRESSED_RGBA_PVRTC_2BPPV1_IMG:
-                    return Math.floor((Math.max(width, 16) * Math.max(height, 8) * 2 + 7) / 8);
-
-                default:
-                    return 0;
-            }
-        }
-
-        egret["web"].WebGLRenderContext.prototype.createTextureFromCompressedData = function (data, width, height, levels, internalFormat): WebGLTexture {
-            var gl = this.context;
-
-            if (!this.pvrtcExt) {
-                this.pvrtcExt = gl.getExtension("WEBKIT_WEBGL_compressed_texture_pvrtc");
-            }
-            var texture = gl.createTexture();
-            gl.bindTexture(gl.TEXTURE_2D, texture);
-
-            var offset = 0;
-            // Loop through each mip level of compressed texture data provided and upload it to the given texture.
-            for (var i = 0; i < levels; ++i) {
-                // Determine how big this level of compressed texture data is in bytes.
-                var levelSize = textureLevelSize(internalFormat, width, height);
-                // Get a view of the bytes for this level of DXT data.
-                var dxtLevel = new Uint8Array(data.buffer, data.byteOffset + offset, levelSize);
-                // Upload!
-                gl.compressedTexImage2D(gl.TEXTURE_2D, i, internalFormat, width, height, 0, dxtLevel);
-                // The next mip level will be half the height and width of this one.
-                width = width >> 1;
-                if (width < 1)
-                    width = 1;
-                height = height >> 1;
-                if (height < 1)
-                    height = 1;
-                // Advance the offset into the compressed texture data past the current mip level's data.
-                offset += levelSize;
-            }
-
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-            return texture;
-        }
-    }
-
-    export var PVRProcessor: Processor = {
-
-        async onLoadStart(host, resource) {
-            let arraybuffer = await host.load(resource, 'bin');
-            let width = 512;
-            let height = 512;
-            let borderWidth = 0;
-            let borderHeight = 0;
-            let byteArray = new egret.ByteArray(arraybuffer);
-            byteArray.position = 7;
-            let list = ["body", "ext"];
-            let pvrDataBuffer;
-            for (let i = 0; i < list.length; i++) {
-                let buffer;
-                switch (list[i]) {
-                    case "body":
-                        byteArray.position += 2;
-                        let dataLength = byteArray.readUnsignedInt();
-                        pvrDataBuffer = byteArray.buffer.slice(byteArray.position, byteArray.position + dataLength);
-                        byteArray.position += dataLength;
-                        break;
-                    case "ext":
-                        byteArray.position += 6;
-                        width = byteArray.readUnsignedShort();
-                        height = byteArray.readUnsignedShort();
-                        borderWidth = byteArray.readUnsignedShort();
-                        borderHeight = byteArray.readUnsignedShort();
-                        break;
-                }
-            }
-            let self = this;
-            let texture;
-            PVRParser.parse(pvrDataBuffer, function (pvrData) {
-                let bitmapData = new egret.BitmapData(pvrData);
-                bitmapData.format = "pvr";
-                texture = new egret.Texture();
-                texture._setBitmapData(bitmapData);
-                texture.$initData(borderWidth, borderHeight, width, height, 0, 0, width, height, bitmapData.width, bitmapData.height);
-            }, function () {
-                console.log("pvr error");
-            });
-            return texture;
-
-        },
-
-        onRemoveStart(host, resource) { }
-    }
-
     export const _map: { [index: string]: Processor } = {
         "image": ImageProcessor,
         "json": JsonProcessor,
@@ -762,9 +486,7 @@ module RES.processor {
         "commonjs": CommonJSProcessor,
         "sound": SoundProcessor,
         "movieclip": MovieClipProcessor,
-        "pvr": PVRProcessor,
         "mergeJson": MergeJSONProcessor,
-        "resourceConfig": ResourceConfigProcessor,
         "legacyResourceConfig": LegacyResourceConfigProcessor,
         // "zip": ZipProcessor
     }
