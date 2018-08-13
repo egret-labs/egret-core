@@ -47,16 +47,8 @@ var JSONParseClass = /** @class */ (function () {
         };
     }
     JSONParseClass.prototype.setData = function (data) {
-        if (!this.json) {
-            this.json = data;
-            this.parseSkinMap(this.json);
-        }
-        else {
-            this.parseSkinMap(data);
-            for (var a in data) {
-                this.json[a] = data[a];
-            }
-        }
+        this.json = data;
+        this.parseSkinMap(this.json);
     };
     JSONParseClass.prototype.generateSkinClass = function (skinData, className, superName) {
         if (!skinData)
