@@ -44,7 +44,6 @@ namespace RES {
             return Promise.resolve();
         }
         public getVirtualUrl(url: string): string {
-            console.log("native     ", url)
             return url;
         }
 

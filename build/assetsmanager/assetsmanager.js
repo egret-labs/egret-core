@@ -916,7 +916,6 @@ var RES;
             return Promise.resolve();
         };
         NativeVersionController.prototype.getVirtualUrl = function (url) {
-            console.log("native     ", url);
             return url;
         };
         NativeVersionController.prototype.getLocalData = function (filePath) {
