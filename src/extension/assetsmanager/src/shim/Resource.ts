@@ -439,26 +439,91 @@ module RES {
         instance.addResourceData(data);
     }
 
+    /**
+        * Returns the VersionController
+        * @version Egret 2.5
+        * @platform Web,Native
+        * @language en_US
+        */
+    /**
+     * 获得版本控制器.
+     * @version Egret 2.5
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    export function getVersionController(): VersionController {
+        if (!instance) instance = new Resource();
+        return instance.vcs;
+    }
+
+    /**
+         * Register the VersionController
+         * @param vcs The VersionController to register.
+         * @version Egret 2.5
+         * @platform Web,Native
+         * @language en_US
+         */
+    /**
+     * 注册版本控制器,通过RES模块加载资源时会从版本控制器获取真实url
+     * @param vcs 注入的版本控制器。
+     * @version Egret 2.5
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    export function registerVersionController(vcs: VersionController): void {
+        if (!instance) instance = new Resource();
+        instance.registerVersionController(vcs);
+    }
+    export function getVirtualUrl(url) {
+        if (instance.vcs) {
+            return instance.vcs.getVirtualUrl(url);
+        }
+        else {
+            return url;
+        }
+    }
 
     /**
      * @private
      */
     export class Resource extends egret.EventDispatcher {
+        vcs: VersionController;
+        isVcsInit = false;
+        constructor() {
+            super();
+            if (VersionController) {
+                this.vcs = new VersionController();
+            }
 
+        }
+        public registerVersionController(vcs: VersionController) {
+            this.vcs = vcs;
+            this.isVcsInit = false;
+        }
         /**
          * 开始加载配置
          * @method RES.loadConfig
          */
         @checkCancelation
         loadConfig(): Promise<void> {
-            native_init();
-            return config.init().then(data => {
-                ResourceEvent.dispatchResourceEvent(this, ResourceEvent.CONFIG_COMPLETE);
-            }, error => {
-                ResourceEvent.dispatchResourceEvent(this, ResourceEvent.CONFIG_LOAD_ERROR);
-                return Promise.reject(error);
-            })
+            let normalCall = () => {
+                return config.init().then(data => {
+                    ResourceEvent.dispatchResourceEvent(this, ResourceEvent.CONFIG_COMPLETE);
+                }, error => {
+                    ResourceEvent.dispatchResourceEvent(this, ResourceEvent.CONFIG_LOAD_ERROR);
+                    return Promise.reject(error);
+                })
+            }
+            if (!this.isVcsInit && this.vcs) {
+                this.isVcsInit = true;
+                return this.vcs.init().then(() => {
+                    return normalCall()
+                });
+            } else {
+                return normalCall()
+            }
         }
+
 
         /**
          * 检查某个资源组是否已经加载完成
@@ -740,7 +805,6 @@ module RES {
      * Resource单例
      */
     var instance: Resource;
-
 
 }
 

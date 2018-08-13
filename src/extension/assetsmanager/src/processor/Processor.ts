@@ -20,7 +20,7 @@ module RES.processor {
         _map[type] = processor;
     }
 
-     function promisify(loader: egret.ImageLoader | egret.HttpRequest | egret.Sound, resource: ResourceInfo): Promise<any> {
+    function promisify(loader: egret.ImageLoader | egret.HttpRequest | egret.Sound, resource: ResourceInfo): Promise<any> {
 
         return new Promise((reslove, reject) => {
             let onSuccess = () => {
@@ -36,22 +36,6 @@ module RES.processor {
             loader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, this);
         })
     }
-
-    function getURL(resource: ResourceInfo) {
-        if (resource.url.indexOf("://") != -1) {
-            return resource.url;
-        }
-        let prefix = resource.root;
-        let url = prefix + resource.url;
-        if (RES['getRealURL']) { //todo: shim native
-            return RES['getRealURL'](url);
-        }
-        else {
-            return url;
-        }
-    }
-
-
     export function getRelativePath(url: string, file: string): string {
         if (file.indexOf("://") != -1) {
             return file;
@@ -80,7 +64,7 @@ module RES.processor {
 
         onLoadStart(host, resource) {
             var loader = new egret.ImageLoader();
-            loader.load(getURL(resource));
+            loader.load(RES.getVirtualUrl(resource.root + resource.url));
             return promisify(loader, resource)
                 .then((bitmapData) => {
                     let texture = new egret.Texture();
@@ -107,7 +91,7 @@ module RES.processor {
         onLoadStart(host, resource) {
             var request: egret.HttpRequest = new egret.HttpRequest();
             request.responseType = egret.HttpResponseType.ARRAY_BUFFER;
-            request.open(getURL(resource), "get");
+            request.open(RES.getVirtualUrl(resource.root + resource.url), "get");
             request.send();
             return promisify(request, resource)
             // let arraybuffer = await promisify(request, resource);
@@ -124,7 +108,7 @@ module RES.processor {
         onLoadStart(host, resource) {
             var request: egret.HttpRequest = new egret.HttpRequest();
             request.responseType = egret.HttpResponseType.TEXT;
-            request.open(getURL(resource), "get");
+            request.open(RES.getVirtualUrl(resource.root + resource.url), "get");
             request.send();
             return promisify(request, resource)
             // let text = await promisify(request, resource);
@@ -310,7 +294,7 @@ module RES.processor {
     export var SoundProcessor: Processor = {
         onLoadStart(host, resource) {
             var sound: egret.Sound = new egret.Sound();
-            sound.load(getURL(resource));
+            sound.load(RES.getVirtualUrl(resource.root + resource.url));
             return promisify(sound, resource).then(() => {
                 return sound;
             });
