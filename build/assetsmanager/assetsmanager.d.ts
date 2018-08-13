@@ -1,3 +1,52 @@
+declare module RES {
+    /**
+     * @class RES.ResourceLoader
+     * @classdesc
+     * @private
+     */
+    class ResourceLoader {
+        /**
+         * 当前组加载的项总个数,key为groupName
+         */
+        private groupTotalDic;
+        /**
+         * 已经加载的项个数,key为groupName
+         */
+        private numLoadedDic;
+        /**
+         * 加载失败的组,key为groupName
+         */
+        private groupErrorDic;
+        private retryTimesDic;
+        maxRetryTimes: number;
+        private reporterDic;
+        private dispatcherDic;
+        private failedList;
+        private loadItemErrorDic;
+        private errorDic;
+        /**
+         * 资源优先级队列，key为资源，value为优先级
+         */
+        private itemListPriorityDic;
+        /**
+         * 资源是否在加载
+         */
+        private itemLoadDic;
+        private promiseHash;
+        private findPriorityInDic(item);
+        private updatelistPriority(list, priority);
+        load(list: ResourceInfo[], groupName: string, priority: number, reporter?: PromiseTaskReporter): Promise<any>;
+        private loadingCount;
+        thread: number;
+        private next();
+        /**
+         * 获取下一个待加载项
+         */
+        private getOneResourceInfo();
+        loadResource(r: ResourceInfo, p?: RES.processor.Processor): Promise<any>;
+        unloadResource(r: ResourceInfo): boolean;
+    }
+}
 declare type ResourceRootSelector<T extends string> = () => T;
 declare type ResourceTypeSelector = (file: string) => string;
 declare type ResourceNameSelector = (file: string) => string;
@@ -92,55 +141,6 @@ declare module RES {
 }
 declare module RES {
     /**
-     * @class RES.ResourceLoader
-     * @classdesc
-     * @private
-     */
-    class ResourceLoader {
-        /**
-         * 当前组加载的项总个数,key为groupName
-         */
-        private groupTotalDic;
-        /**
-         * 已经加载的项个数,key为groupName
-         */
-        private numLoadedDic;
-        /**
-         * 加载失败的组,key为groupName
-         */
-        private groupErrorDic;
-        private retryTimesDic;
-        maxRetryTimes: number;
-        private reporterDic;
-        private dispatcherDic;
-        private failedList;
-        private loadItemErrorDic;
-        private errorDic;
-        /**
-         * 资源优先级队列，key为资源，value为优先级
-         */
-        private itemListPriorityDic;
-        /**
-         * 资源是否在加载
-         */
-        private itemLoadDic;
-        private promiseHash;
-        private findPriorityInDic(item);
-        private updatelistPriority(list, priority);
-        load(list: ResourceInfo[], groupName: string, priority: number, reporter?: PromiseTaskReporter): Promise<any>;
-        private loadingCount;
-        thread: number;
-        private next();
-        /**
-         * 获取下一个待加载项
-         */
-        private getOneResourceInfo();
-        loadResource(r: ResourceInfo, p?: RES.processor.Processor): Promise<any>;
-        unloadResource(r: ResourceInfo): boolean;
-    }
-}
-declare module RES {
-    /**
      * 整个资源加载系统的进程id，协助管理回调派发机制
      */
     var systemPid: number;
@@ -195,6 +195,95 @@ declare namespace RES {
         onCancel?: () => void;
     }
 }
+declare namespace RES {
+    /**
+     * Version control loading interface
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample extension/version/VersionControl.ts
+     * @language en_US
+     */
+    /**
+     * 版本控制加载的接口
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample extension/version/VersionControl.ts
+     * @language zh_CN
+     */
+    interface IVersionController {
+        /**
+         * Get the version information data.<br/>
+         * Before calling this method requires the application of any resource load, we recommend starting at the application entry class (Main) The first call processing. This method is only responsible for acquiring version information, is not responsible for downloaded resources.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 获取版本信息数据。<br/>
+         * 这个方法的调用需要在应用程序进行任何资源加载之前，建议在应用程序的入口类（Main）的开始最先进行调用处理。此方法只负责获取版本信息，不负责资源的下载。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        init(): Promise<void>;
+        /**
+         * Get the actual URL of the resource file.<br/>
+         * Because this method needs to be called to control the actual version of the URL have the original resource files were changed, so would like to get the specified resource file the actual URL.<br/>
+         * In the development and debugging phase, this method will directly return value passed.
+         * @param url Url used in the game
+         * @returns Actual loaded url
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 获取资源文件实际的URL地址。<br/>
+         * 由于版本控制实际已经对原来的资源文件的URL进行了改变，因此想获取指定资源文件实际的URL时需要调用此方法。<br/>
+         * 在开发调试阶段，这个方法会直接返回传入的参数值。
+         * @param url 游戏中使用的url
+         * @returns 实际加载的url
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        getVirtualUrl(url: string): string;
+    }
+    /**
+     * Manage version control class
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @event egret.Event.COMPLETE Version control loading is complete when thrown
+     * @event egret.IOErrorEvent.IO_ERROR Version control failed to load when thrown
+     * @includeExample extension/version/VersionControl.ts
+     * @language en_US
+     */
+    /**
+     * 管理版本控制的类
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @event egret.Event.COMPLETE 版本控制加载完成时抛出
+     * @event egret.IOErrorEvent.IO_ERROR 版本控制加载失败时抛出
+     * @includeExample extension/version/VersionControl.ts
+     * @language zh_CN
+     */
+    interface VersionController extends IVersionController {
+    }
+    /**
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    let VersionController: {
+        /**
+         * Constructor initialization
+         * @language en_US
+         */
+        /**
+         * 初始化构造函数
+         * @language zh_CN
+         */
+        new (): VersionController;
+    };
+}
 declare module RES {
     let checkNull: MethodDecorator;
     /**
@@ -207,31 +296,6 @@ declare module RES {
     namespace upgrade {
         function setUpgradeGuideLevel(level: "warning" | "silent"): void;
     }
-}
-declare module RES.processor {
-    interface Processor {
-        onLoadStart(host: ProcessHost, resource: ResourceInfo): Promise<any>;
-        onRemoveStart(host: ProcessHost, resource: ResourceInfo): void;
-        getData?(host: ProcessHost, resource: ResourceInfo, key: string, subkey: string): any;
-    }
-    function isSupport(resource: ResourceInfo): Processor;
-    function map(type: string, processor: Processor): void;
-    function getRelativePath(url: string, file: string): string;
-    var ImageProcessor: Processor;
-    var BinaryProcessor: Processor;
-    var TextProcessor: Processor;
-    var JsonProcessor: Processor;
-    var XMLProcessor: Processor;
-    var CommonJSProcessor: Processor;
-    const SheetProcessor: Processor;
-    var FontProcessor: Processor;
-    var SoundProcessor: Processor;
-    var MovieClipProcessor: Processor;
-    const MergeJSONProcessor: Processor;
-    const LegacyResourceConfigProcessor: Processor;
-    const _map: {
-        [index: string]: Processor;
-    };
 }
 declare module RES {
     interface File {
@@ -260,6 +324,42 @@ declare module RES {
         private exists(dirpath);
     }
     var fileSystem: FileSystem;
+}
+declare namespace RES {
+    /**
+     * @private
+     */
+    class NativeVersionController implements IVersionController {
+        private versionInfo;
+        init(): Promise<void>;
+        getVirtualUrl(url: string): string;
+        private getLocalData(filePath);
+    }
+}
+declare module RES.processor {
+    interface Processor {
+        onLoadStart(host: ProcessHost, resource: ResourceInfo): Promise<any>;
+        onRemoveStart(host: ProcessHost, resource: ResourceInfo): void;
+        getData?(host: ProcessHost, resource: ResourceInfo, key: string, subkey: string): any;
+    }
+    function isSupport(resource: ResourceInfo): Processor;
+    function map(type: string, processor: Processor): void;
+    function getRelativePath(url: string, file: string): string;
+    var ImageProcessor: Processor;
+    var BinaryProcessor: Processor;
+    var TextProcessor: Processor;
+    var JsonProcessor: Processor;
+    var XMLProcessor: Processor;
+    var CommonJSProcessor: Processor;
+    const SheetProcessor: Processor;
+    var FontProcessor: Processor;
+    var SoundProcessor: Processor;
+    var MovieClipProcessor: Processor;
+    const MergeJSONProcessor: Processor;
+    const LegacyResourceConfigProcessor: Processor;
+    const _map: {
+        [index: string]: Processor;
+    };
 }
 declare module RES {
     /**
@@ -612,8 +712,6 @@ declare namespace RES {
         const basename: (filename: string) => string;
         const dirname: (path: string) => string;
     }
-}
-declare namespace RES {
 }
 declare module RES {
     type GetResAsyncCallback = (value?: any, key?: string) => any;
@@ -972,9 +1070,42 @@ declare module RES {
         url: string;
     }): void;
     /**
+        * Returns the VersionController
+        * @version Egret 2.5
+        * @platform Web,Native
+        * @language en_US
+        */
+    /**
+     * 获得版本控制器.
+     * @version Egret 2.5
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    function getVersionController(): VersionController;
+    /**
+         * Register the VersionController
+         * @param vcs The VersionController to register.
+         * @version Egret 2.5
+         * @platform Web,Native
+         * @language en_US
+         */
+    /**
+     * 注册版本控制器,通过RES模块加载资源时会从版本控制器获取真实url
+     * @param vcs 注入的版本控制器。
+     * @version Egret 2.5
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    function registerVersionController(vcs: VersionController): void;
+    function getVirtualUrl(url: any): any;
+    /**
      * @private
      */
     class Resource extends egret.EventDispatcher {
+        vcs: VersionController;
+        isVcsInit: boolean;
+        constructor();
+        registerVersionController(vcs: VersionController): void;
         /**
          * 开始加载配置
          * @method RES.loadConfig
