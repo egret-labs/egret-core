@@ -1976,7 +1976,7 @@ namespace egret {
          */
         $hitTest(stageX: number, stageY: number): DisplayObject {
             let self = this;
-            if (!self.$renderNode || !self.$visible || self.$scaleX == 0 || self.$scaleY == 0) {
+            if ((!egret.nativeRender && !self.$renderNode) || !self.$visible || self.$scaleX == 0 || self.$scaleY == 0) {
                 return null;
             }
             let m = self.$getInvertedConcatenatedMatrix();
