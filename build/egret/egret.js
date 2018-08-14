@@ -4417,6 +4417,9 @@ var egret;
             }
             self.$children.splice(index, 0, child);
             child.$setParent(self);
+            if (egret.nativeRender) {
+                self.$nativeDisplayObject.addChildAt(child.$nativeDisplayObject.id, index);
+            }
             var stage = self.$stage;
             if (stage) {
                 child.$onAddToStage(stage, self.$nestLevel + 1);
@@ -4433,10 +4436,7 @@ var egret;
                     }
                 }
             }
-            if (egret.nativeRender) {
-                self.$nativeDisplayObject.addChildAt(child.$nativeDisplayObject.id, index);
-            }
-            else {
+            if (!egret.nativeRender) {
                 if (child.$maskedObject) {
                     child.$maskedObject.$updateRenderMode();
                 }
