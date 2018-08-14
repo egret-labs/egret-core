@@ -77,6 +77,7 @@ module RES {
         if (resourceRoot.indexOf('://') >= 0) {
             const temp = resourceRoot.split('://');
             resourceRoot = temp[0] + '://' + path.normalize(temp[1] + '/');
+            url = url.replace(resourceRoot, '');
         }
         else {
             resourceRoot = path.normalize(resourceRoot + "/");
