@@ -343,6 +343,7 @@ namespace eui {
         /**
          * Number that specifies the explicit width of the component,
          * in pixels, in the component's coordinates.
+         * @readOnly
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
@@ -350,12 +351,13 @@ namespace eui {
          */
         /**
          * 外部显式指定的宽度。
+         * @readOnly
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
          * @language zh_CN
          */
-        explicitWidth: number;
+        readonly explicitWidth: number;
 
         /**
          * Number that specifies the explicit height of the component,
@@ -374,7 +376,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        explicitHeight: number;
+        readonly explicitHeight: number;
 
         /**
          * The minimum recommended width of the component to be considered
