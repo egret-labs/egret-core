@@ -34,7 +34,9 @@ export class ExmlPlugin implements Plugin {
         if (this.exmls.length == 0) {
             return;
         }
-
+        this.exmls = this.exmls.sort((a, b) => {
+            return a.filename.localeCompare(b.filename)
+        })
         if (this.publishPolicy == "debug") {
             const dtsContents = exml.generateExmlDTS(this.exmls);
             pluginContext.createFile('libs/exml.e.d.ts', new Buffer(dtsContents))
