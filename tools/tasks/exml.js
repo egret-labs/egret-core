@@ -64,6 +64,9 @@ var ExmlPlugin = /** @class */ (function () {
                 if (this.exmls.length == 0) {
                     return [2 /*return*/];
                 }
+                this.exmls = this.exmls.sort(function (a, b) {
+                    return a.filename.localeCompare(b.filename);
+                });
                 if (this.publishPolicy == "debug") {
                     dtsContents = exml.generateExmlDTS(this.exmls);
                     pluginContext.createFile('libs/exml.e.d.ts', new Buffer(dtsContents));
