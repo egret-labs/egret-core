@@ -17828,7 +17828,7 @@ var eui;
          *
          */
         EditableText.prototype.$onRemoveFromStage = function () {
-            eui.sys.UIComponentImpl.prototype["$onRemoveFromStage"].call(this);
+            _super.prototype.$onRemoveFromStage.call(this);
             this.removeEventListener(egret.FocusEvent.FOCUS_IN, this.onfocusIn, this);
             this.removeEventListener(egret.FocusEvent.FOCUS_OUT, this.onfocusOut, this);
         };
