@@ -47,19 +47,19 @@ module RES {
             if (!this.exists(folder)) {
                 this.mkdir(folder);
             }
-            let d = this.reslove(folder);
+            let d = this.resolve(folder);
             d[basefilename] = { url: filename, type };
         }
 
         getFile(filename: string): File | null {
-            let result = this.reslove(filename) as (File | null)
+            let result = this.resolve(filename) as (File | null)
             if (result) {
                 result.name = filename;
             }
             return result;
         }
 
-        private reslove(dirpath: string) {
+        private resolve(dirpath: string) {
             if (dirpath == "") {
                 return this.data;
             }
@@ -103,9 +103,6 @@ module RES {
             return true;
         }
     }
-
-    export var fileSystem: FileSystem;
-
 }
 
 

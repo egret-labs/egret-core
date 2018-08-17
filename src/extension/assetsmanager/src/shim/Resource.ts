@@ -505,7 +505,6 @@ module RES {
          * 开始加载配置
          * @method RES.loadConfig
          */
-        @checkCancelation
         loadConfig(): Promise<void> {
             let normalCall = () => {
                 return config.init().then(data => {
@@ -584,26 +583,15 @@ module RES {
             })
         }
 
-        @checkCancelation
         private _loadGroup(name: string, priority: number = 0, reporter?: PromiseTaskReporter): Promise<any> {
-
             let resources = config.getGroupByName(name, true);
             if (resources.length == 0) {
-                return new Promise((reslove, reject) => {
+                return new Promise((resolve, reject) => {
                     reject({ error: new ResourceManagerError(2006, name) });
                 })
             }
-            return queue.load(resources, name, priority, reporter);
+            return queue.pushResGroup(resources, name, priority, reporter);
         }
-
-        loadResources(keys: string[], reporter?: PromiseTaskReporter) {
-            let resources = keys.map(key => {
-                let r = config.getResourceWithSubkey(key, true);
-                return r.r;
-            })
-            return queue.load(resources, "name", 0, reporter);
-        }
-
         /**
          * 创建自定义的加载资源组,注意：此方法仅在资源配置文件加载完成后执行才有效。
          * 可以监听ResourceEvent.CONFIG_COMPLETE事件来确认配置加载完成。
@@ -666,11 +654,10 @@ module RES {
         public getResAsync(key: string): Promise<any>
         public getResAsync(key: string, compFunc: GetResAsyncCallback, thisObject: any): void
         @checkNull
-        @checkCancelation
         public getResAsync(key: string, compFunc?: GetResAsyncCallback, thisObject?: any): Promise<any> | void {
             var paramKey = key;
             var { r, subkey } = config.getResourceWithSubkey(key, true);
-            return queue.loadResource(r).then(value => {
+            return queue.pushResItem(r).then(value => {
                 host.save(r, value);
                 let p = processor.isSupport(r);
                 if (p && p.getData && subkey) {
@@ -696,7 +683,6 @@ module RES {
          * @param type {string}
          */
         @checkNull
-        @checkCancelation
         public getResByUrl(url: string, compFunc: Function, thisObject: any, type: string = ""): Promise<any> | void {
             let r = config.getResource(url);
             if (!r) {
@@ -711,7 +697,7 @@ module RES {
                     throw 'never';
                 }
             }
-            return queue.loadResource(r).then(value => {
+            return queue.pushResItem(r).then(value => {
                 host.save(r as ResourceInfo, value);
                 if (compFunc && r) {
                     compFunc.call(thisObject, value, r.url);
@@ -778,7 +764,7 @@ module RES {
         }
 
         /**
-         * 设置最大并发加载线程数量，默认值是2.
+         * 设置最大并发加载线程数量，默认值是4.
          * @method RES.setMaxLoadingThread
          * @param thread {number} 要设置的并发加载数。
          */

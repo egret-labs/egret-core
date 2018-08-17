@@ -550,7 +550,7 @@ namespace vfs {
             if (!this.exists(folder)) {
                 this.mkdir(folder);
             }
-            let d = this.reslove(folder) as (Dictionary | null);
+            let d = this.resolve(folder) as (Dictionary | null);
             if (d) {
                 d[basefilename] = { url, type, name, ...r };
             }
@@ -558,7 +558,7 @@ namespace vfs {
 
         getFile(filename: string): File | undefined {
             filename = this.normalize(filename);
-            return this.reslove(filename) as File;
+            return this.resolve(filename) as File;
         }
 
         private basename(filename: string) {
@@ -573,7 +573,7 @@ namespace vfs {
             return path.substr(0, path.lastIndexOf("/"));
         }
 
-        private reslove(dirpath: string) {
+        private resolve(dirpath: string) {
             if (dirpath == "") {
                 return this.root;
             }
