@@ -237,9 +237,9 @@ function executeCommand(command, options) {
     if (options === void 0) { options = {}; }
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
-            return [2 /*return*/, new Promise(function (reslove, reject) {
+            return [2 /*return*/, new Promise(function (resolve, reject) {
                     cp.exec(command, options, function (error, stdout, stderr) {
-                        reslove({ error: error, stdout: stdout, stderr: stderr });
+                        resolve({ error: error, stdout: stdout, stderr: stderr });
                     });
                 })];
         });
@@ -439,7 +439,7 @@ function shell(path, args, opt, verbase) {
             console.log(str);
         }
     };
-    return new Promise(function (reslove, reject) {
+    return new Promise(function (resolve, reject) {
         // path = "\"" + path + "\"";
         // var shell = cp.spawn(path + " " + args.join(" "));
         var shell = cp.spawn(path, args);
@@ -456,7 +456,7 @@ function shell(path, args, opt, verbase) {
                 reject({ code: code, stdout: stdout, stderr: stderr, path: path, args: args });
             }
             else {
-                reslove({ code: code, stdout: stdout, stderr: stderr, path: path, args: args });
+                resolve({ code: code, stdout: stdout, stderr: stderr, path: path, args: args });
             }
         });
     });

@@ -22,10 +22,10 @@ module RES.processor {
 
     function promisify(loader: egret.ImageLoader | egret.HttpRequest | egret.Sound, resource: ResourceInfo): Promise<any> {
 
-        return new Promise((reslove, reject) => {
+        return new Promise((resolve, reject) => {
             let onSuccess = () => {
                 let texture = loader['data'] ? loader['data'] : loader['response'];
-                reslove(texture);
+                resolve(texture);
             }
 
             let onError = () => {

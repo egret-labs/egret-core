@@ -538,14 +538,14 @@ var vfs;
             if (!this.exists(folder)) {
                 this.mkdir(folder);
             }
-            var d = this.reslove(folder);
+            var d = this.resolve(folder);
             if (d) {
                 d[basefilename] = __assign({ url: url, type: type, name: name }, r);
             }
         };
         FileSystem.prototype.getFile = function (filename) {
             filename = this.normalize(filename);
-            return this.reslove(filename);
+            return this.resolve(filename);
         };
         FileSystem.prototype.basename = function (filename) {
             return filename.substr(filename.lastIndexOf("/") + 1);
@@ -557,7 +557,7 @@ var vfs;
         FileSystem.prototype.dirname = function (path) {
             return path.substr(0, path.lastIndexOf("/"));
         };
-        FileSystem.prototype.reslove = function (dirpath) {
+        FileSystem.prototype.resolve = function (dirpath) {
             if (dirpath == "") {
                 return this.root;
             }

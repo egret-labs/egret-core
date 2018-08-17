@@ -1,32 +1,8 @@
 module RES {
 
     const __tempCache = {};
-
-    /**
-     * 整个资源加载系统的进程id，协助管理回调派发机制
-     */
-    export var systemPid = 0
-
-    export let checkCancelation: MethodDecorator = <Function>(target, propertyKey, descriptor) => {
-        const method = descriptor.value;
-        descriptor.value = function (...arg) {
-            let currentPid = systemPid;
-
-            var result: Promise<any> = method.apply(this, arg);
-            return result.then(value => {
-                if (systemPid != currentPid) {
-                    throw new ResourceManagerError(1005, arg[0]);
-                }
-                else {
-                    return value;
-                }
-            });
-
-        }
-    }
-
     export function profile() {
-        fileSystem.profile();
+        config.config.fileSystem.profile();
         console.log(__tempCache);
         //todo 
         let totalImageSize = 0;
@@ -49,7 +25,7 @@ module RES {
 
         load: (r: ResourceInfo, processorName?: string | processor.Processor) => {
             const processor = typeof processorName == 'string' ? RES.processor._map[processorName] : processorName;
-            return queue.loadResource(r, processor);
+            return queue["loadResource"](r, processor);
         },
 
         unload: (r: ResourceInfo) => queue.unloadResource(r),
@@ -102,7 +78,6 @@ module RES {
         static errorMessage = {
             1001: '文件加载失败:{0}',
             1002: "ResourceManager 初始化失败：配置文件加载失败",
-            1005: 'ResourceManager 已被销毁，文件加载失败:{0}',
             2001: "{0}解析失败,不支持指定解析类型:\'{1}\'，请编写自定义 Processor ，更多内容请参见 https://github.com/egret-labs/resourcemanager/blob/master/docs/README.md#processor",
             2002: "Analyzer 相关API 在 ResourceManager 中不再支持，请编写自定义 Processor ，更多内容请参见 https://github.com/egret-labs/resourcemanager/blob/master/docs/README.md#processor",
             2003: "{0}解析失败,错误原因:{1}",
