@@ -1141,8 +1141,9 @@ var egret;
                 }
                 this.isPlayed = true;
                 var video = this.video;
-                if (startTime != undefined)
+                if (startTime != undefined) {
                     video.currentTime = +startTime || 0;
+                }
                 video.loop = !!loop;
                 if (egret.Capabilities.isMobile) {
                     video.style.zIndex = "-88888"; //移动端，就算设置成最小，只要全屏，都会在最上层，而且在自动退出去后，不担心挡住canvas
@@ -1293,6 +1294,7 @@ var egret;
                     return;
                 }
                 this.userPause = false;
+                this.video.pause();
                 egret.stopTick(this.markDirty, this);
             };
             Object.defineProperty(WebVideo.prototype, "volume", {
