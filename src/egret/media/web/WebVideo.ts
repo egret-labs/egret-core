@@ -171,10 +171,10 @@ namespace egret.web {
             this.isPlayed = true;
 
             let video = this.video;
-            if (startTime != undefined)
+            if (startTime != undefined) {
                 video.currentTime = +startTime || 0;
-                video.loop = !!loop;
-
+            }
+            video.loop = !!loop;
             if (egret.Capabilities.isMobile) {
                 video.style.zIndex = "-88888"; //移动端，就算设置成最小，只要全屏，都会在最上层，而且在自动退出去后，不担心挡住canvas
             }
@@ -194,14 +194,13 @@ namespace egret.web {
 
             this.checkFullScreen(this._fullscreen);
         }
-        private videoPlay(){
+        private videoPlay() {
             this.userPause = false;
             if (this.waiting) {
                 this.userPlay = true;
                 return
             }
-            this.userPlay = false;            
-            
+            this.userPlay = false;
             this.video.play();
         }
 
@@ -355,7 +354,7 @@ namespace egret.web {
                 return
             }
             this.userPause = false;
-
+            this.video.pause();
             egret.stopTick(this.markDirty, this);
         }
 
