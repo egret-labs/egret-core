@@ -1,13 +1,5 @@
-import * as EgretProject from '../project';
-import * as fs from 'fs';
-import * as FileUtil from '../lib/FileUtil';
-import * as Compiler from '../actions/Compiler';
-import * as utils from '../lib/utils';
 import * as exml from '../actions/exml';
-import * as path from 'path';
-
 import { PluginContext, Plugin } from './';
-
 export class ExmlPlugin implements Plugin {
 
     name = 'exml';
@@ -29,7 +21,6 @@ export class ExmlPlugin implements Plugin {
         }
         return file;
     }
-
     async onFinish(pluginContext) {
         if (this.exmls.length == 0) {
             return;
@@ -42,8 +33,12 @@ export class ExmlPlugin implements Plugin {
             pluginContext.createFile('libs/exml.e.d.ts', new Buffer(dtsContents))
         }
         const result = exml.publishEXML(this.exmls, this.publishPolicy);
-        if (result.EuiJson !== undefined) {
-            pluginContext.createFile("resource/gameEui.json", new Buffer(`${result.EuiJson}`));
+        //屏蔽其他编译机制
+        if (result.EuiJson) {
+            result.EuiJson.forEach(item => {
+                const filename = item.path.split("\\").join("/");
+                pluginContext.createFile(filename, new Buffer(item.json))
+            })
         }
         //写入解析规则和定义
         result.files.forEach(item => {

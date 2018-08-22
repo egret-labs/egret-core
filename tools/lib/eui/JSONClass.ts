@@ -1,5 +1,8 @@
 class JSONClass {
     private json = {};
+    public clear() {
+        this.json = {};
+    }
     public toCode(): string {
         let str = JSON.stringify(this.json);
         str = str.replace(/\\\\n/g, "\\n");

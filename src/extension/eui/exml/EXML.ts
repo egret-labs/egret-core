@@ -223,15 +223,18 @@ namespace EXML {
     /**
      * @private
      */
-    export function $parseURLContent(url: string, text: string): any {
+    export function $parseURLContent(url: string, text: string | any): any {
         let clazz: any = null;
-        if (text) {
+        if (text && typeof (text) == "string") {
             try {
                 clazz = parse(text);
             }
             catch (e) {
                 console.error(url + "\n" + e.message)
             }
+        }
+        if (text && text["prototype"]) {
+            clazz = text;
         }
         if (url) {
             if (clazz) {

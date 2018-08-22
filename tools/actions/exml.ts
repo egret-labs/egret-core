@@ -8,7 +8,7 @@ import * as exml from '../lib/eui/EXML';
 import * as EgretProject from '../project';
 import exmlParser = require("../lib/eui/EXMLParser");
 import jsonParser = require("../lib/eui/JSONParser");
-
+export let isOneByOne: boolean;
 function generateThemeData() {
     //1.找到项目内后缀名为'.thm.json'的主题文件并返回列表
     const themeFilenames = searchTheme();
@@ -102,8 +102,15 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
             //todo
             case "commonjs2":
                 var parser2 = new jsonParser.JSONParser();
+                isOneByOne = false;
                 let result2 = parser2.parse(e.contents, e.filename);
                 exmlEl = { path: e.filename, className: result2.className };
+                break;
+            case "json":
+                var parser3 = new jsonParser.JSONParser();
+                isOneByOne = true;
+                let result3 = parser3.parse(e.contents, e.filename);
+                exmlEl = { path: e.filename, json: result3.json, className: result3.className };
                 break;
             //todo
             case "bin":
@@ -158,7 +165,7 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
             path = path.replace("thm.json", "thm.js");
             return { path, content }
         }
-        else if (exmlPublishPolicy == "commonjs2") {
+        else if (exmlPublishPolicy == "commonjs2" || exmlPublishPolicy == "json") {
             if (jsonParser.isError) {
                 //已经存在错误了终止
                 global.globals.exit()
@@ -171,6 +178,9 @@ generateEUI2.paths = {};
 generateEUI2.styles = ${JSON.stringify(thmData.styles)};
 generateEUI2.skins = ${JSON.stringify(thmData.skins)};`;
             path = path.replace("thm.json", "thm.js");
+            if (exmlPublishPolicy == "json") {
+                content = content.replace(/generateEUI2/g, "generateJSON")
+            }
             return { path, content }
         }
         else {
@@ -178,11 +188,26 @@ generateEUI2.skins = ${JSON.stringify(thmData.skins)};`;
         }
     });
     if (exmlPublishPolicy == "commonjs2") {
-        let EuiJson = jsonParser.eui.toCode();
-        if (EuiJson == "")
-            EuiJson = "{}"
+        let EuiJson: { path: string, json: string }[] = [];
+        let json = jsonParser.eui.toCode();
+        if (json == "") {
+            json = "{}"
+        }
+        EuiJson.push({ path: "resource/gameEui.json", json: json });
         return { "files": files, "EuiJson": EuiJson };
-    } else {
+    } else if (exmlPublishPolicy == "json") {
+        let EuiJson: { path: string, json: string }[] = [];
+        for (let theme of themeDatas) {
+            for (let json of theme.exmls) {
+                let dirPath = json.path.replace(".exml", "_EUI.json");
+                let dataJson = json.json;
+                let data = { path: dirPath, json: dataJson }
+                EuiJson.push(data);
+            }
+        }
+        return { "files": files, "EuiJson": EuiJson };
+    }
+    else {
         return { "files": files };
     }
 

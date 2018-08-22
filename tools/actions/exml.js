@@ -97,8 +97,15 @@ function publishEXML(exmls, exmlPublishPolicy) {
             //todo
             case "commonjs2":
                 var parser2 = new jsonParser.JSONParser();
+                exports.isOneByOne = false;
                 var result2 = parser2.parse(e.contents, e.filename);
                 exmlEl = { path: e.filename, className: result2.className };
+                break;
+            case "json":
+                var parser3 = new jsonParser.JSONParser();
+                exports.isOneByOne = true;
+                var result3 = parser3.parse(e.contents, e.filename);
+                exmlEl = { path: e.filename, json: result3.json, className: result3.className };
                 break;
             //todo
             case "bin":
@@ -138,7 +145,7 @@ function publishEXML(exmls, exmlPublishPolicy) {
             path = path.replace("thm.json", "thm.js");
             return { path: path, content: content };
         }
-        else if (exmlPublishPolicy == "commonjs2") {
+        else if (exmlPublishPolicy == "commonjs2" || exmlPublishPolicy == "json") {
             if (jsonParser.isError) {
                 //已经存在错误了终止
                 global.globals.exit();
@@ -148,6 +155,9 @@ function publishEXML(exmls, exmlPublishPolicy) {
             content +=
                 "window.generateEUI2 = {};\ngenerateEUI2.paths = {};\ngenerateEUI2.styles = " + JSON.stringify(thmData.styles) + ";\ngenerateEUI2.skins = " + JSON.stringify(thmData.skins) + ";";
             path = path.replace("thm.json", "thm.js");
+            if (exmlPublishPolicy == "json") {
+                content = content.replace(/generateEUI2/g, "generateJSON");
+            }
             return { path: path, content: content };
         }
         else {
@@ -155,9 +165,26 @@ function publishEXML(exmls, exmlPublishPolicy) {
         }
     });
     if (exmlPublishPolicy == "commonjs2") {
-        var EuiJson = jsonParser.eui.toCode();
-        if (EuiJson == "")
-            EuiJson = "{}";
+        var EuiJson = [];
+        var json = jsonParser.eui.toCode();
+        if (json == "") {
+            json = "{}";
+        }
+        EuiJson.push({ path: "resource/gameEui.json", json: json });
+        return { "files": files, "EuiJson": EuiJson };
+    }
+    else if (exmlPublishPolicy == "json") {
+        var EuiJson = [];
+        for (var _b = 0, themeDatas_1 = themeDatas; _b < themeDatas_1.length; _b++) {
+            var theme = themeDatas_1[_b];
+            for (var _c = 0, _d = theme.exmls; _c < _d.length; _c++) {
+                var json = _d[_c];
+                var dirPath = json.path.replace(".exml", "_EUI.json");
+                var dataJson = json.json;
+                var data = { path: dirPath, json: dataJson };
+                EuiJson.push(data);
+            }
+        }
         return { "files": files, "EuiJson": EuiJson };
     }
     else {

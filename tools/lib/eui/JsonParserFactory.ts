@@ -50,10 +50,15 @@ class JSONParseClass {
 
 
     setData(data: any) {
-
-        this.json = data;
-        this.parseSkinMap(this.json);
-
+        if (!this.json) {
+            this.json = data;
+            this.parseSkinMap(this.json);
+        } else {
+            this.parseSkinMap(data);
+            for (let a in data) {
+                this.json[a] = data[a];
+            }
+        }
     }
     private generateSkinClass(skinData: any, className: string, superName: string): any {
         if (!skinData) return null;

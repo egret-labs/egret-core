@@ -93,3 +93,74 @@ async function zip(sourceFiles: string[]) {
     FileUtil.remove(outputPath);
     return contentBuffer;
 }
+
+
+
+
+
+
+type MergeEuiJsonPluginOptions = {
+
+    mergeSelector?: (p: string) => string | null,
+
+    createConfig?: boolean
+}
+export class MergeEuiJsonPlugin implements Plugin {
+    private mergeList: { [filename: string]: { content: string }[] } = {};
+    private jsonConfig = {};
+    private mergeSelector: (p: string) => string | null = (p: string) => {
+        if (p.indexOf("_EUI.json") >= 0) {
+            let paths = p.split("/");
+            paths.pop();
+            return paths.join("/") + "_EUI.json";
+        } else {
+            return null;
+        }
+    }
+    constructor(private options?: MergeEuiJsonPluginOptions) {
+        if (!this.options) {
+            this.options = {};
+        }
+        if (!this.options.mergeSelector) {
+            this.options.mergeSelector = this.mergeSelector;
+        }
+        if (this.options.createConfig) {
+            this.options.createConfig = true;
+        }
+        else {
+            this.options.createConfig = false;
+        }
+    }
+    async onFile(file: File) {
+        const mergeResult = this.options.mergeSelector(file.origin)
+        if (mergeResult) {
+            if (!this.mergeList[mergeResult]) {
+                this.mergeList[mergeResult] = [];
+            }
+            this.mergeList[mergeResult].push({ content: file.contents.toString() })
+            if (this.options.createConfig) {
+                this.jsonConfig[file.origin.replace("_EUI.json", ".exml")] = mergeResult;
+            }
+            return null;
+        }
+        return file;
+    }
+
+    async onFinish(commandContext: PluginContext) {
+        for (let mergeFilename in this.mergeList) {
+            const mergeItem = this.mergeList[mergeFilename];
+            const json = {};
+            mergeItem.forEach((item) => {
+                let itemjson = JSON.parse(item.content);
+                for (let i in itemjson) {
+                    json[i] = itemjson[i];
+                }
+            })
+            const content = JSON.stringify(json, null, '\t');
+            commandContext.createFile(mergeFilename, new Buffer(content))
+        }
+        if (this.options.createConfig) {
+            commandContext.createFile("resource/euiConfig.json", new Buffer(JSON.stringify(this.jsonConfig)));
+        }
+    }
+}

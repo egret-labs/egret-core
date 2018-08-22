@@ -13229,7 +13229,7 @@ declare namespace EXML {
     /**
      * @private
      */
-    function $parseURLContent(url: string, text: string): any;
+    function $parseURLContent(url: string, text: string | any): any;
 }
 declare namespace eui.sys {
     /**
