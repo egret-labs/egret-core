@@ -33,6 +33,8 @@ let DEBUG = false;
 import { egretbridge } from "./egretbridge";
 import { jsonFactory } from './JSONClass'
 import utils = require('../../lib/utils');
+import isOneByOne =require("../../actions/exml")
+
 export const eui = jsonFactory;
 /**
  * @private
@@ -169,7 +171,7 @@ export class JSONParser {
      * @param xmlData 要编译的EXML文件内容
      *
      */
-    public parse(text: string, path?: string): { className: string } {
+    public parse(text: string, path?: string): { className: string, json?: string } {
         if (DEBUG) {
             if (!text) {
                 egretbridge.$error(1003, "text");
@@ -205,7 +207,13 @@ export class JSONParser {
             jsonFactory.addContent(path, this.className, "$path");
         }
         this.parseClass(xmlData, className);
-        return { className };
+        if (isOneByOne) {
+            let json = eui.toCode();
+            eui.clear();
+            return { className, json };
+        } else {
+            return { className };
+        }
     }
 
     /**

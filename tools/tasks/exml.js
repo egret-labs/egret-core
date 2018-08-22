@@ -72,8 +72,12 @@ var ExmlPlugin = /** @class */ (function () {
                     pluginContext.createFile('libs/exml.e.d.ts', new Buffer(dtsContents));
                 }
                 result = exml.publishEXML(this.exmls, this.publishPolicy);
-                if (result.EuiJson !== undefined) {
-                    pluginContext.createFile("resource/gameEui.json", new Buffer("" + result.EuiJson));
+                //屏蔽其他编译机制
+                if (result.EuiJson) {
+                    result.EuiJson.forEach(function (item) {
+                        var filename = item.path.split("\\").join("/");
+                        pluginContext.createFile(filename, new Buffer(item.json));
+                    });
                 }
                 //写入解析规则和定义
                 result.files.forEach(function (item) {
