@@ -108,6 +108,7 @@ type MergeEuiJsonPluginOptions = {
 export class MergeEuiJsonPlugin implements Plugin {
     private mergeList: { [filename: string]: { content: string }[] } = {};
     private jsonConfig = {};
+    private defaultThm = {};
     private mergeSelector: (p: string) => string | null = (p: string) => {
         if (p.indexOf("_EUI.json") >= 0) {
             let paths = p.split("/");
@@ -139,9 +140,15 @@ export class MergeEuiJsonPlugin implements Plugin {
             }
             this.mergeList[mergeResult].push({ content: file.contents.toString() })
             if (this.options.createConfig) {
-                this.jsonConfig[file.origin.replace("_EUI.json", ".exml")] = mergeResult;
+                if (!this.jsonConfig[mergeResult]) {
+                    this.jsonConfig[mergeResult] = []
+                }
+                this.jsonConfig[mergeResult].push(file.origin.replace("_EUI.json", ".exml"))
             }
             return null;
+        }
+        if (file.origin.indexOf("default.thm.json") > -1) {
+            this.defaultThm = JSON.parse(file.contents.toString());
         }
         return file;
     }
@@ -160,7 +167,8 @@ export class MergeEuiJsonPlugin implements Plugin {
             commandContext.createFile(mergeFilename, new Buffer(content))
         }
         if (this.options.createConfig) {
-            commandContext.createFile("resource/euiConfig.json", new Buffer(JSON.stringify(this.jsonConfig)));
+            this.defaultThm["merge"] = this.jsonConfig
+            commandContext.createFile("resource/default.thm.json", new Buffer(JSON.stringify(this.defaultThm)));
         }
     }
 }
