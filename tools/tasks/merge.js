@@ -145,6 +145,7 @@ var MergeEuiJsonPlugin = /** @class */ (function () {
         this.options = options;
         this.mergeList = {};
         this.jsonConfig = {};
+        this.defaultThm = {};
         this.mergeSelector = function (p) {
             if (p.indexOf("_EUI.json") >= 0) {
                 var paths = p.split("/");
@@ -179,9 +180,15 @@ var MergeEuiJsonPlugin = /** @class */ (function () {
                     }
                     this.mergeList[mergeResult].push({ content: file.contents.toString() });
                     if (this.options.createConfig) {
-                        this.jsonConfig[file.origin.replace("_EUI.json", ".exml")] = mergeResult;
+                        if (!this.jsonConfig[mergeResult]) {
+                            this.jsonConfig[mergeResult] = [];
+                        }
+                        this.jsonConfig[mergeResult].push(file.origin.replace("_EUI.json", ".exml"));
                     }
                     return [2 /*return*/, null];
+                }
+                if (file.origin.indexOf("default.thm.json") > -1) {
+                    this.defaultThm = JSON.parse(file.contents.toString());
                 }
                 return [2 /*return*/, file];
             });
@@ -208,7 +215,8 @@ var MergeEuiJsonPlugin = /** @class */ (function () {
                     _loop_1(mergeFilename);
                 }
                 if (this.options.createConfig) {
-                    commandContext.createFile("resource/euiConfig.json", new Buffer(JSON.stringify(this.jsonConfig)));
+                    this.defaultThm["merge"] = this.jsonConfig;
+                    commandContext.createFile("resource/default.thm.json", new Buffer(JSON.stringify(this.defaultThm)));
                 }
                 return [2 /*return*/];
             });
