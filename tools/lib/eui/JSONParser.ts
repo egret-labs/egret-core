@@ -33,7 +33,7 @@ let DEBUG = false;
 import { egretbridge } from "./egretbridge";
 import { jsonFactory } from './JSONClass'
 import utils = require('../../lib/utils');
-import isOneByOne =require("../../actions/exml")
+import { isOneByOne } from "../../actions/exml";
 
 export const eui = jsonFactory;
 /**

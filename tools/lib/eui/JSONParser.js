@@ -34,7 +34,7 @@ var DEBUG = false;
 var egretbridge_1 = require("./egretbridge");
 var JSONClass_1 = require("./JSONClass");
 var utils = require("../../lib/utils");
-var isOneByOne = require("../../actions/exml");
+var exml_1 = require("../../actions/exml");
 exports.eui = JSONClass_1.jsonFactory;
 exports.isError = false;
 var exmlParserPool = [];
@@ -151,7 +151,7 @@ var JSONParser = /** @class */ (function () {
             JSONClass_1.jsonFactory.addContent(path, this.className, "$path");
         }
         this.parseClass(xmlData, className);
-        if (isOneByOne) {
+        if (exml_1.isOneByOne) {
             var json = exports.eui.toCode();
             exports.eui.clear();
             return { className: className, json: json };
