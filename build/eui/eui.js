@@ -3133,18 +3133,14 @@ var eui;
          * @language zh_CN
          */
         Component.prototype.setSkin = function (skin) {
-            if (!skin) {
-                skin = null;
-                true && egret.$error(2204);
-            }
             if (skin && !(skin instanceof eui.Skin)) {
                 skin = null;
                 true && egret.$error(2202);
             }
             var values = this.$Component;
             var oldSkin = values[8 /* skin */];
-            if (oldSkin && oldSkin["__proto__"] == skin["__proto__"]) {
-                true && egret.$error(2205);
+            if (skin && oldSkin && oldSkin["__proto__"] == skin["__proto__"]) {
+                true && egret.$error(2204);
                 return;
             }
             if (oldSkin) {
@@ -21605,8 +21601,7 @@ var eui;
     locale_strings[2201] = "BasicLayout doesn't support virtualization.";
     locale_strings[2202] = "parse skinName error，the parsing result of skinName must be a instance of eui.Skin.";
     locale_strings[2203] = "Could not find the skin class '{0}'。";
-    locale_strings[2204] = "parse skinName error, and the value of the assigned skinName is null.";
-    locale_strings[2205] = "'{0}' has been defined.";
+    locale_strings[2204] = "'{0}' has been defined.";
     locale_strings[2301] = "parse source failed，could not find asset from URL：{0} .";
 })(eui || (eui = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -21675,8 +21670,7 @@ var eui;
     locale_strings[2201] = "BasicLayout 不支持虚拟化。";
     locale_strings[2202] = "皮肤解析出错，属性 skinName 的值必须要能够解析为一个 eui.Skin 的实例。";
     locale_strings[2203] = "找不到指定的皮肤类 '{0}'。";
-    locale_strings[2204] = "皮肤解析出错，赋值 skinName 的值为空。";
-    locale_strings[2205] = "'{0}'已经被定义。";
+    locale_strings[2204] = "'{0}'已经被定义。";
     locale_strings[2301] = "素材解析失败，找不到URL：{0} 所对应的资源。";
 })(eui || (eui = {}));
 //////////////////////////////////////////////////////////////////////////////////////
