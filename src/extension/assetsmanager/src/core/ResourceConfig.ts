@@ -39,25 +39,50 @@ type ResourceMergerSelector = (file: string) => { path: string, alias: string };
 
 module RES {
 
-
+    /**
+     * @internal
+     */
     export var resourceTypeSelector: ResourceTypeSelector;
-
+    /**
+     * @internal
+     */
     export var resourceNameSelector: ResourceNameSelector = (p) => p;
-
+    /**
+     * @internal
+     */
     export var resourceMergerSelector: ResourceMergerSelector | null;
 
-
+    /**
+     * Get resource information through file path
+     * @param path file path
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * 通过文件路径获取资源信息
+     * @param path 文件路径
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language zh_CN
+     */
     export function getResourceInfo(path: string): File | null {
-        let result =  config.config.fileSystem.getFile(path);
+        let result = config.config.fileSystem.getFile(path);
         if (!result) {
             path = RES.resourceNameSelector(path);
-            result =  config.config.fileSystem.getFile(path);
+            result = config.config.fileSystem.getFile(path);
         }
         return result;
     }
 
     var configItem: ResourceInfo;
 
+    /**
+     * 注册config的相关配置
+     * @internal
+     * @param url config的地址
+     * @param root 根路径
+     */
     export function setConfigURL(url: string, root: string) {
         let type;
         if (url.indexOf(".json") >= 0) {
@@ -68,7 +93,9 @@ module RES {
         }
         configItem = { type, root, url, name: url };
     }
-
+    /**
+    * @private
+    */
     export interface ResourceInfo {
 
         url: string;
@@ -94,7 +121,9 @@ module RES {
         promise?: Promise<any>;
 
     }
-
+    /**
+    * @private
+    */
     export interface Data {
 
         resourceRoot: string;
@@ -135,7 +164,7 @@ module RES {
                     alias: {}, groups: {}, resourceRoot: configItem.root,
                     typeSelector: () => 'unknown', mergeSelector: null,
                     fileSystem: null as any as FileSystem,
-                    loadGroup:[]
+                    loadGroup: []
                 }
             }
             return queue.pushResItem(configItem).catch(e => {

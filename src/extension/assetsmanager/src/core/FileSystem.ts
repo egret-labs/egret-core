@@ -1,5 +1,7 @@
 module RES {
-
+    /**
+    * @internal
+    */
     export interface File {
 
         url: string;
@@ -11,13 +13,17 @@ module RES {
         root: string;
 
     }
-
+    /**
+    * @internal
+    */
     export interface Dictionary {
 
         [file: string]: File | Dictionary
 
     }
-
+    /**
+    * @private
+    */
     export interface FileSystem {
 
         addFile(filename: string, type?: string, root?: string, extra?: 1 | undefined);
@@ -28,7 +34,9 @@ module RES {
 
         removeFile(filename: string);
     }
-
+    /**
+    * @internal
+    */
     export class NewFileSystem {
 
         constructor(private data: Dictionary) {

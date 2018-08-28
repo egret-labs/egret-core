@@ -1,6 +1,18 @@
 module RES {
 
     const __tempCache = {};
+    /**
+     * Print the memory occupied by the picture.
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * 打印图片所占内存
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language zh_CN
+     */
     export function profile() {
         config.config.fileSystem.profile();
         console.log(__tempCache);
@@ -14,7 +26,9 @@ module RES {
         }
         console.log("gpu size : " + (totalImageSize / 1024).toFixed(3) + "kb");
     }
-
+    /**
+    * @internal
+    */
     export var host: ProcessHost = {
 
         state: {},
@@ -46,12 +60,18 @@ module RES {
             delete __tempCache[resource.url];
         }
     }
-
+    /**
+     * @internal
+     */
     export var config = new ResourceConfig();
-
+    /**
+     * @internal
+     */
     export var queue = new ResourceLoader();
 
-
+    /**
+    * @private
+    */
     export interface ProcessHost {
 
         state: { [index: string]: number }
@@ -70,7 +90,9 @@ module RES {
 
 
     }
-
+    /**
+    * @internal
+    */
     export class ResourceManagerError extends Error {
 
 
@@ -104,19 +126,43 @@ module RES {
 
 namespace RES {
     /**
-     * Promise的回调函数集合
+     * Resource group loading progress prompt
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * 资源组的加载进度提示
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language zh_CN
      */
     export interface PromiseTaskReporter {
 
         /**
-         * 进度回调
+         * Progress callback, asynchronous execution, load number and order have nothing to do
+         * @param current The number of currently loaded
+         * @param total Total resources required in the current resource bundle
+         * @param resItem currently loading resource information
+         * @version Egret 5.2
+         * @platform Web,Native
+         * @language en_US
          */
-        onProgress?: (current: number, total: number, resItem: ResourceInfo | undefined) => void;
+        /**
+         * 进度回调，异步执行，加载数目和顺序无关
+         * @param current 当前已经加载数目
+         * @param total 当前资源包内需要资源总数
+         * @param resItem 当前加载资源信息
+         * @version Egret 5.2
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        onProgress?(current: number, total: number, resItem: ResourceInfo | undefined): void;
 
         /**
          * 取消回调
          */
-        onCancel?: () => void;
+        // onCancel?: () => void;
 
     }
 }
