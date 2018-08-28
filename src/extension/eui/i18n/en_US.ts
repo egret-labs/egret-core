@@ -64,8 +64,7 @@ namespace eui {
     locale_strings[2201] = "BasicLayout doesn't support virtualization.";
     locale_strings[2202] = "parse skinName error，the parsing result of skinName must be a instance of eui.Skin.";
     locale_strings[2203] = "Could not find the skin class '{0}'。";
-    locale_strings[2204] = "parse skinName error, and the value of the assigned skinName is null.";
-    locale_strings[2205] = "'{0}' has been defined.";
+    locale_strings[2204] = "'{0}' has been defined.";
 
     locale_strings[2301] = "parse source failed，could not find asset from URL：{0} .";
 
