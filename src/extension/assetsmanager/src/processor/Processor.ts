@@ -2,24 +2,94 @@ module RES.processor {
 
 
     export interface Processor {
-
+        /**
+         * Start loading a single resource
+         * @param host Load the processor, you can use the processor to load resources, directly use http to get the resources back
+         * @param resource Resource information
+         * @version Egret 5.2
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 开始加载单项资源
+         * @param host 加载处理器，可以不使用这个处理器加载资源，直接用http获取资源返回即可
+         * @param resource 资源的信息
+         * @version Egret 5.2
+         * @platform Web,Native
+         * @language zh_CN
+         */
         onLoadStart(host: ProcessHost, resource: ResourceInfo): Promise<any>;
-
+        /**
+         * Remove a single resource, usually call host.unload (resource);
+         * @param host Load the processor
+         * @param resource Resource information
+         * @version Egret 5.2
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 移除单项资源，一般调用host.unload(resource);
+         * @param host 加载处理器
+         * @param resource 资源的信息
+         * @version Egret 5.2
+         * @platform Web,Native
+         * @language zh_CN
+         */
         onRemoveStart(host: ProcessHost, resource: ResourceInfo): void;
 
+        /**
+        * Get the submap of the merged atlas
+        * @param host Load the processor
+        * @param resource Resource information
+        * @param key The key value of the resource
+        * @param subkey  Collection of subset names
+        * @version Egret 5.2
+        * @platform Web,Native
+        * @language en_US
+        */
+        /**
+         * 获取合并图集的子图
+         * @param host 加载处理器
+         * @param resource 资源的信息
+         * @param key 资源的key值
+         * @param subkey  子集名称的集合
+         * @version Egret 5.2
+         * @platform Web,Native
+         * @language zh_CN
+         */
         getData?(host: ProcessHost, resource: ResourceInfo, key: string, subkey: string): any;
 
 
     }
-
+    /**
+     * @internal
+     * @param resource 对应的资源接口，需要type属性
+     */
     export function isSupport(resource: ResourceInfo) {
         return _map[resource.type];
     }
-
+    /**
+     * Register the processor that loads the resource
+     * @param type Load resource type
+     * @param processor Loaded processor, an instance that implements the Processor interface
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * 注册加载资源的处理器
+     * @param type 加载资源类型
+     * @param processor 加载的处理器，一个实现Processor接口的实例
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language zh_CN
+     */
     export function map(type: string, processor: Processor) {
         _map[type] = processor;
     }
-
+    /**
+    * @internal
+    */
     function promisify(loader: egret.ImageLoader | egret.HttpRequest | egret.Sound, resource: ResourceInfo): Promise<any> {
 
         return new Promise((resolve, reject) => {
@@ -36,6 +106,11 @@ module RES.processor {
             loader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, this);
         })
     }
+    /**
+     * @internal
+     * @param url 
+     * @param file 
+     */
     export function getRelativePath(url: string, file: string): string {
         if (file.indexOf("://") != -1) {
             return file;
@@ -59,7 +134,9 @@ module RES.processor {
     }
 
     // var cache: {[index:string]:egret.Texture} = {};
-
+    /**
+    * @internal
+    */
     export var ImageProcessor: Processor = {
 
         onLoadStart(host, resource) {
@@ -85,7 +162,9 @@ module RES.processor {
         }
 
     }
-
+    /**
+    * @internal
+    */
     export var BinaryProcessor: Processor = {
 
         onLoadStart(host, resource) {
@@ -102,7 +181,9 @@ module RES.processor {
         }
 
     }
-
+    /**
+    * @internal
+    */
     export var TextProcessor: Processor = {
 
         onLoadStart(host, resource) {
@@ -119,7 +200,9 @@ module RES.processor {
             return true;
         }
     }
-
+    /**
+   * @internal
+   */
     export var JsonProcessor: Processor = {
 
         onLoadStart(host, resource) {
@@ -135,7 +218,9 @@ module RES.processor {
         }
 
     }
-
+    /**
+    * @internal
+    */
     export var XMLProcessor: Processor = {
 
         onLoadStart(host, resource) {
@@ -149,7 +234,9 @@ module RES.processor {
             return true;
         }
     }
-
+    /**
+    * @internal
+    */
     export var CommonJSProcessor: Processor = {
 
         onLoadStart(host, resource) {
@@ -172,7 +259,9 @@ module RES.processor {
         }
 
     }
-
+    /**
+    * @internal
+    */
     export const SheetProcessor: Processor = {
 
         onLoadStart(host, resource): Promise<any> {
@@ -247,7 +336,9 @@ module RES.processor {
     }
 
     type FontJsonFormat = { file: string };
-
+    /**
+    * @internal
+    */
     export var FontProcessor: Processor = {
 
         onLoadStart(host, resource): Promise<any> {
@@ -290,7 +381,9 @@ module RES.processor {
         }
     }
 
-
+    /**
+    * @internal
+    */
     export var SoundProcessor: Processor = {
         onLoadStart(host, resource) {
             var sound: egret.Sound = new egret.Sound();
@@ -303,6 +396,9 @@ module RES.processor {
         onRemoveStart(host, resource) {
         }
     }
+    /**
+    * @internal
+    */
     export var MovieClipProcessor: Processor = {
 
         onLoadStart(host, resource) {
@@ -336,7 +432,9 @@ module RES.processor {
             host.unload(imageResource);
         }
     }
-
+    /**
+    * @internal
+    */
     export const MergeJSONProcessor: Processor = {
 
         onLoadStart(host, resource): Promise<any> {
@@ -384,7 +482,9 @@ module RES.processor {
         subkeys?: string;
         extra?: 1 | undefined;
     }
-
+    /**
+    * @internal
+    */
     export const LegacyResourceConfigProcessor: Processor = {
 
 
@@ -458,7 +558,9 @@ module RES.processor {
 
     }
 
-
+    /**
+    * @internal
+    */
     export const _map: { [index: string]: Processor } = {
         "image": ImageProcessor,
         "json": JsonProcessor,

@@ -261,6 +261,10 @@ namespace eui {
          * @language zh_CN
          */
         protected setSkin(skin: Skin): void {
+            if (!skin) {
+                skin = null;
+                DEBUG && egret.$error(2204);
+            }
             if (skin && !(skin instanceof eui.Skin)) {
                 skin = null;
                 DEBUG && egret.$error(2202);
@@ -268,7 +272,7 @@ namespace eui {
             let values = this.$Component;
             let oldSkin: Skin = values[sys.ComponentKeys.skin];
             if (oldSkin && oldSkin["__proto__"] == skin["__proto__"]) {
-                console.log(this.skinName + "已经被定义");
+                DEBUG && egret.$error(2205);
                 return
             }
             if (oldSkin) {
