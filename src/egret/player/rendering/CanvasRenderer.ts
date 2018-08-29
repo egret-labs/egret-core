@@ -315,11 +315,13 @@ namespace egret {
                     let maskMatrix = Matrix.create();
                     maskMatrix.copyFrom(mask.$getConcatenatedMatrix());
                     mask.$getConcatenatedMatrixAt(displayObject, maskMatrix);
+                    context.transform(1, 0, 0, 1, offsetX, offsetY);
                     context.transform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
-                    let calls = this.drawDisplayObject(mask, context, offsetX, offsetY);
+                    var calls = this.drawDisplayObject(mask, context, 0, 0);
                     this.renderingMask = false;
                     maskMatrix.$invertInto(maskMatrix);
                     context.transform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
+                    context.transform(1, 0, 0, 1, -offsetX, -offsetY);
                     Matrix.release(maskMatrix);
                     if (scrollRect) {
                         context.beginPath();
