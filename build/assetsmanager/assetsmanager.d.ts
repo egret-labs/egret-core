@@ -545,7 +545,7 @@ declare module RES {
      */
     function destroyRes(name: string, force?: boolean): boolean;
     /**
-     * Sets the maximum number of concurrent load threads, the default value is 2.
+     * Sets the maximum number of concurrent load threads, the default value is 4.
      * @param thread The number of concurrent loads to be set.
      * @see #setMaxRetryTimes
      * @version Egret 5.2
@@ -553,7 +553,7 @@ declare module RES {
      * @language en_US
      */
     /**
-     * 设置最大并发加载线程数量，默认值是 2。
+     * 设置最大并发加载线程数量，默认值是 4。
      * @param thread 要设置的并发加载数。
      * @see #setMaxRetryTimes
      * @version Egret 5.2
