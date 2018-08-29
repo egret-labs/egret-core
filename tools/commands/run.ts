@@ -19,7 +19,7 @@ class Run implements egret.Command {
     async execute() {
         const exitCode = await new Build().execute();
         const target = egret.args.target;
-        const toolsList = launcher.getLauncherLibrary().getInstalledTools();
+        // const toolsList = launcher.getLauncherLibrary().getInstalledTools();
 
         switch (target) {
             case "web":
