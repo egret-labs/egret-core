@@ -89,7 +89,7 @@ var RES;
         else {
             type = "resourceConfig";
         }
-        configItem = { type: type, root: root, url: url, name: url };
+        configItem = { type: type, root: root, url: url, name: root + url };
     }
     RES.setConfigURL = setConfigURL;
     /**
