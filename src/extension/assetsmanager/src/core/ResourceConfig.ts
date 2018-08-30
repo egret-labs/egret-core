@@ -91,7 +91,7 @@ module RES {
         else {
             type = "resourceConfig";
         }
-        configItem = { type, root, url, name: url };
+        configItem = { type, root, url, name: root + url };
     }
     /**
     * @private
