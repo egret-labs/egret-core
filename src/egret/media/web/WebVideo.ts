@@ -97,6 +97,10 @@ namespace egret.web {
             }
         }
 
+        protected createNativeDisplayObject(): void {
+            this.$nativeDisplayObject = new egret_native.NativeDisplayObject(egret_native.NativeObjectType.BITMAP);
+        }
+
         /**
          * @inheritDoc
          */
@@ -167,10 +171,10 @@ namespace egret.web {
             this.isPlayed = true;
 
             let video = this.video;
-            if (startTime != undefined)
+            if (startTime != undefined) {
                 video.currentTime = +startTime || 0;
-                video.loop = !!loop;
-
+            }
+            video.loop = !!loop;
             if (egret.Capabilities.isMobile) {
                 video.style.zIndex = "-88888"; //移动端，就算设置成最小，只要全屏，都会在最上层，而且在自动退出去后，不担心挡住canvas
             }
@@ -190,14 +194,13 @@ namespace egret.web {
 
             this.checkFullScreen(this._fullscreen);
         }
-        private videoPlay(){
+        private videoPlay() {
             this.userPause = false;
             if (this.waiting) {
                 this.userPlay = true;
                 return
             }
-            this.userPlay = false;            
-            
+            this.userPlay = false;
             this.video.play();
         }
 
@@ -351,10 +354,7 @@ namespace egret.web {
                 return
             }
             this.userPause = false;
-
-            // 视频不能暂停的bug
             this.video.pause();
-
             egret.stopTick(this.markDirty, this);
         }
 
@@ -444,6 +444,12 @@ namespace egret.web {
                 this.$renderDirty = true;
                 this.posterData.width = this.getPlayWidth();
                 this.posterData.height = this.getPlayHeight();
+
+                if (egret.nativeRender) {
+                    const texture = new egret.Texture();
+                    texture._setBitmapData(this.posterData);
+                    this.$nativeDisplayObject.setBitmapData(texture);
+                }
 
             }, this);
             imageLoader.load(poster);

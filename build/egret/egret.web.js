@@ -292,8 +292,8 @@ var egret;
                 if (HtmlSound.clearAudios[this.url]) {
                     delete HtmlSound.clearAudios[this.url];
                 }
-                HtmlSound.$recycle(this.url, audio);
                 function onAudioLoaded() {
+                    HtmlSound.$recycle(this.url, audio);
                     removeListeners();
                     if (ua.indexOf("firefox") >= 0) {
                         audio.pause();
@@ -1068,6 +1068,9 @@ var egret;
                 }
                 return _this;
             }
+            WebVideo.prototype.createNativeDisplayObject = function () {
+                this.$nativeDisplayObject = new egret_native.NativeDisplayObject(1 /* BITMAP */);
+            };
             /**
              * @inheritDoc
              */
@@ -1138,8 +1141,9 @@ var egret;
                 }
                 this.isPlayed = true;
                 var video = this.video;
-                if (startTime != undefined)
+                if (startTime != undefined) {
                     video.currentTime = +startTime || 0;
+                }
                 video.loop = !!loop;
                 if (egret.Capabilities.isMobile) {
                     video.style.zIndex = "-88888"; //移动端，就算设置成最小，只要全屏，都会在最上层，而且在自动退出去后，不担心挡住canvas
@@ -1290,10 +1294,7 @@ var egret;
                     return;
                 }
                 this.userPause = false;
-
-                // video无法暂停bug
                 this.video.pause();
-
                 egret.stopTick(this.markDirty, this);
             };
             Object.defineProperty(WebVideo.prototype, "volume", {
@@ -1388,6 +1389,11 @@ var egret;
                     _this.$renderDirty = true;
                     _this.posterData.width = _this.getPlayWidth();
                     _this.posterData.height = _this.getPlayHeight();
+                    if (egret.nativeRender) {
+                        var texture = new egret.Texture();
+                        texture._setBitmapData(_this.posterData);
+                        _this.$nativeDisplayObject.setBitmapData(texture);
+                    }
                 }, this);
                 imageLoader.load(poster);
             };
@@ -6631,6 +6637,7 @@ var egret;
                     this.surface.resize(width, height);
                     return;
                 }
+                this.context.pushBuffer(this);
                 // render target 尺寸重置
                 if (width != this.rootRenderTarget.width || height != this.rootRenderTarget.height) {
                     this.context.drawCmdManager.pushResize(this, width, height);
@@ -6642,7 +6649,6 @@ var egret;
                 if (this.root) {
                     this.context.resize(width, height, useMaxSize);
                 }
-                this.context.pushBuffer(this);
                 this.context.clear();
                 this.context.popBuffer();
             };
@@ -7214,6 +7220,9 @@ var egret;
                     var displayBoundsY = displayBounds.y;
                     var displayBoundsWidth = displayBounds.width;
                     var displayBoundsHeight = displayBounds.height;
+                    if (displayBoundsWidth <= 0 || displayBoundsHeight <= 0) {
+                        return drawCalls;
+                    }
                     //绘制显示对象自身，若有scrollRect，应用clip
                     var displayBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
                     displayBuffer.context.pushBuffer(displayBuffer);
@@ -7886,19 +7895,6 @@ var egret;
         /**
          * @private
          */
-        var WEBGL_ATTRIBUTE_TYPE;
-        (function (WEBGL_ATTRIBUTE_TYPE) {
-            WEBGL_ATTRIBUTE_TYPE[WEBGL_ATTRIBUTE_TYPE["FLOAT_VEC2"] = 35664] = "FLOAT_VEC2";
-            WEBGL_ATTRIBUTE_TYPE[WEBGL_ATTRIBUTE_TYPE["FLOAT_VEC3"] = 35665] = "FLOAT_VEC3";
-            WEBGL_ATTRIBUTE_TYPE[WEBGL_ATTRIBUTE_TYPE["FLOAT_VEC4"] = 35666] = "FLOAT_VEC4";
-            WEBGL_ATTRIBUTE_TYPE[WEBGL_ATTRIBUTE_TYPE["FLOAT"] = 5126] = "FLOAT";
-            WEBGL_ATTRIBUTE_TYPE[WEBGL_ATTRIBUTE_TYPE["BYTE"] = 65535] = "BYTE";
-            WEBGL_ATTRIBUTE_TYPE[WEBGL_ATTRIBUTE_TYPE["UNSIGNED_BYTE"] = 5121] = "UNSIGNED_BYTE";
-            WEBGL_ATTRIBUTE_TYPE[WEBGL_ATTRIBUTE_TYPE["UNSIGNED_SHORT"] = 5123] = "UNSIGNED_SHORT";
-        })(WEBGL_ATTRIBUTE_TYPE = web.WEBGL_ATTRIBUTE_TYPE || (web.WEBGL_ATTRIBUTE_TYPE = {}));
-        /**
-         * @private
-         */
         var EgretWebGLAttribute = (function () {
             function EgretWebGLAttribute(gl, program, attributeData) {
                 this.gl = gl;
@@ -7914,19 +7910,19 @@ var egret;
             EgretWebGLAttribute.prototype.initCount = function (gl) {
                 var type = this.type;
                 switch (type) {
-                    case WEBGL_ATTRIBUTE_TYPE.FLOAT:
-                    case WEBGL_ATTRIBUTE_TYPE.BYTE:
-                    case WEBGL_ATTRIBUTE_TYPE.UNSIGNED_BYTE:
-                    case WEBGL_ATTRIBUTE_TYPE.UNSIGNED_SHORT:
+                    case 5126 /* FLOAT */:
+                    case 5120 /* BYTE */:
+                    case 5121 /* UNSIGNED_BYTE */:
+                    case 5123 /* UNSIGNED_SHORT */:
                         this.count = 1;
                         break;
-                    case WEBGL_ATTRIBUTE_TYPE.FLOAT_VEC2:
+                    case 35664 /* FLOAT_VEC2 */:
                         this.count = 2;
                         break;
-                    case WEBGL_ATTRIBUTE_TYPE.FLOAT_VEC3:
+                    case 35665 /* FLOAT_VEC3 */:
                         this.count = 3;
                         break;
-                    case WEBGL_ATTRIBUTE_TYPE.FLOAT_VEC4:
+                    case 35666 /* FLOAT_VEC4 */:
                         this.count = 4;
                         break;
                 }
@@ -7934,19 +7930,19 @@ var egret;
             EgretWebGLAttribute.prototype.initFormat = function (gl) {
                 var type = this.type;
                 switch (type) {
-                    case WEBGL_ATTRIBUTE_TYPE.FLOAT:
-                    case WEBGL_ATTRIBUTE_TYPE.FLOAT_VEC2:
-                    case WEBGL_ATTRIBUTE_TYPE.FLOAT_VEC3:
-                    case WEBGL_ATTRIBUTE_TYPE.FLOAT_VEC4:
+                    case 5126 /* FLOAT */:
+                    case 35664 /* FLOAT_VEC2 */:
+                    case 35665 /* FLOAT_VEC3 */:
+                    case 35666 /* FLOAT_VEC4 */:
                         this.format = gl.FLOAT;
                         break;
-                    case WEBGL_ATTRIBUTE_TYPE.UNSIGNED_BYTE:
+                    case 5121 /* UNSIGNED_BYTE */:
                         this.format = gl.UNSIGNED_BYTE;
                         break;
-                    case WEBGL_ATTRIBUTE_TYPE.UNSIGNED_SHORT:
+                    case 5123 /* UNSIGNED_SHORT */:
                         this.format = gl.UNSIGNED_SHORT;
                         break;
-                    case WEBGL_ATTRIBUTE_TYPE.BYTE:
+                    case 5120 /* BYTE */:
                         this.format = gl.BYTE;
                         break;
                 }
@@ -8097,34 +8093,6 @@ var egret;
         /**
          * @private
          */
-        var WEBGL_UNIFORM_TYPE;
-        (function (WEBGL_UNIFORM_TYPE) {
-            WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["FLOAT_VEC2"] = 35664] = "FLOAT_VEC2";
-            WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["FLOAT_VEC3"] = 35665] = "FLOAT_VEC3";
-            WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["FLOAT_VEC4"] = 35666] = "FLOAT_VEC4";
-            WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["INT_VEC2"] = 35667] = "INT_VEC2";
-            WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["INT_VEC3"] = 35668] = "INT_VEC3";
-            WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["INT_VEC4"] = 35669] = "INT_VEC4";
-            WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["BOOL"] = 35670] = "BOOL";
-            WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["BOOL_VEC2"] = 35671] = "BOOL_VEC2";
-            WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["BOOL_VEC3"] = 35672] = "BOOL_VEC3";
-            WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["BOOL_VEC4"] = 35673] = "BOOL_VEC4";
-            WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["FLOAT_MAT2"] = 35674] = "FLOAT_MAT2";
-            WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["FLOAT_MAT3"] = 35675] = "FLOAT_MAT3";
-            WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["FLOAT_MAT4"] = 35676] = "FLOAT_MAT4";
-            WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["SAMPLER_2D"] = 35678] = "SAMPLER_2D";
-            WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["SAMPLER_CUBE"] = 35680] = "SAMPLER_CUBE";
-            WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["BYTE"] = 65535] = "BYTE";
-            WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["UNSIGNED_BYTE"] = 5121] = "UNSIGNED_BYTE";
-            WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["SHORT"] = 5122] = "SHORT";
-            WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["UNSIGNED_SHORT"] = 5123] = "UNSIGNED_SHORT";
-            WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["INT"] = 5124] = "INT";
-            WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["UNSIGNED_INT"] = 5125] = "UNSIGNED_INT";
-            WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["FLOAT"] = 5126] = "FLOAT";
-        })(WEBGL_UNIFORM_TYPE = web.WEBGL_UNIFORM_TYPE || (web.WEBGL_UNIFORM_TYPE = {}));
-        /**
-         * @private
-         */
         var EgretWebGLUniform = (function () {
             function EgretWebGLUniform(gl, program, uniformData) {
                 this.gl = gl;
@@ -8139,42 +8107,42 @@ var egret;
             EgretWebGLUniform.prototype.setDefaultValue = function () {
                 var type = this.type;
                 switch (type) {
-                    case WEBGL_UNIFORM_TYPE.FLOAT:
-                    case WEBGL_UNIFORM_TYPE.SAMPLER_2D:
-                    case WEBGL_UNIFORM_TYPE.SAMPLER_CUBE:
-                    case WEBGL_UNIFORM_TYPE.BOOL:
-                    case WEBGL_UNIFORM_TYPE.INT:
+                    case 5126 /* FLOAT */:
+                    case 35678 /* SAMPLER_2D */:
+                    case 35680 /* SAMPLER_CUBE */:
+                    case 35670 /* BOOL */:
+                    case 5124 /* INT */:
                         this.value = 0;
                         break;
-                    case WEBGL_UNIFORM_TYPE.FLOAT_VEC2:
-                    case WEBGL_UNIFORM_TYPE.BOOL_VEC2:
-                    case WEBGL_UNIFORM_TYPE.INT_VEC2:
+                    case 35664 /* FLOAT_VEC2 */:
+                    case 35671 /* BOOL_VEC2 */:
+                    case 35667 /* INT_VEC2 */:
                         this.value = [0, 0];
                         break;
-                    case WEBGL_UNIFORM_TYPE.FLOAT_VEC3:
-                    case WEBGL_UNIFORM_TYPE.BOOL_VEC3:
-                    case WEBGL_UNIFORM_TYPE.INT_VEC3:
+                    case 35665 /* FLOAT_VEC3 */:
+                    case 35672 /* BOOL_VEC3 */:
+                    case 35668 /* INT_VEC3 */:
                         this.value = [0, 0, 0];
                         break;
-                    case WEBGL_UNIFORM_TYPE.FLOAT_VEC4:
-                    case WEBGL_UNIFORM_TYPE.BOOL_VEC4:
-                    case WEBGL_UNIFORM_TYPE.INT_VEC4:
+                    case 35666 /* FLOAT_VEC4 */:
+                    case 35673 /* BOOL_VEC4 */:
+                    case 35669 /* INT_VEC4 */:
                         this.value = [0, 0, 0, 0];
                         break;
-                    case WEBGL_UNIFORM_TYPE.FLOAT_MAT2:
+                    case 35674 /* FLOAT_MAT2 */:
                         this.value = new Float32Array([
                             1, 0,
                             0, 1
                         ]);
                         break;
-                    case WEBGL_UNIFORM_TYPE.FLOAT_MAT3:
+                    case 35675 /* FLOAT_MAT3 */:
                         this.value = new Float32Array([
                             1, 0, 0,
                             0, 1, 0,
                             0, 0, 1
                         ]);
                         break;
-                    case WEBGL_UNIFORM_TYPE.FLOAT_MAT4:
+                    case 35676 /* FLOAT_MAT4 */:
                         this.value = new Float32Array([
                             1, 0, 0, 0,
                             0, 1, 0, 0,
@@ -8187,20 +8155,20 @@ var egret;
             EgretWebGLUniform.prototype.generateSetValue = function () {
                 var type = this.type;
                 switch (type) {
-                    case WEBGL_UNIFORM_TYPE.FLOAT:
-                    case WEBGL_UNIFORM_TYPE.SAMPLER_2D:
-                    case WEBGL_UNIFORM_TYPE.SAMPLER_CUBE:
-                    case WEBGL_UNIFORM_TYPE.BOOL:
-                    case WEBGL_UNIFORM_TYPE.INT:
+                    case 5126 /* FLOAT */:
+                    case 35678 /* SAMPLER_2D */:
+                    case 35680 /* SAMPLER_CUBE */:
+                    case 35670 /* BOOL */:
+                    case 5124 /* INT */:
                         this.setValue = function (value) {
                             var notEqual = this.value !== value;
                             this.value = value;
                             notEqual && this.upload();
                         };
                         break;
-                    case WEBGL_UNIFORM_TYPE.FLOAT_VEC2:
-                    case WEBGL_UNIFORM_TYPE.BOOL_VEC2:
-                    case WEBGL_UNIFORM_TYPE.INT_VEC2:
+                    case 35664 /* FLOAT_VEC2 */:
+                    case 35671 /* BOOL_VEC2 */:
+                    case 35667 /* INT_VEC2 */:
                         this.setValue = function (value) {
                             var notEqual = this.value[0] !== value.x || this.value[1] !== value.y;
                             this.value[0] = value.x;
@@ -8208,9 +8176,9 @@ var egret;
                             notEqual && this.upload();
                         };
                         break;
-                    case WEBGL_UNIFORM_TYPE.FLOAT_VEC3:
-                    case WEBGL_UNIFORM_TYPE.BOOL_VEC3:
-                    case WEBGL_UNIFORM_TYPE.INT_VEC3:
+                    case 35665 /* FLOAT_VEC3 */:
+                    case 35672 /* BOOL_VEC3 */:
+                    case 35668 /* INT_VEC3 */:
                         this.setValue = function (value) {
                             this.value[0] = value.x;
                             this.value[1] = value.y;
@@ -8218,9 +8186,9 @@ var egret;
                             this.upload();
                         };
                         break;
-                    case WEBGL_UNIFORM_TYPE.FLOAT_VEC4:
-                    case WEBGL_UNIFORM_TYPE.BOOL_VEC4:
-                    case WEBGL_UNIFORM_TYPE.INT_VEC4:
+                    case 35666 /* FLOAT_VEC4 */:
+                    case 35673 /* BOOL_VEC4 */:
+                    case 35669 /* INT_VEC4 */:
                         this.setValue = function (value) {
                             this.value[0] = value.x;
                             this.value[1] = value.y;
@@ -8229,9 +8197,9 @@ var egret;
                             this.upload();
                         };
                         break;
-                    case WEBGL_UNIFORM_TYPE.FLOAT_MAT2:
-                    case WEBGL_UNIFORM_TYPE.FLOAT_MAT3:
-                    case WEBGL_UNIFORM_TYPE.FLOAT_MAT4:
+                    case 35674 /* FLOAT_MAT2 */:
+                    case 35675 /* FLOAT_MAT3 */:
+                    case 35676 /* FLOAT_MAT4 */:
                         this.setValue = function (value) {
                             this.value.set(value);
                             this.upload();
@@ -8244,73 +8212,73 @@ var egret;
                 var type = this.type;
                 var location = this.location;
                 switch (type) {
-                    case WEBGL_UNIFORM_TYPE.FLOAT:
+                    case 5126 /* FLOAT */:
                         this.upload = function () {
                             var value = this.value;
                             gl.uniform1f(location, value);
                         };
                         break;
-                    case WEBGL_UNIFORM_TYPE.FLOAT_VEC2:
+                    case 35664 /* FLOAT_VEC2 */:
                         this.upload = function () {
                             var value = this.value;
                             gl.uniform2f(location, value[0], value[1]);
                         };
                         break;
-                    case WEBGL_UNIFORM_TYPE.FLOAT_VEC3:
+                    case 35665 /* FLOAT_VEC3 */:
                         this.upload = function () {
                             var value = this.value;
                             gl.uniform3f(location, value[0], value[1], value[2]);
                         };
                         break;
-                    case WEBGL_UNIFORM_TYPE.FLOAT_VEC4:
+                    case 35666 /* FLOAT_VEC4 */:
                         this.upload = function () {
                             var value = this.value;
                             gl.uniform4f(location, value[0], value[1], value[2], value[3]);
                         };
                         break;
-                    case WEBGL_UNIFORM_TYPE.SAMPLER_2D:
-                    case WEBGL_UNIFORM_TYPE.SAMPLER_CUBE:
-                    case WEBGL_UNIFORM_TYPE.BOOL:
-                    case WEBGL_UNIFORM_TYPE.INT:
+                    case 35678 /* SAMPLER_2D */:
+                    case 35680 /* SAMPLER_CUBE */:
+                    case 35670 /* BOOL */:
+                    case 5124 /* INT */:
                         this.upload = function () {
                             var value = this.value;
                             gl.uniform1i(location, value);
                         };
                         break;
-                    case WEBGL_UNIFORM_TYPE.BOOL_VEC2:
-                    case WEBGL_UNIFORM_TYPE.INT_VEC2:
+                    case 35671 /* BOOL_VEC2 */:
+                    case 35667 /* INT_VEC2 */:
                         this.upload = function () {
                             var value = this.value;
                             gl.uniform2i(location, value[0], value[1]);
                         };
                         break;
-                    case WEBGL_UNIFORM_TYPE.BOOL_VEC3:
-                    case WEBGL_UNIFORM_TYPE.INT_VEC3:
+                    case 35672 /* BOOL_VEC3 */:
+                    case 35668 /* INT_VEC3 */:
                         this.upload = function () {
                             var value = this.value;
                             gl.uniform3i(location, value[0], value[1], value[2]);
                         };
                         break;
-                    case WEBGL_UNIFORM_TYPE.BOOL_VEC4:
-                    case WEBGL_UNIFORM_TYPE.INT_VEC4:
+                    case 35673 /* BOOL_VEC4 */:
+                    case 35669 /* INT_VEC4 */:
                         this.upload = function () {
                             var value = this.value;
                             gl.uniform4i(location, value[0], value[1], value[2], value[3]);
                         };
                         break;
-                    case WEBGL_UNIFORM_TYPE.FLOAT_MAT2:
+                    case 35674 /* FLOAT_MAT2 */:
                         this.upload = function () {
                             var value = this.value;
                             gl.uniformMatrix2fv(location, false, value);
                         };
                         break;
-                    case WEBGL_UNIFORM_TYPE.FLOAT_MAT3:
+                    case 35675 /* FLOAT_MAT3 */:
                         this.upload = function () {
                             var value = this.value;
                             gl.uniformMatrix3fv(location, false, value);
                         };
                         break;
-                    case WEBGL_UNIFORM_TYPE.FLOAT_MAT4:
+                    case 35676 /* FLOAT_MAT4 */:
                         this.upload = function () {
                             var value = this.value;
                             gl.uniformMatrix4fv(location, false, value);

@@ -1,5 +1,7 @@
 module RES {
-
+    /**
+    * @internal
+    */
     export interface File {
 
         url: string;
@@ -11,23 +13,30 @@ module RES {
         root: string;
 
     }
-
+    /**
+    * @internal
+    */
     export interface Dictionary {
 
         [file: string]: File | Dictionary
 
     }
-
+    /**
+    * @private
+    */
     export interface FileSystem {
 
-        addFile(filename: string, type?: string, root?:string);
+        addFile(filename: string, type?: string, root?: string, extra?: 1 | undefined);
 
         getFile(filename: string): File | null;
 
         profile(): void;
 
+        removeFile(filename: string);
     }
-
+    /**
+    * @internal
+    */
     export class NewFileSystem {
 
         constructor(private data: Dictionary) {
@@ -46,19 +55,19 @@ module RES {
             if (!this.exists(folder)) {
                 this.mkdir(folder);
             }
-            let d = this.reslove(folder);
+            let d = this.resolve(folder);
             d[basefilename] = { url: filename, type };
         }
 
         getFile(filename: string): File | null {
-            let result = this.reslove(filename) as (File | null)
+            let result = this.resolve(filename) as (File | null)
             if (result) {
                 result.name = filename;
             }
             return result;
         }
 
-        private reslove(dirpath: string) {
+        private resolve(dirpath: string) {
             if (dirpath == "") {
                 return this.data;
             }
@@ -102,9 +111,6 @@ module RES {
             return true;
         }
     }
-
-    export var fileSystem: FileSystem;
-
 }
 
 

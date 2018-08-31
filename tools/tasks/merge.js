@@ -140,3 +140,88 @@ function zip(sourceFiles) {
         });
     });
 }
+var MergeEuiJsonPlugin = /** @class */ (function () {
+    function MergeEuiJsonPlugin(options) {
+        this.options = options;
+        this.mergeList = {};
+        this.jsonConfig = {};
+        this.defaultThm = {};
+        this.mergeSelector = function (p) {
+            if (p.indexOf("_EUI.json") >= 0) {
+                var paths = p.split("/");
+                paths.pop();
+                return paths.join("/") + "_EUI.json";
+            }
+            else {
+                return null;
+            }
+        };
+        if (!this.options) {
+            this.options = {};
+        }
+        if (!this.options.mergeSelector) {
+            this.options.mergeSelector = this.mergeSelector;
+        }
+        if (this.options.createConfig) {
+            this.options.createConfig = true;
+        }
+        else {
+            this.options.createConfig = false;
+        }
+    }
+    MergeEuiJsonPlugin.prototype.onFile = function (file) {
+        return __awaiter(this, void 0, void 0, function () {
+            var mergeResult;
+            return __generator(this, function (_a) {
+                mergeResult = this.options.mergeSelector(file.origin);
+                if (mergeResult) {
+                    if (!this.mergeList[mergeResult]) {
+                        this.mergeList[mergeResult] = [];
+                    }
+                    this.mergeList[mergeResult].push({ content: file.contents.toString() });
+                    if (this.options.createConfig) {
+                        if (!this.jsonConfig[mergeResult]) {
+                            this.jsonConfig[mergeResult] = [];
+                        }
+                        this.jsonConfig[mergeResult].push(file.origin.replace("_EUI.json", ".exml"));
+                    }
+                    return [2 /*return*/, null];
+                }
+                if (file.origin.indexOf("default.thm.json") > -1) {
+                    this.defaultThm = JSON.parse(file.contents.toString());
+                }
+                return [2 /*return*/, file];
+            });
+        });
+    };
+    MergeEuiJsonPlugin.prototype.onFinish = function (commandContext) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _loop_1, this_1, mergeFilename;
+            return __generator(this, function (_a) {
+                _loop_1 = function (mergeFilename) {
+                    var mergeItem = this_1.mergeList[mergeFilename];
+                    var json = {};
+                    mergeItem.forEach(function (item) {
+                        var itemjson = JSON.parse(item.content);
+                        for (var i in itemjson) {
+                            json[i] = itemjson[i];
+                        }
+                    });
+                    var content = JSON.stringify(json, null, '\t');
+                    commandContext.createFile(mergeFilename, new Buffer(content));
+                };
+                this_1 = this;
+                for (mergeFilename in this.mergeList) {
+                    _loop_1(mergeFilename);
+                }
+                if (this.options.createConfig) {
+                    this.defaultThm["merge"] = this.jsonConfig;
+                    commandContext.createFile("resource/default.thm.json", new Buffer(JSON.stringify(this.defaultThm)));
+                }
+                return [2 /*return*/];
+            });
+        });
+    };
+    return MergeEuiJsonPlugin;
+}());
+exports.MergeEuiJsonPlugin = MergeEuiJsonPlugin;

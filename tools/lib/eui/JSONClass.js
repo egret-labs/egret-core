@@ -3,6 +3,9 @@ var JSONClass = /** @class */ (function () {
     function JSONClass() {
         this.json = {};
     }
+    JSONClass.prototype.clear = function () {
+        this.json = {};
+    };
     JSONClass.prototype.toCode = function () {
         var str = JSON.stringify(this.json);
         str = str.replace(/\\\\n/g, "\\n");

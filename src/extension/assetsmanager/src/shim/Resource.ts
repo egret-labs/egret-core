@@ -31,45 +31,61 @@ module RES {
 
 
     export type GetResAsyncCallback = (value?: any, key?: string) => any;
-
-    export let nameSelector = function (url) {
+    /**
+    * Convert the file name of the resource to the Key value used in the project.
+    * @param url Resource Name.
+    * @returns The key value used in the project
+    * @version Egret 5.2
+    * @platform Web,Native
+    * @language en_US
+    */
+    /**
+     * 将资源的文件名称转换为项目中所使用的Key值。
+     * 在加载合并图集的时候使用，例如图集加载A_json，需要加载对应A_png，这里就是转换的机制
+     * 一般项目中无需更改，只有没有使用默认的key和文件对应的需要修改
+     * @param url 资源名称。
+     * @returns 项目中所用的key值
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    export function nameSelector(url): string {
         return path.basename(url).split(".").join("_");
     }
 
     /**
-     * Conduct mapping injection with class definition as the value.
-     * @param type Injection type.
-     * @param analyzerClass Injection type classes need to be resolved.
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample extension/resource/Resource.ts
+     * Conduct mapping injection with class definition as the value, Deprecated.
+     * @deprecated
+     * @see RES.processor.map
      * @language en_US
      */
     /**
-     * 以类定义为值进行映射注入。
-     * @param type 注入的类型。
-     * @param analyzerClass 注入类型需要解析的类。
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample extension/resource/Resource.ts
+     * 以类定义为值进行映射注入，已废弃。
+     * @deprecated
+     * @see RES.processor.map
      * @language zh_CN
      */
     export function registerAnalyzer(type: string, analyzerClass: any) {
         throw new ResourceManagerError(2002);
     }
 
-
     /**
      * Load configuration file and parse.
+     * @param url The url address of the resource config
+     * @param resourceRoot The root address of the resource config
+     * @returns Promise
      * @see #setMaxRetryTimes
-     * @version Egret 2.4
+     * @version Egret 5.2
      * @platform Web,Native
      * @language en_US
      */
     /**
      * 加载配置文件并解析。
+     * @param url 资源配置的url地址
+     * @param resourceRoot 资源配置的根地址
+     * @returns Promise 
      * @see #setMaxRetryTimes
-     * @version Egret 2.4
+     * @version Egret 5.2
      * @platform Web,Native
      * @language zh_CN
      */
@@ -77,6 +93,7 @@ module RES {
         if (resourceRoot.indexOf('://') >= 0) {
             const temp = resourceRoot.split('://');
             resourceRoot = temp[0] + '://' + path.normalize(temp[1] + '/');
+            url = url.replace(resourceRoot, '');
         }
         else {
             resourceRoot = path.normalize(resourceRoot + "/");
@@ -91,8 +108,9 @@ module RES {
      * @param name Group name to load the resource group.
      * @param priority Load priority can be negative, the default value is 0.
      * <br>A low priority group must wait for the high priority group to complete the end of the load to start, and the same priority group will be loaded at the same time.
+     * @param reporter Resource group loading progress prompt
      * @see #setMaxRetryTimes
-     * @version Egret 2.4
+     * @version Egret 5.2
      * @platform Web,Native
      * @language en_US
      */
@@ -101,8 +119,9 @@ module RES {
      * @param name 要加载资源组的组名。
      * @param priority 加载优先级,可以为负数,默认值为 0。
      * <br>低优先级的组必须等待高优先级组完全加载结束才能开始，同一优先级的组会同时加载。
+     * @param reporter 资源组的加载进度提示
      * @see #setMaxRetryTimes
-     * @version Egret 2.4
+     * @version Egret 5.2
      * @platform Web,Native
      * @language zh_CN
      */
@@ -114,7 +133,7 @@ module RES {
      * @param name Group name。
      * @returns Is loading or not.
      * @see #setMaxRetryTimes
-     * @version Egret 2.4
+     * @version Egret 5.2
      * @platform Web,Native
      * @language en_US
      */
@@ -123,7 +142,7 @@ module RES {
      * @param name 组名。
      * @returns 是否正在加载。
      * @see #setMaxRetryTimes
-     * @version Egret 2.4
+     * @version Egret 5.2
      * @platform Web,Native
      * @language zh_CN
      */
@@ -136,7 +155,7 @@ module RES {
      * @returns The resource item array of group.
      * @see RES.ResourceItem
      * @see #setMaxRetryTimes
-     * @version Egret 2.4
+     * @version Egret 5.2
      * @platform Web,Native
      * @language en_US
      */
@@ -146,7 +165,7 @@ module RES {
      * @returns 加载项列表。
      * @see RES.ResourceItem
      * @see #setMaxRetryTimes
-     * @version Egret 2.4
+     * @version Egret 5.2
      * @platform Web,Native
      * @language zh_CN
      */
@@ -161,7 +180,7 @@ module RES {
      * @param override Is the default false for the same name resource group already exists.
      * @returns Create success or fail.
      * @see #setMaxRetryTimes
-     * @version Egret 2.4
+     * @version Egret 5.2
      * @platform Web,Native
      * @language en_US
      */
@@ -173,7 +192,7 @@ module RES {
      * @param override 是否覆盖已经存在的同名资源组,默认 false。
      * @returns 是否创建成功。
      * @see #setMaxRetryTimes
-     * @version Egret 2.4
+     * @version Egret 5.2
      * @platform Web,Native
      * @language zh_CN
      */
@@ -183,16 +202,18 @@ module RES {
     /**
      * Check whether the configuration file contains the specified resources.
      * @param key A sbuKeys attribute or name property in a configuration file.
+     * @returns Whether you have the specified resource
      * @see #setMaxRetryTimes
-     * @version Egret 2.4
+     * @version Egret 5.2
      * @platform Web,Native
      * @language en_US
      */
     /**
      * 检查配置文件里是否含有指定的资源。
      * @param key 对应配置文件里的 name 属性或 sbuKeys 属性的一项。
+     * @returns 是否拥有指定资源
      * @see #setMaxRetryTimes
-     * @version Egret 2.4
+     * @version Egret 5.2
      * @platform Web,Native
      * @language zh_CN
      */
@@ -216,7 +237,7 @@ module RES {
      * @param key A subKeys attribute or name property in a configuration file.
      * @see RES.ResourceItem
      * @see #setMaxRetryTimes
-     * @version Egret 2.4
+     * @version Egret 5.2
      * @platform Web,Native
      * @language en_US
      */
@@ -235,20 +256,23 @@ module RES {
      * @param key 对应配置文件里的 name 属性或 subKeys 属性的一项。
      * @see RES.ResourceItem
      * @see #setMaxRetryTimes
-     * @version Egret 2.4
+     * @version Egret 5.2
      * @platform Web,Native
      * @language zh_CN
      */
     export function getRes(key: string): any {
         return instance.getRes(key);
     }
+
+    export function getResAsync(key: string): Promise<any>
+    export function getResAsync(key: string, compFunc: GetResAsyncCallback, thisObject: any): Promise<any>
     /**
      * Asynchronous mode to get the resources in the configuration. As long as the resources exist in the configuration file, you can get it in an asynchronous way.
      * @param key A sbuKeys attribute or name property in a configuration file.
      * @param compFunc Call back function. Example：compFunc(data,key):void.
      * @param thisObject This pointer of call back function.
      * @see #setMaxRetryTimes
-     * @version Egret 2.4
+     * @version Egret 5.2
      * @platform Web,Native
      * @language en_US
      */
@@ -258,13 +282,11 @@ module RES {
      * @param compFunc 回调函数。示例：compFunc(data,key):void。
      * @param thisObject 回调函数的 this 引用。
      * @see #setMaxRetryTimes
-     * @version Egret 2.4
+     * @version Egret 5.2
      * @platform Web,Native
      * @language zh_CN
      */
-    export function getResAsync(key: string): Promise<any>
-    export function getResAsync(key: string, compFunc: GetResAsyncCallback, thisObject: any): void
-    export function getResAsync(key: string, compFunc?: GetResAsyncCallback, thisObject?: any): Promise<any> | void {
+    export function getResAsync(key: string, compFunc?: GetResAsyncCallback, thisObject?: any): Promise<any> {
         return instance.getResAsync.apply(instance, arguments);
     }
     /**
@@ -273,9 +295,8 @@ module RES {
      * @param compFunc Call back function. Example：compFunc(data,url):void。
      * @param thisObject This pointer of call back function.
      * @param type File type (optional). Use the static constants defined in the ResourceItem class. If you do not set the file name extension.
-     * @version Egret 2.4
+     * @version Egret 5.2
      * @platform Web,Native
-     * @includeExample extension/resource/GetResByUrl.ts
      * @language en_US
      */
     /**
@@ -284,9 +305,8 @@ module RES {
      * @param compFunc 回调函数。示例：compFunc(data,url):void。
      * @param thisObject 回调函数的 this 引用。
      * @param type 文件类型(可选)。请使用 ResourceItem 类中定义的静态常量。若不设置将根据文件扩展名生成。
-     * @version Egret 2.4
+     * @version Egret 5.2
      * @platform Web,Native
-     * @includeExample extension/resource/GetResByUrl.ts
      * @language zh_CN
      */
     export function getResByUrl(url: string, compFunc: Function, thisObject: any, type: string = ""): void {
@@ -298,7 +318,7 @@ module RES {
      * @param force Destruction of a resource group when the other resources groups have the same resource situation whether the resources will be deleted, the default value true.
      * @returns Are successful destruction.
      * @see #setMaxRetryTimes
-     * @version Egret 2.4
+     * @version Egret 5.2
      * @platform Web,Native
      * @language en_US
      */
@@ -308,26 +328,26 @@ module RES {
      * @param force 销毁一个资源组时其他资源组有同样资源情况资源是否会被删除，默认值 true。
      * @see #setMaxRetryTimes
      * @returns 是否销毁成功。
-     * @version Egret 2.4
+     * @version Egret 5.2
      * @platform Web,Native
      * @language zh_CN
      */
-    export function destroyRes(name: string, force?: boolean): Promise<boolean> {
+    export function destroyRes(name: string, force?: boolean): boolean {
         return instance.destroyRes(name, force);
     }
     /**
-     * Sets the maximum number of concurrent load threads, the default value is 2.
+     * Sets the maximum number of concurrent load threads, the default value is 4.
      * @param thread The number of concurrent loads to be set.
      * @see #setMaxRetryTimes
-     * @version Egret 2.4
+     * @version Egret 5.2
      * @platform Web,Native
      * @language en_US
      */
     /**
-     * 设置最大并发加载线程数量，默认值是 2。
+     * 设置最大并发加载线程数量，默认值是 4。
      * @param thread 要设置的并发加载数。
      * @see #setMaxRetryTimes
-     * @version Egret 2.4
+     * @version Egret 5.2
      * @platform Web,Native
      * @language zh_CN
      */
@@ -340,7 +360,7 @@ module RES {
      * Sets the number of retry times when the resource failed to load, and the default value is 3.
      * @param retry To set the retry count.
      * @includeExample extension/resource/Resource.ts
-     * @version Egret 2.4
+     * @version Egret 5.2
      * @platform Web,Native
      * @language en_US
      */
@@ -348,7 +368,7 @@ module RES {
      * 设置资源加载失败时的重试次数，默认值是 3。
      * @param retry 要设置的重试次数。
      * @includeExample extension/resource/Resource.ts
-     * @version Egret 2.4
+     * @version Egret 5.2
      * @platform Web,Native
      * @language zh_CN
      */
@@ -370,7 +390,7 @@ module RES {
      * All listeners with a priority for n will be processed before the -1 n listener.
      * If two or more listeners share the same priority, they are processed in accordance with the order of their added. The default priority is 0.
      * @see RES.ResourceEvent
-     * @version Egret 2.4
+     * @version Egret 5.2
      * @platform Web,Native
      * @language en_US
      */
@@ -387,7 +407,7 @@ module RES {
      * 优先级为 n -1 的侦听器之前得到处理。如果两个或更多个侦听器共享相同的优先级，则按照它们的添加顺序进行处理。默认优先级为 0。
      * @see RES.ResourceEvent
      * @see #setMaxRetryTimes
-     * @version Egret 2.4
+     * @version Egret 5.2
      * @platform Web,Native
      * @language zh_CN
      */
@@ -401,7 +421,7 @@ module RES {
      * @param listener Listening function。
      * @param thisObject The this object that is bound to a function.
      * @param useCapture Is used to capture, and this property is only valid in the display list.
-     * @version Egret 2.4
+     * @version Egret 5.2
      * @platform Web,Native
      * @language en_US
      */
@@ -411,7 +431,7 @@ module RES {
      * @param listener 侦听函数。
      * @param thisObject 侦听函数绑定的this对象。
      * @param useCapture 是否使用捕获，这个属性只在显示列表中生效。
-     * @version Egret 2.4
+     * @version Egret 5.2
      * @platform Web,Native
      * @language zh_CN
      */
@@ -423,14 +443,14 @@ module RES {
     /**
      * Adding a custom resource configuration.
      * @param data To add configuration.
-     * @version Egret 3.1.6
+     * @version Egret 5.2
      * @platform Web,Native
      * @language en_US
      */
     /**
      * 自定义添加一项资源配置。
      * @param data 要添加的配置。
-     * @version Egret 3.1.6
+     * @version Egret 5.2
      * @platform Web,Native
      * @language zh_CN
      */
@@ -439,19 +459,102 @@ module RES {
         instance.addResourceData(data);
     }
 
+    /**
+    * Returns the VersionController
+    * @version Egret 5.2
+    * @platform Web,Native
+    * @language en_US
+    */
+    /**
+     * 获得版本控制器.
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    export function getVersionController(): VersionController {
+        if (!instance) instance = new Resource();
+        return instance.vcs;
+    }
+
+    /**
+     * Register the VersionController
+     * @param vcs The VersionController to register.
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * 注册版本控制器,通过RES模块加载资源时会从版本控制器获取真实url
+     * @param vcs 注入的版本控制器。
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    export function registerVersionController(vcs: VersionController): void {
+        if (!instance) instance = new Resource();
+        instance.registerVersionController(vcs);
+    }
+    /**
+     * Convert the address of the loaded resource (via version controller conversion)
+     * @param url path to the original resource
+     * @returns converted address
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * 转换加载资源的地址（经过版本控制器的转换）
+     * @param url 原始资源的路径
+     * @returns 转换后的地址
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    export function getVirtualUrl(url) {
+        if (instance.vcs) {
+            return instance.vcs.getVirtualUrl(url);
+        }
+        else {
+            return url;
+        }
+    }
 
     /**
      * @private
      */
     export class Resource extends egret.EventDispatcher {
+        vcs: VersionController;
+        isVcsInit = false;
+        constructor() {
+            super();
+            if (VersionController) {
+                this.vcs = new VersionController();
+            }
 
+        }
+        public registerVersionController(vcs: VersionController) {
+            this.vcs = vcs;
+            this.isVcsInit = false;
+        }
         /**
          * 开始加载配置
          * @method RES.loadConfig
          */
-        @checkCancelation
         loadConfig(): Promise<void> {
-            native_init();
+            if (!this.isVcsInit && this.vcs) {
+                this.isVcsInit = true;
+                return this.vcs.init().then(() => {
+                    return this.normalLoadConfig()
+                });
+            } else {
+                return this.normalLoadConfig()
+            }
+        }
+        /**
+         * @private
+         * 版本控制器加载后的加载配置
+         */
+        private normalLoadConfig = () => {
             return config.init().then(data => {
                 ResourceEvent.dispatchResourceEvent(this, ResourceEvent.CONFIG_COMPLETE);
             }, error => {
@@ -487,42 +590,46 @@ module RES {
         loadGroup(name: string, priority: number = 0, reporter?: PromiseTaskReporter): Promise<any> {
 
             let reporterDelegate = {
-                onProgress: (current, total) => {
+                onProgress: (current, total, resItem) => {
                     if (reporter && reporter.onProgress) {
-                        reporter.onProgress(current, total);
+                        reporter.onProgress(current, total, resItem);
                     }
-                    ResourceEvent.dispatchResourceEvent(this, ResourceEvent.GROUP_PROGRESS, name, undefined, current, total);
+                    ResourceEvent.dispatchResourceEvent(this, ResourceEvent.GROUP_PROGRESS, name, resItem, current, total);
                 }
             }
             return this._loadGroup(name, priority, reporterDelegate).then(data => {
+                if (config.config.loadGroup.indexOf(name) == -1) {
+                    config.config.loadGroup.push(name);
+                }
                 ResourceEvent.dispatchResourceEvent(this, ResourceEvent.GROUP_COMPLETE, name);
+
             }, error => {
-                const itemList: ResourceInfo[] = error.itemList;
-                const length = itemList.length;
-                for (let i = 0; i < length; i++) {
-                    const item = itemList[i];
-                    delete item.promise;
-                    ResourceEvent.dispatchResourceEvent(this, ResourceEvent.ITEM_LOAD_ERROR, name, item);
+                if (config.config.loadGroup.indexOf(name) == -1) {
+                    config.config.loadGroup.push(name);
+                }
+                if (error.itemList) {
+                    const itemList: ResourceInfo[] = error.itemList;
+                    const length = itemList.length;
+                    for (let i = 0; i < length; i++) {
+                        const item = itemList[i];
+                        delete item.promise;
+                        ResourceEvent.dispatchResourceEvent(this, ResourceEvent.ITEM_LOAD_ERROR, name, item);
+                    }
                 }
                 ResourceEvent.dispatchResourceEvent(this, ResourceEvent.GROUP_LOAD_ERROR, name);
                 return Promise.reject(error.error);
             })
         }
 
-        @checkCancelation
         private _loadGroup(name: string, priority: number = 0, reporter?: PromiseTaskReporter): Promise<any> {
             let resources = config.getGroupByName(name, true);
-            return queue.load(resources, name, priority, reporter);
+            if (resources.length == 0) {
+                return new Promise((resolve, reject) => {
+                    reject({ error: new ResourceManagerError(2006, name) });
+                })
+            }
+            return queue.pushResGroup(resources, name, priority, reporter);
         }
-
-        loadResources(keys: string[], reporter?: PromiseTaskReporter) {
-            let resources = keys.map(key => {
-                let r = config.getResourceWithSubkey(key, true);
-                return r.r;
-            })
-            return queue.load(resources, "name", 0, reporter);
-        }
-
         /**
          * 创建自定义的加载资源组,注意：此方法仅在资源配置文件加载完成后执行才有效。
          * 可以监听ResourceEvent.CONFIG_COMPLETE事件来确认配置加载完成。
@@ -583,13 +690,12 @@ module RES {
          */
 
         public getResAsync(key: string): Promise<any>
-        public getResAsync(key: string, compFunc: GetResAsyncCallback, thisObject: any): void
+        public getResAsync(key: string, compFunc: GetResAsyncCallback, thisObject: any): Promise<any>
         @checkNull
-        @checkCancelation
-        public getResAsync(key: string, compFunc?: GetResAsyncCallback, thisObject?: any): Promise<any> | void {
+        public getResAsync(key: string, compFunc?: GetResAsyncCallback, thisObject?: any): Promise<any> {
             var paramKey = key;
             var { r, subkey } = config.getResourceWithSubkey(key, true);
-            return queue.loadResource(r).then(value => {
+            return queue.pushResItem(r).then(value => {
                 host.save(r, value);
                 let p = processor.isSupport(r);
                 if (p && p.getData && subkey) {
@@ -600,6 +706,7 @@ module RES {
                 }
                 return value;
             }, error => {
+                host.remove(r as ResourceInfo);
                 ResourceEvent.dispatchResourceEvent(this, ResourceEvent.ITEM_LOAD_ERROR, "", r as ResourceInfo);
                 return Promise.reject(error);
             })
@@ -614,28 +721,28 @@ module RES {
          * @param type {string}
          */
         @checkNull
-        @checkCancelation
-        public getResByUrl(url: string, compFunc: Function, thisObject: any, type: string = ""): Promise<any> | void {
+        public getResByUrl(url: string, compFunc: Function, thisObject: any, type: string = ""): Promise<any> {
             let r = config.getResource(url);
             if (!r) {
                 if (!type) {
                     type = config.__temp__get__type__via__url(url);
                 }
                 // manager.config.addResourceData({ name: url, url: url });
-                r = { name: url, url, type, root: '' };
+                r = { name: url, url, type, root: '', extra: 1 };
                 config.addResourceData(r);
                 r = config.getResource(url);
                 if (!r) {
                     throw 'never';
                 }
             }
-            return queue.loadResource(r).then(value => {
+            return queue.pushResItem(r).then(value => {
                 host.save(r as ResourceInfo, value);
                 if (compFunc && r) {
                     compFunc.call(thisObject, value, r.url);
                 }
                 return value;
             }, error => {
+                host.remove(r as ResourceInfo);
                 ResourceEvent.dispatchResourceEvent(this, ResourceEvent.ITEM_LOAD_ERROR, "", r as ResourceInfo);
                 return Promise.reject(error);
             })
@@ -648,36 +755,54 @@ module RES {
          * @param force {boolean} 销毁一个资源组时其他资源组有同样资源情况资源是否会被删除，默认值true
          * @returns {boolean}
          */
-        async destroyRes(name: string, force: boolean = true) {
+        destroyRes(name: string, force: boolean = true) {
             var group = config.getGroup(name);
-            let remove = (r: ResourceInfo) => {
-                return queue.unloadResource(r);
-            }
-
             if (group && group.length > 0) {
-                for (let item of group) {
-                    await remove(item);
+                if (force || (config.config.loadGroup.length == 1 && config.config.loadGroup[0] == name)) {
+                    for (let item of group) {
+                        queue.unloadResource(item)
+                    }
+                    let index = config.config.loadGroup.indexOf(name);
+                    config.config.loadGroup.splice(index, 1);
+                } else {
+                    let removeItemHash = {};
+                    for (let groupName of config.config.loadGroup) {
+                        for (let key in config.config.groups[groupName]) {
+                            const tmpname = config.config.groups[groupName][key];
+                            if (removeItemHash[tmpname]) {
+                                removeItemHash[tmpname]++;
+                            } else {
+                                removeItemHash[tmpname] = 1;
+                            }
+                        }
+                    }
+                    for (let tmpname in removeItemHash) {
+                        if (removeItemHash[tmpname] && removeItemHash[tmpname] == 1) {
+                            let item = config.getResource(tmpname);
+                            if (item) {
+                                queue.unloadResource(item)
+                            }
+                        }
+                    }
+                    let index = config.config.loadGroup.indexOf(name);
+                    config.config.loadGroup.splice(index, 1);
                 }
                 return true;
             }
             else {
                 let item = config.getResource(name);
                 if (item) {
-                    await remove(item);
-                    return true;
+                    return queue.unloadResource(item);
                 }
                 else {
                     console.warn(`无法删除指定组:${name}`);
                     return false;
                 }
-
-
-
             }
         }
 
         /**
-         * 设置最大并发加载线程数量，默认值是2.
+         * 设置最大并发加载线程数量，默认值是4.
          * @method RES.setMaxLoadingThread
          * @param thread {number} 要设置的并发加载数。
          */
@@ -705,7 +830,6 @@ module RES {
      * Resource单例
      */
     var instance: Resource;
-
 
 }
 

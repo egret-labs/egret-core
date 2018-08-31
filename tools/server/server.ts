@@ -97,7 +97,7 @@ namespace Server {
 
     export var fileReader = (root) => () => {
         return function (request: http.IncomingMessage, response: http.ServerResponse) {
-            return new Promise((reslove, reject) => {
+            return new Promise((resolve, reject) => {
                 var pathname = url.parse(request.url).pathname;
                 var realPath = path.join(root, pathname);
                 //console.log(realPath);
@@ -106,7 +106,7 @@ namespace Server {
                         'Content-Type': 'text/plain'
                     });
                     response.write("The request URL " + pathname + " is illegal.");
-                    reslove();
+                    resolve();
                     return;
                 }
                 var ext = path.extname(realPath);
@@ -117,21 +117,21 @@ namespace Server {
                             'Content-Type': 'text/plain'
                         });
                         response.write("This request URL " + pathname + " was not found on this server.");
-                        reslove();
+                        resolve();
                     } else {
                         fs.readFile(realPath, "binary", function (err, file) {
                             if (err) {
                                 response.writeHead(500, {
                                     'Content-Type': 'text/plain'
                                 });
-                                reslove();
+                                resolve();
                             } else {
                                 var contentType = mine[ext] || "text/plain";
                                 response.writeHead(200, {
                                     'Content-Type': contentType
                                 });
                                 response.write(file, "binary");
-                                reslove();
+                                resolve();
                             }
                         });
                     }
