@@ -33,7 +33,7 @@ namespace egret.sys {
      * @private
      * 屏幕适配器接口，当播放器视口尺寸改变时，屏幕适配器将被用于计算当前对应的舞台显示尺寸。
      */
-    export interface IScreenAdapter{
+    export interface IScreenAdapter {
 
         /**
          * @private
@@ -44,43 +44,43 @@ namespace egret.sys {
          * @param contentWidth 初始化内容宽度
          * @param contentHeight 初始化内容高度
          */
-        calculateStageSize(scaleMode:string,screenWidth:number,screenHeight:number,
-                           contentWidth:number, contentHeight:number):StageDisplaySize;
+        calculateStageSize(scaleMode: string, screenWidth: number, screenHeight: number,
+            contentWidth: number, contentHeight: number): StageDisplaySize;
     }
 
     /**
      * @private
      * 舞台显示尺寸数据
      */
-    export interface StageDisplaySize{
+    export interface StageDisplaySize {
 
         /**
          * @private
          * 舞台宽度
          */
-        stageWidth:number;
+        stageWidth: number;
         /**
          * @private
          * 舞台高度
          */
-        stageHeight:number;
+        stageHeight: number;
         /**
          * @private
          * 显示宽度，若跟舞台宽度不同，将会产生缩放。
          */
-        displayWidth:number;
+        displayWidth: number;
         /**
          * @private
          * 显示高度，若跟舞台高度不同，将会产生缩放。
          */
-        displayHeight:number;
+        displayHeight: number;
     }
 
     /**
      * @private
      * 屏幕适配器实例，开发者可以通过给这个变量赋值实现了IScreenAdapter接口的实例，从而注入自定义的屏幕适配器。
      */
-    export let screenAdapter:IScreenAdapter;
+    export let screenAdapter: IScreenAdapter;
 
     /**
      * @private
@@ -104,8 +104,8 @@ namespace egret.sys {
          * @param contentWidth 初始化内容宽度
          * @param contentHeight 初始化内容高度
          */
-        public calculateStageSize(scaleMode:string, screenWidth:number, screenHeight:number,
-                                  contentWidth:number, contentHeight:number):StageDisplaySize {
+        public calculateStageSize(scaleMode: string, screenWidth: number, screenHeight: number,
+            contentWidth: number, contentHeight: number): StageDisplaySize {
             let displayWidth = screenWidth;
             let displayHeight = screenHeight;
             let stageWidth = contentWidth;
@@ -153,23 +153,25 @@ namespace egret.sys {
                         stageWidth = Math.round(screenWidth / scaleY);
                     }
                     break;
-                default :
+                default:
                     stageWidth = screenWidth;
                     stageHeight = screenHeight;
                     break;
             }
-            //宽高不是2的整数倍会导致图片绘制出现问题
-            if (stageWidth % 2 != 0) {
-                stageWidth += 1;
-            }
-            if (stageHeight % 2 != 0) {
-                stageHeight += 1;
-            }
-            if(displayWidth % 2 != 0) {
-                displayWidth += 1;
-            }
-            if(displayHeight % 2 != 0) {
-                displayHeight += 1;
+            if (egret.Capabilities.runtimeType != egret.RuntimeType.WXGAME) {
+                //宽高不是2的整数倍会导致图片绘制出现问题
+                if (stageWidth % 2 != 0) {
+                    stageWidth += 1;
+                }
+                if (stageHeight % 2 != 0) {
+                    stageHeight += 1;
+                }
+                if (displayWidth % 2 != 0) {
+                    displayWidth += 1;
+                }
+                if (displayHeight % 2 != 0) {
+                    displayHeight += 1;
+                }
             }
             return {
                 stageWidth: stageWidth,

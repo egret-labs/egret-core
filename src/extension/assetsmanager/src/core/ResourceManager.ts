@@ -1,32 +1,20 @@
 module RES {
 
     const __tempCache = {};
-
     /**
-     * 整个资源加载系统的进程id，协助管理回调派发机制
+     * Print the memory occupied by the picture.
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language en_US
      */
-    export var systemPid = 0
-
-    export let checkCancelation: MethodDecorator = <Function>(target, propertyKey, descriptor) => {
-        const method = descriptor.value;
-        descriptor.value = function (...arg) {
-            let currentPid = systemPid;
-
-            var result: Promise<any> = method.apply(this, arg);
-            return result.then(value => {
-                if (systemPid != currentPid) {
-                    throw new ResourceManagerError(1005, arg[0]);
-                }
-                else {
-                    return value;
-                }
-            });
-
-        }
-    }
-
+    /**
+     * 打印图片所占内存
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language zh_CN
+     */
     export function profile() {
-        fileSystem.profile();
+        config.config.fileSystem.profile();
         console.log(__tempCache);
         //todo 
         let totalImageSize = 0;
@@ -38,7 +26,9 @@ module RES {
         }
         console.log("gpu size : " + (totalImageSize / 1024).toFixed(3) + "kb");
     }
-
+    /**
+    * @internal
+    */
     export var host: ProcessHost = {
 
         state: {},
@@ -49,7 +39,7 @@ module RES {
 
         load: (r: ResourceInfo, processorName?: string | processor.Processor) => {
             const processor = typeof processorName == 'string' ? RES.processor._map[processorName] : processorName;
-            return queue.loadResource(r, processor);
+            return queue["loadResource"](r, processor);
         },
 
         unload: (r: ResourceInfo) => queue.unloadResource(r),
@@ -66,16 +56,22 @@ module RES {
         },
 
         remove(resource: ResourceInfo) {
-            host.state[resource.root + resource.name] = 0;
+            delete host.state[resource.root + resource.name];
             delete __tempCache[resource.url];
         }
     }
-
+    /**
+     * @internal
+     */
     export var config = new ResourceConfig();
-
+    /**
+     * @internal
+     */
     export var queue = new ResourceLoader();
 
-
+    /**
+    * @private
+    */
     export interface ProcessHost {
 
         state: { [index: string]: number }
@@ -84,7 +80,7 @@ module RES {
 
         load: (resource: ResourceInfo, processor?: string | processor.Processor) => Promise<any>;
 
-        unload: (resource: ResourceInfo) => Promise<any>
+        unload: (resource: ResourceInfo) => void
 
         save: (rexource: ResourceInfo, data: any) => void;
 
@@ -94,7 +90,9 @@ module RES {
 
 
     }
-
+    /**
+    * @internal
+    */
     export class ResourceManagerError extends Error {
 
 
@@ -102,7 +100,6 @@ module RES {
         static errorMessage = {
             1001: '文件加载失败:{0}',
             1002: "ResourceManager 初始化失败：配置文件加载失败",
-            1005: 'ResourceManager 已被销毁，文件加载失败:{0}',
             2001: "{0}解析失败,不支持指定解析类型:\'{1}\'，请编写自定义 Processor ，更多内容请参见 https://github.com/egret-labs/resourcemanager/blob/master/docs/README.md#processor",
             2002: "Analyzer 相关API 在 ResourceManager 中不再支持，请编写自定义 Processor ，更多内容请参见 https://github.com/egret-labs/resourcemanager/blob/master/docs/README.md#processor",
             2003: "{0}解析失败,错误原因:{1}",
@@ -129,19 +126,43 @@ module RES {
 
 namespace RES {
     /**
-     * Promise的回调函数集合
+     * Resource group loading progress prompt
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * 资源组的加载进度提示
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language zh_CN
      */
     export interface PromiseTaskReporter {
 
         /**
-         * 进度回调
+         * Progress callback, asynchronous execution, load number and order have nothing to do
+         * @param current The number of currently loaded
+         * @param total Total resources required in the current resource bundle
+         * @param resItem currently loading resource information
+         * @version Egret 5.2
+         * @platform Web,Native
+         * @language en_US
          */
-        onProgress?: (current: number, total: number) => void;
+        /**
+         * 进度回调，异步执行，加载数目和顺序无关
+         * @param current 当前已经加载数目
+         * @param total 当前资源包内需要资源总数
+         * @param resItem 当前加载资源信息
+         * @version Egret 5.2
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        onProgress?(current: number, total: number, resItem: ResourceInfo | undefined): void;
 
         /**
          * 取消回调
          */
-        onCancel?: () => void;
+        // onCancel?: () => void;
 
     }
 }

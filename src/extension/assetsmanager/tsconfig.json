@@ -16,6 +16,10 @@
         ]
     },
     "files": [
+        "../../../build/egret/egret.d.ts",
+        "../../../build/game/game.d.ts",
+        "src/shim/version/IVersionController.ts",
+        "src/shim/version/NativeVersionController.ts",
         "src/core/Path.ts",
         "src/core/FileSystem.ts",
         "src/core/ResourceConfig.ts",
@@ -25,9 +29,6 @@
         "src/shim/ResourceEvent.ts",
         "src/shim/ResourceItem.ts",
         "src/DEBUG.ts",
-        "src/shim/native.ts",
-        "src/shim/Resource.ts",
-        "../../../build/egret/egret.d.ts",
-        "../../../build/game/game.d.ts"
+        "src/shim/Resource.ts"
     ]
 }

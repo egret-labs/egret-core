@@ -29,10 +29,6 @@
 
 
 module RES {
-
-
-
-
 	/**
 	 * @class RES.ResourceLoader
 	 * @classdesc
@@ -46,42 +42,60 @@ module RES {
 		/**
 		 * 已经加载的项个数,key为groupName
 		 */
-		private numLoadedDic: any = {};
-		/**
-		 * 正在加载的组列表,key为groupName
-		 */
-		private itemListDic: any = {};
+		private numLoadedDic: { [name: string]: number } = {};
 		/**
 		 * 加载失败的组,key为groupName
 		 */
 		private groupErrorDic: any = {};
-
 		private retryTimesDic: any = {};
 		public maxRetryTimes = 3;
-		/**
-		 * 优先级队列,key为priority，value为groupName列表
-		 */
-		private priorityQueue: any = {};
 		private reporterDic: any = {};
 		private dispatcherDic: any = {};
 		private failedList: Array<ResourceInfo> = new Array<ResourceInfo>();
 		private loadItemErrorDic: any = {};
 		private errorDic: any = {};
+		/**
+		 * 资源优先级队列，key为资源，value为优先级
+		 */
+		private itemListPriorityDic: { [priority: number]: ResourceInfo[] } = {};
+		/**
+		 * 资源是否在加载
+		 */
+		private itemLoadDic: { [name: string]: 1 } = {};
+		private promiseHash: any = {};
 
-		load(list: ResourceInfo[], groupName: string, priority: number, reporter?: PromiseTaskReporter): Promise<any> {
-			if (this.itemListDic[groupName]) {
-				if(!this.dispatcherDic[groupName])
-				{
-					const dispatcher = new egret.EventDispatcher();
-					this.dispatcherDic[groupName] = dispatcher;
-				}
-				const promise = new Promise((reslove, reject) => {
-					this.dispatcherDic[groupName].addEventListener("complete", reslove, null);
-					this.dispatcherDic[groupName].addEventListener("error", function (e: egret.Event) {
-						reject(e.data);
-					}, null);
-				});
-				return promise;
+		/**
+		 * 延迟加载队列,getResByUrl ,getResAsync等方法存储队列
+		 */
+		private lazyLoadList: Array<ResourceInfo> = new Array<ResourceItem>();
+		pushResItem(resInfo: ResourceInfo): Promise<any> {
+			if (this.promiseHash[resInfo.name]) {
+				return this.promiseHash[resInfo.name];
+			}
+			this.lazyLoadList.push(resInfo);
+			this.itemListPriorityDic[Number.NEGATIVE_INFINITY] = this.lazyLoadList;
+			this.updatelistPriority(this.lazyLoadList, Number.NEGATIVE_INFINITY);
+
+			const dispatcher = new egret.EventDispatcher();
+			this.dispatcherDic[resInfo.name] = dispatcher;
+			const promise = new Promise((resolve, reject) => {
+				dispatcher.addEventListener("complete", function (e: egret.Event) {
+					resolve(e.data);
+				}, null);
+				dispatcher.addEventListener("error", function (e: egret.Event) {
+					reject(e.data);
+				}, null);
+			});
+			this.promiseHash[resInfo.name] = promise;
+			this.loadNextResource();
+			return promise;
+		}
+		/**
+		 * 加载队列,存储组的队列
+		 */
+		pushResGroup(list: ResourceInfo[], groupName: string, priority: number, reporter?: PromiseTaskReporter): Promise<any> {
+			if (this.promiseHash[groupName]) {
+				return this.promiseHash[groupName];
 			}
 			const total = list.length;
 			for (let i: number = 0; i < total; i++) {
@@ -91,188 +105,231 @@ module RES {
 				}
 				resInfo.groupNames.push(groupName);
 			}
-			this.itemListDic[groupName] = list;
 			this.groupTotalDic[groupName] = list.length;
 			this.numLoadedDic[groupName] = 0;
-			if (this.priorityQueue[priority])
-				this.priorityQueue[priority].push(groupName);
-			else
-				this.priorityQueue[priority] = [groupName];
+			this.updatelistPriority(list, priority);
 			this.reporterDic[groupName] = reporter;
 			const dispatcher = new egret.EventDispatcher();
 			this.dispatcherDic[groupName] = dispatcher;
-			const promise = new Promise((reslove, reject) => {
-				dispatcher.addEventListener("complete", reslove, null);
+			const promise = new Promise((resolve, reject) => {
+				dispatcher.addEventListener("complete", resolve, null);
 				dispatcher.addEventListener("error", function (e: egret.Event) {
 					reject(e.data);
 				}, null);
 			});
-			this.next();
+			this.promiseHash[groupName] = promise;
+			this.loadNextResource();
 			return promise;
 		}
-
-		private loadingCount: number = 0;
-		public thread: number = 4;
-
-		private next(): void {
-			while (this.loadingCount < this.thread) {
-				const r: ResourceInfo = <ResourceInfo>this.getOneResourceInfo();
-				if (!r)
-					break;
-				this.loadingCount++;
-				this.loadResource(r)
-					.then(response => {
-						this.loadingCount--;
-						host.save(r, response);
-						const groupName: string = <string>(<string[]>r.groupNames).shift();
-						if ((<string[]>r.groupNames).length == 0) {
-							r.groupNames = undefined;
-						}
-						const reporter = this.reporterDic[groupName];
-						this.numLoadedDic[groupName]++;
-						const current = this.numLoadedDic[groupName];
-						const total = this.groupTotalDic[groupName];
-						if (reporter && reporter.onProgress) {
-							reporter.onProgress(current, total);
-						}
-						if (current == total) {
-							const groupError: boolean = this.groupErrorDic[groupName];
-							this.removeGroupName(groupName);
-							delete this.groupTotalDic[groupName];
-							delete this.numLoadedDic[groupName];
-							delete this.itemListDic[groupName];
-							delete this.groupErrorDic[groupName];
-							const dispatcher: egret.EventDispatcher = this.dispatcherDic[groupName];
-							if (groupError) {
-								const itemList = this.loadItemErrorDic[groupName];
-								delete this.loadItemErrorDic[groupName];
-								const error = this.errorDic[groupName];
-								delete this.errorDic[groupName];
-								dispatcher.dispatchEventWith("error", false, { itemList, error });
-							}
-							else {
-								dispatcher.dispatchEventWith("complete");
-							}
-						}
-						this.next();
-					}).catch((error) => {
-						if (!error) {
-							throw `${r.name} load fail`;
-						}
-						if (!error.__resource_manager_error__) {
-							throw error;
-						}
-						this.loadingCount--;
-						delete host.state[r.root + r.name];
-						const times = this.retryTimesDic[r.name] || 1;
-						if (times > this.maxRetryTimes) {
-							delete this.retryTimesDic[r.name];
-							const groupName: string = <string>(<string[]>r.groupNames).shift();
-							if ((<string[]>r.groupNames).length == 0) {
-								delete r.groupNames;
-							}
-							if (!this.loadItemErrorDic[groupName]) {
-								this.loadItemErrorDic[groupName] = [];
-							}
-							if (this.loadItemErrorDic[groupName].indexOf(r) == -1) {
-								this.loadItemErrorDic[groupName].push(r);
-							}
-							this.groupErrorDic[groupName] = true;
-							const reporter = this.reporterDic[groupName];
-							this.numLoadedDic[groupName]++;
-							const current = this.numLoadedDic[groupName];
-							const total = this.groupTotalDic[groupName];
-							if (reporter && reporter.onProgress) {
-								reporter.onProgress(current, total);
-							}
-							if (current == total) {
-								const groupError = this.groupErrorDic[groupName];
-								this.removeGroupName(groupName);
-								delete this.groupTotalDic[groupName];
-								delete this.numLoadedDic[groupName];
-								delete this.itemListDic[groupName];
-								delete this.groupErrorDic[groupName];
-								const itemList = this.loadItemErrorDic[groupName];
-								delete this.loadItemErrorDic[groupName];
-								const dispatcher = this.dispatcherDic[groupName];
-								dispatcher.dispatchEventWith("error", false, { itemList, error });
-							}
-							else {
-								this.errorDic[groupName] = error;
-							}
-							this.next();
-						}
-						else {
-							this.retryTimesDic[r.name] = times + 1;
-							this.failedList.push(r);
-							this.next();
-							return;
-						}
-					})
-			}
-		}
-
 		/**
-		 * 从优先级队列中移除指定的组名
+		 * 更新组的优先级顺序
+		 * @param list 存储数据的队列
+		 * @param priority 优先级
 		 */
-		private removeGroupName(groupName: string): void {
-			for (let p in this.priorityQueue) {
-				const queue: any[] = this.priorityQueue[p];
-				let index: number = 0;
-				let found: boolean = false;
-				const length: number = queue.length;
-				for (let i: number = 0; i < length; i++) {
-					const name: string = queue[i];
-					if (name == groupName) {
-						queue.splice(index, 1);
-						found = true;
-						break;
-					}
-					index++;
+		private updatelistPriority(list: ResourceInfo[], priority: number) {
+			if (this.itemListPriorityDic[priority] == undefined) {
+				this.itemListPriorityDic[priority] = [];
+			}
+			for (let item of list) {
+				if (this.itemLoadDic[item.name] == 1) {
+					continue;
 				}
-				if (found) {
-					if (queue.length == 0) {
-						delete this.priorityQueue[p];
+				let oldPriority = this.findPriorityInDic(item);
+				if (oldPriority == undefined) {
+					this.itemListPriorityDic[priority].push(item);
+				} else {
+					if (oldPriority < priority) {
+						this.itemListPriorityDic[priority].push(item);
+						const index = this.itemListPriorityDic[oldPriority].indexOf(item);
+						this.itemListPriorityDic[oldPriority].splice(index, 1);
 					}
+				}
+			}
+		}
+		/**
+		 * 搜索单项资源的优先级
+		 * @param item 单项资源
+		 */
+		private findPriorityInDic(item: ResourceInfo) {
+			for (let priority in this.itemListPriorityDic) {
+				if (this.itemListPriorityDic[priority].indexOf(item) > -1)
+					return parseInt(priority);
+			}
+			return undefined;
+		}
+		private loadingCount: number = 0;
+		/**
+		 * 最大线程数目
+		 */
+		public thread: number = 4;
+		/**
+		 * 加载下一项资源，线程控制
+		 */
+		private loadNextResource(): void {
+			while (this.loadingCount < this.thread) {
+				let isload = this.loadSingleResource();
+				if (!isload) {
 					break;
 				}
 			}
 		}
+		/**
+		 * 加载单向资源
+		 */
+		private loadSingleResource(): boolean {
+			let r: ResourceInfo = <ResourceInfo>this.getOneResourceInfoInGroup();
+			if (!r) return false;
+			this.itemLoadDic[r.name] = 1;
+			this.loadingCount++;
 
-		private queueIndex: number = 0;
-
+			this.loadResource(r)
+				.then(response => {
+					this.loadingCount--;
+					delete this.itemLoadDic[r.name];
+					host.save(r, response);
+					if (this.promiseHash[r.name]) {
+						const dispatcher: egret.EventDispatcher = this.deleteDispatcher(r.name);
+						dispatcher.dispatchEventWith("complete", false, response);
+					}
+					const groupNames = r.groupNames;
+					if (groupNames) {
+						delete r.groupNames;
+						for (let groupName of groupNames) {
+							if (this.setGroupProgress(groupName, r)) {
+								this.loadGroupEnd(groupName);
+							}
+						}
+					}
+					this.loadNextResource();
+				}).catch((error) => {
+					if (!error) {
+						throw `${r.name} load fail`;
+					}
+					if (!error.__resource_manager_error__) {
+						throw error;
+					}
+					delete this.itemLoadDic[r.name];
+					this.loadingCount--;
+					delete host.state[r.root + r.name];
+					const times = this.retryTimesDic[r.name] || 1;
+					if (times > this.maxRetryTimes) {
+						delete this.retryTimesDic[r.name];
+						if (this.promiseHash[r.name]) {
+							const dispatcher: egret.EventDispatcher = this.deleteDispatcher(r.name);
+							dispatcher.dispatchEventWith("error", false, { r, error });
+						}
+						const groupNames = r.groupNames;
+						if (groupNames) {
+							delete r.groupNames;
+							for (let groupName of groupNames) {
+								if (!this.loadItemErrorDic[groupName]) {
+									this.loadItemErrorDic[groupName] = [];
+								}
+								if (this.loadItemErrorDic[groupName].indexOf(r) == -1) {
+									this.loadItemErrorDic[groupName].push(r);
+								}
+								this.groupErrorDic[groupName] = true;
+								if (this.setGroupProgress(groupName, r)) {
+									this.loadGroupEnd(groupName, error);
+								}
+								else {
+									this.errorDic[groupName] = error;
+								}
+							}
+						}
+						this.loadNextResource();
+					}
+					else {
+						this.retryTimesDic[r.name] = times + 1;
+						this.failedList.push(r);
+						this.loadNextResource();
+						return;
+					}
+				})
+			return true;
+		}
 		/**
 		 * 获取下一个待加载项
 		 */
-		private getOneResourceInfo(): ResourceInfo | undefined {
+		private getOneResourceInfoInGroup(): ResourceInfo | undefined {
 			if (this.failedList.length > 0)
 				return this.failedList.shift();
 			let maxPriority: number = Number.NEGATIVE_INFINITY;
-			for (let p in this.priorityQueue) {
+			for (let p in this.itemListPriorityDic) {
 				maxPriority = Math.max(maxPriority, <number><any>p);
 			}
-			const queue: any[] = this.priorityQueue[maxPriority];
-			if (!queue || queue.length == 0) {
+			const list: any[] = this.itemListPriorityDic[maxPriority];
+			if (!list) {
 				return undefined;
 			}
-			const length: number = queue.length;
-			let list: Array<ResourceInfo> = [];
-			for (let i: number = 0; i < length; i++) {
-				if (this.queueIndex >= length)
-					this.queueIndex = 0;
-				list = this.itemListDic[queue[this.queueIndex]];
-				if (list.length > 0)
-					break;
-				this.queueIndex++;
+			if (list.length == 0) {
+				delete this.itemListPriorityDic[maxPriority];
+				return this.getOneResourceInfoInGroup();
 			}
-			if (list.length == 0)
-				return undefined;
 			return list.shift();
 		}
+		/**
+		 * 设置组的加载进度，同时返回当前组是否加载完成
+		 * @param groupName 组名
+		 * @param r 加载完成的资源
+		 */
+		private setGroupProgress(groupName: string, r: ResourceInfo) {
+			const reporter = this.reporterDic[groupName];
+			this.numLoadedDic[groupName]++;
+			const current = this.numLoadedDic[groupName];
+			const total = this.groupTotalDic[groupName];
+			if (reporter && reporter.onProgress) {
+				reporter.onProgress(current, total, r);
+			}
+			return current == total;
+		}
+		/**
+		 * 加载组的最后一项，同时派发事件
+		 * @param groupName 组名
+		 * @param lastError 最后一项是否成功，此项为错误信息
+		 */
+		private loadGroupEnd(groupName: string, lastError?: any) {
+			delete this.groupTotalDic[groupName];
+			delete this.numLoadedDic[groupName];
+			delete this.reporterDic[groupName];
+			const dispatcher = this.deleteDispatcher(groupName);
 
-
-		loadResource(r: ResourceInfo, p?: RES.processor.Processor) {
-
+			if (!lastError) {
+				const groupError: boolean = this.groupErrorDic[groupName];
+				delete this.groupErrorDic[groupName];
+				if (groupError) {
+					const itemList = this.loadItemErrorDic[groupName];
+					delete this.loadItemErrorDic[groupName];
+					const error = this.errorDic[groupName];
+					delete this.errorDic[groupName];
+					dispatcher.dispatchEventWith("error", false, { itemList, error });
+				}
+				else {
+					dispatcher.dispatchEventWith("complete");
+				}
+			} else {
+				delete this.groupErrorDic[groupName];
+				const itemList = this.loadItemErrorDic[groupName];
+				delete this.loadItemErrorDic[groupName];
+				dispatcher.dispatchEventWith("error", false, { itemList, lastError });
+			}
+		}
+		/**
+		 * 删除组的事件派发器，Promise的缓存，返回事件派发器
+		 * @param groupName 组名
+		 */
+		private deleteDispatcher(groupName: string) {
+			delete this.promiseHash[groupName];
+			const dispatcher = this.dispatcherDic[groupName];
+			delete this.dispatcherDic[groupName];
+			return dispatcher;
+		}
+		/**
+		 * 加载资源
+		 * @param r 资源信息 
+		 * @param p 加载处理器
+		 */
+		private loadResource(r: ResourceInfo, p?: RES.processor.Processor) {
 			if (!p) {
 				if (FEATURE_FLAG.FIX_DUPLICATE_LOAD == 1) {
 					const s = host.state[r.root + r.name];
@@ -293,22 +350,27 @@ module RES {
 			r.promise = promise;
 			return promise;
 		}
-
+		/**
+		 * 释放资源
+		 * @param r 资源信息 
+		 */
 		unloadResource(r: ResourceInfo) {
 			const data = host.get(r);
 			if (!data) {
 				console.warn("尝试释放不存在的资源:", r.name);
-				return Promise.resolve();
+				return false;
 			}
 			const p = processor.isSupport(r);
 			if (p) {
-				host.state[r.root + r.name] = 3;
-				const promise = p.onRemoveStart(host, r);
+				p.onRemoveStart(host, r);
 				host.remove(r);
-				return promise;
+				if (r.extra == 1) {
+					config.removeResourceData(r);
+				}
+				return true;
 			}
 			else {
-				return Promise.resolve();
+				return true;
 			}
 		}
 	}

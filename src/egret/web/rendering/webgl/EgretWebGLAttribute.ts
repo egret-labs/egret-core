@@ -32,12 +32,12 @@ namespace egret.web {
     /**
      * @private  
      */
-    export enum WEBGL_ATTRIBUTE_TYPE {
+    export const enum WEBGL_ATTRIBUTE_TYPE {
         FLOAT_VEC2 = 0x8B50,
         FLOAT_VEC3 = 0x8B51,
         FLOAT_VEC4 = 0x8B52,
         FLOAT = 0x1406,
-        BYTE = 0xffff,
+        BYTE = 0x1400,
         UNSIGNED_BYTE = 0x1401,
         UNSIGNED_SHORT = 0x1403
     }

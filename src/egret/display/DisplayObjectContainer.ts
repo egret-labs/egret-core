@@ -179,6 +179,10 @@ namespace egret {
 
             self.$children.splice(index, 0, child);
             child.$setParent(self);
+            if (egret.nativeRender) {
+                self.$nativeDisplayObject.addChildAt(child.$nativeDisplayObject.id, index);
+            }
+
             let stage: Stage = self.$stage;
             if (stage) {//当前容器在舞台
                 child.$onAddToStage(stage, self.$nestLevel + 1);
@@ -195,10 +199,7 @@ namespace egret {
                     }
                 }
             }
-            if (egret.nativeRender) {
-                self.$nativeDisplayObject.addChildAt(child.$nativeDisplayObject.id, index);
-            }
-            else {
+            if (!egret.nativeRender) {
                 if (child.$maskedObject) {
                     child.$maskedObject.$updateRenderMode();
                 }
