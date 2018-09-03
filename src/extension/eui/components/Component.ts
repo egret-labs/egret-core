@@ -267,10 +267,6 @@ namespace eui {
             }
             let values = this.$Component;
             let oldSkin: Skin = values[sys.ComponentKeys.skin];
-            if (skin && oldSkin && oldSkin["__proto__"] == skin["__proto__"]) {
-                DEBUG && egret.$error(2204);
-                return
-            }
             if (oldSkin) {
                 let skinParts: string[] = oldSkin.skinParts;
                 let length = skinParts.length;
