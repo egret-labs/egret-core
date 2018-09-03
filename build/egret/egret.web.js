@@ -1471,11 +1471,11 @@ var egret;
              */
             WebVideo.prototype.$setHeight = function (value) {
                 this.heightSet = value;
-                if (this.paused) { // 在暂停和播放结束后，修改视频大小时，没有重绘导致的bug
-                    var _this = this;
+                if (this.paused) {
+                    var self_1 = this;
                     this.$renderDirty = true;
-                    window.setTimeout(function() {
-                        _this.$renderDirty = false;
+                    window.setTimeout(function () {
+                        self_1.$renderDirty = false;
                     }, 200);
                 }
                 _super.prototype.$setHeight.call(this, value);
@@ -1486,11 +1486,11 @@ var egret;
              */
             WebVideo.prototype.$setWidth = function (value) {
                 this.widthSet = value;
-                if (this.paused) { // 在暂停和播放结束后，修改视频大小时，没有重绘导致的bug
-                    var _this = this;
+                if (this.paused) {
+                    var self_2 = this;
                     this.$renderDirty = true;
-                    window.setTimeout(function() {
-                        _this.$renderDirty = false;
+                    window.setTimeout(function () {
+                        self_2.$renderDirty = false;
                     }, 200);
                 }
                 _super.prototype.$setWidth.call(this, value);
@@ -1738,16 +1738,16 @@ var egret;
                 if (xhr.readyState == 4) {
                     var ioError_1 = (xhr.status >= 400 || xhr.status == 0);
                     var url_1 = this._url;
-                    var self_1 = this;
+                    var self_3 = this;
                     window.setTimeout(function () {
                         if (ioError_1) {
-                            if (true && !self_1.hasEventListener(egret.IOErrorEvent.IO_ERROR)) {
+                            if (true && !self_3.hasEventListener(egret.IOErrorEvent.IO_ERROR)) {
                                 egret.$error(1011, url_1);
                             }
-                            self_1.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
+                            self_3.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
                         }
                         else {
-                            self_1.dispatchEventWith(egret.Event.COMPLETE);
+                            self_3.dispatchEventWith(egret.Event.COMPLETE);
                         }
                     }, 0);
                 }

@@ -561,10 +561,10 @@ namespace egret.web {
         $setHeight(value: number): void {
             this.heightSet = value;
             if (this.paused) { // 在暂停和播放结束后，修改视频大小时，没有重绘导致的bug
-                var _this = this;
+                const self = this;
                 this.$renderDirty = true;
                 window.setTimeout(function() {
-                    _this.$renderDirty = false;
+                    self.$renderDirty = false;
                 }, 200);
             }
             super.$setHeight(value);
@@ -577,10 +577,10 @@ namespace egret.web {
         $setWidth(value: number): void {
             this.widthSet = value;
             if (this.paused) { // 在暂停和播放结束后，修改视频大小时，没有重绘导致的bug
-                var _this = this;
+                const self = this;
                 this.$renderDirty = true;
                 window.setTimeout(function() {
-                    _this.$renderDirty = false;
+                    self.$renderDirty = false;
                 }, 200);
             }
             super.$setWidth(value);
