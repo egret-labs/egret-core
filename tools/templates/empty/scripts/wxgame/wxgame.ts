@@ -40,7 +40,7 @@ export class WxgamePlugin implements plugins.Command {
                     content = content.replace(new RegExp('egret.web', 'g'), "egret.wxgame");
                 }
                 if (filename == 'main.js') {
-                    content += ";window.Main = Main;"
+                    content += "\n;window.Main = Main;"
                 }
                 file.contents = new Buffer(content);
             }
@@ -50,6 +50,10 @@ export class WxgamePlugin implements plugins.Command {
     async onFinish(pluginContext: plugins.CommandContext) {
         //同步 index.html 配置到 game.js
         const gameJSPath = path.join(pluginContext.outputDir, "game.js");
+        if(!fs.existsSync(gameJSPath)) {
+            console.log(`${gameJSPath}不存在，请先使用 Launcher 发布微信小游戏`);
+            return;
+        }
         let gameJSContent = fs.readFileSync(gameJSPath, { encoding: "utf8" });
         const projectConfig = pluginContext.buildConfig.projectConfig;
         const optionStr =

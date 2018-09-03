@@ -302,32 +302,35 @@ namespace egret {
                 }
                 return drawCalls;
             }
-            let maskRenderNode = mask.$getRenderNode();
             //遮罩是单纯的填充图形,且alpha为1,性能优化
-            if (mask && (!mask.$children || mask.$children.length == 0) &&
-                maskRenderNode && maskRenderNode.type == sys.RenderNodeType.GraphicsNode &&
-                maskRenderNode.drawData.length == 1 &&
-                (<sys.Path2D>maskRenderNode.drawData[0]).type == sys.PathType.Fill &&
-                (<sys.FillPath>maskRenderNode.drawData[0]).fillAlpha == 1) {
-                this.renderingMask = true;
-                context.save();
-                let maskMatrix = Matrix.create();
-                maskMatrix.copyFrom(mask.$getConcatenatedMatrix());
-                mask.$getConcatenatedMatrixAt(displayObject, maskMatrix);
-                context.transform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
-                let calls = this.drawDisplayObject(mask, context, offsetX, offsetY);
-                this.renderingMask = false;
-                maskMatrix.$invertInto(maskMatrix);
-                context.transform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
-                Matrix.release(maskMatrix);
-                if (scrollRect) {
-                    context.beginPath();
-                    context.rect(scrollRect.x + offsetX, scrollRect.y + offsetY, scrollRect.width, scrollRect.height);
-                    context.clip();
+            if (mask) {
+                let maskRenderNode = mask.$getRenderNode();
+                if ((!mask.$children || mask.$children.length == 0) &&
+                    maskRenderNode && maskRenderNode.type == sys.RenderNodeType.GraphicsNode &&
+                    maskRenderNode.drawData.length == 1 &&
+                    (<sys.Path2D>maskRenderNode.drawData[0]).type == sys.PathType.Fill &&
+                    (<sys.FillPath>maskRenderNode.drawData[0]).fillAlpha == 1) {
+                    this.renderingMask = true;
+                    context.save();
+                    let maskMatrix = Matrix.create();
+                    maskMatrix.copyFrom(mask.$getConcatenatedMatrix());
+                    mask.$getConcatenatedMatrixAt(displayObject, maskMatrix);
+                    maskMatrix.prepend(1, 0, 0, 1, offsetX, offsetY);
+                    context.transform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
+                    var calls = this.drawDisplayObject(mask, context, 0, 0);
+                    this.renderingMask = false;
+                    maskMatrix.$invertInto(maskMatrix);
+                    context.transform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
+                    Matrix.release(maskMatrix);
+                    if (scrollRect) {
+                        context.beginPath();
+                        context.rect(scrollRect.x + offsetX, scrollRect.y + offsetY, scrollRect.width, scrollRect.height);
+                        context.clip();
+                    }
+                    calls += this.drawDisplayObject(displayObject, context, offsetX, offsetY);
+                    context.restore();
+                    return calls;
                 }
-                calls += this.drawDisplayObject(displayObject, context, offsetX, offsetY);
-                context.restore();
-                return calls;
             }
 
             //todo 若显示对象是容器，同时子项有混合模式，则需要先绘制背景到displayBuffer并清除背景区域
@@ -338,6 +341,9 @@ namespace egret {
             const displayBoundsY = displayBounds.y;
             const displayBoundsWidth = displayBounds.width;
             const displayBoundsHeight = displayBounds.height;
+            if (displayBoundsWidth <= 0 || displayBoundsHeight <= 0) {
+                return drawCalls;
+            }
             let displayBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
             let displayContext: CanvasRenderingContext2D = displayBuffer.context;
             if (!displayContext) {//RenderContext创建失败，放弃绘制遮罩。
@@ -348,6 +354,7 @@ namespace egret {
             drawCalls += this.drawDisplayObject(displayObject, displayContext, -displayBoundsX, -displayBoundsY);
             //绘制遮罩
             if (mask) {
+                let maskRenderNode = mask.$getRenderNode();
                 let maskMatrix = Matrix.create();
                 maskMatrix.copyFrom(mask.$getConcatenatedMatrix());
                 mask.$getConcatenatedMatrixAt(displayObject, maskMatrix);

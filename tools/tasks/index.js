@@ -22,6 +22,7 @@ var resSplit_1 = require("./resSplit");
 exports.ResSplitPlugin = resSplit_1.ResSplitPlugin;
 var merge_1 = require("./merge");
 exports.ZipPlugin = merge_1.ZipPlugin;
+exports.MergeEuiJsonPlugin = merge_1.MergeEuiJsonPlugin;
 function run() {
     global.exitCode = 0;
 }

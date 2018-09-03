@@ -173,8 +173,13 @@ var TextureMergerResConfigPlugin = /** @class */ (function () {
         this.resourceConfig = {};
         /** 要打包的文件夹 */
         this.resourceDirs = {};
+        /**
+         * 检查是否一个json插入到不同的res.json中
+         * @param url
+         */
+        this.verboseHash = {};
         this.resourceConfigFiles = this.options.resourceConfigFiles.map(function (item) {
-            var resourceConfigFile = path.posix.join(item.root, item.filename);
+            var resourceConfigFile = path.posix.join(item.filename);
             _this.sheetRoot[resourceConfigFile] = item.root;
             _this.resourceDirs[item.root] = true;
             return resourceConfigFile;
@@ -201,7 +206,7 @@ var TextureMergerResConfigPlugin = /** @class */ (function () {
                     }
                 }
                 if (!isRes) {
-                    return [2 /*return*/];
+                    return [2 /*return*/, file];
                 }
                 if (file.options) {
                     subkeys = file.options.subkeys;
@@ -260,8 +265,16 @@ var TextureMergerResConfigPlugin = /** @class */ (function () {
     };
     TextureMergerResConfigPlugin.prototype.parseTestureMerger = function (pluginContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var sheetFileName, subkeysFile, subkeyHash, _i, _a, subkeyItem;
+            var hasConfig, i, sheetFileName, subkeysFile, subkeyHash, _i, _a, subkeyItem;
             return __generator(this, function (_b) {
+                hasConfig = false;
+                for (i in this.resourceConfig) {
+                    hasConfig = true;
+                }
+                if (!hasConfig) {
+                    console.log(utils.tr(1430));
+                    global.globals.exit();
+                }
                 for (sheetFileName in this.sheetFiles) {
                     subkeysFile = this.sheetFiles[sheetFileName];
                     subkeyHash = {};
@@ -282,33 +295,42 @@ var TextureMergerResConfigPlugin = /** @class */ (function () {
             this.deleteFragmentReference(subkeyHash, resourceConfig_1, root);
             //增加最后的图集和json配置
             //先直接抹去前方的路径，如果没有任何变化，说明资源在res.json的文件上级
-            var relativeJson = this.getSpliceRoot(subkeysFile.url, pluginContext.outputDir + "/" + root);
-            if (relativeJson == subkeysFile.url) {
+            //可能在文件工程中，所以下面在删除一回root
+            var relativeJson = this.getSpliceRoot(subkeysFile.url, pluginContext.outputDir);
+            if (relativeJson == subkeysFile.url && relativeJson.indexOf(pluginContext.outputDir) > -1) {
                 console.log(utils.tr(1422, filename, subkeysFile.name));
                 global.globals.exit();
             }
+            var subkeys = "";
             //json
+            if (typeof (subkeysFile.subkeys) == "string") {
+                subkeys = subkeysFile.subkeys;
+            }
+            else {
+                subkeys = this.sheetToRes(subkeysFile.subkeys);
+            }
             var json = {
                 name: subkeysFile.name,
                 type: subkeysFile.type,
-                subkeys: this.sheetToRes(subkeysFile.subkeys),
-                url: relativeJson
+                subkeys: subkeys,
+                url: this.getSpliceRoot(relativeJson, root)
             };
+            this.checkVerbose(json.url, filename);
             this.deleteReferenceByName(subkeysFile.name, resourceConfig_1, root);
             resourceConfig_1.resources.push(json);
             //png
             var imageUrl = subkeysFile.url.replace("json", "png");
             var imgName = subkeysFile.name.replace("json", "png");
-            var relativeImage = this.getSpliceRoot(imageUrl, pluginContext.outputDir + "/" + root);
+            var relativeImage = this.getSpliceRoot(imageUrl, pluginContext.outputDir);
             var image = {
                 name: imgName,
                 type: "image",
-                url: relativeImage
+                url: this.getSpliceRoot(relativeImage, root)
             };
             this.deleteReferenceByName(imgName, resourceConfig_1, root);
             resourceConfig_1.resources.push(image);
             var buffer = new Buffer(JSON.stringify(resourceConfig_1));
-            pluginContext.createFile(path.join(pluginContext.outputDir, filename), buffer);
+            pluginContext.createFile(filename, buffer);
         }
     };
     /**
@@ -341,6 +363,18 @@ var TextureMergerResConfigPlugin = /** @class */ (function () {
                 continue;
             }
         }
+    };
+    TextureMergerResConfigPlugin.prototype.checkVerbose = function (tmjson, resjson) {
+        if (!this.options.TM_Verbose)
+            return;
+        if (this.verboseHash[tmjson] == undefined) {
+            this.verboseHash[tmjson] = [];
+            this.verboseHash[tmjson].push(resjson);
+            return;
+        }
+        this.verboseHash[tmjson].push(resjson);
+        // console.log(this.verboseHash[tmjson].join(",    "));
+        console.log(utils.tr(1429, this.verboseHash[tmjson].join(",    ")));
     };
     return TextureMergerResConfigPlugin;
 }());
@@ -504,14 +538,14 @@ var vfs;
             if (!this.exists(folder)) {
                 this.mkdir(folder);
             }
-            var d = this.reslove(folder);
+            var d = this.resolve(folder);
             if (d) {
                 d[basefilename] = __assign({ url: url, type: type, name: name }, r);
             }
         };
         FileSystem.prototype.getFile = function (filename) {
             filename = this.normalize(filename);
-            return this.reslove(filename);
+            return this.resolve(filename);
         };
         FileSystem.prototype.basename = function (filename) {
             return filename.substr(filename.lastIndexOf("/") + 1);
@@ -523,7 +557,7 @@ var vfs;
         FileSystem.prototype.dirname = function (path) {
             return path.substr(0, path.lastIndexOf("/"));
         };
-        FileSystem.prototype.reslove = function (dirpath) {
+        FileSystem.prototype.resolve = function (dirpath) {
             if (dirpath == "") {
                 return this.root;
             }

@@ -8,7 +8,7 @@ export { EmitResConfigFilePlugin, ConvertResConfigFilePlugin } from './resConfig
 export { CleanPlugin } from './clean';
 export { RenamePlugin } from './rename';
 export { ResSplitPlugin } from './resSplit';
-export { ZipPlugin } from './merge';
+export { ZipPlugin, MergeEuiJsonPlugin } from './merge';
 
 
 export function run() {

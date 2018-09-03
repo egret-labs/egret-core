@@ -8,7 +8,7 @@ import * as exml from '../lib/eui/EXML';
 import * as EgretProject from '../project';
 import exmlParser = require("../lib/eui/EXMLParser");
 import jsonParser = require("../lib/eui/JSONParser");
-
+export let isOneByOne: boolean;
 function generateThemeData() {
     //1.找到项目内后缀名为'.thm.json'的主题文件并返回列表
     const themeFilenames = searchTheme();
@@ -77,7 +77,6 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
     }
 
     themeDatas.forEach(theme => theme.exmls = []);
-    let EuiJson = "";
     screenExmls.forEach(e => {
         exmlParser.fileSystem.set(e.filename, e);
         var epath = e.filename;
@@ -103,8 +102,15 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
             //todo
             case "commonjs2":
                 var parser2 = new jsonParser.JSONParser();
-                let result2 = parser2.parse(e.contents);
-                exmlEl = { path: e.filename, gjs: result2.code, json: result2.json, className: result2.className };
+                isOneByOne = false;
+                let result2 = parser2.parse(e.contents, e.filename);
+                exmlEl = { path: e.filename, className: result2.className };
+                break;
+            case "json":
+                var parser3 = new jsonParser.JSONParser();
+                isOneByOne = true;
+                let result3 = parser3.parse(e.contents, e.filename);
+                exmlEl = { path: e.filename, json: result3.json, className: result3.className };
                 break;
             //todo
             case "bin":
@@ -113,12 +119,6 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
                 exmlEl = { path: e.filename, content: e.contents };
                 break;
         }
-        if (exmlEl.className) {
-            let className = exmlEl.className.split(".")[exmlEl.className.split(".").length - 1];
-            if (exmlEl.path.indexOf(className) < 0)
-                console.log(utils.tr(2104, exmlEl.path, exmlEl.className));
-        }
-        EuiJson = exmlEl.json;
         themeDatas.forEach((thm) => {
             if (epath in oldEXMLS) {
                 const exmlFile = oldEXMLS[epath];
@@ -165,49 +165,51 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
             path = path.replace("thm.json", "thm.js");
             return { path, content }
         }
-        else if (exmlPublishPolicy == "commonjs2") {
-            let jsonParserStr = file.read(Path.join(egret.root, "tools/lib/eui/JsonParserFactory.js"));
-            let content = `${jsonParserStr}
-                function __extends(d, b) {
-                    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-                        function __() {
-                            this.constructor = d;
-                        }
-                    __.prototype = b.prototype;
-                    d.prototype = new __();
-                };`;
-            content += `
-                window.generateEUI2 = {};
-                generateEUI2.paths = {};
-                generateEUI2.styles = ${JSON.stringify(thmData.styles)};
-                generateEUI2.skins = ${JSON.stringify(thmData.skins)};`;
-
-
-            let namespaces = [];
-            for (let item of thmData.exmls) {
-                let packages: string[] = item.className.split(".")
-                let temp = '';
-                for (let i = 0; i < packages.length - 1; i++) {
-                    temp = i == 0 ? packages[i] : temp + "." + packages[i];
-                    if (namespaces.indexOf(temp) == -1) {
-                        namespaces.push(temp);
-                    }
-                }
-
-                content += `generateEUI2.paths['${item.path}'] = window.${item.className} = ${item.gjs}`;
+        else if (exmlPublishPolicy == "commonjs2" || exmlPublishPolicy == "json") {
+            if (jsonParser.isError) {
+                //已经存在错误了终止
+                global.globals.exit()
             }
-            let result = namespaces.map(v => `window.${v}={};`).join("\n");
-            content = result + content;
+            let jsonParserStr = file.read(Path.join(egret.root, "tools/lib/eui/JsonParserFactory.js"));
+            let content = `${jsonParserStr}`
+            content +=
+                `window.generateEUI2 = {};
+generateEUI2.paths = {};
+generateEUI2.styles = ${JSON.stringify(thmData.styles)};
+generateEUI2.skins = ${JSON.stringify(thmData.skins)};`;
             path = path.replace("thm.json", "thm.js");
+            if (exmlPublishPolicy == "json") {
+                content = content.replace(/generateEUI2/g, "generateJSON")
+            }
             return { path, content }
         }
         else {
             return { path, content: JSON.stringify(thmData, null, '\t') }
         }
     });
-    if (EuiJson == "")
-        EuiJson = "{}"
-    return { "files": files, "EuiJson": EuiJson };
+    if (exmlPublishPolicy == "commonjs2") {
+        let EuiJson: { path: string, json: string }[] = [];
+        let json = jsonParser.eui.toCode();
+        if (json == "") {
+            json = "{}"
+        }
+        EuiJson.push({ path: "resource/gameEui.json", json: json });
+        return { "files": files, "EuiJson": EuiJson };
+    } else if (exmlPublishPolicy == "json") {
+        let EuiJson: { path: string, json: string }[] = [];
+        for (let theme of themeDatas) {
+            for (let json of theme.exmls) {
+                let dirPath = json.path.replace(".exml", "_EUI.json");
+                let dataJson = json.json;
+                let data = { path: dirPath, json: dataJson }
+                EuiJson.push(data);
+            }
+        }
+        return { "files": files, "EuiJson": EuiJson };
+    }
+    else {
+        return { "files": files };
+    }
 
 }
 

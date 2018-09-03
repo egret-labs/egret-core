@@ -104,6 +104,14 @@ var egret;
     locale_strings[1420] = "打包失败，请检查路径中是否有中文或特殊的字符";
     locale_strings[1421] = "打zip包出现异常！";
     locale_strings[1422] = "合图插件运行后，{0}中存在对上级{1}的引用！";
+    locale_strings[1423] = "TextureMerger 执行错误，错误码:{0}";
+    locale_strings[1424] = "执行命令:{0}{1}";
+    locale_strings[1425] = "{0}所对应的textureMerger项目没有设置后缀名，已自动添加，请检查代码";
+    locale_strings[1426] = "请安装 Texture Merger";
+    locale_strings[1427] = "请将 Texture Merger 升级至 1.7.0 以上版本";
+    locale_strings[1428] = "不支持的平台";
+    locale_strings[1429] = "{0}引入了一个相同的TextureMerger合图结果，请检查";
+    locale_strings[1430] = "配置的fileName不存在资源";
     //run
     locale_strings[1501] = "无法启动服务器，请检查权限或端口是否被占用";
     //create_app
@@ -177,7 +185,7 @@ var egret;
     locale_strings[2020] = "{0}: error 在w:Declarations内的子节点，不允许使用includeIn和excludeFrom属性\n{1}";
     locale_strings[2102] = "{0}: warning 在属性节点上找不到任何子节点\n{1}";
     locale_strings[2103] = "{0}: warning 节点上的同一个属性'{1}'被多次赋值\n{2}";
-    locale_strings[2104] = "warning: {0}文件所定义的类名{1}不一致";
+    locale_strings[2104] = "warning: {0}文件所定义的类名{1}存在重复定义";
     // android sdk install
     locale_strings[2201] = "{0}个文件需要下载！";
     locale_strings[2202] = "文件总大小为{0}MB";

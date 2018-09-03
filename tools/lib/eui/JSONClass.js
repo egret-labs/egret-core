@@ -3,6 +3,9 @@ var JSONClass = /** @class */ (function () {
     function JSONClass() {
         this.json = {};
     }
+    JSONClass.prototype.clear = function () {
+        this.json = {};
+    };
     JSONClass.prototype.toCode = function () {
         var str = JSON.stringify(this.json);
         str = str.replace(/\\\\n/g, "\\n");
@@ -22,6 +25,13 @@ var JSONClass = /** @class */ (function () {
             }
         }
         target[name] = value;
+    };
+    JSONClass.prototype.hasClassName = function (className) {
+        for (var name in this.json) {
+            if (name == className)
+                return true;
+        }
+        return false;
     };
     return JSONClass;
 }());

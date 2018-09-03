@@ -549,8 +549,8 @@ namespace egret.web {
         public _initStageDelegateDiv(container, canvas): any {
             this.canvas = canvas;
             let self = this;
-            let stageDelegateDiv;
-            if (!stageDelegateDiv) {
+            if (!this.StageDelegateDiv) {
+                let stageDelegateDiv;
                 stageDelegateDiv = document.createElement("div");
                 this.StageDelegateDiv = stageDelegateDiv;
                 stageDelegateDiv.id = "StageDelegateDiv";

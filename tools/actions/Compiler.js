@@ -98,7 +98,7 @@ var Compiler = /** @class */ (function () {
     };
     Compiler.prototype.doCompile = function () {
         cachedExistingFiles = utils.createMap();
-        this.program = ts.createProgram(this.fileNames, this.options, compilerHost);
+        this.program = ts.createProgram(this.fileNames.concat(), this.options, compilerHost);
         this.sortFiles();
         var emitResult = this.program.emit();
         this.logErrors(emitResult.diagnostics);

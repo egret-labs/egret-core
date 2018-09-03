@@ -138,7 +138,7 @@ export type ConvertResourceConfigPluginOption = {
 
     nameSelector: (url: string) => string
 
-
+    TM_Verbose: boolean;
 }
 
 type R = { url: string, type: string, subkeys: string[] | string, name: string };
@@ -175,7 +175,7 @@ class TextureMergerResConfigPlugin {
     private resourceDirs: { [filename: string]: boolean } = {};
     constructor(private options: ConvertResourceConfigPluginOption) {
         this.resourceConfigFiles = this.options.resourceConfigFiles.map((item) => {
-            let resourceConfigFile = path.posix.join(item.root, item.filename);
+            let resourceConfigFile = path.posix.join(item.filename);
             this.sheetRoot[resourceConfigFile] = item.root;
             this.resourceDirs[item.root] = true;
             return resourceConfigFile;
@@ -199,7 +199,7 @@ class TextureMergerResConfigPlugin {
             }
         }
         if (!isRes) {
-            return;
+            return file;
         }
 
         let subkeys;
@@ -260,6 +260,14 @@ class TextureMergerResConfigPlugin {
     }
 
     async parseTestureMerger(pluginContext: plugin.PluginContext) {
+        let hasConfig = false;
+        for (let i in this.resourceConfig) {
+            hasConfig = true;
+        }
+        if (!hasConfig) {
+            console.log(utils.tr(1430));
+            global.globals.exit()
+        }
         for (let sheetFileName in this.sheetFiles) {
             const subkeysFile = this.sheetFiles[sheetFileName];
             /** 创建哈希，减少一层for遍历 */
@@ -278,35 +286,42 @@ class TextureMergerResConfigPlugin {
 
             //增加最后的图集和json配置
             //先直接抹去前方的路径，如果没有任何变化，说明资源在res.json的文件上级
-            const relativeJson = this.getSpliceRoot(subkeysFile.url, pluginContext.outputDir + "/" + root)
-            if (relativeJson == subkeysFile.url) {
+            //可能在文件工程中，所以下面在删除一回root
+            const relativeJson = this.getSpliceRoot(subkeysFile.url, pluginContext.outputDir)
+            if (relativeJson == subkeysFile.url && relativeJson.indexOf(pluginContext.outputDir) > -1) {
                 console.log(utils.tr(1422, filename, subkeysFile.name));
                 global.globals.exit()
             }
+            let subkeys = "";
             //json
+            if (typeof (subkeysFile.subkeys) == "string") {
+                subkeys = subkeysFile.subkeys;
+            } else {
+                subkeys = this.sheetToRes(subkeysFile.subkeys as string[]);
+            }
             const json = {
                 name: subkeysFile.name,
                 type: subkeysFile.type,
-                subkeys: this.sheetToRes(subkeysFile.subkeys as string[]),
-                url: relativeJson
+                subkeys: subkeys,
+                url: this.getSpliceRoot(relativeJson, root)
             }
+            this.checkVerbose(json.url, filename);
             this.deleteReferenceByName(subkeysFile.name, resourceConfig, root);
             resourceConfig.resources.push(json);
 
             //png
             const imageUrl = subkeysFile.url.replace("json", "png");
             const imgName = subkeysFile.name.replace("json", "png");
-            const relativeImage = this.getSpliceRoot(imageUrl, pluginContext.outputDir + "/" + root)
+            const relativeImage = this.getSpliceRoot(imageUrl, pluginContext.outputDir)
             const image = {
                 name: imgName,
                 type: "image",
-                url: relativeImage
+                url: this.getSpliceRoot(relativeImage, root)
             }
             this.deleteReferenceByName(imgName, resourceConfig, root);
             resourceConfig.resources.push(image);
-
             const buffer = new Buffer(JSON.stringify(resourceConfig));
-            pluginContext.createFile(path.join(pluginContext.outputDir, filename), buffer);
+            pluginContext.createFile(filename, buffer);
         }
     }
     /**
@@ -337,6 +352,22 @@ class TextureMergerResConfigPlugin {
                 continue;
             }
         }
+    }
+    /**
+     * 检查是否一个json插入到不同的res.json中
+     * @param url 
+     */
+    private verboseHash: { [filename: string]: string[] } = {};
+    private checkVerbose(tmjson: string, resjson: string) {
+        if (!this.options.TM_Verbose) return;
+        if (this.verboseHash[tmjson] == undefined) {
+            this.verboseHash[tmjson] = [];
+            this.verboseHash[tmjson].push(resjson)
+            return;
+        }
+        this.verboseHash[tmjson].push(resjson)
+        // console.log(this.verboseHash[tmjson].join(",    "));
+        console.log(utils.tr(1429, this.verboseHash[tmjson].join(",    ")));
     }
 }
 
@@ -519,7 +550,7 @@ namespace vfs {
             if (!this.exists(folder)) {
                 this.mkdir(folder);
             }
-            let d = this.reslove(folder) as (Dictionary | null);
+            let d = this.resolve(folder) as (Dictionary | null);
             if (d) {
                 d[basefilename] = { url, type, name, ...r };
             }
@@ -527,7 +558,7 @@ namespace vfs {
 
         getFile(filename: string): File | undefined {
             filename = this.normalize(filename);
-            return this.reslove(filename) as File;
+            return this.resolve(filename) as File;
         }
 
         private basename(filename: string) {
@@ -542,7 +573,7 @@ namespace vfs {
             return path.substr(0, path.lastIndexOf("/"));
         }
 
-        private reslove(dirpath: string) {
+        private resolve(dirpath: string) {
             if (dirpath == "") {
                 return this.root;
             }

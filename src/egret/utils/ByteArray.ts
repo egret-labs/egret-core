@@ -556,14 +556,14 @@ namespace egret {
 
         /**
          * Read unsigned bytes from the byte stream.
-         * @return A 32-bit unsigned integer ranging from 0 to 255
+         * @return A unsigned integer ranging from 0 to 255
          * @version Egret 2.4
          * @platform Web,Native
          * @language en_US
          */
         /**
          * 从字节流中读取无符号的字节
-         * @return 介于 0 和 255 之间的 32 位无符号整数
+         * @return 介于 0 和 255 之间的无符号整数
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN

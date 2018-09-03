@@ -33,19 +33,19 @@ var CodeFactory_1 = require("./CodeFactory");
 var DEBUG = false;
 var egretbridge_1 = require("./egretbridge");
 var JSONClass_1 = require("./JSONClass");
+var utils = require("../../lib/utils");
+var exml_1 = require("../../actions/exml");
+exports.eui = JSONClass_1.jsonFactory;
+exports.isError = false;
 var exmlParserPool = [];
-var parsedClasses = {};
 var innerClassCount = 1;
 var HOST_COMPONENT = "hostComponent";
-var SKIN_CLASS = "eui.Skin";
 var DECLARATIONS = "Declarations";
-var RECTANGLE = "egret.Rectangle";
 var TYPE_CLASS = "Class";
 var TYPE_ARRAY = "Array";
 var TYPE_PERCENTAGE = "Percentage";
 var TYPE_STexture = "string | Texture";
 var TYPE_STATE = "State[]";
-var SKIN_NAME = "skinName";
 var ELEMENTS_CONTENT = "elementsContent";
 var basicTypes = [TYPE_ARRAY, TYPE_STexture, "boolean", "string", "number"];
 var wingKeys = ["id", "locked", "includeIn", "excludeFrom"];
@@ -82,7 +82,8 @@ var euiShorten = {
     "eui.VerticalLayout": "$eVL",
     "eui.ViewStack": "$eV",
     "eui.VScrollBar": "$eVSB",
-    "eui.VSlider": "$eVS"
+    "eui.VSlider": "$eVS",
+    "eui.Skin": "$eSk"
 };
 /**
  * @private
@@ -92,17 +93,6 @@ var JSONParser = /** @class */ (function () {
      * @private
      */
     function JSONParser() {
-        /**
-         * @private
-         * 延迟赋值字典
-         */
-        this.delayAssignmentDic = {};
-        if (DEBUG) {
-            this.repeatedIdMap = {};
-            this.getRepeatedIds = getRepeatedIds;
-            this.getIds = getIds;
-            this.checkDeclarations = checkDeclarations;
-        }
     }
     Object.defineProperty(JSONParser.prototype, "topNode", {
         get: function () {
@@ -124,7 +114,7 @@ var JSONParser = /** @class */ (function () {
      * @param xmlData 要编译的EXML文件内容
      *
      */
-    JSONParser.prototype.parse = function (text) {
+    JSONParser.prototype.parse = function (text, path) {
         if (DEBUG) {
             if (!text) {
                 egretbridge_1.egretbridge.$error(1003, "text");
@@ -144,21 +134,31 @@ var JSONParser = /** @class */ (function () {
             xmlData = XMLParser.parse(text);
         }
         this._topNode = xmlData;
-        var hasClass = false;
         var className = "";
         if (xmlData.attributes["class"]) {
             className = xmlData.attributes["class"];
             delete xmlData.attributes["class"];
-            hasClass = !!className;
         }
         else {
             className = "$exmlClass" + innerClassCount++;
         }
         this._className = className;
-        var exClass = this.parseClass(xmlData, className);
-        var code = exClass.toCode(true);
-        var json = JSONClass_1.jsonFactory.toCode();
-        return { code: code, json: json, className: className };
+        if (JSONClass_1.jsonFactory.hasClassName(className)) {
+            console.log(utils.tr(2104, path, className));
+            exports.isError = true;
+        }
+        if (path) {
+            JSONClass_1.jsonFactory.addContent(path, this.className, "$path");
+        }
+        this.parseClass(xmlData, className);
+        if (exml_1.isOneByOne) {
+            var json = exports.eui.toCode();
+            exports.eui.clear();
+            return { className: className, json: json };
+        }
+        else {
+            return { className: className };
+        }
     };
     /**
      * @private
@@ -171,7 +171,6 @@ var JSONParser = /** @class */ (function () {
         exports.exmlConfig.dirPath = egret.args.projectDir;
         this.currentXML = xmlData;
         this.currentClassName = className;
-        this.delayAssignmentDic = {};
         this.idDic = {};
         this.stateCode = [];
         this.stateNames = [];
@@ -189,9 +188,6 @@ var JSONParser = /** @class */ (function () {
             this.currentClass.className = className;
         }
         this.startCompile();
-        var clazz = this.currentClass;
-        this.currentClass = null;
-        return clazz;
     };
     /**
      * @private
@@ -205,7 +201,6 @@ var JSONParser = /** @class */ (function () {
             }
         }
         var superClass = this.getClassNameOfNode(this.currentXML);
-        this.isSkinClass = (superClass == SKIN_CLASS);
         this.currentClass.superClass = superClass;
         this.getStateNames();
         var children = this.currentXML.children;
@@ -229,12 +224,12 @@ var JSONParser = /** @class */ (function () {
         }
         if (!this.currentXML.namespace) {
             if (DEBUG) {
-                egretbridge_1.egretbridge.$error(2017, this.currentClassName, toXMLString(this.currentXML));
+                egretbridge_1.egretbridge.$error(2017, this.currentClassName, this.toXMLString(this.currentXML));
             }
             return;
         }
         this.addIds(this.currentXML.children);
-        this.createConstructFunc();
+        this.addBaseConfig();
     };
     /**
      * @private
@@ -252,7 +247,7 @@ var JSONParser = /** @class */ (function () {
             }
             if (!node.namespace) {
                 if (DEBUG) {
-                    egretbridge_1.egretbridge.$error(2017, this.currentClassName, toXMLString(node));
+                    egretbridge_1.egretbridge.$error(2017, this.currentClassName, this.toXMLString(node));
                 }
                 continue;
             }
@@ -318,7 +313,6 @@ var JSONParser = /** @class */ (function () {
                     prop = parent.localName;
                     var index = prop.indexOf(".");
                     if (index != -1) {
-                        var stateName = prop.substring(index + 1);
                         prop = prop.substring(0, index);
                     }
                     parent = parent.parent;
@@ -358,10 +352,12 @@ var JSONParser = /** @class */ (function () {
      */
     JSONParser.prototype.createIdForNode = function (node) {
         var idName = this.getNodeId(node);
-        if (!this.idDic[idName])
+        if (!this.idDic[idName]) {
             this.idDic[idName] = 1;
-        else
+        }
+        else {
             this.idDic[idName]++;
+        }
         idName += this.idDic[idName];
         node.attributes.id = idName;
     };
@@ -370,8 +366,9 @@ var JSONParser = /** @class */ (function () {
      * 获取节点ID
      */
     JSONParser.prototype.getNodeId = function (node) {
-        if (node.attributes["id"])
+        if (node.attributes["id"]) {
             return node.attributes.id;
+        }
         return "_" + node.localName;
     };
     /**
@@ -380,10 +377,12 @@ var JSONParser = /** @class */ (function () {
      */
     JSONParser.prototype.createVarForNode = function (node) {
         var moduleName = this.getClassNameOfNode(node);
-        if (moduleName == "")
+        if (moduleName == "") {
             return;
-        if (!this.currentClass.getVariableByName(node.attributes.id))
+        }
+        if (!this.currentClass.getVariableByName(node.attributes.id)) {
             this.currentClass.addVariable(new CodeFactory_1.EXVariable(node.attributes.id));
+        }
     };
     /**
      * @private
@@ -392,8 +391,9 @@ var JSONParser = /** @class */ (function () {
     JSONParser.prototype.addNodeConfig = function (node) {
         var className = node.localName;
         var isBasicType = this.isBasicTypeData(className);
-        if (isBasicType)
+        if (isBasicType) {
             return this.createBasicTypeForNode(node);
+        }
         var moduleName = this.getClassNameOfNode(node);
         var func = new CodeFactory_1.EXFunction();
         var id = node.attributes.id;
@@ -411,7 +411,7 @@ var JSONParser = /** @class */ (function () {
         config["$t"] = euiShorten[name] == undefined ? name : euiShorten[name];
         JSONClass_1.jsonFactory.addContent(config, this.currentClassName, func.name);
         // 赋值skin的属性
-        this.addConfig(func.name, node, configName, moduleName);
+        this.addConfig(node, configName, moduleName);
         this.initlizeChildNode(node, func.name);
         return func.name;
     };
@@ -457,8 +457,9 @@ var JSONParser = /** @class */ (function () {
                 break;
             case "number":
                 returnValue = text;
-                if (returnValue.indexOf("%") != -1)
+                if (returnValue.indexOf("%") != -1) {
                     returnValue = returnValue.substring(0, returnValue.length - 1);
+                }
                 break;
         }
         if (varItem)
@@ -469,7 +470,7 @@ var JSONParser = /** @class */ (function () {
      * @private
      * 将节点属性赋值语句添加到代码块
      */
-    JSONParser.prototype.addConfig = function (varName, node, configName, type) {
+    JSONParser.prototype.addConfig = function (node, configName, type) {
         var key;
         var value;
         var attributes = node.attributes;
@@ -493,8 +494,9 @@ var JSONParser = /** @class */ (function () {
             value = this.formatValue(key, value, node);
             jsonProperty[key] = value;
         }
-        if (type)
+        if (type) {
             jsonProperty["$t"] = euiShorten[type] == undefined ? type : euiShorten[type];
+        }
         JSONClass_1.jsonFactory.addContent(jsonProperty, this.currentClassName, configName == undefined ? "$bs" : configName);
     };
     /**
@@ -503,8 +505,9 @@ var JSONParser = /** @class */ (function () {
      */
     JSONParser.prototype.initlizeChildNode = function (node, varName) {
         var children = node.children;
-        if (!children || children.length == 0)
+        if (!children || children.length == 0) {
             return;
+        }
         var className = exports.exmlConfig.getClassNameById(node.localName, node.namespace);
         var directChild = [];
         var length = children.length;
@@ -518,7 +521,7 @@ var JSONParser = /** @class */ (function () {
             if (this.isInnerClass(child)) {
                 if (child.localName == "Skin") {
                     var innerClassName = this.parseInnerClass(child);
-                    JSONClass_1.jsonFactory.addContent(innerClassName, this.currentClassName + "/$bs", "skinName");
+                    JSONClass_1.jsonFactory.addContent(innerClassName, this.currentClassName + "/" + this.getNodeId(node), "skinName");
                 }
                 continue;
             }
@@ -530,18 +533,18 @@ var JSONParser = /** @class */ (function () {
                 var type = exports.exmlConfig.getPropertyType(child.localName, className);
                 if (!type) {
                     if (DEBUG) {
-                        egretbridge_1.egretbridge.$error(2005, this.currentClassName, child.localName, getPropertyStr(child));
+                        egretbridge_1.egretbridge.$error(2005, this.currentClassName, child.localName, this.getPropertyStr(child));
                     }
                     continue;
                 }
                 if (!child.children || child.children.length == 0) {
                     if (DEBUG) {
-                        egretbridge_1.egretbridge.$warn(2102, this.currentClassName, getPropertyStr(child));
+                        egretbridge_1.egretbridge.$warn(2102, this.currentClassName, this.getPropertyStr(child));
                     }
                     continue;
                 }
                 if (DEBUG) {
-                    var errorInfo_1 = getPropertyStr(child);
+                    errorInfo = this.getPropertyStr(child);
                 }
                 this.addChildrenToProp(child.children, type, prop, varName, errorInfo, propList, node);
             }
@@ -554,7 +557,7 @@ var JSONParser = /** @class */ (function () {
         var defaultProp = exports.exmlConfig.getDefaultPropById(node.localName, node.namespace);
         var defaultType = exports.exmlConfig.getPropertyType(defaultProp, className);
         if (DEBUG) {
-            errorInfo = getPropertyStr(directChild[0]);
+            errorInfo = this.getPropertyStr(directChild[0]);
         }
         if (!defaultProp || !defaultType) {
             if (DEBUG) {
@@ -574,8 +577,7 @@ var JSONParser = /** @class */ (function () {
             parser = new JSONParser();
         }
         var innerClassName = this.currentClassName + "$" + node.localName + innerClassCount++;
-        var innerClass = parser.parseClass(node, innerClassName);
-        this.currentClass.addInnerClass(innerClass);
+        parser.parseClass(node, innerClassName);
         exmlParserPool.push(parser);
         return innerClassName;
     };
@@ -635,7 +637,7 @@ var JSONParser = /** @class */ (function () {
                                 continue;
                             }
                             nodeName = this.addNodeConfig(item);
-                            var childClassName = this.getClassNameOfNode(item);
+                            this.getClassNameOfNode(item);
                             if (!this.isStateNode(item))
                                 values.push(nodeName);
                         }
@@ -645,13 +647,13 @@ var JSONParser = /** @class */ (function () {
                 else {
                     if (prop == ELEMENTS_CONTENT && !this.isStateNode(firstChild)) {
                         nodeName = this.addToCodeBlockForNode(firstChild);
-                        var childClassName = this.getClassNameOfNode(firstChild);
+                        this.getClassNameOfNode(firstChild);
                         elementsContentForJson = [nodeName];
                         prop = "$eleC";
                     }
                     else {
                         nodeName = this.addNodeConfig(firstChild);
-                        var childClassName = this.getClassNameOfNode(firstChild);
+                        this.getClassNameOfNode(firstChild);
                         if (!this.isStateNode(firstChild)) {
                             elementsContentForJson = [nodeName];
                         }
@@ -670,7 +672,7 @@ var JSONParser = /** @class */ (function () {
                     elementsContentForJson = nodeName;
                 }
                 else {
-                    var targetClass = this.getClassNameOfNode(firstChild);
+                    this.getClassNameOfNode(firstChild);
                     nodeName = this.addNodeConfig(firstChild);
                     elementsContentForJson = nodeName;
                 }
@@ -694,12 +696,11 @@ var JSONParser = /** @class */ (function () {
         }
     };
     JSONParser.prototype.addToCodeBlockForNode = function (node) {
-        var className = node.localName;
         var moduleName = this.getClassNameOfNode(node);
         var id = node.attributes.id;
         var varName = id;
         //赋值基本属性
-        this.addConfig(varName, node, varName, moduleName);
+        this.addConfig(node, varName, moduleName);
         this.initlizeChildNode(node, varName);
         return varName;
     };
@@ -734,8 +735,9 @@ var JSONParser = /** @class */ (function () {
      */
     JSONParser.prototype.isNormalKey = function (key) {
         if (!key || key.indexOf(".") != -1
-            || key.indexOf(":") != -1 || wingKeys.indexOf(key) != -1)
+            || key.indexOf(":") != -1 || wingKeys.indexOf(key) != -1) {
             return false;
+        }
         return true;
     };
     /**
@@ -744,10 +746,12 @@ var JSONParser = /** @class */ (function () {
      */
     JSONParser.prototype.formatKey = function (key, value) {
         if (value.indexOf("%") != -1) {
-            if (key == "height")
+            if (key == "height") {
                 key = "percentHeight";
-            else if (key == "width")
+            }
+            else if (key == "width") {
                 key = "percentWidth";
+            }
         }
         return key;
     };
@@ -762,14 +766,13 @@ var JSONParser = /** @class */ (function () {
         if (!value) {
             value = "";
         }
-        var stringValue = value; //除了字符串，其他类型都去除两端多余空格。
         value = value.trim();
         var className = this.getClassNameOfNode(node);
         var type = exports.exmlConfig.getPropertyType(key, className);
         if (DEBUG && !type) {
-            egretbridge_1.egretbridge.$error(2005, this.currentClassName, key, toXMLString(node));
+            egretbridge_1.egretbridge.$error(2005, this.currentClassName, key, this.toXMLString(node));
         }
-        var bindingValue = this.formatBinding(key, value, node);
+        var bindingValue = this.formatBinding(value);
         if (bindingValue) {
             this.checkIdForState(node);
             var target = "this";
@@ -787,7 +790,6 @@ var JSONParser = /** @class */ (function () {
                 value = parseFloat(value);
         }
         else {
-            var orgValue = value;
             switch (type) {
                 case "number":
                     if (value.indexOf("#") == 0) {
@@ -818,14 +820,14 @@ var JSONParser = /** @class */ (function () {
                     break;
                 default:
                     if (DEBUG) {
-                        egretbridge_1.egretbridge.$error(2008, this.currentClassName, "string", key + ":" + type, toXMLString(node));
+                        egretbridge_1.egretbridge.$error(2008, this.currentClassName, "string", key + ":" + type, this.toXMLString(node));
                     }
                     break;
             }
         }
         return value;
     };
-    JSONParser.prototype.formatBinding = function (key, value, node) {
+    JSONParser.prototype.formatBinding = function (value) {
         if (!value) {
             return null;
         }
@@ -915,8 +917,9 @@ var JSONParser = /** @class */ (function () {
      * 转换HTML实体字符为普通字符
      */
     JSONParser.prototype.unescapeHTMLEntity = function (str) {
-        if (!str)
+        if (!str) {
             return "";
+        }
         var length = htmlEntities.length;
         for (var i = 0; i < length; i++) {
             var arr = htmlEntities[i];
@@ -928,13 +931,12 @@ var JSONParser = /** @class */ (function () {
     };
     /**
      * @private
-     * 创建构造函数
+     * 复制基本属性
+     *
      */
-    JSONParser.prototype.createConstructFunc = function () {
-        var cb = new CodeFactory_1.EXCodeBlock;
+    JSONParser.prototype.addBaseConfig = function () {
         var varName = "this";
-        this.addConfig(varName, this.currentXML, "$bs");
-        cb.addCodeLine("window[\"JSONParseClass\"].create(\"" + this.currentClassName + "\", " + varName + ");");
+        this.addConfig(this.currentXML, "$bs");
         if (this.declarations) {
             var children = this.declarations.children;
             if (children && children.length > 0) {
@@ -949,7 +951,6 @@ var JSONParser = /** @class */ (function () {
             }
         }
         this.initlizeChildNode(this.currentXML, varName);
-        var id;
         var stateIds = this.stateIds;
         if (stateIds.length > 0) {
             JSONClass_1.jsonFactory.addContent(stateIds, this.currentClassName + "/$bs", "$sId");
@@ -1056,7 +1057,7 @@ var JSONParser = /** @class */ (function () {
             }
             JSONClass_1.jsonFactory.addContent(bindingConfig, this.currentClassName, "$b");
         }
-        this.currentClass.constructCode = cb;
+        JSONClass_1.jsonFactory.addContent(euiShorten[nodeClassName] != undefined ? euiShorten[nodeClassName] : nodeClassName, this.currentClassName, "$sC");
     };
     /**
      * @private
@@ -1102,10 +1103,10 @@ var JSONParser = /** @class */ (function () {
         }
         if (DEBUG) {
             if (stateChildren && stateChildren.length == 0) {
-                egretbridge_1.egretbridge.$warn(2102, this.currentClassName, getPropertyStr(item));
+                egretbridge_1.egretbridge.$warn(2102, this.currentClassName, this.getPropertyStr(item));
             }
             if (stateChildren && statesValue) {
-                egretbridge_1.egretbridge.$warn(2103, this.currentClassName, "states", getPropertyStr(item));
+                egretbridge_1.egretbridge.$warn(2103, this.currentClassName, "states", this.getPropertyStr(item));
             }
         }
         if (statesValue) {
@@ -1183,10 +1184,10 @@ var JSONParser = /** @class */ (function () {
                 var type = exports.exmlConfig.getPropertyType(prop, className);
                 if (DEBUG) {
                     if (type == TYPE_ARRAY) {
-                        egretbridge_1.egretbridge.$error(2013, this.currentClassName, getPropertyStr(node));
+                        egretbridge_1.egretbridge.$error(2013, this.currentClassName, this.getPropertyStr(node));
                     }
                     if (children.length > 1) {
-                        egretbridge_1.egretbridge.$error(2011, this.currentClassName, prop, getPropertyStr(node));
+                        egretbridge_1.egretbridge.$error(2011, this.currentClassName, prop, this.getPropertyStr(node));
                     }
                 }
                 var firstChild = children[0];
@@ -1211,7 +1212,7 @@ var JSONParser = /** @class */ (function () {
             else if (this.containsState(node)) {
                 var attributes = node.attributes;
                 var id = attributes.id;
-                var nodeClassName = this.getClassNameOfNode(node);
+                this.getClassNameOfNode(node);
                 this.checkIdForState(node);
                 var stateName = void 0;
                 var states = void 0;
@@ -1271,7 +1272,7 @@ var JSONParser = /** @class */ (function () {
                     if (index != -1) {
                         var key = name.substring(0, index);
                         key = this.formatKey(key, value);
-                        var bindingValue = this.formatBinding(key, value, node);
+                        var bindingValue = this.formatBinding(value);
                         if (!bindingValue) {
                             value = this.formatValue(key, value, node);
                             if (value == undefined) {
@@ -1308,7 +1309,7 @@ var JSONParser = /** @class */ (function () {
         this.createVarForNode(node);
         var id = node.attributes.id;
         var funcName = id;
-        var func = this.currentClass.getFuncByName(funcName);
+        this.currentClass.getFuncByName(funcName);
     };
     /**
      * @private
@@ -1341,7 +1342,7 @@ var JSONParser = /** @class */ (function () {
             }
         }
         if (DEBUG && states.length == 0) {
-            egretbridge_1.egretbridge.$error(2006, this.currentClassName, name, toXMLString(node));
+            egretbridge_1.egretbridge.$error(2006, this.currentClassName, name, this.toXMLString(node));
         }
         return states;
     };
@@ -1400,95 +1401,95 @@ var JSONParser = /** @class */ (function () {
     JSONParser.prototype.getClassNameOfNode = function (node) {
         var className = exports.exmlConfig.getClassNameById(node.localName, node.namespace);
         if (DEBUG && !className) {
-            egretbridge_1.egretbridge.$error(2003, this.currentClassName, toXMLString(node));
+            egretbridge_1.egretbridge.$error(2003, this.currentClassName, this.toXMLString(node));
         }
         return className;
+    };
+    /**
+     * 获取重复的ID名
+     */
+    JSONParser.prototype.getRepeatedIds = function (xml) {
+        var result = [];
+        this.repeatedIdMap = {};
+        this.getIds(xml, result);
+        return result;
+    };
+    JSONParser.prototype.getIds = function (xml, result) {
+        if (xml.namespace != EXMLConfig2_1.NS_W && xml.attributes.id) {
+            var id = xml.attributes.id;
+            if (this.repeatedIdMap[id]) {
+                result.push(this.toXMLString(xml));
+            }
+            else {
+                this.repeatedIdMap[id] = true;
+            }
+        }
+        var children = xml.children;
+        if (children) {
+            var length = children.length;
+            for (var i = 0; i < length; i++) {
+                var node = children[i];
+                if (node.nodeType !== 1 || this.isInnerClass(node)) {
+                    continue;
+                }
+                this.getIds(node, result);
+            }
+        }
+    };
+    JSONParser.prototype.toXMLString = function (node) {
+        if (!node) {
+            return "";
+        }
+        var str = "  at <" + node.name;
+        var attributes = node.attributes;
+        var keys = Object.keys(attributes);
+        var length = keys.length;
+        for (var i = 0; i < length; i++) {
+            var key = keys[i];
+            var value = attributes[key];
+            if (key == "id" && value.substring(0, 2) == "__") {
+                continue;
+            }
+            str += " " + key + "=\"" + value + "\"";
+        }
+        if (node.children.length == 0) {
+            str += "/>";
+        }
+        else {
+            str += ">";
+        }
+        return str;
+    };
+    /**
+     * 清理声明节点里的状态标志
+     */
+    JSONParser.prototype.checkDeclarations = function (declarations, list) {
+        if (!declarations) {
+            return;
+        }
+        var children = declarations.children;
+        if (children) {
+            var length = children.length;
+            for (var i = 0; i < length; i++) {
+                var node = children[i];
+                if (node.nodeType != 1) {
+                    continue;
+                }
+                if (node.attributes.includeIn) {
+                    list.push(this.toXMLString(node));
+                }
+                if (node.attributes.excludeFrom) {
+                    list.push(this.toXMLString(node));
+                }
+                this.checkDeclarations(node, list);
+            }
+        }
+    };
+    JSONParser.prototype.getPropertyStr = function (child) {
+        var parentStr = this.toXMLString(child.parent);
+        var childStr = this.toXMLString(child).substring(5);
+        return parentStr + "\n      \t" + childStr;
     };
     return JSONParser;
 }());
 exports.JSONParser = JSONParser;
-/**
- * 获取重复的ID名
- */
-function getRepeatedIds(xml) {
-    var result = [];
-    this.repeatedIdMap = {};
-    this.getIds(xml, result);
-    return result;
-}
-function getIds(xml, result) {
-    if (xml.namespace != EXMLConfig2_1.NS_W && xml.attributes.id) {
-        var id = xml.attributes.id;
-        if (this.repeatedIdMap[id]) {
-            result.push(toXMLString(xml));
-        }
-        else {
-            this.repeatedIdMap[id] = true;
-        }
-    }
-    var children = xml.children;
-    if (children) {
-        var length = children.length;
-        for (var i = 0; i < length; i++) {
-            var node = children[i];
-            if (node.nodeType !== 1 || this.isInnerClass(node)) {
-                continue;
-            }
-            this.getIds(node, result);
-        }
-    }
-}
-function toXMLString(node) {
-    if (!node) {
-        return "";
-    }
-    var str = "  at <" + node.name;
-    var attributes = node.attributes;
-    var keys = Object.keys(attributes);
-    var length = keys.length;
-    for (var i = 0; i < length; i++) {
-        var key = keys[i];
-        var value = attributes[key];
-        if (key == "id" && value.substring(0, 2) == "__") {
-            continue;
-        }
-        str += " " + key + "=\"" + value + "\"";
-    }
-    if (node.children.length == 0) {
-        str += "/>";
-    }
-    else {
-        str += ">";
-    }
-    return str;
-}
-/**
- * 清理声明节点里的状态标志
- */
-function checkDeclarations(declarations, list) {
-    if (!declarations) {
-        return;
-    }
-    var children = declarations.children;
-    if (children) {
-        var length = children.length;
-        for (var i = 0; i < length; i++) {
-            var node = children[i];
-            if (node.nodeType != 1) {
-                continue;
-            }
-            if (node.attributes.includeIn) {
-                list.push(toXMLString(node));
-            }
-            if (node.attributes.excludeFrom) {
-                list.push(toXMLString(node));
-            }
-            checkDeclarations(node, list);
-        }
-    }
-}
-function getPropertyStr(child) {
-    var parentStr = toXMLString(child.parent);
-    var childStr = toXMLString(child).substring(5);
-    return parentStr + "\n      \t" + childStr;
-}

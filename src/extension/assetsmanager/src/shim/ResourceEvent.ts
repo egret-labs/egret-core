@@ -32,91 +32,91 @@ module RES {
 
 	/**
 	 * The events of resource loading.
-	 * @version Egret 2.4
+	 * @version Egret 5.2
 	 * @platform Web,Native
 	 * @language en_US
 	 */
 	/**
 	 * 资源加载事件。
-	 * @version Egret 2.4
+	 * @version Egret 5.2
 	 * @platform Web,Native
 	 * @language zh_CN
 	 */
 	export class ResourceEvent extends egret.Event {
 		/**
 		 * Failure event for a load item.
-		 * @version Egret 2.4
+		 * @version Egret 5.2
 		 * @platform Web,Native
 		 * @language en_US
 		 */
 		/**
 		 * 一个加载项加载失败事件。
-		 * @version Egret 2.4
+		 * @version Egret 5.2
 		 * @platform Web,Native
 		 * @language zh_CN
 		 */
 		public static ITEM_LOAD_ERROR: string = "itemLoadError";
 		/**
 		 * Configure file to load and parse the completion event. Note: if a configuration file is loaded, it will not be thrown out, and if you want to handle the configuration loading failure, monitor the CONFIG_LOAD_ERROR event.
-		 * @version Egret 2.4
+		 * @version Egret 5.2
 		 * @platform Web,Native
 		 * @language en_US
 		 */
 		/**
 		 * 配置文件加载并解析完成事件。注意：若有配置文件加载失败，将不会抛出此事件，若要处理配置加载失败，请同时监听 CONFIG_LOAD_ERROR 事件。
-		 * @version Egret 2.4
+		 * @version Egret 5.2
 		 * @platform Web,Native
 		 * @language zh_CN
 		 */
 		public static CONFIG_COMPLETE: string = "configComplete";
 		/**
 		 * Configuration file failed to load.
-		 * @version Egret 2.4
+		 * @version Egret 5.2
 		 * @platform Web,Native
 		 * @language en_US
 		 */
 		/**
 		 * 配置文件加载失败事件。
-		 * @version Egret 2.4
+		 * @version Egret 5.2
 		 * @platform Web,Native
 		 * @language zh_CN
 		 */
 		public static CONFIG_LOAD_ERROR: string = "configLoadError";
 		/**
 		 * Delay load group resource loading progress event.
-		 * @version Egret 2.4
+		 * @version Egret 5.2
 		 * @platform Web,Native
 		 * @language en_US
 		 */
 		/**
 		 * 延迟加载组资源加载进度事件。
-		 * @version Egret 2.4
+		 * @version Egret 5.2
 		 * @platform Web,Native
 		 * @language zh_CN
 		 */
 		public static GROUP_PROGRESS: string = "groupProgress";
 		/**
 		 * Delay load group resource to complete event. Note: if you have a resource item loading failure, the event will not be thrown, if you want to handle the group load failure, please listen to the GROUP_LOAD_ERROR event.
-		 * @version Egret 2.4
+		 * @version Egret 5.2
 		 * @platform Web,Native
 		 * @language en_US
 		 */
 		/**
 		 * 延迟加载组资源加载完成事件。注意：若组内有资源项加载失败，将不会抛出此事件，若要处理组加载失败，请同时监听 GROUP_LOAD_ERROR 事件。
-		 * @version Egret 2.4
+		 * @version Egret 5.2
 		 * @platform Web,Native
 		 * @language zh_CN
 		 */
 		public static GROUP_COMPLETE: string = "groupComplete";
 		/**
 		 * Delayed load group resource failed event.
-		 * @version Egret 2.4
+		 * @version Egret 5.2
 		 * @platform Web,Native
 		 * @language en_US
 		 */
 		/**
 		 * 延迟加载组资源加载失败事件。
-		 * @version Egret 2.4
+		 * @version Egret 5.2
 		 * @platform Web,Native
 		 * @language zh_CN
 		 */
@@ -126,7 +126,7 @@ module RES {
 		 * @param type  The type of the event, accessible as Event.type.
 		 * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
 		 * @param cancelable Determines whether the Event object can be canceled. The default values is false.
-		 * @version Egret 2.4
+		 * @version Egret 5.2
 		 * @platform Web,Native
 		 * @private
 		 * @language en_US
@@ -136,7 +136,7 @@ module RES {
 		 * @param type  事件的类型，可以作为 Event.type 访问。
 		 * @param bubbles  确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
 		 * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
-		 * @version Egret 2.4
+		 * @version Egret 5.2
 		 * @platform Web,Native
 		 * @private
 		 * @language zh_CN
@@ -146,57 +146,56 @@ module RES {
 		}
 		/**
 		 * File number that has been loaded.
-		 * @version Egret 2.4
+		 * @version Egret 5.2
 		 * @platform Web,Native
 		 * @language en_US
 		 */
 		/**
 		 * 已经加载的文件数。
-		 * @version Egret 2.4
+		 * @version Egret 5.2
 		 * @platform Web,Native
 		 * @language zh_CN
 		 */
 		public itemsLoaded: number = 0;
 		/**
 		 * Total file number to load.
-		 * @version Egret 2.4
+		 * @version Egret 5.2
 		 * @platform Web,Native
 		 * @language en_US
 		 */
 		/**
 		 * 要加载的总文件数。
-		 * @version Egret 2.4
+		 * @version Egret 5.2
 		 * @platform Web,Native
 		 * @language zh_CN
 		 */
 		public itemsTotal: number = 0;
 		/**
 		 * Resource group name.
-		 * @version Egret 2.4
+		 * @version Egret 5.2
 		 * @platform Web,Native
 		 * @language en_US
 		 */
 		/**
 		 * 资源组名。
-		 * @version Egret 2.4
+		 * @version Egret 5.2
 		 * @platform Web,Native
 		 * @language zh_CN
 		 */
 		public groupName: string = "";
 		/**
 		 * An item of information that is finished by the end of a load.
-		 * @version Egret 2.4
+		 * @version Egret 5.2
 		 * @platform Web,Native
 		 * @language en_US
 		 */
 		/**
 		 * 一次加载项加载结束的项信息对象。
-		 * @version Egret 2.4
+		 * @version Egret 5.2
 		 * @platform Web,Native
 		 * @language zh_CN
 		 */
 		public resItem: ResourceItem;
-
         /**
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
 		 * @method RES.ResourceEvent.dispatchResourceEvent
@@ -207,7 +206,9 @@ module RES {
 		 * @param itemsLoaded {number} 
 		 * @param itemsTotal {number}
 		 * @internal
-		 * @private
+		 * @version Egret 5.2
+		 * @platform Web,Native
+		 * @language en_CN
          */
 		public static dispatchResourceEvent(target: egret.IEventDispatcher, type: string,
 			groupName: string = "", resItem: ResourceInfo | undefined = undefined, itemsLoaded: number = 0, itemsTotal: number = 0): boolean {

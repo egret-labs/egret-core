@@ -1,5 +1,8 @@
 class JSONClass {
     private json = {};
+    public clear() {
+        this.json = {};
+    }
     public toCode(): string {
         let str = JSON.stringify(this.json);
         str = str.replace(/\\\\n/g, "\\n");
@@ -17,6 +20,14 @@ class JSONClass {
             }
         }
         target[name] = value;
+    }
+
+    public hasClassName(className: string) {
+        for (let name in this.json) {
+            if (name == className)
+                return true;
+        }
+        return false;
     }
 }
 export let jsonFactory = new JSONClass();

@@ -500,10 +500,9 @@ namespace RES {
         }
     }
 
-
     /**
-     * @private
-     */
+    * @internal
+    */
     class Resource extends egret.EventDispatcher{
         /**
          * 构造函数

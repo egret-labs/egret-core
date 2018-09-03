@@ -371,13 +371,27 @@ namespace egret {
         }
 
         $setFillMode(value: string): boolean {
-            if (value == this.$fillMode) {
+            const self = this;
+            if (value == self.$fillMode) {
                 return false;
             }
-            this.$fillMode = value;
+            self.$fillMode = value;
 
             if (egret.nativeRender) {
-                this.$nativeDisplayObject.setBitmapFillMode(this.$fillMode);
+                self.$nativeDisplayObject.setBitmapFillMode(self.$fillMode);
+            }
+            else {
+                self.$renderDirty = true;
+                let p = self.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                let maskedObject = self.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
             }
 
             return true;
