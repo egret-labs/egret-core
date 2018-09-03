@@ -34,7 +34,7 @@ export class WxgamePlugin implements plugins.Command {
                 }
                 content = "var egret = window.egret;" + content;
                 if (filename == 'main.js') {
-                    content += ";window.Main = Main;"
+                    content += "\n;window.Main = Main;"
                 }
                 file.contents = new Buffer(content);
             }
