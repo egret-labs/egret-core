@@ -176,7 +176,7 @@ namespace egret.web {
                 let i = 0, iD = 0, l = 0;
                 let u = 0, v = 0, x = 0, y = 0;
                 for (i = 0, l = meshUVs.length; i < l; i += 2) {
-                    iD = index + i * 5 / 2;
+                    iD = index + i * 4 / 2;
                     x = meshVertices[i];
                     y = meshVertices[i + 1];
                     u = meshUVs[i];
