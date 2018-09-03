@@ -8,6 +8,7 @@ import * as exml from '../lib/eui/EXML';
 import * as EgretProject from '../project';
 import exmlParser = require("../lib/eui/EXMLParser");
 import jsonParser = require("../lib/eui/JSONParser");
+import * as fs from 'fs';
 export let isOneByOne: boolean;
 function generateThemeData() {
     //1.找到项目内后缀名为'.thm.json'的主题文件并返回列表

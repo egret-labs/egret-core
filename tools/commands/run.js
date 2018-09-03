@@ -48,7 +48,6 @@ var Build = require("./build");
 var Server = require("../server/server");
 var FileUtil = require("../lib/FileUtil");
 var service = require("../service/index");
-var project_1 = require("../project");
 var os = require("os");
 var Run = /** @class */ (function () {
     function Run() {
@@ -56,14 +55,13 @@ var Run = /** @class */ (function () {
     }
     Run.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var exitCode, target, toolsList, _a, port;
+            var exitCode, target, _a, port;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0: return [4 /*yield*/, new Build().execute()];
                     case 1:
                         exitCode = _b.sent();
                         target = egret.args.target;
-                        toolsList = project_1.launcher.getLauncherLibrary().getInstalledTools();
                         _a = target;
                         switch (_a) {
                             case "web": return [3 /*break*/, 2];

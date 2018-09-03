@@ -52,7 +52,41 @@ module RES {
     export function nameSelector(url): string {
         return path.basename(url).split(".").join("_");
     }
-
+    /**
+    * Get the read type of the file.
+    * When using getResByUrl does not specify the type of the read file, it will find the corresponding type according to this method.
+    * @param path file path.
+    * @returns Processor type used to read the file
+    * @version Egret 5.2
+    * @platform Web,Native
+    * @language en_US
+    */
+    /**
+     * 获取文件的读取类型
+     * 在使用getResByUrl没有指定读取文件的类型，会根据这个方法寻找对应的类型
+     * @param path 文件路径
+     * @returns 读取文件所用的Processor类型
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    export function typeSelector(path: string): string {
+        const ext = path.substr(path.lastIndexOf(".") + 1);
+        const typeMap = {
+            "jpg": "image",
+            "png": "image",
+            "webp": "image",
+            "json": "json",
+            "fnt": "font",
+            "pvr": "pvr",
+            "mp3": "sound",
+            "zip": "zip",
+            "mergeJson": "mergeJson",
+            "sheet": "sheet"
+        }
+        let type = typeMap[ext];
+        return type;
+    }
     /**
      * Conduct mapping injection with class definition as the value, Deprecated.
      * @deprecated
@@ -625,7 +659,7 @@ module RES {
             let resources = config.getGroupByName(name, true);
             if (resources.length == 0) {
                 return new Promise((resolve, reject) => {
-                    reject({ error: new ResourceManagerError(2006, name) });
+                    reject({ error: new ResourceManagerError(2007, name) });
                 })
             }
             return queue.pushResGroup(resources, name, priority, reporter);
@@ -708,6 +742,10 @@ module RES {
             }, error => {
                 host.remove(r as ResourceInfo);
                 ResourceEvent.dispatchResourceEvent(this, ResourceEvent.ITEM_LOAD_ERROR, "", r as ResourceInfo);
+                if (compFunc) {
+                    compFunc.call(thisObject, null, paramKey);
+                    return Promise.reject(null);
+                }
                 return Promise.reject(error);
             })
         }
@@ -795,7 +833,7 @@ module RES {
                     return queue.unloadResource(item);
                 }
                 else {
-                    console.warn(`无法删除指定组:${name}`);
+                    console.warn(`在内存${name}资源不存在`);
                     return false;
                 }
             }

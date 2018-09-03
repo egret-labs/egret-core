@@ -47,17 +47,17 @@ module RES {
         save(resource: ResourceInfo, data: any) {
             host.state[resource.root + resource.name] = 2;
             resource.promise = undefined;
-            __tempCache[resource.url] = data;
+            __tempCache[resource.root + resource.name] = data;
         },
 
 
         get(resource: ResourceInfo) {
-            return __tempCache[resource.url];
+            return __tempCache[resource.root + resource.name];
         },
 
         remove(resource: ResourceInfo) {
             delete host.state[resource.root + resource.name];
-            delete __tempCache[resource.url];
+            delete __tempCache[resource.root + resource.name];
         }
     }
     /**
@@ -105,7 +105,8 @@ module RES {
             2003: "{0}解析失败,错误原因:{1}",
             2004: "无法找到文件类型:{0}",
             2005: "资源配置文件中无法找到特定的资源组:{0}",
-            2006: "资源配置文件中无法找到特定的资源:{0}"
+            2006: "资源配置文件中无法找到特定的资源:{0}",
+            2007: "RES加载了不存在或空的资源组:\"{0}\""
         }
 
         /**
