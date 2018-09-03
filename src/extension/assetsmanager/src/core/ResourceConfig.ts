@@ -28,9 +28,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 type ResourceRootSelector<T extends string> = () => T;
 
-
-type ResourceTypeSelector = (file: string) => string;
-
 type ResourceNameSelector = (file: string) => string;
 
 type ResourceMergerSelector = (file: string) => { path: string, alias: string };
@@ -38,11 +35,6 @@ type ResourceMergerSelector = (file: string) => { path: string, alias: string };
 
 
 module RES {
-
-    /**
-     * @internal
-     */
-    export var resourceTypeSelector: ResourceTypeSelector;
     /**
      * @internal
      */
@@ -91,7 +83,7 @@ module RES {
         else {
             type = "resourceConfig";
         }
-        configItem = { type, root, url, name: root + url };
+        configItem = { type, root, url, name: url };
     }
     /**
     * @private
@@ -128,8 +120,6 @@ module RES {
 
         resourceRoot: string;
 
-        typeSelector: ResourceTypeSelector;
-
         mergeSelector: ResourceMergerSelector | null;
 
         fileSystem: FileSystem
@@ -162,7 +152,7 @@ module RES {
             if (!this.config) {
                 this.config = {
                     alias: {}, groups: {}, resourceRoot: configItem.root,
-                    typeSelector: () => 'unknown', mergeSelector: null,
+                    mergeSelector: null,
                     fileSystem: null as any as FileSystem,
                     loadGroup: []
                 }
@@ -222,8 +212,8 @@ module RES {
                 url = url_or_alias;
             }
 
-            if (resourceTypeSelector) {
-                let type = resourceTypeSelector(url);
+            if (RES.typeSelector) {
+                let type = RES.typeSelector(url);
                 if (!type) {
                     throw new ResourceManagerError(2004, url);
                 }

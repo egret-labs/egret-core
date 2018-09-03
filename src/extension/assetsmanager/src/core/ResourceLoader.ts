@@ -69,15 +69,15 @@ module RES {
 		 */
 		private lazyLoadList: Array<ResourceInfo> = new Array<ResourceItem>();
 		pushResItem(resInfo: ResourceInfo): Promise<any> {
-			if (this.promiseHash[resInfo.name]) {
-				return this.promiseHash[resInfo.name];
+			if (this.promiseHash[resInfo.root + resInfo.name]) {
+				return this.promiseHash[resInfo.root + resInfo.name];
 			}
 			this.lazyLoadList.push(resInfo);
 			this.itemListPriorityDic[Number.NEGATIVE_INFINITY] = this.lazyLoadList;
 			this.updatelistPriority(this.lazyLoadList, Number.NEGATIVE_INFINITY);
 
 			const dispatcher = new egret.EventDispatcher();
-			this.dispatcherDic[resInfo.name] = dispatcher;
+			this.dispatcherDic[resInfo.root + resInfo.name] = dispatcher;
 			const promise = new Promise((resolve, reject) => {
 				dispatcher.addEventListener("complete", function (e: egret.Event) {
 					resolve(e.data);
@@ -86,7 +86,7 @@ module RES {
 					reject(e.data);
 				}, null);
 			});
-			this.promiseHash[resInfo.name] = promise;
+			this.promiseHash[resInfo.root + resInfo.name] = promise;
 			this.loadNextResource();
 			return promise;
 		}
@@ -131,7 +131,7 @@ module RES {
 				this.itemListPriorityDic[priority] = [];
 			}
 			for (let item of list) {
-				if (this.itemLoadDic[item.name] == 1) {
+				if (this.itemLoadDic[item.root + item.name] == 1) {
 					continue;
 				}
 				let oldPriority = this.findPriorityInDic(item);
@@ -179,16 +179,16 @@ module RES {
 		private loadSingleResource(): boolean {
 			let r: ResourceInfo = <ResourceInfo>this.getOneResourceInfoInGroup();
 			if (!r) return false;
-			this.itemLoadDic[r.name] = 1;
+			this.itemLoadDic[r.root + r.name] = 1;
 			this.loadingCount++;
 
 			this.loadResource(r)
 				.then(response => {
 					this.loadingCount--;
-					delete this.itemLoadDic[r.name];
+					delete this.itemLoadDic[r.root + r.name];
 					host.save(r, response);
-					if (this.promiseHash[r.name]) {
-						const dispatcher: egret.EventDispatcher = this.deleteDispatcher(r.name);
+					if (this.promiseHash[r.root + r.name]) {
+						const dispatcher: egret.EventDispatcher = this.deleteDispatcher(r.root + r.name);
 						dispatcher.dispatchEventWith("complete", false, response);
 					}
 					const groupNames = r.groupNames;
@@ -208,14 +208,14 @@ module RES {
 					if (!error.__resource_manager_error__) {
 						throw error;
 					}
-					delete this.itemLoadDic[r.name];
+					delete this.itemLoadDic[r.root + r.name];
 					this.loadingCount--;
 					delete host.state[r.root + r.name];
 					const times = this.retryTimesDic[r.name] || 1;
 					if (times > this.maxRetryTimes) {
 						delete this.retryTimesDic[r.name];
-						if (this.promiseHash[r.name]) {
-							const dispatcher: egret.EventDispatcher = this.deleteDispatcher(r.name);
+						if (this.promiseHash[r.root + r.name]) {
+							const dispatcher: egret.EventDispatcher = this.deleteDispatcher(r.root + r.name);
 							dispatcher.dispatchEventWith("error", false, { r, error });
 						}
 						const groupNames = r.groupNames;
@@ -315,8 +315,8 @@ module RES {
 			}
 		}
 		/**
-		 * 删除组的事件派发器，Promise的缓存，返回事件派发器
-		 * @param groupName 组名
+		 * 删除事件派发器，Promise的缓存，返回事件派发器
+		 * @param groupName 组名或是root+name
 		 */
 		private deleteDispatcher(groupName: string) {
 			delete this.promiseHash[groupName];

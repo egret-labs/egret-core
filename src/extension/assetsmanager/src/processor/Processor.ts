@@ -547,8 +547,8 @@ module RES.processor {
                         // ResourceConfig.
                     }
                 }
-                host.save(resource, resConfigData)
-                return resConfigData;
+                host.save(resource, data)
+                return data;
             })
 
         },
