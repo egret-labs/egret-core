@@ -8,7 +8,6 @@ import * as exml from '../lib/eui/EXML';
 import * as EgretProject from '../project';
 import exmlParser = require("../lib/eui/EXMLParser");
 import jsonParser = require("../lib/eui/JSONParser");
-import * as fs from 'fs';
 export let isOneByOne: boolean;
 function generateThemeData() {
     //1.找到项目内后缀名为'.thm.json'的主题文件并返回列表
@@ -33,15 +32,12 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
     const themeDatas = generateThemeData();
 
     var oldEXMLS: EXMLFile[] = [];
-    //3.对于autoGenerateExmlsList属性的支持
+    //3.将所有的exml信息取出来
     themeDatas.forEach((theme) => {
         if (!theme.exmls || theme.autoGenerateExmlsList) {
             theme.exmls = [];
             for (let exml of exmls) {
                 theme.exmls.push(exml.filename);
-            }
-            if (theme.autoGenerateExmlsList) {
-                file.save(Path.join(egret.args.projectDir, theme.path), JSON.stringify(theme, null, '\t'));
             }
         }
     })
@@ -64,7 +60,6 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
             paths.push(path);
         });
     });
-
     //5.获得排序后的所有exml文件列表
     exmls = exml.sort(exmls);
     //6.对exml文件列表进行筛选
@@ -77,6 +72,31 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
         }
     }
 
+    /**
+     * 因为底下发布策略是修改thm.json的元数据， 最后将写道thm.js中，gjs模式还会改变这个文件的格式
+     * 在这里直接对做完排序的文件进行autoGenerateExmlsList属性的支持
+     * todo：json应该直接维护好自己的，下面的发布最好改成新开辟一块空间做，而不是混在一起，虽然在commonjs或是gjs等模式下thm.json 已经不用了，但是这个文件很难做版本控制
+     */
+    //7.对于autoGenerateExmlsList属性的支持，是否将新的信息写回
+    themeDatas.forEach(theme => theme.exmls = []);
+    screenExmls.forEach(e => {
+        exmlParser.fileSystem.set(e.filename, e);
+        var epath = e.filename;
+        themeDatas.forEach((thm) => {
+            if (epath in oldEXMLS) {
+                const exmlFile = oldEXMLS[epath];
+                if (exmlFile.theme.indexOf("," + thm.path + ",") >= 0)
+                    thm.exmls.push(epath);
+            }
+        });
+    })
+    themeDatas.map((thmData) => {
+        if (thmData.autoGenerateExmlsList) {
+            file.save(Path.join(egret.args.projectDir, thmData.path), JSON.stringify(thmData, null, '\t'));
+        }
+    })
+
+    
     themeDatas.forEach(theme => theme.exmls = []);
     screenExmls.forEach(e => {
         exmlParser.fileSystem.set(e.filename, e);
@@ -130,7 +150,6 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
     });
     let files = themeDatas.map((thmData) => {
         let path = thmData.path;
-
         if (exmlPublishPolicy == "commonjs") {
             let content = `
                 function __extends(d, b) {
