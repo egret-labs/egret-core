@@ -814,6 +814,7 @@ var RES;
     /**
     * Get the read type of the file.
     * When using getResByUrl does not specify the type of the read file, it will find the corresponding type according to this method.
+    * File types not found are loaded by default in binary format
     * @param path file path.
     * @returns Processor type used to read the file
     * @version Egret 5.2
@@ -823,6 +824,7 @@ var RES;
     /**
      * 获取文件的读取类型
      * 在使用getResByUrl没有指定读取文件的类型，会根据这个方法寻找对应的类型
+     * 没有查找到的文件类型以二进制格式默认加载
      * @param path 文件路径
      * @returns 读取文件所用的Processor类型
      * @version Egret 5.2
@@ -831,19 +833,46 @@ var RES;
      */
     function typeSelector(path) {
         var ext = path.substr(path.lastIndexOf(".") + 1);
-        var typeMap = {
-            "jpg": "image",
-            "png": "image",
-            "webp": "image",
-            "json": "json",
-            "fnt": "font",
-            "pvr": "pvr",
-            "mp3": "sound",
-            "zip": "zip",
-            "mergeJson": "mergeJson",
-            "sheet": "sheet"
-        };
-        var type = typeMap[ext];
+        var type;
+        switch (ext) {
+            case RES.ResourceItem.TYPE_XML:
+            case RES.ResourceItem.TYPE_JSON:
+            case RES.ResourceItem.TYPE_SHEET:
+                type = ext;
+                break;
+            case "png":
+            case "jpg":
+            case "gif":
+            case "jpeg":
+            case "bmp":
+                type = RES.ResourceItem.TYPE_IMAGE;
+                break;
+            case "fnt":
+                type = RES.ResourceItem.TYPE_FONT;
+                break;
+            case "txt":
+                type = RES.ResourceItem.TYPE_TEXT;
+                break;
+            case "mp3":
+            case "ogg":
+            case "mpeg":
+            case "wav":
+            case "m4a":
+            case "mp4":
+            case "aiff":
+            case "wma":
+            case "mid":
+                type = RES.ResourceItem.TYPE_SOUND;
+                break;
+            case "mergeJson":
+            case "zip":
+            case "pvr":
+                type = ext;
+                break;
+            default:
+                type = RES.ResourceItem.TYPE_BIN;
+                break;
+        }
         return type;
     }
     RES.typeSelector = typeSelector;
