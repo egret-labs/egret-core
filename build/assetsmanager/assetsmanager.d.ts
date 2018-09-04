@@ -975,6 +975,11 @@ declare module RES.processor {
      * @language zh_CN
      */
     function map(type: string, processor: Processor): void;
+    var ImageProcessor: Processor;
+    var BinaryProcessor: Processor;
+    var TextProcessor: Processor;
+    var JsonProcessor: Processor;
+    var SoundProcessor: Processor;
 }
 declare module RES {
     /**

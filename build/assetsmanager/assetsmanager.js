@@ -1895,10 +1895,6 @@ var RES;
             return url + paramUrl;
         }
         processor_1.getRelativePath = getRelativePath;
-        // var cache: {[index:string]:egret.Texture} = {};
-        /**
-        * @internal
-        */
         processor_1.ImageProcessor = {
             onLoadStart: function (host, resource) {
                 var loader = new egret.ImageLoader();
@@ -1920,9 +1916,6 @@ var RES;
                 texture.dispose();
             }
         };
-        /**
-        * @internal
-        */
         processor_1.BinaryProcessor = {
             onLoadStart: function (host, resource) {
                 var request = new egret.HttpRequest();
@@ -1930,15 +1923,10 @@ var RES;
                 request.open(RES.getVirtualUrl(resource.root + resource.url), "get");
                 request.send();
                 return promisify(request, resource);
-                // let arraybuffer = await promisify(request, resource);
-                // return arraybuffer;
             },
             onRemoveStart: function (host, resource) {
             }
         };
-        /**
-        * @internal
-        */
         processor_1.TextProcessor = {
             onLoadStart: function (host, resource) {
                 var request = new egret.HttpRequest();
@@ -1946,19 +1934,13 @@ var RES;
                 request.open(RES.getVirtualUrl(resource.root + resource.url), "get");
                 request.send();
                 return promisify(request, resource);
-                // let text = await promisify(request, resource);
-                // return text;
             },
             onRemoveStart: function (host, resource) {
                 return true;
             }
         };
-        /**
-       * @internal
-       */
         processor_1.JsonProcessor = {
             onLoadStart: function (host, resource) {
-                // let text = await host.load(resource, 'text');
                 return host.load(resource, 'text').then(function (text) {
                     var data = JSON.parse(text);
                     return data;
@@ -2008,7 +1990,6 @@ var RES;
         */
         processor_1.SheetProcessor = {
             onLoadStart: function (host, resource) {
-                // let data = await host.load(resource, "json");
                 return host.load(resource, "json").then(function (data) {
                     var r = host.resourceConfig.getResource(RES.nameSelector(data.file));
                     if (!r) {
@@ -2111,9 +2092,6 @@ var RES;
                 host.unload(r);
             }
         };
-        /**
-        * @internal
-        */
         processor_1.SoundProcessor = {
             onLoadStart: function (host, resource) {
                 var sound = new egret.Sound();
@@ -2121,7 +2099,6 @@ var RES;
                 return promisify(sound, resource).then(function () {
                     return sound;
                 });
-                // return sound;
             },
             onRemoveStart: function (host, resource) {
             }
