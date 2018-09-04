@@ -320,6 +320,7 @@ declare module RES {
     /**
     * Get the read type of the file.
     * When using getResByUrl does not specify the type of the read file, it will find the corresponding type according to this method.
+    * File types not found are loaded by default in binary format
     * @param path file path.
     * @returns Processor type used to read the file
     * @version Egret 5.2
@@ -329,6 +330,7 @@ declare module RES {
     /**
      * 获取文件的读取类型
      * 在使用getResByUrl没有指定读取文件的类型，会根据这个方法寻找对应的类型
+     * 没有查找到的文件类型以二进制格式默认加载
      * @param path 文件路径
      * @returns 读取文件所用的Processor类型
      * @version Egret 5.2
