@@ -133,10 +133,6 @@ module RES.processor {
         return url + paramUrl;
     }
 
-    // var cache: {[index:string]:egret.Texture} = {};
-    /**
-    * @internal
-    */
     export var ImageProcessor: Processor = {
 
         onLoadStart(host, resource) {
@@ -162,9 +158,6 @@ module RES.processor {
         }
 
     }
-    /**
-    * @internal
-    */
     export var BinaryProcessor: Processor = {
 
         onLoadStart(host, resource) {
@@ -173,17 +166,13 @@ module RES.processor {
             request.open(RES.getVirtualUrl(resource.root + resource.url), "get");
             request.send();
             return promisify(request, resource)
-            // let arraybuffer = await promisify(request, resource);
-            // return arraybuffer;
         },
 
         onRemoveStart(host, resource) {
         }
 
     }
-    /**
-    * @internal
-    */
+
     export var TextProcessor: Processor = {
 
         onLoadStart(host, resource) {
@@ -192,21 +181,15 @@ module RES.processor {
             request.open(RES.getVirtualUrl(resource.root + resource.url), "get");
             request.send();
             return promisify(request, resource)
-            // let text = await promisify(request, resource);
-            // return text;
         },
 
         onRemoveStart(host, resource) {
             return true;
         }
     }
-    /**
-   * @internal
-   */
     export var JsonProcessor: Processor = {
 
         onLoadStart(host, resource) {
-            // let text = await host.load(resource, 'text');
             return host.load(resource, 'text').then(text => {
                 let data = JSON.parse(text);
                 return data;
@@ -265,7 +248,6 @@ module RES.processor {
     export const SheetProcessor: Processor = {
 
         onLoadStart(host, resource): Promise<any> {
-            // let data = await host.load(resource, "json");
             return host.load(resource, "json").then((data) => {
                 let r = host.resourceConfig.getResource(RES.nameSelector(data.file));
                 if (!r) {
@@ -381,9 +363,6 @@ module RES.processor {
         }
     }
 
-    /**
-    * @internal
-    */
     export var SoundProcessor: Processor = {
         onLoadStart(host, resource) {
             var sound: egret.Sound = new egret.Sound();
@@ -391,7 +370,6 @@ module RES.processor {
             return promisify(sound, resource).then(() => {
                 return sound;
             });
-            // return sound;
         },
         onRemoveStart(host, resource) {
         }
