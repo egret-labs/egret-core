@@ -88,7 +88,6 @@ declare namespace RES {
     };
 }
 declare type ResourceRootSelector<T extends string> = () => T;
-declare type ResourceTypeSelector = (file: string) => string;
 declare type ResourceNameSelector = (file: string) => string;
 declare type ResourceMergerSelector = (file: string) => {
     path: string;
@@ -131,7 +130,6 @@ declare module RES {
     */
     interface Data {
         resourceRoot: string;
-        typeSelector: ResourceTypeSelector;
         mergeSelector: ResourceMergerSelector | null;
         fileSystem: FileSystem;
         groups: {
@@ -279,8 +277,8 @@ declare module RES {
          */
         private loadGroupEnd(groupName, lastError?);
         /**
-         * 删除组的事件派发器，Promise的缓存，返回事件派发器
-         * @param groupName 组名
+         * 删除事件派发器，Promise的缓存，返回事件派发器
+         * @param groupName 组名或是root+name
          */
         private deleteDispatcher(groupName);
         /**
@@ -319,6 +317,27 @@ declare module RES {
      * @language zh_CN
      */
     function nameSelector(url: any): string;
+    /**
+    * Get the read type of the file.
+    * When using getResByUrl does not specify the type of the read file, it will find the corresponding type according to this method.
+    * File types not found are loaded by default in binary format
+    * @param path file path.
+    * @returns Processor type used to read the file
+    * @version Egret 5.2
+    * @platform Web,Native
+    * @language en_US
+    */
+    /**
+     * 获取文件的读取类型
+     * 在使用getResByUrl没有指定读取文件的类型，会根据这个方法寻找对应的类型
+     * 没有查找到的文件类型以二进制格式默认加载
+     * @param path 文件路径
+     * @returns 读取文件所用的Processor类型
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    function typeSelector(path: string): string;
     /**
      * Conduct mapping injection with class definition as the value, Deprecated.
      * @deprecated
@@ -956,6 +975,11 @@ declare module RES.processor {
      * @language zh_CN
      */
     function map(type: string, processor: Processor): void;
+    var ImageProcessor: Processor;
+    var BinaryProcessor: Processor;
+    var TextProcessor: Processor;
+    var JsonProcessor: Processor;
+    var SoundProcessor: Processor;
 }
 declare module RES {
     /**
