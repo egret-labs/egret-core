@@ -48,10 +48,10 @@ void main(void) {
         for (float i = 1.0; i <= linearSamplingTimes; i++) {
             curDistanceX = i * stepX * cosAngle;
             curDistanceY = i * stepY * sinAngle;
-            
-            curColor = texture2D(uSampler, vec2(vTextureCoord.x + curDistanceX - offsetX, vTextureCoord.y + curDistanceY + offsetY));
-
-            totalAlpha += (linearSamplingTimes - i) * curColor.a;
+            if (vTextureCoord.x + curDistanceX - offsetX >= 0.0 && vTextureCoord.y + curDistanceY + offsetY <= 1.0){
+                curColor = texture2D(uSampler, vec2(vTextureCoord.x + curDistanceX - offsetX, vTextureCoord.y + curDistanceY + offsetY));
+                totalAlpha += (linearSamplingTimes - i) * curColor.a;
+            }
             maxTotalAlpha += (linearSamplingTimes - i);
         }
     }
