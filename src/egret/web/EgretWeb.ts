@@ -119,9 +119,9 @@ namespace egret.web {
         else {
             Html5Capatibility._audioType = options.audioType;
             Html5Capatibility.$init();
-
+            let renderMode = options.renderMode;
             // WebGL上下文参数自定义
-            if (options.renderMode == "webgl") {
+            if (renderMode == "webgl") {
                 // WebGL抗锯齿默认关闭，提升PC及某些平台性能
                 let antialias = options.antialias;
                 WebGLRenderContext.antialias = !!antialias;
@@ -129,7 +129,11 @@ namespace egret.web {
             }
 
             sys.CanvasRenderBuffer = web.CanvasRenderBuffer;
-            setRenderMode(options.renderMode);
+            if (ua.indexOf("egretnative") >= 0 && renderMode != "webgl") {
+                egret.$warn(1051);
+                renderMode = "webgl";
+            }
+            setRenderMode(renderMode);
 
             let canvasScaleFactor;
             if (options.canvasScaleFactor) {
