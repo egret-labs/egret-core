@@ -132,25 +132,28 @@ module RES {
         throw new ResourceManagerError(2002);
     }
     /**
-    * Is it compatible mode? 
-    * When the return value is true, the assetsManager will output the design as Res. When it is false, all the loaded resources will be returned as promises.
-    * Return false by default, run in strict assetsManager mode
+    * Set whether it is compatible mode
+    * When the value is true, the assetsManager will output the design of Res. When it is false, all the loaded resources will be returned as promises.
+    * The default is false, run in strict assetsManager mode
     * @version Egret 5.2.9
     * @platform Web,Native
     * @language en_US
     */
     /**
-     * 是否为兼容模式 
-     * 当返回值为true时，assetsManager会以Res的设计输出，当为false时候，所有的加载资源都会以promise的方式返回
-     * 默认时返回false，以严格assetsManager方式运行
+     * 设置是否为兼容模式 
+     * 当值为true时，assetsManager会以Res的设计输出，当为false时候，所有的加载资源都会以promise的方式返回
+     * 默认是false，以严格assetsManager方式运行
      * @version Egret 5.2.9
      * @platform Web,Native
      * @language zh_CN
      */
-    export function getIsCompatible(): boolean {
-        return false;
+    export function setIsCompatible(value: boolean) {
+        isCompatible = value;
     }
-
+    /**
+     * @internal
+     */
+    export let isCompatible: boolean = false
     /**
      * Load configuration file and parse.
      * @param url The url address of the resource config
@@ -187,7 +190,7 @@ module RES {
     }
 
     function compatiblePromise(promise: Promise<void>) {
-        if (RES.getIsCompatible()) {
+        if (RES.isCompatible) {
             promise.catch((e) => { }).then()
         } else {
             return promise;
@@ -712,7 +715,7 @@ module RES {
          */
         public isGroupLoaded(name: string): boolean {
             let resources;
-            if (!RES.getIsCompatible()) {
+            if (!RES.isCompatible) {
                 resources = config.getGroupByName(name, true);
             } else {
                 resources = config.getGroupByName(name);
@@ -725,7 +728,7 @@ module RES {
          * @param name {string}
          */
         getGroupByName(name: string): Array<ResourceInfo> {
-            if (!RES.getIsCompatible()) {
+            if (!RES.isCompatible) {
                 return config.getGroupByName(name, true);
             } else {
                 return config.getGroupByName(name);
@@ -768,7 +771,7 @@ module RES {
                         ResourceEvent.dispatchResourceEvent(this, ResourceEvent.ITEM_LOAD_ERROR, name, item);
                     }
                 }
-                if (RES.getIsCompatible()) {
+                if (RES.isCompatible) {
                     console.warn(error.error.message)
                 }
                 ResourceEvent.dispatchResourceEvent(this, ResourceEvent.GROUP_LOAD_ERROR, name);
@@ -778,7 +781,7 @@ module RES {
 
         private _loadGroup(name: string, priority: number = 0, reporter?: PromiseTaskReporter): Promise<any> {
             let resources;
-            if (!RES.getIsCompatible()) {
+            if (!RES.isCompatible) {
                 resources = config.getGroupByName(name, true);
             } else {
                 resources = config.getGroupByName(name);
@@ -855,7 +858,7 @@ module RES {
         public getResAsync(key: string, compFunc?: GetResAsyncCallback, thisObject?: any): Promise<any> {
             var paramKey = key;
             let tempResult;
-            if (!RES.getIsCompatible()) {
+            if (!RES.isCompatible) {
                 tempResult = config.getResourceWithSubkey(key, true);
             } else {
                 tempResult = config.getResourceWithSubkey(key);

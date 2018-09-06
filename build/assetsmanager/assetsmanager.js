@@ -110,7 +110,7 @@ var RES;
                 };
             }
             return RES.queue.pushResItem(configItem).catch(function (e) {
-                if (!RES.getIsCompatible()) {
+                if (!RES.isCompatible) {
                     if (!e.__resource_manager_error__) {
                         if (e.error) {
                             console.error(e.error.stack);
@@ -140,7 +140,7 @@ var RES;
             for (var _i = 0, group_1 = group; _i < group_1.length; _i++) {
                 var paramKey = group_1[_i];
                 var tempResult = void 0;
-                if (!RES.getIsCompatible()) {
+                if (!RES.isCompatible) {
                     tempResult = RES.config.getResourceWithSubkey(paramKey, true);
                 }
                 else {
@@ -151,7 +151,7 @@ var RES;
                 }
                 var key = tempResult.key, subkey = tempResult.subkey;
                 var r = void 0;
-                if (!RES.getIsCompatible()) {
+                if (!RES.isCompatible) {
                     r = RES.config.getResource(key, true);
                 }
                 else {
@@ -919,25 +919,29 @@ var RES;
     }
     RES.registerAnalyzer = registerAnalyzer;
     /**
-    * Is it compatible mode?
-    * When the return value is true, the assetsManager will output the design as Res. When it is false, all the loaded resources will be returned as promises.
-    * Return false by default, run in strict assetsManager mode
+    * Set whether it is compatible mode
+    * When the value is true, the assetsManager will output the design of Res. When it is false, all the loaded resources will be returned as promises.
+    * The default is false, run in strict assetsManager mode
     * @version Egret 5.2.9
     * @platform Web,Native
     * @language en_US
     */
     /**
-     * 是否为兼容模式
-     * 当返回值为true时，assetsManager会以Res的设计输出，当为false时候，所有的加载资源都会以promise的方式返回
-     * 默认时返回false，以严格assetsManager方式运行
+     * 设置是否为兼容模式
+     * 当值为true时，assetsManager会以Res的设计输出，当为false时候，所有的加载资源都会以promise的方式返回
+     * 默认是false，以严格assetsManager方式运行
      * @version Egret 5.2.9
      * @platform Web,Native
      * @language zh_CN
      */
-    function getIsCompatible() {
-        return false;
+    function setIsCompatible(value) {
+        RES.isCompatible = value;
     }
-    RES.getIsCompatible = getIsCompatible;
+    RES.setIsCompatible = setIsCompatible;
+    /**
+     * @internal
+     */
+    RES.isCompatible = false;
     /**
      * Load configuration file and parse.
      * @param url The url address of the resource config
@@ -975,7 +979,7 @@ var RES;
     }
     RES.loadConfig = loadConfig;
     function compatiblePromise(promise) {
-        if (RES.getIsCompatible()) {
+        if (RES.isCompatible) {
             promise.catch(function (e) { }).then();
         }
         else {
@@ -1482,7 +1486,7 @@ var RES;
          */
         Resource.prototype.isGroupLoaded = function (name) {
             var resources;
-            if (!RES.getIsCompatible()) {
+            if (!RES.isCompatible) {
                 resources = RES.config.getGroupByName(name, true);
             }
             else {
@@ -1496,7 +1500,7 @@ var RES;
          * @param name {string}
          */
         Resource.prototype.getGroupByName = function (name) {
-            if (!RES.getIsCompatible()) {
+            if (!RES.isCompatible) {
                 return RES.config.getGroupByName(name, true);
             }
             else {
@@ -1539,7 +1543,7 @@ var RES;
                         RES.ResourceEvent.dispatchResourceEvent(_this, RES.ResourceEvent.ITEM_LOAD_ERROR, name, item);
                     }
                 }
-                if (RES.getIsCompatible()) {
+                if (RES.isCompatible) {
                     console.warn(error.error.message);
                 }
                 RES.ResourceEvent.dispatchResourceEvent(_this, RES.ResourceEvent.GROUP_LOAD_ERROR, name);
@@ -1549,7 +1553,7 @@ var RES;
         Resource.prototype._loadGroup = function (name, priority, reporter) {
             if (priority === void 0) { priority = 0; }
             var resources;
-            if (!RES.getIsCompatible()) {
+            if (!RES.isCompatible) {
                 resources = RES.config.getGroupByName(name, true);
             }
             else {
@@ -1612,7 +1616,7 @@ var RES;
             var _this = this;
             var paramKey = key;
             var tempResult;
-            if (!RES.getIsCompatible()) {
+            if (!RES.isCompatible) {
                 tempResult = RES.config.getResourceWithSubkey(key, true);
             }
             else {
