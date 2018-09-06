@@ -352,6 +352,23 @@ declare module RES {
      */
     function registerAnalyzer(type: string, analyzerClass: any): void;
     /**
+    * Is it compatible mode?
+    * When the return value is true, the assetsManager will output the design as Res. When it is false, all the loaded resources will be returned as promises.
+    * Return false by default, run in strict assetsManager mode
+    * @version Egret 5.2.9
+    * @platform Web,Native
+    * @language en_US
+    */
+    /**
+     * 是否为兼容模式
+     * 当返回值为true时，assetsManager会以Res的设计输出，当为false时候，所有的加载资源都会以promise的方式返回
+     * 默认时返回false，以严格assetsManager方式运行
+     * @version Egret 5.2.9
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    function getIsCompatible(): boolean;
+    /**
      * Load configuration file and parse.
      * @param url The url address of the resource config
      * @param resourceRoot The root address of the resource config
@@ -371,7 +388,7 @@ declare module RES {
      * @platform Web,Native
      * @language zh_CN
      */
-    function loadConfig(url: string, resourceRoot: string): Promise<void>;
+    function loadConfig(url: string, resourceRoot: string): Promise<void> | void;
     /**
      * Load a set of resources according to the group name.
      * @param name Group name to load the resource group.
@@ -394,7 +411,7 @@ declare module RES {
      * @platform Web,Native
      * @language zh_CN
      */
-    function loadGroup(name: string, priority?: number, reporter?: PromiseTaskReporter): Promise<void>;
+    function loadGroup(name: string, priority?: number, reporter?: PromiseTaskReporter): Promise<void> | void;
     /**
      * Check whether a resource group has been loaded.
      * @param name Group name。
@@ -519,8 +536,44 @@ declare module RES {
      * @language zh_CN
      */
     function getRes(key: string): any;
-    function getResAsync(key: string): Promise<any>;
-    function getResAsync(key: string, compFunc: GetResAsyncCallback, thisObject: any): Promise<any>;
+    /**
+     * Asynchronous mode to get the resources in the configuration. As long as the resources exist in the configuration file, you can get it in an asynchronous way.
+     * @param key A sbuKeys attribute or name property in a configuration file.
+     * @see #setMaxRetryTimes
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language en_US
+    */
+    /**
+     * 异步方式获取配置里的资源。只要是配置文件里存在的资源，都可以通过异步方式获取。
+     * @param key 对应配置文件里的 name 属性或 sbuKeys 属性的一项。
+     * @see #setMaxRetryTimes
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    function getResAsync(key: string): Promise<any> | void;
+    /**
+     * Asynchronous mode to get the resources in the configuration. As long as the resources exist in the configuration file, you can get it in an asynchronous way.
+     * @param key A sbuKeys attribute or name property in a configuration file.
+     * @param compFunc Call back function. Example：compFunc(data,key):void.
+     * @param thisObject This pointer of call back function.
+     * @see #setMaxRetryTimes
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * 异步方式获取配置里的资源。只要是配置文件里存在的资源，都可以通过异步方式获取。
+     * @param key 对应配置文件里的 name 属性或 sbuKeys 属性的一项。
+     * @param compFunc 回调函数。示例：compFunc(data,key):void。
+     * @param thisObject 回调函数的 this 引用。
+     * @see #setMaxRetryTimes
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    function getResAsync(key: string, compFunc: GetResAsyncCallback, thisObject: any): Promise<any> | void;
     /**
      * Access to external resources through the full URL.
      * @param url The external path to load the file.
@@ -541,7 +594,7 @@ declare module RES {
      * @platform Web,Native
      * @language zh_CN
      */
-    function getResByUrl(url: string, compFunc: Function, thisObject: any, type?: string): void;
+    function getResByUrl(url: string, compFunc?: Function, thisObject?: any, type?: string): Promise<any> | void;
     /**
      * Destroy a single resource file or a set of resources to the cache data, to return whether to delete success.
      * @param name Name attribute or resource group name of the load item in the configuration file.
@@ -797,7 +850,7 @@ declare module RES {
          * @param thisObject {any}
          * @param type {string}
          */
-        getResByUrl(url: string, compFunc: Function, thisObject: any, type?: string): Promise<any>;
+        getResByUrl(url: string, compFunc?: Function, thisObject?: any, type?: string): Promise<any>;
         /**
          * 销毁单个资源文件或一组资源的缓存数据,返回是否删除成功。
          * @method RES.destroyRes

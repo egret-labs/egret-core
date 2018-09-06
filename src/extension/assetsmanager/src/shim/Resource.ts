@@ -131,6 +131,25 @@ module RES {
     export function registerAnalyzer(type: string, analyzerClass: any) {
         throw new ResourceManagerError(2002);
     }
+    /**
+    * Is it compatible mode? 
+    * When the return value is true, the assetsManager will output the design as Res. When it is false, all the loaded resources will be returned as promises.
+    * Return false by default, run in strict assetsManager mode
+    * @version Egret 5.2.9
+    * @platform Web,Native
+    * @language en_US
+    */
+    /**
+     * 是否为兼容模式 
+     * 当返回值为true时，assetsManager会以Res的设计输出，当为false时候，所有的加载资源都会以promise的方式返回
+     * 默认时返回false，以严格assetsManager方式运行
+     * @version Egret 5.2.9
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    export function getIsCompatible(): boolean {
+        return false;
+    }
 
     /**
      * Load configuration file and parse.
@@ -152,7 +171,7 @@ module RES {
      * @platform Web,Native
      * @language zh_CN
      */
-    export function loadConfig(url: string, resourceRoot: string) {
+    export function loadConfig(url: string, resourceRoot: string): Promise<void> | void {
         if (resourceRoot.indexOf('://') >= 0) {
             const temp = resourceRoot.split('://');
             resourceRoot = temp[0] + '://' + path.normalize(temp[1] + '/');
@@ -164,7 +183,15 @@ module RES {
         }
         setConfigURL(url, resourceRoot);
         if (!instance) instance = new Resource();
-        return instance.loadConfig();
+        return compatiblePromise(instance.loadConfig());
+    }
+
+    function compatiblePromise(promise: Promise<void>) {
+        if (RES.getIsCompatible()) {
+            promise.catch((e) => { }).then()
+        } else {
+            return promise;
+        }
     }
     /**
      * Load a set of resources according to the group name.
@@ -188,8 +215,8 @@ module RES {
      * @platform Web,Native
      * @language zh_CN
      */
-    export function loadGroup(name: string, priority: number = 0, reporter?: PromiseTaskReporter): Promise<void> {
-        return instance.loadGroup(name, priority, reporter);
+    export function loadGroup(name: string, priority: number = 0, reporter?: PromiseTaskReporter): Promise<void> | void {
+        return compatiblePromise(instance.loadGroup(name, priority, reporter));
     }
     /**
      * Check whether a resource group has been loaded.
@@ -326,9 +353,23 @@ module RES {
     export function getRes(key: string): any {
         return instance.getRes(key);
     }
-
-    export function getResAsync(key: string): Promise<any>
-    export function getResAsync(key: string, compFunc: GetResAsyncCallback, thisObject: any): Promise<any>
+    /**
+     * Asynchronous mode to get the resources in the configuration. As long as the resources exist in the configuration file, you can get it in an asynchronous way.
+     * @param key A sbuKeys attribute or name property in a configuration file.
+     * @see #setMaxRetryTimes
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language en_US
+    */
+    /**
+     * 异步方式获取配置里的资源。只要是配置文件里存在的资源，都可以通过异步方式获取。
+     * @param key 对应配置文件里的 name 属性或 sbuKeys 属性的一项。
+     * @see #setMaxRetryTimes
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    export function getResAsync(key: string): Promise<any> | void
     /**
      * Asynchronous mode to get the resources in the configuration. As long as the resources exist in the configuration file, you can get it in an asynchronous way.
      * @param key A sbuKeys attribute or name property in a configuration file.
@@ -349,9 +390,47 @@ module RES {
      * @platform Web,Native
      * @language zh_CN
      */
-    export function getResAsync(key: string, compFunc?: GetResAsyncCallback, thisObject?: any): Promise<any> {
-        return instance.getResAsync.apply(instance, arguments);
+    export function getResAsync(key: string, compFunc: GetResAsyncCallback, thisObject: any): Promise<any> | void
+    /**
+     * Asynchronous mode to get the resources in the configuration. As long as the resources exist in the configuration file, you can get it in an asynchronous way.
+     * @param key A sbuKeys attribute or name property in a configuration file.
+     * @param compFunc Call back function. Example：compFunc(data,key):void.
+     * @param thisObject This pointer of call back function.
+     * @see #setMaxRetryTimes
+     * @example The following code demonstrates how to load a resource via getResAsync
+     * <pre>
+     *       RES.getResAsync("resource/example.json");//Only pass the key value to get the resource
+     * 
+     *       RES.getResAsync("resource/example.json", (data) => {
+     *          console.log(data)
+     *       }, this) //Pass in the key value, compFunc and thisObject get the resource, the latter two must appear at the same time
+     * </pre>
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * 异步方式获取配置里的资源。只要是配置文件里存在的资源，都可以通过异步方式获取。
+     * @param key 对应配置文件里的 name 属性或 sbuKeys 属性的一项。
+     * @param compFunc 回调函数。示例：compFunc(data,key):void。
+     * @param thisObject 回调函数的 this 引用。
+     * @see #setMaxRetryTimes
+     * @example 以下代码演示了如何通过getResAsync加载资源
+     * <pre>
+     *       RES.getResAsync("resource/example.json");//只传入key值获取资源
+     * 
+     *       RES.getResAsync("resource/example.json", (data) => {
+     *          console.log(data)
+     *       }, this) //传入key值，compFunc和thisObject获取资源，后两个必须同时出现
+     * </pre>
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    export function getResAsync(key: string, compFunc?: GetResAsyncCallback, thisObject?: any): Promise<any> | void {
+        return compatiblePromise(instance.getResAsync.apply(instance, arguments));
     }
+
     /**
      * Access to external resources through the full URL.
      * @param url The external path to load the file.
@@ -372,8 +451,8 @@ module RES {
      * @platform Web,Native
      * @language zh_CN
      */
-    export function getResByUrl(url: string, compFunc: Function, thisObject: any, type: string = ""): void {
-        instance.getResByUrl(url, compFunc, thisObject, type);
+    export function getResByUrl(url: string, compFunc?: Function, thisObject?: any, type: string = ""): Promise<any> | void {
+        return compatiblePromise(instance.getResByUrl(url, compFunc, thisObject, type));
     }
     /**
      * Destroy a single resource file or a set of resources to the cache data, to return whether to delete success.
@@ -632,7 +711,12 @@ module RES {
          * @param name {string}
          */
         public isGroupLoaded(name: string): boolean {
-            let resources = config.getGroupByName(name, true);
+            let resources;
+            if (!RES.getIsCompatible()) {
+                resources = config.getGroupByName(name, true);
+            } else {
+                resources = config.getGroupByName(name);
+            }
             return resources.every(r => host.get(r) != null);
         }
         /**
@@ -641,7 +725,12 @@ module RES {
          * @param name {string}
          */
         getGroupByName(name: string): Array<ResourceInfo> {
-            return config.getGroupByName(name, true); //这里不应该传入 true，但是为了老版本的 TypeScriptCompiler 兼容性，暂时这样做
+            if (!RES.getIsCompatible()) {
+                return config.getGroupByName(name, true);
+            } else {
+                return config.getGroupByName(name);
+            }
+            // return config.getGroupByName(name, true); //这里不应该传入 true，但是为了老版本的 TypeScriptCompiler 兼容性，暂时这样做
         }
 
         /**
@@ -679,16 +768,24 @@ module RES {
                         ResourceEvent.dispatchResourceEvent(this, ResourceEvent.ITEM_LOAD_ERROR, name, item);
                     }
                 }
+                if (RES.getIsCompatible()) {
+                    console.warn(error.error.message)
+                }
                 ResourceEvent.dispatchResourceEvent(this, ResourceEvent.GROUP_LOAD_ERROR, name);
                 return Promise.reject(error.error);
             })
         }
 
         private _loadGroup(name: string, priority: number = 0, reporter?: PromiseTaskReporter): Promise<any> {
-            let resources = config.getGroupByName(name, true);
+            let resources;
+            if (!RES.getIsCompatible()) {
+                resources = config.getGroupByName(name, true);
+            } else {
+                resources = config.getGroupByName(name);
+            }
             if (resources.length == 0) {
                 return new Promise((resolve, reject) => {
-                    reject({ error: new ResourceManagerError(2007, name) });
+                    reject({ error: new ResourceManagerError(2005, name) });
                 })
             }
             return queue.pushResGroup(resources, name, priority, reporter);
@@ -757,7 +854,19 @@ module RES {
         @checkNull
         public getResAsync(key: string, compFunc?: GetResAsyncCallback, thisObject?: any): Promise<any> {
             var paramKey = key;
-            var { r, subkey } = config.getResourceWithSubkey(key, true);
+            let tempResult;
+            if (!RES.getIsCompatible()) {
+                tempResult = config.getResourceWithSubkey(key, true);
+            } else {
+                tempResult = config.getResourceWithSubkey(key);
+                if (tempResult == null) {
+                    if (compFunc) {
+                        compFunc.call(thisObject, null, paramKey);
+                        return Promise.reject("");
+                    }
+                }
+            }
+            var { r, subkey } = tempResult;
             return queue.pushResItem(r).then(value => {
                 host.save(r, value);
                 let p = processor.isSupport(r);
@@ -788,7 +897,7 @@ module RES {
          * @param type {string}
          */
         @checkNull
-        public getResByUrl(url: string, compFunc: Function, thisObject: any, type: string = ""): Promise<any> {
+        public getResByUrl(url: string, compFunc?: Function, thisObject?: any, type: string = ""): Promise<any> {
             let r = config.getResource(url);
             if (!r) {
                 if (!type) {
