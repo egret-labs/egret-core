@@ -158,7 +158,7 @@ module RES {
                 }
             }
             return queue.pushResItem(configItem).catch(e => {
-                if (!RES.getIsCompatible()) {
+                if (!RES.isCompatible) {
                     if (!e.__resource_manager_error__) {
                         if (e.error) {
                             console.error(e.error.stack);
@@ -202,7 +202,7 @@ module RES {
             }
             for (var paramKey of group) {
                 let tempResult;
-                if (!RES.getIsCompatible()) {
+                if (!RES.isCompatible) {
                     tempResult = config.getResourceWithSubkey(paramKey, true);
                 } else {
                     tempResult = config.getResourceWithSubkey(paramKey);
@@ -212,7 +212,7 @@ module RES {
                 }
                 var { key, subkey } = tempResult;
                 let r;
-                if (!RES.getIsCompatible()) {
+                if (!RES.isCompatible) {
                     r = config.getResource(key, true);
                 } else {
                     r = config.getResource(key);

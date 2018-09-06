@@ -352,22 +352,22 @@ declare module RES {
      */
     function registerAnalyzer(type: string, analyzerClass: any): void;
     /**
-    * Is it compatible mode?
-    * When the return value is true, the assetsManager will output the design as Res. When it is false, all the loaded resources will be returned as promises.
-    * Return false by default, run in strict assetsManager mode
+    * Set whether it is compatible mode
+    * When the value is true, the assetsManager will output the design of Res. When it is false, all the loaded resources will be returned as promises.
+    * The default is false, run in strict assetsManager mode
     * @version Egret 5.2.9
     * @platform Web,Native
     * @language en_US
     */
     /**
-     * 是否为兼容模式
-     * 当返回值为true时，assetsManager会以Res的设计输出，当为false时候，所有的加载资源都会以promise的方式返回
-     * 默认时返回false，以严格assetsManager方式运行
+     * 设置是否为兼容模式
+     * 当值为true时，assetsManager会以Res的设计输出，当为false时候，所有的加载资源都会以promise的方式返回
+     * 默认是false，以严格assetsManager方式运行
      * @version Egret 5.2.9
      * @platform Web,Native
      * @language zh_CN
      */
-    function getIsCompatible(): boolean;
+    function setIsCompatible(value: boolean): void;
     /**
      * Load configuration file and parse.
      * @param url The url address of the resource config
