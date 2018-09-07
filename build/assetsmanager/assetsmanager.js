@@ -1979,7 +1979,7 @@ var RES;
             });
         }
         /**
-         * @internal
+         * @private
          * @param url
          * @param file
          */
@@ -2896,7 +2896,7 @@ var RES;
      */
     RES.queue = new RES.ResourceLoader();
     /**
-    * @internal
+    * @private
     */
     var ResourceManagerError = (function (_super) {
         __extends(ResourceManagerError, _super);

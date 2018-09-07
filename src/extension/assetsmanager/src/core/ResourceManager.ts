@@ -91,7 +91,7 @@ module RES {
 
     }
     /**
-    * @internal
+    * @private
     */
     export class ResourceManagerError extends Error {
 

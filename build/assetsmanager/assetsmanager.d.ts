@@ -1028,6 +1028,12 @@ declare module RES.processor {
      * @language zh_CN
      */
     function map(type: string, processor: Processor): void;
+    /**
+     * @private
+     * @param url
+     * @param file
+     */
+    function getRelativePath(url: string, file: string): string;
     var ImageProcessor: Processor;
     var BinaryProcessor: Processor;
     var TextProcessor: Processor;
@@ -1417,6 +1423,27 @@ declare module RES {
         save: (rexource: ResourceInfo, data: any) => void;
         get: (resource: ResourceInfo) => any;
         remove: (resource: ResourceInfo) => void;
+    }
+    /**
+    * @private
+    */
+    class ResourceManagerError extends Error {
+        static errorMessage: {
+            1001: string;
+            1002: string;
+            2001: string;
+            2002: string;
+            2003: string;
+            2004: string;
+            2005: string;
+            2006: string;
+        };
+        /**
+         * why instanceof e  != ResourceManagerError ???
+         * see link : https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
+         */
+        private __resource_manager_error__;
+        constructor(code: number, replacer?: Object, replacer2?: Object);
     }
 }
 declare namespace RES {

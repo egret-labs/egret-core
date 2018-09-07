@@ -1,16 +1,19 @@
 import * as exml from '../actions/exml';
-import { PluginContext, Plugin } from './';
+import file = require('../lib/FileUtil');
+import { PluginContext, Plugin, File } from './';
 export class ExmlPlugin implements Plugin {
 
     name = 'exml';
 
     exmls: { filename: string, contents: string }[] = [];
 
+    themeFilenames: string[] = [];
+
     constructor(private publishPolicy: string) {
 
 
     }
-    async onFile(file) {
+    async onFile(file: File) {
         const filename = file.origin;
         if (filename.indexOf('.exml') >= 0) {
             const contents = file.contents.toString()
@@ -18,6 +21,8 @@ export class ExmlPlugin implements Plugin {
             if (this.publishPolicy != "debug") {
                 return null;
             }
+        } else if (filename.indexOf('.thm.json') >= 0) {
+            this.themeFilenames.push(filename);
         }
         return file;
     }
@@ -32,7 +37,13 @@ export class ExmlPlugin implements Plugin {
             const dtsContents = exml.generateExmlDTS(this.exmls);
             pluginContext.createFile('libs/exml.e.d.ts', new Buffer(dtsContents))
         }
-        const result = exml.publishEXML(this.exmls, this.publishPolicy);
+        const themeDatas = this.themeFilenames.map(filename => {
+            const content = file.read(file.joinPath(egret.args.projectDir, filename))
+            const data: egret.EgretEUIThemeConfig = JSON.parse(content);
+            data.path = filename;
+            return data;
+        });
+        const result = exml.publishEXML(this.exmls, this.publishPolicy, themeDatas);
         //屏蔽其他编译机制
         if (result.EuiJson) {
             result.EuiJson.forEach(item => {
