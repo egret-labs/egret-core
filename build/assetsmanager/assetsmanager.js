@@ -110,9 +110,16 @@ var RES;
                 };
             }
             return RES.queue.pushResItem(configItem).catch(function (e) {
-                if (!e.__resource_manager_error__) {
-                    console.error(e.stack);
-                    e = new RES.ResourceManagerError(1002);
+                if (!RES.isCompatible) {
+                    if (!e.__resource_manager_error__) {
+                        if (e.error) {
+                            console.error(e.error.stack);
+                        }
+                        else {
+                            console.error(e.stack);
+                        }
+                        e = new RES.ResourceManagerError(1002);
+                    }
                 }
                 RES.host.remove(configItem);
                 return Promise.reject(e);
@@ -128,12 +135,31 @@ var RES;
                 if (shouldNotBeNull) {
                     throw new RES.ResourceManagerError(2005, name);
                 }
-                return null;
+                return result;
             }
             for (var _i = 0, group_1 = group; _i < group_1.length; _i++) {
                 var paramKey = group_1[_i];
-                var _a = RES.config.getResourceWithSubkey(paramKey, true), key = _a.key, subkey = _a.subkey;
-                var r = RES.config.getResource(key, true);
+                var tempResult = void 0;
+                if (!RES.isCompatible) {
+                    tempResult = RES.config.getResourceWithSubkey(paramKey, true);
+                }
+                else {
+                    tempResult = RES.config.getResourceWithSubkey(paramKey);
+                    if (tempResult == null) {
+                        continue;
+                    }
+                }
+                var key = tempResult.key, subkey = tempResult.subkey;
+                var r = void 0;
+                if (!RES.isCompatible) {
+                    r = RES.config.getResource(key, true);
+                }
+                else {
+                    r = RES.config.getResource(key);
+                    if (r == null) {
+                        continue;
+                    }
+                }
                 if (result.indexOf(r) == -1) {
                     result.push(r);
                 }
@@ -893,6 +919,30 @@ var RES;
     }
     RES.registerAnalyzer = registerAnalyzer;
     /**
+    * Set whether it is compatible mode
+    * When the value is true, the assetsManager will output the design of Res. When it is false, all the loaded resources will be returned as promises.
+    * The default is false, run in strict assetsManager mode
+    * @version Egret 5.2.9
+    * @platform Web,Native
+    * @language en_US
+    */
+    /**
+     * 设置是否为兼容模式
+     * 当值为true时，assetsManager会以Res的设计输出，当为false时候，所有的加载资源都会以promise的方式返回
+     * 默认是false，以严格assetsManager方式运行
+     * @version Egret 5.2.9
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    function setIsCompatible(value) {
+        RES.isCompatible = value;
+    }
+    RES.setIsCompatible = setIsCompatible;
+    /**
+     * @internal
+     */
+    RES.isCompatible = false;
+    /**
      * Load configuration file and parse.
      * @param url The url address of the resource config
      * @param resourceRoot The root address of the resource config
@@ -925,9 +975,17 @@ var RES;
         RES.setConfigURL(url, resourceRoot);
         if (!instance)
             instance = new Resource();
-        return instance.loadConfig();
+        return compatiblePromise(instance.loadConfig());
     }
     RES.loadConfig = loadConfig;
+    function compatiblePromise(promise) {
+        if (RES.isCompatible) {
+            promise.catch(function (e) { }).then();
+        }
+        else {
+            return promise;
+        }
+    }
     /**
      * Load a set of resources according to the group name.
      * @param name Group name to load the resource group.
@@ -952,7 +1010,7 @@ var RES;
      */
     function loadGroup(name, priority, reporter) {
         if (priority === void 0) { priority = 0; }
-        return instance.loadGroup(name, priority, reporter);
+        return compatiblePromise(instance.loadGroup(name, priority, reporter));
     }
     RES.loadGroup = loadGroup;
     /**
@@ -1101,6 +1159,14 @@ var RES;
      * @param compFunc Call back function. Example：compFunc(data,key):void.
      * @param thisObject This pointer of call back function.
      * @see #setMaxRetryTimes
+     * @example The following code demonstrates how to load a resource via getResAsync
+     * <pre>
+     *       RES.getResAsync("resource/example.json");//Only pass the key value to get the resource
+     *
+     *       RES.getResAsync("resource/example.json", (data) => {
+     *          console.log(data)
+     *       }, this) //Pass in the key value, compFunc and thisObject get the resource, the latter two must appear at the same time
+     * </pre>
      * @version Egret 5.2
      * @platform Web,Native
      * @language en_US
@@ -1111,12 +1177,20 @@ var RES;
      * @param compFunc 回调函数。示例：compFunc(data,key):void。
      * @param thisObject 回调函数的 this 引用。
      * @see #setMaxRetryTimes
+     * @example 以下代码演示了如何通过getResAsync加载资源
+     * <pre>
+     *       RES.getResAsync("resource/example.json");//只传入key值获取资源
+     *
+     *       RES.getResAsync("resource/example.json", (data) => {
+     *          console.log(data)
+     *       }, this) //传入key值，compFunc和thisObject获取资源，后两个必须同时出现
+     * </pre>
      * @version Egret 5.2
      * @platform Web,Native
      * @language zh_CN
      */
     function getResAsync(key, compFunc, thisObject) {
-        return instance.getResAsync.apply(instance, arguments);
+        return compatiblePromise(instance.getResAsync.apply(instance, arguments));
     }
     RES.getResAsync = getResAsync;
     /**
@@ -1141,7 +1215,7 @@ var RES;
      */
     function getResByUrl(url, compFunc, thisObject, type) {
         if (type === void 0) { type = ""; }
-        instance.getResByUrl(url, compFunc, thisObject, type);
+        return compatiblePromise(instance.getResByUrl(url, compFunc, thisObject, type));
     }
     RES.getResByUrl = getResByUrl;
     /**
@@ -1411,7 +1485,13 @@ var RES;
          * @param name {string}
          */
         Resource.prototype.isGroupLoaded = function (name) {
-            var resources = RES.config.getGroupByName(name, true);
+            var resources;
+            if (!RES.isCompatible) {
+                resources = RES.config.getGroupByName(name, true);
+            }
+            else {
+                resources = RES.config.getGroupByName(name);
+            }
             return resources.every(function (r) { return RES.host.get(r) != null; });
         };
         /**
@@ -1420,7 +1500,13 @@ var RES;
          * @param name {string}
          */
         Resource.prototype.getGroupByName = function (name) {
-            return RES.config.getGroupByName(name, true); //这里不应该传入 true，但是为了老版本的 TypeScriptCompiler 兼容性，暂时这样做
+            if (!RES.isCompatible) {
+                return RES.config.getGroupByName(name, true);
+            }
+            else {
+                return RES.config.getGroupByName(name);
+            }
+            // return config.getGroupByName(name, true); //这里不应该传入 true，但是为了老版本的 TypeScriptCompiler 兼容性，暂时这样做
         };
         /**
          * 根据组名加载一组资源
@@ -1457,16 +1543,25 @@ var RES;
                         RES.ResourceEvent.dispatchResourceEvent(_this, RES.ResourceEvent.ITEM_LOAD_ERROR, name, item);
                     }
                 }
+                if (RES.isCompatible) {
+                    console.warn(error.error.message);
+                }
                 RES.ResourceEvent.dispatchResourceEvent(_this, RES.ResourceEvent.GROUP_LOAD_ERROR, name);
                 return Promise.reject(error.error);
             });
         };
         Resource.prototype._loadGroup = function (name, priority, reporter) {
             if (priority === void 0) { priority = 0; }
-            var resources = RES.config.getGroupByName(name, true);
+            var resources;
+            if (!RES.isCompatible) {
+                resources = RES.config.getGroupByName(name, true);
+            }
+            else {
+                resources = RES.config.getGroupByName(name);
+            }
             if (resources.length == 0) {
                 return new Promise(function (resolve, reject) {
-                    reject({ error: new RES.ResourceManagerError(2007, name) });
+                    reject({ error: new RES.ResourceManagerError(2005, name) });
                 });
             }
             return RES.queue.pushResGroup(resources, name, priority, reporter);
@@ -1520,7 +1615,20 @@ var RES;
         Resource.prototype.getResAsync = function (key, compFunc, thisObject) {
             var _this = this;
             var paramKey = key;
-            var _a = RES.config.getResourceWithSubkey(key, true), r = _a.r, subkey = _a.subkey;
+            var tempResult;
+            if (!RES.isCompatible) {
+                tempResult = RES.config.getResourceWithSubkey(key, true);
+            }
+            else {
+                tempResult = RES.config.getResourceWithSubkey(key);
+                if (tempResult == null) {
+                    if (compFunc) {
+                        compFunc.call(thisObject, null, paramKey);
+                        return Promise.reject("");
+                    }
+                }
+            }
+            var r = tempResult.r, subkey = tempResult.subkey;
             return RES.queue.pushResItem(r).then(function (value) {
                 RES.host.save(r, value);
                 var p = RES.processor.isSupport(r);
@@ -2810,9 +2918,8 @@ var RES;
             2002: "Analyzer 相关API 在 ResourceManager 中不再支持，请编写自定义 Processor ，更多内容请参见 https://github.com/egret-labs/resourcemanager/blob/master/docs/README.md#processor",
             2003: "{0}解析失败,错误原因:{1}",
             2004: "无法找到文件类型:{0}",
-            2005: "资源配置文件中无法找到特定的资源组:{0}",
-            2006: "资源配置文件中无法找到特定的资源:{0}",
-            2007: "RES加载了不存在或空的资源组:\"{0}\""
+            2005: "RES加载了不存在或空的资源组:\"{0}\"",
+            2006: "资源配置文件中无法找到特定的资源:{0}"
         };
         return ResourceManagerError;
     }(Error));

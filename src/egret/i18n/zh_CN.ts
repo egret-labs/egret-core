@@ -54,6 +54,7 @@ namespace egret {
     locale_strings[1048] = "视频加载失败";
     locale_strings[1049] = "声音在没有加载完之前不允许播放";
     locale_strings[1050] = "ExternalInterface调用了js没有注册的方法: {0}";
+    locale_strings[1051] = "runtime 只支持 webgl 渲染模式";
 
     //gui  3000-3099
     locale_strings[3000] = "主题配置文件加载失败: {0}";

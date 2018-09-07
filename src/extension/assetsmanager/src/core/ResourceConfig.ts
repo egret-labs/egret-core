@@ -158,9 +158,15 @@ module RES {
                 }
             }
             return queue.pushResItem(configItem).catch(e => {
-                if (!e.__resource_manager_error__) {
-                    console.error(e.stack)
-                    e = new ResourceManagerError(1002);
+                if (!RES.isCompatible) {
+                    if (!e.__resource_manager_error__) {
+                        if (e.error) {
+                            console.error(e.error.stack);
+                        } else {
+                            console.error(e.stack);
+                        }
+                        e = new ResourceManagerError(1002);
+                    }
                 }
                 host.remove(configItem);
                 return Promise.reject(e);
@@ -180,11 +186,11 @@ module RES {
         /**
          * @internal
          */
-        public getGroupByName(name: string): ResourceInfo[] | null;
+        public getGroupByName(name: string): ResourceInfo[];
         /**
          * @internal
          */
-        public getGroupByName(name: string, shouldNotBeNull?: boolean): ResourceInfo[] | null {
+        public getGroupByName(name: string, shouldNotBeNull?: boolean): ResourceInfo[] {
 
             let group = this.config.groups[name];
             let result: ResourceInfo[] = [];
@@ -192,11 +198,28 @@ module RES {
                 if (shouldNotBeNull) {
                     throw new RES.ResourceManagerError(2005, name)
                 }
-                return null;
+                return result;
             }
             for (var paramKey of group) {
-                var { key, subkey } = config.getResourceWithSubkey(paramKey, true);
-                let r = config.getResource(key, true);
+                let tempResult;
+                if (!RES.isCompatible) {
+                    tempResult = config.getResourceWithSubkey(paramKey, true);
+                } else {
+                    tempResult = config.getResourceWithSubkey(paramKey);
+                    if (tempResult == null) {
+                        continue;
+                    }
+                }
+                var { key, subkey } = tempResult;
+                let r;
+                if (!RES.isCompatible) {
+                    r = config.getResource(key, true);
+                } else {
+                    r = config.getResource(key);
+                    if (r == null) {
+                        continue;
+                    }
+                }
                 if (result.indexOf(r) == -1) {
                     result.push(r);
                 }
