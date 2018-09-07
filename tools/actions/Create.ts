@@ -58,15 +58,7 @@ function updateEgretProperties(projectConfig: egret.EgretProjectConfig) {
     props.compilerVersion = egret.version;
     props.template = {};
     props.target = { current: "web" };
-    if (projectConfig.type == "eui") {
-        //添加eui项目默认配置
-        props.eui = {
-            exmlRoot: ["resource/eui_skins"],
-            themes: ["resource/default.thm.json"],
-            exmlPublishPolicy: "commonjs"
-        };
-    }
-    else if (projectConfig.type == "wasm") {
+    if (projectConfig.type == "wasm") {
         props.wasm = {};
     }
     if (!props.modules) {

@@ -9,27 +9,11 @@ import * as EgretProject from '../project';
 import exmlParser = require("../lib/eui/EXMLParser");
 import jsonParser = require("../lib/eui/JSONParser");
 export let isOneByOne: boolean;
-function generateThemeData() {
-    //1.找到项目内后缀名为'.thm.json'的主题文件并返回列表
-    const themeFilenames = searchTheme();
-    //2.将主题文件读入内存变成json对象
-    const themeDatas = themeFilenames.map(filename => {
-        const content = file.read(file.joinPath(egret.args.projectDir, filename))
-        const data: egret.EgretEUIThemeConfig = JSON.parse(content);
-        data.path = filename;
-        return data;
-    });
-    return themeDatas;
-}
 
-export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
-    if (!exmlPublishPolicy || exmlPublishPolicy == "default") {
-        exmlPublishPolicy = EgretProject.projectData.getExmlPublishPolicy();
-    }
-    else if (exmlPublishPolicy == 'debug') {
+export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string, themeDatas: egret.EgretEUIThemeConfig[]) {
+    if (exmlPublishPolicy == 'debug') {
         exmlPublishPolicy = 'path';
     }
-    const themeDatas = generateThemeData();
 
     var oldEXMLS: EXMLFile[] = [];
     //3.将所有的exml信息取出来
@@ -85,8 +69,9 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
         themeDatas.forEach((thm) => {
             if (epath in oldEXMLS) {
                 const exmlFile = oldEXMLS[epath];
-                if (exmlFile.theme.indexOf("," + thm.path + ",") >= 0)
+                if (exmlFile.theme.indexOf("," + thm.path + ",") >= 0) {
                     thm.exmls.push(epath);
+                }
             }
         });
     })
@@ -96,7 +81,7 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string) {
         }
     })
 
-    
+
     themeDatas.forEach(theme => theme.exmls = []);
     screenExmls.forEach(e => {
         exmlParser.fileSystem.set(e.filename, e);
@@ -232,31 +217,6 @@ generateEUI2.skins = ${JSON.stringify(thmData.skins)};`;
     }
 
 }
-
-function searchTheme() {
-    let result = EgretProject.projectData.getThemes();
-    if (result) {
-        return result;
-    }
-    var files = file.searchByFunction(egret.args.projectDir, themeFilter);
-    files = files.map(it => file.getRelativePath(egret.args.projectDir, it));
-    return files;
-}
-
-const ignorePath = EgretProject.projectData.getIgnorePath();
-function exmlFilter(f: string) {
-    var isIgnore = false;
-    ignorePath.forEach(path => {
-        if (f.indexOf(path) != -1) {
-            isIgnore = true;
-        }
-    });
-    return /\.exml$/.test(f) && (f.indexOf(egret.args.releaseRootDir) < 0) && !isIgnore;
-}
-function themeFilter(f: string) {
-    return (f.indexOf('.thm.json') > 0) && (f.indexOf(egret.args.releaseRootDir) < 0);
-}
-
 export interface SettingData {
     name: string;
     themes: { [name: string]: string | ThemeData };

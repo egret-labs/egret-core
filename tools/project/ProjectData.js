@@ -85,22 +85,6 @@ var EgretProjectData = /** @class */ (function () {
         }
         return [];
     };
-    EgretProjectData.prototype.getExmlRoots = function () {
-        if (globals.hasKeys(this.egretProperties, ["eui", "exmlRoot"])) {
-            var result = this.egretProperties.eui.exmlRoot;
-            if (typeof result == "string") {
-                return [_path.join(egret.args.projectDir, result)];
-            }
-            else {
-                var temp = this.egretProperties.eui.exmlRoot;
-                return temp.reduce(function (previousValue, currentValue) {
-                    previousValue.push(_path.join(egret.args.projectDir, currentValue));
-                    return previousValue;
-                }, []);
-            }
-        }
-        return [egret.args.projectDir];
-    };
     EgretProjectData.prototype.getCurrentTarget = function () {
         if (globals.hasKeys(this.egretProperties, ["target", "current"])) {
             return this.egretProperties.target.current;
@@ -108,18 +92,6 @@ var EgretProjectData = /** @class */ (function () {
         else {
             return "web";
         }
-    };
-    EgretProjectData.prototype.getThemes = function () {
-        if (globals.hasKeys(this.egretProperties, ["eui", "themes"])) {
-            return this.egretProperties.eui.themes;
-        }
-        return null;
-    };
-    EgretProjectData.prototype.getExmlPublishPolicy = function () {
-        if (globals.hasKeys(this.egretProperties, ["eui", "exmlPublishPolicy"])) {
-            return this.egretProperties.eui.exmlPublishPolicy;
-        }
-        return "content";
     };
     EgretProjectData.prototype.getCopyExmlList = function () {
         if (globals.hasKeys(this.egretProperties, [egret.args.target, "copyExmlList"])) {

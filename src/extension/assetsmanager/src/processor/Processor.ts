@@ -107,7 +107,7 @@ module RES.processor {
         })
     }
     /**
-     * @internal
+     * @private
      * @param url 
      * @param file 
      */

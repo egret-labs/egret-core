@@ -3,29 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Path = require("path");
 var file = require("../lib/FileUtil");
 var exml = require("../lib/eui/EXML");
-var EgretProject = require("../project");
 var exmlParser = require("../lib/eui/EXMLParser");
 var jsonParser = require("../lib/eui/JSONParser");
-function generateThemeData() {
-    //1.找到项目内后缀名为'.thm.json'的主题文件并返回列表
-    var themeFilenames = searchTheme();
-    //2.将主题文件读入内存变成json对象
-    var themeDatas = themeFilenames.map(function (filename) {
-        var content = file.read(file.joinPath(egret.args.projectDir, filename));
-        var data = JSON.parse(content);
-        data.path = filename;
-        return data;
-    });
-    return themeDatas;
-}
-function publishEXML(exmls, exmlPublishPolicy) {
-    if (!exmlPublishPolicy || exmlPublishPolicy == "default") {
-        exmlPublishPolicy = EgretProject.projectData.getExmlPublishPolicy();
-    }
-    else if (exmlPublishPolicy == 'debug') {
+function publishEXML(exmls, exmlPublishPolicy, themeDatas) {
+    if (exmlPublishPolicy == 'debug') {
         exmlPublishPolicy = 'path';
     }
-    var themeDatas = generateThemeData();
     var oldEXMLS = [];
     //3.将所有的exml信息取出来
     themeDatas.forEach(function (theme) {
@@ -82,8 +65,9 @@ function publishEXML(exmls, exmlPublishPolicy) {
         themeDatas.forEach(function (thm) {
             if (epath in oldEXMLS) {
                 var exmlFile = oldEXMLS[epath];
-                if (exmlFile.theme.indexOf("," + thm.path + ",") >= 0)
+                if (exmlFile.theme.indexOf("," + thm.path + ",") >= 0) {
                     thm.exmls.push(epath);
+                }
             }
         });
     });
@@ -212,28 +196,6 @@ function publishEXML(exmls, exmlPublishPolicy) {
     }
 }
 exports.publishEXML = publishEXML;
-function searchTheme() {
-    var result = EgretProject.projectData.getThemes();
-    if (result) {
-        return result;
-    }
-    var files = file.searchByFunction(egret.args.projectDir, themeFilter);
-    files = files.map(function (it) { return file.getRelativePath(egret.args.projectDir, it); });
-    return files;
-}
-var ignorePath = EgretProject.projectData.getIgnorePath();
-function exmlFilter(f) {
-    var isIgnore = false;
-    ignorePath.forEach(function (path) {
-        if (f.indexOf(path) != -1) {
-            isIgnore = true;
-        }
-    });
-    return /\.exml$/.test(f) && (f.indexOf(egret.args.releaseRootDir) < 0) && !isIgnore;
-}
-function themeFilter(f) {
-    return (f.indexOf('.thm.json') > 0) && (f.indexOf(egret.args.releaseRootDir) < 0);
-}
 function generateExmlDTS(exmls) {
     //去掉重复定义
     var classDefinations = {};
