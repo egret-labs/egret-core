@@ -3501,15 +3501,20 @@ var egret;
             else {
                 web.Html5Capatibility._audioType = options.audioType;
                 web.Html5Capatibility.$init();
+                var renderMode = options.renderMode;
                 // WebGL上下文参数自定义
-                if (options.renderMode == "webgl") {
+                if (renderMode == "webgl") {
                     // WebGL抗锯齿默认关闭，提升PC及某些平台性能
                     var antialias = options.antialias;
                     web.WebGLRenderContext.antialias = !!antialias;
                     // WebGLRenderContext.antialias = (typeof antialias == undefined) ? true : antialias;
                 }
                 egret.sys.CanvasRenderBuffer = web.CanvasRenderBuffer;
-                setRenderMode(options.renderMode);
+                if (ua.indexOf("egretnative") >= 0 && renderMode != "webgl") {
+                    egret.$warn(1051);
+                    renderMode = "webgl";
+                }
+                setRenderMode(renderMode);
                 var canvasScaleFactor = void 0;
                 if (options.canvasScaleFactor) {
                     canvasScaleFactor = options.canvasScaleFactor;
