@@ -174,7 +174,7 @@ module RES {
      * @platform Web,Native
      * @language zh_CN
      */
-    export function loadConfig(url: string, resourceRoot: string): Promise<void> | void {
+    export function loadConfig(url: string, resourceRoot: string): Promise<void> {
         if (resourceRoot.indexOf('://') >= 0) {
             const temp = resourceRoot.split('://');
             resourceRoot = temp[0] + '://' + path.normalize(temp[1] + '/');
@@ -189,9 +189,10 @@ module RES {
         return compatiblePromise(instance.loadConfig());
     }
 
-    function compatiblePromise(promise: Promise<void>) {
+    function compatiblePromise(promise: Promise<void>): Promise<void> | Promise<any> {
         if (RES.isCompatible) {
-            promise.catch((e) => { }).then()
+            promise.catch((e) => { }).then();
+            return undefined as any;
         } else {
             return promise;
         }
@@ -218,7 +219,7 @@ module RES {
      * @platform Web,Native
      * @language zh_CN
      */
-    export function loadGroup(name: string, priority: number = 0, reporter?: PromiseTaskReporter): Promise<void> | void {
+    export function loadGroup(name: string, priority: number = 0, reporter?: PromiseTaskReporter): Promise<void> {
         return compatiblePromise(instance.loadGroup(name, priority, reporter));
     }
     /**
@@ -430,7 +431,7 @@ module RES {
      * @platform Web,Native
      * @language zh_CN
      */
-    export function getResAsync(key: string, compFunc?: GetResAsyncCallback, thisObject?: any): Promise<any> | void {
+    export function getResAsync(key: string, compFunc?: GetResAsyncCallback, thisObject?: any): Promise<any> {
         return compatiblePromise(instance.getResAsync.apply(instance, arguments));
     }
 
@@ -454,7 +455,7 @@ module RES {
      * @platform Web,Native
      * @language zh_CN
      */
-    export function getResByUrl(url: string, compFunc?: Function, thisObject?: any, type: string = ""): Promise<any> | void {
+    export function getResByUrl(url: string, compFunc?: Function, thisObject?: any, type: string = ""): Promise<any> {
         return compatiblePromise(instance.getResByUrl(url, compFunc, thisObject, type));
     }
     /**
@@ -714,12 +715,7 @@ module RES {
          * @param name {string}
          */
         public isGroupLoaded(name: string): boolean {
-            let resources;
-            if (!RES.isCompatible) {
-                resources = config.getGroupByName(name, true);
-            } else {
-                resources = config.getGroupByName(name);
-            }
+            let resources = config.getGroupByName(name);
             return resources.every(r => host.get(r) != null);
         }
         /**
@@ -728,12 +724,7 @@ module RES {
          * @param name {string}
          */
         getGroupByName(name: string): Array<ResourceInfo> {
-            if (!RES.isCompatible) {
-                return config.getGroupByName(name, true);
-            } else {
-                return config.getGroupByName(name);
-            }
-            // return config.getGroupByName(name, true); //这里不应该传入 true，但是为了老版本的 TypeScriptCompiler 兼容性，暂时这样做
+            return config.getGroupByName(name);
         }
 
         /**
@@ -780,12 +771,7 @@ module RES {
         }
 
         private _loadGroup(name: string, priority: number = 0, reporter?: PromiseTaskReporter): Promise<any> {
-            let resources;
-            if (!RES.isCompatible) {
-                resources = config.getGroupByName(name, true);
-            } else {
-                resources = config.getGroupByName(name);
-            }
+            let resources = config.getGroupByName(name);
             if (resources.length == 0) {
                 return new Promise((resolve, reject) => {
                     reject({ error: new ResourceManagerError(2005, name) });
@@ -857,17 +843,12 @@ module RES {
         @checkNull
         public getResAsync(key: string, compFunc?: GetResAsyncCallback, thisObject?: any): Promise<any> {
             var paramKey = key;
-            let tempResult;
-            if (!RES.isCompatible) {
-                tempResult = config.getResourceWithSubkey(key, true);
-            } else {
-                tempResult = config.getResourceWithSubkey(key);
-                if (tempResult == null) {
-                    if (compFunc) {
-                        compFunc.call(thisObject, null, paramKey);
-                        return Promise.reject("");
-                    }
+            let tempResult = config.getResourceWithSubkey(key);
+            if (tempResult == null) {
+                if (compFunc) {
+                    compFunc.call(thisObject, null, paramKey);
                 }
+                return Promise.reject(new ResourceManagerError(2006, key));
             }
             var { r, subkey } = tempResult;
             return queue.pushResItem(r).then(value => {
@@ -923,6 +904,10 @@ module RES {
             }, error => {
                 host.remove(r as ResourceInfo);
                 ResourceEvent.dispatchResourceEvent(this, ResourceEvent.ITEM_LOAD_ERROR, "", r as ResourceInfo);
+                if (compFunc) {
+                    compFunc.call(thisObject, null, url);
+                    return Promise.reject(null);
+                }
                 return Promise.reject(error);
             })
         }
@@ -935,7 +920,7 @@ module RES {
          * @returns {boolean}
          */
         destroyRes(name: string, force: boolean = true) {
-            var group = config.getGroup(name);
+            var group = config.getGroupByName(name);
             if (group && group.length > 0) {
                 if (force || (config.config.loadGroup.length == 1 && config.config.loadGroup[0] == name)) {
                     for (let item of group) {

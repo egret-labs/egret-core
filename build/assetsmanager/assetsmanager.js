@@ -126,39 +126,29 @@ var RES;
             });
         };
         /**
-         * @internal
+         * 根据组名获取组加载项列表
+         * @method RES.ResourceConfig#getGroupByName
+         * @param name {string} 组名
+         * @returns {Array<egret.ResourceItem>}
          */
-        ResourceConfig.prototype.getGroupByName = function (name, shouldNotBeNull) {
+        ResourceConfig.prototype.getGroupByName = function (name) {
             var group = this.config.groups[name];
             var result = [];
             if (!group) {
-                if (shouldNotBeNull) {
-                    throw new RES.ResourceManagerError(2005, name);
-                }
                 return result;
             }
             for (var _i = 0, group_1 = group; _i < group_1.length; _i++) {
                 var paramKey = group_1[_i];
                 var tempResult = void 0;
-                if (!RES.isCompatible) {
-                    tempResult = RES.config.getResourceWithSubkey(paramKey, true);
+                tempResult = RES.config.getResourceWithSubkey(paramKey);
+                if (tempResult == null) {
+                    continue;
                 }
-                else {
-                    tempResult = RES.config.getResourceWithSubkey(paramKey);
-                    if (tempResult == null) {
-                        continue;
-                    }
-                }
-                var key = tempResult.key, subkey = tempResult.subkey;
-                var r = void 0;
-                if (!RES.isCompatible) {
-                    r = RES.config.getResource(key, true);
-                }
-                else {
-                    r = RES.config.getResource(key);
-                    if (r == null) {
-                        continue;
-                    }
+                var r = tempResult.r, key = tempResult.key;
+                if (r == null) {
+                    /** 加载组里面的资源，可能不存在 */
+                    throw new RES.ResourceManagerError(2005, key);
+                    continue;
                 }
                 if (result.indexOf(r) == -1) {
                     result.push(r);
@@ -183,7 +173,7 @@ var RES;
                 return "unknown";
             }
         };
-        ResourceConfig.prototype.getResourceWithSubkey = function (key, shouldNotBeNull) {
+        ResourceConfig.prototype.getResourceWithSubkey = function (key) {
             key = this.getKeyByAlias(key);
             var index = key.indexOf("#");
             var subkey = "";
@@ -193,13 +183,7 @@ var RES;
             }
             var r = this.getResource(key);
             if (!r) {
-                if (shouldNotBeNull) {
-                    var msg = subkey ? key + "#" + subkey : key;
-                    throw new RES.ResourceManagerError(2006, msg);
-                }
-                else {
-                    return null;
-                }
+                return null;
             }
             else {
                 return {
@@ -215,33 +199,19 @@ var RES;
                 return aliasName;
             }
         };
-        ResourceConfig.prototype.getResource = function (path_or_alias, shouldNotBeNull) {
+        ResourceConfig.prototype.getResource = function (path_or_alias) {
             var path = this.config.alias[path_or_alias];
             if (!path) {
                 path = path_or_alias;
             }
             var r = getResourceInfo(path);
             if (!r) {
-                if (shouldNotBeNull) {
-                    throw new RES.ResourceManagerError(2006, path_or_alias);
-                }
                 return null;
             }
-            return r;
+            else {
+                return r;
+            }
         };
-        /**
-         * 根据组名获取原始的组加载项列表
-         * @method RES.ResourceConfig#getRawGroupByName
-         * @param name {string} 组名
-         * @returns {Array<any>}
-         * @internal
-         */
-        ResourceConfig.prototype.getGroup = function (name) {
-            return this.getGroupByName(name);
-        };
-        // public getResourceInfos(folderName: string) {
-        //     this.config.resources[]
-        // }
         /**
          * 创建自定义的加载资源组,注意：此方法仅在资源配置文件加载完成后执行才有效。
          * 可以监听ResourceEvent.CONFIG_COMPLETE事件来确认配置加载完成。
@@ -313,15 +283,6 @@ var RES;
                 key = this.config.alias[key];
             }
             this.config.alias[alias] = key;
-        };
-        /**
-         * 获取加载项类型。
-         * @method RES.ResourceConfig#getType
-         * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
-         * @returns {string}
-         */
-        ResourceConfig.prototype.getType = function (key) {
-            return this.getResource(key, true).type;
         };
         ResourceConfig.prototype.addResourceData = function (data) {
             if (RES.hasRes(data.name)) {
@@ -981,6 +942,7 @@ var RES;
     function compatiblePromise(promise) {
         if (RES.isCompatible) {
             promise.catch(function (e) { }).then();
+            return undefined;
         }
         else {
             return promise;
@@ -1485,13 +1447,7 @@ var RES;
          * @param name {string}
          */
         Resource.prototype.isGroupLoaded = function (name) {
-            var resources;
-            if (!RES.isCompatible) {
-                resources = RES.config.getGroupByName(name, true);
-            }
-            else {
-                resources = RES.config.getGroupByName(name);
-            }
+            var resources = RES.config.getGroupByName(name);
             return resources.every(function (r) { return RES.host.get(r) != null; });
         };
         /**
@@ -1500,13 +1456,7 @@ var RES;
          * @param name {string}
          */
         Resource.prototype.getGroupByName = function (name) {
-            if (!RES.isCompatible) {
-                return RES.config.getGroupByName(name, true);
-            }
-            else {
-                return RES.config.getGroupByName(name);
-            }
-            // return config.getGroupByName(name, true); //这里不应该传入 true，但是为了老版本的 TypeScriptCompiler 兼容性，暂时这样做
+            return RES.config.getGroupByName(name);
         };
         /**
          * 根据组名加载一组资源
@@ -1552,13 +1502,7 @@ var RES;
         };
         Resource.prototype._loadGroup = function (name, priority, reporter) {
             if (priority === void 0) { priority = 0; }
-            var resources;
-            if (!RES.isCompatible) {
-                resources = RES.config.getGroupByName(name, true);
-            }
-            else {
-                resources = RES.config.getGroupByName(name);
-            }
+            var resources = RES.config.getGroupByName(name);
             if (resources.length == 0) {
                 return new Promise(function (resolve, reject) {
                     reject({ error: new RES.ResourceManagerError(2005, name) });
@@ -1615,18 +1559,12 @@ var RES;
         Resource.prototype.getResAsync = function (key, compFunc, thisObject) {
             var _this = this;
             var paramKey = key;
-            var tempResult;
-            if (!RES.isCompatible) {
-                tempResult = RES.config.getResourceWithSubkey(key, true);
-            }
-            else {
-                tempResult = RES.config.getResourceWithSubkey(key);
-                if (tempResult == null) {
-                    if (compFunc) {
-                        compFunc.call(thisObject, null, paramKey);
-                        return Promise.reject("");
-                    }
+            var tempResult = RES.config.getResourceWithSubkey(key);
+            if (tempResult == null) {
+                if (compFunc) {
+                    compFunc.call(thisObject, null, paramKey);
                 }
+                return Promise.reject(new RES.ResourceManagerError(2006, key));
             }
             var r = tempResult.r, subkey = tempResult.subkey;
             return RES.queue.pushResItem(r).then(function (value) {
@@ -1682,6 +1620,10 @@ var RES;
             }, function (error) {
                 RES.host.remove(r);
                 RES.ResourceEvent.dispatchResourceEvent(_this, RES.ResourceEvent.ITEM_LOAD_ERROR, "", r);
+                if (compFunc) {
+                    compFunc.call(thisObject, null, url);
+                    return Promise.reject(null);
+                }
                 return Promise.reject(error);
             });
         };
@@ -1694,7 +1636,7 @@ var RES;
          */
         Resource.prototype.destroyRes = function (name, force) {
             if (force === void 0) { force = true; }
-            var group = RES.config.getGroup(name);
+            var group = RES.config.getGroupByName(name);
             if (group && group.length > 0) {
                 if (force || (RES.config.config.loadGroup.length == 1 && RES.config.config.loadGroup[0] == name)) {
                     for (var _i = 0, group_2 = group; _i < group_2.length; _i++) {
@@ -2223,7 +2165,7 @@ var RES;
                     mcData = value;
                     var jsonPath = resource.name;
                     var imagePath = jsonPath.substring(0, jsonPath.lastIndexOf(".")) + ".png";
-                    imageResource = host.resourceConfig.getResource(imagePath, true);
+                    imageResource = host.resourceConfig.getResource(imagePath);
                     if (!imageResource) {
                         throw new RES.ResourceManagerError(1001, imagePath);
                     }
@@ -2242,8 +2184,10 @@ var RES;
                 // refactor
                 var jsonPath = resource.name;
                 var imagePath = jsonPath.substring(0, jsonPath.lastIndexOf(".")) + ".png";
-                var imageResource = host.resourceConfig.getResource(imagePath, true);
-                host.unload(imageResource);
+                var imageResource = host.resourceConfig.getResource(imagePath);
+                if (imageResource) {
+                    host.unload(imageResource);
+                }
             }
         };
         /**
