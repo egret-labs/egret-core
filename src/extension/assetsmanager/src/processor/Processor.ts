@@ -387,7 +387,7 @@ module RES.processor {
                     mcData = value;
                     let jsonPath = resource.name;
                     let imagePath = jsonPath.substring(0, jsonPath.lastIndexOf(".")) + ".png";
-                    imageResource = host.resourceConfig.getResource(imagePath, true);
+                    imageResource = host.resourceConfig.getResource(imagePath) as ResourceInfo;
                     if (!imageResource) {
                         throw new ResourceManagerError(1001, imagePath);
                     }
@@ -406,8 +406,10 @@ module RES.processor {
             // refactor
             let jsonPath = resource.name;
             let imagePath = jsonPath.substring(0, jsonPath.lastIndexOf(".")) + ".png";
-            let imageResource = host.resourceConfig.getResource(imagePath, true);
-            host.unload(imageResource);
+            let imageResource = host.resourceConfig.getResource(imagePath);
+            if (imageResource) {
+                host.unload(imageResource);
+            }
         }
     }
     /**

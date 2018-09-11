@@ -179,46 +179,23 @@ module RES {
          * @param name {string} 组名
 		 * @returns {Array<egret.ResourceItem>}
          */
-        /**
-         * @internal
-         */
-        public getGroupByName(name: string, shouldNotBeNull: true): ResourceInfo[];
-        /**
-         * @internal
-         */
-        public getGroupByName(name: string): ResourceInfo[];
-        /**
-         * @internal
-         */
-        public getGroupByName(name: string, shouldNotBeNull?: boolean): ResourceInfo[] {
-
+        public getGroupByName(name: string): ResourceInfo[] {
             let group = this.config.groups[name];
             let result: ResourceInfo[] = [];
             if (!group) {
-                if (shouldNotBeNull) {
-                    throw new RES.ResourceManagerError(2005, name)
-                }
                 return result;
             }
             for (var paramKey of group) {
                 let tempResult;
-                if (!RES.isCompatible) {
-                    tempResult = config.getResourceWithSubkey(paramKey, true);
-                } else {
-                    tempResult = config.getResourceWithSubkey(paramKey);
-                    if (tempResult == null) {
-                        continue;
-                    }
+                tempResult = config.getResourceWithSubkey(paramKey);
+                if (tempResult == null) {
+                    continue;
                 }
-                var { key, subkey } = tempResult;
-                let r;
-                if (!RES.isCompatible) {
-                    r = config.getResource(key, true);
-                } else {
-                    r = config.getResource(key);
-                    if (r == null) {
-                        continue;
-                    }
+                var { r, key } = tempResult;
+                if (r == null) {
+                    /** 加载组里面的资源，可能不存在 */
+                    throw new RES.ResourceManagerError(2005, key)
+                    continue;
                 }
                 if (result.indexOf(r) == -1) {
                     result.push(r);
@@ -229,12 +206,10 @@ module RES {
 
 
         __temp__get__type__via__url(url_or_alias: string): string {
-
             let url = this.config.alias[url_or_alias];
             if (!url) {
                 url = url_or_alias;
             }
-
             if (RES.typeSelector) {
                 let type = RES.typeSelector(url);
                 if (!type) {
@@ -247,38 +222,17 @@ module RES {
                 return "unknown";
             }
         }
-        /**
-         * @internal
-         */
-        getResourceWithSubkey(key: string): { r: ResourceInfo, key: string, subkey: string } | null
-        /**
-         * @internal
-         */
-        getResourceWithSubkey(key: string, shouldNotBeNull: true): { r: ResourceInfo, key: string, subkey: string }
-        /**
-         * @internal
-         */
-        getResourceWithSubkey(key: string, shouldNotBeNull: false): { r: ResourceInfo, key: string, subkey: string } | null
-
-        getResourceWithSubkey(key: string, shouldNotBeNull?: boolean): { r: ResourceInfo, key: string, subkey: string } | null {
+        getResourceWithSubkey(key: string, ): { r: ResourceInfo, key: string, subkey: string } | null {
             key = this.getKeyByAlias(key);
             let index = key.indexOf("#");
             let subkey = "";
             if (index >= 0) {
                 subkey = key.substr(index + 1)
                 key = key.substr(0, index);
-
             }
             let r = this.getResource(key);
             if (!r) {
-                if (shouldNotBeNull) {
-                    let msg = subkey ? `${key}#${subkey}` : key;
-                    throw new ResourceManagerError(2006, msg);
-                }
-                else {
-                    return null;
-                }
-
+                return null;
             }
             else {
                 return {
@@ -286,7 +240,6 @@ module RES {
                 }
             }
         }
-
 
         public getKeyByAlias(aliasName: string) {
             if (this.config.alias[aliasName]) {
@@ -296,50 +249,18 @@ module RES {
                 return aliasName;
             }
         }
-        /**
-         * @internal
-         */
-        public getResource(url_or_alias: string): ResourceInfo | null;
-        /**
-         * @internal
-         */
-        public getResource(path_or_alias: string, shouldNotBeNull: false): ResourceInfo | null
-        /**
-         * @internal
-         */
-        public getResource(path_or_alias: string, shouldNotBeNull: true): ResourceInfo
-        public getResource(path_or_alias: string, shouldNotBeNull?: boolean): ResourceInfo | null {
+        public getResource(path_or_alias: string): ResourceInfo | null {
             let path = this.config.alias[path_or_alias];
             if (!path) {
                 path = path_or_alias;
             }
             let r = getResourceInfo(path)
             if (!r) {
-                if (shouldNotBeNull) {
-                    throw new ResourceManagerError(2006, path_or_alias)
-                }
                 return null;
+            } else {
+                return r;
             }
-            return r;
         }
-
-        /**
-         * 根据组名获取原始的组加载项列表
-         * @method RES.ResourceConfig#getRawGroupByName
-         * @param name {string} 组名
-         * @returns {Array<any>}
-         * @internal
-         */
-        public getGroup(name: string): ResourceInfo[] | null {
-
-            return this.getGroupByName(name);
-
-        }
-
-        // public getResourceInfos(folderName: string) {
-        //     this.config.resources[]
-        // }
-
         /**
          * 创建自定义的加载资源组,注意：此方法仅在资源配置文件加载完成后执行才有效。
          * 可以监听ResourceEvent.CONFIG_COMPLETE事件来确认配置加载完成。
@@ -418,17 +339,6 @@ module RES {
             }
             this.config.alias[alias] = key;
         }
-
-        /**
-         * 获取加载项类型。
-		 * @method RES.ResourceConfig#getType
-         * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
-		 * @returns {string}
-         */
-        public getType(key: string): string {
-            return this.getResource(key, true).type;
-        }
-
         public addResourceData(data: { name: string, type?: string, url: string, root?: string, extra?: 1 | undefined }): void {
             if (RES.hasRes(data.name)) {
                 return;

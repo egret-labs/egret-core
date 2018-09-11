@@ -149,8 +149,21 @@ declare module RES {
         config: Data;
         constructor();
         init(): Promise<any>;
+        /**
+         * 根据组名获取组加载项列表
+         * @method RES.ResourceConfig#getGroupByName
+         * @param name {string} 组名
+         * @returns {Array<egret.ResourceItem>}
+         */
+        getGroupByName(name: string): ResourceInfo[];
         __temp__get__type__via__url(url_or_alias: string): string;
+        getResourceWithSubkey(key: string): {
+            r: ResourceInfo;
+            key: string;
+            subkey: string;
+        } | null;
         getKeyByAlias(aliasName: string): string;
+        getResource(path_or_alias: string): ResourceInfo | null;
         /**
          * 创建自定义的加载资源组,注意：此方法仅在资源配置文件加载完成后执行才有效。
          * 可以监听ResourceEvent.CONFIG_COMPLETE事件来确认配置加载完成。
@@ -169,13 +182,6 @@ declare module RES {
          */
         addSubkey(subkey: string, name: string): void;
         addAlias(alias: any, key: any): void;
-        /**
-         * 获取加载项类型。
-         * @method RES.ResourceConfig#getType
-         * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
-         * @returns {string}
-         */
-        getType(key: string): string;
         addResourceData(data: {
             name: string;
             type?: string;
@@ -388,7 +394,7 @@ declare module RES {
      * @platform Web,Native
      * @language zh_CN
      */
-    function loadConfig(url: string, resourceRoot: string): Promise<void> | void;
+    function loadConfig(url: string, resourceRoot: string): Promise<void>;
     /**
      * Load a set of resources according to the group name.
      * @param name Group name to load the resource group.
@@ -411,7 +417,7 @@ declare module RES {
      * @platform Web,Native
      * @language zh_CN
      */
-    function loadGroup(name: string, priority?: number, reporter?: PromiseTaskReporter): Promise<void> | void;
+    function loadGroup(name: string, priority?: number, reporter?: PromiseTaskReporter): Promise<void>;
     /**
      * Check whether a resource group has been loaded.
      * @param name Group name。
@@ -594,7 +600,7 @@ declare module RES {
      * @platform Web,Native
      * @language zh_CN
      */
-    function getResByUrl(url: string, compFunc?: Function, thisObject?: any, type?: string): Promise<any> | void;
+    function getResByUrl(url: string, compFunc?: Function, thisObject?: any, type?: string): Promise<any>;
     /**
      * Destroy a single resource file or a set of resources to the cache data, to return whether to delete success.
      * @param name Name attribute or resource group name of the load item in the configuration file.
