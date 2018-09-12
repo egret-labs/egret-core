@@ -70,10 +70,10 @@ var ManifestPlugin = /** @class */ (function () {
                     file.path = path.join(file.base, new_file_path);
                     relative = file.relative.split("\\").join('/');
                     if (file.origin.indexOf('libs/') >= 0) {
-                        manifest.initial.push(relative);
+                        manifest.initial.push("./" + relative);
                     }
                     else {
-                        manifest.game.push(relative);
+                        manifest.game.push("./" + relative);
                     }
                     if (this.options.verbose) {
                         this.verboseInfo.push({ filename: filename, new_file_path: new_file_path });
