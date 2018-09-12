@@ -2820,7 +2820,7 @@ var RES;
         unload: function (r) { return RES.queue.unloadResource(r); },
         save: function (resource, data) {
             RES.host.state[resource.root + resource.name] = 2;
-            resource.promise = undefined;
+            delete resource.promise;
             __tempCache[resource.root + resource.name] = data;
         },
         get: function (resource) {

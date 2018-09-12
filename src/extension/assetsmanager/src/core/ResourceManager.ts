@@ -46,7 +46,7 @@ module RES {
 
         save(resource: ResourceInfo, data: any) {
             host.state[resource.root + resource.name] = 2;
-            resource.promise = undefined;
+            delete resource.promise;
             __tempCache[resource.root + resource.name] = data;
         },
 

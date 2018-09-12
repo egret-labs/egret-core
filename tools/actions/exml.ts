@@ -48,10 +48,16 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string, t
     exmls = exml.sort(exmls);
     //6.对exml文件列表进行筛选
     let screenExmls = []
+    let versionExmlHash = {};
     for (let exml of exmls) {
         for (let path of paths) {
-            if (path === exml.filename) {
+            // if (path === exml.filename) {
+            //     screenExmls.push(exml);
+            // }
+            if (path.indexOf(exml.filename) > -1) {
                 screenExmls.push(exml);
+                versionExmlHash[exml.filename] = path;
+                versionExmlHash[path] = exml.filename;
             }
         }
     }
@@ -65,7 +71,7 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string, t
     themeDatas.forEach(theme => theme.exmls = []);
     screenExmls.forEach(e => {
         exmlParser.fileSystem.set(e.filename, e);
-        var epath = e.filename;
+        var epath = versionExmlHash[e.filename];
         themeDatas.forEach((thm) => {
             if (epath in oldEXMLS) {
                 const exmlFile = oldEXMLS[epath];
@@ -80,8 +86,6 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string, t
             file.save(Path.join(egret.args.projectDir, thmData.path), JSON.stringify(thmData, null, '\t'));
         }
     })
-
-
     themeDatas.forEach(theme => theme.exmls = []);
     screenExmls.forEach(e => {
         exmlParser.fileSystem.set(e.filename, e);
@@ -126,8 +130,8 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string, t
                 break;
         }
         themeDatas.forEach((thm) => {
-            if (epath in oldEXMLS) {
-                const exmlFile = oldEXMLS[epath];
+            if (versionExmlHash[epath] in oldEXMLS) {
+                const exmlFile = oldEXMLS[versionExmlHash[epath]];
                 if (exmlFile.theme.indexOf("," + thm.path + ",") >= 0)
                     thm.exmls.push(exmlEl);
             }
