@@ -43,12 +43,18 @@ function publishEXML(exmls, exmlPublishPolicy, themeDatas) {
     exmls = exml.sort(exmls);
     //6.对exml文件列表进行筛选
     var screenExmls = [];
+    var versionExmlHash = {};
     for (var _i = 0, exmls_2 = exmls; _i < exmls_2.length; _i++) {
         var exml_2 = exmls_2[_i];
         for (var _a = 0, paths_1 = paths; _a < paths_1.length; _a++) {
             var path = paths_1[_a];
-            if (path === exml_2.filename) {
+            // if (path === exml.filename) {
+            //     screenExmls.push(exml);
+            // }
+            if (path.indexOf(exml_2.filename) > -1) {
                 screenExmls.push(exml_2);
+                versionExmlHash[exml_2.filename] = path;
+                versionExmlHash[path] = exml_2.filename;
             }
         }
     }
@@ -61,7 +67,7 @@ function publishEXML(exmls, exmlPublishPolicy, themeDatas) {
     themeDatas.forEach(function (theme) { return theme.exmls = []; });
     screenExmls.forEach(function (e) {
         exmlParser.fileSystem.set(e.filename, e);
-        var epath = e.filename;
+        var epath = versionExmlHash[e.filename];
         themeDatas.forEach(function (thm) {
             if (epath in oldEXMLS) {
                 var exmlFile = oldEXMLS[epath];
@@ -119,8 +125,8 @@ function publishEXML(exmls, exmlPublishPolicy, themeDatas) {
                 break;
         }
         themeDatas.forEach(function (thm) {
-            if (epath in oldEXMLS) {
-                var exmlFile = oldEXMLS[epath];
+            if (versionExmlHash[epath] in oldEXMLS) {
+                var exmlFile = oldEXMLS[versionExmlHash[epath]];
                 if (exmlFile.theme.indexOf("," + thm.path + ",") >= 0)
                     thm.exmls.push(exmlEl);
             }
