@@ -5,7 +5,7 @@ import { Plugin, File } from './index';
 const manifest = {
     initial: [],
     game: [],
-// configURL: ""
+    // configURL: ""
 }
 
 
@@ -53,10 +53,10 @@ export class ManifestPlugin {
             const relative = file.relative.split("\\").join('/');
 
             if (file.origin.indexOf('libs/') >= 0) {
-                manifest.initial.push(relative);
+                manifest.initial.push("./" + relative);
             }
             else {
-                manifest.game.push(relative);
+                manifest.game.push("./" + relative);
             }
 
             if (this.options.verbose) {
