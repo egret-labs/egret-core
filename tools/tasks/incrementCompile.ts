@@ -21,7 +21,11 @@ export class IncrementCompilePlugin {
 function executeBuildCommand() {
 
     return new Promise((resolve, reject) => {
-
+        // console.log("1   executeBuildCommand", {
+        //     path: egret.args.projectDir,
+        //     command: "build",
+        //     option: egret.args
+        // });
         service.client.execCommand({
             path: egret.args.projectDir,
             command: "build",

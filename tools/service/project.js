@@ -28,6 +28,7 @@ var Project = /** @class */ (function () {
     Project.prototype.fileChanged = function (socket, task, path, changeType) {
         var _this = this;
         //console.log("--project.fileChanged--")
+        // console.log("4  Project fileChanged", task);
         if (this.pendingRequest)
             this.pendingRequest.end({ command: "build", exitCode: 0 });
         this.pendingRequest = socket;

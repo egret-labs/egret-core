@@ -236,10 +236,12 @@ var AutoCompileCommand = /** @class */ (function () {
     AutoCompileCommand.prototype.onServiceMessage = function (msg) {
         switch (msg.command) {
             case "build":
+                // console.log("5  compileservice onServiceMessage", msg);
                 if (msg.option) {
                     this.sourceMapStateChanged = msg.option.sourceMap != egret.args.sourceMap;
                     egret.args = parser.parseJSON(msg.option);
                 }
+                // console.log("6  compileservice onServiceMessage", msg);
                 this.buildChanges(msg.changes);
                 break;
             case "shutdown":
