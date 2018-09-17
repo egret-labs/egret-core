@@ -39,6 +39,7 @@ class Project {
 
     fileChanged(socket: ServiceSocket, task: egret.ServiceCommand, path?: string, changeType?: 'added' | 'removed' | 'modified') {
         //console.log("--project.fileChanged--")
+        // console.log("4  Project fileChanged", task);
         if (this.pendingRequest)
             this.pendingRequest.end({ command: "build", exitCode: 0 });
         this.pendingRequest = socket;

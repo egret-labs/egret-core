@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var exml = require("../actions/exml");
 var file = require("../lib/FileUtil");
+var FileUtil = require("../lib/FileUtil");
 var ExmlPlugin = /** @class */ (function () {
     function ExmlPlugin(publishPolicy) {
         this.publishPolicy = publishPolicy;
@@ -64,7 +65,7 @@ var ExmlPlugin = /** @class */ (function () {
     };
     ExmlPlugin.prototype.onFinish = function (pluginContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var dtsContents, themeDatas, result;
+            var dtsContents, exmlDTS, themeDatas, result;
             return __generator(this, function (_a) {
                 if (this.exmls.length == 0) {
                     return [2 /*return*/];
@@ -74,7 +75,15 @@ var ExmlPlugin = /** @class */ (function () {
                 });
                 if (this.publishPolicy == "debug") {
                     dtsContents = exml.generateExmlDTS(this.exmls);
-                    pluginContext.createFile('libs/exml.e.d.ts', new Buffer(dtsContents));
+                    if (!FileUtil.exists('libs/exml.e.d.ts')) {
+                        pluginContext.createFile('libs/exml.e.d.ts', new Buffer(dtsContents));
+                    }
+                    else {
+                        exmlDTS = FileUtil.read('libs/exml.e.d.ts');
+                        if (dtsContents !== exmlDTS) {
+                            pluginContext.createFile('libs/exml.e.d.ts', new Buffer(dtsContents));
+                        }
+                    }
                 }
                 themeDatas = this.themeFilenames.map(function (filename) {
                     var content = file.read(file.joinPath(egret.args.projectDir, filename));

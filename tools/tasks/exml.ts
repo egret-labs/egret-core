@@ -1,6 +1,7 @@
 import * as exml from '../actions/exml';
 import file = require('../lib/FileUtil');
 import { PluginContext, Plugin, File } from './';
+import FileUtil = require('../lib/FileUtil');
 export class ExmlPlugin implements Plugin {
 
     name = 'exml';
@@ -35,7 +36,14 @@ export class ExmlPlugin implements Plugin {
         })
         if (this.publishPolicy == "debug") {
             const dtsContents = exml.generateExmlDTS(this.exmls);
-            pluginContext.createFile('libs/exml.e.d.ts', new Buffer(dtsContents))
+            if (!FileUtil.exists('libs/exml.e.d.ts')) {
+                pluginContext.createFile('libs/exml.e.d.ts', new Buffer(dtsContents))
+            } else {
+                const exmlDTS = FileUtil.read('libs/exml.e.d.ts');
+                if (dtsContents !== exmlDTS) {
+                    pluginContext.createFile('libs/exml.e.d.ts', new Buffer(dtsContents))
+                }
+            }
         }
         const themeDatas = this.themeFilenames.map(filename => {
             const content = file.read(file.joinPath(egret.args.projectDir, filename))
