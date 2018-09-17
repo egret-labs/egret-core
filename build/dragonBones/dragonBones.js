@@ -15695,6 +15695,7 @@ var dragonBones;
             if (!this._batchEnabled || !this._armature) {
                 return;
             }
+            this.$hasRenderNode = false;
             for (var _i = 0, _a = this._armature.getSlots(); _i < _a.length; _i++) {
                 var slot = _a[_i];
                 // (slot as EgretSlot).transformUpdateEnabled = true;
