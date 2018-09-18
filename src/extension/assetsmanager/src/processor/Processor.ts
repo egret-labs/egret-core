@@ -486,12 +486,12 @@ module RES.processor {
                             return fsData[filename]
                         },
 
-                        addFile: (filename, type, root, extra) => {
-                            if (!type) type = "";
+                        addFile: (data: { name: string, type: string, url: string, root?: string, extra?: 1 | undefined }) => {
+                            if (!data.type) data.type = "";
                             if (root == undefined) {
-                                root = "";
+                                data.root = "";
                             }
-                            fsData[filename] = { name: filename, type, url: filename, root, extra };
+                            fsData[data.name] = data;
                         },
 
                         profile: () => {

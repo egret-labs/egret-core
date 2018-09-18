@@ -26,7 +26,7 @@ module RES {
     */
     export interface FileSystem {
 
-        addFile(filename: string, type?: string, root?: string, extra?: 1 | undefined);
+        addFile(data: { name: string, type: string, url: string, root?: string, extra?: 1 | undefined });
 
         getFile(filename: string): File | null;
 
