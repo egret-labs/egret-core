@@ -339,15 +339,15 @@ module RES {
             }
             this.config.alias[alias] = key;
         }
-        public addResourceData(data: { name: string, type?: string, url: string, root?: string, extra?: 1 | undefined }): void {
+        public addResourceData(data: { name: string, type: string, url: string, root?: string, extra?: 1 | undefined }, isAlias = true): void {
             if (RES.hasRes(data.name)) {
                 return;
             }
             if (!data.type) {
                 data.type = this.__temp__get__type__via__url(data.url);
             }
-            config.config.fileSystem.addFile(data.url, data.type, data.root, data.extra);
-            if (data.name) {
+            config.config.fileSystem.addFile(data);
+            if (data.name && isAlias) {
                 this.config.alias[data.name] = data.url;
             }
         }

@@ -284,15 +284,16 @@ var RES;
             }
             this.config.alias[alias] = key;
         };
-        ResourceConfig.prototype.addResourceData = function (data) {
+        ResourceConfig.prototype.addResourceData = function (data, isAlias) {
+            if (isAlias === void 0) { isAlias = true; }
             if (RES.hasRes(data.name)) {
                 return;
             }
             if (!data.type) {
                 data.type = this.__temp__get__type__via__url(data.url);
             }
-            RES.config.config.fileSystem.addFile(data.url, data.type, data.root, data.extra);
-            if (data.name) {
+            RES.config.config.fileSystem.addFile(data);
+            if (data.name && isAlias) {
                 this.config.alias[data.name] = data.url;
             }
         };
@@ -1704,7 +1705,8 @@ var RES;
             RES.queue.maxRetryTimes = retry;
         };
         Resource.prototype.addResourceData = function (data) {
-            RES.config.addResourceData(data);
+            data["root"] = '';
+            RES.config.addResourceData(data, false);
         };
         __decorate([
             RES.checkNull
@@ -2231,13 +2233,13 @@ var RES;
                             getFile: function (filename) {
                                 return fsData[filename];
                             },
-                            addFile: function (filename, type, root, extra) {
-                                if (!type)
-                                    type = "";
+                            addFile: function (data) {
+                                if (!data.type)
+                                    data.type = "";
                                 if (root == undefined) {
-                                    root = "";
+                                    data.root = "";
                                 }
-                                fsData[filename] = { name: filename, type: type, url: filename, root: root, extra: extra };
+                                fsData[data.name] = data;
                             },
                             profile: function () {
                                 console.log(fsData);

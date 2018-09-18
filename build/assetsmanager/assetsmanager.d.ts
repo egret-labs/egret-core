@@ -184,11 +184,11 @@ declare module RES {
         addAlias(alias: any, key: any): void;
         addResourceData(data: {
             name: string;
-            type?: string;
+            type: string;
             url: string;
             root?: string;
             extra?: 1 | undefined;
-        }): void;
+        }, isAlias?: boolean): void;
         removeResourceData(data: {
             name: string;
             type?: string;
@@ -1396,7 +1396,13 @@ declare module RES {
     * @private
     */
     interface FileSystem {
-        addFile(filename: string, type?: string, root?: string, extra?: 1 | undefined): any;
+        addFile(data: {
+            name: string;
+            type: string;
+            url: string;
+            root?: string;
+            extra?: 1 | undefined;
+        }): any;
         getFile(filename: string): File | null;
         profile(): void;
         removeFile(filename: string): any;
