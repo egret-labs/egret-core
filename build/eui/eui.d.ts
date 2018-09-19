@@ -380,7 +380,7 @@ declare namespace eui.sys {
     }
 }
 declare namespace eui {
-    function getAssets(source: string, callback: (content: any) => void): void;
+    function getAssets(source: string, callback: (content: any) => void, thisObject: any): void;
     function getTheme(source: string, callback: (content: any) => void): void;
     /**
      * The UIComponent class is the base class for all visual components, both skinnable and nonskinnable.

@@ -230,7 +230,7 @@ namespace eui {
             let source = this._source;
             if (source && typeof source == "string") {
 
-                getAssets(<string>this._source, (data) => {
+                getAssets(<string>this._source, function (data) {
                     if (source !== this._source)
                         return;
                     if (!egret.is(data, "egret.Texture")) {
@@ -243,7 +243,7 @@ namespace eui {
                     else if (DEBUG) {
                         egret.$warn(2301, source);
                     }
-                })
+                }, this);
             }
             else {
                 this.$setTexture(<egret.Texture>source);

@@ -110,9 +110,9 @@ namespace eui {
             this.$fontChanged = false;
             let font = this.$fontForBitmapLabel;
             if (typeof font == "string") {
-                getAssets(font, (bitmapFont) => {
+                getAssets(font, function (bitmapFont) {
                     this.$setFontData(bitmapFont, <string>font);
-                })
+                }, this);
             } else {
                 this.$setFontData(font);
             }

@@ -33,13 +33,13 @@ namespace eui {
 
 
 
-    export function getAssets(source: string, callback: (content: any) => void) {
+    export function getAssets(source: string, callback: (content: any) => void, thisObject: any) {
         let adapter: IAssetAdapter = egret.getImplementation("eui.IAssetAdapter");
         if (!adapter) {
             adapter = new DefaultAssetAdapter();
         }
         adapter.getAsset(source, content => {
-            callback(content);
+            callback.call(thisObject, content);
         }, this);
     }
 
