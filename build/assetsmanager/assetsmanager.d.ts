@@ -188,7 +188,7 @@ declare module RES {
             url: string;
             root?: string;
             extra?: 1 | undefined;
-        }, isAlias?: boolean): void;
+        }): void;
         removeResourceData(data: {
             name: string;
             type?: string;

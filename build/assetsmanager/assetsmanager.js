@@ -284,8 +284,7 @@ var RES;
             }
             this.config.alias[alias] = key;
         };
-        ResourceConfig.prototype.addResourceData = function (data, isAlias) {
-            if (isAlias === void 0) { isAlias = true; }
+        ResourceConfig.prototype.addResourceData = function (data) {
             if (RES.hasRes(data.name)) {
                 return;
             }
@@ -293,9 +292,6 @@ var RES;
                 data.type = this.__temp__get__type__via__url(data.url);
             }
             RES.config.config.fileSystem.addFile(data);
-            if (data.name && isAlias) {
-                this.config.alias[data.name] = data.url;
-            }
         };
         ResourceConfig.prototype.removeResourceData = function (data) {
             if (!RES.hasRes(data.name)) {
@@ -1706,7 +1702,7 @@ var RES;
         };
         Resource.prototype.addResourceData = function (data) {
             data["root"] = '';
-            RES.config.addResourceData(data, false);
+            RES.config.addResourceData(data);
         };
         __decorate([
             RES.checkNull

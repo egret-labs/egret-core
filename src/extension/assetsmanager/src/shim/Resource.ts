@@ -988,7 +988,7 @@ module RES {
 
         public addResourceData(data: { name: string, type: string, url: string }): void {
             data["root"] = '';
-            config.addResourceData(data, false);
+            config.addResourceData(data);
         }
     }
     /**
