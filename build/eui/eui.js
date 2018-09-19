@@ -14652,7 +14652,10 @@ var eui;
          * @param scrollPos
          */
         Scroller.prototype.horizontalUpdateHandler = function (scrollPos) {
-            this.$Scroller[10 /* viewport */].scrollH = scrollPos;
+            var viewport = this.$Scroller[10 /* viewport */];
+            if (viewport) {
+                viewport.scrollH = scrollPos;
+            }
             this.dispatchEventWith(egret.Event.CHANGE);
         };
         /**
@@ -14661,7 +14664,10 @@ var eui;
          * @param scrollPos
          */
         Scroller.prototype.verticalUpdateHandler = function (scrollPos) {
-            this.$Scroller[10 /* viewport */].scrollV = scrollPos;
+            var viewport = this.$Scroller[10 /* viewport */];
+            if (viewport) {
+                viewport.scrollV = scrollPos;
+            }
             this.dispatchEventWith(egret.Event.CHANGE);
         };
         /**
