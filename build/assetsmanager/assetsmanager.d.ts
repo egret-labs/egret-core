@@ -1393,6 +1393,24 @@ declare module RES {
 }
 declare module RES {
     /**
+     * assetsManager underlying storage resource information
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * assetsManager底层存储资源信息
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    interface File {
+        url: string;
+        type: string;
+        name: string;
+        root: string;
+    }
+    /**
     * @private
     */
     interface FileSystem {
