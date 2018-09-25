@@ -114,13 +114,15 @@ namespace egret.web {
                 return;
             }
             let video: HTMLVideoElement;
-            if (!this.video || egret.Capabilities.isMobile) {
+            if (!this.video) {
                 video = document.createElement("video");
                 this.video = video;
                 video.controls = null;
             } else {
                 video = this.video;
             }
+            // FIXED: 跨域
+            video.crossOrigin = "true";
             video.src = url;
             video.setAttribute("autoplay", "autoplay");
             video.setAttribute("webkit-playsinline", "true");
@@ -224,12 +226,6 @@ namespace egret.web {
                 this.setFullScreenMonitor(false);
 
                 egret.startTick(this.markDirty, this);
-
-                if (egret.Capabilities.isMobile) {
-                    this.video.currentTime = 0;
-                    this.onVideoEnded();
-                    return;
-                }
             }
             this.videoPlay();
         }
@@ -283,9 +279,7 @@ namespace egret.web {
             if (!isfullscreen) {
                 this.checkFullScreen(false);
 
-                if (!egret.Capabilities.isMobile) {
-                    this._fullscreen = isfullscreen;
-                }
+                this._fullscreen = isfullscreen;
             }
         };
 
@@ -407,9 +401,6 @@ namespace egret.web {
          * @inheritDoc
          */
         public set fullscreen(value: boolean) {
-            if (egret.Capabilities.isMobile) {
-                return;
-            }
             this._fullscreen = !!value;
             if (this.video && this.video.paused == false) {
                 this.checkFullScreen(this._fullscreen);
@@ -533,7 +524,7 @@ namespace egret.web {
             let posterData = this.posterData;
             let width = this.getPlayWidth();
             let height = this.getPlayHeight();
-            if ((!this.isPlayed || egret.Capabilities.isMobile) && posterData) {
+            if (!this.isPlayed && posterData) {
                 node.image = posterData;
                 node.imageWidth = width;
                 node.imageHeight = height;
