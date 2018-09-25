@@ -4,7 +4,7 @@
 ---
 
 
-Egret Engine was officially released on May 25, 2018 5.2 stable version. On September 10, 2018, we will release a stable version of 5.2.8. This release is a centralized bug fix for version 5.2
+Egret Engine was officially released on May 25, 2018 5.2 stable version. On September 10, 2018, we will release a stable version of 5.2.9. This release is a centralized bug fix for version 5.2
 
 
 ## 2D Rendering - JavaScript
