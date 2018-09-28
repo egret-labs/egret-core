@@ -74,6 +74,7 @@ module egret {
     locale_strings[1121] = "您的模块 package.json 中不包含 typings 属性，这会导致导出的模块不存在 TypeScript Definition 文件 ( .d.ts )，近而无法在 TypeScript 中包含智能语法提示"
     locale_strings[1122] = "第三方库的 tsconfig.json 中必须包含 outFile 这一属性";
     locale_strings[1123] = "{0} 将被调整为'{1}'";
+    locale_strings[1124] = "第三方库形式的egret项目不支持outDir生成规则";
     //compile
     locale_strings[1301] = "在编译路径 {0} 下找不到 egret_file_list.js 或 game_file_list.js，请检查编译路径是否正确";
     locale_strings[1302] = "请输入编译路径。例:{color_green}egret compile --source [your_typescript_source_dir] --output [your_output_dir]{color_normal}";

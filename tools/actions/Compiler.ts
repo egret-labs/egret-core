@@ -152,23 +152,12 @@ export class Compiler {
         }
 
         let notSupport = ["module", "noLib", "rootDir", "out"];
-        let defaultSupport = { outDir: "bin-debug" };
         let compilerOptions = configObj.compilerOptions;
         for (let optionName of notSupport) {
             if (compilerOptions.hasOwnProperty(optionName)) {
                 var error = utils.tr(1116, optionName);//这个编译选项目前不支持修改
                 console.log(error);//build -e 的时候输出
                 delete compilerOptions[optionName];
-            }
-        }
-        for (let optionName in defaultSupport) {
-            if (compilerOptions[optionName] != defaultSupport[optionName]) {
-                if (compilerOptions[optionName]) {
-                    var error = utils.tr(1116, optionName);
-                    error = utils.tr(1123, error, defaultSupport[optionName]);
-                    console.log(error);
-                }
-                compilerOptions[optionName] = defaultSupport[optionName];
             }
         }
 
