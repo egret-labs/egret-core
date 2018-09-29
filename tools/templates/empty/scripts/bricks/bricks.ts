@@ -23,11 +23,17 @@ export class BricksPlugin implements plugins.Command {
             let content = '';
             content += `BK.Script.loadlib("GameRes://js/promise.js");\n`;
             for (let item of jsonData.initial) {
+                if (item.indexOf("./") == 0) {
+                    item = item.slice(2, item.length);
+                }
                 if (item != 'js/promise.js' && item != 'js/promise.min.js') {
                     content += `BK.Script.loadlib("GameRes://${item}");\n`
                 }
             }
             for (let item of jsonData.game) {
+                if (item.indexOf("./") == 0) {
+                    item = item.slice(2, item.length);
+                }
                 content += `BK.Script.loadlib("GameRes://${item}");\n`
             }
             content += `BK.Script.loadlib("GameRes://egret.bricks.js");\n`
