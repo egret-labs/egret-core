@@ -48,17 +48,17 @@ export class ManifestPlugin {
                 new_file_path = "js/" + basename.substr(0, basename.length - file.extname.length) + file.extname;
 
             }
+            file.outputDir = "";
             file.path = path.join(file.base, new_file_path);
 
             const relative = file.relative.split("\\").join('/');
 
             if (file.origin.indexOf('libs/') >= 0) {
-                manifest.initial.push("./" + relative);
+                manifest.initial.push(relative);
             }
             else {
-                manifest.game.push("./" + relative);
+                manifest.game.push(relative);
             }
-
             if (this.options.verbose) {
                 this.verboseInfo.push({ filename, new_file_path })
             }
