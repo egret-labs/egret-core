@@ -9,20 +9,19 @@ import * as Compiler from './Compiler';
 
 class CompileProject {
     compile(options: egret.ToolArgs) {
-        //console.log("----compileProject.compile----")
-        exmlActions.beforeBuild();
-        //编译
-        exmlActions.build();
-        var result = this.compileProject(options);
-        exmlActions.afterBuild();
+        const result = this.compileProject(options);
         if (result.exitStatus)
             return null;
 
         return result;
     }
     private compilerOptions: ts.CompilerOptions;
+
+    private compilerHost: Compiler.EgretCompilerHost;
+
     public compileProject(args: egret.ToolArgs, files?: egret.FileChanges) {
         //console.log("----compileProject.compileProject----")
+        //增量编译会走到这里面，egret run -a / egret b
         if (files && this.compilerHost) {// console.log("----compileProject.compileProject.B-----")
             // files.forEach(f => f.fileName = f.fileName.replace(args.projectDir, ""));
             // var realCWD = process.cwd();
@@ -65,8 +64,6 @@ class CompileProject {
         return this.compilerHost;
 
     }
-
-    private compilerHost: Compiler.EgretCompilerHost;
 }
 
 function GetJavaScriptFileNames(tsFiles: string[], root: string | RegExp, prefix?: string) {

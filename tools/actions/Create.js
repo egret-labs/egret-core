@@ -38,10 +38,10 @@ var utils = require("../lib/utils");
 var projectAction = require("../actions/Project");
 var FileUtil = require("../lib/FileUtil");
 var doT = require("../lib/doT");
-var EgretProject = require("../project/EgretProject");
-var TemplatesRoot = "tools/templates/";
+var EgretProject = require("../project");
 var Clean = require("../commands/clean");
-var Create = (function () {
+var TemplatesRoot = "tools/templates/";
+var Create = /** @class */ (function () {
     function Create() {
     }
     Create.prototype.execute = function () {
@@ -50,7 +50,7 @@ var Create = (function () {
             return __generator(this, function (_a) {
                 proj = this.project;
                 options = egret.args;
-                project = EgretProject.data;
+                project = EgretProject.projectData;
                 projectAction.normalize(proj);
                 emptyTemplate = FileUtil.joinPath(egret.root, TemplatesRoot + "empty");
                 template = FileUtil.joinPath(egret.root, TemplatesRoot + proj.type);
@@ -81,23 +81,17 @@ function updateEgretProperties(projectConfig) {
     var propFile = FileUtil.joinPath(egret.args.projectDir, "egretProperties.json");
     var jsonString = FileUtil.read(propFile);
     var props = JSON.parse(jsonString);
-    props.egret_version = egret.version;
+    props.engineVersion = egret.version;
+    props.compilerVersion = egret.version;
     props.template = {};
-    if (projectConfig.type == "eui") {
-        //添加eui项目默认配置
-        props.eui = {
-            exmlRoot: ["resource/eui_skins"],
-            themes: ["resource/default.thm.json"],
-            exmlPublishPolicy: "content"
-        };
-    }
-    else if (projectConfig.type == "wasm") {
+    props.target = { current: "web" };
+    if (projectConfig.type == "wasm") {
         props.wasm = {};
     }
     if (!props.modules) {
         props.modules = modules.map(function (m) { return ({ name: m.name }); });
     }
-    var promise = { name: "promise", path: "./promise" };
+    var promise = { name: "promise" };
     props.modules.push(promise);
     FileUtil.save(propFile, JSON.stringify(props, null, "  "));
 }

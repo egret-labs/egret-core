@@ -81,32 +81,35 @@ namespace egret {
          */
         constructor(color:number = 0xFF0000, alpha:number = 1.0, blurX:number = 6.0, blurY:number = 6.0, strength:number = 2, quality:number = 1, inner:boolean = false, knockout:boolean = false) {
             super();
-            this.type = "glow";
+            let self = this;
+            self.type = "glow";
 
-            this.$color = color;
-            this.$blue = color & 0x0000FF;
-            this.$green = (color & 0x00ff00) >> 8;
-            this.$red = color >> 16;
-            this.$alpha = alpha;
-            this.$blurX = blurX;
-            this.$blurY = blurY;
-            this.$strength = strength;
-            this.$quality = quality;
-            this.$inner = inner;
-            this.$knockout = knockout;
+            self.$color = color;
+            self.$blue = color & 0x0000FF;
+            self.$green = (color & 0x00ff00) >> 8;
+            self.$red = color >> 16;
+            self.$alpha = alpha;
+            self.$blurX = blurX;
+            self.$blurY = blurY;
+            self.$strength = strength;
+            self.$quality = quality;
+            self.$inner = inner;
+            self.$knockout = knockout;
 
-            this.$uniforms.color = {x: this.$red / 255, y: this.$green / 255, z: this.$blue / 255, w: 1};
-            this.$uniforms.alpha = alpha;
-            this.$uniforms.blurX = blurX;
-            this.$uniforms.blurY = blurY;
-            this.$uniforms.strength = strength;
+            self.$uniforms.color = {x: this.$red / 255, y: this.$green / 255, z: this.$blue / 255, w: 1};
+            self.$uniforms.alpha = alpha;
+            self.$uniforms.blurX = blurX;
+            self.$uniforms.blurY = blurY;
+            self.$uniforms.strength = strength;
             // this.$uniforms.quality = quality;
-            this.$uniforms.inner = inner ? 1 : 0;
-            this.$uniforms.knockout = knockout ? 0 : 1;
+            self.$uniforms.inner = inner ? 1 : 0;
+            self.$uniforms.knockout = knockout ? 0 : 1;
 
-            this.$uniforms.dist = 0;
-            this.$uniforms.angle = 0;
-            this.$uniforms.hideObject = 0;
+            self.$uniforms.dist = 0;
+            self.$uniforms.angle = 0;
+            self.$uniforms.hideObject = 0;
+
+            self.onPropertyChange();
         }
 
         /**
@@ -141,7 +144,6 @@ namespace egret {
             this.$uniforms.color.x = this.$red / 255;
             this.$uniforms.color.y = this.$green / 255;
             this.$uniforms.color.z = this.$blue / 255;
-            this.invalidate();
         }
 
         /**
@@ -171,7 +173,6 @@ namespace egret {
             }
             this.$alpha = value;
             this.$uniforms.alpha = value;
-            this.invalidate();
         }
 
         /**
@@ -196,12 +197,13 @@ namespace egret {
         }
 
         public set blurX(value:number) {
-            if(this.$blurX == value) {
+            let self = this;
+            if(self.$blurX == value) {
                 return;
             }
-            this.$blurX = value;
-            this.$uniforms.blurX = value;
-            this.invalidate();
+            self.$blurX = value;
+            self.$uniforms.blurX = value;
+            self.onPropertyChange();
         }
 
         /**
@@ -226,12 +228,13 @@ namespace egret {
         }
 
         public set blurY(value:number) {
-            if(this.$blurY == value) {
+            let self = this;
+            if(self.$blurY == value) {
                 return;
             }
-            this.$blurY = value;
-            this.$uniforms.blurY = value;
-            this.invalidate();
+            self.$blurY = value;
+            self.$uniforms.blurY = value;
+            self.onPropertyChange();
         }
 
         /**
@@ -261,7 +264,6 @@ namespace egret {
             }
             this.$strength = value;
             this.$uniforms.strength = value;
-            this.invalidate();
         }
 
         /**
@@ -290,7 +292,6 @@ namespace egret {
                 return;
             }
             this.$quality = value;
-            this.invalidate();
         }
 
         /**
@@ -320,7 +321,6 @@ namespace egret {
             }
             this.$inner = value;
             this.$uniforms.inner = value ? 1 : 0;
-            this.invalidate();
         }
 
         /**
@@ -350,7 +350,6 @@ namespace egret {
             }
             this.$knockout = value;
             this.$uniforms.knockout = value ? 0 : 1;
-            this.invalidate();
         }
 
         /**
@@ -358,6 +357,14 @@ namespace egret {
          */
         public $toJson():string {
             return '{"color": ' + this.$color + ', "red": ' + this.$red + ', "green": ' + this.$green + ', "blue": ' + this.$blue + ', "alpha": ' + this.$alpha + ', "blurX": ' + this.$blurX + ', "blurY": ' + this.blurY + ', "strength": ' + this.$strength + ', "quality": ' + this.$quality + ', "inner": ' + this.$inner + ', "knockout": ' + this.$knockout + '}';
+        }
+
+        protected updatePadding():void {
+            let self = this;
+            self.paddingLeft = self.blurX;
+            self.paddingRight = self.blurX;
+            self.paddingTop = self.blurY;
+            self.paddingBottom = self.blurY;
         }
     }
 }

@@ -27,29 +27,6 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-namespace egret.sys {
-    /**
-     * @private
-     */
-    export const enum BitmapKeys {
-        bitmapData,
-        image,
-        bitmapX,
-        bitmapY,
-        bitmapWidth,
-        bitmapHeight,
-        offsetX,
-        offsetY,
-        textureWidth,
-        textureHeight,
-        smoothing,
-        explicitBitmapWidth,
-        explicitBitmapHeight,
-        sourceWidth,
-        sourceHeight
-    }
-}
-
 namespace egret {
 
     /**
@@ -84,50 +61,47 @@ namespace egret {
     export class Bitmap extends DisplayObject {
 
         /**
-         * Initializes a Bitmap object to refer to the specified BitmapData|Texture object.
-         * @param value The BitmapData|Texture object being referenced.
+         * Initializes a Bitmap object to refer to the specified Texture object.
+         * @param value The Texture object being referenced.
          * @version Egret 2.4
          * @platform Web,Native
          * @language en_US
          */
         /**
-         * 创建一个引用指定 BitmapData|Texture 实例的 Bitmap 对象
-         * @param value 被引用的 BitmapData|Texture 实例
+         * 创建一个引用指定 Texture 实例的 Bitmap 对象
+         * @param value 被引用的 Texture 实例
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
          */
-        public constructor(value?: BitmapData | Texture) {
+        public constructor(value?: Texture) {
             super();
-            this.$renderNode = new sys.BitmapNode();
-            this.$Bitmap = {
-                0: null,     // bitmapData,
-                1: null,     // image,
-                2: 0,        // bitmapX,
-                3: 0,        // bitmapY,
-                4: 0,        // bitmapWidth,
-                5: 0,        // bitmapHeight,
-                6: 0,        // offsetX,
-                7: 0,        // offsetY,
-                8: 0,        // textureWidth,
-                9: 0,        // textureHeight
-                10: Bitmap.defaultSmoothing,    // smoothing
-                11: NaN,     //explicitBitmapWidth,
-                12: NaN,     //explicitBitmapHeight,
-                13: NaN,     //sourceWidth,
-                14: NaN,     //sourceHeight
-            };
-
-            this.$setBitmapData(value);
-            if(value instanceof Texture) {
-                (<sys.BitmapNode>this.$renderNode).rotated = value.$rotated;
+            this.$renderNode = new sys.NormalBitmapNode();
+            this.$setTexture(value);
+            if (value) {
+                (<sys.NormalBitmapNode>this.$renderNode).rotated = value.$rotated;
             }
         }
 
-        /**
-         * @private
-         */
-        $Bitmap: Object;
+        protected $texture: Texture = null;
+        public $bitmapData: BitmapData = null;
+        protected $bitmapX: number = 0;
+        protected $bitmapY: number = 0;
+        protected $bitmapWidth: number = 0;
+        protected $bitmapHeight: number = 0;
+        protected $offsetX: number = 0;
+        protected $offsetY: number = 0;
+        protected $textureWidth: number = 0;
+        protected $textureHeight: number = 0;
+        protected $sourceWidth: number = 0;
+        protected $sourceHeight: number = 0;
+        protected $smoothing: boolean = Bitmap.defaultSmoothing;
+        protected $explicitBitmapWidth: number = NaN;
+        protected $explicitBitmapHeight: number = NaN;
+
+        protected createNativeDisplayObject(): void {
+            this.$nativeDisplayObject = new egret_native.NativeDisplayObject(egret_native.NativeObjectType.BITMAP);
+        }
 
         /**
          * @private
@@ -136,9 +110,9 @@ namespace egret {
         $onAddToStage(stage: Stage, nestLevel: number): void {
             super.$onAddToStage(stage, nestLevel);
 
-            let bitmapData = this.$Bitmap[sys.BitmapKeys.bitmapData];
-            if (bitmapData) {
-                BitmapData.$addDisplayObject(this, bitmapData);
+            let texture = this.$texture;
+            if (texture && texture.$bitmapData) {
+                BitmapData.$addDisplayObject(this, texture.$bitmapData);
             }
         }
 
@@ -149,38 +123,10 @@ namespace egret {
         $onRemoveFromStage(): void {
             super.$onRemoveFromStage();
 
-            let bitmapData = this.$Bitmap[sys.BitmapKeys.bitmapData];
-            if (bitmapData) {
-                BitmapData.$removeDisplayObject(this, bitmapData);
+            let texture = this.$texture;
+            if (texture) {
+                BitmapData.$removeDisplayObject(this, texture.$bitmapData);
             }
-        }
-
-        /**
-         * The BitmapData object being referenced.
-         * If you pass the constructor of type Texture or last set for texture, this value returns null.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 被引用的 BitmapData 对象。
-         * 如果传入构造函数的类型为 Texture 或者最后设置的为 texture，则此值返回 null。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        public get bitmapData(): BitmapData {
-            let value = this.$Bitmap[sys.BitmapKeys.bitmapData];
-            if (value instanceof Texture) {
-                return null;
-            }
-            else {
-                return value;
-            }
-        }
-
-        public set bitmapData(value: BitmapData) {
-            this.$setBitmapData(value);
         }
 
         /**
@@ -198,19 +144,13 @@ namespace egret {
          * @language zh_CN
          */
         public get texture(): Texture {
-            let value = this.$Bitmap[sys.BitmapKeys.bitmapData];
-            if (value instanceof Texture) {
-                return value;
-            }
-            else {
-                return null;
-            }
+            return this.$texture;
         }
 
         public set texture(value: Texture) {
             let self = this;
-            self.$setBitmapData(value);
-            if(value && self.$renderNode) {
+            self.$setTexture(value);
+            if (value && self.$renderNode) {
                 (<sys.BitmapNode>self.$renderNode).rotated = value.$rotated;
             }
         }
@@ -218,73 +158,105 @@ namespace egret {
         /**
          * @private
          */
-        $setBitmapData(value: BitmapData | Texture): boolean {
-            let values = this.$Bitmap;
-            let oldBitmapData = values[sys.BitmapKeys.bitmapData];
-            if (value == oldBitmapData) {
+        $setTexture(value: Texture): boolean {
+            let self = this;
+            let oldTexture = self.$texture;
+            if (value == oldTexture) {
                 return false;
             }
-            values[sys.BitmapKeys.bitmapData] = value;
+            self.$texture = value;
             if (value) {
-                this.$refreshImageData();
+                self.$refreshImageData();
             }
             else {
-                if (oldBitmapData) {
-                    BitmapData.$removeDisplayObject(this, oldBitmapData);
+                if (oldTexture) {
+                    BitmapData.$removeDisplayObject(self, oldTexture.$bitmapData);
                 }
-                this.setImageData(null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-                this.$invalidateContentBounds();
+                self.setImageData(null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+                self.$renderDirty = true;
+                let p = self.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                let maskedObject = self.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
+                if (egret.nativeRender) {
+                    this.setBitmapDataToWasm(null);
+                }
                 return true;
             }
 
-            if (this.$stage) {
-                if (oldBitmapData) {
-                    let oldHashCode: number;
-                    if ((<Texture>oldBitmapData)._bitmapData && (<Texture>oldBitmapData)._bitmapData.hashCode) {
-                        oldHashCode = (<Texture>oldBitmapData)._bitmapData.hashCode;
-                    }
-                    else {
-                        oldHashCode = oldBitmapData.hashCode;
-                    }
-                    let newHashCode: number;
-                    if ((<Texture>value)._bitmapData && (<Texture>value)._bitmapData.hashCode) {
-                        newHashCode = (<Texture>value)._bitmapData.hashCode;
-                    }
-                    else {
-                        newHashCode = value.hashCode;
-                    }
+            if (self.$stage) {
+                if (oldTexture && oldTexture.$bitmapData) {
+                    let oldHashCode: number = oldTexture.$bitmapData.hashCode;
+                    let newHashCode: number = value.$bitmapData ? value.$bitmapData.hashCode : -1;
                     if (oldHashCode == newHashCode) {
-                        this.$invalidateContentBounds();
+                        self.$renderDirty = true;
+                        let p = self.$parent;
+                        if (p && !p.$cacheDirty) {
+                            p.$cacheDirty = true;
+                            p.$cacheDirtyUp();
+                        }
+                        let maskedObject = self.$maskedObject;
+                        if (maskedObject && !maskedObject.$cacheDirty) {
+                            maskedObject.$cacheDirty = true;
+                            maskedObject.$cacheDirtyUp();
+                        }
                         return true;
                     }
-                    BitmapData.$removeDisplayObject(this, oldBitmapData);
+                    BitmapData.$removeDisplayObject(self, oldTexture.$bitmapData);
                 }
-                BitmapData.$addDisplayObject(this, value);
+                BitmapData.$addDisplayObject(self, value.$bitmapData);
             }
 
-            this.$invalidateContentBounds();
+            self.$renderDirty = true;
+            let p = self.$parent;
+            if (p && !p.$cacheDirty) {
+                p.$cacheDirty = true;
+                p.$cacheDirtyUp();
+            }
+            let maskedObject = self.$maskedObject;
+            if (maskedObject && !maskedObject.$cacheDirty) {
+                maskedObject.$cacheDirty = true;
+                maskedObject.$cacheDirtyUp();
+            }
             return true;
+        }
+
+        $setBitmapData(value): void {
+            this.$setTexture(value);
+        }
+
+        /**
+         * @private
+         */
+        protected setBitmapDataToWasm(data?: Texture): void {
+            this.$nativeDisplayObject.setBitmapData(data);
         }
 
         /**
          * @private
          */
         public $refreshImageData(): void {
-            let values = this.$Bitmap;
-            let bitmapData: Texture | BitmapData = values[sys.BitmapKeys.bitmapData];
-            if (bitmapData) {
-                if (bitmapData instanceof Texture) {
-                    this.setImageData(bitmapData._bitmapData,
-                        bitmapData._bitmapX, bitmapData._bitmapY,
-                        bitmapData._bitmapWidth, bitmapData._bitmapHeight,
-                        bitmapData._offsetX, bitmapData._offsetY,
-                        bitmapData.$getTextureWidth(), bitmapData.$getTextureHeight(),
-                        bitmapData._sourceWidth, bitmapData._sourceHeight);
+            let texture: Texture = this.$texture;
+            if (texture) {
+                if (egret.nativeRender) {
+                    this.setBitmapDataToWasm(texture);
                 }
-                else {
-                    let width = bitmapData.width;
-                    let height = bitmapData.height;
-                    this.setImageData(bitmapData, 0, 0, width, height, 0, 0, width, height, width, height);
+                this.setImageData(texture.$bitmapData,
+                    texture.$bitmapX, texture.$bitmapY,
+                    texture.$bitmapWidth, texture.$bitmapHeight,
+                    texture.$offsetX, texture.$offsetY,
+                    texture.$getTextureWidth(), texture.$getTextureHeight(),
+                    texture.$sourceWidth, texture.$sourceHeight);
+            }
+            else {
+                if (egret.nativeRender) {
+                    this.setBitmapDataToWasm(null);
                 }
             }
         }
@@ -292,20 +264,19 @@ namespace egret {
         /**
          * @private
          */
-        private setImageData(image: BitmapData, bitmapX: number, bitmapY: number, bitmapWidth: number, bitmapHeight: number,
+        private setImageData(bitmapData: BitmapData, bitmapX: number, bitmapY: number, bitmapWidth: number, bitmapHeight: number,
             offsetX: number, offsetY: number, textureWidth: number, textureHeight: number, sourceWidth: number, sourceHeight: number): void {
-            let values = this.$Bitmap;
-            values[sys.BitmapKeys.image] = image;
-            values[sys.BitmapKeys.bitmapX] = bitmapX;
-            values[sys.BitmapKeys.bitmapY] = bitmapY;
-            values[sys.BitmapKeys.bitmapWidth] = bitmapWidth;
-            values[sys.BitmapKeys.bitmapHeight] = bitmapHeight;
-            values[sys.BitmapKeys.offsetX] = offsetX;
-            values[sys.BitmapKeys.offsetY] = offsetY;
-            values[sys.BitmapKeys.textureWidth] = textureWidth;
-            values[sys.BitmapKeys.textureHeight] = textureHeight;
-            values[sys.BitmapKeys.sourceWidth] = sourceWidth;
-            values[sys.BitmapKeys.sourceHeight] = sourceHeight;
+            this.$bitmapData = bitmapData;
+            this.$bitmapX = bitmapX;
+            this.$bitmapY = bitmapY;
+            this.$bitmapWidth = bitmapWidth;
+            this.$bitmapHeight = bitmapHeight;
+            this.$offsetX = offsetX;
+            this.$offsetY = offsetY;
+            this.$textureWidth = textureWidth;
+            this.$textureHeight = textureHeight;
+            this.$sourceWidth = sourceWidth;
+            this.$sourceHeight = sourceHeight;
         }
 
         /**
@@ -335,8 +306,32 @@ namespace egret {
         }
 
         public set scale9Grid(value: egret.Rectangle) {
-            this.$scale9Grid = value;
-            this.$invalidateContentBounds();
+            this.$setScale9Grid(value);
+        }
+
+        protected $setScale9Grid(value: egret.Rectangle): void {
+            let self = this;
+            self.$scale9Grid = value;
+            self.$renderDirty = true;
+            if (egret.nativeRender) {
+                if (value) {
+                    self.$nativeDisplayObject.setScale9Grid(value.x, value.y, value.width, value.height);
+                } else {
+                    self.$nativeDisplayObject.setScale9Grid(0, 0, -1, -1);
+                }
+            }
+            else {
+                let p = self.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                let maskedObject = self.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
+            }
         }
 
         /**
@@ -353,7 +348,6 @@ namespace egret {
          * @default <code>BitmapFillMode.SCALE</code>
          *
          * @version Egret 2.4
-         * @version eui 1.0
          * @platform Web
          * @language en_US
          */
@@ -365,7 +359,6 @@ namespace egret {
          * @default <code>BitmapFillMode.SCALE</code>
          *
          * @version Egret 2.4
-         * @version eui 1.0
          * @platform Web
          * @language zh_CN
          */
@@ -378,10 +371,28 @@ namespace egret {
         }
 
         $setFillMode(value: string): boolean {
-            if (value == this.$fillMode) {
+            const self = this;
+            if (value == self.$fillMode) {
                 return false;
             }
-            this.$fillMode = value;
+            self.$fillMode = value;
+
+            if (egret.nativeRender) {
+                self.$nativeDisplayObject.setBitmapFillMode(self.$fillMode);
+            }
+            else {
+                self.$renderDirty = true;
+                let p = self.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                let maskedObject = self.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
+            }
 
             return true;
         }
@@ -417,18 +428,28 @@ namespace egret {
          * @language zh_CN
          */
         public get smoothing(): boolean {
-            let values = this.$Bitmap;
-            return values[sys.BitmapKeys.smoothing];
+            return this.$smoothing;
         }
 
         public set smoothing(value: boolean) {
-            value = !!value;
-            let values = this.$Bitmap;
-            if (value == values[sys.BitmapKeys.smoothing]) {
+            let self = this;
+            if (value == this.$smoothing) {
                 return;
             }
-            values[sys.BitmapKeys.smoothing] = value;
-            this.$invalidate();
+            this.$smoothing = value;
+            (<sys.BitmapNode>this.$renderNode).smoothing = value;
+            if (!egret.nativeRender) {
+                let p = self.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                let maskedObject = self.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
+            }
         }
 
         /**
@@ -437,15 +458,27 @@ namespace egret {
          * @param value
          */
         $setWidth(value: number): boolean {
-            //value = +value || 0;
-            let values = this.$Bitmap;
-            if (value < 0 || value == values[sys.BitmapKeys.explicitBitmapWidth]) {
+            let self = this;
+            if (value < 0 || value == self.$explicitBitmapWidth) {
                 return false;
             }
-            values[sys.BitmapKeys.explicitBitmapWidth] = value;
-
-            this.$invalidateContentBounds();
-
+            self.$explicitBitmapWidth = value;
+            self.$renderDirty = true;
+            if (egret.nativeRender) {
+                self.$nativeDisplayObject.setWidth(value);
+            }
+            else {
+                let p = self.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                let maskedObject = self.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
+            }
             return true;
         }
 
@@ -455,15 +488,27 @@ namespace egret {
          * @param value
          */
         $setHeight(value: number): boolean {
-            //value = +value || 0;
-            let values = this.$Bitmap;
-            if (value < 0 || value == values[sys.BitmapKeys.explicitBitmapHeight]) {
+            let self = this;
+            if (value < 0 || value == self.$explicitBitmapHeight) {
                 return false;
             }
-            values[sys.BitmapKeys.explicitBitmapHeight] = value;
-
-            this.$invalidateContentBounds();
-
+            self.$explicitBitmapHeight = value;
+            self.$renderDirty = true;
+            if (egret.nativeRender) {
+                self.$nativeDisplayObject.setHeight(value);
+            }
+            else {
+                let p = self.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                let maskedObject = self.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
+            }
             return true;
         }
 
@@ -472,8 +517,7 @@ namespace egret {
          * 获取显示宽度
          */
         $getWidth(): number {
-            let values = this.$Bitmap;
-            return isNaN(values[sys.BitmapKeys.explicitBitmapWidth]) ? this.$getContentBounds().width : values[sys.BitmapKeys.explicitBitmapWidth];
+            return isNaN(this.$explicitBitmapWidth) ? this.$getContentBounds().width : this.$explicitBitmapWidth;
         }
 
         /**
@@ -481,24 +525,21 @@ namespace egret {
          * 获取显示宽度
          */
         $getHeight(): number {
-            let values = this.$Bitmap;
-            return isNaN(values[sys.BitmapKeys.explicitBitmapHeight]) ? this.$getContentBounds().height : values[sys.BitmapKeys.explicitBitmapHeight];
+            return isNaN(this.$explicitBitmapHeight) ? this.$getContentBounds().height : this.$explicitBitmapHeight;
         }
 
         /**
          * @private
          */
         $measureContentBounds(bounds: Rectangle): void {
-            let values = this.$Bitmap;
-            if (values[sys.BitmapKeys.image]) {
-                let values = this.$Bitmap;
-                let w: number = !isNaN(values[sys.BitmapKeys.explicitBitmapWidth]) ? values[sys.BitmapKeys.explicitBitmapWidth] : values[sys.BitmapKeys.textureWidth];
-                let h: number = !isNaN(values[sys.BitmapKeys.explicitBitmapHeight]) ? values[sys.BitmapKeys.explicitBitmapHeight] : values[sys.BitmapKeys.textureHeight];
+            if (this.$bitmapData) {
+                let w: number = !isNaN(this.$explicitBitmapWidth) ? this.$explicitBitmapWidth : this.$textureWidth;
+                let h: number = !isNaN(this.$explicitBitmapHeight) ? this.$explicitBitmapHeight : this.$textureHeight;
                 bounds.setTo(0, 0, w, h);
             }
             else {
-                let w = !isNaN(values[sys.BitmapKeys.explicitBitmapWidth]) ? values[sys.BitmapKeys.explicitBitmapWidth] : 0;
-                let h = !isNaN(values[sys.BitmapKeys.explicitBitmapHeight]) ? values[sys.BitmapKeys.explicitBitmapHeight] : 0;
+                let w = !isNaN(this.$explicitBitmapWidth) ? this.$explicitBitmapWidth : 0;
+                let h = !isNaN(this.$explicitBitmapHeight) ? this.$explicitBitmapHeight : 0;
 
                 bounds.setTo(0, 0, w, h);
             }
@@ -507,16 +548,30 @@ namespace egret {
         /**
          * @private
          */
-        $render(): void {
-            let values = this.$Bitmap;
-            if (values[sys.BitmapKeys.image]) {
-                let destW: number = !isNaN(values[sys.BitmapKeys.explicitBitmapWidth]) ? values[sys.BitmapKeys.explicitBitmapWidth] : values[sys.BitmapKeys.textureWidth];
-                let destH: number = !isNaN(values[sys.BitmapKeys.explicitBitmapHeight]) ? values[sys.BitmapKeys.explicitBitmapHeight] : values[sys.BitmapKeys.textureHeight];
+        $updateRenderNode(): void {
+            if (this.$texture) {
+                let destW: number = !isNaN(this.$explicitBitmapWidth) ? this.$explicitBitmapWidth : this.$textureWidth;
+                let destH: number = !isNaN(this.$explicitBitmapHeight) ? this.$explicitBitmapHeight : this.$textureHeight;
 
-                sys.BitmapNode.$updateTextureData(<sys.BitmapNode>this.$renderNode, values[sys.BitmapKeys.image],
-                    values[sys.BitmapKeys.bitmapX], values[sys.BitmapKeys.bitmapY], values[sys.BitmapKeys.bitmapWidth], values[sys.BitmapKeys.bitmapHeight],
-                    values[sys.BitmapKeys.offsetX], values[sys.BitmapKeys.offsetY], values[sys.BitmapKeys.textureWidth], values[sys.BitmapKeys.textureHeight],
-                    destW, destH, values[sys.BitmapKeys.sourceWidth], values[sys.BitmapKeys.sourceHeight], this.scale9Grid || values[sys.BitmapKeys.bitmapData]["scale9Grid"], this.fillMode, values[sys.BitmapKeys.smoothing]);
+                let scale9Grid = this.scale9Grid || this.$texture["scale9Grid"];
+                if (scale9Grid) {
+                    if (this.$renderNode instanceof sys.NormalBitmapNode) {
+                        this.$renderNode = new sys.BitmapNode();
+                    }
+                    sys.BitmapNode.$updateTextureDataWithScale9Grid(<sys.NormalBitmapNode>this.$renderNode, this.$bitmapData, scale9Grid,
+                        this.$bitmapX, this.$bitmapY, this.$bitmapWidth, this.$bitmapHeight,
+                        this.$offsetX, this.$offsetY, this.$textureWidth, this.$textureHeight,
+                        destW, destH, this.$sourceWidth, this.$sourceHeight, this.$smoothing);
+                }
+                else {
+                    if (this.fillMode == egret.BitmapFillMode.REPEAT && this.$renderNode instanceof sys.NormalBitmapNode) {
+                        this.$renderNode = new sys.BitmapNode();
+                    }
+                    sys.BitmapNode.$updateTextureData(<sys.NormalBitmapNode>this.$renderNode, this.$bitmapData,
+                        this.$bitmapX, this.$bitmapY, this.$bitmapWidth, this.$bitmapHeight,
+                        this.$offsetX, this.$offsetY, this.$textureWidth, this.$textureHeight,
+                        destW, destH, this.$sourceWidth, this.$sourceHeight, this.$fillMode, this.$smoothing);
+                }
             }
         }
 
@@ -550,65 +605,12 @@ namespace egret {
         $hitTest(stageX: number, stageY: number): DisplayObject {
             let target = super.$hitTest(stageX, stageY);
             if (target && this._pixelHitTest) {
-                target = this.hitTestPixel(stageX, stageY);
+                let boo = this.hitTestPoint(stageX, stageY, true);
+                if (!boo) {
+                    target = null;
+                }
             }
             return target;
         }
-
-        /**
-         * @private
-         */
-        private hitTestPixel(stageX: number, stageY: number): DisplayObject {
-            let m = this.$getInvertedConcatenatedMatrix();
-            let localX = m.a * stageX + m.c * stageY + m.tx;
-            let localY = m.b * stageX + m.d * stageY + m.ty;
-            let data: number[];
-            let displayList = this.$displayList;
-            if (displayList) {
-                let buffer = displayList.renderBuffer;
-                try {
-                    data = buffer.getPixels(localX - displayList.offsetX, localY - displayList.offsetY);
-                }
-                catch (e) {
-                    console.log(this.$Bitmap[sys.BitmapKeys.bitmapData]);
-                    throw new Error(sys.tr(1039));
-                }
-            }
-            else {
-                let buffer = sys.customHitTestBuffer;
-                buffer.resize(3, 3);
-                let node = this.$getRenderNode();
-                let matrix = Matrix.create();
-                matrix.identity();
-                matrix.translate(1 - localX, 1 - localY);
-                sys.systemRenderer.drawNodeToBuffer(node, buffer, matrix, true);
-                Matrix.release(matrix);
-
-                try {
-                    data = buffer.getPixels(1, 1);
-                }
-                catch (e) {
-                    console.log(this.$Bitmap[sys.BitmapKeys.bitmapData]);
-                    throw new Error(sys.tr(1039));
-                }
-            }
-            if (data[3] === 0) {
-                return null;
-            }
-            return this;
-        }
-
-        static $drawImage(node: sys.BitmapNode, image: any,
-            bitmapX: number, bitmapY: number, bitmapWidth: number, bitmapHeight: number, offsetX: number, offsetY: number,
-            textureWidth: number, textureHeight: number, destW: number, destH: number, sourceWidth: number, sourceHeight: number,
-            scale9Grid: egret.Rectangle, fillMode: string, smoothing: boolean): void {
-            console.warn('deprecated method : Bitmap.$drawImage,use egret.sys.BitmapNode.$drawImage instead of it');
-            sys.BitmapNode.$updateTextureData(node, image,
-                bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY,
-                textureWidth, textureHeight, destW, destH, sourceWidth, sourceHeight,
-                scale9Grid, fillMode, smoothing);
-        }
-
     }
-
 }

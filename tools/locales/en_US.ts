@@ -43,7 +43,7 @@ locale_strings[6] = "manifest.json generated successfully";
 locale_strings[7] = "Total time for native copy: {0} second";
 locale_strings[8] = "Project modules can not use both gui and eui, and the eui module is recommended";
 
-locale_strings[1050] = 'Could not find module at ${0}'
+locale_strings[1050] = 'Could not find module : {0}'
 //create
 locale_strings[1001] = "Enter a project name. Example:  {color_green}egret create [project_name]{color_normal}";
 locale_strings[1002] = "The project already exists";
@@ -74,6 +74,7 @@ locale_strings[1120] = "Egret engine 4.1 use the new structure for third-party l
 locale_strings[1121] = "Your module package.json does not contain the 'typings' attribute, which causes the exported module to not have a TypeScript Definition file (.d.ts), and can not contain smart syntax prompts in TypeScript"
 locale_strings[1122] = "Third-party library tsconfig.json must include outFile this attribute";
 locale_strings[1123] = "{0} will be adjusted to '{1}'";
+locale_strings[1124] = "The egret project in the form of a third-party library does not support the outDir generation rule.";
 //compile
 locale_strings[1301] = "Cannot find egret_file_list.js or game_file_list.js compiled under the path {0}, please check whether the compile path is correct";
 locale_strings[1302] = "Please enter the compile path. Example: {color_green}egret compile --source [your_typescript_source_dir] --output [your_output_dir]{color_normal}";
@@ -107,6 +108,15 @@ locale_strings[1418] = "WebP format fail : {0}";
 locale_strings[1419] = "Format WebP : {0} / {1}";
 locale_strings[1420] = "Zip package failed, there may be special characters in the path";
 locale_strings[1421] = "Playing zip package exception!";
+locale_strings[1422] = "After the TextureMerger Plugin runs, there is a reference to superior {1} in {0}!";
+locale_strings[1423] = "TextureMerger execution error, error code: {0}";
+locale_strings[1424] = "Execute command: {0}{1}";
+locale_strings[1425] = "The textureMerger item corresponding to {0} does not have a suffix name set, it has been added automatically, please check the code";
+locale_strings[1426] = "Please install Texture Merger";
+locale_strings[1427] = "Please upgrade Texture Merger to 1.7.0 or later";
+locale_strings[1428] = "Unsupported platforms";
+locale_strings[1429] = "{0} Introduced an identical TextureMerger result, please check";
+locale_strings[1430] = "The configured fileName does not have a resource";
 //startserver
 locale_strings[1501] = "Unable to start the server, please check the authority or whether the port is occupied";
 //create_app
@@ -146,6 +156,7 @@ locale_strings[1715] = "Project testing sucessfully";
 locale_strings[1716] = "You use the old 3rd part library {0}.Please make sure these files not used the removed API or use the compatible 3rd party library {1}";
 locale_strings[1717] = "upgrade interruption, for the following reasons";
 locale_strings[1718] = "5.0.8 later version will delete template/debug/index.html template file, use index.html directly";
+locale_strings[1719] = "5.1 for the new feature experience version, only to create a new project, the old project can not be upgraded";
 //info
 locale_strings[1801] = "Egret version：{0}";
 locale_strings[1802] = "Egret installation path:{0}";
@@ -180,6 +191,7 @@ locale_strings[2019] = "{0}: error the container’s child item must be visible 
 locale_strings[2020] = "{0}: error error for child nodes in w: Declarations, the includeIn and excludeFrom properties are not allowed to use \n {1}";
 locale_strings[2102] = "{0}: warning no child node can be found on the property code \n {1}";
 locale_strings[2103] = "{0}: warning the same property '{1}' on the node is assigned multiple times \n {2}";
+locale_strings[2104] = "Warning: There is a duplicate definition for the class name {1} defined by the {0} file."
 
 // android sdk install
 locale_strings[2201] = "{0} file(s) will be downloaded!";
@@ -231,6 +243,7 @@ locale_strings[10019] = "Cannot find the projects used to build native apps. The
     + "Please visit http://www.egret.com to download the Egret Installer. If you have install Egret, please contact us.";
 locale_strings[10020] = "Compile service is exit unexpectedly";
 locale_strings[10021] = "Error with the folders, Please note the following items: 1. Please check  template/runtime/native_require.js, if it’s void, please recreate a new project and replace it.\n 2.Don’t create native project on the desktop, put all the files into a same place like E disk partition.\n  Please don’t execute the script immediately after configuration because of operation system refresh. If still doesn’t work after try several times, please send email to XX contact us.";
+locale_strings[10022] = "{0} file changes, automatic compilation is closed";
 
 locale_strings[12000] = "Create a new Egret Project";
 locale_strings[12001] = "Please select a template";
@@ -281,14 +294,13 @@ module helpModule {
         "create": "Create a new project",
         "build": "Compile the TypeScript files in project",
         "publish": "Publish the project, ues GoogleClosureCompiler to compress the code",
-        "startserver": "Start HttpServer, run the project in you browser",
+        "run": "Start HttpServer, run the project in you browser",
         "clean": "Reset the Egret engin code in the project",
         "create_lib": "Create a new third part library",
         "create_app": "Create a native app form Html5",
         "upgrade": "Upgrade the project code",
         "make": "Rebuild the Egret engine source code",
-        "info": "Get information of the Egret engine",
-        "apitest": "Check the api was replaced or not after upgrade engine. Only for the 2.4(or before) upgrade to 2.5(or later).Use this command in 2.5(or later) project"
+        "info": "Get information of the Egret engine"
     };
 
     global["helpModule"] = global["helpModule"] || helpModule;

@@ -1,6 +1,6 @@
 ﻿import utils = require('../lib/utils');
 import FileUtil = require('../lib/FileUtil');
-import EgretProject = require('../project/EgretProject');
+import * as EgretProject from '../project';
 class CreateLib implements egret.Command {
 
     async execute() {
@@ -10,11 +10,11 @@ class CreateLib implements egret.Command {
             return 0;
         }
         const moduleName = FileUtil.basename(option.projectDir);
-        const project = EgretProject.data;
+        const project = EgretProject.projectData;
         const libraryTemplate = FileUtil.joinPath(egret.root, "tools/templates/library");
         FileUtil.copy(libraryTemplate, project.getProjectRoot());
 
-        type Package_JSON = { name: string };
+        type Package_JSON = { name: string, compilerVersion: string };
 
         type TSCONFIG_JSON = {
             compilerOptions: {
@@ -25,6 +25,7 @@ class CreateLib implements egret.Command {
         await convert<Package_JSON>(project.getFilePath("package.json"),
             (data) => {
                 data.name = moduleName;
+                data.compilerVersion = egret.version;
                 return data
             });
 

@@ -31,7 +31,7 @@ var CodeUtil = require("./code_util");
 var create_manifest = require("./createManifest");
 var properties = {};
 var stylesMap = {};
-var EXMLConfig = (function () {
+var EXMLConfig = /** @class */ (function () {
     /**
      * 构造函数
      */
@@ -540,7 +540,7 @@ var EXMLConfig = (function () {
     EXMLConfig.W = "http://ns.egret-labs.org/wing";
     return EXMLConfig;
 }());
-var Component = (function () {
+var Component = /** @class */ (function () {
     /**
      * 构造函数
      */

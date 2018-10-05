@@ -112,7 +112,7 @@ namespace eui {
             //endif*/
         }
 
-        $Component:Object;
+        $Component: Object;
 
         /**
          * A identifier of host component which can determine only one component names.
@@ -134,11 +134,11 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get hostComponentKey():string {
+        public get hostComponentKey(): string {
             return this.$Component[sys.ComponentKeys.hostComponentKey];
         }
 
-        public set hostComponentKey(value:string) {
+        public set hostComponentKey(value: string) {
             this.$Component[sys.ComponentKeys.hostComponentKey] = value;
         }
 
@@ -157,11 +157,11 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get skinName():any {
+        public get skinName(): any {
             return this.$Component[sys.ComponentKeys.skinName];
         }
 
-        public set skinName(value:any) {
+        public set skinName(value: any) {
             let values = this.$Component;
             values[sys.ComponentKeys.skinNameExplicitlySet] = true;
             if (values[sys.ComponentKeys.skinName] == value)
@@ -184,16 +184,16 @@ namespace eui {
          * @private
          * 解析skinName
          */
-        $parseSkinName():void {
+        $parseSkinName(): void {
             let skinName = this.skinName;
-            let skin:any;
+            let skin: any;
             if (skinName) {
                 if (skinName.prototype) {
                     skin = new skinName();
                 }
-                else if (typeof(skinName) == "string") {
-                    let clazz:any;
-                    let text:string = skinName.trim();
+                else if (typeof (skinName) == "string") {
+                    let clazz: any;
+                    let text: string = skinName.trim();
                     if (text.charAt(0) == "<") {
                         clazz = EXML.parse(text);
                     }
@@ -220,7 +220,7 @@ namespace eui {
          * @param clazz
          * @param url
          */
-        private onExmlLoaded(clazz:any, url:string):void {
+        private onExmlLoaded(clazz: any, url: string): void {
             if (this.skinName != url) {
                 return;
             }
@@ -242,7 +242,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get skin():Skin {
+        public get skin(): Skin {
             return this.$Component[sys.ComponentKeys.skin];
         }
 
@@ -260,15 +260,15 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        protected setSkin(skin:Skin):void {
+        protected setSkin(skin: Skin): void {
             if (skin && !(skin instanceof eui.Skin)) {
                 skin = null;
                 DEBUG && egret.$error(2202);
             }
             let values = this.$Component;
-            let oldSkin:Skin = values[sys.ComponentKeys.skin];
+            let oldSkin: Skin = values[sys.ComponentKeys.skin];
             if (oldSkin) {
-                let skinParts:string[] = oldSkin.skinParts;
+                let skinParts: string[] = oldSkin.skinParts;
                 let length = skinParts.length;
                 for (let i = 0; i < length; i++) {
                     let partName = skinParts[i];
@@ -290,7 +290,7 @@ namespace eui {
             }
             values[sys.ComponentKeys.skin] = skin;
             if (skin) {
-                let skinParts:string[] = skin.skinParts;
+                let skinParts: string[] = skin.skinParts;
                 let length = skinParts.length;
                 for (let i = 0; i < length; i++) {
                     let partName = skinParts[i];
@@ -335,7 +335,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public setSkinPart(partName:string, instance:any):void {
+        public setSkinPart(partName: string, instance: any): void {
             let oldInstance = this[partName];
             if (oldInstance) {
                 this.partRemoved(partName, oldInstance);
@@ -373,7 +373,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        protected partAdded(partName:string, instance:any):void {
+        protected partAdded(partName: string, instance: any): void {
 
         }
 
@@ -404,7 +404,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        protected partRemoved(partName:string, instance:any):void {
+        protected partRemoved(partName: string, instance: any): void {
 
         }
 
@@ -413,7 +413,7 @@ namespace eui {
          *
          * @param value
          */
-        $setTouchChildren(value:boolean):boolean {
+        $setTouchChildren(value: boolean): boolean {
             value = !!value;
             let values = this.$Component;
             values[sys.ComponentKeys.explicitTouchChildren] = value;
@@ -431,15 +431,12 @@ namespace eui {
          *
          * @param value
          */
-        $setTouchEnabled(value:boolean):boolean {
+        $setTouchEnabled(value: boolean): void {
             value = !!value;
             let values = this.$Component;
             values[sys.ComponentKeys.explicitTouchEnabled] = value;
             if (values[sys.ComponentKeys.enabled]) {
-                return super.$setTouchEnabled(value);
-            }
-            else {
-                return true;
+                super.$setTouchEnabled(value);
             }
         }
 
@@ -468,11 +465,11 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get enabled():boolean {
+        public get enabled(): boolean {
             return this.$Component[sys.ComponentKeys.enabled];
         }
 
-        public set enabled(value:boolean) {
+        public set enabled(value: boolean) {
             value = !!value;
             this.$setEnabled(value);
         }
@@ -482,7 +479,7 @@ namespace eui {
          *
          * @param value
          */
-        $setEnabled(value:boolean):boolean {
+        $setEnabled(value: boolean): boolean {
 
             let values = this.$Component;
             if (value === values[sys.ComponentKeys.enabled]) {
@@ -524,13 +521,13 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get currentState():string {
+        public get currentState(): string {
             let values = this.$Component;
             return values[sys.ComponentKeys.explicitState] ?
                 values[sys.ComponentKeys.explicitState] : this.getCurrentState();
         }
 
-        public set currentState(value:string) {
+        public set currentState(value: string) {
             let values = this.$Component;
             if (value == values[sys.ComponentKeys.explicitState]) {
                 return;
@@ -554,7 +551,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public invalidateState():void {
+        public invalidateState(): void {
             let values = this.$Component;
             if (values[sys.ComponentKeys.stateIsDirty])
                 return;
@@ -578,7 +575,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        protected getCurrentState():string {
+        protected getCurrentState(): string {
             return "";
         }
 
@@ -590,7 +587,7 @@ namespace eui {
          * @private
          * UIComponentImpl 定义的所有变量请不要添加任何初始值，必须统一在此处初始化。
          */
-        private initializeUIValues:()=>void;
+        private initializeUIValues: () => void;
 
         /**
          * Create child objects of the component. This is an advanced method that you might override
@@ -609,7 +606,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        protected createChildren():void {
+        protected createChildren(): void {
             let values = this.$Component;
             if (!values[sys.ComponentKeys.skinName]) {
                 let theme = egret.getImplementation("eui.Theme");
@@ -639,7 +636,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        protected childrenCreated():void {
+        protected childrenCreated(): void {
 
         }
 
@@ -658,7 +655,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        protected commitProperties():void {
+        protected commitProperties(): void {
             sys.UIComponentImpl.prototype["commitProperties"].call(this);
             let values = this.$Component;
             if (values[sys.ComponentKeys.stateIsDirty]) {
@@ -683,7 +680,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        protected measure():void {
+        protected measure(): void {
             sys.measure(this);
             let skin = this.$Component[sys.ComponentKeys.skin];
             if (!skin) {
@@ -729,7 +726,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        protected updateDisplayList(unscaledWidth:number, unscaledHeight:number):void {
+        protected updateDisplayList(unscaledWidth: number, unscaledHeight: number): void {
             sys.updateDisplayList(this, unscaledWidth, unscaledHeight);
         }
 
@@ -748,18 +745,18 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        protected invalidateParentLayout():void {
+        protected invalidateParentLayout(): void {
         }
 
         /**
          * @private
          */
-        $UIComponent:Object;
+        $UIComponent: Object;
 
         /**
          * @private
          */
-        $includeInLayout:boolean;
+        $includeInLayout: boolean;
 
         /**
          * @inheritDoc
@@ -768,7 +765,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public includeInLayout:boolean;
+        public includeInLayout: boolean;
         /**
          * @inheritDoc
          *
@@ -776,7 +773,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public left:any;
+        public left: any;
 
         /**
          * @inheritDoc
@@ -785,7 +782,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public right:any;
+        public right: any;
 
         /**
          * @inheritDoc
@@ -794,7 +791,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public top:any;
+        public top: any;
 
         /**
          * @inheritDoc
@@ -803,7 +800,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public bottom:any;
+        public bottom: any;
 
         /**
          * @inheritDoc
@@ -812,7 +809,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public horizontalCenter:any;
+        public horizontalCenter: any;
 
         /**
          * @inheritDoc
@@ -821,7 +818,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public verticalCenter:any;
+        public verticalCenter: any;
 
         /**
          * @inheritDoc
@@ -830,7 +827,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public percentWidth:number;
+        public percentWidth: number;
 
         /**
          * @inheritDoc
@@ -839,7 +836,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public percentHeight:number;
+        public percentHeight: number;
 
         /**
          * @inheritDoc
@@ -848,7 +845,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public explicitWidth:number;
+        public explicitWidth: number;
 
         /**
          * @inheritDoc
@@ -857,7 +854,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public explicitHeight:number;
+        public explicitHeight: number;
 
         /**
          * @inheritDoc
@@ -866,7 +863,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public minWidth:number;
+        public minWidth: number;
 
         /**
          * @inheritDoc
@@ -875,7 +872,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public maxWidth:number;
+        public maxWidth: number;
 
         /**
          * @inheritDoc
@@ -884,7 +881,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public minHeight:number;
+        public minHeight: number;
 
         /**
          * @inheritDoc
@@ -893,7 +890,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public maxHeight:number;
+        public maxHeight: number;
 
         /**
          * @inheritDoc
@@ -902,7 +899,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public setMeasuredSize(width:number, height:number):void {
+        public setMeasuredSize(width: number, height: number): void {
         }
 
         /**
@@ -912,7 +909,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public invalidateProperties():void {
+        public invalidateProperties(): void {
         }
 
         /**
@@ -922,7 +919,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public validateProperties():void {
+        public validateProperties(): void {
         }
 
         /**
@@ -932,7 +929,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public invalidateSize():void {
+        public invalidateSize(): void {
         }
 
         /**
@@ -942,7 +939,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public validateSize(recursive?:boolean):void {
+        public validateSize(recursive?: boolean): void {
         }
 
         /**
@@ -952,7 +949,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public invalidateDisplayList():void {
+        public invalidateDisplayList(): void {
         }
 
         /**
@@ -962,7 +959,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public validateDisplayList():void {
+        public validateDisplayList(): void {
         }
 
         /**
@@ -972,7 +969,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public validateNow():void {
+        public validateNow(): void {
         }
 
         /**
@@ -982,7 +979,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public setLayoutBoundsSize(layoutWidth:number, layoutHeight:number):void {
+        public setLayoutBoundsSize(layoutWidth: number, layoutHeight: number): void {
         }
 
         /**
@@ -992,7 +989,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public setLayoutBoundsPosition(x:number, y:number):void {
+        public setLayoutBoundsPosition(x: number, y: number): void {
         }
 
         /**
@@ -1002,7 +999,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public getLayoutBounds(bounds:egret.Rectangle):void {
+        public getLayoutBounds(bounds: egret.Rectangle): void {
         }
 
         /**
@@ -1012,7 +1009,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public getPreferredBounds(bounds:egret.Rectangle):void {
+        public getPreferredBounds(bounds: egret.Rectangle): void {
         }
     }
     registerProperty(Component, "skinName", "Class");

@@ -11,8 +11,7 @@ import file = require('../lib/FileUtil');
 import childProcess = require('child_process');
 import parser = require('../parser/Parser');
 import os = require("os");
-
-
+import { data as engineData } from "../EngineData";
 
 var COMPILE_SERVICE_PORT = 51545;
 //egret version, use to shutdown if the version is different to the value passed by the build command
@@ -70,6 +69,11 @@ export namespace server {
         else if (task.command == 'build') {
             // autoExitTimer();
             var buildHandled = false;
+            /**
+             * egret run -a 
+             * 在egret run 自动编译时起作用，单纯egret build 不起作用
+             */
+            // console.log("3  server handleCommands", task);
             if (task.option.added && task.option.added.length) {
                 task.option.added.forEach(file => proj.fileChanged(serviceSocket, task, file, "added"));
                 buildHandled = true;
@@ -90,8 +94,15 @@ export namespace server {
             heapTotal = heapTotal / 1024 / 1024;
             heapTotal = heapTotal | 0;
             console.log(`内存占用: ${heapTotal}M ${proj.path}`);
-            //取系统最大内存的四分之一，最低500M
-            let maxHeap = Math.max(require("os").totalmem() / 1024 / 1024 / 4, 500);
+            let totalmem = engineData.getTotalMem();
+            let maxHeap;
+            if (totalmem == -1) {
+                //取系统最大内存的四分之一，最低500M
+                maxHeap = Math.max(require("os").totalmem() / 1024 / 1024 / 4, 500);
+            }
+            else {
+                maxHeap = totalmem;
+            }
             if (heapTotal > maxHeap) {
                 console.log("内存占用过高,关闭进程:" + proj.path);
                 proj.shutdown();
@@ -118,8 +129,8 @@ export namespace server {
         var nodePath = process.execPath,
             service = file.joinPath(egret.root, 'tools/bin/egret');
         var startupParams = ['--expose-gc', service, 'service'];
-        if (egret.args.runtime) {
-            startupParams.push("--runtime", egret.args.runtime);
+        if (egret.args.target) {
+            startupParams.push("--runtime", egret.args.target);
         }
         if (egret.args.experimental) {
             startupParams.push("-exp");
@@ -169,6 +180,7 @@ export namespace client {
         });
 
         ss.on('message', cmd => callback && callback(cmd, ss));
+        // console.log("2  client execCommand", command);
         ss.send(command);
         return ss;
     }
@@ -179,14 +191,11 @@ export namespace client {
 
 
     export function closeServer(path) {
-        return new Promise((reslove, reject) => {
-            execCommand({
-                path,
-                command: "shutdown",
-                option: egret.args
-            }, reslove, false);
-        })
-
+        execCommand({
+            path,
+            command: "shutdown",
+            option: egret.args
+        }, null, false);
     }
 
 

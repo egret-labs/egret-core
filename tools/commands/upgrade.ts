@@ -1,16 +1,15 @@
 import file = require('../lib/FileUtil');
 import service = require('../service/index');
-import Project = require('../project/EgretProject');
+import Project = require('../project');
 import path = require('path');
 import utils = require('../lib/utils')
-import modify = require("./upgrade/ModifyProperties");
 import doT = require('../lib/doT');
 import projectAction = require('../actions/Project');
-
+import Clean = require('./clean');
 type VersionInfo = {
 
     v: string,
-    command?: { new (): egret.Command }
+    command?: { new(): egret.Command }
 }
 
 class UpgradeCommand implements egret.Command {
@@ -21,33 +20,45 @@ class UpgradeCommand implements egret.Command {
     execute(): number {
 
         utils.checkEgret();
-        this.run();
+
+
+        var version = Project.projectData.getVersion();
+        const versionArr = version.split(".");
+        let majorVersion = parseInt(versionArr[0]);
+        let middleVersion = parseInt(versionArr[1]);
+        if (majorVersion == 5 && middleVersion != 0) {
+            this.run();
+        }
+        else {
+            globals.exit(1719);
+        }
+
+
         return DontExitCode
     }
 
     private async run() {
-        var version = Project.data.getVersion();
+        var version = Project.projectData.getVersion();
         if (!version) {
-            version = "1.0.0";
+            version = "5.1.0";
         }
 
 
         let upgradeConfigArr: VersionInfo[] = [
-            { "v": "4.0.1", command: Upgrade_4_0_1 },
-            { "v": "4.0.3" },
-            { "v": "4.1.0", command: Upgrade_4_1_0 },
-            { "v": "5.0.0" },
-            { "v": "5.0.1", command: Upgrade_5_0_1 },
-            { "v": "5.0.8", command: Upgrade_5_0_8 },
-            { "v": "5.0.14" }
+            { "v": "5.1.1", command: Upgrade_5_1_1 },
+            { "v": "5.1.2", command: Upgrade_5_1_2 },
+            { "v": "5.2.10" }
         ];
 
         try {
-            modify.initProperties();
             await series(upgrade, upgradeConfigArr.concat())
-            modify.save(upgradeConfigArr.pop().v);
+            Project.projectData.save(upgradeConfigArr.pop().v);
             globals.log(1702);
-            await service.client.closeServer(Project.data.getProjectRoot())
+            service.client.closeServer(Project.projectData.getProjectRoot())
+            await new Clean().execute();
+            let source = path.join(egret.root, "tools/templates/empty/scripts/api.d.ts");
+            let target = path.join(egret.args.projectDir, "scripts/api.d.ts");
+            file.copy(source, target);
             globals.exit(0);
         }
         catch (e) {
@@ -57,6 +68,7 @@ class UpgradeCommand implements egret.Command {
         }
     }
 }
+
 
 
 let series = <T>(cb: (data: T, index?: number, result?: any) => PromiseLike<number>, arr: T[]) => {
@@ -92,7 +104,7 @@ let series = <T>(cb: (data: T, index?: number, result?: any) => PromiseLike<numb
 }
 
 function upgrade(info: VersionInfo) {
-    var version = Project.data.getVersion();
+    var version = Project.projectData.getVersion();
     var v = info.v;
     var command: egret.Command;
     if (info.command) {
@@ -120,74 +132,18 @@ function upgrade(info: VersionInfo) {
 }
 
 
-class Upgrade_4_0_1 {
+class Upgrade_5_1_1 {
 
 
     async execute() {
-
-        let tsconfigPath = Project.data.getFilePath('tsconfig.json');
-        if (!file.exists(tsconfigPath)) {
-            let source = file.joinPath(egret.root, "tools/templates/empty/tsconfig.json");
-            let target = Project.data.getFilePath("tsconfig.json")
-            file.copy(source, target);
-        }
-        let tsconfigContent = file.read(tsconfigPath);
-        let tsconfig = JSON.parse(tsconfigContent);
-        let needLibs = [
-            "es5", "dom", "es2015.promise"
-        ];
-        if (!tsconfig.compilerOptions.lib) {
-            tsconfig.compilerOptions.lib = [];
-        }
-        needLibs.forEach(lib => {
-            if (tsconfig.compilerOptions.lib.indexOf(lib) == -1) {
-                tsconfig.compilerOptions.lib.push(lib);
-            }
-        })
-        tsconfigContent = JSON.stringify(tsconfig, null, "\t");
-        file.save(tsconfigPath, tsconfigContent);
-        file.copy(path.join(egret.root, 'tools/templates/empty/promise'), Project.data.getFilePath('polyfill'));
-
-        globals.log(1703, "https://github.com/egret-labs/egret-core/tree/master/docs/cn/release-note/4.0.1")
-
         return 0;
     }
 }
 
-class Upgrade_4_1_0 {
-    /**
-     * 将用户的系统内置模块添加 path 字段，并指向老版本的模块，而非新版本模块
-     */
-    async execute() {
-        modify.upgradeModulePath();
-        globals.log(1703, "https://github.com/egret-labs/egret-core/tree/master/docs/cn/release-note/4.1.0")
-        return 0;
-    }
-}
+class Upgrade_5_1_2 {
 
-class Upgrade_5_0_1 {
     async execute() {
-        let options = egret.args;
-        if (file.exists(file.joinPath(options.projectDir, "polyfill"))) {
-            file.rename(file.joinPath(options.projectDir, "polyfill"), file.joinPath(options.projectDir, "promise"));
-            let jsonPath = file.joinPath(options.projectDir, "egretProperties.json");
-            let json = JSON.parse(file.read(jsonPath));
-            let modules = json.modules;
-            modules.push({ name: "promise", path: "./promise" });
-            file.save(jsonPath, JSON.stringify(json, undefined, "\t"));
-            modify.initProperties();
-        }
-        return 0;
-    }
-}
-
-class Upgrade_5_0_8 {
-    async execute() {
-        let options = egret.args;
-        if (file.exists(file.joinPath(options.projectDir, "template", "debug"))) {
-            globals.log(1718);
-            file.remove(file.joinPath(options.projectDir, "template", "debug"));
-        }
+        console.log("【警告】: 如果您尝试发布到微信小游戏，建议您创建一个新项目，而不是使用 egret upgrade 命令")
         return 0;
     }
 }

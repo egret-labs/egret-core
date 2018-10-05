@@ -24,7 +24,7 @@ var cachedFileExists = function (fileName) {
         ? cachedExistingFiles[fileName]
         : cachedExistingFiles[fileName] = hostFileExists(fileName);
 };
-var Compiler = (function () {
+var Compiler = /** @class */ (function () {
     function Compiler() {
         this.errors = [];
     }
@@ -98,7 +98,7 @@ var Compiler = (function () {
     };
     Compiler.prototype.doCompile = function () {
         cachedExistingFiles = utils.createMap();
-        this.program = ts.createProgram(this.fileNames, this.options, compilerHost);
+        this.program = ts.createProgram(this.fileNames.concat(), this.options, compilerHost);
         this.sortFiles();
         var emitResult = this.program.emit();
         this.logErrors(emitResult.diagnostics);
@@ -128,7 +128,6 @@ var Compiler = (function () {
             };
         }
         var notSupport = ["module", "noLib", "rootDir", "out"];
-        var defaultSupport = { outDir: "bin-debug" };
         var compilerOptions = configObj.compilerOptions;
         for (var _i = 0, notSupport_1 = notSupport; _i < notSupport_1.length; _i++) {
             var optionName = notSupport_1[_i];
@@ -136,16 +135,6 @@ var Compiler = (function () {
                 var error = utils.tr(1116, optionName); //这个编译选项目前不支持修改
                 console.log(error); //build -e 的时候输出
                 delete compilerOptions[optionName];
-            }
-        }
-        for (var optionName in defaultSupport) {
-            if (compilerOptions[optionName] != defaultSupport[optionName]) {
-                if (compilerOptions[optionName]) {
-                    var error = utils.tr(1116, optionName);
-                    error = utils.tr(1123, error, defaultSupport[optionName]);
-                    console.log(error);
-                }
-                compilerOptions[optionName] = defaultSupport[optionName];
             }
         }
         var configParseResult = ts.parseJsonConfigFileContent(configObj, ts.sys, path.dirname(url));

@@ -41,7 +41,6 @@
     "cacheAsBitmap":"boolean",
     "filters":"Array",
     "height":"number",
-    "implements":["sys.Renderable"],
     "mask":"any",
     "matrix":"egret.Matrix",
     "name":"string",

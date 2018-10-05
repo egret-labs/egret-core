@@ -1,6 +1,6 @@
 {
   "name": "egret",
-  "version": "5.0.14",
+  "version": "5.2.10",
   "private": true,
   "author": "egret-labs",
   "bin": {
@@ -23,114 +23,6 @@
           {
             "path": "../Defines.release.ts",
             "debug": false
-          },
-          {
-            "path": "text/native/NativeTextMeasurer.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/rendering/canvas/NativeCanvasRenderContext.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/rendering/canvas/OldNativeCanvasRenderContext.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/rendering/canvas/NativeCanvas.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/rendering/canvas/NativeCanvasRenderBuffer.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/NativeTexture.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/NativePlayer.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/EgretNative.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/NativeFps.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/NativeGetOption.ts",
-            "platform": "native"
-          },
-          {
-            "path": "external/native/NativeExternalInterface.ts",
-            "platform": "native"
-          },
-          {
-            "path": "media/native/NativeSound.ts",
-            "platform": "native"
-          },
-          {
-            "path": "media/native/NativeSoundChannel.ts",
-            "platform": "native"
-          },
-          {
-            "path": "media/native/NaSound.ts",
-            "platform": "native"
-          },
-          {
-            "path": "media/native/NaSoundChannel.ts",
-            "platform": "native"
-          },
-          {
-            "path": "media/native/NativeVideo.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/NativeGetOption.ts",
-            "platform": "native"
-          },
-          {
-            "path": "external/native/NativeExternalInterface.ts",
-            "platform": "native"
-          },
-          {
-            "path": "localStorage/native/NativeLocalStorage.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/NativeHideHandler.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/NativeResourceLoader.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/NativeTouchHandler.ts",
-            "platform": "native"
-          },
-          {
-            "path": "net/native/NativeHttpRequest.ts",
-            "platform": "native"
-          },
-          {
-            "path": "net/native/NativeImageLoader.ts",
-            "platform": "native"
-          },
-          {
-            "path": "text/native/NativeStageText.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/NativeXML.ts",
-            "platform": "native"
-          },
-          {
-            "path": "web/WebBitmapData.ts",
-            "platform": "web"
           },
           {
             "path": "external/web/WebExternalInterface.ts",
@@ -233,10 +125,6 @@
             "platform": "web"
           },
           {
-            "path": "utils/native/NativeLogger.ts",
-            "platform": "native"
-          },
-          {
             "path": "utils/web/WebLogger.ts",
             "platform": "web"
           },
@@ -285,16 +173,6 @@
         "dependencies": []
       },
       {
-        "name": "res",
-        "description": "res 资源加载库",
-        "description_en": "resource lib",
-        "files": [],
-        "root": "src/extension/resource",
-        "dependencies": [
-          "egret"
-        ]
-      },
-      {
         "name": "eui",
         "description": "eui 界面制作库",
         "description_en": "UI lib",
@@ -303,6 +181,14 @@
         "dependencies": [
           "egret"
         ]
+      },
+      {
+        "name": "assetsmanager",
+        "description": "assetsmanager 资源管理器",
+        "description_en": "AssetsManager",
+        "files": [],
+        "root": "",
+        "dependencies": []
       },
       {
         "name": "dragonBones",
@@ -343,19 +229,31 @@
         ]
       },
       {
-        "name": "egret3d",
-        "description": "egret 3D引擎库",
-        "description_en": "egret 3D engine lib",
-        "files": [],
-        "root": "",
-        "dependencies": []
-      },
-      {
         "name": "experimental",
         "description": "egret实验功能库",
         "description_en": "egret experimental function lib",
         "files": [],
         "root": "src/extension/experimental",
+        "dependencies": [
+          "egret"
+        ]
+      },
+      {
+        "name": "egret-facebook",
+        "description": "Facebook Instant Games SDK",
+        "description_en": "Facebook Instant Games SDK",
+        "files": [],
+        "root": "",
+        "dependencies": [
+          "egret"
+        ]
+      },
+      {
+        "name": "egretia-sdk",
+        "description": "Egretia SDK",
+        "description_en": "Egretia SDK",
+        "files": [],
+        "root": "",
         "dependencies": [
           "egret"
         ]
@@ -378,20 +276,6 @@
     ],
     "templates": [
       {
-        "name": "empty",
-        "displayName": "空 Egret 项目",
-        "displayName_en": "Empty Egret project",
-        "language": "TypeScript",
-        "tag": "game,app,TypeScript",
-        "description": "创建一个空项目,仅添加 Egret 相关模块引用",
-        "description_en": "Create an empty project, add only reference to Egret related modules",
-        "defaultWidth": 640,
-        "defaultHeight": 1136,
-        "modules": [
-          "egret"
-        ]
-      },
-      {
         "name": "game",
         "displayName": "Egret 游戏项目",
         "displayName_en": "Egret game project",
@@ -405,7 +289,7 @@
           "egret",
           "game",
           "tween",
-          "res"
+          "assetsmanager"
         ]
       },
       {
@@ -421,23 +305,8 @@
         "modules": [
           "egret",
           "eui",
-          "res",
+          "assetsmanager",
           "tween"
-        ]
-      },
-      {
-        "name": "egret3d",
-        "displayName": "Egret 3D 项目",
-        "displayName_en": "Egret 3D project",
-        "language": "TypeScript",
-        "tag": "game,app,TypeScript",
-        "description": "创建一个 Egret 3D 项目",
-        "description_en": "Create an Egret 3D project",
-        "defaultWidth": 640,
-        "defaultHeight": 960,
-        "modules": [
-          "egret",
-          "egret3d"
         ]
       },
       {
@@ -456,40 +325,6 @@
           "res",
           "eui",
           "tween"
-        ]
-      },
-      {
-        "name": "res-examples",
-        "displayName": "ResourceManager 示例项目",
-        "displayName_en": "ResourceManager sample project",
-        "language": "TypeScript",
-        "tag": "game,app,TypeScript",
-        "description": "ResourceManager 示例项目",
-        "description_en": "ResourceManager sample project",
-        "defaultWidth": 640,
-        "defaultHeight": 1136,
-        "modules": [
-          "egret",
-          "game",
-          "res",
-          "eui",
-          "tween"
-        ]
-      },
-      {
-        "name": "wasm",
-        "displayName": "WebAssembly 示例项目",
-        "displayName_en": "WebAssembly sample project",
-        "language": "TypeScript",
-        "tag": "game,app,TypeScript,WebAssembly",
-        "description": "WebAssembly 示例项目",
-        "description_en": "WebAssembly sample project",
-        "defaultWidth": 640,
-        "defaultHeight": 1136,
-        "modules": [
-          "egret",
-          "media",
-          "res"
         ]
       }
     ],

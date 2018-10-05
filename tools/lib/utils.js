@@ -77,6 +77,7 @@ var path = require("path");
 var file = require("./FileUtil");
 var UglifyJS = require("./uglify-js/uglifyjs");
 var net = require("net");
+var timers_1 = require("timers");
 //第三方调用时，可能不支持颜色显示，可通过添加 -nocoloroutput 移除颜色信息
 var ColorOutputReplacements = {
     "{color_green}": "\033[1;32;1m",
@@ -232,12 +233,13 @@ function open(target, appName) {
     executeCommand(command + ' "' + escape(target) + '"');
 }
 exports.open = open;
-function executeCommand(command) {
+function executeCommand(command, options) {
+    if (options === void 0) { options = {}; }
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
-            return [2 /*return*/, new Promise(function (reslove, reject) {
-                    cp.exec(command, {}, function (error, stdout, stderr) {
-                        reslove({ error: error, stdout: stdout, stderr: stderr });
+            return [2 /*return*/, new Promise(function (resolve, reject) {
+                    cp.exec(command, options, function (error, stdout, stderr) {
+                        resolve({ error: error, stdout: stdout, stderr: stderr });
                     });
                 })];
         });
@@ -251,6 +253,16 @@ exports.endWith = endWith;
 function escape(s) {
     return s.replace(/"/, '\\\"');
 }
+function uglify(sourceFile) {
+    var defines = {
+        DEBUG: false,
+        RELEASE: true
+    };
+    var result = UglifyJS.minify(sourceFile, { compress: { global_defs: defines }, fromString: true, output: { beautify: false } });
+    var code = result.code;
+    return code;
+}
+exports.uglify = uglify;
 function minify(sourceFile, output) {
     var defines = {
         DEBUG: false,
@@ -258,7 +270,13 @@ function minify(sourceFile, output) {
     };
     //UglifyJS参数参考这个页面：https://github.com/mishoo/UglifyJS2
     var result = UglifyJS.minify(sourceFile, { compress: { global_defs: defines }, output: { beautify: false } });
-    file.save(output, result.code);
+    var code = result.code;
+    if (output) {
+        file.save(output, code);
+    }
+    else {
+        return code;
+    }
 }
 exports.minify = minify;
 function clean(path, excludes) {
@@ -289,24 +307,44 @@ function getNetworkAddress() {
     return ips;
 }
 exports.getNetworkAddress = getNetworkAddress;
-function getAvailablePort(callback, port) {
+function measure(target, propertyKey, descriptor) {
+    var method = descriptor.value;
+    descriptor.value = function () {
+        var arg = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            arg[_i] = arguments[_i];
+        }
+        var timeBuildStart = (new Date()).getTime();
+        var promise = method.apply(this, arg);
+        return promise.then(function (result) {
+            var timeBuildEnd = (new Date()).getTime();
+            var timeBuildUsed = (timeBuildEnd - timeBuildStart) / 1000;
+            console.log(tr(1108, timeBuildUsed));
+            return result;
+        });
+    };
+}
+exports.measure = measure;
+function getAvailablePort(port) {
     if (port === void 0) { port = 0; }
-    function getPort() {
-        var server = net.createServer();
-        server.on('listening', function () {
-            port = server.address().port;
-            server.close();
-        });
-        server.on('close', function () {
-            callback(port);
-        });
-        server.on('error', function (err) {
-            port++;
-            getPort();
-        });
-        server.listen(port, '0.0.0.0');
-    }
-    getPort();
+    return new Promise(function (resolve, reject) {
+        function getPort() {
+            var server = net.createServer();
+            server.on('listening', function () {
+                port = server.address().port;
+                server.close();
+            });
+            server.on('close', function () {
+                resolve(port);
+            });
+            server.on('error', function (err) {
+                port++;
+                getPort();
+            });
+            server.listen(port);
+        }
+        getPort();
+    });
 }
 exports.getAvailablePort = getAvailablePort;
 function checkEgret() {
@@ -357,6 +395,29 @@ function createMap(template) {
     return map;
 }
 exports.createMap = createMap;
+function sleep(milesecond) {
+    return new Promise(function (resolve, reject) {
+        timers_1.setTimeout(function () {
+            resolve();
+        }, milesecond);
+    });
+}
+exports.sleep = sleep;
+function shell2(command, args) {
+    var cmd = command + " " + args.join(" ");
+    return new Promise(function (resolve, reject) {
+        var shell = cp.exec(cmd, function (error, stdout, stderr) {
+            if (!error) {
+                resolve();
+            }
+            else {
+                console.log(stderr);
+                reject();
+            }
+        });
+    });
+}
+exports.shell2 = shell2;
 function shell(path, args, opt, verbase) {
     var stdout = "";
     var stderr = "";
@@ -378,8 +439,10 @@ function shell(path, args, opt, verbase) {
             console.log(str);
         }
     };
-    var callback = function (reslove, reject) {
-        var shell = cp.spawn(path, args, opt);
+    return new Promise(function (resolve, reject) {
+        // path = "\"" + path + "\"";
+        // var shell = cp.spawn(path + " " + args.join(" "));
+        var shell = cp.spawn(path, args);
         shell.on("error", function (message) { console.log(message); });
         shell.stderr.on("data", printStderrBufferMessage);
         shell.stderr.on("error", printStderrBufferMessage);
@@ -390,33 +453,30 @@ function shell(path, args, opt, verbase) {
                 if (verbase) {
                     console.log('Failed: ' + code);
                 }
-                reject({ code: code, stdout: stdout, stderr: stderr });
+                reject({ code: code, stdout: stdout, stderr: stderr, path: path, args: args });
             }
             else {
-                reslove({ code: code, stdout: stdout, stderr: stderr });
+                resolve({ code: code, stdout: stdout, stderr: stderr, path: path, args: args });
             }
         });
-    };
-    return new Promise(callback);
+    });
 }
 exports.shell = shell;
 ;
-var error_code_filename = path.join(__dirname, "../error_code.json");
-var errorcode = file.readJSONSync(error_code_filename, { "encoding": "utf-8" });
-var CliException = (function (_super) {
+var CliException = /** @class */ (function (_super) {
     __extends(CliException, _super);
     function CliException(errorId, param) {
         var _this = _super.call(this) || this;
         _this.errorId = errorId;
-        var message = errorcode[_this.errorId];
-        if (message) {
-            message = message.replace('{0}', param);
-        }
-        else {
-            message = "unkown error : " + errorId;
-            console.error(message);
-        }
-        _this.message = message;
+        // var message: string = errorcode[this.errorId];
+        // if (message) {
+        //     message = message.replace('{0}', param);
+        // }
+        // else {
+        //     message = `unkown error : ${errorId}`;
+        //     console.error(message);
+        // }
+        _this.message = errorId;
         return _this;
     }
     return CliException;

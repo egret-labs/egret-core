@@ -230,17 +230,5 @@ var helpModule1;
             }
         ]
     };
-    helpModule1.apitest = {
-        "command": "apitest",
-        "desc": help_dict.create_lib1,
-        "parameters": [
-            {
-                "placeholder": "project_name",
-                "optional": "true",
-                "desc": help_dict.common_proj_name
-            }
-        ],
-        "configs": []
-    };
 })(helpModule1 || (helpModule1 = {}));
 module.exports = helpModule1;

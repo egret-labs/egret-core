@@ -26,65 +26,6 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-namespace egret.sys {
-    /**
-     * @private
-     */
-    export const enum BitmapTextKeys {
-        /**
-         * @private 外部设定的值
-         */
-        textFieldWidth,
-        /**
-         * @private 外部设定的值
-         */
-        textFieldHeight,
-        /**
-         * @private
-         */
-        text,
-        /**
-         * @private
-         */
-        lineSpacing,
-        /**
-         * @private
-         */
-        letterSpacing,
-        /**
-         * @private
-         */
-        font,
-        /**
-         * @private
-         */
-        fontStringChanged,
-        /**
-         * @private
-         */
-        textLinesChanged,
-        /**
-         * @private 测量的值
-         */
-        textWidth,
-        /**
-         * @private 测量的值
-         */
-        textHeight,
-        /**
-         * @private
-         */
-        textAlign,
-        /**
-         * @private
-         */
-        verticalAlign,
-        /**
-         * @private
-         */
-        smoothing
-    }
-}
 namespace egret {
     /**
      * Bitmap font adopts the Bitmap+SpriteSheet mode to render text.
@@ -116,24 +57,16 @@ namespace egret {
          */
         public constructor() {
             super();
-            this.$renderNode = new sys.BitmapNode();
-            //this.cacheAsBitmap = true;
-            this.$BitmapText = {
-                0: NaN,    //textFieldWidth,
-                1: NaN,    //textFieldHeight,
-                2: "",      //text,
-                3: 0,       //lineSpacing,
-                4: 0,        //letterSpacing,
-                5: null,        //font,
-                6: false,        //fontStringChanged,
-                7: false,        //textLinesChanged,
-                8: false,       //textWidth,
-                9: false,       //textHeight,
-                10: "left",     //textAlign,
-                11: "top",      //verticalAlign
-                12: Bitmap.defaultSmoothing       //smoothing
-            };
+            if (!egret.nativeRender) {
+                this.$renderNode = new sys.BitmapNode();
+            }
         }
+
+        protected createNativeDisplayObject(): void {
+            this.$nativeDisplayObject = new egret_native.NativeDisplayObject(egret_native.NativeObjectType.BITMAP_TEXT);
+        }
+
+        private $smoothing: boolean = Bitmap.defaultSmoothing;
 
         /**
          * Whether or not is smoothed when scaled.
@@ -150,24 +83,30 @@ namespace egret {
          * @language zh_CN
          */
         public get smoothing(): boolean {
-            let values = this.$BitmapText;
-            return values[sys.BitmapTextKeys.smoothing];
+            return this.$smoothing;
         }
 
         public set smoothing(value: boolean) {
-            value = !!value;
-            let values = this.$BitmapText;
-            if (value == values[sys.BitmapTextKeys.smoothing]) {
+            let self = this;
+            if (value == self.$smoothing) {
                 return;
             }
-            values[sys.BitmapTextKeys.smoothing] = value;
-            this.$invalidate();
+            self.$smoothing = value;
+            if (!egret.nativeRender) {
+                let p = self.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                let maskedObject = self.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
+            }
         }
 
-        /**
-         * @private
-         */
-        $BitmapText: Object;
+        private $text: string = "";
 
         /**
          * A string to display in the text field.
@@ -182,7 +121,7 @@ namespace egret {
          * @language zh_CN
          */
         public get text(): string {
-            return this.$BitmapText[sys.BitmapTextKeys.text];
+            return this.$text;
         }
 
         public set text(value: string) {
@@ -193,71 +132,82 @@ namespace egret {
          * @private
          */
         $setText(value: string): boolean {
-            if(value == null){
+            if (value == null) {
                 value = "";
+            } else {
+                value = String(value);
             }
-            value = String(value);
-            let values = this.$BitmapText;
-            if (value == values[sys.BitmapTextKeys.text])
+            let self = this;
+            if (value == self.$text)
                 return false;
-            values[sys.BitmapTextKeys.text] = value;
-            this.$invalidateContentBounds();
+            self.$text = value;
+            self.$invalidateContentBounds();
 
             return true;
         }
+
+        protected $textFieldWidth: number = NaN;
 
         /**
          * @private
          */
         $getWidth(): number {
-            let w = this.$BitmapText[sys.BitmapTextKeys.textFieldWidth];
-            return isNaN(w) ? this.$getContentBounds().width : w;
+            let self = this;
+            let w = self.$textFieldWidth;
+            return isNaN(w) ? self.$getContentBounds().width : w;
         }
 
         /**
          * @private
          */
         $setWidth(value: number): boolean {
-            //value = +value || 0;
-            let values = this.$BitmapText;
-            if (value < 0 || value == values[sys.BitmapTextKeys.textFieldWidth]) {
+            let self = this;
+            if (value < 0 || value == self.$textFieldWidth) {
                 return false;
             }
-            values[sys.BitmapTextKeys.textFieldWidth] = value;
-            this.$invalidateContentBounds();
-
+            self.$textFieldWidth = value;
+            self.$invalidateContentBounds();
             return true;
         }
+
+        private $textLinesChanged: boolean = false;
 
         /**
          * @private
          */
         $invalidateContentBounds(): void {
-            super.$invalidateContentBounds();
-            this.$BitmapText[sys.BitmapTextKeys.textLinesChanged] = true;
+            this.$renderDirty = true;
+            this.$textLinesChanged = true;
+            //todo lcj
+            this.$updateRenderNode();
         }
+
+        protected $textFieldHeight: number = NaN;
 
         /**
          * @private
          */
         $getHeight(): number {
-            let h = this.$BitmapText[sys.BitmapTextKeys.textFieldHeight];
-            return isNaN(h) ? this.$getContentBounds().height : h;
+            let self = this;
+            let h = self.$textFieldHeight;
+            return isNaN(h) ? self.$getContentBounds().height : h;
         }
 
         /**
          * @private
          */
         $setHeight(value: number): boolean {
-            //value = +value || 0;
-            let values = this.$BitmapText;
-            if (value < 0 || value == values[sys.BitmapTextKeys.textFieldHeight]) {
+            let self = this;
+            if (value < 0 || value == self.$textFieldHeight) {
                 return false;
             }
-            values[sys.BitmapTextKeys.textFieldHeight] = value;
-            this.$invalidateContentBounds();
+            self.$textFieldHeight = value;
+            self.$invalidateContentBounds();
             return true;
         }
+
+        protected $font: BitmapFont = null;
+        protected $fontStringChanged: boolean = false;
 
         /**
          * The name of the font to use, or a comma-separated list of font names, the type of value must be BitmapFont.
@@ -274,7 +224,7 @@ namespace egret {
          * @language zh_CN
          */
         public get font(): Object {
-            return this.$BitmapText[sys.BitmapTextKeys.font];
+            return this.$font;
         }
 
         public set font(value: Object) {
@@ -282,17 +232,17 @@ namespace egret {
         }
 
         $setFont(value: any): boolean {
-            let values = this.$BitmapText;
-            if (values[sys.BitmapTextKeys.font] == value) {
+            let self = this;
+            if (self.$font == value) {
                 return false;
             }
-            values[sys.BitmapTextKeys.font] = value;
-
-            this.$BitmapText[sys.BitmapTextKeys.fontStringChanged] = true;
+            self.$font = value;
+            self.$fontStringChanged = true;
             this.$invalidateContentBounds();
-
             return true;
         }
+
+        private $lineSpacing: number = 0;
 
         /**
          /**
@@ -310,7 +260,7 @@ namespace egret {
          * @language zh_CN
          */
         public get lineSpacing(): number {
-            return this.$BitmapText[sys.BitmapTextKeys.lineSpacing];
+            return this.$lineSpacing;
         }
 
         public set lineSpacing(value: number) {
@@ -318,14 +268,15 @@ namespace egret {
         }
 
         $setLineSpacing(value: number): boolean {
-            value = +value || 0;
-            let values = this.$BitmapText;
-            if (values[sys.BitmapTextKeys.lineSpacing] == value)
+            let self = this;
+            if (self.$lineSpacing == value)
                 return false;
-            values[sys.BitmapTextKeys.lineSpacing] = value;
-            this.$invalidateContentBounds();
+            self.$lineSpacing = value;
+            self.$invalidateContentBounds();
             return true;
         }
+
+        private $letterSpacing: number = 0;
 
         /**
          * An integer representing the amount of distance between characters.
@@ -342,7 +293,7 @@ namespace egret {
          * @language zh_CN
          */
         public get letterSpacing(): number {
-            return this.$BitmapText[sys.BitmapTextKeys.letterSpacing];
+            return this.$letterSpacing;
         }
 
         public set letterSpacing(value: number) {
@@ -350,15 +301,16 @@ namespace egret {
         }
 
         $setLetterSpacing(value: number): boolean {
-            value = +value || 0;
-            let values = this.$BitmapText;
-            if (values[sys.BitmapTextKeys.letterSpacing] == value)
+            let self = this;
+            if (self.$letterSpacing == value) {
                 return false;
-            values[sys.BitmapTextKeys.letterSpacing] = value;
-            this.$invalidateContentBounds();
-
+            }
+            self.$letterSpacing = value;
+            self.$invalidateContentBounds();
             return true;
         }
+
+        private $textAlign: string = egret.HorizontalAlign.LEFT;
 
         /**
          * Horizontal alignment of text.
@@ -375,7 +327,7 @@ namespace egret {
          * @language zh_CN
          */
         public get textAlign(): string {
-            return this.$BitmapText[sys.BitmapTextKeys.textAlign];
+            return this.$textAlign;
         }
 
         public set textAlign(value: string) {
@@ -383,13 +335,16 @@ namespace egret {
         }
 
         $setTextAlign(value: string): boolean {
-            let values = this.$BitmapText;
-            if (values[sys.BitmapTextKeys.textAlign] == value)
+            let self = this;
+            if (self.$textAlign == value) {
                 return false;
-            values[sys.BitmapTextKeys.textAlign] = value;
-            this.$invalidateContentBounds();
+            }
+            self.$textAlign = value;
+            self.$invalidateContentBounds();
             return true;
         }
+
+        private $verticalAlign: string = egret.VerticalAlign.TOP;
 
         /**
          * Vertical alignment of text.
@@ -406,7 +361,7 @@ namespace egret {
          * @language zh_CN
          */
         public get verticalAlign(): string {
-            return this.$BitmapText[sys.BitmapTextKeys.verticalAlign];
+            return this.$verticalAlign;
         }
 
         public set verticalAlign(value: string) {
@@ -414,11 +369,12 @@ namespace egret {
         }
 
         $setVerticalAlign(value: string): boolean {
-            let values = this.$BitmapText;
-            if (values[sys.BitmapTextKeys.verticalAlign] == value)
+            let self = this;
+            if (self.$verticalAlign == value) {
                 return false;
-            values[sys.BitmapTextKeys.verticalAlign] = value;
-            this.$invalidateContentBounds();
+            }
+            self.$verticalAlign = value;
+            self.$invalidateContentBounds();
             return true;
         }
 
@@ -441,27 +397,36 @@ namespace egret {
         /**
          * @private
          */
-        $render(): void {
-            let values = this.$BitmapText;
+        $updateRenderNode(): void {
+            let self = this;
             let textLines: string[] = this.$getTextLines();
             let length: number = textLines.length;
             if (length == 0) {
+                if (egret.nativeRender && self.$font) {
+                    self.$nativeDisplayObject.setDataToBitmapNode(self.$nativeDisplayObject.id, self.$font.$texture, []);
+                    self.$nativeDisplayObject.setWidth(0);
+                    self.$nativeDisplayObject.setHeight(0);
+                }
                 return;
             }
+            let drawArr = [];
             let textLinesWidth: number[] = this.$textLinesWidth;
-            let bitmapFont: BitmapFont = values[sys.BitmapTextKeys.font];
-            let node = <sys.BitmapNode>this.$renderNode;
-            if (bitmapFont.$texture) {
-                node.image = bitmapFont.$texture._bitmapData;
+            let bitmapFont: BitmapFont = self.$font;
+            let node
+            if (!egret.nativeRender) {
+                node = <sys.BitmapNode>this.$renderNode;
+                if (bitmapFont.$texture) {
+                    node.image = bitmapFont.$texture.$bitmapData;
+                }
+                node.smoothing = self.$smoothing;
             }
-            node.smoothing = values[sys.BitmapTextKeys.smoothing];
             let emptyHeight: number = bitmapFont._getFirstCharHeight();
             let emptyWidth: number = Math.ceil(emptyHeight * BitmapText.EMPTY_FACTOR);
-            let hasSetHeight: boolean = !isNaN(values[sys.BitmapTextKeys.textFieldHeight]);
-            let textWidth: number = values[sys.BitmapTextKeys.textWidth];
-            let textFieldWidth: number = values[sys.BitmapTextKeys.textFieldWidth];
-            let textFieldHeight: number = values[sys.BitmapTextKeys.textFieldHeight];
-            let align: string = values[sys.BitmapTextKeys.textAlign];
+            let hasSetHeight: boolean = !isNaN(self.$textFieldHeight);
+            let textWidth: number = self.$textWidth;
+            let textFieldWidth: number = self.$textFieldWidth;
+            let textFieldHeight: number = self.$textFieldHeight;
+            let align: string = self.$textAlign;
             let yPos: number = this.$textOffsetY + this.$textStartY;
             let lineHeights: number[] = this.$lineHeights;
             for (let i: number = 0; i < length; i++) {
@@ -493,17 +458,30 @@ namespace egret {
                         }
                         continue;
                     }
-                    let bitmapWidth = texture._bitmapWidth;
-                    let bitmapHeight = texture._bitmapHeight;
-                    node.imageWidth = texture._sourceWidth;
-                    node.imageHeight = texture._sourceHeight;
-                    node.drawImage(texture._bitmapX, texture._bitmapY,
-                        bitmapWidth, bitmapHeight, xPos + texture._offsetX, yPos + texture._offsetY,
-                        texture.$getScaleBitmapWidth(), texture.$getScaleBitmapHeight());
-
-                    xPos += (bitmapFont.getConfig(character, "xadvance") || texture.$getTextureWidth()) + values[sys.BitmapTextKeys.letterSpacing];
+                    let bitmapWidth = texture.$bitmapWidth;
+                    let bitmapHeight = texture.$bitmapHeight;
+                    if (egret.nativeRender) {
+                        drawArr.push(texture.$bitmapX, texture.$bitmapY,
+                            bitmapWidth, bitmapHeight, xPos + texture.$offsetX, yPos + texture.$offsetY,
+                            texture.$getScaleBitmapWidth(), texture.$getScaleBitmapHeight(),
+                            texture.$sourceWidth, texture.$sourceHeight);
+                    }
+                    else {
+                        node.imageWidth = texture.$sourceWidth;
+                        node.imageHeight = texture.$sourceHeight;
+                        node.drawImage(texture.$bitmapX, texture.$bitmapY,
+                            bitmapWidth, bitmapHeight, xPos + texture.$offsetX, yPos + texture.$offsetY,
+                            texture.$getScaleBitmapWidth(), texture.$getScaleBitmapHeight());
+                    }
+                    xPos += (bitmapFont.getConfig(character, "xadvance") || texture.$getTextureWidth()) + self.$letterSpacing;
                 }
-                yPos += lineHeight + values[sys.BitmapTextKeys.lineSpacing];
+                yPos += lineHeight + self.$lineSpacing;
+            }
+            if (egret.nativeRender) {
+                self.$nativeDisplayObject.setDataToBitmapNode(self.$nativeDisplayObject.id, bitmapFont.$texture, drawArr);
+                let bounds = self.$getContentBounds();
+                self.$nativeDisplayObject.setWidth(bounds.width);
+                self.$nativeDisplayObject.setHeight(bounds.height);
             }
         }
 
@@ -516,10 +494,12 @@ namespace egret {
                 bounds.setEmpty();
             }
             else {
-                bounds.setTo(this.$textOffsetX + this.$textStartX, this.$textOffsetY + this.$textStartY, this.$BitmapText[sys.BitmapTextKeys.textWidth] - this.$textOffsetX,
-                    this.$BitmapText[sys.BitmapTextKeys.textHeight] - this.$textOffsetY);
+                bounds.setTo(this.$textOffsetX + this.$textStartX, this.$textOffsetY + this.$textStartY, this.$textWidth - this.$textOffsetX,
+                    this.$textHeight - this.$textOffsetY);
             }
         }
+
+        private $textWidth: number = NaN;
 
         /**
          * Get the BitmapText measured width
@@ -535,8 +515,10 @@ namespace egret {
          */
         public get textWidth(): number {
             this.$getTextLines();
-            return this.$BitmapText[sys.BitmapTextKeys.textWidth];
+            return this.$textWidth;
         }
+
+        private $textHeight: number = NaN;
 
         /**
          * Get Text BitmapText height
@@ -552,7 +534,7 @@ namespace egret {
          */
         public get textHeight(): number {
             this.$getTextLines();
-            return this.$BitmapText[sys.BitmapTextKeys.textHeight];
+            return this.$textHeight;
         }
 
         /**
@@ -591,42 +573,42 @@ namespace egret {
          * @returns
          */
         $getTextLines(): string[] {
-            let values = this.$BitmapText;
-            if (!values[sys.BitmapTextKeys.textLinesChanged]) {
-                return this.textLines;
+            let self = this;
+            if (!self.$textLinesChanged) {
+                return self.textLines;
             }
             let textLines: string[] = [];
-            this.textLines = textLines;
+            self.textLines = textLines;
             let textLinesWidth: number[] = [];
-            this.$textLinesWidth = textLinesWidth;
-            values[sys.BitmapTextKeys.textLinesChanged] = false;
+            self.$textLinesWidth = textLinesWidth;
+            self.$textLinesChanged = false;
             let lineHeights: number[] = [];
-            this.$lineHeights = lineHeights;
-            if (!values[sys.BitmapTextKeys.text] || !values[sys.BitmapTextKeys.font]) {
-                values[sys.BitmapTextKeys.textWidth] = 0;
-                values[sys.BitmapTextKeys.textHeight] = 0;
+            self.$lineHeights = lineHeights;
+            if (!self.$text || !self.$font) {
+                self.$textWidth = 0;
+                self.$textHeight = 0;
                 return textLines;
             }
-            let lineSpacing = values[egret.sys.BitmapTextKeys.lineSpacing]
-            let letterSpacing = values[sys.BitmapTextKeys.letterSpacing];
+            let lineSpacing = self.$lineSpacing;
+            let letterSpacing = self.$letterSpacing;
             let textWidth: number = 0;
             let textHeight: number = 0;
             let textOffsetX: number = 0;
             let textOffsetY: number = 0;
-            let hasWidthSet: boolean = !isNaN(values[sys.BitmapTextKeys.textFieldWidth]);
-            let textFieldWidth: number = values[sys.BitmapTextKeys.textFieldWidth];
-            let textFieldHeight: number = values[sys.BitmapTextKeys.textFieldHeight];
-            let bitmapFont: BitmapFont = values[sys.BitmapTextKeys.font];
+            let hasWidthSet: boolean = !isNaN(self.$textFieldWidth);
+            let textFieldWidth: number = self.$textFieldWidth;
+            let textFieldHeight: number = self.$textFieldHeight;
+            let bitmapFont: BitmapFont = self.$font;
             let emptyHeight: number = bitmapFont._getFirstCharHeight();
             let emptyWidth: number = Math.ceil(emptyHeight * BitmapText.EMPTY_FACTOR);
-            let text: string = values[sys.BitmapTextKeys.text];
+            let text: string = self.$text;
             let textArr: string[] = text.split(/(?:\r\n|\r|\n)/);
             let length: number = textArr.length;
             let isFirstLine: boolean = true;
             let isFirstChar: boolean;
             let isLastChar: boolean;
             let lineHeight: number;
-            let xPos:number;
+            let xPos: number;
             for (let i = 0; i < length; i++) {
                 let line: string = textArr[i];
                 let len = line.length;
@@ -660,8 +642,8 @@ namespace egret {
                     else {
                         texureWidth = texture.$getTextureWidth();
                         textureHeight = texture.$getTextureHeight();
-                        offsetX = texture._offsetX;
-                        offsetY = texture._offsetY;
+                        offsetX = texture.$offsetX;
+                        offsetY = texture.$offsetY;
                     }
 
                     if (isFirstChar) {
@@ -720,15 +702,15 @@ namespace egret {
                 return true;
             }
             textHeight -= lineSpacing;
-            values[sys.BitmapTextKeys.textWidth] = textWidth;
-            values[sys.BitmapTextKeys.textHeight] = textHeight;
+            self.$textWidth = textWidth;
+            self.$textHeight = textHeight;
             this.$textOffsetX = textOffsetX;
             this.$textOffsetY = textOffsetY;
             this.$textStartX = 0;
             this.$textStartY = 0;
             let alignType;
             if (textFieldWidth > textWidth) {
-                alignType = values[sys.BitmapTextKeys.textAlign];
+                alignType = self.$textAlign;
                 if (alignType == egret.HorizontalAlign.RIGHT) {
                     this.$textStartX = textFieldWidth - textWidth;
                 } else if (alignType == egret.HorizontalAlign.CENTER) {
@@ -736,7 +718,7 @@ namespace egret {
                 }
             }
             if (textFieldHeight > textHeight) {
-                alignType = values[sys.BitmapTextKeys.verticalAlign];
+                alignType = self.$verticalAlign;
                 if (alignType == egret.VerticalAlign.BOTTOM) {
                     this.$textStartY = textFieldHeight - textHeight;
                 } else if (alignType == egret.VerticalAlign.MIDDLE) {

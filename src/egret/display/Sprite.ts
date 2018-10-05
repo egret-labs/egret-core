@@ -62,6 +62,10 @@ namespace egret {
             this.$graphics.$setTarget(this);
         }
 
+        protected createNativeDisplayObject(): void {
+            this.$nativeDisplayObject = new egret_native.NativeDisplayObject(egret_native.NativeObjectType.SPRITE);
+        }
+
         /**
          * @private
          */

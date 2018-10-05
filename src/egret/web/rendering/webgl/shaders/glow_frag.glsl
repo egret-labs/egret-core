@@ -1,4 +1,4 @@
-precision mediump float;
+precision highp float;
 varying vec2 vTextureCoord;
 
 uniform sampler2D uSampler;
@@ -17,9 +17,9 @@ uniform float hideObject;
 
 uniform vec2 uTextureSize;
 
-float random(vec3 scale, float seed)
+float random(vec2 scale)
 {
-    return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);
+    return fract(sin(dot(gl_FragCoord.xy, scale)) * 43758.5453);
 }
 
 void main(void) {
@@ -39,7 +39,7 @@ void main(void) {
     const float PI = 3.14159265358979323846264;
     float cosAngle;
     float sinAngle;
-    float offset = PI * 2.0 / circleSamplingTimes * random(vec3(12.9898, 78.233, 151.7182), 0.0);
+    float offset = PI * 2.0 / circleSamplingTimes * random(vec2(12.9898, 78.233));
     float stepX = blurX * px.x / linearSamplingTimes;
     float stepY = blurY * px.y / linearSamplingTimes;
     for (float a = 0.0; a <= PI * 2.0; a += PI * 2.0 / circleSamplingTimes) {
@@ -48,10 +48,10 @@ void main(void) {
         for (float i = 1.0; i <= linearSamplingTimes; i++) {
             curDistanceX = i * stepX * cosAngle;
             curDistanceY = i * stepY * sinAngle;
-            
-            curColor = texture2D(uSampler, vec2(vTextureCoord.x + curDistanceX - offsetX, vTextureCoord.y + curDistanceY + offsetY));
-
-            totalAlpha += (linearSamplingTimes - i) * curColor.a;
+            if (vTextureCoord.x + curDistanceX - offsetX >= 0.0 && vTextureCoord.y + curDistanceY + offsetY <= 1.0){
+                curColor = texture2D(uSampler, vec2(vTextureCoord.x + curDistanceX - offsetX, vTextureCoord.y + curDistanceY + offsetY));
+                totalAlpha += (linearSamplingTimes - i) * curColor.a;
+            }
             maxTotalAlpha += (linearSamplingTimes - i);
         }
     }

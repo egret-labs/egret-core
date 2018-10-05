@@ -88,8 +88,8 @@ namespace eui {
          * @private
          *
          */
-        $invalidateContentBounds(): void {
-            super.$invalidateContentBounds();
+        $invalidateTextField(): void {
+            super.$invalidateTextField();
             this.invalidateSize();
         }
 
@@ -162,7 +162,7 @@ namespace eui {
          * @param nestLevel
          */
         public $onAddToStage(stage: egret.Stage, nestLevel: number): void {
-            sys.UIComponentImpl.prototype["$onAddToStage"].call(this,stage, nestLevel);
+            sys.UIComponentImpl.prototype["$onAddToStage"].call(this, stage, nestLevel);
             this.addEventListener(egret.FocusEvent.FOCUS_IN, this.onfocusIn, this);
             this.addEventListener(egret.FocusEvent.FOCUS_OUT, this.onfocusOut, this);
         }
@@ -171,7 +171,7 @@ namespace eui {
          *
          */
         public $onRemoveFromStage(): void {
-            sys.UIComponentImpl.prototype["$onRemoveFromStage"].call(this);
+            super.$onRemoveFromStage();
             this.removeEventListener(egret.FocusEvent.FOCUS_IN, this.onfocusIn, this);
             this.removeEventListener(egret.FocusEvent.FOCUS_OUT, this.onfocusOut, this);
         }

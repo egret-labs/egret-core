@@ -32,6 +32,8 @@ import path = require('path');
 import file = require('./FileUtil');
 import UglifyJS = require("./uglify-js/uglifyjs");
 import net = require('net');
+import { setTimeout } from 'timers';
+import { resolve } from 'url';
 
 
 
@@ -186,10 +188,10 @@ export function open(target, appName?) {
     executeCommand(command + ' "' + escape(target) + '"')
 }
 
-export async function executeCommand(command: string) {
-    return new Promise<{ error: Error, stdout: string, stderr: string }>((reslove, reject) => {
-        cp.exec(command, {}, (error, stdout, stderr) => {
-            reslove({ error, stdout, stderr })
+export async function executeCommand(command: string, options = {}) {
+    return new Promise<{ error: Error, stdout: string, stderr: string }>((resolve, reject) => {
+        cp.exec(command, options, (error, stdout, stderr) => {
+            resolve({ error, stdout, stderr })
         });
     })
 }
@@ -205,16 +207,33 @@ function escape(s) {
     return s.replace(/"/, '\\\"');
 }
 
-export function minify(sourceFile: string, output: string) {
+export function uglify(sourceFile: any) {
+    const defines = {
+        DEBUG: false,
+        RELEASE: true
+    }
+    const result = UglifyJS.minify(sourceFile, { compress: { global_defs: defines }, fromString: true, output: { beautify: false } });
+    const code = result.code;
+    return code;
+}
 
-
-    var defines = {
+export function minify(sourceFile: string): string
+export function minify(sourceFile: string, output: string): void
+export function minify(sourceFile: string, output?: string) {
+    const defines = {
         DEBUG: false,
         RELEASE: true
     }
     //UglifyJS参数参考这个页面：https://github.com/mishoo/UglifyJS2
-    var result = UglifyJS.minify(sourceFile, { compress: { global_defs: defines }, output: { beautify: false } });
-    file.save(output, result.code);
+    const result = UglifyJS.minify(sourceFile, { compress: { global_defs: defines }, output: { beautify: false } });
+    const code = result.code;
+    if (output) {
+        file.save(output, code);
+    }
+    else {
+        return code;
+    }
+
 }
 
 export function clean(path: string, excludes?: string[]) {
@@ -246,25 +265,44 @@ export function getNetworkAddress(): string[] {
     return ips;
 }
 
-export function getAvailablePort(callback: (port: number) => void, port = 0) {
 
-    function getPort() {
-        var server = net.createServer();
-        server.on('listening', function () {
-            port = server.address().port
-            server.close()
+export function measure(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<any>) {
+
+    const method = descriptor.value;
+    descriptor.value = function (...arg) {
+        const timeBuildStart = (new Date()).getTime();
+        let promise = method.apply(this, arg);
+
+        return promise.then((result) => {
+            const timeBuildEnd = (new Date()).getTime();
+            const timeBuildUsed = (timeBuildEnd - timeBuildStart) / 1000;
+            console.log(tr(1108, timeBuildUsed));
+            return result;
         })
-        server.on('close', function () {
-            callback(port)
-        })
-        server.on('error', function (err) {
-            port++;
-            getPort();
-        })
-        server.listen(port, '0.0.0.0')
     }
+}
 
-    getPort();
+export function getAvailablePort(port = 0) {
+    return new Promise<number>((resolve, reject) => {
+        function getPort() {
+            var server = net.createServer();
+            server.on('listening', function () {
+                port = server.address().port
+                server.close()
+            })
+            server.on('close', function () {
+                resolve(port)
+            })
+            server.on('error', function (err) {
+                port++;
+                getPort();
+            })
+            server.listen(port)
+        }
+        getPort();
+    })
+
+
 }
 
 export function checkEgret() {
@@ -325,9 +363,36 @@ export function createMap<T>(template?: MapLike<T>): Map<T> {
     return map;
 }
 
-export function shell(path: string, args: string[], opt?: cp.SpawnOptions, verbase?: boolean): Promise<number> {
+export function sleep(milesecond: number) {
+    return new Promise((resolve, reject) => {
+
+        setTimeout(() => {
+            resolve();
+        }, milesecond);
+
+    });
+}
+
+export function shell2(command: string, args: string[]) {
+    const cmd = command + " " + args.join(" ");
+    return new Promise((resolve, reject) => {
+        var shell = cp.exec(cmd, (error, stdout, stderr) => {
+            if (!error) {
+                resolve();
+            }
+            else {
+                console.log(stderr);
+                reject();
+            }
+        });
+    })
+
+}
+
+export function shell(path: string, args: string[], opt?: cp.ExecOptions, verbase?: boolean) {
     let stdout = "";
     let stderr = "";
+
     var cmd = `${path} ${args.join(" ")}`;
     if (verbase) {
         console.log(cmd);
@@ -346,8 +411,13 @@ export function shell(path: string, args: string[], opt?: cp.SpawnOptions, verba
             console.log(str);
         }
     };
-    let callback = (reslove, reject) => {
-        var shell = cp.spawn(path, args, opt);
+
+    type Result = { code: number, stdout: string, stderr: string, path: string, args: any[] };
+
+    return new Promise<Result>((resolve, reject) => {
+        // path = "\"" + path + "\"";
+        // var shell = cp.spawn(path + " " + args.join(" "));
+        var shell = cp.spawn(path, args);
         shell.on("error", (message) => { console.log(message); });
         shell.stderr.on("data", printStderrBufferMessage);
         shell.stderr.on("error", printStderrBufferMessage);
@@ -358,33 +428,32 @@ export function shell(path: string, args: string[], opt?: cp.SpawnOptions, verba
                 if (verbase) {
                     console.log('Failed: ' + code);
                 }
-                reject({ code, stdout, stderr });
+                reject({ code, stdout, stderr, path, args });
             }
             else {
-                reslove({ code, stdout, stderr });
+                resolve({ code, stdout, stderr, path, args });
             }
         });
-    };
-    return new Promise(callback);
+    });
 };
 
-let error_code_filename = path.join(__dirname, "../error_code.json");
-let errorcode = file.readJSONSync(error_code_filename, { "encoding": "utf-8" });
+
+
 export class CliException extends Error {
 
     public message;
 
     constructor(public errorId, param?: string) {
         super();
-        var message: string = errorcode[this.errorId];
-        if (message) {
-            message = message.replace('{0}', param);
-        }
-        else {
-            message = `unkown error : ${errorId}`;
-            console.error(message);
-        }
-        this.message = message;
+        // var message: string = errorcode[this.errorId];
+        // if (message) {
+        //     message = message.replace('{0}', param);
+        // }
+        // else {
+        //     message = `unkown error : ${errorId}`;
+        //     console.error(message);
+        // }
+        this.message = errorId;
     }
 }
 

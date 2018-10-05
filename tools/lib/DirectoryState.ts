@@ -11,12 +11,11 @@ export class DirectoryState {
         this.lastStates = updateMTime(this.path);
     }
 
-    checkChanges():egret.FileChanges {
+    checkChanges(): egret.FileChanges {
         var lastStates = this.lastStates;
         var currentStates = updateMTime(this.path);
         var lastFiles = Object.keys(lastStates);
         var currentFiles = Object.keys(currentStates);
-        
         var fileChanges: egret.FileChanges = [];
         currentFiles.forEach((path, index) => {
             var lastState = lastStates[path];
@@ -37,7 +36,7 @@ export class DirectoryState {
             }
         });
 
-        lastFiles.forEach(path=> {
+        lastFiles.forEach(path => {
             if (!currentStates[path]) {
                 fileChanges.push({
                     fileName: path,
@@ -58,7 +57,7 @@ export class DirectoryState {
 
 
 interface Map<T> {
-    [key:string]:T
+    [key: string]: T
 }
 
 interface FileState {

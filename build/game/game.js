@@ -1,16 +1,13 @@
 var __reflect = (this && this.__reflect) || function (p, c, t) {
     p.__class__ = c, t ? t.push(c) : t = [c], p.__types__ = p.__types__ ? t.concat(p.__types__) : t;
 };
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+var __extends = this && this.__extends || function __extends(t, e) { 
+ function r() { 
+ this.constructor = t;
+}
+for (var i in e) e.hasOwnProperty(i) && (t[i] = e[i]);
+r.prototype = e.prototype, t.prototype = new r();
+};
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -1845,23 +1842,22 @@ var egret;
          * @inheritDoc
          */
         ScrollView.prototype.$setWidth = function (value) {
-            if (this.$getExplicitWidth() == value) {
-                return false;
+            if (this.$explicitWidth == value) {
+                return;
             }
-            var result = _super.prototype.$setWidth.call(this, value);
+            _super.prototype.$setWidth.call(this, value);
             this._updateContentPosition();
-            return result;
         };
         /**
          * @private
          * @inheritDoc
          */
         ScrollView.prototype.$setHeight = function (value) {
-            if (this.$getExplicitHeight() == value)
-                return false;
-            var result = _super.prototype.$setHeight.call(this, value);
+            if (this.$explicitHeight == value) {
+                return;
+            }
+            _super.prototype.$setHeight.call(this, value);
             this._updateContentPosition();
-            return true;
         };
         /**
          * @private
@@ -2141,7 +2137,7 @@ var egret;
          * @returns
          */
         ScrollView.prototype._getContentWidth = function () {
-            return this._content.$getExplicitWidth() || this._content.width;
+            return this._content.$explicitWidth || this._content.width;
         };
         /**
          * @private
@@ -2149,7 +2145,7 @@ var egret;
          * @returns
          */
         ScrollView.prototype._getContentHeight = function () {
-            return this._content.$getExplicitHeight() || this._content.height;
+            return this._content.$explicitHeight || this._content.height;
         };
         /**
          * The left side of the maximum distance
@@ -2756,16 +2752,12 @@ var egret;
             if (request.method == egret.URLRequestMethod.GET || !request.data) {
             }
             else if (request.data instanceof egret.URLVariables) {
-                if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB) {
-                    httpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                }
+                httpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                 var urlVars = request.data;
                 sendData = urlVars.toString();
             }
             else {
-                if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB) {
-                    httpRequest.setRequestHeader("Content-Type", "multipart/form-data");
-                }
+                httpRequest.setRequestHeader("Content-Type", "multipart/form-data");
                 sendData = request.data;
             }
             var length = request.requestHeaders.length;
@@ -2850,9 +2842,7 @@ var egret;
             function onLoadComplete(e) {
                 removeListeners();
                 var bitmapData = imageLoader.data;
-                if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB) {
-                    bitmapData.source.setAttribute("bitmapSrc", virtualUrl);
-                }
+                bitmapData.source.setAttribute("bitmapSrc", virtualUrl);
                 var texture = new egret.Texture();
                 texture._setBitmapData(bitmapData);
                 loader.data = texture;
@@ -2938,7 +2928,7 @@ var egret;
         function MovieClip(movieClipData) {
             var _this = _super.call(this) || this;
             //Render Property
-            _this.$bitmapData = null;
+            _this.$texture = null;
             //Render Property
             _this.offsetPoint = egret.Point.create(0, 0);
             //Data Property
@@ -3014,10 +3004,15 @@ var egret;
              */
             _this.lastTime = 0;
             _this.$smoothing = egret.Bitmap.defaultSmoothing;
-            _this.$renderNode = new egret.sys.BitmapNode();
             _this.setMovieClipData(movieClipData);
+            if (!egret.nativeRender) {
+                _this.$renderNode = new egret.sys.NormalBitmapNode();
+            }
             return _this;
         }
+        MovieClip.prototype.createNativeDisplayObject = function () {
+            this.$nativeDisplayObject = new egret_native.NativeDisplayObject(11 /* BITMAP_TEXT */);
+        };
         Object.defineProperty(MovieClip.prototype, "smoothing", {
             /**
              * Whether or not is smoothed when scaled.
@@ -3035,12 +3030,10 @@ var egret;
                 return this.$smoothing;
             },
             set: function (value) {
-                value = !!value;
                 if (value == this.$smoothing) {
                     return;
                 }
                 this.$smoothing = value;
-                this.$invalidate();
             },
             enumerable: true,
             configurable: true
@@ -3090,27 +3083,27 @@ var egret;
         /**
          * @private
          */
-        MovieClip.prototype.$render = function () {
-            var texture = this.$bitmapData;
+        MovieClip.prototype.$updateRenderNode = function () {
+            var texture = this.$texture;
             if (texture) {
                 var offsetX = Math.round(this.offsetPoint.x);
                 var offsetY = Math.round(this.offsetPoint.y);
-                var bitmapWidth = texture._bitmapWidth;
-                var bitmapHeight = texture._bitmapHeight;
+                var bitmapWidth = texture.$bitmapWidth;
+                var bitmapHeight = texture.$bitmapHeight;
                 var textureWidth = texture.$getTextureWidth();
                 var textureHeight = texture.$getTextureHeight();
                 var destW = Math.round(texture.$getScaleBitmapWidth());
                 var destH = Math.round(texture.$getScaleBitmapHeight());
-                var sourceWidth = texture._sourceWidth;
-                var sourceHeight = texture._sourceHeight;
-                egret.sys.BitmapNode.$updateTextureData(this.$renderNode, texture._bitmapData, texture._bitmapX, texture._bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH, sourceWidth, sourceHeight, null, egret.BitmapFillMode.SCALE, this.$smoothing);
+                var sourceWidth = texture.$sourceWidth;
+                var sourceHeight = texture.$sourceHeight;
+                egret.sys.BitmapNode.$updateTextureData(this.$renderNode, texture.$bitmapData, texture.$bitmapX, texture.$bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH, sourceWidth, sourceHeight, egret.BitmapFillMode.SCALE, this.$smoothing);
             }
         };
         /**
          * @private
          */
         MovieClip.prototype.$measureContentBounds = function (bounds) {
-            var texture = this.$bitmapData;
+            var texture = this.$texture;
             if (texture) {
                 var x = this.offsetPoint.x;
                 var y = this.offsetPoint.y;
@@ -3236,6 +3229,8 @@ var egret;
          */
         MovieClip.prototype.play = function (playTimes) {
             if (playTimes === void 0) { playTimes = 0; }
+            this.lastTime = egret.getTimer();
+            this.passedTime = 0;
             this.$isPlaying = true;
             this.setPlayTimes(playTimes);
             if (this.$totalFrames > 1 && this.$stage) {
@@ -3396,22 +3391,55 @@ var egret;
          *
          */
         MovieClip.prototype.constructFrame = function () {
-            var currentFrameNum = this.$currentFrameNum;
-            if (this.displayedKeyFrameNum == currentFrameNum) {
+            var self = this;
+            var currentFrameNum = self.$currentFrameNum;
+            if (self.displayedKeyFrameNum == currentFrameNum) {
                 return;
             }
-            this.$bitmapData = this.$movieClipData.getTextureByFrame(currentFrameNum);
-            this.$movieClipData.$getOffsetByFrame(currentFrameNum, this.offsetPoint);
-            this.$invalidateContentBounds();
-            this.displayedKeyFrameNum = currentFrameNum;
+            var texture = self.$movieClipData.getTextureByFrame(currentFrameNum);
+            self.$texture = texture;
+            self.$movieClipData.$getOffsetByFrame(currentFrameNum, self.offsetPoint);
+            self.displayedKeyFrameNum = currentFrameNum;
+            self.$renderDirty = true;
+            if (egret.nativeRender) {
+                self.$nativeDisplayObject.setDataToBitmapNode(self.$nativeDisplayObject.id, texture, [texture.$bitmapX, texture.$bitmapY, texture.$bitmapWidth, texture.$bitmapHeight,
+                    self.offsetPoint.x, self.offsetPoint.y, texture.$getScaleBitmapWidth(), texture.$getScaleBitmapHeight(),
+                    texture.$sourceWidth, texture.$sourceHeight]);
+                //todo 负数offsetPoint
+                self.$nativeDisplayObject.setWidth(texture.$getTextureWidth() + self.offsetPoint.x);
+                self.$nativeDisplayObject.setHeight(texture.$getTextureHeight() + self.offsetPoint.y);
+            }
+            else {
+                var p = self.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                var maskedObject = self.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
+            }
         };
         /**
          * @private
          *
          */
         MovieClip.prototype.$renderFrame = function () {
-            this.$bitmapData = this.$movieClipData.getTextureByFrame(this.$currentFrameNum);
-            this.$invalidateContentBounds();
+            var self = this;
+            self.$texture = self.$movieClipData.getTextureByFrame(self.$currentFrameNum);
+            self.$renderDirty = true;
+            var p = self.$parent;
+            if (p && !p.$cacheDirty) {
+                p.$cacheDirty = true;
+                p.$cacheDirtyUp();
+            }
+            var maskedObject = self.$maskedObject;
+            if (maskedObject && !maskedObject.$cacheDirty) {
+                maskedObject.$cacheDirty = true;
+                maskedObject.$cacheDirtyUp();
+            }
         };
         /**
          * @private
@@ -4328,26 +4356,6 @@ var egret;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(MainContext, "runtimeType", {
-            /**
-             * @version Egret 2.4
-             * @platform Web,Native
-             */
-            get: function () {
-                egret.$warn(1041, "egret.MainContext.runtimeType", "egret.Capabilities.runtimeType");
-                return MainContext._runtimeType;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * 游戏启动，开启主循环，参考Flash的滑动跑道模型
-         * @method egret.MainContext#run
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        MainContext.prototype.run = function () {
-        };
         Object.defineProperty(MainContext, "instance", {
             /**
              * @method egret.Ticker.getInstance
@@ -4379,16 +4387,6 @@ var egret;
          * @platform Web,Native
          */
         MainContext.DEVICE_MOBILE = "native";
-        /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        MainContext.RUNTIME_HTML5 = "runtimeHtml5";
-        /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        MainContext.RUNTIME_NATIVE = "runtimeNative";
         return MainContext;
     }(egret.EventDispatcher));
     egret.MainContext = MainContext;
@@ -4398,25 +4396,14 @@ var egret;
  * @private
  */
 egret["testDeviceType1"] = function () {
-    if (!__global["navigator"]) {
+    if (!window["navigator"]) {
         return true;
     }
     var ua = navigator.userAgent.toLowerCase();
     return (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
 };
-/**
- * @private
- */
-egret["testRuntimeType1"] = function () {
-    if (__global["navigator"]) {
-        return true;
-    }
-    return false;
-};
 egret.MainContext.deviceType = egret["testDeviceType1"]() ? egret.MainContext.DEVICE_MOBILE : egret.MainContext.DEVICE_PC;
-egret.MainContext._runtimeType = egret["testRuntimeType1"]() ? egret.MainContext.RUNTIME_HTML5 : egret.MainContext.RUNTIME_NATIVE;
 delete egret["testDeviceType1"];
-delete egret["testRuntimeType1"];
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.

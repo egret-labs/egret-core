@@ -3,29 +3,23 @@ import * as path from "path";
 import * as ts from "../../typescript-plus";
 import * as utils from "./typescript-utils";
 
-function watch(rootFileNames: string[], options: ts.CompilerOptions) {
-    const files = {};
+function watch() {
 
-    // initialize the list of files
-    rootFileNames.forEach(fileName => {
-        files[fileName] = { version: 0 };
-    });
 
-    // Create the language service files
-    var program = ts.createProgram(rootFileNames, options);
-
-    var sourceCodes = program.getSourceFiles();
+    const projectRoot = egret.args.projectDir;
+    const tsconfig = FiltUtil.readJSONSync(path.join(projectRoot, 'tsconfig.json'));
+    const config = ts.parseJsonConfigFileContent(tsconfig, ts.sys, projectRoot);
+    const program = ts.createProgram(config.fileNames, config.options);
+    const sourceCodes = program.getSourceFiles();
     sourceCodes.forEach(source => {
-        if (source.fileName.indexOf("lib.d.ts") >= 0) {
-            return;
-        }
+        // if (source.fileName.indexOf("lib.d.ts") >= 0) {
+        //     return;
+        // }
         // if (source.fileName.indexOf("egret.d.ts") >= 0) {
         //     return;
         // }
         delint(program, source, "eui.UIComponent");
     });
-    rootFileNames.length = 0;
-    program = null;
     if (global.gc) global.gc();
 }
 
@@ -87,9 +81,9 @@ function delint(program: ts.Program, sourceFile: ts.SourceFile, base: string) {
     }
 }
 
-export async function run(data: any) {
+export function run(data: any) {
     tempData = data;
-    let files = FiltUtil.searchByFunction(egret.args.projectDir, (filePath: string) => filePath.indexOf(".ts") >= 0);
-    watch(files, { module: ts.ModuleKind.CommonJS });
-    return data;
+    watch();
 }
+
+

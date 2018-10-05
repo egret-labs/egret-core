@@ -4,10 +4,11 @@ import FileUtil = require('../lib/FileUtil');
 import path = require('path');
 import ts = require("../lib/typescript-plus/lib/typescript");
 
-var ANY = 'any';
+const ANY = 'any';
 declare var global: any;
 
 class CompileEgretEngine implements egret.Command {
+
     private compiler: Compiler;
 
     public execute(): number {
@@ -27,6 +28,11 @@ class CompileEgretEngine implements egret.Command {
         ];
 
         let excludeList = [
+            FileUtil.escapePath(path.join(outputDir, "egretia-sdk")),
+            FileUtil.escapePath(path.join(outputDir, "egret-facebook")),
+            FileUtil.escapePath(path.join(outputDir, "promise")),
+            FileUtil.escapePath(path.join(outputDir, "resourcemanager")),
+            FileUtil.escapePath(path.join(outputDir, "assetsmanager")),
             FileUtil.escapePath(path.join(outputDir, "egret3d")),
             FileUtil.escapePath(path.join(outputDir, "egret-wasm")),
             FileUtil.escapePath(path.join(outputDir, "eui-wasm")),
@@ -35,18 +41,15 @@ class CompileEgretEngine implements egret.Command {
             FileUtil.escapePath(path.join(outputDir, "wasm_libs")),
             FileUtil.escapePath(path.join(outputDir, "media")),
             FileUtil.escapePath(path.join(outputDir, "nest")),
+            FileUtil.escapePath(path.join(outputDir, "res")),
             FileUtil.escapePath(path.join(outputDir, "dragonBones"))
         ];
         utils.clean(outputDir, excludeList);
-
-        for (var i = 0; i < manifest.modules.length; i++) {
-            var m = manifest.modules[i];
+        for (let m of manifest.modules) {
             preduceSwanModule(m);
             listModuleFiles(m);
-            for (var j = 0; j < configurations.length; j++) {
-                var config = configurations[j];
-                for (var k = 0; k < manifest.platforms.length; k++) {
-                    var platform = manifest.platforms[k];
+            for (let config of configurations) {
+                for (let platform of manifest.platforms) {
                     code = this.buildModule(m, platform, config);
                     if (code != 0) {
                         delSwanTemp(m);
@@ -54,14 +57,17 @@ class CompileEgretEngine implements egret.Command {
                     }
                 }
             }
+            // break;
             delSwanTemp(m);
         }
+
+
 
         // this.hideInternalMethods();
         return code;
     }
 
-    private buildModule(m: egret.EgretModule, platform: egret.TargetPlatform, configuration: egret.CompileConfiguration) {
+    private buildModule(m: egret.EgretModule, platform: egret.target.Info, configuration: egret.CompileConfiguration) {
 
 
         var name = m.name;
@@ -82,12 +88,14 @@ class CompileEgretEngine implements egret.Command {
         var outDir = this.getModuleOutputPath(null, null, m.outFile);
         var declareFile = this.getModuleOutputPath(m.name, fileName + ".d.ts", m.outFile);
         var singleFile = this.getModuleOutputPath(m.name, fileName + ".js", m.outFile);
+        //var modFile = this.getModuleOutputPath(m.name, fileName + ".mod.js", m.outFile);
+
         var moduleRoot = FileUtil.joinPath(egret.root, m.root);
         if (!m.root) {
             return 0;
         }
         var tss: string[] = [];
-        m.files.forEach((file:any) => {
+        m.files.forEach((file) => {
             var path: string = null;
             var sourcePlatform: string = null, sourceConfig: string = null;
             if (typeof (file) == 'string') {
@@ -112,7 +120,7 @@ class CompileEgretEngine implements egret.Command {
         let tsconfig = path.join(egret.root, 'src/egret/');
         let isPublish = configuration.name != "debug"
         let compileOptions: ts.CompilerOptions = this.compiler.parseTsconfig(tsconfig, isPublish).options;
-
+        // com
         //make 使用引擎的配置,必须用下面的参数
         compileOptions.declaration = dts;
         compileOptions.out = singleFile;
@@ -127,6 +135,7 @@ class CompileEgretEngine implements egret.Command {
         if (configuration.minify) {
             utils.minify(singleFile, singleFile);
         }
+
         return 0;
     }
 
@@ -184,7 +193,7 @@ function listModuleFiles(m: egret.EgretModule) {
         tsFiles = FileUtil.search(FileUtil.joinPath(egret.root, m.root), "ts");
     var specFiles = {};
     m.files.forEach((f, i) => {
-        var fileName = typeof (f) == 'string' ? <string>f : (<egret.ManifestSourceFile>f).path;
+        var fileName = typeof (f) == 'string' ? f : f.path;
         fileName = FileUtil.joinPath(m.root, fileName);
         fileName = FileUtil.joinPath(egret.root, fileName);
         if (f['path'])

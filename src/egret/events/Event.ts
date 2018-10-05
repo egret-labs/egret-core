@@ -76,7 +76,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static ADDED_TO_STAGE:string = "addedToStage";
+        public static ADDED_TO_STAGE: string = "addedToStage";
         /**
          * Dispatched when a display object is about to be removed from the display list, either directly or through the removal
          * of a sub tree in which the display object is contained.
@@ -90,7 +90,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static REMOVED_FROM_STAGE:string = "removedFromStage";
+        public static REMOVED_FROM_STAGE: string = "removedFromStage";
         /**
          * Dispatched when a display object is added to the display list.
          * @version Egret 2.4
@@ -103,7 +103,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static ADDED:string = "added";
+        public static ADDED: string = "added";
         /**
          * Dispatched when a display object is about to be removed from the display list.
          * @version Egret 2.4
@@ -116,7 +116,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static REMOVED:string = "removed";
+        public static REMOVED: string = "removed";
         /**
          * [broadcast event] Dispatched when the playhead is entering a new frame.
          * @version Egret 2.4
@@ -129,7 +129,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static ENTER_FRAME:string = "enterFrame";
+        public static ENTER_FRAME: string = "enterFrame";
         /**
          * Dispatched when the display list is about to be updated and rendered.
          * Note: Every time you want to receive a render event,you must call the stage.invalidate() method.
@@ -145,7 +145,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static RENDER:string = "render";
+        public static RENDER: string = "render";
         /**
          * Dispatched when the size of stage or UIComponent is changed.
          * @version Egret 2.4
@@ -158,7 +158,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static RESIZE:string = "resize";
+        public static RESIZE: string = "resize";
 
         /**
          * Dispatched when the value or selection of a property is chaned.
@@ -172,7 +172,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static CHANGE:string = "change";
+        public static CHANGE: string = "change";
 
         /**
          * Dispatched when the value or selection of a property is going to change.you can cancel this by calling the
@@ -187,7 +187,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static CHANGING:string = "changing";
+        public static CHANGING: string = "changing";
         /**
          * Dispatched when the net request is complete.
          * @version Egret 2.4
@@ -200,7 +200,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static COMPLETE:string = "complete";
+        public static COMPLETE: string = "complete";
 
         /**
          * Dispatched when loop completed.
@@ -214,7 +214,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static LOOP_COMPLETE:string = "loopComplete";
+        public static LOOP_COMPLETE: string = "loopComplete";
 
         /**
          * Dispatched when the TextInput instance gets focus.
@@ -228,7 +228,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static FOCUS_IN:string = "focusIn";
+        public static FOCUS_IN: string = "focusIn";
         /**
          * Dispatched when the TextInput instance loses focus.
          * @version Egret 2.4
@@ -241,7 +241,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static FOCUS_OUT:string = "focusOut";
+        public static FOCUS_OUT: string = "focusOut";
         /**
          * Dispatched when the playback is ended.
          * @version Egret 2.4
@@ -254,7 +254,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static ENDED:string = "ended";
+        public static ENDED: string = "ended";
 
 
         /**
@@ -262,28 +262,28 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static ACTIVATE:string = "activate";
+        public static ACTIVATE: string = "activate";
 
         /**
          * 取消激活
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static DEACTIVATE:string = "deactivate";
+        public static DEACTIVATE: string = "deactivate";
 
         /**
          * Event.CLOSE 常量定义 close 事件对象的 type 属性的值。
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static CLOSE:string = "close";
+        public static CLOSE: string = "close";
 
         /**
          * Event.CONNECT 常量定义 connect 事件对象的 type 属性的值。
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static CONNECT:string = "connect";
+        public static CONNECT: string = "connect";
 
 
         /**
@@ -291,14 +291,14 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static LEAVE_STAGE:string = "leaveStage";
+        public static LEAVE_STAGE: string = "leaveStage";
 
         /**
          * Event.SOUND_COMPLETE 常量定义 在声音完成播放后调度。
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static SOUND_COMPLETE:string = "soundComplete";
+        public static SOUND_COMPLETE: string = "soundComplete";
 
 
         /**
@@ -321,7 +321,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public constructor(type:string, bubbles?:boolean, cancelable?:boolean, data?:any) {
+        public constructor(type: string, bubbles?: boolean, cancelable?: boolean, data?: any) {
             super();
             this.$type = type;
             this.$bubbles = !!bubbles;
@@ -341,12 +341,12 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public data:any;
+        public data: any;
 
         /**
          * @private
          */
-        $type:string;
+        $type: string;
 
         /**
          * The type of event. The type is case-sensitive.
@@ -360,14 +360,14 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get type():string {
+        public get type(): string {
             return this.$type;
         }
 
         /**
          * @private
          */
-        $bubbles:boolean;
+        $bubbles: boolean;
 
         /**
          * Indicates whether an event is a bubbling event.
@@ -381,14 +381,14 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get bubbles():boolean {
+        public get bubbles(): boolean {
             return this.$bubbles;
         }
 
         /**
          * @private
          */
-        $cancelable:boolean;
+        $cancelable: boolean;
         /**
          * Indicates whether the behavior associated with the event can be prevented. If the behavior can be
          * canceled, this value is true; otherwise it is false.
@@ -404,14 +404,14 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get cancelable():boolean {
+        public get cancelable(): boolean {
             return this.$cancelable;
         }
 
         /**
          * @private
          */
-        $eventPhase:number = 2;
+        $eventPhase: number = 2;
 
         /**
          * The current phase in the event flow. This property can contain the following numeric values:
@@ -433,14 +433,14 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get eventPhase():number {
+        public get eventPhase(): number {
             return this.$eventPhase;
         }
 
         /**
          * @private
          */
-        $currentTarget:any = null;
+        $currentTarget: any = null;
 
         /**
          * The object that is actively processing the Event object with an event listener. For example, if a
@@ -457,14 +457,14 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get currentTarget():any {
+        public get currentTarget(): any {
             return this.$currentTarget;
         }
 
         /**
          * @private
          */
-        $target:any = null;
+        $target: any = null;
 
         /**
          * The event target. This property contains the target node. For example, if a user clicks an OK button,
@@ -479,11 +479,11 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get target():any {
+        public get target(): any {
             return this.$target;
         }
 
-        $setTarget(target:any):boolean {
+        $setTarget(target: any): boolean {
             this.$target = target;
             return true;
         }
@@ -491,7 +491,7 @@ namespace egret {
         /**
          * @private
          */
-        $isDefaultPrevented:boolean = false;
+        $isDefaultPrevented: boolean = false;
 
         /**
          * Checks whether the preventDefault() method has been called on the event. If the preventDefault() method has been
@@ -510,7 +510,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public isDefaultPrevented():boolean {
+        public isDefaultPrevented(): boolean {
             return this.$isDefaultPrevented;
         }
 
@@ -540,7 +540,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public preventDefault():void {
+        public preventDefault(): void {
             if (this.$cancelable)
                 this.$isDefaultPrevented = true;
         }
@@ -548,7 +548,7 @@ namespace egret {
         /**
          * @private
          */
-        $isPropagationStopped:boolean = false;
+        $isPropagationStopped: boolean = false;
 
         /**
          * Prevents processing of any event listeners in nodes subsequent to the current node in the event flow. This method
@@ -573,7 +573,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public stopPropagation():void {
+        public stopPropagation(): void {
             if (this.$bubbles)
                 this.$isPropagationStopped = true;
         }
@@ -581,7 +581,7 @@ namespace egret {
         /**
          * @private
          */
-        $isPropagationImmediateStopped:boolean = false;
+        $isPropagationImmediateStopped: boolean = false;
 
         /**
          * Prevents processing of any event listeners in the current node and any subsequent nodes in the event flow.
@@ -604,7 +604,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public stopImmediatePropagation():void {
+        public stopImmediatePropagation(): void {
             if (this.$bubbles)
                 this.$isPropagationImmediateStopped = true;
         }
@@ -628,7 +628,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        protected clean():void {
+        protected clean(): void {
             this.data = this.$currentTarget = null;
             this.$setTarget(null);
         }
@@ -657,9 +657,9 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static dispatchEvent(target:IEventDispatcher, type:string, bubbles:boolean = false, data?:any):boolean {
-            let event:IOErrorEvent = Event.create(Event, type, bubbles);
-            let props:any = Event._getPropertyData(Event);
+        public static dispatchEvent(target: IEventDispatcher, type: string, bubbles: boolean = false, data?: any): boolean {
+            let event: IOErrorEvent = Event.create(Event, type, bubbles);
+            let props: any = Event._getPropertyData(Event);
             if (data != undefined) {
                 props.data = data;
             }
@@ -674,8 +674,8 @@ namespace egret {
          * @param EventClass
          * @returns
          */
-        public static _getPropertyData(EventClass:any):any {
-            let props:any = EventClass._props;
+        public static _getPropertyData(EventClass: any): any {
+            let props: any = EventClass._props;
             if (!props)
                 props = EventClass._props = {};
             return props;
@@ -722,14 +722,19 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static create<T extends Event>(EventClass:{new (type:string, bubbles?:boolean, cancelable?:boolean): T;eventPool?:Event[]},
-                                              type:string, bubbles?:boolean, cancelable?:boolean):T {
-            let eventPool:Event[] = EventClass.eventPool;
+        public static create<T extends Event>(EventClass: { new(type: string, bubbles?: boolean, cancelable?: boolean): T; eventPool?: Event[] },
+            type: string, bubbles?: boolean, cancelable?: boolean): T {
+            let eventPool: Event[];
+            let hasEventPool = (EventClass as any).hasOwnProperty("eventPool");
+            if (hasEventPool) {
+                eventPool = EventClass.eventPool;
+            }
+
             if (!eventPool) {
                 eventPool = EventClass.eventPool = [];
             }
             if (eventPool.length) {
-                let event:T = <T> eventPool.pop();
+                let event: T = <T>eventPool.pop();
                 event.$type = type;
                 event.$bubbles = !!bubbles;
                 event.$cancelable = !!cancelable;
@@ -776,9 +781,9 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static release(event:Event):void {
+        public static release(event: Event): void {
             event.clean();
-            let EventClass:any = Object.getPrototypeOf(event).constructor;
+            let EventClass: any = Object.getPrototypeOf(event).constructor;
             EventClass.eventPool.push(event);
         }
 

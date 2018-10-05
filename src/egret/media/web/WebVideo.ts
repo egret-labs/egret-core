@@ -97,6 +97,10 @@ namespace egret.web {
             }
         }
 
+        protected createNativeDisplayObject(): void {
+            this.$nativeDisplayObject = new egret_native.NativeDisplayObject(egret_native.NativeObjectType.BITMAP);
+        }
+
         /**
          * @inheritDoc
          */
@@ -167,10 +171,10 @@ namespace egret.web {
             this.isPlayed = true;
 
             let video = this.video;
-            if (startTime != undefined)
+            if (startTime != undefined) {
                 video.currentTime = +startTime || 0;
-                video.loop = !!loop;
-
+            }
+            video.loop = !!loop;
             if (egret.Capabilities.isMobile) {
                 video.style.zIndex = "-88888"; //移动端，就算设置成最小，只要全屏，都会在最上层，而且在自动退出去后，不担心挡住canvas
             }
@@ -190,14 +194,13 @@ namespace egret.web {
 
             this.checkFullScreen(this._fullscreen);
         }
-        private videoPlay(){
+        private videoPlay() {
             this.userPause = false;
             if (this.waiting) {
                 this.userPlay = true;
                 return
             }
-            this.userPlay = false;            
-            
+            this.userPlay = false;
             this.video.play();
         }
 
@@ -309,7 +312,6 @@ namespace egret.web {
         private onVideoEnded() {
             this.pause();
             this.isPlayed = false;
-            this.$invalidateContentBounds();
 
             this.dispatchEventWith(egret.Event.ENDED);
         }
@@ -352,9 +354,8 @@ namespace egret.web {
                 return
             }
             this.userPause = false;
-
+            this.video.pause();
             egret.stopTick(this.markDirty, this);
-            this.$invalidate();
         }
 
 
@@ -440,11 +441,16 @@ namespace egret.web {
             imageLoader.once(egret.Event.COMPLETE, e => {
                 let posterData = <HTMLImageElement><any>imageLoader.data;
                 this.posterData = imageLoader.data;
-
+                this.$renderDirty = true;
                 this.posterData.width = this.getPlayWidth();
                 this.posterData.height = this.getPlayHeight();
 
-                this.$invalidateContentBounds();
+                if (egret.nativeRender) {
+                    const texture = new egret.Texture();
+                    texture._setBitmapData(this.posterData);
+                    this.$nativeDisplayObject.setBitmapData(texture);
+                }
+
             }, this);
             imageLoader.load(poster);
         }
@@ -464,7 +470,6 @@ namespace egret.web {
             }
             video.width = video.videoWidth;
             video.height = video.videoHeight;
-            this.$invalidateContentBounds();
             window.setTimeout(() => {
                 this.dispatchEventWith(egret.Event.COMPLETE);
             }, 200);
@@ -522,7 +527,7 @@ namespace egret.web {
         /**
          * @private
          */
-        $render(): void {
+        $updateRenderNode(): void {
             let node = <sys.BitmapNode>this.$renderNode;
             let bitmapData = this.bitmapData;
             let posterData = this.posterData;
@@ -545,7 +550,7 @@ namespace egret.web {
         }
 
         private markDirty(): boolean {
-            this.$invalidate();
+            this.$renderDirty = true;
             return true;
         }
 
@@ -553,22 +558,32 @@ namespace egret.web {
          * @private
          * 设置显示高度
          */
-        $setHeight(value: number): boolean {
-            this.heightSet = +value || 0;
-            this.$invalidate();
-            this.$invalidateContentBounds();
-            return super.$setHeight(value);
+        $setHeight(value: number): void {
+            this.heightSet = value;
+            if (this.paused) { // 在暂停和播放结束后，修改视频大小时，没有重绘导致的bug
+                const self = this;
+                this.$renderDirty = true;
+                window.setTimeout(function() {
+                    self.$renderDirty = false;
+                }, 200);
+            }
+            super.$setHeight(value);
         }
 
         /**
          * @private
          * 设置显示宽度
          */
-        $setWidth(value: number): boolean {
-            this.widthSet = +value || 0;
-            this.$invalidate();
-            this.$invalidateContentBounds();
-            return super.$setWidth(value);
+        $setWidth(value: number): void {
+            this.widthSet = value;
+            if (this.paused) { // 在暂停和播放结束后，修改视频大小时，没有重绘导致的bug
+                const self = this;
+                this.$renderDirty = true;
+                window.setTimeout(function() {
+                    self.$renderDirty = false;
+                }, 200);
+            }
+            super.$setWidth(value);
         }
 
         public get paused(): boolean {

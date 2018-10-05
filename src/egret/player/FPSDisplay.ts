@@ -31,7 +31,7 @@ namespace egret {
     /**
      * @private
      */
-    export interface FPSDisplay extends DisplayObject {
+    export interface FPSDisplay {
         /**
          * 更新FPS信息
          */
@@ -63,8 +63,6 @@ namespace egret {
 interface FPSData extends Object{
     fps:number;
     draw:number;
-    dirty:number;
     costTicker:number;
-    costDirty:number;
     costRender:number;
 }

@@ -59,10 +59,23 @@ namespace egret.web {
          */
         private root: boolean;
 
+
         public constructor(width?: number, height?: number, root?: boolean) {
             super();
             // 获取webglRenderContext
             this.context = WebGLRenderContext.getInstance(width, height);
+
+            if (egret.nativeRender) {
+                if(root) {
+                    this.surface = this.context.surface;
+                }
+                else {
+                    this.surface = new egret_native.NativeRenderSurface(this, width, height, root);
+                }
+                this.rootRenderTarget = null;
+                return;
+            }
+
             // buffer 对应的 render target
             this.rootRenderTarget = new WebGLRenderTarget(this.context.context, 3, 3);
             if (width && height) {
@@ -77,6 +90,7 @@ namespace egret.web {
                 this.context.pushBuffer(this);
                 // 画布
                 this.surface = this.context.surface;
+                this.$computeDrawCall = true;
             } else {
                 // 由于创建renderTarget造成的frameBuffer绑定，这里重置绑定
                 let lastBuffer = this.context.activatedBuffer;
@@ -94,7 +108,7 @@ namespace egret.web {
          * 模版开关状态
          */
         private stencilState: boolean = false;
-        public $stencilList = [];
+        public $stencilList: { x: number, y: number, width: number, height: number }[] = [];
         public stencilHandleCount: number = 0;
 
         public enableStencil(): void {
@@ -156,7 +170,12 @@ namespace egret.web {
          * @readOnly
          */
         public get width(): number {
-            return this.rootRenderTarget.width;
+            if (egret.nativeRender) {
+                return this.surface.width;
+            }
+            else {
+                return this.rootRenderTarget.width;
+            }
         }
 
         /**
@@ -164,7 +183,12 @@ namespace egret.web {
          * @readOnly
          */
         public get height(): number {
-            return this.rootRenderTarget.height;
+            if (egret.nativeRender) {
+                return this.surface.height;
+            }
+            else {
+                return this.rootRenderTarget.height;
+            }
         }
 
         /**
@@ -174,11 +198,13 @@ namespace egret.web {
          * @param useMaxSize 若传入true，则将改变后的尺寸与已有尺寸对比，保留较大的尺寸。
          */
         public resize(width: number, height: number, useMaxSize?: boolean): void {
-            this.context.pushBuffer(this);
-
             width = width || 1;
             height = height || 1;
-
+            if (egret.nativeRender) {
+                this.surface.resize(width, height);
+                return;
+            }
+            this.context.pushBuffer(this);
             // render target 尺寸重置
             if (width != this.rootRenderTarget.width || height != this.rootRenderTarget.height) {
                 this.context.drawCmdManager.pushResize(this, width, height);
@@ -186,149 +212,12 @@ namespace egret.web {
                 this.rootRenderTarget.width = width;
                 this.rootRenderTarget.height = height;
             }
-
             // 如果是舞台的渲染缓冲，执行resize，否则surface大小不随之改变
             if (this.root) {
                 this.context.resize(width, height, useMaxSize);
             }
-
             this.context.clear();
-
             this.context.popBuffer();
-        }
-
-
-
-        /**
-         * 改变渲染缓冲为指定大小，但保留原始图像数据
-         * @param width 改变后的宽
-         * @param height 改变后的高
-         * @param offsetX 原始图像数据在改变后缓冲区的绘制起始位置x
-         * @param offsetY 原始图像数据在改变后缓冲区的绘制起始位置y
-         */
-        public resizeTo(width: number, height: number, offsetX: number, offsetY: number): void {
-            this.context.pushBuffer(this);
-
-            let oldWidth = this.rootRenderTarget.width;
-            let oldHeight = this.rootRenderTarget.height;
-            let tempBuffer: WebGLRenderBuffer = WebGLRenderBuffer.create(oldWidth, oldHeight);
-            this.context.pushBuffer(tempBuffer);
-            this.context.drawImage(<BitmapData><any>this.rootRenderTarget, 0, 0, oldWidth, oldHeight,
-                0, 0, oldWidth, oldHeight, oldWidth, oldHeight, false);
-            this.context.popBuffer();
-
-            this.resize(width, height);
-
-            this.setTransform(1, 0, 0, 1, 0, 0);
-            this.context.drawImage(<BitmapData><any>tempBuffer.rootRenderTarget, 0, 0, oldWidth, oldHeight,
-                offsetX, offsetY, oldWidth, oldHeight, oldWidth, oldHeight, false);
-            WebGLRenderBuffer.release(tempBuffer);
-            this.context.popBuffer();
-        }
-
-        // dirtyRegionPolicy hack
-        private dirtyRegionPolicy: boolean = true;
-        private _dirtyRegionPolicy: boolean = true;// 默认设置为true，保证第一帧绘制在frameBuffer上
-        public setDirtyRegionPolicy(state: string): void {
-            this.dirtyRegionPolicy = (state == "on");
-        }
-
-        /**
-         * 清空并设置裁切
-         * @param regions 矩形列表
-         * @param offsetX 矩形要加上的偏移量x
-         * @param offsetY 矩形要加上的偏移量y
-         */
-        public beginClip(regions: sys.Region[], offsetX?: number, offsetY?: number): void {
-
-            this.context.pushBuffer(this);
-
-            if (this.root) {
-                // dirtyRegionPolicy hack
-                if (this._dirtyRegionPolicy) {
-                    this.rootRenderTarget.useFrameBuffer = true;
-                    this.rootRenderTarget.activate();
-                } else {
-                    this.rootRenderTarget.useFrameBuffer = false;
-                    this.rootRenderTarget.activate();
-                    WebGLRenderBuffer.autoClear && this.context.clear();
-                }
-            }
-
-            offsetX = +offsetX || 0;
-            offsetY = +offsetY || 0;
-            this.setTransform(1, 0, 0, 1, offsetX, offsetY);
-            let length = regions.length;
-            //只有一个区域且刚好为舞台大小时,不设置模板
-            // if (length == 1 && regions[0].minX == 0 && regions[0].minY == 0 &&
-            //     regions[0].width == this.rootRenderTarget.width && regions[0].height == this.rootRenderTarget.height) {
-            this.maskPushed = false;
-            this.rootRenderTarget.useFrameBuffer && this.context.clear();
-            this.context.popBuffer();
-            return;
-            // }
-            // 擦除脏矩形区域
-            // for (let i = 0; i < length; i++) {
-            //     let region = regions[i];
-            //     this.context.clearRect(region.minX, region.minY, region.width, region.height);
-            // }
-            // // 设置模版
-            // if (length > 0) {
-
-            //     // 对第一个且只有一个mask用scissor处理
-            //     if(!this.$hasScissor && length == 1) {
-            //         let region = regions[0];
-            //         regions = regions.slice(1);
-            //         let x = region.minX + offsetX;
-            //         let y = region.minY + offsetY;
-            //         let width = region.width;
-            //         let height = region.height;
-            //         this.context.enableScissor(x, - y - height + this.height, width, height);
-            //         this.scissorEnabled = true;
-            //     } else {
-            //         this.scissorEnabled = false;
-            //     }
-
-            //     if(regions.length > 0) {
-            //         this.context.pushMask(regions);
-            //         this.maskPushed = true;
-            //     } else {
-            //         this.maskPushed = false;
-            //     }
-
-            //     this.offsetX = offsetX;
-            //     this.offsetY = offsetY;
-            // }
-            // else {
-            //     this.maskPushed = false;
-            // }
-
-            // this.context.popBuffer();
-        }
-
-        private maskPushed: boolean;
-        private scissorEnabled: boolean;
-        private offsetX: number;
-        private offsetY: number;
-
-        /**
-         * 取消上一次设置的clip。
-         */
-        public endClip(): void {
-            if (this.maskPushed || this.scissorEnabled) {
-                this.context.pushBuffer(this);
-
-                if (this.maskPushed) {
-                    this.setTransform(1, 0, 0, 1, this.offsetX, this.offsetY);
-                    this.context.popMask();
-                }
-
-                if (this.scissorEnabled) {
-                    this.context.disableScissor();
-                }
-
-                this.context.popBuffer();
-            }
         }
 
         /**
@@ -337,15 +226,21 @@ namespace egret.web {
         public getPixels(x: number, y: number, width: number = 1, height: number = 1): number[] {
             let pixels = new Uint8Array(4 * width * height);
 
-            let useFrameBuffer = this.rootRenderTarget.useFrameBuffer;
-            this.rootRenderTarget.useFrameBuffer = true;
-            this.rootRenderTarget.activate();
+            if (egret.nativeRender) {
+                egret_native.activateBuffer(this);
+                egret_native.nrGetPixels(x, y, width, height, pixels);
+                egret_native.activateBuffer(null);
+            }
+            else {
+                let useFrameBuffer = this.rootRenderTarget.useFrameBuffer;
+                this.rootRenderTarget.useFrameBuffer = true;
+                this.rootRenderTarget.activate();
 
-            this.context.getPixels(x, y, width, height, pixels);
+                this.context.getPixels(x, y, width, height, pixels);
 
-            this.rootRenderTarget.useFrameBuffer = useFrameBuffer;
-            this.rootRenderTarget.activate();
-
+                this.rootRenderTarget.useFrameBuffer = useFrameBuffer;
+                this.rootRenderTarget.activate();
+            }
             //图像反转
             let result = new Uint8Array(4 * width * height);
             for (let i = 0; i < height; i++) {
@@ -380,18 +275,6 @@ namespace egret.web {
 
         public onRenderFinish(): void {
             this.$drawCalls = 0;
-
-            // 如果是舞台渲染buffer，判断脏矩形策略
-            if (this.root) {
-                // dirtyRegionPolicy hack
-                if (!this._dirtyRegionPolicy && this.dirtyRegionPolicy) {
-                    this.drawSurfaceToFrameBuffer(0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height, 0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height, true);
-                }
-                if (this._dirtyRegionPolicy) {
-                    this.drawFrameBufferToSurface(0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height, 0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height);
-                }
-                this._dirtyRegionPolicy = this.dirtyRegionPolicy;
-            }
         }
 
         /**
@@ -411,8 +294,7 @@ namespace egret.web {
             this.globalAlpha = 1;
             this.context.setGlobalCompositeOperation("source-over");
             clear && this.context.clear();
-            this.context.drawImage(<BitmapData><any>this.rootRenderTarget, sourceX, sourceY, sourceWidth, sourceHeight,
-                destX, destY, destWidth, destHeight, sourceWidth, sourceHeight, false);
+            this.context.drawImage(<BitmapData><any>this.rootRenderTarget, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight, false);
             this.context.$drawWebGL();
 
             this.rootRenderTarget.useFrameBuffer = true;
@@ -439,8 +321,7 @@ namespace egret.web {
             this.globalAlpha = 1;
             this.context.setGlobalCompositeOperation("source-over");
             clear && this.context.clear();
-            this.context.drawImage(<BitmapData><any>this.context.surface, sourceX, sourceY, sourceWidth, sourceHeight,
-                destX, destY, destWidth, destHeight, sourceWidth, sourceHeight, false);
+            this.context.drawImage(<BitmapData><any>this.context.surface, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight, false);
             this.context.$drawWebGL();
 
             this.rootRenderTarget.useFrameBuffer = false;
@@ -454,7 +335,9 @@ namespace egret.web {
          * 清空缓冲区数据
          */
         public clear(): void {
+            this.context.pushBuffer(this);
             this.context.clear();
+            this.context.popBuffer();
         }
 
         public $drawCalls: number = 0;
@@ -462,6 +345,9 @@ namespace egret.web {
 
         public globalMatrix: Matrix = new Matrix();
         public savedGlobalMatrix: Matrix = new Matrix();
+
+        public $offsetX: number = 0;
+        public $offsetY: number = 0;
 
         public setTransform(a: number, b: number, c: number, d: number, tx: number, ty: number): void {
             // this.globalMatrix.setTo(a, b, c, d, tx, ty);
@@ -475,7 +361,6 @@ namespace egret.web {
         }
 
         public transform(a: number, b: number, c: number, d: number, tx: number, ty: number): void {
-            // this.globalMatrix.append(a, b, c, d, tx, ty);
             let matrix = this.globalMatrix;
             let a1 = matrix.a;
             let b1 = matrix.b;
@@ -491,15 +376,15 @@ namespace egret.web {
             matrix.ty = tx * b1 + ty * d1 + matrix.ty;
         }
 
-        public translate(dx: number, dy: number): void {
-            // this.globalMatrix.translate(dx, dy);
-            let matrix = this.globalMatrix;
-            matrix.tx += dx;
-            matrix.ty += dy;
+        public useOffset(): void {
+            let self = this;
+            if (self.$offsetX != 0 || self.$offsetY != 0) {
+                self.globalMatrix.append(1, 0, 0, 1, self.$offsetX, self.$offsetY);
+                self.$offsetX = self.$offsetY = 0;
+            }
         }
 
         public saveTransform(): void {
-            // this.savedGlobalMatrix.copyFrom(this.globalMatrix);
             let matrix = this.globalMatrix;
             let sMatrix = this.savedGlobalMatrix;
             sMatrix.a = matrix.a;
@@ -511,7 +396,6 @@ namespace egret.web {
         }
 
         public restoreTransform(): void {
-            // this.globalMatrix.copyFrom(this.savedGlobalMatrix);
             let matrix = this.globalMatrix;
             let sMatrix = this.savedGlobalMatrix;
             matrix.a = sMatrix.a;
@@ -538,6 +422,9 @@ namespace egret.web {
                 matrix.d = 1;
                 matrix.tx = 0;
                 matrix.ty = 0;
+                buffer.globalAlpha = 1;
+                buffer.$offsetX = 0;
+                buffer.$offsetY = 0;
             }
             else {
                 buffer = new WebGLRenderBuffer(width, height);

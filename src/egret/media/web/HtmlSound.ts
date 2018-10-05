@@ -46,7 +46,7 @@ namespace egret.web {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static MUSIC:string = "music";
+        public static MUSIC: string = "music";
 
         /**
          * EFFECT
@@ -60,25 +60,25 @@ namespace egret.web {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static EFFECT:string = "effect";
+        public static EFFECT: string = "effect";
 
         /**
          * @private
          */
-        public type:string;
+        public type: string;
 
         /**
          * @private
          */
-        private url:string;
+        private url: string;
         /**
          * @private
          */
-        private originAudio:HTMLAudioElement;
+        private originAudio: HTMLAudioElement;
         /**
          * @private
          */
-        private loaded:boolean = false;
+        private loaded: boolean = false;
 
         /**
          * @private
@@ -88,12 +88,12 @@ namespace egret.web {
             super();
         }
 
-        public get length():number {
+        public get length(): number {
             if (this.originAudio) {
                 return this.originAudio.duration;
             }
 
-            throw new Error ("sound not loaded!");
+            throw new Error("sound not loaded!");
 
             //return 0;
         }
@@ -101,7 +101,7 @@ namespace egret.web {
         /**
          * @inheritDoc
          */
-        public load(url:string):void {
+        public load(url: string): void {
             let self = this;
 
             this.url = url;
@@ -113,20 +113,22 @@ namespace egret.web {
             audio.addEventListener("canplaythrough", onAudioLoaded);
             audio.addEventListener("error", onAudioError);
 
-            let ua:string = navigator.userAgent.toLowerCase();
+            let ua: string = navigator.userAgent.toLowerCase();
             if (ua.indexOf("firefox") >= 0) {//火狐兼容
                 audio.autoplay = !0;
                 audio.muted = true;
             }
-
+            if (ua.indexOf("edge") >= 0) {//Edge兼容
+                document.body.appendChild(audio);
+            }
             audio.load();
             this.originAudio = audio;
-            if(HtmlSound.clearAudios[this.url]) {
+            if (HtmlSound.clearAudios[this.url]) {
                 delete HtmlSound.clearAudios[this.url];
             }
-            HtmlSound.$recycle(this.url, audio);
 
-            function onAudioLoaded():void {
+            function onAudioLoaded(): void {
+                HtmlSound.$recycle(this.url, audio);
                 removeListeners();
                 if (ua.indexOf("firefox") >= 0) {//火狐兼容
                     audio.pause();
@@ -137,22 +139,24 @@ namespace egret.web {
                 self.dispatchEventWith(egret.Event.COMPLETE);
             }
 
-            function onAudioError():void {
+            function onAudioError(): void {
                 removeListeners();
-
                 self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
             }
 
-            function removeListeners():void {
+            function removeListeners(): void {
                 audio.removeEventListener("canplaythrough", onAudioLoaded);
                 audio.removeEventListener("error", onAudioError);
+                if (ua.indexOf("edge") >= 0) {//Edge兼容
+                    document.body.removeChild(audio);
+                }
             }
         }
 
         /**
          * @inheritDoc
          */
-        public play(startTime?:number, loops?:number):SoundChannel {
+        public play(startTime?: number, loops?: number): SoundChannel {
             startTime = +startTime || 0;
             loops = +loops || 0;
 
@@ -194,30 +198,30 @@ namespace egret.web {
         /**
          * @private
          */
-        private static audios:Object = {};
-        private static clearAudios:Object = {};
+        private static audios: Object = {};
+        private static clearAudios: Object = {};
 
-        static $clear(url:string):void {
+        static $clear(url: string): void {
             HtmlSound.clearAudios[url] = true;
-            let array:HTMLAudioElement[] = HtmlSound.audios[url];
+            let array: HTMLAudioElement[] = HtmlSound.audios[url];
             if (array) {
                 array.length = 0;
             }
         }
 
-        static $pop(url:string):HTMLAudioElement {
-            let array:HTMLAudioElement[] = HtmlSound.audios[url];
+        static $pop(url: string): HTMLAudioElement {
+            let array: HTMLAudioElement[] = HtmlSound.audios[url];
             if (array && array.length > 0) {
                 return array.pop();
             }
             return null;
         }
 
-        static $recycle(url:string, audio:HTMLAudioElement):void {
-            if(HtmlSound.clearAudios[url]) {
+        static $recycle(url: string, audio: HTMLAudioElement): void {
+            if (HtmlSound.clearAudios[url]) {
                 return;
             }
-            let array:HTMLAudioElement[] = HtmlSound.audios[url];
+            let array: HTMLAudioElement[] = HtmlSound.audios[url];
             if (HtmlSound.audios[url] == null) {
                 array = HtmlSound.audios[url] = [];
             }

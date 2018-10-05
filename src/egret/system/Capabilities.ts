@@ -41,7 +41,7 @@ namespace egret {
      * @platform Web,Native
      * @language zh_CN
      */
-    export class RuntimeType {
+    export namespace RuntimeType {
         /**
          * Running on Web
          * @version Egret 2.4
@@ -54,20 +54,51 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static WEB:string = "web";
+        export const WEB = "web";
+
         /**
          * Running on NATIVE
          * @version Egret 2.4
+         * @deprecated
          * @platform Web,Native
          * @language en_US
          */
         /**
          * 运行在NATIVE上
          * @version Egret 2.4
+         * @deprecated
          * @platform Web,Native
          * @language zh_CN
          */
-        public static NATIVE:string = "native";
+        export const NATIVE = "native";
+
+        /**
+         * Running on Runtime2.0
+         * @version Egret 5.1.5
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 运行在Runtime2.0上
+         * @version Egret 5.1.5
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        export const RUNTIME2 = "runtime2";
+
+        /**
+         * Running on WeChat mini game
+         * @version Egret 5.1.5
+         * @platform All
+         * @language en_US
+         */
+        /**
+         * 运行在微信小游戏上
+         * @version Egret 5.1.5
+         * @platform All
+         * @language zh_CN
+         */
+        export const WXGAME = "wxgame";
     }
 
     /**
@@ -85,11 +116,6 @@ namespace egret {
      * @language zh_CN
      */
     export class Capabilities {
-
-        /**
-         * @private
-         */
-        static $language:string = "zh-CN";
         /**
          * Specifies the language code of the system on which the content is running. The language is specified as a lowercase
          * two-letter language code from ISO 639-1. For Chinese, an additional uppercase two-letter country code from ISO 3166
@@ -121,14 +147,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static get language():string {
-            return Capabilities.$language;
-        }
-
-        /**
-         * @private
-         */
-        static $isMobile:boolean;
+        static readonly language: string = "zh-CN";
 
         /**
          * Specifies whether the system is running in a mobile device.(such as a mobile phone or tablet)
@@ -142,14 +161,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static get isMobile():boolean {
-            return Capabilities.$isMobile;
-        }
-
-        /**
-         * @private
-         */
-        static $os:string = "Unknown";
+        static readonly isMobile: boolean;
 
         /**
          * Specifies the current operating system. The os property can return the following strings:
@@ -179,20 +191,14 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static get os():string {
-            return Capabilities.$os;
-        }
-
-        /**
-         * @private
-         */
-        static $runtimeType:string = "Unknown";
+        static readonly os: string = "Unknown";
 
         /**
          * It indicates the current type of operation. runtimeType property returns the following string:
          * <ul>
          * <li>Run on Web     egret.RuntimeType.WEB</li>
-         * <li>Run on Native     egret.RuntimeType.NATIVE</li>
+         * <li>Run on Runtime2.0     egret.RuntimeType.RUNTIME2</li>
+         * <li>Run on WeChat mini game     egret.RuntimeType.WXGAME</li>
          * </ul>
          * @version Egret 2.4
          * @platform Web,Native
@@ -202,35 +208,14 @@ namespace egret {
          * 指示当前的运行类型。runtimeType 属性返回下列字符串：
          * <ul>
          * <li>运行在Web上     egret.RuntimeType.WEB</li>
-         * <li>运行在Native上     egret.RuntimeType.NATIVE</li>
+         * <li>运行在Runtime2.0上     egret.RuntimeType.RUNTIME2</li>
+         * <li>运行在微信小游戏上    egret.RuntimeType.WXGAME</li>
          * </ul>
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
          */
-        public static get runtimeType():string {
-            return Capabilities.$runtimeType;
-        }
-
-        /***
-         * version of the native support.
-         * @type {string}
-         * @version Egret 2.5
-         * @platform Web,Native
-         * @language en_US
-         */
-        /***
-         * native support 的版本号。
-         * @type {string}
-         * @version Egret 2.5
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        public static get supportVersion():string {
-            return Capabilities.$supportVersion;
-        }
-
-        static $supportVersion:string = "Unknown";
+        static readonly runtimeType: string = egret.RuntimeType.WEB;
 
         /***
          * version of Egret.
@@ -246,31 +231,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static get engineVersion():string {
-            return "5.0.14";
-        }
-
-        /**
-         * 设置系统信息
-         */
-        public static $setNativeCapabilities(value:string):void {
-            let arr = value.split("-");
-            if (arr.length <= 4) {
-                //todo 未来去掉数量判断，2.5.4版本之前的参数大于4个
-                let osType:string = arr[0];
-                switch (osType) {
-                    case "android":
-                        osType = "Android";
-                        break;
-                    case "ios":
-                        osType = 'iOS';
-                        break;
-                }
-                Capabilities.$os = osType;
-                let version = arr[2].substring(1,arr[2].length);
-                Capabilities.$supportVersion = version;
-            }
-        }
+        public static readonly engineVersion:string = "5.2.10";
 
         /***
          * current render mode.
@@ -286,11 +247,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static get renderMode():string {
-            return Capabilities.$renderMode;
-        }
-
-        static $renderMode:string = "Unknown";
+        static readonly renderMode: string = "Unknown";
 
         /***
          * Clients border width.
@@ -308,11 +265,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static get boundingClientWidth():number{
-            return Capabilities.$boundingClientWidth;
-        }
-
-        static $boundingClientWidth:number = 0;
+        static readonly boundingClientWidth: number = 0;
 
         /***
          * Clients border height.
@@ -330,37 +283,6 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static get boundingClientHeight():number{
-            return Capabilities.$boundingClientHeight;
-        }
-
-        static $boundingClientHeight:number = 0;
+        static readonly boundingClientHeight: number = 0;
     }
-
-
 }
-
-/**
- * @private
- */
-let testDeviceType = function () {
-    if (!this["navigator"]) {
-        return true
-    }
-    let ua = navigator.userAgent.toLowerCase();
-    return (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
-};
-
-/**
- * @private
- */
-let testRuntimeType = function () {
-    if (this["navigator"]) {
-        return true;
-    }
-    return false;
-};
-
-egret.Capabilities.$isMobile = testDeviceType();
-egret.Capabilities.$runtimeType = testRuntimeType() ? egret.RuntimeType.WEB : egret.RuntimeType.NATIVE;
-

@@ -3,9 +3,9 @@
 import utils = require('../lib/utils');
 import file = require('../lib/FileUtil');
 import CompileOptions = require("./CompileOptions");
-import * as project from "../project/EgretProject";
+import * as project from "../project";
 import path = require("path");
-
+import { data as engineData } from "../EngineData";
 
 
 
@@ -22,11 +22,11 @@ export var optionDeclarations: egret.CommandLineOption[] = [
     }, {
         name: 'autoCompile',
         type: 'boolean',
-        shortName: "a"
+        alias: "a"
     }, {
         name: 'fileName',
         type: 'string',
-        shortName: 'f'
+        alias: 'f'
     }, {
         name: 'port',
         type: 'number'
@@ -70,8 +70,9 @@ export var optionDeclarations: egret.CommandLineOption[] = [
         name: 'type',
         type: 'string'
     }, {
-        name: 'runtime',
-        type: 'string'
+        name: 'target',
+        type: 'string',
+        alias: 'runtime'
     }, {
         name: 'version',
         type: 'string'
@@ -84,7 +85,7 @@ export var optionDeclarations: egret.CommandLineOption[] = [
     }, {
         name: 'keepEXMLTS',
         type: 'boolean',
-        shortName: "k"
+        alias: "k"
     }, {
         name: 'log',
         type: 'boolean'
@@ -92,51 +93,47 @@ export var optionDeclarations: egret.CommandLineOption[] = [
         name: 'platform',
         type: 'string'
     }, {
-        name: 'nativeTemplatePath',
+        name: 'templatePath',
         type: 'string',
-        shortName: "t"
+        alias: "t"
     }, {
         name: 'all',
         type: 'boolean'
     }, {
         name: 'buildEngine',
         type: 'boolean',
-        shortName: "e"
+        alias: "e"
     }, {
         name: 'experimental',
         type: 'boolean',
-        shortName: "exp"
-    }, {
-        name: 'egretVersion',
-        type: 'string',
-        shortName: "ev"
+        alias: "exp"
     }, {
         name: 'ide',
         type: 'string'
     }, {
         name: 'exmlGenJs',
         type: 'boolean',
-        shortName: 'gjs'
+        alias: 'gjs'
     }, {
         name: 'androidProjectPath',
         type: 'string',
-        shortName: 'p'
+        alias: 'p'
     }, {
         name: 'sdk',
         type: 'string',
-        shortName: 's'
+        alias: 's'
     }
 
 ];
 
-var shortOptionNames: egret.Map<string> = {};
+const aliasNames: egret.Map<string> = {};
 var optionNameMap: egret.Map<egret.CommandLineOption> = {};
 
 optionDeclarations.forEach(option => {
     optionNameMap[option.name.toLowerCase()] = option;
 
-    if (option.shortName) {
-        shortOptionNames[option.shortName] = option.name;
+    if (option.alias) {
+        aliasNames[option.alias] = option.name;
     }
 });
 
@@ -147,10 +144,15 @@ export function parseCommandLine(commandLine: string[]) {
     var filenames: string[] = [];
     var errors: string[] = [];
     egret.root = utils.getEgretRoot();
+
     parseStrings(commandLine);
+    if (options.target as string === 'html5') {
+        options.target = 'web';
+    }
     return options;
 
     function parseStrings(args: string[]) {
+
         var i = 0;
         var commands: string[] = [];
         while (i < args.length) {
@@ -158,8 +160,8 @@ export function parseCommandLine(commandLine: string[]) {
             if (s.charAt(0) === '-') {
                 s = s.slice(s.charAt(1) === '-' ? 2 : 1).toLowerCase();
                 // Try to translate short option names to their full equivalents.
-                if (s in shortOptionNames) {
-                    s = shortOptionNames[s].toLowerCase();
+                if (s in aliasNames) {
+                    s = aliasNames[s].toLowerCase();
                 }
 
 
@@ -211,18 +213,6 @@ export function parseCommandLine(commandLine: string[]) {
                 options.projectDir = commands[2];
                 commands.splice(2, 1);
             }
-            //else if (file.isDirectory(commands[1]) && !file.exists(commands[1]) || options.command=="create_app") {
-            //    options.projectDir = commands[1];
-            //    commands.splice(1, 1);
-            //}
-            //else if (file.isDirectory(commands[1]) || options.command=="create_lib") {
-            //    options.projectDir = commands[1];
-            //    commands.splice(1, 1);
-            //}
-            //else if (file.isDirectory(commands[1]) || options.command == "apitest") {
-            //    options.projectDir = commands[1];
-            //    commands.splice(1, 1);
-            //}
         }
 
         //create_app命令不强制设置projectDir属性
@@ -237,9 +227,9 @@ export function parseCommandLine(commandLine: string[]) {
                 }
             }
             options.projectDir = file.joinPath(options.projectDir, "/");
-            project.data.init(options.projectDir);
+            project.projectData.init(options.projectDir);
         }
-
+        engineData.init();
         var packagePath = file.joinPath(egret.root, "package.json");
 
         var content = file.read(packagePath);
@@ -271,7 +261,6 @@ export function parseJSON(json: egret.ToolArgs): egret.ToolArgs {
     options.added = json.added;
     options.modified = json.modified;
     options.removed = json.removed;
-    options.runtime = json.runtime;
     options.experimental = json.experimental;
 
     return options;

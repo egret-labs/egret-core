@@ -4,6 +4,17 @@
 
 declare module egret {
 
+    export namespace target {
+
+        export type Type = "web" | "native" | "wxgame" | 'bricks' | 'ios' | 'android' | "any" | "none"
+
+        export interface Info {
+            name: Type;
+            description?: string;
+            declaration?: boolean;
+        }
+    }
+
     export interface Command {
         execute(): number | Promise<number>
     }
@@ -32,13 +43,10 @@ declare module egret {
         command: string;
         //子命令
         subCommand?: string;
-        action?: string;
         commands?: string[];
-        platform?: string;
 
         type?: string;
-        native?: boolean;
-        runtime?: string;
+        target?: egret.target.Type;
         version?: string;
         compile?: boolean;
         password?: string;
@@ -46,7 +54,7 @@ declare module egret {
         ide: string;
         exmlGenJs: boolean;
         log: boolean;
-        nativeTemplatePath: string;
+        templatePath: string;
         all: boolean;
         projectDir: string;
         getTmpDir(): string;
@@ -55,8 +63,6 @@ declare module egret {
         releaseDir: string;
         releaseRootDir: string;
         templateDir: string;
-        /** 用户命令行指定的引擎版本 */
-        egretVersion?: string;
         port: number;
         host: string | null;
         websocketUrl: string;
@@ -85,33 +91,32 @@ declare module egret {
     }
 
     export interface EgretEUIThemeConfig {
+        path: string;
         skins?: { [host: string]: string };
         exmls?: Array<any>;
         autoGenerateExmlsList?: boolean;
+        styles?: any;
     }
 
     export type EgretPropertyModule = {
-        "name": string,
-        "path"?: string;
+        name: string,
+        version?: string,
+        path?: string;
     }
 
-    export type VersionInfo = {
-        "version": string,
-        "path": string;
-    }
 
     export type EgretProperty = {
+        "engineVersion"?: string,
+        "compilerVersion"?: string,
         "modules": EgretPropertyModule[],
-        "template"?:{
-            
+        "target"?: {
+            "current": string
+        }
+        "template"?: {
+
         },
-        "wasm"?:{
-            
-        },
-        "eui"?:{
-            "exmlRoot"?: string | string[];
-            "themes"?: string[];
-            "exmlPublishPolicy"?: string;
+        "wasm"?: {
+
         },
         "native"?: {
             "path_ignore"?: string[];
@@ -154,14 +159,14 @@ declare module egret {
     export interface CommandLineOption {
         name: string;
         type: string | Map<number>;         // "string", "number", "boolean", or an object literal mapping named values to actual values
-        shortName?: string;                 // A short mnemonic for convenience - for instance, 'h' can be used in place of 'help'.
+        alias?: string;                 // A short mnemonic for convenience - for instance, 'h' can be used in place of 'help'.
         description?: DiagnosticMessage;    // The message describing what the command line switch does
         paramType?: DiagnosticMessage;      // The name to be used for a non-boolean option's parameter.
         error?: DiagnosticMessage;          // The error given when the argument does not fit a customized 'type'.
     }
 
     export interface ServiceCommand {
-        command: string;
+        command: "build" | "shutdown" | "buildResult" | "status" | "buildResult" | "init";
         path?: string;
         version?: string;
         option: ToolArgs;
@@ -203,7 +208,7 @@ declare module egret {
     export interface Manifest {
         registerClass: string;
         modules: EgretModule[];
-        platforms: TargetPlatform[];
+        platforms: target.Info[];
         configurations: CompileConfiguration[];
         scaleModes: ScaleMode[];
         orientationModes: OrientationMode[];
@@ -249,11 +254,7 @@ declare module egret {
         declaration?: boolean;
     }
 
-    export interface TargetPlatform {
-        name: string;
-        description?: string;
-        declaration?: boolean;
-    }
+
 
     export interface IEXMLHandler {
         compile(): number;
@@ -264,7 +265,7 @@ declare module egret {
 
     export interface FileChange {
         fileName: string;
-        type: string;
+        type: 'added' | 'removed' | 'modified';
     }
 
 }

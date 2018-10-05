@@ -36,22 +36,22 @@ namespace egret {
         /**
          * @private
          */
-        private stageText:egret.StageText;
+        private stageText: egret.StageText;
 
         /**
          * @private
          */
-        private stageTextAdded:boolean = false;
+        private stageTextAdded: boolean = false;
 
         /**
          * @private
          */
-        private _text:TextField = null;
+        private _text: TextField = null;
 
         /**
          * @private
          */
-        private _isFocus:boolean = false;
+        private _isFocus: boolean = false;
         /**
          * @version Egret 2.4
          * @platform Web,Native
@@ -66,7 +66,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public init(text:TextField):void {
+        public init(text: TextField): void {
             this._text = text;
             this.stageText = new egret.StageText();
             this.stageText.$setTextField(this._text);
@@ -76,8 +76,8 @@ namespace egret {
          * @private
          * 
          */
-        public _addStageText():void {
-            if(this.stageTextAdded) {
+        public _addStageText(): void {
+            if (this.stageTextAdded) {
                 return;
             }
             if (!this._text.$inputEnabled) {
@@ -101,8 +101,8 @@ namespace egret {
          * @private
          * 
          */
-        public _removeStageText():void {
-            if(!this.stageTextAdded) {
+        public _removeStageText(): void {
+            if (!this.stageTextAdded) {
                 return;
             }
             if (!this._text.$inputEnabled) {
@@ -126,7 +126,7 @@ namespace egret {
          * 
          * @returns 
          */
-        public _getText():string {
+        public _getText(): string {
             return this.stageText.$getText();
         }
 
@@ -135,13 +135,13 @@ namespace egret {
          * 
          * @param value 
          */
-        public _setText(value:string) {
+        public _setText(value: string) {
             this.stageText.$setText(value);
         }
         /**
          * @private
          */
-         public _setColor(value:number){
+        public _setColor(value: number) {
             this.stageText.$setColor(value);
         }
 
@@ -150,14 +150,13 @@ namespace egret {
          * 
          * @param event 
          */
-        private focusHandler(event:Event):void {
+        private focusHandler(event: Event): void {
             //不再显示竖线，并且输入框显示最开始
             if (!this._isFocus) {
                 this._isFocus = true;
                 if (!event["showing"]) {
-                    this._text.$isTyping = true;
+                    this._text.$setIsTyping(true);
                 }
-                this._text.$invalidateContentBounds();
 
                 this._text.dispatchEvent(new egret.FocusEvent(egret.FocusEvent.FOCUS_IN, true));
             }
@@ -168,15 +167,13 @@ namespace egret {
          * 
          * @param event 
          */
-        private blurHandler(event:Event):void {
+        private blurHandler(event: Event): void {
             if (this._isFocus) {
                 //不再显示竖线，并且输入框显示最开始
                 this._isFocus = false;
                 this.tempStage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
 
-                this._text.$isTyping = false;
-                this._text.$invalidateContentBounds();
-
+                this._text.$setIsTyping(false);
                 //失去焦点后调用
                 this.stageText.$onBlur();
 
@@ -184,13 +181,13 @@ namespace egret {
             }
         }
 
-        private tempStage:egret.Stage;
+        private tempStage: egret.Stage;
         //点中文本
-        private onMouseDownHandler(event:TouchEvent) {
+        private onMouseDownHandler(event: TouchEvent) {
             this.$onFocus();
         }
-        
-        $onFocus():void {
+
+        $onFocus(): void {
             let self = this;
             if (!this._text.visible) {
                 return;
@@ -201,18 +198,21 @@ namespace egret {
             }
 
             this.tempStage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
-            egret.callLater(()=> {
+            egret.callLater(() => {
                 this.tempStage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
             }, this);
-            
+
+            if(egret.nativeRender) {
+                this.stageText.$setText(this._text.$TextField[egret.sys.TextKeys.text]);
+            }
 
             //强制更新输入框位置
             this.stageText.$show();
         }
-        
+
         //未点中文本
-        private onStageDownHandler(event:TouchEvent) {
-            if(event.$target != this._text) {
+        private onStageDownHandler(event: TouchEvent) {
+            if (event.$target != this._text) {
                 this.stageText.$hide();
             }
         }
@@ -222,10 +222,10 @@ namespace egret {
          * 
          * @param event 
          */
-        private updateTextHandler(event:Event):void {
+        private updateTextHandler(event: Event): void {
             let values = this._text.$TextField;
             let textValue = this.stageText.$getText();
-            let isChanged:boolean = false;
+            let isChanged: boolean = false;
             let reg: RegExp;
             let result: string[];
             if (values[sys.TextKeys.restrictAnd] != null) {//内匹配
@@ -264,7 +264,7 @@ namespace egret {
          * @private
          * 
          */
-        private resetText():void {
+        private resetText(): void {
             this._text.$setBaseText(this.stageText.$getText());
         }
 
@@ -272,7 +272,7 @@ namespace egret {
          * @private
          * 
          */
-        public _hideInput():void {
+        public _hideInput(): void {
             this.stageText.$removeFromStage();
         }
 
@@ -280,7 +280,7 @@ namespace egret {
          * @private
          * 
          */
-        private updateInput():void {//
+        private updateInput(): void {//
             if (!this._text.$visible && this.stageText) {
                 this._hideInput();
             }
@@ -290,30 +290,12 @@ namespace egret {
          * @private
          * 
          */
-        public _updateProperties():void {
+        public _updateProperties(): void {
             if (this._isFocus) {
                 //整体修改
                 this.stageText.$resetStageText();
                 this.updateInput();
                 return;
-            }
-
-            let stage:egret.Stage = this._text.$stage;
-            if (stage == null) {
-            }
-            else {
-                let item:DisplayObject = this._text;
-                let visible:boolean = item.$visible;
-                while (true) {
-                    if (!visible) {
-                        break;
-                    }
-                    item = item.parent;
-                    if (item == stage) {
-                        break;
-                    }
-                    visible = item.$visible;
-                }
             }
 
             this.stageText.$setText(this._text.$TextField[egret.sys.TextKeys.text]);

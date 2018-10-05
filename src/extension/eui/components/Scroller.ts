@@ -504,6 +504,9 @@ namespace eui {
          * @param event
          */
         private onTouchBeginCapture(event:egret.TouchEvent):void {
+            if(!this.$stage) {
+                return;
+            }
             this.$Scroller[Keys.touchCancle] = false;
             let canScroll:boolean = this.checkScrollPolicy();
             if (!canScroll) {
@@ -809,8 +812,11 @@ namespace eui {
          *
          * @param scrollPos
          */
-        private horizontalUpdateHandler(scrollPos:number):void {
-            this.$Scroller[Keys.viewport].scrollH = scrollPos;
+        private horizontalUpdateHandler(scrollPos: number): void {
+            const viewport = this.$Scroller[Keys.viewport];
+            if (viewport) {
+                viewport.scrollH = scrollPos;
+            }
             this.dispatchEventWith(egret.Event.CHANGE);
         }
 
@@ -819,8 +825,11 @@ namespace eui {
          *
          * @param scrollPos
          */
-        private verticalUpdateHandler(scrollPos:number):void {
-            this.$Scroller[Keys.viewport].scrollV = scrollPos;
+        private verticalUpdateHandler(scrollPos: number): void {
+            const viewport = this.$Scroller[Keys.viewport];
+            if (viewport) {
+                viewport.scrollV = scrollPos;
+            }
             this.dispatchEventWith(egret.Event.CHANGE);
         }
 

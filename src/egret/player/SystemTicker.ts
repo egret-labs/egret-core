@@ -179,7 +179,6 @@ namespace egret.sys {
          * 设置全局帧率
          */
         $setFrameRate(value: number): boolean {
-            value = +value || 0;
             if (value <= 0) {
                 return false;
             }
@@ -188,11 +187,6 @@ namespace egret.sys {
             }
             this.$frameRate = value;
             if (value > 60) {
-                value = 60;
-            }
-            //todo
-            if (Capabilities.runtimeType == RuntimeType.NATIVE) {
-                egret_native.setFrameRate(value);
                 value = 60;
             }
             this.frameDeltaTime = 1000 / value;
@@ -468,5 +462,5 @@ module egret {
  */
 declare let egret_stages: egret.Stage[];
 if (DEBUG) {
-    egret_stages = [];
+    global.egret_stages = [];
 }

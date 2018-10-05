@@ -74,41 +74,61 @@ namespace egret {
 
         /**
          * @private
+         * 纹理id
+         */
+        public $textureId: number;
+
+        /**
+         * Whether to destroy the corresponding BitmapData when the texture is destroyed
+         * @version Egret 5.0.8
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 销毁纹理时是否销毁对应BitmapData
+         * @version Egret 5.0.8
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        public disposeBitmapData: boolean = true;
+
+        /**
+         * @private
          * 表示这个纹理在 bitmapData 上的 x 起始位置
          */
-        public _bitmapX: number = 0;
+        public $bitmapX: number = 0;
         /**
          * @private
          * 表示这个纹理在 bitmapData 上的 y 起始位置
          */
-        public _bitmapY: number = 0;
+        public $bitmapY: number = 0;
         /**
          * @private
          * 表示这个纹理在 bitmapData 上的宽度
          */
-        public _bitmapWidth: number = 0;
+        public $bitmapWidth: number = 0;
         /**
          * @private
          * 表示这个纹理在 bitmapData 上的高度
          */
-        public _bitmapHeight: number = 0;
+        public $bitmapHeight: number = 0;
 
         /**
          * @private
          * 表示这个纹理显示了之后在 x 方向的渲染偏移量
          */
-        public _offsetX = 0;
+        public $offsetX = 0;
         /**
          * @private
          * 表示这个纹理显示了之后在 y 方向的渲染偏移量
          */
-        public _offsetY = 0;
+        public $offsetY = 0;
 
         /**
          * @private
          * 纹理宽度
          */
-        private _textureWidth: number = 0;
+        private $textureWidth: number = 0;
 
         /**
          * Texture width, read only
@@ -127,14 +147,14 @@ namespace egret {
         }
 
         $getTextureWidth(): number {
-            return this._textureWidth;
+            return this.$textureWidth;
         }
 
         /**
          * @private
          * 纹理高度
          */
-        private _textureHeight: number = 0;
+        private $textureHeight: number = 0;
 
         /**
          * Texture height, read only
@@ -153,32 +173,32 @@ namespace egret {
         }
 
         $getTextureHeight(): number {
-            return this._textureHeight;
+            return this.$textureHeight;
         }
 
         $getScaleBitmapWidth(): number {
-            return this._bitmapWidth * $TextureScaleFactor;
+            return this.$bitmapWidth * $TextureScaleFactor;
         }
 
         $getScaleBitmapHeight(): number {
-            return this._bitmapHeight * $TextureScaleFactor;
+            return this.$bitmapHeight * $TextureScaleFactor;
         }
 
         /**
          * @private
          * 表示bitmapData.width
          */
-        public _sourceWidth: number = 0;
+        public $sourceWidth: number = 0;
         /**
          * @private
          * 表示bitmapData.height
          */
-        public _sourceHeight: number = 0;
+        public $sourceHeight: number = 0;
 
         /**
          * @private
          */
-        public _bitmapData: BitmapData = null;
+        public $bitmapData: BitmapData = null;
 
         /**
          * @private
@@ -198,7 +218,7 @@ namespace egret {
          * @language zh_CN
          */
         public get bitmapData(): BitmapData {
-            return this._bitmapData;
+            return this.$bitmapData;
         }
 
         public set bitmapData(value: BitmapData) {
@@ -218,7 +238,7 @@ namespace egret {
          * @language zh_CN
          */
         public _setBitmapData(value: BitmapData) {
-            this._bitmapData = value;
+            this.$bitmapData = value;
             let scale = $TextureScaleFactor;
             let w = value.width * scale;
             let h = value.height * scale;
@@ -242,23 +262,23 @@ namespace egret {
         public $initData(bitmapX: number, bitmapY: number, bitmapWidth: number, bitmapHeight: number, offsetX: number, offsetY: number,
             textureWidth: number, textureHeight: number, sourceWidth: number, sourceHeight: number, rotated: boolean = false): void {
             let scale = $TextureScaleFactor;
-            this._bitmapX = bitmapX / scale;
-            this._bitmapY = bitmapY / scale;
-            this._bitmapWidth = bitmapWidth / scale;
-            this._bitmapHeight = bitmapHeight / scale;
+            this.$bitmapX = bitmapX / scale;
+            this.$bitmapY = bitmapY / scale;
+            this.$bitmapWidth = bitmapWidth / scale;
+            this.$bitmapHeight = bitmapHeight / scale;
 
-            this._offsetX = offsetX;
-            this._offsetY = offsetY;
-            this._textureWidth = textureWidth;
-            this._textureHeight = textureHeight;
+            this.$offsetX = offsetX;
+            this.$offsetY = offsetY;
+            this.$textureWidth = textureWidth;
+            this.$textureHeight = textureHeight;
 
-            this._sourceWidth = sourceWidth;
-            this._sourceHeight = sourceHeight;
+            this.$sourceWidth = sourceWidth;
+            this.$sourceHeight = sourceHeight;
 
             this.$rotated = rotated;
 
             //todo
-            BitmapData.$invalidate(this);
+            BitmapData.$invalidate(this.$bitmapData);
         }
 
         /**
@@ -353,9 +373,14 @@ namespace egret {
          * @language zh_CN
          */
         public dispose(): void {
-            if (this._bitmapData) {
-                this._bitmapData.$dispose();
-                this._bitmapData = null;
+            if (this.$bitmapData) {
+                if(this.disposeBitmapData) {
+                    this.$bitmapData.$dispose();
+                }
+                this.$bitmapData = null;
+            }
+            if(egret.nativeRender) {
+                egret_native.NativeDisplayObject.disposeTexture(this);
             }
         }
     }

@@ -55,7 +55,7 @@
  * @platform Web,Native
  * @language zh_CN
  */
-declare let DEBUG:boolean;
+declare let DEBUG: boolean;
 /**
  * Is release mode.
  * @version Egret 2.5
@@ -68,39 +68,39 @@ declare let DEBUG:boolean;
  * @platform Web,Native
  * @language zh_CN
  */
-declare let RELEASE:boolean;
+declare let RELEASE: boolean;
 
-this["DEBUG"] = true;
-this["RELEASE"] = false;
+global.DEBUG = true;
+global.RELEASE = false;
 
 namespace egret {
     /**
      * @private
      */
-    export declare function $error(code:number, ...params:any[]):void;
+    export declare function $error(code: number, ...params: any[]): void;
     /**
      * @private
      */
-    export declare function $warn(code:number, ...params:any[]):void;
+    export declare function $warn(code: number, ...params: any[]): void;
     /**
      * @private
      */
-    export declare function getString(code:number, ...params:any[]):string;
+    export declare function getString(code: number, ...params: any[]): string;
     /**
      * @private
      */
-    export declare function $markCannotUse(instance:any, property:string, defaultVale:any):void;
+    export declare function $markCannotUse(instance: any, property: string, defaultVale: any): void;
 
     /**
      * @private
      */
-    function _getString(code:number, ...params:any[]):string {
+    function _getString(code: number, ...params: any[]): string {
         return egret.sys.tr.apply(egret.sys, arguments);
     }
     egret.getString = _getString;
 
-    function _error(code:number, ...params:any[]):void {
-        let text:string = egret.sys.tr.apply(null, arguments);
+    function _error(code: number, ...params: any[]): void {
+        let text: string = egret.sys.tr.apply(null, arguments);
         if (DEBUG) {
             egret.sys.$errorToFPS("Error #" + code + ": " + text);
         }
@@ -109,8 +109,8 @@ namespace egret {
 
     egret.$error = _error;
 
-    function _warn(code:number, ...params:any[]):void {
-        let text:string = egret.sys.tr.apply(null, arguments);
+    function _warn(code: number, ...params: any[]): void {
+        let text: string = egret.sys.tr.apply(null, arguments);
         if (DEBUG) {
             egret.sys.$warnToFPS("Warning #" + code + ": " + text);
         }
@@ -119,13 +119,13 @@ namespace egret {
 
     egret.$warn = _warn;
 
-    function _markReadOnly(instance:any, property:string, isProperty:boolean = true):void {
-        let data:PropertyDescriptor = Object.getOwnPropertyDescriptor(isProperty ? instance.prototype : instance, property);
+    function _markReadOnly(instance: any, property: string, isProperty: boolean = true): void {
+        let data: PropertyDescriptor = Object.getOwnPropertyDescriptor(isProperty ? instance.prototype : instance, property);
         if (data == null) {
             console.log(instance);
             return;
         }
-        data.set = function (value:any) {
+        data.set = function (value: any) {
             if (isProperty) {
                 egret.$warn(1010, getQualifiedClassName(instance), property);
             }
@@ -137,7 +137,7 @@ namespace egret {
     }
 
 
-    function markCannotUse(instance:any, property:string, defaultValue:any):void {
+    function markCannotUse(instance: any, property: string, defaultValue: any): void {
         Object.defineProperty(instance.prototype, property, {
             get: function () {
                 egret.$warn(1009, getQualifiedClassName(instance), property);

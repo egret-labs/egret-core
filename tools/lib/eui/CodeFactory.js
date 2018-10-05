@@ -47,7 +47,7 @@ var BINDING_PROPERTIES = "eui.Binding.$bindProperties";
  * @private
  * 代码生成工具基类
  */
-var CodeBase = (function () {
+var CodeBase = /** @class */ (function () {
     function CodeBase() {
         /**
          * @private
@@ -81,7 +81,7 @@ exports.CodeBase = CodeBase;
 /**
  * @private
  */
-var EXClass = (function (_super) {
+var EXClass = /** @class */ (function (_super) {
     __extends(EXClass, _super);
     function EXClass() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
@@ -90,6 +90,11 @@ var EXClass = (function (_super) {
          * 类名,不包括模块名
          */
         _this.className = "";
+        /**
+          * @private
+          * 全名包括模块名
+          */
+        _this.allName = "";
         /**
          * @private
          * 父类类名,包括完整模块名
@@ -174,7 +179,8 @@ var EXClass = (function (_super) {
      *
      * @returns
      */
-    EXClass.prototype.toCode = function () {
+    EXClass.prototype.toCode = function (isAssignWindow) {
+        if (isAssignWindow === void 0) { isAssignWindow = false; }
         var indent = this.indent;
         var indentStr = this.getIndent(indent);
         var indent1Str = this.getIndent(indent + 1);
@@ -193,7 +199,12 @@ var EXClass = (function (_super) {
         for (var i = 0; i < length; i++) {
             var clazz = innerClasses[i];
             clazz.indent = indent + 1;
-            returnStr += indent1Str + "var " + clazz.className + " = " + clazz.toCode() + "\n\n";
+            if (!isAssignWindow)
+                returnStr += indent1Str + "var " + clazz.className + " = " + clazz.toCode() + "\n\n";
+            else {
+                returnStr += indent1Str + "var " + clazz.className + " = " + clazz.toCode() + "\n";
+                returnStr += indent1Str + ("window." + clazz.allName + "=" + clazz.className + ";\n");
+            }
         }
         returnStr += indent1Str + "function " + this.className + "() {\n";
         if (this.superClass) {
@@ -243,7 +254,7 @@ exports.EXClass = EXClass;
 /**
  * @private
  */
-var EXCodeBlock = (function (_super) {
+var EXCodeBlock = /** @class */ (function (_super) {
     __extends(EXCodeBlock, _super);
     function EXCodeBlock() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
@@ -380,7 +391,7 @@ exports.EXCodeBlock = EXCodeBlock;
 /**
  * @private
  */
-var EXFunction = (function (_super) {
+var EXFunction = /** @class */ (function (_super) {
     __extends(EXFunction, _super);
     function EXFunction() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
@@ -442,7 +453,7 @@ exports.EXFunction = EXFunction;
 /**
  * @private
  */
-var EXVariable = (function (_super) {
+var EXVariable = /** @class */ (function (_super) {
     __extends(EXVariable, _super);
     /**
      * @private
@@ -468,10 +479,23 @@ var EXVariable = (function (_super) {
     return EXVariable;
 }(CodeBase));
 exports.EXVariable = EXVariable;
+var EXArray = /** @class */ (function (_super) {
+    __extends(EXArray, _super);
+    function EXArray(array) {
+        var _this = _super.call(this) || this;
+        _this.array = array;
+        return _this;
+    }
+    EXArray.prototype.toCode = function () {
+        return "[" + this.array.map(function (v) { return "\"" + v + "\""; }).join(",") + "]";
+    };
+    return EXArray;
+}(CodeBase));
+exports.EXArray = EXArray;
 /**
  * @private
  */
-var EXState = (function (_super) {
+var EXState = /** @class */ (function (_super) {
     __extends(EXState, _super);
     /**
      * @private
@@ -545,7 +569,7 @@ exports.EXState = EXState;
 /**
  * @private
  */
-var EXAddItems = (function (_super) {
+var EXAddItems = /** @class */ (function (_super) {
     __extends(EXAddItems, _super);
     /**
      * @private
@@ -573,7 +597,7 @@ exports.EXAddItems = EXAddItems;
 /**
  * @private
  */
-var EXSetProperty = (function (_super) {
+var EXSetProperty = /** @class */ (function (_super) {
     __extends(EXSetProperty, _super);
     /**
      * @private
@@ -599,7 +623,7 @@ exports.EXSetProperty = EXSetProperty;
 /**
  * @private
  */
-var EXSetStateProperty = (function (_super) {
+var EXSetStateProperty = /** @class */ (function (_super) {
     __extends(EXSetStateProperty, _super);
     /**
      * @private
@@ -635,7 +659,7 @@ exports.EXSetStateProperty = EXSetStateProperty;
 /**
  * @private
  */
-var EXBinding = (function (_super) {
+var EXBinding = /** @class */ (function (_super) {
     __extends(EXBinding, _super);
     /**
      * @private
@@ -657,9 +681,9 @@ var EXBinding = (function (_super) {
         var expression = this.templates.join(",");
         var chain = this.chainIndex.join(",");
         return BINDING_PROPERTIES + "(this, [" + expression + "]," + "[" + chain + "]," +
-            this.target + ",\"" + this.property + "\")";
+            this.target + ",\"" + this.property + "\");";
     };
     return EXBinding;
 }(CodeBase));
 exports.EXBinding = EXBinding;
-// } 
+// }

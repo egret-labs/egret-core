@@ -7,9 +7,12 @@ import CompileProject = require('../actions/CompileProject');
 import projectAction = require('../actions/Project');
 import FileUtil = require('../lib/FileUtil');
 import doT = require('../lib/doT');
-import EgretProject = require('../project/EgretProject');
-var TemplatesRoot = "tools/templates/";
+import * as EgretProject from '../project';
+
 import Clean = require('../commands/clean');
+
+
+const TemplatesRoot = "tools/templates/";
 
 class Create implements egret.Command {
     project: egret.EgretProjectConfig;
@@ -17,7 +20,7 @@ class Create implements egret.Command {
 
         var proj = this.project;
         var options = egret.args;
-        let project = EgretProject.data;
+        let project = EgretProject.projectData;
 
         projectAction.normalize(proj);
 
@@ -51,23 +54,17 @@ function updateEgretProperties(projectConfig: egret.EgretProjectConfig) {
     var propFile = FileUtil.joinPath(egret.args.projectDir, "egretProperties.json");
     var jsonString = FileUtil.read(propFile);
     var props: egret.EgretProperty = JSON.parse(jsonString);
-    props.egret_version = egret.version;
+    props.engineVersion = egret.version;
+    props.compilerVersion = egret.version;
     props.template = {};
-    if (projectConfig.type == "eui") {
-        //添加eui项目默认配置
-        props.eui = {
-            exmlRoot: ["resource/eui_skins"],
-            themes: ["resource/default.thm.json"],
-            exmlPublishPolicy: "content"
-        };
-    }
-    else if (projectConfig.type == "wasm") {
+    props.target = { current: "web" };
+    if (projectConfig.type == "wasm") {
         props.wasm = {};
     }
     if (!props.modules) {
         props.modules = modules.map(m => ({ name: m.name }));
     }
-    let promise = { name: "promise", path: "./promise" };
+    let promise = { name: "promise" };
     props.modules.push(promise);
     FileUtil.save(propFile, JSON.stringify(props, null, "  "));
 }

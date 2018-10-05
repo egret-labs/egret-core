@@ -4,6 +4,8 @@ import file = require('../lib/FileUtil');
 import _utils = require('../lib/utils');
 import _path = require("path");
 import cp = require('child_process');
+import { cache, shell } from '../lib/utils';
+import { version } from '../lib/doT';
 
 
 export type Package_JSON = {
@@ -31,12 +33,15 @@ type SourceCode = {
 
     debug: string,
     release: string,
-    platform: "web" | "native"
+    platform: egret.target.Type
 }
 
-export class EgretProjectData {
+
+class EgretProjectData {
     private egretProperties: egret.EgretProperty = {
-        modules: []
+        modules: [],
+        target: { current: "web" }
+
     };
 
     projectRoot = "";
@@ -91,13 +96,6 @@ export class EgretProjectData {
         return _path.resolve(this.getProjectRoot(), fileName);
     }
 
-    /**
-     * 获取项目使用的egret版本号
-     */
-    getVersion() {
-        return this.egretProperties.egret_version;
-    }
-
     getReleaseRoot() {
         var p = "bin-release";
         if (globals.hasKeys(this.egretProperties, ["publish", "path"])) {
@@ -115,47 +113,29 @@ export class EgretProjectData {
         return 1;
     }
 
+    getVersion() {
+        return this.egretProperties.egret_version || this.egretProperties.compilerVersion;
+    }
+
     getIgnorePath(): Array<any> {
-        if (globals.hasKeys(this.egretProperties, [egret.args.runtime, "path_ignore"])) {
-            return this.egretProperties[egret.args.runtime]["path_ignore"];
+        if (globals.hasKeys(this.egretProperties, [egret.args.target, "path_ignore"])) {
+            return this.egretProperties[egret.args.target]["path_ignore"];
         }
         return [];
     }
 
-    getExmlRoots(): string[] {
-        if (globals.hasKeys(this.egretProperties, ["eui", "exmlRoot"])) {
-            let result = this.egretProperties.eui.exmlRoot;
-            if (typeof result == "string") {
-                return [_path.join(egret.args.projectDir, result)];
-            }
-            else {
-                let temp: string[] = <string[]>this.egretProperties.eui.exmlRoot;
-                return temp.reduce(function (previousValue: string[], currentValue: string) {
-                    previousValue.push(_path.join(egret.args.projectDir, currentValue));
-                    return previousValue;
-                }, []);
-            }
+    getCurrentTarget() {
+        if (globals.hasKeys(this.egretProperties, ["target", "current"])) {
+            return this.egretProperties.target.current;
         }
-        return [egret.args.projectDir];
-    }
-
-    getThemes(): string[] {
-        if (globals.hasKeys(this.egretProperties, ["eui", "themes"])) {
-            return this.egretProperties.eui.themes;
+        else {
+            return "web"
         }
-        return null;
-    }
-
-    getExmlPublishPolicy(): string {
-        if (globals.hasKeys(this.egretProperties, ["eui", "exmlPublishPolicy"])) {
-            return this.egretProperties.eui.exmlPublishPolicy;
-        }
-        return "content";
     }
 
     getCopyExmlList(): Array<string> {
-        if (globals.hasKeys(this.egretProperties, [egret.args.runtime, "copyExmlList"])) {
-            return this.egretProperties[egret.args.runtime]["copyExmlList"];
+        if (globals.hasKeys(this.egretProperties, [egret.args.target, "copyExmlList"])) {
+            return this.egretProperties[egret.args.target]["copyExmlList"];
         }
         return [];
     }
@@ -167,11 +147,23 @@ export class EgretProjectData {
         return null;
     }
 
-    private getModulePath2(p: string) {
+    private getModulePath2(m: egret.EgretPropertyModule) {
+        let p = m.path;
         if (!p) {
-            return egret.root;
+
+            const engineVersion = m.version || this.egretProperties.engineVersion
+            if (engineVersion) {
+                const versions = launcher.getEgretToolsInstalledByVersion(engineVersion);
+                return _path.join(versions, 'build', m.name);
+            }
+            return _path.join(egret.root, 'build', m.name);
         }
-        let egretLibs = getAppDataEnginesRootPath();
+        let egretLibs;
+        if (process.platform === 'linux') {
+            egretLibs = _path.resolve(__dirname, '../../');
+        } else {
+            egretLibs = getAppDataEnginesRootPath();
+        }
         let keyword = '${EGRET_APP_DATA}';
         if (p.indexOf(keyword) >= 0) {
             p = p.replace(keyword, egretLibs);
@@ -185,7 +177,7 @@ export class EgretProjectData {
     }
 
     private getModulePath(m: egret.EgretPropertyModule) {
-        let modulePath = this.getModulePath2(m.path)
+        let modulePath = this.getModulePath2(m)
         modulePath = file.getAbsolutePath(modulePath);
         let name = m.name;
         if (this.isWasmProject()) {
@@ -197,15 +189,18 @@ export class EgretProjectData {
             _path.join(modulePath, "bin", name),
             _path.join(modulePath, "bin"),
             _path.join(modulePath, "build", name),
-            modulePath
+            _path.join(modulePath)
         ];
+        // if (m.path) {
+        //     searchPaths.push(modulePath)
+        // }
         if (this.isWasmProject()) {
             searchPaths.unshift(_path.join(modulePath, "bin-wasm"));
             searchPaths.unshift(_path.join(modulePath, "bin-wasm", name));
         }
         let dir = file.searchPath(searchPaths);
         if (!dir) {
-            globals.exit(1050, modulePath);
+            globals.exit(1050, name);
         }
         return dir;
     }
@@ -214,40 +209,11 @@ export class EgretProjectData {
         return this.getFilePath('libs/modules');
     }
 
-    getEgretVersionInfos() {
-        var build = cp.spawnSync("egret", ["versions"], {
-            encoding: "utf-8"
-        });
-        let versions: string[];
-        if (build && build.stdout) {
-            versions = build.stdout.toString().split("\n");
-            //删除最后一行空格
-            versions = versions.slice(0, versions.length - 1);
-        }
-        else {
-            versions = [];
-        }
-        let result: egret.VersionInfo[] = versions.map(versionStr => {
-            let version: string;
-            let path: string;
-            const versionRegExp = /(\d+\.){2}\d+(\.\d+)?/g;
-            let matchResultVersion = versionStr.match(versionRegExp);
-            if (matchResultVersion && matchResultVersion.length > 0) {
-                version = matchResultVersion[0];
-            }
-            const pathRegExp = /(?:[a-zA-Z]\:)?(?:[\\|\/][^\\|\/]+)+[\\|\/]?/g;
-            let matchResult2 = versionStr.match(pathRegExp);
-            if (matchResult2 && matchResult2.length > 0) {
-                path = _path.join(matchResult2[0], '.');
-            }
-            return { version, path };
-        });
-        return result;
-    }
-
-
     @_utils.cache
-    getModulesConfig(platform: "web" | "native") {
+    getModulesConfig(platform: egret.target.Type) {
+        if (platform == 'ios' || platform == 'android') {
+            platform = 'web';
+        }
         let result = this.egretProperties.modules.map(m => {
             let name = m.name;
             let sourceDir = this.getModulePath(m);
@@ -283,14 +249,6 @@ export class EgretProjectData {
         return false;
     }
 
-    getPublishType(runtime: string): number {
-        if (globals.hasKeys(this.egretProperties, ["publish", runtime])) {
-            return this.egretProperties["publish"][runtime];
-        }
-
-        return 0;
-    }
-
     getResources(): string[] {
         if (globals.hasKeys(this.egretProperties, ["resources"])) {
             return this.egretProperties["resources"];
@@ -312,30 +270,148 @@ export class EgretProjectData {
         });
         return result;
     }
+
+    save(version) {
+        if (version) {
+            this.egretProperties.engineVersion = version;
+            this.egretProperties.compilerVersion = version;
+        }
+        var egretPropertiesPath = this.getFilePath("egretProperties.json");
+        var content = JSON.stringify(this.egretProperties, null, "\t");
+        file.save(egretPropertiesPath, content);
+    }
 }
 
-export var data = new EgretProjectData();
+
+type LauncherAPI = {
 
 
+    getAllEngineVersions(): any
 
-function getAppDataEnginesRootPath(): string {
-    var path: string;
+    getInstalledTools(): { name: string, version: string, path: string }[];
 
+    getTarget(targetName: string): string
+
+    getUserID(): string;
+
+    sign(templatePath: string, uid: string): void;
+
+
+}
+
+type LauncherAPI_MinVersion = {[P in keyof LauncherAPI]: string }
+
+class EgretLauncherProxy {
+
+    getMinVersion(): LauncherAPI_MinVersion {
+
+        return {
+            getAllEngineVersions: '1.0.24',
+            getInstalledTools: '1.0.24',
+            getTarget: "1.0.45",
+            getUserID: "1.0.46",
+            sign: "1.0.46"
+        }
+    }
+
+    private proxy: LauncherAPI;
+
+    getEgretToolsInstalledByVersion(checkVersion: string) {
+        if (process.platform === 'linux') {
+            return _path.resolve(__dirname, '../../');
+        }
+        const egretjs = this.getLauncherLibrary();
+        const data = egretjs.getAllEngineVersions() as any[];
+        const versions: { version: string, path: string }[] = [];
+        for (let key in data) {
+            const item = data[key];
+            versions.push({ version: item.version, path: item.root })
+        }
+        for (let versionInfo of versions) {
+            if (versionInfo.version == checkVersion) {
+                return versionInfo.path;
+            }
+        }
+        throw `找不到指定的 egret 版本: ${checkVersion}`;
+    }
+
+    getLauncherLibrary(): LauncherAPI {
+        const egretjspath = file.joinPath(getEgretLauncherPath(), "egret.js");
+        const minVersions = this.getMinVersion();
+        const m = require(egretjspath);
+        const selector: LauncherAPI = m.selector;
+        if (!this.proxy) {
+            this.proxy = new Proxy(selector, {
+                get: (target, p, receiver) => {
+                    const result = target[p];
+                    if (!result) {
+                        const minVersion = minVersions[p];
+                        throw `找不到 LauncherAPI:${p},请安装最新的白鹭引擎启动器客户端解决此问题,最低版本要求:${minVersion},下载地址:https://egret.com/products/engine.html`//i18n
+                    }
+                    return result.bind(target)
+                }
+            });
+        }
+        return this.proxy;
+    }
+}
+
+function getAppDataPath() {
+    var result: string;
     switch (process.platform) {
         case 'darwin':
             var home = process.env.HOME || ("/Users/" + (process.env.NAME || process.env.LOGNAME));
             if (!home)
                 return null;
-            path = `${home}/Library/Application Support/Egret/engine/`;
+            result = `${home}/Library/Application Support/`;//Egret/engine/`;
             break;
         case 'win32':
             var appdata = process.env.AppData || `${process.env.USERPROFILE}/AppData/Roaming/`;
-            path = file.escapePath(`${appdata}/Egret/engine/`);
+            result = file.escapePath(appdata);
             break;
         default:
             ;
     }
-    if (file.exists(path))
-        return path;
-    return null;
+
+    if (!file.exists(result)) {
+        throw 'missing appdata path'
+    }
+    return result;
 }
+
+
+function getAppDataEnginesRootPath() {
+    const result = file.joinPath(getAppDataPath(), "Egret/engine/");
+    if (!file.exists(result)) {
+        throw `找不到 ${result}，请在 Egret Launcher 中执行修复引擎`;//todo i18n
+    }
+    return result;
+}
+
+function getEgretLauncherPath() {
+    let npmEgretPath;
+    if (process.platform === 'darwin') {
+        let basicPath = '/usr/local';
+        if (!file.existsSync(basicPath)) {//some mac doesn't have path '/usr/local'
+            basicPath = '/usr';
+        }
+        npmEgretPath = file.joinPath(basicPath, 'lib/node_modules/egret/EgretEngine');
+    }
+    else {
+        npmEgretPath = file.joinPath(getAppDataPath(), 'npm/node_modules/egret/EgretEngine');
+
+    }
+    if (!file.exists(npmEgretPath)) {
+        throw `找不到  ${npmEgretPath}，请在 Egret Launcher 中执行修复引擎`;//todo i18n
+    }
+    const launcherPath = file.joinPath(file.read(npmEgretPath), "../");
+    return launcherPath;
+
+}
+
+export var launcher = new EgretLauncherProxy();
+
+export var projectData = new EgretProjectData();
+
+
+
