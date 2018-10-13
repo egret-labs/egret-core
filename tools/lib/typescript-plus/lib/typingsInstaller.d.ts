@@ -3109,6 +3109,7 @@ declare namespace ts {
         type?: Type;
         uniqueESSymbolType?: Type;
         declaredType?: Type;
+        resolvedJSDocType?: Type;
         typeParameters?: TypeParameter[];
         outerTypeParameters?: TypeParameter[];
         inferredClassType?: Type;
@@ -5452,6 +5453,7 @@ declare namespace ts {
         Cannot_find_name_0_Do_you_need_to_change_your_target_library_Try_changing_the_lib_compiler_option_to_include_dom: DiagnosticMessage;
         _0_only_refers_to_a_type_but_is_being_used_as_a_value_here_Do_you_need_to_change_your_target_library_Try_changing_the_lib_compiler_option_to_es2015_or_later: DiagnosticMessage;
         Enum_type_0_circularly_references_itself: DiagnosticMessage;
+        JSDoc_type_0_circularly_references_itself: DiagnosticMessage;
         JSX_element_attributes_type_0_may_not_be_a_union_type: DiagnosticMessage;
         The_return_type_of_a_JSX_element_constructor_must_return_an_object_type: DiagnosticMessage;
         JSX_element_implicitly_has_type_any_because_the_global_type_JSX_Element_does_not_exist: DiagnosticMessage;
