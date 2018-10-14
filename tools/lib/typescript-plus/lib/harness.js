@@ -3252,28 +3252,35 @@ var ts;
                         locations.push({ textSpan: this.decodeSpan(loc, fileName_1), fileName: fileName_1 });
                     }
                 }
-                return this.lastRenameEntry = {
-                    canRename: body.info.canRename,
-                    fileToRename: body.info.fileToRename,
-                    displayName: body.info.displayName,
-                    fullDisplayName: body.info.fullDisplayName,
-                    kind: body.info.kind,
-                    kindModifiers: body.info.kindModifiers,
-                    localizedErrorMessage: body.info.localizedErrorMessage,
-                    triggerSpan: ts.createTextSpanFromBounds(position, position),
-                    fileName: fileName,
-                    position: position,
-                    findInStrings: !!findInStrings,
-                    findInComments: !!findInComments,
+                var renameInfo = body.info.canRename
+                    ? ts.identity({
+                        canRename: body.info.canRename,
+                        fileToRename: body.info.fileToRename,
+                        displayName: body.info.displayName,
+                        fullDisplayName: body.info.fullDisplayName,
+                        kind: body.info.kind,
+                        kindModifiers: body.info.kindModifiers,
+                        triggerSpan: ts.createTextSpanFromBounds(position, position),
+                    })
+                    : ts.identity({ canRename: false, localizedErrorMessage: body.info.localizedErrorMessage });
+                this.lastRenameEntry = {
+                    renameInfo: renameInfo,
+                    inputs: {
+                        fileName: fileName,
+                        position: position,
+                        findInStrings: !!findInStrings,
+                        findInComments: !!findInComments,
+                    },
                     locations: locations,
                 };
+                return renameInfo;
             };
             SessionClient.prototype.findRenameLocations = function (fileName, position, findInStrings, findInComments) {
                 if (!this.lastRenameEntry ||
-                    this.lastRenameEntry.fileName !== fileName ||
-                    this.lastRenameEntry.position !== position ||
-                    this.lastRenameEntry.findInStrings !== findInStrings ||
-                    this.lastRenameEntry.findInComments !== findInComments) {
+                    this.lastRenameEntry.inputs.fileName !== fileName ||
+                    this.lastRenameEntry.inputs.position !== position ||
+                    this.lastRenameEntry.inputs.findInStrings !== findInStrings ||
+                    this.lastRenameEntry.inputs.findInComments !== findInComments) {
                     this.getRenameInfo(fileName, position, findInStrings, findInComments);
                 }
                 return this.lastRenameEntry.locations;
@@ -8681,7 +8688,7 @@ var FourSlash;
         TestState.prototype.verifyRenameInfoSucceeded = function (displayName, fullDisplayName, kind, kindModifiers, fileToRename, expectedRange) {
             var renameInfo = this.languageService.getRenameInfo(this.activeFile.fileName, this.currentCaretPosition);
             if (!renameInfo.canRename) {
-                this.raiseError("Rename did not succeed");
+                throw this.raiseError("Rename did not succeed");
             }
             this.validate("displayName", displayName, renameInfo.displayName);
             this.validate("fullDisplayName", fullDisplayName, renameInfo.fullDisplayName);
@@ -8703,7 +8710,7 @@ var FourSlash;
         TestState.prototype.verifyRenameInfoFailed = function (message) {
             var renameInfo = this.languageService.getRenameInfo(this.activeFile.fileName, this.currentCaretPosition);
             if (renameInfo.canRename) {
-                this.raiseError("Rename was expected to fail");
+                throw this.raiseError("Rename was expected to fail");
             }
             this.validate("error", message, renameInfo.localizedErrorMessage);
         };

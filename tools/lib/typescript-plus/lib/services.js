@@ -4551,7 +4551,7 @@ var ts;
                     if (resolvedModuleSymbol !== moduleSymbol &&
                         // Don't add another completion for `export =` of a symbol that's already global.
                         // So in `declare namespace foo {} declare module "foo" { export = foo; }`, there will just be the global completion for `foo`.
-                        resolvedModuleSymbol.declarations.some(function (d) { return !!d.getSourceFile().externalModuleIndicator; })) {
+                        ts.some(resolvedModuleSymbol.declarations, function (d) { return !!d.getSourceFile().externalModuleIndicator; })) {
                         symbols.push(resolvedModuleSymbol);
                         symbolToOriginInfoMap[ts.getSymbolId(resolvedModuleSymbol)] = { kind: 3 /* Export */, moduleSymbol: moduleSymbol, isDefaultExport: false };
                     }
@@ -10965,7 +10965,6 @@ var ts;
                 fileToRename: name,
                 kind: kind,
                 displayName: name,
-                localizedErrorMessage: undefined,
                 fullDisplayName: name,
                 kindModifiers: "" /* none */,
                 triggerSpan: triggerSpan,
@@ -10977,23 +10976,13 @@ var ts;
                 fileToRename: undefined,
                 kind: kind,
                 displayName: displayName,
-                localizedErrorMessage: undefined,
                 fullDisplayName: fullDisplayName,
                 kindModifiers: kindModifiers,
                 triggerSpan: createTriggerSpanForNode(node, sourceFile)
             };
         }
         function getRenameInfoError(diagnostic) {
-            // TODO: GH#18217
-            return {
-                canRename: false,
-                localizedErrorMessage: ts.getLocaleSpecificMessage(diagnostic),
-                displayName: undefined,
-                fullDisplayName: undefined,
-                kind: undefined,
-                kindModifiers: undefined,
-                triggerSpan: undefined
-            };
+            return { canRename: false, localizedErrorMessage: ts.getLocaleSpecificMessage(diagnostic) };
         }
         function createTriggerSpanForNode(node, sourceFile) {
             var start = node.getStart(sourceFile);
@@ -15405,6 +15394,14 @@ var ts;
                 var pos = before.getStart(sourceFile);
                 this.replaceRange(sourceFile, { pos: pos, end: pos }, ts.createToken(modifier), { suffix: " " });
             };
+            ChangeTracker.prototype.insertLastModifierBefore = function (sourceFile, modifier, before) {
+                if (!before.modifiers) {
+                    this.insertModifierBefore(sourceFile, modifier, before);
+                    return;
+                }
+                var pos = before.modifiers.end;
+                this.replaceRange(sourceFile, { pos: pos, end: pos }, ts.createToken(modifier), { prefix: " " });
+            };
             ChangeTracker.prototype.insertCommentBeforeLine = function (sourceFile, lineNumber, position, commentText) {
                 var lineStartPosition = ts.getStartPositionOfLine(lineNumber, sourceFile);
                 var startPosition = ts.getFirstNonSpaceCharacterPosition(sourceFile.text, lineStartPosition);
@@ -16737,7 +16734,7 @@ var ts;
                 return;
             }
             // add the async keyword
-            changes.insertModifierBefore(sourceFile, 120 /* AsyncKeyword */, functionToConvert);
+            changes.insertLastModifierBefore(sourceFile, 120 /* AsyncKeyword */, functionToConvert);
             function startTransformation(node, nodeToReplace) {
                 var newNodes = transformExpression(node, transformer, node);
                 changes.replaceNodeWithNodes(sourceFile, nodeToReplace, newNodes);
@@ -16897,7 +16894,7 @@ var ts;
             }
         }
         function getNewNameIfConflict(name, originalNames) {
-            var numVarsSameName = (originalNames.get(name.text) || []).length;
+            var numVarsSameName = (originalNames.get(name.text) || ts.emptyArray).length;
             var numberOfAssignmentsOriginal = 0;
             var identifier = numVarsSameName === 0 ? name : ts.createIdentifier(name.text + "_" + numVarsSameName);
             return { identifier: identifier, types: [], numberOfAssignmentsOriginal: numberOfAssignmentsOriginal };
@@ -16906,7 +16903,7 @@ var ts;
         // should be kept up to date with isFixablePromiseHandler in suggestionDiagnostics.ts
         function transformExpression(node, transformer, outermostParent, prevArgName) {
             if (!node) {
-                return [];
+                return ts.emptyArray;
             }
             var originalType = ts.isIdentifier(node) && transformer.originalTypeMap.get(ts.getNodeId(node).toString());
             var nodeType = originalType || transformer.checker.getTypeAtLocation(node);
@@ -16923,7 +16920,7 @@ var ts;
                 return transformPromiseCall(node, transformer, prevArgName);
             }
             codeActionSucceeded = false;
-            return [];
+            return ts.emptyArray;
         }
         function transformCatch(node, transformer, prevArgName) {
             var func = node.arguments[0];
@@ -17006,13 +17003,13 @@ var ts;
         function createTransformedStatement(prevArgName, rightHandSide, transformer) {
             if (!prevArgName || prevArgName.identifier.text.length === 0) {
                 // if there's no argName to assign to, there still might be side effects
-                return ts.createNodeArray([ts.createStatement(rightHandSide)]);
+                return [ts.createStatement(rightHandSide)];
             }
             if (prevArgName.types.length < prevArgName.numberOfAssignmentsOriginal) {
                 // if the variable has already been declared, we don't need "let" or "const"
-                return ts.createNodeArray([ts.createStatement(ts.createAssignment(ts.getSynthesizedDeepClone(prevArgName.identifier), rightHandSide))]);
+                return [ts.createStatement(ts.createAssignment(ts.getSynthesizedDeepClone(prevArgName.identifier), rightHandSide))];
             }
-            return ts.createNodeArray([ts.createVariableStatement(/*modifiers*/ undefined, (ts.createVariableDeclarationList([ts.createVariableDeclaration(ts.getSynthesizedDeepClone(prevArgName.identifier), /*type*/ undefined, rightHandSide)], getFlagOfIdentifier(prevArgName.identifier, transformer.constIdentifiers))))]);
+            return [ts.createVariableStatement(/*modifiers*/ undefined, (ts.createVariableDeclarationList([ts.createVariableDeclaration(ts.getSynthesizedDeepClone(prevArgName.identifier), /*type*/ undefined, rightHandSide)], getFlagOfIdentifier(prevArgName.identifier, transformer.constIdentifiers))))];
         }
         // should be kept up to date with isFixablePromiseArgument in suggestionDiagnostics.ts
         function getTransformationBody(func, prevArgName, argName, parent, transformer) {
@@ -17026,9 +17023,9 @@ var ts;
                         // undefined was argument passed to promise handler
                         break;
                     }
-                    var synthCall = ts.createCall(ts.getSynthesizedDeepClone(func), /*typeArguments*/ undefined, argName ? [argName.identifier] : []);
+                    var synthCall = ts.createCall(ts.getSynthesizedDeepClone(func), /*typeArguments*/ undefined, argName ? [argName.identifier] : ts.emptyArray);
                     if (shouldReturn) {
-                        return ts.createNodeArray([ts.createReturn(synthCall)]);
+                        return [ts.createReturn(synthCall)];
                     }
                     var type = transformer.originalTypeMap.get(ts.getNodeId(func).toString()) || transformer.checker.getTypeAtLocation(func);
                     var callSignatures = transformer.checker.getSignaturesOfType(type, 0 /* Call */);
@@ -17062,14 +17059,14 @@ var ts;
                                 refactoredStmts.push(statement);
                             }
                         }
-                        return shouldReturn ? ts.getSynthesizedDeepClones(ts.createNodeArray(refactoredStmts)) :
-                            removeReturns(ts.createNodeArray(refactoredStmts), prevArgName.identifier, transformer, seenReturnStatement);
+                        return shouldReturn ? refactoredStmts.map(function (s) { return ts.getSynthesizedDeepClone(s); }) :
+                            removeReturns(refactoredStmts, prevArgName === undefined ? undefined : prevArgName.identifier, transformer, seenReturnStatement);
                     }
                     else {
                         var innerRetStmts = ts.getReturnStatementsWithPromiseHandlers(ts.createReturn(funcBody));
                         var innerCbBody = getInnerTransformationBody(transformer, innerRetStmts, prevArgName);
                         if (innerCbBody.length > 0) {
-                            return ts.createNodeArray(innerCbBody);
+                            return innerCbBody;
                         }
                         if (!shouldReturn) {
                             var type_1 = transformer.checker.getTypeAtLocation(func);
@@ -17083,7 +17080,7 @@ var ts;
                             return transformedStatement;
                         }
                         else {
-                            return ts.createNodeArray([ts.createReturn(ts.getSynthesizedDeepClone(funcBody))]);
+                            return [ts.createReturn(ts.getSynthesizedDeepClone(funcBody))];
                         }
                     }
                 }
@@ -17092,7 +17089,7 @@ var ts;
                     codeActionSucceeded = false;
                     break;
             }
-            return ts.createNodeArray([]);
+            return ts.emptyArray;
         }
         function getLastCallSignature(type, checker) {
             var callSignatures = checker.getSignaturesOfType(type, 0 /* Call */);
@@ -17105,7 +17102,12 @@ var ts;
                 if (ts.isReturnStatement(stmt)) {
                     if (stmt.expression) {
                         var possiblyAwaitedExpression = isPromiseReturningExpression(stmt.expression, transformer.checker) ? ts.createAwait(stmt.expression) : stmt.expression;
-                        ret.push(ts.createVariableStatement(/*modifiers*/ undefined, (ts.createVariableDeclarationList([ts.createVariableDeclaration(prevArgName, /*type*/ undefined, possiblyAwaitedExpression)], getFlagOfIdentifier(prevArgName, transformer.constIdentifiers)))));
+                        if (prevArgName === undefined) {
+                            ret.push(ts.createExpressionStatement(possiblyAwaitedExpression));
+                        }
+                        else {
+                            ret.push(ts.createVariableStatement(/*modifiers*/ undefined, (ts.createVariableDeclarationList([ts.createVariableDeclaration(prevArgName, /*type*/ undefined, possiblyAwaitedExpression)], getFlagOfIdentifier(prevArgName, transformer.constIdentifiers)))));
+                        }
                     }
                 }
                 else {
@@ -17113,10 +17115,10 @@ var ts;
                 }
             }
             // if block has no return statement, need to define prevArgName as undefined to prevent undeclared variables
-            if (!seenReturnStatement) {
+            if (!seenReturnStatement && prevArgName !== undefined) {
                 ret.push(ts.createVariableStatement(/*modifiers*/ undefined, (ts.createVariableDeclarationList([ts.createVariableDeclaration(prevArgName, /*type*/ undefined, ts.createIdentifier("undefined"))], getFlagOfIdentifier(prevArgName, transformer.constIdentifiers)))));
             }
-            return ts.createNodeArray(ret);
+            return ret;
         }
         function getInnerTransformationBody(transformer, innerRetStmts, prevArgName) {
             var innerCbBody = [];
@@ -17857,19 +17859,19 @@ var ts;
                 }
                 var defaultInfo = getDefaultLikeExportInfo(moduleSymbol, checker, compilerOptions);
                 if (defaultInfo && defaultInfo.name === symbolName && ts.skipAlias(defaultInfo.symbol, checker) === exportedSymbol) {
-                    result.push({ moduleSymbol: moduleSymbol, importKind: defaultInfo.kind, exportedSymbolIsTypeOnly: isTypeOnlySymbol(defaultInfo.symbol) });
+                    result.push({ moduleSymbol: moduleSymbol, importKind: defaultInfo.kind, exportedSymbolIsTypeOnly: isTypeOnlySymbol(defaultInfo.symbol, checker) });
                 }
                 for (var _i = 0, _a = checker.getExportsOfModule(moduleSymbol); _i < _a.length; _i++) {
                     var exported = _a[_i];
                     if (exported.name === symbolName && ts.skipAlias(exported, checker) === exportedSymbol) {
-                        result.push({ moduleSymbol: moduleSymbol, importKind: 0 /* Named */, exportedSymbolIsTypeOnly: isTypeOnlySymbol(exported) });
+                        result.push({ moduleSymbol: moduleSymbol, importKind: 0 /* Named */, exportedSymbolIsTypeOnly: isTypeOnlySymbol(exported, checker) });
                     }
                 }
             });
             return result;
         }
-        function isTypeOnlySymbol(s) {
-            return !(s.flags & 67220415 /* Value */);
+        function isTypeOnlySymbol(s, checker) {
+            return !(ts.skipAlias(s, checker).flags & 67220415 /* Value */);
         }
         function getFixForImport(exportInfos, symbolName, position, program, sourceFile, host, preferences) {
             var checker = program.getTypeChecker();
@@ -18037,7 +18039,7 @@ var ts;
             // Maps symbol id to info for modules providing that symbol (original export + re-exports).
             var originalSymbolToExportInfos = ts.createMultiMap();
             function addSymbol(moduleSymbol, exportedSymbol, importKind) {
-                originalSymbolToExportInfos.add(ts.getUniqueSymbolId(exportedSymbol, checker).toString(), { moduleSymbol: moduleSymbol, importKind: importKind, exportedSymbolIsTypeOnly: isTypeOnlySymbol(exportedSymbol) });
+                originalSymbolToExportInfos.add(ts.getUniqueSymbolId(exportedSymbol, checker).toString(), { moduleSymbol: moduleSymbol, importKind: importKind, exportedSymbolIsTypeOnly: isTypeOnlySymbol(exportedSymbol, checker) });
             }
             forEachExternalModuleToImportFrom(checker, sourceFile, program.getSourceFiles(), function (moduleSymbol) {
                 cancellationToken.throwIfCancellationRequested();
@@ -18059,7 +18061,7 @@ var ts;
                 return undefined;
             var symbol = exported.symbol, kind = exported.kind;
             var info = getDefaultExportInfoWorker(symbol, moduleSymbol, checker, compilerOptions);
-            return info && { symbol: symbol, symbolForMeaning: info.symbolForMeaning, name: info.name, kind: kind };
+            return info && __assign({ symbol: symbol, kind: kind }, info);
         }
         function getDefaultLikeExportWorker(moduleSymbol, checker) {
             var defaultExport = checker.tryGetMemberInModuleExports("default" /* Default */, moduleSymbol);

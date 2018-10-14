@@ -5070,9 +5070,14 @@ var ts;
                 var renameInfo = this.mapRenameInfo(defaultProject.getLanguageService().getRenameInfo(file, position), ts.Debug.assertDefined(this.projectService.getScriptInfo(file)));
                 return { info: renameInfo, locs: this.toSpanGroups(locations) };
             };
-            Session.prototype.mapRenameInfo = function (_a, scriptInfo) {
-                var canRename = _a.canRename, fileToRename = _a.fileToRename, localizedErrorMessage = _a.localizedErrorMessage, displayName = _a.displayName, fullDisplayName = _a.fullDisplayName, kind = _a.kind, kindModifiers = _a.kindModifiers, triggerSpan = _a.triggerSpan;
-                return { canRename: canRename, fileToRename: fileToRename, localizedErrorMessage: localizedErrorMessage, displayName: displayName, fullDisplayName: fullDisplayName, kind: kind, kindModifiers: kindModifiers, triggerSpan: this.toLocationTextSpan(triggerSpan, scriptInfo) };
+            Session.prototype.mapRenameInfo = function (info, scriptInfo) {
+                if (info.canRename) {
+                    var canRename = info.canRename, fileToRename = info.fileToRename, displayName = info.displayName, fullDisplayName = info.fullDisplayName, kind = info.kind, kindModifiers = info.kindModifiers, triggerSpan = info.triggerSpan;
+                    return ts.identity({ canRename: canRename, fileToRename: fileToRename, displayName: displayName, fullDisplayName: fullDisplayName, kind: kind, kindModifiers: kindModifiers, triggerSpan: this.toLocationTextSpan(triggerSpan, scriptInfo) });
+                }
+                else {
+                    return info;
+                }
             };
             Session.prototype.toSpanGroups = function (locations) {
                 var map = ts.createMap();
