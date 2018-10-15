@@ -125,7 +125,7 @@ class CompileEgretEngine implements egret.Command {
         compileOptions.declaration = dts;
         compileOptions.out = singleFile;
         compileOptions.emitReflection = true;
-
+        compileOptions.experimentalDecorators = true;
 
         var result = this.compiler.compile(compileOptions, tss);
         if (result.exitStatus != 0) {

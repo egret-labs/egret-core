@@ -281,14 +281,6 @@
         "dependencies": []
       },
       {
-        "name": "assetsmanager",
-        "description": "assetsmanager 资源管理器",
-        "description_en": "AssetsManager",
-        "files": [],
-        "root": "",
-        "dependencies": []
-      },
-      {
         "name": "eui",
         "description": "UI lib",
         "description_en": "UI lib",
@@ -314,6 +306,17 @@
         "root": "src/extension/game",
         "dependencies": [
           "egret"
+        ]
+      },
+      {
+        "name": "assetsmanager",
+        "description": "assetsmanager 资源管理器",
+        "description_en": "AssetsManager",
+        "files": [],
+        "root": "src/extension/assetsmanager",
+        "dependencies": [
+          "egret",
+          "game"
         ]
       },
       {

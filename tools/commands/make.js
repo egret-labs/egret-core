@@ -112,6 +112,7 @@ var CompileEgretEngine = /** @class */ (function () {
         compileOptions.declaration = dts;
         compileOptions.out = singleFile;
         compileOptions.emitReflection = true;
+        compileOptions.experimentalDecorators = true;
         var result = this.compiler.compile(compileOptions, tss);
         if (result.exitStatus != 0) {
             result.messages.forEach(function (m) { return console.log(m); });
