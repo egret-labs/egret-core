@@ -5330,9 +5330,6 @@ var egret;
                     this.hasMesh = true;
                 }
             };
-            WebGLVertexArrayObject.prototype.isMesh = function () {
-                return this.hasMesh;
-            };
             /**
              * 缓存一组顶点
              */
@@ -6161,6 +6158,16 @@ var egret;
                 uint32Array[index++] = node.uvs[3];
                 // alpha
                 float32Array[index++] = alpha;
+                // 缓存索引数组
+                if (this.vao.hasMesh) {
+                    var indicesForMesh = this.vao.indicesForMesh;
+                    indicesForMesh[this.vao.indexIndex + 0] = 0 + this.vao.vertexIndex;
+                    indicesForMesh[this.vao.indexIndex + 1] = 1 + this.vao.vertexIndex;
+                    indicesForMesh[this.vao.indexIndex + 2] = 2 + this.vao.vertexIndex;
+                    indicesForMesh[this.vao.indexIndex + 3] = 0 + this.vao.vertexIndex;
+                    indicesForMesh[this.vao.indexIndex + 4] = 2 + this.vao.vertexIndex;
+                    indicesForMesh[this.vao.indexIndex + 5] = 3 + this.vao.vertexIndex;
+                }
                 this.vao.vertexIndex += 4;
                 this.vao.indexIndex += 6;
                 if (image.source && image.source["texture"]) {
@@ -6299,6 +6306,16 @@ var egret;
                 uint32Array[index++] = 65535 << 16;
                 // alpha
                 float32Array[index++] = alpha;
+                // 缓存索引数组
+                if (this.vao.hasMesh) {
+                    var indicesForMesh = this.vao.indicesForMesh;
+                    indicesForMesh[this.vao.indexIndex + 0] = 0 + this.vao.vertexIndex;
+                    indicesForMesh[this.vao.indexIndex + 1] = 1 + this.vao.vertexIndex;
+                    indicesForMesh[this.vao.indexIndex + 2] = 2 + this.vao.vertexIndex;
+                    indicesForMesh[this.vao.indexIndex + 3] = 0 + this.vao.vertexIndex;
+                    indicesForMesh[this.vao.indexIndex + 4] = 2 + this.vao.vertexIndex;
+                    indicesForMesh[this.vao.indexIndex + 5] = 3 + this.vao.vertexIndex;
+                }
                 this.vao.vertexIndex += 4;
                 this.vao.indexIndex += 6;
             };
@@ -6378,7 +6395,7 @@ var egret;
                 }
                 this.uploadVerticesArray(this.vao.getVertices());
                 // 有mesh，则使用indicesForMesh
-                if (this.vao.isMesh()) {
+                if (this.vao.hasMesh) {
                     this.uploadIndicesArray(this.vao.getMeshIndices());
                 }
                 var length = this.drawCmdManager.drawDataLen;
@@ -6401,7 +6418,7 @@ var egret;
                     }
                 }
                 // 切换回默认indices
-                if (this.vao.isMesh()) {
+                if (this.vao.hasMesh) {
                     this.uploadIndicesArray(this.vao.getIndices());
                 }
                 // 清空数据

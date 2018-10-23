@@ -641,6 +641,17 @@ namespace egret.web {
             // alpha
             float32Array[index++] = alpha;
 
+            // 缓存索引数组
+            if (this.vao.hasMesh) {
+                let indicesForMesh = this.vao.indicesForMesh;
+                indicesForMesh[this.vao.indexIndex + 0] = 0 + this.vao.vertexIndex;
+                indicesForMesh[this.vao.indexIndex + 1] = 1 + this.vao.vertexIndex;
+                indicesForMesh[this.vao.indexIndex + 2] = 2 + this.vao.vertexIndex;
+                indicesForMesh[this.vao.indexIndex + 3] = 0 + this.vao.vertexIndex;
+                indicesForMesh[this.vao.indexIndex + 4] = 2 + this.vao.vertexIndex;
+                indicesForMesh[this.vao.indexIndex + 5] = 3 + this.vao.vertexIndex;
+            }
+
             this.vao.vertexIndex += 4;
             this.vao.indexIndex += 6;
 
@@ -810,6 +821,17 @@ namespace egret.web {
             // alpha
             float32Array[index++] = alpha;
 
+            // 缓存索引数组
+            if (this.vao.hasMesh) {
+                let indicesForMesh = this.vao.indicesForMesh;
+                indicesForMesh[this.vao.indexIndex + 0] = 0 + this.vao.vertexIndex;
+                indicesForMesh[this.vao.indexIndex + 1] = 1 + this.vao.vertexIndex;
+                indicesForMesh[this.vao.indexIndex + 2] = 2 + this.vao.vertexIndex;
+                indicesForMesh[this.vao.indexIndex + 3] = 0 + this.vao.vertexIndex;
+                indicesForMesh[this.vao.indexIndex + 4] = 2 + this.vao.vertexIndex;
+                indicesForMesh[this.vao.indexIndex + 5] = 3 + this.vao.vertexIndex;
+            }
+
             this.vao.vertexIndex += 4;
             this.vao.indexIndex += 6;
         }
@@ -912,7 +934,7 @@ namespace egret.web {
             this.uploadVerticesArray(this.vao.getVertices());
 
             // 有mesh，则使用indicesForMesh
-            if (this.vao.isMesh()) {
+            if (this.vao.hasMesh) {
                 this.uploadIndicesArray(this.vao.getMeshIndices());
             }
 
@@ -937,7 +959,7 @@ namespace egret.web {
             }
 
             // 切换回默认indices
-            if (this.vao.isMesh()) {
+            if (this.vao.hasMesh) {
                 this.uploadIndicesArray(this.vao.getIndices());
             }
 

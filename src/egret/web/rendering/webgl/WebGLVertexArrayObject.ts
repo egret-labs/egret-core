@@ -41,7 +41,7 @@ namespace egret.web {
         public vertSize: number = 4;
 
         private indices: Uint16Array;
-        private indicesForMesh: Uint16Array;
+        public indicesForMesh: Uint16Array;
 
         //为了实现drawNormalImage绘制，将这三个属性设为public
         public float32Array: Float32Array;
@@ -49,7 +49,7 @@ namespace egret.web {
         public vertexIndex: number = 0;
         public indexIndex: number = 0;
 
-        private hasMesh: boolean = false;
+        public hasMesh: boolean = false;
 
         private vertexActualSize: number;
 
@@ -119,10 +119,6 @@ namespace egret.web {
 
                 this.hasMesh = true;
             }
-        }
-
-        public isMesh(): boolean {
-            return this.hasMesh;
         }
 
         /**
