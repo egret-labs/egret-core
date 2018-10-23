@@ -297,7 +297,7 @@ export function getAvailablePort(port = 0) {
                 port++;
                 getPort();
             })
-            server.listen(port, '0.0.0.0')
+            server.listen(port)
         }
         getPort();
     })

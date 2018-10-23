@@ -250,7 +250,6 @@ declare module 'built-in' {
 
     /**
      * 发布策略
-     * * default : 使用 egretProperties.json 中的 exmlPublishPolicy 中的策略
      * * debug : 默认策略，用于开发环境
      * * contents : 将 EXML 的内容写入到主题文件中
      * * gjs : 将生成的JS文件写入到主题文件中
@@ -258,7 +257,7 @@ declare module 'built-in' {
      * * commonjs2 : 将EXML合并为一个含有解析方法和皮肤定义的文件，且皮肤抽离为一份配置
      * * json : 将每个EXML文件生成一份配置
      */
-    type EXML_Publish_Policy = "default" | "debug" | "contents" | "gjs" | "commonjs" | "commonjs2" | "json"
+    type EXML_Publish_Policy = "debug" | "contents" | "gjs" | "commonjs" | "commonjs2" | "json"
 
 
 

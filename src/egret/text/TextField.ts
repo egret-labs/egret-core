@@ -606,8 +606,9 @@ namespace egret {
 
         $setLineSpacing(value: number): boolean {
             let values = this.$TextField;
-            if (values[sys.TextKeys.lineSpacing] == value)
+            if (values[sys.TextKeys.lineSpacing] == value) {
                 return false;
+            }
             values[sys.TextKeys.lineSpacing] = value;
             this.$invalidateTextField();
             if (egret.nativeRender) {
@@ -781,6 +782,9 @@ namespace egret {
          * @language zh_CN
          */
         public set inputType(value: string) {
+            if (this.$TextField[sys.TextKeys.inputType] == value) {
+                return;
+            }
             this.$TextField[sys.TextKeys.inputType] = value;
             if (egret.nativeRender) {
                 this.$nativeDisplayObject.setInputType(value);
@@ -1071,7 +1075,11 @@ namespace egret {
          * @language zh_CN
          */
         public set scrollV(value: number) {
-            this.$TextField[sys.TextKeys.scrollV] = Math.max(value, 1);
+            value = Math.max(value, 1);
+            if (value == this.$TextField[sys.TextKeys.scrollV]) {
+                return;
+            }
+            this.$TextField[sys.TextKeys.scrollV] = value;
             if (egret.nativeRender) {
                 this.$nativeDisplayObject.setScrollV(value);
             }
@@ -1188,6 +1196,9 @@ namespace egret {
          * @param value
          */
         $setMultiline(value: boolean): boolean {
+            if (this.$TextField[sys.TextKeys.multiline] == value) {
+                return false;
+            }
             this.$TextField[sys.TextKeys.multiline] = value;
             this.$invalidateTextField();
             if (egret.nativeRender) {
@@ -1405,7 +1416,11 @@ namespace egret {
          */
         $setBorder(value: boolean): void {
             value = !!value;
+            if (this.$TextField[sys.TextKeys.border] == value) {
+                return;
+            }
             this.$TextField[sys.TextKeys.border] = value;
+            this.$invalidateTextField();
             if (egret.nativeRender) {
                 this.$nativeDisplayObject.setBorder(value);
             }
@@ -1440,7 +1455,11 @@ namespace egret {
          */
         $setBorderColor(value: number): void {
             value = +value || 0;
+            if (this.$TextField[sys.TextKeys.borderColor] == value) {
+                return;
+            }
             this.$TextField[sys.TextKeys.borderColor] = value;
+            this.$invalidateTextField();
             if (egret.nativeRender) {
                 this.$nativeDisplayObject.setBorderColor(value);
             }
@@ -1476,7 +1495,11 @@ namespace egret {
          * @private
          */
         $setBackground(value: boolean): void {
+            if (this.$TextField[sys.TextKeys.background] == value) {
+                return;
+            }
             this.$TextField[sys.TextKeys.background] = value;
+            this.$invalidateTextField();
             if (egret.nativeRender) {
                 this.$nativeDisplayObject.setBackground(value);
             }
@@ -1510,7 +1533,11 @@ namespace egret {
          * @private
          */
         $setBackgroundColor(value: number): void {
+            if (this.$TextField[sys.TextKeys.backgroundColor] == value) {
+                return;
+            }
             this.$TextField[sys.TextKeys.backgroundColor] = value;
+            this.$invalidateTextField();
             if (egret.nativeRender) {
                 this.$nativeDisplayObject.setBackgroundColor(value);
             }

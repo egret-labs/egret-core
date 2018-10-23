@@ -57,6 +57,11 @@ var server;
         else if (task.command == 'build') {
             // autoExitTimer();
             var buildHandled = false;
+            /**
+             * egret run -a
+             * 在egret run 自动编译时起作用，单纯egret build 不起作用
+             */
+            // console.log("3  server handleCommands", task);
             if (task.option.added && task.option.added.length) {
                 task.option.added.forEach(function (file) { return proj.fileChanged(serviceSocket, task, file, "added"); });
                 buildHandled = true;
@@ -152,6 +157,7 @@ var client;
             setTimeout(function () { return execCommand(command, callback); }, 200);
         });
         ss.on('message', function (cmd) { return callback && callback(cmd, ss); });
+        // console.log("2  client execCommand", command);
         ss.send(command);
         return ss;
     }

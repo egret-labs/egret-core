@@ -118,11 +118,6 @@ declare module egret {
         "wasm"?: {
 
         },
-        "eui"?: {
-            "exmlRoot"?: string | string[];
-            "themes"?: string[];
-            "exmlPublishPolicy"?: string;
-        },
         "native"?: {
             "path_ignore"?: string[];
         },

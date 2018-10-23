@@ -58,6 +58,7 @@ var Build = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         options = egret.args;
+                        //以package.json判断是否第三方库？
                         if (packageJsonContent = FileUtil.read(project.projectData.getFilePath("package.json"))) {
                             packageJson = JSON.parse(packageJsonContent);
                             if (packageJson.modules) { //通过有modules来识别是egret库项目
@@ -66,7 +67,7 @@ var Build = /** @class */ (function () {
                                 return [2 /*return*/, 0];
                             }
                             if (FileUtil.exists(project.projectData.getFilePath("tsconfig.json"))) {
-                                this.buildLib2(packageJson);
+                                this.buildLib(packageJson);
                                 return [2 /*return*/, 0];
                             }
                         }
@@ -88,11 +89,19 @@ var Build = /** @class */ (function () {
             });
         });
     };
-    Build.prototype.buildLib2 = function (packageJson) {
+    /**
+     * 以编译第三方库的形式编译egret项目
+     * @param packageJson 包含变异这个项目使用的egret的引擎版本
+     */
+    Build.prototype.buildLib = function (packageJson) {
         var projectDir = egret.args.projectDir;
         var compiler = new Compiler.Compiler();
         var _a = compiler.parseTsconfig(projectDir, egret.args.publish), options = _a.options, fileNames = _a.fileNames;
         options.emitReflection = true;
+        if (options.outDir) {
+            console.log(utils.tr(1124));
+        }
+        // outFile 不存在就直接退出
         var outFile = options.outFile;
         if (!outFile) {
             globals.exit(1122);
@@ -115,55 +124,6 @@ var Build = /** @class */ (function () {
                 globals.log(1119);
                 globals.exit(1121);
             }
-        }
-    };
-    Build.prototype.buildLib = function (packageJson) {
-        var options = egret.args;
-        var libFiles = FileUtil.search(FileUtil.joinPath(options.projectDir, "libs"), "d.ts");
-        var outDir = "bin";
-        var compiler = new Compiler.Compiler();
-        utils.clean(FileUtil.joinPath(options.projectDir, outDir));
-        var _loop_1 = function (m) {
-            length = m.files.length;
-            if (length > 0) {
-                files = m.files
-                    .filter(function (file) { return file.indexOf(".ts") != -1; })
-                    .map(function (file) { return FileUtil.joinPath(options.projectDir, m.root, file); });
-            }
-            else {
-                //todo exml
-                files = FileUtil.search(FileUtil.joinPath(options.projectDir, m.root), "ts");
-            }
-            //解决根目录没文件编译异常问题
-            tmpFilePath = FileUtil.joinPath(options.projectDir, m.root, "tmp.ts");
-            hasTmpTsFile = false;
-            if (!FileUtil.exists(tmpFilePath)) {
-                hasTmpTsFile = true;
-                FileUtil.save(tmpFilePath, "");
-            }
-            else if (FileUtil.read(tmpFilePath) == "") {
-                hasTmpTsFile = true;
-            }
-            var compilerOptions = {
-                target: ts.ScriptTarget.ES5,
-                out: FileUtil.joinPath(options.projectDir, outDir, m.name, m.name + ".js"),
-                declaration: true
-            };
-            compileFiles = libFiles.concat(files);
-            if (hasTmpTsFile) {
-                compileFiles.push(tmpFilePath);
-            }
-            result = compiler.compile(compilerOptions, compileFiles);
-            if (hasTmpTsFile) {
-                FileUtil.remove(tmpFilePath);
-            }
-            minPath = FileUtil.joinPath(options.projectDir, outDir, m.name, m.name + ".min.js");
-            utils.minify(compilerOptions.out, minPath);
-        };
-        var files, length, tmpFilePath, hasTmpTsFile, compileFiles, result, minPath;
-        for (var _i = 0, _a = packageJson.modules; _i < _a.length; _i++) {
-            var m = _a[_i];
-            _loop_1(m);
         }
     };
     __decorate([

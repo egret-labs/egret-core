@@ -432,11 +432,24 @@ namespace egret {
         }
 
         public set smoothing(value: boolean) {
+            let self = this;
             if (value == this.$smoothing) {
                 return;
             }
             this.$smoothing = value;
             (<sys.BitmapNode>this.$renderNode).smoothing = value;
+            if (!egret.nativeRender) {
+                let p = self.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                let maskedObject = self.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
+            }
         }
 
         /**

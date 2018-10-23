@@ -103,7 +103,7 @@ var TextureMergerPlugin = /** @class */ (function () {
                     }
                     //相对路径
                     else {
-                        if (fileOrigin.indexOf(path.normalize(root)) >= 0) {
+                        if (path.join(egret.args.projectDir, fileOrigin).indexOf(path.normalize(root)) >= 0) {
                             isRes = true;
                         }
                     }

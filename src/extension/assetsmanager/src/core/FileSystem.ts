@@ -1,7 +1,16 @@
 module RES {
     /**
-    * @internal
-    */
+     * assetsManager underlying storage resource information
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * assetsManager底层存储资源信息
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language zh_CN
+     */
     export interface File {
 
         url: string;
@@ -26,7 +35,7 @@ module RES {
     */
     export interface FileSystem {
 
-        addFile(filename: string, type?: string, root?: string, extra?: 1 | undefined);
+        addFile(data: { name: string, type: string, url: string, root?: string, extra?: 1 | undefined });
 
         getFile(filename: string): File | null;
 

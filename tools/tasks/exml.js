@@ -35,11 +35,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var exml = require("../actions/exml");
+var file = require("../lib/FileUtil");
+var FileUtil = require("../lib/FileUtil");
 var ExmlPlugin = /** @class */ (function () {
     function ExmlPlugin(publishPolicy) {
         this.publishPolicy = publishPolicy;
         this.name = 'exml';
         this.exmls = [];
+        this.themeFilenames = [];
     }
     ExmlPlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
@@ -53,13 +56,16 @@ var ExmlPlugin = /** @class */ (function () {
                         return [2 /*return*/, null];
                     }
                 }
+                else if (filename.indexOf('.thm.json') >= 0) {
+                    this.themeFilenames.push(filename);
+                }
                 return [2 /*return*/, file];
             });
         });
     };
     ExmlPlugin.prototype.onFinish = function (pluginContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var dtsContents, result;
+            var dtsContents, exmlDTS, themeDatas, result;
             return __generator(this, function (_a) {
                 if (this.exmls.length == 0) {
                     return [2 /*return*/];
@@ -69,9 +75,23 @@ var ExmlPlugin = /** @class */ (function () {
                 });
                 if (this.publishPolicy == "debug") {
                     dtsContents = exml.generateExmlDTS(this.exmls);
-                    pluginContext.createFile('libs/exml.e.d.ts', new Buffer(dtsContents));
+                    if (!FileUtil.exists('libs/exml.e.d.ts')) {
+                        pluginContext.createFile('libs/exml.e.d.ts', new Buffer(dtsContents));
+                    }
+                    else {
+                        exmlDTS = FileUtil.read('libs/exml.e.d.ts');
+                        if (dtsContents !== exmlDTS) {
+                            pluginContext.createFile('libs/exml.e.d.ts', new Buffer(dtsContents));
+                        }
+                    }
                 }
-                result = exml.publishEXML(this.exmls, this.publishPolicy);
+                themeDatas = this.themeFilenames.map(function (filename) {
+                    var content = file.read(file.joinPath(egret.args.projectDir, filename));
+                    var data = JSON.parse(content);
+                    data.path = filename;
+                    return data;
+                });
+                result = exml.publishEXML(this.exmls, this.publishPolicy, themeDatas);
                 //屏蔽其他编译机制
                 if (result.EuiJson) {
                     result.EuiJson.forEach(function (item) {

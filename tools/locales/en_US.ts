@@ -74,6 +74,7 @@ locale_strings[1120] = "Egret engine 4.1 use the new structure for third-party l
 locale_strings[1121] = "Your module package.json does not contain the 'typings' attribute, which causes the exported module to not have a TypeScript Definition file (.d.ts), and can not contain smart syntax prompts in TypeScript"
 locale_strings[1122] = "Third-party library tsconfig.json must include outFile this attribute";
 locale_strings[1123] = "{0} will be adjusted to '{1}'";
+locale_strings[1124] = "The egret project in the form of a third-party library does not support the outDir generation rule.";
 //compile
 locale_strings[1301] = "Cannot find egret_file_list.js or game_file_list.js compiled under the path {0}, please check whether the compile path is correct";
 locale_strings[1302] = "Please enter the compile path. Example: {color_green}egret compile --source [your_typescript_source_dir] --output [your_output_dir]{color_normal}";
@@ -242,6 +243,7 @@ locale_strings[10019] = "Cannot find the projects used to build native apps. The
     + "Please visit http://www.egret.com to download the Egret Installer. If you have install Egret, please contact us.";
 locale_strings[10020] = "Compile service is exit unexpectedly";
 locale_strings[10021] = "Error with the folders, Please note the following items: 1. Please check  template/runtime/native_require.js, if it’s void, please recreate a new project and replace it.\n 2.Don’t create native project on the desktop, put all the files into a same place like E disk partition.\n  Please don’t execute the script immediately after configuration because of operation system refresh. If still doesn’t work after try several times, please send email to XX contact us.";
+locale_strings[10022] = "{0} file changes, automatic compilation is closed";
 
 locale_strings[12000] = "Create a new Egret Project";
 locale_strings[12001] = "Please select a template";

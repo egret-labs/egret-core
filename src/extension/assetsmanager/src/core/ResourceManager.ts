@@ -46,7 +46,7 @@ module RES {
 
         save(resource: ResourceInfo, data: any) {
             host.state[resource.root + resource.name] = 2;
-            resource.promise = undefined;
+            delete resource.promise;
             __tempCache[resource.root + resource.name] = data;
         },
 
@@ -91,7 +91,7 @@ module RES {
 
     }
     /**
-    * @internal
+    * @private
     */
     export class ResourceManagerError extends Error {
 
@@ -104,9 +104,8 @@ module RES {
             2002: "Analyzer 相关API 在 ResourceManager 中不再支持，请编写自定义 Processor ，更多内容请参见 https://github.com/egret-labs/resourcemanager/blob/master/docs/README.md#processor",
             2003: "{0}解析失败,错误原因:{1}",
             2004: "无法找到文件类型:{0}",
-            2005: "资源配置文件中无法找到特定的资源组:{0}",
-            2006: "资源配置文件中无法找到特定的资源:{0}",
-            2007: "RES加载了不存在或空的资源组:\"{0}\""
+            2005: "RES加载了不存在或空的资源组:\"{0}\"",
+            2006: "资源配置文件中无法找到特定的资源:{0}"
         }
 
         /**

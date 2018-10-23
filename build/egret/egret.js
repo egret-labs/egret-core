@@ -1102,6 +1102,9 @@ var egret;
          */
         DisplayObject.prototype.$setScaleX = function (value) {
             var self = this;
+            if (self.$scaleX == value) {
+                return;
+            }
             self.$scaleX = value;
             self.$matrixDirty = true;
             self.$updateUseTransform();
@@ -1160,6 +1163,9 @@ var egret;
          */
         DisplayObject.prototype.$setScaleY = function (value) {
             var self = this;
+            if (self.$scaleY == value) {
+                return;
+            }
             self.$scaleY = value;
             self.$matrixDirty = true;
             self.$updateUseTransform();
@@ -1377,7 +1383,11 @@ var egret;
          * 设置显示宽度
          */
         DisplayObject.prototype.$setWidth = function (value) {
-            this.$explicitWidth = isNaN(value) ? NaN : value;
+            value = isNaN(value) ? NaN : value;
+            if (this.$explicitWidth == value) {
+                return;
+            }
+            this.$explicitWidth = value;
         };
         Object.defineProperty(DisplayObject.prototype, "height", {
             /**
@@ -1415,7 +1425,11 @@ var egret;
          * 设置显示高度
          */
         DisplayObject.prototype.$setHeight = function (value) {
-            this.$explicitHeight = isNaN(value) ? NaN : value;
+            value = isNaN(value) ? NaN : value;
+            if (this.$explicitHeight == value) {
+                return;
+            }
+            this.$explicitHeight = value;
         };
         Object.defineProperty(DisplayObject.prototype, "measuredWidth", {
             /**
@@ -1477,9 +1491,24 @@ var egret;
          */
         DisplayObject.prototype.$setAnchorOffsetX = function (value) {
             var self = this;
+            if (self.$anchorOffsetX == value) {
+                return;
+            }
             self.$anchorOffsetX = value;
             if (egret.nativeRender) {
                 self.$nativeDisplayObject.setAnchorOffsetX(value);
+            }
+            else {
+                var p = self.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                var maskedObject = self.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
             }
             this.$checkAnchorChanged();
         };
@@ -1515,9 +1544,24 @@ var egret;
          */
         DisplayObject.prototype.$setAnchorOffsetY = function (value) {
             var self = this;
+            if (self.$anchorOffsetY == value) {
+                return;
+            }
             self.$anchorOffsetY = value;
             if (egret.nativeRender) {
                 self.$nativeDisplayObject.setAnchorOffsetY(value);
+            }
+            else {
+                var p = self.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                var maskedObject = self.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
             }
             this.$checkAnchorChanged();
         };
@@ -1557,6 +1601,9 @@ var egret;
         });
         DisplayObject.prototype.$setVisible = function (value) {
             var self = this;
+            if (self.$visible == value) {
+                return;
+            }
             self.$visible = value;
             if (egret.nativeRender) {
                 self.$nativeDisplayObject.setVisible(value);
@@ -1671,6 +1718,9 @@ var egret;
          */
         DisplayObject.prototype.$setAlpha = function (value) {
             var self = this;
+            if (self.$alpha == value) {
+                return;
+            }
             self.$alpha = value;
             if (egret.nativeRender) {
                 self.$nativeDisplayObject.setAlpha(value);
@@ -1731,7 +1781,7 @@ var egret;
          * @private
          */
         DisplayObject.prototype.$setTouchEnabled = function (value) {
-            this.$touchEnabled = value;
+            this.$touchEnabled = !!value;
         };
         Object.defineProperty(DisplayObject.prototype, "scrollRect", {
             /**
@@ -1807,6 +1857,16 @@ var egret;
             }
             if (!egret.nativeRender) {
                 self.$updateRenderMode();
+                var p = self.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                var maskedObject = self.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
             }
         };
         Object.defineProperty(DisplayObject.prototype, "blendMode", {
@@ -1835,6 +1895,9 @@ var egret;
             set: function (value) {
                 var self = this;
                 var mode = egret.sys.blendModeToNumber(value);
+                if (self.$blendMode == mode) {
+                    return;
+                }
                 self.$blendMode = mode;
                 if (egret.nativeRender) {
                     self.$nativeDisplayObject.setBlendMode(mode);
@@ -2955,8 +3018,8 @@ var egret;
          * 获取指定像素区域的颜色值
          * @param x  像素区域的X轴坐标
          * @param y  像素区域的Y轴坐标
-         * @param width  像素点的Y轴坐标
-         * @param height  像素点的Y轴坐标
+         * @param width  像素区域的宽度
+         * @param height  像素区域的高度
          * @returns  指定像素区域的颜色值
          * @version Egret 3.2.1
          * @platform Web
@@ -5729,11 +5792,24 @@ var egret;
                 return this.$smoothing;
             },
             set: function (value) {
+                var self = this;
                 if (value == this.$smoothing) {
                     return;
                 }
                 this.$smoothing = value;
                 this.$renderNode.smoothing = value;
+                if (!egret.nativeRender) {
+                    var p = self.$parent;
+                    if (p && !p.$cacheDirty) {
+                        p.$cacheDirty = true;
+                        p.$cacheDirtyUp();
+                    }
+                    var maskedObject = self.$maskedObject;
+                    if (maskedObject && !maskedObject.$cacheDirty) {
+                        maskedObject.$cacheDirty = true;
+                        maskedObject.$cacheDirtyUp();
+                    }
+                }
             },
             enumerable: true,
             configurable: true
@@ -12165,6 +12241,7 @@ var egret;
     locale_strings[1048] = "Video loading failed";
     locale_strings[1049] = "In the absence of sound is not allowed to play after loading";
     locale_strings[1050] = "ExternalInterface calls the method without js registration: {0}";
+    locale_strings[1051] = "runtime only support webgl render mode";
     //gui  3000-3099
     locale_strings[3000] = "Theme configuration file failed to load: {0}";
     locale_strings[3001] = "Cannot find the skin name which is configured in Theme: {0}";
@@ -12332,6 +12409,7 @@ var egret;
     locale_strings[1048] = "视频加载失败";
     locale_strings[1049] = "声音在没有加载完之前不允许播放";
     locale_strings[1050] = "ExternalInterface调用了js没有注册的方法: {0}";
+    locale_strings[1051] = "runtime 只支持 webgl 渲染模式";
     //gui  3000-3099
     locale_strings[3000] = "主题配置文件加载失败: {0}";
     locale_strings[3001] = "找不到主题中所配置的皮肤类名: {0}";
@@ -17907,6 +17985,18 @@ var egret;
                     return;
                 }
                 self.$smoothing = value;
+                if (!egret.nativeRender) {
+                    var p = self.$parent;
+                    if (p && !p.$cacheDirty) {
+                        p.$cacheDirty = true;
+                        p.$cacheDirtyUp();
+                    }
+                    var maskedObject = self.$maskedObject;
+                    if (maskedObject && !maskedObject.$cacheDirty) {
+                        maskedObject.$cacheDirty = true;
+                        maskedObject.$cacheDirtyUp();
+                    }
+                }
             },
             enumerable: true,
             configurable: true
@@ -19615,8 +19705,9 @@ var egret;
         });
         TextField.prototype.$setLineSpacing = function (value) {
             var values = this.$TextField;
-            if (values[1 /* lineSpacing */] == value)
+            if (values[1 /* lineSpacing */] == value) {
                 return false;
+            }
             values[1 /* lineSpacing */] = value;
             this.$invalidateTextField();
             if (egret.nativeRender) {
@@ -19789,6 +19880,9 @@ var egret;
              * @language zh_CN
              */
             set: function (value) {
+                if (this.$TextField[37 /* inputType */] == value) {
+                    return;
+                }
                 this.$TextField[37 /* inputType */] = value;
                 if (egret.nativeRender) {
                     this.$nativeDisplayObject.setInputType(value);
@@ -20068,7 +20162,11 @@ var egret;
              * @language zh_CN
              */
             set: function (value) {
-                this.$TextField[28 /* scrollV */] = Math.max(value, 1);
+                value = Math.max(value, 1);
+                if (value == this.$TextField[28 /* scrollV */]) {
+                    return;
+                }
+                this.$TextField[28 /* scrollV */] = value;
                 if (egret.nativeRender) {
                     this.$nativeDisplayObject.setScrollV(value);
                 }
@@ -20198,6 +20296,9 @@ var egret;
          * @param value
          */
         TextField.prototype.$setMultiline = function (value) {
+            if (this.$TextField[30 /* multiline */] == value) {
+                return false;
+            }
             this.$TextField[30 /* multiline */] = value;
             this.$invalidateTextField();
             if (egret.nativeRender) {
@@ -20397,7 +20498,11 @@ var egret;
          */
         TextField.prototype.$setBorder = function (value) {
             value = !!value;
+            if (this.$TextField[31 /* border */] == value) {
+                return;
+            }
             this.$TextField[31 /* border */] = value;
+            this.$invalidateTextField();
             if (egret.nativeRender) {
                 this.$nativeDisplayObject.setBorder(value);
             }
@@ -20433,7 +20538,11 @@ var egret;
          */
         TextField.prototype.$setBorderColor = function (value) {
             value = +value || 0;
+            if (this.$TextField[32 /* borderColor */] == value) {
+                return;
+            }
             this.$TextField[32 /* borderColor */] = value;
+            this.$invalidateTextField();
             if (egret.nativeRender) {
                 this.$nativeDisplayObject.setBorderColor(value);
             }
@@ -20470,7 +20579,11 @@ var egret;
          * @private
          */
         TextField.prototype.$setBackground = function (value) {
+            if (this.$TextField[33 /* background */] == value) {
+                return;
+            }
             this.$TextField[33 /* background */] = value;
+            this.$invalidateTextField();
             if (egret.nativeRender) {
                 this.$nativeDisplayObject.setBackground(value);
             }
@@ -20505,7 +20618,11 @@ var egret;
          * @private
          */
         TextField.prototype.$setBackgroundColor = function (value) {
+            if (this.$TextField[34 /* backgroundColor */] == value) {
+                return;
+            }
             this.$TextField[34 /* backgroundColor */] = value;
+            this.$invalidateTextField();
             if (egret.nativeRender) {
                 this.$nativeDisplayObject.setBackgroundColor(value);
             }

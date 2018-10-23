@@ -149,8 +149,21 @@ declare module RES {
         config: Data;
         constructor();
         init(): Promise<any>;
+        /**
+         * 根据组名获取组加载项列表
+         * @method RES.ResourceConfig#getGroupByName
+         * @param name {string} 组名
+         * @returns {Array<egret.ResourceItem>}
+         */
+        getGroupByName(name: string): ResourceInfo[];
         __temp__get__type__via__url(url_or_alias: string): string;
+        getResourceWithSubkey(key: string): {
+            r: ResourceInfo;
+            key: string;
+            subkey: string;
+        } | null;
         getKeyByAlias(aliasName: string): string;
+        getResource(path_or_alias: string): ResourceInfo | null;
         /**
          * 创建自定义的加载资源组,注意：此方法仅在资源配置文件加载完成后执行才有效。
          * 可以监听ResourceEvent.CONFIG_COMPLETE事件来确认配置加载完成。
@@ -169,16 +182,9 @@ declare module RES {
          */
         addSubkey(subkey: string, name: string): void;
         addAlias(alias: any, key: any): void;
-        /**
-         * 获取加载项类型。
-         * @method RES.ResourceConfig#getType
-         * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
-         * @returns {string}
-         */
-        getType(key: string): string;
         addResourceData(data: {
             name: string;
-            type?: string;
+            type: string;
             url: string;
             root?: string;
             extra?: 1 | undefined;
@@ -352,6 +358,23 @@ declare module RES {
      */
     function registerAnalyzer(type: string, analyzerClass: any): void;
     /**
+    * Set whether it is compatible mode
+    * When the value is true, the assetsManager will output the design of Res. When it is false, all the loaded resources will be returned as promises.
+    * The default is false, run in strict assetsManager mode
+    * @version Egret 5.2.9
+    * @platform Web,Native
+    * @language en_US
+    */
+    /**
+     * 设置是否为兼容模式
+     * 当值为true时，assetsManager会以Res的设计输出，当为false时候，所有的加载资源都会以promise的方式返回
+     * 默认是false，以严格assetsManager方式运行
+     * @version Egret 5.2.9
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    function setIsCompatible(value: boolean): void;
+    /**
      * Load configuration file and parse.
      * @param url The url address of the resource config
      * @param resourceRoot The root address of the resource config
@@ -519,8 +542,44 @@ declare module RES {
      * @language zh_CN
      */
     function getRes(key: string): any;
-    function getResAsync(key: string): Promise<any>;
-    function getResAsync(key: string, compFunc: GetResAsyncCallback, thisObject: any): Promise<any>;
+    /**
+     * Asynchronous mode to get the resources in the configuration. As long as the resources exist in the configuration file, you can get it in an asynchronous way.
+     * @param key A sbuKeys attribute or name property in a configuration file.
+     * @see #setMaxRetryTimes
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language en_US
+    */
+    /**
+     * 异步方式获取配置里的资源。只要是配置文件里存在的资源，都可以通过异步方式获取。
+     * @param key 对应配置文件里的 name 属性或 sbuKeys 属性的一项。
+     * @see #setMaxRetryTimes
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    function getResAsync(key: string): Promise<any> | void;
+    /**
+     * Asynchronous mode to get the resources in the configuration. As long as the resources exist in the configuration file, you can get it in an asynchronous way.
+     * @param key A sbuKeys attribute or name property in a configuration file.
+     * @param compFunc Call back function. Example：compFunc(data,key):void.
+     * @param thisObject This pointer of call back function.
+     * @see #setMaxRetryTimes
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * 异步方式获取配置里的资源。只要是配置文件里存在的资源，都可以通过异步方式获取。
+     * @param key 对应配置文件里的 name 属性或 sbuKeys 属性的一项。
+     * @param compFunc 回调函数。示例：compFunc(data,key):void。
+     * @param thisObject 回调函数的 this 引用。
+     * @see #setMaxRetryTimes
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    function getResAsync(key: string, compFunc: GetResAsyncCallback, thisObject: any): Promise<any> | void;
     /**
      * Access to external resources through the full URL.
      * @param url The external path to load the file.
@@ -541,7 +600,7 @@ declare module RES {
      * @platform Web,Native
      * @language zh_CN
      */
-    function getResByUrl(url: string, compFunc: Function, thisObject: any, type?: string): void;
+    function getResByUrl(url: string, compFunc?: Function, thisObject?: any, type?: string): Promise<any>;
     /**
      * Destroy a single resource file or a set of resources to the cache data, to return whether to delete success.
      * @param name Name attribute or resource group name of the load item in the configuration file.
@@ -797,7 +856,7 @@ declare module RES {
          * @param thisObject {any}
          * @param type {string}
          */
-        getResByUrl(url: string, compFunc: Function, thisObject: any, type?: string): Promise<any>;
+        getResByUrl(url: string, compFunc?: Function, thisObject?: any, type?: string): Promise<any>;
         /**
          * 销毁单个资源文件或一组资源的缓存数据,返回是否删除成功。
          * @method RES.destroyRes
@@ -975,6 +1034,12 @@ declare module RES.processor {
      * @language zh_CN
      */
     function map(type: string, processor: Processor): void;
+    /**
+     * @private
+     * @param url
+     * @param file
+     */
+    function getRelativePath(url: string, file: string): string;
     var ImageProcessor: Processor;
     var BinaryProcessor: Processor;
     var TextProcessor: Processor;
@@ -1328,10 +1393,34 @@ declare module RES {
 }
 declare module RES {
     /**
+     * assetsManager underlying storage resource information
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * assetsManager底层存储资源信息
+     * @version Egret 5.2
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    interface File {
+        url: string;
+        type: string;
+        name: string;
+        root: string;
+    }
+    /**
     * @private
     */
     interface FileSystem {
-        addFile(filename: string, type?: string, root?: string, extra?: 1 | undefined): any;
+        addFile(data: {
+            name: string;
+            type: string;
+            url: string;
+            root?: string;
+            extra?: 1 | undefined;
+        }): any;
         getFile(filename: string): File | null;
         profile(): void;
         removeFile(filename: string): any;
@@ -1364,6 +1453,27 @@ declare module RES {
         save: (rexource: ResourceInfo, data: any) => void;
         get: (resource: ResourceInfo) => any;
         remove: (resource: ResourceInfo) => void;
+    }
+    /**
+    * @private
+    */
+    class ResourceManagerError extends Error {
+        static errorMessage: {
+            1001: string;
+            1002: string;
+            2001: string;
+            2002: string;
+            2003: string;
+            2004: string;
+            2005: string;
+            2006: string;
+        };
+        /**
+         * why instanceof e  != ResourceManagerError ???
+         * see link : https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
+         */
+        private __resource_manager_error__;
+        constructor(code: number, replacer?: Object, replacer2?: Object);
     }
 }
 declare namespace RES {

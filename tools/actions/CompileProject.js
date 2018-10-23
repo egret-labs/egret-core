@@ -14,6 +14,7 @@ var CompileProject = /** @class */ (function () {
     };
     CompileProject.prototype.compileProject = function (args, files) {
         //console.log("----compileProject.compileProject----")
+        //增量编译会走到这里面，egret run -a / egret b
         if (files && this.compilerHost) { // console.log("----compileProject.compileProject.B-----")
             // files.forEach(f => f.fileName = f.fileName.replace(args.projectDir, ""));
             // var realCWD = process.cwd();

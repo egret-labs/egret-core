@@ -984,13 +984,13 @@ var eui;
 /// <reference path="Validator.ts" />
 var eui;
 (function (eui) {
-    function getAssets(source, callback) {
+    function getAssets(source, callback, thisObject) {
         var adapter = egret.getImplementation("eui.IAssetAdapter");
         if (!adapter) {
             adapter = new eui.DefaultAssetAdapter();
         }
         adapter.getAsset(source, function (content) {
-            callback(content);
+            callback.call(thisObject, content);
         }, this);
     }
     eui.getAssets = getAssets;
@@ -10528,24 +10528,23 @@ var eui;
          * 解析source
          */
         Image.prototype.parseSource = function () {
-            var _this = this;
             this.sourceChanged = false;
             var source = this._source;
             if (source && typeof source == "string") {
                 eui.getAssets(this._source, function (data) {
-                    if (source !== _this._source)
+                    if (source !== this._source)
                         return;
                     if (!egret.is(data, "egret.Texture")) {
                         return;
                     }
-                    _this.$setTexture(data);
+                    this.$setTexture(data);
                     if (data) {
-                        _this.dispatchEventWith(egret.Event.COMPLETE);
+                        this.dispatchEventWith(egret.Event.COMPLETE);
                     }
                     else if (true) {
                         egret.$warn(2301, source);
                     }
-                });
+                }, this);
             }
             else {
                 this.$setTexture(source);
@@ -14652,7 +14651,10 @@ var eui;
          * @param scrollPos
          */
         Scroller.prototype.horizontalUpdateHandler = function (scrollPos) {
-            this.$Scroller[10 /* viewport */].scrollH = scrollPos;
+            var viewport = this.$Scroller[10 /* viewport */];
+            if (viewport) {
+                viewport.scrollH = scrollPos;
+            }
             this.dispatchEventWith(egret.Event.CHANGE);
         };
         /**
@@ -14661,7 +14663,10 @@ var eui;
          * @param scrollPos
          */
         Scroller.prototype.verticalUpdateHandler = function (scrollPos) {
-            this.$Scroller[10 /* viewport */].scrollV = scrollPos;
+            var viewport = this.$Scroller[10 /* viewport */];
+            if (viewport) {
+                viewport.scrollV = scrollPos;
+            }
             this.dispatchEventWith(egret.Event.CHANGE);
         };
         /**
@@ -20807,13 +20812,12 @@ var eui;
          * 解析source
          */
         BitmapLabel.prototype.$parseFont = function () {
-            var _this = this;
             this.$fontChanged = false;
             var font = this.$fontForBitmapLabel;
             if (typeof font == "string") {
                 eui.getAssets(font, function (bitmapFont) {
-                    _this.$setFontData(bitmapFont, font);
-                });
+                    this.$setFontData(bitmapFont, font);
+                }, this);
             }
             else {
                 this.$setFontData(font);
