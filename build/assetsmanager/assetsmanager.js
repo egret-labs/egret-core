@@ -2060,6 +2060,9 @@ var RES;
                         }
                         host.save(r, bitmapData);
                         return spriteSheet;
+                    }, function (e) {
+                        host.remove(r);
+                        throw e;
                     });
                 });
             },
@@ -2131,6 +2134,9 @@ var RES;
                         // todo refactor
                         host.save(r, texture);
                         return font;
+                    }, function (e) {
+                        host.remove(r);
+                        throw e;
                     });
                 });
             },

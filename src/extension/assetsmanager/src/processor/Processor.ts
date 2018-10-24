@@ -270,6 +270,9 @@ module RES.processor {
                         }
                         host.save(r as ResourceInfo, bitmapData);
                         return spriteSheet;
+                    }, function (e) {
+                        host.remove(r!);
+                        throw e;
                     })
             })
         },
@@ -352,6 +355,9 @@ module RES.processor {
                     // todo refactor
                     host.save(r as ResourceInfo, texture);
                     return font;
+                }, function (e) {
+                    host.remove(r!);
+                    throw e;
                 })
             })
         },
