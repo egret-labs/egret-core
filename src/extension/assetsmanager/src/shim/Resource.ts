@@ -920,16 +920,20 @@ module RES {
          * @returns {boolean}
          */
         destroyRes(name: string, force: boolean = true) {
-            var group = config.getGroupByName(name);
+            const group = config.getGroupByName(name);
             if (group && group.length > 0) {
+                const index = config.config.loadGroup.indexOf(name);
+                if(index == -1) {
+                    return false;
+                }
                 if (force || (config.config.loadGroup.length == 1 && config.config.loadGroup[0] == name)) {
                     for (let item of group) {
-                        queue.unloadResource(item)
+                        queue.unloadResource(item);
                     }
-                    let index = config.config.loadGroup.indexOf(name);
+
                     config.config.loadGroup.splice(index, 1);
                 } else {
-                    let removeItemHash = {};
+                    const removeItemHash = {};
                     for (let groupName of config.config.loadGroup) {
                         for (let key in config.config.groups[groupName]) {
                             const tmpname = config.config.groups[groupName][key];
@@ -940,21 +944,17 @@ module RES {
                             }
                         }
                     }
-                    for (let tmpname in removeItemHash) {
-                        if (removeItemHash[tmpname] && removeItemHash[tmpname] == 1) {
-                            let item = config.getResource(tmpname);
-                            if (item) {
-                                queue.unloadResource(item)
-                            }
+                    for (let item of group) {
+                        if (removeItemHash[item.name] && removeItemHash[item.name] == 1) {
+                            queue.unloadResource(item);
                         }
                     }
-                    let index = config.config.loadGroup.indexOf(name);
                     config.config.loadGroup.splice(index, 1);
                 }
                 return true;
             }
             else {
-                let item = config.getResource(name);
+                const item = config.getResource(name);
                 if (item) {
                     return queue.unloadResource(item);
                 }
