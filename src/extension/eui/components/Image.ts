@@ -152,7 +152,7 @@ namespace eui {
             if (value == this.$fillMode) {
                 return;
             }
-            this.$fillMode = value;
+            super.$setFillMode(value);
             this.invalidateDisplayList();
         }
 
