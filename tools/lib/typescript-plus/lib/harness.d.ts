@@ -653,7 +653,7 @@ declare namespace compiler {
         symlinks?: vfs.FileSet;
         private _inputs;
         private _inputsAndOutputs;
-        constructor(host: fakes.CompilerHost, options: ts.CompilerOptions, program: ts.Program | undefined, result: ts.EmitResult | undefined, diagnostics: ts.Diagnostic[]);
+        constructor(host: fakes.CompilerHost, options: ts.CompilerOptions, program: ts.Program | undefined, result: ts.EmitResult | undefined, diagnostics: ReadonlyArray<ts.Diagnostic>);
         readonly vfs: vfs.FileSystem;
         readonly inputs: ReadonlyArray<documents.TextDocument>;
         readonly outputs: ReadonlyArray<documents.TextDocument>;
@@ -857,6 +857,7 @@ declare namespace ts.server {
         private convertChanges;
         convertTextChangeToCodeEdit(change: protocol.CodeEdit, fileName: string): TextChange;
         getBraceMatchingAtPosition(fileName: string, position: number): TextSpan[];
+        configurePlugin(pluginName: string, configuration: any): void;
         getIndentationAtPosition(_fileName: string, _position: number, _options: EditorOptions): number;
         getSyntacticClassifications(_fileName: string, _span: TextSpan): ClassifiedSpan[];
         getSemanticClassifications(_fileName: string, _span: TextSpan): ClassifiedSpan[];
@@ -892,7 +893,7 @@ declare abstract class RunnerBase {
     static removeFullPaths(path: string): string;
 }
 declare namespace Harness.SourceMapRecorder {
-    function getSourceMapRecord(sourceMapDataList: ReadonlyArray<ts.SourceMapData>, program: ts.Program, jsFiles: ReadonlyArray<documents.TextDocument>, declarationFiles: ReadonlyArray<documents.TextDocument>): string;
+    function getSourceMapRecord(sourceMapDataList: ReadonlyArray<ts.SourceMapEmitResult>, program: ts.Program, jsFiles: ReadonlyArray<documents.TextDocument>, declarationFiles: ReadonlyArray<documents.TextDocument>): string;
 }
 declare var _chai: typeof chai;
 declare var assert: typeof _chai.assert;
@@ -966,7 +967,7 @@ declare namespace Harness {
         getExecutingFilePath(): string;
         getWorkspaceRoot(): string;
         exit(exitCode?: number): void;
-        readDirectory(path: string, extension?: ReadonlyArray<string>, exclude?: ReadonlyArray<string>, include?: ReadonlyArray<string>, depth?: number): string[];
+        readDirectory(path: string, extension?: ReadonlyArray<string>, exclude?: ReadonlyArray<string>, include?: ReadonlyArray<string>, depth?: number): ReadonlyArray<string>;
         getAccessibleFileSystemEntries(dirname: string): ts.FileSystemEntries;
         tryEnableSourceMapsForHost?(): void;
         getEnvironmentVariable?(name: string): string;
@@ -1105,6 +1106,7 @@ declare namespace Harness {
     function getConfigNameFromFileName(filename: string): "tsconfig.json" | "jsconfig.json" | undefined;
 }
 declare namespace Harness.LanguageService {
+    function makeDefaultProxy(info: ts.server.PluginCreateInfo): ts.LanguageService;
     class ScriptInfo {
         fileName: string;
         content: string;
@@ -1186,8 +1188,8 @@ declare namespace Harness.LanguageService {
     }
     class ShimLanguageServiceHost extends LanguageServiceAdapterHost implements ts.LanguageServiceShimHost, ts.CoreServicesShimHost {
         private nativeHost;
-        getModuleResolutionsForFile: (fileName: string) => string;
-        getTypeReferenceDirectiveResolutionsForFile: (fileName: string) => string;
+        getModuleResolutionsForFile: ((fileName: string) => string) | undefined;
+        getTypeReferenceDirectiveResolutionsForFile: ((fileName: string) => string) | undefined;
         constructor(preprocessToResolve: boolean, cancellationToken?: ts.HostCancellationToken, options?: ts.CompilerOptions);
         getFilenames(): string[];
         getScriptInfo(fileName: string): ScriptInfo | undefined;
@@ -1329,6 +1331,7 @@ declare namespace ts.TestFSWithWatch {
         private readonly currentDirectory;
         private readonly dynamicPriorityWatchFile;
         private readonly customRecursiveWatchDirectory;
+        require: ((initialPath: string, moduleName: string) => server.RequireResult) | undefined;
         constructor(withSafeList: boolean, useCaseSensitiveFileNames: boolean, executingFilePath: string, currentDirectory: string, fileOrFolderorSymLinkList: ReadonlyArray<FileOrFolderOrSymLink>, newLine?: string, useWindowsStylePath?: boolean | undefined, environmentVariables?: Map<string> | undefined);
         getNewLine(): string;
         toNormalizedAbsolutePath(s: string): string;
@@ -1403,6 +1406,9 @@ declare namespace ts.TestFSWithWatch {
         exit(exitCode?: number): void;
         getEnvironmentVariable(name: string): string;
     }
+    const tsbuildProjectsLocation = "/user/username/projects";
+    function getTsBuildProjectFilePath(project: string, file: string): string;
+    function getTsBuildProjectFile(project: string, file: string): File;
 }
 declare namespace FourSlash {
     import ArrayOrSingle = FourSlashInterface.ArrayOrSingle;
@@ -1513,38 +1519,10 @@ declare namespace FourSlash {
         private verifyDefinitionTextSpan;
         verifyGetEmitOutputForCurrentFile(expected: string): void;
         verifyGetEmitOutputContentsForCurrentFile(expected: ts.OutputFile[]): void;
-        verifyCompletionListCount(expectedCount: number, negative: boolean): void;
-        verifyCompletionListItemsCountIsGreaterThan(count: number, negative: boolean): void;
-        verifyCompletionListStartsWithItemsInOrder(items: string[]): void;
-        noItemsWithSameNameButDifferentKind(): void;
-        verifyCompletionListIsEmpty(negative: boolean): void;
-        verifyCompletionListAllowsNewIdentifier(negative: boolean): void;
-        verifyCompletionListIsGlobal(expected: boolean): void;
         verifyCompletions(options: FourSlashInterface.VerifyCompletionsOptions): void;
         private verifyCompletionsWorker;
         private verifyCompletionEntry;
         private verifyCompletionsAreExactly;
-        verifyCompletionsAt(markerName: string | ReadonlyArray<string>, expected: ReadonlyArray<FourSlashInterface.ExpectedCompletionEntry>, options?: FourSlashInterface.CompletionsAtOptions): void;
-        verifyCompletionListContains(entryId: ts.Completions.CompletionEntryIdentifier, text?: string, documentation?: string, kind?: string | {
-            kind?: string;
-            kindModifiers?: string;
-        }, spanIndex?: number, hasAction?: boolean, options?: FourSlashInterface.VerifyCompletionListContainsOptions): void;
-        /**
-         * Verify that the completion list does NOT contain the given symbol.
-         * The symbol is considered matched with the symbol in the list if and only if all given parameters must matched.
-         * When any parameter is omitted, the parameter is ignored during comparison and assumed that the parameter with
-         * that property of the symbol in the list.
-         * @param symbol the name of symbol
-         * @param expectedText the text associated with the symbol
-         * @param expectedDocumentation the documentation text associated with the symbol
-         * @param expectedKind the kind of symbol (see ScriptElementKind)
-         * @param spanIndex the index of the range that the completion item's replacement text span should match
-         */
-        verifyCompletionListDoesNotContain(entryId: ts.Completions.CompletionEntryIdentifier, expectedText?: string, expectedDocumentation?: string, expectedKind?: string | {
-            kind?: string;
-            kindModifiers?: string;
-        }, spanIndex?: number, options?: FourSlashInterface.CompletionsAtOptions): void;
-        verifyCompletionEntryDetails(entryName: string, expectedText: string, expectedDocumentation?: string, kind?: string, tags?: ts.JSDocTagInfo[]): void;
         /** Use `getProgram` instead of accessing this directly. */
         private _program;
         /** Use `getChecker` instead of accessing this directly. */
@@ -1575,7 +1553,7 @@ declare namespace FourSlash {
         getSemanticDiagnostics(expected: ReadonlyArray<FourSlashInterface.Diagnostic>): void;
         getSuggestionDiagnostics(expected: ReadonlyArray<FourSlashInterface.Diagnostic>): void;
         private testDiagnostics;
-        verifyQuickInfoAt(markerName: string, expectedText: string, expectedDocumentation?: string): void;
+        verifyQuickInfoAt(markerName: string | Range, expectedText: string, expectedDocumentation?: string): void;
         verifyQuickInfos(namesAndTexts: {
             [name: string]: string | [string, string];
         }): void;
@@ -1586,11 +1564,7 @@ declare namespace FourSlash {
             findInComments?: boolean;
             ranges?: Range[];
         }): void;
-        verifyRenameLocations(startRanges: ArrayOrSingle<Range>, options: ReadonlyArray<Range> | {
-            findInStrings?: boolean;
-            findInComments?: boolean;
-            ranges: ReadonlyArray<Range>;
-        }): void;
+        verifyRenameLocations(startRanges: ArrayOrSingle<Range>, options: FourSlashInterface.RenameLocationsOptions): void;
         verifyQuickInfoExists(negative: boolean): void;
         verifySignatureHelpPresence(expectPresent: boolean, triggerReason: ts.SignatureHelpTriggerReason | undefined, markers: ReadonlyArray<string>): void;
         verifySignatureHelp(optionses: ReadonlyArray<FourSlashInterface.VerifySignatureHelpOptions>): void;
@@ -1638,6 +1612,7 @@ declare namespace FourSlash {
         private removeWhitespace;
         goToBOF(): void;
         goToEOF(): void;
+        private goToMarkerOrRange;
         goToRangeStart({ fileName, pos }: Range): void;
         goToTypeDefinition(definitionIndex: number): void;
         verifyTypeDefinitionsCount(negative: boolean, expectedCount: number): void;
@@ -1694,16 +1669,6 @@ declare namespace FourSlash {
          */
         verifyRangeAfterCodeFix(expectedText: string, includeWhiteSpace?: boolean, errorCode?: number, index?: number): void;
         verifyCodeFixAll({ fixId, fixAllDescription, newFileContent, commands: expectedCommands }: FourSlashInterface.VerifyCodeFixAllOptions): void;
-        /**
-         * Applies fixes for the errors in fileName and compares the results to
-         * expectedContents after all fixes have been applied.
-         *
-         * Note: applying one codefix may generate another (eg: remove duplicate implements
-         * may generate an extends -> interface conversion fix).
-         * @param expectedContents The contents of the file after the fixes are applied.
-         * @param fileName The file to check. If not supplied, the current open file is used.
-         */
-        verifyFileAfterCodeFix(expectedContents: string, fileName?: string): void;
         verifyCodeFix(options: FourSlashInterface.VerifyCodeFixOptions): void;
         private verifyNewContent;
         private verifyNewContentAfterChange;
@@ -1712,7 +1677,6 @@ declare namespace FourSlash {
          * @param fileName Path to file where error should be retrieved from.
          */
         private getCodeFixes;
-        private applyCodeActions;
         private applyChanges;
         verifyImportFixAtPosition(expectedTextArray: string[], errorCode: number | undefined, preferences: ts.UserPreferences | undefined): void;
         verifyDocCommentTemplate(expected: ts.TextInsertion | undefined): void;
@@ -1749,7 +1713,6 @@ declare namespace FourSlash {
         private getSelection;
         verifyRefactorAvailable(negative: boolean, name: string, actionName?: string): void;
         verifyRefactorsAvailable(names: ReadonlyArray<string>): void;
-        verifyRefactor({ name, actionName, refactors }: FourSlashInterface.VerifyRefactorOptions): void;
         verifyApplicableRefactorAvailableForRange(negative: boolean): void;
         applyRefactor({ refactorName, actionName, actionDescription, newContent: newContentWithRenameMarker }: FourSlashInterface.ApplyRefactorOptions): void;
         private static parseNewContent;
@@ -1759,12 +1722,10 @@ declare namespace FourSlash {
         verifyFileAfterApplyingRefactorAtMarker(markerName: string, expectedContent: string, refactorNameToApply: string, actionName: string, formattingOptions?: ts.FormatCodeSettings): void;
         printAvailableCodeFixes(): void;
         private getCurrentLineContent;
-        private assertItemInCompletionList;
         private findFile;
         private tryFindFileWorker;
         private hasFile;
         private getLineColStringAtPosition;
-        private getTextSpanForRangeAtIndex;
         getMarkerByName(markerName: string): Marker;
         setCancelled(numberOfCalls: number): void;
         resetCancelled(): void;
@@ -1773,6 +1734,7 @@ declare namespace FourSlash {
         private getApplicableRefactors;
         private getApplicableRefactorsWorker;
         generateTypes(examples: ReadonlyArray<FourSlashInterface.GenerateTypesOptions>): void;
+        configurePlugin(pluginName: string, configuration: any): void;
     }
     function runFourSlashTest(basePath: string, testType: FourSlashTestType, fileName: string): void;
     function runFourSlashTestContent(basePath: string, testType: FourSlashTestType, content: string, fileName: string): void;
@@ -1791,6 +1753,11 @@ declare namespace FourSlashInterface {
         markerByName(s: string): FourSlash.Marker;
         symbolsInScope(range: FourSlash.Range): ts.Symbol[];
         setTypesRegistry(map: ts.MapLike<void>): void;
+    }
+    class Plugins {
+        private state;
+        constructor(state: FourSlash.TestState);
+        configurePlugin(pluginName: string, configuration: any): void;
     }
     class GoTo {
         private state;
@@ -1812,22 +1779,9 @@ declare namespace FourSlashInterface {
     class VerifyNegatable {
         protected state: FourSlash.TestState;
         private negative;
-        not: VerifyNegatable;
-        allowedClassElementKeywords: string[];
-        allowedConstructorParameterKeywords: string[];
+        not: VerifyNegatable | undefined;
         constructor(state: FourSlash.TestState, negative?: boolean);
-        completionListCount(expectedCount: number): void;
-        completionListContains(entryId: string | ts.Completions.CompletionEntryIdentifier, text?: string, documentation?: string, kind?: string | {
-            kind?: string;
-            kindModifiers?: string;
-        }, spanIndex?: number, hasAction?: boolean, options?: VerifyCompletionListContainsOptions): void;
-        completionListItemsCountIsGreaterThan(count: number): void;
         assertHasRanges(ranges: FourSlash.Range[]): void;
-        completionListIsEmpty(): void;
-        completionListContainsClassElementKeywords(): void;
-        completionListContainsConstructorParameterKeywords(): void;
-        completionListIsGlobal(expected: boolean): void;
-        completionListAllowsNewIdentifier(): void;
         noSignatureHelp(...markers: string[]): void;
         noSignatureHelpForTriggerReason(reason: ts.SignatureHelpTriggerReason, ...markers: string[]): void;
         signatureHelpPresentForTriggerReason(reason: ts.SignatureHelpTriggerReason, ...markers: string[]): void;
@@ -1848,15 +1802,13 @@ declare namespace FourSlashInterface {
         applicableRefactorAvailableAtMarker(markerName: string): void;
         applicableRefactorAvailableForRange(): void;
         refactorsAvailable(names: ReadonlyArray<string>): void;
-        refactor(options: VerifyRefactorOptions): void;
         refactorAvailable(name: string, actionName?: string): void;
     }
     class Verify extends VerifyNegatable {
         constructor(state: FourSlash.TestState);
-        completionsAt(markerName: ArrayOrSingle<string>, completions: ReadonlyArray<ExpectedCompletionEntry>, options?: CompletionsAtOptions): void;
         completions(...optionsArray: VerifyCompletionsOptions[]): void;
         quickInfoIs(expectedText: string, expectedDocumentation?: string): void;
-        quickInfoAt(markerName: string, expectedText: string, expectedDocumentation?: string): void;
+        quickInfoAt(markerName: string | FourSlash.Range, expectedText: string, expectedDocumentation?: string): void;
         quickInfos(namesAndTexts: {
             [name: string]: string;
         }): void;
@@ -1934,7 +1886,6 @@ declare namespace FourSlashInterface {
         rangesWithSameTextAreDocumentHighlights(): void;
         documentHighlightsOf(startRange: FourSlash.Range, ranges: FourSlash.Range[], options?: VerifyDocumentHighlightsOptions): void;
         noDocumentHighlights(startRange: FourSlash.Range): void;
-        completionEntryDetailIs(entryName: string, text: string, documentation?: string, kind?: string, tags?: ts.JSDocTagInfo[]): void;
         /**
          * This method *requires* a contiguous, complete, and ordered stream of classifications for a file.
          */
@@ -1948,11 +1899,7 @@ declare namespace FourSlashInterface {
         semanticClassificationsAre(...classifications: Classification[]): void;
         renameInfoSucceeded(displayName?: string, fullDisplayName?: string, kind?: string, kindModifiers?: string, fileToRename?: string, expectedRange?: FourSlash.Range): void;
         renameInfoFailed(message?: string): void;
-        renameLocations(startRanges: ArrayOrSingle<FourSlash.Range>, options: FourSlash.Range[] | {
-            findInStrings?: boolean;
-            findInComments?: boolean;
-            ranges: FourSlash.Range[];
-        }): void;
+        renameLocations(startRanges: ArrayOrSingle<FourSlash.Range>, options: RenameLocationsOptions): void;
         verifyQuickInfoDisplayParts(kind: string, kindModifiers: string, textSpan: FourSlash.TextSpan, displayParts: ts.SymbolDisplayPart[], documentation: ts.SymbolDisplayPart[], tags: ts.JSDocTagInfo[]): void;
         getSyntacticDiagnostics(expected: ReadonlyArray<Diagnostic>): void;
         getSemanticDiagnostics(expected: ReadonlyArray<Diagnostic>): void;
@@ -1967,6 +1914,7 @@ declare namespace FourSlashInterface {
     interface GenerateTypesOptions {
         readonly name?: string;
         readonly value: unknown;
+        readonly global?: boolean;
         readonly output?: string;
         readonly outputBaseline?: string;
     }
@@ -2052,6 +2000,27 @@ declare namespace FourSlashInterface {
         function jsxText(text: string, position?: number): Classification;
         function jsxAttributeStringLiteralValue(text: string, position?: number): Classification;
     }
+    namespace Completion {
+        const keywordsWithUndefined: ReadonlyArray<ExpectedCompletionEntryObject>;
+        const keywords: ReadonlyArray<ExpectedCompletionEntryObject>;
+        const typeKeywords: ReadonlyArray<ExpectedCompletionEntryObject>;
+        const globalTypes: ReadonlyArray<ExpectedCompletionEntry>;
+        function globalTypesPlus(plus: ReadonlyArray<ExpectedCompletionEntry>): ReadonlyArray<ExpectedCompletionEntry>;
+        const classElementKeywords: ReadonlyArray<ExpectedCompletionEntryObject>;
+        const constructorParameterKeywords: ReadonlyArray<ExpectedCompletionEntryObject>;
+        const functionMembers: ReadonlyArray<ExpectedCompletionEntryObject>;
+        const stringMembers: ReadonlyArray<ExpectedCompletionEntryObject>;
+        const functionMembersWithPrototype: ReadonlyArray<ExpectedCompletionEntryObject>;
+        const statementKeywordsWithTypes: ReadonlyArray<ExpectedCompletionEntryObject>;
+        const statementKeywords: ReadonlyArray<ExpectedCompletionEntryObject>;
+        const globalsVars: ReadonlyArray<ExpectedCompletionEntryObject>;
+        const globalsInsideFunction: (plus: ReadonlyArray<ExpectedCompletionEntry>) => ReadonlyArray<ExpectedCompletionEntry>;
+        const globalKeywords: ReadonlyArray<ExpectedCompletionEntryObject>;
+        const insideMethodKeywords: ReadonlyArray<ExpectedCompletionEntryObject>;
+        const globalKeywordsPlusUndefined: ReadonlyArray<ExpectedCompletionEntryObject>;
+        const globals: ReadonlyArray<ExpectedCompletionEntryObject>;
+        function globalsPlus(plus: ReadonlyArray<ExpectedCompletionEntry>): ReadonlyArray<ExpectedCompletionEntry>;
+    }
     interface ReferenceGroup {
         definition: ReferenceGroupDefinition;
         ranges: FourSlash.Range[];
@@ -2066,7 +2035,8 @@ declare namespace FourSlashInterface {
         actionDescription: string;
         newContent: NewFileContent;
     }
-    type ExpectedCompletionEntry = string | {
+    type ExpectedCompletionEntry = string | ExpectedCompletionEntryObject;
+    interface ExpectedCompletionEntryObject {
         readonly name: string;
         readonly source?: string;
         readonly insertText?: string;
@@ -2074,24 +2044,19 @@ declare namespace FourSlashInterface {
         readonly hasAction?: boolean;
         readonly isRecommended?: boolean;
         readonly kind?: string;
-        readonly text: string;
-        readonly documentation: string;
+        readonly kindModifiers?: string;
+        readonly text?: string;
+        readonly documentation?: string;
         readonly sourceDisplay?: string;
         readonly tags?: ReadonlyArray<ts.JSDocTagInfo>;
-    };
-    interface CompletionsAtOptions extends Partial<ts.UserPreferences> {
-        triggerCharacter?: ts.CompletionsTriggerCharacter;
-        isNewIdentifierLocation?: boolean;
     }
     interface VerifyCompletionsOptions {
         readonly marker?: ArrayOrSingle<string | FourSlash.Marker>;
         readonly isNewIdentifierLocation?: boolean;
+        readonly isGlobalCompletion?: boolean;
         readonly exact?: ArrayOrSingle<ExpectedCompletionEntry>;
         readonly includes?: ArrayOrSingle<ExpectedCompletionEntry>;
-        readonly excludes?: ArrayOrSingle<string | {
-            readonly name: string;
-            readonly source: string;
-        }>;
+        readonly excludes?: ArrayOrSingle<string>;
         readonly preferences?: ts.UserPreferences;
         readonly triggerCharacter?: ts.CompletionsTriggerCharacter;
     }
@@ -2168,7 +2133,7 @@ declare namespace FourSlashInterface {
     interface VerifyRefactorOptions {
         name: string;
         actionName: string;
-        refactors: ts.ApplicableRefactorInfo[];
+        refactors: ReadonlyArray<ts.ApplicableRefactorInfo>;
     }
     interface VerifyCompletionActionOptions extends NewContentOptions {
         name: string;
@@ -2196,6 +2161,16 @@ declare namespace FourSlashInterface {
         };
         readonly preferences?: ts.UserPreferences;
     }
+    type RenameLocationsOptions = ReadonlyArray<RenameLocationOptions> | {
+        readonly findInStrings?: boolean;
+        readonly findInComments?: boolean;
+        readonly ranges: ReadonlyArray<RenameLocationOptions>;
+    };
+    type RenameLocationOptions = FourSlash.Range | {
+        readonly range: FourSlash.Range;
+        readonly prefixText?: string;
+        readonly suffixText?: string;
+    };
 }
 interface TypeWriterTypeResult {
     line: number;

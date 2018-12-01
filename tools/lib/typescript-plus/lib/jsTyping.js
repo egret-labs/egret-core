@@ -37,7 +37,6 @@ var ts;
                 : undefined;
         }
         server.findArgument = findArgument;
-        /*@internal*/
         function nowString() {
             // E.g. "12:34:56.789"
             var d = new Date();
@@ -51,13 +50,11 @@ var ts;
 (function (ts) {
     var JsTyping;
     (function (JsTyping) {
-        /* @internal */
         function isTypingUpToDate(cachedTyping, availableTypingVersions) {
             var availableVersion = new ts.Version(ts.getProperty(availableTypingVersions, "ts" + ts.versionMajorMinor) || ts.getProperty(availableTypingVersions, "latest"));
             return availableVersion.compareTo(cachedTyping.version) <= 0;
         }
         JsTyping.isTypingUpToDate = isTypingUpToDate;
-        /* @internal */
         JsTyping.nodeCoreModuleList = [
             "assert",
             "async_hooks",
@@ -96,7 +93,6 @@ var ts;
             "vm",
             "zlib"
         ];
-        /* @internal */
         JsTyping.nodeCoreModules = ts.arrayToSet(JsTyping.nodeCoreModuleList);
         function loadSafeList(host, safeListPath) {
             var result = ts.readConfigFile(safeListPath, function (path) { return host.readFile(path); });

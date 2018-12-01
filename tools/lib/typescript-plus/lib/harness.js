@@ -53,13 +53,22 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+            t[p[i]] = s[p[i]];
+    return t;
+};
 var collections;
 (function (collections) {
     var SortedMap = /** @class */ (function () {
@@ -3248,8 +3257,9 @@ var ts;
                     var entry = _a[_i];
                     var fileName_1 = entry.file;
                     for (var _b = 0, _c = entry.locs; _b < _c.length; _b++) {
-                        var loc = _c[_b];
-                        locations.push({ textSpan: this.decodeSpan(loc, fileName_1), fileName: fileName_1 });
+                        var _d = _c[_b];
+                        var start = _d.start, end = _d.end, prefixSuffixText = __rest(_d, ["start", "end"]);
+                        locations.push(__assign({ textSpan: this.decodeSpan({ start: start, end: end }, fileName_1), fileName: fileName_1 }, prefixSuffixText));
                     }
                 }
                 var renameInfo = body.info.canRename
@@ -3490,6 +3500,9 @@ var ts;
                 var response = this.processResponse(request);
                 return response.body.map(function (entry) { return _this.decodeSpan(entry, fileName); }); // TODO: GH#18217
             };
+            SessionClient.prototype.configurePlugin = function (pluginName, configuration) {
+                this.processRequest("configurePlugin", { pluginName: pluginName, configuration: configuration });
+            };
             SessionClient.prototype.getIndentationAtPosition = function (_fileName, _position, _options) {
                 return ts.notImplemented();
             };
@@ -3564,16 +3577,8 @@ var Harness;
             var mappings;
             function initializeSourceMapDecoding(sourceMapData) {
                 decodingIndex = 0;
-                sourceMapMappings = sourceMapData.sourceMapMappings;
-                mappings = ts.sourcemaps.decodeMappings({
-                    version: 3,
-                    file: sourceMapData.sourceMapFile,
-                    sources: sourceMapData.sourceMapSources,
-                    sourceRoot: sourceMapData.sourceMapSourceRoot,
-                    sourcesContent: sourceMapData.sourceMapSourcesContent,
-                    mappings: sourceMapData.sourceMapMappings,
-                    names: sourceMapData.sourceMapNames
-                });
+                sourceMapMappings = sourceMapData.sourceMap.mappings;
+                mappings = ts.decodeMappings(sourceMapData.sourceMap.mappings);
             }
             SourceMapDecoder.initializeSourceMapDecoding = initializeSourceMapDecoding;
             function decodeNextEncodedSourceMapSpan() {
@@ -3581,14 +3586,14 @@ var Harness;
                     return ts.Debug.fail("not initialized");
                 var result = mappings.next();
                 if (result.done)
-                    return { error: mappings.error || "No encoded entry found", sourceMapSpan: mappings.lastSpan };
+                    return { error: mappings.error || "No encoded entry found", sourceMapSpan: mappings.state };
                 return { sourceMapSpan: result.value };
             }
             SourceMapDecoder.decodeNextEncodedSourceMapSpan = decodeNextEncodedSourceMapSpan;
             function hasCompletedDecoding() {
                 if (!mappings)
                     return ts.Debug.fail("not initialized");
-                return mappings.decodingIndex === sourceMapMappings.length;
+                return mappings.pos === sourceMapMappings.length;
             }
             SourceMapDecoder.hasCompletedDecoding = hasCompletedDecoding;
             function getRemainingDecodeString() {
@@ -3611,8 +3616,8 @@ var Harness;
             var spanMarkerContinues;
             function initializeSourceMapSpanWriter(sourceMapRecordWriter, sourceMapData, currentJsFile) {
                 sourceMapRecorder = sourceMapRecordWriter;
-                sourceMapSources = sourceMapData.sourceMapSources;
-                sourceMapNames = sourceMapData.sourceMapNames;
+                sourceMapSources = sourceMapData.sourceMap.sources;
+                sourceMapNames = sourceMapData.sourceMap.names;
                 jsFile = currentJsFile;
                 jsLineMap = jsFile.lineStarts;
                 spansOnSingleLine = [];
@@ -3621,24 +3626,27 @@ var Harness;
                 spanMarkerContinues = false;
                 SourceMapDecoder.initializeSourceMapDecoding(sourceMapData);
                 sourceMapRecorder.WriteLine("===================================================================");
-                sourceMapRecorder.WriteLine("JsFile: " + sourceMapData.sourceMapFile);
-                sourceMapRecorder.WriteLine("mapUrl: " + sourceMapData.jsSourceMappingURL);
-                sourceMapRecorder.WriteLine("sourceRoot: " + sourceMapData.sourceMapSourceRoot);
-                sourceMapRecorder.WriteLine("sources: " + sourceMapData.sourceMapSources);
-                if (sourceMapData.sourceMapSourcesContent) {
-                    sourceMapRecorder.WriteLine("sourcesContent: " + JSON.stringify(sourceMapData.sourceMapSourcesContent));
+                sourceMapRecorder.WriteLine("JsFile: " + sourceMapData.sourceMap.file);
+                sourceMapRecorder.WriteLine("mapUrl: " + ts.tryGetSourceMappingURL(jsFile.text, jsLineMap));
+                sourceMapRecorder.WriteLine("sourceRoot: " + sourceMapData.sourceMap.sourceRoot);
+                sourceMapRecorder.WriteLine("sources: " + sourceMapData.sourceMap.sources);
+                if (sourceMapData.sourceMap.sourcesContent) {
+                    sourceMapRecorder.WriteLine("sourcesContent: " + JSON.stringify(sourceMapData.sourceMap.sourcesContent));
                 }
                 sourceMapRecorder.WriteLine("===================================================================");
             }
             SourceMapSpanWriter.initializeSourceMapSpanWriter = initializeSourceMapSpanWriter;
             function getSourceMapSpanString(mapEntry, getAbsentNameIndex) {
-                var mapString = "Emitted(" + (mapEntry.emittedLine + 1) + ", " + (mapEntry.emittedColumn + 1) + ") Source(" + (mapEntry.sourceLine + 1) + ", " + (mapEntry.sourceColumn + 1) + ") + SourceIndex(" + mapEntry.sourceIndex + ")";
-                if (mapEntry.nameIndex >= 0 && mapEntry.nameIndex < sourceMapNames.length) {
-                    mapString += " name (" + sourceMapNames[mapEntry.nameIndex] + ")";
-                }
-                else {
-                    if ((mapEntry.nameIndex && mapEntry.nameIndex !== -1) || getAbsentNameIndex) {
-                        mapString += " nameIndex (" + mapEntry.nameIndex + ")";
+                var mapString = "Emitted(" + (mapEntry.generatedLine + 1) + ", " + (mapEntry.generatedCharacter + 1) + ")";
+                if (ts.isSourceMapping(mapEntry)) {
+                    mapString += " Source(" + (mapEntry.sourceLine + 1) + ", " + (mapEntry.sourceCharacter + 1) + ") + SourceIndex(" + mapEntry.sourceIndex + ")";
+                    if (mapEntry.nameIndex >= 0 && mapEntry.nameIndex < sourceMapNames.length) {
+                        mapString += " name (" + sourceMapNames[mapEntry.nameIndex] + ")";
+                    }
+                    else {
+                        if ((mapEntry.nameIndex && mapEntry.nameIndex !== -1) || getAbsentNameIndex) {
+                            mapString += " nameIndex (" + mapEntry.nameIndex + ")";
+                        }
                     }
                 }
                 return mapString;
@@ -3647,13 +3655,7 @@ var Harness;
                 // verify the decoded span is same as the new span
                 var decodeResult = SourceMapDecoder.decodeNextEncodedSourceMapSpan();
                 var decodeErrors;
-                if (typeof decodeResult.error === "string"
-                    || decodeResult.sourceMapSpan.emittedLine !== sourceMapSpan.emittedLine
-                    || decodeResult.sourceMapSpan.emittedColumn !== sourceMapSpan.emittedColumn
-                    || decodeResult.sourceMapSpan.sourceLine !== sourceMapSpan.sourceLine
-                    || decodeResult.sourceMapSpan.sourceColumn !== sourceMapSpan.sourceColumn
-                    || decodeResult.sourceMapSpan.sourceIndex !== sourceMapSpan.sourceIndex
-                    || decodeResult.sourceMapSpan.nameIndex !== sourceMapSpan.nameIndex) {
+                if (typeof decodeResult.error === "string" || !ts.sameMapping(decodeResult.sourceMapSpan, sourceMapSpan)) {
                     if (decodeResult.error) {
                         decodeErrors = ["!!^^ !!^^ There was decoding error in the sourcemap at this location: " + decodeResult.error];
                     }
@@ -3662,7 +3664,7 @@ var Harness;
                     }
                     decodeErrors.push("!!^^ !!^^ Decoded span from sourcemap's mappings entry: " + getSourceMapSpanString(decodeResult.sourceMapSpan, /*getAbsentNameIndex*/ true) + " Span encoded by the emitter:" + getSourceMapSpanString(sourceMapSpan, /*getAbsentNameIndex*/ true));
                 }
-                if (spansOnSingleLine.length && spansOnSingleLine[0].sourceMapSpan.emittedLine !== sourceMapSpan.emittedLine) {
+                if (spansOnSingleLine.length && spansOnSingleLine[0].sourceMapSpan.generatedLine !== sourceMapSpan.generatedLine) {
                     // On different line from the one that we have been recording till now,
                     writeRecordedSpans();
                     spansOnSingleLine = [];
@@ -3671,11 +3673,17 @@ var Harness;
             }
             SourceMapSpanWriter.recordSourceMapSpan = recordSourceMapSpan;
             function recordNewSourceFileSpan(sourceMapSpan, newSourceFileCode) {
-                assert.isTrue(spansOnSingleLine.length === 0 || spansOnSingleLine[0].sourceMapSpan.emittedLine !== sourceMapSpan.emittedLine, "new file source map span should be on new line. We currently handle only that scenario");
+                var continuesLine = false;
+                if (spansOnSingleLine.length > 0 && spansOnSingleLine[0].sourceMapSpan.generatedCharacter === sourceMapSpan.generatedLine) {
+                    writeRecordedSpans();
+                    spansOnSingleLine = [];
+                    nextJsLineToWrite--; // walk back one line to reprint the line
+                    continuesLine = true;
+                }
                 recordSourceMapSpan(sourceMapSpan);
                 assert.isTrue(spansOnSingleLine.length === 1);
                 sourceMapRecorder.WriteLine("-------------------------------------------------------------------");
-                sourceMapRecorder.WriteLine("emittedFile:" + jsFile.file);
+                sourceMapRecorder.WriteLine("emittedFile:" + jsFile.file + (continuesLine ? " (" + (sourceMapSpan.generatedLine + 1) + ", " + (sourceMapSpan.generatedCharacter + 1) + ")" : ""));
                 sourceMapRecorder.WriteLine("sourceFile:" + sourceMapSources[spansOnSingleLine[0].sourceMapSpan.sourceIndex]);
                 sourceMapRecorder.WriteLine("-------------------------------------------------------------------");
                 tsLineMap = ts.computeLineStarts(newSourceFileCode);
@@ -3727,7 +3735,7 @@ var Harness;
                     prevEmittedCol = 0;
                     for (var i = 0; i < spansOnSingleLine.length; i++) {
                         fn(spansOnSingleLine[i], i);
-                        prevEmittedCol = spansOnSingleLine[i].sourceMapSpan.emittedColumn;
+                        prevEmittedCol = spansOnSingleLine[i].sourceMapSpan.generatedCharacter;
                     }
                 }
                 function writeSourceMapIndent(indentLength, indentPrefix) {
@@ -3737,7 +3745,7 @@ var Harness;
                     }
                 }
                 function writeSourceMapMarker(currentSpan, index, endColumn, endContinues) {
-                    if (endColumn === void 0) { endColumn = currentSpan.sourceMapSpan.emittedColumn; }
+                    if (endColumn === void 0) { endColumn = currentSpan.sourceMapSpan.generatedCharacter; }
                     if (endContinues === void 0) { endContinues = false; }
                     var markerId = getMarkerId(index);
                     markerIds.push(markerId);
@@ -3752,7 +3760,7 @@ var Harness;
                     spanMarkerContinues = endContinues;
                 }
                 function writeSourceMapSourceText(currentSpan, index) {
-                    var sourcePos = tsLineMap[currentSpan.sourceMapSpan.sourceLine] + (currentSpan.sourceMapSpan.sourceColumn);
+                    var sourcePos = tsLineMap[currentSpan.sourceMapSpan.sourceLine] + (currentSpan.sourceMapSpan.sourceCharacter);
                     var sourceText = "";
                     if (prevWrittenSourcePos < sourcePos) {
                         // Position that goes forward, get text
@@ -3780,7 +3788,7 @@ var Harness;
                     sourceMapRecorder.WriteLine(markerIds[index] + getSourceMapSpanString(currentSpan.sourceMapSpan));
                 }
                 if (spansOnSingleLine.length) {
-                    var currentJsLine = spansOnSingleLine[0].sourceMapSpan.emittedLine;
+                    var currentJsLine = spansOnSingleLine[0].sourceMapSpan.generatedLine;
                     // Write js line
                     writeJsFileLines(currentJsLine + 1);
                     // Emit markers
@@ -3805,7 +3813,7 @@ var Harness;
                 var sourceMapData = sourceMapDataList[i];
                 var prevSourceFile = void 0;
                 var currentFile = void 0;
-                if (ts.endsWith(sourceMapData.sourceMapFile, ".d.ts" /* Dts */)) {
+                if (ts.endsWith(sourceMapData.sourceMap.file, ".d.ts" /* Dts */)) {
                     if (sourceMapDataList.length > jsFiles.length) {
                         currentFile = declarationFiles[Math.floor(i / 2)]; // When both kinds of source map are present, they alternate js/dts
                     }
@@ -3822,11 +3830,15 @@ var Harness;
                     }
                 }
                 SourceMapSpanWriter.initializeSourceMapSpanWriter(sourceMapRecorder, sourceMapData, currentFile);
-                var mapper = ts.sourcemaps.decodeMappings({ mappings: sourceMapData.sourceMapMappings, sources: sourceMapData.sourceMapSources });
+                var mapper = ts.decodeMappings(sourceMapData.sourceMap.mappings);
                 for (var _b = mapper.next(), decodedSourceMapping = _b.value, done = _b.done; !done; _a = mapper.next(), decodedSourceMapping = _a.value, done = _a.done, _a) {
-                    var currentSourceFile = program.getSourceFile(sourceMapData.inputSourceFileNames[decodedSourceMapping.sourceIndex]);
+                    var currentSourceFile = ts.isSourceMapping(decodedSourceMapping)
+                        ? program.getSourceFile(sourceMapData.inputSourceFileNames[decodedSourceMapping.sourceIndex])
+                        : undefined;
                     if (currentSourceFile !== prevSourceFile) {
-                        SourceMapSpanWriter.recordNewSourceFileSpan(decodedSourceMapping, currentSourceFile.text);
+                        if (currentSourceFile) {
+                            SourceMapSpanWriter.recordNewSourceFileSpan(decodedSourceMapping, currentSourceFile.text);
+                        }
                         prevSourceFile = currentSourceFile;
                     }
                     else {
@@ -4115,7 +4127,7 @@ var Utils;
                         break;
                     case "text":
                         // Include 'text' field for identifiers/literals, but not for source files.
-                        if (n.kind !== 277 /* SourceFile */) {
+                        if (n.kind !== 279 /* SourceFile */) {
                             o[propertyName] = n[propertyName];
                         }
                         break;
@@ -4920,6 +4932,9 @@ if (Harness.IO.tryEnableSourceMapsForHost && /^development$/i.test(Harness.IO.ge
                 var content = value[1];
                 outputLines += content;
             }
+            if (pretty) {
+                outputLines += ts.getErrorSummaryText(ts.getErrorCountForSummary(diagnostics), Harness.IO.newLine());
+            }
             return outputLines;
         }
         Compiler.getErrorBaseline = getErrorBaseline;
@@ -5246,6 +5261,8 @@ if (Harness.IO.tryEnableSourceMapsForHost && /^development$/i.test(Harness.IO.ge
                 else {
                     sourceMapCode_1 = "";
                     result.maps.forEach(function (sourceMap) {
+                        if (sourceMapCode_1)
+                            sourceMapCode_1 += "\r\n";
                         sourceMapCode_1 += fileOutput(sourceMap, harnessSettings);
                     });
                 }
@@ -5269,6 +5286,9 @@ if (Harness.IO.tryEnableSourceMapsForHost && /^development$/i.test(Harness.IO.ge
             }
             var jsCode = "";
             result.js.forEach(function (file) {
+                if (jsCode.length && jsCode.charCodeAt(jsCode.length - 1) !== 10 /* lineFeed */) {
+                    jsCode += "\r\n";
+                }
                 jsCode += fileOutput(file, harnessSettings);
             });
             if (result.dts.size > 0) {
@@ -5722,6 +5742,23 @@ var Harness;
 (function (Harness) {
     var LanguageService;
     (function (LanguageService) {
+        function makeDefaultProxy(info) {
+            // tslint:disable-next-line:no-null-keyword
+            var proxy = Object.create(/*prototype*/ null);
+            var langSvc = info.languageService;
+            var _loop_3 = function (k) {
+                // tslint:disable-next-line only-arrow-functions
+                proxy[k] = function () {
+                    return langSvc[k].apply(langSvc, arguments);
+                };
+            };
+            for (var _i = 0, _a = Object.keys(langSvc); _i < _a.length; _i++) {
+                var k = _a[_i];
+                _loop_3(k);
+            }
+            return proxy;
+        }
+        LanguageService.makeDefaultProxy = makeDefaultProxy;
         var ScriptInfo = /** @class */ (function () {
             function ScriptInfo(fileName, content, isRootFile) {
                 this.fileName = fileName;
@@ -6466,27 +6503,40 @@ var Harness;
                             }); },
                             error: undefined
                         };
+                    // Accepts configurations
+                    case "configurable-diagnostic-adder":
+                        var customMessage_1 = "default message";
+                        return {
+                            module: function () { return ({
+                                create: function (info) {
+                                    customMessage_1 = info.config.message;
+                                    var proxy = makeDefaultProxy(info);
+                                    proxy.getSemanticDiagnostics = function (filename) {
+                                        var prev = info.languageService.getSemanticDiagnostics(filename);
+                                        var sourceFile = info.project.getSourceFile(ts.toPath(filename, /*basePath*/ undefined, ts.createGetCanonicalFileName(info.serverHost.useCaseSensitiveFileNames)));
+                                        prev.push({
+                                            category: ts.DiagnosticCategory.Error,
+                                            file: sourceFile,
+                                            code: 9999,
+                                            length: 3,
+                                            messageText: customMessage_1,
+                                            start: 0
+                                        });
+                                        return prev;
+                                    };
+                                    return proxy;
+                                },
+                                onConfigurationChanged: function (config) {
+                                    customMessage_1 = config.message;
+                                }
+                            }); },
+                            error: undefined
+                        };
                     default:
                         return {
                             module: undefined,
                             error: new Error("Could not resolve module")
                         };
-                }
-                function makeDefaultProxy(info) {
-                    // tslint:disable-next-line:no-null-keyword
-                    var proxy = Object.create(/*prototype*/ null);
-                    var langSvc = info.languageService;
-                    var _loop_3 = function (k) {
-                        // tslint:disable-next-line only-arrow-functions
-                        proxy[k] = function () {
-                            return langSvc[k].apply(langSvc, arguments);
-                        };
-                    };
-                    for (var _i = 0, _a = Object.keys(langSvc); _i < _a.length; _i++) {
-                        var k = _a[_i];
-                        _loop_3(k);
-                    }
-                    return proxy;
                 }
             };
             return SessionServerHost;
@@ -6536,7 +6586,7 @@ var ts;
     (function (TestFSWithWatch) {
         TestFSWithWatch.libFile = {
             path: "/a/lib/lib.d.ts",
-            content: "/// <reference no-default-lib=\"true\"/>\ninterface Boolean {}\ninterface Function {}\ninterface IArguments {}\ninterface Number { toExponential: any; }\ninterface Object {}\ninterface RegExp {}\ninterface String { charAt: any; }\ninterface Array<T> {}"
+            content: "/// <reference no-default-lib=\"true\"/>\ninterface Boolean {}\ninterface Function {}\ninterface CallableFunction {}\ninterface NewableFunction {}\ninterface IArguments {}\ninterface Number { toExponential: any; }\ninterface Object {}\ninterface RegExp {}\ninterface String { charAt: any; }\ninterface Array<T> {}"
         };
         TestFSWithWatch.safeList = {
             path: "/safeList.json",
@@ -6998,8 +7048,8 @@ var ts;
                 }
                 this.invokeFileWatcher(fileOrDirectory.fullPath, ts.FileWatcherEventKind.Created);
                 if (isFsFolder(fileOrDirectory)) {
-                    this.invokeDirectoryWatcher(fileOrDirectory.fullPath, "");
-                    this.invokeWatchedDirectoriesRecursiveCallback(fileOrDirectory.fullPath, "");
+                    this.invokeDirectoryWatcher(fileOrDirectory.fullPath, fileOrDirectory.fullPath);
+                    this.invokeWatchedDirectoriesRecursiveCallback(fileOrDirectory.fullPath, fileOrDirectory.fullPath);
                 }
                 this.invokeDirectoryWatcher(folder.fullPath, fileOrDirectory.fullPath);
             };
@@ -7357,6 +7407,18 @@ var ts;
             return TestServerHost;
         }());
         TestFSWithWatch.TestServerHost = TestServerHost;
+        TestFSWithWatch.tsbuildProjectsLocation = "/user/username/projects";
+        function getTsBuildProjectFilePath(project, file) {
+            return TestFSWithWatch.tsbuildProjectsLocation + "/" + project + "/" + file;
+        }
+        TestFSWithWatch.getTsBuildProjectFilePath = getTsBuildProjectFilePath;
+        function getTsBuildProjectFile(project, file) {
+            return {
+                path: getTsBuildProjectFilePath(project, file),
+                content: Harness.IO.readFile(Harness.IO.getWorkspaceRoot() + "/tests/projects/" + project + "/" + file)
+            };
+        }
+        TestFSWithWatch.getTsBuildProjectFile = getTsBuildProjectFile;
     })(TestFSWithWatch = ts.TestFSWithWatch || (ts.TestFSWithWatch = {}));
 })(ts || (ts = {}));
 var FourSlash;
@@ -7546,29 +7608,7 @@ var FourSlash;
                 var file = _d[_c];
                 _loop_4(file);
             }
-            this.formatCodeSettings = {
-                baseIndentSize: 0,
-                indentSize: 4,
-                tabSize: 4,
-                newLineCharacter: "\n",
-                convertTabsToSpaces: true,
-                indentStyle: ts.IndentStyle.Smart,
-                insertSpaceAfterCommaDelimiter: true,
-                insertSpaceAfterSemicolonInForStatements: true,
-                insertSpaceBeforeAndAfterBinaryOperators: true,
-                insertSpaceAfterConstructor: false,
-                insertSpaceAfterKeywordsInControlFlowStatements: true,
-                insertSpaceAfterFunctionKeywordForAnonymousFunctions: false,
-                insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis: false,
-                insertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets: false,
-                insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces: true,
-                insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces: false,
-                insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces: false,
-                insertSpaceAfterTypeAssertion: false,
-                placeOpenBraceOnNewLineForFunctions: false,
-                placeOpenBraceOnNewLineForControlBlocks: false,
-                insertSpaceBeforeTypeAnnotation: false
-            };
+            this.formatCodeSettings = ts.testFormatSettings;
             // Open the first file by default
             this.openFile(0);
             function memoWrap(ls, target) {
@@ -7852,7 +7892,8 @@ var FourSlash;
             var _this = this;
             ts.forEachKey(this.inputFiles, function (fileName) {
                 if (!ts.isAnySupportedFileExtension(fileName)
-                    || !_this.getProgram().getCompilerOptions().allowJs && !ts.extensionIsTS(ts.extensionFromPath(fileName)))
+                    || Harness.getConfigNameFromFileName(fileName)
+                    || !_this.getProgram().getCompilerOptions().allowJs && !ts.resolutionExtensionIsTSOrJson(ts.extensionFromPath(fileName)))
                     return;
                 var errors = _this.getDiagnostics(fileName).filter(function (e) { return e.category !== ts.DiagnosticCategory.Suggestion; });
                 if (errors.length) {
@@ -7997,85 +8038,6 @@ var FourSlash;
                 assert.equal(outputFile.text, expected.text, "Content");
             });
         };
-        TestState.prototype.verifyCompletionListCount = function (expectedCount, negative) {
-            if (expectedCount === 0 && negative) {
-                this.verifyCompletionListIsEmpty(/*negative*/ false);
-                return;
-            }
-            var members = this.getCompletionListAtCaret();
-            if (members) {
-                var match = members.entries.length === expectedCount;
-                if ((!match && !negative) || (match && negative)) {
-                    this.raiseError("Member list count was " + members.entries.length + ". Expected " + expectedCount);
-                }
-            }
-            else if (expectedCount) {
-                this.raiseError("Member list count was 0. Expected " + expectedCount);
-            }
-        };
-        TestState.prototype.verifyCompletionListItemsCountIsGreaterThan = function (count, negative) {
-            var completions = this.getCompletionListAtCaret();
-            var itemsCount = completions ? completions.entries.length : 0;
-            if (negative) {
-                if (itemsCount > count) {
-                    this.raiseError("Expected completion list items count to not be greater than " + count + ", but is actually " + itemsCount);
-                }
-            }
-            else {
-                if (itemsCount <= count) {
-                    this.raiseError("Expected completion list items count to be greater than " + count + ", but is actually " + itemsCount);
-                }
-            }
-        };
-        TestState.prototype.verifyCompletionListStartsWithItemsInOrder = function (items) {
-            if (items.length === 0) {
-                return;
-            }
-            var entries = this.getCompletionListAtCaret().entries;
-            assert.isTrue(items.length <= entries.length, "Amount of expected items in completion list [ " + items.length + " ] is greater than actual number of items in list [ " + entries.length + " ]");
-            ts.zipWith(entries, items, function (entry, item) {
-                assert.equal(entry.name, item, "Unexpected item in completion list");
-            });
-        };
-        TestState.prototype.noItemsWithSameNameButDifferentKind = function () {
-            var completions = this.getCompletionListAtCaret();
-            var uniqueItems = ts.createMap();
-            for (var _i = 0, _a = completions.entries; _i < _a.length; _i++) {
-                var item = _a[_i];
-                var uniqueItem = uniqueItems.get(item.name);
-                if (!uniqueItem) {
-                    uniqueItems.set(item.name, item.kind);
-                }
-                else {
-                    assert.equal(item.kind, uniqueItem, "Items should have the same kind, got " + item.kind + " and " + uniqueItem);
-                }
-            }
-        };
-        TestState.prototype.verifyCompletionListIsEmpty = function (negative) {
-            var completions = this.getCompletionListAtCaret();
-            if ((!completions || completions.entries.length === 0) && negative) {
-                this.raiseError("Completion list is empty at caret at position " + this.activeFile.fileName + " " + this.currentCaretPosition);
-            }
-            else if (completions && completions.entries.length !== 0 && !negative) {
-                this.raiseError("Completion list is not empty at caret at position " + this.activeFile.fileName + " " + this.currentCaretPosition + "\n" +
-                    ("Completion List contains: " + stringify(completions.entries.map(function (e) { return e.name; }))));
-            }
-        };
-        TestState.prototype.verifyCompletionListAllowsNewIdentifier = function (negative) {
-            var completions = this.getCompletionListAtCaret();
-            if ((completions && !completions.isNewIdentifierLocation) && !negative) {
-                this.raiseError("Expected builder completion entry");
-            }
-            else if ((completions && completions.isNewIdentifierLocation) && negative) {
-                this.raiseError("Un-expected builder completion entry");
-            }
-        };
-        TestState.prototype.verifyCompletionListIsGlobal = function (expected) {
-            var completions = this.getCompletionListAtCaret();
-            if (completions && completions.isGlobalCompletion !== expected) {
-                this.raiseError("verifyCompletionListIsGlobal failed - expected result to be " + completions.isGlobalCompletion);
-            }
-        };
         TestState.prototype.verifyCompletions = function (options) {
             if (options.marker === undefined) {
                 this.verifyCompletionsWorker(options);
@@ -8098,13 +8060,20 @@ var FourSlash;
             if (actualCompletions.isNewIdentifierLocation !== (options.isNewIdentifierLocation || false)) {
                 this.raiseError("Expected 'isNewIdentifierLocation' to be " + (options.isNewIdentifierLocation || false) + ", got " + actualCompletions.isNewIdentifierLocation);
             }
-            var actualByName = ts.createMap();
+            if ("isGlobalCompletion" in options && actualCompletions.isGlobalCompletion !== options.isGlobalCompletion) {
+                this.raiseError("Expected 'isGlobalCompletion to be " + options.isGlobalCompletion + ", got " + actualCompletions.isGlobalCompletion);
+            }
+            var nameToEntries = ts.createMap();
             var _loop_6 = function (entry) {
-                if (actualByName.has(entry.name)) {
-                    this_1.raiseError("Duplicate (" + actualCompletions.entries.filter(function (a) { return a.name === entry.name; }).length + ") completions for " + entry.name);
+                var entries = nameToEntries.get(entry.name);
+                if (!entries) {
+                    nameToEntries.set(entry.name, [entry]);
                 }
                 else {
-                    actualByName.set(entry.name, entry);
+                    if (entries.some(function (e) { return e.source === entry.source; })) {
+                        this_1.raiseError("Duplicate completions for " + entry.name);
+                    }
+                    entries.push(entry);
                 }
             };
             var this_1 = this;
@@ -8123,25 +8092,19 @@ var FourSlash;
                     for (var _b = 0, _c = toArray(options.includes); _b < _c.length; _b++) {
                         var include = _c[_b];
                         var name = typeof include === "string" ? include : include.name;
-                        var found = actualByName.get(name);
+                        var found = nameToEntries.get(name);
                         if (!found)
                             throw this.raiseError("No completion " + name + " found");
-                        this.verifyCompletionEntry(found, include);
+                        assert(found.length === 1); // Must use 'exact' for multiple completions with same name
+                        this.verifyCompletionEntry(ts.first(found), include);
                     }
                 }
                 if (options.excludes) {
                     for (var _d = 0, _e = toArray(options.excludes); _d < _e.length; _d++) {
                         var exclude = _e[_d];
-                        if (typeof exclude === "string") {
-                            if (actualByName.has(exclude)) {
-                                this.raiseError("Did not expect to get a completion named " + exclude);
-                            }
-                        }
-                        else {
-                            var found = actualByName.get(exclude.name);
-                            if (found && found.source === exclude.source) {
-                                this.raiseError("Did not expect to get a completion named " + exclude.name + " with source " + exclude.source);
-                            }
+                        assert(typeof exclude === "string");
+                        if (nameToEntries.has(exclude)) {
+                            this.raiseError("Did not expect to get a completion named " + exclude);
                         }
                     }
                 }
@@ -8149,8 +8112,8 @@ var FourSlash;
         };
         TestState.prototype.verifyCompletionEntry = function (actual, expected) {
             var _a = typeof expected === "string"
-                ? { insertText: undefined, replacementSpan: undefined, hasAction: undefined, isRecommended: undefined, kind: undefined, text: undefined, documentation: undefined, tags: undefined, source: undefined, sourceDisplay: undefined }
-                : expected, insertText = _a.insertText, replacementSpan = _a.replacementSpan, hasAction = _a.hasAction, isRecommended = _a.isRecommended, kind = _a.kind, text = _a.text, documentation = _a.documentation, tags = _a.tags, source = _a.source, sourceDisplay = _a.sourceDisplay;
+                ? { insertText: undefined, replacementSpan: undefined, hasAction: undefined, isRecommended: undefined, kind: undefined, kindModifiers: undefined, text: undefined, documentation: undefined, tags: undefined, source: undefined, sourceDisplay: undefined }
+                : expected, insertText = _a.insertText, replacementSpan = _a.replacementSpan, hasAction = _a.hasAction, isRecommended = _a.isRecommended, kind = _a.kind, kindModifiers = _a.kindModifiers, text = _a.text, documentation = _a.documentation, tags = _a.tags, source = _a.source, sourceDisplay = _a.sourceDisplay;
             if (actual.insertText !== insertText) {
                 this.raiseError("Expected completion insert text to be " + insertText + ", got " + actual.insertText);
             }
@@ -8161,8 +8124,14 @@ var FourSlash;
             catch (_b) {
                 this.raiseError("Expected completion replacementSpan to be " + stringify(convertedReplacementSpan) + ", got " + stringify(actual.replacementSpan));
             }
-            if (kind !== undefined)
-                assert.equal(actual.kind, kind);
+            if (kind !== undefined || kindModifiers !== undefined) {
+                if (actual.kind !== kind) {
+                    this.raiseError("Unexpected kind for " + actual.name + ": Expected " + kind + ", actual " + actual.kind);
+                }
+                if (actual.kindModifiers !== (kindModifiers || "")) {
+                    this.raiseError("Bad kind modifiers for " + actual.name + ": Expected " + (kindModifiers || "") + ", actual " + actual.kindModifiers);
+                }
+            }
             assert.equal(actual.hasAction, hasAction);
             assert.equal(actual.isRecommended, isRecommended);
             assert.equal(actual.source, source);
@@ -8182,9 +8151,8 @@ var FourSlash;
         };
         TestState.prototype.verifyCompletionsAreExactly = function (actual, expected) {
             var _this = this;
-            if (actual.length !== expected.length) {
-                this.raiseError("Expected " + expected.length + " completions, got " + actual.length + " (" + actual.map(function (a) { return a.name; }) + ").");
-            }
+            // First pass: test that names are right. Then we'll test details.
+            assert.deepEqual(actual.map(function (a) { return a.name; }), expected.map(function (e) { return typeof e === "string" ? e : e.name; }));
             ts.zipWith(actual, expected, function (completion, expectedCompletion, index) {
                 var name = typeof expectedCompletion === "string" ? expectedCompletion : expectedCompletion.name;
                 if (completion.name !== name) {
@@ -8192,107 +8160,6 @@ var FourSlash;
                 }
                 _this.verifyCompletionEntry(completion, expectedCompletion);
             });
-        };
-        TestState.prototype.verifyCompletionsAt = function (markerName, expected, options) {
-            this.verifyCompletions({
-                marker: markerName,
-                exact: expected,
-                isNewIdentifierLocation: options && options.isNewIdentifierLocation,
-                preferences: options,
-                triggerCharacter: options && options.triggerCharacter,
-            });
-        };
-        TestState.prototype.verifyCompletionListContains = function (entryId, text, documentation, kind, spanIndex, hasAction, options) {
-            var completions = this.getCompletionListAtCaret(options);
-            if (completions) {
-                this.assertItemInCompletionList(completions.entries, entryId, text, documentation, kind, spanIndex, hasAction, options);
-            }
-            else {
-                this.raiseError("No completions at position '" + this.currentCaretPosition + "' when looking for '" + JSON.stringify(entryId) + "'.");
-            }
-        };
-        /**
-         * Verify that the completion list does NOT contain the given symbol.
-         * The symbol is considered matched with the symbol in the list if and only if all given parameters must matched.
-         * When any parameter is omitted, the parameter is ignored during comparison and assumed that the parameter with
-         * that property of the symbol in the list.
-         * @param symbol the name of symbol
-         * @param expectedText the text associated with the symbol
-         * @param expectedDocumentation the documentation text associated with the symbol
-         * @param expectedKind the kind of symbol (see ScriptElementKind)
-         * @param spanIndex the index of the range that the completion item's replacement text span should match
-         */
-        TestState.prototype.verifyCompletionListDoesNotContain = function (entryId, expectedText, expectedDocumentation, expectedKind, spanIndex, options) {
-            var _this = this;
-            var replacementSpan;
-            if (spanIndex !== undefined) {
-                replacementSpan = this.getTextSpanForRangeAtIndex(spanIndex);
-            }
-            var completions = this.getCompletionListAtCaret(options);
-            if (completions) {
-                var filterCompletions = completions.entries.filter(function (e) { return e.name === entryId.name && e.source === entryId.source; });
-                filterCompletions = expectedKind ? filterCompletions.filter(function (e) { return e.kind === expectedKind || (typeof expectedKind === "object" && e.kind === expectedKind.kind); }) : filterCompletions;
-                filterCompletions = filterCompletions.filter(function (entry) {
-                    var details = _this.getCompletionEntryDetails(entry.name);
-                    var documentation = details && ts.displayPartsToString(details.documentation);
-                    var text = details && ts.displayPartsToString(details.displayParts);
-                    // If any of the expected values are undefined, assume that users don't
-                    // care about them.
-                    if (replacementSpan && !ts.textSpansEqual(replacementSpan, entry.replacementSpan)) {
-                        return false;
-                    }
-                    else if (expectedText && text !== expectedText) {
-                        return false;
-                    }
-                    else if (expectedDocumentation && documentation !== expectedDocumentation) {
-                        return false;
-                    }
-                    return true;
-                });
-                if (filterCompletions.length !== 0) {
-                    // After filtered using all present criterion, if there are still symbol left in the list
-                    // then these symbols must meet the criterion for Not supposed to be in the list. So we
-                    // raise an error
-                    var error = "Completion list did contain '" + JSON.stringify(entryId) + "'.";
-                    var details = this.getCompletionEntryDetails(filterCompletions[0].name);
-                    if (expectedText) {
-                        error += "Expected text: " + expectedText + " to equal: " + ts.displayPartsToString(details.displayParts) + ".";
-                    }
-                    if (expectedDocumentation) {
-                        error += "Expected documentation: " + expectedDocumentation + " to equal: " + ts.displayPartsToString(details.documentation) + ".";
-                    }
-                    if (expectedKind) {
-                        error += "Expected kind: " + expectedKind + " to equal: " + filterCompletions[0].kind + ".";
-                    }
-                    else {
-                        error += "kind: " + filterCompletions[0].kind + ".";
-                    }
-                    if (replacementSpan) {
-                        var spanText = filterCompletions[0].replacementSpan ? stringify(filterCompletions[0].replacementSpan) : undefined;
-                        error += "Expected replacement span: " + stringify(replacementSpan) + " to equal: " + spanText + ".";
-                    }
-                    this.raiseError(error);
-                }
-            }
-        };
-        TestState.prototype.verifyCompletionEntryDetails = function (entryName, expectedText, expectedDocumentation, kind, tags) {
-            var _this = this;
-            var details = this.getCompletionEntryDetails(entryName);
-            assert(details, "no completion entry available");
-            assert.equal(ts.displayPartsToString(details.displayParts), expectedText, this.assertionMessageAtLastKnownMarker("completion entry details text"));
-            if (expectedDocumentation !== undefined) {
-                assert.equal(ts.displayPartsToString(details.documentation), expectedDocumentation, this.assertionMessageAtLastKnownMarker("completion entry documentation"));
-            }
-            if (kind !== undefined) {
-                assert.equal(details.kind, kind, this.assertionMessageAtLastKnownMarker("completion entry kind"));
-            }
-            if (tags !== undefined) {
-                assert.equal(details.tags.length, tags.length, this.messageAtLastKnownMarker("QuickInfo tags"));
-                ts.zipWith(tags, details.tags, function (expectedTag, actualTag) {
-                    assert.equal(actualTag.name, expectedTag.name);
-                    assert.equal(actualTag.text, expectedTag.text, _this.messageAtLastKnownMarker("QuickInfo tag " + actualTag.name));
-                });
-            }
         };
         TestState.prototype.getProgram = function () {
             return this._program || (this._program = this.languageService.getProgram()); // TODO: GH#18217
@@ -8387,12 +8254,7 @@ var FourSlash;
             });
             for (var _i = 0, _a = toArray(starts); _i < _a.length; _i++) {
                 var start = _a[_i];
-                if (typeof start === "string") {
-                    this.goToMarker(start);
-                }
-                else {
-                    this.goToRangeStart(start);
-                }
+                this.goToMarkerOrRange(start);
                 var fullActual = ts.map(this.findReferencesAtCaret(), function (_a, i) {
                     var definition = _a.definition, references = _a.references;
                     var text = definition.displayParts.map(function (d) { return d.text; }).join("");
@@ -8408,14 +8270,8 @@ var FourSlash;
             }
         };
         TestState.prototype.verifyNoReferences = function (markerNameOrRange) {
-            if (markerNameOrRange) {
-                if (ts.isString(markerNameOrRange)) {
-                    this.goToMarker(markerNameOrRange);
-                }
-                else {
-                    this.goToRangeStart(markerNameOrRange);
-                }
-            }
+            if (markerNameOrRange)
+                this.goToMarkerOrRange(markerNameOrRange);
             var refs = this.getReferencesAtCaret();
             if (refs && refs.length) {
                 this.raiseError("Expected getReferences to fail, but saw references: " + stringify(refs));
@@ -8505,7 +8361,10 @@ var FourSlash;
             assert.deepEqual(ts.realizeDiagnostics(diagnostics, "\n"), expected.map(function (e) { return (__assign({ message: e.message, category: category, code: e.code }, ts.createTextSpanFromRange(e.range || _this.getRanges()[0]), { reportsUnnecessary: e.reportsUnnecessary })); }));
         };
         TestState.prototype.verifyQuickInfoAt = function (markerName, expectedText, expectedDocumentation) {
-            this.goToMarker(markerName);
+            if (typeof markerName === "string")
+                this.goToMarker(markerName);
+            else
+                this.goToRangeStart(markerName);
             this.verifyQuickInfoString(expectedText, expectedDocumentation);
         };
         TestState.prototype.verifyQuickInfos = function (namesAndTexts) {
@@ -8575,7 +8434,10 @@ var FourSlash;
                 var sort = function (locations) {
                     return locations && ts.sort(locations, function (r1, r2) { return ts.compareStringsCaseSensitive(r1.fileName, r2.fileName) || r1.textSpan.start - r2.textSpan.start; });
                 };
-                assert.deepEqual(sort(references), sort(ranges.map(function (r) { return ({ fileName: r.fileName, textSpan: ts.createTextSpanFromRange(r) }); })));
+                assert.deepEqual(sort(references), sort(ranges.map(function (rangeOrOptions) {
+                    var _a = "range" in rangeOrOptions ? rangeOrOptions : { range: rangeOrOptions }, range = _a.range, prefixSuffixText = __rest(_a, ["range"]);
+                    return __assign({ fileName: range.fileName, textSpan: ts.createTextSpanFromRange(range) }, prefixSuffixText);
+                })));
             }
         };
         TestState.prototype.verifyQuickInfoExists = function (negative) {
@@ -9132,6 +8994,14 @@ var FourSlash;
             var len = this.getFileContent(this.activeFile.fileName).length;
             this.goToPosition(len);
         };
+        TestState.prototype.goToMarkerOrRange = function (markerOrRange) {
+            if (typeof markerOrRange === "string") {
+                this.goToMarker(markerOrRange);
+            }
+            else {
+                this.goToRangeStart(markerOrRange);
+            }
+        };
         TestState.prototype.goToRangeStart = function (_a) {
             var fileName = _a.fileName, pos = _a.pos;
             this.openFile(fileName);
@@ -9478,7 +9348,19 @@ var FourSlash;
          */
         TestState.prototype.getAndApplyCodeActions = function (errorCode, index) {
             var fileName = this.activeFile.fileName;
-            this.applyCodeActions(this.getCodeFixes(fileName, errorCode), index);
+            var fixes = this.getCodeFixes(fileName, errorCode);
+            if (index === undefined) {
+                if (!(fixes && fixes.length === 1)) {
+                    this.raiseError("Should find exactly one codefix, but " + (fixes ? fixes.length : "none") + " found. " + (fixes ? fixes.map(function (a) { return Harness.IO.newLine() + " \"" + a.description + "\""; }) : ""));
+                }
+                index = 0;
+            }
+            else {
+                if (!(fixes && fixes.length >= index + 1)) {
+                    this.raiseError("Should find at least " + (index + 1) + " codefix(es), but " + (fixes ? fixes.length : "none") + " found.");
+                }
+            }
+            this.applyChanges(fixes[index].changes);
         };
         TestState.prototype.applyCodeActionFromCompletion = function (markerName, options) {
             this.goToMarker(markerName);
@@ -9487,10 +9369,11 @@ var FourSlash;
             if (codeActions.length !== 1) {
                 this.raiseError("Expected one code action, got " + codeActions.length);
             }
-            if (codeActions[0].description !== options.description) {
+            var codeAction = ts.first(codeActions);
+            if (codeAction.description !== options.description) {
                 this.raiseError("Expected description to be:\n" + options.description + "\ngot:\n" + codeActions[0].description);
             }
-            this.applyCodeActions(codeActions);
+            this.applyChanges(codeAction.changes);
             this.verifyNewContentAfterChange(options, ts.flatMap(codeActions, function (a) { return a.changes.map(function (c) { return c.fileName; }); }));
         };
         TestState.prototype.verifyRangeIs = function (expectedText, includeWhiteSpace) {
@@ -9530,23 +9413,6 @@ var FourSlash;
             var _b = this.languageService.getCombinedCodeFix({ type: "file", fileName: this.activeFile.fileName }, fixId, this.formatCodeSettings, ts.emptyOptions), changes = _b.changes, commands = _b.commands;
             assert.deepEqual(commands, expectedCommands);
             this.verifyNewContent({ newFileContent: newFileContent }, changes);
-        };
-        /**
-         * Applies fixes for the errors in fileName and compares the results to
-         * expectedContents after all fixes have been applied.
-         *
-         * Note: applying one codefix may generate another (eg: remove duplicate implements
-         * may generate an extends -> interface conversion fix).
-         * @param expectedContents The contents of the file after the fixes are applied.
-         * @param fileName The file to check. If not supplied, the current open file is used.
-         */
-        TestState.prototype.verifyFileAfterCodeFix = function (expectedContents, fileName) {
-            fileName = fileName ? fileName : this.activeFile.fileName;
-            this.applyCodeActions(this.getCodeFixes(fileName));
-            var actualContents = this.getFileContent(fileName);
-            if (this.removeWhitespace(actualContents) !== this.removeWhitespace(expectedContents)) {
-                this.raiseError("Actual text doesn't match expected text. Actual:\n" + actualContents + "\n\nExpected:\n" + expectedContents);
-            }
         };
         TestState.prototype.verifyCodeFix = function (options) {
             var fileName = this.activeFile.fileName;
@@ -9653,20 +9519,6 @@ var FourSlash;
                 }
                 return _this.languageService.getCodeFixesAtPosition(fileName, diagnostic.start, diagnostic.start + diagnostic.length, [diagnostic.code], _this.formatCodeSettings, preferences);
             });
-        };
-        TestState.prototype.applyCodeActions = function (actions, index) {
-            if (index === undefined) {
-                if (!(actions && actions.length === 1)) {
-                    this.raiseError("Should find exactly one codefix, but " + (actions ? actions.length : "none") + " found. " + (actions ? actions.map(function (a) { return Harness.IO.newLine() + " \"" + a.description + "\""; }) : ""));
-                }
-                index = 0;
-            }
-            else {
-                if (!(actions && actions.length >= index + 1)) {
-                    this.raiseError("Should find at least " + (index + 1) + " codefix(es), but " + (actions ? actions.length : "none") + " found.");
-                }
-            }
-            this.applyChanges(actions[index].changes);
         };
         TestState.prototype.applyChanges = function (changes) {
             for (var _i = 0, changes_2 = changes; _i < changes_2.length; _i++) {
@@ -10003,11 +9855,6 @@ var FourSlash;
         TestState.prototype.verifyRefactorsAvailable = function (names) {
             assert.deepEqual(unique(this.getApplicableRefactorsAtSelection(), function (r) { return r.name; }), names);
         };
-        TestState.prototype.verifyRefactor = function (_a) {
-            var name = _a.name, actionName = _a.actionName, refactors = _a.refactors;
-            var actualRefactors = this.getApplicableRefactorsAtSelection().filter(function (r) { return r.name === name && r.actions.some(function (a) { return a.name === actionName; }); });
-            this.assertObjectsEqual(actualRefactors, refactors);
-        };
         TestState.prototype.verifyApplicableRefactorAvailableForRange = function (negative) {
             var ranges = this.getRanges();
             if (!(ranges && ranges.length === 1)) {
@@ -10171,57 +10018,6 @@ var FourSlash;
             }
             return text.substring(startPos, endPos);
         };
-        TestState.prototype.assertItemInCompletionList = function (items, entryId, text, documentation, kind, spanIndex, hasAction, options) {
-            var _this = this;
-            var eq = function (a, b, msg) {
-                assert.deepEqual(a, b, _this.assertionMessageAtLastKnownMarker(msg + " for " + stringify(entryId)));
-            };
-            var matchingItems = items.filter(function (item) { return item.name === entryId.name && item.source === entryId.source; });
-            if (matchingItems.length === 0) {
-                var itemsString = items.map(function (item) { return stringify({ name: item.name, source: item.source, kind: item.kind }); }).join(",\n");
-                this.raiseError("Expected \"" + stringify({ entryId: entryId, text: text, documentation: documentation, kind: kind }) + "\" to be in list [" + itemsString + "]");
-            }
-            else if (matchingItems.length > 1) {
-                this.raiseError("Found duplicate completion items for " + stringify(entryId));
-            }
-            var item = matchingItems[0];
-            if (documentation !== undefined || text !== undefined || entryId.source !== undefined) {
-                var details = this.getCompletionEntryDetails(item.name, item.source);
-                if (documentation !== undefined) {
-                    eq(ts.displayPartsToString(details.documentation), documentation, "completion item documentation");
-                }
-                if (text !== undefined) {
-                    eq(ts.displayPartsToString(details.displayParts), text, "completion item detail text");
-                }
-                if (entryId.source === undefined) {
-                    eq(options && options.sourceDisplay, /*b*/ undefined, "source display");
-                }
-                else {
-                    eq(details.source, [ts.textPart(options.sourceDisplay)], "source display");
-                }
-            }
-            if (kind !== undefined) {
-                if (typeof kind === "string") {
-                    eq(item.kind, kind, "completion item kind");
-                }
-                else {
-                    if (kind.kind) {
-                        eq(item.kind, kind.kind, "completion item kind");
-                    }
-                    if (kind.kindModifiers !== undefined) {
-                        eq(item.kindModifiers, kind.kindModifiers, "completion item kindModifiers");
-                    }
-                }
-            }
-            if (spanIndex !== undefined) {
-                var span = this.getTextSpanForRangeAtIndex(spanIndex);
-                assert.isTrue(ts.textSpansEqual(span, item.replacementSpan), this.assertionMessageAtLastKnownMarker(stringify(span) + " does not equal " + stringify(item.replacementSpan) + " replacement span for " + stringify(entryId)));
-            }
-            eq(item.hasAction, hasAction, "hasAction");
-            eq(item.isRecommended, options && options.isRecommended, "isRecommended");
-            eq(item.insertText, options && options.insertText, "insertText");
-            eq(item.replacementSpan, options && options.replacementSpan && ts.createTextSpanFromRange(options.replacementSpan), "replacementSpan");
-        };
         TestState.prototype.findFile = function (indexOrName) {
             if (typeof indexOrName === "number") {
                 var index = indexOrName;
@@ -10266,15 +10062,6 @@ var FourSlash;
             var pos = this.languageServiceAdapterHost.positionToLineAndCharacter(this.activeFile.fileName, position);
             return "line " + (pos.line + 1) + ", col " + pos.character;
         };
-        TestState.prototype.getTextSpanForRangeAtIndex = function (index) {
-            var ranges = this.getRanges();
-            if (ranges.length > index) {
-                return ts.createTextSpanFromRange(ranges[index]);
-            }
-            else {
-                throw this.raiseError("Supplied span index: " + index + " does not exist in range list of size: " + ranges.length);
-            }
-        };
         TestState.prototype.getMarkerByName = function (markerName) {
             var markerPos = this.testData.markerPositions.get(markerName);
             if (markerPos === undefined) {
@@ -10317,8 +10104,8 @@ var FourSlash;
         };
         TestState.prototype.generateTypes = function (examples) {
             for (var _i = 0, examples_1 = examples; _i < examples_1.length; _i++) {
-                var _a = examples_1[_i], _b = _a.name, name = _b === void 0 ? "example" : _b, value = _a.value, output = _a.output, outputBaseline = _a.outputBaseline;
-                var actual = ts.generateTypesForModule(name, value, this.formatCodeSettings);
+                var _a = examples_1[_i], _b = _a.name, name = _b === void 0 ? "example" : _b, value = _a.value, global_1 = _a.global, output = _a.output, outputBaseline = _a.outputBaseline;
+                var actual = (global_1 ? ts.generateTypesForGlobal : ts.generateTypesForModule)(name, value, this.formatCodeSettings);
                 if (outputBaseline) {
                     if (actual === undefined)
                         throw ts.Debug.fail();
@@ -10328,6 +10115,9 @@ var FourSlash;
                     assert.equal(actual, output, "generateTypes output for " + name + " does not match");
                 }
             }
+        };
+        TestState.prototype.configurePlugin = function (pluginName, configuration) {
+            this.languageService.configurePlugin(pluginName, configuration);
         };
         return TestState;
     }());
@@ -10389,17 +10179,18 @@ var FourSlash;
     FourSlash.runFourSlashTestContent = runFourSlashTestContent;
     function runCode(code, state) {
         // Compile and execute the test
-        var wrappedCode = "(function(test, goTo, verify, edit, debug, format, cancellation, classification, verifyOperationIsCancelled) {\n" + code + "\n})";
+        var wrappedCode = "(function(test, goTo, plugins, verify, edit, debug, format, cancellation, classification, completion, verifyOperationIsCancelled) {\n" + code + "\n})";
         try {
             var test_1 = new FourSlashInterface.Test(state);
             var goTo = new FourSlashInterface.GoTo(state);
+            var plugins = new FourSlashInterface.Plugins(state);
             var verify = new FourSlashInterface.Verify(state);
             var edit = new FourSlashInterface.Edit(state);
             var debug = new FourSlashInterface.Debug(state);
             var format = new FourSlashInterface.Format(state);
             var cancellation = new FourSlashInterface.Cancellation(state);
             var f = eval(wrappedCode);
-            f(test_1, goTo, verify, edit, debug, format, cancellation, FourSlashInterface.Classification, verifyOperationIsCancelled);
+            f(test_1, goTo, plugins, verify, edit, debug, format, cancellation, FourSlashInterface.Classification, FourSlashInterface.Completion, verifyOperationIsCancelled);
         }
         catch (err) {
             throw err;
@@ -10739,7 +10530,7 @@ var FourSlash;
             reportError(fileName, openMarker.sourceLine, openMarker.sourceColumn, "Unterminated marker.");
         }
         // put ranges in the correct order
-        localRanges = localRanges.sort(function (a, b) { return a.pos < b.pos ? -1 : 1; });
+        localRanges = localRanges.sort(function (a, b) { return a.pos < b.pos ? -1 : a.pos === b.pos && a.end > b.end ? -1 : 1; });
         localRanges.forEach(function (r) { ranges.push(r); });
         return {
             content: output,
@@ -10830,6 +10621,16 @@ var FourSlashInterface;
         return Test;
     }());
     FourSlashInterface.Test = Test;
+    var Plugins = /** @class */ (function () {
+        function Plugins(state) {
+            this.state = state;
+        }
+        Plugins.prototype.configurePlugin = function (pluginName, configuration) {
+            this.state.configurePlugin(pluginName, configuration);
+        };
+        return Plugins;
+    }());
+    FourSlashInterface.Plugins = Plugins;
     var GoTo = /** @class */ (function () {
         function GoTo(state) {
             this.state = state;
@@ -10889,72 +10690,12 @@ var FourSlashInterface;
             if (negative === void 0) { negative = false; }
             this.state = state;
             this.negative = negative;
-            this.allowedClassElementKeywords = [
-                "public",
-                "private",
-                "protected",
-                "static",
-                "abstract",
-                "readonly",
-                "get",
-                "set",
-                "constructor",
-                "async"
-            ];
-            this.allowedConstructorParameterKeywords = [
-                "public",
-                "private",
-                "protected",
-                "readonly",
-            ];
             if (!negative) {
                 this.not = new VerifyNegatable(state, true);
             }
         }
-        VerifyNegatable.prototype.completionListCount = function (expectedCount) {
-            this.state.verifyCompletionListCount(expectedCount, this.negative);
-        };
-        // Verifies the completion list contains the specified symbol. The
-        // completion list is brought up if necessary
-        VerifyNegatable.prototype.completionListContains = function (entryId, text, documentation, kind, spanIndex, hasAction, options) {
-            if (typeof entryId === "string") {
-                entryId = { name: entryId, source: undefined };
-            }
-            if (this.negative) {
-                this.state.verifyCompletionListDoesNotContain(entryId, text, documentation, kind, spanIndex, options);
-            }
-            else {
-                this.state.verifyCompletionListContains(entryId, text, documentation, kind, spanIndex, hasAction, options);
-            }
-        };
-        // Verifies the completion list items count to be greater than the specified amount. The
-        // completion list is brought up if necessary
-        VerifyNegatable.prototype.completionListItemsCountIsGreaterThan = function (count) {
-            this.state.verifyCompletionListItemsCountIsGreaterThan(count, this.negative);
-        };
         VerifyNegatable.prototype.assertHasRanges = function (ranges) {
             assert(ranges.length !== 0, "Array of ranges is expected to be non-empty");
-        };
-        VerifyNegatable.prototype.completionListIsEmpty = function () {
-            this.state.verifyCompletionListIsEmpty(this.negative);
-        };
-        VerifyNegatable.prototype.completionListContainsClassElementKeywords = function () {
-            for (var _i = 0, _a = this.allowedClassElementKeywords; _i < _a.length; _i++) {
-                var keyword = _a[_i];
-                this.completionListContains(keyword, keyword, /*documentation*/ undefined, "keyword");
-            }
-        };
-        VerifyNegatable.prototype.completionListContainsConstructorParameterKeywords = function () {
-            for (var _i = 0, _a = this.allowedConstructorParameterKeywords; _i < _a.length; _i++) {
-                var keyword = _a[_i];
-                this.completionListContains(keyword, keyword, /*documentation*/ undefined, "keyword");
-            }
-        };
-        VerifyNegatable.prototype.completionListIsGlobal = function (expected) {
-            this.state.verifyCompletionListIsGlobal(expected);
-        };
-        VerifyNegatable.prototype.completionListAllowsNewIdentifier = function () {
-            this.state.verifyCompletionListAllowsNewIdentifier(this.negative);
         };
         VerifyNegatable.prototype.noSignatureHelp = function () {
             var markers = [];
@@ -11028,9 +10769,6 @@ var FourSlashInterface;
         VerifyNegatable.prototype.refactorsAvailable = function (names) {
             this.state.verifyRefactorsAvailable(names);
         };
-        VerifyNegatable.prototype.refactor = function (options) {
-            this.state.verifyRefactor(options);
-        };
         VerifyNegatable.prototype.refactorAvailable = function (name, actionName) {
             this.state.verifyRefactorAvailable(this.negative, name, actionName);
         };
@@ -11042,9 +10780,6 @@ var FourSlashInterface;
         function Verify(state) {
             return _super.call(this, state) || this;
         }
-        Verify.prototype.completionsAt = function (markerName, completions, options) {
-            this.state.verifyCompletionsAt(markerName, completions, options);
-        };
         Verify.prototype.completions = function () {
             var optionsArray = [];
             for (var _i = 0; _i < arguments.length; _i++) {
@@ -11250,9 +10985,6 @@ var FourSlashInterface;
         Verify.prototype.noDocumentHighlights = function (startRange) {
             this.state.verifyNoDocumentHighlights(startRange);
         };
-        Verify.prototype.completionEntryDetailIs = function (entryName, text, documentation, kind, tags) {
-            this.state.verifyCompletionEntryDetails(entryName, text, documentation, kind, tags);
-        };
         /**
          * This method *requires* a contiguous, complete, and ordered stream of classifications for a file.
          */
@@ -11445,7 +11177,8 @@ var FourSlashInterface;
             this.state.formatOnType(this.state.getMarkerByName(posMarker).position, key);
         };
         Format.prototype.setOption = function (name, value) {
-            this.state.formatCodeSettings[name] = value;
+            var _a;
+            this.state.formatCodeSettings = __assign({}, this.state.formatCodeSettings, (_a = {}, _a[name] = value, _a));
         };
         return Format;
     }());
@@ -11563,6 +11296,479 @@ var FourSlashInterface;
             return { classificationType: classificationType, text: text, textSpan: textSpan };
         }
     })(Classification = FourSlashInterface.Classification || (FourSlashInterface.Classification = {}));
+    var Completion;
+    (function (Completion) {
+        var functionEntry = function (name) { return ({ name: name, kind: "function", kindModifiers: "declare" }); };
+        var constEntry = function (name) { return ({ name: name, kind: "const", kindModifiers: "declare" }); };
+        var moduleEntry = function (name) { return ({ name: name, kind: "module", kindModifiers: "declare" }); };
+        var keywordEntry = function (name) { return ({ name: name, kind: "keyword" }); };
+        var methodEntry = function (name) { return ({ name: name, kind: "method", kindModifiers: "declare" }); };
+        var propertyEntry = function (name) { return ({ name: name, kind: "property", kindModifiers: "declare" }); };
+        var interfaceEntry = function (name) { return ({ name: name, kind: "interface", kindModifiers: "declare" }); };
+        var typeEntry = function (name) { return ({ name: name, kind: "type", kindModifiers: "declare" }); };
+        var res = [];
+        for (var i = 73 /* FirstKeyword */; i <= 147 /* LastKeyword */; i++) {
+            res.push({ name: ts.Debug.assertDefined(ts.tokenToString(i)), kind: "keyword" });
+        }
+        Completion.keywordsWithUndefined = res;
+        Completion.keywords = Completion.keywordsWithUndefined.filter(function (k) { return k.name !== "undefined"; });
+        Completion.typeKeywords = ["false", "null", "true", "void", "any", "boolean", "keyof", "never", "number", "object", "string", "symbol", "undefined", "unique", "unknown", "bigint"].map(keywordEntry);
+        var globalTypeDecls = [
+            interfaceEntry("Symbol"),
+            typeEntry("PropertyKey"),
+            interfaceEntry("PropertyDescriptor"),
+            interfaceEntry("PropertyDescriptorMap"),
+            constEntry("Object"),
+            interfaceEntry("ObjectConstructor"),
+            constEntry("Function"),
+            interfaceEntry("FunctionConstructor"),
+            interfaceEntry("CallableFunction"),
+            interfaceEntry("NewableFunction"),
+            interfaceEntry("IArguments"),
+            constEntry("String"),
+            interfaceEntry("StringConstructor"),
+            constEntry("Boolean"),
+            interfaceEntry("BooleanConstructor"),
+            constEntry("Number"),
+            interfaceEntry("NumberConstructor"),
+            interfaceEntry("TemplateStringsArray"),
+            interfaceEntry("ImportMeta"),
+            constEntry("Math"),
+            constEntry("Date"),
+            interfaceEntry("DateConstructor"),
+            interfaceEntry("RegExpMatchArray"),
+            interfaceEntry("RegExpExecArray"),
+            constEntry("RegExp"),
+            interfaceEntry("RegExpConstructor"),
+            constEntry("Error"),
+            interfaceEntry("ErrorConstructor"),
+            constEntry("EvalError"),
+            interfaceEntry("EvalErrorConstructor"),
+            constEntry("RangeError"),
+            interfaceEntry("RangeErrorConstructor"),
+            constEntry("ReferenceError"),
+            interfaceEntry("ReferenceErrorConstructor"),
+            constEntry("SyntaxError"),
+            interfaceEntry("SyntaxErrorConstructor"),
+            constEntry("TypeError"),
+            interfaceEntry("TypeErrorConstructor"),
+            constEntry("URIError"),
+            interfaceEntry("URIErrorConstructor"),
+            constEntry("JSON"),
+            interfaceEntry("ReadonlyArray"),
+            interfaceEntry("ConcatArray"),
+            constEntry("Array"),
+            interfaceEntry("ArrayConstructor"),
+            interfaceEntry("TypedPropertyDescriptor"),
+            typeEntry("ClassDecorator"),
+            typeEntry("PropertyDecorator"),
+            typeEntry("MethodDecorator"),
+            typeEntry("ParameterDecorator"),
+            typeEntry("PromiseConstructorLike"),
+            interfaceEntry("PromiseLike"),
+            interfaceEntry("Promise"),
+            interfaceEntry("ArrayLike"),
+            typeEntry("Partial"),
+            typeEntry("Required"),
+            typeEntry("Readonly"),
+            typeEntry("Pick"),
+            typeEntry("Record"),
+            typeEntry("Exclude"),
+            typeEntry("Extract"),
+            typeEntry("NonNullable"),
+            typeEntry("Parameters"),
+            typeEntry("ConstructorParameters"),
+            typeEntry("ReturnType"),
+            typeEntry("InstanceType"),
+            interfaceEntry("ThisType"),
+            constEntry("ArrayBuffer"),
+            interfaceEntry("ArrayBufferTypes"),
+            typeEntry("ArrayBufferLike"),
+            interfaceEntry("ArrayBufferConstructor"),
+            interfaceEntry("ArrayBufferView"),
+            constEntry("DataView"),
+            interfaceEntry("DataViewConstructor"),
+            constEntry("Int8Array"),
+            interfaceEntry("Int8ArrayConstructor"),
+            constEntry("Uint8Array"),
+            interfaceEntry("Uint8ArrayConstructor"),
+            constEntry("Uint8ClampedArray"),
+            interfaceEntry("Uint8ClampedArrayConstructor"),
+            constEntry("Int16Array"),
+            interfaceEntry("Int16ArrayConstructor"),
+            constEntry("Uint16Array"),
+            interfaceEntry("Uint16ArrayConstructor"),
+            constEntry("Int32Array"),
+            interfaceEntry("Int32ArrayConstructor"),
+            constEntry("Uint32Array"),
+            interfaceEntry("Uint32ArrayConstructor"),
+            constEntry("Float32Array"),
+            interfaceEntry("Float32ArrayConstructor"),
+            constEntry("Float64Array"),
+            interfaceEntry("Float64ArrayConstructor"),
+            moduleEntry("Intl"),
+        ];
+        Completion.globalTypes = globalTypesPlus([]);
+        function globalTypesPlus(plus) {
+            return globalTypeDecls.concat(plus, Completion.typeKeywords);
+        }
+        Completion.globalTypesPlus = globalTypesPlus;
+        Completion.classElementKeywords = ["private", "protected", "public", "static", "abstract", "async", "constructor", "get", "readonly", "set"].map(keywordEntry);
+        Completion.constructorParameterKeywords = ["private", "protected", "public", "readonly"].map(function (name) { return ({ name: name, kind: "keyword" }); });
+        Completion.functionMembers = [
+            methodEntry("apply"),
+            methodEntry("call"),
+            methodEntry("bind"),
+            methodEntry("toString"),
+            propertyEntry("length"),
+            { name: "arguments", kind: "property", kindModifiers: "declare", text: "(property) Function.arguments: any" },
+            propertyEntry("caller"),
+        ];
+        Completion.stringMembers = [
+            methodEntry("toString"),
+            methodEntry("charAt"),
+            methodEntry("charCodeAt"),
+            methodEntry("concat"),
+            methodEntry("indexOf"),
+            methodEntry("lastIndexOf"),
+            methodEntry("localeCompare"),
+            methodEntry("match"),
+            methodEntry("replace"),
+            methodEntry("search"),
+            methodEntry("slice"),
+            methodEntry("split"),
+            methodEntry("substring"),
+            methodEntry("toLowerCase"),
+            methodEntry("toLocaleLowerCase"),
+            methodEntry("toUpperCase"),
+            methodEntry("toLocaleUpperCase"),
+            methodEntry("trim"),
+            propertyEntry("length"),
+            methodEntry("substr"),
+            methodEntry("valueOf"),
+        ];
+        Completion.functionMembersWithPrototype = Completion.functionMembers.slice(0, 4).concat([
+            propertyEntry("prototype")
+        ], Completion.functionMembers.slice(4));
+        // TODO: Shouldn't propose type keywords in statement position
+        Completion.statementKeywordsWithTypes = [
+            "break",
+            "case",
+            "catch",
+            "class",
+            "const",
+            "continue",
+            "debugger",
+            "default",
+            "delete",
+            "do",
+            "else",
+            "enum",
+            "export",
+            "extends",
+            "false",
+            "finally",
+            "for",
+            "function",
+            "if",
+            "import",
+            "in",
+            "instanceof",
+            "new",
+            "null",
+            "return",
+            "super",
+            "switch",
+            "this",
+            "throw",
+            "true",
+            "try",
+            "typeof",
+            "var",
+            "void",
+            "while",
+            "with",
+            "implements",
+            "interface",
+            "let",
+            "package",
+            "private",
+            "protected",
+            "public",
+            "static",
+            "yield",
+            "abstract",
+            "as",
+            "any",
+            "async",
+            "await",
+            "boolean",
+            "constructor",
+            "declare",
+            "get",
+            "infer",
+            "is",
+            "keyof",
+            "module",
+            "namespace",
+            "never",
+            "readonly",
+            "require",
+            "number",
+            "object",
+            "set",
+            "string",
+            "symbol",
+            "type",
+            "unique",
+            "unknown",
+            "from",
+            "global",
+            "bigint",
+            "of",
+        ].map(keywordEntry);
+        Completion.statementKeywords = Completion.statementKeywordsWithTypes.filter(function (k) {
+            var name = k.name;
+            switch (name) {
+                case "false":
+                case "true":
+                case "null":
+                case "void":
+                    return true;
+                case "declare":
+                case "module":
+                    return false;
+                default:
+                    return !ts.contains(Completion.typeKeywords, k);
+            }
+        });
+        Completion.globalsVars = [
+            functionEntry("eval"),
+            functionEntry("parseInt"),
+            functionEntry("parseFloat"),
+            functionEntry("isNaN"),
+            functionEntry("isFinite"),
+            functionEntry("decodeURI"),
+            functionEntry("decodeURIComponent"),
+            functionEntry("encodeURI"),
+            functionEntry("encodeURIComponent"),
+            functionEntry("escape"),
+            functionEntry("unescape"),
+            constEntry("NaN"),
+            constEntry("Infinity"),
+            constEntry("Object"),
+            constEntry("Function"),
+            constEntry("String"),
+            constEntry("Boolean"),
+            constEntry("Number"),
+            constEntry("Math"),
+            constEntry("Date"),
+            constEntry("RegExp"),
+            constEntry("Error"),
+            constEntry("EvalError"),
+            constEntry("RangeError"),
+            constEntry("ReferenceError"),
+            constEntry("SyntaxError"),
+            constEntry("TypeError"),
+            constEntry("URIError"),
+            constEntry("JSON"),
+            constEntry("Array"),
+            constEntry("ArrayBuffer"),
+            constEntry("DataView"),
+            constEntry("Int8Array"),
+            constEntry("Uint8Array"),
+            constEntry("Uint8ClampedArray"),
+            constEntry("Int16Array"),
+            constEntry("Uint16Array"),
+            constEntry("Int32Array"),
+            constEntry("Uint32Array"),
+            constEntry("Float32Array"),
+            constEntry("Float64Array"),
+            moduleEntry("Intl"),
+        ];
+        var globalKeywordsInsideFunction = [
+            "break",
+            "case",
+            "catch",
+            "class",
+            "const",
+            "continue",
+            "debugger",
+            "default",
+            "delete",
+            "do",
+            "else",
+            "enum",
+            "export",
+            "extends",
+            "false",
+            "finally",
+            "for",
+            "function",
+            "if",
+            "import",
+            "in",
+            "instanceof",
+            "new",
+            "null",
+            "return",
+            "super",
+            "switch",
+            "this",
+            "throw",
+            "true",
+            "try",
+            "typeof",
+            "var",
+            "void",
+            "while",
+            "with",
+            "implements",
+            "interface",
+            "let",
+            "package",
+            "yield",
+            "async",
+        ].map(keywordEntry);
+        // TODO: many of these are inappropriate to always provide
+        Completion.globalsInsideFunction = function (plus) { return [
+            { name: "arguments", kind: "local var" }
+        ].concat(plus, Completion.globalsVars, [
+            { name: "undefined", kind: "var" }
+        ], globalKeywordsInsideFunction); };
+        // TODO: many of these are inappropriate to always provide
+        Completion.globalKeywords = [
+            "break",
+            "case",
+            "catch",
+            "class",
+            "const",
+            "continue",
+            "debugger",
+            "default",
+            "delete",
+            "do",
+            "else",
+            "enum",
+            "export",
+            "extends",
+            "false",
+            "finally",
+            "for",
+            "function",
+            "if",
+            "import",
+            "in",
+            "instanceof",
+            "new",
+            "null",
+            "return",
+            "super",
+            "switch",
+            "this",
+            "throw",
+            "true",
+            "try",
+            "typeof",
+            "var",
+            "void",
+            "while",
+            "with",
+            "implements",
+            "interface",
+            "let",
+            "package",
+            "private",
+            "protected",
+            "public",
+            "static",
+            "yield",
+            "abstract",
+            "as",
+            "any",
+            "async",
+            "await",
+            "boolean",
+            "constructor",
+            "declare",
+            "get",
+            "infer",
+            "is",
+            "keyof",
+            "module",
+            "namespace",
+            "never",
+            "readonly",
+            "require",
+            "number",
+            "object",
+            "set",
+            "string",
+            "symbol",
+            "type",
+            "unique",
+            "unknown",
+            "from",
+            "global",
+            "bigint",
+            "of",
+        ].map(keywordEntry);
+        Completion.insideMethodKeywords = [
+            "break",
+            "case",
+            "catch",
+            "class",
+            "const",
+            "continue",
+            "debugger",
+            "default",
+            "delete",
+            "do",
+            "else",
+            "enum",
+            "export",
+            "extends",
+            "false",
+            "finally",
+            "for",
+            "function",
+            "if",
+            "import",
+            "in",
+            "instanceof",
+            "new",
+            "null",
+            "return",
+            "super",
+            "switch",
+            "this",
+            "throw",
+            "true",
+            "try",
+            "typeof",
+            "var",
+            "void",
+            "while",
+            "with",
+            "implements",
+            "interface",
+            "let",
+            "package",
+            "yield",
+            "async",
+        ].map(keywordEntry);
+        Completion.globalKeywordsPlusUndefined = (function () {
+            var i = ts.findIndex(Completion.globalKeywords, function (x) { return x.name === "unique"; });
+            return Completion.globalKeywords.slice(0, i).concat([keywordEntry("undefined")], Completion.globalKeywords.slice(i));
+        })();
+        Completion.globals = Completion.globalsVars.concat([
+            { name: "undefined", kind: "var" }
+        ], Completion.globalKeywords);
+        function globalsPlus(plus) {
+            return Completion.globalsVars.concat(plus, [{ name: "undefined", kind: "var" }], Completion.globalKeywords);
+        }
+        Completion.globalsPlus = globalsPlus;
+    })(Completion = FourSlashInterface.Completion || (FourSlashInterface.Completion = {}));
 })(FourSlashInterface || (FourSlashInterface = {}));
 var TypeWriterWalker = /** @class */ (function () {
     function TypeWriterWalker(program, fullTypeCheck, hadErrorBaseline) {
@@ -11625,7 +11831,7 @@ var TypeWriterWalker = /** @class */ (function () {
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
-                    if (!(ts.isExpressionNode(node) || node.kind === 71 /* Identifier */ || ts.isDeclarationName(node))) return [3 /*break*/, 2];
+                    if (!(ts.isExpressionNode(node) || node.kind === 72 /* Identifier */ || ts.isDeclarationName(node))) return [3 /*break*/, 2];
                     result = this.writeTypeOrSymbol(node, isSymbolWalk);
                     if (!result) return [3 /*break*/, 2];
                     return [4 /*yield*/, result];
