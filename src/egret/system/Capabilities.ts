@@ -99,6 +99,22 @@ namespace egret {
          * @language zh_CN
          */
         export const WXGAME = "wxgame";
+
+        /**
+         * Running on Baidu mini game
+         * @version Egret 5.1.5
+         * @platform All
+         * @language en_US
+         */
+        /**
+         * 运行在百度小游戏上
+         * @version Egret 5.1.5
+         * @platform All
+         * @language zh_CN
+         */
+        export const BAIDUGAME = "baidugame";
+
+
     }
 
     /**
