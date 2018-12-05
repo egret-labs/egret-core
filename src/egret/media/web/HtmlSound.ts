@@ -128,7 +128,7 @@ namespace egret.web {
             }
 
             function onAudioLoaded(): void {
-                HtmlSound.$recycle(this.url, audio);
+                HtmlSound.$recycle(self.url, audio);
                 removeListeners();
                 if (ua.indexOf("firefox") >= 0) {//火狐兼容
                     audio.pause();
