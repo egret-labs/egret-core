@@ -607,9 +607,8 @@ namespace egret.web {
                 inputElement = document.createElement("input");
                 self._simpleElement = inputElement;
                 inputElement.id = "egretInput";
+                inputElement.type = "text";
             }
-
-            inputElement.type = "text";
 
             self._inputDIV.appendChild(inputElement);
             inputElement.setAttribute("tabindex", "-1");
