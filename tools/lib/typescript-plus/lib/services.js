@@ -4540,14 +4540,11 @@ var ts;
                 // If already using commonjs, don't introduce ES6.
                 if (sourceFile.commonJsModuleIndicator)
                     return false;
-                // For JS, stay on the safe side.
-                if (isUncheckedFile)
-                    return false;
-                // If some file is using ES6 modules, assume that it's OK to add more.
-                if (ts.programContainsEs6Modules(program))
-                    return true;
                 // If module transpilation is enabled or we're targeting es6 or above, or not emitting, OK.
-                return ts.compilerOptionsIndicateEs6Modules(program.getCompilerOptions());
+                if (ts.compilerOptionsIndicateEs6Modules(program.getCompilerOptions()))
+                    return true;
+                // If some file is using ES6 modules, assume that it's OK to add more.
+                return ts.programContainsEs6Modules(program);
             }
             function isSnippetScope(scopeNode) {
                 switch (scopeNode.kind) {
@@ -5346,7 +5343,7 @@ var ts;
             }
         }
         function isFunctionLikeBodyKeyword(kind) {
-            return kind === 121 /* AsyncKeyword */ || !ts.isContextualKeyword(kind) && !isClassMemberCompletionKeyword(kind);
+            return kind === 121 /* AsyncKeyword */ || kind === 122 /* AwaitKeyword */ || !ts.isContextualKeyword(kind) && !isClassMemberCompletionKeyword(kind);
         }
         function keywordForNode(node) {
             return ts.isIdentifier(node) ? node.originalKeywordKind || 0 /* Unknown */ : node.kind;
@@ -14643,10 +14640,7 @@ var ts;
              * Trimming will be done for lines after the previous range
              */
             function trimTrailingWhitespacesForRemainingRange() {
-                if (!previousRange) {
-                    return;
-                }
-                var startPosition = previousRange.end;
+                var startPosition = previousRange ? previousRange.end : originalRange.pos;
                 var startLine = sourceFile.getLineAndCharacterOfPosition(startPosition).line;
                 var endLine = sourceFile.getLineAndCharacterOfPosition(originalRange.end).line;
                 trimTrailingWhitespacesForLines(startLine, endLine + 1, previousRange);
@@ -16947,20 +16941,8 @@ var ts;
                 annotate(changes, sourceFile, declaration, inferTypeForVariableFromUsage(declaration.name, program, cancellationToken), program, host);
             }
         }
-        function isApplicableFunctionForInference(declaration) {
-            switch (declaration.kind) {
-                case 239 /* FunctionDeclaration */:
-                case 156 /* MethodDeclaration */:
-                case 157 /* Constructor */:
-                    return true;
-                case 196 /* FunctionExpression */:
-                    var parent = declaration.parent;
-                    return ts.isVariableDeclaration(parent) && ts.isIdentifier(parent.name) || !!declaration.name;
-            }
-            return false;
-        }
         function annotateParameters(changes, sourceFile, parameterDeclaration, containingFunction, program, host, cancellationToken) {
-            if (!ts.isIdentifier(parameterDeclaration.name) || !isApplicableFunctionForInference(containingFunction)) {
+            if (!ts.isIdentifier(parameterDeclaration.name)) {
                 return;
             }
             var parameterInferences = inferTypeForParametersFromUsage(containingFunction, sourceFile, program, cancellationToken) ||
@@ -16973,12 +16955,17 @@ var ts;
                 annotateJSDocParameters(changes, sourceFile, parameterInferences, program, host);
             }
             else {
+                var needParens = ts.isArrowFunction(containingFunction) && !ts.findChildOfKind(containingFunction, 20 /* OpenParenToken */, sourceFile);
+                if (needParens)
+                    changes.insertNodeBefore(sourceFile, ts.first(containingFunction.parameters), ts.createToken(20 /* OpenParenToken */));
                 for (var _i = 0, parameterInferences_1 = parameterInferences; _i < parameterInferences_1.length; _i++) {
                     var _a = parameterInferences_1[_i], declaration = _a.declaration, type = _a.type;
                     if (declaration && !declaration.type && !declaration.initializer) {
                         annotate(changes, sourceFile, declaration, type, program, host);
                     }
                 }
+                if (needParens)
+                    changes.insertNodeAfter(sourceFile, ts.last(containingFunction.parameters), ts.createToken(21 /* CloseParenToken */));
             }
         }
         function annotateSetAccessor(changes, sourceFile, setAccessorDeclaration, program, host, cancellationToken) {
@@ -17099,6 +17086,7 @@ var ts;
                 case 157 /* Constructor */:
                     searchToken = ts.findChildOfKind(containingFunction, 124 /* ConstructorKeyword */, sourceFile);
                     break;
+                case 197 /* ArrowFunction */:
                 case 196 /* FunctionExpression */:
                     var parent = containingFunction.parent;
                     searchToken = ts.isVariableDeclaration(parent) && ts.isIdentifier(parent.name) ?

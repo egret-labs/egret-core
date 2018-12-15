@@ -11629,6 +11629,7 @@ var FourSlashInterface;
             "package",
             "yield",
             "async",
+            "await",
         ].map(keywordEntry);
         // TODO: many of these are inappropriate to always provide
         Completion.globalsInsideFunction = function (plus) { return [
@@ -11756,6 +11757,7 @@ var FourSlashInterface;
             "package",
             "yield",
             "async",
+            "await",
         ].map(keywordEntry);
         Completion.globalKeywordsPlusUndefined = (function () {
             var i = ts.findIndex(Completion.globalKeywords, function (x) { return x.name === "unique"; });
