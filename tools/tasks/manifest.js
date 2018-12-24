@@ -96,7 +96,7 @@ var ManifestPlugin = /** @class */ (function () {
                         contents = JSON.stringify(manifest, null, '\t');
                         break;
                     case ".js":
-                        contents = manifest.initial.concat(manifest.game).map(function (fileName) { return "require(\"" + fileName + "\")"; }).join("\n");
+                        contents = manifest.initial.concat(manifest.game).map(function (fileName) { return "require(\"./" + fileName + "\")"; }).join("\n");
                         break;
                 }
                 pluginContext.createFile(this.options.output, new Buffer(contents));
