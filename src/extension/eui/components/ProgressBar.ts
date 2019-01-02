@@ -299,7 +299,12 @@ namespace eui {
                 animation.play();
             }
             else {
-                this.animationValue = this.value;
+                if (this.animation.isPlaying) {
+                    this.animation.stop();
+                }
+                this.animationValue = newValue;
+                this.animation.from = newValue;
+                this.animation.currentValue = newValue;
             }
             return result;
         }
