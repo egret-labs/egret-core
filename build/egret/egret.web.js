@@ -1398,7 +1398,7 @@ var egret;
                     if (egret.nativeRender) {
                         var texture = new egret.Texture();
                         texture._setBitmapData(_this.posterData);
-                        _this.$nativeDisplayObject.setBitmapData(texture);
+                        _this.$nativeDisplayObject.setTexture(texture);
                     }
                 }, this);
                 imageLoader.load(poster);

@@ -448,7 +448,7 @@ namespace egret.web {
                 if (egret.nativeRender) {
                     const texture = new egret.Texture();
                     texture._setBitmapData(this.posterData);
-                    this.$nativeDisplayObject.setBitmapData(texture);
+                    this.$nativeDisplayObject.setTexture(texture);
                 }
 
             }, this);
