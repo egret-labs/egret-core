@@ -106,8 +106,7 @@ declare namespace egret_native {
      */
     class NativeBitmapData {
         public $init();
-        public __addr_l: number;
-        public __addr_r: number;
+        public $id;
     }
     /**
      * @private
