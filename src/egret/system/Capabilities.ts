@@ -102,18 +102,30 @@ namespace egret {
 
         /**
          * Running on Baidu mini game
-         * @version Egret 5.1.5
+         * @version Egret 5.2.13
          * @platform All
          * @language en_US
          */
         /**
          * 运行在百度小游戏上
-         * @version Egret 5.1.5
+         * @version Egret 5.2.13
          * @platform All
          * @language zh_CN
          */
         export const BAIDUGAME = "baidugame";
-
+        /**
+         * Running on Xiaomi quick game
+         * @version Egret 5.2.14
+         * @platform All
+         * @language en_US
+         */
+        /**
+         * 运行在小米快游戏上
+         * @version Egret 5.2.14
+         * @platform All
+         * @language zh_CN
+         */
+        export const QGAME = "qgame";
 
     }
 
