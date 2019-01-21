@@ -69,7 +69,8 @@ var UpgradeCommand = /** @class */ (function () {
                         upgradeConfigArr = [
                             { "v": "5.1.1", command: Upgrade_5_1_1 },
                             { "v": "5.1.2", command: Upgrade_5_1_2 },
-                            { "v": "5.2.13", command: Upgrade_5_2_13 }
+                            { "v": "5.2.13", command: Upgrade_5_2_13 },
+                            { "v": "5.2.14", command: Upgrade_5_2_13 }
                         ];
                         _a.label = 1;
                     case 1:
@@ -184,6 +185,20 @@ var Upgrade_5_2_13 = /** @class */ (function () {
             return __generator(this, function (_a) {
                 file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "baidugame"), path.join(egret.args.projectDir, "scripts", "baidugame"));
                 file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.baidugame.ts"), path.join(egret.args.projectDir, "scripts", "config.baidugame.ts"));
+                return [2 /*return*/, 0];
+            });
+        });
+    };
+    return Upgrade_5_2_13;
+}());
+var Upgrade_5_2_14 = /** @class */ (function () {
+    function Upgrade_5_2_14() {
+    }
+    Upgrade_5_2_13.prototype.execute = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "qgame"), path.join(egret.args.projectDir, "scripts", "qgame"));
+                file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.qgame.ts"), path.join(egret.args.projectDir, "scripts", "config.qgame.ts"));
                 return [2 /*return*/, 0];
             });
         });
