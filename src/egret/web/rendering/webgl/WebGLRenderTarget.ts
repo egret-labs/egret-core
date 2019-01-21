@@ -66,17 +66,27 @@ namespace egret.web {
          * 重置render target的尺寸
          */
         public resize(width: number, height: number): void {
+            if (width < 1) {                
+                if(DEBUG){
+                    egret.warn('WebGLRenderTarget resize width = ' + width);
+                }
+                width = 1;
+            }
+            if (height < 1) {
+                if(DEBUG){
+                    egret.warn('WebGLRenderTarget resize height = ' + height);        
+                }
+                height = 1;
+            }
             let gl = this.gl;
             this.width = width;
             this.height = height;
-
             if (this.frameBuffer) {
                 // 设置texture尺寸
                 gl.bindTexture(gl.TEXTURE_2D, this.texture);
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
                 // gl.bindTexture(gl.TEXTURE_2D, null);
             }
-
             if (this.stencilBuffer) {
                 gl.deleteRenderbuffer(this.stencilBuffer);
                 this.stencilBuffer = null;

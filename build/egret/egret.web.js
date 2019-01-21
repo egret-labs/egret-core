@@ -5490,6 +5490,18 @@ var egret;
              * 重置render target的尺寸
              */
             WebGLRenderTarget.prototype.resize = function (width, height) {
+                if (width < 1) {
+                    if (true) {
+                        egret.warn('WebGLRenderTarget resize width = ' + width);
+                    }
+                    width = 1;
+                }
+                if (height < 1) {
+                    if (true) {
+                        egret.warn('WebGLRenderTarget resize height = ' + height);
+                    }
+                    height = 1;
+                }
                 var gl = this.gl;
                 this.width = width;
                 this.height = height;
