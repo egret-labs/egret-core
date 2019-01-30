@@ -148,10 +148,16 @@ namespace egret.web {
                 this._xhr.abort();
                 this._xhr = null;
             }
-            this._xhr = this.getXHR();//new XMLHttpRequest();
-            this._xhr.onreadystatechange = this.onReadyStateChange.bind(this);
-            this._xhr.onprogress = this.updateProgress.bind(this);
-            this._xhr.open(this._method, this._url, true);
+            let xhr = this.getXHR();//new XMLHttpRequest();
+            if (window["XMLHttpRequest"]) {
+                xhr.addEventListener("load", this.onload.bind(this));
+                xhr.addEventListener("error", this.onerror.bind(this));
+            } else {
+                xhr.onreadystatechange = this.onReadyStateChange.bind(this);
+            }
+            xhr.onprogress = this.updateProgress.bind(this);
+            xhr.open(this._method, this._url, true);
+            this._xhr = xhr;
         }
 
         /**
@@ -256,6 +262,30 @@ namespace egret.web {
             }
         }
 
+
+        /**
+         * @private
+         */
+        private onload(): void {
+            let self = this;
+            window.setTimeout(function ():void {
+                self.dispatchEventWith(Event.COMPLETE);
+            }, 0);
+        }
+
+        /**
+         * @private
+         */
+        private onerror(): void {
+            let url = this._url;
+            let self = this;
+            window.setTimeout(function ():void {
+                if (DEBUG && !self.hasEventListener(IOErrorEvent.IO_ERROR)) {
+                    $error(1011, url);
+                }
+                self.dispatchEventWith(IOErrorEvent.IO_ERROR);
+            }, 0);
+        }
     }
     HttpRequest = WebHttpRequest;
 
