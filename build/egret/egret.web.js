@@ -3269,6 +3269,7 @@ var egret;
                 Html5Capatibility.ua = ua;
                 Html5Capatibility._canUseBlob = false;
                 var canUseWebAudio = window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"];
+                var isIos = ua.indexOf("iphone") >= 0 || ua.indexOf("ipad") >= 0 || ua.indexOf("ipod") >= 0;
                 if (canUseWebAudio) {
                     try {
                         //防止某些chrome版本创建异常问题
@@ -3284,6 +3285,11 @@ var egret;
                     checkAudioType = false;
                     Html5Capatibility.setAudioType(audioType);
                 }
+                else if (!isIos && ua.indexOf("safari") >= 0 && ua.indexOf("chrome") === -1) {
+                    //在Mac上的Safari浏览器中，默认使用web audio的方式播放音频
+                    checkAudioType = false;
+                    Html5Capatibility.setAudioType(AudioType.WEB_AUDIO);
+                }
                 else {
                     checkAudioType = true;
                     Html5Capatibility.setAudioType(AudioType.HTML5_AUDIO);
@@ -3293,7 +3299,7 @@ var egret;
                         Html5Capatibility.setAudioType(AudioType.WEB_AUDIO);
                     }
                 }
-                else if (ua.indexOf("iphone") >= 0 || ua.indexOf("ipad") >= 0 || ua.indexOf("ipod") >= 0) {
+                else if (isIos) {
                     if (Html5Capatibility.getIOSVersion() >= 7) {
                         Html5Capatibility._canUseBlob = true;
                         if (checkAudioType && canUseWebAudio) {
