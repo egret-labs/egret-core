@@ -2425,8 +2425,9 @@ var compiler;
             return outputs && outputs[kind];
         };
         CompilationResult.prototype.getSourceMapRecord = function () {
-            if (this.result.sourceMaps && this.result.sourceMaps.length > 0) {
-                return Harness.SourceMapRecorder.getSourceMapRecord(this.result.sourceMaps, this.program, Array.from(this.js.values()).filter(function (d) { return !ts.fileExtensionIs(d.file, ".json" /* Json */); }), Array.from(this.dts.values()));
+            var maps = this.result.sourceMaps;
+            if (maps && maps.length > 0) {
+                return Harness.SourceMapRecorder.getSourceMapRecord(maps, this.program, Array.from(this.js.values()).filter(function (d) { return !ts.fileExtensionIs(d.file, ".json" /* Json */); }), Array.from(this.dts.values()));
             }
         };
         CompilationResult.prototype.getSourceMap = function (path) {
@@ -2886,9 +2887,13 @@ var fakes;
         __extends(SolutionBuilderHost, _super);
         function SolutionBuilderHost() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.createProgram = ts.createAbstractBuilder;
             _this.diagnostics = [];
             return _this;
         }
+        SolutionBuilderHost.prototype.now = function () {
+            return new Date(this.sys.vfs.time());
+        };
         SolutionBuilderHost.prototype.reportDiagnostic = function (diagnostic) {
             this.diagnostics.push(diagnostic);
         };
@@ -3247,7 +3252,8 @@ var ts;
             SessionClient.prototype.getCompilerOptionsDiagnostics = function () {
                 return ts.notImplemented();
             };
-            SessionClient.prototype.getRenameInfo = function (fileName, position, findInStrings, findInComments) {
+            SessionClient.prototype.getRenameInfo = function (fileName, position, _options, findInStrings, findInComments) {
+                // Not passing along 'options' because server should already have those from the 'configure' command
                 var args = __assign({}, this.createFileLocationRequestArgs(fileName, position), { findInStrings: findInStrings, findInComments: findInComments });
                 var request = this.processRequest(server.CommandNames.Rename, args);
                 var response = this.processResponse(request);
@@ -3291,7 +3297,7 @@ var ts;
                     this.lastRenameEntry.inputs.position !== position ||
                     this.lastRenameEntry.inputs.findInStrings !== findInStrings ||
                     this.lastRenameEntry.inputs.findInComments !== findInComments) {
-                    this.getRenameInfo(fileName, position, findInStrings, findInComments);
+                    this.getRenameInfo(fileName, position, { allowRenameOfImportPath: true }, findInStrings, findInComments);
                 }
                 return this.lastRenameEntry.locations;
             };
@@ -3627,7 +3633,7 @@ var Harness;
                 SourceMapDecoder.initializeSourceMapDecoding(sourceMapData);
                 sourceMapRecorder.WriteLine("===================================================================");
                 sourceMapRecorder.WriteLine("JsFile: " + sourceMapData.sourceMap.file);
-                sourceMapRecorder.WriteLine("mapUrl: " + ts.tryGetSourceMappingURL(jsFile.text, jsLineMap));
+                sourceMapRecorder.WriteLine("mapUrl: " + ts.tryGetSourceMappingURL(ts.getLineInfo(jsFile.text, jsLineMap)));
                 sourceMapRecorder.WriteLine("sourceRoot: " + sourceMapData.sourceMap.sourceRoot);
                 sourceMapRecorder.WriteLine("sources: " + sourceMapData.sourceMap.sources);
                 if (sourceMapData.sourceMap.sourcesContent) {
@@ -3880,7 +3886,7 @@ var assert = _chai.assert;
         }
     };
 }
-var global = Function("return this").call(undefined);
+var global = Function("return this").call(undefined); // tslint:disable-line:function-constructor
 /* tslint:enable:no-var-keyword prefer-const */
 var Utils;
 (function (Utils) {
@@ -6170,11 +6176,11 @@ var Harness;
             LanguageServiceShimProxy.prototype.getSignatureHelpItems = function (fileName, position, options) {
                 return unwrapJSONCallResult(this.shim.getSignatureHelpItems(fileName, position, options));
             };
-            LanguageServiceShimProxy.prototype.getRenameInfo = function (fileName, position) {
-                return unwrapJSONCallResult(this.shim.getRenameInfo(fileName, position));
+            LanguageServiceShimProxy.prototype.getRenameInfo = function (fileName, position, options) {
+                return unwrapJSONCallResult(this.shim.getRenameInfo(fileName, position, options));
             };
-            LanguageServiceShimProxy.prototype.findRenameLocations = function (fileName, position, findInStrings, findInComments) {
-                return unwrapJSONCallResult(this.shim.findRenameLocations(fileName, position, findInStrings, findInComments));
+            LanguageServiceShimProxy.prototype.findRenameLocations = function (fileName, position, findInStrings, findInComments, providePrefixAndSuffixTextForRename) {
+                return unwrapJSONCallResult(this.shim.findRenameLocations(fileName, position, findInStrings, findInComments, providePrefixAndSuffixTextForRename));
             };
             LanguageServiceShimProxy.prototype.getDefinitionAtPosition = function (fileName, position) {
                 return unwrapJSONCallResult(this.shim.getDefinitionAtPosition(fileName, position));
@@ -7918,7 +7924,7 @@ var FourSlash;
             if (emit.outputFiles.length !== 1) {
                 throw new Error("Expected exactly one output from emit of " + this.activeFile.fileName);
             }
-            var evaluation = new Function(emit.outputFiles[0].text + ";\r\nreturn (" + expr + ");")();
+            var evaluation = new Function(emit.outputFiles[0].text + ";\r\nreturn (" + expr + ");")(); // tslint:disable-line:function-constructor
             if (evaluation !== value) {
                 this.raiseError("Expected evaluation of expression \"" + expr + "\" to equal \"" + value + "\", but got \"" + evaluation + "\"");
             }
@@ -8230,7 +8236,7 @@ var FourSlash;
             var _loop_7 = function (fileName) {
                 var searchFileNames = startFile === fileName ? [startFile] : [startFile, fileName];
                 var highlights = this_2.getDocumentHighlightsAtCurrentPosition(searchFileNames);
-                if (!highlights.every(function (dh) { return ts.contains(searchFileNames, dh.fileName); })) {
+                if (highlights && !highlights.every(function (dh) { return ts.contains(searchFileNames, dh.fileName); })) {
                     this_2.raiseError("When asking for document highlights only in files " + searchFileNames + ", got document highlights in " + unique(highlights, function (dh) { return dh.fileName; }));
                 }
             };
@@ -8421,16 +8427,16 @@ var FourSlash;
             }
         };
         TestState.prototype.verifyRenameLocations = function (startRanges, options) {
-            var _a = ts.isArray(options) ? { findInStrings: false, findInComments: false, ranges: options } : options, _b = _a.findInStrings, findInStrings = _b === void 0 ? false : _b, _c = _a.findInComments, findInComments = _c === void 0 ? false : _c, _d = _a.ranges, ranges = _d === void 0 ? this.getRanges() : _d;
-            for (var _i = 0, _e = toArray(startRanges); _i < _e.length; _i++) {
-                var startRange = _e[_i];
+            var _a = ts.isArray(options) ? { findInStrings: false, findInComments: false, ranges: options, providePrefixAndSuffixTextForRename: true } : options, _b = _a.findInStrings, findInStrings = _b === void 0 ? false : _b, _c = _a.findInComments, findInComments = _c === void 0 ? false : _c, _d = _a.ranges, ranges = _d === void 0 ? this.getRanges() : _d, _e = _a.providePrefixAndSuffixTextForRename, providePrefixAndSuffixTextForRename = _e === void 0 ? true : _e;
+            for (var _i = 0, _f = toArray(startRanges); _i < _f.length; _i++) {
+                var startRange = _f[_i];
                 this.goToRangeStart(startRange);
                 var renameInfo = this.languageService.getRenameInfo(this.activeFile.fileName, this.currentCaretPosition);
                 if (!renameInfo.canRename) {
                     this.raiseError("Expected rename to succeed, but it actually failed.");
                     break;
                 }
-                var references = this.languageService.findRenameLocations(this.activeFile.fileName, this.currentCaretPosition, findInStrings, findInComments);
+                var references = this.languageService.findRenameLocations(this.activeFile.fileName, this.currentCaretPosition, findInStrings, findInComments, providePrefixAndSuffixTextForRename);
                 var sort = function (locations) {
                     return locations && ts.sort(locations, function (r1, r2) { return ts.compareStringsCaseSensitive(r1.fileName, r2.fileName) || r1.textSpan.start - r2.textSpan.start; });
                 };
@@ -8547,8 +8553,8 @@ var FourSlash;
                 this.raiseError("Expected " + name + " '" + expected + "'.  Got '" + actual + "' instead.");
             }
         };
-        TestState.prototype.verifyRenameInfoSucceeded = function (displayName, fullDisplayName, kind, kindModifiers, fileToRename, expectedRange) {
-            var renameInfo = this.languageService.getRenameInfo(this.activeFile.fileName, this.currentCaretPosition);
+        TestState.prototype.verifyRenameInfoSucceeded = function (displayName, fullDisplayName, kind, kindModifiers, fileToRename, expectedRange, renameInfoOptions) {
+            var renameInfo = this.languageService.getRenameInfo(this.activeFile.fileName, this.currentCaretPosition, renameInfoOptions || { allowRenameOfImportPath: true });
             if (!renameInfo.canRename) {
                 throw this.raiseError("Rename did not succeed");
             }
@@ -8569,8 +8575,9 @@ var FourSlash;
                     renameInfo.triggerSpan.start + "," + ts.textSpanEnd(renameInfo.triggerSpan) + ") instead.");
             }
         };
-        TestState.prototype.verifyRenameInfoFailed = function (message) {
-            var renameInfo = this.languageService.getRenameInfo(this.activeFile.fileName, this.currentCaretPosition);
+        TestState.prototype.verifyRenameInfoFailed = function (message, allowRenameOfImportPath) {
+            allowRenameOfImportPath = allowRenameOfImportPath === undefined ? true : allowRenameOfImportPath;
+            var renameInfo = this.languageService.getRenameInfo(this.activeFile.fileName, this.currentCaretPosition, { allowRenameOfImportPath: allowRenameOfImportPath });
             if (renameInfo.canRename) {
                 throw this.raiseError("Rename was expected to fail");
             }
@@ -11005,11 +11012,11 @@ var FourSlashInterface;
             }
             this.state.verifySemanticClassifications(classifications);
         };
-        Verify.prototype.renameInfoSucceeded = function (displayName, fullDisplayName, kind, kindModifiers, fileToRename, expectedRange) {
-            this.state.verifyRenameInfoSucceeded(displayName, fullDisplayName, kind, kindModifiers, fileToRename, expectedRange);
+        Verify.prototype.renameInfoSucceeded = function (displayName, fullDisplayName, kind, kindModifiers, fileToRename, expectedRange, options) {
+            this.state.verifyRenameInfoSucceeded(displayName, fullDisplayName, kind, kindModifiers, fileToRename, expectedRange, options);
         };
-        Verify.prototype.renameInfoFailed = function (message) {
-            this.state.verifyRenameInfoFailed(message);
+        Verify.prototype.renameInfoFailed = function (message, allowRenameOfImportPath) {
+            this.state.verifyRenameInfoFailed(message, allowRenameOfImportPath);
         };
         Verify.prototype.renameLocations = function (startRanges, options) {
             this.state.verifyRenameLocations(startRanges, options);
@@ -11322,6 +11329,8 @@ var FourSlashInterface;
             interfaceEntry("ObjectConstructor"),
             constEntry("Function"),
             interfaceEntry("FunctionConstructor"),
+            typeEntry("ThisParameterType"),
+            typeEntry("OmitThisParameter"),
             interfaceEntry("CallableFunction"),
             interfaceEntry("NewableFunction"),
             interfaceEntry("IArguments"),

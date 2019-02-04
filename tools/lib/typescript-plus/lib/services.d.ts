@@ -76,7 +76,6 @@ declare namespace ts {
     }
     interface SourceFileLike {
         getLineAndCharacterOfPosition(pos: number): LineAndCharacter;
-        sourceMapper?: DocumentPositionMapper;
     }
     interface SourceMapSource {
         getLineAndCharacterOfPosition(pos: number): LineAndCharacter;
@@ -156,6 +155,8 @@ declare namespace ts {
         installPackage?(options: InstallPackageOptions): Promise<ApplyCodeActionCommandResult>;
         inspectValue?(options: InspectValueOptions): Promise<ValueInfo>;
         writeFile?(fileName: string, content: string): void;
+        getDocumentPositionMapper?(generatedFileName: string, sourceFileName?: string): DocumentPositionMapper | undefined;
+        getSourceFileLike?(fileName: string): SourceFileLike | undefined;
     }
     const emptyOptions: {};
     type WithMetadata<T> = T & {
@@ -185,8 +186,8 @@ declare namespace ts {
         getNameOrDottedNameSpan(fileName: string, startPos: number, endPos: number): TextSpan | undefined;
         getBreakpointStatementAtPosition(fileName: string, position: number): TextSpan | undefined;
         getSignatureHelpItems(fileName: string, position: number, options: SignatureHelpItemsOptions | undefined): SignatureHelpItems | undefined;
-        getRenameInfo(fileName: string, position: number): RenameInfo;
-        findRenameLocations(fileName: string, position: number, findInStrings: boolean, findInComments: boolean): ReadonlyArray<RenameLocation> | undefined;
+        getRenameInfo(fileName: string, position: number, options?: RenameInfoOptions): RenameInfo;
+        findRenameLocations(fileName: string, position: number, findInStrings: boolean, findInComments: boolean, providePrefixAndSuffixTextForRename?: boolean): ReadonlyArray<RenameLocation> | undefined;
         getDefinitionAtPosition(fileName: string, position: number): ReadonlyArray<DefinitionInfo> | undefined;
         getDefinitionAndBoundSpan(fileName: string, position: number): DefinitionInfoAndBoundSpan | undefined;
         getTypeDefinitionAtPosition(fileName: string, position: number): ReadonlyArray<DefinitionInfo> | undefined;
@@ -637,6 +638,9 @@ declare namespace ts {
         canRename: false;
         localizedErrorMessage: string;
     }
+    interface RenameInfoOptions {
+        readonly allowRenameOfImportPath?: boolean;
+    }
     interface SignatureHelpParameter {
         name: string;
         documentation: SymbolDisplayPart[];
@@ -1071,8 +1075,12 @@ declare namespace ts {
     function getNameFromPropertyName(name: PropertyName): string | undefined;
     function programContainsEs6Modules(program: Program): boolean;
     function compilerOptionsIndicateEs6Modules(compilerOptions: CompilerOptions): boolean;
-    function hostUsesCaseSensitiveFileNames(host: LanguageServiceHost): boolean;
-    function hostGetCanonicalFileName(host: LanguageServiceHost): GetCanonicalFileName;
+    function hostUsesCaseSensitiveFileNames(host: {
+        useCaseSensitiveFileNames?(): boolean;
+    }): boolean;
+    function hostGetCanonicalFileName(host: {
+        useCaseSensitiveFileNames?(): boolean;
+    }): GetCanonicalFileName;
     function makeImportIfNecessary(defaultImport: Identifier | undefined, namedImports: ReadonlyArray<ImportSpecifier> | undefined, moduleSpecifier: string, quotePreference: QuotePreference): ImportDeclaration | undefined;
     function makeImport(defaultImport: Identifier | undefined, namedImports: ReadonlyArray<ImportSpecifier> | undefined, moduleSpecifier: string | Expression, quotePreference: QuotePreference): ImportDeclaration;
     function makeStringLiteral(text: string, quotePreference: QuotePreference): StringLiteral;
@@ -1418,23 +1426,29 @@ declare namespace ts.FindAllReferences {
         readonly isForRename?: boolean;
         /** True if we are searching for implementations. We will have a different method of adding references if so. */
         readonly implementations?: boolean;
+        /**
+         * True to opt in for enhanced renaming of shorthand properties and import/export specifiers.
+         * Default is false for backwards compatibility.
+         */
+        readonly providePrefixAndSuffixTextForRename?: boolean;
     }
     function findReferencedSymbols(program: Program, cancellationToken: CancellationToken, sourceFiles: ReadonlyArray<SourceFile>, sourceFile: SourceFile, position: number): ReferencedSymbol[] | undefined;
     function getImplementationsAtPosition(program: Program, cancellationToken: CancellationToken, sourceFiles: ReadonlyArray<SourceFile>, sourceFile: SourceFile, position: number): ImplementationLocation[] | undefined;
     function findReferenceOrRenameEntries<T>(program: Program, cancellationToken: CancellationToken, sourceFiles: ReadonlyArray<SourceFile>, node: Node, position: number, options: Options | undefined, convertEntry: ToReferenceOrRenameEntry<T>): T[] | undefined;
     type ToReferenceOrRenameEntry<T> = (entry: Entry, originalNode: Node, checker: TypeChecker) => T;
     function getReferenceEntriesForNode(position: number, node: Node, program: Program, sourceFiles: ReadonlyArray<SourceFile>, cancellationToken: CancellationToken, options?: Options, sourceFilesSet?: ReadonlyMap<true>): ReadonlyArray<Entry> | undefined;
-    function toRenameLocation(entry: Entry, originalNode: Node, checker: TypeChecker): RenameLocation;
+    function toRenameLocation(entry: Entry, originalNode: Node, checker: TypeChecker, providePrefixAndSuffixText: boolean): RenameLocation;
     function toReferenceEntry(entry: Entry): ReferenceEntry;
     function toHighlightSpan(entry: Entry): {
         fileName: string;
         span: HighlightSpan;
     };
+    function getTextSpanOfEntry(entry: Entry): TextSpan;
 }
 /** Encapsulates the core find-all-references algorithm. */
 declare namespace ts.FindAllReferences.Core {
     /** Core find-all-references algorithm. Handles special cases before delegating to `getReferencedSymbolsForSymbol`. */
-    function getReferencedSymbolsForNode(position: number, node: Node, program: Program, sourceFiles: ReadonlyArray<SourceFile>, cancellationToken: CancellationToken, options?: Options, sourceFilesSet?: ReadonlyMap<true>): SymbolAndEntries[] | undefined;
+    function getReferencedSymbolsForNode(position: number, node: Node, program: Program, sourceFiles: ReadonlyArray<SourceFile>, cancellationToken: CancellationToken, options?: Options, sourceFilesSet?: ReadonlyMap<true>): ReadonlyArray<SymbolAndEntries> | undefined;
     function eachExportReference(sourceFiles: ReadonlyArray<SourceFile>, checker: TypeChecker, cancellationToken: CancellationToken | undefined, exportSymbol: Symbol, exportingModuleSymbol: Symbol, exportName: string, isDefaultExport: boolean, cb: (ref: Identifier) => void): void;
     /** Used as a quick check for whether a symbol is used at all in a file (besides its definition). */
     function isSymbolReferencedInFile(definition: Identifier, checker: TypeChecker, sourceFile: SourceFile): boolean;
@@ -1553,7 +1567,7 @@ declare namespace ts {
     function preProcessFile(sourceText: string, readImportFiles?: boolean, detectJavaScriptImports?: boolean): PreProcessedFileInfo;
 }
 declare namespace ts.Rename {
-    function getRenameInfo(program: Program, sourceFile: SourceFile, position: number): RenameInfo;
+    function getRenameInfo(program: Program, sourceFile: SourceFile, position: number, options?: RenameInfoOptions): RenameInfo;
 }
 declare namespace ts.SignatureHelp {
     function getSignatureHelpItems(program: Program, sourceFile: SourceFile, position: number, triggerReason: SignatureHelpTriggerReason | undefined, cancellationToken: CancellationToken): SignatureHelpItems | undefined;
@@ -1571,7 +1585,23 @@ declare namespace ts {
         tryGetGeneratedPosition(info: DocumentPosition): DocumentPosition | undefined;
         clearCache(): void;
     }
-    function getSourceMapper(useCaseSensitiveFileNames: boolean, currentDirectory: string, log: (message: string) => void, host: LanguageServiceHost, getProgram: () => Program): SourceMapper;
+    interface SourceMapperHost {
+        useCaseSensitiveFileNames(): boolean;
+        getCurrentDirectory(): string;
+        getProgram(): Program | undefined;
+        fileExists?(path: string): boolean;
+        readFile?(path: string, encoding?: string): string | undefined;
+        getSourceFileLike?(fileName: string): SourceFileLike | undefined;
+        getDocumentPositionMapper?(generatedFileName: string, sourceFileName?: string): DocumentPositionMapper | undefined;
+        log(s: string): void;
+    }
+    function getSourceMapper(host: SourceMapperHost): SourceMapper;
+    /**
+     * string | undefined to contents of map file to create DocumentPositionMapper from it
+     * DocumentPositionMapper | false to give back cached DocumentPositionMapper
+     */
+    type ReadMapFile = (mapFileName: string, mapFileNameFromDts: string | undefined) => string | undefined | DocumentPositionMapper | false;
+    function getDocumentPositionMapper(host: DocumentPositionMapperHost, generatedFileName: string, generatedFileLineInfo: LineInfo, readMapFile: ReadMapFile): DocumentPositionMapper | undefined;
 }
 declare namespace ts {
     function computeSuggestionDiagnostics(sourceFile: SourceFile, program: Program, cancellationToken: CancellationToken): DiagnosticWithLocation[];
@@ -2022,14 +2052,24 @@ declare namespace ts.codefix {
 declare namespace ts.codefix {
 }
 declare namespace ts.codefix {
+}
+declare namespace ts.codefix {
     /**
      * Finds members of the resolved type that are missing in the class pointed to by class decl
      * and generates source code for the missing members.
      * @param possiblyMissingSymbols The collection of symbols to filter and then get insertions for.
      * @returns Empty string iff there are no member insertions.
      */
-    function createMissingMemberNodes(classDeclaration: ClassLikeDeclaration, possiblyMissingSymbols: ReadonlyArray<Symbol>, checker: TypeChecker, preferences: UserPreferences, out: (node: ClassElement) => void): void;
-    function createMethodFromCallExpression(context: CodeFixContextBase, call: CallExpression, methodName: string, inJs: boolean, makeStatic: boolean, preferences: UserPreferences, body: boolean): MethodDeclaration;
+    function createMissingMemberNodes(classDeclaration: ClassLikeDeclaration, possiblyMissingSymbols: ReadonlyArray<Symbol>, context: TypeConstructionContext, preferences: UserPreferences, out: (node: ClassElement) => void): void;
+    function getNoopSymbolTrackerWithResolver(context: TypeConstructionContext): SymbolTracker;
+    interface TypeConstructionContext {
+        program: Program;
+        host: ModuleSpecifierResolutionHost;
+    }
+    function createMethodFromCallExpression(context: CodeFixContextBase, call: CallExpression, methodName: string, inJs: boolean, makeStatic: boolean, preferences: UserPreferences, contextNode: Node): MethodDeclaration;
+    function setJsonCompilerOptionValue(changeTracker: textChanges.ChangeTracker, configFile: TsConfigSourceFile, optionName: string, optionValue: Expression): undefined;
+    function createJsonPropertyAssignment(name: string, initializer: Expression): PropertyAssignment;
+    function findJsonProperty(obj: ObjectLiteralExpression, name: string): PropertyAssignment | undefined;
 }
 declare namespace ts.codefix {
 }
@@ -2299,12 +2339,12 @@ declare namespace ts {
          * Returns a JSON-encoded value of the type:
          * { canRename: boolean, localizedErrorMessage: string, displayName: string, fullDisplayName: string, kind: string, kindModifiers: string, triggerSpan: { start; length } }
          */
-        getRenameInfo(fileName: string, position: number): string;
+        getRenameInfo(fileName: string, position: number, options?: RenameInfoOptions): string;
         /**
          * Returns a JSON-encoded value of the type:
          * { fileName: string, textSpan: { start: number, length: number } }[]
          */
-        findRenameLocations(fileName: string, position: number, findInStrings: boolean, findInComments: boolean): string;
+        findRenameLocations(fileName: string, position: number, findInStrings: boolean, findInComments: boolean, providePrefixAndSuffixTextForRename?: boolean): string;
         /**
          * Returns a JSON-encoded value of the type:
          * { fileName: string; textSpan: { start: number; length: number}; kind: string; name: string; containerKind: string; containerName: string }
@@ -2463,5 +2503,5 @@ declare namespace ts {
 declare namespace TypeScript.Services {
     const TypeScriptServicesFactory: typeof ts.TypeScriptServicesFactory;
 }
-declare const toolsVersion = "3.2";
+declare const toolsVersion = "3.3";
 //# sourceMappingURL=services.d.ts.map

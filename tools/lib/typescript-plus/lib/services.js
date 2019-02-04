@@ -3770,7 +3770,7 @@ var ts;
                 getJSCompletionEntries(sourceFile, location.pos, uniqueNames, compilerOptions.target, entries); // TODO: GH#18217
             }
             else {
-                if ((!symbols || symbols.length === 0) && keywordFilters === 0 /* None */) {
+                if (!isNewIdentifierLocation && (!symbols || symbols.length === 0) && keywordFilters === 0 /* None */) {
                     return undefined;
                 }
                 getCompletionEntriesFromSymbols(symbols, entries, location, sourceFile, typeChecker, compilerOptions.target, log, completionKind, preferences, propertyAccessToConvert, isJsxInitializer, recommendedCompletion, symbolToOriginInfoMap);
@@ -3970,7 +3970,8 @@ var ts;
             }) || { type: "none" };
         }
         function getSymbolName(symbol, origin, target) {
-            return origin && originIsExport(origin) && origin.isDefaultExport && symbol.escapedName === "default" /* Default */
+            return origin && originIsExport(origin) && ((origin.isDefaultExport && symbol.escapedName === "default" /* Default */) ||
+                (symbol.escapedName === "export=" /* ExportEquals */))
                 // Name of "export default foo;" is "foo". Name of "export default 0" is the filename converted to camelCase.
                 ? ts.firstDefined(symbol.declarations, function (d) { return ts.isExportAssignment(d) && ts.isIdentifier(d.expression) ? d.expression.text : undefined; })
                     || ts.codefix.moduleSymbolToValidIdentifier(origin.moduleSymbol, target)
@@ -6701,8 +6702,8 @@ var ts;
             var _a = ts.SymbolDisplay.getSymbolDisplayPartsDocumentationAndSymbolKind(checker, symbol, enclosingDeclaration.getSourceFile(), enclosingDeclaration, enclosingDeclaration, meaning), displayParts = _a.displayParts, symbolKind = _a.symbolKind;
             return { displayParts: displayParts, kind: symbolKind };
         }
-        function toRenameLocation(entry, originalNode, checker) {
-            return __assign({}, entryToDocumentSpan(entry), getPrefixAndSuffixText(entry, originalNode, checker));
+        function toRenameLocation(entry, originalNode, checker, providePrefixAndSuffixText) {
+            return __assign({}, entryToDocumentSpan(entry), (providePrefixAndSuffixText && getPrefixAndSuffixText(entry, originalNode, checker)));
         }
         FindAllReferences.toRenameLocation = toRenameLocation;
         function toReferenceEntry(entry) {
@@ -6813,6 +6814,11 @@ var ts;
             }
             return ts.createTextSpanFromBounds(start, end);
         }
+        function getTextSpanOfEntry(entry) {
+            return entry.kind === 0 /* Span */ ? entry.textSpan :
+                getTextSpan(entry.node, entry.node.getSourceFile());
+        }
+        FindAllReferences.getTextSpanOfEntry = getTextSpanOfEntry;
         /** A node is considered a writeAccess iff it is a name of a declaration or a target of an assignment */
         function isWriteAccessForReference(node) {
             var decl = ts.getDeclarationFromName(node);
@@ -6906,24 +6912,100 @@ var ts;
                 if (symbol.escapedName === "export=" /* ExportEquals */) {
                     return getReferencedSymbolsForModule(program, symbol.parent, /*excludeImportTypeOfExportEquals*/ false, sourceFiles, sourceFilesSet);
                 }
-                var moduleReferences = ts.emptyArray;
-                var moduleSourceFile = isModuleSymbol(symbol);
-                var referencedNode = node;
-                if (moduleSourceFile) {
-                    var exportEquals = symbol.exports.get("export=" /* ExportEquals */);
-                    // If !!exportEquals, we're about to add references to `import("mod")` anyway, so don't double-count them.
-                    moduleReferences = getReferencedSymbolsForModule(program, symbol, !!exportEquals, sourceFiles, sourceFilesSet);
-                    if (!exportEquals || !sourceFilesSet.has(moduleSourceFile.fileName))
-                        return moduleReferences;
-                    // Continue to get references to 'export ='.
-                    symbol = ts.skipAlias(exportEquals, checker);
-                    referencedNode = undefined;
+                var moduleReferences = getReferencedSymbolsForModuleIfDeclaredBySourceFile(symbol, program, sourceFiles, cancellationToken, options, sourceFilesSet);
+                if (moduleReferences && !(symbol.flags & 33554432 /* Transient */)) {
+                    return moduleReferences;
                 }
-                return ts.concatenate(moduleReferences, getReferencedSymbolsForSymbol(symbol, referencedNode, sourceFiles, sourceFilesSet, checker, cancellationToken, options));
+                var aliasedSymbol = getMergedAliasedSymbolOfNamespaceExportDeclaration(node, symbol, checker);
+                var moduleReferencesOfExportTarget = aliasedSymbol &&
+                    getReferencedSymbolsForModuleIfDeclaredBySourceFile(aliasedSymbol, program, sourceFiles, cancellationToken, options, sourceFilesSet);
+                var references = getReferencedSymbolsForSymbol(symbol, node, sourceFiles, sourceFilesSet, checker, cancellationToken, options);
+                return mergeReferences(program, moduleReferences, references, moduleReferencesOfExportTarget);
             }
             Core.getReferencedSymbolsForNode = getReferencedSymbolsForNode;
-            function isModuleSymbol(symbol) {
-                return symbol.flags & 1536 /* Module */ ? ts.find(symbol.declarations, ts.isSourceFile) : undefined;
+            function getMergedAliasedSymbolOfNamespaceExportDeclaration(node, symbol, checker) {
+                if (node.parent && ts.isNamespaceExportDeclaration(node.parent)) {
+                    var aliasedSymbol = checker.getAliasedSymbol(symbol);
+                    var targetSymbol = checker.getMergedSymbol(aliasedSymbol);
+                    if (aliasedSymbol !== targetSymbol) {
+                        return targetSymbol;
+                    }
+                }
+                return undefined;
+            }
+            function getReferencedSymbolsForModuleIfDeclaredBySourceFile(symbol, program, sourceFiles, cancellationToken, options, sourceFilesSet) {
+                var moduleSourceFile = symbol.flags & 1536 /* Module */ ? ts.find(symbol.declarations, ts.isSourceFile) : undefined;
+                if (!moduleSourceFile)
+                    return undefined;
+                var exportEquals = symbol.exports.get("export=" /* ExportEquals */);
+                // If !!exportEquals, we're about to add references to `import("mod")` anyway, so don't double-count them.
+                var moduleReferences = getReferencedSymbolsForModule(program, symbol, !!exportEquals, sourceFiles, sourceFilesSet);
+                if (!exportEquals || !sourceFilesSet.has(moduleSourceFile.fileName))
+                    return moduleReferences;
+                // Continue to get references to 'export ='.
+                var checker = program.getTypeChecker();
+                symbol = ts.skipAlias(exportEquals, checker);
+                return mergeReferences(program, moduleReferences, getReferencedSymbolsForSymbol(symbol, /*node*/ undefined, sourceFiles, sourceFilesSet, checker, cancellationToken, options));
+            }
+            /**
+             * Merges the references by sorting them (by file index in sourceFiles and their location in it) that point to same definition symbol
+             */
+            function mergeReferences(program) {
+                var referencesToMerge = [];
+                for (var _i = 1; _i < arguments.length; _i++) {
+                    referencesToMerge[_i - 1] = arguments[_i];
+                }
+                var result;
+                for (var _a = 0, referencesToMerge_1 = referencesToMerge; _a < referencesToMerge_1.length; _a++) {
+                    var references = referencesToMerge_1[_a];
+                    if (!references || !references.length)
+                        continue;
+                    if (!result) {
+                        result = references;
+                        continue;
+                    }
+                    var _loop_3 = function (entry) {
+                        if (!entry.definition || entry.definition.type !== 0 /* Symbol */) {
+                            result.push(entry);
+                            return "continue";
+                        }
+                        var symbol = entry.definition.symbol;
+                        var refIndex = ts.findIndex(result, function (ref) { return !!ref.definition &&
+                            ref.definition.type === 0 /* Symbol */ &&
+                            ref.definition.symbol === symbol; });
+                        if (refIndex === -1) {
+                            result.push(entry);
+                            return "continue";
+                        }
+                        var reference = result[refIndex];
+                        result[refIndex] = {
+                            definition: reference.definition,
+                            references: reference.references.concat(entry.references).sort(function (entry1, entry2) {
+                                var entry1File = getSourceFileIndexOfEntry(program, entry1);
+                                var entry2File = getSourceFileIndexOfEntry(program, entry2);
+                                if (entry1File !== entry2File) {
+                                    return ts.compareValues(entry1File, entry2File);
+                                }
+                                var entry1Span = FindAllReferences.getTextSpanOfEntry(entry1);
+                                var entry2Span = FindAllReferences.getTextSpanOfEntry(entry2);
+                                return entry1Span.start !== entry2Span.start ?
+                                    ts.compareValues(entry1Span.start, entry2Span.start) :
+                                    ts.compareValues(entry1Span.length, entry2Span.length);
+                            })
+                        };
+                    };
+                    for (var _b = 0, references_1 = references; _b < references_1.length; _b++) {
+                        var entry = references_1[_b];
+                        _loop_3(entry);
+                    }
+                }
+                return result;
+            }
+            function getSourceFileIndexOfEntry(program, entry) {
+                var sourceFile = entry.kind === 0 /* Span */ ?
+                    program.getSourceFile(entry.fileName) :
+                    entry.node.getSourceFile();
+                return program.getSourceFiles().indexOf(sourceFile);
             }
             function getReferencedSymbolsForModule(program, symbol, excludeImportTypeOfExportEquals, sourceFiles, sourceFilesSet) {
                 ts.Debug.assert(!!symbol.valueDeclaration);
@@ -6960,7 +7042,7 @@ var ts;
                             break;
                         default:
                             // This may be merged with something.
-                            ts.Debug.fail("Expected a module symbol to be declared by a SourceFile or ModuleDeclaration.");
+                            ts.Debug.assert(!!(symbol.flags & 33554432 /* Transient */), "Expected a module symbol to be declared by a SourceFile or ModuleDeclaration.");
                     }
                 }
                 var exported = symbol.exports.get("export=" /* ExportEquals */);
@@ -7007,12 +7089,12 @@ var ts;
             }
             /** Core find-all-references algorithm for a normal symbol. */
             function getReferencedSymbolsForSymbol(originalSymbol, node, sourceFiles, sourceFilesSet, checker, cancellationToken, options) {
-                var symbol = node && skipPastExportOrImportSpecifierOrUnion(originalSymbol, node, checker, !!options.isForRename) || originalSymbol;
+                var symbol = node && skipPastExportOrImportSpecifierOrUnion(originalSymbol, node, checker, /*useLocalSymbolForExportSpecifier*/ !isForRenameWithPrefixAndSuffixText(options)) || originalSymbol;
                 // Compute the meaning from the location and the symbol it references
                 var searchMeaning = node ? getIntersectingMeaningFromDeclarations(node, symbol) : 7 /* All */;
                 var result = [];
                 var state = new State(sourceFiles, sourceFilesSet, node ? getSpecialSearchKind(node) : 0 /* None */, checker, cancellationToken, searchMeaning, options, result);
-                var exportSpecifier = !options.isForRename ? undefined : ts.find(symbol.declarations, ts.isExportSpecifier);
+                var exportSpecifier = !isForRenameWithPrefixAndSuffixText(options) ? undefined : ts.find(symbol.declarations, ts.isExportSpecifier);
                 if (exportSpecifier) {
                     // When renaming at an export specifier, rename the export and not the thing being exported.
                     getReferencesAtExportSpecifier(exportSpecifier.name, symbol, exportSpecifier, state.createSearch(node, originalSymbol, /*comingFrom*/ undefined), state, /*addReferencesHere*/ true, /*alwaysGetReferences*/ true);
@@ -7022,7 +7104,7 @@ var ts;
                     searchForImportsOfExport(node, symbol, { exportingModuleSymbol: ts.Debug.assertDefined(symbol.parent, "Expected export symbol to have a parent"), exportKind: 1 /* Default */ }, state);
                 }
                 else {
-                    var search = state.createSearch(node, symbol, /*comingFrom*/ undefined, { allSearchSymbols: node ? populateSearchSymbolSet(symbol, node, checker, !!options.isForRename, !!options.implementations) : [symbol] });
+                    var search = state.createSearch(node, symbol, /*comingFrom*/ undefined, { allSearchSymbols: node ? populateSearchSymbolSet(symbol, node, checker, !!options.isForRename, !!options.providePrefixAndSuffixTextForRename, !!options.implementations) : [symbol] });
                     // Try to get the smallest valid scope that we can limit our search to;
                     // otherwise we'll need to search globally (i.e. include each file).
                     var scope = getSymbolScope(symbol);
@@ -7055,14 +7137,17 @@ var ts;
                 }
             }
             /** Handle a few special cases relating to export/import specifiers. */
-            function skipPastExportOrImportSpecifierOrUnion(symbol, node, checker, isForRename) {
+            function skipPastExportOrImportSpecifierOrUnion(symbol, node, checker, useLocalSymbolForExportSpecifier) {
                 var parent = node.parent;
-                if (ts.isExportSpecifier(parent) && !isForRename) {
+                if (ts.isExportSpecifier(parent) && useLocalSymbolForExportSpecifier) {
                     return getLocalSymbolForExportSpecifier(node, symbol, parent, checker);
                 }
                 // If the symbol is declared as part of a declaration like `{ type: "a" } | { type: "b" }`, use the property on the union type to get more references.
                 return ts.firstDefined(symbol.declarations, function (decl) {
                     if (!decl.parent) {
+                        // Ignore UMD module and global merge
+                        if (symbol.flags & 33554432 /* Transient */)
+                            return undefined;
                         // Assertions for GH#21814. We should be handling SourceFile symbols in `getReferencedSymbolsForModule` instead of getting here.
                         ts.Debug.fail("Unexpected symbol at " + ts.Debug.showSyntaxKind(node) + ": " + ts.Debug.showSymbol(symbol));
                     }
@@ -7077,6 +7162,12 @@ var ts;
                 SpecialSearchKind[SpecialSearchKind["Constructor"] = 1] = "Constructor";
                 SpecialSearchKind[SpecialSearchKind["Class"] = 2] = "Class";
             })(SpecialSearchKind || (SpecialSearchKind = {}));
+            function getNonModuleSymbolOfMergedModuleSymbol(symbol) {
+                if (!(symbol.flags & (1536 /* Module */ | 33554432 /* Transient */)))
+                    return undefined;
+                var decl = symbol.declarations && ts.find(symbol.declarations, function (d) { return !ts.isSourceFile(d) && !ts.isModuleDeclaration(d); });
+                return decl && decl.symbol;
+            }
             /**
              * Holds all state needed for the finding references.
              * Unlike `Search`, there is only one `State`.
@@ -7135,7 +7226,7 @@ var ts;
                     // Note: getLocalSymbolForExportDefault handles `export default class C {}`, but not `export default C` or `export { C as default }`.
                     // The other two forms seem to be handled downstream (e.g. in `skipPastExportOrImportSpecifier`), so special-casing the first form
                     // here appears to be intentional).
-                    var _a = searchOptions.text, text = _a === void 0 ? ts.stripQuotes(ts.unescapeLeadingUnderscores((ts.getLocalSymbolForExportDefault(symbol) || symbol).escapedName)) : _a, _b = searchOptions.allSearchSymbols, allSearchSymbols = _b === void 0 ? [symbol] : _b;
+                    var _a = searchOptions.text, text = _a === void 0 ? ts.stripQuotes(ts.unescapeLeadingUnderscores((ts.getLocalSymbolForExportDefault(symbol) || getNonModuleSymbolOfMergedModuleSymbol(symbol) || symbol).escapedName)) : _a, _b = searchOptions.allSearchSymbols, allSearchSymbols = _b === void 0 ? [symbol] : _b;
                     var escapedText = ts.escapeLeadingUnderscores(text);
                     var parents = this.options.implementations && location ? getParentSymbolsOfPropertyAccess(location, symbol, this.checker) : undefined;
                     return { symbol: symbol, comingFrom: comingFrom, text: text, escapedText: escapedText, parents: parents, allSearchSymbols: allSearchSymbols, includes: function (sym) { return ts.contains(allSearchSymbols, sym); } };
@@ -7519,6 +7610,7 @@ var ts;
                 getImportOrExportReferences(referenceLocation, referenceSymbol, search, state);
             }
             function getReferencesAtExportSpecifier(referenceLocation, referenceSymbol, exportSpecifier, search, state, addReferencesHere, alwaysGetReferences) {
+                ts.Debug.assert(!alwaysGetReferences || !!state.options.providePrefixAndSuffixTextForRename, "If alwaysGetReferences is true, then prefix/suffix text must be enabled");
                 var parent = exportSpecifier.parent, propertyName = exportSpecifier.propertyName, name = exportSpecifier.name;
                 var exportDeclaration = parent.parent;
                 var localSymbol = getLocalSymbolForExportSpecifier(referenceLocation, referenceSymbol, exportSpecifier, state.checker);
@@ -7547,14 +7639,14 @@ var ts;
                     }
                 }
                 // For `export { foo as bar }`, rename `foo`, but not `bar`.
-                if (!state.options.isForRename || alwaysGetReferences) {
+                if (!isForRenameWithPrefixAndSuffixText(state.options) || alwaysGetReferences) {
                     var exportKind = referenceLocation.originalKeywordKind === 80 /* DefaultKeyword */ ? 1 /* Default */ : 0 /* Named */;
                     var exportSymbol = ts.Debug.assertDefined(exportSpecifier.symbol);
                     var exportInfo = ts.Debug.assertDefined(FindAllReferences.getExportInfo(exportSymbol, exportKind, state.checker));
                     searchForImportsOfExport(referenceLocation, exportSymbol, exportInfo, state);
                 }
                 // At `export { x } from "foo"`, also search for the imported symbol `"foo".x`.
-                if (search.comingFrom !== 1 /* Export */ && exportDeclaration.moduleSpecifier && !propertyName && !state.options.isForRename) {
+                if (search.comingFrom !== 1 /* Export */ && exportDeclaration.moduleSpecifier && !propertyName && !isForRenameWithPrefixAndSuffixText(state.options)) {
                     var imported = state.checker.getExportSpecifierLocalTargetSymbol(exportSpecifier);
                     if (imported)
                         searchForImportedSymbol(imported, state);
@@ -7586,7 +7678,7 @@ var ts;
                     return;
                 var symbol = importOrExport.symbol;
                 if (importOrExport.kind === 0 /* Import */) {
-                    if (!state.options.isForRename) {
+                    if (!(isForRenameWithPrefixAndSuffixText(state.options))) {
                         searchForImportedSymbol(symbol, state);
                     }
                 }
@@ -7848,6 +7940,9 @@ var ts;
                 });
                 return [{ definition: { type: 0 /* Symbol */, symbol: searchSpaceNode.symbol }, references: references }];
             }
+            function isParameterName(node) {
+                return node.kind === 72 /* Identifier */ && node.parent.kind === 151 /* Parameter */ && node.parent.name === node;
+            }
             function getReferencesForThisKeyword(thisOrSuperKeyword, sourceFiles, cancellationToken) {
                 var searchSpaceNode = ts.getThisContainer(thisOrSuperKeyword, /* includeArrowFunctions */ false);
                 // Whether 'this' occurs in a static context within a class.
@@ -7868,7 +7963,7 @@ var ts;
                         searchSpaceNode = searchSpaceNode.parent; // re-assign to be the owning class
                         break;
                     case 279 /* SourceFile */:
-                        if (ts.isExternalModule(searchSpaceNode)) {
+                        if (ts.isExternalModule(searchSpaceNode) || isParameterName(thisOrSuperKeyword)) {
                             return undefined;
                         }
                     // falls through
@@ -7900,7 +7995,7 @@ var ts;
                                 // and has the appropriate static modifier from the original container.
                                 return container.parent && searchSpaceNode.symbol === container.parent.symbol && (ts.getModifierFlags(container) & 32 /* Static */) === staticFlag;
                             case 279 /* SourceFile */:
-                                return container.kind === 279 /* SourceFile */ && !ts.isExternalModule(container);
+                                return container.kind === 279 /* SourceFile */ && !ts.isExternalModule(container) && !isParameterName(node);
                         }
                     });
                 }).map(function (n) { return FindAllReferences.nodeEntry(n); });
@@ -7924,13 +8019,13 @@ var ts;
             }
             // For certain symbol kinds, we need to include other symbols in the search set.
             // This is not needed when searching for re-exports.
-            function populateSearchSymbolSet(symbol, location, checker, isForRename, implementations) {
+            function populateSearchSymbolSet(symbol, location, checker, isForRename, providePrefixAndSuffixText, implementations) {
                 var result = [];
-                forEachRelatedSymbol(symbol, location, checker, isForRename, function (sym, root, base) { result.push(base || root || sym); }, 
+                forEachRelatedSymbol(symbol, location, checker, isForRename, !(isForRename && providePrefixAndSuffixText), function (sym, root, base) { result.push(base || root || sym); }, 
                 /*allowBaseTypes*/ function () { return !implementations; });
                 return result;
             }
-            function forEachRelatedSymbol(symbol, location, checker, isForRenamePopulateSearchSymbolSet, cbSymbol, allowBaseTypes) {
+            function forEachRelatedSymbol(symbol, location, checker, isForRenamePopulateSearchSymbolSet, onlyIncludeBindingElementAtReferenceLocation, cbSymbol, allowBaseTypes) {
                 var containingObjectLiteralElement = ts.getContainingObjectLiteralElement(location);
                 if (containingObjectLiteralElement) {
                     /* Because in short-hand property assignment, location has two meaning : property name and as value of the property
@@ -7967,6 +8062,13 @@ var ts;
                     if (res2)
                         return res2;
                 }
+                var aliasedSymbol = getMergedAliasedSymbolOfNamespaceExportDeclaration(location, symbol, checker);
+                if (aliasedSymbol) {
+                    // In case of UMD module and global merging, search for global as well
+                    var res_2 = cbSymbol(aliasedSymbol, /*rootSymbol*/ undefined, /*baseSymbol*/ undefined, 1 /* Node */);
+                    if (res_2)
+                        return res_2;
+                }
                 var res = fromRoot(symbol);
                 if (res)
                     return res;
@@ -7977,9 +8079,23 @@ var ts;
                     return fromRoot(symbol.flags & 1 /* FunctionScopedVariable */ ? paramProps[1] : paramProps[0]);
                 }
                 // symbolAtLocation for a binding element is the local symbol. See if the search symbol is the property.
-                // Don't do this when populating search set for a rename -- just rename the local.
+                // Don't do this when populating search set for a rename when prefix and suffix text will be provided -- just rename the local.
                 if (!isForRenamePopulateSearchSymbolSet) {
-                    var bindingElementPropertySymbol = ts.isObjectBindingElementWithoutPropertyName(location.parent) ? ts.getPropertySymbolFromBindingElement(checker, location.parent) : undefined;
+                    var bindingElementPropertySymbol = void 0;
+                    if (onlyIncludeBindingElementAtReferenceLocation) {
+                        bindingElementPropertySymbol = ts.isObjectBindingElementWithoutPropertyName(location.parent) ? ts.getPropertySymbolFromBindingElement(checker, location.parent) : undefined;
+                    }
+                    else {
+                        bindingElementPropertySymbol = getPropertySymbolOfObjectBindingPatternWithoutPropertyName(symbol, checker);
+                    }
+                    return bindingElementPropertySymbol && fromRoot(bindingElementPropertySymbol, 4 /* SearchedPropertyFoundLocal */);
+                }
+                ts.Debug.assert(isForRenamePopulateSearchSymbolSet);
+                // due to the above assert and the arguments at the uses of this function,
+                // (onlyIncludeBindingElementAtReferenceLocation <=> !providePrefixAndSuffixTextForRename) holds
+                var includeOriginalSymbolOfBindingElement = onlyIncludeBindingElementAtReferenceLocation;
+                if (includeOriginalSymbolOfBindingElement) {
+                    var bindingElementPropertySymbol = getPropertySymbolOfObjectBindingPatternWithoutPropertyName(symbol, checker);
                     return bindingElementPropertySymbol && fromRoot(bindingElementPropertySymbol, 4 /* SearchedPropertyFoundLocal */);
                 }
                 function fromRoot(sym, kind) {
@@ -7997,10 +8113,17 @@ var ts;
                                 : undefined);
                     });
                 }
+                function getPropertySymbolOfObjectBindingPatternWithoutPropertyName(symbol, checker) {
+                    var bindingElement = ts.getDeclarationOfKind(symbol, 186 /* BindingElement */);
+                    if (bindingElement && ts.isObjectBindingElementWithoutPropertyName(bindingElement)) {
+                        return ts.getPropertySymbolFromBindingElement(checker, bindingElement);
+                    }
+                }
             }
             function getRelatedSymbol(search, referenceSymbol, referenceLocation, state) {
                 var checker = state.checker;
-                return forEachRelatedSymbol(referenceSymbol, referenceLocation, checker, /*isForRenamePopulateSearchSymbolSet*/ false, function (sym, rootSymbol, baseSymbol, kind) { return search.includes(baseSymbol || rootSymbol || sym)
+                return forEachRelatedSymbol(referenceSymbol, referenceLocation, checker, /*isForRenamePopulateSearchSymbolSet*/ false, 
+                /*onlyIncludeBindingElementAtReferenceLocation*/ !state.options.isForRename || !!state.options.providePrefixAndSuffixTextForRename, function (sym, rootSymbol, baseSymbol, kind) { return search.includes(baseSymbol || rootSymbol || sym)
                     // For a base type, use the symbol for the derived type. For a synthetic (e.g. union) property, use the union symbol.
                     ? { symbol: rootSymbol && !(ts.getCheckFlags(sym) & 6 /* Synthetic */) ? rootSymbol : sym, kind: kind }
                     : undefined; }, 
@@ -8042,7 +8165,8 @@ var ts;
             Core.getIntersectingMeaningFromDeclarations = getIntersectingMeaningFromDeclarations;
             function isImplementation(node) {
                 return !!(node.flags & 4194304 /* Ambient */)
-                    || (ts.isVariableLike(node) ? ts.hasInitializer(node)
+                    ? !(ts.isInterfaceDeclaration(node) || ts.isTypeAliasDeclaration(node))
+                    : (ts.isVariableLike(node) ? ts.hasInitializer(node)
                         : ts.isFunctionLikeDeclaration(node) ? !!node.body
                             : ts.isClassLike(node) || ts.isModuleOrEnumDeclaration(node));
             }
@@ -8084,6 +8208,9 @@ var ts;
                     return t.symbol && t.symbol.flags & (32 /* Class */ | 64 /* Interface */) ? t.symbol : undefined;
                 });
                 return res.length === 0 ? undefined : res;
+            }
+            function isForRenameWithPrefixAndSuffixText(options) {
+                return options.isForRename && options.providePrefixAndSuffixTextForRename;
             }
         })(Core = FindAllReferences.Core || (FindAllReferences.Core = {}));
     })(FindAllReferences = ts.FindAllReferences || (ts.FindAllReferences = {}));
@@ -8197,7 +8324,7 @@ var ts;
     }
     function updateImports(program, changeTracker, oldToNew, newToOld, host, getCanonicalFileName) {
         var allFiles = program.getSourceFiles();
-        var _loop_3 = function (sourceFile) {
+        var _loop_4 = function (sourceFile) {
             var newFromOld = oldToNew(sourceFile.path);
             var newImportFromPath = newFromOld !== undefined ? newFromOld : sourceFile.path;
             var newImportFromDirectory = ts.getDirectoryPath(newImportFromPath);
@@ -8219,7 +8346,7 @@ var ts;
                 var toImport = oldFromNew !== undefined
                     // If we're at the new location (file was already renamed), need to redo module resolution starting from the old location.
                     // TODO:GH#18217
-                    ? getSourceFileToImportFromResolved(ts.resolveModuleName(importLiteral.text, oldImportFromPath, program.getCompilerOptions(), host), oldToNew, host)
+                    ? getSourceFileToImportFromResolved(ts.resolveModuleName(importLiteral.text, oldImportFromPath, program.getCompilerOptions(), host), oldToNew)
                     : getSourceFileToImport(importedModuleSymbol, importLiteral, sourceFile, program, host, oldToNew);
                 // Need an update if the imported file moved, or the importing file moved and was using a relative path.
                 return toImport !== undefined && (toImport.updated || (importingSourceFileMoved && ts.pathIsRelative(importLiteral.text)))
@@ -8229,7 +8356,7 @@ var ts;
         };
         for (var _i = 0, allFiles_1 = allFiles; _i < allFiles_1.length; _i++) {
             var sourceFile = allFiles_1[_i];
-            _loop_3(sourceFile);
+            _loop_4(sourceFile);
         }
     }
     function combineNormal(pathA, pathB) {
@@ -8249,23 +8376,32 @@ var ts;
             var resolved = host.resolveModuleNames
                 ? host.getResolvedModuleWithFailedLookupLocationsFromCache && host.getResolvedModuleWithFailedLookupLocationsFromCache(importLiteral.text, importingSourceFile.fileName)
                 : program.getResolvedModuleWithFailedLookupLocationsFromCache(importLiteral.text, importingSourceFile.fileName);
-            return getSourceFileToImportFromResolved(resolved, oldToNew, host);
+            return getSourceFileToImportFromResolved(resolved, oldToNew);
         }
     }
-    function getSourceFileToImportFromResolved(resolved, oldToNew, host) {
+    function getSourceFileToImportFromResolved(resolved, oldToNew) {
         // Search through all locations looking for a moved file, and only then test already existing files.
         // This is because if `a.ts` is compiled to `a.js` and `a.ts` is moved, we don't want to resolve anything to `a.js`, but to `a.ts`'s new location.
-        return tryEach(tryGetNewFile) || tryEach(tryGetOldFile);
-        function tryEach(cb) {
-            return resolved && ((resolved.resolvedModule && cb(resolved.resolvedModule.resolvedFileName)) || ts.firstDefined(resolved.failedLookupLocations, cb));
+        if (!resolved)
+            return undefined;
+        // First try resolved module
+        if (resolved.resolvedModule) {
+            var result_2 = tryChange(resolved.resolvedModule.resolvedFileName);
+            if (result_2)
+                return result_2;
         }
-        function tryGetNewFile(oldFileName) {
-            var newFileName = oldToNew(oldFileName);
-            return newFileName !== undefined && host.fileExists(newFileName) ? { newFileName: newFileName, updated: true } : undefined; // TODO: GH#18217
+        // Then failed lookups except package.json since we dont want to touch them (only included ts/js files)
+        var result = ts.forEach(resolved.failedLookupLocations, tryChangeWithIgnoringPackageJson);
+        if (result)
+            return result;
+        // If nothing changed, then result is resolved module file thats not updated
+        return resolved.resolvedModule && { newFileName: resolved.resolvedModule.resolvedFileName, updated: false };
+        function tryChangeWithIgnoringPackageJson(oldFileName) {
+            return !ts.endsWith(oldFileName, "/package.json") ? tryChange(oldFileName) : undefined;
         }
-        function tryGetOldFile(oldFileName) {
+        function tryChange(oldFileName) {
             var newFileName = oldToNew(oldFileName);
-            return host.fileExists(oldFileName) ? newFileName !== undefined ? { newFileName: newFileName, updated: true } : { newFileName: oldFileName, updated: false } : undefined; // TODO: GH#18217
+            return newFileName && { newFileName: newFileName, updated: true };
         }
     }
     function updateImportsWorker(sourceFile, changeTracker, updateRef, updateImport) {
@@ -9010,7 +9146,7 @@ var ts;
             if (!patternMatcher)
                 return ts.emptyArray;
             var rawItems = [];
-            var _loop_4 = function (sourceFile) {
+            var _loop_5 = function (sourceFile) {
                 cancellationToken.throwIfCancellationRequested();
                 if (excludeDtsFiles && sourceFile.isDeclarationFile) {
                     return "continue";
@@ -9022,7 +9158,7 @@ var ts;
             // Search the declarations in all files and output matched NavigateToItem into array of NavigateToItem[]
             for (var _i = 0, sourceFiles_4 = sourceFiles; _i < sourceFiles_4.length; _i++) {
                 var sourceFile = sourceFiles_4[_i];
-                _loop_4(sourceFile);
+                _loop_5(sourceFile);
             }
             rawItems.sort(compareNavigateToItems);
             return (maxResultCount === undefined ? rawItems : rawItems.slice(0, maxResultCount)).map(createNavigateToItem);
@@ -9714,7 +9850,7 @@ var ts;
             else if (ts.isCallExpression(parent)) {
                 var name = getCalledExpressionName(parent.expression);
                 if (name !== undefined) {
-                    var args = ts.mapDefined(parent.arguments, function (a) { return ts.isStringLiteral(a) ? a.getText(curSourceFile) : undefined; }).join(", ");
+                    var args = ts.mapDefined(parent.arguments, function (a) { return ts.isStringLiteralLike(a) ? a.getText(curSourceFile) : undefined; }).join(", ");
                     return name + "(" + args + ") callback";
                 }
             }
@@ -9767,10 +9903,12 @@ var ts;
             organizeImportsWorker(topLevelExportDecls, coalesceExports);
             for (var _i = 0, _a = sourceFile.statements.filter(ts.isAmbientModule); _i < _a.length; _i++) {
                 var ambientModule = _a[_i];
-                var ambientModuleBody = getModuleBlock(ambientModule); // TODO: GH#18217
-                var ambientModuleImportDecls = ambientModuleBody.statements.filter(ts.isImportDeclaration);
+                if (!ambientModule.body) {
+                    continue;
+                }
+                var ambientModuleImportDecls = ambientModule.body.statements.filter(ts.isImportDeclaration);
                 organizeImportsWorker(ambientModuleImportDecls, coalesceAndOrganizeImports);
-                var ambientModuleExportDecls = ambientModuleBody.statements.filter(ts.isExportDeclaration);
+                var ambientModuleExportDecls = ambientModule.body.statements.filter(ts.isExportDeclaration);
                 organizeImportsWorker(ambientModuleExportDecls, coalesceExports);
             }
             return changeTracker.getChanges();
@@ -9810,13 +9948,9 @@ var ts;
             }
         }
         OrganizeImports.organizeImports = organizeImports;
-        function getModuleBlock(moduleDecl) {
-            var body = moduleDecl.body;
-            return body && !ts.isIdentifier(body) ? (ts.isModuleBlock(body) ? body : getModuleBlock(body)) : undefined;
-        }
         function removeUnusedImports(oldImports, sourceFile, program) {
             var typeChecker = program.getTypeChecker();
-            var jsxNamespace = typeChecker.getJsxNamespace();
+            var jsxNamespace = typeChecker.getJsxNamespace(sourceFile);
             var jsxElementsPresent = !!(sourceFile.transformFlags & 4 /* ContainsJsx */);
             var usedImports = [];
             for (var _i = 0, oldImports_1 = oldImports; _i < oldImports_1.length; _i++) {
@@ -10076,6 +10210,9 @@ var ts;
                 if (ts.isDeclaration(n)) {
                     addOutliningForLeadingCommentsForNode(n, sourceFile, cancellationToken, out);
                 }
+                if (isFunctionExpressionAssignedToVariable(n)) {
+                    addOutliningForLeadingCommentsForNode(n.parent.parent.parent, sourceFile, cancellationToken, out);
+                }
                 var span = getOutliningSpanForNode(n, sourceFile);
                 if (span)
                     out.push(span);
@@ -10092,6 +10229,13 @@ var ts;
                     n.forEachChild(visitNonImportNode);
                 }
                 depthRemaining++;
+            }
+            function isFunctionExpressionAssignedToVariable(n) {
+                if (!ts.isFunctionExpression(n) && !ts.isArrowFunction(n)) {
+                    return false;
+                }
+                var ancestor = ts.findAncestor(n, ts.isVariableStatement);
+                return !!ancestor && ts.getSingleInitializerOfVariableStatementOrPropertyDeclaration(ancestor) === n;
             }
         }
         function addRegionOutliningSpans(sourceFile, out) {
@@ -10208,6 +10352,7 @@ var ts;
                 case 245 /* ModuleBlock */:
                     return spanForNode(n.parent);
                 case 240 /* ClassDeclaration */:
+                case 209 /* ClassExpression */:
                 case 241 /* InterfaceDeclaration */:
                 case 243 /* EnumDeclaration */:
                 case 246 /* CaseBlock */:
@@ -10236,10 +10381,10 @@ var ts;
             }
             function spanForObjectOrArrayLiteral(node, open) {
                 if (open === void 0) { open = 18 /* OpenBraceToken */; }
-                // If the block has no leading keywords and is inside an array literal,
+                // If the block has no leading keywords and is inside an array literal or call expression,
                 // we only want to collapse the span of the block.
                 // Otherwise, the collapsed section will include the end of the previous line.
-                return spanForNode(node, /*autoCollapse*/ false, /*useFullStart*/ !ts.isArrayLiteralExpression(node.parent), open);
+                return spanForNode(node, /*autoCollapse*/ false, /*useFullStart*/ !ts.isArrayLiteralExpression(node.parent) && !ts.isCallExpression(node.parent), open);
             }
             function spanForNode(hintSpanNode, autoCollapse, useFullStart, open) {
                 if (autoCollapse === void 0) { autoCollapse = false; }
@@ -10541,13 +10686,13 @@ var ts;
     // Assumes 'value' is already lowercase.
     function indexOfIgnoringCase(str, value) {
         var n = str.length - value.length;
-        var _loop_5 = function (start) {
+        var _loop_6 = function (start) {
             if (every(value, function (valueChar, i) { return toLowerCase(str.charCodeAt(i + start)) === valueChar; })) {
                 return { value: start };
             }
         };
         for (var start = 0; start <= n; start++) {
-            var state_1 = _loop_5(start);
+            var state_1 = _loop_6(start);
             if (typeof state_1 === "object")
                 return state_1.value;
         }
@@ -11063,15 +11208,15 @@ var ts;
 (function (ts) {
     var Rename;
     (function (Rename) {
-        function getRenameInfo(program, sourceFile, position) {
+        function getRenameInfo(program, sourceFile, position, options) {
             var node = ts.getTouchingPropertyName(sourceFile, position);
             var renameInfo = node && nodeIsEligibleForRename(node)
-                ? getRenameInfoForNode(node, program.getTypeChecker(), sourceFile, function (declaration) { return program.isSourceFileDefaultLibrary(declaration.getSourceFile()); })
+                ? getRenameInfoForNode(node, program.getTypeChecker(), sourceFile, function (declaration) { return program.isSourceFileDefaultLibrary(declaration.getSourceFile()); }, options)
                 : undefined;
             return renameInfo || getRenameInfoError(ts.Diagnostics.You_cannot_rename_this_element);
         }
         Rename.getRenameInfo = getRenameInfo;
-        function getRenameInfoForNode(node, typeChecker, sourceFile, isDefinedInLibraryFile) {
+        function getRenameInfoForNode(node, typeChecker, sourceFile, isDefinedInLibraryFile, options) {
             var symbol = typeChecker.getSymbolAtLocation(node);
             if (!symbol)
                 return;
@@ -11088,7 +11233,7 @@ var ts;
                 return undefined;
             }
             if (ts.isStringLiteralLike(node) && ts.tryGetImportFromModuleSpecifier(node)) {
-                return getRenameInfoForModule(node, sourceFile, symbol);
+                return options && options.allowRenameOfImportPath ? getRenameInfoForModule(node, sourceFile, symbol) : undefined;
             }
             var kind = ts.SymbolDisplay.getSymbolKind(typeChecker, symbol, node);
             var specifierName = (ts.isImportOrExportSpecifierName(node) || ts.isStringOrNumericLiteralLike(node) && node.parent.kind === 149 /* ComputedPropertyName */)
@@ -11105,7 +11250,7 @@ var ts;
             var moduleSourceFile = ts.find(moduleSymbol.declarations, ts.isSourceFile);
             if (!moduleSourceFile)
                 return undefined;
-            var withoutIndex = node.text.endsWith("/index") || node.text.endsWith("/index.js") ? undefined : ts.tryRemoveSuffix(ts.removeFileExtension(moduleSourceFile.fileName), "/index");
+            var withoutIndex = ts.endsWith(node.text, "/index") || ts.endsWith(node.text, "/index.js") ? undefined : ts.tryRemoveSuffix(ts.removeFileExtension(moduleSourceFile.fileName), "/index");
             var name = withoutIndex === undefined ? moduleSourceFile.fileName : withoutIndex;
             var kind = withoutIndex === undefined ? "module" /* moduleElement */ : "directory" /* directory */;
             var indexAfterLastSlash = node.text.lastIndexOf("/") + 1;
@@ -11560,7 +11705,7 @@ var ts;
             return ts.createTextSpan(applicableSpanStart, applicableSpanEnd - applicableSpanStart);
         }
         function getContainingArgumentInfo(node, position, sourceFile, checker, isManuallyInvoked) {
-            var _loop_6 = function (n) {
+            var _loop_7 = function (n) {
                 // If the node is not a subspan of its parent, this is a big problem.
                 // There have been crashes that might be caused by this violation.
                 ts.Debug.assert(ts.rangeContainsRange(n.parent, n), "Not a subspan", function () { return "Child: " + ts.Debug.showSyntaxKind(n) + ", parent: " + ts.Debug.showSyntaxKind(n.parent); });
@@ -11569,8 +11714,8 @@ var ts;
                     return { value: argumentInfo };
                 }
             };
-            for (var n = node; isManuallyInvoked || (!ts.isBlock(n) && !ts.isSourceFile(n)); n = n.parent) {
-                var state_2 = _loop_6(n);
+            for (var n = node; !ts.isSourceFile(n) && (isManuallyInvoked || !ts.isBlock(n)); n = n.parent) {
+                var state_2 = _loop_7(n);
                 if (typeof state_2 === "object")
                     return state_2.value;
             }
@@ -11685,86 +11830,47 @@ var ts;
 var ts;
 (function (ts) {
     var base64UrlRegExp = /^data:(?:application\/json(?:;charset=[uU][tT][fF]-8);base64,([A-Za-z0-9+\/=]+)$)?/;
-    function getSourceMapper(useCaseSensitiveFileNames, currentDirectory, log, host, getProgram) {
-        var getCanonicalFileName = ts.createGetCanonicalFileName(useCaseSensitiveFileNames);
-        var sourcemappedFileCache;
+    function getSourceMapper(host) {
+        var getCanonicalFileName = ts.createGetCanonicalFileName(host.useCaseSensitiveFileNames());
+        var currentDirectory = host.getCurrentDirectory();
+        var sourceFileLike = ts.createMap();
+        var documentPositionMappers = ts.createMap();
         return { tryGetSourcePosition: tryGetSourcePosition, tryGetGeneratedPosition: tryGetGeneratedPosition, toLineColumnOffset: toLineColumnOffset, clearCache: clearCache };
         function toPath(fileName) {
             return ts.toPath(fileName, currentDirectory, getCanonicalFileName);
         }
-        function scanForSourcemapURL(fileName) {
-            var mappedFile = sourcemappedFileCache.get(toPath(fileName));
-            if (!mappedFile) {
-                return;
+        function getDocumentPositionMapper(generatedFileName, sourceFileName) {
+            var path = toPath(generatedFileName);
+            var value = documentPositionMappers.get(path);
+            if (value)
+                return value;
+            var mapper;
+            if (host.getDocumentPositionMapper) {
+                mapper = host.getDocumentPositionMapper(generatedFileName, sourceFileName);
             }
-            return ts.tryGetSourceMappingURL(mappedFile.text, ts.getLineStarts(mappedFile));
-        }
-        function convertDocumentToSourceMapper(file, contents, mapFileName) {
-            var map = ts.tryParseRawSourceMap(contents);
-            if (!map || !map.sources || !map.file || !map.mappings) {
-                // obviously invalid map
-                return file.sourceMapper = ts.identitySourceMapConsumer;
+            else if (host.readFile) {
+                var file = getSourceFileLike(generatedFileName);
+                mapper = file && ts.getDocumentPositionMapper({ getSourceFileLike: getSourceFileLike, getCanonicalFileName: getCanonicalFileName, log: function (s) { return host.log(s); } }, generatedFileName, ts.getLineInfo(file.text, ts.getLineStarts(file)), function (f) { return !host.fileExists || host.fileExists(f) ? host.readFile(f) : undefined; });
             }
-            var program = getProgram();
-            return file.sourceMapper = ts.createDocumentPositionMapper({
-                getSourceFileLike: function (s) {
-                    // Lookup file in program, if provided
-                    var file = program && program.getSourceFileByPath(s);
-                    // file returned here could be .d.ts when asked for .ts file if projectReferences and module resolution created this source file
-                    if (file === undefined || file.resolvedPath !== s) {
-                        // Otherwise check the cache (which may hit disk)
-                        return sourcemappedFileCache.get(s);
-                    }
-                    return file;
-                },
-                getCanonicalFileName: getCanonicalFileName,
-                log: log,
-            }, map, mapFileName);
-        }
-        function getSourceMapper(fileName, file) {
-            if (!host.readFile || !host.fileExists) {
-                return file.sourceMapper = ts.identitySourceMapConsumer;
-            }
-            if (file.sourceMapper) {
-                return file.sourceMapper;
-            }
-            var mapFileName = scanForSourcemapURL(fileName);
-            if (mapFileName) {
-                var match = base64UrlRegExp.exec(mapFileName);
-                if (match) {
-                    if (match[1]) {
-                        var base64Object = match[1];
-                        return convertDocumentToSourceMapper(file, ts.base64decode(ts.sys, base64Object), fileName);
-                    }
-                    // Not a data URL we can parse, skip it
-                    mapFileName = undefined;
-                }
-            }
-            var possibleMapLocations = [];
-            if (mapFileName) {
-                possibleMapLocations.push(mapFileName);
-            }
-            possibleMapLocations.push(fileName + ".map");
-            for (var _i = 0, possibleMapLocations_1 = possibleMapLocations; _i < possibleMapLocations_1.length; _i++) {
-                var location = possibleMapLocations_1[_i];
-                var mapPath = ts.toPath(location, ts.getDirectoryPath(fileName), getCanonicalFileName);
-                if (host.fileExists(mapPath)) {
-                    return convertDocumentToSourceMapper(file, host.readFile(mapPath), mapPath); // TODO: GH#18217
-                }
-            }
-            return file.sourceMapper = ts.identitySourceMapConsumer;
+            documentPositionMappers.set(path, mapper || ts.identitySourceMapConsumer);
+            return mapper || ts.identitySourceMapConsumer;
         }
         function tryGetSourcePosition(info) {
             if (!ts.isDeclarationFileName(info.fileName))
                 return undefined;
-            var file = getFile(info.fileName);
+            var file = getSourceFile(info.fileName);
             if (!file)
                 return undefined;
-            var newLoc = getSourceMapper(info.fileName, file).getSourcePosition(info);
-            return newLoc === info ? undefined : tryGetSourcePosition(newLoc) || newLoc;
+            var newLoc = getDocumentPositionMapper(info.fileName).getSourcePosition(info);
+            return !newLoc || newLoc === info ? undefined : tryGetSourcePosition(newLoc) || newLoc;
         }
         function tryGetGeneratedPosition(info) {
-            var program = getProgram();
+            if (ts.isDeclarationFileName(info.fileName))
+                return undefined;
+            var sourceFile = getSourceFile(info.fileName);
+            if (!sourceFile)
+                return undefined;
+            var program = host.getProgram();
             var options = program.getCompilerOptions();
             var outPath = options.outFile || options.out;
             var declarationPath = outPath ?
@@ -11772,49 +11878,96 @@ var ts;
                 ts.getDeclarationEmitOutputFilePathWorker(info.fileName, program.getCompilerOptions(), currentDirectory, program.getCommonSourceDirectory(), getCanonicalFileName);
             if (declarationPath === undefined)
                 return undefined;
-            var declarationFile = getFile(declarationPath);
-            if (!declarationFile)
-                return undefined;
-            var newLoc = getSourceMapper(declarationPath, declarationFile).getGeneratedPosition(info);
+            var newLoc = getDocumentPositionMapper(declarationPath, info.fileName).getGeneratedPosition(info);
             return newLoc === info ? undefined : newLoc;
         }
-        function getFile(fileName) {
+        function getSourceFile(fileName) {
+            var program = host.getProgram();
+            if (!program)
+                return undefined;
             var path = toPath(fileName);
-            var file = getProgram().getSourceFileByPath(path);
-            if (file && file.resolvedPath === path) {
-                return file;
+            // file returned here could be .d.ts when asked for .ts file if projectReferences and module resolution created this source file
+            var file = program.getSourceFileByPath(path);
+            return file && file.resolvedPath === path ? file : undefined;
+        }
+        function getOrCreateSourceFileLike(fileName) {
+            var path = toPath(fileName);
+            var fileFromCache = sourceFileLike.get(path);
+            if (fileFromCache !== undefined)
+                return fileFromCache ? fileFromCache : undefined;
+            if (!host.readFile || host.fileExists && !host.fileExists(path)) {
+                sourceFileLike.set(path, false);
+                return undefined;
             }
-            return sourcemappedFileCache.get(path);
+            // And failing that, check the disk
+            var text = host.readFile(path);
+            var file = text ? createSourceFileLike(text) : false;
+            sourceFileLike.set(path, file);
+            return file ? file : undefined;
+        }
+        // This can be called from source mapper in either source program or program that includes generated file
+        function getSourceFileLike(fileName) {
+            return !host.getSourceFileLike ?
+                getSourceFile(fileName) || getOrCreateSourceFileLike(fileName) :
+                host.getSourceFileLike(fileName);
         }
         function toLineColumnOffset(fileName, position) {
-            var file = getFile(fileName); // TODO: GH#18217
+            var file = getSourceFileLike(fileName); // TODO: GH#18217
             return file.getLineAndCharacterOfPosition(position);
         }
         function clearCache() {
-            sourcemappedFileCache = createSourceFileLikeCache(host);
+            sourceFileLike.clear();
+            documentPositionMappers.clear();
         }
     }
     ts.getSourceMapper = getSourceMapper;
-    function createSourceFileLikeCache(host) {
-        var cached = ts.createMap();
-        return {
-            get: function (path) {
-                if (cached.has(path)) {
-                    return cached.get(path);
+    function getDocumentPositionMapper(host, generatedFileName, generatedFileLineInfo, readMapFile) {
+        var mapFileName = ts.tryGetSourceMappingURL(generatedFileLineInfo);
+        if (mapFileName) {
+            var match = base64UrlRegExp.exec(mapFileName);
+            if (match) {
+                if (match[1]) {
+                    var base64Object = match[1];
+                    return convertDocumentToSourceMapper(host, ts.base64decode(ts.sys, base64Object), generatedFileName);
                 }
-                if (!host.fileExists || !host.readFile || !host.fileExists(path))
-                    return;
-                // And failing that, check the disk
-                var text = host.readFile(path); // TODO: GH#18217
-                var file = {
-                    text: text,
-                    lineMap: undefined,
-                    getLineAndCharacterOfPosition: function (pos) {
-                        return ts.computeLineAndCharacterOfPosition(ts.getLineStarts(this), pos);
-                    }
-                };
-                cached.set(path, file);
-                return file;
+                // Not a data URL we can parse, skip it
+                mapFileName = undefined;
+            }
+        }
+        var possibleMapLocations = [];
+        if (mapFileName) {
+            possibleMapLocations.push(mapFileName);
+        }
+        possibleMapLocations.push(generatedFileName + ".map");
+        var originalMapFileName = mapFileName && ts.getNormalizedAbsolutePath(mapFileName, ts.getDirectoryPath(generatedFileName));
+        for (var _i = 0, possibleMapLocations_1 = possibleMapLocations; _i < possibleMapLocations_1.length; _i++) {
+            var location = possibleMapLocations_1[_i];
+            var mapFileName_1 = ts.getNormalizedAbsolutePath(location, ts.getDirectoryPath(generatedFileName));
+            var mapFileContents = readMapFile(mapFileName_1, originalMapFileName);
+            if (ts.isString(mapFileContents)) {
+                return convertDocumentToSourceMapper(host, mapFileContents, mapFileName_1);
+            }
+            if (mapFileContents !== undefined) {
+                return mapFileContents || undefined;
+            }
+        }
+        return undefined;
+    }
+    ts.getDocumentPositionMapper = getDocumentPositionMapper;
+    function convertDocumentToSourceMapper(host, contents, mapFileName) {
+        var map = ts.tryParseRawSourceMap(contents);
+        if (!map || !map.sources || !map.file || !map.mappings) {
+            // obviously invalid map
+            return undefined;
+        }
+        return ts.createDocumentPositionMapper(host, map, mapFileName);
+    }
+    function createSourceFileLike(text, lineMap) {
+        return {
+            text: text,
+            lineMap: lineMap,
+            getLineAndCharacterOfPosition: function (pos) {
+                return ts.computeLineAndCharacterOfPosition(ts.getLineStarts(this), pos);
             }
         };
     }
@@ -11822,6 +11975,7 @@ var ts;
 /* @internal */
 var ts;
 (function (ts) {
+    var visitedNestedConvertibleFunctions = ts.createMap();
     function computeSuggestionDiagnostics(sourceFile, program, cancellationToken) {
         program.getSemanticDiagnostics(sourceFile, cancellationToken);
         var diags = [];
@@ -11832,6 +11986,7 @@ var ts;
             diags.push(ts.createDiagnosticForNode(getErrorNodeFromCommonJsIndicator(sourceFile.commonJsModuleIndicator), ts.Diagnostics.File_is_a_CommonJS_module_it_may_be_converted_to_an_ES6_module));
         }
         var isJsFile = ts.isSourceFileJS(sourceFile);
+        visitedNestedConvertibleFunctions.clear();
         check(sourceFile);
         if (ts.getAllowSyntheticDefaultImports(program.getCompilerOptions())) {
             for (var _i = 0, _a = sourceFile.imports; _i < _a.length; _i++) {
@@ -11929,13 +12084,17 @@ var ts;
         }
     }
     function addConvertToAsyncFunctionDiagnostics(node, checker, diags) {
-        if (!ts.isAsyncFunction(node) &&
+        // need to check function before checking map so that deeper levels of nested callbacks are checked
+        if (isConvertibleFunction(node, checker) && !visitedNestedConvertibleFunctions.has(getKeyFromNode(node))) {
+            diags.push(ts.createDiagnosticForNode(!node.name && ts.isVariableDeclaration(node.parent) && ts.isIdentifier(node.parent.name) ? node.parent.name : node, ts.Diagnostics.This_may_be_converted_to_an_async_function));
+        }
+    }
+    function isConvertibleFunction(node, checker) {
+        return !ts.isAsyncFunction(node) &&
             node.body &&
             ts.isBlock(node.body) &&
             hasReturnStatementWithPromiseHandler(node.body) &&
-            returnsPromise(node, checker)) {
-            diags.push(ts.createDiagnosticForNode(!node.name && ts.isVariableDeclaration(node.parent) && ts.isIdentifier(node.parent.name) ? node.parent.name : node, ts.Diagnostics.This_may_be_converted_to_an_async_function));
-        }
+            returnsPromise(node, checker);
     }
     function returnsPromise(node, checker) {
         var functionType = checker.getTypeAtLocation(node);
@@ -11976,15 +12135,20 @@ var ts;
     // should be kept up to date with getTransformationBody in convertToAsyncFunction.ts
     function isFixablePromiseArgument(arg) {
         switch (arg.kind) {
-            case 96 /* NullKeyword */:
-            case 72 /* Identifier */: // identifier includes undefined
             case 239 /* FunctionDeclaration */:
             case 196 /* FunctionExpression */:
             case 197 /* ArrowFunction */:
+                visitedNestedConvertibleFunctions.set(getKeyFromNode(arg), true);
+            /* falls through */
+            case 96 /* NullKeyword */:
+            case 72 /* Identifier */: // identifier includes undefined
                 return true;
             default:
                 return false;
         }
+    }
+    function getKeyFromNode(exp) {
+        return exp.pos.toString() + ":" + exp.end.toString();
     }
 })(ts || (ts = {}));
 /* @internal */
@@ -12708,7 +12872,7 @@ var ts;
             return typeof o.type === "object" && !ts.forEachEntry(o.type, function (v) { return typeof v !== "number"; });
         });
         options = ts.cloneCompilerOptions(options);
-        var _loop_7 = function (opt) {
+        var _loop_8 = function (opt) {
             if (!ts.hasProperty(options, opt.name)) {
                 return "continue";
             }
@@ -12727,7 +12891,7 @@ var ts;
         };
         for (var _i = 0, commandLineOptionsStringToEnum_1 = commandLineOptionsStringToEnum; _i < commandLineOptionsStringToEnum_1.length; _i++) {
             var opt = commandLineOptionsStringToEnum_1[_i];
-            _loop_7(opt);
+            _loop_8(opt);
         }
         return options;
     }
@@ -15899,7 +16063,7 @@ var ts;
             ChangeTracker.prototype.finishDeleteDeclarations = function () {
                 var _this = this;
                 var deletedNodesInLists = new ts.NodeSet(); // Stores nodes in lists that we already deleted. Used to avoid deleting `, ` twice in `a, b`.
-                var _loop_8 = function (sourceFile, node) {
+                var _loop_9 = function (sourceFile, node) {
                     if (!this_1.deletedNodes.some(function (d) { return d.sourceFile === sourceFile && ts.rangeContainsRangeExclusive(d.node, node); })) {
                         if (ts.isArray(node)) {
                             this_1.deleteRange(sourceFile, ts.rangeOfTypeParameters(node));
@@ -15912,7 +16076,7 @@ var ts;
                 var this_1 = this;
                 for (var _i = 0, _a = this.deletedNodes; _i < _a.length; _i++) {
                     var _b = _a[_i], sourceFile = _b.sourceFile, node = _b.node;
-                    _loop_8(sourceFile, node);
+                    _loop_9(sourceFile, node);
                 }
                 deletedNodesInLists.forEach(function (node) {
                     var sourceFile = node.getSourceFile();
@@ -15969,14 +16133,14 @@ var ts;
                     // order changes by start position
                     // If the start position is the same, put the shorter range first, since an empty range (x, x) may precede (x, y) but not vice-versa.
                     var normalized = ts.stableSort(changesInFile, function (a, b) { return (a.range.pos - b.range.pos) || (a.range.end - b.range.end); });
-                    var _loop_9 = function (i) {
+                    var _loop_10 = function (i) {
                         ts.Debug.assert(normalized[i].range.end <= normalized[i + 1].range.pos, "Changes overlap", function () {
                             return JSON.stringify(normalized[i].range) + " and " + JSON.stringify(normalized[i + 1].range);
                         });
                     };
                     // verify that change intervals do not overlap, except possibly at end points.
                     for (var i = 0; i < normalized.length - 1; i++) {
-                        _loop_9(i);
+                        _loop_10(i);
                     }
                     var textChanges = normalized.map(function (c) {
                         return ts.createTextChange(ts.createTextSpanFromRange(c.range), computeNewText(c, sourceFile, newLineCharacter, formatContext, validate));
@@ -17106,8 +17270,8 @@ var ts;
         (function (InferFromReference) {
             function inferTypesFromReferences(references, checker, cancellationToken) {
                 var usageContext = {};
-                for (var _i = 0, references_1 = references; _i < references_1.length; _i++) {
-                    var reference = references_1[_i];
+                for (var _i = 0, references_2 = references; _i < references_2.length; _i++) {
+                    var reference = references_2[_i];
                     cancellationToken.throwIfCancellationRequested();
                     inferTypeFromContext(reference, checker, usageContext);
                 }
@@ -17123,8 +17287,8 @@ var ts;
                     return undefined;
                 }
                 var usageContext = {};
-                for (var _i = 0, references_2 = references; _i < references_2.length; _i++) {
-                    var reference = references_2[_i];
+                for (var _i = 0, references_3 = references; _i < references_3.length; _i++) {
+                    var reference = references_3[_i];
                     cancellationToken.throwIfCancellationRequested();
                     inferTypeFromContext(reference, checker, usageContext);
                 }
@@ -17764,7 +17928,7 @@ var ts;
                 var newNodes = transformExpression(node, transformer, node);
                 changes.replaceNodeWithNodes(sourceFile, nodeToReplace, newNodes);
             }
-            var _loop_10 = function (statement) {
+            var _loop_11 = function (statement) {
                 ts.forEachChild(statement, function visit(node) {
                     if (ts.isCallExpression(node)) {
                         startTransformation(node, statement);
@@ -17776,7 +17940,7 @@ var ts;
             };
             for (var _i = 0, returnStatements_1 = returnStatements; _i < returnStatements_1.length; _i++) {
                 var statement = returnStatements_1[_i];
-                _loop_10(statement);
+                _loop_11(statement);
             }
         }
         function getReturnStatementsWithPromiseHandlers(body) {
@@ -18684,11 +18848,10 @@ var ts;
         codefix.registerCodeFix({
             errorCodes: errorCodes,
             getCodeActions: function (context) {
-                var program = context.program, sourceFile = context.sourceFile, span = context.span;
+                var sourceFile = context.sourceFile, span = context.span;
                 var classDeclaration = getClass(sourceFile, span.start);
-                var checker = program.getTypeChecker();
                 return ts.mapDefined(ts.getClassImplementsHeritageClauseElements(classDeclaration), function (implementedTypeNode) {
-                    var changes = ts.textChanges.ChangeTracker.with(context, function (t) { return addMissingDeclarations(checker, implementedTypeNode, sourceFile, classDeclaration, t, context.preferences); });
+                    var changes = ts.textChanges.ChangeTracker.with(context, function (t) { return addMissingDeclarations(context, implementedTypeNode, sourceFile, classDeclaration, t, context.preferences); });
                     return changes.length === 0 ? undefined : codefix.createCodeFixAction(fixId, changes, [ts.Diagnostics.Implement_interface_0, implementedTypeNode.getText(sourceFile)], fixId, ts.Diagnostics.Implement_all_unimplemented_interfaces);
                 });
             },
@@ -18700,7 +18863,7 @@ var ts;
                     if (ts.addToSeen(seenClassDeclarations, ts.getNodeId(classDeclaration))) {
                         for (var _i = 0, _a = ts.getClassImplementsHeritageClauseElements(classDeclaration); _i < _a.length; _i++) {
                             var implementedTypeNode = _a[_i];
-                            addMissingDeclarations(context.program.getTypeChecker(), implementedTypeNode, diag.file, classDeclaration, changes, context.preferences);
+                            addMissingDeclarations(context, implementedTypeNode, diag.file, classDeclaration, changes, context.preferences);
                         }
                     }
                 });
@@ -18712,7 +18875,8 @@ var ts;
         function symbolPointsToNonPrivateMember(symbol) {
             return !(ts.getModifierFlags(symbol.valueDeclaration) & 8 /* Private */);
         }
-        function addMissingDeclarations(checker, implementedTypeNode, sourceFile, classDeclaration, changeTracker, preferences) {
+        function addMissingDeclarations(context, implementedTypeNode, sourceFile, classDeclaration, changeTracker, preferences) {
+            var checker = context.program.getTypeChecker();
             var maybeHeritageClauseSymbol = getHeritageClauseSymbolTable(classDeclaration, checker);
             // Note that this is ultimately derived from a map indexed by symbol names,
             // so duplicates cannot occur.
@@ -18726,11 +18890,11 @@ var ts;
             if (!classType.getStringIndexType()) {
                 createMissingIndexSignatureDeclaration(implementedType, 0 /* String */);
             }
-            codefix.createMissingMemberNodes(classDeclaration, nonPrivateAndNotExistedInHeritageClauseMembers, checker, preferences, function (member) { return changeTracker.insertNodeAtClassStart(sourceFile, classDeclaration, member); });
+            codefix.createMissingMemberNodes(classDeclaration, nonPrivateAndNotExistedInHeritageClauseMembers, context, preferences, function (member) { return changeTracker.insertNodeAtClassStart(sourceFile, classDeclaration, member); });
             function createMissingIndexSignatureDeclaration(type, kind) {
                 var indexInfoOfKind = checker.getIndexInfoOfType(type, kind);
                 if (indexInfoOfKind) {
-                    changeTracker.insertNodeAtClassStart(sourceFile, classDeclaration, checker.indexInfoToIndexSignatureDeclaration(indexInfoOfKind, kind, classDeclaration));
+                    changeTracker.insertNodeAtClassStart(sourceFile, classDeclaration, checker.indexInfoToIndexSignatureDeclaration(indexInfoOfKind, kind, classDeclaration, /*flags*/ undefined, codefix.getNoopSymbolTrackerWithResolver(context)));
                 }
             }
         }
@@ -19056,7 +19220,7 @@ var ts;
             var symbolName = ts.isJsxOpeningLikeElement(symbolToken.parent)
                 && symbolToken.parent.tagName === symbolToken
                 && (ts.isIntrinsicJsxName(symbolToken.text) || checker.resolveName(symbolToken.text, symbolToken, 67108863 /* All */, /*excludeGlobals*/ false))
-                ? checker.getJsxNamespace()
+                ? checker.getJsxNamespace(sourceFile)
                 : symbolToken.text;
             // "default" is a keyword and not a legal identifier for the import, so we don't expect it here
             ts.Debug.assert(symbolName !== "default" /* Default */);
@@ -19428,7 +19592,7 @@ var ts;
                     });
                     typeDeclToMembers.forEach(function (infos, classDeclaration) {
                         var supers = getAllSupers(classDeclaration, checker);
-                        var _loop_11 = function (info) {
+                        var _loop_12 = function (info) {
                             // If some superclass added this property, don't add it again.
                             if (supers.some(function (superClassOrInterface) {
                                 var superInfos = typeDeclToMembers.get(superClassOrInterface);
@@ -19455,7 +19619,7 @@ var ts;
                         };
                         for (var _i = 0, infos_1 = infos; _i < infos_1.length; _i++) {
                             var info = infos_1[_i];
-                            _loop_11(info);
+                            _loop_12(info);
                         }
                     });
                 }));
@@ -19604,7 +19768,7 @@ var ts;
             return codefix.createCodeFixAction(fixName, changes, [makeStatic ? ts.Diagnostics.Declare_static_method_0 : ts.Diagnostics.Declare_method_0, token.text], fixId, ts.Diagnostics.Add_all_missing_members);
         }
         function addMethodDeclaration(context, changeTracker, declSourceFile, typeDecl, token, callExpression, makeStatic, inJs, preferences) {
-            var methodDeclaration = codefix.createMethodFromCallExpression(context, callExpression, token.text, inJs, makeStatic, preferences, !ts.isInterfaceDeclaration(typeDecl));
+            var methodDeclaration = codefix.createMethodFromCallExpression(context, callExpression, token.text, inJs, makeStatic, preferences, typeDecl);
             var containingMethodDeclaration = ts.getAncestor(callExpression, 156 /* MethodDeclaration */);
             if (containingMethodDeclaration && containingMethodDeclaration.parent === typeDecl) {
                 changeTracker.insertNodeAfter(declSourceFile, containingMethodDeclaration, methodDeclaration);
@@ -19741,10 +19905,10 @@ var ts;
             var tsconfigObjectLiteral = ts.getTsConfigObjectLiteralExpression(configFile);
             if (!tsconfigObjectLiteral)
                 return undefined;
-            var compilerOptionsProperty = findProperty(tsconfigObjectLiteral, "compilerOptions");
+            var compilerOptionsProperty = codefix.findJsonProperty(tsconfigObjectLiteral, "compilerOptions");
             if (!compilerOptionsProperty) {
                 var newCompilerOptions = ts.createObjectLiteral([makeDefaultBaseUrl(), makeDefaultPaths()]);
-                changes.insertNodeAtObjectStart(configFile, tsconfigObjectLiteral, createJsonPropertyAssignment("compilerOptions", newCompilerOptions));
+                changes.insertNodeAtObjectStart(configFile, tsconfigObjectLiteral, codefix.createJsonPropertyAssignment("compilerOptions", newCompilerOptions));
                 return defaultTypesDirectoryName;
             }
             var compilerOptions = compilerOptionsProperty.initializer;
@@ -19756,10 +19920,10 @@ var ts;
         }
         var defaultBaseUrl = ".";
         function makeDefaultBaseUrl() {
-            return createJsonPropertyAssignment("baseUrl", ts.createStringLiteral(defaultBaseUrl));
+            return codefix.createJsonPropertyAssignment("baseUrl", ts.createStringLiteral(defaultBaseUrl));
         }
         function getOrAddBaseUrl(changes, tsconfig, compilerOptions) {
-            var baseUrlProp = findProperty(compilerOptions, "baseUrl");
+            var baseUrlProp = codefix.findJsonProperty(compilerOptions, "baseUrl");
             if (baseUrlProp) {
                 return ts.isStringLiteral(baseUrlProp.initializer) ? baseUrlProp.initializer.text : defaultBaseUrl;
             }
@@ -19770,13 +19934,13 @@ var ts;
         }
         var defaultTypesDirectoryName = "types";
         function makeDefaultPathMapping() {
-            return createJsonPropertyAssignment("*", ts.createArrayLiteral([ts.createStringLiteral(defaultTypesDirectoryName + "/*")]));
+            return codefix.createJsonPropertyAssignment("*", ts.createArrayLiteral([ts.createStringLiteral(defaultTypesDirectoryName + "/*")]));
         }
         function makeDefaultPaths() {
-            return createJsonPropertyAssignment("paths", ts.createObjectLiteral([makeDefaultPathMapping()]));
+            return codefix.createJsonPropertyAssignment("paths", ts.createObjectLiteral([makeDefaultPathMapping()]));
         }
         function getOrAddPathMapping(changes, tsconfig, compilerOptions) {
-            var paths = findProperty(compilerOptions, "paths");
+            var paths = codefix.findJsonProperty(compilerOptions, "paths");
             if (!paths || !ts.isObjectLiteralExpression(paths.initializer)) {
                 changes.insertNodeAtObjectStart(tsconfig, compilerOptions, makeDefaultPaths());
                 return defaultTypesDirectoryName;
@@ -19791,12 +19955,6 @@ var ts;
                 return existing;
             changes.insertNodeAtObjectStart(tsconfig, paths.initializer, makeDefaultPathMapping());
             return defaultTypesDirectoryName;
-        }
-        function createJsonPropertyAssignment(name, initializer) {
-            return ts.createPropertyAssignment(ts.createStringLiteral(name), initializer);
-        }
-        function findProperty(obj, name) {
-            return ts.find(obj.properties, function (p) { return ts.isPropertyAssignment(p) && !!p.name && ts.isStringLiteral(p.name) && p.name.text === name; });
         }
         function getInstallCommand(fileName, packageName) {
             return { type: "install package", file: fileName, packageName: packageName };
@@ -19826,9 +19984,9 @@ var ts;
         codefix.registerCodeFix({
             errorCodes: errorCodes,
             getCodeActions: function (context) {
-                var program = context.program, sourceFile = context.sourceFile, span = context.span;
+                var sourceFile = context.sourceFile, span = context.span;
                 var changes = ts.textChanges.ChangeTracker.with(context, function (t) {
-                    return addMissingMembers(getClass(sourceFile, span.start), sourceFile, program.getTypeChecker(), t, context.preferences);
+                    return addMissingMembers(getClass(sourceFile, span.start), sourceFile, context, t, context.preferences);
                 });
                 return changes.length === 0 ? undefined : [codefix.createCodeFixAction(fixId, changes, ts.Diagnostics.Implement_inherited_abstract_class, fixId, ts.Diagnostics.Implement_all_inherited_abstract_classes)];
             },
@@ -19838,7 +19996,7 @@ var ts;
                 return codefix.codeFixAll(context, errorCodes, function (changes, diag) {
                     var classDeclaration = getClass(diag.file, diag.start);
                     if (ts.addToSeen(seenClassDeclarations, ts.getNodeId(classDeclaration))) {
-                        addMissingMembers(classDeclaration, context.sourceFile, context.program.getTypeChecker(), changes, context.preferences);
+                        addMissingMembers(classDeclaration, context.sourceFile, context, changes, context.preferences);
                     }
                 });
             },
@@ -19849,13 +20007,14 @@ var ts;
             var token = ts.getTokenAtPosition(sourceFile, pos);
             return ts.cast(token.parent, ts.isClassLike);
         }
-        function addMissingMembers(classDeclaration, sourceFile, checker, changeTracker, preferences) {
+        function addMissingMembers(classDeclaration, sourceFile, context, changeTracker, preferences) {
             var extendsNode = ts.getEffectiveBaseTypeNode(classDeclaration);
+            var checker = context.program.getTypeChecker();
             var instantiatedExtendsType = checker.getTypeAtLocation(extendsNode);
             // Note that this is ultimately derived from a map indexed by symbol names,
             // so duplicates cannot occur.
             var abstractAndNonPrivateExtendsSymbols = checker.getPropertiesOfType(instantiatedExtendsType).filter(symbolPointsToNonPrivateAndAbstractMember);
-            codefix.createMissingMemberNodes(classDeclaration, abstractAndNonPrivateExtendsSymbols, checker, preferences, function (member) { return changeTracker.insertNodeAtClassStart(sourceFile, classDeclaration, member); });
+            codefix.createMissingMemberNodes(classDeclaration, abstractAndNonPrivateExtendsSymbols, context, preferences, function (member) { return changeTracker.insertNodeAtClassStart(sourceFile, classDeclaration, member); });
         }
         function symbolPointsToNonPrivateAndAbstractMember(symbol) {
             // See `codeFixClassExtendAbstractProtectedProperty.ts` in https://github.com/Microsoft/TypeScript/pull/11547/files
@@ -19949,6 +20108,32 @@ var ts;
         function doChange(changes, sourceFile, ctr) {
             var superCall = ts.createStatement(ts.createCall(ts.createSuper(), /*typeArguments*/ undefined, /*argumentsArray*/ ts.emptyArray));
             changes.insertNodeAtConstructorStart(sourceFile, ctr, superCall);
+        }
+    })(codefix = ts.codefix || (ts.codefix = {}));
+})(ts || (ts = {}));
+/* @internal */
+var ts;
+(function (ts) {
+    var codefix;
+    (function (codefix) {
+        var fixId = "enableExperimentalDecorators";
+        var errorCodes = [
+            ts.Diagnostics.Experimental_support_for_decorators_is_a_feature_that_is_subject_to_change_in_a_future_release_Set_the_experimentalDecorators_option_to_remove_this_warning.code
+        ];
+        codefix.registerCodeFix({
+            errorCodes: errorCodes,
+            getCodeActions: function (context) {
+                var configFile = context.program.getCompilerOptions().configFile;
+                if (configFile === undefined) {
+                    return undefined;
+                }
+                var changes = ts.textChanges.ChangeTracker.with(context, function (changeTracker) { return makeChange(changeTracker, configFile); });
+                return [codefix.createCodeFixActionNoFixId(fixId, changes, ts.Diagnostics.Enable_the_experimentalDecorators_option_in_your_configuration_file)];
+            },
+            fixIds: [fixId],
+        });
+        function makeChange(changeTracker, configFile) {
+            codefix.setJsonCompilerOptionValue(changeTracker, configFile, "experimentalDecorators", ts.createTrue());
         }
     })(codefix = ts.codefix || (ts.codefix = {}));
 })(ts || (ts = {}));
@@ -20597,24 +20782,43 @@ var ts;
          * @param possiblyMissingSymbols The collection of symbols to filter and then get insertions for.
          * @returns Empty string iff there are no member insertions.
          */
-        function createMissingMemberNodes(classDeclaration, possiblyMissingSymbols, checker, preferences, out) {
+        function createMissingMemberNodes(classDeclaration, possiblyMissingSymbols, context, preferences, out) {
             var classMembers = classDeclaration.symbol.members;
             for (var _i = 0, possiblyMissingSymbols_1 = possiblyMissingSymbols; _i < possiblyMissingSymbols_1.length; _i++) {
                 var symbol = possiblyMissingSymbols_1[_i];
                 if (!classMembers.has(symbol.escapedName)) {
-                    addNewNodeForMemberSymbol(symbol, classDeclaration, checker, preferences, out);
+                    addNewNodeForMemberSymbol(symbol, classDeclaration, context, preferences, out);
                 }
             }
         }
         codefix.createMissingMemberNodes = createMissingMemberNodes;
+        function getModuleSpecifierResolverHost(context) {
+            return {
+                directoryExists: context.host.directoryExists ? function (d) { return context.host.directoryExists(d); } : undefined,
+                fileExists: context.host.fileExists ? function (f) { return context.host.fileExists(f); } : undefined,
+                getCurrentDirectory: context.host.getCurrentDirectory ? function () { return context.host.getCurrentDirectory(); } : undefined,
+                readFile: context.host.readFile ? function (f) { return context.host.readFile(f); } : undefined,
+                useCaseSensitiveFileNames: context.host.useCaseSensitiveFileNames ? function () { return context.host.useCaseSensitiveFileNames(); } : undefined,
+                getSourceFiles: function () { return context.program.getSourceFiles(); },
+                getCommonSourceDirectory: function () { return context.program.getCommonSourceDirectory(); },
+            };
+        }
+        function getNoopSymbolTrackerWithResolver(context) {
+            return {
+                trackSymbol: ts.noop,
+                moduleResolverHost: getModuleSpecifierResolverHost(context),
+            };
+        }
+        codefix.getNoopSymbolTrackerWithResolver = getNoopSymbolTrackerWithResolver;
         /**
          * @returns Empty string iff there we can't figure out a representation for `symbol` in `enclosingDeclaration`.
          */
-        function addNewNodeForMemberSymbol(symbol, enclosingDeclaration, checker, preferences, out) {
+        function addNewNodeForMemberSymbol(symbol, enclosingDeclaration, context, preferences, out) {
             var declarations = symbol.getDeclarations();
             if (!(declarations && declarations.length)) {
                 return undefined;
             }
+            var checker = context.program.getTypeChecker();
             var declaration = declarations[0];
             var name = ts.getSynthesizedDeepClone(ts.getNameOfDeclaration(declaration), /*includeTrivia*/ false);
             var visibilityModifier = createVisibilityModifier(ts.getModifierFlags(declaration));
@@ -20626,7 +20830,7 @@ var ts;
                 case 159 /* SetAccessor */:
                 case 153 /* PropertySignature */:
                 case 154 /* PropertyDeclaration */:
-                    var typeNode = checker.typeToTypeNode(type, enclosingDeclaration);
+                    var typeNode = checker.typeToTypeNode(type, enclosingDeclaration, /*flags*/ undefined, getNoopSymbolTrackerWithResolver(context));
                     out(ts.createProperty(
                     /*decorators*/ undefined, modifiers, name, optional ? ts.createToken(56 /* QuestionToken */) : undefined, typeNode, 
                     /*initializer*/ undefined));
@@ -20666,13 +20870,14 @@ var ts;
                     break;
             }
             function outputMethod(signature, modifiers, name, body) {
-                var method = signatureToMethodDeclaration(checker, signature, enclosingDeclaration, modifiers, name, optional, body);
+                var method = signatureToMethodDeclaration(context, signature, enclosingDeclaration, modifiers, name, optional, body);
                 if (method)
                     out(method);
             }
         }
-        function signatureToMethodDeclaration(checker, signature, enclosingDeclaration, modifiers, name, optional, body) {
-            var signatureDeclaration = checker.signatureToSignatureDeclaration(signature, 156 /* MethodDeclaration */, enclosingDeclaration, 256 /* SuppressAnyReturnType */);
+        function signatureToMethodDeclaration(context, signature, enclosingDeclaration, modifiers, name, optional, body) {
+            var program = context.program;
+            var signatureDeclaration = program.getTypeChecker().signatureToSignatureDeclaration(signature, 156 /* MethodDeclaration */, enclosingDeclaration, 1 /* NoTruncation */ | 256 /* SuppressAnyReturnType */, getNoopSymbolTrackerWithResolver(context));
             if (!signatureDeclaration) {
                 return undefined;
             }
@@ -20683,19 +20888,21 @@ var ts;
             signatureDeclaration.body = body;
             return signatureDeclaration;
         }
-        function createMethodFromCallExpression(context, call, methodName, inJs, makeStatic, preferences, body) {
+        function createMethodFromCallExpression(context, call, methodName, inJs, makeStatic, preferences, contextNode) {
+            var body = !ts.isInterfaceDeclaration(contextNode);
             var typeArguments = call.typeArguments, args = call.arguments, parent = call.parent;
             var checker = context.program.getTypeChecker();
+            var tracker = getNoopSymbolTrackerWithResolver(context);
             var types = ts.map(args, function (arg) {
                 // Widen the type so we don't emit nonsense annotations like "function fn(x: 3) {"
-                return checker.typeToTypeNode(checker.getBaseTypeOfLiteralType(checker.getTypeAtLocation(arg)));
+                return checker.typeToTypeNode(checker.getBaseTypeOfLiteralType(checker.getTypeAtLocation(arg)), contextNode, /*flags*/ undefined, tracker);
             });
             var names = ts.map(args, function (arg) {
                 return ts.isIdentifier(arg) ? arg.text :
                     ts.isPropertyAccessExpression(arg) ? arg.name.text : undefined;
             });
             var contextualType = checker.getContextualType(call);
-            var returnType = inJs ? undefined : contextualType && checker.typeToTypeNode(contextualType, call) || ts.createKeywordTypeNode(120 /* AnyKeyword */);
+            var returnType = inJs ? undefined : contextualType && checker.typeToTypeNode(contextualType, contextNode, /*flags*/ undefined, tracker) || ts.createKeywordTypeNode(120 /* AnyKeyword */);
             return ts.createMethod(
             /*decorators*/ undefined, 
             /*modifiers*/ makeStatic ? [ts.createToken(116 /* StaticKeyword */)] : undefined, 
@@ -20776,6 +20983,38 @@ var ts;
             }
             return undefined;
         }
+        function setJsonCompilerOptionValue(changeTracker, configFile, optionName, optionValue) {
+            var tsconfigObjectLiteral = ts.getTsConfigObjectLiteralExpression(configFile);
+            if (!tsconfigObjectLiteral)
+                return undefined;
+            var compilerOptionsProperty = findJsonProperty(tsconfigObjectLiteral, "compilerOptions");
+            if (compilerOptionsProperty === undefined) {
+                changeTracker.insertNodeAtObjectStart(configFile, tsconfigObjectLiteral, createJsonPropertyAssignment("compilerOptions", ts.createObjectLiteral([
+                    createJsonPropertyAssignment(optionName, optionValue),
+                ])));
+                return;
+            }
+            var compilerOptions = compilerOptionsProperty.initializer;
+            if (!ts.isObjectLiteralExpression(compilerOptions)) {
+                return;
+            }
+            var optionProperty = findJsonProperty(compilerOptions, optionName);
+            if (optionProperty === undefined) {
+                changeTracker.insertNodeAtObjectStart(configFile, compilerOptions, createJsonPropertyAssignment(optionName, optionValue));
+            }
+            else {
+                changeTracker.replaceNode(configFile, optionProperty.initializer, optionValue);
+            }
+        }
+        codefix.setJsonCompilerOptionValue = setJsonCompilerOptionValue;
+        function createJsonPropertyAssignment(name, initializer) {
+            return ts.createPropertyAssignment(ts.createStringLiteral(name), initializer);
+        }
+        codefix.createJsonPropertyAssignment = createJsonPropertyAssignment;
+        function findJsonProperty(obj, name) {
+            return ts.find(obj.properties, function (p) { return ts.isPropertyAssignment(p) && !!p.name && ts.isStringLiteral(p.name) && p.name.text === name; });
+        }
+        codefix.findJsonProperty = findJsonProperty;
     })(codefix = ts.codefix || (ts.codefix = {}));
 })(ts || (ts = {}));
 /* @internal */
@@ -21654,7 +21893,7 @@ var ts;
             });
             var namespaceImportName = namespaceNameConflicts ? ts.getUniqueName(preferredName, sourceFile) : preferredName;
             var neededNamedImports = [];
-            var _loop_12 = function (element) {
+            var _loop_13 = function (element) {
                 var propertyName = (element.propertyName || element.name).text;
                 ts.FindAllReferences.Core.eachSymbolReferenceInFile(element.name, checker, sourceFile, function (id) {
                     var access = ts.createPropertyAccess(ts.createIdentifier(namespaceImportName), propertyName);
@@ -21673,7 +21912,7 @@ var ts;
             };
             for (var _i = 0, _a = toConvert.elements; _i < _a.length; _i++) {
                 var element = _a[_i];
-                _loop_12(element);
+                _loop_13(element);
             }
             changes.replaceNode(sourceFile, toConvert, ts.createNamespaceImport(ts.createIdentifier(namespaceImportName)));
             if (neededNamedImports.length) {
@@ -22068,32 +22307,30 @@ var ts;
                             case 100 /* ThisKeyword */:
                                 rangeFacts |= RangeFacts.UsesThis;
                                 break;
-                            case 233 /* LabeledStatement */:
-                                {
-                                    var label = node.label;
-                                    (seenLabels || (seenLabels = [])).push(label.escapedText);
-                                    ts.forEachChild(node, visit);
-                                    seenLabels.pop();
-                                    break;
-                                }
+                            case 233 /* LabeledStatement */: {
+                                var label = node.label;
+                                (seenLabels || (seenLabels = [])).push(label.escapedText);
+                                ts.forEachChild(node, visit);
+                                seenLabels.pop();
+                                break;
+                            }
                             case 229 /* BreakStatement */:
-                            case 228 /* ContinueStatement */:
-                                {
-                                    var label = node.label;
-                                    if (label) {
-                                        if (!ts.contains(seenLabels, label.escapedText)) {
-                                            // attempts to jump to label that is not in range to be extracted
-                                            (errors || (errors = [])).push(ts.createDiagnosticForNode(node, Messages.cannotExtractRangeContainingLabeledBreakOrContinueStatementWithTargetOutsideOfTheRange));
-                                        }
+                            case 228 /* ContinueStatement */: {
+                                var label = node.label;
+                                if (label) {
+                                    if (!ts.contains(seenLabels, label.escapedText)) {
+                                        // attempts to jump to label that is not in range to be extracted
+                                        (errors || (errors = [])).push(ts.createDiagnosticForNode(node, Messages.cannotExtractRangeContainingLabeledBreakOrContinueStatementWithTargetOutsideOfTheRange));
                                     }
-                                    else {
-                                        if (!(permittedJumps & (node.kind === 229 /* BreakStatement */ ? 1 /* Break */ : 2 /* Continue */))) {
-                                            // attempt to break or continue in a forbidden context
-                                            (errors || (errors = [])).push(ts.createDiagnosticForNode(node, Messages.cannotExtractRangeContainingConditionalBreakOrContinueStatements));
-                                        }
-                                    }
-                                    break;
                                 }
+                                else {
+                                    if (!(permittedJumps & (node.kind === 229 /* BreakStatement */ ? 1 /* Break */ : 2 /* Continue */))) {
+                                        // attempt to break or continue in a forbidden context
+                                        (errors || (errors = [])).push(ts.createDiagnosticForNode(node, Messages.cannotExtractRangeContainingConditionalBreakOrContinueStatements));
+                                    }
+                                }
+                                break;
+                            }
                             case 201 /* AwaitExpression */:
                                 rangeFacts |= RangeFacts.IsAsyncFunction;
                                 break;
@@ -22905,7 +23142,7 @@ var ts;
                         : ts.getEnclosingBlockScopeContainer(scopes[0]);
                     ts.forEachChild(containingLexicalScopeOfExtraction, checkForUsedDeclarations);
                 }
-                var _loop_13 = function (i) {
+                var _loop_14 = function (i) {
                     var scopeUsages = usagesPerScope[i];
                     // Special case: in the innermost scope, all usages are available.
                     // (The computed value reflects the value at the top-level of the scope, but the
@@ -22945,7 +23182,7 @@ var ts;
                     }
                 };
                 for (var i = 0; i < scopes.length; i++) {
-                    _loop_13(i);
+                    _loop_14(i);
                 }
                 return { target: target, usagesPerScope: usagesPerScope, functionErrorsPerScope: functionErrorsPerScope, constantErrorsPerScope: constantErrorsPerScope, exposedVariableDeclarations: exposedVariableDeclarations };
                 function isInGenericContext(node) {
@@ -23496,10 +23733,10 @@ var ts;
         }
         function updateImportsInOtherFiles(changes, program, oldFile, movedSymbols, newModuleName) {
             var checker = program.getTypeChecker();
-            var _loop_14 = function (sourceFile) {
+            var _loop_15 = function (sourceFile) {
                 if (sourceFile === oldFile)
                     return "continue";
-                var _loop_15 = function (statement) {
+                var _loop_16 = function (statement) {
                     forEachImportInStatement(statement, function (importNode) {
                         if (checker.getSymbolAtLocation(moduleSpecifierFromImport(importNode)) !== oldFile.symbol)
                             return;
@@ -23521,12 +23758,12 @@ var ts;
                 };
                 for (var _i = 0, _a = sourceFile.statements; _i < _a.length; _i++) {
                     var statement = _a[_i];
-                    _loop_15(statement);
+                    _loop_16(statement);
                 }
             };
             for (var _i = 0, _a = program.getSourceFiles(); _i < _a.length; _i++) {
                 var sourceFile = _a[_i];
-                _loop_14(sourceFile);
+                _loop_15(sourceFile);
             }
         }
         function getNamespaceLikeImport(node) {
@@ -23769,6 +24006,11 @@ var ts;
             var movedSymbols = new SymbolSet();
             var oldImportsNeededByNewFile = new SymbolSet();
             var newFileImportsFromOldFile = new SymbolSet();
+            var containsJsx = ts.find(toMove, function (statement) { return !!(statement.transformFlags & 4 /* ContainsJsx */); });
+            var jsxNamespaceSymbol = getJsxNamespaceSymbol(containsJsx);
+            if (jsxNamespaceSymbol) { // Might not exist (e.g. in non-compiling code)
+                oldImportsNeededByNewFile.add(jsxNamespaceSymbol);
+            }
             for (var _i = 0, toMove_1 = toMove; _i < toMove_1.length; _i++) {
                 var statement = toMove_1[_i];
                 forEachTopLevelDeclaration(statement, function (decl) {
@@ -23797,6 +24039,10 @@ var ts;
                 var statement = _c[_b];
                 if (ts.contains(toMove, statement))
                     continue;
+                // jsxNamespaceSymbol will only be set iff it is in oldImportsNeededByNewFile.
+                if (jsxNamespaceSymbol && !!(statement.transformFlags & 4 /* ContainsJsx */)) {
+                    unusedImportsFromOldFile.delete(jsxNamespaceSymbol);
+                }
                 forEachReference(statement, checker, function (symbol) {
                     if (movedSymbols.has(symbol))
                         oldFileImportsFromNewFile.add(symbol);
@@ -23804,6 +24050,19 @@ var ts;
                 });
             }
             return { movedSymbols: movedSymbols, newFileImportsFromOldFile: newFileImportsFromOldFile, oldFileImportsFromNewFile: oldFileImportsFromNewFile, oldImportsNeededByNewFile: oldImportsNeededByNewFile, unusedImportsFromOldFile: unusedImportsFromOldFile };
+            function getJsxNamespaceSymbol(containsJsx) {
+                if (containsJsx === undefined) {
+                    return undefined;
+                }
+                var jsxNamespace = checker.getJsxNamespace(containsJsx);
+                // Strictly speaking, this could resolve to a symbol other than the JSX namespace.
+                // This will produce erroneous output (probably, an incorrectly copied import) but
+                // is expected to be very rare and easily reversible.
+                var jsxNamespaceSymbol = checker.resolveName(jsxNamespace, containsJsx, 1920 /* Namespace */, /*excludeGlobals*/ true);
+                return !!jsxNamespaceSymbol && ts.some(jsxNamespaceSymbol.declarations, isInImport)
+                    ? jsxNamespaceSymbol
+                    : undefined;
+            }
         }
         // Below should all be utilities
         function isInImport(decl) {
@@ -23822,7 +24081,7 @@ var ts;
         }
         function isVariableDeclarationInImport(decl) {
             return ts.isSourceFile(decl.parent.parent.parent) &&
-                decl.initializer && ts.isRequireCall(decl.initializer, /*checkArgumentIsStringLiteralLike*/ true);
+                !!decl.initializer && ts.isRequireCall(decl.initializer, /*checkArgumentIsStringLiteralLike*/ true);
         }
         function filterImport(i, moduleSpecifier, keep) {
             switch (i.kind) {
@@ -24576,8 +24835,8 @@ var ts;
         SourceFileObject.prototype.getLineStarts = function () {
             return ts.getLineStarts(this);
         };
-        SourceFileObject.prototype.getPositionOfLineAndCharacter = function (line, character) {
-            return ts.getPositionOfLineAndCharacter(this, line, character);
+        SourceFileObject.prototype.getPositionOfLineAndCharacter = function (line, character, allowEdits) {
+            return ts.computePositionOfLineAndCharacter(ts.getLineStarts(this), line, character, this.text, allowEdits);
         };
         SourceFileObject.prototype.getLineEndOfPosition = function (pos) {
             var line = this.getLineAndCharacterOfPosition(pos).line;
@@ -25027,7 +25286,16 @@ var ts;
         }
         var useCaseSensitiveFileNames = ts.hostUsesCaseSensitiveFileNames(host);
         var getCanonicalFileName = ts.createGetCanonicalFileName(useCaseSensitiveFileNames);
-        var sourceMapper = ts.getSourceMapper(useCaseSensitiveFileNames, currentDirectory, log, host, function () { return program; });
+        var sourceMapper = ts.getSourceMapper({
+            useCaseSensitiveFileNames: function () { return useCaseSensitiveFileNames; },
+            getCurrentDirectory: function () { return currentDirectory; },
+            getProgram: getProgram,
+            fileExists: host.fileExists && (function (f) { return host.fileExists(f); }),
+            readFile: host.readFile && (function (f, encoding) { return host.readFile(f, encoding); }),
+            getDocumentPositionMapper: host.getDocumentPositionMapper && (function (generatedFileName, sourceFileName) { return host.getDocumentPositionMapper(generatedFileName, sourceFileName); }),
+            getSourceFileLike: host.getSourceFileLike && (function (f) { return host.getSourceFileLike(f); }),
+            log: log
+        });
         function getValidSourceFile(fileName) {
             var sourceFile = program.getSourceFile(fileName);
             if (!sourceFile) {
@@ -25080,15 +25348,7 @@ var ts;
                 writeFile: ts.noop,
                 getCurrentDirectory: function () { return currentDirectory; },
                 fileExists: fileExists,
-                readFile: function (fileName) {
-                    // stub missing host functionality
-                    var path = ts.toPath(fileName, currentDirectory, getCanonicalFileName);
-                    var entry = hostCache && hostCache.getEntryByPath(path);
-                    if (entry) {
-                        return ts.isString(entry) ? undefined : ts.getSnapshotText(entry.scriptSnapshot);
-                    }
-                    return host.readFile && host.readFile(fileName);
-                },
+                readFile: readFile,
                 realpath: host.realpath && (function (path) { return host.realpath(path); }),
                 directoryExists: function (directoryName) {
                     return ts.directoryProbablyExists(directoryName, host);
@@ -25141,6 +25401,15 @@ var ts;
                 return entry ?
                     !ts.isString(entry) :
                     (!!host.fileExists && host.fileExists(fileName));
+            }
+            function readFile(fileName) {
+                // stub missing host functionality
+                var path = ts.toPath(fileName, currentDirectory, getCanonicalFileName);
+                var entry = hostCache && hostCache.getEntryByPath(path);
+                if (entry) {
+                    return ts.isString(entry) ? undefined : ts.getSnapshotText(entry.scriptSnapshot);
+                }
+                return host.readFile && host.readFile(fileName);
             }
             // Release any files we have acquired in the old program but are
             // not part of the new program.
@@ -25353,7 +25622,7 @@ var ts;
             var sourceFile = getValidSourceFile(fileName);
             return ts.DocumentHighlights.getDocumentHighlights(program, cancellationToken, sourceFile, position, sourceFilesToSearch);
         }
-        function findRenameLocations(fileName, position, findInStrings, findInComments) {
+        function findRenameLocations(fileName, position, findInStrings, findInComments, providePrefixAndSuffixTextForRename) {
             synchronizeHostData();
             var sourceFile = getValidSourceFile(fileName);
             var node = ts.getTouchingPropertyName(sourceFile, position);
@@ -25364,7 +25633,7 @@ var ts;
                 });
             }
             else {
-                return getReferencesWorker(node, position, { findInStrings: findInStrings, findInComments: findInComments, isForRename: true }, ts.FindAllReferences.toRenameLocation);
+                return getReferencesWorker(node, position, { findInStrings: findInStrings, findInComments: findInComments, providePrefixAndSuffixTextForRename: providePrefixAndSuffixTextForRename, isForRename: true }, function (entry, originalNode, checker) { return ts.FindAllReferences.toRenameLocation(entry, originalNode, checker, providePrefixAndSuffixTextForRename || false); });
             }
         }
         function getReferencesAtPosition(fileName, position) {
@@ -25788,9 +26057,9 @@ var ts;
                 return ts.stringContains(path, "/node_modules/");
             }
         }
-        function getRenameInfo(fileName, position) {
+        function getRenameInfo(fileName, position, options) {
             synchronizeHostData();
-            return ts.Rename.getRenameInfo(program, getValidSourceFile(fileName), position);
+            return ts.Rename.getRenameInfo(program, getValidSourceFile(fileName), position, options);
         }
         function getRefactorContext(file, positionOrRange, preferences, formatOptions) {
             var _a = typeof positionOrRange === "number" ? [positionOrRange, undefined] : [positionOrRange.pos, positionOrRange.end], startPosition = _a[0], endPosition = _a[1];
@@ -27048,13 +27317,13 @@ var ts;
             var _this = this;
             return this.forwardJSONCall("getImplementationAtPosition('" + fileName + "', " + position + ")", function () { return _this.languageService.getImplementationAtPosition(fileName, position); });
         };
-        LanguageServiceShimObject.prototype.getRenameInfo = function (fileName, position) {
+        LanguageServiceShimObject.prototype.getRenameInfo = function (fileName, position, options) {
             var _this = this;
-            return this.forwardJSONCall("getRenameInfo('" + fileName + "', " + position + ")", function () { return _this.languageService.getRenameInfo(fileName, position); });
+            return this.forwardJSONCall("getRenameInfo('" + fileName + "', " + position + ")", function () { return _this.languageService.getRenameInfo(fileName, position, options); });
         };
-        LanguageServiceShimObject.prototype.findRenameLocations = function (fileName, position, findInStrings, findInComments) {
+        LanguageServiceShimObject.prototype.findRenameLocations = function (fileName, position, findInStrings, findInComments, providePrefixAndSuffixTextForRename) {
             var _this = this;
-            return this.forwardJSONCall("findRenameLocations('" + fileName + "', " + position + ", " + findInStrings + ", " + findInComments + ")", function () { return _this.languageService.findRenameLocations(fileName, position, findInStrings, findInComments); });
+            return this.forwardJSONCall("findRenameLocations('" + fileName + "', " + position + ", " + findInStrings + ", " + findInComments + ", " + providePrefixAndSuffixTextForRename + ")", function () { return _this.languageService.findRenameLocations(fileName, position, findInStrings, findInComments, providePrefixAndSuffixTextForRename); });
         };
         /// GET BRACE MATCHING
         LanguageServiceShimObject.prototype.getBraceMatchingAtPosition = function (fileName, position) {

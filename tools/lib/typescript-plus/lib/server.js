@@ -207,6 +207,15 @@ var ts;
         server.stringifyIndented = stringifyIndented;
     })(server = ts.server || (ts.server = {}));
 })(ts || (ts = {}));
+(function (ts) {
+    var WatchType;
+    (function (WatchType) {
+        WatchType["ClosedScriptInfo"] = "Closed Script info";
+        WatchType["ConfigFileForInferredRoot"] = "Config file for the inferred project root";
+        WatchType["NodeModulesForClosedScriptInfo"] = "node_modules for closed script infos in them";
+        WatchType["MissingSourceMapFile"] = "Missing source map file";
+    })(WatchType = ts.WatchType || (ts.WatchType = {}));
+})(ts || (ts = {}));
 var ts;
 (function (ts) {
     var server;
@@ -377,11 +386,20 @@ var ts;
             TextStorage.prototype.useScriptVersionCache_TestOnly = function () {
                 this.switchToScriptVersionCache();
             };
+            TextStorage.prototype.resetSourceMapInfo = function () {
+                this.info.sourceFileLike = undefined;
+                this.info.closeSourceMapFileWatcher();
+                this.info.sourceMapFilePath = undefined;
+                this.info.declarationInfoPath = undefined;
+                this.info.sourceInfos = undefined;
+                this.info.documentPositionMapper = undefined;
+            };
             TextStorage.prototype.useText = function (newText) {
                 this.svc = undefined;
                 this.text = newText;
                 this.lineMap = undefined;
                 this.fileSize = undefined;
+                this.resetSourceMapInfo();
                 this.version.text++;
             };
             TextStorage.prototype.edit = function (start, end, newText) {
@@ -390,6 +408,7 @@ var ts;
                 this.text = undefined;
                 this.lineMap = undefined;
                 this.fileSize = undefined;
+                this.resetSourceMapInfo();
             };
             TextStorage.prototype.reload = function (newText) {
                 ts.Debug.assert(newText !== undefined);
@@ -431,8 +450,8 @@ var ts;
                     ? this.svc.getSnapshot()
                     : ts.ScriptSnapshot.fromString(this.getOrLoadText());
             };
-            TextStorage.prototype.getLineInfo = function (line) {
-                return this.switchToScriptVersionCache().getLineInfo(line);
+            TextStorage.prototype.getAbsolutePositionAndLineText = function (line) {
+                return this.switchToScriptVersionCache().getAbsolutePositionAndLineText(line);
             };
             TextStorage.prototype.lineToTextSpan = function (line) {
                 if (!this.useScriptVersionCacheIfValidOrOpen()) {
@@ -443,9 +462,9 @@ var ts;
                 }
                 return this.svc.lineToTextSpan(line);
             };
-            TextStorage.prototype.lineOffsetToPosition = function (line, offset) {
+            TextStorage.prototype.lineOffsetToPosition = function (line, offset, allowEdits) {
                 if (!this.useScriptVersionCacheIfValidOrOpen()) {
-                    return ts.computePositionOfLineAndCharacter(this.getLineMap(), line - 1, offset - 1, this.text);
+                    return ts.computePositionOfLineAndCharacter(this.getLineMap(), line - 1, offset - 1, this.text, allowEdits);
                 }
                 return this.svc.lineOffsetToPosition(line, offset);
             };
@@ -499,6 +518,17 @@ var ts;
             TextStorage.prototype.getLineMap = function () {
                 ts.Debug.assert(!this.svc, "ScriptVersionCache should not be set");
                 return this.lineMap || (this.lineMap = ts.computeLineStarts(this.getOrLoadText()));
+            };
+            TextStorage.prototype.getLineInfo = function () {
+                var _this = this;
+                if (this.svc) {
+                    return {
+                        getLineCount: function () { return _this.svc.getLineCount(); },
+                        getLineText: function (line) { return _this.svc.getAbsolutePositionAndLineText(line + 1).lineText; }
+                    };
+                }
+                var lineMap = this.getLineMap();
+                return ts.getLineInfo(this.text, lineMap);
             };
             return TextStorage;
         }());
@@ -708,8 +738,8 @@ var ts;
                 }
                 return false;
             };
-            ScriptInfo.prototype.getLineInfo = function (line) {
-                return this.textStorage.getLineInfo(line);
+            ScriptInfo.prototype.getAbsolutePositionAndLineText = function (line) {
+                return this.textStorage.getAbsolutePositionAndLineText(line);
             };
             ScriptInfo.prototype.editContent = function (start, end, newText) {
                 this.textStorage.edit(start, end, newText);
@@ -727,14 +757,23 @@ var ts;
             ScriptInfo.prototype.lineToTextSpan = function (line) {
                 return this.textStorage.lineToTextSpan(line);
             };
-            ScriptInfo.prototype.lineOffsetToPosition = function (line, offset) {
-                return this.textStorage.lineOffsetToPosition(line, offset);
+            ScriptInfo.prototype.lineOffsetToPosition = function (line, offset, allowEdits) {
+                return this.textStorage.lineOffsetToPosition(line, offset, allowEdits);
             };
             ScriptInfo.prototype.positionToLineOffset = function (position) {
                 return this.textStorage.positionToLineOffset(position);
             };
             ScriptInfo.prototype.isJavaScript = function () {
                 return this.scriptKind === 1 || this.scriptKind === 2;
+            };
+            ScriptInfo.prototype.getLineInfo = function () {
+                return this.textStorage.getLineInfo();
+            };
+            ScriptInfo.prototype.closeSourceMapFileWatcher = function () {
+                if (this.sourceMapFilePath && !ts.isString(this.sourceMapFilePath)) {
+                    ts.closeFileWatcherOf(this.sourceMapFilePath);
+                    this.sourceMapFilePath = undefined;
+                }
             };
             return ScriptInfo;
         }());
@@ -1119,13 +1158,13 @@ var ts;
                 return ts.toPath(fileName, this.currentDirectory, this.projectService.toCanonicalFileName);
             };
             Project.prototype.watchDirectoryOfFailedLookupLocation = function (directory, cb, flags) {
-                return this.projectService.watchFactory.watchDirectory(this.projectService.host, directory, cb, flags, "Directory of Failed lookup locations in module resolution", this);
+                return this.projectService.watchFactory.watchDirectory(this.projectService.host, directory, cb, flags, "Failed Lookup Locations", this);
             };
             Project.prototype.onInvalidatedResolution = function () {
                 this.projectService.delayUpdateProjectGraphAndEnsureProjectStructureForOpenFiles(this);
             };
             Project.prototype.watchTypeRootsDirectory = function (directory, cb, flags) {
-                return this.projectService.watchFactory.watchDirectory(this.projectService.host, directory, cb, flags, "Type root directory", this);
+                return this.projectService.watchFactory.watchDirectory(this.projectService.host, directory, cb, flags, "Type roots", this);
             };
             Project.prototype.onChangedAutomaticTypeDirectiveNames = function () {
                 this.hasChangedAutomaticTypeDirectiveNames = true;
@@ -1163,6 +1202,12 @@ var ts;
             };
             Project.prototype.getSourceMapper = function () {
                 return this.getLanguageService().getSourceMapper();
+            };
+            Project.prototype.getDocumentPositionMapper = function (generatedFileName, sourceFileName) {
+                return this.projectService.getDocumentPositionMapper(this, generatedFileName, sourceFileName);
+            };
+            Project.prototype.getSourceFileLike = function (fileName) {
+                return this.projectService.getSourceFileLike(fileName, this);
             };
             Project.prototype.shouldEmitFile = function (scriptInfo) {
                 return scriptInfo && !scriptInfo.isDynamicOrHasMixedContent();
@@ -1374,7 +1419,12 @@ var ts;
                 return false;
             };
             Project.prototype.containsScriptInfo = function (info) {
-                return this.isRoot(info) || (!!this.program && this.program.getSourceFileByPath(info.path) !== undefined);
+                if (this.isRoot(info))
+                    return true;
+                if (!this.program)
+                    return false;
+                var file = this.program.getSourceFileByPath(info.path);
+                return !!file && file.resolvedPath === info.path;
             };
             Project.prototype.containsFile = function (filename, requireOpen) {
                 var info = this.projectService.getScriptInfoForNormalizedPath(filename);
@@ -1527,7 +1577,7 @@ var ts;
                         fileWatcher.close();
                         _this.projectService.delayUpdateProjectGraphAndEnsureProjectStructureForOpenFiles(_this);
                     }
-                }, ts.PollingInterval.Medium, "Missing file from program", this);
+                }, ts.PollingInterval.Medium, "Missing file", this);
                 return fileWatcher;
             };
             Project.prototype.isWatchedMissingFile = function (path) {
@@ -2120,17 +2170,6 @@ var ts;
                 }
             }
         }
-        var WatchType;
-        (function (WatchType) {
-            WatchType["ConfigFilePath"] = "Config file for the program";
-            WatchType["MissingFilePath"] = "Missing file from program";
-            WatchType["WildcardDirectories"] = "Wild card directory";
-            WatchType["ClosedScriptInfo"] = "Closed Script info";
-            WatchType["ConfigFileForInferredRoot"] = "Config file for the inferred project root";
-            WatchType["FailedLookupLocation"] = "Directory of Failed lookup locations in module resolution";
-            WatchType["TypeRoots"] = "Type root directory";
-            WatchType["NodeModulesForClosedScriptInfo"] = "node_modules for closed script infos in them";
-        })(WatchType = server.WatchType || (server.WatchType = {}));
         var ConfigFileWatcherStatus;
         (function (ConfigFileWatcherStatus) {
             ConfigFileWatcherStatus["ReloadingFiles"] = "Reloading configured projects for files";
@@ -2497,7 +2536,35 @@ var ts;
                     else if (!info.isScriptOpen()) {
                         info.delayReloadNonMixedContentFile();
                         this.delayUpdateProjectGraphs(info.containingProjects);
+                        this.handleSourceMapProjects(info);
                     }
+                }
+            };
+            ProjectService.prototype.handleSourceMapProjects = function (info) {
+                if (info.sourceMapFilePath) {
+                    if (ts.isString(info.sourceMapFilePath)) {
+                        var sourceMapFileInfo = this.getScriptInfoForPath(info.sourceMapFilePath);
+                        this.delayUpdateSourceInfoProjects(sourceMapFileInfo && sourceMapFileInfo.sourceInfos);
+                    }
+                    else {
+                        this.delayUpdateSourceInfoProjects(info.sourceMapFilePath.sourceInfos);
+                    }
+                }
+                this.delayUpdateSourceInfoProjects(info.sourceInfos);
+                if (info.declarationInfoPath) {
+                    this.delayUpdateProjectsOfScriptInfoPath(info.declarationInfoPath);
+                }
+            };
+            ProjectService.prototype.delayUpdateSourceInfoProjects = function (sourceInfos) {
+                var _this = this;
+                if (sourceInfos) {
+                    sourceInfos.forEach(function (_value, path) { return _this.delayUpdateProjectsOfScriptInfoPath(path); });
+                }
+            };
+            ProjectService.prototype.delayUpdateProjectsOfScriptInfoPath = function (path) {
+                var info = this.getScriptInfoForPath(path);
+                if (info) {
+                    this.delayUpdateProjectGraphs(info.containingProjects);
                 }
             };
             ProjectService.prototype.handleDeletedFile = function (info) {
@@ -2507,6 +2574,14 @@ var ts;
                     var containingProjects = info.containingProjects.slice();
                     info.detachAllProjects();
                     this.delayUpdateProjectGraphs(containingProjects);
+                    this.handleSourceMapProjects(info);
+                    info.closeSourceMapFileWatcher();
+                    if (info.declarationInfoPath) {
+                        var declarationInfo = this.getScriptInfoForPath(info.declarationInfoPath);
+                        if (declarationInfo) {
+                            declarationInfo.sourceMapFilePath = undefined;
+                        }
+                    }
                 }
             };
             ProjectService.prototype.watchWildcardDirectory = function (directory, flags, project) {
@@ -2679,7 +2754,7 @@ var ts;
             ProjectService.prototype.setConfigFileExistenceByNewConfiguredProject = function (project) {
                 var configFileExistenceInfo = this.getConfigFileExistenceInfo(project);
                 if (configFileExistenceInfo) {
-                    ts.Debug.assert(configFileExistenceInfo.exists);
+                    configFileExistenceInfo.exists = true;
                     if (configFileExistenceInfo.configFileWatcherForRootOfInferredProject) {
                         var configFileName = project.getConfigFilePath();
                         configFileExistenceInfo.configFileWatcherForRootOfInferredProject.close();
@@ -2727,7 +2802,7 @@ var ts;
                     watches.push("Config file for the inferred project root");
                 }
                 if (this.configuredProjects.has(canonicalConfigFilePath)) {
-                    watches.push("Config file for the program");
+                    watches.push("Config file");
                 }
                 this.logger.info("ConfigFilePresence:: Current Watches: " + watches + ":: File: " + configFileName + " Currently impacted open files: RootsOfInferredProjects: " + inferredRoots + " OtherOpenFiles: " + otherFiles + " Status: " + status);
             };
@@ -2977,7 +3052,7 @@ var ts;
                 var cachedDirectoryStructureHost = ts.createCachedDirectoryStructureHost(this.host, this.host.getCurrentDirectory(), this.host.useCaseSensitiveFileNames);
                 this.logger.info("Opened configuration file " + configFileName);
                 var project = new server.ConfiguredProject(configFileName, this, this.documentRegistry, cachedDirectoryStructureHost);
-                project.configFileWatcher = this.watchFactory.watchFile(this.host, configFileName, function (_fileName, eventKind) { return _this.onConfigChangedForConfiguredProject(project, eventKind); }, ts.PollingInterval.High, "Config file for the program", project);
+                project.configFileWatcher = this.watchFactory.watchFile(this.host, configFileName, function (_fileName, eventKind) { return _this.onConfigChangedForConfiguredProject(project, eventKind); }, ts.PollingInterval.High, "Config file", project);
                 this.configuredProjects.set(project.canonicalConfigFilePath, project);
                 this.setConfigFileExistenceByNewConfiguredProject(project);
                 return project;
@@ -3191,7 +3266,7 @@ var ts;
                 var info = this.getScriptInfoForNormalizedPath(path);
                 if (info)
                     return info;
-                var configProject = this.configuredProjects.get(uncheckedFileName);
+                var configProject = this.configuredProjects.get(this.toPath(uncheckedFileName));
                 return configProject && configProject.getCompilerOptions().configFile;
             };
             ProjectService.prototype.logErrorForScriptInfoNotFound = function (fileName) {
@@ -3377,6 +3452,119 @@ var ts;
             ProjectService.prototype.getScriptInfoForPath = function (fileName) {
                 return this.filenameToScriptInfo.get(fileName);
             };
+            ProjectService.prototype.getDocumentPositionMapper = function (project, generatedFileName, sourceFileName) {
+                var _this = this;
+                var declarationInfo = this.getOrCreateScriptInfoNotOpenedByClient(generatedFileName, project.currentDirectory, this.host);
+                if (!declarationInfo)
+                    return undefined;
+                declarationInfo.getSnapshot();
+                if (ts.isString(declarationInfo.sourceMapFilePath)) {
+                    var sourceMapFileInfo_1 = this.getScriptInfoForPath(declarationInfo.sourceMapFilePath);
+                    if (sourceMapFileInfo_1) {
+                        sourceMapFileInfo_1.getSnapshot();
+                        if (sourceMapFileInfo_1.documentPositionMapper !== undefined) {
+                            sourceMapFileInfo_1.sourceInfos = this.addSourceInfoToSourceMap(sourceFileName, project, sourceMapFileInfo_1.sourceInfos);
+                            return sourceMapFileInfo_1.documentPositionMapper ? sourceMapFileInfo_1.documentPositionMapper : undefined;
+                        }
+                    }
+                    declarationInfo.sourceMapFilePath = undefined;
+                }
+                else if (declarationInfo.sourceMapFilePath) {
+                    declarationInfo.sourceMapFilePath.sourceInfos = this.addSourceInfoToSourceMap(sourceFileName, project, declarationInfo.sourceMapFilePath.sourceInfos);
+                    return undefined;
+                }
+                else if (declarationInfo.sourceMapFilePath !== undefined) {
+                    return undefined;
+                }
+                var sourceMapFileInfo;
+                var mapFileNameFromDeclarationInfo;
+                var readMapFile = function (mapFileName, mapFileNameFromDts) {
+                    var mapInfo = _this.getOrCreateScriptInfoNotOpenedByClient(mapFileName, project.currentDirectory, _this.host);
+                    if (!mapInfo) {
+                        mapFileNameFromDeclarationInfo = mapFileNameFromDts;
+                        return undefined;
+                    }
+                    sourceMapFileInfo = mapInfo;
+                    var snap = mapInfo.getSnapshot();
+                    if (mapInfo.documentPositionMapper !== undefined)
+                        return mapInfo.documentPositionMapper;
+                    return snap.getText(0, snap.getLength());
+                };
+                var projectName = project.projectName;
+                var documentPositionMapper = ts.getDocumentPositionMapper({ getCanonicalFileName: this.toCanonicalFileName, log: function (s) { return _this.logger.info(s); }, getSourceFileLike: function (f) { return _this.getSourceFileLike(f, projectName, declarationInfo); } }, declarationInfo.fileName, declarationInfo.getLineInfo(), readMapFile);
+                readMapFile = undefined;
+                if (sourceMapFileInfo) {
+                    declarationInfo.sourceMapFilePath = sourceMapFileInfo.path;
+                    sourceMapFileInfo.declarationInfoPath = declarationInfo.path;
+                    sourceMapFileInfo.documentPositionMapper = documentPositionMapper || false;
+                    sourceMapFileInfo.sourceInfos = this.addSourceInfoToSourceMap(sourceFileName, project, sourceMapFileInfo.sourceInfos);
+                }
+                else if (mapFileNameFromDeclarationInfo) {
+                    declarationInfo.sourceMapFilePath = {
+                        watcher: this.addMissingSourceMapFile(project.currentDirectory === this.currentDirectory ?
+                            mapFileNameFromDeclarationInfo :
+                            ts.getNormalizedAbsolutePath(mapFileNameFromDeclarationInfo, project.currentDirectory), declarationInfo.path),
+                        sourceInfos: this.addSourceInfoToSourceMap(sourceFileName, project)
+                    };
+                }
+                else {
+                    declarationInfo.sourceMapFilePath = false;
+                }
+                return documentPositionMapper;
+            };
+            ProjectService.prototype.addSourceInfoToSourceMap = function (sourceFileName, project, sourceInfos) {
+                if (sourceFileName) {
+                    var sourceInfo = this.getOrCreateScriptInfoNotOpenedByClient(sourceFileName, project.currentDirectory, project.directoryStructureHost);
+                    (sourceInfos || (sourceInfos = ts.createMap())).set(sourceInfo.path, true);
+                }
+                return sourceInfos;
+            };
+            ProjectService.prototype.addMissingSourceMapFile = function (mapFileName, declarationInfoPath) {
+                var _this = this;
+                var fileWatcher = this.watchFactory.watchFile(this.host, mapFileName, function () {
+                    var declarationInfo = _this.getScriptInfoForPath(declarationInfoPath);
+                    if (declarationInfo && declarationInfo.sourceMapFilePath && !ts.isString(declarationInfo.sourceMapFilePath)) {
+                        _this.delayUpdateProjectGraphs(declarationInfo.containingProjects);
+                        _this.delayUpdateSourceInfoProjects(declarationInfo.sourceMapFilePath.sourceInfos);
+                        declarationInfo.closeSourceMapFileWatcher();
+                    }
+                }, ts.PollingInterval.High, "Missing source map file");
+                return fileWatcher;
+            };
+            ProjectService.prototype.getSourceFileLike = function (fileName, projectNameOrProject, declarationInfo) {
+                var project = projectNameOrProject.projectName ? projectNameOrProject : this.findProject(projectNameOrProject);
+                if (project) {
+                    var path = project.toPath(fileName);
+                    var sourceFile = project.getSourceFile(path);
+                    if (sourceFile && sourceFile.resolvedPath === path)
+                        return sourceFile;
+                }
+                var info = this.getOrCreateScriptInfoNotOpenedByClient(fileName, (project || this).currentDirectory, project ? project.directoryStructureHost : this.host);
+                if (!info)
+                    return undefined;
+                if (declarationInfo && ts.isString(declarationInfo.sourceMapFilePath) && info !== declarationInfo) {
+                    var sourceMapInfo = this.getScriptInfoForPath(declarationInfo.sourceMapFilePath);
+                    if (sourceMapInfo) {
+                        (sourceMapInfo.sourceInfos || (sourceMapInfo.sourceInfos = ts.createMap())).set(info.path, true);
+                    }
+                }
+                if (info.cacheSourceFile)
+                    return info.cacheSourceFile.sourceFile;
+                if (!info.sourceFileLike) {
+                    info.sourceFileLike = {
+                        get text() {
+                            ts.Debug.fail("shouldnt need text");
+                            return "";
+                        },
+                        getLineAndCharacterOfPosition: function (pos) {
+                            var lineOffset = info.positionToLineOffset(pos);
+                            return { line: lineOffset.line - 1, character: lineOffset.offset - 1 };
+                        },
+                        getPositionOfLineAndCharacter: function (line, character, allowEdits) { return info.lineOffsetToPosition(line + 1, character + 1, allowEdits); }
+                    };
+                }
+                return info.sourceFileLike;
+            };
             ProjectService.prototype.setHostConfiguration = function (args) {
                 var _this = this;
                 if (args.file) {
@@ -3518,7 +3706,7 @@ var ts;
                 }
             };
             ProjectService.prototype.fileExists = function (fileName) {
-                return this.filenameToScriptInfo.has(fileName) || this.host.fileExists(fileName);
+                return !!this.getScriptInfoForNormalizedPath(fileName) || this.host.fileExists(fileName);
             };
             ProjectService.prototype.findExternalProjectContainingOpenScriptInfo = function (info) {
                 return ts.find(this.externalProjects, function (proj) {
@@ -3527,7 +3715,6 @@ var ts;
                 });
             };
             ProjectService.prototype.openClientFileWithNormalizedPath = function (fileName, fileContent, scriptKind, hasMixedContent, projectRootPath) {
-                var _this = this;
                 var configFileName;
                 var configFileErrors;
                 var info = this.getOrCreateScriptInfoOpenedByClientForNormalizedPath(fileName, projectRootPath ? this.getNormalizedAbsolutePath(projectRootPath) : this.currentDirectory, fileContent, scriptKind, hasMixedContent);
@@ -3564,12 +3751,7 @@ var ts;
                         this.removeProject(inferredProject);
                     }
                 }
-                this.filenameToScriptInfo.forEach(function (info) {
-                    if (!info.isScriptOpen() && info.isOrphan()) {
-                        _this.stopWatchingScriptInfo(info);
-                        _this.deleteScriptInfo(info);
-                    }
-                });
+                this.removeOrphanScriptInfos();
                 this.printProjects();
                 this.telemetryOnOpenFile(info);
                 return { configFileName: configFileName, configFileErrors: configFileErrors };
@@ -3602,11 +3784,61 @@ var ts;
                     }
                 }
             };
+            ProjectService.prototype.removeOrphanScriptInfos = function () {
+                var _this = this;
+                var toRemoveScriptInfos = ts.cloneMap(this.filenameToScriptInfo);
+                this.filenameToScriptInfo.forEach(function (info) {
+                    if (!info.isScriptOpen() && info.isOrphan()) {
+                        if (!info.sourceMapFilePath)
+                            return;
+                        var sourceInfos = void 0;
+                        if (ts.isString(info.sourceMapFilePath)) {
+                            var sourceMapInfo = _this.getScriptInfoForPath(info.sourceMapFilePath);
+                            sourceInfos = sourceMapInfo && sourceMapInfo.sourceInfos;
+                        }
+                        else {
+                            sourceInfos = info.sourceMapFilePath.sourceInfos;
+                        }
+                        if (!sourceInfos)
+                            return;
+                        if (!ts.forEachKey(sourceInfos, function (path) {
+                            var info = _this.getScriptInfoForPath(path);
+                            return !!info && (info.isScriptOpen() || !info.isOrphan());
+                        })) {
+                            return;
+                        }
+                    }
+                    toRemoveScriptInfos.delete(info.path);
+                    if (info.sourceMapFilePath) {
+                        var sourceInfos = void 0;
+                        if (ts.isString(info.sourceMapFilePath)) {
+                            toRemoveScriptInfos.delete(info.sourceMapFilePath);
+                            var sourceMapInfo = _this.getScriptInfoForPath(info.sourceMapFilePath);
+                            sourceInfos = sourceMapInfo && sourceMapInfo.sourceInfos;
+                        }
+                        else {
+                            sourceInfos = info.sourceMapFilePath.sourceInfos;
+                        }
+                        if (sourceInfos) {
+                            sourceInfos.forEach(function (_value, path) { return toRemoveScriptInfos.delete(path); });
+                        }
+                    }
+                });
+                toRemoveScriptInfos.forEach(function (info) {
+                    _this.stopWatchingScriptInfo(info);
+                    _this.deleteScriptInfo(info);
+                    info.closeSourceMapFileWatcher();
+                });
+            };
             ProjectService.prototype.telemetryOnOpenFile = function (scriptInfo) {
                 if (this.syntaxOnly || !this.eventHandler || !scriptInfo.isJavaScript() || !ts.addToSeen(this.allJsFilesForOpenFileTelemetry, scriptInfo.path)) {
                     return;
                 }
-                var info = { checkJs: !!scriptInfo.getDefaultProject().getSourceFile(scriptInfo.path).checkJsDirective };
+                var project = scriptInfo.getDefaultProject();
+                if (!project.languageServiceEnabled) {
+                    return;
+                }
+                var info = { checkJs: !!project.getSourceFile(scriptInfo.path).checkJsDirective };
                 this.eventHandler({ eventName: server.OpenFileInfoTelemetryEvent, data: { info: info } });
             };
             ProjectService.prototype.closeClientFile = function (uncheckedFileName) {
@@ -4152,11 +4384,11 @@ var ts;
             }, undefined);
             return outputs;
         }
-        function combineProjectOutputForRenameLocations(projects, defaultProject, initialLocation, findInStrings, findInComments) {
+        function combineProjectOutputForRenameLocations(projects, defaultProject, initialLocation, findInStrings, findInComments, hostPreferences) {
             var outputs = [];
             combineProjectOutputWorker(projects, defaultProject, initialLocation, function (_a, tryAddToTodo) {
                 var project = _a.project, location = _a.location;
-                for (var _i = 0, _b = project.getLanguageService().findRenameLocations(location.fileName, location.pos, findInStrings, findInComments) || server.emptyArray; _i < _b.length; _i++) {
+                for (var _i = 0, _b = project.getLanguageService().findRenameLocations(location.fileName, location.pos, findInStrings, findInComments, hostPreferences.providePrefixAndSuffixTextForRename) || server.emptyArray; _i < _b.length; _i++) {
                     var output = _b[_i];
                     if (!ts.contains(outputs, output, ts.documentSpansEqual) && !tryAddToTodo(project, documentSpanLocation(output))) {
                         outputs.push(output);
@@ -5127,7 +5359,8 @@ var ts;
             Session.prototype.getRenameInfo = function (args) {
                 var _a = this.getFileAndProject(args), file = _a.file, project = _a.project;
                 var position = this.getPositionInFile(args, file);
-                return project.getLanguageService().getRenameInfo(file, position);
+                var preferences = this.getHostPreferences();
+                return project.getLanguageService().getRenameInfo(file, position, { allowRenameOfImportPath: preferences.allowRenameOfImportPath });
             };
             Session.prototype.getProjects = function (args, getScriptInfoEnsuringProjectsUptoDate, ignoreNoProjectError) {
                 var projects;
@@ -5172,11 +5405,11 @@ var ts;
                 var file = server.toNormalizedPath(args.file);
                 var position = this.getPositionInFile(args, file);
                 var projects = this.getProjects(args);
-                var locations = combineProjectOutputForRenameLocations(projects, this.getDefaultProject(args), { fileName: args.file, pos: position }, !!args.findInStrings, !!args.findInComments);
+                var locations = combineProjectOutputForRenameLocations(projects, this.getDefaultProject(args), { fileName: args.file, pos: position }, !!args.findInStrings, !!args.findInComments, this.getHostPreferences());
                 if (!simplifiedResult)
                     return locations;
                 var defaultProject = this.getDefaultProject(args);
-                var renameInfo = this.mapRenameInfo(defaultProject.getLanguageService().getRenameInfo(file, position), ts.Debug.assertDefined(this.projectService.getScriptInfo(file)));
+                var renameInfo = this.mapRenameInfo(defaultProject.getLanguageService().getRenameInfo(file, position, { allowRenameOfImportPath: this.getHostPreferences().allowRenameOfImportPath }), ts.Debug.assertDefined(this.projectService.getScriptInfo(file)));
                 return { info: renameInfo, locs: this.toSpanGroups(locations) };
             };
             Session.prototype.mapRenameInfo = function (info, scriptInfo) {
@@ -5374,7 +5607,7 @@ var ts;
                 var formatOptions = this.getFormatOptions(file);
                 var edits = languageService.getFormattingEditsAfterKeystroke(file, position, args.key, formatOptions);
                 if ((args.key === "\n") && ((!edits) || (edits.length === 0) || allEditsBeforePos(edits, position))) {
-                    var _b = scriptInfo.getLineInfo(args.line), lineText = _b.lineText, absolutePosition = _b.absolutePosition;
+                    var _b = scriptInfo.getAbsolutePositionAndLineText(args.line), lineText = _b.lineText, absolutePosition = _b.absolutePosition;
                     if (lineText && lineText.search("\\S") < 0) {
                         var preferredIndent = languageService.getIndentationAtPosition(file, position, formatOptions);
                         var hasIndent = 0;
@@ -6263,8 +6496,8 @@ var ts;
             ScriptVersionCache.prototype.getSnapshotVersion = function () {
                 return this._getSnapshot().version;
             };
-            ScriptVersionCache.prototype.getLineInfo = function (line) {
-                return this._getSnapshot().index.lineNumberToInfo(line);
+            ScriptVersionCache.prototype.getAbsolutePositionAndLineText = function (oneBasedLine) {
+                return this._getSnapshot().index.lineNumberToInfo(oneBasedLine);
             };
             ScriptVersionCache.prototype.lineOffsetToPosition = function (line, column) {
                 return this._getSnapshot().index.absolutePositionOfStartOfLine(line) + (column - 1);
@@ -6298,6 +6531,9 @@ var ts;
                 else {
                     return ts.unchangedTextChangeRange;
                 }
+            };
+            ScriptVersionCache.prototype.getLineCount = function () {
+                return this._getSnapshot().index.getLineCount();
             };
             ScriptVersionCache.fromString = function (script) {
                 var svc = new ScriptVersionCache();
@@ -6353,8 +6589,11 @@ var ts;
             LineIndex.prototype.positionToColumnAndLineText = function (position) {
                 return this.root.charOffsetToLineInfo(1, position);
             };
+            LineIndex.prototype.getLineCount = function () {
+                return this.root.lineCount();
+            };
             LineIndex.prototype.lineNumberToInfo = function (oneBasedLine) {
-                var lineCount = this.root.lineCount();
+                var lineCount = this.getLineCount();
                 if (oneBasedLine <= lineCount) {
                     var _a = this.root.lineNumberToInfo(oneBasedLine, 0), position = _a.position, leaf = _a.leaf;
                     return { absolutePosition: position, lineText: leaf && leaf.text };

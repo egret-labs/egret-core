@@ -105,6 +105,14 @@ declare namespace ts.server {
     function indent(str: string): string;
     function stringifyIndented(json: {}): string;
 }
+declare namespace ts {
+    const enum WatchType {
+        ClosedScriptInfo = "Closed Script info",
+        ConfigFileForInferredRoot = "Config file for the inferred project root",
+        NodeModulesForClosedScriptInfo = "node_modules for closed script infos in them",
+        MissingSourceMapFile = "Missing source map file"
+    }
+}
 declare namespace ts.server.protocol {
     const enum CommandTypes {
         JsxClosingTag = "jsxClosingTag",
@@ -1219,6 +1227,8 @@ declare namespace ts.server.protocol {
         readonly importModuleSpecifierPreference?: "relative" | "non-relative";
         readonly allowTextChangesInNewFiles?: boolean;
         readonly lazyConfiguredProjectsFromExternalProject?: boolean;
+        readonly providePrefixAndSuffixTextForRename?: boolean;
+        readonly allowRenameOfImportPath?: boolean;
     }
     interface CompilerOptions {
         allowJs?: boolean;
@@ -1345,6 +1355,7 @@ declare namespace ts.server {
         getVersion(): string;
         hasScriptVersionCache_TestOnly(): boolean;
         useScriptVersionCache_TestOnly(): void;
+        private resetSourceMapInfo;
         useText(newText?: string): void;
         edit(start: number, end: number, newText: string): void;
         reload(newText: string): boolean;
@@ -1353,20 +1364,25 @@ declare namespace ts.server {
         delayReloadFromFileIntoText(): void;
         getTelemetryFileSize(): number;
         getSnapshot(): IScriptSnapshot;
-        getLineInfo(line: number): AbsolutePositionAndLineText;
+        getAbsolutePositionAndLineText(line: number): AbsolutePositionAndLineText;
         lineToTextSpan(line: number): TextSpan;
-        lineOffsetToPosition(line: number, offset: number): number;
+        lineOffsetToPosition(line: number, offset: number, allowEdits?: true): number;
         positionToLineOffset(position: number): protocol.Location;
         private getFileTextAndSize;
         private switchToScriptVersionCache;
         private useScriptVersionCacheIfValidOrOpen;
         private getOrLoadText;
         private getLineMap;
+        getLineInfo(): LineInfo;
     }
     function isDynamicFileName(fileName: NormalizedPath): boolean;
     interface DocumentRegistrySourceFileCache {
         key: DocumentRegistryBucketKey;
         sourceFile: SourceFile;
+    }
+    interface SourceMapFileWatcher {
+        watcher: FileWatcher;
+        sourceInfos?: Map<true>;
     }
     class ScriptInfo {
         private readonly host;
@@ -1383,6 +1399,11 @@ declare namespace ts.server {
         private realpath;
         cacheSourceFile: DocumentRegistrySourceFileCache | undefined;
         mTime?: number;
+        sourceFileLike?: SourceFileLike;
+        sourceMapFilePath?: Path | SourceMapFileWatcher | false;
+        declarationInfoPath?: Path;
+        sourceInfos?: Map<true>;
+        documentPositionMapper?: DocumentPositionMapper | false;
         constructor(host: ServerHost, fileName: NormalizedPath, scriptKind: ScriptKind, hasMixedContent: boolean, path: Path, initialVersion?: ScriptInfoVersion);
         getVersion(): ScriptInfoVersion;
         getTelemetryFileSize(): number;
@@ -1406,14 +1427,17 @@ declare namespace ts.server {
         saveTo(fileName: string): void;
         delayReloadNonMixedContentFile(): void;
         reloadFromFile(tempFileName?: NormalizedPath): boolean;
-        getLineInfo(line: number): AbsolutePositionAndLineText;
+        getAbsolutePositionAndLineText(line: number): AbsolutePositionAndLineText;
         editContent(start: number, end: number, newText: string): void;
         markContainingProjectsAsDirty(): void;
         isOrphan(): boolean;
         lineToTextSpan(line: number): TextSpan;
         lineOffsetToPosition(line: number, offset: number): number;
+        lineOffsetToPosition(line: number, offset: number, allowEdits?: true): number;
         positionToLineOffset(position: number): protocol.Location;
         isJavaScript(): boolean;
+        getLineInfo(): LineInfo;
+        closeSourceMapFileWatcher(): void;
     }
 }
 declare namespace ts.server {
@@ -1564,6 +1588,8 @@ declare namespace ts.server {
         getAllProjectErrors(): ReadonlyArray<Diagnostic>;
         getLanguageService(ensureSynchronized?: boolean): LanguageService;
         getSourceMapper(): SourceMapper;
+        getDocumentPositionMapper(generatedFileName: string, sourceFileName?: string): DocumentPositionMapper | undefined;
+        getSourceFileLike(fileName: string): SourceFileLike | undefined;
         private shouldEmitFile;
         getCompileOnSaveAffectedFileList(scriptInfo: ScriptInfo): string[];
         emitFile(scriptInfo: ScriptInfo, writeFile: (path: string, data: string, writeByteOrderMark?: boolean) => void): boolean;
@@ -1820,16 +1846,6 @@ declare namespace ts.server {
         configFileName?: NormalizedPath;
         configFileErrors?: ReadonlyArray<Diagnostic>;
     }
-    const enum WatchType {
-        ConfigFilePath = "Config file for the program",
-        MissingFilePath = "Missing file from program",
-        WildcardDirectories = "Wild card directory",
-        ClosedScriptInfo = "Closed Script info",
-        ConfigFileForInferredRoot = "Config file for the inferred project root",
-        FailedLookupLocation = "Directory of Failed lookup locations in module resolution",
-        TypeRoots = "Type root directory",
-        NodeModulesForClosedScriptInfo = "node_modules for closed script infos in them"
-    }
     interface ConfigFileExistenceInfo {
         exists: boolean;
         openFilesImpactedByConfigFile: Map<boolean>;
@@ -1855,7 +1871,7 @@ declare namespace ts.server {
     class ProjectService {
         readonly typingsCache: TypingsCache;
         readonly documentRegistry: DocumentRegistry;
-        private readonly filenameToScriptInfo;
+        readonly filenameToScriptInfo: Map<ScriptInfo>;
         private readonly scriptInfoInNodeModulesWatchers;
         private readonly filenameToScriptInfoVersion;
         private readonly allJsFilesForOpenFileTelemetry;
@@ -1934,6 +1950,9 @@ declare namespace ts.server {
         getHostFormatCodeOptions(): FormatCodeSettings;
         getHostPreferences(): protocol.UserPreferences;
         private onSourceFileChanged;
+        private handleSourceMapProjects;
+        private delayUpdateSourceInfoProjects;
+        private delayUpdateProjectsOfScriptInfoPath;
         private handleDeletedFile;
         watchWildcardDirectory(directory: Path, flags: WatchDirectoryFlags, project: ConfiguredProject): FileWatcher;
         getConfigFileExistenceInfo(project: ConfiguredProject): ConfigFileExistenceInfo;
@@ -1997,6 +2016,10 @@ declare namespace ts.server {
         private getOrCreateScriptInfoWorker;
         getScriptInfoForNormalizedPath(fileName: NormalizedPath): ScriptInfo | undefined;
         getScriptInfoForPath(fileName: Path): ScriptInfo | undefined;
+        getDocumentPositionMapper(project: Project, generatedFileName: string, sourceFileName?: string): DocumentPositionMapper | undefined;
+        private addSourceInfoToSourceMap;
+        private addMissingSourceMapFile;
+        getSourceFileLike(fileName: string, projectNameOrProject: string | Project, declarationInfo?: ScriptInfo): SourceFileLike | undefined;
         setHostConfiguration(args: protocol.ConfigureRequestArguments): void;
         closeLog(): void;
         reloadProjects(): void;
@@ -2010,6 +2033,7 @@ declare namespace ts.server {
         private findExternalProjectContainingOpenScriptInfo;
         openClientFileWithNormalizedPath(fileName: NormalizedPath, fileContent?: string, scriptKind?: ScriptKind, hasMixedContent?: boolean, projectRootPath?: NormalizedPath): OpenConfiguredProjectResult;
         private removeOrphanConfiguredProjects;
+        private removeOrphanScriptInfos;
         private telemetryOnOpenFile;
         closeClientFile(uncheckedFileName: string): void;
         private collectChanges;
@@ -2254,11 +2278,12 @@ declare namespace ts.server {
         getSnapshot(): IScriptSnapshot;
         private _getSnapshot;
         getSnapshotVersion(): number;
-        getLineInfo(line: number): AbsolutePositionAndLineText;
+        getAbsolutePositionAndLineText(oneBasedLine: number): AbsolutePositionAndLineText;
         lineOffsetToPosition(line: number, column: number): number;
         positionToLineOffset(position: number): protocol.Location;
         lineToTextSpan(line: number): TextSpan;
         getTextChangesBetweenVersions(oldVersion: number, newVersion: number): TextChangeRange | undefined;
+        getLineCount(): number;
         static fromString(script: string): ScriptVersionCache;
     }
     class LineIndex {
@@ -2267,6 +2292,7 @@ declare namespace ts.server {
         absolutePositionOfStartOfLine(oneBasedLine: number): number;
         positionToLineOffset(position: number): protocol.Location;
         private positionToColumnAndLineText;
+        getLineCount(): number;
         lineNumberToInfo(oneBasedLine: number): AbsolutePositionAndLineText;
         load(lines: string[]): void;
         walk(rangeStart: number, rangeLength: number, walkFns: LineIndexWalker): void;

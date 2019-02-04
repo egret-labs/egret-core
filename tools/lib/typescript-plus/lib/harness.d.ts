@@ -767,7 +767,9 @@ declare namespace fakes {
         getDefaultLibFileName(options: ts.CompilerOptions): string;
         getSourceFile(fileName: string, languageVersion: number): ts.SourceFile | undefined;
     }
-    class SolutionBuilderHost extends CompilerHost implements ts.SolutionBuilderHost {
+    class SolutionBuilderHost extends CompilerHost implements ts.SolutionBuilderHost<ts.BuilderProgram> {
+        createProgram: typeof ts.createAbstractBuilder;
+        now(): Date;
         diagnostics: ts.Diagnostic[];
         reportDiagnostic(diagnostic: ts.Diagnostic): void;
         reportSolutionBuilderStatus(diagnostic: ts.Diagnostic): void;
@@ -824,7 +826,7 @@ declare namespace ts.server {
         getSuggestionDiagnostics(file: string): DiagnosticWithLocation[];
         private getDiagnostics;
         getCompilerOptionsDiagnostics(): Diagnostic[];
-        getRenameInfo(fileName: string, position: number, findInStrings?: boolean, findInComments?: boolean): RenameInfo;
+        getRenameInfo(fileName: string, position: number, _options?: RenameInfoOptions, findInStrings?: boolean, findInComments?: boolean): RenameInfo;
         findRenameLocations(fileName: string, position: number, findInStrings: boolean, findInComments: boolean): RenameLocation[];
         private decodeNavigationBarItems;
         getNavigationBarItems(file: string): NavigationBarItem[];
@@ -899,9 +901,7 @@ declare var _chai: typeof chai;
 declare var assert: typeof _chai.assert;
 declare var global: NodeJS.Global;
 declare var window: {};
-declare var XMLHttpRequest: {
-    new (): XMLHttpRequest;
-};
+declare var XMLHttpRequest: new () => XMLHttpRequest;
 interface XMLHttpRequest {
     readonly readyState: number;
     readonly responseText: string;
@@ -1570,8 +1570,8 @@ declare namespace FourSlash {
         verifySignatureHelp(optionses: ReadonlyArray<FourSlashInterface.VerifySignatureHelpOptions>): void;
         private verifySignatureHelpWorker;
         private validate;
-        verifyRenameInfoSucceeded(displayName: string | undefined, fullDisplayName: string | undefined, kind: string | undefined, kindModifiers: string | undefined, fileToRename: string | undefined, expectedRange: Range | undefined): void;
-        verifyRenameInfoFailed(message?: string): void;
+        verifyRenameInfoSucceeded(displayName: string | undefined, fullDisplayName: string | undefined, kind: string | undefined, kindModifiers: string | undefined, fileToRename: string | undefined, expectedRange: Range | undefined, renameInfoOptions: ts.RenameInfoOptions | undefined): void;
+        verifyRenameInfoFailed(message?: string, allowRenameOfImportPath?: boolean): void;
         private alignmentForExtraInfo;
         private spanInfoToString;
         private baselineCurrentFileLocations;
@@ -1897,8 +1897,8 @@ declare namespace FourSlashInterface {
          * This method *requires* an ordered stream of classifications for a file, and spans are highly recommended.
          */
         semanticClassificationsAre(...classifications: Classification[]): void;
-        renameInfoSucceeded(displayName?: string, fullDisplayName?: string, kind?: string, kindModifiers?: string, fileToRename?: string, expectedRange?: FourSlash.Range): void;
-        renameInfoFailed(message?: string): void;
+        renameInfoSucceeded(displayName?: string, fullDisplayName?: string, kind?: string, kindModifiers?: string, fileToRename?: string, expectedRange?: FourSlash.Range, options?: ts.RenameInfoOptions): void;
+        renameInfoFailed(message?: string, allowRenameOfImportPath?: boolean): void;
         renameLocations(startRanges: ArrayOrSingle<FourSlash.Range>, options: RenameLocationsOptions): void;
         verifyQuickInfoDisplayParts(kind: string, kindModifiers: string, textSpan: FourSlash.TextSpan, displayParts: ts.SymbolDisplayPart[], documentation: ts.SymbolDisplayPart[], tags: ts.JSDocTagInfo[]): void;
         getSyntacticDiagnostics(expected: ReadonlyArray<Diagnostic>): void;
@@ -2165,6 +2165,7 @@ declare namespace FourSlashInterface {
         readonly findInStrings?: boolean;
         readonly findInComments?: boolean;
         readonly ranges: ReadonlyArray<RenameLocationOptions>;
+        readonly providePrefixAndSuffixTextForRename?: boolean;
     };
     type RenameLocationOptions = FourSlash.Range | {
         readonly range: FourSlash.Range;

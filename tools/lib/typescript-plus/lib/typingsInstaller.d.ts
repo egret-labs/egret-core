@@ -5314,7 +5314,6 @@ declare namespace ts {
         Non_simple_parameter_declared_here: DiagnosticMessage;
         use_strict_directive_used_here: DiagnosticMessage;
         Print_the_final_configuration_instead_of_building: DiagnosticMessage;
-        An_identifier_or_keyword_cannot_immediately_follow_a_numeric_literal: DiagnosticMessage;
         Duplicate_identifier_0: DiagnosticMessage;
         Initializer_of_instance_member_variable_0_cannot_reference_identifier_1_declared_in_the_constructor: DiagnosticMessage;
         Static_members_cannot_reference_class_type_parameters: DiagnosticMessage;
@@ -7434,9 +7433,7 @@ declare namespace ts {
     function isNamedImportsOrExports(node: Node): node is NamedImportsOrExports;
     interface ObjectAllocator {
         getNodeConstructor(): new (kind: SyntaxKind, pos?: number, end?: number) => Node;
-        getTokenConstructor(): {
-            new <TKind extends SyntaxKind>(kind: TKind, pos?: number, end?: number): Token<TKind>;
-        };
+        getTokenConstructor(): new <TKind extends SyntaxKind>(kind: TKind, pos?: number, end?: number) => Token<TKind>;
         getIdentifierConstructor(): new (kind: SyntaxKind.Identifier, pos?: number, end?: number) => Identifier;
         getSourceFileConstructor(): new (kind: SyntaxKind.SourceFile, pos?: number, end?: number) => SourceFile;
         getSymbolConstructor(): new (flags: SymbolFlags, name: __String) => Symbol;
