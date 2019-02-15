@@ -3664,6 +3664,7 @@ declare namespace egret_native {
      */
     class NativeDisplayObject {
         id: number;
+        sharedBuffer: Float32Array;
         constructor(type: number);
         addChildAt(childId: number, index: number): void;
         removeChild(childId: number): void;
@@ -10462,17 +10463,30 @@ declare namespace egret {
         const WXGAME = "wxgame";
         /**
          * Running on Baidu mini game
-         * @version Egret 5.1.5
+         * @version Egret 5.2.13
          * @platform All
          * @language en_US
          */
         /**
          * 运行在百度小游戏上
-         * @version Egret 5.1.5
+         * @version Egret 5.2.13
          * @platform All
          * @language zh_CN
          */
         const BAIDUGAME = "baidugame";
+        /**
+         * Running on Xiaomi quick game
+         * @version Egret 5.2.14
+         * @platform All
+         * @language en_US
+         */
+        /**
+         * 运行在小米快游戏上
+         * @version Egret 5.2.14
+         * @platform All
+         * @language zh_CN
+         */
+        const QGAME = "qgame";
     }
     /**
      * The Capabilities class provides properties that describe the system and runtime that are hosting the application.

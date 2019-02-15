@@ -1722,8 +1722,15 @@ namespace egret {
             let w: number = 0;
             let h: number = 0;
             if (nativeRender) {
-                w = egret_native.nrGetTextFieldWidth(this.$nativeDisplayObject.id);
-                h = egret_native.nrGetTextFieldHeight(this.$nativeDisplayObject.id);
+                let nativeDisplayObject = this.$nativeDisplayObject;
+                let sharedBuffer: Float32Array = nativeDisplayObject.sharedBuffer;
+                if (sharedBuffer) {
+                    w = (sharedBuffer[0 /*TextFieldWidth*/] >= 0) ? sharedBuffer[0 /*TextFieldWidth*/] : sharedBuffer[2 /*TextWidth*/];
+                    h = (sharedBuffer[1 /*TextFieldHeight*/] >= 0) ? sharedBuffer[1 /*TextFieldHeight*/] : sharedBuffer[3 /*TextHeight*/];
+                } else {
+                    w = egret_native.nrGetTextFieldWidth(nativeDisplayObject.id);
+                    h = egret_native.nrGetTextFieldHeight(nativeDisplayObject.id);
+                }
             }
             else {
                 w = !isNaN(this.$TextField[sys.TextKeys.textFieldWidth]) ? this.$TextField[sys.TextKeys.textFieldWidth] : this.$TextField[sys.TextKeys.textWidth];

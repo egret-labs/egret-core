@@ -17024,17 +17024,30 @@ var egret;
         RuntimeType.WXGAME = "wxgame";
         /**
          * Running on Baidu mini game
-         * @version Egret 5.1.5
+         * @version Egret 5.2.13
          * @platform All
          * @language en_US
          */
         /**
          * 运行在百度小游戏上
-         * @version Egret 5.1.5
+         * @version Egret 5.2.13
          * @platform All
          * @language zh_CN
          */
         RuntimeType.BAIDUGAME = "baidugame";
+        /**
+         * Running on Xiaomi quick game
+         * @version Egret 5.2.14
+         * @platform All
+         * @language en_US
+         */
+        /**
+         * 运行在小米快游戏上
+         * @version Egret 5.2.14
+         * @platform All
+         * @language zh_CN
+         */
+        RuntimeType.QGAME = "qgame";
     })(RuntimeType = egret.RuntimeType || (egret.RuntimeType = {}));
     /**
      * The Capabilities class provides properties that describe the system and runtime that are hosting the application.
@@ -20655,8 +20668,16 @@ var egret;
             var w = 0;
             var h = 0;
             if (egret.nativeRender) {
-                w = egret_native.nrGetTextFieldWidth(this.$nativeDisplayObject.id);
-                h = egret_native.nrGetTextFieldHeight(this.$nativeDisplayObject.id);
+                var nativeDisplayObject = this.$nativeDisplayObject;
+                var sharedBuffer = nativeDisplayObject.sharedBuffer;
+                if (sharedBuffer) {
+                    w = (sharedBuffer[0 /*TextFieldWidth*/] >= 0) ? sharedBuffer[0 /*TextFieldWidth*/] : sharedBuffer[2 /*TextWidth*/];
+                    h = (sharedBuffer[1 /*TextFieldHeight*/] >= 0) ? sharedBuffer[1 /*TextFieldHeight*/] : sharedBuffer[3 /*TextHeight*/];
+                }
+                else {
+                    w = egret_native.nrGetTextFieldWidth(nativeDisplayObject.id);
+                    h = egret_native.nrGetTextFieldHeight(nativeDisplayObject.id);
+                }
             }
             else {
                 w = !isNaN(this.$TextField[3 /* textFieldWidth */]) ? this.$TextField[3 /* textFieldWidth */] : this.$TextField[5 /* textWidth */];

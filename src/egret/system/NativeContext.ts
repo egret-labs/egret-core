@@ -113,6 +113,7 @@ declare namespace egret_native {
      */
     class NativeDisplayObject {
         id: number;
+        sharedBuffer: Float32Array;
         constructor(type: number);
         public addChildAt(childId: number, index: number): void;
         public removeChild(childId: number): void;
