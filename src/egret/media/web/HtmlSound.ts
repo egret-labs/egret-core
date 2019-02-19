@@ -134,6 +134,10 @@ namespace egret.web {
                     audio.pause();
                     audio.muted = false;
                 }
+                if (ua.indexOf("edge") >= 0) {//Edge兼容
+                    document.body.appendChild(audio);
+                }
+                
 
                 self.loaded = true;
                 self.dispatchEventWith(egret.Event.COMPLETE);
