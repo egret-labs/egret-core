@@ -704,24 +704,19 @@ var egret;
                 var request = new XMLHttpRequest();
                 request.open("GET", url, true);
                 request.responseType = "arraybuffer";
-                request.onreadystatechange = function () {
-                    if (request.readyState == 4) {
-                        var ioError = (request.status >= 400 || request.status == 0);
-                        if (ioError) {
-                            self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
-                        }
-                        else {
-                            WebAudioDecode.decodeArr.push({
-                                "buffer": request.response,
-                                "success": onAudioLoaded,
-                                "fail": onAudioError,
-                                "self": self,
-                                "url": self.url
-                            });
-                            WebAudioDecode.decodeAudios();
-                        }
-                    }
-                };
+                request.addEventListener("load", function () {
+                    WebAudioDecode.decodeArr.push({
+                        "buffer": request.response,
+                        "success": onAudioLoaded,
+                        "fail": onAudioError,
+                        "self": self,
+                        "url": self.url
+                    });
+                    WebAudioDecode.decodeAudios();
+                });
+                request.addEventListener("error", function () {
+                    self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
+                });
                 request.send();
                 function onAudioLoaded() {
                     self.loaded = true;
@@ -1668,10 +1663,17 @@ var egret;
                     this._xhr.abort();
                     this._xhr = null;
                 }
-                this._xhr = this.getXHR(); //new XMLHttpRequest();
-                this._xhr.onreadystatechange = this.onReadyStateChange.bind(this);
-                this._xhr.onprogress = this.updateProgress.bind(this);
-                this._xhr.open(this._method, this._url, true);
+                var xhr = this.getXHR(); //new XMLHttpRequest();
+                if (window["XMLHttpRequest"]) {
+                    xhr.addEventListener("load", this.onload.bind(this));
+                    xhr.addEventListener("error", this.onerror.bind(this));
+                }
+                else {
+                    xhr.onreadystatechange = this.onReadyStateChange.bind(this);
+                }
+                xhr.onprogress = this.updateProgress.bind(this);
+                xhr.open(this._method, this._url, true);
+                this._xhr = xhr;
             };
             /**
              * @private
@@ -1765,6 +1767,28 @@ var egret;
                 if (event.lengthComputable) {
                     egret.ProgressEvent.dispatchProgressEvent(this, egret.ProgressEvent.PROGRESS, event.loaded, event.total);
                 }
+            };
+            /**
+             * @private
+             */
+            WebHttpRequest.prototype.onload = function () {
+                var self = this;
+                window.setTimeout(function () {
+                    self.dispatchEventWith(egret.Event.COMPLETE);
+                }, 0);
+            };
+            /**
+             * @private
+             */
+            WebHttpRequest.prototype.onerror = function () {
+                var url = this._url;
+                var self = this;
+                window.setTimeout(function () {
+                    if (true && !self.hasEventListener(egret.IOErrorEvent.IO_ERROR)) {
+                        egret.$error(1011, url);
+                    }
+                    self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
+                }, 0);
             };
             return WebHttpRequest;
         }(egret.EventDispatcher));
@@ -3601,8 +3625,8 @@ var egret;
             }
             requestAnimationFrame(onTick);
             function onTick() {
-                ticker.update();
                 requestAnimationFrame(onTick);
+                ticker.update();
             }
         }
         //覆盖原生的isNaN()方法实现，在不同浏览器上有2~10倍性能提升。
