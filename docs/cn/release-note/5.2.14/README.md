@@ -12,6 +12,7 @@
 * 优化主循环逻辑，当游戏代码出现异常时，屏幕不再黑屏，游戏可以继续带错运行。
 * 生成 manifest 依赖文件时，在路径里增加 `./` 开头
 * HttpRequest 支持在 Android 上通过 WebView 加载本地文件
+* 修复 BitmapText 在带有 offset 值的情况下，位置计算错误的问题。
 
 ## Native
 

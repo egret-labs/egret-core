@@ -12,6 +12,7 @@ Egret Engine was officially released on May 25, 2018 5.2 stable version. On Octo
 * Optimize the main loop logic, when the game code abnormal, the screen will not be black, the game can continue to run with the error.
 * When generating manifest dependent files, add './' to the path
 * HttpRequest supports loading local files via WebView on Android
+* Fixes an issue where the position calculates an error bitmaptext with a offset value.
 
 ## Native
 
