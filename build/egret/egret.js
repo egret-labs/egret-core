@@ -12235,7 +12235,7 @@ var egret;
     locale_strings[1049] = "In the absence of sound is not allowed to play after loading";
     locale_strings[1050] = "ExternalInterface calls the method without js registration: {0}";
     locale_strings[1051] = "runtime only support webgl render mode";
-    locale_strings[1052] = "network request timeout";
+    locale_strings[1052] = "network request timeout{0}";
     //gui  3000-3099
     locale_strings[3000] = "Theme configuration file failed to load: {0}";
     locale_strings[3001] = "Cannot find the skin name which is configured in Theme: {0}";
@@ -12404,7 +12404,7 @@ var egret;
     locale_strings[1049] = "声音在没有加载完之前不允许播放";
     locale_strings[1050] = "ExternalInterface调用了js没有注册的方法: {0}";
     locale_strings[1051] = "runtime 只支持 webgl 渲染模式";
-    locale_strings[1052] = "网络请求超时";
+    locale_strings[1052] = "网络请求超时:{0}";
     //gui  3000-3099
     locale_strings[3000] = "主题配置文件加载失败: {0}";
     locale_strings[3001] = "找不到主题中所配置的皮肤类名: {0}";
