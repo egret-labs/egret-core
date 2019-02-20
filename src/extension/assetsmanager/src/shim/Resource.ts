@@ -456,6 +456,11 @@ module RES {
      * @language zh_CN
      */
     export function getResByUrl(url: string, compFunc?: Function, thisObject?: any, type: string = ""): Promise<any> {
+        if(!instance){
+            let message = egret.sys.tr(3200)
+            egret.warn(message)
+            return Promise.reject(message);
+        }
         return compatiblePromise(instance.getResByUrl(url, compFunc, thisObject, type));
     }
     /**

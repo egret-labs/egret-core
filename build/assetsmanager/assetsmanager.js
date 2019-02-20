@@ -1174,6 +1174,11 @@ var RES;
      */
     function getResByUrl(url, compFunc, thisObject, type) {
         if (type === void 0) { type = ""; }
+        if (!instance) {
+            var message = egret.sys.tr(3200);
+            egret.warn(message);
+            return Promise.reject(message);
+        }
         return compatiblePromise(instance.getResByUrl(url, compFunc, thisObject, type));
     }
     RES.getResByUrl = getResByUrl;

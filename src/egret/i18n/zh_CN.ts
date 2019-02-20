@@ -4,8 +4,7 @@ namespace egret {
     $locale_strings["zh_CN"] = $locale_strings["zh_CN"] || {};
     let locale_strings = $locale_strings["zh_CN"];
 
-    //eui 2000-2999
-    //RES 3200-3299
+    //eui 2000-2999    
 
     //core  1000-1999
     locale_strings[1001] = "找不到Egret入口类: {0}。";
@@ -79,10 +78,16 @@ namespace egret {
     locale_strings[3101] = "请先连接WebSocket";
     locale_strings[3102] = "请先设置type为二进制类型";
 
+    //RES 3200-3299
+    locale_strings[3200] = "getResByUrl 必须在 loadConfig 之后调用";
+
     //db 4000-4299
     locale_strings[4000] = "An Bone cannot be added as a child to itself or one of its children (or children's children, etc.)";
     locale_strings[4001] = "Abstract class can not be instantiated!";
     locale_strings[4002] = "Unnamed data!";
     locale_strings[4003] = "Nonsupport version!";
+
+    //4500-5000 platform
+    locale_strings[4500] = "该平台不支持 {0} 适配模式，已经自动替换为 {1} 模式，请修改您的代码适配逻辑";
 
 }
