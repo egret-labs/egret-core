@@ -52,6 +52,7 @@ namespace egret {
     locale_strings[1049] = "In the absence of sound is not allowed to play after loading";
     locale_strings[1050] = "ExternalInterface calls the method without js registration: {0}";
     locale_strings[1051] = "runtime only support webgl render mode";
+    locale_strings[1052] = "network request timeout";
 
     //gui  3000-3099
     locale_strings[3000] = "Theme configuration file failed to load: {0}";
