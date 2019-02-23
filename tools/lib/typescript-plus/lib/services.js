@@ -1508,7 +1508,7 @@ var ts;
     }
     ts.quotePreferenceFromString = quotePreferenceFromString;
     function getQuotePreference(sourceFile, preferences) {
-        if (preferences.quotePreference) {
+        if (preferences.quotePreference && preferences.quotePreference !== "auto") {
             return preferences.quotePreference === "single" ? 0 /* Single */ : 1 /* Double */;
         }
         else {
@@ -2079,15 +2079,18 @@ var ts;
         if (/^\d+$/.test(text)) {
             return text;
         }
+        // Editors can pass in undefined or empty string - we want to infer the preference in those cases.
+        var quotePreference = preferences.quotePreference || "auto";
         var quoted = JSON.stringify(text);
-        switch (preferences.quotePreference) {
-            case undefined:
+        switch (quotePreference) {
+            // TODO use getQuotePreference to infer the actual quote style.
+            case "auto":
             case "double":
                 return quoted;
             case "single":
                 return "'" + stripQuotes(quoted).replace("'", "\\'").replace('\\"', '"') + "'";
             default:
-                return ts.Debug.assertNever(preferences.quotePreference);
+                return ts.Debug.assertNever(quotePreference);
         }
     }
     ts.quote = quote;
@@ -20971,7 +20974,9 @@ var ts;
         }
         function createStubbedMethodBody(preferences) {
             return ts.createBlock([ts.createThrow(ts.createNew(ts.createIdentifier("Error"), 
-                /*typeArguments*/ undefined, [ts.createLiteral("Method not implemented.", /*isSingleQuote*/ preferences.quotePreference === "single")]))], 
+                /*typeArguments*/ undefined, 
+                // TODO Handle auto quote preference.
+                [ts.createLiteral("Method not implemented.", /*isSingleQuote*/ preferences.quotePreference === "single")]))], 
             /*multiline*/ true);
         }
         function createVisibilityModifier(flags) {
