@@ -10464,7 +10464,7 @@ var eui;
                 if (value == this.$fillMode) {
                     return;
                 }
-                this.$fillMode = value;
+                _super.prototype.$setFillMode.call(this, value);
                 this.invalidateDisplayList();
             },
             enumerable: true,

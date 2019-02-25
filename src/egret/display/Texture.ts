@@ -73,12 +73,6 @@ namespace egret {
         }
 
         /**
-         * @private
-         * 纹理id
-         */
-        public $textureId: number;
-
-        /**
          * Whether to destroy the corresponding BitmapData when the texture is destroyed
          * @version Egret 5.0.8
          * @platform Web,Native
@@ -378,9 +372,6 @@ namespace egret {
                     this.$bitmapData.$dispose();
                 }
                 this.$bitmapData = null;
-            }
-            if(egret.nativeRender) {
-                egret_native.NativeDisplayObject.disposeTexture(this);
             }
         }
     }

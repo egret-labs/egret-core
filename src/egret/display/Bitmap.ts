@@ -235,7 +235,7 @@ namespace egret {
          * @private
          */
         protected setBitmapDataToWasm(data?: Texture): void {
-            this.$nativeDisplayObject.setBitmapData(data);
+            this.$nativeDisplayObject.setTexture(data);
         }
 
         /**

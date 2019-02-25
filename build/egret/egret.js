@@ -3071,9 +3071,6 @@ var egret;
                 }
                 this.$bitmapData = null;
             }
-            if (egret.nativeRender) {
-                egret_native.NativeDisplayObject.disposeTexture(this);
-            }
         };
         return Texture;
     }(egret.HashObject));
@@ -5607,7 +5604,7 @@ var egret;
          * @private
          */
         Bitmap.prototype.setBitmapDataToWasm = function (data) {
-            this.$nativeDisplayObject.setBitmapData(data);
+            this.$nativeDisplayObject.setTexture(data);
         };
         /**
          * @private
@@ -8337,11 +8334,29 @@ var egret;
              * webgl纹理生成后，是否删掉原始图像数据
              */
             _this.$deleteSource = true;
+            if (egret.nativeRender) {
+                var nativeBitmapData = new egret_native.NativeBitmapData();
+                nativeBitmapData.$init();
+                _this.$nativeBitmapData = nativeBitmapData;
+            }
             _this.source = source;
             _this.width = source.width;
             _this.height = source.height;
             return _this;
         }
+        Object.defineProperty(BitmapData.prototype, "source", {
+            get: function () {
+                return this.$source;
+            },
+            set: function (value) {
+                this.$source = value;
+                if (egret.nativeRender) {
+                    egret_native.NativeDisplayObject.setSourceToNativeBitmapData(this.$nativeBitmapData, value);
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
         BitmapData.create = function (type, data, callback) {
             var base64 = "";
             if (type === "arraybuffer") {
@@ -8385,6 +8400,9 @@ var egret;
                 this.source.dispose();
             }
             this.source = null;
+            if (egret.nativeRender) {
+                egret_native.NativeDisplayObject.disposeNativeBitmapData(this.$nativeBitmapData);
+            }
             BitmapData.$dispose(this);
         };
         BitmapData.$addDisplayObject = function (displayObject, bitmapData) {
@@ -8479,9 +8497,6 @@ var egret;
                     maskedObject.$cacheDirty = true;
                     maskedObject.$cacheDirtyUp();
                 }
-            }
-            if (egret.nativeRender) {
-                egret_native.NativeDisplayObject.disposeBitmapData(bitmapData);
             }
             delete BitmapData._displayList[hashCode];
         };
@@ -13438,10 +13453,10 @@ var egret;
     if (egret.nativeRender) {
         var nrABIVersion = egret_native.nrABIVersion;
         var nrMinEgretVersion = egret_native.nrMinEgretVersion;
-        var requiredNrABIVersion = 4;
+        var requiredNrABIVersion = 5;
         if (nrABIVersion < requiredNrABIVersion) {
             egret.nativeRender = false;
-            var msg = "需要升级微端版本到 0.1.8 才可以开启原生渲染加速";
+            var msg = "需要升级微端版本到 0.1.14 才可以开启原生渲染加速";
             egret.sys.$warnToFPS(msg);
             egret.warn(msg);
         }
@@ -17007,6 +17022,32 @@ var egret;
          * @language zh_CN
          */
         RuntimeType.WXGAME = "wxgame";
+        /**
+         * Running on Baidu mini game
+         * @version Egret 5.2.13
+         * @platform All
+         * @language en_US
+         */
+        /**
+         * 运行在百度小游戏上
+         * @version Egret 5.2.13
+         * @platform All
+         * @language zh_CN
+         */
+        RuntimeType.BAIDUGAME = "baidugame";
+        /**
+         * Running on Xiaomi quick game
+         * @version Egret 5.2.14
+         * @platform All
+         * @language en_US
+         */
+        /**
+         * 运行在小米快游戏上
+         * @version Egret 5.2.14
+         * @platform All
+         * @language zh_CN
+         */
+        RuntimeType.QGAME = "qgame";
     })(RuntimeType = egret.RuntimeType || (egret.RuntimeType = {}));
     /**
      * The Capabilities class provides properties that describe the system and runtime that are hosting the application.
@@ -17123,7 +17164,7 @@ var egret;
          * @platform Web,Native
          * @language zh_CN
          */
-        Capabilities.engineVersion = "5.2.12";
+        Capabilities.engineVersion = "5.2.14";
         /***
          * current render mode.
          * @type {string}
@@ -18311,14 +18352,14 @@ var egret;
                         offsetX = texture.$offsetX;
                         offsetY = texture.$offsetY;
                     }
-                    if (isFirstChar) {
-                        isFirstChar = false;
-                        textOffsetX = Math.min(offsetX, textOffsetX);
-                    }
-                    if (isFirstLine) {
-                        isFirstLine = false;
-                        textOffsetY = Math.min(offsetY, textOffsetY);
-                    }
+                    // if (isFirstChar) {
+                    //     isFirstChar = false;
+                    //     textOffsetX = Math.min(offsetX, textOffsetX);
+                    // }
+                    // if (isFirstLine) {
+                    //     isFirstLine = false;
+                    //     textOffsetY = Math.min(offsetY, textOffsetY);
+                    // }
                     if (hasWidthSet && j > 0 && xPos + texureWidth > textFieldWidth) {
                         if (!setLineData(line.substring(0, j)))
                             break;

@@ -184,23 +184,19 @@ namespace egret.web {
             let request = new XMLHttpRequest();
             request.open("GET", url, true);
             request.responseType = "arraybuffer";
-            request.onreadystatechange = function () {
-                if (request.readyState == 4) {// 4 = "loaded"
-                    let ioError = (request.status >= 400 || request.status == 0);
-                    if (ioError) {//请求错误
-                        self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
-                    } else {
-                        WebAudioDecode.decodeArr.push({
-                            "buffer": request.response,
-                            "success": onAudioLoaded,
-                            "fail": onAudioError,
-                            "self": self,
-                            "url": self.url
-                        });
-                        WebAudioDecode.decodeAudios();
-                    }
-                }
-            }
+            request.addEventListener("load", function() {
+                WebAudioDecode.decodeArr.push({
+                    "buffer": request.response,
+                    "success": onAudioLoaded,
+                    "fail": onAudioError,
+                    "self": self,
+                    "url": self.url
+                });
+                WebAudioDecode.decodeAudios();
+            });
+            request.addEventListener("error", function() {
+                self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
+            });
             request.send();
 
             function onAudioLoaded():void {
