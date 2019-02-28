@@ -1,0 +1,4 @@
+## 2D 渲染 - JavaScript 
+
+* 修复 `egret.Timer` 在游戏逻辑出错的情况下，不会终止的问题
+* 修复 `egret.setTimeout` 在游戏逻辑出错的情况下，不会终止的问题
