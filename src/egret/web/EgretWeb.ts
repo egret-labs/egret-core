@@ -223,8 +223,8 @@ namespace egret.web {
 
         requestAnimationFrame(onTick);
         function onTick(): void {
-            ticker.update();
             requestAnimationFrame(onTick);
+            ticker.update();
         }
     }
 

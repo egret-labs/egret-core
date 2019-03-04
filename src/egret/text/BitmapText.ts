@@ -646,15 +646,15 @@ namespace egret {
                         offsetY = texture.$offsetY;
                     }
 
-                    if (isFirstChar) {
-                        isFirstChar = false;
-                        textOffsetX = Math.min(offsetX, textOffsetX);
-                    }
+                    // if (isFirstChar) {
+                    //     isFirstChar = false;
+                    //     textOffsetX = Math.min(offsetX, textOffsetX);
+                    // }
 
-                    if (isFirstLine) {
-                        isFirstLine = false;
-                        textOffsetY = Math.min(offsetY, textOffsetY);
-                    }
+                    // if (isFirstLine) {
+                    //     isFirstLine = false;
+                    //     textOffsetY = Math.min(offsetY, textOffsetY);
+                    // }
                     if (hasWidthSet && j > 0 && xPos + texureWidth > textFieldWidth) {
                         if (!setLineData(line.substring(0, j)))
                             break;

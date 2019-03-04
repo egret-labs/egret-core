@@ -47,7 +47,8 @@ class UpgradeCommand implements egret.Command {
         let upgradeConfigArr: VersionInfo[] = [
             { "v": "5.1.1", command: Upgrade_5_1_1 },
             { "v": "5.1.2", command: Upgrade_5_1_2 },
-            { "v": "5.3.1" }
+            { "v": "5.2.13", command: Upgrade_5_2_13 },
+            { "v": "5.3.2" }
         ];
 
         try {
@@ -144,6 +145,15 @@ class Upgrade_5_1_2 {
 
     async execute() {
         console.log("【警告】: 如果您尝试发布到微信小游戏，建议您创建一个新项目，而不是使用 egret upgrade 命令")
+        return 0;
+    }
+}
+
+class Upgrade_5_2_13 {
+
+    async execute() {
+        file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "baidugame"), path.join(egret.args.projectDir, "scripts", "baidugame"));
+        file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.baidugame.ts"), path.join(egret.args.projectDir, "scripts", "config.baidugame.ts"));
         return 0;
     }
 }

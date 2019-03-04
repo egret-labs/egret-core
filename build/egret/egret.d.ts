@@ -1349,11 +1349,6 @@ declare namespace egret {
          */
         constructor();
         /**
-         * @private
-         * 纹理id
-         */
-        $textureId: number;
-        /**
          * Whether to destroy the corresponding BitmapData when the texture is destroyed
          * @version Egret 5.0.8
          * @platform Web,Native
@@ -3630,6 +3625,8 @@ declare namespace egret_native {
     function nrUpdateCallbackList(dt: number): void;
     function nrActiveBuffer(id: number, width: number, height: number): void;
     function nrGetPixels(x: number, y: number, width: number, height: number, pixels: Uint8Array): void;
+    function nrGetCustomImageId(type: number): number;
+    function nrSetCustomImageData(customImageId: number, pvrtcData: any, width: any, height: any, mipmapsCount: any, format: any): void;
     class NrNode {
         constructor(id: number, type: number);
     }
@@ -3663,6 +3660,13 @@ declare namespace egret_native {
     /**
      * @private
      */
+    class NativeBitmapData {
+        $init(): any;
+        $id: any;
+    }
+    /**
+     * @private
+     */
     class NativeDisplayObject {
         id: number;
         constructor(type: number);
@@ -3687,11 +3691,10 @@ declare namespace egret_native {
         static createFilter(filter: egret.Filter): void;
         static setFilterPadding(filterId: number, paddingTop: number, paddingBottom: number, paddingLeft: number, paddingRight: number): void;
         setMask(value: number): void;
-        setBitmapData(value: egret.Texture): void;
-        setBitmapDataToMesh(value: egret.Texture): void;
-        setBitmapDataToParticle(value: egret.Texture): void;
-        setStopToParticle(value: boolean): void;
-        setCustomData(config: any): void;
+        static setSourceToNativeBitmapData(nativeBitmapData: egret_native.NativeBitmapData, source: any): any;
+        setTexture(texture: egret.Texture): void;
+        setBitmapDataToMesh(texture: egret.Texture): void;
+        setBitmapDataToParticle(texture: egret.Texture): void;
         setWidth(value: number): void;
         setHeight(value: number): void;
         setCacheAsBitmap(value: boolean): void;
@@ -3702,8 +3705,7 @@ declare namespace egret_native {
         setDataToBitmapNode(id: number, texture: egret.Texture, arr: number[]): void;
         setDataToMesh(vertexArr: number[], indiceArr: number[], uvArr: number[]): void;
         static setDataToFilter(currFilter: egret.Filter): void;
-        static disposeTexture(texture: egret.Texture): void;
-        static disposeBitmapData(bitmapData: egret.BitmapData): void;
+        static disposeNativeBitmapData(nativeBitmapData: egret_native.NativeBitmapData): void;
         static disposeTextData(node: egret.TextField): void;
         static disposeGraphicData(graphic: egret.Graphics): void;
         setFontSize(value: number): void;
@@ -5418,7 +5420,7 @@ declare namespace egret {
          * @private
          * @language zh_CN
          */
-        source: any;
+        $source: any;
         /**
          * WebGL texture.
          * @version Egret 2.4
@@ -5456,7 +5458,7 @@ declare namespace egret {
          * @private
          * id
          */
-        $bitmapDataId: number;
+        $nativeBitmapData: egret_native.NativeBitmapData;
         /**
          * Initializes a BitmapData object to refer to the specified source object.
          * @param source The source object being referenced.
@@ -5472,6 +5474,7 @@ declare namespace egret {
          * @language zh_CN
          */
         constructor(source: any);
+        source: any;
         static create(type: "arraybuffer", data: ArrayBuffer, callback?: (bitmapData: BitmapData) => void): BitmapData;
         static create(type: "base64", data: string, callback?: (bitmapData: BitmapData) => void): BitmapData;
         $dispose(): void;
@@ -8413,6 +8416,21 @@ declare namespace egret {
          */
         responseType: string;
         /**
+         * Can be set to a time in milliseconds.When set to a non-zero value will cause fetching to terminate after the given time has passed.
+         * @default egret.HttpResponseType.TEXT
+         * @version Egret 5.2.15
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 代表着一个请求在被自动终止前所消耗的毫秒数。默认值为 0，意味着没有超时。
+         * @default egret.HttpResponseType.TEXT
+         * @version Egret 5.2.15
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        timeout: number;
+        /**
          * indicates whether or not cross-site Access-Control requests should be made using credentials such as cookies
          * or authorization headers. (This never affects same-site requests.)
          * @default false
@@ -9474,7 +9492,7 @@ declare namespace egret.sys {
          * @private
          * 执行一次刷新
          */
-        update(): void;
+        update(forceUpdate?: boolean): void;
         /**
          * @private
          * 执行一次屏幕渲染
@@ -10569,6 +10587,32 @@ declare namespace egret {
          * @language zh_CN
          */
         const WXGAME = "wxgame";
+        /**
+         * Running on Baidu mini game
+         * @version Egret 5.2.13
+         * @platform All
+         * @language en_US
+         */
+        /**
+         * 运行在百度小游戏上
+         * @version Egret 5.2.13
+         * @platform All
+         * @language zh_CN
+         */
+        const BAIDUGAME = "baidugame";
+        /**
+         * Running on Xiaomi quick game
+         * @version Egret 5.2.14
+         * @platform All
+         * @language en_US
+         */
+        /**
+         * 运行在小米快游戏上
+         * @version Egret 5.2.14
+         * @platform All
+         * @language zh_CN
+         */
+        const QGAME = "qgame";
     }
     /**
      * The Capabilities class provides properties that describe the system and runtime that are hosting the application.
