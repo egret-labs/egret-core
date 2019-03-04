@@ -14199,7 +14199,7 @@ var egret;
              * @private
              * 执行一次刷新
              */
-            SystemTicker.prototype.update = function () {
+            SystemTicker.prototype.update = function (forceUpdate) {
                 var t1 = egret.getTimer();
                 var callBackList = this.callBackList;
                 var thisObjectList = this.thisObjectList;
@@ -14226,7 +14226,7 @@ var egret;
                 var t2 = egret.getTimer();
                 var deltaTime = timeStamp - this.lastTimeStamp;
                 this.lastTimeStamp = timeStamp;
-                if (deltaTime >= this.frameDeltaTime) {
+                if (deltaTime >= this.frameDeltaTime || forceUpdate) {
                     this.lastCount = this.frameInterval;
                 }
                 else {
@@ -17173,7 +17173,7 @@ var egret;
          * @platform Web,Native
          * @language zh_CN
          */
-        Capabilities.engineVersion = "5.2.14";
+        Capabilities.engineVersion = "5.2.15";
         /***
          * current render mode.
          * @type {string}
