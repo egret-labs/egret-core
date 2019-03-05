@@ -33,7 +33,7 @@ namespace eui {
     /**
      * @private
      */
-    const enum Keys{
+    const enum Keys {
         useVirtualLayout,
         useVirtualLayoutChanged,
         rendererToClassMap,
@@ -120,7 +120,7 @@ namespace eui {
             };
         }
 
-        $DataGroup:Object;
+        $DataGroup: Object;
 
         /**
          * @copy eui.LayoutBase#useVirtualLayout
@@ -129,12 +129,12 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public get useVirtualLayout():boolean {
+        public get useVirtualLayout(): boolean {
             return this.$layout ? this.$layout.$useVirtualLayout :
                 this.$DataGroup[Keys.useVirtualLayout];
         }
 
-        public set useVirtualLayout(value:boolean) {
+        public set useVirtualLayout(value: boolean) {
             value = !!value;
             let values = this.$DataGroup;
             if (value === values[Keys.useVirtualLayout])
@@ -150,7 +150,7 @@ namespace eui {
          *
          * @param value
          */
-        $setLayout(value:LayoutBase):boolean {
+        $setLayout(value: LayoutBase): boolean {
             if (value == this.$layout)
                 return false;
 
@@ -161,7 +161,7 @@ namespace eui {
 
             if (this.$layout && value && (this.$layout.$useVirtualLayout != value.$useVirtualLayout))
                 this.onUseVirtualLayoutChanged();
-            let result:boolean = super.$setLayout(value);
+            let result: boolean = super.$setLayout(value);
             if (value) {
                 let rect = this.$DataGroup[Keys.typicalLayoutRect];
                 if (rect) {
@@ -178,7 +178,7 @@ namespace eui {
          * @private
          * 是否使用虚拟布局标记改变
          */
-        private onUseVirtualLayoutChanged(event?:egret.Event):void {
+        private onUseVirtualLayoutChanged(event?: egret.Event): void {
             let values = this.$DataGroup;
             values[Keys.useVirtualLayoutChanged] = true;
             values[Keys.cleanFreeRenderer] = true;
@@ -193,7 +193,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public setVirtualElementIndicesInView(startIndex:number, endIndex:number):void {
+        public setVirtualElementIndicesInView(startIndex: number, endIndex: number): void {
             if (!this.$layout || !this.$layout.$useVirtualLayout) {
                 return;
             }
@@ -215,7 +215,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public getElementAt(index:number):egret.DisplayObject {
+        public getElementAt(index: number): egret.DisplayObject {
             return this.$indexToRenderer[index];
         }
 
@@ -226,13 +226,13 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public getVirtualElementAt(index:number):UIComponent {
+        public getVirtualElementAt(index: number): UIComponent {
             index = +index | 0;
             if (index < 0 || index >= this.$dataProvider.length)
                 return null;
             let renderer = this.$indexToRenderer[index];
             if (!renderer) {
-                let item:any = this.$dataProvider.getItemAt(index);
+                let item: any = this.$dataProvider.getItemAt(index);
                 renderer = this.createVirtualRenderer(item);
                 this.$indexToRenderer[index] = renderer;
                 this.updateRenderer(renderer, index, item);
@@ -250,7 +250,7 @@ namespace eui {
          * @private
          * 释放指定索引处的项呈示器
          */
-        private freeRendererByIndex(index:number):void {
+        private freeRendererByIndex(index: number): void {
             let renderer = this.$indexToRenderer[index];
             if (renderer) {
                 delete this.$indexToRenderer[index];
@@ -263,7 +263,7 @@ namespace eui {
          *
          * @param renderer
          */
-        private doFreeRenderer(renderer:IItemRenderer):void {
+        private doFreeRenderer(renderer: IItemRenderer): void {
             let values = this.$DataGroup;
             let rendererClass = values[Keys.rendererToClassMap][renderer.$hashCode];
             let hashCode = rendererClass.$hashCode;
@@ -281,7 +281,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public invalidateSize():void {
+        public invalidateSize(): void {
             if (!this.$DataGroup[Keys.createNewRendererFlag]) {//虚拟布局时创建子项不需要重新验证
                 super.invalidateSize();
             }
@@ -291,8 +291,8 @@ namespace eui {
          * @private
          * 为指定索引创建虚拟的项呈示器
          */
-        private createVirtualRenderer(item:any):IItemRenderer {
-            let renderer:IItemRenderer;
+        private createVirtualRenderer(item: any): IItemRenderer {
+            let renderer: IItemRenderer;
             let rendererClass = this.itemToRendererClass(item);
             let hashCode = rendererClass.$hashCode;
             let values = this.$DataGroup;
@@ -311,8 +311,8 @@ namespace eui {
          * @private
          * 根据rendererClass创建一个Renderer,并添加到显示列表
          */
-        private createOneRenderer(rendererClass:any):IItemRenderer {
-            let renderer = <IItemRenderer> (new rendererClass());
+        private createOneRenderer(rendererClass: any): IItemRenderer {
+            let renderer = <IItemRenderer>(new rendererClass());
             let values = this.$DataGroup;
             values[Keys.rendererToClassMap][renderer.$hashCode] = rendererClass;
             if (!egret.is(renderer, "eui.IItemRenderer")) {
@@ -329,9 +329,9 @@ namespace eui {
          * @private
          * 设置项呈示器的默认皮肤
          */
-        private setItemRenderSkinName(renderer:IItemRenderer, skinName:any):void {
+        private setItemRenderSkinName(renderer: IItemRenderer, skinName: any): void {
             if (renderer && renderer instanceof Component) {
-                let comp:Component = <Component> <any>renderer;
+                let comp: Component = <Component><any>renderer;
                 if (!comp.$Component[sys.ComponentKeys.skinNameExplicitlySet]) {
                     comp.skinName = skinName;
                     comp.$Component[sys.ComponentKeys.skinNameExplicitlySet] = false;
@@ -343,12 +343,12 @@ namespace eui {
         /**
          * @private
          */
-        $dataProviderChanged:boolean = false;
+        $dataProviderChanged: boolean = false;
 
         /**
          * @private
          */
-        $dataProvider:ICollection = null;
+        $dataProvider: ICollection = null;
 
         /**
          * The data provider for this DataGroup.
@@ -373,11 +373,11 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get dataProvider():ICollection {
+        public get dataProvider(): ICollection {
             return this.$dataProvider;
         }
 
-        public set dataProvider(value:ICollection) {
+        public set dataProvider(value: ICollection) {
             this.$setDataProvider(value);
         }
 
@@ -386,7 +386,7 @@ namespace eui {
          *
          * @param value
          */
-        $setDataProvider(value:ICollection):boolean {
+        $setDataProvider(value: ICollection): boolean {
             if (this.$dataProvider == value || (value && !value.getItemAt))
                 return false;
             this.removeDataProviderListener();
@@ -404,7 +404,7 @@ namespace eui {
          * @private
          * 移除数据源监听
          */
-        private removeDataProviderListener():void {
+        private removeDataProviderListener(): void {
             if (this.$dataProvider)
                 this.$dataProvider.removeEventListener(CollectionEvent.COLLECTION_CHANGE, this.onCollectionChange, this);
         }
@@ -430,7 +430,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        protected onCollectionChange(event:CollectionEvent):void {
+        protected onCollectionChange(event: CollectionEvent): void {
             switch (event.kind) {
                 case CollectionEventKind.ADD:
                     this.itemAddedHandler(event.items, event.location);
@@ -443,21 +443,25 @@ namespace eui {
                     this.itemUpdatedHandler(event.items[0], event.location);
                     break;
                 case CollectionEventKind.RESET:
-                case CollectionEventKind.REFRESH:
+                case CollectionEventKind.REFRESH: {
                     if (this.$layout && this.$layout.$useVirtualLayout) {
-                        let indexToRenderer = this.$indexToRenderer;
-                        let keys = Object.keys(indexToRenderer);
-                        let length = keys.length;
+                        const indexToRenderer = this.$indexToRenderer;
+                        const keys = Object.keys(indexToRenderer);
+                        const length = keys.length;
                         for (let i = length - 1; i >= 0; i--) {
-                            let index = +keys[i];
+                            const index = +keys[i];
                             this.freeRendererByIndex(index);
                         }
                     }
                     this.$dataProviderChanged = true;
                     this.invalidateProperties();
                     break;
+                }
+                default: {
+                    egret.$warn(2204, event.kind);
+                    break;
+                }
             }
-
             this.invalidateSize();
             this.invalidateDisplayList();
         }
@@ -466,7 +470,7 @@ namespace eui {
          * @private
          * 数据源添加项目事件处理
          */
-        private itemAddedHandler(items:any[], index:number):void {
+        private itemAddedHandler(items: any[], index: number): void {
             let length = items.length;
             for (let i = 0; i < length; i++) {
                 this.itemAdded(items[i], index + i);
@@ -478,7 +482,7 @@ namespace eui {
          * @private
          * 数据源移除项目事件处理
          */
-        private itemRemovedHandler(items:any[], location:number):void {
+        private itemRemovedHandler(items: any[], location: number): void {
             let length = items.length;
             for (let i = length - 1; i >= 0; i--) {
                 this.itemRemoved(items[i], location + i);
@@ -514,7 +518,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        protected itemAdded(item:any, index:number):void {
+        protected itemAdded(item: any, index: number): void {
             if (this.$layout)
                 this.$layout.elementAdded(index);
 
@@ -561,7 +565,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        protected itemRemoved(item:any, index:number):void {
+        protected itemRemoved(item: any, index: number): void {
             if (this.$layout)
                 this.$layout.elementRemoved(index);
             let oldRenderer = this.$indexToRenderer[index];
@@ -584,7 +588,7 @@ namespace eui {
          * @private
          * 更新当前所有项的索引
          */
-        private resetRenderersIndices():void {
+        private resetRenderersIndices(): void {
             let indexToRenderer = this.$indexToRenderer;
             if (indexToRenderer.length == 0)
                 return;
@@ -609,7 +613,7 @@ namespace eui {
          * @private
          * 数据源更新或替换项目事件处理
          */
-        private itemUpdatedHandler(item:any, location:number):void {
+        private itemUpdatedHandler(item: any, location: number): void {
             if (this.$DataGroup[Keys.renderersBeingUpdated]) {
                 return;//防止无限循环
             }
@@ -623,7 +627,7 @@ namespace eui {
          * @private
          * 调整指定项呈示器的索引值
          */
-        private resetRendererItemIndex(index:number):void {
+        private resetRendererItemIndex(index: number): void {
             let renderer = this.$indexToRenderer[index];
             if (renderer)
                 renderer.itemIndex = index;
@@ -650,11 +654,11 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get itemRenderer():any {
+        public get itemRenderer(): any {
             return this.$DataGroup[Keys.itemRenderer];
         }
 
-        public set itemRenderer(value:any) {
+        public set itemRenderer(value: any) {
             let values = this.$DataGroup;
             if (values[Keys.itemRenderer] == value)
                 return;
@@ -683,11 +687,11 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get itemRendererSkinName():any {
+        public get itemRendererSkinName(): any {
             return this.$DataGroup[Keys.itemRendererSkinName];
         }
 
-        public set itemRendererSkinName(value:any) {
+        public set itemRendererSkinName(value: any) {
             let values = this.$DataGroup;
             if (values[Keys.itemRendererSkinName] == value)
                 return;
@@ -718,11 +722,11 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get itemRendererFunction():(item:any)=>any {
+        public get itemRendererFunction(): (item: any) => any {
             return this.$DataGroup[Keys.itemRendererFunction];
         }
 
-        public set itemRendererFunction(value:(item:any)=>any) {
+        public set itemRendererFunction(value: (item: any) => any) {
             let values = this.$DataGroup;
             if (values[Keys.itemRendererFunction] == value)
                 return;
@@ -737,8 +741,8 @@ namespace eui {
          * @private
          * 为特定的数据项返回项呈示器的工厂实例
          */
-        private itemToRendererClass(item:any):any {
-            let rendererClass:any;
+        private itemToRendererClass(item: any): any {
+            let rendererClass: any;
             let values = this.$DataGroup;
             if (values[Keys.itemRendererFunction]) {
                 rendererClass = values[Keys.itemRendererFunction](item);
@@ -762,9 +766,9 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        protected createChildren():void {
+        protected createChildren(): void {
             if (!this.$layout) {
-                let layout:VerticalLayout = new VerticalLayout();
+                let layout: VerticalLayout = new VerticalLayout();
                 layout.gap = 0;
                 layout.horizontalAlign = JustifyAlign.CONTENT_JUSTIFY;
                 this.$setLayout(layout);
@@ -780,7 +784,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        protected commitProperties():void {
+        protected commitProperties(): void {
             let values = this.$DataGroup;
             if (values[Keys.itemRendererChanged] || this.$dataProviderChanged || values[Keys.useVirtualLayoutChanged]) {
                 this.removeAllRenderers();
@@ -829,7 +833,7 @@ namespace eui {
                 length = keys.length;
                 for (let i = 0; i < length; i++) {
                     let hashCode = keys[i];
-                    let list:IItemRenderer[] = freeRenderers[hashCode];
+                    let list: IItemRenderer[] = freeRenderers[hashCode];
                     let length = list.length;
                     for (let i = 0; i < length; i++) {
                         this.setItemRenderSkinName(list[i], skinName);
@@ -845,7 +849,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        protected measure():void {
+        protected measure(): void {
             if (this.$layout && this.$layout.$useVirtualLayout) {
                 this.ensureTypicalLayoutElement();
             }
@@ -860,7 +864,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        protected updateDisplayList(unscaledWidth:number, unscaledHeight:number):void {
+        protected updateDisplayList(unscaledWidth: number, unscaledHeight: number): void {
             let useVirtualLayout = (this.$layout && this.$layout.$useVirtualLayout);
             if (useVirtualLayout) {
                 this.ensureTypicalLayoutElement();
@@ -887,7 +891,7 @@ namespace eui {
          * @private
          * 确保测量过默认条目大小。
          */
-        private ensureTypicalLayoutElement():void {
+        private ensureTypicalLayoutElement(): void {
             if (this.$DataGroup[Keys.typicalLayoutRect])
                 return;
 
@@ -901,7 +905,7 @@ namespace eui {
          * @private
          * 测量项呈示器默认尺寸
          */
-        private measureRendererSize():void {
+        private measureRendererSize(): void {
             let values = this.$DataGroup;
             if (values[Keys.typicalItem] == undefined) {
                 this.setTypicalLayoutRect(null);
@@ -934,7 +938,7 @@ namespace eui {
          * @private
          * 设置项目默认大小
          */
-        private setTypicalLayoutRect(rect:egret.Rectangle):void {
+        private setTypicalLayoutRect(rect: egret.Rectangle): void {
             this.$DataGroup[Keys.typicalLayoutRect] = rect;
             if (this.$layout) {
                 if (rect) {
@@ -951,13 +955,13 @@ namespace eui {
          * @private
          * 索引到项呈示器的转换数组
          */
-        $indexToRenderer:IItemRenderer[] = [];
+        $indexToRenderer: IItemRenderer[] = [];
 
         /**
          * @private
          * 移除所有项呈示器
          */
-        private removeAllRenderers():void {
+        private removeAllRenderers(): void {
             let indexToRenderer = this.$indexToRenderer;
             let keys = Object.keys(indexToRenderer);
             let length = keys.length;
@@ -977,7 +981,7 @@ namespace eui {
                 let length = keys.length;
                 for (let i = 0; i < length; i++) {
                     let hashCode = keys[i];
-                    let list:IItemRenderer[] = freeRenderers[hashCode];
+                    let list: IItemRenderer[] = freeRenderers[hashCode];
                     let length = list.length;
                     for (let i = 0; i < length; i++) {
                         let renderer = list[i];
@@ -995,7 +999,7 @@ namespace eui {
          * @private
          * 为数据项创建项呈示器
          */
-        private createRenderers():void {
+        private createRenderers(): void {
             if (!this.$dataProvider)
                 return;
             let index = 0;
@@ -1003,7 +1007,7 @@ namespace eui {
             for (let i = 0; i < length; i++) {
                 let item = this.$dataProvider.getItemAt(i);
                 let rendererClass = this.itemToRendererClass(item);
-                let renderer:IItemRenderer = this.createOneRenderer(rendererClass);
+                let renderer: IItemRenderer = this.createOneRenderer(rendererClass);
                 if (!renderer)
                     continue;
                 this.$indexToRenderer[index] = renderer;
@@ -1045,11 +1049,11 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public updateRenderer(renderer:IItemRenderer, itemIndex:number, data:any):IItemRenderer {
+        public updateRenderer(renderer: IItemRenderer, itemIndex: number, data: any): IItemRenderer {
             let values = this.$DataGroup;
             values[Keys.renderersBeingUpdated] = true;
             renderer.itemIndex = itemIndex;
-            if(renderer.parent == this) {
+            if (renderer.parent == this) {
                 this.setChildIndex(renderer, itemIndex);
             }
             renderer.data = data;
@@ -1064,7 +1068,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public get numElements():number {
+        public get numElements(): number {
             if (!this.$dataProvider)
                 return 0;
             return this.$dataProvider.length;
@@ -1100,7 +1104,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        protected rendererAdded(renderer:IItemRenderer, index:number, item:any):void {
+        protected rendererAdded(renderer: IItemRenderer, index: number, item: any): void {
         }
 
         /**
@@ -1131,7 +1135,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        protected rendererRemoved(renderer:IItemRenderer, index:number, item:any):void {
+        protected rendererRemoved(renderer: IItemRenderer, index: number, item: any): void {
         }
     }
 

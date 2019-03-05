@@ -4113,7 +4113,7 @@ var eui;
                     this.itemUpdatedHandler(event.items[0], event.location);
                     break;
                 case eui.CollectionEventKind.RESET:
-                case eui.CollectionEventKind.REFRESH:
+                case eui.CollectionEventKind.REFRESH: {
                     if (this.$layout && this.$layout.$useVirtualLayout) {
                         var indexToRenderer = this.$indexToRenderer;
                         var keys = Object.keys(indexToRenderer);
@@ -4126,6 +4126,11 @@ var eui;
                     this.$dataProviderChanged = true;
                     this.invalidateProperties();
                     break;
+                }
+                default: {
+                    egret.$warn(2204, event.kind);
+                    break;
+                }
             }
             this.invalidateSize();
             this.invalidateDisplayList();
@@ -21601,6 +21606,7 @@ var eui;
     locale_strings[2201] = "BasicLayout doesn't support virtualization.";
     locale_strings[2202] = "parse skinName error，the parsing result of skinName must be a instance of eui.Skin.";
     locale_strings[2203] = "Could not find the skin class '{0}'。";
+    locale_strings[2204] = "Undefined event.kind type (CollectionEventKind) = '{0}'.";
     locale_strings[2301] = "parse source failed，could not find asset from URL：{0} .";
 })(eui || (eui = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -21669,6 +21675,7 @@ var eui;
     locale_strings[2201] = "BasicLayout 不支持虚拟化。";
     locale_strings[2202] = "皮肤解析出错，属性 skinName 的值必须要能够解析为一个 eui.Skin 的实例。";
     locale_strings[2203] = "找不到指定的皮肤类 '{0}'。";
+    locale_strings[2204] = "未定义的event.kind类型(CollectionEventKind) = '{0}'.";
     locale_strings[2301] = "素材解析失败，找不到URL：{0} 所对应的资源。";
 })(eui || (eui = {}));
 //////////////////////////////////////////////////////////////////////////////////////
