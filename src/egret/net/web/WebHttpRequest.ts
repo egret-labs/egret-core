@@ -284,8 +284,19 @@ namespace egret.web {
          */
         private onload(): void {
             let self = this;
+            let xhr = this._xhr;
+            let url = this._url;
+            let ioError = (xhr.status >= 400);
             window.setTimeout(function (): void {
-                self.dispatchEventWith(Event.COMPLETE);
+                if (ioError) {//请求错误
+                    if (DEBUG && !self.hasEventListener(IOErrorEvent.IO_ERROR)) {
+                        $error(1011, url);
+                    }
+                    self.dispatchEventWith(IOErrorEvent.IO_ERROR);
+                }
+                else {
+                    self.dispatchEventWith(Event.COMPLETE);
+                }
             }, 0);
         }
 
