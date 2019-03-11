@@ -7,3 +7,4 @@
 * 完善 EUI `DataGroup` 里的事件处理，增加异常事件报错信息
 * 修复 `HttpRequest` 加载错误时，不会抛出 `IO_ERROR` 事件的问题
 * 修复 `BitmapText` 里 `letterSpacing` 为负数时，居中计算错误的问题。
+* 增加 `Edge` 和 `IE11` 浏览器上声音的兼容性支持

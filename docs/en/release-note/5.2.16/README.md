@@ -7,3 +7,4 @@
 * Perfect the event handling in EUI `DataGroup` and increase the error information of abnormal events
 * Fix `HttpRequest` load error when `IO_ERROR` event is not thrown
 * Fix the problem of calculating errors when `letterSpacing` in `BitmapText` is negative.
+* Added compatibility support for sound on `Edge` and `IE11` browsers
