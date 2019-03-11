@@ -120,7 +120,6 @@ namespace egret.web {
             }
             //edge and ie11
             let ie = ua.indexOf("edge") >= 0 || ua.indexOf("trident") >= 0;
-            console.log('ie',ie)
             if (ie) {
                 document.body.appendChild(audio);
             }
@@ -137,7 +136,6 @@ namespace egret.web {
                     audio.pause();
                     audio.muted = false;
                 }
-                console.log('onAudioLoaded',ie)
                 if (ie) {
                     document.body.appendChild(audio);
                 }
@@ -155,7 +153,6 @@ namespace egret.web {
             function removeListeners(): void {
                 audio.removeEventListener("canplaythrough", onAudioLoaded);
                 audio.removeEventListener("error", onAudioError);
-                console.log('onAudioLoaded',ie)
                 if (ie) {
                     document.body.removeChild(audio);
                 }
