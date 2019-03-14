@@ -3,7 +3,7 @@
 
 import * as path from 'path';
 import { UglifyPlugin, CompilePlugin, ManifestPlugin, ExmlPlugin, ResSplitPlugin, CleanPlugin } from 'built-in';
-import { QgamePlugin } from './qgame/qgame';
+import { MiqgamePlugin } from './qgame/qgame';
 import * as defaultConfig from './config';
 
 const config: ResourceManagerConfig = {
@@ -19,7 +19,7 @@ const config: ResourceManagerConfig = {
                     new CleanPlugin({ matchers: ["js", "resource"] }),
                     new CompilePlugin({ libraryType: "debug", defines: { DEBUG: true, RELEASE: false } }),
                     new ExmlPlugin('commonjs'), // 非 EUI 项目关闭此设置
-                    new QgamePlugin(),
+                    new MiqgamePlugin(),
                     new ManifestPlugin({ output: 'manifest.js' })
                 ]
             }
@@ -31,7 +31,7 @@ const config: ResourceManagerConfig = {
                     new CleanPlugin({ matchers: ["js", "resource"] }),
                     new CompilePlugin({ libraryType: "release", defines: { DEBUG: false, RELEASE: true } }),
                     new ExmlPlugin('commonjs'), // 非 EUI 项目关闭此设置
-                    new QgamePlugin(),
+                    new MiqgamePlugin(),
                     new UglifyPlugin([{
                         sources: ["main.js"],
                         target: "main.min.js"

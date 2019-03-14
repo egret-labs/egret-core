@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-export class QgamePlugin implements plugins.Command {
+export class MiqgamePlugin implements plugins.Command {
 
     constructor() {
     }
@@ -28,6 +28,13 @@ export class QgamePlugin implements plugins.Command {
                 }
                 if (filename == "libs/modules/eui/eui.js" || filename == 'libs/modules/eui/eui.min.js') {
                     content += ";window.eui = eui;"
+                    if(filename == "libs/modules/eui/eui.js"){
+                        content = content.replace("function getRepeatedIds","window.getRepeatedIds=function getRepeatedIds");
+                        content = content.replace("function getIds","window.getIds=function getIds");
+                        content = content.replace("function toXMLString","window.toXMLString=function toXMLString");
+                        content = content.replace("function checkDeclarations","window.checkDeclarations=function checkDeclarations");
+                        content = content.replace("function getPropertyStr","window.getPropertyStr=function getPropertyStr");
+                    }
                 }
                 if (filename == 'libs/modules/dragonBones/dragonBones.js' || filename == 'libs/modules/dragonBones/dragonBones.min.js') {
                     content += ';window.dragonBones = dragonBones';
