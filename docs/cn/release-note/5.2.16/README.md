@@ -15,6 +15,7 @@
 * 修复 `HttpRequest` 加载错误时，不会抛出 `IO_ERROR` 事件的问题
 * 修复 `BitmapText` 里 `letterSpacing` 为负数时，居中计算错误的问题。
 * 增加 `Edge` 和 `IE11` 浏览器上声音的兼容性支持
+* 修复 `EUI` 的 `EditableText` 在 `PC` 浏览器里，滚动后还会出现输入框的问题
 
 ## 微信小游戏 v1.1.11
 * 优化 iOS 平台的性能

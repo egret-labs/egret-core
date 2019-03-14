@@ -16,6 +16,7 @@ Egret Engine was officially released on May 25, 2018 5.2 stable version. On Marc
 * Fix `HttpRequest` load error when `IO_ERROR` event is not thrown
 * Fix the problem of calculating errors when `letterSpacing` in `BitmapText` is negative.
 * Added compatibility support for sound on `Edge` and `IE11` browsers
+* Fix `EUI` `EditableText` in `PC` browser, there will also be an issue with the input box after scrolling
 
 ## WeChat Game v1.1.11
 

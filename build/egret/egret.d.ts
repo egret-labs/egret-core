@@ -11633,7 +11633,7 @@ declare namespace egret {
         /**
          * @private
          */
-        private stageText;
+        stageText: egret.StageText;
         /**
          * @private
          */
@@ -12199,10 +12199,7 @@ declare namespace egret {
          */
         wordWrap: boolean;
         $setWordWrap(value: boolean): void;
-        /**
-         * @private
-         */
-        private inputUtils;
+        protected inputUtils: InputController;
         /**
          * @version Egret 2.4
          * @platform Web,Native

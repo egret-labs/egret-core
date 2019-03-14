@@ -694,11 +694,8 @@ namespace egret {
                 this.$nativeDisplayObject.setWordWrap(value);
             }
         }
-
-        /**
-         * @private
-         */
-        private inputUtils: InputController = null;
+        
+        protected inputUtils: InputController = null;
 
         /**
          * Type of the text field.
