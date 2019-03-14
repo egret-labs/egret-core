@@ -17173,7 +17173,7 @@ var egret;
          * @platform Web,Native
          * @language zh_CN
          */
-        Capabilities.engineVersion = "5.2.15";
+        Capabilities.engineVersion = "5.2.16";
         /***
          * current render mode.
          * @type {string}
@@ -18361,14 +18361,14 @@ var egret;
                         offsetX = texture.$offsetX;
                         offsetY = texture.$offsetY;
                     }
-                    // if (isFirstChar) {
-                    //     isFirstChar = false;
-                    //     textOffsetX = Math.min(offsetX, textOffsetX);
-                    // }
-                    // if (isFirstLine) {
-                    //     isFirstLine = false;
-                    //     textOffsetY = Math.min(offsetY, textOffsetY);
-                    // }
+                    if (isFirstChar) {
+                        isFirstChar = false;
+                        // textOffsetX = Math.min(offsetX, textOffsetX);
+                    }
+                    if (isFirstLine) {
+                        isFirstLine = false;
+                        // textOffsetY = Math.min(offsetY, textOffsetY);
+                    }
                     if (hasWidthSet && j > 0 && xPos + texureWidth > textFieldWidth) {
                         if (!setLineData(line.substring(0, j)))
                             break;
@@ -19260,9 +19260,6 @@ var egret;
         function TextField() {
             var _this = _super.call(this) || this;
             _this.$inputEnabled = false;
-            /**
-             * @private
-             */
             _this.inputUtils = null;
             /**
              * @private

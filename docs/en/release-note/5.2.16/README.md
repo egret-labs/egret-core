@@ -8,7 +8,6 @@ Egret Engine was officially released on May 25, 2018 5.2 stable version. On Marc
 
 
 ## 2D Rendering - JavaScript
-
 * Fix the problem of `egret.Timer` that does not terminate in the event of a game logic error
 * Fix the problem of `egret.setTimeout` that does not terminate in the event of a game logic error
 * Change some error information from `alert` method to `egret.log` method
@@ -19,7 +18,10 @@ Egret Engine was officially released on May 25, 2018 5.2 stable version. On Marc
 * Fix `EUI` `EditableText` in `PC` browser, there will also be an issue with the input box after scrolling
 
 ## WeChat Game v1.1.11
-
 * Optimize the performance of iOS platform
 * Fix the problem of `egret.Capabilities.os` return value error 
 * Fix the problem of `egret.Capabilities.language` return value error 
+
+## Baidu Game v0.1.5
+* Optimize the performance of iOS platform
+* Fix the problem of `egret.Capabilities.isMobile` return value error 

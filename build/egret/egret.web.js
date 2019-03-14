@@ -287,7 +287,9 @@ var egret;
                     audio.autoplay = !0;
                     audio.muted = true;
                 }
-                if (ua.indexOf("edge") >= 0) {
+                //edge and ie11
+                var ie = ua.indexOf("edge") >= 0 || ua.indexOf("trident") >= 0;
+                if (ie) {
                     document.body.appendChild(audio);
                 }
                 audio.load();
@@ -302,7 +304,7 @@ var egret;
                         audio.pause();
                         audio.muted = false;
                     }
-                    if (ua.indexOf("edge") >= 0) {
+                    if (ie) {
                         document.body.appendChild(audio);
                     }
                     self.loaded = true;
@@ -315,7 +317,7 @@ var egret;
                 function removeListeners() {
                     audio.removeEventListener("canplaythrough", onAudioLoaded);
                     audio.removeEventListener("error", onAudioError);
-                    if (ua.indexOf("edge") >= 0) {
+                    if (ie) {
                         document.body.removeChild(audio);
                     }
                 }
@@ -646,7 +648,7 @@ var egret;
                     WebAudioDecode.isDecoding = false;
                     WebAudioDecode.decodeAudios();
                 }, function () {
-                    alert("sound decode error: " + decodeInfo["url"] + "！\nsee http://edn.egret.com/cn/docs/page/156");
+                    egret.log('sound decode error');
                     if (decodeInfo["fail"]) {
                         decodeInfo["fail"]();
                     }

@@ -7,7 +7,6 @@
 白鹭引擎在 2018年5月25日 正式发布了 5.2 稳定版本。在 2019年3月18日，我们将发布 5.2.16 稳定版本。
 
 ## 2D 渲染 - JavaScript 
-
 * 修复 `egret.Timer` 在游戏逻辑出错的情况下，不会终止的问题
 * 修复 `egret.setTimeout` 在游戏逻辑出错的情况下，不会终止的问题
 * 将某些报错信息由 `alert` 方法改为 `egret.log` 方法
@@ -21,3 +20,7 @@
 * 优化 iOS 平台的性能
 * 修复 `egret.Capabilities.os` 返回值错误的问题
 * 修复 `egret.Capabilities.language` 返回值错误的问题
+
+## 百度小游戏 v0.1.5
+* 优化 `iOS` 平台的性能
+* 修复 `egret.Capabilities.isMobile` 返回值错误的问题

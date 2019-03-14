@@ -17749,6 +17749,10 @@ var eui;
              * @private
              */
             _this.$isFocusIn = false;
+            /**
+             * @private
+             */
+            _this.$isTouchCancle = false;
             _this.initializeUIValues();
             _this.type = egret.TextFieldType.INPUT;
             _this.$EditableText = {
@@ -17832,6 +17836,8 @@ var eui;
             eui.sys.UIComponentImpl.prototype["$onAddToStage"].call(this, stage, nestLevel);
             this.addEventListener(egret.FocusEvent.FOCUS_IN, this.onfocusIn, this);
             this.addEventListener(egret.FocusEvent.FOCUS_OUT, this.onfocusOut, this);
+            this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
+            this.addEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancle, this);
         };
         /**
          * @private
@@ -17841,6 +17847,8 @@ var eui;
             _super.prototype.$onRemoveFromStage.call(this);
             this.removeEventListener(egret.FocusEvent.FOCUS_IN, this.onfocusIn, this);
             this.removeEventListener(egret.FocusEvent.FOCUS_OUT, this.onfocusOut, this);
+            this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
+            this.removeEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancle, this);
         };
         Object.defineProperty(EditableText.prototype, "prompt", {
             /**
@@ -17921,7 +17929,23 @@ var eui;
         /**
          * @private
          */
+        EditableText.prototype.onTouchBegin = function () {
+            this.$isTouchCancle = false;
+        };
+        /**
+         * @private
+         */
+        EditableText.prototype.onTouchCancle = function () {
+            this.$isTouchCancle = true;
+        };
+        /**
+         * @private
+         */
         EditableText.prototype.onfocusIn = function () {
+            if (!egret.Capabilities.isMobile && this.$isTouchCancle) {
+                this.inputUtils.stageText.$hide();
+                return;
+            }
             this.$isFocusIn = true;
             this.$isShowPrompt = false;
             this.displayAsPassword = this.$EditableText[2 /* asPassword */];

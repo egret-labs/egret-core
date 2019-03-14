@@ -10664,6 +10664,18 @@ declare namespace eui {
         /**
          * @private
          */
+        private $isTouchCancle;
+        /**
+         * @private
+         */
+        private onTouchBegin();
+        /**
+         * @private
+         */
+        private onTouchCancle();
+        /**
+         * @private
+         */
         private onfocusIn();
         /**
          * @private
