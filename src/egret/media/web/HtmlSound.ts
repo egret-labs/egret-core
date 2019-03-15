@@ -118,7 +118,9 @@ namespace egret.web {
                 audio.autoplay = !0;
                 audio.muted = true;
             }
-            if (ua.indexOf("edge") >= 0) {//Edge兼容
+            //edge and ie11
+            let ie = ua.indexOf("edge") >= 0 || ua.indexOf("trident") >= 0;
+            if (ie) {
                 document.body.appendChild(audio);
             }
             audio.load();
@@ -134,6 +136,10 @@ namespace egret.web {
                     audio.pause();
                     audio.muted = false;
                 }
+                if (ie) {
+                    document.body.appendChild(audio);
+                }
+                
 
                 self.loaded = true;
                 self.dispatchEventWith(egret.Event.COMPLETE);
@@ -147,7 +153,7 @@ namespace egret.web {
             function removeListeners(): void {
                 audio.removeEventListener("canplaythrough", onAudioLoaded);
                 audio.removeEventListener("error", onAudioError);
-                if (ua.indexOf("edge") >= 0) {//Edge兼容
+                if (ie) {
                     document.body.removeChild(audio);
                 }
             }

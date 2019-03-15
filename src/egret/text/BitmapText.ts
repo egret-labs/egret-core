@@ -444,6 +444,7 @@ namespace egret {
                         xPos += countWidth - textLinesWidth[i];
                     } else if (align == egret.HorizontalAlign.CENTER) {
                         xPos += Math.floor((countWidth - textLinesWidth[i]) / 2);
+                        
                     }
                 }
                 for (let j: number = 0; j < len; j++) {
@@ -648,12 +649,12 @@ namespace egret {
 
                     if (isFirstChar) {
                         isFirstChar = false;
-                        textOffsetX = Math.min(offsetX, textOffsetX);
+                        // textOffsetX = Math.min(offsetX, textOffsetX);
                     }
 
                     if (isFirstLine) {
                         isFirstLine = false;
-                        textOffsetY = Math.min(offsetY, textOffsetY);
+                        // textOffsetY = Math.min(offsetY, textOffsetY);
                     }
                     if (hasWidthSet && j > 0 && xPos + texureWidth > textFieldWidth) {
                         if (!setLineData(line.substring(0, j)))

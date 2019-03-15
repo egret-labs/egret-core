@@ -52,6 +52,7 @@ namespace egret {
     locale_strings[1049] = "In the absence of sound is not allowed to play after loading";
     locale_strings[1050] = "ExternalInterface calls the method without js registration: {0}";
     locale_strings[1051] = "runtime only support webgl render mode";
+    locale_strings[1052] = "network request timeout{0}";
 
     //gui  3000-3099
     locale_strings[3000] = "Theme configuration file failed to load: {0}";
@@ -73,11 +74,16 @@ namespace egret {
     locale_strings[3100] = "Current browser does not support WebSocket";
     locale_strings[3101] = "Please connect Socket firstly";
     locale_strings[3102] = "Please set the type of binary type";
+    //RES 3200-3299
+    locale_strings[3200] = "getResByUrl must be called after loadConfig";
 
     //db 4000-4299
     locale_strings[4000] = "An Bone cannot be added as a child to itself or one of its children (or children's children, etc.)";
     locale_strings[4001] = "Abstract class can not be instantiated!";
     locale_strings[4002] = "Unnamed data!";
     locale_strings[4003] = "Nonsupport version!";
+
+    //4500-5000 platform
+    locale_strings[4500] = "The platform does not support {0} adapter mode and has been automatically replaced with {1} mode, please modify your code adapter logic";
 
 }

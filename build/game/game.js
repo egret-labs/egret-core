@@ -4806,8 +4806,8 @@ var egret;
             var data = setTimeoutCache[key2];
             data.delay -= dt;
             if (data.delay <= 0) {
-                data.listener.apply(data.thisObject, data.params);
                 clearTimeout(key2);
+                data.listener.apply(data.thisObject, data.params);
             }
         }
         return false;

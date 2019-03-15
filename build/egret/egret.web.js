@@ -287,7 +287,9 @@ var egret;
                     audio.autoplay = !0;
                     audio.muted = true;
                 }
-                if (ua.indexOf("edge") >= 0) {
+                //edge and ie11
+                var ie = ua.indexOf("edge") >= 0 || ua.indexOf("trident") >= 0;
+                if (ie) {
                     document.body.appendChild(audio);
                 }
                 audio.load();
@@ -302,6 +304,9 @@ var egret;
                         audio.pause();
                         audio.muted = false;
                     }
+                    if (ie) {
+                        document.body.appendChild(audio);
+                    }
                     self.loaded = true;
                     self.dispatchEventWith(egret.Event.COMPLETE);
                 }
@@ -312,7 +317,7 @@ var egret;
                 function removeListeners() {
                     audio.removeEventListener("canplaythrough", onAudioLoaded);
                     audio.removeEventListener("error", onAudioError);
-                    if (ua.indexOf("edge") >= 0) {
+                    if (ie) {
                         document.body.removeChild(audio);
                     }
                 }
@@ -643,7 +648,7 @@ var egret;
                     WebAudioDecode.isDecoding = false;
                     WebAudioDecode.decodeAudios();
                 }, function () {
-                    alert("sound decode error: " + decodeInfo["url"] + "！\nsee http://edn.egret.com/cn/docs/page/156");
+                    egret.log('sound decode error');
                     if (decodeInfo["fail"]) {
                         decodeInfo["fail"]();
                     }
@@ -704,24 +709,25 @@ var egret;
                 var request = new XMLHttpRequest();
                 request.open("GET", url, true);
                 request.responseType = "arraybuffer";
-                request.onreadystatechange = function () {
-                    if (request.readyState == 4) {
-                        var ioError = (request.status >= 400 || request.status == 0);
-                        if (ioError) {
-                            self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
-                        }
-                        else {
-                            WebAudioDecode.decodeArr.push({
-                                "buffer": request.response,
-                                "success": onAudioLoaded,
-                                "fail": onAudioError,
-                                "self": self,
-                                "url": self.url
-                            });
-                            WebAudioDecode.decodeAudios();
-                        }
+                request.addEventListener("load", function () {
+                    var ioError = (request.status >= 400);
+                    if (ioError) {
+                        self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
                     }
-                };
+                    else {
+                        WebAudioDecode.decodeArr.push({
+                            "buffer": request.response,
+                            "success": onAudioLoaded,
+                            "fail": onAudioError,
+                            "self": self,
+                            "url": self.url
+                        });
+                        WebAudioDecode.decodeAudios();
+                    }
+                });
+                request.addEventListener("error", function () {
+                    self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
+                });
                 request.send();
                 function onAudioLoaded() {
                     self.loaded = true;
@@ -1574,6 +1580,10 @@ var egret;
             function WebHttpRequest() {
                 var _this = _super.call(this) || this;
                 /**
+                 *
+                 */
+                _this.timeout = 0;
+                /**
                  * @private
                  */
                 _this._url = "";
@@ -1668,10 +1678,18 @@ var egret;
                     this._xhr.abort();
                     this._xhr = null;
                 }
-                this._xhr = this.getXHR(); //new XMLHttpRequest();
-                this._xhr.onreadystatechange = this.onReadyStateChange.bind(this);
-                this._xhr.onprogress = this.updateProgress.bind(this);
-                this._xhr.open(this._method, this._url, true);
+                var xhr = this.getXHR(); //new XMLHttpRequest();
+                if (window["XMLHttpRequest"]) {
+                    xhr.addEventListener("load", this.onload.bind(this));
+                    xhr.addEventListener("error", this.onerror.bind(this));
+                }
+                else {
+                    xhr.onreadystatechange = this.onReadyStateChange.bind(this);
+                }
+                xhr.onprogress = this.updateProgress.bind(this);
+                xhr.ontimeout = this.onTimeout.bind(this);
+                xhr.open(this._method, this._url, true);
+                this._xhr = xhr;
             };
             /**
              * @private
@@ -1690,6 +1708,7 @@ var egret;
                         this._xhr.setRequestHeader(key, this.headerObj[key]);
                     }
                 }
+                this._xhr.timeout = this.timeout;
                 this._xhr.send(data);
             };
             /**
@@ -1739,6 +1758,15 @@ var egret;
             /**
              * @private
              */
+            WebHttpRequest.prototype.onTimeout = function () {
+                if (true) {
+                    egret.$warn(1052, this._url);
+                }
+                this.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
+            };
+            /**
+             * @private
+             */
             WebHttpRequest.prototype.onReadyStateChange = function () {
                 var xhr = this._xhr;
                 if (xhr.readyState == 4) {
@@ -1765,6 +1793,39 @@ var egret;
                 if (event.lengthComputable) {
                     egret.ProgressEvent.dispatchProgressEvent(this, egret.ProgressEvent.PROGRESS, event.loaded, event.total);
                 }
+            };
+            /**
+             * @private
+             */
+            WebHttpRequest.prototype.onload = function () {
+                var self = this;
+                var xhr = this._xhr;
+                var url = this._url;
+                var ioError = (xhr.status >= 400);
+                window.setTimeout(function () {
+                    if (ioError) {
+                        if (true && !self.hasEventListener(egret.IOErrorEvent.IO_ERROR)) {
+                            egret.$error(1011, url);
+                        }
+                        self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
+                    }
+                    else {
+                        self.dispatchEventWith(egret.Event.COMPLETE);
+                    }
+                }, 0);
+            };
+            /**
+             * @private
+             */
+            WebHttpRequest.prototype.onerror = function () {
+                var url = this._url;
+                var self = this;
+                window.setTimeout(function () {
+                    if (true && !self.hasEventListener(egret.IOErrorEvent.IO_ERROR)) {
+                        egret.$error(1011, url);
+                    }
+                    self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
+                }, 0);
             };
             return WebHttpRequest;
         }(egret.EventDispatcher));
@@ -3601,8 +3662,8 @@ var egret;
             }
             requestAnimationFrame(onTick);
             function onTick() {
-                ticker.update();
                 requestAnimationFrame(onTick);
+                ticker.update();
             }
         }
         //覆盖原生的isNaN()方法实现，在不同浏览器上有2~10倍性能提升。
@@ -5469,34 +5530,47 @@ var egret;
     (function (web) {
         /**
          * @private
-         * WebGLRenderTarget类
-         * 一个WebGL渲染目标，拥有一个frame buffer和texture
+         * WebGLRenderTarget
+         * A WebGL render target with a frame buffer and texture
          */
         var WebGLRenderTarget = (function (_super) {
             __extends(WebGLRenderTarget, _super);
             function WebGLRenderTarget(gl, width, height) {
                 var _this = _super.call(this) || this;
-                // 清除色
                 _this.clearColor = [0, 0, 0, 0];
-                // 是否启用frame buffer, 默认为true
+                /**
+                 * If frame buffer is enabled, the default is true
+                 */
                 _this.useFrameBuffer = true;
                 _this.gl = gl;
-                // 如果尺寸为 0 chrome会报警
-                _this.width = width || 1;
-                _this.height = height || 1;
+                _this._resize(width, height);
                 return _this;
             }
-            /**
-             * 重置render target的尺寸
-             */
-            WebGLRenderTarget.prototype.resize = function (width, height) {
-                var gl = this.gl;
+            WebGLRenderTarget.prototype._resize = function (width, height) {
+                // Chrome alerts if the size is 0
+                width = width || 1;
+                height = height || 1;
+                if (width < 1) {
+                    if (true) {
+                        egret.warn('WebGLRenderTarget _resize width = ' + width);
+                    }
+                    width = 1;
+                }
+                if (height < 1) {
+                    if (true) {
+                        egret.warn('WebGLRenderTarget _resize height = ' + height);
+                    }
+                    height = 1;
+                }
                 this.width = width;
                 this.height = height;
+            };
+            WebGLRenderTarget.prototype.resize = function (width, height) {
+                this._resize(width, height);
+                var gl = this.gl;
                 if (this.frameBuffer) {
-                    // 设置texture尺寸
                     gl.bindTexture(gl.TEXTURE_2D, this.texture);
-                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.width, this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
                     // gl.bindTexture(gl.TEXTURE_2D, null);
                 }
                 if (this.stencilBuffer) {
@@ -5504,16 +5578,10 @@ var egret;
                     this.stencilBuffer = null;
                 }
             };
-            /**
-             * 激活此render target
-             */
             WebGLRenderTarget.prototype.activate = function () {
                 var gl = this.gl;
                 gl.bindFramebuffer(gl.FRAMEBUFFER, this.getFrameBuffer());
             };
-            /**
-             * 获取frame buffer
-             */
             WebGLRenderTarget.prototype.getFrameBuffer = function () {
                 if (!this.useFrameBuffer) {
                     return null;
@@ -5523,19 +5591,12 @@ var egret;
             WebGLRenderTarget.prototype.initFrameBuffer = function () {
                 if (!this.frameBuffer) {
                     var gl = this.gl;
-                    // 创建材质
                     this.texture = this.createTexture();
-                    // 创建frame buffer
                     this.frameBuffer = gl.createFramebuffer();
                     gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
-                    // 绑定材质
                     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.texture, 0);
                 }
             };
-            /**
-             * 创建材质
-             * TODO 创建材质的方法可以合并
-             */
             WebGLRenderTarget.prototype.createTexture = function () {
                 var gl = this.gl;
                 var texture = gl.createTexture();
@@ -5548,9 +5609,6 @@ var egret;
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
                 return texture;
             };
-            /**
-             * 清除render target颜色缓存
-             */
             WebGLRenderTarget.prototype.clear = function (bind) {
                 var gl = this.gl;
                 if (bind) {
@@ -5565,14 +5623,12 @@ var egret;
                     return;
                 }
                 var gl = this.gl;
-                // 设置render buffer的尺寸
-                gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer); // 是否需要强制绑定？
-                // 绑定stencil buffer
+                gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
                 this.stencilBuffer = gl.createRenderbuffer();
                 gl.bindRenderbuffer(gl.RENDERBUFFER, this.stencilBuffer);
                 gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_STENCIL, this.width, this.height);
                 gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, this.stencilBuffer);
-                // 此处不解绑是否会造成bug？
+                // Is unbundling a bug here?
                 // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
             };
             WebGLRenderTarget.prototype.dispose = function () {

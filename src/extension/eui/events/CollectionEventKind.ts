@@ -63,7 +63,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static ADD:string = "add";
+        public static readonly ADD: string = "add";
         /**
          * Indicates that the collection applied a sort, a filter, or both.
          * This change can potentially be easier to handle than a RESET.
@@ -79,7 +79,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static REFRESH:string = "refresh";
+        public static readonly REFRESH: string = "refresh";
         /**
          * Indicates that the collection removed an item or items.
          * @version Egret 2.4
@@ -94,7 +94,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static REMOVE:string = "remove";
+        public static readonly REMOVE: string = "remove";
         /**
          * Indicates that the item at the position identified by the
          * CollectionEvent <code>location</code> property has been replaced.
@@ -110,7 +110,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static REPLACE:string = "replace";
+        public static readonly REPLACE: string = "replace";
         /**
          * Indicates that the collection has changed so drastically that
          * a reset is required.
@@ -126,7 +126,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static RESET:string = "reset";
+        public static readonly RESET: string = "reset";
         /**
          * Indicates that one or more items were updated within the collection.
          * The affected item(s)
@@ -143,6 +143,6 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static UPDATE:string = "update";
+        public static readonly UPDATE: string = "update";
     }
 }

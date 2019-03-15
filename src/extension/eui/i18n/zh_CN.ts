@@ -68,6 +68,7 @@ namespace eui {
     locale_strings[2201] = "BasicLayout 不支持虚拟化。";
     locale_strings[2202] = "皮肤解析出错，属性 skinName 的值必须要能够解析为一个 eui.Skin 的实例。";
     locale_strings[2203] = "找不到指定的皮肤类 '{0}'。";
+    locale_strings[2204] = "未定义的event.kind类型(CollectionEventKind) = '{0}'.";
 
     locale_strings[2301] = "素材解析失败，找不到URL：{0} 所对应的资源。";
 }
