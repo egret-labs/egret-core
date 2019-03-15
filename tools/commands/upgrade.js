@@ -13,8 +13,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
         while (_) try {
-            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [0, t.value];
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
                 case 0: case 1: t = op; break;
                 case 4: _.label++; return { value: op[1], done: false };
@@ -70,7 +70,7 @@ var UpgradeCommand = /** @class */ (function () {
                             { "v": "5.1.1", command: Upgrade_5_1_1 },
                             { "v": "5.1.2", command: Upgrade_5_1_2 },
                             { "v": "5.2.13", command: Upgrade_5_2_13 },
-                            { "v": "5.2.14", command: Upgrade_5_2_13 }
+                            { "v": "5.2.16", command: Upgrade_5_2_16 },
                         ];
                         _a.label = 1;
                     case 1:
@@ -191,10 +191,10 @@ var Upgrade_5_2_13 = /** @class */ (function () {
     };
     return Upgrade_5_2_13;
 }());
-var Upgrade_5_2_14 = /** @class */ (function () {
-    function Upgrade_5_2_14() {
+var Upgrade_5_2_16 = /** @class */ (function () {
+    function Upgrade_5_2_16() {
     }
-    Upgrade_5_2_13.prototype.execute = function () {
+    Upgrade_5_2_16.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "qgame"), path.join(egret.args.projectDir, "scripts", "qgame"));
@@ -203,6 +203,6 @@ var Upgrade_5_2_14 = /** @class */ (function () {
             });
         });
     };
-    return Upgrade_5_2_13;
+    return Upgrade_5_2_16;
 }());
 module.exports = UpgradeCommand;
