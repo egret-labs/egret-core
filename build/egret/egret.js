@@ -12235,6 +12235,7 @@ var egret;
     locale_strings[1049] = "In the absence of sound is not allowed to play after loading";
     locale_strings[1050] = "ExternalInterface calls the method without js registration: {0}";
     locale_strings[1051] = "runtime only support webgl render mode";
+    locale_strings[1052] = "network request timeout{0}";
     //gui  3000-3099
     locale_strings[3000] = "Theme configuration file failed to load: {0}";
     locale_strings[3001] = "Cannot find the skin name which is configured in Theme: {0}";
@@ -12255,11 +12256,15 @@ var egret;
     locale_strings[3100] = "Current browser does not support WebSocket";
     locale_strings[3101] = "Please connect Socket firstly";
     locale_strings[3102] = "Please set the type of binary type";
+    //RES 3200-3299
+    locale_strings[3200] = "getResByUrl must be called after loadConfig";
     //db 4000-4299
     locale_strings[4000] = "An Bone cannot be added as a child to itself or one of its children (or children's children, etc.)";
     locale_strings[4001] = "Abstract class can not be instantiated!";
     locale_strings[4002] = "Unnamed data!";
     locale_strings[4003] = "Nonsupport version!";
+    //4500-5000 platform
+    locale_strings[4500] = "The platform does not support {0} adapter mode and has been automatically replaced with {1} mode, please modify your code adapter logic";
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -12353,8 +12358,7 @@ var egret;
     egret.$locale_strings = egret.$locale_strings || {};
     egret.$locale_strings["zh_CN"] = egret.$locale_strings["zh_CN"] || {};
     var locale_strings = egret.$locale_strings["zh_CN"];
-    //eui 2000-2999
-    //RES 3200-3299
+    //eui 2000-2999    
     //core  1000-1999
     locale_strings[1001] = "找不到Egret入口类: {0}。";
     locale_strings[1002] = "Egret入口类 {0} 必须继承自egret.DisplayObject。";
@@ -12403,6 +12407,7 @@ var egret;
     locale_strings[1049] = "声音在没有加载完之前不允许播放";
     locale_strings[1050] = "ExternalInterface调用了js没有注册的方法: {0}";
     locale_strings[1051] = "runtime 只支持 webgl 渲染模式";
+    locale_strings[1052] = "网络请求超时:{0}";
     //gui  3000-3099
     locale_strings[3000] = "主题配置文件加载失败: {0}";
     locale_strings[3001] = "找不到主题中所配置的皮肤类名: {0}";
@@ -12423,11 +12428,15 @@ var egret;
     locale_strings[3100] = "当前浏览器不支持WebSocket";
     locale_strings[3101] = "请先连接WebSocket";
     locale_strings[3102] = "请先设置type为二进制类型";
+    //RES 3200-3299
+    locale_strings[3200] = "getResByUrl 必须在 loadConfig 之后调用";
     //db 4000-4299
     locale_strings[4000] = "An Bone cannot be added as a child to itself or one of its children (or children's children, etc.)";
     locale_strings[4001] = "Abstract class can not be instantiated!";
     locale_strings[4002] = "Unnamed data!";
     locale_strings[4003] = "Nonsupport version!";
+    //4500-5000 platform
+    locale_strings[4500] = "该平台不支持 {0} 适配模式，已经自动替换为 {1} 模式，请修改您的代码适配逻辑";
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -14190,7 +14199,7 @@ var egret;
              * @private
              * 执行一次刷新
              */
-            SystemTicker.prototype.update = function () {
+            SystemTicker.prototype.update = function (forceUpdate) {
                 var t1 = egret.getTimer();
                 var callBackList = this.callBackList;
                 var thisObjectList = this.thisObjectList;
@@ -14217,7 +14226,7 @@ var egret;
                 var t2 = egret.getTimer();
                 var deltaTime = timeStamp - this.lastTimeStamp;
                 this.lastTimeStamp = timeStamp;
-                if (deltaTime >= this.frameDeltaTime) {
+                if (deltaTime >= this.frameDeltaTime || forceUpdate) {
                     this.lastCount = this.frameInterval;
                 }
                 else {
@@ -17164,7 +17173,7 @@ var egret;
          * @platform Web,Native
          * @language zh_CN
          */
-        Capabilities.engineVersion = "5.2.14";
+        Capabilities.engineVersion = "5.2.16";
         /***
          * current render mode.
          * @type {string}
@@ -18354,11 +18363,11 @@ var egret;
                     }
                     if (isFirstChar) {
                         isFirstChar = false;
-                        textOffsetX = Math.min(offsetX, textOffsetX);
+                        // textOffsetX = Math.min(offsetX, textOffsetX);
                     }
                     if (isFirstLine) {
                         isFirstLine = false;
-                        textOffsetY = Math.min(offsetY, textOffsetY);
+                        // textOffsetY = Math.min(offsetY, textOffsetY);
                     }
                     if (hasWidthSet && j > 0 && xPos + texureWidth > textFieldWidth) {
                         if (!setLineData(line.substring(0, j)))
@@ -19251,9 +19260,6 @@ var egret;
         function TextField() {
             var _this = _super.call(this) || this;
             _this.$inputEnabled = false;
-            /**
-             * @private
-             */
             _this.inputUtils = null;
             /**
              * @private
@@ -24203,7 +24209,9 @@ var egret;
             this.lastTimeStamp = timeStamp;
             this._currentCount++;
             var complete = (this.repeatCount > 0 && this._currentCount >= this.repeatCount);
-            egret.TimerEvent.dispatchTimerEvent(this, egret.TimerEvent.TIMER);
+            if (this._currentCount <= this.repeatCount) {
+                egret.TimerEvent.dispatchTimerEvent(this, egret.TimerEvent.TIMER);
+            }
             if (complete) {
                 this.stop();
                 egret.TimerEvent.dispatchTimerEvent(this, egret.TimerEvent.TIMER_COMPLETE);
