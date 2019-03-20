@@ -11,7 +11,7 @@ const config: ResourceManagerConfig = {
     buildConfig: (params) => {
 
         const { target, command, projectName, version } = params;
-        const outputDir = `../${projectName}_qgame/src`;
+        const outputDir = `../${projectName}_qgame`;
         if (command == 'build') {
             return {
                 outputDir,
