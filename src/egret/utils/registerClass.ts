@@ -87,6 +87,7 @@ namespace egret {
         Object.defineProperty(prototype, '__class__', {
             value: className,
             enumerable: false,
+            writable: true
         });
         let types = [className];
         if (interfaceNames) {
@@ -105,6 +106,7 @@ namespace egret {
         Object.defineProperty(prototype, '__types__', {
             value: types,
             enumerable: false,
+            writable: true
         });
     }
 }
