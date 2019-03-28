@@ -71,7 +71,7 @@ namespace egret {
      * @platform Web,Native
      * @language zh_CN
      */
-    export function registerClass(classDefinition:any, className:string, interfaceNames?:string[]):void {
+    export function registerClass(classDefinition: any, className: string, interfaceNames?: string[]): void {
         if (DEBUG) {
             if (!classDefinition) {
                 $error(1003, "classDefinition");
@@ -83,8 +83,11 @@ namespace egret {
                 $error(1003, "className");
             }
         }
-        let prototype:any = classDefinition.prototype;
-        prototype.__class__ = className;
+        let prototype: any = classDefinition.prototype;
+        Object.defineProperty(prototype, '__class__', {
+            value: className,
+            enumerable: false,
+        });
         let types = [className];
         if (interfaceNames) {
             types = types.concat(interfaceNames);
@@ -92,13 +95,16 @@ namespace egret {
         let superTypes = prototype.__types__;
         if (prototype.__types__) {
             let length = superTypes.length;
-            for(let i=0;i<length;i++){
+            for (let i = 0; i < length; i++) {
                 let name = superTypes[i];
-                if(types.indexOf(name)==-1){
+                if (types.indexOf(name) == -1) {
                     types.push(name);
                 }
             }
         }
-        prototype.__types__ = types;
+        Object.defineProperty(prototype, '__types__', {
+            value: types,
+            enumerable: false,
+        });
     }
 }
