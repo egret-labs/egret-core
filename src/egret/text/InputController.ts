@@ -36,7 +36,7 @@ namespace egret {
         /**
          * @private
          */
-        private stageText: egret.StageText;
+        public stageText: egret.StageText;
 
         /**
          * @private

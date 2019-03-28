@@ -84,8 +84,7 @@ namespace egret.web {
                 WebAudioDecode.isDecoding = false;
                 WebAudioDecode.decodeAudios();
             }, function () {
-                alert("sound decode error: " + decodeInfo["url"] + "！\nsee http://edn.egret.com/cn/docs/page/156");
-
+                egret.log('sound decode error')
                 if (decodeInfo["fail"]) {
                     decodeInfo["fail"]();
                 }
@@ -185,14 +184,19 @@ namespace egret.web {
             request.open("GET", url, true);
             request.responseType = "arraybuffer";
             request.addEventListener("load", function() {
-                WebAudioDecode.decodeArr.push({
-                    "buffer": request.response,
-                    "success": onAudioLoaded,
-                    "fail": onAudioError,
-                    "self": self,
-                    "url": self.url
-                });
-                WebAudioDecode.decodeAudios();
+                var ioError = (request.status >= 400);
+                if (ioError) {
+                    self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
+                } else {
+                    WebAudioDecode.decodeArr.push({
+                        "buffer": request.response,
+                        "success": onAudioLoaded,
+                        "fail": onAudioError,
+                        "self": self,
+                        "url": self.url
+                    });
+                    WebAudioDecode.decodeAudios();
+                }
             });
             request.addEventListener("error", function() {
                 self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);

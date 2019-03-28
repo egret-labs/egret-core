@@ -259,7 +259,9 @@ namespace egret {
             this.lastTimeStamp = timeStamp;
             this._currentCount++;
             let complete = (this.repeatCount > 0 && this._currentCount >= this.repeatCount);
-            TimerEvent.dispatchTimerEvent(this, TimerEvent.TIMER);
+            if (this.repeatCount == 0 || this._currentCount <= this.repeatCount) {
+                egret.TimerEvent.dispatchTimerEvent(this, egret.TimerEvent.TIMER);
+            }
             if (complete) {
                 this.stop();
                 TimerEvent.dispatchTimerEvent(this, TimerEvent.TIMER_COMPLETE);

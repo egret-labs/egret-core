@@ -10664,6 +10664,18 @@ declare namespace eui {
         /**
          * @private
          */
+        private $isTouchCancle;
+        /**
+         * @private
+         */
+        private onTouchBegin();
+        /**
+         * @private
+         */
+        private onTouchCancle();
+        /**
+         * @private
+         */
         private onfocusIn();
         /**
          * @private
@@ -11918,7 +11930,7 @@ declare namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        static ADD: string;
+        static readonly ADD: string;
         /**
          * Indicates that the collection applied a sort, a filter, or both.
          * This change can potentially be easier to handle than a RESET.
@@ -11934,7 +11946,7 @@ declare namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        static REFRESH: string;
+        static readonly REFRESH: string;
         /**
          * Indicates that the collection removed an item or items.
          * @version Egret 2.4
@@ -11949,7 +11961,7 @@ declare namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        static REMOVE: string;
+        static readonly REMOVE: string;
         /**
          * Indicates that the item at the position identified by the
          * CollectionEvent <code>location</code> property has been replaced.
@@ -11965,7 +11977,7 @@ declare namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        static REPLACE: string;
+        static readonly REPLACE: string;
         /**
          * Indicates that the collection has changed so drastically that
          * a reset is required.
@@ -11981,7 +11993,7 @@ declare namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        static RESET: string;
+        static readonly RESET: string;
         /**
          * Indicates that one or more items were updated within the collection.
          * The affected item(s)
@@ -11998,7 +12010,7 @@ declare namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        static UPDATE: string;
+        static readonly UPDATE: string;
     }
 }
 declare namespace eui {
