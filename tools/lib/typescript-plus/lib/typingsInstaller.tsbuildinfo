@@ -1,0 +1,110 @@
+{
+  "bundle": {
+    "commonSourceDirectory": "D:/github/TypeScript/src/",
+    "sourceFiles": [
+      "D:/github/TypeScript/src/typingsInstaller/nodeTypingsInstaller.ts"
+    ],
+    "js": {
+      "sections": [
+        {
+          "pos": 0,
+          "end": 13,
+          "kind": "prologue",
+          "data": "use strict"
+        },
+        {
+          "pos": 14,
+          "end": 396,
+          "kind": "emitHelpers",
+          "data": "typescript:assign"
+        },
+        {
+          "pos": 397,
+          "end": 2187,
+          "kind": "emitHelpers",
+          "data": "typescript:generator"
+        },
+        {
+          "pos": 2188,
+          "end": 2416,
+          "kind": "emitHelpers",
+          "data": "typescript:makeTemplateObject"
+        },
+        {
+          "pos": 2417,
+          "end": 3002,
+          "kind": "emitHelpers",
+          "data": "typescript:extends"
+        },
+        {
+          "pos": 3003,
+          "end": 5476957,
+          "kind": "prepend",
+          "data": "D:/github/TypeScript/built/local/compiler.js",
+          "texts": [
+            {
+              "pos": 3003,
+              "end": 5476957,
+              "kind": "text"
+            }
+          ]
+        },
+        {
+          "pos": 5476957,
+          "end": 5495106,
+          "kind": "prepend",
+          "data": "D:/github/TypeScript/built/local/jsTyping.js",
+          "texts": [
+            {
+              "pos": 5476957,
+              "end": 5495106,
+              "kind": "text"
+            }
+          ]
+        },
+        {
+          "pos": 5495106,
+          "end": 5524976,
+          "kind": "prepend",
+          "data": "D:/github/TypeScript/built/local/typingsInstallerCore.js",
+          "texts": [
+            {
+              "pos": 5495106,
+              "end": 5524976,
+              "kind": "text"
+            }
+          ]
+        },
+        {
+          "pos": 5524976,
+          "end": 5537809,
+          "kind": "text"
+        }
+      ],
+      "sources": {
+        "prologues": [
+          {
+            "file": 0,
+            "text": "",
+            "directives": [
+              {
+                "pos": -1,
+                "end": -1,
+                "expression": {
+                  "pos": -1,
+                  "end": -1,
+                  "text": "use strict"
+                }
+              }
+            ]
+          }
+        ],
+        "helpers": [
+          "typescript:extends",
+          "typescript:assign"
+        ]
+      }
+    }
+  },
+  "version": "3.4.1"
+}

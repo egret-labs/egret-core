@@ -1,0 +1,125 @@
+{
+  "bundle": {
+    "commonSourceDirectory": "D:/github/TypeScript/src/",
+    "sourceFiles": [
+      "D:/github/TypeScript/src/typescriptServices/typescriptServices.ts"
+    ],
+    "js": {
+      "sections": [
+        {
+          "pos": 0,
+          "end": 13,
+          "kind": "prologue",
+          "data": "use strict"
+        },
+        {
+          "pos": 14,
+          "end": 396,
+          "kind": "emitHelpers",
+          "data": "typescript:assign"
+        },
+        {
+          "pos": 397,
+          "end": 2187,
+          "kind": "emitHelpers",
+          "data": "typescript:generator"
+        },
+        {
+          "pos": 2188,
+          "end": 2416,
+          "kind": "emitHelpers",
+          "data": "typescript:makeTemplateObject"
+        },
+        {
+          "pos": 2417,
+          "end": 3002,
+          "kind": "emitHelpers",
+          "data": "typescript:extends"
+        },
+        {
+          "pos": 3003,
+          "end": 5476957,
+          "kind": "prepend",
+          "data": "D:/github/TypeScript/built/local/compiler.js",
+          "texts": [
+            {
+              "pos": 3003,
+              "end": 5476957,
+              "kind": "text"
+            }
+          ]
+        },
+        {
+          "pos": 5476957,
+          "end": 5495106,
+          "kind": "prepend",
+          "data": "D:/github/TypeScript/built/local/jsTyping.js",
+          "texts": [
+            {
+              "pos": 5476957,
+              "end": 5495106,
+              "kind": "text"
+            }
+          ]
+        },
+        {
+          "pos": 5495106,
+          "end": 7185023,
+          "kind": "prepend",
+          "data": "D:/github/TypeScript/built/local/services.js",
+          "texts": [
+            {
+              "pos": 5495106,
+              "end": 7185023,
+              "kind": "text"
+            }
+          ]
+        }
+      ]
+    },
+    "dts": {
+      "sections": [
+        {
+          "pos": 0,
+          "end": 239825,
+          "kind": "prepend",
+          "data": "D:/github/TypeScript/built/local/compiler.d.ts",
+          "texts": [
+            {
+              "pos": 0,
+              "end": 239825,
+              "kind": "text"
+            }
+          ]
+        },
+        {
+          "pos": 239825,
+          "end": 242886,
+          "kind": "prepend",
+          "data": "D:/github/TypeScript/built/local/jsTyping.d.ts",
+          "texts": [
+            {
+              "pos": 239825,
+              "end": 242886,
+              "kind": "text"
+            }
+          ]
+        },
+        {
+          "pos": 242886,
+          "end": 290659,
+          "kind": "prepend",
+          "data": "D:/github/TypeScript/built/local/services.d.ts",
+          "texts": [
+            {
+              "pos": 242886,
+              "end": 290659,
+              "kind": "text"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "version": "3.4.1"
+}

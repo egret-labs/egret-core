@@ -1143,6 +1143,7 @@ declare namespace ts {
     function startsWithQuote(name: string): boolean;
     function scriptKindIs(fileName: string, host: LanguageServiceHost, ...scriptKinds: ScriptKind[]): boolean;
     function getScriptKind(fileName: string, host?: LanguageServiceHost): ScriptKind;
+    function getSymbolTarget(symbol: Symbol, checker: TypeChecker): Symbol;
     function getUniqueSymbolId(symbol: Symbol, checker: TypeChecker): number;
     function getFirstNonSpaceCharacterPosition(text: string, position: number): number;
     function getPrecedingNonSpaceCharacterPosition(text: string, position: number): number;
@@ -1175,13 +1176,23 @@ declare namespace ts {
      * user was before extracting it.
      */
     function getRenameLocation(edits: ReadonlyArray<FileTextChanges>, renameFilename: string, name: string, preferLastLocation: boolean): number;
-    function copyComments(sourceNode: Node, targetNode: Node, sourceFile: SourceFile, commentKind?: CommentKind, hasTrailingNewLine?: boolean): void;
+    function copyLeadingComments(sourceNode: Node, targetNode: Node, sourceFile: SourceFile, commentKind?: CommentKind, hasTrailingNewLine?: boolean): void;
+    function copyTrailingComments(sourceNode: Node, targetNode: Node, sourceFile: SourceFile, commentKind?: CommentKind, hasTrailingNewLine?: boolean): void;
+    /**
+     * This function copies the trailing comments for the token that comes before `sourceNode`, as leading comments of `targetNode`.
+     * This is useful because sometimes a comment that refers to `sourceNode` will be a leading comment for `sourceNode`, according to the
+     * notion of trivia ownership, and instead will be a trailing comment for the token before `sourceNode`, e.g.:
+     * `function foo(\* not leading comment for a *\ a: string) {}`
+     * The comment refers to `a` but belongs to the `(` token, but we might want to copy it.
+     */
+    function copyTrailingAsLeadingComments(sourceNode: Node, targetNode: Node, sourceFile: SourceFile, commentKind?: CommentKind, hasTrailingNewLine?: boolean): void;
     function getContextualTypeFromParent(node: Expression, checker: TypeChecker): Type | undefined;
     function quote(text: string, preferences: UserPreferences): string;
     function isEqualityOperatorKind(kind: SyntaxKind): kind is EqualityOperator;
     function isStringLiteralOrTemplate(node: Node): node is StringLiteralLike | TemplateExpression | TaggedTemplateExpression;
     function hasIndexSignature(type: Type): boolean;
     function getSwitchedType(caseClause: CaseClause, checker: TypeChecker): Type | undefined;
+    function getTypeNodeIfAccessible(type: Type, enclosingScope: Node, program: Program, host: LanguageServiceHost): TypeNode | undefined;
 }
 declare namespace ts {
     function createClassifier(): Classifier;
@@ -1428,6 +1439,7 @@ declare namespace ts.FindAllReferences {
         readonly implementations?: boolean;
         /**
          * True to opt in for enhanced renaming of shorthand properties and import/export specifiers.
+         * The options controls the behavior for the whole rename operation; it cannot be changed on a per-file basis.
          * Default is false for backwards compatibility.
          */
         readonly providePrefixAndSuffixTextForRename?: boolean;
@@ -1533,11 +1545,11 @@ declare namespace ts.OrganizeImports {
     /**
      * @param importGroup a list of ImportDeclarations, all with the same module name.
      */
-    function coalesceImports(importGroup: ReadonlyArray<ImportDeclaration>): ReadonlyArray<ImportDeclaration>;
+    function coalesceImports(importGroup: ReadonlyArray<ImportDeclaration>): readonly ImportDeclaration[];
     /**
      * @param exportGroup a list of ExportDeclarations, all with the same module name.
      */
-    function coalesceExports(exportGroup: ReadonlyArray<ExportDeclaration>): ReadonlyArray<ExportDeclaration>;
+    function coalesceExports(exportGroup: ReadonlyArray<ExportDeclaration>): readonly ExportDeclaration[];
     function compareModuleSpecifiers(m1: Expression, m2: Expression): Comparison;
 }
 declare namespace ts.OutliningElementsCollector {
@@ -1794,16 +1806,25 @@ declare namespace ts.formatting {
 }
 declare namespace ts.textChanges {
     interface ConfigurableStart {
-        /** True to use getStart() (NB, not getFullStart()) without adjustment. */
-        useNonAdjustedStartPosition?: boolean;
+        leadingTriviaOption?: LeadingTriviaOption;
     }
     interface ConfigurableEnd {
-        /** True to use getEnd() without adjustment. */
-        useNonAdjustedEndPosition?: boolean;
+        trailingTriviaOption?: TrailingTriviaOption;
     }
-    enum Position {
-        FullStart = 0,
-        Start = 1
+    enum LeadingTriviaOption {
+        /** Exclude all leading trivia (use getStart()) */
+        Exclude = 0,
+        /** Include leading trivia and,
+         * if there are no line breaks between the node and the previous token,
+         * include all trivia between the node and the previous token
+         */
+        IncludeAll = 1
+    }
+    enum TrailingTriviaOption {
+        /** Exclude all trailing trivia (use getEnd()) */
+        Exclude = 0,
+        /** Include trailing trivia */
+        Include = 1
     }
     /**
      * Usually node.pos points to a position immediately after the previous token.
@@ -1815,11 +1836,11 @@ declare namespace ts.textChanges {
      * Usually leading trivia of the variable declaration 'y' should not include trailing trivia (whitespace, comment 'this is x' and newline) from the preceding
      * variable declaration and trailing trivia for 'y' should include (whitespace, comment 'this is y', newline).
      * By default when removing nodes we adjust start and end positions to respect specification of the trivia above.
-     * If pos\end should be interpreted literally 'useNonAdjustedStartPosition' or 'useNonAdjustedEndPosition' should be set to true
+     * If pos\end should be interpreted literally (that is, withouth including leading and trailing trivia), `leadingTriviaOption` should be set to `LeadingTriviaOption.Exclude`
+     * and `trailingTriviaOption` to `TrailingTriviaOption.Exclude`.
      */
     interface ConfigurableStartEnd extends ConfigurableStart, ConfigurableEnd {
     }
-    const useNonAdjustedPositions: ConfigurableStartEnd;
     interface InsertNodeOptions {
         /**
          * Text to be inserted before the new node
@@ -2176,6 +2197,8 @@ declare namespace ts.refactor {
 }
 declare namespace ts.refactor.addOrRemoveBracesToArrowFunction {
 }
+declare namespace ts.refactor.convertParamsToDestructuredObject {
+}
 declare namespace ts {
     /** The version of the language service API */
     const servicesVersion = "0.8";
@@ -2503,5 +2526,5 @@ declare namespace ts {
 declare namespace TypeScript.Services {
     const TypeScriptServicesFactory: typeof ts.TypeScriptServicesFactory;
 }
-declare const toolsVersion = "3.3";
+declare const toolsVersion = "3.4";
 //# sourceMappingURL=services.d.ts.map
