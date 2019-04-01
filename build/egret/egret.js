@@ -23258,7 +23258,11 @@ var egret;
             }
         }
         var prototype = classDefinition.prototype;
-        prototype.__class__ = className;
+        Object.defineProperty(prototype, '__class__', {
+            value: className,
+            enumerable: false,
+            writable: true
+        });
         var types = [className];
         if (interfaceNames) {
             types = types.concat(interfaceNames);
@@ -23273,7 +23277,11 @@ var egret;
                 }
             }
         }
-        prototype.__types__ = types;
+        Object.defineProperty(prototype, '__types__', {
+            value: types,
+            enumerable: false,
+            writable: true
+        });
     }
     egret.registerClass = registerClass;
 })(egret || (egret = {}));
