@@ -213,6 +213,12 @@ namespace egret.sys {
         private isPaused: boolean = false;
 
         /**
+         * @private
+         * 暂停开始的时间
+         */
+        private pauseTimeStamp: number = 0;
+
+        /**
          * Pause the ticker.
          * @version Egret 5.0.2
          * @platform Web,Native
@@ -226,6 +232,7 @@ namespace egret.sys {
          */
         public pause(): void {
             this.isPaused = true;
+            this.pauseTimeStamp = egret.getTimer();
         }
 
         /**
@@ -242,6 +249,10 @@ namespace egret.sys {
          */
         public resume(): void {
             this.isPaused = false;
+            const updateRTFunc = egret["$updateRemainingTime"];
+            if (updateRTFunc && this.pauseTimeStamp) {
+                updateRTFunc(egret.getTimer() - this.pauseTimeStamp);
+            }
         }
 
         /**

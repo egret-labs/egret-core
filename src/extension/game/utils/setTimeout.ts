@@ -26,7 +26,6 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-
 namespace egret {
 
     let setTimeoutCache: any = {};
@@ -118,5 +117,20 @@ namespace egret {
         }
 
         return false;
+    }
+
+    /**
+     * 延后所有的settimeout回调
+     * @private
+     * 
+     * @param dt 要延后的时间，单位毫秒
+     */
+    export function $updateRemainingTime(dt: number): void {
+        for (const key in setTimeoutCache) {
+            if (setTimeoutCache.hasOwnProperty(key)) {
+                const timeOut = setTimeoutCache[key];
+                timeOut.delay += dt;
+            }
+        }
     }
 }
