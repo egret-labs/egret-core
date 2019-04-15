@@ -17173,7 +17173,7 @@ var egret;
          * @platform Web,Native
          * @language zh_CN
          */
-        Capabilities.engineVersion = "5.2.17";
+        Capabilities.engineVersion = "5.2.18";
         /***
          * current render mode.
          * @type {string}
