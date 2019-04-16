@@ -223,6 +223,10 @@ namespace egret {
             if (this.source && this.source.dispose) {
                 this.source.dispose();
             }
+            // WeChat Memory leakage bug
+            if (this.source && this.source.src) {
+                this.source.src = "";
+            }
             this.source = null;
             if (egret.nativeRender) {
                 egret_native.NativeDisplayObject.disposeNativeBitmapData(this.$nativeBitmapData);
