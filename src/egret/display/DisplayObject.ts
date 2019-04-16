@@ -819,7 +819,7 @@ namespace egret {
             self.$skewYdeg = value;
 
             value = clampRotation(value);
-            value = value / 180 * Math.PI;
+            value = (value + self.$rotation) / 180 * Math.PI;
 
             self.$skewY = value;
             self.$matrixDirty = true;

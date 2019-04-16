@@ -169,7 +169,7 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string, t
 
                 content += `generateEUI.paths['${item.path}'] = window.${item.className} = ${item.gjs}`;
             }
-            let result = namespaces.map(v => `window.${v}={};`).join("\n");
+            let result = namespaces.map(v => `window.${v}=window.${v}||{};`).join("\n");
             content = result + content;
             path = path.replace("thm.json", "thm.js");
             return { path, content }

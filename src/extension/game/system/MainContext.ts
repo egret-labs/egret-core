@@ -78,7 +78,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get stage():Stage {
+        public get stage(): Stage {
             return egret.sys.$TempStage;
         }
 
@@ -86,18 +86,18 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static deviceType:string = null;
+        public static deviceType: string = null;
 
         /**
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static DEVICE_PC:string = "web";
+        public static DEVICE_PC: string = "web";
         /**
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static DEVICE_MOBILE:string = "native";
+        public static DEVICE_MOBILE: string = "native";
 
 
         // /**
@@ -138,7 +138,7 @@ namespace egret {
         /**
          * @private
          */
-        private static _instance:egret.MainContext;
+        private static _instance: egret.MainContext;
 
         /**
          * @method egret.Ticker.getInstance
@@ -146,7 +146,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static get instance():egret.MainContext {
+        public static get instance(): egret.MainContext {
             if (MainContext._instance == null) {
                 MainContext._instance = new MainContext();
             }
@@ -159,7 +159,7 @@ namespace egret {
  * @private
  */
 egret["testDeviceType1"] = function () {
-    if (!window["navigator"]) {
+    if (!window["navigator"] || !navigator) {
         return true;
     }
     let ua = navigator.userAgent.toLowerCase();

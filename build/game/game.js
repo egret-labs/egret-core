@@ -4396,7 +4396,7 @@ var egret;
  * @private
  */
 egret["testDeviceType1"] = function () {
-    if (!window["navigator"]) {
+    if (!window["navigator"] || !navigator) {
         return true;
     }
     var ua = navigator.userAgent.toLowerCase();
