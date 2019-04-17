@@ -53,7 +53,7 @@ export class OppogamePlugin implements plugins.Command {
         //同步 index.html 配置到 game.js
         const gameJSPath = path.join(pluginContext.outputDir, "main.js");
         if(!fs.existsSync(gameJSPath)) {
-            console.log(`${gameJSPath}不存在，请先使用 Launcher 发布Oppo快游戏`);
+            console.log(`${gameJSPath}不存在，请先使用 Launcher 发布 Oppo 小游戏`);
             return;
         }
         let gameJSContent = fs.readFileSync(gameJSPath, { encoding: "utf8" });

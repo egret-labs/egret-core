@@ -126,6 +126,13 @@ namespace egret {
          * @language zh_CN
          */
         export const QGAME = "qgame";
+        /**
+         * 运行在 Oppo 小游戏上
+         * @version Egret 5.2.14
+         * @platform All
+         * @language zh_CN
+         */
+        export const OPPOGAME = "oppogame";
 
     }
 
