@@ -29,6 +29,8 @@
 
 namespace egret.web {
 
+    let compressedTextureNotSupportedLog = false;
+
     /**
      * 创建一个canvas。
      */
@@ -453,14 +455,18 @@ namespace egret.web {
                     }
                 }
                 if (!checkCurrentSupportedCompressedTextureTypes) {
-                    // egret.log('internalFormat = ' + internalFormat + ':' + ('0x' + internalFormat.toString(16)) + ', the current hardware does not support the corresponding compression format.');
-                    // for (let i = 0, length = currentSupportedCompressedTextureTypes.length; i < length; ++i) {
-                    //     const ss = currentSupportedCompressedTextureTypes[i];
-                    //     egret.log('type = ' + ss.type + ', formats = ' + ss.formats);
-                    // }
+                    if (!compressedTextureNotSupportedLog) {
+                        compressedTextureNotSupportedLog = true;
+                        egret.log('internalFormat = ' + internalFormat + ':' + ('0x' + internalFormat.toString(16)) + ', the current hardware does not support the corresponding compression format.');
+                        for (let i = 0, length = currentSupportedCompressedTextureTypes.length; i < length; ++i) {
+                            const ss = currentSupportedCompressedTextureTypes[i];
+                            egret.log('type = ' + ss.type + ', formats = ' + ss.formats);
+                        }
+                    }
                     return null;
                 }
             }
+            //return null;
             //////
             const gl: any = this.context;
             const texture = gl.createTexture();
@@ -841,7 +847,7 @@ namespace egret.web {
                             program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.glow_frag, "glow");
                         }
                     } else {
-                        program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.texture_frag, "texture");
+                        program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.texture_etc_frag, "texture");
                     }
 
                     this.activeProgram(gl, program);
