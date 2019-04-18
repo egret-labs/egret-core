@@ -8276,6 +8276,14 @@ var egret;
 //////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
+    //refactor
+    var BitmapCompressedData = (function () {
+        function BitmapCompressedData() {
+        }
+        return BitmapCompressedData;
+    }());
+    egret.BitmapCompressedData = BitmapCompressedData;
+    __reflect(BitmapCompressedData.prototype, "egret.BitmapCompressedData");
     /**
      * A BitmapData object contains an array of pixel data. This data can represent either a fully opaque bitmap or a
      * transparent bitmap that contains alpha channel data. Either type of BitmapData object is stored as a buffer of 32-bit
@@ -8334,14 +8342,27 @@ var egret;
              * webgl纹理生成后，是否删掉原始图像数据
              */
             _this.$deleteSource = true;
+            /**
+             * @private
+             *
+             */
+            _this.bitmapCompressedData = [];
             if (egret.nativeRender) {
                 var nativeBitmapData = new egret_native.NativeBitmapData();
                 nativeBitmapData.$init();
                 _this.$nativeBitmapData = nativeBitmapData;
             }
             _this.source = source;
-            _this.width = source.width;
-            _this.height = source.height;
+            // this.width = source.width;
+            // this.height = source.height;
+            _this.source = source;
+            if (_this.source && _this.source instanceof HTMLImageElement) {
+                _this.width = source.width;
+                _this.height = source.height;
+            }
+            else {
+                ///compressed texture?
+            }
             return _this;
         }
         Object.defineProperty(BitmapData.prototype, "source", {

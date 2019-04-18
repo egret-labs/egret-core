@@ -5351,6 +5351,14 @@ declare namespace egret {
     }
 }
 declare namespace egret {
+    class BitmapCompressedData {
+        glInternalFormat: number;
+        width: number;
+        height: number;
+        byteArray: Uint8Array;
+        face: number;
+        level: number;
+    }
     /**
      * A BitmapData object contains an array of pixel data. This data can represent either a fully opaque bitmap or a
      * transparent bitmap that contains alpha channel data. Either type of BitmapData object is stored as a buffer of 32-bit
@@ -5459,6 +5467,11 @@ declare namespace egret {
          * id
          */
         $nativeBitmapData: egret_native.NativeBitmapData;
+        /**
+         * @private
+         *
+         */
+        readonly bitmapCompressedData: BitmapCompressedData[];
         /**
          * Initializes a BitmapData object to refer to the specified source object.
          * @param source The source object being referenced.

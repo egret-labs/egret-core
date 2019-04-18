@@ -5694,6 +5694,8 @@ var egret;
                 this.projectionX = NaN;
                 this.projectionY = NaN;
                 this.contextLost = false;
+                //refactor
+                this.currentSupportedCompressedTextureTypes = [];
                 this.$scissorState = false;
                 this.vertSize = 5;
                 this.surface = createCanvas(width, height);
@@ -5818,6 +5820,38 @@ var egret;
                 }
                 this.onResize();
             };
+            WebGLRenderContext.prototype.getSupportedCompressedTextureTypes = function (gl, compressedTextureType) {
+                var result = [];
+                for (var i = 0, length_3 = compressedTextureType.length; i < length_3; ++i) {
+                    var targetCompressedTextureType = compressedTextureType[i];
+                    var rs = this.getSupportedCompressedTextureType(gl, targetCompressedTextureType);
+                    if (rs) {
+                        result.push(rs);
+                    }
+                }
+                return result;
+            };
+            WebGLRenderContext.prototype.getSupportedCompressedTextureType = function (gl, targetCompressedTextureType) {
+                var availableExtensions = gl.getSupportedExtensions();
+                for (var i = 0; i < availableExtensions.length; ++i) {
+                    if (availableExtensions[i].indexOf(targetCompressedTextureType) !== -1) {
+                        var extension = gl.getExtension(availableExtensions[i]);
+                        var formats = gl.getParameter(gl.COMPRESSED_TEXTURE_FORMATS);
+                        if (true) {
+                            egret.log(formats);
+                            for (var key in extension) {
+                                egret.log(key, extension[key], '0x' + extension[key].toString(16));
+                            }
+                        }
+                        return {
+                            type: targetCompressedTextureType,
+                            extension: extension,
+                            formats: formats
+                        };
+                    }
+                }
+                return null;
+            };
             WebGLRenderContext.prototype.initWebGL = function () {
                 this.onResize();
                 this.surface.addEventListener("webglcontextlost", this.handleContextLost.bind(this), false);
@@ -5825,6 +5859,8 @@ var egret;
                 this.getWebGLContext();
                 var gl = this.context;
                 this.$maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+                //refactor
+                this.currentSupportedCompressedTextureTypes = this.getSupportedCompressedTextureTypes(this.context, ['s3tc', 'etc1', 'pvrtc']);
             };
             WebGLRenderContext.prototype.handleContextLost = function () {
                 this.contextLost = true;
@@ -5925,8 +5961,54 @@ var egret;
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
                 return texture;
             };
+            // private createTextureFromCompressedData(data, width, height, levels, internalFormat): WebGLTexture {
+            //     return null;
+            // }
             WebGLRenderContext.prototype.createTextureFromCompressedData = function (data, width, height, levels, internalFormat) {
-                return null;
+                ////
+                if (true) {
+                    var checkCurrentSupportedCompressedTextureTypes = false;
+                    var currentSupportedCompressedTextureTypes = this.currentSupportedCompressedTextureTypes;
+                    for (var i = 0, length_4 = currentSupportedCompressedTextureTypes.length; i < length_4; ++i) {
+                        var ss = currentSupportedCompressedTextureTypes[i];
+                        var formats = ss.formats;
+                        for (var j = 0, length_5 = formats.length; j < length_5; ++j) {
+                            if (formats[j] === internalFormat) {
+                                checkCurrentSupportedCompressedTextureTypes = true;
+                                break;
+                            }
+                        }
+                        if (checkCurrentSupportedCompressedTextureTypes) {
+                            break;
+                        }
+                    }
+                    if (!checkCurrentSupportedCompressedTextureTypes) {
+                        // egret.log('internalFormat = ' + internalFormat + ':' + ('0x' + internalFormat.toString(16)) + ', the current hardware does not support the corresponding compression format.');
+                        // for (let i = 0, length = currentSupportedCompressedTextureTypes.length; i < length; ++i) {
+                        //     const ss = currentSupportedCompressedTextureTypes[i];
+                        //     egret.log('type = ' + ss.type + ', formats = ' + ss.formats);
+                        // }
+                        return null;
+                    }
+                }
+                //////
+                var gl = this.context;
+                var texture = gl.createTexture();
+                if (!texture) {
+                    //先创建texture失败,然后lost事件才发出来..
+                    this.contextLost = true;
+                    return;
+                }
+                texture.glContext = gl;
+                gl.bindTexture(gl.TEXTURE_2D, texture);
+                //gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
+                //gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, bitmapData);
+                gl.compressedTexImage2D(gl.TEXTURE_2D, levels, internalFormat, width, height, 0, data);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+                return texture;
             };
             /**
              * 更新材质的bitmapData
@@ -5942,11 +6024,14 @@ var egret;
              */
             WebGLRenderContext.prototype.getWebGLTexture = function (bitmapData) {
                 if (!bitmapData.webGLTexture) {
-                    if (bitmapData.format == "image") {
+                    if (bitmapData.format == "image" && bitmapData.bitmapCompressedData.length === 0) {
                         bitmapData.webGLTexture = this.createTexture(bitmapData.source);
                     }
-                    else if (bitmapData.format == "pvr") {
-                        bitmapData.webGLTexture = this.createTextureFromCompressedData(bitmapData.source.pvrtcData, bitmapData.width, bitmapData.height, bitmapData.source.mipmapsCount, bitmapData.source.format);
+                    else if (bitmapData.format == "pvr" || bitmapData.bitmapCompressedData.length > 0) {
+                        var bitmapCompressedData = bitmapData.bitmapCompressedData[0];
+                        bitmapData.webGLTexture = this.createTextureFromCompressedData(bitmapCompressedData.byteArray, bitmapCompressedData.width, bitmapCompressedData.height, bitmapCompressedData.level, bitmapCompressedData.glInternalFormat
+                        //bitmapData.source.pvrtcData, bitmapData.width, bitmapData.height, bitmapData.source.mipmapsCount, bitmapData.source.format
+                        );
                     }
                     if (bitmapData.$deleteSource && bitmapData.webGLTexture) {
                         bitmapData.source = null;
@@ -6991,8 +7076,8 @@ var egret;
                     if (renderBufferPool.length > 6) {
                         renderBufferPool.length = 6;
                     }
-                    var length_3 = renderBufferPool.length;
-                    for (var i = 0; i < length_3; i++) {
+                    var length_6 = renderBufferPool.length;
+                    for (var i = 0; i < length_6; i++) {
                         renderBufferPool[i].resize(0, 0);
                     }
                 }
@@ -7055,8 +7140,8 @@ var egret;
                 }
                 var children = displayObject.$children;
                 if (children) {
-                    var length_4 = children.length;
-                    for (var i = 0; i < length_4; i++) {
+                    var length_7 = children.length;
+                    for (var i = 0; i < length_7; i++) {
                         var child = children[i];
                         var offsetX2 = void 0;
                         var offsetY2 = void 0;
@@ -7503,8 +7588,8 @@ var egret;
                 }
                 var children = displayObject.$children;
                 if (children) {
-                    var length_5 = children.length;
-                    for (var i = 0; i < length_5; i++) {
+                    var length_8 = children.length;
+                    for (var i = 0; i < length_8; i++) {
                         var child = children[i];
                         switch (child.$renderMode) {
                             case 1 /* NONE */:

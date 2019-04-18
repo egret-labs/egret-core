@@ -29,6 +29,16 @@
 
 namespace egret {
 
+    //refactor
+    export class BitmapCompressedData {
+        public glInternalFormat: number;
+        public width: number;
+        public height: number;
+        public byteArray: Uint8Array;
+        public face: number;
+        public level: number;
+    }
+
     /**
      * A BitmapData object contains an array of pixel data. This data can represent either a fully opaque bitmap or a
      * transparent bitmap that contains alpha channel data. Either type of BitmapData object is stored as a buffer of 32-bit
@@ -144,6 +154,12 @@ namespace egret {
         public $nativeBitmapData: egret_native.NativeBitmapData;
 
         /**
+         * @private
+         * 
+         */
+        public readonly bitmapCompressedData: BitmapCompressedData[] = [];
+
+        /**
          * Initializes a BitmapData object to refer to the specified source object.
          * @param source The source object being referenced.
          * @version Egret 2.4
@@ -165,8 +181,16 @@ namespace egret {
                 this.$nativeBitmapData = nativeBitmapData;
             }
             this.source = source;
-            this.width = source.width;
-            this.height = source.height;
+            // this.width = source.width;
+            // this.height = source.height;
+            this.source = source;
+            if (this.source && this.source instanceof HTMLImageElement) {
+                this.width = source.width;
+                this.height = source.height;
+            }
+            else {
+                ///compressed texture?
+            }
         }
 
         public get source(): any {
