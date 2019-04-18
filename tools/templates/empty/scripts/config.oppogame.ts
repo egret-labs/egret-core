@@ -3,7 +3,7 @@
 
 import * as path from 'path';
 import { UglifyPlugin, CompilePlugin, ManifestPlugin, ExmlPlugin, ResSplitPlugin, CleanPlugin } from 'built-in';
-import { OppogamePlugin } from './oppo/oppogame';
+import { OppogamePlugin } from './oppogame/oppogame';
 import * as defaultConfig from './config';
 
 const config: ResourceManagerConfig = {
