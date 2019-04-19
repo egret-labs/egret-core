@@ -9271,11 +9271,11 @@ declare namespace egret {
      */
     class KTXContainer {
         /** contents of the KTX container file */ arrayBuffer: any;
-        private static HEADER_LEN;
-        private static COMPRESSED_2D;
-        private static COMPRESSED_3D;
-        private static TEX_2D;
-        private static TEX_3D;
+        private static readonly HEADER_LEN;
+        private static readonly COMPRESSED_2D;
+        private static readonly COMPRESSED_3D;
+        private static readonly TEX_2D;
+        private static readonly TEX_3D;
         /**
          * Gets the openGL type
          */

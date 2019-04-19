@@ -34,13 +34,14 @@ namespace egret {
      * for file layout see https://www.khronos.org/opengles/sdk/tools/KTX/file_format_spec/
      */
     export class KTXContainer {
-        private static HEADER_LEN = 12 + (13 * 4); // identifier + header elements (not including key value meta-data pairs)
+
+        private static readonly HEADER_LEN = 12 + (13 * 4); // identifier + header elements (not including key value meta-data pairs)
 
         // load types
-        private static COMPRESSED_2D = 0; // uses a gl.compressedTexImage2D()
-        private static COMPRESSED_3D = 1; // uses a gl.compressedTexImage3D()
-        private static TEX_2D = 2; // uses a gl.texImage2D()
-        private static TEX_3D = 3; // uses a gl.texImage3D()
+        private static readonly COMPRESSED_2D = 0; // uses a gl.compressedTexImage2D()
+        private static readonly COMPRESSED_3D = 1; // uses a gl.compressedTexImage3D()
+        private static readonly TEX_2D = 2; // uses a gl.texImage2D()
+        private static readonly TEX_3D = 3; // uses a gl.texImage3D()
 
         // elements of the header
         /**
@@ -107,7 +108,7 @@ namespace egret {
          * @param threeDExpected provision for indicating that data should be a 3D texture, not implemented
          * @param textureArrayExpected provision for indicating that data should be a texture array, not implemented
          */
-        public constructor(/** contents of the KTX container file */public arrayBuffer: any, facesExpected: number, threeDExpected?: boolean, textureArrayExpected?: boolean) {
+        constructor(/** contents of the KTX container file */public arrayBuffer: any, facesExpected: number, threeDExpected?: boolean, textureArrayExpected?: boolean) {
             // Test that it is a ktx formatted file, based on the first 12 bytes, character representation is:
             // '�', 'K', 'T', 'X', ' ', '1', '1', '�', '\r', '\n', '\x1A', '\n'
             // 0xAB, 0x4B, 0x54, 0x58, 0x20, 0x31, 0x31, 0xBB, 0x0D, 0x0A, 0x1A, 0x0A
