@@ -59,6 +59,9 @@ namespace egret.web {
 
         public static antialias: boolean;
 
+        //
+        public _emptyWhiteTexture: WebGLTexture = null;
+
         /**
          * 渲染上下文
          */
@@ -407,7 +410,7 @@ namespace egret.web {
         /**
          * 创建一个WebGLTexture
          */
-        public createTexture(bitmapData: BitmapData): WebGLTexture {
+        public createTexture(bitmapData: BitmapData | HTMLCanvasElement): WebGLTexture {
             let gl: any = this.context;
 
             let texture = gl.createTexture();
@@ -433,10 +436,10 @@ namespace egret.web {
             return texture;
         }
 
-        // private createTextureFromCompressedData(data, width, height, levels, internalFormat): WebGLTexture {
+        // private createCompressedTexture(data, width, height, levels, internalFormat): WebGLTexture {
         //     return null;
         // }
-        private createTextureFromCompressedData(data: Uint8Array, width: number, height: number, levels: number, internalFormat: number): WebGLTexture {
+        private createCompressedTexture(data: Uint8Array, width: number, height: number, levels: number, internalFormat: number): WebGLTexture {
             ////
             if (DEBUG) {
                 let checkCurrentSupportedCompressedTextureTypes = false;
@@ -463,10 +466,10 @@ namespace egret.web {
                             egret.log('type = ' + ss.type + ', formats = ' + ss.formats);
                         }
                     }
+                    return this.getEmptyWhiteTexture();
                     return null;
                 }
             }
-            //return null;
             //////
             const gl: any = this.context;
             const texture = gl.createTexture();
@@ -477,13 +480,14 @@ namespace egret.web {
             }
             texture.glContext = gl;
             gl.bindTexture(gl.TEXTURE_2D, texture);
-            //gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
+            gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
             //gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, bitmapData);
             gl.compressedTexImage2D(gl.TEXTURE_2D, levels, internalFormat, width, height, 0, data);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+            gl.bindTexture(gl.TEXTURE_2D, null);
             return texture;
         }
 
@@ -500,17 +504,29 @@ namespace egret.web {
          * 获取一个WebGLTexture
          * 如果有缓存的texture返回缓存的texture，如果没有则创建并缓存texture
          */
+        public getEmptyWhiteTexture(): WebGLTexture {
+            if (!this._emptyWhiteTexture){
+                const size = 16;
+                const canvas = createCanvas(size, size);
+                const context = canvas.getContext('2d');
+                context.fillStyle = 'white';
+                context.fillRect(0, 0, size, size);
+                this._emptyWhiteTexture = this.createTexture(canvas);
+            }
+            return this._emptyWhiteTexture;
+        }
+
         public getWebGLTexture(bitmapData: BitmapData): WebGLTexture {
             if (!bitmapData.webGLTexture) {
                 if (bitmapData.format == "image" && !bitmapData.hasCompressed2d()) {
                     bitmapData.webGLTexture = this.createTexture(bitmapData.source);
                 }
                 // else if (bitmapData.format == "pvr") {//todo 需要支持其他格式
-                //     bitmapData.webGLTexture = this.createTextureFromCompressedData(bitmapData.source.pvrtcData, bitmapData.width, bitmapData.height, bitmapData.source.mipmapsCount, bitmapData.source.format);
+                //     bitmapData.webGLTexture = this.createCompressedTexture(bitmapData.source.pvrtcData, bitmapData.width, bitmapData.height, bitmapData.source.mipmapsCount, bitmapData.source.format);
                 // }
                 else if (bitmapData.format == "pvr" || bitmapData.hasCompressed2d()) {//todo 需要支持其他格式
                     const compressedData = bitmapData.getCompressed2dTextureData();//bitmapCompressedData[0];
-                    bitmapData.webGLTexture = this.createTextureFromCompressedData(
+                    bitmapData.webGLTexture = this.createCompressedTexture(
                         compressedData!.byteArray,
                         compressedData!.width,
                         compressedData!.height,

@@ -14973,7 +14973,7 @@ declare namespace egret {
          * 创建一个WebGLTexture
          */
         createTexture(bitmapData: BitmapData): WebGLTexture;
-        private createTextureFromCompressedData(data, width, height, levels, internalFormat);
+        private createCompressedTexture(data, width, height, levels, internalFormat);
         /**
          * 更新材质的bitmapData
          */

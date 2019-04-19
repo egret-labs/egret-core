@@ -5696,6 +5696,8 @@ var egret;
          */
         var WebGLRenderContext = (function () {
             function WebGLRenderContext(width, height) {
+                //
+                this._emptyWhiteTexture = null;
                 this.glID = null;
                 this.projectionX = NaN;
                 this.projectionY = NaN;
@@ -5967,10 +5969,10 @@ var egret;
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
                 return texture;
             };
-            // private createTextureFromCompressedData(data, width, height, levels, internalFormat): WebGLTexture {
+            // private createCompressedTexture(data, width, height, levels, internalFormat): WebGLTexture {
             //     return null;
             // }
-            WebGLRenderContext.prototype.createTextureFromCompressedData = function (data, width, height, levels, internalFormat) {
+            WebGLRenderContext.prototype.createCompressedTexture = function (data, width, height, levels, internalFormat) {
                 ////
                 if (true) {
                     var checkCurrentSupportedCompressedTextureTypes = false;
@@ -5997,10 +5999,10 @@ var egret;
                                 egret.log('type = ' + ss.type + ', formats = ' + ss.formats);
                             }
                         }
+                        return this.getEmptyWhiteTexture();
                         return null;
                     }
                 }
-                //return null;
                 //////
                 var gl = this.context;
                 var texture = gl.createTexture();
@@ -6011,13 +6013,14 @@ var egret;
                 }
                 texture.glContext = gl;
                 gl.bindTexture(gl.TEXTURE_2D, texture);
-                //gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
+                gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
                 //gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, bitmapData);
                 gl.compressedTexImage2D(gl.TEXTURE_2D, levels, internalFormat, width, height, 0, data);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+                gl.bindTexture(gl.TEXTURE_2D, null);
                 return texture;
             };
             /**
@@ -6032,6 +6035,17 @@ var egret;
              * 获取一个WebGLTexture
              * 如果有缓存的texture返回缓存的texture，如果没有则创建并缓存texture
              */
+            WebGLRenderContext.prototype.getEmptyWhiteTexture = function () {
+                if (!this._emptyWhiteTexture) {
+                    var size = 16;
+                    var canvas = createCanvas(size, size);
+                    var context = canvas.getContext('2d');
+                    context.fillStyle = 'white';
+                    context.fillRect(0, 0, size, size);
+                    this._emptyWhiteTexture = this.createTexture(canvas);
+                }
+                return this._emptyWhiteTexture;
+            };
             WebGLRenderContext.prototype.getWebGLTexture = function (bitmapData) {
                 if (!bitmapData.webGLTexture) {
                     if (bitmapData.format == "image" && !bitmapData.hasCompressed2d()) {
@@ -6039,7 +6053,7 @@ var egret;
                     }
                     else if (bitmapData.format == "pvr" || bitmapData.hasCompressed2d()) {
                         var compressedData = bitmapData.getCompressed2dTextureData(); //bitmapCompressedData[0];
-                        bitmapData.webGLTexture = this.createTextureFromCompressedData(compressedData.byteArray, compressedData.width, compressedData.height, compressedData.level, compressedData.glInternalFormat
+                        bitmapData.webGLTexture = this.createCompressedTexture(compressedData.byteArray, compressedData.width, compressedData.height, compressedData.level, compressedData.glInternalFormat
                         //bitmapData.source.pvrtcData, bitmapData.width, bitmapData.height, bitmapData.source.mipmapsCount, bitmapData.source.format
                         );
                         ///
