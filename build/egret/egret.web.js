@@ -6000,7 +6000,7 @@ var egret;
                             }
                         }
                         return this.getEmptyWhiteTexture();
-                        return null;
+                        //return null;
                     }
                 }
                 //////
@@ -6345,7 +6345,15 @@ var egret;
                             }
                         }
                         else {
-                            program = web.EgretWebGLProgram.getProgram(gl, web.EgretShaderLib.default_vert, web.EgretShaderLib.texture_frag, "texture");
+                            if (data.texture['etc_alpha_mask']) {
+                                program = web.EgretWebGLProgram.getProgram(gl, web.EgretShaderLib.default_vert, web.EgretShaderLib.texture_etc_frag1, 'etc_alpha_mask');
+                                ///refactor
+                                gl.activeTexture(gl.TEXTURE1);
+                                gl.bindTexture(gl.TEXTURE_2D, data.texture['etc_alpha_mask']);
+                            }
+                            else {
+                                program = web.EgretWebGLProgram.getProgram(gl, web.EgretShaderLib.default_vert, web.EgretShaderLib.texture_frag, "texture");
+                            }
                         }
                         this.activeProgram(gl, program);
                         this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
@@ -6451,6 +6459,10 @@ var egret;
                         uniforms[key].setValue({ x: textureWidth, y: textureHeight });
                     }
                     else if (key === "uSampler") {
+                        uniforms[key].setValue(0);
+                    }
+                    else if (key === "uSamplerAlphaMask") {
+                        uniforms[key].setValue(1);
                     }
                     else {
                         var value = filter.$uniforms[key];
@@ -6468,6 +6480,7 @@ var egret;
              **/
             WebGLRenderContext.prototype.drawTextureElements = function (data, offset) {
                 var gl = this.context;
+                gl.activeTexture(gl.TEXTURE0); ///refactor
                 gl.bindTexture(gl.TEXTURE_2D, data.texture);
                 var size = data.count * 3;
                 gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
@@ -8495,6 +8508,7 @@ var egret;
             EgretShaderLib.primitive_frag = "precision lowp float;\r\nvarying vec2 vTextureCoord;\r\nvarying vec4 vColor;\r\n\r\nvoid main(void) {\r\n    gl_FragColor = vColor;\r\n}";
             EgretShaderLib.texture_frag = "precision lowp float;\r\nvarying vec2 vTextureCoord;\r\nvarying vec4 vColor;\r\nuniform sampler2D uSampler;\r\n\r\nvoid main(void) {\r\n    gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor;\r\n}";
             EgretShaderLib.texture_etc_frag = "precision lowp float;\r\nvarying vec2 vTextureCoord;\r\nvarying vec4 vColor;\r\nuniform sampler2D uSampler;\r\n\r\nvoid main(void) {\r\n   vec4 v4Color = texture2D(uSampler, vec2(0.0, 0.0) + vTextureCoord);\r\n float a = texture2D(uSampler, vec2(0.0, 0.5) + vTextureCoord).r; \r\n vec4 v4Alpha = vec4(a, a, a, a); \r\n gl_FragColor = v4Color * v4Alpha;\r\n}";
+            EgretShaderLib.texture_etc_frag1 = "precision lowp float; \r\n varying vec2 vTextureCoord; \r\n varying vec4 vColor;\r\n uniform sampler2D uSampler;\r\n  uniform sampler2D uSamplerAlphaMask; \r\n void main(void) { \r\n  vec4 v4Color = texture2D(uSampler, vTextureCoord); \r\n  vec4 vec4Alpha = texture2D(uSamplerAlphaMask, vTextureCoord);\r\n gl_FragColor = v4Color * vec4(vec4Alpha.r) * vColor;\r\n}";
             return EgretShaderLib;
         }());
         web.EgretShaderLib = EgretShaderLib;

@@ -12,5 +12,10 @@ namespace egret.web {
 	
 	
 		public static readonly texture_etc_frag: string = "precision lowp float;\r\nvarying vec2 vTextureCoord;\r\nvarying vec4 vColor;\r\nuniform sampler2D uSampler;\r\n\r\nvoid main(void) {\r\n   vec4 v4Color = texture2D(uSampler, vec2(0.0, 0.0) + vTextureCoord);\r\n float a = texture2D(uSampler, vec2(0.0, 0.5) + vTextureCoord).r; \r\n vec4 v4Alpha = vec4(a, a, a, a); \r\n gl_FragColor = v4Color * v4Alpha;\r\n}";
+	
+	
+	
+		public static texture_etc_frag1: string = "precision lowp float; \r\n varying vec2 vTextureCoord; \r\n varying vec4 vColor;\r\n uniform sampler2D uSampler;\r\n  uniform sampler2D uSamplerAlphaMask; \r\n void main(void) { \r\n  vec4 v4Color = texture2D(uSampler, vTextureCoord); \r\n  vec4 vec4Alpha = texture2D(uSamplerAlphaMask, vTextureCoord);\r\n gl_FragColor = v4Color * vec4(vec4Alpha.r) * vColor;\r\n}";
+
 	}
 };

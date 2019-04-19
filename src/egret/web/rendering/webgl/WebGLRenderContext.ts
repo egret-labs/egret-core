@@ -467,7 +467,7 @@ namespace egret.web {
                         }
                     }
                     return this.getEmptyWhiteTexture();
-                    return null;
+                    //return null;
                 }
             }
             //////
@@ -873,7 +873,15 @@ namespace egret.web {
                             program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.glow_frag, "glow");
                         }
                     } else {
-                        program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.texture_frag, "texture");
+                        if (data.texture['etc_alpha_mask']) {
+                            program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.texture_etc_frag1, 'etc_alpha_mask');
+                            ///refactor
+                            gl.activeTexture(gl.TEXTURE1);
+                            gl.bindTexture(gl.TEXTURE_2D, data.texture['etc_alpha_mask']);
+                        }
+                        else {
+                            program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.texture_frag, "texture");
+                        }
                     }
 
                     this.activeProgram(gl, program);
@@ -990,8 +998,12 @@ namespace egret.web {
                 } else if (key === "uTextureSize") {
                     uniforms[key].setValue({ x: textureWidth, y: textureHeight });
                 } else if (key === "uSampler") {
-
-                } else {
+                    uniforms[key].setValue(0);
+                } 
+                else if (key === "uSamplerAlphaMask") {
+                    uniforms[key].setValue(1);
+                }
+                else {
                     let value = filter.$uniforms[key];
                     if (value !== undefined) {
                         uniforms[key].setValue(value);
@@ -1007,6 +1019,7 @@ namespace egret.web {
          **/
         private drawTextureElements(data: any, offset: number): number {
             let gl: any = this.context;
+            gl.activeTexture(gl.TEXTURE0); ///refactor
             gl.bindTexture(gl.TEXTURE_2D, data.texture);
             let size = data.count * 3;
             gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
