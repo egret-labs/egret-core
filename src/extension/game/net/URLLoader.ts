@@ -291,7 +291,7 @@ namespace egret {
 
                 window.setTimeout(function () {
                     loader.dispatchEventWith(Event.COMPLETE);
-                }, self);
+                }, 0);
             }
 
             function removeListeners(): void {
