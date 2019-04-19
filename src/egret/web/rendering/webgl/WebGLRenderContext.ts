@@ -874,7 +874,7 @@ namespace egret.web {
                         }
                     } else {
                         if (data.texture['etc_alpha_mask']) {
-                            program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.texture_etc_frag1, 'etc_alpha_mask');
+                            program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.texture_etc_alphamask_frag, 'etc_alpha_mask');
                             ///refactor
                             gl.activeTexture(gl.TEXTURE1);
                             gl.bindTexture(gl.TEXTURE_2D, data.texture['etc_alpha_mask']);
