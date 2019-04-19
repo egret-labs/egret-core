@@ -5187,7 +5187,7 @@ var egret;
                     data.count = 0;
                     data.texture = null;
                     data.filter = null;
-                    data.uv = null;
+                    //data.uv = null;
                     data.value = "";
                     data.buffer = null;
                     data.width = 0;

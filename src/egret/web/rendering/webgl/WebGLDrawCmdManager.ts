@@ -49,11 +49,11 @@ namespace egret.web {
     export interface IDrawData {
         type: number,
         count: number,
-        texture: any,
-        filter : any,
-        uv: any,
+        texture: WebGLTexture,
+        filter : Filter,
+        //uv: any,
         value: string,
-        buffer: any,
+        buffer: WebGLRenderBuffer,
         width: number,
         height: number,
         textureWidth: number,
@@ -61,18 +61,6 @@ namespace egret.web {
         smoothing: boolean,
         x: number,
         y: number,
-        ktx_etc: boolean,
-        /* 
-        **** create atlas = 0
-        Create a combined image containing ETC-compressed alpha
-        channel data following the ETC-compressed colour data. The
-        height of the image is double that of the original image.
-
-        **** create separate compressed image = 1
-        Create a separate ETC-compressed image containing the alpha
-        channel
-        */
-        etc_alphahanding: 0,  
     }
 
     /**
@@ -308,7 +296,7 @@ namespace egret.web {
                 data.count = 0;
                 data.texture = null;
                 data.filter = null;
-                data.uv = null;
+                //data.uv = null;
                 data.value = "";
                 data.buffer = null;
                 data.width = 0;
