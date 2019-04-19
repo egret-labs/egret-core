@@ -5351,7 +5351,7 @@ declare namespace egret {
     }
 }
 declare namespace egret {
-    class BitmapCompressedData {
+    class CompressedTextureData {
         glInternalFormat: number;
         width: number;
         height: number;
@@ -5471,7 +5471,9 @@ declare namespace egret {
          * @private
          *
          */
-        readonly bitmapCompressedData: BitmapCompressedData[];
+        readonly compressedTextureData: Array<Array<CompressedTextureData>>;
+        debugCompressedTextureURL: string;
+        etcAlphaMask: BitmapData;
         /**
          * Initializes a BitmapData object to refer to the specified source object.
          * @param source The source object being referenced.
@@ -5496,6 +5498,10 @@ declare namespace egret {
         static $removeDisplayObject(displayObject: DisplayObject, bitmapData: BitmapData): void;
         static $invalidate(bitmapData: BitmapData): void;
         static $dispose(bitmapData: BitmapData): void;
+        private _getCompressedTextureData(level, face);
+        getCompressed2dTextureData(): CompressedTextureData;
+        hasCompressed2d(): boolean;
+        clearCompressedTextureData(): void;
     }
 }
 declare namespace egret {

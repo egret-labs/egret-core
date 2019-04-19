@@ -30,7 +30,7 @@
 namespace egret {
 
     //refactor
-    export class BitmapCompressedData {
+    export class CompressedTextureData {
         public glInternalFormat: number;
         public width: number;
         public height: number;
@@ -157,7 +157,9 @@ namespace egret {
          * @private
          * 
          */
-        public readonly bitmapCompressedData: BitmapCompressedData[] = [];
+        public readonly compressedTextureData: Array<Array<CompressedTextureData>> = [];
+        public debugCompressedTextureURL: string = '';
+        public etcAlphaMask: BitmapData = null;
 
         /**
          * Initializes a BitmapData object to refer to the specified source object.
@@ -248,6 +250,14 @@ namespace egret {
                 this.source.dispose();
             }
             this.source = null;
+
+            ///dispose compressed texture info
+            //this.bitmapCompressedData.length = 0;
+            this.clearCompressedTextureData();
+            this.debugCompressedTextureURL = '';
+            this.etcAlphaMask = null;
+            ///
+            
             if (egret.nativeRender) {
                 egret_native.NativeDisplayObject.disposeNativeBitmapData(this.$nativeBitmapData);
             }
@@ -353,6 +363,26 @@ namespace egret {
                 }
             }
             delete BitmapData._displayList[hashCode];
+        }
+
+        private _getCompressedTextureData(level: number, face: number): CompressedTextureData {
+            if (DEBUG) {
+                //level face is valid?
+            }
+            const levelData = this.compressedTextureData[level];
+            return levelData ? levelData[face] : null;
+        }
+
+        public getCompressed2dTextureData(): CompressedTextureData {
+            return this._getCompressedTextureData(0, 0);
+        }
+
+        public hasCompressed2d(): boolean {
+            return !!this.getCompressed2dTextureData();
+        }
+        
+        public clearCompressedTextureData(): void {
+            this.compressedTextureData.length = 0;
         }
     }
 }

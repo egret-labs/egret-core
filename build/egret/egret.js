@@ -8277,13 +8277,13 @@ var egret;
 var egret;
 (function (egret) {
     //refactor
-    var BitmapCompressedData = (function () {
-        function BitmapCompressedData() {
+    var CompressedTextureData = (function () {
+        function CompressedTextureData() {
         }
-        return BitmapCompressedData;
+        return CompressedTextureData;
     }());
-    egret.BitmapCompressedData = BitmapCompressedData;
-    __reflect(BitmapCompressedData.prototype, "egret.BitmapCompressedData");
+    egret.CompressedTextureData = CompressedTextureData;
+    __reflect(CompressedTextureData.prototype, "egret.CompressedTextureData");
     /**
      * A BitmapData object contains an array of pixel data. This data can represent either a fully opaque bitmap or a
      * transparent bitmap that contains alpha channel data. Either type of BitmapData object is stored as a buffer of 32-bit
@@ -8346,7 +8346,9 @@ var egret;
              * @private
              *
              */
-            _this.bitmapCompressedData = [];
+            _this.compressedTextureData = [];
+            _this.debugCompressedTextureURL = '';
+            _this.etcAlphaMask = null;
             if (egret.nativeRender) {
                 var nativeBitmapData = new egret_native.NativeBitmapData();
                 nativeBitmapData.$init();
@@ -8421,6 +8423,12 @@ var egret;
                 this.source.dispose();
             }
             this.source = null;
+            ///dispose compressed texture info
+            //this.bitmapCompressedData.length = 0;
+            this.clearCompressedTextureData();
+            this.debugCompressedTextureURL = '';
+            this.etcAlphaMask = null;
+            ///
             if (egret.nativeRender) {
                 egret_native.NativeDisplayObject.disposeNativeBitmapData(this.$nativeBitmapData);
             }
@@ -8520,6 +8528,22 @@ var egret;
                 }
             }
             delete BitmapData._displayList[hashCode];
+        };
+        BitmapData.prototype._getCompressedTextureData = function (level, face) {
+            if (true) {
+                //level face is valid?
+            }
+            var levelData = this.compressedTextureData[level];
+            return levelData ? levelData[face] : null;
+        };
+        BitmapData.prototype.getCompressed2dTextureData = function () {
+            return this._getCompressedTextureData(0, 0);
+        };
+        BitmapData.prototype.hasCompressed2d = function () {
+            return !!this.getCompressed2dTextureData();
+        };
+        BitmapData.prototype.clearCompressedTextureData = function () {
+            this.compressedTextureData.length = 0;
         };
         BitmapData._displayList = egret.createMap();
         return BitmapData;

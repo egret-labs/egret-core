@@ -502,25 +502,35 @@ namespace egret.web {
          */
         public getWebGLTexture(bitmapData: BitmapData): WebGLTexture {
             if (!bitmapData.webGLTexture) {
-                if (bitmapData.format == "image" && bitmapData.bitmapCompressedData.length === 0) {
+                if (bitmapData.format == "image" && !bitmapData.hasCompressed2d()) {
                     bitmapData.webGLTexture = this.createTexture(bitmapData.source);
                 }
                 // else if (bitmapData.format == "pvr") {//todo 需要支持其他格式
                 //     bitmapData.webGLTexture = this.createTextureFromCompressedData(bitmapData.source.pvrtcData, bitmapData.width, bitmapData.height, bitmapData.source.mipmapsCount, bitmapData.source.format);
                 // }
-                else if (bitmapData.format == "pvr" || bitmapData.bitmapCompressedData.length > 0) {//todo 需要支持其他格式
-                    const bitmapCompressedData = bitmapData.bitmapCompressedData[0];
+                else if (bitmapData.format == "pvr" || bitmapData.hasCompressed2d()) {//todo 需要支持其他格式
+                    const compressedData = bitmapData.getCompressed2dTextureData();//bitmapCompressedData[0];
                     bitmapData.webGLTexture = this.createTextureFromCompressedData(
-                        bitmapCompressedData.byteArray,
-                        bitmapCompressedData.width,
-                        bitmapCompressedData.height,
-                        bitmapCompressedData.level,
-                        bitmapCompressedData.glInternalFormat
+                        compressedData!.byteArray,
+                        compressedData!.width,
+                        compressedData!.height,
+                        compressedData!.level,
+                        compressedData!.glInternalFormat
                         //bitmapData.source.pvrtcData, bitmapData.width, bitmapData.height, bitmapData.source.mipmapsCount, bitmapData.source.format
                     );
+                    ///
+                    const etcAlphaMask = bitmapData.etcAlphaMask;
+                    if (etcAlphaMask) {
+                        const maskTexture = this.getWebGLTexture(etcAlphaMask);
+                        if (maskTexture) {
+                            bitmapData.webGLTexture['etc_alpha_mask'] = maskTexture;
+                        }
+                    }
                 }
                 if (bitmapData.$deleteSource && bitmapData.webGLTexture) {
                     bitmapData.source = null;
+                    //bitmapData.bitmapCompressedData.length = 0;
+                    bitmapData.clearCompressedTextureData();
                 }
                 if (bitmapData.webGLTexture) {
                     //todo 默认值
@@ -847,7 +857,7 @@ namespace egret.web {
                             program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.glow_frag, "glow");
                         }
                     } else {
-                        program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.texture_etc_frag, "texture");
+                        program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.texture_frag, "texture");
                     }
 
                     this.activeProgram(gl, program);
