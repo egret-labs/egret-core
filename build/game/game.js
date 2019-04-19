@@ -2848,7 +2848,7 @@ var egret;
                 loader.data = texture;
                 window.setTimeout(function () {
                     loader.dispatchEventWith(egret.Event.COMPLETE);
-                }, self);
+                }, 0);
             }
             function removeListeners() {
                 imageLoader.removeEventListener(egret.Event.COMPLETE, onLoadComplete, self);
