@@ -107,13 +107,11 @@ namespace egret {
          * @param threeDExpected provision for indicating that data should be a 3D texture, not implemented
          * @param textureArrayExpected provision for indicating that data should be a texture array, not implemented
          */
-        public constructor(
-            /** contents of the KTX container file */
-            public arrayBuffer: any, facesExpected: number, threeDExpected?: boolean, textureArrayExpected?: boolean) {
+        public constructor(/** contents of the KTX container file */public arrayBuffer: any, facesExpected: number, threeDExpected?: boolean, textureArrayExpected?: boolean) {
             // Test that it is a ktx formatted file, based on the first 12 bytes, character representation is:
             // '�', 'K', 'T', 'X', ' ', '1', '1', '�', '\r', '\n', '\x1A', '\n'
             // 0xAB, 0x4B, 0x54, 0x58, 0x20, 0x31, 0x31, 0xBB, 0x0D, 0x0A, 0x1A, 0x0A
-            var identifier = new Uint8Array(this.arrayBuffer, 0, 12);
+            const identifier = new Uint8Array(this.arrayBuffer, 0, 12);
             if (identifier[0] !== 0xAB || identifier[1] !== 0x4B || identifier[2] !== 0x54 || identifier[3] !== 0x58 || identifier[4] !== 0x20 || identifier[5] !== 0x31 ||
                 identifier[6] !== 0x31 || identifier[7] !== 0xBB || identifier[8] !== 0x0D || identifier[9] !== 0x0A || identifier[10] !== 0x1A || identifier[11] !== 0x0A) {
                 this.isInvalid = true;
@@ -123,10 +121,10 @@ namespace egret {
             }
 
             // load the reset of the header in native 32 bit uint
-            var dataSize = Uint32Array.BYTES_PER_ELEMENT;
-            var headerDataView = new DataView(this.arrayBuffer, 12, 13 * dataSize);
-            var endianness = headerDataView.getUint32(0, true);
-            var littleEndian = endianness === 0x04030201;
+            const dataSize = Uint32Array.BYTES_PER_ELEMENT;
+            const headerDataView = new DataView(this.arrayBuffer, 12, 13 * dataSize);
+            const endianness = headerDataView.getUint32(0, true);
+            const littleEndian = endianness === 0x04030201;
 
             this.glType = headerDataView.getUint32(1 * dataSize, littleEndian); // must be 0 for compressed textures
             this.glTypeSize = headerDataView.getUint32(2 * dataSize, littleEndian); // must be 1 for compressed textures

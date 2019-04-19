@@ -13931,9 +13931,7 @@ var egret;
          * @param threeDExpected provision for indicating that data should be a 3D texture, not implemented
          * @param textureArrayExpected provision for indicating that data should be a texture array, not implemented
          */
-        function KTXContainer(
-            /** contents of the KTX container file */
-            arrayBuffer, facesExpected, threeDExpected, textureArrayExpected) {
+        function KTXContainer(/** contents of the KTX container file */ arrayBuffer, facesExpected, threeDExpected, textureArrayExpected) {
             this.arrayBuffer = arrayBuffer;
             /**
              * If the container has been made invalid (eg. constructor failed to correctly load array buffer)

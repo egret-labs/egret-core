@@ -9270,8 +9270,7 @@ declare namespace egret {
      * for file layout see https://www.khronos.org/opengles/sdk/tools/KTX/file_format_spec/
      */
     class KTXContainer {
-        /** contents of the KTX container file */
-        arrayBuffer: any;
+        /** contents of the KTX container file */ arrayBuffer: any;
         private static HEADER_LEN;
         private static COMPRESSED_2D;
         private static COMPRESSED_3D;
@@ -9340,9 +9339,7 @@ declare namespace egret {
          * @param threeDExpected provision for indicating that data should be a 3D texture, not implemented
          * @param textureArrayExpected provision for indicating that data should be a texture array, not implemented
          */
-        constructor(
-            /** contents of the KTX container file */
-            arrayBuffer: any, facesExpected: number, threeDExpected?: boolean, textureArrayExpected?: boolean);
+        constructor(/** contents of the KTX container file */ arrayBuffer: any, facesExpected: number, threeDExpected?: boolean, textureArrayExpected?: boolean);
         /**
          * Uploads KTX content to a Babylon Texture.
          * It is assumed that the texture has already been created & is currently bound
