@@ -1969,6 +1969,53 @@ var RES;
                 texture.dispose();
             }
         };
+        var KTXTextureProcessor = {
+            onLoadStart: function (host, resource) {
+                var _this = this;
+                var request = new egret.HttpRequest();
+                request.responseType = egret.HttpResponseType.ARRAY_BUFFER;
+                var virtualUrl = resource.root + resource.url;
+                request.open(RES.getVirtualUrl(virtualUrl), "get");
+                request.send();
+                return new Promise(function (resolve, reject) {
+                    var onSuccess = function () {
+                        var data = request['data'] ? request['data'] : request['response'];
+                        resolve(data);
+                    };
+                    var onError = function () {
+                        var e = new RES.ResourceManagerError(1001, resource.url);
+                        reject(e);
+                    };
+                    request.addEventListener(egret.Event.COMPLETE, onSuccess, _this);
+                    request.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, _this);
+                }).then(function (data) {
+                    var ktx = new egret.KTXContainer(data, 1);
+                    if (ktx.isInvalid) {
+                        egret.error('ktx:' + virtualUrl + ' is invalid');
+                        return null;
+                    }
+                    //
+                    var bitmapData = new egret.BitmapData(data);
+                    bitmapData.debugCompressedTextureURL = virtualUrl;
+                    ktx.uploadLevels(bitmapData, false);
+                    //
+                    var texture = new egret.Texture();
+                    texture._setBitmapData(bitmapData);
+                    var r = host.resourceConfig.getResource(resource.name);
+                    if (r && r.scale9grid) {
+                        var list = r.scale9grid.split(",");
+                        texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
+                    }
+                    return texture;
+                });
+            },
+            onRemoveStart: function (host, resource) {
+                var texture = host.get(resource);
+                if (texture) {
+                    texture.dispose();
+                }
+            }
+        };
         processor_1.BinaryProcessor = {
             onLoadStart: function (host, resource) {
                 var request = new egret.HttpRequest();
@@ -2307,6 +2354,7 @@ var RES;
             "movieclip": processor_1.MovieClipProcessor,
             "mergeJson": processor_1.MergeJSONProcessor,
             "legacyResourceConfig": processor_1.LegacyResourceConfigProcessor,
+            "ktx": KTXTextureProcessor,
         };
     })(processor = RES.processor || (RES.processor = {}));
 })(RES || (RES = {}));

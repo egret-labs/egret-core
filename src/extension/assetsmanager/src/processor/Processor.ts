@@ -156,8 +156,57 @@ module RES.processor {
             let texture = host.get(resource);
             texture.dispose();
         }
-
     }
+
+    const KTXTextureProcessor: RES.processor.Processor = {
+
+        onLoadStart(host, resource) {
+            const request: egret.HttpRequest = new egret.HttpRequest();
+            request.responseType = egret.HttpResponseType.ARRAY_BUFFER;
+            const virtualUrl = resource.root + resource.url;
+            request.open(RES.getVirtualUrl(virtualUrl), "get");
+            request.send();
+            return new Promise((resolve, reject) => {
+                const onSuccess = () => {
+                    const data = request['data'] ? request['data'] : request['response'];
+                    resolve(data);
+                }
+                const onError = () => {
+                    const e = new RES.ResourceManagerError(1001, resource.url);
+                    reject(e);
+                }
+                request.addEventListener(egret.Event.COMPLETE, onSuccess, this);
+                request.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, this);
+            }).then((data) => {
+                const ktx = new egret.KTXContainer(data, 1);
+                if (ktx.isInvalid) {
+                    egret.error('ktx:' + virtualUrl + ' is invalid');
+                    return null;
+                }
+                //
+                const bitmapData = new egret.BitmapData(data);
+                bitmapData.debugCompressedTextureURL = virtualUrl;
+                ktx.uploadLevels(bitmapData, false);
+                //
+                const texture = new egret.Texture();
+                texture._setBitmapData(<egret.BitmapData>bitmapData);
+                const r = host.resourceConfig.getResource(resource.name);
+                if (r && r.scale9grid) {
+                    const list: Array<string> = r.scale9grid.split(",");
+                    texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
+                }
+                return texture;
+            });
+        },
+    
+        onRemoveStart(host, resource) {
+            const texture = host.get(resource);
+            if (texture) {
+                texture.dispose();
+            }
+        }
+    }
+    
     export var BinaryProcessor: Processor = {
 
         onLoadStart(host, resource) {
@@ -560,6 +609,7 @@ module RES.processor {
         "movieclip": MovieClipProcessor,
         "mergeJson": MergeJSONProcessor,
         "legacyResourceConfig": LegacyResourceConfigProcessor,
+        "ktx": KTXTextureProcessor,
         // "zip": ZipProcessor
     }
 }
