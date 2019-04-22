@@ -166,6 +166,14 @@ module RES.processor {
             const virtualUrl = resource.root + resource.url;
             request.open(RES.getVirtualUrl(virtualUrl), "get");
             request.send();
+            if (DEBUG) {
+                if (resource['seperated_alpha']) {
+                    const seperated_alpha = resource['seperated_alpha'];
+                    egret.log('seperated_alpha = ' + seperated_alpha);
+                    egret.log('virtualUrl = ' + virtualUrl);
+                    egret.log('resource.name = ' + resource.name);
+                }
+            }
             return new Promise((resolve, reject) => {
                 const onSuccess = () => {
                     const data = request['data'] ? request['data'] : request['response'];

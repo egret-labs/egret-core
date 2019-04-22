@@ -1977,6 +1977,14 @@ var RES;
                 var virtualUrl = resource.root + resource.url;
                 request.open(RES.getVirtualUrl(virtualUrl), "get");
                 request.send();
+                if (true) {
+                    if (resource['seperated_alpha']) {
+                        var seperatedAlphaUrl = resource['seperated_alpha'];
+                        egret.log('seperatedAlphaUrl = ' + seperatedAlphaUrl);
+                        egret.log('virtualUrl = ' + virtualUrl);
+                        egret.log('resource.name = ' + resource.name);
+                    }
+                }
                 return new Promise(function (resolve, reject) {
                     var onSuccess = function () {
                         var data = request['data'] ? request['data'] : request['response'];
