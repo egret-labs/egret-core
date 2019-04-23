@@ -237,12 +237,13 @@ module RES.processor {
                 if (alphaMask) {
                     bitmapOfColor.etcAlphaMask = alphaMask.$bitmapData;
                 }
+                else {
+                    ///????
+                }
             }
             else {
-                if (bitmapOfColor.etcAlphaMask) {
-                    bitmapOfColor.etcAlphaMask.$dispose();
-                    bitmapOfColor.etcAlphaMask = null;
-                }
+                //unbind
+                bitmapOfColor.etcAlphaMask = null;
             }
         });
     }
