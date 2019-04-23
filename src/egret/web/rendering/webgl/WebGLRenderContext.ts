@@ -29,8 +29,6 @@
 
 namespace egret.web {
 
-    let compressedTextureNotSupportedLog = false;
-
     /**
      * 创建一个canvas。
      */
@@ -49,6 +47,9 @@ namespace egret.web {
         formats: Uint32Array,
         extension: any
     }
+
+    //
+    let compressedTextureNotSupportedLogShowOnce = false;
 
     /**
      * @private
@@ -439,9 +440,47 @@ namespace egret.web {
         // private createCompressedTexture(data, width, height, levels, internalFormat): WebGLTexture {
         //     return null;
         // }
+        private debugCheckCompressedTextureInternalFormat(currentSupportedCompressedTextureTypes: SupportedCompressedTextureType[], internalFormat: number): boolean {
+            //width: number, height: number 其实长和宽也应该检查。。
+            let checkCurrentSupportedCompressedTextureTypes = false;
+            //const currentSupportedCompressedTextureTypes = this.currentSupportedCompressedTextureTypes;
+            for (let i = 0, length = currentSupportedCompressedTextureTypes.length; i < length; ++i) {
+                const ss = currentSupportedCompressedTextureTypes[i];
+                const formats = ss.formats;
+                for (let j = 0, length = formats.length; j < length; ++j) {
+                    if (formats[j] === internalFormat) {
+                        checkCurrentSupportedCompressedTextureTypes = true;
+                        break;
+                    }
+                }
+            }
+            return checkCurrentSupportedCompressedTextureTypes;
+        }
+        /*
+        * TO DO
+        */
+        private debugLogCompressedTextureNotSupportedLog(currentSupportedCompressedTextureTypes: SupportedCompressedTextureType[], internalFormat: number): void {
+            if (!compressedTextureNotSupportedLogShowOnce) {
+                compressedTextureNotSupportedLogShowOnce = true;
+                egret.log('internalFormat = ' + internalFormat + ':' + ('0x' + internalFormat.toString(16)) + ', the current hardware does not support the corresponding compression format.');
+                for (let i = 0, length = currentSupportedCompressedTextureTypes.length; i < length; ++i) {
+                    const ss = currentSupportedCompressedTextureTypes[i];
+                    egret.log('type = ' + ss.type + ', formats = ' + ss.formats);
+                }
+            }
+        }
+
+
         private createCompressedTexture(data: Uint8Array, width: number, height: number, levels: number, internalFormat: number): WebGLTexture {
-            ////
             if (DEBUG) {
+                //
+                const checkRes = this.debugCheckCompressedTextureInternalFormat(this.currentSupportedCompressedTextureTypes, internalFormat);
+                if (!checkRes) {
+                    this.debugLogCompressedTextureNotSupportedLog(this.currentSupportedCompressedTextureTypes, internalFormat);
+                    return this.getEmptyWhiteTexture();
+                }
+
+                /*
                 let checkCurrentSupportedCompressedTextureTypes = false;
                 const currentSupportedCompressedTextureTypes = this.currentSupportedCompressedTextureTypes;
                 for (let i = 0, length = currentSupportedCompressedTextureTypes.length; i < length; ++i) {
@@ -458,8 +497,8 @@ namespace egret.web {
                     }
                 }
                 if (!checkCurrentSupportedCompressedTextureTypes) {
-                    if (!compressedTextureNotSupportedLog) {
-                        compressedTextureNotSupportedLog = true;
+                    if (!compressedTextureNotSupportedLogShowOnce) {
+                        compressedTextureNotSupportedLogShowOnce = true;
                         egret.log('internalFormat = ' + internalFormat + ':' + ('0x' + internalFormat.toString(16)) + ', the current hardware does not support the corresponding compression format.');
                         for (let i = 0, length = currentSupportedCompressedTextureTypes.length; i < length; ++i) {
                             const ss = currentSupportedCompressedTextureTypes[i];
@@ -469,6 +508,7 @@ namespace egret.web {
                     return this.getEmptyWhiteTexture();
                     //return null;
                 }
+                */
             }
             //////
             const gl: any = this.context;
@@ -505,7 +545,7 @@ namespace egret.web {
          * 如果有缓存的texture返回缓存的texture，如果没有则创建并缓存texture
          */
         public getEmptyWhiteTexture(): WebGLTexture {
-            if (!this._emptyWhiteTexture){
+            if (!this._emptyWhiteTexture) {
                 const size = 16;
                 const canvas = createCanvas(size, size);
                 const context = canvas.getContext('2d');
@@ -539,7 +579,7 @@ namespace egret.web {
                     if (etcAlphaMask) {
                         const maskTexture = this.getWebGLTexture(etcAlphaMask);
                         if (maskTexture) {
-                            bitmapData.webGLTexture['etc_alpha_mask'] = maskTexture;
+                            bitmapData.webGLTexture[etc_alpha_mask] = maskTexture;
                         }
                     }
                 }
@@ -860,6 +900,7 @@ namespace egret.web {
 
             switch (data.type) {
                 case DRAWABLE_TYPE.TEXTURE:
+                    //这段的切换可以优化
                     if (filter) {
                         if (filter.type === "custom") {
                             program = EgretWebGLProgram.getProgram(gl, filter.$vertexSrc, filter.$fragmentSrc, filter.$shaderKey);
@@ -873,11 +914,11 @@ namespace egret.web {
                             program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.glow_frag, "glow");
                         }
                     } else {
-                        if (data.texture['etc_alpha_mask']) {
-                            program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.texture_etc_alphamask_frag, 'etc_alpha_mask');
-                            ///refactor
+                        if (data.texture[etc_alpha_mask]) {
+                            program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.texture_etc_alphamask_frag, etc_alpha_mask);
+                            ///need refactor
                             gl.activeTexture(gl.TEXTURE1);
-                            gl.bindTexture(gl.TEXTURE_2D, data.texture['etc_alpha_mask']);
+                            gl.bindTexture(gl.TEXTURE_2D, data.texture[etc_alpha_mask]);
                         }
                         else {
                             program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.texture_frag, "texture");
@@ -999,7 +1040,7 @@ namespace egret.web {
                     uniforms[key].setValue({ x: textureWidth, y: textureHeight });
                 } else if (key === "uSampler") {
                     uniforms[key].setValue(0);
-                } 
+                }
                 else if (key === "uSamplerAlphaMask") {
                     uniforms[key].setValue(1);
                 }

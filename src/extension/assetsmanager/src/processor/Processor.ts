@@ -169,11 +169,11 @@ module RES.processor {
             request.send();
             ///
             if (resource['seperated_alpha']) {
-                if (DEBUG) {
-                    egret.log('seperated_alpha = ' + resource['seperated_alpha']);
-                    egret.log('virtualUrl = ' + virtualUrl);
-                    egret.log('resource.name = ' + resource.name);
-                }
+                // if (DEBUG) {
+                //     egret.log('seperated_alpha = ' + resource['seperated_alpha']);
+                //     egret.log('virtualUrl = ' + virtualUrl);
+                //     egret.log('resource.name = ' + resource.name);
+                // }
                 etc1SeperatedAlphaMap[resource.name] = resource['seperated_alpha'];
             }        
             return new Promise((resolve, reject) => {

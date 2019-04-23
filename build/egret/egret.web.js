@@ -5677,7 +5677,6 @@ var egret;
 (function (egret) {
     var web;
     (function (web) {
-        var compressedTextureNotSupportedLog = false;
         /**
          * 创建一个canvas。
          */
@@ -5689,6 +5688,8 @@ var egret;
             }
             return canvas;
         }
+        //
+        var compressedTextureNotSupportedLogShowOnce = false;
         /**
          * @private
          * WebGL上下文对象，提供简单的绘图接口
@@ -5972,15 +5973,50 @@ var egret;
             // private createCompressedTexture(data, width, height, levels, internalFormat): WebGLTexture {
             //     return null;
             // }
-            WebGLRenderContext.prototype.createCompressedTexture = function (data, width, height, levels, internalFormat) {
-                ////
-                if (true) {
-                    var checkCurrentSupportedCompressedTextureTypes = false;
-                    var currentSupportedCompressedTextureTypes = this.currentSupportedCompressedTextureTypes;
-                    for (var i = 0, length_4 = currentSupportedCompressedTextureTypes.length; i < length_4; ++i) {
+            WebGLRenderContext.prototype.debugCheckCompressedTextureInternalFormat = function (currentSupportedCompressedTextureTypes, internalFormat) {
+                //width: number, height: number 其实长和宽也应该检查。。
+                var checkCurrentSupportedCompressedTextureTypes = false;
+                //const currentSupportedCompressedTextureTypes = this.currentSupportedCompressedTextureTypes;
+                for (var i = 0, length_4 = currentSupportedCompressedTextureTypes.length; i < length_4; ++i) {
+                    var ss = currentSupportedCompressedTextureTypes[i];
+                    var formats = ss.formats;
+                    for (var j = 0, length_5 = formats.length; j < length_5; ++j) {
+                        if (formats[j] === internalFormat) {
+                            checkCurrentSupportedCompressedTextureTypes = true;
+                            break;
+                        }
+                    }
+                }
+                return checkCurrentSupportedCompressedTextureTypes;
+            };
+            /*
+            * TO DO
+            */
+            WebGLRenderContext.prototype.debugLogCompressedTextureNotSupportedLog = function (currentSupportedCompressedTextureTypes, internalFormat) {
+                if (!compressedTextureNotSupportedLogShowOnce) {
+                    compressedTextureNotSupportedLogShowOnce = true;
+                    egret.log('internalFormat = ' + internalFormat + ':' + ('0x' + internalFormat.toString(16)) + ', the current hardware does not support the corresponding compression format.');
+                    for (var i = 0, length_6 = currentSupportedCompressedTextureTypes.length; i < length_6; ++i) {
                         var ss = currentSupportedCompressedTextureTypes[i];
-                        var formats = ss.formats;
-                        for (var j = 0, length_5 = formats.length; j < length_5; ++j) {
+                        egret.log('type = ' + ss.type + ', formats = ' + ss.formats);
+                    }
+                }
+            };
+            WebGLRenderContext.prototype.createCompressedTexture = function (data, width, height, levels, internalFormat) {
+                if (true) {
+                    //
+                    var checkRes = this.debugCheckCompressedTextureInternalFormat(this.currentSupportedCompressedTextureTypes, internalFormat);
+                    if (!checkRes) {
+                        this.debugLogCompressedTextureNotSupportedLog(this.currentSupportedCompressedTextureTypes, internalFormat);
+                        return this.getEmptyWhiteTexture();
+                    }
+                    /*
+                    let checkCurrentSupportedCompressedTextureTypes = false;
+                    const currentSupportedCompressedTextureTypes = this.currentSupportedCompressedTextureTypes;
+                    for (let i = 0, length = currentSupportedCompressedTextureTypes.length; i < length; ++i) {
+                        const ss = currentSupportedCompressedTextureTypes[i];
+                        const formats = ss.formats;
+                        for (let j = 0, length = formats.length; j < length; ++j) {
                             if (formats[j] === internalFormat) {
                                 checkCurrentSupportedCompressedTextureTypes = true;
                                 break;
@@ -5991,17 +6027,18 @@ var egret;
                         }
                     }
                     if (!checkCurrentSupportedCompressedTextureTypes) {
-                        if (!compressedTextureNotSupportedLog) {
-                            compressedTextureNotSupportedLog = true;
+                        if (!compressedTextureNotSupportedLogShowOnce) {
+                            compressedTextureNotSupportedLogShowOnce = true;
                             egret.log('internalFormat = ' + internalFormat + ':' + ('0x' + internalFormat.toString(16)) + ', the current hardware does not support the corresponding compression format.');
-                            for (var i = 0, length_6 = currentSupportedCompressedTextureTypes.length; i < length_6; ++i) {
-                                var ss = currentSupportedCompressedTextureTypes[i];
+                            for (let i = 0, length = currentSupportedCompressedTextureTypes.length; i < length; ++i) {
+                                const ss = currentSupportedCompressedTextureTypes[i];
                                 egret.log('type = ' + ss.type + ', formats = ' + ss.formats);
                             }
                         }
                         return this.getEmptyWhiteTexture();
                         //return null;
                     }
+                    */
                 }
                 //////
                 var gl = this.context;
@@ -6061,7 +6098,7 @@ var egret;
                         if (etcAlphaMask) {
                             var maskTexture = this.getWebGLTexture(etcAlphaMask);
                             if (maskTexture) {
-                                bitmapData.webGLTexture['etc_alpha_mask'] = maskTexture;
+                                bitmapData.webGLTexture[egret.etc_alpha_mask] = maskTexture;
                             }
                         }
                     }
@@ -6327,6 +6364,7 @@ var egret;
                 var filter = data.filter;
                 switch (data.type) {
                     case 0 /* TEXTURE */:
+                        //这段的切换可以优化
                         if (filter) {
                             if (filter.type === "custom") {
                                 program = web.EgretWebGLProgram.getProgram(gl, filter.$vertexSrc, filter.$fragmentSrc, filter.$shaderKey);
@@ -6345,11 +6383,11 @@ var egret;
                             }
                         }
                         else {
-                            if (data.texture['etc_alpha_mask']) {
-                                program = web.EgretWebGLProgram.getProgram(gl, web.EgretShaderLib.default_vert, web.EgretShaderLib.texture_etc_alphamask_frag, 'etc_alpha_mask');
-                                ///refactor
+                            if (data.texture[egret.etc_alpha_mask]) {
+                                program = web.EgretWebGLProgram.getProgram(gl, web.EgretShaderLib.default_vert, web.EgretShaderLib.texture_etc_alphamask_frag, egret.etc_alpha_mask);
+                                ///need refactor
                                 gl.activeTexture(gl.TEXTURE1);
-                                gl.bindTexture(gl.TEXTURE_2D, data.texture['etc_alpha_mask']);
+                                gl.bindTexture(gl.TEXTURE_2D, data.texture[egret.etc_alpha_mask]);
                             }
                             else {
                                 program = web.EgretWebGLProgram.getProgram(gl, web.EgretShaderLib.default_vert, web.EgretShaderLib.texture_frag, "texture");

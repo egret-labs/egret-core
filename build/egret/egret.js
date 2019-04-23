@@ -8623,6 +8623,7 @@ var egret;
     }());
     egret.CompressedTextureData = CompressedTextureData;
     __reflect(CompressedTextureData.prototype, "egret.CompressedTextureData");
+    egret.etc_alpha_mask = 'etc_alpha_mask';
     /**
      * A BitmapData object contains an array of pixel data. This data can represent either a fully opaque bitmap or a
      * transparent bitmap that contains alpha channel data. Either type of BitmapData object is stored as a buffer of 32-bit
