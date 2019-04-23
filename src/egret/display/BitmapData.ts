@@ -159,7 +159,7 @@ namespace egret {
          */
         public readonly compressedTextureData: Array<Array<CompressedTextureData>> = [];
         public debugCompressedTextureURL: string = '';
-        public etcAlphaMask: BitmapData = null;
+        public etcAlphaMask: Nullable<BitmapData> = null;
 
         /**
          * Initializes a BitmapData object to refer to the specified source object.

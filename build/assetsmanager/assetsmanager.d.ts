@@ -1041,6 +1041,15 @@ declare module RES.processor {
      */
     function getRelativePath(url: string, file: string): string;
     var ImageProcessor: Processor;
+    let etc1SeperatedAlphaMap: {
+        [index: string]: string;
+    };
+    const KTXTextureProcessor: RES.processor.Processor;
+    /**
+     * This method must be called before etc1 alpha mask can be used
+     * @param enable
+     */
+    function enableEtc1SeperatedAlphaMask(enable: boolean): void;
     var BinaryProcessor: Processor;
     var TextProcessor: Processor;
     var JsonProcessor: Processor;

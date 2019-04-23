@@ -1969,7 +1969,8 @@ var RES;
                 texture.dispose();
             }
         };
-        var KTXTextureProcessor = {
+        processor_1.etc1SeperatedAlphaMap = {};
+        processor_1.KTXTextureProcessor = {
             onLoadStart: function (host, resource) {
                 var _this = this;
                 var request = new egret.HttpRequest();
@@ -1977,13 +1978,14 @@ var RES;
                 var virtualUrl = resource.root + resource.url;
                 request.open(RES.getVirtualUrl(virtualUrl), "get");
                 request.send();
-                if (true) {
-                    if (resource['seperated_alpha']) {
-                        var seperatedAlphaUrl = resource['seperated_alpha'];
-                        egret.log('seperatedAlphaUrl = ' + seperatedAlphaUrl);
+                ///
+                if (resource['seperated_alpha']) {
+                    if (true) {
+                        egret.log('seperated_alpha = ' + resource['seperated_alpha']);
                         egret.log('virtualUrl = ' + virtualUrl);
                         egret.log('resource.name = ' + resource.name);
                     }
+                    processor_1.etc1SeperatedAlphaMap[resource.name] = resource['seperated_alpha'];
                 }
                 return new Promise(function (resolve, reject) {
                     var onSuccess = function () {
@@ -2024,6 +2026,36 @@ var RES;
                 }
             }
         };
+        /**
+         * This method must be called before etc1 alpha mask can be used
+         * @param enable
+         */
+        function enableEtc1SeperatedAlphaMask(enable) {
+            if (!processor_1.etc1SeperatedAlphaMap) {
+                return;
+            }
+            var obj = processor_1.etc1SeperatedAlphaMap;
+            Object.keys(obj).forEach(function (key) {
+                var color = RES.getRes(key);
+                if (!color || !color.$bitmapData) {
+                    return;
+                }
+                var bitmapOfColor = color.$bitmapData;
+                if (enable) {
+                    var alphaMask = RES.getRes(obj[key]);
+                    if (alphaMask) {
+                        bitmapOfColor.etcAlphaMask = alphaMask.$bitmapData;
+                    }
+                }
+                else {
+                    if (bitmapOfColor.etcAlphaMask) {
+                        bitmapOfColor.etcAlphaMask.$dispose();
+                        bitmapOfColor.etcAlphaMask = null;
+                    }
+                }
+            });
+        }
+        processor_1.enableEtc1SeperatedAlphaMask = enableEtc1SeperatedAlphaMask;
         processor_1.BinaryProcessor = {
             onLoadStart: function (host, resource) {
                 var request = new egret.HttpRequest();
@@ -2362,7 +2394,7 @@ var RES;
             "movieclip": processor_1.MovieClipProcessor,
             "mergeJson": processor_1.MergeJSONProcessor,
             "legacyResourceConfig": processor_1.LegacyResourceConfigProcessor,
-            "ktx": KTXTextureProcessor,
+            "ktx": processor_1.KTXTextureProcessor,
         };
     })(processor = RES.processor || (RES.processor = {}));
 })(RES || (RES = {}));

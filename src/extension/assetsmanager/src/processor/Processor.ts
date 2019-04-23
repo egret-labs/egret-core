@@ -158,7 +158,8 @@ module RES.processor {
         }
     }
 
-    const KTXTextureProcessor: RES.processor.Processor = {
+    export let etc1SeperatedAlphaMap: { [index: string]: string } = {};
+    export const KTXTextureProcessor: RES.processor.Processor = {
 
         onLoadStart(host, resource) {
             const request: egret.HttpRequest = new egret.HttpRequest();
@@ -166,14 +167,15 @@ module RES.processor {
             const virtualUrl = resource.root + resource.url;
             request.open(RES.getVirtualUrl(virtualUrl), "get");
             request.send();
-            if (DEBUG) {
-                if (resource['seperated_alpha']) {
-                    const seperated_alpha = resource['seperated_alpha'];
-                    egret.log('seperated_alpha = ' + seperated_alpha);
+            ///
+            if (resource['seperated_alpha']) {
+                if (DEBUG) {
+                    egret.log('seperated_alpha = ' + resource['seperated_alpha']);
                     egret.log('virtualUrl = ' + virtualUrl);
                     egret.log('resource.name = ' + resource.name);
                 }
-            }
+                etc1SeperatedAlphaMap[resource.name] = resource['seperated_alpha'];
+            }        
             return new Promise((resolve, reject) => {
                 const onSuccess = () => {
                     const data = request['data'] ? request['data'] : request['response'];
@@ -213,6 +215,36 @@ module RES.processor {
                 texture.dispose();
             }
         }
+    }
+
+    /**
+     * This method must be called before etc1 alpha mask can be used
+     * @param enable
+     */
+    export function enableEtc1SeperatedAlphaMask(enable: boolean): void {
+        if (!etc1SeperatedAlphaMap) {
+            return;
+        }
+        const obj = etc1SeperatedAlphaMap;
+        Object.keys(obj).forEach(function(key){
+            const color: egret.Texture = RES.getRes(key);
+            if (!color || !color.$bitmapData) {
+                return;
+            }
+            const bitmapOfColor = color.$bitmapData;
+            if (enable) {
+                const alphaMask: egret.Texture = RES.getRes(obj[key]);
+                if (alphaMask) {
+                    bitmapOfColor.etcAlphaMask = alphaMask.$bitmapData;
+                }
+            }
+            else {
+                if (bitmapOfColor.etcAlphaMask) {
+                    bitmapOfColor.etcAlphaMask.$dispose();
+                    bitmapOfColor.etcAlphaMask = null;
+                }
+            }
+        });
     }
     
     export var BinaryProcessor: Processor = {
