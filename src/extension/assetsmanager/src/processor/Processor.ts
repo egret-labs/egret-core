@@ -158,7 +158,6 @@ module RES.processor {
         }
     }
 
-    export let etc1SeperatedAlphaMap: { [index: string]: string } = {};
     export const KTXTextureProcessor: RES.processor.Processor = {
 
         onLoadStart(host, resource) {
@@ -167,15 +166,6 @@ module RES.processor {
             const virtualUrl = resource.root + resource.url;
             request.open(RES.getVirtualUrl(virtualUrl), "get");
             request.send();
-            ///
-            if (resource['seperated_alpha']) {
-                // if (DEBUG) {
-                //     egret.log('seperated_alpha = ' + resource['seperated_alpha']);
-                //     egret.log('virtualUrl = ' + virtualUrl);
-                //     egret.log('resource.name = ' + resource.name);
-                // }
-                etc1SeperatedAlphaMap[resource.name] = resource['seperated_alpha'];
-            }        
             return new Promise((resolve, reject) => {
                 const onSuccess = () => {
                     const data = request['data'] ? request['data'] : request['response'];
@@ -190,12 +180,13 @@ module RES.processor {
             }).then((data) => {
                 const ktx = new egret.KTXContainer(data, 1);
                 if (ktx.isInvalid) {
-                    egret.error('ktx:' + virtualUrl + ' is invalid');
+                    console.error('ktx:' + virtualUrl + ' is invalid');
                     return null;
                 }
                 //
                 const bitmapData = new egret.BitmapData(data);
                 bitmapData.debugCompressedTextureURL = virtualUrl;
+                bitmapData.format = 'ktx';
                 ktx.uploadLevels(bitmapData, false);
                 //
                 const texture = new egret.Texture();
@@ -206,9 +197,11 @@ module RES.processor {
                     texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
                 }
                 return texture;
+            }, function (e) {
+                throw e;
             });
         },
-    
+
         onRemoveStart(host, resource) {
             const texture = host.get(resource);
             if (texture) {
@@ -217,30 +210,67 @@ module RES.processor {
         }
     }
 
-    /**
-     * This method must be called before etc1 alpha mask can be used
-     * @param enable
+      /**
+     * 
      */
-    export function addEtc1SeperatedAlphaMask(): void {
-        if (!etc1SeperatedAlphaMap) {
-            return;
-        }
-        const obj = etc1SeperatedAlphaMap;
-        Object.keys(obj).forEach(function(key){
-            const color: egret.Texture = RES.getRes(key);
-            if (!color || !color.$bitmapData) {
-                return;
-            }
-            const alphaMask: egret.Texture = RES.getRes(obj[key]);
-            if (alphaMask) {
-                color.$bitmapData.etcAlphaMask = alphaMask.$bitmapData;
+    export function makeEtc1SeperatedAlphaResourceInfo(resource: ResourceInfo): ResourceInfo {
+        return { name: resource.name + '_alpha', url: resource['seperated_alpha_url'], type: 'ktx', root: resource.root };
+    }
+
+    /**
+    * 
+    */
+    export const ETC1KTXProcessor: Processor = {
+
+        onLoadStart(host, resource): Promise<any> {
+            return host.load(resource, "ktx").then((colorTex) => {
+                if (resource['seperated_alpha_url']) {
+                    const r = makeEtc1SeperatedAlphaResourceInfo(resource);
+                    return host.load(r, "ktx")
+                        .then((alphaMaskTex) => {
+                            if (colorTex 
+                                && colorTex.$bitmapData 
+                                && alphaMaskTex.$bitmapData) {
+                                colorTex.$bitmapData.etcAlphaMask = alphaMaskTex.$bitmapData;
+                                host.save(r as ResourceInfo, alphaMaskTex);
+                            }
+                            else {
+                                //error
+                            }
+                            return colorTex;
+                        }, function (e) {
+                            host.remove(r!);
+                            throw e;
+                        });
+                }
+                else {
+                    return colorTex;
+                }
+            });
+        },
+
+        onRemoveStart(host, resource) {
+            const colorTex = host.get(resource);
+            if (colorTex) {
+                colorTex.dispose();
             }
             else {
-                ///
+                //error?!
             }
-        });
+
+            if (resource['seperated_alpha_url']) {
+                const r = makeEtc1SeperatedAlphaResourceInfo(resource);
+                const alphaMaskTex = host.get(r!);
+                if (alphaMaskTex) {
+                    alphaMaskTex.dispose();
+                }
+            }
+            else {
+                //no alpha mask
+            }
+        }
     }
-    
+
     export var BinaryProcessor: Processor = {
 
         onLoadStart(host, resource) {
@@ -643,8 +673,8 @@ module RES.processor {
         "movieclip": MovieClipProcessor,
         "mergeJson": MergeJSONProcessor,
         "legacyResourceConfig": LegacyResourceConfigProcessor,
-        //"ktx": KTXTextureProcessor,
-        "etc1.ktx": KTXTextureProcessor,
+        "ktx": KTXTextureProcessor,
+        "etc1.ktx": ETC1KTXProcessor,
         "pvrtc.ktx": KTXTextureProcessor,
         // "zip": ZipProcessor
     }

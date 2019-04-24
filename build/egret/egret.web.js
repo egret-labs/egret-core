@@ -5688,7 +5688,7 @@ var egret;
             }
             return canvas;
         }
-        //
+        //TO DO
         var compressedTextureNotSupportedLogShowOnce = false;
         /**
          * @private
@@ -5970,13 +5970,12 @@ var egret;
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
                 return texture;
             };
-            // private createCompressedTexture(data, width, height, levels, internalFormat): WebGLTexture {
-            //     return null;
-            // }
+            /*
+            * TO DO
+            */
             WebGLRenderContext.prototype.debugCheckCompressedTextureInternalFormat = function (currentSupportedCompressedTextureTypes, internalFormat) {
-                //width: number, height: number 其实长和宽也应该检查。。
+                //width: number, height: number max ?
                 var checkCurrentSupportedCompressedTextureTypes = false;
-                //const currentSupportedCompressedTextureTypes = this.currentSupportedCompressedTextureTypes;
                 for (var i = 0, length_4 = currentSupportedCompressedTextureTypes.length; i < length_4; ++i) {
                     var ss = currentSupportedCompressedTextureTypes[i];
                     var formats = ss.formats;
@@ -6004,54 +6003,21 @@ var egret;
             };
             WebGLRenderContext.prototype.createCompressedTexture = function (data, width, height, levels, internalFormat) {
                 if (true) {
-                    //
                     var checkRes = this.debugCheckCompressedTextureInternalFormat(this.currentSupportedCompressedTextureTypes, internalFormat);
                     if (!checkRes) {
                         this.debugLogCompressedTextureNotSupportedLog(this.currentSupportedCompressedTextureTypes, internalFormat);
                         return this.getEmptyWhiteTexture();
                     }
-                    /*
-                    let checkCurrentSupportedCompressedTextureTypes = false;
-                    const currentSupportedCompressedTextureTypes = this.currentSupportedCompressedTextureTypes;
-                    for (let i = 0, length = currentSupportedCompressedTextureTypes.length; i < length; ++i) {
-                        const ss = currentSupportedCompressedTextureTypes[i];
-                        const formats = ss.formats;
-                        for (let j = 0, length = formats.length; j < length; ++j) {
-                            if (formats[j] === internalFormat) {
-                                checkCurrentSupportedCompressedTextureTypes = true;
-                                break;
-                            }
-                        }
-                        if (checkCurrentSupportedCompressedTextureTypes) {
-                            break;
-                        }
-                    }
-                    if (!checkCurrentSupportedCompressedTextureTypes) {
-                        if (!compressedTextureNotSupportedLogShowOnce) {
-                            compressedTextureNotSupportedLogShowOnce = true;
-                            egret.log('internalFormat = ' + internalFormat + ':' + ('0x' + internalFormat.toString(16)) + ', the current hardware does not support the corresponding compression format.');
-                            for (let i = 0, length = currentSupportedCompressedTextureTypes.length; i < length; ++i) {
-                                const ss = currentSupportedCompressedTextureTypes[i];
-                                egret.log('type = ' + ss.type + ', formats = ' + ss.formats);
-                            }
-                        }
-                        return this.getEmptyWhiteTexture();
-                        //return null;
-                    }
-                    */
                 }
-                //////
                 var gl = this.context;
                 var texture = gl.createTexture();
                 if (!texture) {
-                    //先创建texture失败,然后lost事件才发出来..
                     this.contextLost = true;
                     return;
                 }
                 texture.glContext = gl;
                 gl.bindTexture(gl.TEXTURE_2D, texture);
                 gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
-                //gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, bitmapData);
                 gl.compressedTexImage2D(gl.TEXTURE_2D, levels, internalFormat, width, height, 0, data);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
@@ -6088,11 +6054,9 @@ var egret;
                     if (bitmapData.format == "image" && !bitmapData.hasCompressed2d()) {
                         bitmapData.webGLTexture = this.createTexture(bitmapData.source);
                     }
-                    else if (bitmapData.format == "pvr" || bitmapData.hasCompressed2d()) {
-                        var compressedData = bitmapData.getCompressed2dTextureData(); //bitmapCompressedData[0];
-                        bitmapData.webGLTexture = this.createCompressedTexture(compressedData.byteArray, compressedData.width, compressedData.height, compressedData.level, compressedData.glInternalFormat
-                        //bitmapData.source.pvrtcData, bitmapData.width, bitmapData.height, bitmapData.source.mipmapsCount, bitmapData.source.format
-                        );
+                    else if (bitmapData.hasCompressed2d()) {
+                        var compressedData = bitmapData.getCompressed2dTextureData();
+                        bitmapData.webGLTexture = this.createCompressedTexture(compressedData.byteArray, compressedData.width, compressedData.height, compressedData.level, compressedData.glInternalFormat);
                         ///
                         var etcAlphaMask = bitmapData.etcAlphaMask;
                         if (etcAlphaMask) {
@@ -6104,7 +6068,6 @@ var egret;
                     }
                     if (bitmapData.$deleteSource && bitmapData.webGLTexture) {
                         bitmapData.source = null;
-                        //bitmapData.bitmapCompressedData.length = 0;
                         bitmapData.clearCompressedTextureData();
                     }
                     if (bitmapData.webGLTexture) {

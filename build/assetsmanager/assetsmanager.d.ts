@@ -1041,15 +1041,15 @@ declare module RES.processor {
      */
     function getRelativePath(url: string, file: string): string;
     var ImageProcessor: Processor;
-    let etc1SeperatedAlphaMap: {
-        [index: string]: string;
-    };
     const KTXTextureProcessor: RES.processor.Processor;
     /**
-     * This method must be called before etc1 alpha mask can be used
-     * @param enable
-     */
-    function addEtc1SeperatedAlphaMask(): void;
+   *
+   */
+    function makeEtc1SeperatedAlphaResourceInfo(resource: ResourceInfo): ResourceInfo;
+    /**
+    *
+    */
+    const ETC1KTXProcessor: Processor;
     var BinaryProcessor: Processor;
     var TextProcessor: Processor;
     var JsonProcessor: Processor;

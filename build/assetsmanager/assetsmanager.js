@@ -1969,7 +1969,6 @@ var RES;
                 texture.dispose();
             }
         };
-        processor_1.etc1SeperatedAlphaMap = {};
         processor_1.KTXTextureProcessor = {
             onLoadStart: function (host, resource) {
                 var _this = this;
@@ -1978,15 +1977,6 @@ var RES;
                 var virtualUrl = resource.root + resource.url;
                 request.open(RES.getVirtualUrl(virtualUrl), "get");
                 request.send();
-                ///
-                if (resource['seperated_alpha']) {
-                    // if (DEBUG) {
-                    //     egret.log('seperated_alpha = ' + resource['seperated_alpha']);
-                    //     egret.log('virtualUrl = ' + virtualUrl);
-                    //     egret.log('resource.name = ' + resource.name);
-                    // }
-                    processor_1.etc1SeperatedAlphaMap[resource.name] = resource['seperated_alpha'];
-                }
                 return new Promise(function (resolve, reject) {
                     var onSuccess = function () {
                         var data = request['data'] ? request['data'] : request['response'];
@@ -2001,12 +1991,13 @@ var RES;
                 }).then(function (data) {
                     var ktx = new egret.KTXContainer(data, 1);
                     if (ktx.isInvalid) {
-                        egret.error('ktx:' + virtualUrl + ' is invalid');
+                        console.error('ktx:' + virtualUrl + ' is invalid');
                         return null;
                     }
                     //
                     var bitmapData = new egret.BitmapData(data);
                     bitmapData.debugCompressedTextureURL = virtualUrl;
+                    bitmapData.format = 'ktx';
                     ktx.uploadLevels(bitmapData, false);
                     //
                     var texture = new egret.Texture();
@@ -2017,6 +2008,8 @@ var RES;
                         texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
                     }
                     return texture;
+                }, function (e) {
+                    throw e;
                 });
             },
             onRemoveStart: function (host, resource) {
@@ -2027,29 +2020,62 @@ var RES;
             }
         };
         /**
-         * This method must be called before etc1 alpha mask can be used
-         * @param enable
-         */
-        function addEtc1SeperatedAlphaMask() {
-            if (!processor_1.etc1SeperatedAlphaMap) {
-                return;
-            }
-            var obj = processor_1.etc1SeperatedAlphaMap;
-            Object.keys(obj).forEach(function (key) {
-                var color = RES.getRes(key);
-                if (!color || !color.$bitmapData) {
-                    return;
-                }
-                var alphaMask = RES.getRes(obj[key]);
-                if (alphaMask) {
-                    color.$bitmapData.etcAlphaMask = alphaMask.$bitmapData;
+       *
+       */
+        function makeEtc1SeperatedAlphaResourceInfo(resource) {
+            return { name: resource.name + '_alpha', url: resource['seperated_alpha_url'], type: 'ktx', root: resource.root };
+        }
+        processor_1.makeEtc1SeperatedAlphaResourceInfo = makeEtc1SeperatedAlphaResourceInfo;
+        /**
+        *
+        */
+        processor_1.ETC1KTXProcessor = {
+            onLoadStart: function (host, resource) {
+                return host.load(resource, "ktx").then(function (colorTex) {
+                    if (resource['seperated_alpha_url']) {
+                        var r_1 = makeEtc1SeperatedAlphaResourceInfo(resource);
+                        return host.load(r_1, "ktx")
+                            .then(function (alphaMaskTex) {
+                            if (colorTex
+                                && colorTex.$bitmapData
+                                && alphaMaskTex.$bitmapData) {
+                                colorTex.$bitmapData.etcAlphaMask = alphaMaskTex.$bitmapData;
+                                host.save(r_1, alphaMaskTex);
+                            }
+                            else {
+                                //error
+                            }
+                            return colorTex;
+                        }, function (e) {
+                            host.remove(r_1);
+                            throw e;
+                        });
+                    }
+                    else {
+                        return colorTex;
+                    }
+                });
+            },
+            onRemoveStart: function (host, resource) {
+                var colorTex = host.get(resource);
+                if (colorTex) {
+                    colorTex.dispose();
                 }
                 else {
-                    ///
+                    //error?!
                 }
-            });
-        }
-        processor_1.addEtc1SeperatedAlphaMask = addEtc1SeperatedAlphaMask;
+                if (resource['seperated_alpha_url']) {
+                    var r = makeEtc1SeperatedAlphaResourceInfo(resource);
+                    var alphaMaskTex = host.get(r);
+                    if (alphaMaskTex) {
+                        alphaMaskTex.dispose();
+                    }
+                }
+                else {
+                    //no alpha mask
+                }
+            }
+        };
         processor_1.BinaryProcessor = {
             onLoadStart: function (host, resource) {
                 var request = new egret.HttpRequest();
@@ -2388,8 +2414,8 @@ var RES;
             "movieclip": processor_1.MovieClipProcessor,
             "mergeJson": processor_1.MergeJSONProcessor,
             "legacyResourceConfig": processor_1.LegacyResourceConfigProcessor,
-            //"ktx": KTXTextureProcessor,
-            "etc1.ktx": processor_1.KTXTextureProcessor,
+            "ktx": processor_1.KTXTextureProcessor,
+            "etc1.ktx": processor_1.ETC1KTXProcessor,
             "pvrtc.ktx": processor_1.KTXTextureProcessor,
         };
     })(processor = RES.processor || (RES.processor = {}));
