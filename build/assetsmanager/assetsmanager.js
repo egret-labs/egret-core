@@ -2030,7 +2030,7 @@ var RES;
          * This method must be called before etc1 alpha mask can be used
          * @param enable
          */
-        function enableEtc1SeperatedAlphaMask(enable) {
+        function addEtc1SeperatedAlphaMask() {
             if (!processor_1.etc1SeperatedAlphaMap) {
                 return;
             }
@@ -2040,23 +2040,16 @@ var RES;
                 if (!color || !color.$bitmapData) {
                     return;
                 }
-                var bitmapOfColor = color.$bitmapData;
-                if (enable) {
-                    var alphaMask = RES.getRes(obj[key]);
-                    if (alphaMask) {
-                        bitmapOfColor.etcAlphaMask = alphaMask.$bitmapData;
-                    }
-                    else {
-                        ///????
-                    }
+                var alphaMask = RES.getRes(obj[key]);
+                if (alphaMask) {
+                    color.$bitmapData.etcAlphaMask = alphaMask.$bitmapData;
                 }
                 else {
-                    //unbind
-                    bitmapOfColor.etcAlphaMask = null;
+                    ///
                 }
             });
         }
-        processor_1.enableEtc1SeperatedAlphaMask = enableEtc1SeperatedAlphaMask;
+        processor_1.addEtc1SeperatedAlphaMask = addEtc1SeperatedAlphaMask;
         processor_1.BinaryProcessor = {
             onLoadStart: function (host, resource) {
                 var request = new egret.HttpRequest();

@@ -221,7 +221,7 @@ module RES.processor {
      * This method must be called before etc1 alpha mask can be used
      * @param enable
      */
-    export function enableEtc1SeperatedAlphaMask(enable: boolean): void {
+    export function addEtc1SeperatedAlphaMask(): void {
         if (!etc1SeperatedAlphaMap) {
             return;
         }
@@ -231,19 +231,12 @@ module RES.processor {
             if (!color || !color.$bitmapData) {
                 return;
             }
-            const bitmapOfColor = color.$bitmapData;
-            if (enable) {
-                const alphaMask: egret.Texture = RES.getRes(obj[key]);
-                if (alphaMask) {
-                    bitmapOfColor.etcAlphaMask = alphaMask.$bitmapData;
-                }
-                else {
-                    ///????
-                }
+            const alphaMask: egret.Texture = RES.getRes(obj[key]);
+            if (alphaMask) {
+                color.$bitmapData.etcAlphaMask = alphaMask.$bitmapData;
             }
             else {
-                //unbind
-                bitmapOfColor.etcAlphaMask = null;
+                ///
             }
         });
     }

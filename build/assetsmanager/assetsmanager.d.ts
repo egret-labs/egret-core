@@ -1049,7 +1049,7 @@ declare module RES.processor {
      * This method must be called before etc1 alpha mask can be used
      * @param enable
      */
-    function enableEtc1SeperatedAlphaMask(enable: boolean): void;
+    function addEtc1SeperatedAlphaMask(): void;
     var BinaryProcessor: Processor;
     var TextProcessor: Processor;
     var JsonProcessor: Processor;
