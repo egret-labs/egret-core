@@ -643,7 +643,9 @@ module RES.processor {
         "movieclip": MovieClipProcessor,
         "mergeJson": MergeJSONProcessor,
         "legacyResourceConfig": LegacyResourceConfigProcessor,
-        "ktx": KTXTextureProcessor,
+        //"ktx": KTXTextureProcessor,
+        "etc1.ktx": KTXTextureProcessor,
+        "pvrtc.ktx": KTXTextureProcessor,
         // "zip": ZipProcessor
     }
 }

@@ -2388,7 +2388,9 @@ var RES;
             "movieclip": processor_1.MovieClipProcessor,
             "mergeJson": processor_1.MergeJSONProcessor,
             "legacyResourceConfig": processor_1.LegacyResourceConfigProcessor,
-            "ktx": processor_1.KTXTextureProcessor,
+            //"ktx": KTXTextureProcessor,
+            "etc1.ktx": processor_1.KTXTextureProcessor,
+            "pvrtc.ktx": processor_1.KTXTextureProcessor,
         };
     })(processor = RES.processor || (RES.processor = {}));
 })(RES || (RES = {}));
