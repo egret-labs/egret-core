@@ -182,6 +182,13 @@ namespace egret.sys {
             }
             buffer.resize(width, height);
         }
+        /**
+         * @private
+         * stage渲染
+         */
+        public $stageRenderToSurface() {
+            systemRenderer.render(this.root, this.renderBuffer, this.offsetMatrix);
+        }
 
         public static $canvasScaleFactor: number = 1;
 

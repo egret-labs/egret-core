@@ -12980,6 +12980,13 @@ var egret;
             };
             /**
              * @private
+             * stage渲染
+             */
+            DisplayList.prototype.$stageRenderToSurface = function () {
+                sys.systemRenderer.render(this.root, this.renderBuffer, this.offsetMatrix);
+            };
+            /**
+             * @private
              */
             DisplayList.$setCanvasScale = function (x, y) {
                 DisplayList.$canvasScaleX = x;
@@ -14479,6 +14486,8 @@ var egret;
                     this.useTouchesCount++;
                 }
                 egret.TouchEvent.dispatchTouchEvent(target, egret.TouchEvent.TOUCH_BEGIN, true, true, x, y, touchPointID, true);
+                //for 3D&2D
+                return target !== this.stage;
             };
             /**
              * @private
@@ -14498,6 +14507,8 @@ var egret;
                 this.lastTouchY = y;
                 var target = this.findTarget(x, y);
                 egret.TouchEvent.dispatchTouchEvent(target, egret.TouchEvent.TOUCH_MOVE, true, true, x, y, touchPointID, true);
+                //for 3D&2D
+                return target !== this.stage;
             };
             /**
              * @private
@@ -14521,6 +14532,8 @@ var egret;
                 else {
                     egret.TouchEvent.dispatchTouchEvent(oldTarget, egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, true, true, x, y, touchPointID, false);
                 }
+                //for 3D&2D
+                return target !== this.stage;
             };
             /**
              * @private
@@ -23580,7 +23593,17 @@ var egret;
                     return;
                 }
                 this.$maxTouches = value;
-                this.$screen.updateMaxTouches();
+                //for 3D&2D
+                if (this.$screen) {
+                    this.$screen.updateMaxTouches();
+                }
+                else {
+                    if (!this.$touch) {
+                        this.$touch = new egret.sys.TouchHandler(this);
+                        this.$touch.$initMaxTouches();
+                    }
+                    this.$touch.$initMaxTouches();
+                }
             },
             enumerable: true,
             configurable: true
@@ -23603,6 +23626,54 @@ var egret;
          */
         Stage.prototype.setContentSize = function (width, height) {
             this.$screen.setContentSize(width, height);
+        };
+        //for 3D&2D
+        /**
+         * @private
+         */
+        Stage.prototype.$onTouchBegin = function (x, y, touchPointID) {
+            if (!this.$touch) {
+                this.$touch = new egret.sys.TouchHandler(this);
+                this.$touch.$initMaxTouches();
+            }
+            return this.$touch.onTouchBegin(x, y, touchPointID);
+        };
+        /**
+         * @private
+         */
+        Stage.prototype.$onTouchEnd = function (x, y, touchPointID) {
+            if (!this.$touch) {
+                this.$touch = new egret.sys.TouchHandler(this);
+                this.$touch.$initMaxTouches();
+            }
+            return this.$touch.onTouchEnd(x, y, touchPointID);
+        };
+        /**
+         * @private
+         */
+        Stage.prototype.$onTouchMove = function (x, y, touchPointID) {
+            if (!this.$touch) {
+                this.$touch = new egret.sys.TouchHandler(this);
+                this.$touch.$initMaxTouches();
+            }
+            return this.$touch.onTouchMove(x, y, touchPointID);
+        };
+        /**
+         * @private
+         */
+        Stage.prototype.$drawToSurface = function () {
+            if (this.$displayList) {
+                this.$displayList.drawToSurface();
+            }
+        };
+        /**
+         * @private
+         */
+        Stage.prototype.$resize = function (width, height) {
+            this.$stageWidth = width;
+            this.$stageHeight = height;
+            this.$displayList.renderBuffer.resize(width, height);
+            this.dispatchEventWith(egret.Event.RESIZE);
         };
         return Stage;
     }(egret.DisplayObjectContainer));

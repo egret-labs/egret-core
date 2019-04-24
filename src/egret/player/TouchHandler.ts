@@ -71,7 +71,7 @@ namespace egret.sys {
          * @param y 事件发生处相对于舞台的坐标y
          * @param touchPointID 分配给触摸点的唯一标识号
          */
-        public onTouchBegin(x:number, y:number, touchPointID:number):void {
+        public onTouchBegin(x:number, y:number, touchPointID:number):boolean {
             if (this.useTouchesCount >= this.maxTouches) {
                 return;
             }
@@ -84,6 +84,8 @@ namespace egret.sys {
                 this.useTouchesCount++;
             }
             TouchEvent.dispatchTouchEvent(target, TouchEvent.TOUCH_BEGIN, true, true, x, y, touchPointID, true);
+            //for 3D&2D
+            return target !== this.stage;
         }
 
         /**
@@ -102,7 +104,7 @@ namespace egret.sys {
          * @param y 事件发生处相对于舞台的坐标y
          * @param touchPointID 分配给触摸点的唯一标识号
          */
-        public onTouchMove(x:number, y:number, touchPointID:number):void {
+        public onTouchMove(x:number, y:number, touchPointID:number):boolean {
             if (this.touchDownTarget[touchPointID] == null) {
                 return;
             }
@@ -116,6 +118,8 @@ namespace egret.sys {
 
             let target = this.findTarget(x, y);
             TouchEvent.dispatchTouchEvent(target, TouchEvent.TOUCH_MOVE, true, true, x, y, touchPointID, true);
+            //for 3D&2D
+            return target !== this.stage;
         }
 
         /**
@@ -125,7 +129,7 @@ namespace egret.sys {
          * @param y 事件发生处相对于舞台的坐标y
          * @param touchPointID 分配给触摸点的唯一标识号
          */
-        public onTouchEnd(x:number, y:number, touchPointID:number):void {
+        public onTouchEnd(x:number, y:number, touchPointID:number):boolean {
             if (this.touchDownTarget[touchPointID] == null) {
                 return;
             }
@@ -142,6 +146,8 @@ namespace egret.sys {
             else {
                 TouchEvent.dispatchTouchEvent(oldTarget, TouchEvent.TOUCH_RELEASE_OUTSIDE, true, true, x, y, touchPointID, false);
             }
+            //for 3D&2D
+            return target !== this.stage;
         }
 
         /**

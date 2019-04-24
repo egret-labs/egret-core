@@ -5689,7 +5689,7 @@ var egret;
          * 抽象出此类，以实现共用一个context
          */
         var WebGLRenderContext = (function () {
-            function WebGLRenderContext(width, height) {
+            function WebGLRenderContext(width, height, context) {
                 this.glID = null;
                 this.projectionX = NaN;
                 this.projectionY = NaN;
@@ -5700,7 +5700,7 @@ var egret;
                 if (egret.nativeRender) {
                     return;
                 }
-                this.initWebGL();
+                this.initWebGL(context);
                 this.$bufferStack = [];
                 var gl = this.context;
                 this.vertexBuffer = gl.createBuffer();
@@ -5711,11 +5711,11 @@ var egret;
                 this.vao = new web.WebGLVertexArrayObject();
                 this.setGlobalCompositeOperation("source-over");
             }
-            WebGLRenderContext.getInstance = function (width, height) {
+            WebGLRenderContext.getInstance = function (width, height, context) {
                 if (this.instance) {
                     return this.instance;
                 }
-                this.instance = new WebGLRenderContext(width, height);
+                this.instance = new WebGLRenderContext(width, height, context);
                 return this.instance;
             };
             /**
@@ -5818,11 +5818,11 @@ var egret;
                 }
                 this.onResize();
             };
-            WebGLRenderContext.prototype.initWebGL = function () {
+            WebGLRenderContext.prototype.initWebGL = function (context) {
                 this.onResize();
                 this.surface.addEventListener("webglcontextlost", this.handleContextLost.bind(this), false);
                 this.surface.addEventListener("webglcontextrestored", this.handleContextRestored.bind(this), false);
-                this.getWebGLContext();
+                this.setContext(context ? context : this.getWebGLContext());
                 var gl = this.context;
                 this.$maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
             };
@@ -5855,7 +5855,7 @@ var egret;
                 if (!gl) {
                     egret.$error(1021);
                 }
-                this.setContext(gl);
+                return gl;
             };
             WebGLRenderContext.prototype.setContext = function (gl) {
                 this.context = gl;
@@ -6195,6 +6195,24 @@ var egret;
                 // 清空数据
                 this.drawCmdManager.clear();
                 this.vao.clear();
+            };
+            /**
+             * @private
+             * for 3D&2D
+             */
+            WebGLRenderContext.prototype.$beforeRender = function () {
+                var gl = this.context;
+                gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+                gl.disable(gl.DEPTH_TEST);
+                gl.disable(gl.CULL_FACE);
+                gl.enable(gl.BLEND);
+                gl.disable(gl.STENCIL_TEST);
+                gl.colorMask(true, true, true, true);
+                this.setBlendMode("source-over");
+                // 目前只使用0号材质单元，默认开启
+                gl.activeTexture(gl.TEXTURE0);
+                this.currentProgram = null;
             };
             /**
              * 执行绘制命令

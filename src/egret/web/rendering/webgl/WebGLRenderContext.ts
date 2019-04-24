@@ -63,11 +63,12 @@ namespace egret.web {
          * WebGLRenderContext单例
          */
         private static instance: WebGLRenderContext;
-        public static getInstance(width: number, height: number): WebGLRenderContext {
+
+        public static getInstance(width: number, height: number, context?: WebGLRenderingContext): WebGLRenderContext {
             if (this.instance) {
                 return this.instance;
             }
-            this.instance = new WebGLRenderContext(width, height);
+            this.instance = new WebGLRenderContext(width, height, context);
             return this.instance;
         }
 
@@ -141,7 +142,7 @@ namespace egret.web {
         /**
          * 启用RenderBuffer
          */
-        private activateBuffer(buffer: WebGLRenderBuffer, width:number, height:number): void {
+        private activateBuffer(buffer: WebGLRenderBuffer, width: number, height: number): void {
 
             buffer.rootRenderTarget.activate();
 
@@ -178,7 +179,7 @@ namespace egret.web {
         private vertexBuffer;
         private indexBuffer;
 
-        public constructor(width?: number, height?: number) {
+        public constructor(width?: number, height?: number, context?: WebGLRenderingContext) {
 
             this.surface = createCanvas(width, height);
 
@@ -186,7 +187,7 @@ namespace egret.web {
                 return;
             }
 
-            this.initWebGL();
+            this.initWebGL(context);
 
             this.$bufferStack = [];
 
@@ -256,13 +257,14 @@ namespace egret.web {
 
         public contextLost: boolean = false;
 
-        private initWebGL(): void {
+        private initWebGL(context?: WebGLRenderingContext): void {
             this.onResize();
 
             this.surface.addEventListener("webglcontextlost", this.handleContextLost.bind(this), false);
             this.surface.addEventListener("webglcontextrestored", this.handleContextRestored.bind(this), false);
 
-            this.getWebGLContext();
+            this.setContext(context ? context : this.getWebGLContext());
+
 
             let gl = this.context;
             this.$maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
@@ -277,7 +279,7 @@ namespace egret.web {
             this.contextLost = false;
         }
 
-        private getWebGLContext() {
+        private getWebGLContext(): any {
             let options = {
                 antialias: WebGLRenderContext.antialias,
                 stencil: true//设置可以使用模板（用于不规则遮罩）
@@ -298,7 +300,7 @@ namespace egret.web {
             if (!gl) {
                 $error(1021);
             }
-            this.setContext(gl);
+            return gl;
         }
 
         private setContext(gl: any) {
@@ -709,6 +711,26 @@ namespace egret.web {
             // 清空数据
             this.drawCmdManager.clear();
             this.vao.clear();
+        }
+		/**
+         * @private
+         * for 3D&2D
+         */
+        public $beforeRender() {
+            const gl = this.context;
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+
+            gl.disable(gl.DEPTH_TEST);
+            gl.disable(gl.CULL_FACE);
+            gl.enable(gl.BLEND);
+            gl.disable(gl.STENCIL_TEST);
+            gl.colorMask(true, true, true, true);
+            this.setBlendMode("source-over");
+
+            // 目前只使用0号材质单元，默认开启
+            gl.activeTexture(gl.TEXTURE0);
+            this.currentProgram = null!;
         }
 
         /**
