@@ -5605,7 +5605,7 @@ var egret;
             WebGLRenderTarget.prototype.createTexture = function () {
                 var gl = this.gl;
                 var texture = gl.createTexture();
-                texture["glContext"] = gl;
+                texture[egret.glContext] = gl;
                 gl.bindTexture(gl.TEXTURE_2D, texture);
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.width, this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
@@ -5689,7 +5689,7 @@ var egret;
             return canvas;
         }
         //TO DO
-        var compressedTextureNotSupportedLogShowOnce = false;
+        var debugLogOnceCompressedTextureNotSupported = false;
         /**
          * @private
          * WebGL上下文对象，提供简单的绘图接口
@@ -5698,7 +5698,7 @@ var egret;
         var WebGLRenderContext = (function () {
             function WebGLRenderContext(width, height) {
                 //
-                this._emptyWhiteTexture = null;
+                this._defaultEmptyTexture = null;
                 this.glID = null;
                 this.projectionX = NaN;
                 this.projectionY = NaN;
@@ -5960,7 +5960,7 @@ var egret;
                     this.contextLost = true;
                     return;
                 }
-                texture.glContext = gl;
+                texture[egret.glContext] = gl;
                 gl.bindTexture(gl.TEXTURE_2D, texture);
                 gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, bitmapData);
@@ -5973,7 +5973,7 @@ var egret;
             /*
             * TO DO
             */
-            WebGLRenderContext.prototype.debugCheckCompressedTextureInternalFormat = function (currentSupportedCompressedTextureTypes, internalFormat) {
+            WebGLRenderContext.prototype.$debugCheckCompressedTextureInternalFormat = function (currentSupportedCompressedTextureTypes, internalFormat) {
                 //width: number, height: number max ?
                 var checkCurrentSupportedCompressedTextureTypes = false;
                 for (var i = 0, length_4 = currentSupportedCompressedTextureTypes.length; i < length_4; ++i) {
@@ -5991,9 +5991,9 @@ var egret;
             /*
             * TO DO
             */
-            WebGLRenderContext.prototype.debugLogCompressedTextureNotSupportedLog = function (currentSupportedCompressedTextureTypes, internalFormat) {
-                if (!compressedTextureNotSupportedLogShowOnce) {
-                    compressedTextureNotSupportedLogShowOnce = true;
+            WebGLRenderContext.prototype.$debugLogOnceCompressedTextureNotSupported = function (currentSupportedCompressedTextureTypes, internalFormat) {
+                if (!debugLogOnceCompressedTextureNotSupported) {
+                    debugLogOnceCompressedTextureNotSupported = true;
                     egret.log('internalFormat = ' + internalFormat + ':' + ('0x' + internalFormat.toString(16)) + ', the current hardware does not support the corresponding compression format.');
                     for (var i = 0, length_6 = currentSupportedCompressedTextureTypes.length; i < length_6; ++i) {
                         var ss = currentSupportedCompressedTextureTypes[i];
@@ -6001,12 +6001,13 @@ var egret;
                     }
                 }
             };
+            //
             WebGLRenderContext.prototype.createCompressedTexture = function (data, width, height, levels, internalFormat) {
                 if (true) {
-                    var checkRes = this.debugCheckCompressedTextureInternalFormat(this.currentSupportedCompressedTextureTypes, internalFormat);
+                    var checkRes = this.$debugCheckCompressedTextureInternalFormat(this.currentSupportedCompressedTextureTypes, internalFormat);
                     if (!checkRes) {
-                        this.debugLogCompressedTextureNotSupportedLog(this.currentSupportedCompressedTextureTypes, internalFormat);
-                        return this.getEmptyWhiteTexture();
+                        this.$debugLogOnceCompressedTextureNotSupported(this.currentSupportedCompressedTextureTypes, internalFormat);
+                        return this.defaultEmptyTexture;
                     }
                 }
                 var gl = this.context;
@@ -6015,7 +6016,8 @@ var egret;
                     this.contextLost = true;
                     return;
                 }
-                texture.glContext = gl;
+                texture[egret.glContext] = gl;
+                texture[egret.is_compressed_texture] = true;
                 gl.bindTexture(gl.TEXTURE_2D, texture);
                 gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
                 gl.compressedTexImage2D(gl.TEXTURE_2D, levels, internalFormat, width, height, 0, data);
@@ -6034,22 +6036,22 @@ var egret;
                 gl.bindTexture(gl.TEXTURE_2D, texture);
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, bitmapData);
             };
-            /**
-             * 获取一个WebGLTexture
-             * 如果有缓存的texture返回缓存的texture，如果没有则创建并缓存texture
-             */
-            WebGLRenderContext.prototype.getEmptyWhiteTexture = function () {
-                if (!this._emptyWhiteTexture) {
-                    var size = 16;
-                    var canvas = createCanvas(size, size);
-                    var context = canvas.getContext('2d');
-                    context.fillStyle = 'white';
-                    context.fillRect(0, 0, size, size);
-                    this._emptyWhiteTexture = this.createTexture(canvas);
-                    this._emptyWhiteTexture[egret.engine_default_empty_texture] = true;
-                }
-                return this._emptyWhiteTexture;
-            };
+            Object.defineProperty(WebGLRenderContext.prototype, "defaultEmptyTexture", {
+                get: function () {
+                    if (!this._defaultEmptyTexture) {
+                        var size = 16;
+                        var canvas = createCanvas(size, size);
+                        var context = canvas.getContext('2d');
+                        context.fillStyle = 'white';
+                        context.fillRect(0, 0, size, size);
+                        this._defaultEmptyTexture = this.createTexture(canvas);
+                        this._defaultEmptyTexture[egret.engine_default_empty_texture] = true;
+                    }
+                    return this._defaultEmptyTexture;
+                },
+                enumerable: true,
+                configurable: true
+            });
             WebGLRenderContext.prototype.getWebGLTexture = function (bitmapData) {
                 if (!bitmapData.webGLTexture) {
                     if (bitmapData.format == "image" && !bitmapData.hasCompressed2d()) {

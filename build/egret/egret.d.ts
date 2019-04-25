@@ -5574,6 +5574,8 @@ declare namespace egret {
     }
     const etc_alpha_mask = "etc_alpha_mask";
     const engine_default_empty_texture = "engine_default_empty_texture";
+    const is_compressed_texture = "is_compressed_texture";
+    const glContext = "glContext";
     /**
      * A BitmapData object contains an array of pixel data. This data can represent either a fully opaque bitmap or a
      * transparent bitmap that contains alpha channel data. Either type of BitmapData object is stored as a buffer of 32-bit

@@ -91,7 +91,7 @@ namespace egret {
                 console.warn('deleteWebGLTexture:' + engine_default_empty_texture);
                 return;
             }
-            const gl = webglTexture['glContext'] as WebGLRenderingContext;
+            const gl = webglTexture[glContext] as WebGLRenderingContext;
             if (gl) {
                 gl.deleteTexture(webglTexture);
             }
@@ -99,7 +99,7 @@ namespace egret {
                 //error!!!!!
                 console.error('deleteWebGLTexture gl = ' + gl);
             }
-            /*
+            /*old
             if (webglTexture && !webglTexture['engine_default_empty_texture']) {
                 const gl = webglTexture['glContext'] as WebGLRenderingContext;//bitmapData.glContext;
                 if (gl) {

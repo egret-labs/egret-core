@@ -7403,7 +7403,7 @@ var egret;
                 console.warn('deleteWebGLTexture:' + egret.engine_default_empty_texture);
                 return;
             }
-            var gl = webglTexture['glContext'];
+            var gl = webglTexture[egret.glContext];
             if (gl) {
                 gl.deleteTexture(webglTexture);
             }
@@ -7411,7 +7411,7 @@ var egret;
                 //error!!!!!
                 console.error('deleteWebGLTexture gl = ' + gl);
             }
-            /*
+            /*old
             if (webglTexture && !webglTexture['engine_default_empty_texture']) {
                 const gl = webglTexture['glContext'] as WebGLRenderingContext;//bitmapData.glContext;
                 if (gl) {
@@ -8646,6 +8646,8 @@ var egret;
     __reflect(CompressedTextureData.prototype, "egret.CompressedTextureData");
     egret.etc_alpha_mask = 'etc_alpha_mask';
     egret.engine_default_empty_texture = 'engine_default_empty_texture';
+    egret.is_compressed_texture = 'is_compressed_texture';
+    egret.glContext = 'glContext';
     /**
      * A BitmapData object contains an array of pixel data. This data can represent either a fully opaque bitmap or a
      * transparent bitmap that contains alpha channel data. Either type of BitmapData object is stored as a buffer of 32-bit
