@@ -12978,6 +12978,7 @@ var egret;
                 }
                 buffer.resize(width, height);
             };
+            //for 3D&2D
             /**
              * @private
              * stage渲染
@@ -14466,6 +14467,13 @@ var egret;
              */
             TouchHandler.prototype.$initMaxTouches = function () {
                 this.maxTouches = this.stage.$maxTouches;
+            };
+            /**
+             * @private
+             * 设置同时触摸数量
+             */
+            TouchHandler.prototype.$updateMaxTouches = function (value) {
+                this.maxTouches = value;
             };
             /**
              * @private
@@ -23593,17 +23601,7 @@ var egret;
                     return;
                 }
                 this.$maxTouches = value;
-                //for 3D&2D
-                if (this.$screen) {
-                    this.$screen.updateMaxTouches();
-                }
-                else {
-                    if (!this.$touch) {
-                        this.$touch = new egret.sys.TouchHandler(this);
-                        this.$touch.$initMaxTouches();
-                    }
-                    this.$touch.$initMaxTouches();
-                }
+                this.$screen.updateMaxTouches();
             },
             enumerable: true,
             configurable: true
@@ -23631,41 +23629,12 @@ var egret;
         /**
          * @private
          */
-        Stage.prototype.$onTouchBegin = function (x, y, touchPointID) {
-            if (!this.$touch) {
-                this.$touch = new egret.sys.TouchHandler(this);
-                this.$touch.$initMaxTouches();
-            }
-            return this.$touch.onTouchBegin(x, y, touchPointID);
-        };
-        /**
-         * @private
-         */
-        Stage.prototype.$onTouchEnd = function (x, y, touchPointID) {
-            if (!this.$touch) {
-                this.$touch = new egret.sys.TouchHandler(this);
-                this.$touch.$initMaxTouches();
-            }
-            return this.$touch.onTouchEnd(x, y, touchPointID);
-        };
-        /**
-         * @private
-         */
-        Stage.prototype.$onTouchMove = function (x, y, touchPointID) {
-            if (!this.$touch) {
-                this.$touch = new egret.sys.TouchHandler(this);
-                this.$touch.$initMaxTouches();
-            }
-            return this.$touch.onTouchMove(x, y, touchPointID);
-        };
-        /**
-         * @private
-         */
         Stage.prototype.$drawToSurface = function () {
             if (this.$displayList) {
                 this.$displayList.drawToSurface();
             }
         };
+        //for 3D&2D
         /**
          * @private
          */

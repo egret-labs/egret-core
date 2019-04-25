@@ -9502,6 +9502,11 @@ declare namespace egret.sys {
         $initMaxTouches(): void;
         /**
          * @private
+         * 设置同时触摸数量
+         */
+        $updateMaxTouches(value: number): void;
+        /**
+         * @private
          */
         private stage;
         /**
@@ -13814,10 +13819,6 @@ declare namespace egret {
         constructor();
         protected createNativeDisplayObject(): void;
         /**
-        * @private
-        */
-        $touch: egret.sys.TouchHandler;
-        /**
          * Gets and sets the frame rate of the stage. The frame rate is defined as frames per second. Valid range for the
          * frame rate is from 0.01 to 1000 frames per second.<br/>
          * Note: setting the frameRate property of one Stage object changes the frame rate for all Stage objects
@@ -13992,18 +13993,6 @@ declare namespace egret {
          * @language zh_CN
          */
         setContentSize(width: number, height: number): void;
-        /**
-         * @private
-         */
-        $onTouchBegin(x: number, y: number, touchPointID: number): boolean;
-        /**
-         * @private
-         */
-        $onTouchEnd(x: number, y: number, touchPointID: number): boolean;
-        /**
-         * @private
-         */
-        $onTouchMove(x: number, y: number, touchPointID: number): boolean;
         /**
          * @private
          */

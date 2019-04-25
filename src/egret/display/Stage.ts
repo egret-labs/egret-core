@@ -72,10 +72,6 @@ namespace egret {
         }
 
         /**
-        * @private
-        */
-        $touch: egret.sys.TouchHandler;
-        /**
          * Gets and sets the frame rate of the stage. The frame rate is defined as frames per second. Valid range for the
          * frame rate is from 0.01 to 1000 frames per second.<br/>
          * Note: setting the frameRate property of one Stage object changes the frame rate for all Stage objects
@@ -295,17 +291,7 @@ namespace egret {
                 return;
             }
             this.$maxTouches = value;
-            //for 3D&2D
-            if (this.$screen) {
-                this.$screen.updateMaxTouches();
-            }
-            else {
-                if (!this.$touch) {
-                    this.$touch = new egret.sys.TouchHandler(this);
-                    this.$touch.$initMaxTouches();
-                }
-                this.$touch.$initMaxTouches();
-            }
+            this.$screen.updateMaxTouches();
         }
 
         /**
@@ -332,41 +318,12 @@ namespace egret {
         /**
          * @private
          */
-        $onTouchBegin(x: number, y: number, touchPointID: number): boolean {
-            if (!this.$touch) {
-                this.$touch = new egret.sys.TouchHandler(this);
-                this.$touch.$initMaxTouches();
-            }
-            return this.$touch.onTouchBegin(x, y, touchPointID);
-        }
-        /**
-         * @private
-         */
-        $onTouchEnd(x: number, y: number, touchPointID: number): boolean {
-            if (!this.$touch) {
-                this.$touch = new egret.sys.TouchHandler(this);
-                this.$touch.$initMaxTouches();
-            }
-            return this.$touch.onTouchEnd(x, y, touchPointID);
-        }
-        /**
-         * @private
-         */
-        $onTouchMove(x: number, y: number, touchPointID: number): boolean {
-            if (!this.$touch) {
-                this.$touch = new egret.sys.TouchHandler(this);
-                this.$touch.$initMaxTouches();
-            }
-            return this.$touch.onTouchMove(x, y, touchPointID);
-        }
-        /**
-         * @private
-         */
         $drawToSurface() {
             if (this.$displayList) {
                 this.$displayList.drawToSurface();
             }
         }
+        //for 3D&2D
         /**
          * @private
          */

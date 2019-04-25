@@ -182,6 +182,7 @@ namespace egret.sys {
             }
             buffer.resize(width, height);
         }
+        //for 3D&2D
         /**
          * @private
          * stage渲染
