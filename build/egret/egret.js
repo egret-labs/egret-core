@@ -7394,13 +7394,34 @@ var egret;
             }
             return WebGLUtils.canUseWebGL;
         };
-        WebGLUtils.deleteWebGLTexture = function (bitmapData) {
-            if (bitmapData) {
-                var gl = bitmapData.glContext;
+        WebGLUtils.deleteWebGLTexture = function (webglTexture) {
+            if (!webglTexture) {
+                return;
+            }
+            if (webglTexture[egret.engine_default_empty_texture]) {
+                //引擎默认的空白纹理，不允许删除
+                console.warn('deleteWebGLTexture:' + egret.engine_default_empty_texture);
+                return;
+            }
+            var gl = webglTexture['glContext'];
+            if (gl) {
+                gl.deleteTexture(webglTexture);
+            }
+            else {
+                //error!!!!!
+                console.error('deleteWebGLTexture gl = ' + gl);
+            }
+            /*
+            if (webglTexture && !webglTexture['engine_default_empty_texture']) {
+                const gl = webglTexture['glContext'] as WebGLRenderingContext;//bitmapData.glContext;
                 if (gl) {
-                    gl.deleteTexture(bitmapData);
+                    gl.deleteTexture(webglTexture);
+                }
+                else {
+                    console.error('deleteWebGLTexture gl = ' + gl);
                 }
             }
+            */
         };
         return WebGLUtils;
     }());
@@ -8624,6 +8645,7 @@ var egret;
     egret.CompressedTextureData = CompressedTextureData;
     __reflect(CompressedTextureData.prototype, "egret.CompressedTextureData");
     egret.etc_alpha_mask = 'etc_alpha_mask';
+    egret.engine_default_empty_texture = 'engine_default_empty_texture';
     /**
      * A BitmapData object contains an array of pixel data. This data can represent either a fully opaque bitmap or a
      * transparent bitmap that contains alpha channel data. Either type of BitmapData object is stored as a buffer of 32-bit

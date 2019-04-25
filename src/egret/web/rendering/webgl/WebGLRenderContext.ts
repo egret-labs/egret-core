@@ -518,6 +518,7 @@ namespace egret.web {
                 context.fillStyle = 'white';
                 context.fillRect(0, 0, size, size);
                 this._emptyWhiteTexture = this.createTexture(canvas);
+                this._emptyWhiteTexture[engine_default_empty_texture] = true;
             }
             return this._emptyWhiteTexture;
         }

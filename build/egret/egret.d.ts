@@ -4333,7 +4333,7 @@ declare namespace egret {
         private static _compileShader(gl, shaderSrc, shaderType);
         private static canUseWebGL;
         static checkCanUseWebGL(): boolean;
-        static deleteWebGLTexture(bitmapData: any): void;
+        static deleteWebGLTexture(webglTexture: WebGLTexture): void;
     }
 }
 declare namespace egret {
@@ -5573,6 +5573,7 @@ declare namespace egret {
         level: number;
     }
     const etc_alpha_mask = "etc_alpha_mask";
+    const engine_default_empty_texture = "engine_default_empty_texture";
     /**
      * A BitmapData object contains an array of pixel data. This data can represent either a fully opaque bitmap or a
      * transparent bitmap that contains alpha channel data. Either type of BitmapData object is stored as a buffer of 32-bit
