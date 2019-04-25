@@ -2023,7 +2023,7 @@ var RES;
        *
        */
         function makeEtc1SeperatedAlphaResourceInfo(resource) {
-            return { name: resource.name + '_alpha', url: resource['seperated_alpha_url'], type: 'ktx', root: resource.root };
+            return { name: resource.name + '_alpha', url: resource['etc1_alpha_url'], type: 'ktx', root: resource.root };
         }
         processor_1.makeEtc1SeperatedAlphaResourceInfo = makeEtc1SeperatedAlphaResourceInfo;
         /**
@@ -2032,7 +2032,7 @@ var RES;
         processor_1.ETC1KTXProcessor = {
             onLoadStart: function (host, resource) {
                 return host.load(resource, "ktx").then(function (colorTex) {
-                    if (resource['seperated_alpha_url']) {
+                    if (resource['etc1_alpha_url']) {
                         var r_1 = makeEtc1SeperatedAlphaResourceInfo(resource);
                         return host.load(r_1, "ktx")
                             .then(function (alphaMaskTex) {
@@ -2064,13 +2064,13 @@ var RES;
                 else {
                     //error?!
                 }
-                if (resource['seperated_alpha_url']) {
+                if (resource['etc1_alpha_url']) {
                     var r = makeEtc1SeperatedAlphaResourceInfo(resource);
                     var alphaMaskTex = host.get(r);
                     if (alphaMaskTex) {
                         alphaMaskTex.dispose();
                     }
-                    host.unload(r);
+                    host.unload(r); //这里其实还会再删除一次，不过无所谓了。alphaMaskTex已经显示删除了
                 }
                 else {
                     //no alpha mask

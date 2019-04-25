@@ -214,7 +214,7 @@ module RES.processor {
      * 
      */
     export function makeEtc1SeperatedAlphaResourceInfo(resource: ResourceInfo): ResourceInfo {
-        return { name: resource.name + '_alpha', url: resource['seperated_alpha_url'], type: 'ktx', root: resource.root };
+        return { name: resource.name + '_alpha', url: resource['etc1_alpha_url'], type: 'ktx', root: resource.root };
     }
 
     /**
@@ -224,7 +224,7 @@ module RES.processor {
 
         onLoadStart(host, resource): Promise<any> {
             return host.load(resource, "ktx").then((colorTex) => {
-                if (resource['seperated_alpha_url']) {
+                if (resource['etc1_alpha_url']) {
                     const r = makeEtc1SeperatedAlphaResourceInfo(resource);
                     return host.load(r, "ktx")
                         .then((alphaMaskTex) => {
@@ -257,14 +257,13 @@ module RES.processor {
             else {
                 //error?!
             }
-
-            if (resource['seperated_alpha_url']) {
+            if (resource['etc1_alpha_url']) {
                 const r = makeEtc1SeperatedAlphaResourceInfo(resource);
                 const alphaMaskTex = host.get(r!);
                 if (alphaMaskTex) {
                     alphaMaskTex.dispose();
                 }
-                host.unload(r);
+                host.unload(r);//这里其实还会再删除一次，不过无所谓了。alphaMaskTex已经显示删除了
             }
             else {
                 //no alpha mask
