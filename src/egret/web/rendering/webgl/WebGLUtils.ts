@@ -87,8 +87,10 @@ namespace egret {
                 return;
             }
             if (webglTexture[engine_default_empty_texture]) {
-                //引擎默认的空白纹理，不允许删除
-                console.warn('deleteWebGLTexture:' + engine_default_empty_texture);
+                if (DEBUG) {
+                    //引擎默认的空白纹理，不允许删除
+                    console.warn('deleteWebGLTexture:' + engine_default_empty_texture);
+                }
                 return;
             }
             const gl = webglTexture[glContext] as WebGLRenderingContext;
@@ -96,8 +98,9 @@ namespace egret {
                 gl.deleteTexture(webglTexture);
             }
             else {
-                //error!!!!!
-                console.error('deleteWebGLTexture gl = ' + gl);
+                if (DEBUG) {
+                    console.error('deleteWebGLTexture gl = ' + gl);
+                }
             }
             /*old
             if (webglTexture && !webglTexture['engine_default_empty_texture']) {
