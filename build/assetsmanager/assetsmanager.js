@@ -2070,6 +2070,7 @@ var RES;
                     if (alphaMaskTex) {
                         alphaMaskTex.dispose();
                     }
+                    host.unload(r);
                 }
                 else {
                     //no alpha mask
