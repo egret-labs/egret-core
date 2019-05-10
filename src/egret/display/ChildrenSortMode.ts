@@ -57,17 +57,30 @@ namespace egret {
          */
         DEFAULT: "default",
         /**
-         * Tiled mode. Automatic sorted by y coordinates.
+         * Y increase mode. Automatic sorted ascending by y coordinates.
          * @version Egret 5.2.19
          * @platform Native
          * @language en_US
          */
         /**
-         * 瓦片模式。自动按y坐标排序。
+         * Y递增模式。自动按y坐标升序排序。
          * @version Egret 5.2.19
          * @platform Native
          * @language en_US
          */
-        TILED: "tiled"
+        INCREASE_Y: "increaseY",
+        /**
+         * Y decrease mode. Automatic sorted descending by y coordinates.
+         * @version Egret 5.2.19
+         * @platform Native
+         * @language en_US
+         */
+        /**
+         * Y递减模式。自动按y坐标降序排序。
+         * @version Egret 5.2.19
+         * @platform Native
+         * @language en_US
+         */
+        DECREASE_Y: "decreaseY"
     }
 }

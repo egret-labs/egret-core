@@ -4354,7 +4354,8 @@ declare namespace egret {
      */
     const ChildrenSortMode: {
         DEFAULT: string;
-        TILED: string;
+        INCREASE_Y: string;
+        DECREASE_Y: string;
     };
 }
 declare namespace egret {
