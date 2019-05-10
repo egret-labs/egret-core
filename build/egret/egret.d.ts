@@ -10501,6 +10501,13 @@ declare namespace egret {
          * @language zh_CN
          */
         const QGAME = "qgame";
+        /**
+         * 运行在 Oppo 小游戏上
+         * @version Egret 5.2.14
+         * @platform All
+         * @language zh_CN
+         */
+        const OPPOGAME = "oppogame";
     }
     /**
      * The Capabilities class provides properties that describe the system and runtime that are hosting the application.
