@@ -4407,7 +4407,7 @@ var egret;
          * @language en_US
          */
         DisplayObjectContainer.prototype.setChildrenSortMode = function (value) {
-            if (egret.nativeRender) {
+            if (egret.nativeRender && this.$nativeDisplayObject.setChildrenSortMode) {
                 this.$nativeDisplayObject.setChildrenSortMode(value);
             }
         };

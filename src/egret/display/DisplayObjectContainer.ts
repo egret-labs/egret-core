@@ -103,7 +103,7 @@ namespace egret {
          * @language en_US
          */
         public setChildrenSortMode(value: string): void {
-            if (egret.nativeRender) {
+            if (egret.nativeRender && this.$nativeDisplayObject.setChildrenSortMode) {
                 this.$nativeDisplayObject.setChildrenSortMode(value);
             }
         }
