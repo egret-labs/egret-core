@@ -4,7 +4,7 @@
 ---
 
 
-Egret Engine was officially released on May 25, 2018 5.2 stable version. On October 29, 2018, we will release a stable version of 5.2.19. This version has added support for baidugame.
+Egret Engine was officially released on May 25, 2018 5.2 stable version. On October 29, 2018, we will release a stable version of 5.2.14. This version has added support for baidugame.
 
 
 ## 2D Rendering - JavaScript
