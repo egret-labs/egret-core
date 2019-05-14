@@ -85,7 +85,7 @@
             "platform": "web"
           },
           {
-            "path": "web/EgretWebSysImpl.ts",
+            "path": "web/WebSysImpl.ts",
             "platform": "web"
           },
           {
