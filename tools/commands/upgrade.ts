@@ -49,7 +49,7 @@ class UpgradeCommand implements egret.Command {
             { "v": "5.1.2", command: Upgrade_5_1_2 },
             { "v": "5.2.13", command: Upgrade_5_2_13 },
             { "v": "5.2.17", command: Upgrade_5_2_17 },
-            { "v": "5.2.18" }
+            { "v": "5.2.19", command: Upgrade_5_2_19 }
         ];
 
         try {
@@ -135,15 +135,12 @@ function upgrade(info: VersionInfo) {
 
 
 class Upgrade_5_1_1 {
-
-
     async execute() {
         return 0;
     }
 }
 
 class Upgrade_5_1_2 {
-
     async execute() {
         console.log("【警告】: 如果您尝试发布到微信小游戏，建议您创建一个新项目，而不是使用 egret upgrade 命令")
         return 0;
@@ -151,7 +148,6 @@ class Upgrade_5_1_2 {
 }
 
 class Upgrade_5_2_13 {
-
     async execute() {
         file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "baidugame"), path.join(egret.args.projectDir, "scripts", "baidugame"));
         file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.baidugame.ts"), path.join(egret.args.projectDir, "scripts", "config.baidugame.ts"));
@@ -160,10 +156,17 @@ class Upgrade_5_2_13 {
 }
 
 class Upgrade_5_2_17 {
-
     async execute() {
         file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "qgame"), path.join(egret.args.projectDir, "scripts", "qgame"));
         file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.qgame.ts"), path.join(egret.args.projectDir, "scripts", "config.qgame.ts"));
+        return 0;
+    }
+}
+
+class Upgrade_5_2_19 {
+    async execute() {
+        file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "oppogame"), path.join(egret.args.projectDir, "scripts", "oppogame"));
+        file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.oppogame.ts"), path.join(egret.args.projectDir, "scripts", "config.oppogame.ts"));
         return 0;
     }
 }

@@ -19,8 +19,9 @@ export type TargetTemplateConfig = {
 
 export async function buildBefore(context) {
     // console.log(context)
-    const target = egret.args.target;
+    let target = egret.args.target;
     if (target != 'web') {
+        // target = 'qgame'
         // const targetRoot = path.resolve(__dirname, '../../egret-target-wxgame/target');
         const targetRoot = launcher.getLauncherLibrary().getTarget(target);
         if (!targetRoot) {
