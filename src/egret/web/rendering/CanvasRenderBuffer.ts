@@ -32,7 +32,7 @@ namespace egret.web {
     /**
      * 创建一个canvas。
      */
-    function createCanvas(width?:number, height?:number):HTMLCanvasElement {
+    function __createCanvas__(width?:number, height?:number):HTMLCanvasElement {
         let canvas:HTMLCanvasElement = document.createElement("canvas");
         if (!isNaN(width) && !isNaN(height)) {
             canvas.width = width;
@@ -74,7 +74,7 @@ namespace egret.web {
     export class CanvasRenderBuffer implements sys.RenderBuffer {
 
         public constructor(width?:number, height?:number, root?:boolean) {
-            this.surface = createCanvas(width, height);
+            this.surface = __createCanvas__(width, height);
             this.context = this.surface.getContext("2d");
             if (this.context) {
                 this.context.$offsetX = 0;

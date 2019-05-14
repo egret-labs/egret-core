@@ -14414,6 +14414,45 @@ var egret;
 (function (egret) {
     var sys;
     (function (sys) {
+        /**
+         * 创建一个canvas。
+         */
+        function createCanvas(width, height) {
+            console.error("empty sys.createCanvas = " + width + ", " + height);
+            return null;
+        }
+        sys.createCanvas = createCanvas;
+        /**
+        * 重新设置主canvas的大小
+        */
+        function resizeContext(renderContext, width, height, useMaxSize) {
+            console.error("empty sys.resizeContext = " + renderContext + ", " + width + ", " + height + ", " + useMaxSize);
+        }
+        sys.resizeContext = resizeContext;
+        /**
+        * 获得系统的渲染运行时
+        */
+        function getSystemRenderingContext(surface) {
+            console.error("empty sys.getSystemRenderingContext = " + surface);
+            return null;
+        }
+        sys.getSystemRenderingContext = getSystemRenderingContext;
+        /**
+        * 重新设置主canvas的大小
+        */
+        function createTexture(renderContext, bitmapData) {
+            console.error("empty sys.createTexture = " + bitmapData);
+            return null;
+        }
+        sys.createTexture = createTexture;
+        /**
+         * 画texture
+         **/
+        function drawTextureElements(renderContext, data, offset) {
+            console.error("empty sys.drawTextureElements = " + renderContext + ", " + data + ", " + offset);
+            return 0;
+        }
+        sys.drawTextureElements = drawTextureElements;
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////

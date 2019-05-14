@@ -29,18 +29,6 @@
 
 namespace egret.web {
 
-    /**
-     * 创建一个canvas。
-     */
-    function createCanvas(width?: number, height?: number): HTMLCanvasElement {
-        let canvas: HTMLCanvasElement = document.createElement("canvas");
-        if (!isNaN(width) && !isNaN(height)) {
-            canvas.width = width;
-            canvas.height = height;
-        }
-        return canvas;
-    }
-
     ///
     export interface SupportedCompressedTextureType {
         type: string,
@@ -56,7 +44,7 @@ namespace egret.web {
      * WebGL上下文对象，提供简单的绘图接口
      * 抽象出此类，以实现共用一个context
      */
-    export class WebGLRenderContext {
+    export class WebGLRenderContext implements egret.sys.RenderContext {
 
         public static antialias: boolean;
 
@@ -193,7 +181,7 @@ namespace egret.web {
 
         public constructor(width?: number, height?: number) {
 
-            this.surface = createCanvas(width, height);
+            this.surface = egret.sys.createCanvas(width, height);
 
             if (egret.nativeRender) {
                 return;
@@ -223,7 +211,7 @@ namespace egret.web {
             this.surface.width = this.surface.height = 0;
         }
 
-        private onResize(width?: number, height?: number): void {
+        public onResize(width?: number, height?: number): void {
             width = width || this.surface.width;
             height = height || this.surface.height;
             this.projectionX = width / 2;
@@ -240,6 +228,8 @@ namespace egret.web {
          * @param useMaxSize 若传入true，则将改变后的尺寸与已有尺寸对比，保留较大的尺寸。
          */
         public resize(width: number, height: number, useMaxSize?: boolean): void {
+            egret.sys.resizeContext(this, width, height, useMaxSize);
+            /*
             let surface = this.surface;
             if (useMaxSize) {
                 if (surface.width < width) {
@@ -259,6 +249,7 @@ namespace egret.web {
             }
 
             this.onResize();
+            */
         }
 
         public static glContextId: number = 0;
@@ -330,6 +321,7 @@ namespace egret.web {
         }
 
         private getWebGLContext() {
+            /*
             let options = {
                 antialias: WebGLRenderContext.antialias,
                 stencil: true//设置可以使用模板（用于不规则遮罩）
@@ -350,6 +342,8 @@ namespace egret.web {
             if (!gl) {
                 $error(1021);
             }
+            */
+            const gl = egret.sys.getSystemRenderingContext(this.surface);
             this.setContext(gl);
         }
 
@@ -412,8 +406,12 @@ namespace egret.web {
          * 创建一个WebGLTexture
          */
         public createTexture(bitmapData: BitmapData | HTMLCanvasElement): WebGLTexture {
-            const gl = this.context;
-            const texture = gl.createTexture() as WebGLTexture;
+            return egret.sys.createTexture(this, bitmapData);
+            /*
+            let gl: any = this.context;
+
+            let texture = gl.createTexture();
+
             if (!texture) {
                 //先创建texture失败,然后lost事件才发出来..
                 this.contextLost = true;
@@ -428,6 +426,7 @@ namespace egret.web {
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
             return texture;
+            */
         }
 
         /*
@@ -503,7 +502,7 @@ namespace egret.web {
         public get defaultEmptyTexture(): WebGLTexture {
             if (!this._defaultEmptyTexture) {
                 const size = 16;
-                const canvas = createCanvas(size, size);
+                const canvas = egret.sys.createCanvas(size, size);
                 const context = canvas.getContext('2d');
                 context.fillStyle = 'white';
                 context.fillRect(0, 0, size, size);
@@ -1011,12 +1010,15 @@ namespace egret.web {
          * 画texture
          **/
         private drawTextureElements(data: any, offset: number): number {
+            return egret.sys.drawTextureElements(this, data, offset);
+            /*
             let gl: any = this.context;
             gl.activeTexture(gl.TEXTURE0); ///refactor
             gl.bindTexture(gl.TEXTURE_2D, data.texture);
             let size = data.count * 3;
             gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
             return size;
+            */
         }
 
         /**
