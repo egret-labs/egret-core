@@ -40,6 +40,10 @@ namespace egret.web {
         }
         return canvas;
     }
+    /*
+    * 覆盖掉系统的
+    */
+    egret.sys.createCanvas = createCanvas;
 
     /**
      * @private
@@ -180,7 +184,7 @@ namespace egret.web {
 
         public constructor(width?: number, height?: number) {
 
-            this.surface = createCanvas(width, height);
+            this.surface = egret.sys.createCanvas(width, height);
 
             if (egret.nativeRender) {
                 return;

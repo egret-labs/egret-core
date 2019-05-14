@@ -13980,6 +13980,14 @@ var egret;
 (function (egret) {
     var sys;
     (function (sys) {
+        /**
+         * 创建一个canvas。
+         */
+        function createCanvas(width, height) {
+            console.error("empty sys.createCanvas = " + width + ", " + height);
+            return null;
+        }
+        sys.createCanvas = createCanvas;
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////

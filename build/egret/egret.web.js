@@ -2806,7 +2806,7 @@ var egret;
         /**
          * 创建一个canvas。
          */
-        function createCanvas(width, height) {
+        function __createCanvas__(width, height) {
             var canvas = document.createElement("canvas");
             if (!isNaN(width) && !isNaN(height)) {
                 canvas.width = width;
@@ -2845,7 +2845,7 @@ var egret;
          */
         var CanvasRenderBuffer = (function () {
             function CanvasRenderBuffer(width, height, root) {
-                this.surface = createCanvas(width, height);
+                this.surface = __createCanvas__(width, height);
                 this.context = this.surface.getContext("2d");
                 if (this.context) {
                     this.context.$offsetX = 0;
@@ -5683,6 +5683,10 @@ var egret;
             }
             return canvas;
         }
+        /*
+        * 覆盖掉系统的
+        */
+        egret.sys.createCanvas = createCanvas;
         /**
          * @private
          * WebGL上下文对象，提供简单的绘图接口
@@ -5696,7 +5700,7 @@ var egret;
                 this.contextLost = false;
                 this.$scissorState = false;
                 this.vertSize = 5;
-                this.surface = createCanvas(width, height);
+                this.surface = egret.sys.createCanvas(width, height);
                 if (egret.nativeRender) {
                     return;
                 }

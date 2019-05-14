@@ -62,4 +62,12 @@ namespace egret.sys {
          */
         drawNodeToBuffer(node:sys.RenderNode, buffer:RenderBuffer, matrix:Matrix, forHitTest?:boolean):void;
     }
+
+    /**
+     * 创建一个canvas。
+     */
+    export function createCanvas(width?: number, height?: number): HTMLCanvasElement {
+        console.error(`empty sys.createCanvas = ${width}, ${height}`);
+        return null;
+    }
 }
