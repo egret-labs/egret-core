@@ -13995,6 +13995,14 @@ var egret;
             console.error("empty sys.resizeContext = " + renderContext + ", " + width + ", " + height + ", " + useMaxSize);
         }
         sys.resizeContext = resizeContext;
+        /**
+        * 重新设置主canvas的大小
+        */
+        function getSystemRenderingContext(surface) {
+            console.error("empty sys.getSystemRenderingContext = " + surface);
+            return null;
+        }
+        sys.getSystemRenderingContext = getSystemRenderingContext;
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////

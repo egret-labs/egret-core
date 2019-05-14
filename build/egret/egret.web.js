@@ -5683,10 +5683,10 @@ var egret;
             }
             return canvas;
         }
-        /*
-        * 覆盖掉系统的
-        */
         egret.sys.createCanvas = createCanvas;
+        /**
+         * sys.resizeContext。
+         */
         function resizeContext(renderContext, width, height, useMaxSize) {
             if (!renderContext) {
                 return;
@@ -5712,10 +5712,35 @@ var egret;
             webglrendercontext.onResize();
         }
         web.resizeContext = resizeContext;
-        /*
-        * 覆盖掉系统的
-        */
         egret.sys.resizeContext = resizeContext;
+        /**
+         * sys.getSystemRenderingContext
+         */
+        function getSystemRenderingContext(surface) {
+            var options = {
+                antialias: WebGLRenderContext.antialias,
+                stencil: true //设置可以使用模板（用于不规则遮罩）
+            };
+            var gl = null;
+            //todo 是否使用chrome源码names
+            //let contextNames = ["moz-webgl", "webkit-3d", "experimental-webgl", "webgl", "3d"];
+            var names = ["webgl", "experimental-webgl"];
+            for (var i = 0; i < names.length; ++i) {
+                try {
+                    gl = surface.getContext(names[i], options);
+                }
+                catch (e) {
+                }
+                if (gl) {
+                    break;
+                }
+            }
+            if (!gl) {
+                egret.$error(1021);
+            }
+            return gl;
+        }
+        egret.sys.getSystemRenderingContext = getSystemRenderingContext;
         /**
          * @private
          * WebGL上下文对象，提供简单的绘图接口
@@ -5871,27 +5896,29 @@ var egret;
                 this.contextLost = false;
             };
             WebGLRenderContext.prototype.getWebGLContext = function () {
-                var options = {
+                /*
+                let options = {
                     antialias: WebGLRenderContext.antialias,
-                    stencil: true //设置可以使用模板（用于不规则遮罩）
+                    stencil: true//设置可以使用模板（用于不规则遮罩）
                 };
-                var gl;
+                let gl: any;
                 //todo 是否使用chrome源码names
                 //let contextNames = ["moz-webgl", "webkit-3d", "experimental-webgl", "webgl", "3d"];
-                var names = ["webgl", "experimental-webgl"];
-                for (var i = 0; i < names.length; i++) {
+                let names = ["webgl", "experimental-webgl"];
+                for (let i = 0; i < names.length; i++) {
                     try {
                         gl = this.surface.getContext(names[i], options);
-                    }
-                    catch (e) {
+                    } catch (e) {
                     }
                     if (gl) {
                         break;
                     }
                 }
                 if (!gl) {
-                    egret.$error(1021);
+                    $error(1021);
                 }
+                */
+                var gl = egret.sys.getSystemRenderingContext(this.surface);
                 this.setContext(gl);
             };
             WebGLRenderContext.prototype.setContext = function (gl) {

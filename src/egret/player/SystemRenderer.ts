@@ -62,11 +62,12 @@ namespace egret.sys {
          */
         drawNodeToBuffer(node: sys.RenderNode, buffer: RenderBuffer, matrix: Matrix, forHitTest?: boolean): void;
     }
-
+    /**
+     * 
+     */
     export interface RenderContext {
 
     }
-
     /**
      * 创建一个canvas。
      */
@@ -74,11 +75,17 @@ namespace egret.sys {
         console.error(`empty sys.createCanvas = ${width}, ${height}`);
         return null;
     }
-
     /**
     * 重新设置主canvas的大小
     */
     export function resizeContext(renderContext: RenderContext, width: number, height: number, useMaxSize?: boolean): void {
         console.error(`empty sys.resizeContext = ${renderContext}, ${width}, ${height}, ${useMaxSize}`);
+    }
+    /**
+    * 重新设置主canvas的大小
+    */
+    export function getSystemRenderingContext(surface: HTMLCanvasElement): CanvasRenderingContext2D | WebGLRenderingContext {
+        console.error(`empty sys.getSystemRenderingContext = ${surface}`);
+        return null;
     }
 }

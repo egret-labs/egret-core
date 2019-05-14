@@ -9294,6 +9294,9 @@ declare namespace egret.sys {
          */
         drawNodeToBuffer(node: sys.RenderNode, buffer: RenderBuffer, matrix: Matrix, forHitTest?: boolean): void;
     }
+    /**
+     *
+     */
     interface RenderContext {
     }
     /**
@@ -9304,6 +9307,10 @@ declare namespace egret.sys {
     * 重新设置主canvas的大小
     */
     function resizeContext(renderContext: RenderContext, width: number, height: number, useMaxSize?: boolean): void;
+    /**
+    * 重新设置主canvas的大小
+    */
+    function getSystemRenderingContext(surface: HTMLCanvasElement): CanvasRenderingContext2D | WebGLRenderingContext;
 }
 declare namespace egret.sys {
     /**
