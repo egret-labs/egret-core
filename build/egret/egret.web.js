@@ -5687,6 +5687,35 @@ var egret;
         * 覆盖掉系统的
         */
         egret.sys.createCanvas = createCanvas;
+        function resizeContext(renderContext, width, height, useMaxSize) {
+            if (!renderContext) {
+                return;
+            }
+            var webglrendercontext = renderContext;
+            var surface = webglrendercontext.surface;
+            if (useMaxSize) {
+                if (surface.width < width) {
+                    surface.width = width;
+                }
+                if (surface.height < height) {
+                    surface.height = height;
+                }
+            }
+            else {
+                if (surface.width !== width) {
+                    surface.width = width;
+                }
+                if (surface.height !== height) {
+                    surface.height = height;
+                }
+            }
+            webglrendercontext.onResize();
+        }
+        web.resizeContext = resizeContext;
+        /*
+        * 覆盖掉系统的
+        */
+        egret.sys.resizeContext = resizeContext;
         /**
          * @private
          * WebGL上下文对象，提供简单的绘图接口
@@ -5803,7 +5832,9 @@ var egret;
              * @param useMaxSize 若传入true，则将改变后的尺寸与已有尺寸对比，保留较大的尺寸。
              */
             WebGLRenderContext.prototype.resize = function (width, height, useMaxSize) {
-                var surface = this.surface;
+                egret.sys.resizeContext(this, width, height, useMaxSize);
+                /*
+                let surface = this.surface;
                 if (useMaxSize) {
                     if (surface.width < width) {
                         surface.width = width;
@@ -5820,7 +5851,9 @@ var egret;
                         surface.height = height;
                     }
                 }
+    
                 this.onResize();
+                */
             };
             WebGLRenderContext.prototype.initWebGL = function () {
                 this.onResize();
@@ -6519,7 +6552,7 @@ var egret;
             return WebGLRenderContext;
         }());
         web.WebGLRenderContext = WebGLRenderContext;
-        __reflect(WebGLRenderContext.prototype, "egret.web.WebGLRenderContext");
+        __reflect(WebGLRenderContext.prototype, "egret.web.WebGLRenderContext", ["egret.sys.RenderContext"]);
         WebGLRenderContext.initBlendMode();
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));

@@ -13988,6 +13988,13 @@ var egret;
             return null;
         }
         sys.createCanvas = createCanvas;
+        /**
+        * 重新设置主canvas的大小
+        */
+        function resizeContext(renderContext, width, height, useMaxSize) {
+            console.error("empty sys.resizeContext = " + renderContext + ", " + width + ", " + height + ", " + useMaxSize);
+        }
+        sys.resizeContext = resizeContext;
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////

@@ -45,12 +45,41 @@ namespace egret.web {
     */
     egret.sys.createCanvas = createCanvas;
 
+    export function resizeContext(renderContext: egret.sys.RenderContext, width: number, height: number, useMaxSize?: boolean): void {
+        if (!renderContext) {
+            return;
+        }
+        const webglrendercontext = <WebGLRenderContext>renderContext;
+        const surface = webglrendercontext.surface;
+        if (useMaxSize) {
+            if (surface.width < width) {
+                surface.width = width;
+            }
+            if (surface.height < height) {
+                surface.height = height;
+            }
+        }
+        else {
+            if (surface.width !== width) {
+                surface.width = width;
+            }
+            if (surface.height !== height) {
+                surface.height = height;
+            }
+        }
+        webglrendercontext.onResize();
+    }
+    /*
+    * 覆盖掉系统的
+    */
+    egret.sys.resizeContext = resizeContext;
+
     /**
      * @private
      * WebGL上下文对象，提供简单的绘图接口
      * 抽象出此类，以实现共用一个context
      */
-    export class WebGLRenderContext {
+    export class WebGLRenderContext implements egret.sys.RenderContext {
 
         public static antialias: boolean;
 
@@ -214,7 +243,7 @@ namespace egret.web {
             this.surface.width = this.surface.height = 0;
         }
 
-        private onResize(width?: number, height?: number): void {
+        public onResize(width?: number, height?: number): void {
             width = width || this.surface.width;
             height = height || this.surface.height;
             this.projectionX = width / 2;
@@ -231,6 +260,8 @@ namespace egret.web {
          * @param useMaxSize 若传入true，则将改变后的尺寸与已有尺寸对比，保留较大的尺寸。
          */
         public resize(width: number, height: number, useMaxSize?: boolean): void {
+            egret.sys.resizeContext(this, width, height, useMaxSize);
+            /*
             let surface = this.surface;
             if (useMaxSize) {
                 if (surface.width < width) {
@@ -250,6 +281,7 @@ namespace egret.web {
             }
 
             this.onResize();
+            */
         }
 
         public static glContextId: number = 0;
