@@ -96,4 +96,12 @@ namespace egret.sys {
         console.error(`empty sys.createTexture = ${bitmapData}`);
         return null;
     }
+
+    /**
+     * 画texture
+     **/
+    export function drawTextureElements(renderContext: RenderContext, data: any, offset: number): number {
+        console.error(`empty sys.drawTextureElements = ${renderContext}, ${data}, ${offset}`);
+        return 0;
+    }
 }

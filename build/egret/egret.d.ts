@@ -9315,6 +9315,10 @@ declare namespace egret.sys {
     * 重新设置主canvas的大小
     */
     function createTexture(renderContext: RenderContext, bitmapData: BitmapData): WebGLTexture;
+    /**
+     * 画texture
+     **/
+    function drawTextureElements(renderContext: RenderContext, data: any, offset: number): number;
 }
 declare namespace egret.sys {
     /**

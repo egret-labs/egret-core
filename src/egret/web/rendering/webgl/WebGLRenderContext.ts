@@ -125,6 +125,18 @@ namespace egret.web {
     }
     egret.sys.createTexture = createTexture;
 
+    /**
+     * 画texture
+     **/
+    function drawTextureElements(renderContext: egret.sys.RenderContext, data: any, offset: number): number {
+        const webglrendercontext = <WebGLRenderContext>renderContext;
+        const gl: any = webglrendercontext.context;
+        gl.bindTexture(gl.TEXTURE_2D, data.texture);
+        const size = data.count * 3;
+        gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
+        return size;
+    }
+    egret.sys.drawTextureElements = drawTextureElements;
 
 
 
@@ -229,7 +241,7 @@ namespace egret.web {
         /**
          * 启用RenderBuffer
          */
-        private activateBuffer(buffer: WebGLRenderBuffer, width:number, height:number): void {
+        private activateBuffer(buffer: WebGLRenderBuffer, width: number, height: number): void {
 
             buffer.rootRenderTarget.activate();
 
@@ -968,11 +980,14 @@ namespace egret.web {
          * 画texture
          **/
         private drawTextureElements(data: any, offset: number): number {
+            return egret.sys.drawTextureElements(this, data, offset);
+            /*
             let gl: any = this.context;
             gl.bindTexture(gl.TEXTURE_2D, data.texture);
             let size = data.count * 3;
             gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
             return size;
+            */
         }
 
         /**

@@ -14011,6 +14011,14 @@ var egret;
             return null;
         }
         sys.createTexture = createTexture;
+        /**
+         * 画texture
+         **/
+        function drawTextureElements(renderContext, data, offset) {
+            console.error("empty sys.drawTextureElements = " + renderContext + ", " + data + ", " + offset);
+            return 0;
+        }
+        sys.drawTextureElements = drawTextureElements;
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
