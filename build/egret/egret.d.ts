@@ -9308,9 +9308,13 @@ declare namespace egret.sys {
     */
     function resizeContext(renderContext: RenderContext, width: number, height: number, useMaxSize?: boolean): void;
     /**
-    * 重新设置主canvas的大小
+    * 获得系统的渲染运行时
     */
     function getSystemRenderingContext(surface: HTMLCanvasElement): CanvasRenderingContext2D | WebGLRenderingContext;
+    /**
+    * 重新设置主canvas的大小
+    */
+    function createTexture(renderContext: RenderContext, bitmapData: BitmapData): WebGLTexture;
 }
 declare namespace egret.sys {
     /**

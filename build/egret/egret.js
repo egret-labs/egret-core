@@ -13996,13 +13996,21 @@ var egret;
         }
         sys.resizeContext = resizeContext;
         /**
-        * 重新设置主canvas的大小
+        * 获得系统的渲染运行时
         */
         function getSystemRenderingContext(surface) {
             console.error("empty sys.getSystemRenderingContext = " + surface);
             return null;
         }
         sys.getSystemRenderingContext = getSystemRenderingContext;
+        /**
+        * 重新设置主canvas的大小
+        */
+        function createTexture(renderContext, bitmapData) {
+            console.error("empty sys.createTexture = " + bitmapData);
+            return null;
+        }
+        sys.createTexture = createTexture;
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////

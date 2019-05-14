@@ -82,10 +82,18 @@ namespace egret.sys {
         console.error(`empty sys.resizeContext = ${renderContext}, ${width}, ${height}, ${useMaxSize}`);
     }
     /**
-    * 重新设置主canvas的大小
+    * 获得系统的渲染运行时
     */
     export function getSystemRenderingContext(surface: HTMLCanvasElement): CanvasRenderingContext2D | WebGLRenderingContext {
         console.error(`empty sys.getSystemRenderingContext = ${surface}`);
+        return null;
+    }
+
+    /**
+    * 重新设置主canvas的大小
+    */
+    export function createTexture(renderContext: RenderContext, bitmapData: BitmapData): WebGLTexture {
+        console.error(`empty sys.createTexture = ${bitmapData}`);
         return null;
     }
 }
