@@ -130,7 +130,8 @@ namespace egret.web {
      **/
     function drawTextureElements(renderContext: egret.sys.RenderContext, data: any, offset: number): number {
         const webglrendercontext = <WebGLRenderContext>renderContext;
-        const gl: any = webglrendercontext.context;
+        const gl: WebGLRenderingContext = webglrendercontext.context;
+        gl.activeTexture(gl.TEXTURE0); ///refactor
         gl.bindTexture(gl.TEXTURE_2D, data.texture);
         const size = data.count * 3;
         gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);

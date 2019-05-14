@@ -3771,6 +3771,7 @@ var egret;
         function drawTextureElements(renderContext, data, offset) {
             var webglrendercontext = renderContext;
             var gl = webglrendercontext.context;
+            gl.activeTexture(gl.TEXTURE0); ///refactor
             gl.bindTexture(gl.TEXTURE_2D, data.texture);
             var size = data.count * 3;
             gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
