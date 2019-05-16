@@ -5989,7 +5989,7 @@ var egret;
                             }
                             var formats = gl.getParameter(gl.COMPRESSED_TEXTURE_FORMATS);
                             if (true) {
-                                egret.log('gl.getParameter(gl.COMPRESSED_TEXTURE_FORMATS) = ' + formats);
+                                egret.log(availableExtensions[i] + '=> gl.getParameter(gl.COMPRESSED_TEXTURE_FORMATS) = ' + formats);
                                 for (var key in extension) {
                                     egret.log(key, extension[key], '0x' + extension[key].toString(16));
                                 }
@@ -6003,14 +6003,14 @@ var egret;
                             //
                             if (formats.length === 0) {
                                 for (var key in extension) {
-                                    info._Extension_KEY_VALUE_.push(extension[key]);
+                                    info._Extension_KEY_VALUE_.push([key, extension[key]]);
                                 }
                             }
                             //
                             if (true) {
                                 if (info._COMPRESSED_TEXTURE_FORMATS_.length === 0
                                     && info._Extension_KEY_VALUE_.length === 0) {
-                                    console.error('buildSupportedCompressedTextureInfo failed = ' + extension);
+                                    console.error('buildSupportedCompressedTextureInfo failed = ' + availableExtensions[i]);
                                 }
                             }
                             returnValue.push(info);
@@ -6150,7 +6150,7 @@ var egret;
                     }
                     var extension_values = ss._Extension_KEY_VALUE_;
                     for (var j = 0, length_5 = extension_values.length; j < length_5; ++j) {
-                        if (extension_values[j] === internalFormat) {
+                        if (extension_values[j][1] === internalFormat) {
                             return true;
                         }
                     }

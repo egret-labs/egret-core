@@ -30,11 +30,11 @@
 namespace egret.web {
 
     ///
-    export interface SupportedCompressedTextureInfo {
+    interface SupportedCompressedTextureInfo {
         keywordAsType: string,
         extensionName: string,
         _COMPRESSED_TEXTURE_FORMATS_: Uint32Array | number[],
-        _Extension_KEY_VALUE_: number[],
+        _Extension_KEY_VALUE_: Array<[string, number]>,
     }
 
     //TO DO
@@ -278,7 +278,7 @@ namespace egret.web {
                         }
                         const formats = gl.getParameter(gl.COMPRESSED_TEXTURE_FORMATS);
                         if (DEBUG) {
-                            egret.log('gl.getParameter(gl.COMPRESSED_TEXTURE_FORMATS) = ' + formats);
+                            egret.log(availableExtensions[i] + ' => gl.getParameter(gl.COMPRESSED_TEXTURE_FORMATS) = ' + formats);
                             for (const key in extension) {
                                 egret.log(key, extension[key], '0x' + extension[key].toString(16));
                             }
@@ -293,14 +293,14 @@ namespace egret.web {
                         //
                         if (formats.length === 0) {
                             for (const key in extension) {
-                                info._Extension_KEY_VALUE_.push(extension[key]);
+                                info._Extension_KEY_VALUE_.push([key, extension[key]]);
                             }
                         }
                         //
                         if (DEBUG) {
                             if (info._COMPRESSED_TEXTURE_FORMATS_.length === 0
                                 && info._Extension_KEY_VALUE_.length === 0) {
-                                    console.error('buildSupportedCompressedTextureInfo failed = ' + extension);
+                                    console.error('buildSupportedCompressedTextureInfo failed = ' + availableExtensions[i]);
                             }
                         }
                         returnValue.push(info);
@@ -458,7 +458,7 @@ namespace egret.web {
                 }
                 const extension_values = ss._Extension_KEY_VALUE_;
                 for (let j = 0, length = extension_values.length; j < length; ++j) {
-                    if (extension_values[j] === internalFormat) {
+                    if (extension_values[j][1] === internalFormat) {
                         return true;
                     }
                 }
