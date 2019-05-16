@@ -182,7 +182,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        constructor(source) {
+        constructor(source: any) {
             super();
             if (egret.nativeRender) {
                 let nativeBitmapData = new egret_native.NativeBitmapData();
@@ -193,9 +193,9 @@ namespace egret {
             // this.width = source.width;
             // this.height = source.height;
             this.source = source;
-            if (this.source && this.source instanceof HTMLImageElement) {
-                this.width = source.width;
-                this.height = source.height;
+            if (this.source) {
+                this.width = +source.width;
+                this.height = +source.height;
             }
             else {
                 ///compressed texture?

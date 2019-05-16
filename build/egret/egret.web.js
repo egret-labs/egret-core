@@ -3676,6 +3676,10 @@ var egret;
         /**
          * 创建一个canvas。
          */
+        function mainCanvas(width, height) {
+            return createCanvas(width, height);
+        }
+        egret.sys.mainCanvas = mainCanvas;
         function createCanvas(width, height) {
             var canvas = document.createElement("canvas");
             if (!isNaN(width) && !isNaN(height)) {
@@ -3715,9 +3719,9 @@ var egret;
         web.resizeContext = resizeContext;
         egret.sys.resizeContext = resizeContext;
         /**
-         * sys.getSystemRenderingContext
+         * sys.getContextWebGL
          */
-        function getSystemRenderingContext(surface) {
+        function getContextWebGL(surface) {
             var options = {
                 antialias: web.WebGLRenderContext.antialias,
                 stencil: true //设置可以使用模板（用于不规则遮罩）
@@ -3741,7 +3745,15 @@ var egret;
             }
             return gl;
         }
-        egret.sys.getSystemRenderingContext = getSystemRenderingContext;
+        egret.sys.getContextWebGL = getContextWebGL;
+        /**
+         * sys.getContext2d
+         */
+        function getContext2d(surface) {
+            return surface ? surface.getContext('2d') : null;
+        }
+        web.getContext2d = getContext2d;
+        egret.sys.getContext2d = getContext2d;
         /**
          * 创建一个WebGLTexture
          */
@@ -3771,7 +3783,7 @@ var egret;
         function drawTextureElements(renderContext, data, offset) {
             var webglrendercontext = renderContext;
             var gl = webglrendercontext.context;
-            gl.activeTexture(gl.TEXTURE0); ///refactor
+            gl.activeTexture(gl.TEXTURE0);
             gl.bindTexture(gl.TEXTURE_2D, data.texture);
             var size = data.count * 3;
             gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
@@ -5835,7 +5847,7 @@ var egret;
                 this.currentSupportedCompressedTextureTypes = [];
                 this.$scissorState = false;
                 this.vertSize = 5;
-                this.surface = egret.sys.createCanvas(width, height);
+                this.surface = egret.sys.mainCanvas(width, height);
                 if (egret.nativeRender) {
                     return;
                 }
@@ -6033,7 +6045,7 @@ var egret;
                     $error(1021);
                 }
                 */
-                var gl = egret.sys.getSystemRenderingContext(this.surface);
+                var gl = egret.sys.getContextWebGL(this.surface);
                 this.setContext(gl);
             };
             WebGLRenderContext.prototype.setContext = function (gl) {
@@ -6180,7 +6192,7 @@ var egret;
                     if (!this._defaultEmptyTexture) {
                         var size = 16;
                         var canvas = egret.sys.createCanvas(size, size);
-                        var context = canvas.getContext('2d');
+                        var context = egret.sys.getContext2d(canvas); //canvas.getContext('2d');
                         context.fillStyle = 'white';
                         context.fillRect(0, 0, size, size);
                         this._defaultEmptyTexture = this.createTexture(canvas);

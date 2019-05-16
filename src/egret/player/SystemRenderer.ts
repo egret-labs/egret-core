@@ -71,6 +71,11 @@ namespace egret.sys {
     /**
      * 创建一个canvas。
      */
+    export function mainCanvas(width?: number, height?: number): HTMLCanvasElement {
+        console.error(`empty sys.mainCanvas = ${width}, ${height}`);
+        return null;
+    }
+
     export function createCanvas(width?: number, height?: number): HTMLCanvasElement {
         console.error(`empty sys.createCanvas = ${width}, ${height}`);
         return null;
@@ -84,8 +89,13 @@ namespace egret.sys {
     /**
     * 获得系统的渲染运行时
     */
-    export function getSystemRenderingContext(surface: HTMLCanvasElement): CanvasRenderingContext2D | WebGLRenderingContext {
-        console.error(`empty sys.getSystemRenderingContext = ${surface}`);
+    export function getContextWebGL(surface: HTMLCanvasElement): WebGLRenderingContext {
+        console.error(`empty sys.getContextWebGL = ${surface}`);
+        return null;
+    }
+
+    export function getContext2d(surface: HTMLCanvasElement): CanvasRenderingContext2D {
+        console.error(`empty sys.getContext2d = ${surface}`);
         return null;
     }
 

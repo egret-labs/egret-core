@@ -9595,6 +9595,7 @@ declare namespace egret.sys {
     /**
      * 创建一个canvas。
      */
+    function mainCanvas(width?: number, height?: number): HTMLCanvasElement;
     function createCanvas(width?: number, height?: number): HTMLCanvasElement;
     /**
     * 重新设置主canvas的大小
@@ -9603,7 +9604,8 @@ declare namespace egret.sys {
     /**
     * 获得系统的渲染运行时
     */
-    function getSystemRenderingContext(surface: HTMLCanvasElement): CanvasRenderingContext2D | WebGLRenderingContext;
+    function getContextWebGL(surface: HTMLCanvasElement): WebGLRenderingContext;
+    function getContext2d(surface: HTMLCanvasElement): CanvasRenderingContext2D;
     /**
     * 重新设置主canvas的大小
     */

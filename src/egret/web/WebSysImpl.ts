@@ -32,6 +32,11 @@ namespace egret.web {
     /**
      * 创建一个canvas。
      */
+    function mainCanvas(width?: number, height?: number): HTMLCanvasElement {
+        return createCanvas(width, height);
+    }
+    egret.sys.mainCanvas = mainCanvas;
+
     function createCanvas(width?: number, height?: number): HTMLCanvasElement {
         let canvas: HTMLCanvasElement = document.createElement("canvas");
         if (!isNaN(width) && !isNaN(height)) {
@@ -73,9 +78,9 @@ namespace egret.web {
 
 
     /**
-     * sys.getSystemRenderingContext
+     * sys.getContextWebGL
      */
-    function getSystemRenderingContext(surface: HTMLCanvasElement): CanvasRenderingContext2D | WebGLRenderingContext {
+    function getContextWebGL(surface: HTMLCanvasElement): WebGLRenderingContext {
         const options = {
             antialias: WebGLRenderContext.antialias,
             stencil: true//设置可以使用模板（用于不规则遮罩）
@@ -96,10 +101,16 @@ namespace egret.web {
         if (!gl) {
             $error(1021);
         }
-        return gl;
+        return gl as WebGLRenderingContext;
     }
-    egret.sys.getSystemRenderingContext = getSystemRenderingContext;
-
+    egret.sys.getContextWebGL = getContextWebGL;
+    /**
+     * sys.getContext2d
+     */
+    export function getContext2d(surface: HTMLCanvasElement): CanvasRenderingContext2D {
+        return surface ? surface.getContext('2d') : null;
+    }
+    egret.sys.getContext2d = getContext2d;
 
     /**
      * 创建一个WebGLTexture
@@ -131,7 +142,7 @@ namespace egret.web {
     function drawTextureElements(renderContext: egret.sys.RenderContext, data: any, offset: number): number {
         const webglrendercontext = <WebGLRenderContext>renderContext;
         const gl: WebGLRenderingContext = webglrendercontext.context;
-        gl.activeTexture(gl.TEXTURE0); ///refactor
+        gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, data.texture);
         const size = data.count * 3;
         gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);

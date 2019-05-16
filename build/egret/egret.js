@@ -8725,9 +8725,9 @@ var egret;
             // this.width = source.width;
             // this.height = source.height;
             _this.source = source;
-            if (_this.source && _this.source instanceof HTMLImageElement) {
-                _this.width = source.width;
-                _this.height = source.height;
+            if (_this.source) {
+                _this.width = +source.width;
+                _this.height = +source.height;
             }
             else {
                 ///compressed texture?
@@ -14417,6 +14417,11 @@ var egret;
         /**
          * 创建一个canvas。
          */
+        function mainCanvas(width, height) {
+            console.error("empty sys.mainCanvas = " + width + ", " + height);
+            return null;
+        }
+        sys.mainCanvas = mainCanvas;
         function createCanvas(width, height) {
             console.error("empty sys.createCanvas = " + width + ", " + height);
             return null;
@@ -14432,11 +14437,16 @@ var egret;
         /**
         * 获得系统的渲染运行时
         */
-        function getSystemRenderingContext(surface) {
-            console.error("empty sys.getSystemRenderingContext = " + surface);
+        function getContextWebGL(surface) {
+            console.error("empty sys.getContextWebGL = " + surface);
             return null;
         }
-        sys.getSystemRenderingContext = getSystemRenderingContext;
+        sys.getContextWebGL = getContextWebGL;
+        function getContext2d(surface) {
+            console.error("empty sys.getContext2d = " + surface);
+            return null;
+        }
+        sys.getContext2d = getContext2d;
         /**
         * 重新设置主canvas的大小
         */

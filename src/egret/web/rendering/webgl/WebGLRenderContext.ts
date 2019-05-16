@@ -181,7 +181,7 @@ namespace egret.web {
 
         public constructor(width?: number, height?: number) {
 
-            this.surface = egret.sys.createCanvas(width, height);
+            this.surface = egret.sys.mainCanvas(width, height);
 
             if (egret.nativeRender) {
                 return;
@@ -343,7 +343,7 @@ namespace egret.web {
                 $error(1021);
             }
             */
-            const gl = egret.sys.getSystemRenderingContext(this.surface);
+            const gl = egret.sys.getContextWebGL(this.surface);
             this.setContext(gl);
         }
 
@@ -503,7 +503,7 @@ namespace egret.web {
             if (!this._defaultEmptyTexture) {
                 const size = 16;
                 const canvas = egret.sys.createCanvas(size, size);
-                const context = canvas.getContext('2d');
+                const context = egret.sys.getContext2d(canvas);//canvas.getContext('2d');
                 context.fillStyle = 'white';
                 context.fillRect(0, 0, size, size);
                 this._defaultEmptyTexture = this.createTexture(canvas);
