@@ -51,7 +51,7 @@ export class VivogamePlugin implements plugins.Command {
     }
     async onFinish(pluginContext: plugins.CommandContext) {
         //同步 index.html 配置到 game.js
-        const gameJSPath = path.join(pluginContext.outputDir, "main.js");
+        const gameJSPath = path.join(pluginContext.outputDir, "game.js");
         if(!fs.existsSync(gameJSPath)) {
             console.log(`${gameJSPath}不存在，请先使用 Launcher 发布 Vivo 小游戏`);
             return;
@@ -84,7 +84,7 @@ export class VivogamePlugin implements plugins.Command {
         }
         const gameJSONPath = path.join(pluginContext.outputDir, "manifest.json");
         let gameJSONContent = JSON.parse(fs.readFileSync(gameJSONPath, { encoding: "utf8" }));
-        gameJSONContent.orientation = orientation;
+        gameJSONContent.deviceOrientation = orientation;
         fs.writeFileSync(gameJSONPath, JSON.stringify(gameJSONContent, null, "\t"));
     }
 }

@@ -11,7 +11,7 @@ const config: ResourceManagerConfig = {
     buildConfig: (params) => {
 
         const { target, command, projectName, version } = params;
-        const outputDir = `../${projectName}_vivogame`;
+        const outputDir = `../${projectName}_vivogame/src`;
         if (command == 'build') {
             return {
                 outputDir,
