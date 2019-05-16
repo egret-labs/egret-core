@@ -31,10 +31,8 @@ namespace egret.web {
 
     ///
     interface SupportedCompressedTextureInfo {
-        keywordAsType: string,
         extensionName: string,
-        _COMPRESSED_TEXTURE_FORMATS_: Uint32Array | number[],
-        _Extension_KEY_VALUE_: Array<[string, number]>,
+        supportedFormats: Array<[string, number]>,
     }
 
     //TO DO
@@ -263,49 +261,39 @@ namespace egret.web {
 
         //refactor
         private _supportedCompressedTextureInfo: SupportedCompressedTextureInfo[] = [];
-        private _buildSupportedCompressedTextureInfo(gl: WebGLRenderingContext, compressedTextureTypeKeywords: string[]): SupportedCompressedTextureInfo[] {
-            if (compressedTextureTypeKeywords.length === 0) {
+        private _buildSupportedCompressedTextureInfo(gl: WebGLRenderingContext, compressedTextureExNames: string[]): SupportedCompressedTextureInfo[] {
+            if (compressedTextureExNames.length === 0) {
                 return [];
             }
             const returnValue: SupportedCompressedTextureInfo[] = [];
-            const availableExtensions = gl.getSupportedExtensions();
-            for (let i = 0; i < availableExtensions.length; ++i) {
-                for (const kw of compressedTextureTypeKeywords) {
-                    if (availableExtensions[i].indexOf(kw) !== -1) {
-                        const extension = gl.getExtension(availableExtensions[i]);
-                        if (!extension) {
-                            continue;
-                        }
-                        const formats = gl.getParameter(gl.COMPRESSED_TEXTURE_FORMATS);
-                        if (DEBUG) {
-                            egret.log(availableExtensions[i] + ' => gl.getParameter(gl.COMPRESSED_TEXTURE_FORMATS) = ' + formats);
-                            for (const key in extension) {
-                                egret.log(key, extension[key], '0x' + extension[key].toString(16));
-                            }
-                        }
-                        const info = {
-                            keywordAsType: kw,
-                            extensionName: availableExtensions[i],
-                            _COMPRESSED_TEXTURE_FORMATS_: formats,
-                            _Extension_KEY_VALUE_: []
-                        } as SupportedCompressedTextureInfo;
+            for (const exName of compressedTextureExNames) {
+                const extension = gl.getExtension(exName);
+                if (!extension) {
+                    continue;
+                }
 
-                        //
-                        if (formats.length === 0) {
-                            for (const key in extension) {
-                                info._Extension_KEY_VALUE_.push([key, extension[key]]);
-                            }
+                const info = {
+                    extensionName: exName,
+                    supportedFormats: []
+                } as SupportedCompressedTextureInfo;
+
+                //
+                for (const key in extension) {
+                    info.supportedFormats.push([key, extension[key]]);
+                }
+                //
+                if (DEBUG) {
+                    if (info.supportedFormats.length === 0) {
+                        console.error('buildSupportedCompressedTextureInfo failed = ' + exName);
+                    }
+                    else {
+                        egret.log('support: ' + exName);
+                        for (const key in extension) {
+                            egret.log(key, extension[key], '0x' + extension[key].toString(16));
                         }
-                        //
-                        if (DEBUG) {
-                            if (info._COMPRESSED_TEXTURE_FORMATS_.length === 0
-                                && info._Extension_KEY_VALUE_.length === 0) {
-                                    console.error('buildSupportedCompressedTextureInfo failed = ' + availableExtensions[i]);
-                            }
-                        }
-                        returnValue.push(info);
                     }
                 }
+                returnValue.push(info);
             }
             return returnValue;
         }
@@ -322,7 +310,20 @@ namespace egret.web {
             this.$maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
 
             //refactor
-            this._supportedCompressedTextureInfo = this._buildSupportedCompressedTextureInfo(this.context, ['s3tc', 'etc1', 'pvrtc']);
+            // this._caps.astc = this._gl.getExtension('WEBGL_compressed_texture_astc') || this._gl.getExtension('WEBKIT_WEBGL_compressed_texture_astc');
+            // this._caps.s3tc = this._gl.getExtension('WEBGL_compressed_texture_s3tc') || this._gl.getExtension('WEBKIT_WEBGL_compressed_texture_s3tc');
+            // this._caps.pvrtc = this._gl.getExtension('WEBGL_compressed_texture_pvrtc') || this._gl.getExtension('WEBKIT_WEBGL_compressed_texture_pvrtc');
+            // this._caps.etc1 = this._gl.getExtension('WEBGL_compressed_texture_etc1') || this._gl.getExtension('WEBKIT_WEBGL_compressed_texture_etc1');
+            // this._caps.etc2 = this._gl.getExtension('WEBGL_compressed_texture_etc') || this._gl.getExtension('WEBKIT_WEBGL_compressed_texture_etc') ||
+            //     this._gl.getExtension('WEBGL_compressed_texture_es3_0'); // also a requirement of OpenGL ES 3
+            const compressedTextureExNames = [
+                'WEBGL_compressed_texture_pvrtc', 'WEBKIT_WEBGL_compressed_texture_pvrtc',
+                'WEBGL_compressed_texture_etc1', 'WEBKIT_WEBGL_compressed_texture_etc1',
+                'WEBGL_compressed_texture_etc', 'WEBKIT_WEBGL_compressed_texture_etc',
+                'WEBGL_compressed_texture_astc', 'WEBKIT_WEBGL_compressed_texture_astc',
+                'WEBGL_compressed_texture_s3tc', 'WEBKIT_WEBGL_compressed_texture_s3tc',
+                'WEBGL_compressed_texture_es3_0'];
+            this._supportedCompressedTextureInfo = this._buildSupportedCompressedTextureInfo(this.context, compressedTextureExNames);
         }
 
         private handleContextLost() {
@@ -450,15 +451,15 @@ namespace egret.web {
             //width: number, height: number max ?
             for (let i = 0, length = supportedCompressedTextureInfo.length; i < length; ++i) {
                 const ss = supportedCompressedTextureInfo[i];
-                const formats = ss._COMPRESSED_TEXTURE_FORMATS_;
-                for (let j = 0, length = formats.length; j < length; ++j) {
-                    if (formats[j] === internalFormat) {
-                        return true;
-                    }
-                }
-                const extension_values = ss._Extension_KEY_VALUE_;
-                for (let j = 0, length = extension_values.length; j < length; ++j) {
-                    if (extension_values[j][1] === internalFormat) {
+                // const formats = ss._COMPRESSED_TEXTURE_FORMATS_;
+                // for (let j = 0, length = formats.length; j < length; ++j) {
+                //     if (formats[j] === internalFormat) {
+                //         return true;
+                //     }
+                // }
+                const supportedFormats = ss.supportedFormats;
+                for (let j = 0, length = supportedFormats.length; j < length; ++j) {
+                    if (supportedFormats[j][1] === internalFormat) {
                         return true;
                     }
                 }
@@ -475,11 +476,12 @@ namespace egret.web {
                 egret.log('internalFormat = ' + internalFormat + ':' + ('0x' + internalFormat.toString(16)) + ', the current hardware does not support the corresponding compression format.');
                 for (let i = 0, length = supportedCompressedTextureInfo.length; i < length; ++i) {
                     const ss = supportedCompressedTextureInfo[i];
-                    if (ss._COMPRESSED_TEXTURE_FORMATS_.length > 0) {
-                        egret.log('keywordAsType = ' + ss.keywordAsType + ', extensionName = ' + ss.extensionName + ', _COMPRESSED_TEXTURE_FORMATS_ = ' + ss._COMPRESSED_TEXTURE_FORMATS_);
-                    }
-                    else {
-                        egret.log('keywordAsType = ' + ss.keywordAsType + ', extensionName = ' + ss.extensionName + ', _Extension_KEY_VALUE_ = ' + ss._Extension_KEY_VALUE_);
+                    if (ss.supportedFormats.length > 0) {
+                        egret.log('support = ' + ss.extensionName);
+                        for (let j = 0, length = ss.supportedFormats.length; j < length; ++j) {
+                            const tp = ss.supportedFormats[j];
+                            egret.log(tp[0] + ' : ' + tp[1] + ' : ' + ('0x' + tp[1].toString(16)));
+                        }
                     }
                 }
             }
