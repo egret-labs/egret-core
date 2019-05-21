@@ -196,6 +196,8 @@ module RES.processor {
                     const list: Array<string> = r.scale9grid.split(",");
                     texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
                 }
+                //
+                host.save(resource as ResourceInfo, texture);
                 return texture;
             }, function (e) {
                 throw e;
