@@ -1043,8 +1043,8 @@ declare module RES.processor {
     var ImageProcessor: Processor;
     const KTXTextureProcessor: RES.processor.Processor;
     /**
-   *
-   */
+    *
+    */
     function makeEtc1SeperatedAlphaResourceInfo(resource: ResourceInfo): ResourceInfo;
     /**
     *

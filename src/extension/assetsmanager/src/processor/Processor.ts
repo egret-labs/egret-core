@@ -161,31 +161,15 @@ module RES.processor {
     export const KTXTextureProcessor: RES.processor.Processor = {
 
         onLoadStart(host, resource) {
-            const request: egret.HttpRequest = new egret.HttpRequest();
-            request.responseType = egret.HttpResponseType.ARRAY_BUFFER;
-            const virtualUrl = resource.root + resource.url;
-            request.open(RES.getVirtualUrl(virtualUrl), "get");
-            request.send();
-            return new Promise((resolve, reject) => {
-                const onSuccess = () => {
-                    const data = request['data'] ? request['data'] : request['response'];
-                    resolve(data);
-                }
-                const onError = () => {
-                    const e = new RES.ResourceManagerError(1001, resource.url);
-                    reject(e);
-                }
-                request.addEventListener(egret.Event.COMPLETE, onSuccess, this);
-                request.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, this);
-            }).then((data) => {
+            return host.load(resource, 'bin').then((data) => {
                 const ktx = new egret.KTXContainer(data, 1);
                 if (ktx.isInvalid) {
-                    console.error('ktx:' + virtualUrl + ' is invalid');
+                    console.error('ktx:' + resource.root + resource.url + ' is invalid');
                     return null;
                 }
                 //
                 const bitmapData = new egret.BitmapData(data);
-                bitmapData.debugCompressedTextureURL = virtualUrl;
+                bitmapData.debugCompressedTextureURL = resource.root + resource.url;
                 bitmapData.format = 'ktx';
                 ktx.uploadLevels(bitmapData, false);
                 //
@@ -209,12 +193,14 @@ module RES.processor {
             if (texture) {
                 texture.dispose();
             }
+            else {
+            }
         }
     }
 
-      /**
-     * 
-     */
+    /**
+    * 
+    */
     export function makeEtc1SeperatedAlphaResourceInfo(resource: ResourceInfo): ResourceInfo {
         return { name: resource.name + '_alpha', url: resource['etc1_alpha_url'], type: 'ktx', root: resource.root };
     }
@@ -230,14 +216,11 @@ module RES.processor {
                     const r = makeEtc1SeperatedAlphaResourceInfo(resource);
                     return host.load(r, "ktx")
                         .then((alphaMaskTex) => {
-                            if (colorTex 
-                                && colorTex.$bitmapData 
-                                && alphaMaskTex.$bitmapData) {
+                            if (colorTex && colorTex.$bitmapData && alphaMaskTex.$bitmapData) {
                                 colorTex.$bitmapData.etcAlphaMask = alphaMaskTex.$bitmapData;
                                 host.save(r as ResourceInfo, alphaMaskTex);
                             }
                             else {
-                                //error
                             }
                             return colorTex;
                         }, function (e) {
@@ -257,13 +240,14 @@ module RES.processor {
                 colorTex.dispose();
             }
             else {
-                //error?!
             }
             if (resource['etc1_alpha_url']) {
                 const r = makeEtc1SeperatedAlphaResourceInfo(resource);
                 const alphaMaskTex = host.get(r!);
                 if (alphaMaskTex) {
                     alphaMaskTex.dispose();
+                }
+                else {
                 }
                 host.unload(r);//这里其实还会再删除一次，不过无所谓了。alphaMaskTex已经显示删除了
             }

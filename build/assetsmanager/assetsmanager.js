@@ -1971,32 +1971,15 @@ var RES;
         };
         processor_1.KTXTextureProcessor = {
             onLoadStart: function (host, resource) {
-                var _this = this;
-                var request = new egret.HttpRequest();
-                request.responseType = egret.HttpResponseType.ARRAY_BUFFER;
-                var virtualUrl = resource.root + resource.url;
-                request.open(RES.getVirtualUrl(virtualUrl), "get");
-                request.send();
-                return new Promise(function (resolve, reject) {
-                    var onSuccess = function () {
-                        var data = request['data'] ? request['data'] : request['response'];
-                        resolve(data);
-                    };
-                    var onError = function () {
-                        var e = new RES.ResourceManagerError(1001, resource.url);
-                        reject(e);
-                    };
-                    request.addEventListener(egret.Event.COMPLETE, onSuccess, _this);
-                    request.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, _this);
-                }).then(function (data) {
+                return host.load(resource, 'bin').then(function (data) {
                     var ktx = new egret.KTXContainer(data, 1);
                     if (ktx.isInvalid) {
-                        console.error('ktx:' + virtualUrl + ' is invalid');
+                        console.error('ktx:' + resource.root + resource.url + ' is invalid');
                         return null;
                     }
                     //
                     var bitmapData = new egret.BitmapData(data);
-                    bitmapData.debugCompressedTextureURL = virtualUrl;
+                    bitmapData.debugCompressedTextureURL = resource.root + resource.url;
                     bitmapData.format = 'ktx';
                     ktx.uploadLevels(bitmapData, false);
                     //
@@ -2019,11 +2002,13 @@ var RES;
                 if (texture) {
                     texture.dispose();
                 }
+                else {
+                }
             }
         };
         /**
-       *
-       */
+        *
+        */
         function makeEtc1SeperatedAlphaResourceInfo(resource) {
             return { name: resource.name + '_alpha', url: resource['etc1_alpha_url'], type: 'ktx', root: resource.root };
         }
@@ -2038,14 +2023,11 @@ var RES;
                         var r_1 = makeEtc1SeperatedAlphaResourceInfo(resource);
                         return host.load(r_1, "ktx")
                             .then(function (alphaMaskTex) {
-                            if (colorTex
-                                && colorTex.$bitmapData
-                                && alphaMaskTex.$bitmapData) {
+                            if (colorTex && colorTex.$bitmapData && alphaMaskTex.$bitmapData) {
                                 colorTex.$bitmapData.etcAlphaMask = alphaMaskTex.$bitmapData;
                                 host.save(r_1, alphaMaskTex);
                             }
                             else {
-                                //error
                             }
                             return colorTex;
                         }, function (e) {
@@ -2064,13 +2046,14 @@ var RES;
                     colorTex.dispose();
                 }
                 else {
-                    //error?!
                 }
                 if (resource['etc1_alpha_url']) {
                     var r = makeEtc1SeperatedAlphaResourceInfo(resource);
                     var alphaMaskTex = host.get(r);
                     if (alphaMaskTex) {
                         alphaMaskTex.dispose();
+                    }
+                    else {
                     }
                     host.unload(r); //这里其实还会再删除一次，不过无所谓了。alphaMaskTex已经显示删除了
                 }
