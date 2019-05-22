@@ -17699,6 +17699,19 @@ var egret;
          * @language zh_CN
          */
         Capabilities.boundingClientHeight = 0;
+        /***
+         * supported compressed texture
+         * @version Egret 5.2.19
+         * @platform Web,Native
+         * @language en_US
+         */
+        /***
+         * supported compressed texture
+         * @version Egret 5.2.19
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        Capabilities.supportedCompressedTexture = {};
         return Capabilities;
     }());
     egret.Capabilities = Capabilities;

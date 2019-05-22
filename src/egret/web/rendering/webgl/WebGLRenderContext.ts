@@ -326,20 +326,19 @@ namespace egret.web {
             //     'WEBGL_compressed_texture_astc', 'WEBKIT_WEBGL_compressed_texture_astc',
             //     'WEBGL_compressed_texture_s3tc', 'WEBKIT_WEBGL_compressed_texture_s3tc',
             //     'WEBGL_compressed_texture_es3_0'];
-
-            const capabilities = egret.Capabilities;
             //
             this.pvrtc = gl.getExtension('WEBGL_compressed_texture_pvrtc') || gl.getExtension('WEBKIT_WEBGL_compressed_texture_pvrtc');
             if (this.pvrtc) {
-                this.pvrtc.name = 'WEBGL_compressed_texture_pvrtc';
-                capabilities['pvrtc'] = this.pvrtc;
+                this.pvrtc.name = 'WEBGL_compressed_texture_pvrtc';                
             }
             //
             this.etc1 = gl.getExtension('WEBGL_compressed_texture_etc1') || gl.getExtension('WEBKIT_WEBGL_compressed_texture_etc1');
             if (this.etc1) {
-                this.etc1.name = 'WEBGL_compressed_texture_etc1';
-                capabilities['etc1'] = this.etc1;
+                this.etc1.name = 'WEBGL_compressed_texture_etc1';                
             }
+            //
+            egret.Capabilities.supportedCompressedTexture.pvrtc = !!this.pvrtc;
+            egret.Capabilities.supportedCompressedTexture.etc1 = !!this.etc1;
             //
             this._supportedCompressedTextureInfo = this._buildSupportedCompressedTextureInfo(/*this.context, compressedTextureExNames,*/ [this.etc1, this.pvrtc]);
         }
