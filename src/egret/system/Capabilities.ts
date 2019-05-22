@@ -337,6 +337,6 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        static readonly supportedCompressedTexture: SupportedCompressedTexture = {} as SupportedCompressedTexture;
+        static supportedCompressedTexture: SupportedCompressedTexture;
     }
 }
