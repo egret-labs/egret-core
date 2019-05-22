@@ -1972,6 +1972,10 @@ var RES;
         processor_1.KTXTextureProcessor = {
             onLoadStart: function (host, resource) {
                 return host.load(resource, 'bin').then(function (data) {
+                    if (!data) {
+                        console.error('ktx:' + resource.root + resource.url + ' is null');
+                        return null;
+                    }
                     var ktx = new egret.KTXContainer(data, 1);
                     if (ktx.isInvalid) {
                         console.error('ktx:' + resource.root + resource.url + ' is invalid');
@@ -1994,6 +1998,7 @@ var RES;
                     host.save(resource, texture);
                     return texture;
                 }, function (e) {
+                    host.remove(resource);
                     throw e;
                 });
             },
@@ -2001,8 +2006,6 @@ var RES;
                 var texture = host.get(resource);
                 if (texture) {
                     texture.dispose();
-                }
-                else {
                 }
             }
         };
@@ -2019,6 +2022,9 @@ var RES;
         processor_1.ETC1KTXProcessor = {
             onLoadStart: function (host, resource) {
                 return host.load(resource, "ktx").then(function (colorTex) {
+                    if (!colorTex) {
+                        return null;
+                    }
                     if (resource['etc1_alpha_url']) {
                         var r_1 = makeEtc1SeperatedAlphaResourceInfo(resource);
                         return host.load(r_1, "ktx")
@@ -2028,6 +2034,7 @@ var RES;
                                 host.save(r_1, alphaMaskTex);
                             }
                             else {
+                                host.remove(r_1);
                             }
                             return colorTex;
                         }, function (e) {
@@ -2035,9 +2042,10 @@ var RES;
                             throw e;
                         });
                     }
-                    else {
-                        return colorTex;
-                    }
+                    return colorTex;
+                }, function (e) {
+                    host.remove(resource);
+                    throw e;
                 });
             },
             onRemoveStart: function (host, resource) {
@@ -2045,20 +2053,13 @@ var RES;
                 if (colorTex) {
                     colorTex.dispose();
                 }
-                else {
-                }
                 if (resource['etc1_alpha_url']) {
                     var r = makeEtc1SeperatedAlphaResourceInfo(resource);
                     var alphaMaskTex = host.get(r);
                     if (alphaMaskTex) {
                         alphaMaskTex.dispose();
                     }
-                    else {
-                    }
                     host.unload(r); //这里其实还会再删除一次，不过无所谓了。alphaMaskTex已经显示删除了
-                }
-                else {
-                    //no alpha mask
                 }
             }
         };
@@ -2144,6 +2145,9 @@ var RES;
                     }
                     return host.load(r)
                         .then(function (bitmapData) {
+                        if (!bitmapData) {
+                            return null;
+                        }
                         var frames = data.frames;
                         var spriteSheet = new egret.SpriteSheet(bitmapData);
                         spriteSheet["$resourceInfo"] = r;

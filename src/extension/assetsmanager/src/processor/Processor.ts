@@ -159,9 +159,12 @@ module RES.processor {
     }
 
     export const KTXTextureProcessor: RES.processor.Processor = {
-
         onLoadStart(host, resource) {
             return host.load(resource, 'bin').then((data) => {
+                if (!data) {
+                    console.error('ktx:' + resource.root + resource.url + ' is null');
+                    return null;
+                }
                 const ktx = new egret.KTXContainer(data, 1);
                 if (ktx.isInvalid) {
                     console.error('ktx:' + resource.root + resource.url + ' is invalid');
@@ -184,6 +187,7 @@ module RES.processor {
                 host.save(resource as ResourceInfo, texture);
                 return texture;
             }, function (e) {
+                host.remove(resource);
                 throw e;
             });
         },
@@ -192,8 +196,6 @@ module RES.processor {
             const texture = host.get(resource);
             if (texture) {
                 texture.dispose();
-            }
-            else {
             }
         }
     }
@@ -209,9 +211,11 @@ module RES.processor {
     * 
     */
     export const ETC1KTXProcessor: Processor = {
-
         onLoadStart(host, resource): Promise<any> {
             return host.load(resource, "ktx").then((colorTex) => {
+                if (!colorTex) {
+                    return null;
+                }
                 if (resource['etc1_alpha_url']) {
                     const r = makeEtc1SeperatedAlphaResourceInfo(resource);
                     return host.load(r, "ktx")
@@ -221,16 +225,18 @@ module RES.processor {
                                 host.save(r as ResourceInfo, alphaMaskTex);
                             }
                             else {
+                                host.remove(r);
                             }
                             return colorTex;
                         }, function (e) {
-                            host.remove(r!);
+                            host.remove(r);
                             throw e;
                         });
                 }
-                else {
-                    return colorTex;
-                }
+                return colorTex;
+            }, function (e) {
+                host.remove(resource);
+                throw e;
             });
         },
 
@@ -239,20 +245,13 @@ module RES.processor {
             if (colorTex) {
                 colorTex.dispose();
             }
-            else {
-            }
             if (resource['etc1_alpha_url']) {
                 const r = makeEtc1SeperatedAlphaResourceInfo(resource);
                 const alphaMaskTex = host.get(r!);
                 if (alphaMaskTex) {
                     alphaMaskTex.dispose();
                 }
-                else {
-                }
                 host.unload(r);//这里其实还会再删除一次，不过无所谓了。alphaMaskTex已经显示删除了
-            }
-            else {
-                //no alpha mask
             }
         }
     }
@@ -355,6 +354,9 @@ module RES.processor {
                 }
                 return host.load(r)
                     .then((bitmapData) => {
+                        if (!bitmapData) {
+                            return null;
+                        }
                         var frames: any = data.frames;
                         var spriteSheet = new egret.SpriteSheet(bitmapData);
                         spriteSheet["$resourceInfo"] = r;
