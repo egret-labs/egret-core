@@ -9435,6 +9435,16 @@ declare namespace egret.sys {
          */
         private render(triggerByFrame, costTicker);
         /**
+         * for 3D&2D
+         * @private
+         */
+        $beforeRender(): void;
+        /**
+         * for 3D&2D
+         * @private
+         */
+        $afterRender(): void;
+        /**
          * @private
          * 广播EnterFrame事件。
          */
@@ -13993,6 +14003,10 @@ declare namespace egret {
          * @language zh_CN
          */
         setContentSize(width: number, height: number): void;
+        /**
+         * @private
+         */
+        $drawToSurfaceAutoClear(): void;
         /**
          * @private
          */

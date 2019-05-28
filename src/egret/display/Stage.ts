@@ -318,9 +318,18 @@ namespace egret {
         /**
          * @private
          */
-        $drawToSurface() {
+        $drawToSurfaceAutoClear() {
             if (this.$displayList) {
                 this.$displayList.drawToSurface();
+            }
+        }
+        //for 3D&2D
+        /**
+         * @private
+         */
+        $drawToSurface() {
+            if (this.$displayList) {
+                this.$displayList.$stageRenderToSurface();
             }
         }
         //for 3D&2D

@@ -314,6 +314,23 @@ namespace egret.sys {
             }
             $requestRenderingFlag = false;
         }
+        /**
+         * for 3D&2D
+         * @private
+         */
+        public $beforeRender(): void {
+            if ($invalidateRenderFlag) {
+                this.broadcastRender();
+                $invalidateRenderFlag = false;
+            }
+        }
+        /**
+         * for 3D&2D
+         * @private
+         */
+        public $afterRender(): void {
+            this.broadcastEnterFrame();
+        }
 
         /**
          * @private

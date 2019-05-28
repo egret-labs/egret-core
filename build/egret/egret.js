@@ -14274,6 +14274,23 @@ var egret;
                 sys.$requestRenderingFlag = false;
             };
             /**
+             * for 3D&2D
+             * @private
+             */
+            SystemTicker.prototype.$beforeRender = function () {
+                if (sys.$invalidateRenderFlag) {
+                    this.broadcastRender();
+                    sys.$invalidateRenderFlag = false;
+                }
+            };
+            /**
+             * for 3D&2D
+             * @private
+             */
+            SystemTicker.prototype.$afterRender = function () {
+                this.broadcastEnterFrame();
+            };
+            /**
              * @private
              * 广播EnterFrame事件。
              */
@@ -23629,9 +23646,18 @@ var egret;
         /**
          * @private
          */
-        Stage.prototype.$drawToSurface = function () {
+        Stage.prototype.$drawToSurfaceAutoClear = function () {
             if (this.$displayList) {
                 this.$displayList.drawToSurface();
+            }
+        };
+        //for 3D&2D
+        /**
+         * @private
+         */
+        Stage.prototype.$drawToSurface = function () {
+            if (this.$displayList) {
+                this.$displayList.$stageRenderToSurface();
             }
         };
         //for 3D&2D
