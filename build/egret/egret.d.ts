@@ -1433,6 +1433,10 @@ declare namespace egret {
         /**
          * @private
          */
+        $ktxData: ArrayBuffer;
+        /**
+         * @private
+         */
         $rotated: boolean;
         /**
          * The BitmapData object being referenced.
@@ -1460,6 +1464,19 @@ declare namespace egret {
          * @language zh_CN
          */
         _setBitmapData(value: BitmapData): void;
+        /**
+        * Set the KTX object.
+        * @version Egret 5.2.21
+        * @platform Web,Native
+        * @language en_US
+        */
+        /**
+         * 设置 KTX 对象。
+         * @version Egret 5.2.21
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        ktxData: ArrayBuffer;
         /**
          * @private
          * 设置Texture数据

@@ -2850,6 +2850,10 @@ var egret;
             /**
              * @private
              */
+            _this.$ktxData = null;
+            /**
+             * @private
+             */
             _this.$rotated = false;
             return _this;
         }
@@ -2944,6 +2948,44 @@ var egret;
             var h = value.height * scale;
             this.$initData(0, 0, w, h, 0, 0, w, h, value.width, value.height);
         };
+        Object.defineProperty(Texture.prototype, "ktxData", {
+            get: function () {
+                return this.$ktxData;
+            },
+            /**
+            * Set the KTX object.
+            * @version Egret 5.2.21
+            * @platform Web,Native
+            * @language en_US
+            */
+            /**
+             * 设置 KTX 对象。
+             * @version Egret 5.2.21
+             * @platform Web,Native
+             * @language zh_CN
+             */
+            set: function (data) {
+                if (!data) {
+                    egret.error('ktx data is null');
+                    return;
+                }
+                if (data == this.$ktxData) {
+                    return;
+                }
+                var ktx = new egret.KTXContainer(data, 1);
+                if (ktx.isInvalid) {
+                    egret.error('ktx data is invalid');
+                    return;
+                }
+                this.$ktxData = data;
+                var bitmapData = new egret.BitmapData(data);
+                bitmapData.format = 'ktx';
+                ktx.uploadLevels(bitmapData, false);
+                this._setBitmapData(bitmapData);
+            },
+            enumerable: true,
+            configurable: true
+        });
         /**
          * @private
          * 设置Texture数据
