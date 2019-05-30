@@ -2924,6 +2924,7 @@ var egret;
                 return this.$bitmapData;
             },
             set: function (value) {
+                this.ktxData = null;
                 this._setBitmapData(value);
             },
             enumerable: true,
@@ -2949,43 +2950,58 @@ var egret;
             this.$initData(0, 0, w, h, 0, 0, w, h, value.width, value.height);
         };
         Object.defineProperty(Texture.prototype, "ktxData", {
-            get: function () {
-                return this.$ktxData;
-            },
             /**
-            * Set the KTX object.
+             * The KTX object being referenced.
             * @version Egret 5.2.21
             * @platform Web,Native
             * @language en_US
             */
             /**
-             * 设置 KTX 对象。
+             * 被引用的 KTXData 对象。
              * @version Egret 5.2.21
              * @platform Web,Native
              * @language zh_CN
              */
+            get: function () {
+                return this.$ktxData;
+            },
             set: function (data) {
-                if (!data) {
-                    egret.error('ktx data is null');
-                    return;
-                }
-                if (data == this.$ktxData) {
-                    return;
-                }
-                var ktx = new egret.KTXContainer(data, 1);
-                if (ktx.isInvalid) {
-                    egret.error('ktx data is invalid');
-                    return;
-                }
-                this.$ktxData = data;
-                var bitmapData = new egret.BitmapData(data);
-                bitmapData.format = 'ktx';
-                ktx.uploadLevels(bitmapData, false);
-                this._setBitmapData(bitmapData);
+                this._setKtxData(data);
             },
             enumerable: true,
             configurable: true
         });
+        /**
+        * Set the KTXData object.
+        * @version Egret 3.2.1
+        * @platform Web,Native
+        * @language en_US
+        */
+        /**
+         * 设置 KTXData 对象。
+         * @version Egret 3.2.1
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        Texture.prototype._setKtxData = function (value) {
+            if (!value) {
+                egret.error('ktx data is null');
+                return;
+            }
+            if (value == this.$ktxData) {
+                return;
+            }
+            var ktx = new egret.KTXContainer(value, 1);
+            if (ktx.isInvalid) {
+                egret.error('ktx data is invalid');
+                return;
+            }
+            this.$ktxData = value;
+            var bitmapData = new egret.BitmapData(value);
+            bitmapData.format = 'ktx';
+            ktx.uploadLevels(bitmapData, false);
+            this._setBitmapData(bitmapData);
+        };
         /**
          * @private
          * 设置Texture数据

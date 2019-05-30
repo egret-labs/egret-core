@@ -1465,18 +1465,31 @@ declare namespace egret {
          */
         _setBitmapData(value: BitmapData): void;
         /**
-        * Set the KTX object.
+         * The KTX object being referenced.
         * @version Egret 5.2.21
         * @platform Web,Native
         * @language en_US
         */
         /**
-         * 设置 KTX 对象。
+         * 被引用的 KTXData 对象。
          * @version Egret 5.2.21
          * @platform Web,Native
          * @language zh_CN
          */
         ktxData: ArrayBuffer;
+        /**
+        * Set the KTXData object.
+        * @version Egret 3.2.1
+        * @platform Web,Native
+        * @language en_US
+        */
+        /**
+         * 设置 KTXData 对象。
+         * @version Egret 3.2.1
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        _setKtxData(value: ArrayBuffer): void;
         /**
          * @private
          * 设置Texture数据
