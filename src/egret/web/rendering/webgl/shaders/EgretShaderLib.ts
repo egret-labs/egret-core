@@ -37,9 +37,39 @@ namespace egret.web {
 		public static readonly primitive_frag: string = "precision lowp float;\r\nvarying vec2 vTextureCoord;\r\nvarying vec4 vColor;\r\n\r\nvoid main(void) {\r\n    gl_FragColor = vColor;\r\n}";
 		public static readonly texture_frag: string = "precision lowp float;\r\nvarying vec2 vTextureCoord;\r\nvarying vec4 vColor;\r\nuniform sampler2D uSampler;\r\n\r\nvoid main(void) {\r\n    gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor;\r\n}";
 		public static readonly texture_etc_alphamask_frag: string = "precision lowp float; \r\n varying vec2 vTextureCoord; \r\n varying vec4 vColor;\r\n uniform sampler2D uSampler;\r\n  uniform sampler2D uSamplerAlphaMask; \r\n void main(void) { \r\n  vec4 v4Color = texture2D(uSampler, vTextureCoord); \r\n  vec4 vec4Alpha = texture2D(uSamplerAlphaMask, vTextureCoord);\r\n v4Color = v4Color * vec4Alpha; v4Color.a = vec4Alpha.r; gl_FragColor = v4Color * vColor;\r\n}";
-	
+
+
+
+
+
+
+
+
+
 		//
-		public static readonly colorTransform_frag_etc_alphamask_frag: string = "precision mediump float;\r\nvarying vec2 vTextureCoord;\r\nvarying vec4 vColor;\r\nuniform mat4 matrix;\r\nuniform vec4 colorAdd;\r\nuniform sampler2D uSampler;\r\n\r\nvoid main(void) {\r\n    vec4 texColor = texture2D(uSampler, vTextureCoord);\r\n    if(texColor.a > 0.) {\r\n        // 抵消预乘的alpha通道\r\n        texColor = vec4(texColor.rgb / texColor.a, texColor.a);\r\n    }\r\n    vec4 locColor = clamp(texColor * matrix + colorAdd, 0., 1.);\r\n    gl_FragColor = vColor * vec4(locColor.rgb * locColor.a, locColor.a);\r\n}";
+		/*
+		"precision mediump float;
+		varying vec2 vTextureCoord;
+		varying vec4 vColor;
+		uniform mat4 matrix;
+		uniform vec4 colorAdd;
+		uniform sampler2D uSampler;
+		uniform sampler2D uSamplerAlphaMask;
+
+		void main(void){
+			vec4 texColor = texture2D(uSampler, vTextureCoord);
+			if(texColor.a > 0.0) {
+				// 抵消预乘的alpha通道
+				texColor = vec4(texColor.rgb / texColor.a, texColor.a);
+			}
+			vec4 v4Color = clamp(texColor * matrix + colorAdd, 0.0, 1.0);
+			vec4 vec4Alpha = texture2D(uSamplerAlphaMask, vTextureCoord);
+			v4Color = v4Color * vec4Alpha;
+			v4Color.a = vec4Alpha.r;
+			gl_FragColor = v4Color * vColor;
+		}"
+		*/
+		public static readonly colorTransform_frag_etc_alphamask_frag: string = "precision mediump float;\r\nvarying vec2 vTextureCoord;\r\nvarying vec4 vColor;\r\nuniform mat4 matrix;\r\nuniform vec4 colorAdd;\r\nuniform sampler2D uSampler;\r\nuniform sampler2D uSamplerAlphaMask;\r\n\r\nvoid main(void){\r\nvec4 texColor = texture2D(uSampler, vTextureCoord);\r\nif(texColor.a > 0.0) {\r\n // 抵消预乘的alpha通道\r\ntexColor = vec4(texColor.rgb / texColor.a, texColor.a);\r\n}\r\nvec4 v4Color = clamp(texColor * matrix + colorAdd, 0.0, 1.0);\r\nvec4 vec4Alpha = texture2D(uSamplerAlphaMask, vTextureCoord);\r\nv4Color = v4Color * vec4Alpha;\r\nv4Color.a = vec4Alpha.r;\r\ngl_FragColor = v4Color * vColor;\r\n}"; 
 
 	}
 };
