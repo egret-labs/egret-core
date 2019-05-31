@@ -114,6 +114,7 @@ declare namespace egret_native {
     class NativeDisplayObject {
         id: number;
         constructor(type: number);
+        public setChildrenSortMode(mode: string): void;
         public addChildAt(childId: number, index: number): void;
         public removeChild(childId: number): void;
         public swapChild(index1: number, index2: number): void;
