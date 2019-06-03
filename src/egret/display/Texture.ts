@@ -221,7 +221,7 @@ namespace egret {
         }
 
         public set bitmapData(value: BitmapData) {
-            this.ktxData = null;
+            this.$ktxData = null;
             this._setBitmapData(value);
         }
         /**
