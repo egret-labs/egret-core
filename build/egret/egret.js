@@ -9064,9 +9064,6 @@ var egret;
             delete BitmapData._displayList[hashCode];
         };
         BitmapData.prototype._getCompressedTextureData = function (level, face) {
-            if (true) {
-                //level face is valid?
-            }
             var levelData = this.compressedTextureData[level];
             return levelData ? levelData[face] : null;
         };

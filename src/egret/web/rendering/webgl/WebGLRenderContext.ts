@@ -579,6 +579,7 @@ namespace egret.web {
                 }
                 if (bitmapData.$deleteSource && bitmapData.webGLTexture) {
                     if (bitmapData.source) {
+                        // WeChat Memory leakage bug
                         bitmapData.source.src = '';
                         bitmapData.source = null;
                     }

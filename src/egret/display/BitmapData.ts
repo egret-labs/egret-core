@@ -377,9 +377,6 @@ namespace egret {
         }
 
         private _getCompressedTextureData(level: number, face: number): CompressedTextureData {
-            if (DEBUG) {
-                //level face is valid?
-            }
             const levelData = this.compressedTextureData[level];
             return levelData ? levelData[face] : null;
         }
