@@ -8075,7 +8075,69 @@ var egret;
             /**
              * @private
              */
+            WebGLRenderer.prototype.___renderText____ = function (node, buffer) {
+                var width = node.width - node.x;
+                var height = node.height - node.y;
+                if (width <= 0 || height <= 0 || !width || !height || node.drawData.length === 0) {
+                    return;
+                }
+                var canvasScaleX = egret.sys.DisplayList.$canvasScaleX;
+                var canvasScaleY = egret.sys.DisplayList.$canvasScaleY;
+                var maxTextureSize = buffer.context.$maxTextureSize;
+                if (width * canvasScaleX > maxTextureSize) {
+                    canvasScaleX *= maxTextureSize / (width * canvasScaleX);
+                }
+                if (height * canvasScaleY > maxTextureSize) {
+                    canvasScaleY *= maxTextureSize / (height * canvasScaleY);
+                }
+                width *= canvasScaleX;
+                height *= canvasScaleY;
+                var x = node.x * canvasScaleX;
+                var y = node.y * canvasScaleY;
+                if (node.$canvasScaleX !== canvasScaleX || node.$canvasScaleY !== canvasScaleY) {
+                    node.$canvasScaleX = canvasScaleX;
+                    node.$canvasScaleY = canvasScaleY;
+                    node.dirtyRender = true;
+                }
+                if (x || y) {
+                    buffer.transform(1, 0, 0, 1, x / canvasScaleX, y / canvasScaleY);
+                }
+                if (node.dirtyRender) {
+                    web.TextAtlasRender.analysisTextNode(node);
+                }
+                if (web.TextAtlasRender.renderTextBlockCommands.length > 0) {
+                    var _offsetX = buffer.$offsetX - node.x / canvasScaleX;
+                    var _offsetY = buffer.$offsetY - node.y / canvasScaleX;
+                    for (var _i = 0, _a = web.TextAtlasRender.renderTextBlockCommands; _i < _a.length; _i++) {
+                        var cmd = _a[_i];
+                        var anchorX = cmd.anchorX;
+                        var anchorY = cmd.anchorY;
+                        var txtBlocks = cmd.textBlocks;
+                        var drawX = 0;
+                        for (var i = 0, length_10 = txtBlocks.length; i < length_10; ++i) {
+                            var tb = txtBlocks[i];
+                            var page = tb.line.page;
+                            //
+                            buffer.$offsetX = _offsetX + (anchorX + drawX);
+                            buffer.$offsetY = _offsetY + (anchorY + (-tb['measureHeight'] / 2));
+                            //
+                            buffer.context.drawTexture(page['textTextureAtlas'], tb.u, tb.v, tb.contentWidth, tb.contentHeight, 0, 0, tb.contentWidth / canvasScaleX, tb.contentHeight / canvasScaleY, page.pageWidth, page.pageHeight);
+                            drawX += tb.contentWidth / canvasScaleX;
+                        }
+                    }
+                    buffer.$offsetX = _offsetX;
+                    buffer.$offsetX = _offsetY;
+                }
+                if (x || y) {
+                    buffer.transform(1, 0, 0, 1, -x / canvasScaleX, -y / canvasScaleY);
+                }
+                node.dirtyRender = false;
+            };
             WebGLRenderer.prototype.renderText = function (node, buffer) {
+                if (web.textAtlasRenderEnable) {
+                    this.___renderText____(node, buffer);
+                    return;
+                }
                 var width = node.width - node.x;
                 var height = node.height - node.y;
                 if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) {
@@ -8553,7 +8615,7 @@ var egret;
                 }
                 //找到最合适的
                 var _sortLines = this._sortLines;
-                for (var i = 0, length_10 = _sortLines.length; i < length_10; ++i) {
+                for (var i = 0, length_11 = _sortLines.length; i < length_11; ++i) {
                     var line = _sortLines[i];
                     if (!line.isCapacityOf(textBlock)) {
                         continue;
@@ -8570,7 +8632,7 @@ var egret;
                 }
                 //现有的page中插入
                 var _pages = this._pages;
-                for (var i = 0, length_11 = _pages.length; i < length_11; ++i) {
+                for (var i = 0, length_12 = _pages.length; i < length_12; ++i) {
                     var page = _pages[i];
                     if (page.addLine(newLine)) {
                         return [page, newLine];
@@ -8642,7 +8704,7 @@ var egret;
                 return 0;
             }
             var hash = 0;
-            for (var i = 0, length_12 = str.length; i < length_12; ++i) {
+            for (var i = 0, length_13 = str.length; i < length_13; ++i) {
                 var chr = str.charCodeAt(i);
                 hash = ((hash << 5) - hash) + chr;
                 hash |= 0; // Convert to 32bit integer
@@ -8833,7 +8895,7 @@ var egret;
                 var format = {};
                 TextAtlasRender.renderTextBlocks.length = 0;
                 TextAtlasRender.renderTextBlockCommands.length = 0;
-                for (var i = 0, length_13 = drawData.length; i < length_13; i += offset) {
+                for (var i = 0, length_14 = drawData.length; i < length_14; i += offset) {
                     anchorX = drawData[i + 0];
                     anchorY = drawData[i + 1];
                     labelString = drawData[i + 2];
