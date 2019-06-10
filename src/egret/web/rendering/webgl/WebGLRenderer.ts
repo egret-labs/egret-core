@@ -873,22 +873,26 @@ namespace egret.web {
             if (node.dirtyRender) {
                 TextAtlasRender.analysisTextNode(node);
             }
-            if (TextAtlasRender.renderTextBlockCommands.length > 0) {
+
+            const drawCommands = node['DrawLabel'] as Array<DrawLabel>;
+            if (drawCommands && drawCommands.length > 0) {
+                //存一下
+                const saveOffsetX = buffer.$offsetX;
+                const saveOffsetY = buffer.$offsetY;
+                //基础偏移
                 const _offsetX = buffer.$offsetX - node.x / canvasScaleX;
                 const _offsetY = buffer.$offsetY - node.y / canvasScaleX;
-                for (const cmd of TextAtlasRender.renderTextBlockCommands) {
+                //开始画
+                for (const cmd of drawCommands) {
                     const anchorX = cmd.anchorX;
                     const anchorY = cmd.anchorY;
-                    const txtBlocks = cmd.textBlocks;
                     let drawX = 0;
-
-                    for (let i = 0, length = txtBlocks.length; i < length; ++i) {
-                        const tb = txtBlocks[i];
-                        const page = tb.line.page;
-                        //
+                    const textBlocks = cmd.textBlocks;
+                    for (const tb of textBlocks) {
                         buffer.$offsetX = _offsetX + (anchorX + drawX);
                         buffer.$offsetY = _offsetY + (anchorY + (-tb.measureHeight / 2));
                         //
+                        const page = tb.line.page;
                         buffer.context.drawTexture(page.webGLTexture,
                             tb.u, tb.v,
                             tb.contentWidth, tb.contentHeight,
@@ -899,9 +903,9 @@ namespace egret.web {
                         drawX += tb.contentWidth / canvasScaleX;
                     }
                 }
-
-                buffer.$offsetX = _offsetX;
-                buffer.$offsetX = _offsetY;
+                //还原回去
+                buffer.$offsetX = saveOffsetX;
+                buffer.$offsetX = saveOffsetY;
             }
             if (x || y) {
                 buffer.transform(1, 0, 0, 1, -x / canvasScaleX, -y / canvasScaleY);

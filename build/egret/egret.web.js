@@ -8321,28 +8321,34 @@ var egret;
                 if (node.dirtyRender) {
                     web.TextAtlasRender.analysisTextNode(node);
                 }
-                if (web.TextAtlasRender.renderTextBlockCommands.length > 0) {
+                var drawCommands = node['DrawLabel'];
+                if (drawCommands && drawCommands.length > 0) {
+                    //存一下
+                    var saveOffsetX = buffer.$offsetX;
+                    var saveOffsetY = buffer.$offsetY;
+                    //基础偏移
                     var _offsetX = buffer.$offsetX - node.x / canvasScaleX;
                     var _offsetY = buffer.$offsetY - node.y / canvasScaleX;
-                    for (var _i = 0, _a = web.TextAtlasRender.renderTextBlockCommands; _i < _a.length; _i++) {
-                        var cmd = _a[_i];
+                    //开始画
+                    for (var _i = 0, drawCommands_1 = drawCommands; _i < drawCommands_1.length; _i++) {
+                        var cmd = drawCommands_1[_i];
                         var anchorX = cmd.anchorX;
                         var anchorY = cmd.anchorY;
-                        var txtBlocks = cmd.textBlocks;
                         var drawX = 0;
-                        for (var i = 0, length_12 = txtBlocks.length; i < length_12; ++i) {
-                            var tb = txtBlocks[i];
-                            var page = tb.line.page;
-                            //
+                        var textBlocks = cmd.textBlocks;
+                        for (var _a = 0, textBlocks_1 = textBlocks; _a < textBlocks_1.length; _a++) {
+                            var tb = textBlocks_1[_a];
                             buffer.$offsetX = _offsetX + (anchorX + drawX);
                             buffer.$offsetY = _offsetY + (anchorY + (-tb.measureHeight / 2));
                             //
+                            var page = tb.line.page;
                             buffer.context.drawTexture(page.webGLTexture, tb.u, tb.v, tb.contentWidth, tb.contentHeight, 0, 0, tb.contentWidth / canvasScaleX, tb.contentHeight / canvasScaleY, page.pageWidth, page.pageHeight);
                             drawX += tb.contentWidth / canvasScaleX;
                         }
                     }
-                    buffer.$offsetX = _offsetX;
-                    buffer.$offsetX = _offsetY;
+                    //还原回去
+                    buffer.$offsetX = saveOffsetX;
+                    buffer.$offsetX = saveOffsetY;
                 }
                 if (x || y) {
                     buffer.transform(1, 0, 0, 1, -x / canvasScaleX, -y / canvasScaleY);
@@ -8745,24 +8751,46 @@ var egret;
 (function (egret) {
     var web;
     (function (web) {
-        // function __hashCode__(str: string): number {
-        //     if (str.length === 0) {
-        //         return 0;
-        //     }
-        //     let hash = 0;
-        //     for (let i = 0, length = str.length; i < length; ++i) {
-        //         const chr = str.charCodeAt(i);
-        //         hash = ((hash << 5) - hash) + chr;
-        //         hash |= 0; // Convert to 32bit integer
-        //     }
-        //     return hash;
-        // }
+        var DrawLabel = (function (_super) {
+            __extends(DrawLabel, _super);
+            function DrawLabel() {
+                var _this = _super !== null && _super.apply(this, arguments) || this;
+                _this.anchorX = 0;
+                _this.anchorY = 0;
+                _this.textBlocks = [];
+                return _this;
+            }
+            DrawLabel.prototype.clear = function () {
+                this.anchorX = 0;
+                this.anchorY = 0;
+                this.textBlocks.length = 0; //这个没事,实体在book里面存着
+            };
+            DrawLabel.create = function () {
+                var pool = DrawLabel.pool;
+                if (pool.length === 0) {
+                    pool.push(new DrawLabel);
+                }
+                return pool.pop();
+            };
+            DrawLabel.back = function (drawLabel, checkRepeat) {
+                if (!drawLabel) {
+                    return;
+                }
+                var pool = DrawLabel.pool;
+                if (checkRepeat && pool.indexOf(drawLabel) >= 0) {
+                    return;
+                }
+                drawLabel.clear();
+                pool.push(drawLabel);
+            };
+            DrawLabel.pool = [];
+            return DrawLabel;
+        }(egret.HashObject));
+        web.DrawLabel = DrawLabel;
+        __reflect(DrawLabel.prototype, "egret.web.DrawLabel");
         //针对中文的加速查找
         var __chineseCharactersRegExp__ = new RegExp("^[\u4E00-\u9FA5]$");
         var __chineseCharacterMeasureFastMap__ = {};
-        //属性关键子
-        // const property_tag: string = 'tag';
-        // const property_textTextureAtlas: string = 'textTextureAtlas';
         //
         var StyleKey = (function (_super) {
             __extends(StyleKey, _super);
@@ -8897,19 +8925,6 @@ var egret;
         web.textAtlasRenderEnable = true;
         //测试对象
         web.__textAtlasRender__ = null;
-        var DrawTextBlocksCommand = (function (_super) {
-            __extends(DrawTextBlocksCommand, _super);
-            function DrawTextBlocksCommand() {
-                var _this = _super !== null && _super.apply(this, arguments) || this;
-                _this.anchorX = 0;
-                _this.anchorY = 0;
-                _this.textBlocks = [];
-                return _this;
-            }
-            return DrawTextBlocksCommand;
-        }(egret.HashObject));
-        web.DrawTextBlocksCommand = DrawTextBlocksCommand;
-        __reflect(DrawTextBlocksCommand.prototype, "egret.web.DrawTextBlocksCommand");
         //
         var TextAtlasRender = (function (_super) {
             __extends(TextAtlasRender, _super);
@@ -8929,9 +8944,6 @@ var egret;
                 if (!textNode) {
                     return;
                 }
-                //先配置这个模型
-                //configTextTextureAtlasStrategy(512);
-                //__book__ = __book__ || configTextTextureAtlasStrategy(512, 1);
                 web.__textAtlasRender__ = web.__textAtlasRender__ || new TextAtlasRender(egret.web.WebGLRenderContext.getInstance(0, 0));
                 //
                 var offset = 4;
@@ -8941,20 +8953,31 @@ var egret;
                 var labelString = '';
                 var format = {};
                 TextAtlasRender.renderTextBlocks.length = 0;
-                TextAtlasRender.renderTextBlockCommands.length = 0;
-                for (var i = 0, length_13 = drawData.length; i < length_13; i += offset) {
+                //TextAtlasRender.renderTextBlockCommands.length = 0;
+                //清除命令
+                textNode['DrawLabel'] = textNode['DrawLabel'] || [];
+                var drawLabels = textNode['DrawLabel'];
+                for (var _i = 0, drawLabels_1 = drawLabels; _i < drawLabels_1.length; _i++) {
+                    var drawLabel = drawLabels_1[_i];
+                    DrawLabel.back(drawLabel, true);
+                    //drawLabel = DrawLabel.create();
+                }
+                drawLabels.length = 0;
+                ///
+                //
+                for (var i = 0, length_12 = drawData.length; i < length_12; i += offset) {
                     anchorX = drawData[i + 0];
                     anchorY = drawData[i + 1];
                     labelString = drawData[i + 2];
                     format = drawData[i + 3] || {};
                     TextAtlasRender.renderTextBlocks.length = 0;
                     web.__textAtlasRender__.convertLabelStringToTextAtlas(labelString, new StyleKey(textNode, format));
-                    //
-                    var drawCmd = new DrawTextBlocksCommand;
-                    drawCmd.anchorX = anchorX;
-                    drawCmd.anchorY = anchorY;
-                    drawCmd.textBlocks = [].concat(TextAtlasRender.renderTextBlocks);
-                    TextAtlasRender.renderTextBlockCommands.push(drawCmd);
+                    //添加命令
+                    var drawLabel = DrawLabel.create(); //new DrawLabel;
+                    drawLabel.anchorX = anchorX;
+                    drawLabel.anchorY = anchorY;
+                    drawLabel.textBlocks = [].concat(TextAtlasRender.renderTextBlocks);
+                    drawLabels.push(drawLabel);
                 }
             };
             TextAtlasRender.prototype.convertLabelStringToTextAtlas = function (labelstring, styleKey) {
@@ -9010,7 +9033,7 @@ var egret;
                 configurable: true
             });
             TextAtlasRender.renderTextBlocks = [];
-            TextAtlasRender.renderTextBlockCommands = [];
+            //public static readonly renderTextBlockCommands: DrawLabel[] = [];
             //public static readonly textAtlasBorder = 1;
             TextAtlasRender.book = new web.Book(512, 1);
             return TextAtlasRender;

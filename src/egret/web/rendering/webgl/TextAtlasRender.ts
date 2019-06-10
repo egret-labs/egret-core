@@ -29,26 +29,44 @@
 
 namespace egret.web {
 
-    // function __hashCode__(str: string): number {
-    //     if (str.length === 0) {
-    //         return 0;
-    //     }
-    //     let hash = 0;
-    //     for (let i = 0, length = str.length; i < length; ++i) {
-    //         const chr = str.charCodeAt(i);
-    //         hash = ((hash << 5) - hash) + chr;
-    //         hash |= 0; // Convert to 32bit integer
-    //     }
-    //     return hash;
-    // }
+    export class DrawLabel extends HashObject {
+
+        private static pool: DrawLabel[] = [];
+
+        public anchorX: number = 0;
+        public anchorY: number = 0;
+        public textBlocks: TextBlock[] = [];
+
+        private clear(): void {
+            this.anchorX = 0;
+            this.anchorY = 0;
+            this.textBlocks.length = 0; //这个没事,实体在book里面存着
+        }
+
+        public static create(): DrawLabel {
+            const pool = DrawLabel.pool;
+            if (pool.length === 0) {
+                pool.push(new DrawLabel);
+            }
+            return pool.pop();
+        }
+
+        public static back(drawLabel: DrawLabel, checkRepeat: boolean): void {
+            if (!drawLabel) {
+                return;
+            }
+            const pool = DrawLabel.pool;
+            if (checkRepeat && pool.indexOf(drawLabel) >= 0) {
+                return;
+            }
+            drawLabel.clear();
+            pool.push(drawLabel);
+        }
+    }
 
     //针对中文的加速查找
     const __chineseCharactersRegExp__ = new RegExp("^[\u4E00-\u9FA5]$");
     const __chineseCharacterMeasureFastMap__: { [index: string]: TextMetrics } = {};
-
-    //属性关键子
-    // const property_tag: string = 'tag';
-    // const property_textTextureAtlas: string = 'textTextureAtlas';
 
     //
     class StyleKey extends HashObject {
@@ -221,11 +239,7 @@ namespace egret.web {
     //测试对象
     export let __textAtlasRender__: TextAtlasRender = null;
 
-    export class DrawTextBlocksCommand extends HashObject {
-        public anchorX: number = 0;
-        public anchorY: number = 0;
-        public textBlocks: TextBlock[] = [];
-    }
+   
 
     //
     export class TextAtlasRender extends HashObject {
@@ -243,16 +257,13 @@ namespace egret.web {
         }
 
         public static readonly renderTextBlocks: TextBlock[] = [];
-        public static readonly renderTextBlockCommands: DrawTextBlocksCommand[] = [];
+        //public static readonly renderTextBlockCommands: DrawLabel[] = [];
         //public static readonly textAtlasBorder = 1;
         public static readonly book = new Book(512, 1);
         public static analysisTextNode(textNode: sys.TextNode): void {
             if (!textNode) {
                 return;
             }
-            //先配置这个模型
-            //configTextTextureAtlasStrategy(512);
-            //__book__ = __book__ || configTextTextureAtlasStrategy(512, 1);
             __textAtlasRender__ = __textAtlasRender__ || new TextAtlasRender(egret.web.WebGLRenderContext.getInstance(0, 0));
             //
             const offset = 4;
@@ -262,7 +273,19 @@ namespace egret.web {
             let labelString = '';
             let format: sys.TextFormat = {};
             TextAtlasRender.renderTextBlocks.length = 0;
-            TextAtlasRender.renderTextBlockCommands.length = 0;
+            //TextAtlasRender.renderTextBlockCommands.length = 0;
+
+            //清除命令
+            textNode['DrawLabel'] = textNode['DrawLabel'] || [];
+            let drawLabels = textNode['DrawLabel'] as DrawLabel[];
+            for (const drawLabel of drawLabels) {
+                DrawLabel.back(drawLabel, DEBUG);
+                //drawLabel = DrawLabel.create();
+            }
+            drawLabels.length = 0;
+            ///
+
+            //
             for (let i = 0, length = drawData.length; i < length; i += offset) {
                 anchorX = drawData[i + 0] as number;
                 anchorY = drawData[i + 1] as number;
@@ -271,12 +294,12 @@ namespace egret.web {
                 TextAtlasRender.renderTextBlocks.length = 0;
                 __textAtlasRender__.convertLabelStringToTextAtlas(labelString, new StyleKey(textNode, format));
 
-                //
-                const drawCmd = new DrawTextBlocksCommand;
-                drawCmd.anchorX = anchorX;
-                drawCmd.anchorY = anchorY;
-                drawCmd.textBlocks = [].concat(TextAtlasRender.renderTextBlocks);
-                TextAtlasRender.renderTextBlockCommands.push(drawCmd);
+                //添加命令
+                const drawLabel = DrawLabel.create();//new DrawLabel;
+                drawLabel.anchorX = anchorX;
+                drawLabel.anchorY = anchorY;
+                drawLabel.textBlocks = [].concat(TextAtlasRender.renderTextBlocks);
+                drawLabels.push(drawLabel);
             }
         }
 
