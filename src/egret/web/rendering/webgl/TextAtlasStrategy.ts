@@ -27,20 +27,11 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-namespace egret.web {
+/*
+***  back -> page -> line -> textBlock
+*/
 
-    // let __MAX_PAGE_SIZE__ = 1024;
-    // //export let __TXT_RENDER_BORDER__ = 1; //最好是描边宽度 + 1;
-    // //export let __book__: Book = null;
-    // export function configTextTextureAtlasStrategy(maxPageSize: number): void {
-    //     //if (!__book__) {
-    //         //__book__ = new Book;
-    //         __MAX_PAGE_SIZE__ = maxPageSize;
-    //         //__TXT_RENDER_BORDER__ = offset;
-    //         //console.log('configTextTextureAtlasStrategy: max page = ' + __MAX_PAGE_SIZE__ + ', border = ');
-    //     //}
-    //     //return __book__;
-    // }
+namespace egret.web {
 
     export class TextBlock extends HashObject {
 
@@ -52,12 +43,17 @@ namespace egret.web {
         public y: number = 0;
         public u: number = 0;
         public v: number = 0;
+        public tag: string = '';
+        public readonly measureWidth: number = 0;
+        public readonly measureHeight: number = 0;
 
-        constructor(width: number, height: number, border: number) {
+        constructor(width: number, height: number, measureWidth: number, measureHeight: number, border: number) {
             super();
             this._width = width;
             this._height = height;
             this._border = border;
+            this.measureWidth = measureWidth;
+            this.measureHeight = measureHeight;
         }
 
         public get border(): number {
@@ -80,6 +76,10 @@ namespace egret.web {
             return this._height;
         }
 
+        public get page(): Page {
+            return this.line ? this.line.page : null;
+        }
+
         public updateUV(): boolean {
             const line = this.line;
             if (!line) {
@@ -89,12 +89,28 @@ namespace egret.web {
             this.v = line.y + this.y + this.border * 1;
             return true;
         }
+
+        public get subImageOffsetX() : number {
+            const line = this.line;
+            if (!line) {
+                return 0;
+            }
+            return line.x + this.x + this.border;
+        }
+
+        public get subImageOffsetY() : number {
+            const line = this.line;
+            if (!line) {
+                return 0;
+            }
+            return line.y + this.y + this.border;
+        }
     }
 
     export class Line extends HashObject {
 
         public page: Page = null;
-        public readonly textBlocks: TextBlock[] = [];
+        private readonly textBlocks: TextBlock[] = [];
         public dynamicMaxHeight: number = 0;
         public readonly maxWidth: number = 0;
         public x: number = 0;
@@ -128,7 +144,7 @@ namespace egret.web {
             return true;
         }
 
-        public lastTextBlock(): TextBlock {
+        private lastTextBlock(): TextBlock {
             const textBlocks = this.textBlocks;
             if (textBlocks.length > 0) {
                 return textBlocks[textBlocks.length - 1];
@@ -170,6 +186,7 @@ namespace egret.web {
         public readonly lines: Line[] = [];
         public readonly pageWidth: number = 0;
         public readonly pageHeight: number = 0;
+        public webGLTexture: WebGLTexture = null;
 
         constructor(pageWidth: number, pageHeight: number) {
             super();
@@ -209,8 +226,8 @@ namespace egret.web {
 
     export class Book extends HashObject {
 
-        public readonly _pages: Page[] = [];
-        public _sortLines: Line[] = [];
+        private readonly _pages: Page[] = [];
+        private _sortLines: Line[] = [];
         private readonly _maxSize: number = 1024;
         private readonly _border: number = 1;
 
@@ -245,7 +262,7 @@ namespace egret.web {
             return true;
         }
 
-        public _addTextBlock(textBlock: TextBlock): [Page, Line] | null {
+        private _addTextBlock(textBlock: TextBlock): [Page, Line] | null {
             if (!textBlock) {
                 return null;
             }
@@ -267,7 +284,7 @@ namespace egret.web {
             //做新的行
             const newLine = new Line(this._maxSize);
             if (!newLine.addTextBlock(textBlock, true)) {
-                console.error('???');
+                console.error('_addTextBlock !newLine.addTextBlock(textBlock, true)');
                 return null;
             }
             //现有的page中插入
@@ -280,7 +297,7 @@ namespace egret.web {
             }
             //都没有，就做新的page
             //添加目标行
-            const newPage = this.newPage(this._maxSize, this._maxSize);
+            const newPage = this.createPage(this._maxSize, this._maxSize);
             if (!newPage.addLine(newLine)) {
                 console.error('_addText newPage.addLine failed');
                 return null;
@@ -288,13 +305,13 @@ namespace egret.web {
             return [newPage, newLine];
         }
 
-        public newPage(pageWidth: number, pageHeight: number): Page {
+        private createPage(pageWidth: number, pageHeight: number): Page {
             const newPage = new Page(pageWidth, pageHeight);
             this._pages.push(newPage);
             return newPage;
         }
 
-        public sort(): void {
+        private sort(): void {
             if (this._sortLines.length <= 1) {
                 return;
             }
@@ -304,8 +321,8 @@ namespace egret.web {
             this._sortLines = this._sortLines.sort(sortFunc);
         }
 
-        public createTextBlock(width: number, height: number): TextBlock {
-            const txtBlock = new TextBlock(width, height, this._border);
+        public createTextBlock(width: number, height: number, measureWidth: number, measureHeight: number): TextBlock {
+            const txtBlock = new TextBlock(width, height, measureWidth, measureHeight, this._border);
             if (!this.addTextBlock(txtBlock)) {
                 //走到这里几乎是不可能的，除非内存分配没了
                 //暂时还没有到提交纹理的地步，现在都是虚拟的

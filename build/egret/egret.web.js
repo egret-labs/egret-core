@@ -36,25 +36,16 @@ r.prototype = e.prototype, t.prototype = new r();
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+/*
+***  back -> page -> line -> textBlock
+*/
 var egret;
 (function (egret) {
     var web;
     (function (web) {
-        // let __MAX_PAGE_SIZE__ = 1024;
-        // //export let __TXT_RENDER_BORDER__ = 1; //最好是描边宽度 + 1;
-        // //export let __book__: Book = null;
-        // export function configTextTextureAtlasStrategy(maxPageSize: number): void {
-        //     //if (!__book__) {
-        //         //__book__ = new Book;
-        //         __MAX_PAGE_SIZE__ = maxPageSize;
-        //         //__TXT_RENDER_BORDER__ = offset;
-        //         //console.log('configTextTextureAtlasStrategy: max page = ' + __MAX_PAGE_SIZE__ + ', border = ');
-        //     //}
-        //     //return __book__;
-        // }
         var TextBlock = (function (_super) {
             __extends(TextBlock, _super);
-            function TextBlock(width, height, border) {
+            function TextBlock(width, height, measureWidth, measureHeight, border) {
                 var _this = _super.call(this) || this;
                 _this._width = 0;
                 _this._height = 0;
@@ -64,9 +55,14 @@ var egret;
                 _this.y = 0;
                 _this.u = 0;
                 _this.v = 0;
+                _this.tag = '';
+                _this.measureWidth = 0;
+                _this.measureHeight = 0;
                 _this._width = width;
                 _this._height = height;
                 _this._border = border;
+                _this.measureWidth = measureWidth;
+                _this.measureHeight = measureHeight;
                 return _this;
             }
             Object.defineProperty(TextBlock.prototype, "border", {
@@ -104,6 +100,13 @@ var egret;
                 enumerable: true,
                 configurable: true
             });
+            Object.defineProperty(TextBlock.prototype, "page", {
+                get: function () {
+                    return this.line ? this.line.page : null;
+                },
+                enumerable: true,
+                configurable: true
+            });
             TextBlock.prototype.updateUV = function () {
                 var line = this.line;
                 if (!line) {
@@ -113,6 +116,28 @@ var egret;
                 this.v = line.y + this.y + this.border * 1;
                 return true;
             };
+            Object.defineProperty(TextBlock.prototype, "subImageOffsetX", {
+                get: function () {
+                    var line = this.line;
+                    if (!line) {
+                        return 0;
+                    }
+                    return line.x + this.x + this.border;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(TextBlock.prototype, "subImageOffsetY", {
+                get: function () {
+                    var line = this.line;
+                    if (!line) {
+                        return 0;
+                    }
+                    return line.y + this.y + this.border;
+                },
+                enumerable: true,
+                configurable: true
+            });
             return TextBlock;
         }(egret.HashObject));
         web.TextBlock = TextBlock;
@@ -197,6 +222,7 @@ var egret;
                 _this.lines = [];
                 _this.pageWidth = 0;
                 _this.pageHeight = 0;
+                _this.webGLTexture = null;
                 _this.pageWidth = pageWidth;
                 _this.pageHeight = pageHeight;
                 return _this;
@@ -292,7 +318,7 @@ var egret;
                 //做新的行
                 var newLine = new Line(this._maxSize);
                 if (!newLine.addTextBlock(textBlock, true)) {
-                    console.error('???');
+                    console.error('_addTextBlock !newLine.addTextBlock(textBlock, true)');
                     return null;
                 }
                 //现有的page中插入
@@ -305,14 +331,14 @@ var egret;
                 }
                 //都没有，就做新的page
                 //添加目标行
-                var newPage = this.newPage(this._maxSize, this._maxSize);
+                var newPage = this.createPage(this._maxSize, this._maxSize);
                 if (!newPage.addLine(newLine)) {
                     console.error('_addText newPage.addLine failed');
                     return null;
                 }
                 return [newPage, newLine];
             };
-            Book.prototype.newPage = function (pageWidth, pageHeight) {
+            Book.prototype.createPage = function (pageWidth, pageHeight) {
                 var newPage = new Page(pageWidth, pageHeight);
                 this._pages.push(newPage);
                 return newPage;
@@ -326,8 +352,8 @@ var egret;
                 };
                 this._sortLines = this._sortLines.sort(sortFunc);
             };
-            Book.prototype.createTextBlock = function (width, height) {
-                var txtBlock = new TextBlock(width, height, this._border);
+            Book.prototype.createTextBlock = function (width, height, measureWidth, measureHeight) {
+                var txtBlock = new TextBlock(width, height, measureWidth, measureHeight, this._border);
                 if (!this.addTextBlock(txtBlock)) {
                     //走到这里几乎是不可能的，除非内存分配没了
                     //暂时还没有到提交纹理的地步，现在都是虚拟的
@@ -8309,9 +8335,9 @@ var egret;
                             var page = tb.line.page;
                             //
                             buffer.$offsetX = _offsetX + (anchorX + drawX);
-                            buffer.$offsetY = _offsetY + (anchorY + (-tb['measureHeight'] / 2));
+                            buffer.$offsetY = _offsetY + (anchorY + (-tb.measureHeight / 2));
                             //
-                            buffer.context.drawTexture(page['textTextureAtlas'], tb.u, tb.v, tb.contentWidth, tb.contentHeight, 0, 0, tb.contentWidth / canvasScaleX, tb.contentHeight / canvasScaleY, page.pageWidth, page.pageHeight);
+                            buffer.context.drawTexture(page.webGLTexture, tb.u, tb.v, tb.contentWidth, tb.contentHeight, 0, 0, tb.contentWidth / canvasScaleX, tb.contentHeight / canvasScaleY, page.pageWidth, page.pageHeight);
                             drawX += tb.contentWidth / canvasScaleX;
                         }
                     }
@@ -8735,8 +8761,8 @@ var egret;
         var __chineseCharactersRegExp__ = new RegExp("^[\u4E00-\u9FA5]$");
         var __chineseCharacterMeasureFastMap__ = {};
         //属性关键子
-        var property_tag = 'tag';
-        var property_textTextureAtlas = 'textTextureAtlas';
+        // const property_tag: string = 'tag';
+        // const property_textTextureAtlas: string = 'textTextureAtlas';
         //
         var StyleKey = (function (_super) {
             __extends(StyleKey, _super);
@@ -8948,38 +8974,22 @@ var egret;
                     $charValue.drawToCanvas(canvas);
                     //console.log(char + ':' + canvas.width + ', ' + canvas.height);
                     //创建新的文字块
-                    var newTxtBlock = TextAtlasRender.book.createTextBlock($charValue.renderWidth, $charValue.renderHeight);
-                    if (!newTxtBlock) {
-                        //走到这里几乎是不可能的，除非内存分配没了
-                        //暂时还没有到提交纹理的地步，现在都是虚拟的
-                        //console.error('__book__.addTextBlock ??');
+                    var txtBlock = TextAtlasRender.book.createTextBlock($charValue.renderWidth, $charValue.renderHeight, $charValue.measureWidth, $charValue.measureHeight);
+                    if (!txtBlock) {
                         continue;
                     }
-                    // new TextBlock($charValue.renderWidth, $charValue.renderHeight, TextAtlasRender.textAtlasBorder);
-                    // if (!TextAtlasRender.book.addTextBlock(newTxtBlock)) {
-                    //     //走到这里几乎是不可能的，除非内存分配没了
-                    //     //暂时还没有到提交纹理的地步，现在都是虚拟的
-                    //     //console.error('__book__.addTextBlock ??');
-                    //     continue;
-                    // }
-                    //记录 + 测试 + 准备渲染
-                    textBlockMap[$charValue._hashCode] = newTxtBlock;
-                    newTxtBlock[property_tag] = char;
-                    newTxtBlock['measureWidth'] = $charValue.measureWidth;
-                    newTxtBlock['measureHeight'] = $charValue.measureHeight;
-                    TextAtlasRender.renderTextBlocks.push(newTxtBlock);
                     //
-                    var line = newTxtBlock.line;
-                    var page = line.page;
-                    var xoffset = line.x + newTxtBlock.x + newTxtBlock.border;
-                    var yoffset = line.y + newTxtBlock.y + newTxtBlock.border;
+                    textBlockMap[$charValue._hashCode] = txtBlock;
+                    txtBlock.tag = char;
+                    TextAtlasRender.renderTextBlocks.push(txtBlock);
                     //
-                    page[property_textTextureAtlas] = page[property_textTextureAtlas] || this.createTextTextureAtlas(page.pageWidth, page.pageHeight);
-                    var textAtlas = page[property_textTextureAtlas];
+                    var page = txtBlock.page;
+                    page.webGLTexture = page.webGLTexture || this.createTextTextureAtlas(page.pageWidth, page.pageHeight);
+                    var textAtlas = page.webGLTexture;
                     var gl = this.webglRenderContext.context;
                     gl.bindTexture(gl.TEXTURE_2D, textAtlas);
                     gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-                    gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, gl.RGBA, gl.UNSIGNED_BYTE, canvas);
+                    gl.texSubImage2D(gl.TEXTURE_2D, 0, txtBlock.subImageOffsetX, txtBlock.subImageOffsetY, gl.RGBA, gl.UNSIGNED_BYTE, canvas);
                     gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
                 }
             };

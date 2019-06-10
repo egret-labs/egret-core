@@ -887,9 +887,9 @@ namespace egret.web {
                         const page = tb.line.page;
                         //
                         buffer.$offsetX = _offsetX + (anchorX + drawX);
-                        buffer.$offsetY = _offsetY + (anchorY + (-tb['measureHeight'] / 2));
+                        buffer.$offsetY = _offsetY + (anchorY + (-tb.measureHeight / 2));
                         //
-                        buffer.context.drawTexture(page['textTextureAtlas'] as WebGLTexture,
+                        buffer.context.drawTexture(page.webGLTexture,
                             tb.u, tb.v,
                             tb.contentWidth, tb.contentHeight,
                             0, 0,

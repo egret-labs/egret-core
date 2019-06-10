@@ -47,8 +47,8 @@ namespace egret.web {
     const __chineseCharacterMeasureFastMap__: { [index: string]: TextMetrics } = {};
 
     //属性关键子
-    const property_tag: string = 'tag';
-    const property_textTextureAtlas: string = 'textTextureAtlas';
+    // const property_tag: string = 'tag';
+    // const property_textTextureAtlas: string = 'textTextureAtlas';
 
     //
     class StyleKey extends HashObject {
@@ -296,38 +296,22 @@ namespace egret.web {
                 $charValue.drawToCanvas(canvas);
                 //console.log(char + ':' + canvas.width + ', ' + canvas.height);
                 //创建新的文字块
-                const newTxtBlock = TextAtlasRender.book.createTextBlock($charValue.renderWidth, $charValue.renderHeight);
-                if (!newTxtBlock) {
-                    //走到这里几乎是不可能的，除非内存分配没了
-                    //暂时还没有到提交纹理的地步，现在都是虚拟的
-                    //console.error('__book__.addTextBlock ??');
+                const txtBlock = TextAtlasRender.book.createTextBlock($charValue.renderWidth, $charValue.renderHeight, $charValue.measureWidth, $charValue.measureHeight);
+                if (!txtBlock) {
                     continue;
                 }
-                // new TextBlock($charValue.renderWidth, $charValue.renderHeight, TextAtlasRender.textAtlasBorder);
-                // if (!TextAtlasRender.book.addTextBlock(newTxtBlock)) {
-                //     //走到这里几乎是不可能的，除非内存分配没了
-                //     //暂时还没有到提交纹理的地步，现在都是虚拟的
-                //     //console.error('__book__.addTextBlock ??');
-                //     continue;
-                // }
-                //记录 + 测试 + 准备渲染
-                textBlockMap[$charValue._hashCode] = newTxtBlock;
-                newTxtBlock[property_tag] = char;
-                newTxtBlock['measureWidth'] = $charValue.measureWidth;
-                newTxtBlock['measureHeight'] = $charValue.measureHeight;
-                TextAtlasRender.renderTextBlocks.push(newTxtBlock);
                 //
-                const line = newTxtBlock.line;
-                const page = line.page;
-                const xoffset = line.x + newTxtBlock.x + newTxtBlock.border;
-                const yoffset = line.y + newTxtBlock.y + newTxtBlock.border;
+                textBlockMap[$charValue._hashCode] = txtBlock;
+                txtBlock.tag = char;
+                TextAtlasRender.renderTextBlocks.push(txtBlock);
                 //
-                page[property_textTextureAtlas] = page[property_textTextureAtlas] || this.createTextTextureAtlas(page.pageWidth, page.pageHeight);
-                const textAtlas = page[property_textTextureAtlas] as WebGLTexture;
+                const page = txtBlock.page;
+                page.webGLTexture = page.webGLTexture || this.createTextTextureAtlas(page.pageWidth, page.pageHeight);
+                const textAtlas = page.webGLTexture;
                 const gl = this.webglRenderContext.context;
                 gl.bindTexture(gl.TEXTURE_2D, textAtlas);
                 gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-                gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, gl.RGBA, gl.UNSIGNED_BYTE, canvas);
+                gl.texSubImage2D(gl.TEXTURE_2D, 0, txtBlock.subImageOffsetX, txtBlock.subImageOffsetY, gl.RGBA, gl.UNSIGNED_BYTE, canvas);
                 gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
             }
         }
