@@ -36,335 +36,34 @@ r.prototype = e.prototype, t.prototype = new r();
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-/*
-***  back -> page -> line -> textBlock
-*/
 var egret;
 (function (egret) {
     var web;
     (function (web) {
-        var TextBlock = (function (_super) {
-            __extends(TextBlock, _super);
-            function TextBlock(width, height, measureWidth, measureHeight, border) {
-                var _this = _super.call(this) || this;
-                _this._width = 0;
-                _this._height = 0;
-                _this._border = 0;
-                _this.line = null;
-                _this.x = 0;
-                _this.y = 0;
-                _this.u = 0;
-                _this.v = 0;
-                _this.tag = '';
-                _this.measureWidth = 0;
-                _this.measureHeight = 0;
-                _this._width = width;
-                _this._height = height;
-                _this._border = border;
-                _this.measureWidth = measureWidth;
-                _this.measureHeight = measureHeight;
-                return _this;
+        /**
+         * @private
+         */
+        function getOption(key) {
+            if (window.location) {
+                var search = location.search;
+                if (search == "") {
+                    return "";
+                }
+                search = search.slice(1);
+                var searchArr = search.split("&");
+                var length_1 = searchArr.length;
+                for (var i = 0; i < length_1; i++) {
+                    var str = searchArr[i];
+                    var arr = str.split("=");
+                    if (arr[0] == key) {
+                        return arr[1];
+                    }
+                }
             }
-            Object.defineProperty(TextBlock.prototype, "border", {
-                get: function () {
-                    return this._border;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(TextBlock.prototype, "width", {
-                get: function () {
-                    return this._width + this.border * 2;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(TextBlock.prototype, "height", {
-                get: function () {
-                    return this._height + this.border * 2;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(TextBlock.prototype, "contentWidth", {
-                get: function () {
-                    return this._width;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(TextBlock.prototype, "contentHeight", {
-                get: function () {
-                    return this._height;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(TextBlock.prototype, "page", {
-                get: function () {
-                    return this.line ? this.line.page : null;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            TextBlock.prototype.updateUV = function () {
-                var line = this.line;
-                if (!line) {
-                    return false; //不属于任何的line就是错的
-                }
-                this.u = line.x + this.x + this.border * 1;
-                this.v = line.y + this.y + this.border * 1;
-                return true;
-            };
-            Object.defineProperty(TextBlock.prototype, "subImageOffsetX", {
-                get: function () {
-                    var line = this.line;
-                    if (!line) {
-                        return 0;
-                    }
-                    return line.x + this.x + this.border;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(TextBlock.prototype, "subImageOffsetY", {
-                get: function () {
-                    var line = this.line;
-                    if (!line) {
-                        return 0;
-                    }
-                    return line.y + this.y + this.border;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            return TextBlock;
-        }(egret.HashObject));
-        web.TextBlock = TextBlock;
-        __reflect(TextBlock.prototype, "egret.web.TextBlock");
-        var Line = (function (_super) {
-            __extends(Line, _super);
-            function Line(maxWidth) {
-                var _this = _super.call(this) || this;
-                _this.page = null;
-                _this.textBlocks = [];
-                _this.dynamicMaxHeight = 0;
-                _this.maxWidth = 0;
-                _this.x = 0;
-                _this.y = 0;
-                _this.maxWidth = maxWidth;
-                return _this;
-            }
-            Line.prototype.isCapacityOf = function (textBlock) {
-                if (!textBlock) {
-                    return false;
-                }
-                //
-                var posx = 0;
-                var posy = 0;
-                var lastTxtBlock = this.lastTextBlock();
-                if (lastTxtBlock) {
-                    posx = lastTxtBlock.x + lastTxtBlock.width;
-                    posy = lastTxtBlock.y;
-                }
-                //
-                if (posx + textBlock.width > this.maxWidth) {
-                    return false; //宽度不够
-                }
-                //
-                if (this.dynamicMaxHeight > 0 && posy + textBlock.height > this.dynamicMaxHeight) {
-                    return false; //如果有已经有动态高度，到这里，说明高度也不够
-                }
-                return true;
-            };
-            Line.prototype.lastTextBlock = function () {
-                var textBlocks = this.textBlocks;
-                if (textBlocks.length > 0) {
-                    return textBlocks[textBlocks.length - 1];
-                }
-                return null;
-            };
-            Line.prototype.addTextBlock = function (textBlock, needCheck) {
-                //
-                if (!textBlock) {
-                    return false;
-                }
-                //
-                if (needCheck) {
-                    if (!this.isCapacityOf(textBlock)) {
-                        return false;
-                    }
-                }
-                //
-                var posx = 0;
-                var posy = 0;
-                var lastTxtBlock = this.lastTextBlock();
-                if (lastTxtBlock) {
-                    posx = lastTxtBlock.x + lastTxtBlock.width;
-                    posy = lastTxtBlock.y;
-                }
-                //
-                textBlock.x = posx;
-                textBlock.y = posy;
-                textBlock.line = this;
-                this.textBlocks.push(textBlock);
-                this.dynamicMaxHeight = Math.max(this.dynamicMaxHeight, textBlock.height);
-                return true;
-            };
-            return Line;
-        }(egret.HashObject));
-        web.Line = Line;
-        __reflect(Line.prototype, "egret.web.Line");
-        var Page = (function (_super) {
-            __extends(Page, _super);
-            function Page(pageWidth, pageHeight) {
-                var _this = _super.call(this) || this;
-                _this.lines = [];
-                _this.pageWidth = 0;
-                _this.pageHeight = 0;
-                _this.webGLTexture = null;
-                _this.pageWidth = pageWidth;
-                _this.pageHeight = pageHeight;
-                return _this;
-            }
-            Page.prototype.addLine = function (line) {
-                if (!line) {
-                    return false;
-                }
-                //
-                var posx = 0;
-                var posy = 0;
-                //
-                var lines = this.lines;
-                if (lines.length > 0) {
-                    var lastLine = lines[lines.length - 1];
-                    posx = lastLine.x;
-                    posy = lastLine.y + lastLine.dynamicMaxHeight;
-                }
-                if (line.maxWidth > this.pageWidth) {
-                    console.error('line.maxWidth = ' + line.maxWidth + ', ' + 'this.pageWidth = ' + this.pageWidth);
-                    return false; //宽度不够
-                }
-                if (posy + line.dynamicMaxHeight > this.pageHeight) {
-                    return false; //满了
-                }
-                //更新数据
-                line.x = posx;
-                line.y = posy;
-                line.page = this;
-                this.lines.push(line);
-                return true;
-            };
-            return Page;
-        }(egret.HashObject));
-        web.Page = Page;
-        __reflect(Page.prototype, "egret.web.Page");
-        var Book = (function (_super) {
-            __extends(Book, _super);
-            function Book(maxSize, border) {
-                var _this = _super.call(this) || this;
-                _this._pages = [];
-                _this._sortLines = [];
-                _this._maxSize = 1024;
-                _this._border = 1;
-                _this._maxSize = maxSize;
-                _this._border = border;
-                return _this;
-            }
-            Book.prototype.addTextBlock = function (textBlock) {
-                var result = this._addTextBlock(textBlock);
-                if (!result) {
-                    return false;
-                }
-                //更新下uv
-                textBlock.updateUV();
-                //没有才要添加
-                var exist = false;
-                var cast = result;
-                var _sortLines = this._sortLines;
-                for (var _i = 0, _sortLines_1 = _sortLines; _i < _sortLines_1.length; _i++) {
-                    var line = _sortLines_1[_i];
-                    if (line === cast[1]) {
-                        exist = true;
-                        break;
-                    }
-                }
-                if (!exist) {
-                    _sortLines.push(cast[1]);
-                }
-                //重新排序
-                this.sort();
-                return true;
-            };
-            Book.prototype._addTextBlock = function (textBlock) {
-                if (!textBlock) {
-                    return null;
-                }
-                if (textBlock.width > this._maxSize || textBlock.height > this._maxSize) {
-                    console.error('textBlock.width = ' + textBlock.width + ', ' + 'textBlock.height = ' + textBlock.height);
-                    return null;
-                }
-                //找到最合适的
-                var _sortLines = this._sortLines;
-                for (var i = 0, length_1 = _sortLines.length; i < length_1; ++i) {
-                    var line = _sortLines[i];
-                    if (!line.isCapacityOf(textBlock)) {
-                        continue;
-                    }
-                    if (line.addTextBlock(textBlock, false)) {
-                        return [line.page, line];
-                    }
-                }
-                //做新的行
-                var newLine = new Line(this._maxSize);
-                if (!newLine.addTextBlock(textBlock, true)) {
-                    console.error('_addTextBlock !newLine.addTextBlock(textBlock, true)');
-                    return null;
-                }
-                //现有的page中插入
-                var _pages = this._pages;
-                for (var i = 0, length_2 = _pages.length; i < length_2; ++i) {
-                    var page = _pages[i];
-                    if (page.addLine(newLine)) {
-                        return [page, newLine];
-                    }
-                }
-                //都没有，就做新的page
-                //添加目标行
-                var newPage = this.createPage(this._maxSize, this._maxSize);
-                if (!newPage.addLine(newLine)) {
-                    console.error('_addText newPage.addLine failed');
-                    return null;
-                }
-                return [newPage, newLine];
-            };
-            Book.prototype.createPage = function (pageWidth, pageHeight) {
-                var newPage = new Page(pageWidth, pageHeight);
-                this._pages.push(newPage);
-                return newPage;
-            };
-            Book.prototype.sort = function () {
-                if (this._sortLines.length <= 1) {
-                    return;
-                }
-                var sortFunc = function (a, b) {
-                    return (a.dynamicMaxHeight < b.dynamicMaxHeight) ? -1 : 1;
-                };
-                this._sortLines = this._sortLines.sort(sortFunc);
-            };
-            Book.prototype.createTextBlock = function (width, height, measureWidth, measureHeight) {
-                var txtBlock = new TextBlock(width, height, measureWidth, measureHeight, this._border);
-                if (!this.addTextBlock(txtBlock)) {
-                    //走到这里几乎是不可能的，除非内存分配没了
-                    //暂时还没有到提交纹理的地步，现在都是虚拟的
-                    return null;
-                }
-                return txtBlock;
-            };
-            return Book;
-        }(egret.HashObject));
-        web.Book = Book;
-        __reflect(Book.prototype, "egret.web.Book");
+            return "";
+        }
+        web.getOption = getOption;
+        egret.getOption = getOption;
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -402,27 +101,112 @@ var egret;
         /**
          * @private
          */
-        function getOption(key) {
-            if (window.location) {
-                var search = location.search;
-                if (search == "") {
-                    return "";
-                }
-                search = search.slice(1);
-                var searchArr = search.split("&");
-                var length_3 = searchArr.length;
-                for (var i = 0; i < length_3; i++) {
-                    var str = searchArr[i];
-                    var arr = str.split("=");
-                    if (arr[0] == key) {
-                        return arr[1];
-                    }
-                }
+        var WebExternalInterface = (function () {
+            function WebExternalInterface() {
             }
-            return "";
+            /**
+             * @private
+             * @param functionName
+             * @param value
+             */
+            WebExternalInterface.call = function (functionName, value) {
+            };
+            /**
+             * @private
+             * @param functionName
+             * @param listener
+             */
+            WebExternalInterface.addCallback = function (functionName, listener) {
+            };
+            return WebExternalInterface;
+        }());
+        web.WebExternalInterface = WebExternalInterface;
+        __reflect(WebExternalInterface.prototype, "egret.web.WebExternalInterface", ["egret.ExternalInterface"]);
+        var ua = navigator.userAgent.toLowerCase();
+        if (ua.indexOf("egretnative") < 0) {
+            egret.ExternalInterface = WebExternalInterface;
         }
-        web.getOption = getOption;
-        egret.getOption = getOption;
+    })(web = egret.web || (egret.web = {}));
+})(egret || (egret = {}));
+(function (egret) {
+    var web;
+    (function (web) {
+        var callBackDic = {};
+        /**
+         * @private
+         */
+        var NativeExternalInterface = (function () {
+            function NativeExternalInterface() {
+            }
+            NativeExternalInterface.call = function (functionName, value) {
+                var data = {};
+                data.functionName = functionName;
+                data.value = value;
+                egret_native.sendInfoToPlugin(JSON.stringify(data));
+            };
+            NativeExternalInterface.addCallback = function (functionName, listener) {
+                callBackDic[functionName] = listener;
+            };
+            return NativeExternalInterface;
+        }());
+        web.NativeExternalInterface = NativeExternalInterface;
+        __reflect(NativeExternalInterface.prototype, "egret.web.NativeExternalInterface", ["egret.ExternalInterface"]);
+        /**
+         * @private
+         * @param info
+         */
+        function onReceivedPluginInfo(info) {
+            var data = JSON.parse(info);
+            var functionName = data.functionName;
+            var listener = callBackDic[functionName];
+            if (listener) {
+                var value = data.value;
+                listener.call(null, value);
+            }
+            else {
+                egret.$warn(1050, functionName);
+            }
+        }
+        var ua = navigator.userAgent.toLowerCase();
+        if (ua.indexOf("egretnative") >= 0) {
+            egret.ExternalInterface = NativeExternalInterface;
+            egret_native.receivedPluginInfo = onReceivedPluginInfo;
+        }
+    })(web = egret.web || (egret.web = {}));
+})(egret || (egret = {}));
+(function (egret) {
+    var web;
+    (function (web) {
+        var callBackDic = {};
+        /**
+         * @private
+         */
+        var WebViewExternalInterface = (function () {
+            function WebViewExternalInterface() {
+            }
+            WebViewExternalInterface.call = function (functionName, value) {
+                __global.ExternalInterface.call(functionName, value);
+            };
+            WebViewExternalInterface.addCallback = function (functionName, listener) {
+                callBackDic[functionName] = listener;
+            };
+            WebViewExternalInterface.invokeCallback = function (functionName, value) {
+                var listener = callBackDic[functionName];
+                if (listener) {
+                    listener.call(null, value);
+                }
+                else {
+                    egret.$warn(1050, functionName);
+                }
+            };
+            return WebViewExternalInterface;
+        }());
+        web.WebViewExternalInterface = WebViewExternalInterface;
+        __reflect(WebViewExternalInterface.prototype, "egret.web.WebViewExternalInterface", ["egret.ExternalInterface"]);
+        var ua = navigator.userAgent.toLowerCase();
+        if (ua.indexOf("egretwebview") >= 0) {
+            egret.ExternalInterface = WebViewExternalInterface;
+        }
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -4000,8 +3784,8 @@ var egret;
                     egret.sys.screenAdapter = new egret.sys.DefaultScreenAdapter();
                 }
                 var list = document.querySelectorAll(".egret-player");
-                var length_4 = list.length;
-                for (var i = 0; i < length_4; i++) {
+                var length_2 = list.length;
+                for (var i = 0; i < length_2; i++) {
                     var container = list[i];
                     var player = new web.WebPlayer(container, options);
                     container["egret-player"] = player;
@@ -6397,7 +6181,7 @@ var egret;
             */
             WebGLRenderContext.prototype.checkCompressedTextureInternalFormat = function (supportedCompressedTextureInfo, internalFormat) {
                 //width: number, height: number max ?
-                for (var i = 0, length_5 = supportedCompressedTextureInfo.length; i < length_5; ++i) {
+                for (var i = 0, length_3 = supportedCompressedTextureInfo.length; i < length_3; ++i) {
                     var ss = supportedCompressedTextureInfo[i];
                     // const formats = ss._COMPRESSED_TEXTURE_FORMATS_;
                     // for (let j = 0, length = formats.length; j < length; ++j) {
@@ -6406,7 +6190,7 @@ var egret;
                     //     }
                     // }
                     var supportedFormats = ss.supportedFormats;
-                    for (var j = 0, length_6 = supportedFormats.length; j < length_6; ++j) {
+                    for (var j = 0, length_4 = supportedFormats.length; j < length_4; ++j) {
                         if (supportedFormats[j][1] === internalFormat) {
                             return true;
                         }
@@ -6421,11 +6205,11 @@ var egret;
                 if (!debugLogCompressedTextureNotSupported[internalFormat]) {
                     debugLogCompressedTextureNotSupported[internalFormat] = true;
                     egret.log('internalFormat = ' + internalFormat + ':' + ('0x' + internalFormat.toString(16)) + ', the current hardware does not support the corresponding compression format.');
-                    for (var i = 0, length_7 = supportedCompressedTextureInfo.length; i < length_7; ++i) {
+                    for (var i = 0, length_5 = supportedCompressedTextureInfo.length; i < length_5; ++i) {
                         var ss = supportedCompressedTextureInfo[i];
                         if (ss.supportedFormats.length > 0) {
                             egret.log('support = ' + ss.extensionName);
-                            for (var j = 0, length_8 = ss.supportedFormats.length; j < length_8; ++j) {
+                            for (var j = 0, length_6 = ss.supportedFormats.length; j < length_6; ++j) {
                                 var tp = ss.supportedFormats[j];
                                 egret.log(tp[0] + ' : ' + tp[1] + ' : ' + ('0x' + tp[1].toString(16)));
                             }
@@ -7572,8 +7356,8 @@ var egret;
                     if (renderBufferPool.length > 6) {
                         renderBufferPool.length = 6;
                     }
-                    var length_9 = renderBufferPool.length;
-                    for (var i = 0; i < length_9; i++) {
+                    var length_7 = renderBufferPool.length;
+                    for (var i = 0; i < length_7; i++) {
                         renderBufferPool[i].resize(0, 0);
                     }
                 }
@@ -7636,8 +7420,8 @@ var egret;
                 }
                 var children = displayObject.$children;
                 if (children) {
-                    var length_10 = children.length;
-                    for (var i = 0; i < length_10; i++) {
+                    var length_8 = children.length;
+                    for (var i = 0; i < length_8; i++) {
                         var child = children[i];
                         var offsetX2 = void 0;
                         var offsetY2 = void 0;
@@ -8084,8 +7868,8 @@ var egret;
                 }
                 var children = displayObject.$children;
                 if (children) {
-                    var length_11 = children.length;
-                    for (var i = 0; i < length_11; i++) {
+                    var length_9 = children.length;
+                    for (var i = 0; i < length_9; i++) {
                         var child = children[i];
                         switch (child.$renderMode) {
                             case 1 /* NONE */:
@@ -8321,7 +8105,7 @@ var egret;
                 if (node.dirtyRender) {
                     web.TextAtlasRender.analysisTextNode(node);
                 }
-                var drawCommands = node['DrawLabel'];
+                var drawCommands = node[web.property_drawLabel];
                 if (drawCommands && drawCommands.length > 0) {
                     //存一下
                     var saveOffsetX = buffer.$offsetX;
@@ -8604,119 +8388,335 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+/*
+***  back -> page -> line -> textBlock
+*/
 var egret;
 (function (egret) {
     var web;
     (function (web) {
-        /**
-         * @private
-         */
-        var WebExternalInterface = (function () {
-            function WebExternalInterface() {
+        var TextBlock = (function (_super) {
+            __extends(TextBlock, _super);
+            function TextBlock(width, height, measureWidth, measureHeight, border) {
+                var _this = _super.call(this) || this;
+                _this._width = 0;
+                _this._height = 0;
+                _this._border = 0;
+                _this.line = null;
+                _this.x = 0;
+                _this.y = 0;
+                _this.u = 0;
+                _this.v = 0;
+                _this.tag = '';
+                _this.measureWidth = 0;
+                _this.measureHeight = 0;
+                _this._width = width;
+                _this._height = height;
+                _this._border = border;
+                _this.measureWidth = measureWidth;
+                _this.measureHeight = measureHeight;
+                return _this;
             }
-            /**
-             * @private
-             * @param functionName
-             * @param value
-             */
-            WebExternalInterface.call = function (functionName, value) {
-            };
-            /**
-             * @private
-             * @param functionName
-             * @param listener
-             */
-            WebExternalInterface.addCallback = function (functionName, listener) {
-            };
-            return WebExternalInterface;
-        }());
-        web.WebExternalInterface = WebExternalInterface;
-        __reflect(WebExternalInterface.prototype, "egret.web.WebExternalInterface", ["egret.ExternalInterface"]);
-        var ua = navigator.userAgent.toLowerCase();
-        if (ua.indexOf("egretnative") < 0) {
-            egret.ExternalInterface = WebExternalInterface;
-        }
-    })(web = egret.web || (egret.web = {}));
-})(egret || (egret = {}));
-(function (egret) {
-    var web;
-    (function (web) {
-        var callBackDic = {};
-        /**
-         * @private
-         */
-        var NativeExternalInterface = (function () {
-            function NativeExternalInterface() {
-            }
-            NativeExternalInterface.call = function (functionName, value) {
-                var data = {};
-                data.functionName = functionName;
-                data.value = value;
-                egret_native.sendInfoToPlugin(JSON.stringify(data));
-            };
-            NativeExternalInterface.addCallback = function (functionName, listener) {
-                callBackDic[functionName] = listener;
-            };
-            return NativeExternalInterface;
-        }());
-        web.NativeExternalInterface = NativeExternalInterface;
-        __reflect(NativeExternalInterface.prototype, "egret.web.NativeExternalInterface", ["egret.ExternalInterface"]);
-        /**
-         * @private
-         * @param info
-         */
-        function onReceivedPluginInfo(info) {
-            var data = JSON.parse(info);
-            var functionName = data.functionName;
-            var listener = callBackDic[functionName];
-            if (listener) {
-                var value = data.value;
-                listener.call(null, value);
-            }
-            else {
-                egret.$warn(1050, functionName);
-            }
-        }
-        var ua = navigator.userAgent.toLowerCase();
-        if (ua.indexOf("egretnative") >= 0) {
-            egret.ExternalInterface = NativeExternalInterface;
-            egret_native.receivedPluginInfo = onReceivedPluginInfo;
-        }
-    })(web = egret.web || (egret.web = {}));
-})(egret || (egret = {}));
-(function (egret) {
-    var web;
-    (function (web) {
-        var callBackDic = {};
-        /**
-         * @private
-         */
-        var WebViewExternalInterface = (function () {
-            function WebViewExternalInterface() {
-            }
-            WebViewExternalInterface.call = function (functionName, value) {
-                __global.ExternalInterface.call(functionName, value);
-            };
-            WebViewExternalInterface.addCallback = function (functionName, listener) {
-                callBackDic[functionName] = listener;
-            };
-            WebViewExternalInterface.invokeCallback = function (functionName, value) {
-                var listener = callBackDic[functionName];
-                if (listener) {
-                    listener.call(null, value);
+            Object.defineProperty(TextBlock.prototype, "border", {
+                get: function () {
+                    return this._border;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(TextBlock.prototype, "width", {
+                get: function () {
+                    return this._width + this.border * 2;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(TextBlock.prototype, "height", {
+                get: function () {
+                    return this._height + this.border * 2;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(TextBlock.prototype, "contentWidth", {
+                get: function () {
+                    return this._width;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(TextBlock.prototype, "contentHeight", {
+                get: function () {
+                    return this._height;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(TextBlock.prototype, "page", {
+                get: function () {
+                    return this.line ? this.line.page : null;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            TextBlock.prototype.updateUV = function () {
+                var line = this.line;
+                if (!line) {
+                    return false; //不属于任何的line就是错的
                 }
-                else {
-                    egret.$warn(1050, functionName);
-                }
+                this.u = line.x + this.x + this.border * 1;
+                this.v = line.y + this.y + this.border * 1;
+                return true;
             };
-            return WebViewExternalInterface;
-        }());
-        web.WebViewExternalInterface = WebViewExternalInterface;
-        __reflect(WebViewExternalInterface.prototype, "egret.web.WebViewExternalInterface", ["egret.ExternalInterface"]);
-        var ua = navigator.userAgent.toLowerCase();
-        if (ua.indexOf("egretwebview") >= 0) {
-            egret.ExternalInterface = WebViewExternalInterface;
-        }
+            Object.defineProperty(TextBlock.prototype, "subImageOffsetX", {
+                get: function () {
+                    var line = this.line;
+                    if (!line) {
+                        return 0;
+                    }
+                    return line.x + this.x + this.border;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(TextBlock.prototype, "subImageOffsetY", {
+                get: function () {
+                    var line = this.line;
+                    if (!line) {
+                        return 0;
+                    }
+                    return line.y + this.y + this.border;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            return TextBlock;
+        }(egret.HashObject));
+        web.TextBlock = TextBlock;
+        __reflect(TextBlock.prototype, "egret.web.TextBlock");
+        var Line = (function (_super) {
+            __extends(Line, _super);
+            function Line(maxWidth) {
+                var _this = _super.call(this) || this;
+                _this.page = null;
+                _this.textBlocks = [];
+                _this.dynamicMaxHeight = 0;
+                _this.maxWidth = 0;
+                _this.x = 0;
+                _this.y = 0;
+                _this.maxWidth = maxWidth;
+                return _this;
+            }
+            Line.prototype.isCapacityOf = function (textBlock) {
+                if (!textBlock) {
+                    return false;
+                }
+                //
+                var posx = 0;
+                var posy = 0;
+                var lastTxtBlock = this.lastTextBlock();
+                if (lastTxtBlock) {
+                    posx = lastTxtBlock.x + lastTxtBlock.width;
+                    posy = lastTxtBlock.y;
+                }
+                //
+                if (posx + textBlock.width > this.maxWidth) {
+                    return false; //宽度不够
+                }
+                //
+                if (this.dynamicMaxHeight > 0 && posy + textBlock.height > this.dynamicMaxHeight) {
+                    return false; //如果有已经有动态高度，到这里，说明高度也不够
+                }
+                return true;
+            };
+            Line.prototype.lastTextBlock = function () {
+                var textBlocks = this.textBlocks;
+                if (textBlocks.length > 0) {
+                    return textBlocks[textBlocks.length - 1];
+                }
+                return null;
+            };
+            Line.prototype.addTextBlock = function (textBlock, needCheck) {
+                //
+                if (!textBlock) {
+                    return false;
+                }
+                //
+                if (needCheck) {
+                    if (!this.isCapacityOf(textBlock)) {
+                        return false;
+                    }
+                }
+                //
+                var posx = 0;
+                var posy = 0;
+                var lastTxtBlock = this.lastTextBlock();
+                if (lastTxtBlock) {
+                    posx = lastTxtBlock.x + lastTxtBlock.width;
+                    posy = lastTxtBlock.y;
+                }
+                //
+                textBlock.x = posx;
+                textBlock.y = posy;
+                textBlock.line = this;
+                this.textBlocks.push(textBlock);
+                this.dynamicMaxHeight = Math.max(this.dynamicMaxHeight, textBlock.height);
+                return true;
+            };
+            return Line;
+        }(egret.HashObject));
+        web.Line = Line;
+        __reflect(Line.prototype, "egret.web.Line");
+        var Page = (function (_super) {
+            __extends(Page, _super);
+            function Page(pageWidth, pageHeight) {
+                var _this = _super.call(this) || this;
+                _this.lines = [];
+                _this.pageWidth = 0;
+                _this.pageHeight = 0;
+                _this.webGLTexture = null;
+                _this.pageWidth = pageWidth;
+                _this.pageHeight = pageHeight;
+                return _this;
+            }
+            Page.prototype.addLine = function (line) {
+                if (!line) {
+                    return false;
+                }
+                //
+                var posx = 0;
+                var posy = 0;
+                //
+                var lines = this.lines;
+                if (lines.length > 0) {
+                    var lastLine = lines[lines.length - 1];
+                    posx = lastLine.x;
+                    posy = lastLine.y + lastLine.dynamicMaxHeight;
+                }
+                if (line.maxWidth > this.pageWidth) {
+                    console.error('line.maxWidth = ' + line.maxWidth + ', ' + 'this.pageWidth = ' + this.pageWidth);
+                    return false; //宽度不够
+                }
+                if (posy + line.dynamicMaxHeight > this.pageHeight) {
+                    return false; //满了
+                }
+                //更新数据
+                line.x = posx;
+                line.y = posy;
+                line.page = this;
+                this.lines.push(line);
+                return true;
+            };
+            return Page;
+        }(egret.HashObject));
+        web.Page = Page;
+        __reflect(Page.prototype, "egret.web.Page");
+        var Book = (function (_super) {
+            __extends(Book, _super);
+            function Book(maxSize, border) {
+                var _this = _super.call(this) || this;
+                _this._pages = [];
+                _this._sortLines = [];
+                _this._maxSize = 1024;
+                _this._border = 1;
+                _this._maxSize = maxSize;
+                _this._border = border;
+                return _this;
+            }
+            Book.prototype.addTextBlock = function (textBlock) {
+                var result = this._addTextBlock(textBlock);
+                if (!result) {
+                    return false;
+                }
+                //更新下uv
+                textBlock.updateUV();
+                //没有才要添加
+                var exist = false;
+                var cast = result;
+                var _sortLines = this._sortLines;
+                for (var _i = 0, _sortLines_1 = _sortLines; _i < _sortLines_1.length; _i++) {
+                    var line = _sortLines_1[_i];
+                    if (line === cast[1]) {
+                        exist = true;
+                        break;
+                    }
+                }
+                if (!exist) {
+                    _sortLines.push(cast[1]);
+                }
+                //重新排序
+                this.sort();
+                return true;
+            };
+            Book.prototype._addTextBlock = function (textBlock) {
+                if (!textBlock) {
+                    return null;
+                }
+                if (textBlock.width > this._maxSize || textBlock.height > this._maxSize) {
+                    console.error('textBlock.width = ' + textBlock.width + ', ' + 'textBlock.height = ' + textBlock.height);
+                    return null;
+                }
+                //找到最合适的
+                var _sortLines = this._sortLines;
+                for (var i = 0, length_10 = _sortLines.length; i < length_10; ++i) {
+                    var line = _sortLines[i];
+                    if (!line.isCapacityOf(textBlock)) {
+                        continue;
+                    }
+                    if (line.addTextBlock(textBlock, false)) {
+                        return [line.page, line];
+                    }
+                }
+                //做新的行
+                var newLine = new Line(this._maxSize);
+                if (!newLine.addTextBlock(textBlock, true)) {
+                    console.error('_addTextBlock !newLine.addTextBlock(textBlock, true)');
+                    return null;
+                }
+                //现有的page中插入
+                var _pages = this._pages;
+                for (var i = 0, length_11 = _pages.length; i < length_11; ++i) {
+                    var page = _pages[i];
+                    if (page.addLine(newLine)) {
+                        return [page, newLine];
+                    }
+                }
+                //都没有，就做新的page
+                //添加目标行
+                var newPage = this.createPage(this._maxSize, this._maxSize);
+                if (!newPage.addLine(newLine)) {
+                    console.error('_addText newPage.addLine failed');
+                    return null;
+                }
+                return [newPage, newLine];
+            };
+            Book.prototype.createPage = function (pageWidth, pageHeight) {
+                var newPage = new Page(pageWidth, pageHeight);
+                this._pages.push(newPage);
+                return newPage;
+            };
+            Book.prototype.sort = function () {
+                if (this._sortLines.length <= 1) {
+                    return;
+                }
+                var sortFunc = function (a, b) {
+                    return (a.dynamicMaxHeight < b.dynamicMaxHeight) ? -1 : 1;
+                };
+                this._sortLines = this._sortLines.sort(sortFunc);
+            };
+            Book.prototype.createTextBlock = function (width, height, measureWidth, measureHeight) {
+                var txtBlock = new TextBlock(width, height, measureWidth, measureHeight, this._border);
+                if (!this.addTextBlock(txtBlock)) {
+                    //走到这里几乎是不可能的，除非内存分配没了
+                    //暂时还没有到提交纹理的地步，现在都是虚拟的
+                    return null;
+                }
+                return txtBlock;
+            };
+            return Book;
+        }(egret.HashObject));
+        web.Book = Book;
+        __reflect(Book.prototype, "egret.web.Book");
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -8751,6 +8751,13 @@ var egret;
 (function (egret) {
     var web;
     (function (web) {
+        //测试开关
+        web.textAtlasRenderEnable = true;
+        //测试对象
+        web.__textAtlasRender__ = null;
+        //不想改TextNode的代码了，先用这种方式实现
+        web.property_drawLabel = 'DrawLabel';
+        //画一行
         var DrawLabel = (function (_super) {
             __extends(DrawLabel, _super);
             function DrawLabel() {
@@ -8778,6 +8785,7 @@ var egret;
                 }
                 var pool = DrawLabel.pool;
                 if (checkRepeat && pool.indexOf(drawLabel) >= 0) {
+                    console.error('DrawLabel.back repeat');
                     return;
                 }
                 drawLabel.clear();
@@ -8788,16 +8796,13 @@ var egret;
         }(egret.HashObject));
         web.DrawLabel = DrawLabel;
         __reflect(DrawLabel.prototype, "egret.web.DrawLabel");
-        //针对中文的加速查找
-        var __chineseCharactersRegExp__ = new RegExp("^[\u4E00-\u9FA5]$");
-        var __chineseCharacterMeasureFastMap__ = {};
         //
         var StyleKey = (function (_super) {
             __extends(StyleKey, _super);
             function StyleKey(textNode, format) {
                 var _this = _super.call(this) || this;
-                //
                 _this.format = null;
+                //
                 _this.textColor = textNode.textColor;
                 _this.strokeColor = textNode.strokeColor;
                 _this.size = textNode.size;
@@ -8810,26 +8815,27 @@ var egret;
                 _this.$canvasScaleX = parseFloat(textNode.$canvasScaleX.toFixed(2)); //不搞那么长
                 _this.$canvasScaleY = parseFloat(textNode.$canvasScaleY.toFixed(2));
                 //
-                _this.__string__ = '' + _this.font;
+                _this.description = '' + _this.font;
                 var textColor = format.textColor == null ? textNode.textColor : format.textColor;
                 var strokeColor = format.strokeColor == null ? textNode.strokeColor : format.strokeColor;
                 var stroke = format.stroke == null ? textNode.stroke : format.stroke;
-                _this.__string__ += '-' + egret.toColorString(textColor);
-                _this.__string__ += '-' + egret.toColorString(strokeColor);
+                _this.description += '-' + egret.toColorString(textColor);
+                _this.description += '-' + egret.toColorString(strokeColor);
                 if (stroke) {
-                    _this.__string__ += '-' + stroke * 2;
+                    _this.description += '-' + stroke * 2;
                 }
-                _this.__string__ += '-' + _this.$canvasScaleX;
-                _this.__string__ += '-' + _this.$canvasScaleY;
+                _this.description += '-' + _this.$canvasScaleX;
+                _this.description += '-' + _this.$canvasScaleY;
                 return _this;
             }
             return StyleKey;
         }(egret.HashObject));
         __reflect(StyleKey.prototype, "StyleKey");
-        var CharValue = (function (_super) {
-            __extends(CharValue, _super);
-            function CharValue() {
-                var _this = _super.call(this) || this;
+        var CharImage = (function (_super) {
+            __extends(CharImage, _super);
+            function CharImage() {
+                var _this = _super !== null && _super.apply(this, arguments) || this;
+                //
                 _this._char = '';
                 _this._styleKey = null;
                 _this._string = '';
@@ -8838,28 +8844,28 @@ var egret;
                 _this.measureHeight = 0;
                 return _this;
             }
-            CharValue.prototype.reset = function (char, styleKey) {
+            CharImage.prototype.reset = function (char, styleKey) {
                 this._char = char;
                 this._styleKey = styleKey;
-                this._string = char + ':' + styleKey.__string__;
+                this._string = char + ':' + styleKey.description;
                 this._hashCode = egret.NumberUtils.convertStringToHashCode(this._string);
                 return this;
             };
-            Object.defineProperty(CharValue.prototype, "renderWidth", {
+            Object.defineProperty(CharImage.prototype, "renderWidth", {
                 get: function () {
                     return this.measureWidth * this._styleKey.$canvasScaleX;
                 },
                 enumerable: true,
                 configurable: true
             });
-            Object.defineProperty(CharValue.prototype, "renderHeight", {
+            Object.defineProperty(CharImage.prototype, "renderHeight", {
                 get: function () {
                     return this.measureHeight * this._styleKey.$canvasScaleY;
                 },
                 enumerable: true,
                 configurable: true
             });
-            CharValue.prototype.drawToCanvas = function (canvas) {
+            CharImage.prototype.measureTextAndDrawToCanvas = function (canvas) {
                 if (!canvas) {
                     return;
                 }
@@ -8904,85 +8910,86 @@ var egret;
                 context.fillText(text, 0, 0);
                 context.restore();
             };
-            CharValue.prototype.measureText = function (context, text, font) {
-                var isChinese = __chineseCharactersRegExp__.test(text);
+            CharImage.prototype.measureText = function (context, text, font) {
+                var isChinese = CharImage.__chineseCharactersRegExp__.test(text);
                 if (isChinese) {
-                    if (__chineseCharacterMeasureFastMap__[font]) {
-                        return __chineseCharacterMeasureFastMap__[font];
+                    if (CharImage.__chineseCharacterMeasureFastMap__[font]) {
+                        return CharImage.__chineseCharacterMeasureFastMap__[font];
                     }
                 }
                 context.font = font;
                 var measureText = context.measureText(text);
                 if (isChinese) {
-                    __chineseCharacterMeasureFastMap__[font] = measureText;
+                    CharImage.__chineseCharacterMeasureFastMap__[font] = measureText;
                 }
                 return measureText;
             };
-            return CharValue;
+            //针对中文的加速查找
+            CharImage.__chineseCharactersRegExp__ = new RegExp("^[\u4E00-\u9FA5]$");
+            CharImage.__chineseCharacterMeasureFastMap__ = {};
+            return CharImage;
         }(egret.HashObject));
-        __reflect(CharValue.prototype, "CharValue");
-        //测试开关
-        web.textAtlasRenderEnable = true;
-        //测试对象
-        web.__textAtlasRender__ = null;
+        __reflect(CharImage.prototype, "CharImage");
         //
         var TextAtlasRender = (function (_super) {
             __extends(TextAtlasRender, _super);
             //
-            function TextAtlasRender(webglRenderContext) {
+            function TextAtlasRender(webglRenderContext, maxSize, border) {
                 var _this = _super.call(this) || this;
                 //
-                _this.$charValue = new CharValue;
+                _this.book = new web.Book(512, 1);
+                _this.charImage = new CharImage;
                 _this.textBlockMap = {};
                 _this._canvas = null;
                 _this.textAtlasTextureCache = [];
                 _this.webglRenderContext = null;
                 _this.webglRenderContext = webglRenderContext;
+                _this.book = new web.Book(maxSize, border);
                 return _this;
             }
             TextAtlasRender.analysisTextNode = function (textNode) {
                 if (!textNode) {
                     return;
                 }
-                web.__textAtlasRender__ = web.__textAtlasRender__ || new TextAtlasRender(egret.web.WebGLRenderContext.getInstance(0, 0));
-                //
+                if (!web.__textAtlasRender__) {
+                    var webglcontext = egret.web.WebGLRenderContext.getInstance(0, 0);
+                    web.__textAtlasRender__ = new TextAtlasRender(webglcontext, webglcontext.$maxTextureSize, 1);
+                }
+                //清除命令
+                textNode[web.property_drawLabel] = textNode[web.property_drawLabel] || [];
+                var drawLabels = textNode[web.property_drawLabel];
+                for (var _i = 0, drawLabels_1 = drawLabels; _i < drawLabels_1.length; _i++) {
+                    var drawLabel = drawLabels_1[_i];
+                    DrawLabel.back(drawLabel, false);
+                }
+                drawLabels.length = 0;
+                //重新装填
                 var offset = 4;
                 var drawData = textNode.drawData;
                 var anchorX = 0;
                 var anchorY = 0;
                 var labelString = '';
                 var format = {};
-                TextAtlasRender.renderTextBlocks.length = 0;
-                //TextAtlasRender.renderTextBlockCommands.length = 0;
-                //清除命令
-                textNode['DrawLabel'] = textNode['DrawLabel'] || [];
-                var drawLabels = textNode['DrawLabel'];
-                for (var _i = 0, drawLabels_1 = drawLabels; _i < drawLabels_1.length; _i++) {
-                    var drawLabel = drawLabels_1[_i];
-                    DrawLabel.back(drawLabel, true);
-                    //drawLabel = DrawLabel.create();
-                }
-                drawLabels.length = 0;
-                ///
-                //
+                var renderTextBlocks = [];
                 for (var i = 0, length_12 = drawData.length; i < length_12; i += offset) {
                     anchorX = drawData[i + 0];
                     anchorY = drawData[i + 1];
                     labelString = drawData[i + 2];
                     format = drawData[i + 3] || {};
-                    TextAtlasRender.renderTextBlocks.length = 0;
-                    web.__textAtlasRender__.convertLabelStringToTextAtlas(labelString, new StyleKey(textNode, format));
+                    renderTextBlocks.length = 0;
+                    //提取数据
+                    web.__textAtlasRender__.convertLabelStringToTextAtlas(labelString, new StyleKey(textNode, format), renderTextBlocks);
                     //添加命令
                     var drawLabel = DrawLabel.create(); //new DrawLabel;
                     drawLabel.anchorX = anchorX;
                     drawLabel.anchorY = anchorY;
-                    drawLabel.textBlocks = [].concat(TextAtlasRender.renderTextBlocks);
+                    drawLabel.textBlocks = [].concat(renderTextBlocks);
                     drawLabels.push(drawLabel);
                 }
             };
-            TextAtlasRender.prototype.convertLabelStringToTextAtlas = function (labelstring, styleKey) {
+            TextAtlasRender.prototype.convertLabelStringToTextAtlas = function (labelstring, styleKey, renderTextBlocks) {
                 var canvas = this.canvas;
-                var $charValue = this.$charValue;
+                var $charValue = this.charImage;
                 var textBlockMap = this.textBlockMap;
                 for (var _i = 0, labelstring_1 = labelstring; _i < labelstring_1.length; _i++) {
                     var char = labelstring_1[_i];
@@ -8990,21 +8997,21 @@ var egret;
                     $charValue.reset(char, styleKey);
                     if (textBlockMap[$charValue._hashCode]) {
                         //检查重复
-                        TextAtlasRender.renderTextBlocks.push(textBlockMap[$charValue._hashCode]);
+                        renderTextBlocks.push(textBlockMap[$charValue._hashCode]);
                         continue;
                     }
                     //尝试渲染到canvas
-                    $charValue.drawToCanvas(canvas);
+                    $charValue.measureTextAndDrawToCanvas(canvas);
                     //console.log(char + ':' + canvas.width + ', ' + canvas.height);
                     //创建新的文字块
-                    var txtBlock = TextAtlasRender.book.createTextBlock($charValue.renderWidth, $charValue.renderHeight, $charValue.measureWidth, $charValue.measureHeight);
+                    var txtBlock = this.book.createTextBlock($charValue.renderWidth, $charValue.renderHeight, $charValue.measureWidth, $charValue.measureHeight);
                     if (!txtBlock) {
                         continue;
                     }
                     //
                     textBlockMap[$charValue._hashCode] = txtBlock;
                     txtBlock.tag = char;
-                    TextAtlasRender.renderTextBlocks.push(txtBlock);
+                    renderTextBlocks.push(txtBlock);
                     //
                     var page = txtBlock.page;
                     page.webGLTexture = page.webGLTexture || this.createTextTextureAtlas(page.pageWidth, page.pageHeight);
@@ -9025,17 +9032,14 @@ var egret;
             };
             Object.defineProperty(TextAtlasRender.prototype, "canvas", {
                 get: function () {
-                    var size = 24;
-                    this._canvas = this._canvas || egret.sys.createCanvas(size, size);
+                    if (!this._canvas) {
+                        this._canvas = egret.sys.createCanvas(24, 24);
+                    }
                     return this._canvas;
                 },
                 enumerable: true,
                 configurable: true
             });
-            TextAtlasRender.renderTextBlocks = [];
-            //public static readonly renderTextBlockCommands: DrawLabel[] = [];
-            //public static readonly textAtlasBorder = 1;
-            TextAtlasRender.book = new web.Book(512, 1);
             return TextAtlasRender;
         }(egret.HashObject));
         web.TextAtlasRender = TextAtlasRender;

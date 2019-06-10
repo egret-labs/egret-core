@@ -874,7 +874,7 @@ namespace egret.web {
                 TextAtlasRender.analysisTextNode(node);
             }
 
-            const drawCommands = node['DrawLabel'] as Array<DrawLabel>;
+            const drawCommands = node[property_drawLabel] as Array<DrawLabel>;
             if (drawCommands && drawCommands.length > 0) {
                 //存一下
                 const saveOffsetX = buffer.$offsetX;
