@@ -29,18 +29,18 @@
 
 namespace egret.web {
 
-    function __hashCode__(str: string): number {
-        if (str.length === 0) {
-            return 0;
-        }
-        let hash = 0;
-        for (let i = 0, length = str.length; i < length; ++i) {
-            const chr = str.charCodeAt(i);
-            hash = ((hash << 5) - hash) + chr;
-            hash |= 0; // Convert to 32bit integer
-        }
-        return hash;
-    }
+    // function __hashCode__(str: string): number {
+    //     if (str.length === 0) {
+    //         return 0;
+    //     }
+    //     let hash = 0;
+    //     for (let i = 0, length = str.length; i < length; ++i) {
+    //         const chr = str.charCodeAt(i);
+    //         hash = ((hash << 5) - hash) + chr;
+    //         hash |= 0; // Convert to 32bit integer
+    //     }
+    //     return hash;
+    // }
 
     //针对中文的加速查找
     const __chineseCharactersRegExp__ = new RegExp("^[\u4E00-\u9FA5]$");
@@ -142,7 +142,7 @@ namespace egret.web {
             this._char = char;
             this._styleKey = styleKey;
             this._string = char + ':' + styleKey.__string__;
-            this._hashCode = __hashCode__(this._string);
+            this._hashCode = NumberUtils.convertStringToHashCode(this._string);
             return this;
         }
 
@@ -244,12 +244,15 @@ namespace egret.web {
 
         public static readonly renderTextBlocks: TextBlock[] = [];
         public static readonly renderTextBlockCommands: DrawTextBlocksCommand[] = [];
+        //public static readonly textAtlasBorder = 1;
+        public static readonly book = new Book(512, 1);
         public static analysisTextNode(textNode: sys.TextNode): void {
             if (!textNode) {
                 return;
             }
             //先配置这个模型
-            __book__ = __book__ || configTextTextureAtlasStrategy(512, 1);
+            //configTextTextureAtlasStrategy(512);
+            //__book__ = __book__ || configTextTextureAtlasStrategy(512, 1);
             __textAtlasRender__ = __textAtlasRender__ || new TextAtlasRender(egret.web.WebGLRenderContext.getInstance(0, 0));
             //
             const offset = 4;
@@ -293,13 +296,20 @@ namespace egret.web {
                 $charValue.drawToCanvas(canvas);
                 //console.log(char + ':' + canvas.width + ', ' + canvas.height);
                 //创建新的文字块
-                const newTxtBlock = new TextBlock($charValue.renderWidth, $charValue.renderHeight);
-                if (!__book__.addTextBlock(newTxtBlock)) {
+                const newTxtBlock = TextAtlasRender.book.createTextBlock($charValue.renderWidth, $charValue.renderHeight);
+                if (!newTxtBlock) {
                     //走到这里几乎是不可能的，除非内存分配没了
                     //暂时还没有到提交纹理的地步，现在都是虚拟的
-                    console.error('__book__.addTextBlock ??');
+                    //console.error('__book__.addTextBlock ??');
                     continue;
                 }
+                // new TextBlock($charValue.renderWidth, $charValue.renderHeight, TextAtlasRender.textAtlasBorder);
+                // if (!TextAtlasRender.book.addTextBlock(newTxtBlock)) {
+                //     //走到这里几乎是不可能的，除非内存分配没了
+                //     //暂时还没有到提交纹理的地步，现在都是虚拟的
+                //     //console.error('__book__.addTextBlock ??');
+                //     continue;
+                // }
                 //记录 + 测试 + 准备渲染
                 textBlockMap[$charValue._hashCode] = newTxtBlock;
                 newTxtBlock[property_tag] = char;
@@ -309,8 +319,8 @@ namespace egret.web {
                 //
                 const line = newTxtBlock.line;
                 const page = line.page;
-                const xoffset = line.x + newTxtBlock.x + __TXT_RENDER_BORDER__;
-                const yoffset = line.y + newTxtBlock.y + __TXT_RENDER_BORDER__;
+                const xoffset = line.x + newTxtBlock.x + newTxtBlock.border;
+                const yoffset = line.y + newTxtBlock.y + newTxtBlock.border;
                 //
                 page[property_textTextureAtlas] = page[property_textTextureAtlas] || this.createTextTextureAtlas(page.pageWidth, page.pageHeight);
                 const textAtlas = page[property_textTextureAtlas] as WebGLTexture;

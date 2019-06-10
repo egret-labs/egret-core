@@ -14450,6 +14450,7 @@ declare namespace egret {
          * @returns
          */
         private static cosInt(value);
+        static convertStringToHashCode(str: string): number;
     }
 }
 /**

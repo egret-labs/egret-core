@@ -29,41 +29,47 @@
 
 namespace egret.web {
 
-    export let __MAX_PAGE_SIZE__ = 1024;
-    export let __TXT_RENDER_BORDER__ = 1; //最好是描边宽度 + 1;
-    export let __book__: Book = null;
-    export function configTextTextureAtlasStrategy(maxPageSize: number, offset: number): Book {
-        if (!__book__) {
-            __book__ = new Book;
-            __MAX_PAGE_SIZE__ = maxPageSize;
-            __TXT_RENDER_BORDER__ = offset;
-            console.log('configTextTextureAtlasStrategy: max page = ' + __MAX_PAGE_SIZE__ + ', border = ' + __TXT_RENDER_BORDER__);
-        }
-        return __book__;
-    }
+    // let __MAX_PAGE_SIZE__ = 1024;
+    // //export let __TXT_RENDER_BORDER__ = 1; //最好是描边宽度 + 1;
+    // //export let __book__: Book = null;
+    // export function configTextTextureAtlasStrategy(maxPageSize: number): void {
+    //     //if (!__book__) {
+    //         //__book__ = new Book;
+    //         __MAX_PAGE_SIZE__ = maxPageSize;
+    //         //__TXT_RENDER_BORDER__ = offset;
+    //         //console.log('configTextTextureAtlasStrategy: max page = ' + __MAX_PAGE_SIZE__ + ', border = ');
+    //     //}
+    //     //return __book__;
+    // }
 
     export class TextBlock extends HashObject {
 
         private _width: number = 0;
         private _height: number = 0;
+        private _border: number = 0;
         public line: Line = null;
         public x: number = 0;
         public y: number = 0;
         public u: number = 0;
         public v: number = 0;
 
-        constructor(width: number, height: number) {
+        constructor(width: number, height: number, border: number) {
             super();
             this._width = width;
             this._height = height;
+            this._border = border;
+        }
+
+        public get border(): number {
+            return this._border;
         }
 
         public get width(): number {
-            return this._width + __TXT_RENDER_BORDER__ * 2;
+            return this._width + this.border * 2;
         }
 
         public get height(): number {
-            return this._height + __TXT_RENDER_BORDER__ * 2;
+            return this._height + this.border * 2;
         }
 
         public get contentWidth(): number {
@@ -77,12 +83,10 @@ namespace egret.web {
         public updateUV(): boolean {
             const line = this.line;
             if (!line) {
-                //不属于任何的line就是错的
-                return false;
+                return false;//不属于任何的line就是错的
             }
-
-            this.u = line.x + this.x + __TXT_RENDER_BORDER__ * 1;
-            this.v = line.y + this.y + __TXT_RENDER_BORDER__ * 1;
+            this.u = line.x + this.x + this.border * 1;
+            this.v = line.y + this.y + this.border * 1;
             return true;
         }
     }
@@ -207,6 +211,14 @@ namespace egret.web {
 
         public readonly _pages: Page[] = [];
         public _sortLines: Line[] = [];
+        private readonly _maxSize: number = 1024;
+        private readonly _border: number = 1;
+
+        constructor(maxSize: number, border: number) {
+            super();
+            this._maxSize = maxSize;
+            this._border = border;
+        }
 
         public addTextBlock(textBlock: TextBlock): boolean {
             const result = this._addTextBlock(textBlock);
@@ -237,7 +249,7 @@ namespace egret.web {
             if (!textBlock) {
                 return null;
             }
-            if (textBlock.width > __MAX_PAGE_SIZE__ || textBlock.height > __MAX_PAGE_SIZE__) {
+            if (textBlock.width > this._maxSize || textBlock.height > this._maxSize) {
                 console.error('textBlock.width = ' + textBlock.width + ', ' + 'textBlock.height = ' + textBlock.height);
                 return null;
             }
@@ -253,7 +265,7 @@ namespace egret.web {
                 }
             }
             //做新的行
-            const newLine = new Line(__MAX_PAGE_SIZE__);
+            const newLine = new Line(this._maxSize);
             if (!newLine.addTextBlock(textBlock, true)) {
                 console.error('???');
                 return null;
@@ -268,7 +280,7 @@ namespace egret.web {
             }
             //都没有，就做新的page
             //添加目标行
-            const newPage = this.newPage(__MAX_PAGE_SIZE__, __MAX_PAGE_SIZE__);
+            const newPage = this.newPage(this._maxSize, this._maxSize);
             if (!newPage.addLine(newLine)) {
                 console.error('_addText newPage.addLine failed');
                 return null;
@@ -290,6 +302,16 @@ namespace egret.web {
                 return (a.dynamicMaxHeight < b.dynamicMaxHeight) ? -1 : 1;
             }
             this._sortLines = this._sortLines.sort(sortFunc);
+        }
+
+        public createTextBlock(width: number, height: number): TextBlock {
+            const txtBlock = new TextBlock(width, height, this._border);
+            if (!this.addTextBlock(txtBlock)) {
+                //走到这里几乎是不可能的，除非内存分配没了
+                //暂时还没有到提交纹理的地步，现在都是虚拟的
+                return null;
+            }
+            return txtBlock;
         }
     }
 }
