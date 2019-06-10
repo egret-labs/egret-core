@@ -43,215 +43,27 @@ var egret;
         /**
          * @private
          */
-        var WebFps = (function () {
-            function WebFps(stage, showFPS, showLog, logFilter, styles) {
-                this.showPanle = true;
-                this.fpsHeight = 0;
-                this.WIDTH = 101;
-                this.HEIGHT = 20;
-                this.bgCanvasColor = "#18304b";
-                this.fpsFrontColor = "#18fefe";
-                this.WIDTH_COST = 50;
-                this.cost1Color = "#18fefe";
-                // private cost2Color = "#ffff00";
-                this.cost3Color = "#ff0000";
-                this.arrFps = [];
-                this.arrCost = [];
-                this.arrLog = [];
-                if (showFPS || showLog) {
-                    if (egret.Capabilities.renderMode == 'canvas') {
-                        this.renderMode = "Canvas";
+        function getOption(key) {
+            if (window.location) {
+                var search = location.search;
+                if (search == "") {
+                    return "";
+                }
+                search = search.slice(1);
+                var searchArr = search.split("&");
+                var length_1 = searchArr.length;
+                for (var i = 0; i < length_1; i++) {
+                    var str = searchArr[i];
+                    var arr = str.split("=");
+                    if (arr[0] == key) {
+                        return arr[1];
                     }
-                    else {
-                        this.renderMode = "WebGL";
-                    }
-                    this.panelX = styles["x"] === undefined ? 0 : parseInt(styles['x']);
-                    this.panelY = styles["y"] === undefined ? 0 : parseInt(styles['y']);
-                    this.fontColor = styles["textColor"] === undefined ? '#ffffff' : styles['textColor'].replace("0x", "#");
-                    this.fontSize = styles["size"] === undefined ? 12 : parseInt(styles['size']);
-                    if (egret.Capabilities.isMobile) {
-                        this.fontSize -= 2;
-                    }
-                    var all = document.createElement('div');
-                    all.style.position = 'absolute';
-                    all.style.background = "rgba(0,0,0," + styles['bgAlpha'] + ")";
-                    all.style.left = this.panelX + 'px';
-                    all.style.top = this.panelY + 'px';
-                    all.style.pointerEvents = 'none';
-                    document.body.appendChild(all);
-                    var container = document.createElement('div');
-                    container.style.color = this.fontColor;
-                    container.style.fontSize = this.fontSize + 'px';
-                    container.style.lineHeight = this.fontSize + 'px';
-                    container.style.margin = '4px 4px 4px 4px';
-                    this.container = container;
-                    all.appendChild(container);
-                    if (showFPS)
-                        this.addFps();
-                    if (showLog)
-                        this.addLog();
                 }
             }
-            WebFps.prototype.addFps = function () {
-                var div = document.createElement('div');
-                div.style.display = 'inline-block';
-                this.containerFps = div;
-                this.container.appendChild(div);
-                var fps = document.createElement('div');
-                fps.style.paddingBottom = '2px';
-                this.fps = fps;
-                this.containerFps.appendChild(fps);
-                fps.innerHTML = "0 FPS " + this.renderMode + "<br/>min0 max0 avg0";
-                var canvas = document.createElement('canvas');
-                this.containerFps.appendChild(canvas);
-                canvas.width = this.WIDTH;
-                canvas.height = this.HEIGHT;
-                this.canvasFps = canvas;
-                var context = canvas.getContext('2d');
-                this.contextFps = context;
-                context.fillStyle = this.bgCanvasColor;
-                context.fillRect(0, 0, this.WIDTH, this.HEIGHT);
-                var divDatas = document.createElement('div');
-                this.divDatas = divDatas;
-                this.containerFps.appendChild(divDatas);
-                var left = document.createElement('div');
-                left.style['float'] = 'left';
-                left.innerHTML = "Draw<br/>Cost";
-                divDatas.appendChild(left);
-                var right = document.createElement('div');
-                right.style.paddingLeft = left.offsetWidth + 20 + "px";
-                divDatas.appendChild(right);
-                var draw = document.createElement('div');
-                this.divDraw = draw;
-                draw.innerHTML = "0<br/>";
-                right.appendChild(draw);
-                var cost = document.createElement('div');
-                this.divCost = cost;
-                cost.innerHTML = "<font  style=\"color:" + this.cost1Color + "\">0<font/> <font  style=\"color:" + this.cost3Color + "\">0<font/>";
-                right.appendChild(cost);
-                canvas = document.createElement('canvas');
-                this.canvasCost = canvas;
-                this.containerFps.appendChild(canvas);
-                canvas.width = this.WIDTH;
-                canvas.height = this.HEIGHT;
-                context = canvas.getContext('2d');
-                this.contextCost = context;
-                context.fillStyle = this.bgCanvasColor;
-                context.fillRect(0, 0, this.WIDTH, this.HEIGHT);
-                context.fillStyle = "#000000";
-                context.fillRect(this.WIDTH_COST, 0, 1, this.HEIGHT);
-                this.fpsHeight = this.container.offsetHeight;
-            };
-            WebFps.prototype.addLog = function () {
-                var log = document.createElement('div');
-                log.style.maxWidth = document.body.clientWidth - 8 - this.panelX + 'px';
-                log.style.wordWrap = "break-word";
-                this.log = log;
-                this.container.appendChild(log);
-            };
-            WebFps.prototype.update = function (datas, showLastData) {
-                if (showLastData === void 0) { showLastData = false; }
-                var numFps;
-                var numCostTicker;
-                var numCostRender;
-                if (!showLastData) {
-                    numFps = datas.fps;
-                    numCostTicker = datas.costTicker;
-                    numCostRender = datas.costRender;
-                    this.lastNumDraw = datas.draw;
-                    this.arrFps.push(numFps);
-                    this.arrCost.push([numCostTicker, numCostRender]);
-                }
-                else {
-                    numFps = this.arrFps[this.arrFps.length - 1];
-                    numCostTicker = this.arrCost[this.arrCost.length - 1][0];
-                    numCostRender = this.arrCost[this.arrCost.length - 1][1];
-                }
-                var fpsTotal = 0;
-                var lenFps = this.arrFps.length;
-                if (lenFps > 101) {
-                    lenFps = 101;
-                    this.arrFps.shift();
-                    this.arrCost.shift();
-                }
-                var fpsMin = this.arrFps[0];
-                var fpsMax = this.arrFps[0];
-                for (var i = 0; i < lenFps; i++) {
-                    var num = this.arrFps[i];
-                    fpsTotal += num;
-                    if (num < fpsMin)
-                        fpsMin = num;
-                    else if (num > fpsMax)
-                        fpsMax = num;
-                }
-                var WIDTH = this.WIDTH;
-                var HEIGHT = this.HEIGHT;
-                var context = this.contextFps;
-                context.drawImage(this.canvasFps, 1, 0, WIDTH - 1, HEIGHT, 0, 0, WIDTH - 1, HEIGHT);
-                context.fillStyle = this.bgCanvasColor;
-                context.fillRect(WIDTH - 1, 0, 1, HEIGHT);
-                var lastHeight = Math.floor(numFps / 60 * 20);
-                if (lastHeight < 1)
-                    lastHeight = 1;
-                context.fillStyle = this.fpsFrontColor;
-                context.fillRect(WIDTH - 1, 20 - lastHeight, 1, lastHeight);
-                var WIDTH_COST = this.WIDTH_COST;
-                context = this.contextCost;
-                context.drawImage(this.canvasCost, 1, 0, WIDTH_COST - 1, HEIGHT, 0, 0, WIDTH_COST - 1, HEIGHT);
-                context.drawImage(this.canvasCost, WIDTH_COST + 2, 0, WIDTH_COST - 1, HEIGHT, WIDTH_COST + 1, 0, WIDTH_COST - 1, HEIGHT);
-                var c1Height = Math.floor(numCostTicker / 2);
-                if (c1Height < 1)
-                    c1Height = 1;
-                else if (c1Height > 20)
-                    c1Height = 20;
-                //todo lcj
-                var c2Height = Math.floor(numCostRender / 2);
-                if (c2Height < 1)
-                    c2Height = 1;
-                else if (c2Height > 20)
-                    c2Height = 20;
-                context.fillStyle = this.bgCanvasColor;
-                context.fillRect(WIDTH_COST - 1, 0, 1, HEIGHT);
-                context.fillRect(WIDTH_COST * 2, 0, 1, HEIGHT);
-                context.fillRect(WIDTH_COST * 3 + 1, 0, 1, HEIGHT);
-                context.fillStyle = this.cost1Color;
-                context.fillRect(WIDTH_COST - 1, 20 - c1Height, 1, c1Height);
-                context.fillStyle = this.cost3Color;
-                context.fillRect(WIDTH_COST * 2, 20 - c2Height, 1, c2Height);
-                var fpsAvg = Math.floor(fpsTotal / lenFps);
-                var fpsOutput = numFps + " FPS " + this.renderMode;
-                if (this.showPanle) {
-                    fpsOutput += "<br/>min" + fpsMin + " max" + fpsMax + " avg" + fpsAvg;
-                    this.divDraw.innerHTML = this.lastNumDraw + "<br/>";
-                    this.divCost.innerHTML = "<font  style=\"color:#18fefe\">" + numCostTicker + "<font/> <font  style=\"color:#ff0000\">" + numCostRender + "<font/>";
-                }
-                this.fps.innerHTML = fpsOutput;
-            };
-            ;
-            WebFps.prototype.updateInfo = function (info) {
-                this.arrLog.push(info);
-                this.updateLogLayout();
-            };
-            WebFps.prototype.updateWarn = function (info) {
-                this.arrLog.push("[Warning]" + info);
-                this.updateLogLayout();
-            };
-            WebFps.prototype.updateError = function (info) {
-                this.arrLog.push("[Error]" + info);
-                this.updateLogLayout();
-            };
-            WebFps.prototype.updateLogLayout = function () {
-                this.log.innerHTML = this.arrLog.join('<br/>');
-                while (document.body.clientHeight < (this.log.offsetHeight + this.fpsHeight + this.panelY + this.fontSize * 2)) {
-                    this.arrLog.shift();
-                    this.log.innerHTML = this.arrLog.join('<br/>');
-                }
-            };
-            return WebFps;
-        }());
-        web.WebFps = WebFps;
-        __reflect(WebFps.prototype, "egret.web.WebFps", ["egret.FPSDisplay"]);
-        egret.FPSDisplay = WebFps;
+            return "";
+        }
+        web.getOption = getOption;
+        egret.getOption = getOption;
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -3930,13 +3742,13 @@ var egret;
                 }
                 else {
                     //based on : https://github.com/jondavidjohn/hidpi-canvas-polyfill
-                    var context = egret.sys.canvasHitTestBuffer.context;
-                    var backingStore = context.backingStorePixelRatio ||
-                        context.webkitBackingStorePixelRatio ||
-                        context.mozBackingStorePixelRatio ||
-                        context.msBackingStorePixelRatio ||
-                        context.oBackingStorePixelRatio ||
-                        context.backingStorePixelRatio || 1;
+                    var context_1 = egret.sys.canvasHitTestBuffer.context;
+                    var backingStore = context_1.backingStorePixelRatio ||
+                        context_1.webkitBackingStorePixelRatio ||
+                        context_1.mozBackingStorePixelRatio ||
+                        context_1.msBackingStorePixelRatio ||
+                        context_1.oBackingStorePixelRatio ||
+                        context_1.backingStorePixelRatio || 1;
                     canvasScaleFactor = (window.devicePixelRatio || 1) / backingStore;
                 }
                 egret.sys.DisplayList.$canvasScaleFactor = canvasScaleFactor;
@@ -3949,8 +3761,8 @@ var egret;
                     egret.sys.screenAdapter = new egret.sys.DefaultScreenAdapter();
                 }
                 var list = document.querySelectorAll(".egret-player");
-                var length_1 = list.length;
-                for (var i = 0; i < length_1; i++) {
+                var length_2 = list.length;
+                for (var i = 0; i < length_2; i++) {
                     var container = list[i];
                     var player = new web.WebPlayer(container, options);
                     container["egret-player"] = player;
@@ -4170,6 +3982,252 @@ var egret;
 //////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
+    var web;
+    (function (web) {
+        /**
+         * @private
+         */
+        var WebFps = (function () {
+            function WebFps(stage, showFPS, showLog, logFilter, styles) {
+                this.showPanle = true;
+                this.fpsHeight = 0;
+                this.WIDTH = 101;
+                this.HEIGHT = 20;
+                this.bgCanvasColor = "#18304b";
+                this.fpsFrontColor = "#18fefe";
+                this.WIDTH_COST = 50;
+                this.cost1Color = "#18fefe";
+                // private cost2Color = "#ffff00";
+                this.cost3Color = "#ff0000";
+                this.arrFps = [];
+                this.arrCost = [];
+                this.arrLog = [];
+                if (showFPS || showLog) {
+                    if (egret.Capabilities.renderMode == 'canvas') {
+                        this.renderMode = "Canvas";
+                    }
+                    else {
+                        this.renderMode = "WebGL";
+                    }
+                    this.panelX = styles["x"] === undefined ? 0 : parseInt(styles['x']);
+                    this.panelY = styles["y"] === undefined ? 0 : parseInt(styles['y']);
+                    this.fontColor = styles["textColor"] === undefined ? '#ffffff' : styles['textColor'].replace("0x", "#");
+                    this.fontSize = styles["size"] === undefined ? 12 : parseInt(styles['size']);
+                    if (egret.Capabilities.isMobile) {
+                        this.fontSize -= 2;
+                    }
+                    var all = document.createElement('div');
+                    all.style.position = 'absolute';
+                    all.style.background = "rgba(0,0,0," + styles['bgAlpha'] + ")";
+                    all.style.left = this.panelX + 'px';
+                    all.style.top = this.panelY + 'px';
+                    all.style.pointerEvents = 'none';
+                    document.body.appendChild(all);
+                    var container = document.createElement('div');
+                    container.style.color = this.fontColor;
+                    container.style.fontSize = this.fontSize + 'px';
+                    container.style.lineHeight = this.fontSize + 'px';
+                    container.style.margin = '4px 4px 4px 4px';
+                    this.container = container;
+                    all.appendChild(container);
+                    if (showFPS)
+                        this.addFps();
+                    if (showLog)
+                        this.addLog();
+                }
+            }
+            WebFps.prototype.addFps = function () {
+                var div = document.createElement('div');
+                div.style.display = 'inline-block';
+                this.containerFps = div;
+                this.container.appendChild(div);
+                var fps = document.createElement('div');
+                fps.style.paddingBottom = '2px';
+                this.fps = fps;
+                this.containerFps.appendChild(fps);
+                fps.innerHTML = "0 FPS " + this.renderMode + "<br/>min0 max0 avg0";
+                var canvas = document.createElement('canvas');
+                this.containerFps.appendChild(canvas);
+                canvas.width = this.WIDTH;
+                canvas.height = this.HEIGHT;
+                this.canvasFps = canvas;
+                var context = canvas.getContext('2d');
+                this.contextFps = context;
+                context.fillStyle = this.bgCanvasColor;
+                context.fillRect(0, 0, this.WIDTH, this.HEIGHT);
+                var divDatas = document.createElement('div');
+                this.divDatas = divDatas;
+                this.containerFps.appendChild(divDatas);
+                var left = document.createElement('div');
+                left.style['float'] = 'left';
+                left.innerHTML = "Draw<br/>Cost";
+                divDatas.appendChild(left);
+                var right = document.createElement('div');
+                right.style.paddingLeft = left.offsetWidth + 20 + "px";
+                divDatas.appendChild(right);
+                var draw = document.createElement('div');
+                this.divDraw = draw;
+                draw.innerHTML = "0<br/>";
+                right.appendChild(draw);
+                var cost = document.createElement('div');
+                this.divCost = cost;
+                cost.innerHTML = "<font  style=\"color:" + this.cost1Color + "\">0<font/> <font  style=\"color:" + this.cost3Color + "\">0<font/>";
+                right.appendChild(cost);
+                canvas = document.createElement('canvas');
+                this.canvasCost = canvas;
+                this.containerFps.appendChild(canvas);
+                canvas.width = this.WIDTH;
+                canvas.height = this.HEIGHT;
+                context = canvas.getContext('2d');
+                this.contextCost = context;
+                context.fillStyle = this.bgCanvasColor;
+                context.fillRect(0, 0, this.WIDTH, this.HEIGHT);
+                context.fillStyle = "#000000";
+                context.fillRect(this.WIDTH_COST, 0, 1, this.HEIGHT);
+                this.fpsHeight = this.container.offsetHeight;
+            };
+            WebFps.prototype.addLog = function () {
+                var log = document.createElement('div');
+                log.style.maxWidth = document.body.clientWidth - 8 - this.panelX + 'px';
+                log.style.wordWrap = "break-word";
+                this.log = log;
+                this.container.appendChild(log);
+            };
+            WebFps.prototype.update = function (datas, showLastData) {
+                if (showLastData === void 0) { showLastData = false; }
+                var numFps;
+                var numCostTicker;
+                var numCostRender;
+                if (!showLastData) {
+                    numFps = datas.fps;
+                    numCostTicker = datas.costTicker;
+                    numCostRender = datas.costRender;
+                    this.lastNumDraw = datas.draw;
+                    this.arrFps.push(numFps);
+                    this.arrCost.push([numCostTicker, numCostRender]);
+                }
+                else {
+                    numFps = this.arrFps[this.arrFps.length - 1];
+                    numCostTicker = this.arrCost[this.arrCost.length - 1][0];
+                    numCostRender = this.arrCost[this.arrCost.length - 1][1];
+                }
+                var fpsTotal = 0;
+                var lenFps = this.arrFps.length;
+                if (lenFps > 101) {
+                    lenFps = 101;
+                    this.arrFps.shift();
+                    this.arrCost.shift();
+                }
+                var fpsMin = this.arrFps[0];
+                var fpsMax = this.arrFps[0];
+                for (var i = 0; i < lenFps; i++) {
+                    var num = this.arrFps[i];
+                    fpsTotal += num;
+                    if (num < fpsMin)
+                        fpsMin = num;
+                    else if (num > fpsMax)
+                        fpsMax = num;
+                }
+                var WIDTH = this.WIDTH;
+                var HEIGHT = this.HEIGHT;
+                var context = this.contextFps;
+                context.drawImage(this.canvasFps, 1, 0, WIDTH - 1, HEIGHT, 0, 0, WIDTH - 1, HEIGHT);
+                context.fillStyle = this.bgCanvasColor;
+                context.fillRect(WIDTH - 1, 0, 1, HEIGHT);
+                var lastHeight = Math.floor(numFps / 60 * 20);
+                if (lastHeight < 1)
+                    lastHeight = 1;
+                context.fillStyle = this.fpsFrontColor;
+                context.fillRect(WIDTH - 1, 20 - lastHeight, 1, lastHeight);
+                var WIDTH_COST = this.WIDTH_COST;
+                context = this.contextCost;
+                context.drawImage(this.canvasCost, 1, 0, WIDTH_COST - 1, HEIGHT, 0, 0, WIDTH_COST - 1, HEIGHT);
+                context.drawImage(this.canvasCost, WIDTH_COST + 2, 0, WIDTH_COST - 1, HEIGHT, WIDTH_COST + 1, 0, WIDTH_COST - 1, HEIGHT);
+                var c1Height = Math.floor(numCostTicker / 2);
+                if (c1Height < 1)
+                    c1Height = 1;
+                else if (c1Height > 20)
+                    c1Height = 20;
+                //todo lcj
+                var c2Height = Math.floor(numCostRender / 2);
+                if (c2Height < 1)
+                    c2Height = 1;
+                else if (c2Height > 20)
+                    c2Height = 20;
+                context.fillStyle = this.bgCanvasColor;
+                context.fillRect(WIDTH_COST - 1, 0, 1, HEIGHT);
+                context.fillRect(WIDTH_COST * 2, 0, 1, HEIGHT);
+                context.fillRect(WIDTH_COST * 3 + 1, 0, 1, HEIGHT);
+                context.fillStyle = this.cost1Color;
+                context.fillRect(WIDTH_COST - 1, 20 - c1Height, 1, c1Height);
+                context.fillStyle = this.cost3Color;
+                context.fillRect(WIDTH_COST * 2, 20 - c2Height, 1, c2Height);
+                var fpsAvg = Math.floor(fpsTotal / lenFps);
+                var fpsOutput = numFps + " FPS " + this.renderMode;
+                if (this.showPanle) {
+                    fpsOutput += "<br/>min" + fpsMin + " max" + fpsMax + " avg" + fpsAvg;
+                    this.divDraw.innerHTML = this.lastNumDraw + "<br/>";
+                    this.divCost.innerHTML = "<font  style=\"color:#18fefe\">" + numCostTicker + "<font/> <font  style=\"color:#ff0000\">" + numCostRender + "<font/>";
+                }
+                this.fps.innerHTML = fpsOutput;
+            };
+            ;
+            WebFps.prototype.updateInfo = function (info) {
+                this.arrLog.push(info);
+                this.updateLogLayout();
+            };
+            WebFps.prototype.updateWarn = function (info) {
+                this.arrLog.push("[Warning]" + info);
+                this.updateLogLayout();
+            };
+            WebFps.prototype.updateError = function (info) {
+                this.arrLog.push("[Error]" + info);
+                this.updateLogLayout();
+            };
+            WebFps.prototype.updateLogLayout = function () {
+                this.log.innerHTML = this.arrLog.join('<br/>');
+                while (document.body.clientHeight < (this.log.offsetHeight + this.fpsHeight + this.panelY + this.fontSize * 2)) {
+                    this.arrLog.shift();
+                    this.log.innerHTML = this.arrLog.join('<br/>');
+                }
+            };
+            return WebFps;
+        }());
+        web.WebFps = WebFps;
+        __reflect(WebFps.prototype, "egret.web.WebFps", ["egret.FPSDisplay"]);
+        egret.FPSDisplay = WebFps;
+    })(web = egret.web || (egret.web = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
     var localStorage;
     (function (localStorage) {
         var web;
@@ -4221,64 +4279,6 @@ var egret;
             localStorage.clear = clear;
         })(web = localStorage.web || (localStorage.web = {}));
     })(localStorage = egret.localStorage || (egret.localStorage = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var web;
-    (function (web) {
-        /**
-         * @private
-         */
-        function getOption(key) {
-            if (window.location) {
-                var search = location.search;
-                if (search == "") {
-                    return "";
-                }
-                search = search.slice(1);
-                var searchArr = search.split("&");
-                var length_2 = searchArr.length;
-                for (var i = 0; i < length_2; i++) {
-                    var str = searchArr[i];
-                    var arr = str.split("=");
-                    if (arr[0] == key) {
-                        return arr[1];
-                    }
-                }
-            }
-            return "";
-        }
-        web.getOption = getOption;
-        egret.getOption = getOption;
-    })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -6233,9 +6233,9 @@ var egret;
                     if (!this._defaultEmptyTexture) {
                         var size = 16;
                         var canvas = egret.sys.createCanvas(size, size);
-                        var context = egret.sys.getContext2d(canvas); //canvas.getContext('2d');
-                        context.fillStyle = 'white';
-                        context.fillRect(0, 0, size, size);
+                        var context_2 = egret.sys.getContext2d(canvas); //canvas.getContext('2d');
+                        context_2.fillStyle = 'white';
+                        context_2.fillRect(0, 0, size, size);
                         this._defaultEmptyTexture = this.createTexture(canvas);
                         this._defaultEmptyTexture[egret.engine_default_empty_texture] = true;
                     }
@@ -8269,6 +8269,584 @@ var egret;
         __reflect(WebGLRenderer.prototype, "egret.web.WebGLRenderer", ["egret.sys.SystemRenderer"]);
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
+// //////////////////////////////////////////////////////////////////////////////////////
+// //
+// //  Copyright (c) 2014-present, Egret Technology.
+// //  All rights reserved.
+// //  Redistribution and use in source and binary forms, with or without
+// //  modification, are permitted provided that the following conditions are met:
+// //
+// //     * Redistributions of source code must retain the above copyright
+// //       notice, this list of conditions and the following disclaimer.
+// //     * Redistributions in binary form must reproduce the above copyright
+// //       notice, this list of conditions and the following disclaimer in the
+// //       documentation and/or other materials provided with the distribution.
+// //     * Neither the name of the Egret nor the
+// //       names of its contributors may be used to endorse or promote products
+// //       derived from this software without specific prior written permission.
+// //
+// //  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+// //  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+// //  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+// //  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+// //  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// //  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+// //  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+// //  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+// //  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+// //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// //
+// //////////////////////////////////////////////////////////////////////////////////////
+// namespace egret.web {
+//     export let __MAX_PAGE_SIZE__ = 1024;
+//     export let __TXT_RENDER_BORDER__ = 1; //最好是描边宽度 + 1;
+//     export let __book__: Book = null;
+//     export function configTextTextureAtlasStrategy(maxPageSize: number, offset: number): Book {
+//         if (!__book__) {
+//             __book__ = new Book;
+//             __MAX_PAGE_SIZE__ = maxPageSize;
+//             __TXT_RENDER_BORDER__ = offset;
+//             console.log('configTextTextureAtlasStrategy: max page = ' + __MAX_PAGE_SIZE__ + ', border = ' + __TXT_RENDER_BORDER__);
+//         }
+//         return __book__;
+//     }
+//     export class TextBlock extends HashObject {
+//         private _width: number = 0;
+//         private _height: number = 0;
+//         public line: Line = null;
+//         public x: number = 0;
+//         public y: number = 0;
+//         public u: number = 0;
+//         public v: number = 0;
+//         constructor(width: number, height: number) {
+//             super();
+//             this._width = width;
+//             this._height = height;
+//         }
+//         public get width(): number {
+//             return this._width + __TXT_RENDER_BORDER__ * 2;
+//         }
+//         public get height(): number {
+//             return this._height + __TXT_RENDER_BORDER__ * 2;
+//         }
+//         public get contentWidth(): number {
+//             return this._width;
+//         }
+//         public get contentHeight(): number {
+//             return this._height;
+//         }
+//         public updateUV(): boolean {
+//             const line = this.line;
+//             if (!line) {
+//                 //不属于任何的line就是错的
+//                 return false;
+//             }
+//             this.u = line.x + this.x + __TXT_RENDER_BORDER__ * 1;
+//             this.v = line.y + this.y + __TXT_RENDER_BORDER__ * 1;
+//             return true;
+//         }
+//     }
+//     export class Line extends HashObject {
+//         public page: Page = null;
+//         public readonly textBlocks: TextBlock[] = [];
+//         public dynamicMaxHeight: number = 0;
+//         public readonly maxWidth: number = 0;
+//         public x: number = 0;
+//         public y: number = 0;
+//         constructor(maxWidth: number) {
+//             super();
+//             this.maxWidth = maxWidth;
+//         }
+//         public isCapacityOf(textBlock: TextBlock): boolean {
+//             if (!textBlock) {
+//                 return false;
+//             }
+//             //
+//             let posx = 0;
+//             let posy = 0;
+//             const lastTxtBlock = this.lastTextBlock();
+//             if (lastTxtBlock) {
+//                 posx = lastTxtBlock.x + lastTxtBlock.width;
+//                 posy = lastTxtBlock.y;
+//             }
+//             //
+//             if (posx + textBlock.width > this.maxWidth) {
+//                 return false;//宽度不够
+//             }
+//             //
+//             if (this.dynamicMaxHeight > 0 && posy + textBlock.height > this.dynamicMaxHeight) {
+//                 return false;//如果有已经有动态高度，到这里，说明高度也不够
+//             }
+//             return true;
+//         }
+//         public lastTextBlock(): TextBlock {
+//             const textBlocks = this.textBlocks;
+//             if (textBlocks.length > 0) {
+//                 return textBlocks[textBlocks.length - 1];
+//             }
+//             return null;
+//         }
+//         public addTextBlock(textBlock: TextBlock, needCheck: boolean): boolean {
+//             //
+//             if (!textBlock) {
+//                 return false;
+//             }
+//             //
+//             if (needCheck) {
+//                 if (!this.isCapacityOf(textBlock)) {
+//                     return false;
+//                 }
+//             }
+//             //
+//             let posx = 0;
+//             let posy = 0;
+//             const lastTxtBlock = this.lastTextBlock();
+//             if (lastTxtBlock) {
+//                 posx = lastTxtBlock.x + lastTxtBlock.width;
+//                 posy = lastTxtBlock.y;
+//             }
+//             //
+//             textBlock.x = posx;
+//             textBlock.y = posy;
+//             textBlock.line = this;
+//             this.textBlocks.push(textBlock);
+//             this.dynamicMaxHeight = Math.max(this.dynamicMaxHeight, textBlock.height);
+//             return true;
+//         }
+//     }
+//     export class Page extends HashObject {
+//         public readonly lines: Line[] = [];
+//         public readonly pageWidth: number = 0;
+//         public readonly pageHeight: number = 0;
+//         constructor(pageWidth: number, pageHeight: number) {
+//             super();
+//             this.pageWidth = pageWidth;
+//             this.pageHeight = pageHeight;
+//         }
+//         public addLine(line: Line): boolean {
+//             if (!line) {
+//                 return false;
+//             }
+//             //
+//             let posx = 0;
+//             let posy = 0;
+//             //
+//             const lines = this.lines;
+//             if (lines.length > 0) {
+//                 const lastLine = lines[lines.length - 1];
+//                 posx = lastLine.x;
+//                 posy = lastLine.y + lastLine.dynamicMaxHeight;
+//             }
+//             if (line.maxWidth > this.pageWidth) {
+//                 console.error('line.maxWidth = ' + line.maxWidth + ', ' + 'this.pageWidth = ' + this.pageWidth);
+//                 return false;//宽度不够
+//             }
+//             if (posy + line.dynamicMaxHeight > this.pageHeight) {
+//                 return false;//满了
+//             }
+//             //更新数据
+//             line.x = posx;
+//             line.y = posy;
+//             line.page = this;
+//             this.lines.push(line);
+//             return true;
+//         }
+//     }
+//     export class Book extends HashObject {
+//         public readonly _pages: Page[] = [];
+//         public _sortLines: Line[] = [];
+//         public addTextBlock(textBlock: TextBlock): boolean {
+//             const result = this._addTextBlock(textBlock);
+//             if (!result) {
+//                 return false;
+//             }
+//             //更新下uv
+//             textBlock.updateUV();
+//             //没有才要添加
+//             let exist = false;
+//             const cast = result as [Page, Line];
+//             const _sortLines = this._sortLines;
+//             for (const line of _sortLines) {
+//                 if (line === cast[1]) {
+//                     exist = true;
+//                     break;
+//                 }
+//             }
+//             if (!exist) {
+//                 _sortLines.push(cast[1]);
+//             }
+//             //重新排序
+//             this.sort();
+//             return true;
+//         }
+//         public _addTextBlock(textBlock: TextBlock): [Page, Line] | null {
+//             if (!textBlock) {
+//                 return null;
+//             }
+//             if (textBlock.width > __MAX_PAGE_SIZE__ || textBlock.height > __MAX_PAGE_SIZE__) {
+//                 console.error('textBlock.width = ' + textBlock.width + ', ' + 'textBlock.height = ' + textBlock.height);
+//                 return null;
+//             }
+//             //找到最合适的
+//             const _sortLines = this._sortLines;
+//             for (let i = 0, length = _sortLines.length; i < length; ++i) {
+//                 const line = _sortLines[i];
+//                 if (!line.isCapacityOf(textBlock)) {
+//                     continue;
+//                 }
+//                 if (line.addTextBlock(textBlock, false)) {
+//                     return [line.page, line];
+//                 }
+//             }
+//             //做新的行
+//             const newLine = new Line(__MAX_PAGE_SIZE__);
+//             if (!newLine.addTextBlock(textBlock, true)) {
+//                 console.error('???');
+//                 return null;
+//             }
+//             //现有的page中插入
+//             const _pages = this._pages;
+//             for (let i = 0, length = _pages.length; i < length; ++i) {
+//                 const page = _pages[i];
+//                 if (page.addLine(newLine)) {
+//                     return [page, newLine];
+//                 }
+//             }
+//             //都没有，就做新的page
+//             //添加目标行
+//             const newPage = this.newPage(__MAX_PAGE_SIZE__, __MAX_PAGE_SIZE__);
+//             if (!newPage.addLine(newLine)) {
+//                 console.error('_addText newPage.addLine failed');
+//                 return null;
+//             }
+//             return [newPage, newLine];
+//         }
+//         public newPage(pageWidth: number, pageHeight: number): Page {
+//             const newPage = new Page(pageWidth, pageHeight);
+//             this._pages.push(newPage);
+//             return newPage;
+//         }
+//         public sort(): void {
+//             if (this._sortLines.length <= 1) {
+//                 return;
+//             }
+//             const sortFunc = (a: Line, b: Line): number => {
+//                 return (a.dynamicMaxHeight < b.dynamicMaxHeight) ? -1 : 1;
+//             }
+//             this._sortLines = this._sortLines.sort(sortFunc);
+//         }
+//     }
+// }
+// //////////////////////////////////////////////////////////////////////////////////////
+// //
+// //  Copyright (c) 2014-present, Egret Technology.
+// //  All rights reserved.
+// //  Redistribution and use in source and binary forms, with or without
+// //  modification, are permitted provided that the following conditions are met:
+// //
+// //     * Redistributions of source code must retain the above copyright
+// //       notice, this list of conditions and the following disclaimer.
+// //     * Redistributions in binary form must reproduce the above copyright
+// //       notice, this list of conditions and the following disclaimer in the
+// //       documentation and/or other materials provided with the distribution.
+// //     * Neither the name of the Egret nor the
+// //       names of its contributors may be used to endorse or promote products
+// //       derived from this software without specific prior written permission.
+// //
+// //  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+// //  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+// //  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+// //  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+// //  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// //  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+// //  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+// //  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+// //  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+// //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// //
+// //////////////////////////////////////////////////////////////////////////////////////
+// namespace egret.web {
+//     function __hashCode__(str: string): number {
+//         if (str.length === 0) {
+//             return 0;
+//         }
+//         let hash = 0;
+//         for (let i = 0, length = str.length; i < length; ++i) {
+//             const chr = str.charCodeAt(i);
+//             hash = ((hash << 5) - hash) + chr;
+//             hash |= 0; // Convert to 32bit integer
+//         }
+//         return hash;
+//     }
+//     //针对中文的加速查找
+//     const __chineseCharactersRegExp__ = new RegExp("^[\u4E00-\u9FA5]$");
+//     const __chineseCharacterMeasureFastMap__: { [index: string]: TextMetrics } = {};
+//     //属性关键子
+//     const property_tag: string = 'tag';
+//     const property_textTextureAtlas: string = 'textTextureAtlas';
+//     //
+//     class StyleKey extends HashObject {
+//         /**
+//          * 颜色值
+//          */
+//         public readonly textColor: number;
+//         /**
+//          * 描边颜色值
+//          */
+//         public readonly strokeColor: number;
+//         /**
+//          * 字号
+//          */
+//         public readonly size: number;
+//         /**
+//          * 描边大小
+//          */
+//         public readonly stroke: number;
+//         /**
+//          * 是否加粗
+//          */
+//         public readonly bold: boolean;
+//         /**
+//          * 是否倾斜
+//          */
+//         public readonly italic: boolean;
+//         /**
+//          * 字体名称
+//          */
+//         public readonly fontFamily: string;
+//         //
+//         public readonly font: string;
+//         //
+//         public readonly format: sys.TextFormat = null;
+//         public readonly $canvasScaleX: number;
+//         public readonly $canvasScaleY: number;
+//         /**
+//          * ????
+//          */
+//         public __string__: string;
+//         constructor(textNode: sys.TextNode, format: sys.TextFormat) {
+//             super();
+//             this.textColor = textNode.textColor;
+//             this.strokeColor = textNode.strokeColor;
+//             this.size = textNode.size;
+//             this.stroke = textNode.stroke;
+//             this.bold = textNode.bold;
+//             this.italic = textNode.italic;
+//             this.fontFamily = textNode.fontFamily;
+//             this.format = format;
+//             this.font = getFontString(textNode, this.format);
+//             this.$canvasScaleX = parseFloat(textNode.$canvasScaleX.toFixed(2)); //不搞那么长
+//             this.$canvasScaleY = parseFloat(textNode.$canvasScaleY.toFixed(2));
+//             //
+//             this.__string__ = '' + this.font;
+//             const textColor = format.textColor == null ? textNode.textColor : format.textColor;
+//             const strokeColor = format.strokeColor == null ? textNode.strokeColor : format.strokeColor;
+//             const stroke = format.stroke == null ? textNode.stroke : format.stroke;
+//             this.__string__ += '-' + toColorString(textColor);
+//             this.__string__ += '-' + toColorString(strokeColor);
+//             if (stroke) {
+//                 this.__string__ += '-' + stroke * 2;
+//             }
+//             this.__string__ += '-' + this.$canvasScaleX;
+//             this.__string__ += '-' + this.$canvasScaleY;
+//         }
+//     }
+//     class CharValue extends HashObject {
+//         public _char: string = '';
+//         public _styleKey: StyleKey = null;
+//         public _string: string = '';
+//         public _hashCode: number = 0;
+//         public measureWidth: number = 0;
+//         public measureHeight: number = 0;
+//         constructor() {
+//             super();
+//         }
+//         public reset(char: string, styleKey: StyleKey): CharValue {
+//             this._char = char;
+//             this._styleKey = styleKey;
+//             this._string = char + ':' + styleKey.__string__;
+//             this._hashCode = __hashCode__(this._string);
+//             return this;
+//         }
+//         public get renderWidth(): number {
+//             return this.measureWidth * this._styleKey.$canvasScaleX;
+//         }
+//         public get renderHeight(): number {
+//             return this.measureHeight * this._styleKey.$canvasScaleY;
+//         }
+//         public drawToCanvas(canvas: HTMLCanvasElement): void {
+//             if (!canvas) {
+//                 return;
+//             }
+//             //
+//             const text = this._char;
+//             const format: sys.TextFormat = this._styleKey.format;
+//             const textColor = format.textColor == null ? this._styleKey.textColor : format.textColor;
+//             const strokeColor = format.strokeColor == null ? this._styleKey.strokeColor : format.strokeColor;
+//             const stroke = format.stroke == null ? this._styleKey.stroke : format.stroke;
+//             //
+//             const context = egret.sys.getContext2d(canvas);
+//             //Step1: 重新测试字体大小
+//             const measureText = this.measureText(context, text, this._styleKey.font);
+//             if (measureText) {
+//                 this.measureWidth = measureText.width;
+//                 this.measureHeight = this._styleKey.size;
+//             }
+//             else {
+//                 console.error('text = ' + text + ', measureText is null');
+//                 this.measureWidth = this._styleKey.size;
+//                 this.measureHeight = this._styleKey.size;
+//             }
+//             //
+//             canvas.width = this.renderWidth;
+//             canvas.height = this.renderHeight;
+//             //再开始绘制
+//             context.save();
+//             context.textAlign = 'left';
+//             context.textBaseline = 'top';
+//             context.lineJoin = 'round';
+//             context.font = this._styleKey.font;
+//             context.fillStyle = toColorString(textColor);
+//             context.strokeStyle = toColorString(strokeColor);
+//             context.clearRect(0, 0, canvas.width, canvas.height);
+//             context.translate(0, 0);
+//             context.scale(this._styleKey.$canvasScaleX, this._styleKey.$canvasScaleY);
+//             //
+//             if (stroke) {
+//                 context.lineWidth = stroke * 2;
+//                 context.strokeText(text, 0, 0);
+//             }
+//             context.fillText(text, 0, 0);
+//             context.restore();
+//         }
+//         private measureText(context: CanvasRenderingContext2D, text: string, font: string): TextMetrics {
+//             const isChinese = __chineseCharactersRegExp__.test(text);
+//             if (isChinese) {
+//                 if (__chineseCharacterMeasureFastMap__[font]) {
+//                     return __chineseCharacterMeasureFastMap__[font];
+//                 }
+//             }
+//             context.font = font;
+//             const measureText = context.measureText(text);
+//             if (isChinese) {
+//                 __chineseCharacterMeasureFastMap__[font] = measureText;
+//             }
+//             return measureText;
+//         }
+//     }
+//     //测试开关
+//     export const textAtlasRenderEnable : boolean = true;
+//     //测试对象
+//     export let __textAtlasRender__ : TextAtlasRender = null;
+//     export class DrawTextBlocksCommand extends HashObject  {
+//         public anchorX: number = 0;
+//         public anchorY: number = 0;
+//         public textBlocks: TextBlock[] = [];
+//     }
+//     //
+//     export class TextAtlasRender extends HashObject {
+//         //
+//         private readonly $charValue = new CharValue;
+//         private readonly textBlockMap: { [index: number]: TextBlock } = {};
+//         private _canvas: HTMLCanvasElement = null;
+//         private readonly textAtlasTextureCache: WebGLTexture[] = [];
+//         private readonly webglRenderContext: WebGLRenderContext = null;
+//         //
+//         constructor (webglRenderContext: WebGLRenderContext) {
+//             super();
+//             this.webglRenderContext = webglRenderContext;
+//         }
+//         public static readonly renderTextBlocks: TextBlock[] = [];
+//         public static readonly renderTextBlockCommands: DrawTextBlocksCommand[] = [];
+//         public static analysisTextNode(textNode: sys.TextNode): void {
+//             if (!textNode) {
+//                 return;
+//             }
+//             //先配置这个模型
+//             __book__ = __book__ || configTextTextureAtlasStrategy(512, 1);
+//             __textAtlasRender__ = __textAtlasRender__ || new TextAtlasRender(egret.web.WebGLRenderContext.getInstance(0, 0));
+//             //
+//             const offset = 4;
+//             const drawData = textNode.drawData;
+//             let anchorX = 0;
+//             let anchorY = 0;
+//             let labelString = '';
+//             let format: sys.TextFormat = {};
+//             TextAtlasRender.renderTextBlocks.length = 0;
+//             TextAtlasRender.renderTextBlockCommands.length = 0;
+//             for (let i = 0, length = drawData.length; i < length; i += offset) {
+//                 anchorX = drawData[i + 0] as number;
+//                 anchorY = drawData[i + 1] as number;
+//                 labelString = drawData[i + 2] as string;
+//                 format = drawData[i + 3] as sys.TextFormat || {};
+//                 TextAtlasRender.renderTextBlocks.length = 0;
+//                 __textAtlasRender__.convertLabelStringToTextAtlas(labelString, new StyleKey(textNode, format));
+//                 //
+//                 const drawCmd = new DrawTextBlocksCommand;
+//                 drawCmd.anchorX = anchorX;
+//                 drawCmd.anchorY = anchorY;
+//                 drawCmd.textBlocks = [].concat(TextAtlasRender.renderTextBlocks);
+//                 TextAtlasRender.renderTextBlockCommands.push(drawCmd);
+//             }
+//         }
+//         public convertLabelStringToTextAtlas(labelstring: string, styleKey: StyleKey): void {
+//             const canvas = this.canvas;
+//             const $charValue = this.$charValue;
+//             const textBlockMap = this.textBlockMap;
+//             for (const char of labelstring) {
+//                 //不反复创建
+//                 $charValue.reset(char, styleKey);
+//                 if (textBlockMap[$charValue._hashCode]) {
+//                     //检查重复
+//                     TextAtlasRender.renderTextBlocks.push(textBlockMap[$charValue._hashCode]);
+//                     continue;
+//                 }
+//                 //尝试渲染到canvas
+//                 $charValue.drawToCanvas(canvas);
+//                 //console.log(char + ':' + canvas.width + ', ' + canvas.height);
+//                 //创建新的文字块
+//                 const newTxtBlock = new TextBlock($charValue.renderWidth, $charValue.renderHeight);
+//                 if (!__book__.addTextBlock(newTxtBlock)) {
+//                     //走到这里几乎是不可能的，除非内存分配没了
+//                     //暂时还没有到提交纹理的地步，现在都是虚拟的
+//                     console.error('__book__.addTextBlock ??');
+//                     continue;
+//                 }
+//                 //记录 + 测试 + 准备渲染
+//                 textBlockMap[$charValue._hashCode] = newTxtBlock;
+//                 newTxtBlock[property_tag] = char;
+//                 newTxtBlock['measureWidth'] = $charValue.measureWidth;
+//                 newTxtBlock['measureHeight'] = $charValue.measureHeight;
+//                 TextAtlasRender.renderTextBlocks.push(newTxtBlock);
+//                 //
+//                 const line = newTxtBlock.line;
+//                 const page = line.page;
+//                 const xoffset = line.x + newTxtBlock.x + __TXT_RENDER_BORDER__;
+//                 const yoffset = line.y + newTxtBlock.y + __TXT_RENDER_BORDER__;
+//                 //
+//                 page[property_textTextureAtlas] = page[property_textTextureAtlas] || this.createTextTextureAtlas(page.pageWidth, page.pageHeight);
+//                 const textAtlas = page[property_textTextureAtlas] as WebGLTexture;
+//                 const gl = this.webglRenderContext.context;
+//                 gl.bindTexture(gl.TEXTURE_2D, textAtlas);
+//                 gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+//                 gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, gl.RGBA, gl.UNSIGNED_BYTE, canvas);
+//                 gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
+//             }
+//         }
+//         private createTextTextureAtlas(width: number, height: number): WebGLTexture {
+//             const texture = egret.sys._createTexture(this.webglRenderContext, width, height, null);
+//             if (texture) {
+//                 this.textAtlasTextureCache.push(texture);
+//             }
+//             return texture;
+//         }
+//         private get canvas(): HTMLCanvasElement {
+//             const size = 24;
+//             this._canvas = this._canvas || egret.sys.createCanvas(size, size);
+//             return this._canvas;
+//         }
+//     }
+// }
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
