@@ -8953,7 +8953,7 @@ var egret;
                 }
                 if (!web.__textAtlasRender__) {
                     var webglcontext = egret.web.WebGLRenderContext.getInstance(0, 0);
-                    web.__textAtlasRender__ = new TextAtlasRender(webglcontext, webglcontext.$maxTextureSize, 1);
+                    web.__textAtlasRender__ = new TextAtlasRender(webglcontext, 512, 1);
                 }
                 //清除命令
                 textNode[web.property_drawLabel] = textNode[web.property_drawLabel] || [];

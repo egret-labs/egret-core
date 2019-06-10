@@ -234,7 +234,7 @@ namespace egret.web {
 
             if (!__textAtlasRender__) {
                 const webglcontext = egret.web.WebGLRenderContext.getInstance(0, 0);
-                __textAtlasRender__ = new TextAtlasRender(webglcontext, webglcontext.$maxTextureSize, 1);
+                __textAtlasRender__ = new TextAtlasRender(webglcontext, 512, 1);
             }
 
             //清除命令
