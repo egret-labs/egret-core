@@ -3590,6 +3590,29 @@ var egret;
         }
         egret.sys.createTexture = createTexture;
         /**
+         * 创建一个WebGLTexture
+         */
+        function _createTexture(renderContext, width, height, data) {
+            var webglrendercontext = renderContext;
+            var gl = webglrendercontext.context;
+            var texture = gl.createTexture();
+            if (!texture) {
+                //先创建texture失败,然后lost事件才发出来..
+                webglrendercontext.contextLost = true;
+                return null;
+            }
+            //
+            texture[egret.glContext] = gl;
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, data);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+            return texture;
+        }
+        egret.sys._createTexture = _createTexture;
+        /**
          * 画texture
          **/
         function drawTextureElements(renderContext, data, offset) {
@@ -8269,584 +8292,631 @@ var egret;
         __reflect(WebGLRenderer.prototype, "egret.web.WebGLRenderer", ["egret.sys.SystemRenderer"]);
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
-// //////////////////////////////////////////////////////////////////////////////////////
-// //
-// //  Copyright (c) 2014-present, Egret Technology.
-// //  All rights reserved.
-// //  Redistribution and use in source and binary forms, with or without
-// //  modification, are permitted provided that the following conditions are met:
-// //
-// //     * Redistributions of source code must retain the above copyright
-// //       notice, this list of conditions and the following disclaimer.
-// //     * Redistributions in binary form must reproduce the above copyright
-// //       notice, this list of conditions and the following disclaimer in the
-// //       documentation and/or other materials provided with the distribution.
-// //     * Neither the name of the Egret nor the
-// //       names of its contributors may be used to endorse or promote products
-// //       derived from this software without specific prior written permission.
-// //
-// //  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-// //  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-// //  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-// //  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-// //  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-// //  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-// //  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-// //  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-// //  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-// //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-// //
-// //////////////////////////////////////////////////////////////////////////////////////
-// namespace egret.web {
-//     export let __MAX_PAGE_SIZE__ = 1024;
-//     export let __TXT_RENDER_BORDER__ = 1; //最好是描边宽度 + 1;
-//     export let __book__: Book = null;
-//     export function configTextTextureAtlasStrategy(maxPageSize: number, offset: number): Book {
-//         if (!__book__) {
-//             __book__ = new Book;
-//             __MAX_PAGE_SIZE__ = maxPageSize;
-//             __TXT_RENDER_BORDER__ = offset;
-//             console.log('configTextTextureAtlasStrategy: max page = ' + __MAX_PAGE_SIZE__ + ', border = ' + __TXT_RENDER_BORDER__);
-//         }
-//         return __book__;
-//     }
-//     export class TextBlock extends HashObject {
-//         private _width: number = 0;
-//         private _height: number = 0;
-//         public line: Line = null;
-//         public x: number = 0;
-//         public y: number = 0;
-//         public u: number = 0;
-//         public v: number = 0;
-//         constructor(width: number, height: number) {
-//             super();
-//             this._width = width;
-//             this._height = height;
-//         }
-//         public get width(): number {
-//             return this._width + __TXT_RENDER_BORDER__ * 2;
-//         }
-//         public get height(): number {
-//             return this._height + __TXT_RENDER_BORDER__ * 2;
-//         }
-//         public get contentWidth(): number {
-//             return this._width;
-//         }
-//         public get contentHeight(): number {
-//             return this._height;
-//         }
-//         public updateUV(): boolean {
-//             const line = this.line;
-//             if (!line) {
-//                 //不属于任何的line就是错的
-//                 return false;
-//             }
-//             this.u = line.x + this.x + __TXT_RENDER_BORDER__ * 1;
-//             this.v = line.y + this.y + __TXT_RENDER_BORDER__ * 1;
-//             return true;
-//         }
-//     }
-//     export class Line extends HashObject {
-//         public page: Page = null;
-//         public readonly textBlocks: TextBlock[] = [];
-//         public dynamicMaxHeight: number = 0;
-//         public readonly maxWidth: number = 0;
-//         public x: number = 0;
-//         public y: number = 0;
-//         constructor(maxWidth: number) {
-//             super();
-//             this.maxWidth = maxWidth;
-//         }
-//         public isCapacityOf(textBlock: TextBlock): boolean {
-//             if (!textBlock) {
-//                 return false;
-//             }
-//             //
-//             let posx = 0;
-//             let posy = 0;
-//             const lastTxtBlock = this.lastTextBlock();
-//             if (lastTxtBlock) {
-//                 posx = lastTxtBlock.x + lastTxtBlock.width;
-//                 posy = lastTxtBlock.y;
-//             }
-//             //
-//             if (posx + textBlock.width > this.maxWidth) {
-//                 return false;//宽度不够
-//             }
-//             //
-//             if (this.dynamicMaxHeight > 0 && posy + textBlock.height > this.dynamicMaxHeight) {
-//                 return false;//如果有已经有动态高度，到这里，说明高度也不够
-//             }
-//             return true;
-//         }
-//         public lastTextBlock(): TextBlock {
-//             const textBlocks = this.textBlocks;
-//             if (textBlocks.length > 0) {
-//                 return textBlocks[textBlocks.length - 1];
-//             }
-//             return null;
-//         }
-//         public addTextBlock(textBlock: TextBlock, needCheck: boolean): boolean {
-//             //
-//             if (!textBlock) {
-//                 return false;
-//             }
-//             //
-//             if (needCheck) {
-//                 if (!this.isCapacityOf(textBlock)) {
-//                     return false;
-//                 }
-//             }
-//             //
-//             let posx = 0;
-//             let posy = 0;
-//             const lastTxtBlock = this.lastTextBlock();
-//             if (lastTxtBlock) {
-//                 posx = lastTxtBlock.x + lastTxtBlock.width;
-//                 posy = lastTxtBlock.y;
-//             }
-//             //
-//             textBlock.x = posx;
-//             textBlock.y = posy;
-//             textBlock.line = this;
-//             this.textBlocks.push(textBlock);
-//             this.dynamicMaxHeight = Math.max(this.dynamicMaxHeight, textBlock.height);
-//             return true;
-//         }
-//     }
-//     export class Page extends HashObject {
-//         public readonly lines: Line[] = [];
-//         public readonly pageWidth: number = 0;
-//         public readonly pageHeight: number = 0;
-//         constructor(pageWidth: number, pageHeight: number) {
-//             super();
-//             this.pageWidth = pageWidth;
-//             this.pageHeight = pageHeight;
-//         }
-//         public addLine(line: Line): boolean {
-//             if (!line) {
-//                 return false;
-//             }
-//             //
-//             let posx = 0;
-//             let posy = 0;
-//             //
-//             const lines = this.lines;
-//             if (lines.length > 0) {
-//                 const lastLine = lines[lines.length - 1];
-//                 posx = lastLine.x;
-//                 posy = lastLine.y + lastLine.dynamicMaxHeight;
-//             }
-//             if (line.maxWidth > this.pageWidth) {
-//                 console.error('line.maxWidth = ' + line.maxWidth + ', ' + 'this.pageWidth = ' + this.pageWidth);
-//                 return false;//宽度不够
-//             }
-//             if (posy + line.dynamicMaxHeight > this.pageHeight) {
-//                 return false;//满了
-//             }
-//             //更新数据
-//             line.x = posx;
-//             line.y = posy;
-//             line.page = this;
-//             this.lines.push(line);
-//             return true;
-//         }
-//     }
-//     export class Book extends HashObject {
-//         public readonly _pages: Page[] = [];
-//         public _sortLines: Line[] = [];
-//         public addTextBlock(textBlock: TextBlock): boolean {
-//             const result = this._addTextBlock(textBlock);
-//             if (!result) {
-//                 return false;
-//             }
-//             //更新下uv
-//             textBlock.updateUV();
-//             //没有才要添加
-//             let exist = false;
-//             const cast = result as [Page, Line];
-//             const _sortLines = this._sortLines;
-//             for (const line of _sortLines) {
-//                 if (line === cast[1]) {
-//                     exist = true;
-//                     break;
-//                 }
-//             }
-//             if (!exist) {
-//                 _sortLines.push(cast[1]);
-//             }
-//             //重新排序
-//             this.sort();
-//             return true;
-//         }
-//         public _addTextBlock(textBlock: TextBlock): [Page, Line] | null {
-//             if (!textBlock) {
-//                 return null;
-//             }
-//             if (textBlock.width > __MAX_PAGE_SIZE__ || textBlock.height > __MAX_PAGE_SIZE__) {
-//                 console.error('textBlock.width = ' + textBlock.width + ', ' + 'textBlock.height = ' + textBlock.height);
-//                 return null;
-//             }
-//             //找到最合适的
-//             const _sortLines = this._sortLines;
-//             for (let i = 0, length = _sortLines.length; i < length; ++i) {
-//                 const line = _sortLines[i];
-//                 if (!line.isCapacityOf(textBlock)) {
-//                     continue;
-//                 }
-//                 if (line.addTextBlock(textBlock, false)) {
-//                     return [line.page, line];
-//                 }
-//             }
-//             //做新的行
-//             const newLine = new Line(__MAX_PAGE_SIZE__);
-//             if (!newLine.addTextBlock(textBlock, true)) {
-//                 console.error('???');
-//                 return null;
-//             }
-//             //现有的page中插入
-//             const _pages = this._pages;
-//             for (let i = 0, length = _pages.length; i < length; ++i) {
-//                 const page = _pages[i];
-//                 if (page.addLine(newLine)) {
-//                     return [page, newLine];
-//                 }
-//             }
-//             //都没有，就做新的page
-//             //添加目标行
-//             const newPage = this.newPage(__MAX_PAGE_SIZE__, __MAX_PAGE_SIZE__);
-//             if (!newPage.addLine(newLine)) {
-//                 console.error('_addText newPage.addLine failed');
-//                 return null;
-//             }
-//             return [newPage, newLine];
-//         }
-//         public newPage(pageWidth: number, pageHeight: number): Page {
-//             const newPage = new Page(pageWidth, pageHeight);
-//             this._pages.push(newPage);
-//             return newPage;
-//         }
-//         public sort(): void {
-//             if (this._sortLines.length <= 1) {
-//                 return;
-//             }
-//             const sortFunc = (a: Line, b: Line): number => {
-//                 return (a.dynamicMaxHeight < b.dynamicMaxHeight) ? -1 : 1;
-//             }
-//             this._sortLines = this._sortLines.sort(sortFunc);
-//         }
-//     }
-// }
-// //////////////////////////////////////////////////////////////////////////////////////
-// //
-// //  Copyright (c) 2014-present, Egret Technology.
-// //  All rights reserved.
-// //  Redistribution and use in source and binary forms, with or without
-// //  modification, are permitted provided that the following conditions are met:
-// //
-// //     * Redistributions of source code must retain the above copyright
-// //       notice, this list of conditions and the following disclaimer.
-// //     * Redistributions in binary form must reproduce the above copyright
-// //       notice, this list of conditions and the following disclaimer in the
-// //       documentation and/or other materials provided with the distribution.
-// //     * Neither the name of the Egret nor the
-// //       names of its contributors may be used to endorse or promote products
-// //       derived from this software without specific prior written permission.
-// //
-// //  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-// //  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-// //  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-// //  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-// //  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-// //  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-// //  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-// //  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-// //  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-// //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-// //
-// //////////////////////////////////////////////////////////////////////////////////////
-// namespace egret.web {
-//     function __hashCode__(str: string): number {
-//         if (str.length === 0) {
-//             return 0;
-//         }
-//         let hash = 0;
-//         for (let i = 0, length = str.length; i < length; ++i) {
-//             const chr = str.charCodeAt(i);
-//             hash = ((hash << 5) - hash) + chr;
-//             hash |= 0; // Convert to 32bit integer
-//         }
-//         return hash;
-//     }
-//     //针对中文的加速查找
-//     const __chineseCharactersRegExp__ = new RegExp("^[\u4E00-\u9FA5]$");
-//     const __chineseCharacterMeasureFastMap__: { [index: string]: TextMetrics } = {};
-//     //属性关键子
-//     const property_tag: string = 'tag';
-//     const property_textTextureAtlas: string = 'textTextureAtlas';
-//     //
-//     class StyleKey extends HashObject {
-//         /**
-//          * 颜色值
-//          */
-//         public readonly textColor: number;
-//         /**
-//          * 描边颜色值
-//          */
-//         public readonly strokeColor: number;
-//         /**
-//          * 字号
-//          */
-//         public readonly size: number;
-//         /**
-//          * 描边大小
-//          */
-//         public readonly stroke: number;
-//         /**
-//          * 是否加粗
-//          */
-//         public readonly bold: boolean;
-//         /**
-//          * 是否倾斜
-//          */
-//         public readonly italic: boolean;
-//         /**
-//          * 字体名称
-//          */
-//         public readonly fontFamily: string;
-//         //
-//         public readonly font: string;
-//         //
-//         public readonly format: sys.TextFormat = null;
-//         public readonly $canvasScaleX: number;
-//         public readonly $canvasScaleY: number;
-//         /**
-//          * ????
-//          */
-//         public __string__: string;
-//         constructor(textNode: sys.TextNode, format: sys.TextFormat) {
-//             super();
-//             this.textColor = textNode.textColor;
-//             this.strokeColor = textNode.strokeColor;
-//             this.size = textNode.size;
-//             this.stroke = textNode.stroke;
-//             this.bold = textNode.bold;
-//             this.italic = textNode.italic;
-//             this.fontFamily = textNode.fontFamily;
-//             this.format = format;
-//             this.font = getFontString(textNode, this.format);
-//             this.$canvasScaleX = parseFloat(textNode.$canvasScaleX.toFixed(2)); //不搞那么长
-//             this.$canvasScaleY = parseFloat(textNode.$canvasScaleY.toFixed(2));
-//             //
-//             this.__string__ = '' + this.font;
-//             const textColor = format.textColor == null ? textNode.textColor : format.textColor;
-//             const strokeColor = format.strokeColor == null ? textNode.strokeColor : format.strokeColor;
-//             const stroke = format.stroke == null ? textNode.stroke : format.stroke;
-//             this.__string__ += '-' + toColorString(textColor);
-//             this.__string__ += '-' + toColorString(strokeColor);
-//             if (stroke) {
-//                 this.__string__ += '-' + stroke * 2;
-//             }
-//             this.__string__ += '-' + this.$canvasScaleX;
-//             this.__string__ += '-' + this.$canvasScaleY;
-//         }
-//     }
-//     class CharValue extends HashObject {
-//         public _char: string = '';
-//         public _styleKey: StyleKey = null;
-//         public _string: string = '';
-//         public _hashCode: number = 0;
-//         public measureWidth: number = 0;
-//         public measureHeight: number = 0;
-//         constructor() {
-//             super();
-//         }
-//         public reset(char: string, styleKey: StyleKey): CharValue {
-//             this._char = char;
-//             this._styleKey = styleKey;
-//             this._string = char + ':' + styleKey.__string__;
-//             this._hashCode = __hashCode__(this._string);
-//             return this;
-//         }
-//         public get renderWidth(): number {
-//             return this.measureWidth * this._styleKey.$canvasScaleX;
-//         }
-//         public get renderHeight(): number {
-//             return this.measureHeight * this._styleKey.$canvasScaleY;
-//         }
-//         public drawToCanvas(canvas: HTMLCanvasElement): void {
-//             if (!canvas) {
-//                 return;
-//             }
-//             //
-//             const text = this._char;
-//             const format: sys.TextFormat = this._styleKey.format;
-//             const textColor = format.textColor == null ? this._styleKey.textColor : format.textColor;
-//             const strokeColor = format.strokeColor == null ? this._styleKey.strokeColor : format.strokeColor;
-//             const stroke = format.stroke == null ? this._styleKey.stroke : format.stroke;
-//             //
-//             const context = egret.sys.getContext2d(canvas);
-//             //Step1: 重新测试字体大小
-//             const measureText = this.measureText(context, text, this._styleKey.font);
-//             if (measureText) {
-//                 this.measureWidth = measureText.width;
-//                 this.measureHeight = this._styleKey.size;
-//             }
-//             else {
-//                 console.error('text = ' + text + ', measureText is null');
-//                 this.measureWidth = this._styleKey.size;
-//                 this.measureHeight = this._styleKey.size;
-//             }
-//             //
-//             canvas.width = this.renderWidth;
-//             canvas.height = this.renderHeight;
-//             //再开始绘制
-//             context.save();
-//             context.textAlign = 'left';
-//             context.textBaseline = 'top';
-//             context.lineJoin = 'round';
-//             context.font = this._styleKey.font;
-//             context.fillStyle = toColorString(textColor);
-//             context.strokeStyle = toColorString(strokeColor);
-//             context.clearRect(0, 0, canvas.width, canvas.height);
-//             context.translate(0, 0);
-//             context.scale(this._styleKey.$canvasScaleX, this._styleKey.$canvasScaleY);
-//             //
-//             if (stroke) {
-//                 context.lineWidth = stroke * 2;
-//                 context.strokeText(text, 0, 0);
-//             }
-//             context.fillText(text, 0, 0);
-//             context.restore();
-//         }
-//         private measureText(context: CanvasRenderingContext2D, text: string, font: string): TextMetrics {
-//             const isChinese = __chineseCharactersRegExp__.test(text);
-//             if (isChinese) {
-//                 if (__chineseCharacterMeasureFastMap__[font]) {
-//                     return __chineseCharacterMeasureFastMap__[font];
-//                 }
-//             }
-//             context.font = font;
-//             const measureText = context.measureText(text);
-//             if (isChinese) {
-//                 __chineseCharacterMeasureFastMap__[font] = measureText;
-//             }
-//             return measureText;
-//         }
-//     }
-//     //测试开关
-//     export const textAtlasRenderEnable : boolean = true;
-//     //测试对象
-//     export let __textAtlasRender__ : TextAtlasRender = null;
-//     export class DrawTextBlocksCommand extends HashObject  {
-//         public anchorX: number = 0;
-//         public anchorY: number = 0;
-//         public textBlocks: TextBlock[] = [];
-//     }
-//     //
-//     export class TextAtlasRender extends HashObject {
-//         //
-//         private readonly $charValue = new CharValue;
-//         private readonly textBlockMap: { [index: number]: TextBlock } = {};
-//         private _canvas: HTMLCanvasElement = null;
-//         private readonly textAtlasTextureCache: WebGLTexture[] = [];
-//         private readonly webglRenderContext: WebGLRenderContext = null;
-//         //
-//         constructor (webglRenderContext: WebGLRenderContext) {
-//             super();
-//             this.webglRenderContext = webglRenderContext;
-//         }
-//         public static readonly renderTextBlocks: TextBlock[] = [];
-//         public static readonly renderTextBlockCommands: DrawTextBlocksCommand[] = [];
-//         public static analysisTextNode(textNode: sys.TextNode): void {
-//             if (!textNode) {
-//                 return;
-//             }
-//             //先配置这个模型
-//             __book__ = __book__ || configTextTextureAtlasStrategy(512, 1);
-//             __textAtlasRender__ = __textAtlasRender__ || new TextAtlasRender(egret.web.WebGLRenderContext.getInstance(0, 0));
-//             //
-//             const offset = 4;
-//             const drawData = textNode.drawData;
-//             let anchorX = 0;
-//             let anchorY = 0;
-//             let labelString = '';
-//             let format: sys.TextFormat = {};
-//             TextAtlasRender.renderTextBlocks.length = 0;
-//             TextAtlasRender.renderTextBlockCommands.length = 0;
-//             for (let i = 0, length = drawData.length; i < length; i += offset) {
-//                 anchorX = drawData[i + 0] as number;
-//                 anchorY = drawData[i + 1] as number;
-//                 labelString = drawData[i + 2] as string;
-//                 format = drawData[i + 3] as sys.TextFormat || {};
-//                 TextAtlasRender.renderTextBlocks.length = 0;
-//                 __textAtlasRender__.convertLabelStringToTextAtlas(labelString, new StyleKey(textNode, format));
-//                 //
-//                 const drawCmd = new DrawTextBlocksCommand;
-//                 drawCmd.anchorX = anchorX;
-//                 drawCmd.anchorY = anchorY;
-//                 drawCmd.textBlocks = [].concat(TextAtlasRender.renderTextBlocks);
-//                 TextAtlasRender.renderTextBlockCommands.push(drawCmd);
-//             }
-//         }
-//         public convertLabelStringToTextAtlas(labelstring: string, styleKey: StyleKey): void {
-//             const canvas = this.canvas;
-//             const $charValue = this.$charValue;
-//             const textBlockMap = this.textBlockMap;
-//             for (const char of labelstring) {
-//                 //不反复创建
-//                 $charValue.reset(char, styleKey);
-//                 if (textBlockMap[$charValue._hashCode]) {
-//                     //检查重复
-//                     TextAtlasRender.renderTextBlocks.push(textBlockMap[$charValue._hashCode]);
-//                     continue;
-//                 }
-//                 //尝试渲染到canvas
-//                 $charValue.drawToCanvas(canvas);
-//                 //console.log(char + ':' + canvas.width + ', ' + canvas.height);
-//                 //创建新的文字块
-//                 const newTxtBlock = new TextBlock($charValue.renderWidth, $charValue.renderHeight);
-//                 if (!__book__.addTextBlock(newTxtBlock)) {
-//                     //走到这里几乎是不可能的，除非内存分配没了
-//                     //暂时还没有到提交纹理的地步，现在都是虚拟的
-//                     console.error('__book__.addTextBlock ??');
-//                     continue;
-//                 }
-//                 //记录 + 测试 + 准备渲染
-//                 textBlockMap[$charValue._hashCode] = newTxtBlock;
-//                 newTxtBlock[property_tag] = char;
-//                 newTxtBlock['measureWidth'] = $charValue.measureWidth;
-//                 newTxtBlock['measureHeight'] = $charValue.measureHeight;
-//                 TextAtlasRender.renderTextBlocks.push(newTxtBlock);
-//                 //
-//                 const line = newTxtBlock.line;
-//                 const page = line.page;
-//                 const xoffset = line.x + newTxtBlock.x + __TXT_RENDER_BORDER__;
-//                 const yoffset = line.y + newTxtBlock.y + __TXT_RENDER_BORDER__;
-//                 //
-//                 page[property_textTextureAtlas] = page[property_textTextureAtlas] || this.createTextTextureAtlas(page.pageWidth, page.pageHeight);
-//                 const textAtlas = page[property_textTextureAtlas] as WebGLTexture;
-//                 const gl = this.webglRenderContext.context;
-//                 gl.bindTexture(gl.TEXTURE_2D, textAtlas);
-//                 gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-//                 gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, gl.RGBA, gl.UNSIGNED_BYTE, canvas);
-//                 gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
-//             }
-//         }
-//         private createTextTextureAtlas(width: number, height: number): WebGLTexture {
-//             const texture = egret.sys._createTexture(this.webglRenderContext, width, height, null);
-//             if (texture) {
-//                 this.textAtlasTextureCache.push(texture);
-//             }
-//             return texture;
-//         }
-//         private get canvas(): HTMLCanvasElement {
-//             const size = 24;
-//             this._canvas = this._canvas || egret.sys.createCanvas(size, size);
-//             return this._canvas;
-//         }
-//     }
-// }
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var web;
+    (function (web) {
+        web.__MAX_PAGE_SIZE__ = 1024;
+        web.__TXT_RENDER_BORDER__ = 1; //最好是描边宽度 + 1;
+        web.__book__ = null;
+        function configTextTextureAtlasStrategy(maxPageSize, offset) {
+            if (!web.__book__) {
+                web.__book__ = new Book;
+                web.__MAX_PAGE_SIZE__ = maxPageSize;
+                web.__TXT_RENDER_BORDER__ = offset;
+                console.log('configTextTextureAtlasStrategy: max page = ' + web.__MAX_PAGE_SIZE__ + ', border = ' + web.__TXT_RENDER_BORDER__);
+            }
+            return web.__book__;
+        }
+        web.configTextTextureAtlasStrategy = configTextTextureAtlasStrategy;
+        var TextBlock = (function (_super) {
+            __extends(TextBlock, _super);
+            function TextBlock(width, height) {
+                var _this = _super.call(this) || this;
+                _this._width = 0;
+                _this._height = 0;
+                _this.line = null;
+                _this.x = 0;
+                _this.y = 0;
+                _this.u = 0;
+                _this.v = 0;
+                _this._width = width;
+                _this._height = height;
+                return _this;
+            }
+            Object.defineProperty(TextBlock.prototype, "width", {
+                get: function () {
+                    return this._width + web.__TXT_RENDER_BORDER__ * 2;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(TextBlock.prototype, "height", {
+                get: function () {
+                    return this._height + web.__TXT_RENDER_BORDER__ * 2;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(TextBlock.prototype, "contentWidth", {
+                get: function () {
+                    return this._width;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(TextBlock.prototype, "contentHeight", {
+                get: function () {
+                    return this._height;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            TextBlock.prototype.updateUV = function () {
+                var line = this.line;
+                if (!line) {
+                    //不属于任何的line就是错的
+                    return false;
+                }
+                this.u = line.x + this.x + web.__TXT_RENDER_BORDER__ * 1;
+                this.v = line.y + this.y + web.__TXT_RENDER_BORDER__ * 1;
+                return true;
+            };
+            return TextBlock;
+        }(egret.HashObject));
+        web.TextBlock = TextBlock;
+        __reflect(TextBlock.prototype, "egret.web.TextBlock");
+        var Line = (function (_super) {
+            __extends(Line, _super);
+            function Line(maxWidth) {
+                var _this = _super.call(this) || this;
+                _this.page = null;
+                _this.textBlocks = [];
+                _this.dynamicMaxHeight = 0;
+                _this.maxWidth = 0;
+                _this.x = 0;
+                _this.y = 0;
+                _this.maxWidth = maxWidth;
+                return _this;
+            }
+            Line.prototype.isCapacityOf = function (textBlock) {
+                if (!textBlock) {
+                    return false;
+                }
+                //
+                var posx = 0;
+                var posy = 0;
+                var lastTxtBlock = this.lastTextBlock();
+                if (lastTxtBlock) {
+                    posx = lastTxtBlock.x + lastTxtBlock.width;
+                    posy = lastTxtBlock.y;
+                }
+                //
+                if (posx + textBlock.width > this.maxWidth) {
+                    return false; //宽度不够
+                }
+                //
+                if (this.dynamicMaxHeight > 0 && posy + textBlock.height > this.dynamicMaxHeight) {
+                    return false; //如果有已经有动态高度，到这里，说明高度也不够
+                }
+                return true;
+            };
+            Line.prototype.lastTextBlock = function () {
+                var textBlocks = this.textBlocks;
+                if (textBlocks.length > 0) {
+                    return textBlocks[textBlocks.length - 1];
+                }
+                return null;
+            };
+            Line.prototype.addTextBlock = function (textBlock, needCheck) {
+                //
+                if (!textBlock) {
+                    return false;
+                }
+                //
+                if (needCheck) {
+                    if (!this.isCapacityOf(textBlock)) {
+                        return false;
+                    }
+                }
+                //
+                var posx = 0;
+                var posy = 0;
+                var lastTxtBlock = this.lastTextBlock();
+                if (lastTxtBlock) {
+                    posx = lastTxtBlock.x + lastTxtBlock.width;
+                    posy = lastTxtBlock.y;
+                }
+                //
+                textBlock.x = posx;
+                textBlock.y = posy;
+                textBlock.line = this;
+                this.textBlocks.push(textBlock);
+                this.dynamicMaxHeight = Math.max(this.dynamicMaxHeight, textBlock.height);
+                return true;
+            };
+            return Line;
+        }(egret.HashObject));
+        web.Line = Line;
+        __reflect(Line.prototype, "egret.web.Line");
+        var Page = (function (_super) {
+            __extends(Page, _super);
+            function Page(pageWidth, pageHeight) {
+                var _this = _super.call(this) || this;
+                _this.lines = [];
+                _this.pageWidth = 0;
+                _this.pageHeight = 0;
+                _this.pageWidth = pageWidth;
+                _this.pageHeight = pageHeight;
+                return _this;
+            }
+            Page.prototype.addLine = function (line) {
+                if (!line) {
+                    return false;
+                }
+                //
+                var posx = 0;
+                var posy = 0;
+                //
+                var lines = this.lines;
+                if (lines.length > 0) {
+                    var lastLine = lines[lines.length - 1];
+                    posx = lastLine.x;
+                    posy = lastLine.y + lastLine.dynamicMaxHeight;
+                }
+                if (line.maxWidth > this.pageWidth) {
+                    console.error('line.maxWidth = ' + line.maxWidth + ', ' + 'this.pageWidth = ' + this.pageWidth);
+                    return false; //宽度不够
+                }
+                if (posy + line.dynamicMaxHeight > this.pageHeight) {
+                    return false; //满了
+                }
+                //更新数据
+                line.x = posx;
+                line.y = posy;
+                line.page = this;
+                this.lines.push(line);
+                return true;
+            };
+            return Page;
+        }(egret.HashObject));
+        web.Page = Page;
+        __reflect(Page.prototype, "egret.web.Page");
+        var Book = (function (_super) {
+            __extends(Book, _super);
+            function Book() {
+                var _this = _super !== null && _super.apply(this, arguments) || this;
+                _this._pages = [];
+                _this._sortLines = [];
+                return _this;
+            }
+            Book.prototype.addTextBlock = function (textBlock) {
+                var result = this._addTextBlock(textBlock);
+                if (!result) {
+                    return false;
+                }
+                //更新下uv
+                textBlock.updateUV();
+                //没有才要添加
+                var exist = false;
+                var cast = result;
+                var _sortLines = this._sortLines;
+                for (var _i = 0, _sortLines_1 = _sortLines; _i < _sortLines_1.length; _i++) {
+                    var line = _sortLines_1[_i];
+                    if (line === cast[1]) {
+                        exist = true;
+                        break;
+                    }
+                }
+                if (!exist) {
+                    _sortLines.push(cast[1]);
+                }
+                //重新排序
+                this.sort();
+                return true;
+            };
+            Book.prototype._addTextBlock = function (textBlock) {
+                if (!textBlock) {
+                    return null;
+                }
+                if (textBlock.width > web.__MAX_PAGE_SIZE__ || textBlock.height > web.__MAX_PAGE_SIZE__) {
+                    console.error('textBlock.width = ' + textBlock.width + ', ' + 'textBlock.height = ' + textBlock.height);
+                    return null;
+                }
+                //找到最合适的
+                var _sortLines = this._sortLines;
+                for (var i = 0, length_10 = _sortLines.length; i < length_10; ++i) {
+                    var line = _sortLines[i];
+                    if (!line.isCapacityOf(textBlock)) {
+                        continue;
+                    }
+                    if (line.addTextBlock(textBlock, false)) {
+                        return [line.page, line];
+                    }
+                }
+                //做新的行
+                var newLine = new Line(web.__MAX_PAGE_SIZE__);
+                if (!newLine.addTextBlock(textBlock, true)) {
+                    console.error('???');
+                    return null;
+                }
+                //现有的page中插入
+                var _pages = this._pages;
+                for (var i = 0, length_11 = _pages.length; i < length_11; ++i) {
+                    var page = _pages[i];
+                    if (page.addLine(newLine)) {
+                        return [page, newLine];
+                    }
+                }
+                //都没有，就做新的page
+                //添加目标行
+                var newPage = this.newPage(web.__MAX_PAGE_SIZE__, web.__MAX_PAGE_SIZE__);
+                if (!newPage.addLine(newLine)) {
+                    console.error('_addText newPage.addLine failed');
+                    return null;
+                }
+                return [newPage, newLine];
+            };
+            Book.prototype.newPage = function (pageWidth, pageHeight) {
+                var newPage = new Page(pageWidth, pageHeight);
+                this._pages.push(newPage);
+                return newPage;
+            };
+            Book.prototype.sort = function () {
+                if (this._sortLines.length <= 1) {
+                    return;
+                }
+                var sortFunc = function (a, b) {
+                    return (a.dynamicMaxHeight < b.dynamicMaxHeight) ? -1 : 1;
+                };
+                this._sortLines = this._sortLines.sort(sortFunc);
+            };
+            return Book;
+        }(egret.HashObject));
+        web.Book = Book;
+        __reflect(Book.prototype, "egret.web.Book");
+    })(web = egret.web || (egret.web = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var web;
+    (function (web) {
+        function __hashCode__(str) {
+            if (str.length === 0) {
+                return 0;
+            }
+            var hash = 0;
+            for (var i = 0, length_12 = str.length; i < length_12; ++i) {
+                var chr = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + chr;
+                hash |= 0; // Convert to 32bit integer
+            }
+            return hash;
+        }
+        //针对中文的加速查找
+        var __chineseCharactersRegExp__ = new RegExp("^[\u4E00-\u9FA5]$");
+        var __chineseCharacterMeasureFastMap__ = {};
+        //属性关键子
+        var property_tag = 'tag';
+        var property_textTextureAtlas = 'textTextureAtlas';
+        //
+        var StyleKey = (function (_super) {
+            __extends(StyleKey, _super);
+            function StyleKey(textNode, format) {
+                var _this = _super.call(this) || this;
+                //
+                _this.format = null;
+                _this.textColor = textNode.textColor;
+                _this.strokeColor = textNode.strokeColor;
+                _this.size = textNode.size;
+                _this.stroke = textNode.stroke;
+                _this.bold = textNode.bold;
+                _this.italic = textNode.italic;
+                _this.fontFamily = textNode.fontFamily;
+                _this.format = format;
+                _this.font = egret.getFontString(textNode, _this.format);
+                _this.$canvasScaleX = parseFloat(textNode.$canvasScaleX.toFixed(2)); //不搞那么长
+                _this.$canvasScaleY = parseFloat(textNode.$canvasScaleY.toFixed(2));
+                //
+                _this.__string__ = '' + _this.font;
+                var textColor = format.textColor == null ? textNode.textColor : format.textColor;
+                var strokeColor = format.strokeColor == null ? textNode.strokeColor : format.strokeColor;
+                var stroke = format.stroke == null ? textNode.stroke : format.stroke;
+                _this.__string__ += '-' + egret.toColorString(textColor);
+                _this.__string__ += '-' + egret.toColorString(strokeColor);
+                if (stroke) {
+                    _this.__string__ += '-' + stroke * 2;
+                }
+                _this.__string__ += '-' + _this.$canvasScaleX;
+                _this.__string__ += '-' + _this.$canvasScaleY;
+                return _this;
+            }
+            return StyleKey;
+        }(egret.HashObject));
+        __reflect(StyleKey.prototype, "StyleKey");
+        var CharValue = (function (_super) {
+            __extends(CharValue, _super);
+            function CharValue() {
+                var _this = _super.call(this) || this;
+                _this._char = '';
+                _this._styleKey = null;
+                _this._string = '';
+                _this._hashCode = 0;
+                _this.measureWidth = 0;
+                _this.measureHeight = 0;
+                return _this;
+            }
+            CharValue.prototype.reset = function (char, styleKey) {
+                this._char = char;
+                this._styleKey = styleKey;
+                this._string = char + ':' + styleKey.__string__;
+                this._hashCode = __hashCode__(this._string);
+                return this;
+            };
+            Object.defineProperty(CharValue.prototype, "renderWidth", {
+                get: function () {
+                    return this.measureWidth * this._styleKey.$canvasScaleX;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(CharValue.prototype, "renderHeight", {
+                get: function () {
+                    return this.measureHeight * this._styleKey.$canvasScaleY;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            CharValue.prototype.drawToCanvas = function (canvas) {
+                if (!canvas) {
+                    return;
+                }
+                //
+                var text = this._char;
+                var format = this._styleKey.format;
+                var textColor = format.textColor == null ? this._styleKey.textColor : format.textColor;
+                var strokeColor = format.strokeColor == null ? this._styleKey.strokeColor : format.strokeColor;
+                var stroke = format.stroke == null ? this._styleKey.stroke : format.stroke;
+                //
+                var context = egret.sys.getContext2d(canvas);
+                //Step1: 重新测试字体大小
+                var measureText = this.measureText(context, text, this._styleKey.font);
+                if (measureText) {
+                    this.measureWidth = measureText.width;
+                    this.measureHeight = this._styleKey.size;
+                }
+                else {
+                    console.error('text = ' + text + ', measureText is null');
+                    this.measureWidth = this._styleKey.size;
+                    this.measureHeight = this._styleKey.size;
+                }
+                //
+                canvas.width = this.renderWidth;
+                canvas.height = this.renderHeight;
+                //再开始绘制
+                context.save();
+                context.textAlign = 'left';
+                context.textBaseline = 'top';
+                context.lineJoin = 'round';
+                context.font = this._styleKey.font;
+                context.fillStyle = egret.toColorString(textColor);
+                context.strokeStyle = egret.toColorString(strokeColor);
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                context.translate(0, 0);
+                context.scale(this._styleKey.$canvasScaleX, this._styleKey.$canvasScaleY);
+                //
+                if (stroke) {
+                    context.lineWidth = stroke * 2;
+                    context.strokeText(text, 0, 0);
+                }
+                context.fillText(text, 0, 0);
+                context.restore();
+            };
+            CharValue.prototype.measureText = function (context, text, font) {
+                var isChinese = __chineseCharactersRegExp__.test(text);
+                if (isChinese) {
+                    if (__chineseCharacterMeasureFastMap__[font]) {
+                        return __chineseCharacterMeasureFastMap__[font];
+                    }
+                }
+                context.font = font;
+                var measureText = context.measureText(text);
+                if (isChinese) {
+                    __chineseCharacterMeasureFastMap__[font] = measureText;
+                }
+                return measureText;
+            };
+            return CharValue;
+        }(egret.HashObject));
+        __reflect(CharValue.prototype, "CharValue");
+        //测试开关
+        web.textAtlasRenderEnable = true;
+        //测试对象
+        web.__textAtlasRender__ = null;
+        var DrawTextBlocksCommand = (function (_super) {
+            __extends(DrawTextBlocksCommand, _super);
+            function DrawTextBlocksCommand() {
+                var _this = _super !== null && _super.apply(this, arguments) || this;
+                _this.anchorX = 0;
+                _this.anchorY = 0;
+                _this.textBlocks = [];
+                return _this;
+            }
+            return DrawTextBlocksCommand;
+        }(egret.HashObject));
+        web.DrawTextBlocksCommand = DrawTextBlocksCommand;
+        __reflect(DrawTextBlocksCommand.prototype, "egret.web.DrawTextBlocksCommand");
+        //
+        var TextAtlasRender = (function (_super) {
+            __extends(TextAtlasRender, _super);
+            //
+            function TextAtlasRender(webglRenderContext) {
+                var _this = _super.call(this) || this;
+                //
+                _this.$charValue = new CharValue;
+                _this.textBlockMap = {};
+                _this._canvas = null;
+                _this.textAtlasTextureCache = [];
+                _this.webglRenderContext = null;
+                _this.webglRenderContext = webglRenderContext;
+                return _this;
+            }
+            TextAtlasRender.analysisTextNode = function (textNode) {
+                if (!textNode) {
+                    return;
+                }
+                //先配置这个模型
+                web.__book__ = web.__book__ || web.configTextTextureAtlasStrategy(512, 1);
+                web.__textAtlasRender__ = web.__textAtlasRender__ || new TextAtlasRender(egret.web.WebGLRenderContext.getInstance(0, 0));
+                //
+                var offset = 4;
+                var drawData = textNode.drawData;
+                var anchorX = 0;
+                var anchorY = 0;
+                var labelString = '';
+                var format = {};
+                TextAtlasRender.renderTextBlocks.length = 0;
+                TextAtlasRender.renderTextBlockCommands.length = 0;
+                for (var i = 0, length_13 = drawData.length; i < length_13; i += offset) {
+                    anchorX = drawData[i + 0];
+                    anchorY = drawData[i + 1];
+                    labelString = drawData[i + 2];
+                    format = drawData[i + 3] || {};
+                    TextAtlasRender.renderTextBlocks.length = 0;
+                    web.__textAtlasRender__.convertLabelStringToTextAtlas(labelString, new StyleKey(textNode, format));
+                    //
+                    var drawCmd = new DrawTextBlocksCommand;
+                    drawCmd.anchorX = anchorX;
+                    drawCmd.anchorY = anchorY;
+                    drawCmd.textBlocks = [].concat(TextAtlasRender.renderTextBlocks);
+                    TextAtlasRender.renderTextBlockCommands.push(drawCmd);
+                }
+            };
+            TextAtlasRender.prototype.convertLabelStringToTextAtlas = function (labelstring, styleKey) {
+                var canvas = this.canvas;
+                var $charValue = this.$charValue;
+                var textBlockMap = this.textBlockMap;
+                for (var _i = 0, labelstring_1 = labelstring; _i < labelstring_1.length; _i++) {
+                    var char = labelstring_1[_i];
+                    //不反复创建
+                    $charValue.reset(char, styleKey);
+                    if (textBlockMap[$charValue._hashCode]) {
+                        //检查重复
+                        TextAtlasRender.renderTextBlocks.push(textBlockMap[$charValue._hashCode]);
+                        continue;
+                    }
+                    //尝试渲染到canvas
+                    $charValue.drawToCanvas(canvas);
+                    //console.log(char + ':' + canvas.width + ', ' + canvas.height);
+                    //创建新的文字块
+                    var newTxtBlock = new web.TextBlock($charValue.renderWidth, $charValue.renderHeight);
+                    if (!web.__book__.addTextBlock(newTxtBlock)) {
+                        //走到这里几乎是不可能的，除非内存分配没了
+                        //暂时还没有到提交纹理的地步，现在都是虚拟的
+                        console.error('__book__.addTextBlock ??');
+                        continue;
+                    }
+                    //记录 + 测试 + 准备渲染
+                    textBlockMap[$charValue._hashCode] = newTxtBlock;
+                    newTxtBlock[property_tag] = char;
+                    newTxtBlock['measureWidth'] = $charValue.measureWidth;
+                    newTxtBlock['measureHeight'] = $charValue.measureHeight;
+                    TextAtlasRender.renderTextBlocks.push(newTxtBlock);
+                    //
+                    var line = newTxtBlock.line;
+                    var page = line.page;
+                    var xoffset = line.x + newTxtBlock.x + web.__TXT_RENDER_BORDER__;
+                    var yoffset = line.y + newTxtBlock.y + web.__TXT_RENDER_BORDER__;
+                    //
+                    page[property_textTextureAtlas] = page[property_textTextureAtlas] || this.createTextTextureAtlas(page.pageWidth, page.pageHeight);
+                    var textAtlas = page[property_textTextureAtlas];
+                    var gl = this.webglRenderContext.context;
+                    gl.bindTexture(gl.TEXTURE_2D, textAtlas);
+                    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+                    gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, gl.RGBA, gl.UNSIGNED_BYTE, canvas);
+                    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
+                }
+            };
+            TextAtlasRender.prototype.createTextTextureAtlas = function (width, height) {
+                var texture = egret.sys._createTexture(this.webglRenderContext, width, height, null);
+                if (texture) {
+                    this.textAtlasTextureCache.push(texture);
+                }
+                return texture;
+            };
+            Object.defineProperty(TextAtlasRender.prototype, "canvas", {
+                get: function () {
+                    var size = 24;
+                    this._canvas = this._canvas || egret.sys.createCanvas(size, size);
+                    return this._canvas;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            TextAtlasRender.renderTextBlocks = [];
+            TextAtlasRender.renderTextBlockCommands = [];
+            return TextAtlasRender;
+        }(egret.HashObject));
+        web.TextAtlasRender = TextAtlasRender;
+        __reflect(TextAtlasRender.prototype, "egret.web.TextAtlasRender");
+    })(web = egret.web || (egret.web = {}));
+})(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.

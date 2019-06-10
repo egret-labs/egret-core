@@ -14614,13 +14614,21 @@ var egret;
         }
         sys.getContext2d = getContext2d;
         /**
-        * 重新设置主canvas的大小
+        * 仅通过bitmapData创建纹理
         */
         function createTexture(renderContext, bitmapData) {
             console.error("empty sys.createTexture = " + bitmapData);
             return null;
         }
         sys.createTexture = createTexture;
+        /**
+        * 通过 width, height, data创建纹理
+        */
+        function _createTexture(renderContext, width, height, data) {
+            console.error("empty sys._createTexture = " + width + ", " + height + ", " + data);
+            return null;
+        }
+        sys._createTexture = _createTexture;
         /**
          * 画texture
          **/

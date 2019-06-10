@@ -100,10 +100,18 @@ namespace egret.sys {
     }
 
     /**
-    * 重新设置主canvas的大小
+    * 仅通过bitmapData创建纹理
     */
     export function createTexture(renderContext: RenderContext, bitmapData: BitmapData | HTMLCanvasElement): WebGLTexture {
         console.error(`empty sys.createTexture = ${bitmapData}`);
+        return null;
+    }
+
+    /**
+    * 通过 width, height, data创建纹理
+    */
+    export function _createTexture(renderContext: RenderContext, width: number, height: number, data: any): WebGLTexture {
+        console.error(`empty sys._createTexture = ${width}, ${height}, ${data}`);
         return null;
     }
 
