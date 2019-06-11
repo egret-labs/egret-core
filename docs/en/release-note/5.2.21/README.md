@@ -1,7 +1,7 @@
 # Egret Engine 5.2.21 Release Notes
 The Egret Engine released the 5.2.21 stable version on June 11, 2019.
 
-## 2D 渲染 - JavaScript 
+## 2D Rendering - JavaScript 
 - **[new]** `KTX` Texture storage format supports filters
 - **[new]** `KTX` Texture storage format supports `Baidu minigame`, `Xiaomi qgame`, `oppo minigame`
 - **[optimize]** Optimize memory management on WeChat minigame
