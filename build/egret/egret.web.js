@@ -8103,7 +8103,7 @@ var egret;
                     buffer.transform(1, 0, 0, 1, x / canvasScaleX, y / canvasScaleY);
                 }
                 if (node.dirtyRender) {
-                    web.TextAtlasRender.analysisTextNode(node);
+                    web.TextAtlasRender.analysisTextNodeAndFlushDrawLabel(node);
                 }
                 var drawCommands = node[web.property_drawLabel];
                 if (drawCommands && drawCommands.length > 0) {
@@ -8947,7 +8947,7 @@ var egret;
                 _this.book = new web.Book(maxSize, border);
                 return _this;
             }
-            TextAtlasRender.analysisTextNode = function (textNode) {
+            TextAtlasRender.analysisTextNodeAndFlushDrawLabel = function (textNode) {
                 if (!textNode) {
                     return;
                 }
@@ -9014,7 +9014,9 @@ var egret;
                     renderTextBlocks.push(txtBlock);
                     //
                     var page = txtBlock.page;
-                    page.webGLTexture = page.webGLTexture || this.createTextTextureAtlas(page.pageWidth, page.pageHeight);
+                    if (!page.webGLTexture) {
+                        page.webGLTexture = this.createTextTextureAtlas(page.pageWidth, page.pageHeight, false);
+                    }
                     var textAtlas = page.webGLTexture;
                     var gl = this.webglRenderContext.context;
                     gl.bindTexture(gl.TEXTURE_2D, textAtlas);
@@ -9023,8 +9025,18 @@ var egret;
                     gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
                 }
             };
-            TextAtlasRender.prototype.createTextTextureAtlas = function (width, height) {
-                var texture = egret.sys._createTexture(this.webglRenderContext, width, height, null);
+            TextAtlasRender.prototype.createTextTextureAtlas = function (width, height, debug) {
+                var texture = null;
+                if (debug) {
+                    var canvas = egret.sys.createCanvas(width, width);
+                    var context_3 = egret.sys.getContext2d(canvas);
+                    context_3.fillStyle = 'black';
+                    context_3.fillRect(0, 0, width, width);
+                    texture = egret.sys.createTexture(this.webglRenderContext, canvas);
+                }
+                else {
+                    texture = egret.sys._createTexture(this.webglRenderContext, width, height, null);
+                }
                 if (texture) {
                     this.textAtlasTextureCache.push(texture);
                 }

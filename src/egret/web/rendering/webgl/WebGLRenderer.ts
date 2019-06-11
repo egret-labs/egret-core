@@ -871,7 +871,7 @@ namespace egret.web {
                 buffer.transform(1, 0, 0, 1, x / canvasScaleX, y / canvasScaleY);
             }
             if (node.dirtyRender) {
-                TextAtlasRender.analysisTextNode(node);
+                TextAtlasRender.analysisTextNodeAndFlushDrawLabel(node);
             }
 
             const drawCommands = node[property_drawLabel] as Array<DrawLabel>;

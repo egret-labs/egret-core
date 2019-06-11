@@ -227,7 +227,7 @@ namespace egret.web {
             this.book = new Book(maxSize, border);
         }
 
-        public static analysisTextNode(textNode: sys.TextNode): void {
+        public static analysisTextNodeAndFlushDrawLabel(textNode: sys.TextNode): void {
             if (!textNode) {
                 return;
             }
@@ -295,7 +295,9 @@ namespace egret.web {
                 renderTextBlocks.push(txtBlock);
                 //
                 const page = txtBlock.page;
-                page.webGLTexture = page.webGLTexture || this.createTextTextureAtlas(page.pageWidth, page.pageHeight);
+                if (!page.webGLTexture) {
+                    page.webGLTexture = this.createTextTextureAtlas(page.pageWidth, page.pageHeight, false);
+                }
                 const textAtlas = page.webGLTexture;
                 const gl = this.webglRenderContext.context;
                 gl.bindTexture(gl.TEXTURE_2D, textAtlas);
@@ -305,8 +307,18 @@ namespace egret.web {
             }
         }
 
-        private createTextTextureAtlas(width: number, height: number): WebGLTexture {
-            const texture = egret.sys._createTexture(this.webglRenderContext, width, height, null);
+        private createTextTextureAtlas(width: number, height: number, debug: boolean): WebGLTexture {
+            let texture: WebGLTexture = null;
+            if (debug) {
+                const canvas = egret.sys.createCanvas(width, width);
+                const context = egret.sys.getContext2d(canvas);
+                context.fillStyle = 'black';
+                context.fillRect(0, 0, width, width);
+                texture = egret.sys.createTexture(this.webglRenderContext, canvas);
+            }
+            else {
+                texture = egret.sys._createTexture(this.webglRenderContext, width, height, null);         
+            }
             if (texture) {
                 this.textAtlasTextureCache.push(texture);
             }
