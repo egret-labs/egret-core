@@ -20,7 +20,7 @@ const config: ResourceManagerConfig = {
                     new CompilePlugin({ libraryType: "debug", defines: { DEBUG: true, RELEASE: false } }),
                     new ExmlPlugin('commonjs'), // 非 EUI 项目关闭此设置
                     new VivogamePlugin(),
-                    new ManifestPlugin({ output: 'manifest.js' })
+                    new ManifestPlugin({ output: 'manifest.js', info: { target: 'vivogame' } })
                 ]
             }
         }
@@ -37,7 +37,7 @@ const config: ResourceManagerConfig = {
                         target: "main.min.js"
                     }
                     ]),
-                    new ManifestPlugin({ output: 'manifest.js' })
+                    new ManifestPlugin({ output: 'manifest.js', info: { target: 'vivogame' } })
                 ]
             }
         }
