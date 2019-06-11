@@ -8410,6 +8410,8 @@ var egret;
                 _this.tag = '';
                 _this.measureWidth = 0;
                 _this.measureHeight = 0;
+                _this.drawCanvasOffsetX = 0;
+                _this.drawCanvasOffsetY = 0;
                 _this._width = width;
                 _this._height = height;
                 _this._border = border;
@@ -8845,6 +8847,8 @@ var egret;
                 _this._hashCode = 0;
                 _this.measureWidth = 0;
                 _this.measureHeight = 0;
+                _this.drawCanvasOffsetX = 0;
+                _this.drawCanvasOffsetY = 0;
                 return _this;
             }
             CharImage.prototype.reset = function (char, styleKey) {
@@ -8852,22 +8856,39 @@ var egret;
                 this._styleKey = styleKey;
                 this._string = char + ':' + styleKey.description;
                 this._hashCode = egret.NumberUtils.convertStringToHashCode(this._string);
+                this.drawCanvasOffsetX = 0;
+                this.drawCanvasOffsetY = 0;
                 return this;
             };
-            Object.defineProperty(CharImage.prototype, "renderWidth", {
-                get: function () {
-                    return this.measureWidth * this._styleKey.$canvasScaleX;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(CharImage.prototype, "renderHeight", {
-                get: function () {
-                    return this.measureHeight * this._styleKey.$canvasScaleY;
-                },
-                enumerable: true,
-                configurable: true
-            });
+            // public get renderWidth(): number {
+            //     return this.measureWidth * this._styleKey.$canvasScaleX;
+            // }
+            // public get renderHeight(): number {
+            //     return this.measureHeight * this._styleKey.$canvasScaleY;
+            // }
+            /*
+             $getRenderBounds(): Rectangle {
+                let bounds = this.$getContentBounds();
+                let tmpBounds = Rectangle.create();
+                tmpBounds.copyFrom(bounds);
+                if (this.$TextField[sys.TextKeys.border]) {
+                    tmpBounds.width += 2;
+                    tmpBounds.height += 2;
+                }
+                let _strokeDouble = this.$TextField[sys.TextKeys.stroke] * 2;
+                if (_strokeDouble > 0) {
+                    tmpBounds.width += _strokeDouble * 2;
+                    tmpBounds.height += _strokeDouble * 2;
+                }
+                tmpBounds.x -= _strokeDouble + 2;//+2和+4 是为了webgl纹理太小导致裁切问题
+                tmpBounds.y -= _strokeDouble + 2;
+                tmpBounds.width = Math.ceil(tmpBounds.width) + 4;
+                tmpBounds.height = Math.ceil(tmpBounds.height) + 4;
+                return tmpBounds;
+            }
+    
+    
+            */
             CharImage.prototype.measureTextAndDrawToCanvas = function (canvas) {
                 if (!canvas) {
                     return;
@@ -8881,10 +8902,17 @@ var egret;
                 //
                 var context = egret.sys.getContext2d(canvas);
                 //Step1: 重新测试字体大小
-                var measureTextWidth = this.measureTextWidth(context, text, this._styleKey);
+                var measureTextWidth = this.measureTextWidth(text, this._styleKey);
                 //if (measureTextWidth) {
                 this.measureWidth = measureTextWidth; //measureText.width;
                 this.measureHeight = this._styleKey.size;
+                var _strokeDouble = stroke * 2;
+                if (_strokeDouble > 0) {
+                    this.measureWidth += _strokeDouble * 2;
+                    this.measureHeight += _strokeDouble * 2;
+                }
+                this.measureWidth = Math.ceil(this.measureWidth) + 2 * 2;
+                this.measureHeight = Math.ceil(this.measureHeight) + 2 * 2;
                 //}
                 // else {
                 //     console.error('text = ' + text + ', measureText is null');
@@ -8892,8 +8920,8 @@ var egret;
                 //     this.measureHeight = this._styleKey.size;
                 // }
                 //
-                canvas.width = this.renderWidth;
-                canvas.height = this.renderHeight;
+                canvas.width = this.measureWidth; //this.renderWidth;
+                canvas.height = this.measureHeight; //this.renderHeight;
                 //再开始绘制
                 context.save();
                 context.textAlign = 'left';
@@ -8903,17 +8931,22 @@ var egret;
                 context.fillStyle = egret.toColorString(textColor);
                 context.strokeStyle = egret.toColorString(strokeColor);
                 context.clearRect(0, 0, canvas.width, canvas.height);
-                context.translate(0, 0);
-                context.scale(this._styleKey.$canvasScaleX, this._styleKey.$canvasScaleY);
+                //context.translate(0, 0);
+                //context.scale(this._styleKey.$canvasScaleX, this._styleKey.$canvasScaleY);
                 //
+                var offsetX = _strokeDouble + 2;
+                var offsetY = _strokeDouble + 2;
                 if (stroke) {
                     context.lineWidth = stroke * 2;
-                    context.strokeText(text, 0, 0);
+                    context.strokeText(text, offsetX, offsetY);
                 }
-                context.fillText(text, 0, 0);
+                context.fillText(text, offsetX, offsetY);
                 context.restore();
+                //
+                this.drawCanvasOffsetX = offsetX;
+                this.drawCanvasOffsetY = offsetY;
             };
-            CharImage.prototype.measureTextWidth = function (context, text, styleKey) {
+            CharImage.prototype.measureTextWidth = function (text, styleKey) {
                 var isChinese = CharImage.__chineseCharactersRegExp__.test(text);
                 if (isChinese) {
                     if (CharImage.__chineseCharacterMeasureFastMap__[styleKey.font]) {
@@ -8940,7 +8973,7 @@ var egret;
             function TextAtlasRender(webglRenderContext, maxSize, border) {
                 var _this = _super.call(this) || this;
                 //
-                _this.book = new web.Book(512, 1);
+                _this.book = new web.Book(512, 12);
                 _this.charImage = new CharImage;
                 _this.textBlockMap = {};
                 _this._canvas = null;
@@ -9007,18 +9040,20 @@ var egret;
                     $charValue.measureTextAndDrawToCanvas(canvas);
                     //console.log(char + ':' + canvas.width + ', ' + canvas.height);
                     //创建新的文字块
-                    var txtBlock = this.book.createTextBlock($charValue.renderWidth, $charValue.renderHeight, $charValue.measureWidth, $charValue.measureHeight);
+                    var txtBlock = this.book.createTextBlock(canvas.width, canvas.height, $charValue.measureWidth, $charValue.measureHeight);
                     if (!txtBlock) {
                         continue;
                     }
                     //
                     textBlockMap[$charValue._hashCode] = txtBlock;
                     txtBlock.tag = char;
+                    txtBlock.drawCanvasOffsetX = $charValue.drawCanvasOffsetX;
+                    txtBlock.drawCanvasOffsetY = $charValue.drawCanvasOffsetY;
                     renderTextBlocks.push(txtBlock);
                     //
                     var page = txtBlock.page;
                     if (!page.webGLTexture) {
-                        page.webGLTexture = this.createTextTextureAtlas(page.pageWidth, page.pageHeight, false);
+                        page.webGLTexture = this.createTextTextureAtlas(page.pageWidth, page.pageHeight, true);
                     }
                     var textAtlas = page.webGLTexture;
                     var gl = this.webglRenderContext.context;

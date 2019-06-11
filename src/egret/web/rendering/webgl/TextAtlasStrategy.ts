@@ -46,6 +46,8 @@ namespace egret.web {
         public tag: string = '';
         public readonly measureWidth: number = 0;
         public readonly measureHeight: number = 0;
+        public drawCanvasOffsetX = 0;
+        public drawCanvasOffsetY = 0;
 
         constructor(width: number, height: number, measureWidth: number, measureHeight: number, border: number) {
             super();
