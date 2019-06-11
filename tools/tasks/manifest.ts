@@ -53,11 +53,11 @@ export class ManifestPlugin {
             }
             file.outputDir = "";
             file.path = path.join(file.base, new_file_path);
+            const relative = file.relative.split("\\").join('/');
+
             if (this.options.info && this.options.info.target == 'vivogame') {
                 file.path = path.join(file.base, '../', 'engine', new_file_path);
             }
-
-            const relative = file.relative.split("\\").join('/');
 
             if (file.origin.indexOf('libs/') >= 0) {
                 manifest.initial.push(relative);
