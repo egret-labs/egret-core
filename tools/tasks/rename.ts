@@ -13,6 +13,8 @@ type RenamePluginOptions = {
     hash?: "crc32"
 
     matchers: { from: string, to: string }[]
+
+    callback?:Function
 }
 
 export class RenamePlugin {
@@ -40,6 +42,12 @@ export class RenamePlugin {
                 const p = path.dirname(file.origin) + "/";
                 const toFilename = match.to.replace('[name]', name).replace('[hash]', hash).replace('[ext]', extname).replace("[path]", p);
                 file.path = file.base + '/' + toFilename;
+		if(this.options.callback)
+		{
+		    this.options.callback(toFilename,
+					  file.origin,
+					  hash)
+		}
                 if (this.options.verbose) {
                     console.log(`RenamePlugin: ${file.origin} => ${toFilename}`)
                 }

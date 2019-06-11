@@ -377,6 +377,11 @@ declare module 'built-in' {
          * 该参数是个数组，允许设置多个匹配规则
          */
         matchers: Matcher[]
+        /**
+         * 设重命名文件后回调函数
+         * 回调函数参数列表:(重命名后的文件路径，重命名前的文件路径，文件内容hash算法字符串)
+         */
+        callback?: Function
     }
 
 
