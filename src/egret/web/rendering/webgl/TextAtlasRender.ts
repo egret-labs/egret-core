@@ -91,6 +91,10 @@ namespace egret.web {
 
         constructor(textNode: sys.TextNode, format: sys.TextFormat) {
             super();
+            
+            const saveForDebug = textNode.textColor;
+            textNode.textColor = 0xff0000;
+
             //
             this.textColor = textNode.textColor;
             this.strokeColor = textNode.strokeColor;
@@ -115,6 +119,8 @@ namespace egret.web {
             }
             this.description += '-' + this.$canvasScaleX;
             this.description += '-' + this.$canvasScaleY;
+
+            textNode.textColor = saveForDebug;
         }
     }
 
@@ -129,7 +135,7 @@ namespace egret.web {
 
         //针对中文的加速查找
         private static readonly __chineseCharactersRegExp__ = new RegExp("^[\u4E00-\u9FA5]$");
-        private static readonly __chineseCharacterMeasureFastMap__: { [index: string]: TextMetrics } = {};
+        private static readonly __chineseCharacterMeasureFastMap__: { [index: string]: number } = {};
 
         public reset(char: string, styleKey: StyleKey): CharImage {
             this._char = char;
@@ -160,16 +166,16 @@ namespace egret.web {
             //
             const context = egret.sys.getContext2d(canvas);
             //Step1: 重新测试字体大小
-            const measureText = this.measureText(context, text, this._styleKey.font);
-            if (measureText) {
-                this.measureWidth = measureText.width;
-                this.measureHeight = this._styleKey.size;
-            }
-            else {
-                console.error('text = ' + text + ', measureText is null');
-                this.measureWidth = this._styleKey.size;
-                this.measureHeight = this._styleKey.size;
-            }
+            const measureTextWidth = this.measureTextWidth(context, text, this._styleKey);
+            //if (measureTextWidth) {
+            this.measureWidth = measureTextWidth;//measureText.width;
+            this.measureHeight = this._styleKey.size;
+            //}
+            // else {
+            //     console.error('text = ' + text + ', measureText is null');
+            //     this.measureWidth = this._styleKey.size;
+            //     this.measureHeight = this._styleKey.size;
+            // }
             //
             canvas.width = this.renderWidth;
             canvas.height = this.renderHeight;
@@ -193,19 +199,19 @@ namespace egret.web {
             context.restore();
         }
 
-        private measureText(context: CanvasRenderingContext2D, text: string, font: string): TextMetrics {
+        private measureTextWidth(context: CanvasRenderingContext2D, text: string, styleKey: StyleKey): number {
             const isChinese = CharImage.__chineseCharactersRegExp__.test(text);
             if (isChinese) {
-                if (CharImage.__chineseCharacterMeasureFastMap__[font]) {
-                    return CharImage.__chineseCharacterMeasureFastMap__[font];
+                if (CharImage.__chineseCharacterMeasureFastMap__[styleKey.font]) {
+                    return CharImage.__chineseCharacterMeasureFastMap__[styleKey.font];
                 }
             }
-            context.font = font;
-            const measureText = context.measureText(text);
+            //context.font = font;
+            const measureTextWidth = egret.sys.measureText(text, styleKey.fontFamily, styleKey.size, styleKey.bold, styleKey.italic);//context.measureText(text);
             if (isChinese) {
-                CharImage.__chineseCharacterMeasureFastMap__[font] = measureText;
+                CharImage.__chineseCharacterMeasureFastMap__[styleKey.font] = measureTextWidth;
             }
-            return measureText;
+            return measureTextWidth;
         }
     }
 
@@ -317,7 +323,7 @@ namespace egret.web {
                 texture = egret.sys.createTexture(this.webglRenderContext, canvas);
             }
             else {
-                texture = egret.sys._createTexture(this.webglRenderContext, width, height, null);         
+                texture = egret.sys._createTexture(this.webglRenderContext, width, height, null);
             }
             if (texture) {
                 this.textAtlasTextureCache.push(texture);

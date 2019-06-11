@@ -8097,7 +8097,7 @@ var egret;
                 if (node.$canvasScaleX !== canvasScaleX || node.$canvasScaleY !== canvasScaleY) {
                     node.$canvasScaleX = canvasScaleX;
                     node.$canvasScaleY = canvasScaleY;
-                    node.dirtyRender = true;
+                    //node.dirtyRender = true;
                 }
                 if (x || y) {
                     buffer.transform(1, 0, 0, 1, x / canvasScaleX, y / canvasScaleY);
@@ -8132,17 +8132,17 @@ var egret;
                     }
                     //还原回去
                     buffer.$offsetX = saveOffsetX;
-                    buffer.$offsetX = saveOffsetY;
+                    buffer.$offsetY = saveOffsetY;
                 }
                 if (x || y) {
                     buffer.transform(1, 0, 0, 1, -x / canvasScaleX, -y / canvasScaleY);
                 }
-                node.dirtyRender = false;
+                //node.dirtyRender = false;
             };
             WebGLRenderer.prototype.renderText = function (node, buffer) {
                 if (web.textAtlasRenderEnable) {
                     this.___renderText____(node, buffer);
-                    return;
+                    //return;
                 }
                 var width = node.width - node.x;
                 var height = node.height - node.y;
@@ -8802,6 +8802,8 @@ var egret;
             function StyleKey(textNode, format) {
                 var _this = _super.call(this) || this;
                 _this.format = null;
+                var saveForDebug = textNode.textColor;
+                textNode.textColor = 0xff0000;
                 //
                 _this.textColor = textNode.textColor;
                 _this.strokeColor = textNode.strokeColor;
@@ -8826,6 +8828,7 @@ var egret;
                 }
                 _this.description += '-' + _this.$canvasScaleX;
                 _this.description += '-' + _this.$canvasScaleY;
+                textNode.textColor = saveForDebug;
                 return _this;
             }
             return StyleKey;
@@ -8878,16 +8881,16 @@ var egret;
                 //
                 var context = egret.sys.getContext2d(canvas);
                 //Step1: 重新测试字体大小
-                var measureText = this.measureText(context, text, this._styleKey.font);
-                if (measureText) {
-                    this.measureWidth = measureText.width;
-                    this.measureHeight = this._styleKey.size;
-                }
-                else {
-                    console.error('text = ' + text + ', measureText is null');
-                    this.measureWidth = this._styleKey.size;
-                    this.measureHeight = this._styleKey.size;
-                }
+                var measureTextWidth = this.measureTextWidth(context, text, this._styleKey);
+                //if (measureTextWidth) {
+                this.measureWidth = measureTextWidth; //measureText.width;
+                this.measureHeight = this._styleKey.size;
+                //}
+                // else {
+                //     console.error('text = ' + text + ', measureText is null');
+                //     this.measureWidth = this._styleKey.size;
+                //     this.measureHeight = this._styleKey.size;
+                // }
                 //
                 canvas.width = this.renderWidth;
                 canvas.height = this.renderHeight;
@@ -8910,19 +8913,19 @@ var egret;
                 context.fillText(text, 0, 0);
                 context.restore();
             };
-            CharImage.prototype.measureText = function (context, text, font) {
+            CharImage.prototype.measureTextWidth = function (context, text, styleKey) {
                 var isChinese = CharImage.__chineseCharactersRegExp__.test(text);
                 if (isChinese) {
-                    if (CharImage.__chineseCharacterMeasureFastMap__[font]) {
-                        return CharImage.__chineseCharacterMeasureFastMap__[font];
+                    if (CharImage.__chineseCharacterMeasureFastMap__[styleKey.font]) {
+                        return CharImage.__chineseCharacterMeasureFastMap__[styleKey.font];
                     }
                 }
-                context.font = font;
-                var measureText = context.measureText(text);
+                //context.font = font;
+                var measureTextWidth = egret.sys.measureText(text, styleKey.fontFamily, styleKey.size, styleKey.bold, styleKey.italic); //context.measureText(text);
                 if (isChinese) {
-                    CharImage.__chineseCharacterMeasureFastMap__[font] = measureText;
+                    CharImage.__chineseCharacterMeasureFastMap__[styleKey.font] = measureTextWidth;
                 }
-                return measureText;
+                return measureTextWidth;
             };
             //针对中文的加速查找
             CharImage.__chineseCharactersRegExp__ = new RegExp("^[\u4E00-\u9FA5]$");

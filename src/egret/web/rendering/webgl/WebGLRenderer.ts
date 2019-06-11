@@ -865,7 +865,7 @@ namespace egret.web {
             if (node.$canvasScaleX !== canvasScaleX || node.$canvasScaleY !== canvasScaleY) {
                 node.$canvasScaleX = canvasScaleX;
                 node.$canvasScaleY = canvasScaleY;
-                node.dirtyRender = true;
+                //node.dirtyRender = true;
             }
             if (x || y) {
                 buffer.transform(1, 0, 0, 1, x / canvasScaleX, y / canvasScaleY);
@@ -905,18 +905,18 @@ namespace egret.web {
                 }
                 //还原回去
                 buffer.$offsetX = saveOffsetX;
-                buffer.$offsetX = saveOffsetY;
+                buffer.$offsetY = saveOffsetY;
             }
             if (x || y) {
                 buffer.transform(1, 0, 0, 1, -x / canvasScaleX, -y / canvasScaleY);
             }
-            node.dirtyRender = false;
+            //node.dirtyRender = false;
         }
 
         private renderText(node: sys.TextNode, buffer: WebGLRenderBuffer): void {
             if (textAtlasRenderEnable) {
                 this.___renderText____(node, buffer);
-                return;
+                //return;
             }
 
             let width = node.width - node.x;
