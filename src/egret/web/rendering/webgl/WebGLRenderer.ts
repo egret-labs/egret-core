@@ -868,7 +868,6 @@ namespace egret.web {
             if (node.dirtyRender) {
                 TextAtlasRender.analysisTextNodeAndFlushDrawLabel(node);
             }
-
             const drawCommands = node[property_drawLabel] as Array<DrawLabel>;
             if (drawCommands && drawCommands.length > 0) {
                 //存一下
@@ -894,14 +893,13 @@ namespace egret.web {
                 buffer.$offsetX = saveOffsetX;
                 buffer.$offsetY = saveOffsetY;
             }
-
-            //node.dirtyRender = false;
+            node.dirtyRender = false;
         }
 
         private renderText(node: sys.TextNode, buffer: WebGLRenderBuffer): void {
             if (textAtlasRenderEnable) {
                 this.___renderText____(node, buffer);
-                //return;
+                return;
             }
 
             let width = node.width - node.x;

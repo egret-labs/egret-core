@@ -30,7 +30,7 @@
 namespace egret.web {
 
     //测试开关
-    export const textAtlasRenderEnable: boolean = true;
+    export const textAtlasRenderEnable: boolean = false;
     //测试对象
     export let __textAtlasRender__: TextAtlasRender = null;
     //不想改TextNode的代码了，先用这种方式实现

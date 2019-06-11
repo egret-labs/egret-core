@@ -8125,12 +8125,12 @@ var egret;
                     buffer.$offsetX = saveOffsetX;
                     buffer.$offsetY = saveOffsetY;
                 }
-                //node.dirtyRender = false;
+                node.dirtyRender = false;
             };
             WebGLRenderer.prototype.renderText = function (node, buffer) {
                 if (web.textAtlasRenderEnable) {
                     this.___renderText____(node, buffer);
-                    //return;
+                    return;
                 }
                 var width = node.width - node.x;
                 var height = node.height - node.y;
@@ -8742,7 +8742,7 @@ var egret;
     var web;
     (function (web) {
         //测试开关
-        web.textAtlasRenderEnable = true;
+        web.textAtlasRenderEnable = false;
         //测试对象
         web.__textAtlasRender__ = null;
         //不想改TextNode的代码了，先用这种方式实现
