@@ -860,10 +860,15 @@ namespace egret.web {
             }
             width *= canvasScaleX;
             height *= canvasScaleY;
+            let x = node.x * canvasScaleX;
+            let y = node.y * canvasScaleY;
             if (node.$canvasScaleX !== canvasScaleX || node.$canvasScaleY !== canvasScaleY) {
                 node.$canvasScaleX = canvasScaleX;
                 node.$canvasScaleY = canvasScaleY;
                 node.dirtyRender = true;
+            }
+            if (x || y) {
+                buffer.transform(1, 0, 0, 1, x / canvasScaleX, y / canvasScaleY);
             }
             if (node.dirtyRender) {
                 TextAtlasRender.analysisTextNodeAndFlushDrawLabel(node);
@@ -883,7 +888,7 @@ namespace egret.web {
                     for (let _a = 0, textBlocks_1 = textBlocks; _a < textBlocks_1.length; _a++) {
                         const tb = textBlocks_1[_a];
                         buffer.$offsetX += -tb.drawCanvasOffsetX;
-                        buffer.$offsetY = saveOffsetY + anchorY - (tb.measureHeight/2 * canvasScaleY);
+                        buffer.$offsetY = saveOffsetY + anchorY - (tb.measureHeight / 2);
                         const page = tb.line.page;
                         buffer.context.drawTexture(page.webGLTexture, tb.u, tb.v, tb.contentWidth, tb.contentHeight, 0, 0, tb.contentWidth, tb.contentHeight, page.pageWidth, page.pageHeight);
                         buffer.$offsetX += tb.contentWidth - tb.drawCanvasOffsetX;
@@ -893,13 +898,16 @@ namespace egret.web {
                 buffer.$offsetX = saveOffsetX;
                 buffer.$offsetY = saveOffsetY;
             }
-            node.dirtyRender = false;
+            if (x || y) {
+                buffer.transform(1, 0, 0, 1, -x / canvasScaleX, -y / canvasScaleY);
+            }
+            //node.dirtyRender = false;
         }
 
         private renderText(node: sys.TextNode, buffer: WebGLRenderBuffer): void {
             if (textAtlasRenderEnable) {
                 this.___renderText____(node, buffer);
-                return;
+                //return;
             }
 
             let width = node.width - node.x;

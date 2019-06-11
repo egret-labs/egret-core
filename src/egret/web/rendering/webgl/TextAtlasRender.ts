@@ -30,13 +30,13 @@
 namespace egret.web {
 
     //测试开关
-    export const textAtlasRenderEnable: boolean = false;
+    export const textAtlasRenderEnable: boolean = true;
     //测试对象
     export let __textAtlasRender__: TextAtlasRender = null;
     //不想改TextNode的代码了，先用这种方式实现
     export const property_drawLabel = 'DrawLabel';
 
-    const textAtlasDebug: boolean = false;
+    const textAtlasDebug: boolean = true;
 
     //画一行
     export class DrawLabel extends HashObject {
@@ -93,13 +93,13 @@ namespace egret.web {
 
         constructor(textNode: sys.TextNode, format: sys.TextFormat) {
             super();
-            
+
             let saveTextColorForDebug = 0;
             if (textAtlasDebug) {
                 saveTextColorForDebug = textNode.textColor;
                 textNode.textColor = 0xff0000;
             }
-            
+
 
             //
             this.textColor = textNode.textColor;
@@ -185,8 +185,8 @@ namespace egret.web {
             canvas.height = canvasHeight;
             //再开始绘制
             context.save();
-            context.textAlign = 'left';
-            context.textBaseline = 'top';
+            context.textAlign = 'start';
+            context.textBaseline = 'middle';
             context.lineJoin = 'round';
             context.font = this._styleKey.font;
             context.fillStyle = toColorString(textColor);
@@ -197,9 +197,9 @@ namespace egret.web {
             this.drawCanvasOffsetY = _strokeDouble + 2;
             if (stroke) {
                 context.lineWidth = stroke * 2;
-                context.strokeText(text, this.drawCanvasOffsetX, this.drawCanvasOffsetY);
+                context.strokeText(text, this.drawCanvasOffsetX, canvas.height/2);
             }
-            context.fillText(text, this.drawCanvasOffsetX, this.drawCanvasOffsetY);
+            context.fillText(text, this.drawCanvasOffsetX, canvas.height/2);
             context.restore();
         }
 

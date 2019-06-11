@@ -8092,10 +8092,15 @@ var egret;
                 }
                 width *= canvasScaleX;
                 height *= canvasScaleY;
+                var x = node.x * canvasScaleX;
+                var y = node.y * canvasScaleY;
                 if (node.$canvasScaleX !== canvasScaleX || node.$canvasScaleY !== canvasScaleY) {
                     node.$canvasScaleX = canvasScaleX;
                     node.$canvasScaleY = canvasScaleY;
                     node.dirtyRender = true;
+                }
+                if (x || y) {
+                    buffer.transform(1, 0, 0, 1, x / canvasScaleX, y / canvasScaleY);
                 }
                 if (node.dirtyRender) {
                     web.TextAtlasRender.analysisTextNodeAndFlushDrawLabel(node);
@@ -8115,7 +8120,7 @@ var egret;
                         for (var _a = 0, textBlocks_1 = textBlocks; _a < textBlocks_1.length; _a++) {
                             var tb = textBlocks_1[_a];
                             buffer.$offsetX += -tb.drawCanvasOffsetX;
-                            buffer.$offsetY = saveOffsetY + anchorY - (tb.measureHeight / 2 * canvasScaleY);
+                            buffer.$offsetY = saveOffsetY + anchorY - (tb.measureHeight / 2);
                             var page = tb.line.page;
                             buffer.context.drawTexture(page.webGLTexture, tb.u, tb.v, tb.contentWidth, tb.contentHeight, 0, 0, tb.contentWidth, tb.contentHeight, page.pageWidth, page.pageHeight);
                             buffer.$offsetX += tb.contentWidth - tb.drawCanvasOffsetX;
@@ -8125,12 +8130,15 @@ var egret;
                     buffer.$offsetX = saveOffsetX;
                     buffer.$offsetY = saveOffsetY;
                 }
-                node.dirtyRender = false;
+                if (x || y) {
+                    buffer.transform(1, 0, 0, 1, -x / canvasScaleX, -y / canvasScaleY);
+                }
+                //node.dirtyRender = false;
             };
             WebGLRenderer.prototype.renderText = function (node, buffer) {
                 if (web.textAtlasRenderEnable) {
                     this.___renderText____(node, buffer);
-                    return;
+                    //return;
                 }
                 var width = node.width - node.x;
                 var height = node.height - node.y;
@@ -8742,12 +8750,12 @@ var egret;
     var web;
     (function (web) {
         //测试开关
-        web.textAtlasRenderEnable = false;
+        web.textAtlasRenderEnable = true;
         //测试对象
         web.__textAtlasRender__ = null;
         //不想改TextNode的代码了，先用这种方式实现
         web.property_drawLabel = 'DrawLabel';
-        var textAtlasDebug = false;
+        var textAtlasDebug = true;
         //画一行
         var DrawLabel = (function (_super) {
             __extends(DrawLabel, _super);
@@ -8882,8 +8890,8 @@ var egret;
                 canvas.height = canvasHeight;
                 //再开始绘制
                 context.save();
-                context.textAlign = 'left';
-                context.textBaseline = 'top';
+                context.textAlign = 'start';
+                context.textBaseline = 'middle';
                 context.lineJoin = 'round';
                 context.font = this._styleKey.font;
                 context.fillStyle = egret.toColorString(textColor);
@@ -8894,9 +8902,9 @@ var egret;
                 this.drawCanvasOffsetY = _strokeDouble + 2;
                 if (stroke) {
                     context.lineWidth = stroke * 2;
-                    context.strokeText(text, this.drawCanvasOffsetX, this.drawCanvasOffsetY);
+                    context.strokeText(text, this.drawCanvasOffsetX, canvas.height / 2);
                 }
-                context.fillText(text, this.drawCanvasOffsetX, this.drawCanvasOffsetY);
+                context.fillText(text, this.drawCanvasOffsetX, canvas.height / 2);
                 context.restore();
             };
             CharImage.prototype.measureTextWidth = function (text, styleKey) {
