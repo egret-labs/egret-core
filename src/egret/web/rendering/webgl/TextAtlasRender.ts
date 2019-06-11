@@ -185,7 +185,7 @@ namespace egret.web {
             canvas.height = canvasHeight;
             //再开始绘制
             context.save();
-            context.textAlign = 'start';
+            context.textAlign = 'left';
             context.textBaseline = 'middle';
             context.lineJoin = 'round';
             context.font = this._styleKey.font;

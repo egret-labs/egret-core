@@ -8119,11 +8119,18 @@ var egret;
                         var textBlocks = cmd.textBlocks;
                         for (var _a = 0, textBlocks_1 = textBlocks; _a < textBlocks_1.length; _a++) {
                             var tb = textBlocks_1[_a];
-                            buffer.$offsetX += -tb.drawCanvasOffsetX;
+                            if (_a > 0) {
+                                buffer.$offsetX += -tb.drawCanvasOffsetX;
+                            }
                             buffer.$offsetY = saveOffsetY + anchorY - (tb.measureHeight / 2);
                             var page = tb.line.page;
                             buffer.context.drawTexture(page.webGLTexture, tb.u, tb.v, tb.contentWidth, tb.contentHeight, 0, 0, tb.contentWidth, tb.contentHeight, page.pageWidth, page.pageHeight);
-                            buffer.$offsetX += tb.contentWidth - tb.drawCanvasOffsetX;
+                            if (_a > 0) {
+                                buffer.$offsetX += tb.contentWidth - tb.drawCanvasOffsetX;
+                            }
+                            else {
+                                buffer.$offsetX += tb.contentWidth - tb.drawCanvasOffsetX * 2;
+                            }
                         }
                     }
                     //还原回去
@@ -8890,7 +8897,7 @@ var egret;
                 canvas.height = canvasHeight;
                 //再开始绘制
                 context.save();
-                context.textAlign = 'start';
+                context.textAlign = 'left';
                 context.textBaseline = 'middle';
                 context.lineJoin = 'round';
                 context.font = this._styleKey.font;
