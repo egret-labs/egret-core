@@ -69,12 +69,17 @@ export class ManifestPlugin {
         const output = this.options.output;
         const extname = path.extname(output);
         let contents = '';
+        let target = pluginContext.buildConfig.target
         switch (extname) {
             case ".json":
                 contents = JSON.stringify(manifest, null, '\t');
                 break;
             case ".js":
-                contents = manifest.initial.concat(manifest.game).map((fileName) => `require("./${fileName}")`).join("\n")
+                if(target == 'vivogame'){
+                    contents = manifest.initial.concat(manifest.game).map((fileName) => `require("${fileName}")`).join("\n")
+                }else{
+                    contents = manifest.initial.concat(manifest.game).map((fileName) => `require("./${fileName}")`).join("\n")
+                }                
                 break;
         }
         pluginContext.createFile(this.options.output, new Buffer(contents));
