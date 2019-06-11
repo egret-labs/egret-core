@@ -197,6 +197,11 @@ namespace egret {
         /**
          * @private
          */
+        public $ktxData: ArrayBuffer = null;
+
+        /**
+         * @private
+         */
         public $rotated: boolean = false;
 
         /**
@@ -216,9 +221,9 @@ namespace egret {
         }
 
         public set bitmapData(value: BitmapData) {
+            this.$ktxData = null;
             this._setBitmapData(value);
         }
-
         /**
         * Set the BitmapData object.
         * @version Egret 3.2.1
@@ -237,6 +242,57 @@ namespace egret {
             let w = value.width * scale;
             let h = value.height * scale;
             this.$initData(0, 0, w, h, 0, 0, w, h, value.width, value.height);
+        }
+        /**
+         * The KTX object being referenced.
+        * @version Egret 5.2.21
+        * @platform Web,Native
+        * @language en_US
+        */
+        /**
+         * 被引用的 KTXData 对象。
+         * @version Egret 5.2.21
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        public get ktxData(): ArrayBuffer {
+            return this.$ktxData;
+        }
+
+        public set ktxData(data: ArrayBuffer) {
+            this._setKtxData(data);
+        }
+        
+        /**
+        * Set the KTXData object.
+        * @version Egret 3.2.1
+        * @platform Web,Native
+        * @language en_US
+        */
+        /**
+         * 设置 KTXData 对象。
+         * @version Egret 3.2.1
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        public _setKtxData(value: ArrayBuffer) {
+            if (!value) {
+                egret.error('ktx data is null');
+                return;
+            }
+            if (value == this.$ktxData) {
+                return;
+            }
+            let ktx = new egret.KTXContainer(value, 1);
+            if (ktx.isInvalid) {
+                egret.error('ktx data is invalid');
+                return;
+            }
+            this.$ktxData = value;
+            let bitmapData = new egret.BitmapData(value);
+            bitmapData.format = 'ktx';
+            ktx.uploadLevels(bitmapData, false);
+            this._setBitmapData(bitmapData);
         }
 
         /**
@@ -368,7 +424,7 @@ namespace egret {
          */
         public dispose(): void {
             if (this.$bitmapData) {
-                if(this.disposeBitmapData) {
+                if (this.disposeBitmapData) {
                     this.$bitmapData.$dispose();
                 }
                 this.$bitmapData = null;

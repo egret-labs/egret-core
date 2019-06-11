@@ -1969,6 +1969,100 @@ var RES;
                 texture.dispose();
             }
         };
+        processor_1.KTXTextureProcessor = {
+            onLoadStart: function (host, resource) {
+                return host.load(resource, 'bin').then(function (data) {
+                    if (!data) {
+                        console.error('ktx:' + resource.root + resource.url + ' is null');
+                        return null;
+                    }
+                    var ktx = new egret.KTXContainer(data, 1);
+                    if (ktx.isInvalid) {
+                        console.error('ktx:' + resource.root + resource.url + ' is invalid');
+                        return null;
+                    }
+                    //
+                    var bitmapData = new egret.BitmapData(data);
+                    bitmapData.debugCompressedTextureURL = resource.root + resource.url;
+                    bitmapData.format = 'ktx';
+                    ktx.uploadLevels(bitmapData, false);
+                    //
+                    var texture = new egret.Texture();
+                    texture._setBitmapData(bitmapData);
+                    var r = host.resourceConfig.getResource(resource.name);
+                    if (r && r.scale9grid) {
+                        var list = r.scale9grid.split(",");
+                        texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
+                    }
+                    //
+                    host.save(resource, texture);
+                    return texture;
+                }, function (e) {
+                    host.remove(resource);
+                    throw e;
+                });
+            },
+            onRemoveStart: function (host, resource) {
+                var texture = host.get(resource);
+                if (texture) {
+                    texture.dispose();
+                }
+            }
+        };
+        /**
+        *
+        */
+        function makeEtc1SeperatedAlphaResourceInfo(resource) {
+            return { name: resource.name + '_alpha', url: resource['etc1_alpha_url'], type: 'ktx', root: resource.root };
+        }
+        processor_1.makeEtc1SeperatedAlphaResourceInfo = makeEtc1SeperatedAlphaResourceInfo;
+        /**
+        *
+        */
+        processor_1.ETC1KTXProcessor = {
+            onLoadStart: function (host, resource) {
+                return host.load(resource, "ktx").then(function (colorTex) {
+                    if (!colorTex) {
+                        return null;
+                    }
+                    if (resource['etc1_alpha_url']) {
+                        var r_1 = makeEtc1SeperatedAlphaResourceInfo(resource);
+                        return host.load(r_1, "ktx")
+                            .then(function (alphaMaskTex) {
+                            if (colorTex && colorTex.$bitmapData && alphaMaskTex.$bitmapData) {
+                                colorTex.$bitmapData.etcAlphaMask = alphaMaskTex.$bitmapData;
+                                host.save(r_1, alphaMaskTex);
+                            }
+                            else {
+                                host.remove(r_1);
+                            }
+                            return colorTex;
+                        }, function (e) {
+                            host.remove(r_1);
+                            throw e;
+                        });
+                    }
+                    return colorTex;
+                }, function (e) {
+                    host.remove(resource);
+                    throw e;
+                });
+            },
+            onRemoveStart: function (host, resource) {
+                var colorTex = host.get(resource);
+                if (colorTex) {
+                    colorTex.dispose();
+                }
+                if (resource['etc1_alpha_url']) {
+                    var r = makeEtc1SeperatedAlphaResourceInfo(resource);
+                    var alphaMaskTex = host.get(r);
+                    if (alphaMaskTex) {
+                        alphaMaskTex.dispose();
+                    }
+                    host.unload(r); //这里其实还会再删除一次，不过无所谓了。alphaMaskTex已经显示删除了
+                }
+            }
+        };
         processor_1.BinaryProcessor = {
             onLoadStart: function (host, resource) {
                 var request = new egret.HttpRequest();
@@ -2051,6 +2145,9 @@ var RES;
                     }
                     return host.load(r)
                         .then(function (bitmapData) {
+                        if (!bitmapData) {
+                            return null;
+                        }
                         var frames = data.frames;
                         var spriteSheet = new egret.SpriteSheet(bitmapData);
                         spriteSheet["$resourceInfo"] = r;
@@ -2307,6 +2404,9 @@ var RES;
             "movieclip": processor_1.MovieClipProcessor,
             "mergeJson": processor_1.MergeJSONProcessor,
             "legacyResourceConfig": processor_1.LegacyResourceConfigProcessor,
+            "ktx": processor_1.KTXTextureProcessor,
+            "etc1.ktx": processor_1.ETC1KTXProcessor,
+            "pvrtc.ktx": processor_1.KTXTextureProcessor,
         };
     })(processor = RES.processor || (RES.processor = {}));
 })(RES || (RES = {}));

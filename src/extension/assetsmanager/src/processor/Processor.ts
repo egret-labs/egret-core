@@ -156,8 +156,106 @@ module RES.processor {
             let texture = host.get(resource);
             texture.dispose();
         }
-
     }
+
+    export const KTXTextureProcessor: RES.processor.Processor = {
+        onLoadStart(host, resource) {
+            return host.load(resource, 'bin').then((data) => {
+                if (!data) {
+                    console.error('ktx:' + resource.root + resource.url + ' is null');
+                    return null;
+                }
+                const ktx = new egret.KTXContainer(data, 1);
+                if (ktx.isInvalid) {
+                    console.error('ktx:' + resource.root + resource.url + ' is invalid');
+                    return null;
+                }
+                //
+                const bitmapData = new egret.BitmapData(data);
+                bitmapData.debugCompressedTextureURL = resource.root + resource.url;
+                bitmapData.format = 'ktx';
+                ktx.uploadLevels(bitmapData, false);
+                //
+                const texture = new egret.Texture();
+                texture._setBitmapData(<egret.BitmapData>bitmapData);
+                const r = host.resourceConfig.getResource(resource.name);
+                if (r && r.scale9grid) {
+                    const list: Array<string> = r.scale9grid.split(",");
+                    texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
+                }
+                //
+                host.save(resource as ResourceInfo, texture);
+                return texture;
+            }, function (e) {
+                host.remove(resource);
+                throw e;
+            });
+        },
+
+        onRemoveStart(host, resource) {
+            const texture = host.get(resource);
+            if (texture) {
+                texture.dispose();
+            }
+        }
+    }
+
+    /**
+    * 
+    */
+    export function makeEtc1SeperatedAlphaResourceInfo(resource: ResourceInfo): ResourceInfo {
+        return { name: resource.name + '_alpha', url: resource['etc1_alpha_url'], type: 'ktx', root: resource.root };
+    }
+
+    /**
+    * 
+    */
+    export const ETC1KTXProcessor: Processor = {
+        onLoadStart(host, resource): Promise<any> {
+            return host.load(resource, "ktx").then((colorTex) => {
+                if (!colorTex) {
+                    return null;
+                }
+                if (resource['etc1_alpha_url']) {
+                    const r = makeEtc1SeperatedAlphaResourceInfo(resource);
+                    return host.load(r, "ktx")
+                        .then((alphaMaskTex) => {
+                            if (colorTex && colorTex.$bitmapData && alphaMaskTex.$bitmapData) {
+                                colorTex.$bitmapData.etcAlphaMask = alphaMaskTex.$bitmapData;
+                                host.save(r as ResourceInfo, alphaMaskTex);
+                            }
+                            else {
+                                host.remove(r);
+                            }
+                            return colorTex;
+                        }, function (e) {
+                            host.remove(r);
+                            throw e;
+                        });
+                }
+                return colorTex;
+            }, function (e) {
+                host.remove(resource);
+                throw e;
+            });
+        },
+
+        onRemoveStart(host, resource) {
+            const colorTex = host.get(resource);
+            if (colorTex) {
+                colorTex.dispose();
+            }
+            if (resource['etc1_alpha_url']) {
+                const r = makeEtc1SeperatedAlphaResourceInfo(resource);
+                const alphaMaskTex = host.get(r!);
+                if (alphaMaskTex) {
+                    alphaMaskTex.dispose();
+                }
+                host.unload(r);//这里其实还会再删除一次，不过无所谓了。alphaMaskTex已经显示删除了
+            }
+        }
+    }
+
     export var BinaryProcessor: Processor = {
 
         onLoadStart(host, resource) {
@@ -256,6 +354,9 @@ module RES.processor {
                 }
                 return host.load(r)
                     .then((bitmapData) => {
+                        if (!bitmapData) {
+                            return null;
+                        }
                         var frames: any = data.frames;
                         var spriteSheet = new egret.SpriteSheet(bitmapData);
                         spriteSheet["$resourceInfo"] = r;
@@ -560,6 +661,9 @@ module RES.processor {
         "movieclip": MovieClipProcessor,
         "mergeJson": MergeJSONProcessor,
         "legacyResourceConfig": LegacyResourceConfigProcessor,
+        "ktx": KTXTextureProcessor,
+        "etc1.ktx": ETC1KTXProcessor,
+        "pvrtc.ktx": KTXTextureProcessor,
         // "zip": ZipProcessor
     }
 }

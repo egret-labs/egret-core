@@ -43,27 +43,215 @@ var egret;
         /**
          * @private
          */
-        function getOption(key) {
-            if (window.location) {
-                var search = location.search;
-                if (search == "") {
-                    return "";
-                }
-                search = search.slice(1);
-                var searchArr = search.split("&");
-                var length_1 = searchArr.length;
-                for (var i = 0; i < length_1; i++) {
-                    var str = searchArr[i];
-                    var arr = str.split("=");
-                    if (arr[0] == key) {
-                        return arr[1];
+        var WebFps = (function () {
+            function WebFps(stage, showFPS, showLog, logFilter, styles) {
+                this.showPanle = true;
+                this.fpsHeight = 0;
+                this.WIDTH = 101;
+                this.HEIGHT = 20;
+                this.bgCanvasColor = "#18304b";
+                this.fpsFrontColor = "#18fefe";
+                this.WIDTH_COST = 50;
+                this.cost1Color = "#18fefe";
+                // private cost2Color = "#ffff00";
+                this.cost3Color = "#ff0000";
+                this.arrFps = [];
+                this.arrCost = [];
+                this.arrLog = [];
+                if (showFPS || showLog) {
+                    if (egret.Capabilities.renderMode == 'canvas') {
+                        this.renderMode = "Canvas";
                     }
+                    else {
+                        this.renderMode = "WebGL";
+                    }
+                    this.panelX = styles["x"] === undefined ? 0 : parseInt(styles['x']);
+                    this.panelY = styles["y"] === undefined ? 0 : parseInt(styles['y']);
+                    this.fontColor = styles["textColor"] === undefined ? '#ffffff' : styles['textColor'].replace("0x", "#");
+                    this.fontSize = styles["size"] === undefined ? 12 : parseInt(styles['size']);
+                    if (egret.Capabilities.isMobile) {
+                        this.fontSize -= 2;
+                    }
+                    var all = document.createElement('div');
+                    all.style.position = 'absolute';
+                    all.style.background = "rgba(0,0,0," + styles['bgAlpha'] + ")";
+                    all.style.left = this.panelX + 'px';
+                    all.style.top = this.panelY + 'px';
+                    all.style.pointerEvents = 'none';
+                    document.body.appendChild(all);
+                    var container = document.createElement('div');
+                    container.style.color = this.fontColor;
+                    container.style.fontSize = this.fontSize + 'px';
+                    container.style.lineHeight = this.fontSize + 'px';
+                    container.style.margin = '4px 4px 4px 4px';
+                    this.container = container;
+                    all.appendChild(container);
+                    if (showFPS)
+                        this.addFps();
+                    if (showLog)
+                        this.addLog();
                 }
             }
-            return "";
-        }
-        web.getOption = getOption;
-        egret.getOption = getOption;
+            WebFps.prototype.addFps = function () {
+                var div = document.createElement('div');
+                div.style.display = 'inline-block';
+                this.containerFps = div;
+                this.container.appendChild(div);
+                var fps = document.createElement('div');
+                fps.style.paddingBottom = '2px';
+                this.fps = fps;
+                this.containerFps.appendChild(fps);
+                fps.innerHTML = "0 FPS " + this.renderMode + "<br/>min0 max0 avg0";
+                var canvas = document.createElement('canvas');
+                this.containerFps.appendChild(canvas);
+                canvas.width = this.WIDTH;
+                canvas.height = this.HEIGHT;
+                this.canvasFps = canvas;
+                var context = canvas.getContext('2d');
+                this.contextFps = context;
+                context.fillStyle = this.bgCanvasColor;
+                context.fillRect(0, 0, this.WIDTH, this.HEIGHT);
+                var divDatas = document.createElement('div');
+                this.divDatas = divDatas;
+                this.containerFps.appendChild(divDatas);
+                var left = document.createElement('div');
+                left.style['float'] = 'left';
+                left.innerHTML = "Draw<br/>Cost";
+                divDatas.appendChild(left);
+                var right = document.createElement('div');
+                right.style.paddingLeft = left.offsetWidth + 20 + "px";
+                divDatas.appendChild(right);
+                var draw = document.createElement('div');
+                this.divDraw = draw;
+                draw.innerHTML = "0<br/>";
+                right.appendChild(draw);
+                var cost = document.createElement('div');
+                this.divCost = cost;
+                cost.innerHTML = "<font  style=\"color:" + this.cost1Color + "\">0<font/> <font  style=\"color:" + this.cost3Color + "\">0<font/>";
+                right.appendChild(cost);
+                canvas = document.createElement('canvas');
+                this.canvasCost = canvas;
+                this.containerFps.appendChild(canvas);
+                canvas.width = this.WIDTH;
+                canvas.height = this.HEIGHT;
+                context = canvas.getContext('2d');
+                this.contextCost = context;
+                context.fillStyle = this.bgCanvasColor;
+                context.fillRect(0, 0, this.WIDTH, this.HEIGHT);
+                context.fillStyle = "#000000";
+                context.fillRect(this.WIDTH_COST, 0, 1, this.HEIGHT);
+                this.fpsHeight = this.container.offsetHeight;
+            };
+            WebFps.prototype.addLog = function () {
+                var log = document.createElement('div');
+                log.style.maxWidth = document.body.clientWidth - 8 - this.panelX + 'px';
+                log.style.wordWrap = "break-word";
+                this.log = log;
+                this.container.appendChild(log);
+            };
+            WebFps.prototype.update = function (datas, showLastData) {
+                if (showLastData === void 0) { showLastData = false; }
+                var numFps;
+                var numCostTicker;
+                var numCostRender;
+                if (!showLastData) {
+                    numFps = datas.fps;
+                    numCostTicker = datas.costTicker;
+                    numCostRender = datas.costRender;
+                    this.lastNumDraw = datas.draw;
+                    this.arrFps.push(numFps);
+                    this.arrCost.push([numCostTicker, numCostRender]);
+                }
+                else {
+                    numFps = this.arrFps[this.arrFps.length - 1];
+                    numCostTicker = this.arrCost[this.arrCost.length - 1][0];
+                    numCostRender = this.arrCost[this.arrCost.length - 1][1];
+                }
+                var fpsTotal = 0;
+                var lenFps = this.arrFps.length;
+                if (lenFps > 101) {
+                    lenFps = 101;
+                    this.arrFps.shift();
+                    this.arrCost.shift();
+                }
+                var fpsMin = this.arrFps[0];
+                var fpsMax = this.arrFps[0];
+                for (var i = 0; i < lenFps; i++) {
+                    var num = this.arrFps[i];
+                    fpsTotal += num;
+                    if (num < fpsMin)
+                        fpsMin = num;
+                    else if (num > fpsMax)
+                        fpsMax = num;
+                }
+                var WIDTH = this.WIDTH;
+                var HEIGHT = this.HEIGHT;
+                var context = this.contextFps;
+                context.drawImage(this.canvasFps, 1, 0, WIDTH - 1, HEIGHT, 0, 0, WIDTH - 1, HEIGHT);
+                context.fillStyle = this.bgCanvasColor;
+                context.fillRect(WIDTH - 1, 0, 1, HEIGHT);
+                var lastHeight = Math.floor(numFps / 60 * 20);
+                if (lastHeight < 1)
+                    lastHeight = 1;
+                context.fillStyle = this.fpsFrontColor;
+                context.fillRect(WIDTH - 1, 20 - lastHeight, 1, lastHeight);
+                var WIDTH_COST = this.WIDTH_COST;
+                context = this.contextCost;
+                context.drawImage(this.canvasCost, 1, 0, WIDTH_COST - 1, HEIGHT, 0, 0, WIDTH_COST - 1, HEIGHT);
+                context.drawImage(this.canvasCost, WIDTH_COST + 2, 0, WIDTH_COST - 1, HEIGHT, WIDTH_COST + 1, 0, WIDTH_COST - 1, HEIGHT);
+                var c1Height = Math.floor(numCostTicker / 2);
+                if (c1Height < 1)
+                    c1Height = 1;
+                else if (c1Height > 20)
+                    c1Height = 20;
+                //todo lcj
+                var c2Height = Math.floor(numCostRender / 2);
+                if (c2Height < 1)
+                    c2Height = 1;
+                else if (c2Height > 20)
+                    c2Height = 20;
+                context.fillStyle = this.bgCanvasColor;
+                context.fillRect(WIDTH_COST - 1, 0, 1, HEIGHT);
+                context.fillRect(WIDTH_COST * 2, 0, 1, HEIGHT);
+                context.fillRect(WIDTH_COST * 3 + 1, 0, 1, HEIGHT);
+                context.fillStyle = this.cost1Color;
+                context.fillRect(WIDTH_COST - 1, 20 - c1Height, 1, c1Height);
+                context.fillStyle = this.cost3Color;
+                context.fillRect(WIDTH_COST * 2, 20 - c2Height, 1, c2Height);
+                var fpsAvg = Math.floor(fpsTotal / lenFps);
+                var fpsOutput = numFps + " FPS " + this.renderMode;
+                if (this.showPanle) {
+                    fpsOutput += "<br/>min" + fpsMin + " max" + fpsMax + " avg" + fpsAvg;
+                    this.divDraw.innerHTML = this.lastNumDraw + "<br/>";
+                    this.divCost.innerHTML = "<font  style=\"color:#18fefe\">" + numCostTicker + "<font/> <font  style=\"color:#ff0000\">" + numCostRender + "<font/>";
+                }
+                this.fps.innerHTML = fpsOutput;
+            };
+            ;
+            WebFps.prototype.updateInfo = function (info) {
+                this.arrLog.push(info);
+                this.updateLogLayout();
+            };
+            WebFps.prototype.updateWarn = function (info) {
+                this.arrLog.push("[Warning]" + info);
+                this.updateLogLayout();
+            };
+            WebFps.prototype.updateError = function (info) {
+                this.arrLog.push("[Error]" + info);
+                this.updateLogLayout();
+            };
+            WebFps.prototype.updateLogLayout = function () {
+                this.log.innerHTML = this.arrLog.join('<br/>');
+                while (document.body.clientHeight < (this.log.offsetHeight + this.fpsHeight + this.panelY + this.fontSize * 2)) {
+                    this.arrLog.shift();
+                    this.log.innerHTML = this.arrLog.join('<br/>');
+                }
+            };
+            return WebFps;
+        }());
+        web.WebFps = WebFps;
+        __reflect(WebFps.prototype, "egret.web.WebFps", ["egret.FPSDisplay"]);
+        egret.FPSDisplay = WebFps;
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -2806,7 +2994,7 @@ var egret;
         /**
          * 创建一个canvas。
          */
-        function createCanvas(width, height) {
+        function __createCanvas__(width, height) {
             var canvas = document.createElement("canvas");
             if (!isNaN(width) && !isNaN(height)) {
                 canvas.width = width;
@@ -2845,7 +3033,7 @@ var egret;
          */
         var CanvasRenderBuffer = (function () {
             function CanvasRenderBuffer(width, height, root) {
-                this.surface = createCanvas(width, height);
+                this.surface = __createCanvas__(width, height);
                 this.context = this.surface.getContext("2d");
                 if (this.context) {
                     this.context.$offsetX = 0;
@@ -3486,6 +3674,157 @@ var egret;
     var web;
     (function (web) {
         /**
+         * 创建一个canvas。
+         */
+        function mainCanvas(width, height) {
+            return createCanvas(width, height);
+        }
+        egret.sys.mainCanvas = mainCanvas;
+        function createCanvas(width, height) {
+            var canvas = document.createElement("canvas");
+            if (!isNaN(width) && !isNaN(height)) {
+                canvas.width = width;
+                canvas.height = height;
+            }
+            return canvas;
+        }
+        egret.sys.createCanvas = createCanvas;
+        /**
+         * sys.resizeContext。
+         */
+        function resizeContext(renderContext, width, height, useMaxSize) {
+            if (!renderContext) {
+                return;
+            }
+            var webglrendercontext = renderContext;
+            var surface = webglrendercontext.surface;
+            if (useMaxSize) {
+                if (surface.width < width) {
+                    surface.width = width;
+                }
+                if (surface.height < height) {
+                    surface.height = height;
+                }
+            }
+            else {
+                if (surface.width !== width) {
+                    surface.width = width;
+                }
+                if (surface.height !== height) {
+                    surface.height = height;
+                }
+            }
+            webglrendercontext.onResize();
+        }
+        web.resizeContext = resizeContext;
+        egret.sys.resizeContext = resizeContext;
+        /**
+         * sys.getContextWebGL
+         */
+        function getContextWebGL(surface) {
+            var options = {
+                antialias: web.WebGLRenderContext.antialias,
+                stencil: true //设置可以使用模板（用于不规则遮罩）
+            };
+            var gl = null;
+            //todo 是否使用chrome源码names
+            //let contextNames = ["moz-webgl", "webkit-3d", "experimental-webgl", "webgl", "3d"];
+            var names = ["webgl", "experimental-webgl"];
+            for (var i = 0; i < names.length; ++i) {
+                try {
+                    gl = surface.getContext(names[i], options);
+                }
+                catch (e) {
+                }
+                if (gl) {
+                    break;
+                }
+            }
+            if (!gl) {
+                egret.$error(1021);
+            }
+            return gl;
+        }
+        egret.sys.getContextWebGL = getContextWebGL;
+        /**
+         * sys.getContext2d
+         */
+        function getContext2d(surface) {
+            return surface ? surface.getContext('2d') : null;
+        }
+        web.getContext2d = getContext2d;
+        egret.sys.getContext2d = getContext2d;
+        /**
+         * 创建一个WebGLTexture
+         */
+        function createTexture(renderContext, bitmapData) {
+            var webglrendercontext = renderContext;
+            var gl = webglrendercontext.context;
+            var texture = gl.createTexture();
+            if (!texture) {
+                //先创建texture失败,然后lost事件才发出来..
+                webglrendercontext.contextLost = true;
+                return;
+            }
+            texture[egret.glContext] = gl;
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, bitmapData);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+            return texture;
+        }
+        egret.sys.createTexture = createTexture;
+        /**
+         * 画texture
+         **/
+        function drawTextureElements(renderContext, data, offset) {
+            var webglrendercontext = renderContext;
+            var gl = webglrendercontext.context;
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, data.texture);
+            var size = data.count * 3;
+            gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
+            return size;
+        }
+        egret.sys.drawTextureElements = drawTextureElements;
+    })(web = egret.web || (egret.web = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var web;
+    (function (web) {
+        /**
          * @private
          * 刷新所有Egret播放器的显示区域尺寸。仅当使用外部JavaScript代码动态修改了Egret容器大小时，需要手动调用此方法刷新显示区域。
          * 当网页尺寸发生改变时此方法会自动被调用。
@@ -3610,8 +3949,8 @@ var egret;
                     egret.sys.screenAdapter = new egret.sys.DefaultScreenAdapter();
                 }
                 var list = document.querySelectorAll(".egret-player");
-                var length_2 = list.length;
-                for (var i = 0; i < length_2; i++) {
+                var length_1 = list.length;
+                for (var i = 0; i < length_1; i++) {
                     var container = list[i];
                     var player = new web.WebPlayer(container, options);
                     container["egret-player"] = player;
@@ -3831,252 +4170,6 @@ var egret;
 //////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
-    var web;
-    (function (web) {
-        /**
-         * @private
-         */
-        var WebFps = (function () {
-            function WebFps(stage, showFPS, showLog, logFilter, styles) {
-                this.showPanle = true;
-                this.fpsHeight = 0;
-                this.WIDTH = 101;
-                this.HEIGHT = 20;
-                this.bgCanvasColor = "#18304b";
-                this.fpsFrontColor = "#18fefe";
-                this.WIDTH_COST = 50;
-                this.cost1Color = "#18fefe";
-                // private cost2Color = "#ffff00";
-                this.cost3Color = "#ff0000";
-                this.arrFps = [];
-                this.arrCost = [];
-                this.arrLog = [];
-                if (showFPS || showLog) {
-                    if (egret.Capabilities.renderMode == 'canvas') {
-                        this.renderMode = "Canvas";
-                    }
-                    else {
-                        this.renderMode = "WebGL";
-                    }
-                    this.panelX = styles["x"] === undefined ? 0 : parseInt(styles['x']);
-                    this.panelY = styles["y"] === undefined ? 0 : parseInt(styles['y']);
-                    this.fontColor = styles["textColor"] === undefined ? '#ffffff' : styles['textColor'].replace("0x", "#");
-                    this.fontSize = styles["size"] === undefined ? 12 : parseInt(styles['size']);
-                    if (egret.Capabilities.isMobile) {
-                        this.fontSize -= 2;
-                    }
-                    var all = document.createElement('div');
-                    all.style.position = 'absolute';
-                    all.style.background = "rgba(0,0,0," + styles['bgAlpha'] + ")";
-                    all.style.left = this.panelX + 'px';
-                    all.style.top = this.panelY + 'px';
-                    all.style.pointerEvents = 'none';
-                    document.body.appendChild(all);
-                    var container = document.createElement('div');
-                    container.style.color = this.fontColor;
-                    container.style.fontSize = this.fontSize + 'px';
-                    container.style.lineHeight = this.fontSize + 'px';
-                    container.style.margin = '4px 4px 4px 4px';
-                    this.container = container;
-                    all.appendChild(container);
-                    if (showFPS)
-                        this.addFps();
-                    if (showLog)
-                        this.addLog();
-                }
-            }
-            WebFps.prototype.addFps = function () {
-                var div = document.createElement('div');
-                div.style.display = 'inline-block';
-                this.containerFps = div;
-                this.container.appendChild(div);
-                var fps = document.createElement('div');
-                fps.style.paddingBottom = '2px';
-                this.fps = fps;
-                this.containerFps.appendChild(fps);
-                fps.innerHTML = "0 FPS " + this.renderMode + "<br/>min0 max0 avg0";
-                var canvas = document.createElement('canvas');
-                this.containerFps.appendChild(canvas);
-                canvas.width = this.WIDTH;
-                canvas.height = this.HEIGHT;
-                this.canvasFps = canvas;
-                var context = canvas.getContext('2d');
-                this.contextFps = context;
-                context.fillStyle = this.bgCanvasColor;
-                context.fillRect(0, 0, this.WIDTH, this.HEIGHT);
-                var divDatas = document.createElement('div');
-                this.divDatas = divDatas;
-                this.containerFps.appendChild(divDatas);
-                var left = document.createElement('div');
-                left.style['float'] = 'left';
-                left.innerHTML = "Draw<br/>Cost";
-                divDatas.appendChild(left);
-                var right = document.createElement('div');
-                right.style.paddingLeft = left.offsetWidth + 20 + "px";
-                divDatas.appendChild(right);
-                var draw = document.createElement('div');
-                this.divDraw = draw;
-                draw.innerHTML = "0<br/>";
-                right.appendChild(draw);
-                var cost = document.createElement('div');
-                this.divCost = cost;
-                cost.innerHTML = "<font  style=\"color:" + this.cost1Color + "\">0<font/> <font  style=\"color:" + this.cost3Color + "\">0<font/>";
-                right.appendChild(cost);
-                canvas = document.createElement('canvas');
-                this.canvasCost = canvas;
-                this.containerFps.appendChild(canvas);
-                canvas.width = this.WIDTH;
-                canvas.height = this.HEIGHT;
-                context = canvas.getContext('2d');
-                this.contextCost = context;
-                context.fillStyle = this.bgCanvasColor;
-                context.fillRect(0, 0, this.WIDTH, this.HEIGHT);
-                context.fillStyle = "#000000";
-                context.fillRect(this.WIDTH_COST, 0, 1, this.HEIGHT);
-                this.fpsHeight = this.container.offsetHeight;
-            };
-            WebFps.prototype.addLog = function () {
-                var log = document.createElement('div');
-                log.style.maxWidth = document.body.clientWidth - 8 - this.panelX + 'px';
-                log.style.wordWrap = "break-word";
-                this.log = log;
-                this.container.appendChild(log);
-            };
-            WebFps.prototype.update = function (datas, showLastData) {
-                if (showLastData === void 0) { showLastData = false; }
-                var numFps;
-                var numCostTicker;
-                var numCostRender;
-                if (!showLastData) {
-                    numFps = datas.fps;
-                    numCostTicker = datas.costTicker;
-                    numCostRender = datas.costRender;
-                    this.lastNumDraw = datas.draw;
-                    this.arrFps.push(numFps);
-                    this.arrCost.push([numCostTicker, numCostRender]);
-                }
-                else {
-                    numFps = this.arrFps[this.arrFps.length - 1];
-                    numCostTicker = this.arrCost[this.arrCost.length - 1][0];
-                    numCostRender = this.arrCost[this.arrCost.length - 1][1];
-                }
-                var fpsTotal = 0;
-                var lenFps = this.arrFps.length;
-                if (lenFps > 101) {
-                    lenFps = 101;
-                    this.arrFps.shift();
-                    this.arrCost.shift();
-                }
-                var fpsMin = this.arrFps[0];
-                var fpsMax = this.arrFps[0];
-                for (var i = 0; i < lenFps; i++) {
-                    var num = this.arrFps[i];
-                    fpsTotal += num;
-                    if (num < fpsMin)
-                        fpsMin = num;
-                    else if (num > fpsMax)
-                        fpsMax = num;
-                }
-                var WIDTH = this.WIDTH;
-                var HEIGHT = this.HEIGHT;
-                var context = this.contextFps;
-                context.drawImage(this.canvasFps, 1, 0, WIDTH - 1, HEIGHT, 0, 0, WIDTH - 1, HEIGHT);
-                context.fillStyle = this.bgCanvasColor;
-                context.fillRect(WIDTH - 1, 0, 1, HEIGHT);
-                var lastHeight = Math.floor(numFps / 60 * 20);
-                if (lastHeight < 1)
-                    lastHeight = 1;
-                context.fillStyle = this.fpsFrontColor;
-                context.fillRect(WIDTH - 1, 20 - lastHeight, 1, lastHeight);
-                var WIDTH_COST = this.WIDTH_COST;
-                context = this.contextCost;
-                context.drawImage(this.canvasCost, 1, 0, WIDTH_COST - 1, HEIGHT, 0, 0, WIDTH_COST - 1, HEIGHT);
-                context.drawImage(this.canvasCost, WIDTH_COST + 2, 0, WIDTH_COST - 1, HEIGHT, WIDTH_COST + 1, 0, WIDTH_COST - 1, HEIGHT);
-                var c1Height = Math.floor(numCostTicker / 2);
-                if (c1Height < 1)
-                    c1Height = 1;
-                else if (c1Height > 20)
-                    c1Height = 20;
-                //todo lcj
-                var c2Height = Math.floor(numCostRender / 2);
-                if (c2Height < 1)
-                    c2Height = 1;
-                else if (c2Height > 20)
-                    c2Height = 20;
-                context.fillStyle = this.bgCanvasColor;
-                context.fillRect(WIDTH_COST - 1, 0, 1, HEIGHT);
-                context.fillRect(WIDTH_COST * 2, 0, 1, HEIGHT);
-                context.fillRect(WIDTH_COST * 3 + 1, 0, 1, HEIGHT);
-                context.fillStyle = this.cost1Color;
-                context.fillRect(WIDTH_COST - 1, 20 - c1Height, 1, c1Height);
-                context.fillStyle = this.cost3Color;
-                context.fillRect(WIDTH_COST * 2, 20 - c2Height, 1, c2Height);
-                var fpsAvg = Math.floor(fpsTotal / lenFps);
-                var fpsOutput = numFps + " FPS " + this.renderMode;
-                if (this.showPanle) {
-                    fpsOutput += "<br/>min" + fpsMin + " max" + fpsMax + " avg" + fpsAvg;
-                    this.divDraw.innerHTML = this.lastNumDraw + "<br/>";
-                    this.divCost.innerHTML = "<font  style=\"color:#18fefe\">" + numCostTicker + "<font/> <font  style=\"color:#ff0000\">" + numCostRender + "<font/>";
-                }
-                this.fps.innerHTML = fpsOutput;
-            };
-            ;
-            WebFps.prototype.updateInfo = function (info) {
-                this.arrLog.push(info);
-                this.updateLogLayout();
-            };
-            WebFps.prototype.updateWarn = function (info) {
-                this.arrLog.push("[Warning]" + info);
-                this.updateLogLayout();
-            };
-            WebFps.prototype.updateError = function (info) {
-                this.arrLog.push("[Error]" + info);
-                this.updateLogLayout();
-            };
-            WebFps.prototype.updateLogLayout = function () {
-                this.log.innerHTML = this.arrLog.join('<br/>');
-                while (document.body.clientHeight < (this.log.offsetHeight + this.fpsHeight + this.panelY + this.fontSize * 2)) {
-                    this.arrLog.shift();
-                    this.log.innerHTML = this.arrLog.join('<br/>');
-                }
-            };
-            return WebFps;
-        }());
-        web.WebFps = WebFps;
-        __reflect(WebFps.prototype, "egret.web.WebFps", ["egret.FPSDisplay"]);
-        egret.FPSDisplay = WebFps;
-    })(web = egret.web || (egret.web = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
     var localStorage;
     (function (localStorage) {
         var web;
@@ -4128,6 +4221,64 @@ var egret;
             localStorage.clear = clear;
         })(web = localStorage.web || (localStorage.web = {}));
     })(localStorage = egret.localStorage || (egret.localStorage = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var web;
+    (function (web) {
+        /**
+         * @private
+         */
+        function getOption(key) {
+            if (window.location) {
+                var search = location.search;
+                if (search == "") {
+                    return "";
+                }
+                search = search.slice(1);
+                var searchArr = search.split("&");
+                var length_2 = searchArr.length;
+                for (var i = 0; i < length_2; i++) {
+                    var str = searchArr[i];
+                    var arr = str.split("=");
+                    if (arr[0] == key) {
+                        return arr[1];
+                    }
+                }
+            }
+            return "";
+        }
+        web.getOption = getOption;
+        egret.getOption = getOption;
+    })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -5187,11 +5338,16 @@ var egret;
                     data.count = 0;
                     data.texture = null;
                     data.filter = null;
-                    data.uv = null;
+                    //data.uv = null;
                     data.value = "";
                     data.buffer = null;
                     data.width = 0;
                     data.height = 0;
+                    data.textureWidth = 0;
+                    data.textureHeight = 0;
+                    data.smoothing = false;
+                    data.x = 0;
+                    data.y = 0;
                 }
                 this.drawDataLen = 0;
             };
@@ -5600,7 +5756,7 @@ var egret;
             WebGLRenderTarget.prototype.createTexture = function () {
                 var gl = this.gl;
                 var texture = gl.createTexture();
-                texture["glContext"] = gl;
+                texture[egret.glContext] = gl;
                 gl.bindTexture(gl.TEXTURE_2D, texture);
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.width, this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
@@ -5672,17 +5828,8 @@ var egret;
 (function (egret) {
     var web;
     (function (web) {
-        /**
-         * 创建一个canvas。
-         */
-        function createCanvas(width, height) {
-            var canvas = document.createElement("canvas");
-            if (!isNaN(width) && !isNaN(height)) {
-                canvas.width = width;
-                canvas.height = height;
-            }
-            return canvas;
-        }
+        //TO DO
+        var debugLogCompressedTextureNotSupported = {};
         /**
          * @private
          * WebGL上下文对象，提供简单的绘图接口
@@ -5690,13 +5837,17 @@ var egret;
          */
         var WebGLRenderContext = (function () {
             function WebGLRenderContext(width, height) {
+                //
+                this._defaultEmptyTexture = null;
                 this.glID = null;
                 this.projectionX = NaN;
                 this.projectionY = NaN;
                 this.contextLost = false;
+                //refactor
+                this._supportedCompressedTextureInfo = [];
                 this.$scissorState = false;
                 this.vertSize = 5;
-                this.surface = createCanvas(width, height);
+                this.surface = egret.sys.mainCanvas(width, height);
                 if (egret.nativeRender) {
                     return;
                 }
@@ -5799,7 +5950,9 @@ var egret;
              * @param useMaxSize 若传入true，则将改变后的尺寸与已有尺寸对比，保留较大的尺寸。
              */
             WebGLRenderContext.prototype.resize = function (width, height, useMaxSize) {
-                var surface = this.surface;
+                egret.sys.resizeContext(this, width, height, useMaxSize);
+                /*
+                let surface = this.surface;
                 if (useMaxSize) {
                     if (surface.width < width) {
                         surface.width = width;
@@ -5816,7 +5969,45 @@ var egret;
                         surface.height = height;
                     }
                 }
+    
                 this.onResize();
+                */
+            };
+            WebGLRenderContext.prototype._buildSupportedCompressedTextureInfo = function (/*gl: WebGLRenderingContext, compressedTextureExNames: string[],*/ extensions) {
+                // if (compressedTextureExNames.length === 0) {
+                //     return [];
+                // }
+                var returnValue = [];
+                // for (const exName of compressedTextureExNames) {
+                //     const extension = gl.getExtension(exName);
+                for (var _i = 0, extensions_1 = extensions; _i < extensions_1.length; _i++) {
+                    var extension = extensions_1[_i];
+                    if (!extension) {
+                        continue;
+                    }
+                    var info = {
+                        extensionName: extension.name,
+                        supportedFormats: []
+                    };
+                    //
+                    for (var key in extension) {
+                        info.supportedFormats.push([key, extension[key]]);
+                    }
+                    //
+                    if (true) {
+                        if (info.supportedFormats.length === 0) {
+                            console.error('buildSupportedCompressedTextureInfo failed = ' + extension.name);
+                        }
+                        else {
+                            egret.log('support: ' + extension.name);
+                            for (var key in extension) {
+                                egret.log(key, extension[key], '0x' + extension[key].toString(16));
+                            }
+                        }
+                    }
+                    returnValue.push(info);
+                }
+                return returnValue;
             };
             WebGLRenderContext.prototype.initWebGL = function () {
                 this.onResize();
@@ -5825,6 +6016,36 @@ var egret;
                 this.getWebGLContext();
                 var gl = this.context;
                 this.$maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+                //refactor
+                // this._caps.astc = this._gl.getExtension('WEBGL_compressed_texture_astc') || this._gl.getExtension('WEBKIT_WEBGL_compressed_texture_astc');
+                // this._caps.s3tc = this._gl.getExtension('WEBGL_compressed_texture_s3tc') || this._gl.getExtension('WEBKIT_WEBGL_compressed_texture_s3tc');
+                // this._caps.pvrtc = this._gl.getExtension('WEBGL_compressed_texture_pvrtc') || this._gl.getExtension('WEBKIT_WEBGL_compressed_texture_pvrtc');
+                // this._caps.etc1 = this._gl.getExtension('WEBGL_compressed_texture_etc1') || this._gl.getExtension('WEBKIT_WEBGL_compressed_texture_etc1');
+                // this._caps.etc2 = this._gl.getExtension('WEBGL_compressed_texture_etc') || this._gl.getExtension('WEBKIT_WEBGL_compressed_texture_etc') ||
+                //     this._gl.getExtension('WEBGL_compressed_texture_es3_0'); // also a requirement of OpenGL ES 3
+                // const compressedTextureExNames = [
+                //     'WEBGL_compressed_texture_pvrtc', 'WEBKIT_WEBGL_compressed_texture_pvrtc',
+                //     'WEBGL_compressed_texture_etc1', 'WEBKIT_WEBGL_compressed_texture_etc1',
+                //     'WEBGL_compressed_texture_etc', 'WEBKIT_WEBGL_compressed_texture_etc',
+                //     'WEBGL_compressed_texture_astc', 'WEBKIT_WEBGL_compressed_texture_astc',
+                //     'WEBGL_compressed_texture_s3tc', 'WEBKIT_WEBGL_compressed_texture_s3tc',
+                //     'WEBGL_compressed_texture_es3_0'];
+                //
+                this.pvrtc = gl.getExtension('WEBGL_compressed_texture_pvrtc') || gl.getExtension('WEBKIT_WEBGL_compressed_texture_pvrtc');
+                if (this.pvrtc) {
+                    this.pvrtc.name = 'WEBGL_compressed_texture_pvrtc';
+                }
+                //
+                this.etc1 = gl.getExtension('WEBGL_compressed_texture_etc1') || gl.getExtension('WEBKIT_WEBGL_compressed_texture_etc1');
+                if (this.etc1) {
+                    this.etc1.name = 'WEBGL_compressed_texture_etc1';
+                }
+                //
+                egret.Capabilities.supportedCompressedTexture = egret.Capabilities.supportedCompressedTexture || {};
+                egret.Capabilities.supportedCompressedTexture.pvrtc = !!this.pvrtc;
+                egret.Capabilities.supportedCompressedTexture.etc1 = !!this.etc1;
+                //
+                this._supportedCompressedTextureInfo = this._buildSupportedCompressedTextureInfo(/*this.context, compressedTextureExNames,*/ [this.etc1, this.pvrtc]);
             };
             WebGLRenderContext.prototype.handleContextLost = function () {
                 this.contextLost = true;
@@ -5834,27 +6055,29 @@ var egret;
                 this.contextLost = false;
             };
             WebGLRenderContext.prototype.getWebGLContext = function () {
-                var options = {
+                /*
+                let options = {
                     antialias: WebGLRenderContext.antialias,
-                    stencil: true //设置可以使用模板（用于不规则遮罩）
+                    stencil: true//设置可以使用模板（用于不规则遮罩）
                 };
-                var gl;
+                let gl: any;
                 //todo 是否使用chrome源码names
                 //let contextNames = ["moz-webgl", "webkit-3d", "experimental-webgl", "webgl", "3d"];
-                var names = ["webgl", "experimental-webgl"];
-                for (var i = 0; i < names.length; i++) {
+                let names = ["webgl", "experimental-webgl"];
+                for (let i = 0; i < names.length; i++) {
                     try {
                         gl = this.surface.getContext(names[i], options);
-                    }
-                    catch (e) {
+                    } catch (e) {
                     }
                     if (gl) {
                         break;
                     }
                 }
                 if (!gl) {
-                    egret.$error(1021);
+                    $error(1021);
                 }
+                */
+                var gl = egret.sys.getContextWebGL(this.surface);
                 this.setContext(gl);
             };
             WebGLRenderContext.prototype.setContext = function (gl) {
@@ -5908,25 +6131,94 @@ var egret;
              * 创建一个WebGLTexture
              */
             WebGLRenderContext.prototype.createTexture = function (bitmapData) {
-                var gl = this.context;
-                var texture = gl.createTexture();
+                return egret.sys.createTexture(this, bitmapData);
+                /*
+                let gl: any = this.context;
+    
+                let texture = gl.createTexture();
+    
                 if (!texture) {
                     //先创建texture失败,然后lost事件才发出来..
                     this.contextLost = true;
                     return;
                 }
-                texture.glContext = gl;
+                texture[glContext] = gl;
                 gl.bindTexture(gl.TEXTURE_2D, texture);
                 gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
-                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, bitmapData);
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, bitmapData as any);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
                 return texture;
+                */
             };
-            WebGLRenderContext.prototype.createTextureFromCompressedData = function (data, width, height, levels, internalFormat) {
-                return null;
+            /*
+            * TO DO
+            */
+            WebGLRenderContext.prototype.checkCompressedTextureInternalFormat = function (supportedCompressedTextureInfo, internalFormat) {
+                //width: number, height: number max ?
+                for (var i = 0, length_3 = supportedCompressedTextureInfo.length; i < length_3; ++i) {
+                    var ss = supportedCompressedTextureInfo[i];
+                    // const formats = ss._COMPRESSED_TEXTURE_FORMATS_;
+                    // for (let j = 0, length = formats.length; j < length; ++j) {
+                    //     if (formats[j] === internalFormat) {
+                    //         return true;
+                    //     }
+                    // }
+                    var supportedFormats = ss.supportedFormats;
+                    for (var j = 0, length_4 = supportedFormats.length; j < length_4; ++j) {
+                        if (supportedFormats[j][1] === internalFormat) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            };
+            /*
+            * TO DO
+            */
+            WebGLRenderContext.prototype.$debugLogCompressedTextureNotSupported = function (supportedCompressedTextureInfo, internalFormat) {
+                if (!debugLogCompressedTextureNotSupported[internalFormat]) {
+                    debugLogCompressedTextureNotSupported[internalFormat] = true;
+                    egret.log('internalFormat = ' + internalFormat + ':' + ('0x' + internalFormat.toString(16)) + ', the current hardware does not support the corresponding compression format.');
+                    for (var i = 0, length_5 = supportedCompressedTextureInfo.length; i < length_5; ++i) {
+                        var ss = supportedCompressedTextureInfo[i];
+                        if (ss.supportedFormats.length > 0) {
+                            egret.log('support = ' + ss.extensionName);
+                            for (var j = 0, length_6 = ss.supportedFormats.length; j < length_6; ++j) {
+                                var tp = ss.supportedFormats[j];
+                                egret.log(tp[0] + ' : ' + tp[1] + ' : ' + ('0x' + tp[1].toString(16)));
+                            }
+                        }
+                    }
+                }
+            };
+            //
+            WebGLRenderContext.prototype.createCompressedTexture = function (data, width, height, levels, internalFormat) {
+                var checkSupported = this.checkCompressedTextureInternalFormat(this._supportedCompressedTextureInfo, internalFormat);
+                if (!checkSupported) {
+                    this.$debugLogCompressedTextureNotSupported(this._supportedCompressedTextureInfo, internalFormat);
+                    return this.defaultEmptyTexture;
+                }
+                ///
+                var gl = this.context;
+                var texture = gl.createTexture();
+                if (!texture) {
+                    this.contextLost = true;
+                    return;
+                }
+                texture[egret.glContext] = gl;
+                texture[egret.is_compressed_texture] = true;
+                gl.bindTexture(gl.TEXTURE_2D, texture);
+                gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
+                gl.compressedTexImage2D(gl.TEXTURE_2D, levels, internalFormat, width, height, 0, data);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+                gl.bindTexture(gl.TEXTURE_2D, null);
+                return texture;
             };
             /**
              * 更新材质的bitmapData
@@ -5936,20 +6228,46 @@ var egret;
                 gl.bindTexture(gl.TEXTURE_2D, texture);
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, bitmapData);
             };
-            /**
-             * 获取一个WebGLTexture
-             * 如果有缓存的texture返回缓存的texture，如果没有则创建并缓存texture
-             */
+            Object.defineProperty(WebGLRenderContext.prototype, "defaultEmptyTexture", {
+                get: function () {
+                    if (!this._defaultEmptyTexture) {
+                        var size = 16;
+                        var canvas = egret.sys.createCanvas(size, size);
+                        var context = egret.sys.getContext2d(canvas); //canvas.getContext('2d');
+                        context.fillStyle = 'white';
+                        context.fillRect(0, 0, size, size);
+                        this._defaultEmptyTexture = this.createTexture(canvas);
+                        this._defaultEmptyTexture[egret.engine_default_empty_texture] = true;
+                    }
+                    return this._defaultEmptyTexture;
+                },
+                enumerable: true,
+                configurable: true
+            });
             WebGLRenderContext.prototype.getWebGLTexture = function (bitmapData) {
                 if (!bitmapData.webGLTexture) {
-                    if (bitmapData.format == "image") {
+                    if (bitmapData.format == "image" && !bitmapData.hasCompressed2d()) {
                         bitmapData.webGLTexture = this.createTexture(bitmapData.source);
                     }
-                    else if (bitmapData.format == "pvr") {
-                        bitmapData.webGLTexture = this.createTextureFromCompressedData(bitmapData.source.pvrtcData, bitmapData.width, bitmapData.height, bitmapData.source.mipmapsCount, bitmapData.source.format);
+                    else if (bitmapData.hasCompressed2d()) {
+                        var compressedData = bitmapData.getCompressed2dTextureData();
+                        bitmapData.webGLTexture = this.createCompressedTexture(compressedData.byteArray, compressedData.width, compressedData.height, compressedData.level, compressedData.glInternalFormat);
+                        ///
+                        var etcAlphaMask = bitmapData.etcAlphaMask;
+                        if (etcAlphaMask) {
+                            var maskTexture = this.getWebGLTexture(etcAlphaMask);
+                            if (maskTexture) {
+                                bitmapData.webGLTexture[egret.etc_alpha_mask] = maskTexture;
+                            }
+                        }
                     }
                     if (bitmapData.$deleteSource && bitmapData.webGLTexture) {
-                        bitmapData.source = null;
+                        if (bitmapData.source) {
+                            // WeChat Memory leakage bug
+                            bitmapData.source.src = '';
+                            bitmapData.source = null;
+                        }
+                        bitmapData.clearCompressedTextureData();
                     }
                     if (bitmapData.webGLTexture) {
                         //todo 默认值
@@ -6208,12 +6526,20 @@ var egret;
                 var filter = data.filter;
                 switch (data.type) {
                     case 0 /* TEXTURE */:
+                        //这段的切换可以优化
                         if (filter) {
                             if (filter.type === "custom") {
                                 program = web.EgretWebGLProgram.getProgram(gl, filter.$vertexSrc, filter.$fragmentSrc, filter.$shaderKey);
                             }
                             else if (filter.type === "colorTransform") {
-                                program = web.EgretWebGLProgram.getProgram(gl, web.EgretShaderLib.default_vert, web.EgretShaderLib.colorTransform_frag, "colorTransform");
+                                if (data.texture[egret.etc_alpha_mask]) {
+                                    gl.activeTexture(gl.TEXTURE1);
+                                    gl.bindTexture(gl.TEXTURE_2D, data.texture[egret.etc_alpha_mask]);
+                                    program = web.EgretWebGLProgram.getProgram(gl, web.EgretShaderLib.default_vert, web.EgretShaderLib.colorTransform_frag_etc_alphamask_frag, "colorTransform_frag_etc_alphamask_frag");
+                                }
+                                else {
+                                    program = web.EgretWebGLProgram.getProgram(gl, web.EgretShaderLib.default_vert, web.EgretShaderLib.colorTransform_frag, "colorTransform");
+                                }
                             }
                             else if (filter.type === "blurX") {
                                 program = web.EgretWebGLProgram.getProgram(gl, web.EgretShaderLib.default_vert, web.EgretShaderLib.blur_frag, "blur");
@@ -6226,7 +6552,15 @@ var egret;
                             }
                         }
                         else {
-                            program = web.EgretWebGLProgram.getProgram(gl, web.EgretShaderLib.default_vert, web.EgretShaderLib.texture_frag, "texture");
+                            if (data.texture[egret.etc_alpha_mask]) {
+                                program = web.EgretWebGLProgram.getProgram(gl, web.EgretShaderLib.default_vert, web.EgretShaderLib.texture_etc_alphamask_frag, egret.etc_alpha_mask);
+                                ///need refactor
+                                gl.activeTexture(gl.TEXTURE1);
+                                gl.bindTexture(gl.TEXTURE_2D, data.texture[egret.etc_alpha_mask]);
+                            }
+                            else {
+                                program = web.EgretWebGLProgram.getProgram(gl, web.EgretShaderLib.default_vert, web.EgretShaderLib.texture_frag, "texture");
+                            }
                         }
                         this.activeProgram(gl, program);
                         this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
@@ -6332,6 +6666,10 @@ var egret;
                         uniforms[key].setValue({ x: textureWidth, y: textureHeight });
                     }
                     else if (key === "uSampler") {
+                        uniforms[key].setValue(0);
+                    }
+                    else if (key === "uSamplerAlphaMask") {
+                        uniforms[key].setValue(1);
                     }
                     else {
                         var value = filter.$uniforms[key];
@@ -6348,11 +6686,15 @@ var egret;
              * 画texture
              **/
             WebGLRenderContext.prototype.drawTextureElements = function (data, offset) {
-                var gl = this.context;
+                return egret.sys.drawTextureElements(this, data, offset);
+                /*
+                let gl: any = this.context;
+                gl.activeTexture(gl.TEXTURE0); ///refactor
                 gl.bindTexture(gl.TEXTURE_2D, data.texture);
-                var size = data.count * 3;
+                let size = data.count * 3;
                 gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
                 return size;
+                */
             };
             /**
              * @private
@@ -6515,7 +6857,7 @@ var egret;
             return WebGLRenderContext;
         }());
         web.WebGLRenderContext = WebGLRenderContext;
-        __reflect(WebGLRenderContext.prototype, "egret.web.WebGLRenderContext");
+        __reflect(WebGLRenderContext.prototype, "egret.web.WebGLRenderContext", ["egret.sys.RenderContext"]);
         WebGLRenderContext.initBlendMode();
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
@@ -6991,8 +7333,8 @@ var egret;
                     if (renderBufferPool.length > 6) {
                         renderBufferPool.length = 6;
                     }
-                    var length_3 = renderBufferPool.length;
-                    for (var i = 0; i < length_3; i++) {
+                    var length_7 = renderBufferPool.length;
+                    for (var i = 0; i < length_7; i++) {
                         renderBufferPool[i].resize(0, 0);
                     }
                 }
@@ -7055,8 +7397,8 @@ var egret;
                 }
                 var children = displayObject.$children;
                 if (children) {
-                    var length_4 = children.length;
-                    for (var i = 0; i < length_4; i++) {
+                    var length_8 = children.length;
+                    for (var i = 0; i < length_8; i++) {
                         var child = children[i];
                         var offsetX2 = void 0;
                         var offsetY2 = void 0;
@@ -7503,8 +7845,8 @@ var egret;
                 }
                 var children = displayObject.$children;
                 if (children) {
-                    var length_5 = children.length;
-                    for (var i = 0; i < length_5; i++) {
+                    var length_9 = children.length;
+                    for (var i = 0; i < length_9; i++) {
                         var child = children[i];
                         switch (child.$renderMode) {
                             case 1 /* NONE */:
@@ -8359,13 +8701,38 @@ var egret;
         __reflect(EgretWebGLUniform.prototype, "egret.web.EgretWebGLUniform");
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
     var web;
     (function (web) {
-        /**
-         * @private
-         */
         var EgretShaderLib = (function () {
             function EgretShaderLib() {
             }
@@ -8375,6 +8742,31 @@ var egret;
             EgretShaderLib.glow_frag = "precision highp float;\r\nvarying vec2 vTextureCoord;\r\n\r\nuniform sampler2D uSampler;\r\n\r\nuniform float dist;\r\nuniform float angle;\r\nuniform vec4 color;\r\nuniform float alpha;\r\nuniform float blurX;\r\nuniform float blurY;\r\n// uniform vec4 quality;\r\nuniform float strength;\r\nuniform float inner;\r\nuniform float knockout;\r\nuniform float hideObject;\r\n\r\nuniform vec2 uTextureSize;\r\n\r\nfloat random(vec2 scale)\r\n{\r\n    return fract(sin(dot(gl_FragCoord.xy, scale)) * 43758.5453);\r\n}\r\n\r\nvoid main(void) {\r\n    vec2 px = vec2(1.0 / uTextureSize.x, 1.0 / uTextureSize.y);\r\n    // TODO 自动调节采样次数？\r\n    const float linearSamplingTimes = 7.0;\r\n    const float circleSamplingTimes = 12.0;\r\n    vec4 ownColor = texture2D(uSampler, vTextureCoord);\r\n    vec4 curColor;\r\n    float totalAlpha = 0.0;\r\n    float maxTotalAlpha = 0.0;\r\n    float curDistanceX = 0.0;\r\n    float curDistanceY = 0.0;\r\n    float offsetX = dist * cos(angle) * px.x;\r\n    float offsetY = dist * sin(angle) * px.y;\r\n\r\n    const float PI = 3.14159265358979323846264;\r\n    float cosAngle;\r\n    float sinAngle;\r\n    float offset = PI * 2.0 / circleSamplingTimes * random(vec2(12.9898, 78.233));\r\n    float stepX = blurX * px.x / linearSamplingTimes;\r\n    float stepY = blurY * px.y / linearSamplingTimes;\r\n    for (float a = 0.0; a <= PI * 2.0; a += PI * 2.0 / circleSamplingTimes) {\r\n        cosAngle = cos(a + offset);\r\n        sinAngle = sin(a + offset);\r\n        for (float i = 1.0; i <= linearSamplingTimes; i++) {\r\n            curDistanceX = i * stepX * cosAngle;\r\n            curDistanceY = i * stepY * sinAngle;\r\n            if (vTextureCoord.x + curDistanceX - offsetX >= 0.0 && vTextureCoord.y + curDistanceY + offsetY <= 1.0){\r\n                curColor = texture2D(uSampler, vec2(vTextureCoord.x + curDistanceX - offsetX, vTextureCoord.y + curDistanceY + offsetY));\r\n                totalAlpha += (linearSamplingTimes - i) * curColor.a;\r\n            }\r\n            maxTotalAlpha += (linearSamplingTimes - i);\r\n        }\r\n    }\r\n\r\n    ownColor.a = max(ownColor.a, 0.0001);\r\n    ownColor.rgb = ownColor.rgb / ownColor.a;\r\n\r\n    float outerGlowAlpha = (totalAlpha / maxTotalAlpha) * strength * alpha * (1. - inner) * max(min(hideObject, knockout), 1. - ownColor.a);\r\n    float innerGlowAlpha = ((maxTotalAlpha - totalAlpha) / maxTotalAlpha) * strength * alpha * inner * ownColor.a;\r\n\r\n    ownColor.a = max(ownColor.a * knockout * (1. - hideObject), 0.0001);\r\n    vec3 mix1 = mix(ownColor.rgb, color.rgb, innerGlowAlpha / (innerGlowAlpha + ownColor.a));\r\n    vec3 mix2 = mix(mix1, color.rgb, outerGlowAlpha / (innerGlowAlpha + ownColor.a + outerGlowAlpha));\r\n    float resultAlpha = min(ownColor.a + outerGlowAlpha + innerGlowAlpha, 1.);\r\n    gl_FragColor = vec4(mix2 * resultAlpha, resultAlpha);\r\n}";
             EgretShaderLib.primitive_frag = "precision lowp float;\r\nvarying vec2 vTextureCoord;\r\nvarying vec4 vColor;\r\n\r\nvoid main(void) {\r\n    gl_FragColor = vColor;\r\n}";
             EgretShaderLib.texture_frag = "precision lowp float;\r\nvarying vec2 vTextureCoord;\r\nvarying vec4 vColor;\r\nuniform sampler2D uSampler;\r\n\r\nvoid main(void) {\r\n    gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor;\r\n}";
+            EgretShaderLib.texture_etc_alphamask_frag = "precision lowp float; \r\n varying vec2 vTextureCoord; \r\n varying vec4 vColor;\r\n uniform sampler2D uSampler;\r\n  uniform sampler2D uSamplerAlphaMask; \r\n void main(void) { \r\n  vec4 v4Color = texture2D(uSampler, vTextureCoord); \r\n  vec4 vec4Alpha = texture2D(uSamplerAlphaMask, vTextureCoord);\r\n v4Color = v4Color * vec4Alpha; v4Color.a = vec4Alpha.r; gl_FragColor = v4Color * vColor;\r\n}";
+            //
+            /*
+            "precision mediump float;
+            varying vec2 vTextureCoord;
+            varying vec4 vColor;
+            uniform mat4 matrix;
+            uniform vec4 colorAdd;
+            uniform sampler2D uSampler;
+            uniform sampler2D uSamplerAlphaMask;
+    
+            void main(void){
+                vec4 texColor = texture2D(uSampler, vTextureCoord);
+                if(texColor.a > 0.0) {
+                    // 抵消预乘的alpha通道
+                    texColor = vec4(texColor.rgb / texColor.a, texColor.a);
+                }
+                vec4 v4Color = clamp(texColor * matrix + colorAdd, 0.0, 1.0);
+                vec4 vec4Alpha = texture2D(uSamplerAlphaMask, vTextureCoord);
+                v4Color = v4Color * vec4Alpha;
+                v4Color.a = vec4Alpha.r;
+                gl_FragColor = v4Color * vColor;
+            }"
+            */
+            EgretShaderLib.colorTransform_frag_etc_alphamask_frag = "precision mediump float;\r\nvarying vec2 vTextureCoord;\r\nvarying vec4 vColor;\r\nuniform mat4 matrix;\r\nuniform vec4 colorAdd;\r\nuniform sampler2D uSampler;\r\nuniform sampler2D uSamplerAlphaMask;\r\n\r\nvoid main(void){\r\nvec4 texColor = texture2D(uSampler, vTextureCoord);\r\nif(texColor.a > 0.0) {\r\n // 抵消预乘的alpha通道\r\ntexColor = vec4(texColor.rgb / texColor.a, texColor.a);\r\n}\r\nvec4 v4Color = clamp(texColor * matrix + colorAdd, 0.0, 1.0);\r\nvec4 vec4Alpha = texture2D(uSamplerAlphaMask, vTextureCoord);\r\nv4Color = v4Color * vec4Alpha;\r\nv4Color.a = vec4Alpha.r;\r\ngl_FragColor = v4Color * vColor;\r\n}";
             return EgretShaderLib;
         }());
         web.EgretShaderLib = EgretShaderLib;

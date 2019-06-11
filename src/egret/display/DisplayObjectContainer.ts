@@ -87,6 +87,28 @@ namespace egret {
         }
 
         /**
+         * Set children sort mode.
+         * @param value {string} The sort mode
+         * @see egret.ChildrenSortMode
+         * @version Egret 5.2.19
+         * @platform Native
+         * @language en_US
+         */
+        /**
+         * 设置子项目的排序方式
+         * @param value {string} 排序方式
+         * @see egret.ChildrenSortMode
+         * @version Egret 5.2.19
+         * @platform Native
+         * @language en_US
+         */
+        public setChildrenSortMode(value: string): void {
+            if (egret.nativeRender && this.$nativeDisplayObject.setChildrenSortMode) {
+                this.$nativeDisplayObject.setChildrenSortMode(value);
+            }
+        }
+
+        /**
          * Adds a child DisplayObject instance to this DisplayObjectContainer instance. The child is added to the front
          * (top) of all other children in this DisplayObjectContainer instance. (To add a child to a specific index position,
          * use the addChildAt() method.)If you add a child object that already has a different display object container

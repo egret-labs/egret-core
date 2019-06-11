@@ -82,13 +82,37 @@ namespace egret {
             return WebGLUtils.canUseWebGL;
         }
 
-        public static deleteWebGLTexture(bitmapData): void {
-            if (bitmapData) {
-                let gl = bitmapData.glContext;
-                if (gl) {
-                    gl.deleteTexture(bitmapData);
+        public static deleteWebGLTexture(webglTexture: WebGLTexture): void {
+            if (!webglTexture) {
+                return;
+            }
+            if (webglTexture[engine_default_empty_texture]) {
+                if (DEBUG) {
+                    //引擎默认的空白纹理，不允许删除
+                    console.warn('deleteWebGLTexture:' + engine_default_empty_texture);
+                }
+                return;
+            }
+            const gl = webglTexture[glContext] as WebGLRenderingContext;
+            if (gl) {
+                gl.deleteTexture(webglTexture);
+            }
+            else {
+                if (DEBUG) {
+                    console.error('deleteWebGLTexture gl = ' + gl);
                 }
             }
+            /*old
+            if (webglTexture && !webglTexture['engine_default_empty_texture']) {
+                const gl = webglTexture['glContext'] as WebGLRenderingContext;//bitmapData.glContext;
+                if (gl) {
+                    gl.deleteTexture(webglTexture);
+                }
+                else {
+                    console.error('deleteWebGLTexture gl = ' + gl);
+                }
+            }
+            */
         }
     }
 }

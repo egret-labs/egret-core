@@ -43,6 +43,9 @@ if (typeof __global == 'undefined') {
 let __define = this && this.__define || function (o, p, g, s) { Object.defineProperty(o, p, { configurable: true, enumerable: true, get: g, set: s }) };
 
 namespace egret {
+
+    export type Nullable<T> = T | null;
+    
     /**
      * The HashObject class is the base class for all objects in the Egret framework.The HashObject
      * class includes a hashCode property, which is a unique identification number of the instance.

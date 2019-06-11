@@ -1041,6 +1041,15 @@ declare module RES.processor {
      */
     function getRelativePath(url: string, file: string): string;
     var ImageProcessor: Processor;
+    const KTXTextureProcessor: RES.processor.Processor;
+    /**
+    *
+    */
+    function makeEtc1SeperatedAlphaResourceInfo(resource: ResourceInfo): ResourceInfo;
+    /**
+    *
+    */
+    const ETC1KTXProcessor: Processor;
     var BinaryProcessor: Processor;
     var TextProcessor: Processor;
     var JsonProcessor: Processor;

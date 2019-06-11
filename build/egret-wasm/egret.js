@@ -29652,7 +29652,7 @@ var egret;
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
             return texture;
         };
-        WebGLRenderContext.prototype.createTextureFromCompressedData = function (data, width, height, levels, internalFormat) {
+        WebGLRenderContext.prototype.createCompressedTexture = function (data, width, height, levels, internalFormat) {
             return null;
         };
         /**
@@ -29673,7 +29673,7 @@ var egret;
                     bitmapData.webGLTexture = this.createTexture(bitmapData.source);
                 }
                 else if (bitmapData.format == "pvr") {
-                    bitmapData.webGLTexture = this.createTextureFromCompressedData(bitmapData.source.pvrtcData, bitmapData.width, bitmapData.height, bitmapData.source.mipmapsCount, bitmapData.source.format);
+                    bitmapData.webGLTexture = this.createCompressedTexture(bitmapData.source.pvrtcData, bitmapData.width, bitmapData.height, bitmapData.source.mipmapsCount, bitmapData.source.format);
                 }
                 if (bitmapData.$deleteSource && bitmapData.webGLTexture) {
                     bitmapData.source = null;

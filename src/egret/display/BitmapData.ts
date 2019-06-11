@@ -29,6 +29,23 @@
 
 namespace egret {
 
+    //refactor
+    export class CompressedTextureData {
+        public glInternalFormat: number;
+        public width: number;
+        public height: number;
+        public byteArray: Uint8Array;
+        public face: number;
+        public level: number;
+    }
+
+    export const etc_alpha_mask = 'etc_alpha_mask';
+    export const engine_default_empty_texture = 'engine_default_empty_texture';
+    export const is_compressed_texture = 'is_compressed_texture';
+    export const glContext = 'glContext';
+
+    
+
     /**
      * A BitmapData object contains an array of pixel data. This data can represent either a fully opaque bitmap or a
      * transparent bitmap that contains alpha channel data. Either type of BitmapData object is stored as a buffer of 32-bit
@@ -144,6 +161,14 @@ namespace egret {
         public $nativeBitmapData: egret_native.NativeBitmapData;
 
         /**
+         * @private
+         * 
+         */
+        public readonly compressedTextureData: Array<Array<CompressedTextureData>> = [];
+        public debugCompressedTextureURL: string = '';
+        public etcAlphaMask: Nullable<BitmapData> = null;
+
+        /**
          * Initializes a BitmapData object to refer to the specified source object.
          * @param source The source object being referenced.
          * @version Egret 2.4
@@ -157,7 +182,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        constructor(source) {
+        constructor(source: any) {
             super();
             if (egret.nativeRender) {
                 let nativeBitmapData = new egret_native.NativeBitmapData();
@@ -165,8 +190,16 @@ namespace egret {
                 this.$nativeBitmapData = nativeBitmapData;
             }
             this.source = source;
-            this.width = source.width;
-            this.height = source.height;
+            // this.width = source.width;
+            // this.height = source.height;
+            this.source = source;
+            if (this.source) {
+                this.width = +source.width;
+                this.height = +source.height;
+            }
+            else {
+                ///compressed texture?
+            }
         }
 
         public get source(): any {
@@ -228,6 +261,14 @@ namespace egret {
                 this.source.src = "";
             }
             this.source = null;
+
+            ///dispose compressed texture info
+            //this.bitmapCompressedData.length = 0;
+            this.clearCompressedTextureData();
+            this.debugCompressedTextureURL = '';
+            this.etcAlphaMask = null;
+            ///
+            
             if (egret.nativeRender) {
                 egret_native.NativeDisplayObject.disposeNativeBitmapData(this.$nativeBitmapData);
             }
@@ -333,6 +374,23 @@ namespace egret {
                 }
             }
             delete BitmapData._displayList[hashCode];
+        }
+
+        private _getCompressedTextureData(level: number, face: number): CompressedTextureData {
+            const levelData = this.compressedTextureData[level];
+            return levelData ? levelData[face] : null;
+        }
+
+        public getCompressed2dTextureData(): CompressedTextureData {
+            return this._getCompressedTextureData(0, 0);
+        }
+
+        public hasCompressed2d(): boolean {
+            return !!this.getCompressed2dTextureData();
+        }
+        
+        public clearCompressedTextureData(): void {
+            this.compressedTextureData.length = 0;
         }
     }
 }

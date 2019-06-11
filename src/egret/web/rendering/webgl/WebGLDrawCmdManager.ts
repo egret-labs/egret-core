@@ -46,6 +46,23 @@ namespace egret.web {
         SMOOTHING
     }
 
+    export interface IDrawData {
+        type: number,
+        count: number,
+        texture: WebGLTexture,
+        filter : Filter,
+        //uv: any,
+        value: string,
+        buffer: WebGLRenderBuffer,
+        width: number,
+        height: number,
+        textureWidth: number,
+        textureHeight: number,
+        smoothing: boolean,
+        x: number,
+        y: number,
+    }
+
     /**
      * @private
      * 绘制指令管理器
@@ -56,7 +73,7 @@ namespace egret.web {
         /**
          * 用于缓存绘制命令的数组
          */
-        public drawData = [];
+        public readonly drawData: IDrawData[] = [];
 
         public drawDataLen = 0;
 
@@ -69,7 +86,7 @@ namespace egret.web {
          */
         public pushDrawRect():void {
             if(this.drawDataLen == 0 || this.drawData[this.drawDataLen - 1].type != DRAWABLE_TYPE.RECT) {
-                let data = this.drawData[this.drawDataLen] || {};
+                let data = this.drawData[this.drawDataLen] || <IDrawData>{};
                 data.type = DRAWABLE_TYPE.RECT;
                 data.count = 0;
                 this.drawData[this.drawDataLen] = data;
@@ -84,7 +101,7 @@ namespace egret.web {
         public pushDrawTexture(texture:any, count:number = 2, filter?:any, textureWidth?:number, textureHeight?:number):void {
             if(filter) {
                 // 目前有滤镜的情况下不会合并绘制
-                let data = this.drawData[this.drawDataLen] || {};
+                let data = this.drawData[this.drawDataLen] || <IDrawData>{};
                 data.type = DRAWABLE_TYPE.TEXTURE;
                 data.texture = texture;
                 data.filter = filter;
@@ -96,7 +113,7 @@ namespace egret.web {
             } else {
 
                 if (this.drawDataLen == 0 || this.drawData[this.drawDataLen - 1].type != DRAWABLE_TYPE.TEXTURE || texture != this.drawData[this.drawDataLen - 1].texture || this.drawData[this.drawDataLen - 1].filter) {
-                    let data = this.drawData[this.drawDataLen] || {};
+                    let data = this.drawData[this.drawDataLen] || <IDrawData>{};
                     data.type = DRAWABLE_TYPE.TEXTURE;
                     data.texture = texture;
                     data.count = 0;
@@ -110,7 +127,7 @@ namespace egret.web {
 
         public pushChangeSmoothing(texture:WebGLTexture, smoothing:boolean):void {
             texture["smoothing"] = smoothing;
-            let data = this.drawData[this.drawDataLen] || {};
+            let data = this.drawData[this.drawDataLen] || <IDrawData>{};
             data.type = DRAWABLE_TYPE.SMOOTHING;
             data.texture = texture;
             data.smoothing = smoothing;
@@ -122,7 +139,7 @@ namespace egret.web {
          * 压入pushMask指令
          */
         public pushPushMask(count:number = 1):void {
-            let data = this.drawData[this.drawDataLen] || {};
+            let data = this.drawData[this.drawDataLen] || <IDrawData>{};
             data.type = DRAWABLE_TYPE.PUSH_MASK;
             data.count = count * 2;
             this.drawData[this.drawDataLen] = data;
@@ -133,7 +150,7 @@ namespace egret.web {
          * 压入popMask指令
          */
         public pushPopMask(count:number = 1):void {
-            let data = this.drawData[this.drawDataLen] || {};
+            let data = this.drawData[this.drawDataLen] || <IDrawData>{};
             data.type = DRAWABLE_TYPE.POP_MASK;
             data.count = count * 2;
             this.drawData[this.drawDataLen] = data;
@@ -173,7 +190,7 @@ namespace egret.web {
                 }
             }
 
-            let _data = this.drawData[this.drawDataLen] || {};
+            let _data = this.drawData[this.drawDataLen] || <IDrawData>{};
             _data.type = DRAWABLE_TYPE.BLEND;
             _data.value = value;
             this.drawData[this.drawDataLen] = _data;
@@ -184,7 +201,7 @@ namespace egret.web {
          * 压入resize render target命令
          */
         public pushResize(buffer:WebGLRenderBuffer, width:number, height:number) {
-            let data = this.drawData[this.drawDataLen] || {};
+            let data = this.drawData[this.drawDataLen] || <IDrawData>{};
             data.type = DRAWABLE_TYPE.RESIZE_TARGET;
             data.buffer = buffer;
             data.width = width;
@@ -197,7 +214,7 @@ namespace egret.web {
          * 压入clear color命令
          */
         public pushClearColor() {
-            let data = this.drawData[this.drawDataLen] || {};
+            let data = this.drawData[this.drawDataLen] || <IDrawData>{};
             data.type = DRAWABLE_TYPE.CLEAR_COLOR;
             this.drawData[this.drawDataLen] = data;
             this.drawDataLen++;
@@ -236,7 +253,7 @@ namespace egret.web {
                 }
             }
 
-            let _data = this.drawData[this.drawDataLen] || {};
+            let _data = this.drawData[this.drawDataLen] || <IDrawData>{};
             _data.type = DRAWABLE_TYPE.ACT_BUFFER;
             _data.buffer = buffer;
             _data.width = buffer.rootRenderTarget.width;
@@ -249,7 +266,7 @@ namespace egret.web {
          * 压入enabel scissor命令
          */
         public pushEnableScissor(x:number, y:number, width:number, height:number) {
-            let data = this.drawData[this.drawDataLen] || {};
+            let data = this.drawData[this.drawDataLen] || <IDrawData>{};
             data.type = DRAWABLE_TYPE.ENABLE_SCISSOR;
             data.x = x;
             data.y = y;
@@ -263,7 +280,7 @@ namespace egret.web {
          * 压入disable scissor命令
          */
         public pushDisableScissor() {
-            let data = this.drawData[this.drawDataLen] || {};
+            let data = this.drawData[this.drawDataLen] || <IDrawData>{};
             data.type = DRAWABLE_TYPE.DISABLE_SCISSOR;
             this.drawData[this.drawDataLen] = data;
             this.drawDataLen++;
@@ -275,16 +292,20 @@ namespace egret.web {
         public clear():void {
             for(let i = 0; i < this.drawDataLen; i++) {
                 let data = this.drawData[i];
-
                 data.type = 0;
                 data.count = 0;
                 data.texture = null;
                 data.filter = null;
-                data.uv = null;
+                //data.uv = null;
                 data.value = "";
                 data.buffer = null;
                 data.width = 0;
                 data.height = 0;
+                data.textureWidth = 0;
+                data.textureHeight = 0;
+                data.smoothing = false;
+                data.x = 0;
+                data.y = 0;
             }
 
             this.drawDataLen = 0;

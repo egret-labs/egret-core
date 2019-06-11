@@ -136,6 +136,11 @@ namespace egret {
 
     }
 
+    export interface SupportedCompressedTexture {
+        pvrtc: boolean;
+        etc1: boolean;
+    }
+
     /**
      * The Capabilities class provides properties that describe the system and runtime that are hosting the application.
      * @version Egret 2.4
@@ -266,7 +271,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static readonly engineVersion:string = "5.2.19";
+        public static readonly engineVersion: string = "5.2.21";
 
         /***
          * current render mode.
@@ -319,5 +324,19 @@ namespace egret {
          * @language zh_CN
          */
         static readonly boundingClientHeight: number = 0;
+
+        /***
+         * supported compressed texture
+         * @version Egret 5.2.19
+         * @platform Web,Native
+         * @language en_US
+         */
+        /***
+         * supported compressed texture
+         * @version Egret 5.2.19
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        static supportedCompressedTexture: SupportedCompressedTexture;
     }
 }
