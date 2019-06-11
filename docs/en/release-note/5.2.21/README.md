@@ -11,7 +11,7 @@ The Egret Engine released the 5.2.21 stable version on June 11, 2019.
 * The status of the `KTX` texture support for the minigame platforms:
 
 
- system/palform | WeChat minigame | Baidu minigame | Xiaomi qgame | OPPO minigame
+system/palform | WeChat minigame | Baidu minigame | Xiaomi qgame | OPPO minigame
 ------------- | ------------- | -------------| -------------| -------------
 Android ETC1  | ✅ | ✅| ✅| ✅
 iOS PVRTC  | ✅ | ❌ | ❌ | ❌ 
