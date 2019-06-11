@@ -36,6 +36,8 @@ namespace egret.web {
     //不想改TextNode的代码了，先用这种方式实现
     export const property_drawLabel = 'DrawLabel';
 
+    const textAtlasDebug: boolean = false;
+
     //画一行
     export class DrawLabel extends HashObject {
 
@@ -92,8 +94,12 @@ namespace egret.web {
         constructor(textNode: sys.TextNode, format: sys.TextFormat) {
             super();
             
-            const saveForDebug = textNode.textColor;
-            textNode.textColor = 0xff0000;
+            let saveTextColorForDebug = 0;
+            if (textAtlasDebug) {
+                saveTextColorForDebug = textNode.textColor;
+                textNode.textColor = 0xff0000;
+            }
+            
 
             //
             this.textColor = textNode.textColor;
@@ -120,7 +126,9 @@ namespace egret.web {
             this.description += '-' + this.$canvasScaleX;
             this.description += '-' + this.$canvasScaleY;
 
-            textNode.textColor = saveForDebug;
+            if (textAtlasDebug) {
+                textNode.textColor = saveTextColorForDebug;
+            }
         }
     }
 
@@ -159,13 +167,11 @@ namespace egret.web {
             const textColor = format.textColor == null ? this._styleKey.textColor : format.textColor;
             const strokeColor = format.strokeColor == null ? this._styleKey.strokeColor : format.strokeColor;
             const stroke = format.stroke == null ? this._styleKey.stroke : format.stroke;
-            //
+            ////Step1: 重新测试字体大小
             const context = egret.sys.getContext2d(canvas);
-            //Step1: 重新测试字体大小
             this.measureWidth = this.measureTextWidth(text, this._styleKey);
             this.measureHeight = this._styleKey.size;
-
-            //if (measureTextWidth) {
+            //
             let canvasWidth = this.measureWidth;
             let canvasHeight = this.measureHeight;
             const _strokeDouble = stroke * 2;
@@ -173,8 +179,8 @@ namespace egret.web {
                 canvasWidth += _strokeDouble * 2;
                 canvasHeight += _strokeDouble * 2;
             }
-            canvasWidth = /*Math.ceil*/(canvasWidth) + 2 * 2;
-            canvasHeight = /*Math.ceil*/(canvasHeight) + 2 * 2;
+            canvasWidth = Math.ceil(canvasWidth) + 2 * 2;
+            canvasHeight = Math.ceil(canvasHeight) + 2 * 2;
             canvas.width = canvasWidth;
             canvas.height = canvasHeight;
             //再开始绘制
@@ -237,7 +243,7 @@ namespace egret.web {
 
             if (!__textAtlasRender__) {
                 const webglcontext = egret.web.WebGLRenderContext.getInstance(0, 0);
-                __textAtlasRender__ = new TextAtlasRender(webglcontext, 512, 1);
+                __textAtlasRender__ = new TextAtlasRender(webglcontext, 512, textAtlasDebug ? 12 : 1);
             }
 
             //清除命令
@@ -301,7 +307,7 @@ namespace egret.web {
                 //
                 const page = txtBlock.page;
                 if (!page.webGLTexture) {
-                    page.webGLTexture = this.createTextTextureAtlas(page.pageWidth, page.pageHeight, true);
+                    page.webGLTexture = this.createTextTextureAtlas(page.pageWidth, page.pageHeight, textAtlasDebug);
                 }
                 const textAtlas = page.webGLTexture;
                 const gl = this.webglRenderContext.context;

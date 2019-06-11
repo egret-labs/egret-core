@@ -8747,6 +8747,7 @@ var egret;
         web.__textAtlasRender__ = null;
         //不想改TextNode的代码了，先用这种方式实现
         web.property_drawLabel = 'DrawLabel';
+        var textAtlasDebug = false;
         //画一行
         var DrawLabel = (function (_super) {
             __extends(DrawLabel, _super);
@@ -8792,8 +8793,11 @@ var egret;
             function StyleKey(textNode, format) {
                 var _this = _super.call(this) || this;
                 _this.format = null;
-                var saveForDebug = textNode.textColor;
-                textNode.textColor = 0xff0000;
+                var saveTextColorForDebug = 0;
+                if (textAtlasDebug) {
+                    saveTextColorForDebug = textNode.textColor;
+                    textNode.textColor = 0xff0000;
+                }
                 //
                 _this.textColor = textNode.textColor;
                 _this.strokeColor = textNode.strokeColor;
@@ -8818,7 +8822,9 @@ var egret;
                 }
                 _this.description += '-' + _this.$canvasScaleX;
                 _this.description += '-' + _this.$canvasScaleY;
-                textNode.textColor = saveForDebug;
+                if (textAtlasDebug) {
+                    textNode.textColor = saveTextColorForDebug;
+                }
                 return _this;
             }
             return StyleKey;
@@ -8858,12 +8864,11 @@ var egret;
                 var textColor = format.textColor == null ? this._styleKey.textColor : format.textColor;
                 var strokeColor = format.strokeColor == null ? this._styleKey.strokeColor : format.strokeColor;
                 var stroke = format.stroke == null ? this._styleKey.stroke : format.stroke;
-                //
+                ////Step1: 重新测试字体大小
                 var context = egret.sys.getContext2d(canvas);
-                //Step1: 重新测试字体大小
                 this.measureWidth = this.measureTextWidth(text, this._styleKey);
                 this.measureHeight = this._styleKey.size;
-                //if (measureTextWidth) {
+                //
                 var canvasWidth = this.measureWidth;
                 var canvasHeight = this.measureHeight;
                 var _strokeDouble = stroke * 2;
@@ -8871,8 +8876,8 @@ var egret;
                     canvasWidth += _strokeDouble * 2;
                     canvasHeight += _strokeDouble * 2;
                 }
-                canvasWidth = (canvasWidth) + 2 * 2;
-                canvasHeight = (canvasHeight) + 2 * 2;
+                canvasWidth = Math.ceil(canvasWidth) + 2 * 2;
+                canvasHeight = Math.ceil(canvasHeight) + 2 * 2;
                 canvas.width = canvasWidth;
                 canvas.height = canvasHeight;
                 //再开始绘制
@@ -8936,7 +8941,7 @@ var egret;
                 }
                 if (!web.__textAtlasRender__) {
                     var webglcontext = egret.web.WebGLRenderContext.getInstance(0, 0);
-                    web.__textAtlasRender__ = new TextAtlasRender(webglcontext, 512, 1);
+                    web.__textAtlasRender__ = new TextAtlasRender(webglcontext, 512, textAtlasDebug ? 12 : 1);
                 }
                 //清除命令
                 textNode[web.property_drawLabel] = textNode[web.property_drawLabel] || [];
@@ -9000,7 +9005,7 @@ var egret;
                     //
                     var page = txtBlock.page;
                     if (!page.webGLTexture) {
-                        page.webGLTexture = this.createTextTextureAtlas(page.pageWidth, page.pageHeight, true);
+                        page.webGLTexture = this.createTextTextureAtlas(page.pageWidth, page.pageHeight, textAtlasDebug);
                     }
                     var textAtlas = page.webGLTexture;
                     var gl = this.webglRenderContext.context;
