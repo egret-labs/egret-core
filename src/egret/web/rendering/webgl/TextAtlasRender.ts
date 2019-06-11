@@ -261,7 +261,7 @@ namespace egret.web {
     export class TextAtlasRender extends HashObject {
 
         //
-        private readonly book = new Book(512, 12);
+        private readonly book = null;//new Book(512, 12);
         private readonly charImage = new CharImage;
         private readonly textBlockMap: { [index: number]: TextBlock } = {};
         private _canvas: HTMLCanvasElement = null;

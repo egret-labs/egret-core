@@ -7586,8 +7586,8 @@ var egret;
                     drawCount += node.$getRenderCount();
                 }
                 if (displayObject.$children) {
-                    for (var _i = 0, _a = displayObject.$children; _i < _a.length; _i++) {
-                        var child = _a[_i];
+                    for (var _b = 0, _c = displayObject.$children; _b < _c.length; _b++) {
+                        var child = _c[_b];
                         var filters = child.$filters;
                         // 特殊处理有滤镜的对象
                         if (filters && filters.length > 0) {
@@ -8111,23 +8111,33 @@ var egret;
                     var saveOffsetX = buffer.$offsetX;
                     var saveOffsetY = buffer.$offsetY;
                     //基础偏移
-                    var _offsetX = buffer.$offsetX - node.x / canvasScaleX;
-                    var _offsetY = buffer.$offsetY - node.y / canvasScaleX;
+                    //var _offsetX = buffer.$offsetX - node.x / canvasScaleX;
+                    //var _offsetY = buffer.$offsetY - node.y / canvasScaleX;
                     //开始画
                     for (var _i = 0, drawCommands_1 = drawCommands; _i < drawCommands_1.length; _i++) {
                         var cmd = drawCommands_1[_i];
                         var anchorX = cmd.anchorX;
                         var anchorY = cmd.anchorY;
-                        var drawX = 0;
+                        buffer.$offsetX = saveOffsetX + anchorX;
+                        buffer.$offsetY = saveOffsetY + anchorY;
+                        //var drawX = 0;
                         var textBlocks = cmd.textBlocks;
+                        buffer.$offsetY -= 12;
                         for (var _a = 0, textBlocks_1 = textBlocks; _a < textBlocks_1.length; _a++) {
                             var tb = textBlocks_1[_a];
-                            buffer.$offsetX = _offsetX + (anchorX + drawX);
+                            buffer.$offsetX += -tb.drawCanvasOffsetX; //(_a > 0 ? -tb.drawCanvasOffsetX : 0);
+                            var page = tb.line.page;
+                            buffer.context.drawTexture(page.webGLTexture, tb.u, tb.v, tb.contentWidth, tb.contentHeight, 0, 0, tb.contentWidth, tb.contentHeight, page.pageWidth, page.pageHeight);
+                            //drawX += tb.contentWidth + (_a > 0 ? -tb.drawCanvasOffsetX : 0);
+                            buffer.$offsetX += tb.contentWidth - tb.drawCanvasOffsetX; // + (_a > 0 ? -tb.drawCanvasOffsetX : 0);
+                            /*
+                            buffer.$offsetX = _offsetX + (anchorX + drawX + (_a > 0 ? -tb.drawCanvasOffsetX : 0));
                             buffer.$offsetY = _offsetY + (anchorY + (-tb.measureHeight / 2));
                             //
                             var page = tb.line.page;
-                            buffer.context.drawTexture(page.webGLTexture, tb.u, tb.v, tb.contentWidth, tb.contentHeight, 0, 0, tb.contentWidth / canvasScaleX, tb.contentHeight / canvasScaleY, page.pageWidth, page.pageHeight);
-                            drawX += tb.contentWidth / canvasScaleX;
+                            buffer.context.drawTexture(page.webGLTexture, tb.u, tb.v, tb.contentWidth, tb.contentHeight, 0, 0, tb.contentWidth, tb.contentHeight, page.pageWidth, page.pageHeight);
+                            drawX += tb.contentWidth + (_a > 0 ? -tb.drawCanvasOffsetX : 0);
+                            */
                         }
                     }
                     //还原回去
@@ -8973,7 +8983,7 @@ var egret;
             function TextAtlasRender(webglRenderContext, maxSize, border) {
                 var _this = _super.call(this) || this;
                 //
-                _this.book = new web.Book(512, 12);
+                _this.book = null; //new Book(512, 12);
                 _this.charImage = new CharImage;
                 _this.textBlockMap = {};
                 _this._canvas = null;
