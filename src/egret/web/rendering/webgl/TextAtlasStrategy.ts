@@ -30,7 +30,6 @@
 /*
 ***  back -> page -> line -> textBlock
 */
-
 namespace egret.web {
 
     export class TextBlock extends HashObject {

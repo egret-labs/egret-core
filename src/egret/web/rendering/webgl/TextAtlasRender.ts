@@ -149,38 +149,6 @@ namespace egret.web {
             return this;
         }
 
-        // public get renderWidth(): number {
-        //     return this.measureWidth * this._styleKey.$canvasScaleX;
-        // }
-
-        // public get renderHeight(): number {
-        //     return this.measureHeight * this._styleKey.$canvasScaleY;
-        // }
-
-        /*
-         $getRenderBounds(): Rectangle {
-            let bounds = this.$getContentBounds();
-            let tmpBounds = Rectangle.create();
-            tmpBounds.copyFrom(bounds);
-            if (this.$TextField[sys.TextKeys.border]) {
-                tmpBounds.width += 2;
-                tmpBounds.height += 2;
-            }
-            let _strokeDouble = this.$TextField[sys.TextKeys.stroke] * 2;
-            if (_strokeDouble > 0) {
-                tmpBounds.width += _strokeDouble * 2;
-                tmpBounds.height += _strokeDouble * 2;
-            }
-            tmpBounds.x -= _strokeDouble + 2;//+2和+4 是为了webgl纹理太小导致裁切问题
-            tmpBounds.y -= _strokeDouble + 2;
-            tmpBounds.width = Math.ceil(tmpBounds.width) + 4;
-            tmpBounds.height = Math.ceil(tmpBounds.height) + 4;
-            return tmpBounds;
-        }
-
-
-        */
-
         public measureTextAndDrawToCanvas(canvas: HTMLCanvasElement): void {
             if (!canvas) {
                 return;
@@ -194,27 +162,21 @@ namespace egret.web {
             //
             const context = egret.sys.getContext2d(canvas);
             //Step1: 重新测试字体大小
-            const measureTextWidth = this.measureTextWidth(text, this._styleKey);
-            //if (measureTextWidth) {
-            this.measureWidth = measureTextWidth;//measureText.width;
+            this.measureWidth = this.measureTextWidth(text, this._styleKey);
             this.measureHeight = this._styleKey.size;
 
-            let _strokeDouble = stroke * 2;
+            //if (measureTextWidth) {
+            let canvasWidth = this.measureWidth;
+            let canvasHeight = this.measureHeight;
+            const _strokeDouble = stroke * 2;
             if (_strokeDouble > 0) {
-                this.measureWidth += _strokeDouble * 2;
-                this.measureHeight += _strokeDouble * 2;
+                canvasWidth += _strokeDouble * 2;
+                canvasHeight += _strokeDouble * 2;
             }
-            this.measureWidth = Math.ceil(this.measureWidth) + 2 * 2;
-            this.measureHeight = Math.ceil(this.measureHeight) + 2 * 2;
-            //}
-            // else {
-            //     console.error('text = ' + text + ', measureText is null');
-            //     this.measureWidth = this._styleKey.size;
-            //     this.measureHeight = this._styleKey.size;
-            // }
-            //
-            canvas.width = this.measureWidth;//this.renderWidth;
-            canvas.height = this.measureHeight;//this.renderHeight;
+            canvasWidth = /*Math.ceil*/(canvasWidth) + 2 * 2;
+            canvasHeight = /*Math.ceil*/(canvasHeight) + 2 * 2;
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
             //再开始绘制
             context.save();
             context.textAlign = 'left';
@@ -224,21 +186,15 @@ namespace egret.web {
             context.fillStyle = toColorString(textColor);
             context.strokeStyle = toColorString(strokeColor);
             context.clearRect(0, 0, canvas.width, canvas.height);
-            //context.translate(0, 0);
-            //context.scale(this._styleKey.$canvasScaleX, this._styleKey.$canvasScaleY);
             //
-            const offsetX = _strokeDouble + 2;
-            const offsetY = _strokeDouble + 2;
+            this.drawCanvasOffsetX = _strokeDouble + 2;
+            this.drawCanvasOffsetY = _strokeDouble + 2;
             if (stroke) {
                 context.lineWidth = stroke * 2;
-                context.strokeText(text, offsetX, offsetY);
+                context.strokeText(text, this.drawCanvasOffsetX, this.drawCanvasOffsetY);
             }
-            context.fillText(text, offsetX, offsetY);
+            context.fillText(text, this.drawCanvasOffsetX, this.drawCanvasOffsetY);
             context.restore();
-
-            //
-            this.drawCanvasOffsetX = offsetX;
-            this.drawCanvasOffsetY = offsetY;
         }
 
         private measureTextWidth(text: string, styleKey: StyleKey): number {
@@ -248,8 +204,7 @@ namespace egret.web {
                     return CharImage.__chineseCharacterMeasureFastMap__[styleKey.font];
                 }
             }
-            //context.font = font;
-            const measureTextWidth = egret.sys.measureText(text, styleKey.fontFamily, styleKey.size, styleKey.bold, styleKey.italic);//context.measureText(text);
+            const measureTextWidth = egret.sys.measureText(text, styleKey.fontFamily, styleKey.size, styleKey.bold, styleKey.italic);
             if (isChinese) {
                 CharImage.__chineseCharacterMeasureFastMap__[styleKey.font] = measureTextWidth;
             }
@@ -261,7 +216,7 @@ namespace egret.web {
     export class TextAtlasRender extends HashObject {
 
         //
-        private readonly book = null;//new Book(512, 12);
+        private readonly book = null;
         private readonly charImage = new CharImage;
         private readonly textBlockMap: { [index: number]: TextBlock } = {};
         private _canvas: HTMLCanvasElement = null;

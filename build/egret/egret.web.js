@@ -8092,15 +8092,10 @@ var egret;
                 }
                 width *= canvasScaleX;
                 height *= canvasScaleY;
-                var x = node.x * canvasScaleX;
-                var y = node.y * canvasScaleY;
                 if (node.$canvasScaleX !== canvasScaleX || node.$canvasScaleY !== canvasScaleY) {
                     node.$canvasScaleX = canvasScaleX;
                     node.$canvasScaleY = canvasScaleY;
-                    //node.dirtyRender = true;
-                }
-                if (x || y) {
-                    buffer.transform(1, 0, 0, 1, x / canvasScaleX, y / canvasScaleY);
+                    node.dirtyRender = true;
                 }
                 if (node.dirtyRender) {
                     web.TextAtlasRender.analysisTextNodeAndFlushDrawLabel(node);
@@ -8110,42 +8105,25 @@ var egret;
                     //存一下
                     var saveOffsetX = buffer.$offsetX;
                     var saveOffsetY = buffer.$offsetY;
-                    //基础偏移
-                    //var _offsetX = buffer.$offsetX - node.x / canvasScaleX;
-                    //var _offsetY = buffer.$offsetY - node.y / canvasScaleX;
                     //开始画
                     for (var _i = 0, drawCommands_1 = drawCommands; _i < drawCommands_1.length; _i++) {
                         var cmd = drawCommands_1[_i];
                         var anchorX = cmd.anchorX;
                         var anchorY = cmd.anchorY;
                         buffer.$offsetX = saveOffsetX + anchorX;
-                        buffer.$offsetY = saveOffsetY + anchorY;
-                        //var drawX = 0;
                         var textBlocks = cmd.textBlocks;
-                        buffer.$offsetY -= 12;
                         for (var _a = 0, textBlocks_1 = textBlocks; _a < textBlocks_1.length; _a++) {
                             var tb = textBlocks_1[_a];
-                            buffer.$offsetX += -tb.drawCanvasOffsetX; //(_a > 0 ? -tb.drawCanvasOffsetX : 0);
+                            buffer.$offsetX += -tb.drawCanvasOffsetX;
+                            buffer.$offsetY = saveOffsetY + anchorY - (tb.measureHeight / 2 * canvasScaleY);
                             var page = tb.line.page;
                             buffer.context.drawTexture(page.webGLTexture, tb.u, tb.v, tb.contentWidth, tb.contentHeight, 0, 0, tb.contentWidth, tb.contentHeight, page.pageWidth, page.pageHeight);
-                            //drawX += tb.contentWidth + (_a > 0 ? -tb.drawCanvasOffsetX : 0);
-                            buffer.$offsetX += tb.contentWidth - tb.drawCanvasOffsetX; // + (_a > 0 ? -tb.drawCanvasOffsetX : 0);
-                            /*
-                            buffer.$offsetX = _offsetX + (anchorX + drawX + (_a > 0 ? -tb.drawCanvasOffsetX : 0));
-                            buffer.$offsetY = _offsetY + (anchorY + (-tb.measureHeight / 2));
-                            //
-                            var page = tb.line.page;
-                            buffer.context.drawTexture(page.webGLTexture, tb.u, tb.v, tb.contentWidth, tb.contentHeight, 0, 0, tb.contentWidth, tb.contentHeight, page.pageWidth, page.pageHeight);
-                            drawX += tb.contentWidth + (_a > 0 ? -tb.drawCanvasOffsetX : 0);
-                            */
+                            buffer.$offsetX += tb.contentWidth - tb.drawCanvasOffsetX;
                         }
                     }
                     //还原回去
                     buffer.$offsetX = saveOffsetX;
                     buffer.$offsetY = saveOffsetY;
-                }
-                if (x || y) {
-                    buffer.transform(1, 0, 0, 1, -x / canvasScaleX, -y / canvasScaleY);
                 }
                 //node.dirtyRender = false;
             };
@@ -8870,35 +8848,6 @@ var egret;
                 this.drawCanvasOffsetY = 0;
                 return this;
             };
-            // public get renderWidth(): number {
-            //     return this.measureWidth * this._styleKey.$canvasScaleX;
-            // }
-            // public get renderHeight(): number {
-            //     return this.measureHeight * this._styleKey.$canvasScaleY;
-            // }
-            /*
-             $getRenderBounds(): Rectangle {
-                let bounds = this.$getContentBounds();
-                let tmpBounds = Rectangle.create();
-                tmpBounds.copyFrom(bounds);
-                if (this.$TextField[sys.TextKeys.border]) {
-                    tmpBounds.width += 2;
-                    tmpBounds.height += 2;
-                }
-                let _strokeDouble = this.$TextField[sys.TextKeys.stroke] * 2;
-                if (_strokeDouble > 0) {
-                    tmpBounds.width += _strokeDouble * 2;
-                    tmpBounds.height += _strokeDouble * 2;
-                }
-                tmpBounds.x -= _strokeDouble + 2;//+2和+4 是为了webgl纹理太小导致裁切问题
-                tmpBounds.y -= _strokeDouble + 2;
-                tmpBounds.width = Math.ceil(tmpBounds.width) + 4;
-                tmpBounds.height = Math.ceil(tmpBounds.height) + 4;
-                return tmpBounds;
-            }
-    
-    
-            */
             CharImage.prototype.measureTextAndDrawToCanvas = function (canvas) {
                 if (!canvas) {
                     return;
@@ -8912,26 +8861,20 @@ var egret;
                 //
                 var context = egret.sys.getContext2d(canvas);
                 //Step1: 重新测试字体大小
-                var measureTextWidth = this.measureTextWidth(text, this._styleKey);
-                //if (measureTextWidth) {
-                this.measureWidth = measureTextWidth; //measureText.width;
+                this.measureWidth = this.measureTextWidth(text, this._styleKey);
                 this.measureHeight = this._styleKey.size;
+                //if (measureTextWidth) {
+                var canvasWidth = this.measureWidth;
+                var canvasHeight = this.measureHeight;
                 var _strokeDouble = stroke * 2;
                 if (_strokeDouble > 0) {
-                    this.measureWidth += _strokeDouble * 2;
-                    this.measureHeight += _strokeDouble * 2;
+                    canvasWidth += _strokeDouble * 2;
+                    canvasHeight += _strokeDouble * 2;
                 }
-                this.measureWidth = Math.ceil(this.measureWidth) + 2 * 2;
-                this.measureHeight = Math.ceil(this.measureHeight) + 2 * 2;
-                //}
-                // else {
-                //     console.error('text = ' + text + ', measureText is null');
-                //     this.measureWidth = this._styleKey.size;
-                //     this.measureHeight = this._styleKey.size;
-                // }
-                //
-                canvas.width = this.measureWidth; //this.renderWidth;
-                canvas.height = this.measureHeight; //this.renderHeight;
+                canvasWidth = (canvasWidth) + 2 * 2;
+                canvasHeight = (canvasHeight) + 2 * 2;
+                canvas.width = canvasWidth;
+                canvas.height = canvasHeight;
                 //再开始绘制
                 context.save();
                 context.textAlign = 'left';
@@ -8941,20 +8884,15 @@ var egret;
                 context.fillStyle = egret.toColorString(textColor);
                 context.strokeStyle = egret.toColorString(strokeColor);
                 context.clearRect(0, 0, canvas.width, canvas.height);
-                //context.translate(0, 0);
-                //context.scale(this._styleKey.$canvasScaleX, this._styleKey.$canvasScaleY);
                 //
-                var offsetX = _strokeDouble + 2;
-                var offsetY = _strokeDouble + 2;
+                this.drawCanvasOffsetX = _strokeDouble + 2;
+                this.drawCanvasOffsetY = _strokeDouble + 2;
                 if (stroke) {
                     context.lineWidth = stroke * 2;
-                    context.strokeText(text, offsetX, offsetY);
+                    context.strokeText(text, this.drawCanvasOffsetX, this.drawCanvasOffsetY);
                 }
-                context.fillText(text, offsetX, offsetY);
+                context.fillText(text, this.drawCanvasOffsetX, this.drawCanvasOffsetY);
                 context.restore();
-                //
-                this.drawCanvasOffsetX = offsetX;
-                this.drawCanvasOffsetY = offsetY;
             };
             CharImage.prototype.measureTextWidth = function (text, styleKey) {
                 var isChinese = CharImage.__chineseCharactersRegExp__.test(text);
@@ -8963,8 +8901,7 @@ var egret;
                         return CharImage.__chineseCharacterMeasureFastMap__[styleKey.font];
                     }
                 }
-                //context.font = font;
-                var measureTextWidth = egret.sys.measureText(text, styleKey.fontFamily, styleKey.size, styleKey.bold, styleKey.italic); //context.measureText(text);
+                var measureTextWidth = egret.sys.measureText(text, styleKey.fontFamily, styleKey.size, styleKey.bold, styleKey.italic);
                 if (isChinese) {
                     CharImage.__chineseCharacterMeasureFastMap__[styleKey.font] = measureTextWidth;
                 }
@@ -8983,7 +8920,7 @@ var egret;
             function TextAtlasRender(webglRenderContext, maxSize, border) {
                 var _this = _super.call(this) || this;
                 //
-                _this.book = null; //new Book(512, 12);
+                _this.book = null;
                 _this.charImage = new CharImage;
                 _this.textBlockMap = {};
                 _this._canvas = null;

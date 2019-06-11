@@ -860,15 +860,10 @@ namespace egret.web {
             }
             width *= canvasScaleX;
             height *= canvasScaleY;
-            const x = node.x * canvasScaleX;
-            const y = node.y * canvasScaleY;
             if (node.$canvasScaleX !== canvasScaleX || node.$canvasScaleY !== canvasScaleY) {
                 node.$canvasScaleX = canvasScaleX;
                 node.$canvasScaleY = canvasScaleY;
-                //node.dirtyRender = true;
-            }
-            if (x || y) {
-                buffer.transform(1, 0, 0, 1, x / canvasScaleX, y / canvasScaleY);
+                node.dirtyRender = true;
             }
             if (node.dirtyRender) {
                 TextAtlasRender.analysisTextNodeAndFlushDrawLabel(node);
@@ -879,44 +874,27 @@ namespace egret.web {
                 //存一下
                 const saveOffsetX = buffer.$offsetX;
                 const saveOffsetY = buffer.$offsetY;
-                //基础偏移
-                //var _offsetX = buffer.$offsetX - node.x / canvasScaleX;
-                //var _offsetY = buffer.$offsetY - node.y / canvasScaleX;
                 //开始画
                 for (let _i = 0, drawCommands_1 = drawCommands; _i < drawCommands_1.length; _i++) {
                     const cmd = drawCommands_1[_i];
                     const anchorX = cmd.anchorX;
                     const anchorY = cmd.anchorY;
                     buffer.$offsetX = saveOffsetX + anchorX;
-                    buffer.$offsetY = saveOffsetY + anchorY;
-                    //var drawX = 0;
                     const textBlocks = cmd.textBlocks;
-                    buffer.$offsetY -= 12;
                     for (let _a = 0, textBlocks_1 = textBlocks; _a < textBlocks_1.length; _a++) {
                         const tb = textBlocks_1[_a];
-
-                        buffer.$offsetX += -tb.drawCanvasOffsetX;//(_a > 0 ? -tb.drawCanvasOffsetX : 0);
+                        buffer.$offsetX += -tb.drawCanvasOffsetX;
+                        buffer.$offsetY = saveOffsetY + anchorY - (tb.measureHeight/2 * canvasScaleY);
                         const page = tb.line.page;
                         buffer.context.drawTexture(page.webGLTexture, tb.u, tb.v, tb.contentWidth, tb.contentHeight, 0, 0, tb.contentWidth, tb.contentHeight, page.pageWidth, page.pageHeight);
-                        //drawX += tb.contentWidth + (_a > 0 ? -tb.drawCanvasOffsetX : 0);
-                        buffer.$offsetX += tb.contentWidth - tb.drawCanvasOffsetX;// + (_a > 0 ? -tb.drawCanvasOffsetX : 0);
-                        /*
-                        buffer.$offsetX = _offsetX + (anchorX + drawX + (_a > 0 ? -tb.drawCanvasOffsetX : 0));
-                        buffer.$offsetY = _offsetY + (anchorY + (-tb.measureHeight / 2));
-                        //
-                        var page = tb.line.page;
-                        buffer.context.drawTexture(page.webGLTexture, tb.u, tb.v, tb.contentWidth, tb.contentHeight, 0, 0, tb.contentWidth, tb.contentHeight, page.pageWidth, page.pageHeight);
-                        drawX += tb.contentWidth + (_a > 0 ? -tb.drawCanvasOffsetX : 0);
-                        */
+                        buffer.$offsetX += tb.contentWidth - tb.drawCanvasOffsetX;
                     }
                 }
                 //还原回去
                 buffer.$offsetX = saveOffsetX;
                 buffer.$offsetY = saveOffsetY;
             }
-            if (x || y) {
-                buffer.transform(1, 0, 0, 1, -x / canvasScaleX, -y / canvasScaleY);
-            }
+
             //node.dirtyRender = false;
         }
 
