@@ -8128,7 +8128,7 @@ var egret;
                             buffer.$offsetY = saveOffsetY + anchorY - (tb.measureHeight / 2);
                             page = tb.line.page;
                             buffer.context.drawTexture(page.webGLTexture, tb.u, tb.v, tb.contentWidth, tb.contentHeight, 0, 0, tb.contentWidth, tb.contentHeight, page.pageWidth, page.pageHeight);
-                            buffer.$offsetX += (tb.contentWidth - tb.drawCanvasOffsetX * 2);
+                            buffer.$offsetX += (tb.contentWidth - tb.canvasWidthOffset * 2);
                         }
                     }
                     //还原回去
@@ -8391,7 +8391,7 @@ var egret;
 //
 //////////////////////////////////////////////////////////////////////////////////////
 /*
-***  back -> page -> line -> textBlock
+*** 一个管理模型，逐级包含: back -> page -> line -> textBlock
 */
 var egret;
 (function (egret) {
@@ -8399,7 +8399,7 @@ var egret;
     (function (web) {
         var TextBlock = (function (_super) {
             __extends(TextBlock, _super);
-            function TextBlock(width, height, measureWidth, measureHeight, border) {
+            function TextBlock(width, height, measureWidth, measureHeight, canvasWidthOffset, canvasHeightOffset, border) {
                 var _this = _super.call(this) || this;
                 _this._width = 0;
                 _this._height = 0;
@@ -8412,13 +8412,15 @@ var egret;
                 _this.tag = '';
                 _this.measureWidth = 0;
                 _this.measureHeight = 0;
-                _this.drawCanvasOffsetX = 0;
-                _this.drawCanvasOffsetY = 0;
+                _this.canvasWidthOffset = 0;
+                _this.canvasHeightOffset = 0;
                 _this._width = width;
                 _this._height = height;
                 _this._border = border;
                 _this.measureWidth = measureWidth;
                 _this.measureHeight = measureHeight;
+                _this.canvasWidthOffset = canvasWidthOffset;
+                _this.canvasHeightOffset = canvasHeightOffset;
                 return _this;
             }
             Object.defineProperty(TextBlock.prototype, "border", {
@@ -8708,13 +8710,14 @@ var egret;
                 };
                 this._sortLines = this._sortLines.sort(sortFunc);
             };
-            Book.prototype.createTextBlock = function (width, height, measureWidth, measureHeight) {
-                var txtBlock = new TextBlock(width, height, measureWidth, measureHeight, this._border);
+            Book.prototype.createTextBlock = function (tag, width, height, measureWidth, measureHeight, canvasWidthOffset, canvasHeightOffset) {
+                var txtBlock = new TextBlock(width, height, measureWidth, measureHeight, canvasWidthOffset, canvasHeightOffset, this._border);
                 if (!this.addTextBlock(txtBlock)) {
                     //走到这里几乎是不可能的，除非内存分配没了
                     //暂时还没有到提交纹理的地步，现在都是虚拟的
                     return null;
                 }
+                txtBlock.tag = tag;
                 return txtBlock;
             };
             return Book;
@@ -8755,28 +8758,33 @@ var egret;
 (function (egret) {
     var web;
     (function (web) {
-        //测试开关
+        //测试开关,打开会截住老的字体渲染
         web.textAtlasRenderEnable = false;
-        //测试对象
+        //测试对象, 先不用singleton的，后续整理代码，就new一个，放在全局的context上做成员变量
         web.__textAtlasRender__ = null;
-        //不想改TextNode的代码了，先用这种方式实现
+        //不想改TextNode的代码了，先用这种方式实现，以后稳了再改
         web.property_drawLabel = 'DrawLabel';
+        //开启这个，用textAtlas渲染出来的，都是红字，而且加黑框
         var textAtlasDebug = false;
         //画一行
         var DrawLabel = (function (_super) {
             __extends(DrawLabel, _super);
             function DrawLabel() {
                 var _this = _super !== null && _super.apply(this, arguments) || this;
+                //记录初始位置
                 _this.anchorX = 0;
                 _this.anchorY = 0;
+                //要画的字块
                 _this.textBlocks = [];
                 return _this;
             }
+            //清除数据，回池
             DrawLabel.prototype.clear = function () {
                 this.anchorX = 0;
                 this.anchorY = 0;
                 this.textBlocks.length = 0; //这个没事,实体在book里面存着
             };
+            //池子创建
             DrawLabel.create = function () {
                 var pool = DrawLabel.pool;
                 if (pool.length === 0) {
@@ -8784,6 +8792,7 @@ var egret;
                 }
                 return pool.pop();
             };
+            //回池
             DrawLabel.back = function (drawLabel, checkRepeat) {
                 if (!drawLabel) {
                     return;
@@ -8796,23 +8805,26 @@ var egret;
                 drawLabel.clear();
                 pool.push(drawLabel);
             };
+            //池子，防止反复创建
             DrawLabel.pool = [];
             return DrawLabel;
         }(egret.HashObject));
         web.DrawLabel = DrawLabel;
         __reflect(DrawLabel.prototype, "egret.web.DrawLabel");
-        //
-        var StyleKey = (function (_super) {
-            __extends(StyleKey, _super);
-            function StyleKey(textNode, format) {
+        //记录样式的
+        var StyleInfo = (function (_super) {
+            __extends(StyleInfo, _super);
+            //
+            function StyleInfo(textNode, format) {
                 var _this = _super.call(this) || this;
                 _this.format = null;
+                //debug强制红色
                 var saveTextColorForDebug = 0;
                 if (textAtlasDebug) {
                     saveTextColorForDebug = textNode.textColor;
                     textNode.textColor = 0xff0000;
                 }
-                //
+                //存上
                 _this.textColor = textNode.textColor;
                 _this.strokeColor = textNode.strokeColor;
                 _this.size = textNode.size;
@@ -8822,67 +8834,70 @@ var egret;
                 _this.fontFamily = textNode.fontFamily;
                 _this.format = format;
                 _this.font = egret.getFontString(textNode, _this.format);
-                _this.$canvasScaleX = parseFloat(textNode.$canvasScaleX.toFixed(2)); //不搞那么长
-                _this.$canvasScaleY = parseFloat(textNode.$canvasScaleY.toFixed(2));
-                //
+                //描述用于生成hashcode
                 _this.description = '' + _this.font;
-                var textColor = format.textColor == null ? textNode.textColor : format.textColor;
-                var strokeColor = format.strokeColor == null ? textNode.strokeColor : format.strokeColor;
-                var stroke = format.stroke == null ? textNode.stroke : format.stroke;
+                var textColor = (!format.textColor ? textNode.textColor : format.textColor);
+                var strokeColor = (!format.strokeColor ? textNode.strokeColor : format.strokeColor);
+                var stroke = (!format.stroke ? textNode.stroke : format.stroke);
                 _this.description += '-' + egret.toColorString(textColor);
                 _this.description += '-' + egret.toColorString(strokeColor);
                 if (stroke) {
                     _this.description += '-' + stroke * 2;
                 }
-                _this.description += '-' + _this.$canvasScaleX;
-                _this.description += '-' + _this.$canvasScaleY;
+                //还原
                 if (textAtlasDebug) {
                     textNode.textColor = saveTextColorForDebug;
                 }
                 return _this;
             }
-            return StyleKey;
+            return StyleInfo;
         }(egret.HashObject));
-        __reflect(StyleKey.prototype, "StyleKey");
-        var CharImage = (function (_super) {
-            __extends(CharImage, _super);
-            function CharImage() {
+        __reflect(StyleInfo.prototype, "StyleInfo");
+        //测量字体和绘制的
+        var CharImageRender = (function (_super) {
+            __extends(CharImageRender, _super);
+            function CharImageRender() {
                 var _this = _super !== null && _super.apply(this, arguments) || this;
-                //
-                _this._char = '';
-                _this._styleKey = null;
-                _this._string = '';
-                _this._hashCode = 0;
+                //要渲染的字符串
+                _this.char = '';
+                //StyleInfo
+                _this.styleInfo = null;
+                //生成hashcode的字符串
+                _this.hashCodeString = '';
+                //字母：style设置行程唯一值
+                _this.charWithStyleHashCode = 0;
+                //测量实际的size
                 _this.measureWidth = 0;
                 _this.measureHeight = 0;
-                _this.drawCanvasOffsetX = 0;
-                _this.drawCanvasOffsetY = 0;
+                //边缘放大之后的偏移
+                _this.canvasWidthOffset = 0;
+                _this.canvasHeightOffset = 0;
                 return _this;
             }
-            CharImage.prototype.reset = function (char, styleKey) {
-                this._char = char;
-                this._styleKey = styleKey;
-                this._string = char + ':' + styleKey.description;
-                this._hashCode = egret.NumberUtils.convertStringToHashCode(this._string);
-                this.drawCanvasOffsetX = 0;
-                this.drawCanvasOffsetY = 0;
+            CharImageRender.prototype.reset = function (char, styleKey) {
+                this.char = char;
+                this.styleInfo = styleKey;
+                this.hashCodeString = char + ':' + styleKey.description;
+                this.charWithStyleHashCode = egret.NumberUtils.convertStringToHashCode(this.hashCodeString);
+                this.canvasWidthOffset = 0;
+                this.canvasHeightOffset = 0;
                 return this;
             };
-            CharImage.prototype.measureTextAndDrawToCanvas = function (canvas) {
+            CharImageRender.prototype.measureAndDraw = function (targetCanvas) {
+                var canvas = targetCanvas;
                 if (!canvas) {
                     return;
                 }
-                //
-                var text = this._char;
-                var format = this._styleKey.format;
-                var textColor = format.textColor == null ? this._styleKey.textColor : format.textColor;
-                var strokeColor = format.strokeColor == null ? this._styleKey.strokeColor : format.strokeColor;
-                var stroke = format.stroke == null ? this._styleKey.stroke : format.stroke;
-                ////Step1: 重新测试字体大小
-                var context = egret.sys.getContext2d(canvas);
-                this.measureWidth = this.measureTextWidth(text, this._styleKey);
-                this.measureHeight = this._styleKey.size;
-                //
+                //读取设置
+                var text = this.char;
+                var format = this.styleInfo.format;
+                var textColor = (!format.textColor ? this.styleInfo.textColor : format.textColor);
+                var strokeColor = (!format.strokeColor ? this.styleInfo.strokeColor : format.strokeColor);
+                var stroke = (!format.stroke ? this.styleInfo.stroke : format.stroke);
+                //开始测量---------------------------------------
+                this.measureWidth = this.measure(text, this.styleInfo);
+                this.measureHeight = this.styleInfo.size;
+                //调整 参考TextField: $getRenderBounds(): Rectangle {
                 var canvasWidth = this.measureWidth;
                 var canvasHeight = this.measureHeight;
                 var _strokeDouble = stroke * 2;
@@ -8890,22 +8905,21 @@ var egret;
                     canvasWidth += _strokeDouble * 2;
                     canvasHeight += _strokeDouble * 2;
                 }
-                canvasWidth = Math.ceil(canvasWidth) + 2 * 2;
-                canvasHeight = Math.ceil(canvasHeight) + 2 * 2;
-                canvas.width = canvasWidth;
-                canvas.height = canvasHeight;
-                //再开始绘制
+                //赋值
+                canvas.width = canvasWidth = Math.ceil(canvasWidth) + 2 * 2;
+                canvas.height = canvasHeight = Math.ceil(canvasHeight) + 2 * 2;
+                this.canvasWidthOffset = (canvas.width - this.measureWidth) / 2;
+                this.canvasHeightOffset = (canvas.height - this.measureHeight) / 2;
+                //再开始绘制---------------------------------------
+                var context = egret.sys.getContext2d(canvas);
                 context.save();
                 context.textAlign = 'center';
                 context.textBaseline = 'middle';
                 context.lineJoin = 'round';
-                context.font = this._styleKey.font;
+                context.font = this.styleInfo.font;
                 context.fillStyle = egret.toColorString(textColor);
                 context.strokeStyle = egret.toColorString(strokeColor);
                 context.clearRect(0, 0, canvas.width, canvas.height);
-                //
-                this.drawCanvasOffsetX = (canvasWidth - this.measureWidth) / 2;
-                this.drawCanvasOffsetY = (canvasHeight - this.measureHeight) / 2;
                 if (stroke) {
                     context.lineWidth = stroke * 2;
                     context.strokeText(text, canvas.width / 2, canvas.height / 2);
@@ -8913,26 +8927,26 @@ var egret;
                 context.fillText(text, canvas.width / 2, canvas.height / 2);
                 context.restore();
             };
-            CharImage.prototype.measureTextWidth = function (text, styleKey) {
-                var isChinese = CharImage.__chineseCharactersRegExp__.test(text);
+            CharImageRender.prototype.measure = function (text, styleKey) {
+                var isChinese = CharImageRender.chineseCharactersRegExp.test(text);
                 if (isChinese) {
-                    if (CharImage.__chineseCharacterMeasureFastMap__[styleKey.font]) {
-                        return CharImage.__chineseCharacterMeasureFastMap__[styleKey.font];
+                    if (CharImageRender.chineseCharacterMeasureFastMap[styleKey.font]) {
+                        return CharImageRender.chineseCharacterMeasureFastMap[styleKey.font];
                     }
                 }
                 var measureTextWidth = egret.sys.measureText(text, styleKey.fontFamily, styleKey.size, styleKey.bold, styleKey.italic);
                 if (isChinese) {
-                    CharImage.__chineseCharacterMeasureFastMap__[styleKey.font] = measureTextWidth;
+                    CharImageRender.chineseCharacterMeasureFastMap[styleKey.font] = measureTextWidth;
                 }
                 return measureTextWidth;
             };
             //针对中文的加速查找
-            CharImage.__chineseCharactersRegExp__ = new RegExp("^[\u4E00-\u9FA5]$");
-            CharImage.__chineseCharacterMeasureFastMap__ = {};
-            return CharImage;
+            CharImageRender.chineseCharactersRegExp = new RegExp("^[\u4E00-\u9FA5]$");
+            CharImageRender.chineseCharacterMeasureFastMap = {};
+            return CharImageRender;
         }(egret.HashObject));
-        __reflect(CharImage.prototype, "CharImage");
-        //
+        __reflect(CharImageRender.prototype, "CharImageRender");
+        //对外的类
         var TextAtlasRender = (function (_super) {
             __extends(TextAtlasRender, _super);
             //
@@ -8940,7 +8954,7 @@ var egret;
                 var _this = _super.call(this) || this;
                 //
                 _this.book = null;
-                _this.charImage = new CharImage;
+                _this.charImageRender = new CharImageRender;
                 _this.textBlockMap = {};
                 _this._canvas = null;
                 _this.textAtlasTextureCache = [];
@@ -8949,11 +8963,13 @@ var egret;
                 _this.book = new web.Book(maxSize, border);
                 return _this;
             }
+            //分析textNode，把数据提取出来，然后给textNode挂上渲染的信息
             TextAtlasRender.analysisTextNodeAndFlushDrawLabel = function (textNode) {
                 if (!textNode) {
                     return;
                 }
                 if (!web.__textAtlasRender__) {
+                    //创建，后续会转移给WebGLRenderContext
                     var webglcontext = egret.web.WebGLRenderContext.getInstance(0, 0);
                     web.__textAtlasRender__ = new TextAtlasRender(webglcontext, 512, textAtlasDebug ? 12 : 1);
                 }
@@ -8962,6 +8978,7 @@ var egret;
                 var drawLabels = textNode[web.property_drawLabel];
                 for (var _i = 0, drawLabels_1 = drawLabels; _i < drawLabels_1.length; _i++) {
                     var drawLabel = drawLabels_1[_i];
+                    //还回去
                     DrawLabel.back(drawLabel, false);
                 }
                 drawLabels.length = 0;
@@ -8971,67 +8988,66 @@ var egret;
                 var anchorX = 0;
                 var anchorY = 0;
                 var labelString = '';
-                var format = {};
-                var renderTextBlocks = [];
+                var labelFormat = {};
+                var resultAsRenderTextBlocks = [];
                 for (var i = 0, length_13 = drawData.length; i < length_13; i += offset) {
                     anchorX = drawData[i + 0];
                     anchorY = drawData[i + 1];
                     labelString = drawData[i + 2];
-                    format = drawData[i + 3] || {};
-                    renderTextBlocks.length = 0;
+                    labelFormat = drawData[i + 3] || {};
+                    resultAsRenderTextBlocks.length = 0;
                     //提取数据
-                    web.__textAtlasRender__.convertLabelStringToTextAtlas(labelString, new StyleKey(textNode, format), renderTextBlocks);
-                    //添加命令
-                    var drawLabel = DrawLabel.create(); //new DrawLabel;
+                    web.__textAtlasRender__.convertLabelStringToTextAtlas(labelString, new StyleInfo(textNode, labelFormat), resultAsRenderTextBlocks);
+                    //pool创建 + 添加命令
+                    var drawLabel = DrawLabel.create();
                     drawLabel.anchorX = anchorX;
                     drawLabel.anchorY = anchorY;
-                    drawLabel.textBlocks = [].concat(renderTextBlocks);
+                    drawLabel.textBlocks = [].concat(resultAsRenderTextBlocks);
                     drawLabels.push(drawLabel);
                 }
             };
-            TextAtlasRender.prototype.convertLabelStringToTextAtlas = function (labelstring, styleKey, renderTextBlocks) {
+            //字符串转化成为TextBlock
+            TextAtlasRender.prototype.convertLabelStringToTextAtlas = function (labelstring, styleKey, resultAsRenderTextBlocks) {
                 var canvas = this.canvas;
-                var $charValue = this.charImage;
+                var charImageRender = this.charImageRender;
                 var textBlockMap = this.textBlockMap;
                 for (var _i = 0, labelstring_1 = labelstring; _i < labelstring_1.length; _i++) {
                     var char = labelstring_1[_i];
                     //不反复创建
-                    $charValue.reset(char, styleKey);
-                    if (textBlockMap[$charValue._hashCode]) {
+                    charImageRender.reset(char, styleKey);
+                    if (textBlockMap[charImageRender.charWithStyleHashCode]) {
                         //检查重复
-                        renderTextBlocks.push(textBlockMap[$charValue._hashCode]);
+                        resultAsRenderTextBlocks.push(textBlockMap[charImageRender.charWithStyleHashCode]);
                         continue;
                     }
-                    //尝试渲染到canvas
-                    $charValue.measureTextAndDrawToCanvas(canvas);
-                    //console.log(char + ':' + canvas.width + ', ' + canvas.height);
+                    //画到到canvas
+                    charImageRender.measureAndDraw(canvas);
                     //创建新的文字块
-                    var txtBlock = this.book.createTextBlock(canvas.width, canvas.height, $charValue.measureWidth, $charValue.measureHeight);
+                    var txtBlock = this.book.createTextBlock(char, canvas.width, canvas.height, charImageRender.measureWidth, charImageRender.measureHeight, charImageRender.canvasWidthOffset, charImageRender.canvasHeightOffset);
                     if (!txtBlock) {
                         continue;
                     }
-                    //
-                    textBlockMap[$charValue._hashCode] = txtBlock;
-                    txtBlock.tag = char;
-                    txtBlock.drawCanvasOffsetX = $charValue.drawCanvasOffsetX;
-                    txtBlock.drawCanvasOffsetY = $charValue.drawCanvasOffsetY;
-                    renderTextBlocks.push(txtBlock);
-                    //
+                    //需要绘制
+                    resultAsRenderTextBlocks.push(txtBlock);
+                    //记录快速查找
+                    textBlockMap[charImageRender.charWithStyleHashCode] = txtBlock;
+                    //生成纹理
                     var page = txtBlock.page;
                     if (!page.webGLTexture) {
                         page.webGLTexture = this.createTextTextureAtlas(page.pageWidth, page.pageHeight, textAtlasDebug);
                     }
-                    var textAtlas = page.webGLTexture;
                     var gl = this.webglRenderContext.context;
-                    gl.bindTexture(gl.TEXTURE_2D, textAtlas);
+                    gl.bindTexture(gl.TEXTURE_2D, page.webGLTexture);
                     gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
                     gl.texSubImage2D(gl.TEXTURE_2D, 0, txtBlock.subImageOffsetX, txtBlock.subImageOffsetY, gl.RGBA, gl.UNSIGNED_BYTE, canvas);
                     gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
                 }
             };
+            //给一个page创建一个纹理
             TextAtlasRender.prototype.createTextTextureAtlas = function (width, height, debug) {
                 var texture = null;
                 if (debug) {
+                    //做一个黑底子的，方便调试代码
                     var canvas = egret.sys.createCanvas(width, width);
                     var context_3 = egret.sys.getContext2d(canvas);
                     context_3.fillStyle = 'black';
@@ -9039,16 +9055,20 @@ var egret;
                     texture = egret.sys.createTexture(this.webglRenderContext, canvas);
                 }
                 else {
+                    //真的
                     texture = egret.sys._createTexture(this.webglRenderContext, width, height, null);
                 }
                 if (texture) {
+                    //存起来，未来可以删除，或者查看
                     this.textAtlasTextureCache.push(texture);
                 }
                 return texture;
             };
             Object.defineProperty(TextAtlasRender.prototype, "canvas", {
+                //给CharImageRender用的canvas
                 get: function () {
                     if (!this._canvas) {
+                        //就用默认体积24
                         this._canvas = egret.sys.createCanvas(24, 24);
                     }
                     return this._canvas;

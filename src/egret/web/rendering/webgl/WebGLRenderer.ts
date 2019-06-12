@@ -901,7 +901,7 @@ namespace egret.web {
                             0, 0, tb.contentWidth, tb.contentHeight,
                              page.pageWidth, page.pageHeight);
 
-                        buffer.$offsetX += (tb.contentWidth - tb.drawCanvasOffsetX * 2);
+                        buffer.$offsetX += (tb.contentWidth - tb.canvasWidthOffset * 2);
                     }
                 }
                 //还原回去

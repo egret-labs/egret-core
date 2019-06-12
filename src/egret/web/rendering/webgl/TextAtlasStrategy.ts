@@ -28,15 +28,15 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 /*
-***  back -> page -> line -> textBlock
+*** 一个管理模型，逐级包含: back -> page -> line -> textBlock
 */
 namespace egret.web {
 
     export class TextBlock extends HashObject {
 
-        private _width: number = 0;
-        private _height: number = 0;
-        private _border: number = 0;
+        private readonly _width: number = 0;
+        private readonly _height: number = 0;
+        private readonly _border: number = 0;
         public line: Line = null;
         public x: number = 0;
         public y: number = 0;
@@ -45,16 +45,18 @@ namespace egret.web {
         public tag: string = '';
         public readonly measureWidth: number = 0;
         public readonly measureHeight: number = 0;
-        public drawCanvasOffsetX = 0;
-        public drawCanvasOffsetY = 0;
+        public readonly canvasWidthOffset: number = 0;
+        public readonly canvasHeightOffset: number = 0;
 
-        constructor(width: number, height: number, measureWidth: number, measureHeight: number, border: number) {
+        constructor(width: number, height: number, measureWidth: number, measureHeight: number, canvasWidthOffset: number, canvasHeightOffset: number, border: number) {
             super();
             this._width = width;
             this._height = height;
             this._border = border;
             this.measureWidth = measureWidth;
             this.measureHeight = measureHeight;
+            this.canvasWidthOffset = canvasWidthOffset;
+            this.canvasHeightOffset = canvasHeightOffset;
         }
 
         public get border(): number {
@@ -322,13 +324,14 @@ namespace egret.web {
             this._sortLines = this._sortLines.sort(sortFunc);
         }
 
-        public createTextBlock(width: number, height: number, measureWidth: number, measureHeight: number): TextBlock {
-            const txtBlock = new TextBlock(width, height, measureWidth, measureHeight, this._border);
+        public createTextBlock(tag: string, width: number, height: number, measureWidth: number, measureHeight: number, canvasWidthOffset: number, canvasHeightOffset: number): TextBlock {
+            const txtBlock = new TextBlock(width, height, measureWidth, measureHeight, canvasWidthOffset, canvasHeightOffset, this._border);
             if (!this.addTextBlock(txtBlock)) {
                 //走到这里几乎是不可能的，除非内存分配没了
                 //暂时还没有到提交纹理的地步，现在都是虚拟的
                 return null;
             }
+            txtBlock.tag = tag;
             return txtBlock;
         }
     }
