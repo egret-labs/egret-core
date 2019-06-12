@@ -1,12 +1,13 @@
 import * as fs from 'fs';
 import * as path from 'path';
 export class VivogamePlugin implements plugins.Command {
-
+    jsFileList: any = []
     constructor() {
     }
     async onFile(file: plugins.File) {
         if (file.extname == '.js') {
             const filename = file.origin;
+            this.jsFileList.push(file.basename)
             if (filename == "libs/modules/promise/promise.js" || filename == 'libs/modules/promise/promise.min.js') {
                 return null;
             }
@@ -86,19 +87,13 @@ export class VivogamePlugin implements plugins.Command {
         let gameJSONContent = JSON.parse(fs.readFileSync(gameJSONPath, { encoding: "utf8" }));
         gameJSONContent.deviceOrientation = orientation;
         fs.writeFileSync(gameJSONPath, JSON.stringify(gameJSONContent, null, "\t"));
-        // console.log('pluginContext',pluginContext)
 
-        const manifestPath = path.join(pluginContext.outputDir, "manifest.js");
-        let manifestJSContent = fs.readFileSync(manifestPath, { encoding: "utf8" });
-        manifestJSContent = manifestJSContent.replace(/require\(/g, "")
-        manifestJSContent = manifestJSContent.replace(/[\r\n]/g, "");
-        manifestJSContent = manifestJSContent.replace(/\"/g, "");
-        let jsList = manifestJSContent.split(')')
+        
         let configOption = "webpackConf.externals = Object.assign(webpackConf.externals || {\n\t\t"
-        for (var i = 0, len = jsList.length; i < len - 1; i++) {
-            let jsFile = jsList[i];
+        for (var i = 0, len = this.jsFileList.length; i < len; i++) {
+            let jsFile = this.jsFileList[i];
             configOption += `"${jsFile}":"commonjs ${jsFile}"`
-            if (i < len - 2) {
+            if (i < len - 1) {
                 configOption += ",\n\t\t"
             } else {
                 configOption += "\n\t\t"
