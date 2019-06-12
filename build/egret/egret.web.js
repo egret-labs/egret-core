@@ -8111,13 +8111,17 @@ var egret;
                     var saveOffsetX = buffer.$offsetX;
                     var saveOffsetY = buffer.$offsetY;
                     //开始画
+                    var cmd = null;
+                    var anchorX = 0;
+                    var anchorY = 0;
+                    var textBlocks = null;
+                    var tb = null;
+                    var page = null;
                     for (var i = 0, length_10 = drawCommands.length; i < length_10; ++i) {
-                        var cmd = drawCommands[i];
-                        var anchorX = cmd.anchorX;
-                        var anchorY = cmd.anchorY;
-                        var textBlocks = cmd.textBlocks;
-                        var tb = null;
-                        var page = null;
+                        cmd = drawCommands[i];
+                        anchorX = cmd.anchorX;
+                        anchorY = cmd.anchorY;
+                        textBlocks = cmd.textBlocks;
                         buffer.$offsetX = saveOffsetX + anchorX;
                         for (var j = 0, length1 = textBlocks.length; j < length1; ++j) {
                             tb = textBlocks[j];
@@ -8134,12 +8138,13 @@ var egret;
                 if (x || y) {
                     buffer.transform(1, 0, 0, 1, -x / canvasScaleX, -y / canvasScaleY);
                 }
-                //node.dirtyRender = false;
+                node.dirtyRender = false;
             };
             WebGLRenderer.prototype.renderText = function (node, buffer) {
                 if (web.textAtlasRenderEnable) {
+                    //新的文字渲染机制
                     this.___renderText____(node, buffer);
-                    //return;
+                    return;
                 }
                 var width = node.width - node.x;
                 var height = node.height - node.y;
@@ -8751,12 +8756,12 @@ var egret;
     var web;
     (function (web) {
         //测试开关
-        web.textAtlasRenderEnable = true;
+        web.textAtlasRenderEnable = false;
         //测试对象
         web.__textAtlasRender__ = null;
         //不想改TextNode的代码了，先用这种方式实现
         web.property_drawLabel = 'DrawLabel';
-        var textAtlasDebug = true;
+        var textAtlasDebug = false;
         //画一行
         var DrawLabel = (function (_super) {
             __extends(DrawLabel, _super);

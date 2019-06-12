@@ -860,8 +860,8 @@ namespace egret.web {
             }
             width *= canvasScaleX;
             height *= canvasScaleY;
-            let x = node.x * canvasScaleX;
-            let y = node.y * canvasScaleY;
+            const x = node.x * canvasScaleX;
+            const y = node.y * canvasScaleY;
             if (node.$canvasScaleX !== canvasScaleX || node.$canvasScaleY !== canvasScaleY) {
                 node.$canvasScaleX = canvasScaleX;
                 node.$canvasScaleY = canvasScaleY;
@@ -879,22 +879,28 @@ namespace egret.web {
                 const saveOffsetX = buffer.$offsetX;
                 const saveOffsetY = buffer.$offsetY;
                 //开始画
+                let cmd: DrawLabel = null;
+                let anchorX = 0;
+                let anchorY = 0;
+                let textBlocks: TextBlock[] = null;
+                let tb: TextBlock = null;
+                let page: Page = null;
                 for (let i = 0, length = drawCommands.length; i < length; ++i) {
-                    
-                    const cmd = drawCommands[i];
-                    const anchorX = cmd.anchorX;
-                    const anchorY = cmd.anchorY;
-                    const textBlocks = cmd.textBlocks;
-
-                    let tb: TextBlock = null;
-                    let page: Page = null;
-                    
+                    cmd = drawCommands[i];
+                    anchorX = cmd.anchorX;
+                    anchorY = cmd.anchorY;
+                    textBlocks = cmd.textBlocks;
                     buffer.$offsetX = saveOffsetX + anchorX;
                     for (let j = 0, length1 = textBlocks.length; j < length1; ++j) {
                         tb = textBlocks[j];
                         buffer.$offsetY = saveOffsetY + anchorY - (tb.measureHeight / 2);
+
                         page = tb.line.page;
-                        buffer.context.drawTexture(page.webGLTexture, tb.u, tb.v, tb.contentWidth, tb.contentHeight, 0, 0, tb.contentWidth, tb.contentHeight, page.pageWidth, page.pageHeight);
+                        buffer.context.drawTexture(page.webGLTexture,
+                            tb.u, tb.v, tb.contentWidth, tb.contentHeight, 
+                            0, 0, tb.contentWidth, tb.contentHeight,
+                             page.pageWidth, page.pageHeight);
+
                         buffer.$offsetX += (tb.contentWidth - tb.drawCanvasOffsetX * 2);
                     }
                 }
@@ -905,15 +911,15 @@ namespace egret.web {
             if (x || y) {
                 buffer.transform(1, 0, 0, 1, -x / canvasScaleX, -y / canvasScaleY);
             }
-            //node.dirtyRender = false;
+            node.dirtyRender = false;
         }
 
         private renderText(node: sys.TextNode, buffer: WebGLRenderBuffer): void {
             if (textAtlasRenderEnable) {
+                //新的文字渲染机制
                 this.___renderText____(node, buffer);
-                //return;
+                return;
             }
-
             let width = node.width - node.x;
             let height = node.height - node.y;
             if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) {
