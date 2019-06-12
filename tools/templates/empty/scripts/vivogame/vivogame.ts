@@ -92,7 +92,7 @@ export class VivogamePlugin implements plugins.Command {
         let configOption = "webpackConf.externals = Object.assign(webpackConf.externals || {\n\t\t"
         for (var i = 0, len = this.jsFileList.length; i < len; i++) {
             let jsFile = this.jsFileList[i];
-            configOption += `"${jsFile}":"commonjs js/${jsFile}"`
+            configOption += `"js/${jsFile}":"commonjs js/${jsFile}"`
             if (i < len - 1) {
                 configOption += ",\n\t\t"
             } else {
