@@ -185,7 +185,7 @@ namespace egret.web {
             canvas.height = canvasHeight;
             //再开始绘制
             context.save();
-            context.textAlign = 'left';
+            context.textAlign = 'center';
             context.textBaseline = 'middle';
             context.lineJoin = 'round';
             context.font = this._styleKey.font;
@@ -193,13 +193,13 @@ namespace egret.web {
             context.strokeStyle = toColorString(strokeColor);
             context.clearRect(0, 0, canvas.width, canvas.height);
             //
-            this.drawCanvasOffsetX = _strokeDouble + 2;
-            this.drawCanvasOffsetY = _strokeDouble + 2;
+            this.drawCanvasOffsetX = (canvasWidth - this.measureWidth) / 2;
+            this.drawCanvasOffsetY = (canvasHeight - this.measureHeight) / 2;
             if (stroke) {
                 context.lineWidth = stroke * 2;
-                context.strokeText(text, this.drawCanvasOffsetX, canvas.height/2);
+                context.strokeText(text, canvas.width / 2, canvas.height / 2);
             }
-            context.fillText(text, this.drawCanvasOffsetX, canvas.height/2);
+            context.fillText(text, canvas.width / 2, canvas.height / 2);
             context.restore();
         }
 

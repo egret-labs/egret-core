@@ -7586,8 +7586,8 @@ var egret;
                     drawCount += node.$getRenderCount();
                 }
                 if (displayObject.$children) {
-                    for (var _b = 0, _c = displayObject.$children; _b < _c.length; _b++) {
-                        var child = _c[_b];
+                    for (var _i = 0, _a = displayObject.$children; _i < _a.length; _i++) {
+                        var child = _a[_i];
                         var filters = child.$filters;
                         // 特殊处理有滤镜的对象
                         if (filters && filters.length > 0) {
@@ -8111,26 +8111,20 @@ var egret;
                     var saveOffsetX = buffer.$offsetX;
                     var saveOffsetY = buffer.$offsetY;
                     //开始画
-                    for (var _i = 0, drawCommands_1 = drawCommands; _i < drawCommands_1.length; _i++) {
-                        var cmd = drawCommands_1[_i];
+                    for (var i = 0, length_10 = drawCommands.length; i < length_10; ++i) {
+                        var cmd = drawCommands[i];
                         var anchorX = cmd.anchorX;
                         var anchorY = cmd.anchorY;
-                        buffer.$offsetX = saveOffsetX + anchorX;
                         var textBlocks = cmd.textBlocks;
-                        for (var _a = 0, textBlocks_1 = textBlocks; _a < textBlocks_1.length; _a++) {
-                            var tb = textBlocks_1[_a];
-                            if (_a > 0) {
-                                buffer.$offsetX += -tb.drawCanvasOffsetX;
-                            }
+                        var tb = null;
+                        var page = null;
+                        buffer.$offsetX = saveOffsetX + anchorX;
+                        for (var j = 0, length1 = textBlocks.length; j < length1; ++j) {
+                            tb = textBlocks[j];
                             buffer.$offsetY = saveOffsetY + anchorY - (tb.measureHeight / 2);
-                            var page = tb.line.page;
+                            page = tb.line.page;
                             buffer.context.drawTexture(page.webGLTexture, tb.u, tb.v, tb.contentWidth, tb.contentHeight, 0, 0, tb.contentWidth, tb.contentHeight, page.pageWidth, page.pageHeight);
-                            if (_a > 0) {
-                                buffer.$offsetX += tb.contentWidth - tb.drawCanvasOffsetX;
-                            }
-                            else {
-                                buffer.$offsetX += tb.contentWidth - tb.drawCanvasOffsetX * 2;
-                            }
+                            buffer.$offsetX += (tb.contentWidth - tb.drawCanvasOffsetX * 2);
                         }
                     }
                     //还原回去
@@ -8663,7 +8657,7 @@ var egret;
                 }
                 //找到最合适的
                 var _sortLines = this._sortLines;
-                for (var i = 0, length_10 = _sortLines.length; i < length_10; ++i) {
+                for (var i = 0, length_11 = _sortLines.length; i < length_11; ++i) {
                     var line = _sortLines[i];
                     if (!line.isCapacityOf(textBlock)) {
                         continue;
@@ -8680,7 +8674,7 @@ var egret;
                 }
                 //现有的page中插入
                 var _pages = this._pages;
-                for (var i = 0, length_11 = _pages.length; i < length_11; ++i) {
+                for (var i = 0, length_12 = _pages.length; i < length_12; ++i) {
                     var page = _pages[i];
                     if (page.addLine(newLine)) {
                         return [page, newLine];
@@ -8897,7 +8891,7 @@ var egret;
                 canvas.height = canvasHeight;
                 //再开始绘制
                 context.save();
-                context.textAlign = 'left';
+                context.textAlign = 'center';
                 context.textBaseline = 'middle';
                 context.lineJoin = 'round';
                 context.font = this._styleKey.font;
@@ -8905,13 +8899,13 @@ var egret;
                 context.strokeStyle = egret.toColorString(strokeColor);
                 context.clearRect(0, 0, canvas.width, canvas.height);
                 //
-                this.drawCanvasOffsetX = _strokeDouble + 2;
-                this.drawCanvasOffsetY = _strokeDouble + 2;
+                this.drawCanvasOffsetX = (canvasWidth - this.measureWidth) / 2;
+                this.drawCanvasOffsetY = (canvasHeight - this.measureHeight) / 2;
                 if (stroke) {
                     context.lineWidth = stroke * 2;
-                    context.strokeText(text, this.drawCanvasOffsetX, canvas.height / 2);
+                    context.strokeText(text, canvas.width / 2, canvas.height / 2);
                 }
-                context.fillText(text, this.drawCanvasOffsetX, canvas.height / 2);
+                context.fillText(text, canvas.width / 2, canvas.height / 2);
                 context.restore();
             };
             CharImage.prototype.measureTextWidth = function (text, styleKey) {
@@ -8974,7 +8968,7 @@ var egret;
                 var labelString = '';
                 var format = {};
                 var renderTextBlocks = [];
-                for (var i = 0, length_12 = drawData.length; i < length_12; i += offset) {
+                for (var i = 0, length_13 = drawData.length; i < length_13; i += offset) {
                     anchorX = drawData[i + 0];
                     anchorY = drawData[i + 1];
                     labelString = drawData[i + 2];

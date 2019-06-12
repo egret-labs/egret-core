@@ -879,26 +879,23 @@ namespace egret.web {
                 const saveOffsetX = buffer.$offsetX;
                 const saveOffsetY = buffer.$offsetY;
                 //开始画
-                for (let _i = 0, drawCommands_1 = drawCommands; _i < drawCommands_1.length; _i++) {
-                    const cmd = drawCommands_1[_i];
+                for (let i = 0, length = drawCommands.length; i < length; ++i) {
+                    
+                    const cmd = drawCommands[i];
                     const anchorX = cmd.anchorX;
                     const anchorY = cmd.anchorY;
-                    buffer.$offsetX = saveOffsetX + anchorX;
                     const textBlocks = cmd.textBlocks;
-                    for (let _a = 0, textBlocks_1 = textBlocks; _a < textBlocks_1.length; _a++) {
-                        const tb = textBlocks_1[_a];
-                        if (_a > 0) {
-                            buffer.$offsetX += -tb.drawCanvasOffsetX;
-                        }
+
+                    let tb: TextBlock = null;
+                    let page: Page = null;
+                    
+                    buffer.$offsetX = saveOffsetX + anchorX;
+                    for (let j = 0, length1 = textBlocks.length; j < length1; ++j) {
+                        tb = textBlocks[j];
                         buffer.$offsetY = saveOffsetY + anchorY - (tb.measureHeight / 2);
-                        const page = tb.line.page;
+                        page = tb.line.page;
                         buffer.context.drawTexture(page.webGLTexture, tb.u, tb.v, tb.contentWidth, tb.contentHeight, 0, 0, tb.contentWidth, tb.contentHeight, page.pageWidth, page.pageHeight);
-                        if (_a > 0) {
-                            buffer.$offsetX += tb.contentWidth - tb.drawCanvasOffsetX;
-                        }
-                        else {
-                            buffer.$offsetX += tb.contentWidth - tb.drawCanvasOffsetX * 2;
-                        }
+                        buffer.$offsetX += (tb.contentWidth - tb.drawCanvasOffsetX * 2);
                     }
                 }
                 //还原回去
