@@ -8128,7 +8128,7 @@ var egret;
                             if (j > 0) {
                                 buffer.$offsetX -= tb.canvasWidthOffset;
                             }
-                            buffer.$offsetY = saveOffsetY + anchorY - (tb.measureHeight + tb.canvasHeightOffset) / 2;
+                            buffer.$offsetY = saveOffsetY + anchorY - (tb.measureHeight + (tb.stroke2 ? tb.canvasHeightOffset : 0)) / 2;
                             page = tb.line.page;
                             buffer.context.drawTexture(page.webGLTexture, tb.u, tb.v, tb.contentWidth, tb.contentHeight, 0, 0, tb.contentWidth, tb.contentHeight, page.pageWidth, page.pageHeight);
                             buffer.$offsetX += (tb.contentWidth - tb.canvasWidthOffset);
@@ -8402,7 +8402,7 @@ var egret;
     (function (web) {
         var TextBlock = (function (_super) {
             __extends(TextBlock, _super);
-            function TextBlock(width, height, measureWidth, measureHeight, canvasWidthOffset, canvasHeightOffset, border) {
+            function TextBlock(width, height, measureWidth, measureHeight, canvasWidthOffset, canvasHeightOffset, stroke2, border) {
                 var _this = _super.call(this) || this;
                 _this._width = 0;
                 _this._height = 0;
@@ -8417,6 +8417,7 @@ var egret;
                 _this.measureHeight = 0;
                 _this.canvasWidthOffset = 0;
                 _this.canvasHeightOffset = 0;
+                _this.stroke2 = 0;
                 _this._width = width;
                 _this._height = height;
                 _this._border = border;
@@ -8424,6 +8425,7 @@ var egret;
                 _this.measureHeight = measureHeight;
                 _this.canvasWidthOffset = canvasWidthOffset;
                 _this.canvasHeightOffset = canvasHeightOffset;
+                _this.stroke2 = stroke2;
                 return _this;
             }
             Object.defineProperty(TextBlock.prototype, "border", {
@@ -8715,8 +8717,8 @@ var egret;
                 };
                 this._sortLines = this._sortLines.sort(sortFunc);
             };
-            Book.prototype.createTextBlock = function (tag, width, height, measureWidth, measureHeight, canvasWidthOffset, canvasHeightOffset) {
-                var txtBlock = new TextBlock(width, height, measureWidth, measureHeight, canvasWidthOffset, canvasHeightOffset, this._border);
+            Book.prototype.createTextBlock = function (tag, width, height, measureWidth, measureHeight, canvasWidthOffset, canvasHeightOffset, stroke2) {
+                var txtBlock = new TextBlock(width, height, measureWidth, measureHeight, canvasWidthOffset, canvasHeightOffset, stroke2, this._border);
                 if (!this.addTextBlock(txtBlock)) {
                     //走到这里几乎是不可能的，除非内存分配没了
                     //暂时还没有到提交纹理的地步，现在都是虚拟的
@@ -8879,6 +8881,8 @@ var egret;
                 //边缘放大之后的偏移
                 _this.canvasWidthOffset = 0;
                 _this.canvasHeightOffset = 0;
+                //描边的记录
+                _this.stroke2 = 0;
                 return _this;
             }
             CharImageRender.prototype.reset = function (char, styleKey) {
@@ -8888,6 +8892,7 @@ var egret;
                 this.charWithStyleHashCode = egret.NumberUtils.convertStringToHashCode(this.hashCodeString);
                 this.canvasWidthOffset = 0;
                 this.canvasHeightOffset = 0;
+                this.stroke2 = 0;
                 return this;
             };
             CharImageRender.prototype.measureAndDraw = function (targetCanvas) {
@@ -8913,6 +8918,7 @@ var egret;
                     canvasWidth += _strokeDouble * 2;
                     canvasHeight += _strokeDouble * 2;
                 }
+                this.stroke2 = _strokeDouble;
                 //赋值
                 canvas.width = canvasWidth = Math.ceil(canvasWidth) + 2 * 2;
                 canvas.height = canvasHeight = Math.ceil(canvasHeight) + 2 * 2;
@@ -8965,7 +8971,6 @@ var egret;
             //
             function TextAtlasRender(webglRenderContext, maxSize, border) {
                 var _this = _super.call(this) || this;
-                //
                 _this.book = null;
                 _this.charImageRender = new CharImageRender;
                 _this.textBlockMap = {};
@@ -9036,7 +9041,7 @@ var egret;
                     //画到到canvas
                     charImageRender.measureAndDraw(canvas);
                     //创建新的文字块
-                    var txtBlock = this.book.createTextBlock(char, canvas.width, canvas.height, charImageRender.measureWidth, charImageRender.measureHeight, charImageRender.canvasWidthOffset, charImageRender.canvasHeightOffset);
+                    var txtBlock = this.book.createTextBlock(char, canvas.width, canvas.height, charImageRender.measureWidth, charImageRender.measureHeight, charImageRender.canvasWidthOffset, charImageRender.canvasHeightOffset, charImageRender.stroke2);
                     if (!txtBlock) {
                         continue;
                     }

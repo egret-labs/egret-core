@@ -36,7 +36,7 @@ namespace egret.web {
     export let __textAtlasRender__: TextAtlasRender = null;
 
     //不想改TextNode的代码了，先用这种方式实现，以后稳了再改
-    export const property_drawLabel = 'DrawLabel';
+    export const property_drawLabel: string = 'DrawLabel';
 
     //开启这个，用textAtlas渲染出来的，都是红字，而且加黑框
     const textAtlasDebug: boolean = false;
@@ -146,8 +146,10 @@ namespace egret.web {
         //边缘放大之后的偏移
         public canvasWidthOffset: number = 0;
         public canvasHeightOffset: number = 0;
+        //描边的记录
+        public stroke2: number = 0;
         //针对中文的加速查找
-        private static readonly chineseCharactersRegExp = new RegExp("^[\u4E00-\u9FA5]$");
+        private static readonly chineseCharactersRegExp: RegExp = new RegExp("^[\u4E00-\u9FA5]$");
         private static readonly chineseCharacterMeasureFastMap: { [index: string]: number } = {};
 
         public reset(char: string, styleKey: StyleInfo): CharImageRender {
@@ -157,6 +159,7 @@ namespace egret.web {
             this.charWithStyleHashCode = NumberUtils.convertStringToHashCode(this.hashCodeString);
             this.canvasWidthOffset = 0;
             this.canvasHeightOffset = 0;
+            this.stroke2 = 0;
             return this;
         }
 
@@ -183,6 +186,7 @@ namespace egret.web {
                 canvasWidth += _strokeDouble * 2;
                 canvasHeight += _strokeDouble * 2;
             }
+            this.stroke2 = _strokeDouble;
             //赋值
             canvas.width = canvasWidth = Math.ceil(canvasWidth) + 2 * 2;
             canvas.height = canvasHeight = Math.ceil(canvasHeight) + 2 * 2;
@@ -229,9 +233,8 @@ namespace egret.web {
     //对外的类
     export class TextAtlasRender extends HashObject {
 
-        //
-        private readonly book = null;
-        private readonly charImageRender = new CharImageRender;
+        private readonly book: Book = null;
+        private readonly charImageRender: CharImageRender = new CharImageRender;
         private readonly textBlockMap: { [index: number]: TextBlock } = {};
         private _canvas: HTMLCanvasElement = null;
         private readonly textAtlasTextureCache: WebGLTexture[] = [];
@@ -306,7 +309,8 @@ namespace egret.web {
                 const txtBlock = this.book.createTextBlock(char,
                     canvas.width, canvas.height,
                     charImageRender.measureWidth, charImageRender.measureHeight,
-                    charImageRender.canvasWidthOffset, charImageRender.canvasHeightOffset);
+                    charImageRender.canvasWidthOffset, charImageRender.canvasHeightOffset,
+                    charImageRender.stroke2);
 
                 if (!txtBlock) {
                     continue;

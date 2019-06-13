@@ -47,8 +47,10 @@ namespace egret.web {
         public readonly measureHeight: number = 0;
         public readonly canvasWidthOffset: number = 0;
         public readonly canvasHeightOffset: number = 0;
+        public readonly stroke2: number = 0;
+        
 
-        constructor(width: number, height: number, measureWidth: number, measureHeight: number, canvasWidthOffset: number, canvasHeightOffset: number, border: number) {
+        constructor(width: number, height: number, measureWidth: number, measureHeight: number, canvasWidthOffset: number, canvasHeightOffset: number, stroke2: number, border: number) {
             super();
             this._width = width;
             this._height = height;
@@ -57,6 +59,7 @@ namespace egret.web {
             this.measureHeight = measureHeight;
             this.canvasWidthOffset = canvasWidthOffset;
             this.canvasHeightOffset = canvasHeightOffset;
+            this.stroke2 = stroke2;
         }
 
         public get border(): number {
@@ -326,8 +329,8 @@ namespace egret.web {
             this._sortLines = this._sortLines.sort(sortFunc);
         }
 
-        public createTextBlock(tag: string, width: number, height: number, measureWidth: number, measureHeight: number, canvasWidthOffset: number, canvasHeightOffset: number): TextBlock {
-            const txtBlock = new TextBlock(width, height, measureWidth, measureHeight, canvasWidthOffset, canvasHeightOffset, this._border);
+        public createTextBlock(tag: string, width: number, height: number, measureWidth: number, measureHeight: number, canvasWidthOffset: number, canvasHeightOffset: number, stroke2: number): TextBlock {
+            const txtBlock = new TextBlock(width, height, measureWidth, measureHeight, canvasWidthOffset, canvasHeightOffset, stroke2, this._border);
             if (!this.addTextBlock(txtBlock)) {
                 //走到这里几乎是不可能的，除非内存分配没了
                 //暂时还没有到提交纹理的地步，现在都是虚拟的

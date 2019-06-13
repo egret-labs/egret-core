@@ -896,7 +896,7 @@ namespace egret.web {
                         if (j > 0) {
                             buffer.$offsetX -= tb.canvasWidthOffset;
                         }
-                        buffer.$offsetY = saveOffsetY + anchorY - (tb.measureHeight + tb.canvasHeightOffset) / 2;
+                        buffer.$offsetY = saveOffsetY + anchorY - (tb.measureHeight + (tb.stroke2 ? tb.canvasHeightOffset : 0)) / 2;
                         page = tb.line.page;
                         buffer.context.drawTexture(page.webGLTexture,
                             tb.u, tb.v, tb.contentWidth, tb.contentHeight, 
