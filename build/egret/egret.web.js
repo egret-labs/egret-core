@@ -3330,6 +3330,7 @@ var egret;
                 Html5Capatibility.ua = ua;
                 Html5Capatibility._canUseBlob = false;
                 var canUseWebAudio = window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"];
+                var isIos = ua.indexOf("iphone") >= 0 || ua.indexOf("ipad") >= 0 || ua.indexOf("ipod") >= 0;
                 if (canUseWebAudio) {
                     try {
                         //防止某些chrome版本创建异常问题
@@ -3345,6 +3346,11 @@ var egret;
                     checkAudioType = false;
                     Html5Capatibility.setAudioType(audioType);
                 }
+                else if (!isIos && ua.indexOf("safari") >= 0 && ua.indexOf("chrome") === -1) {
+                    // In Safari browser on Mac,use web audio
+                    checkAudioType = false;
+                    Html5Capatibility.setAudioType(AudioType.WEB_AUDIO);
+                }
                 else {
                     checkAudioType = true;
                     Html5Capatibility.setAudioType(AudioType.HTML5_AUDIO);
@@ -3354,7 +3360,7 @@ var egret;
                         Html5Capatibility.setAudioType(AudioType.WEB_AUDIO);
                     }
                 }
-                else if (ua.indexOf("iphone") >= 0 || ua.indexOf("ipad") >= 0 || ua.indexOf("ipod") >= 0) {
+                else if (isIos) {
                     if (Html5Capatibility.getIOSVersion() >= 7) {
                         Html5Capatibility._canUseBlob = true;
                         if (checkAudioType && canUseWebAudio) {
@@ -3765,13 +3771,13 @@ var egret;
                 }
                 else {
                     //based on : https://github.com/jondavidjohn/hidpi-canvas-polyfill
-                    var context_1 = egret.sys.canvasHitTestBuffer.context;
-                    var backingStore = context_1.backingStorePixelRatio ||
-                        context_1.webkitBackingStorePixelRatio ||
-                        context_1.mozBackingStorePixelRatio ||
-                        context_1.msBackingStorePixelRatio ||
-                        context_1.oBackingStorePixelRatio ||
-                        context_1.backingStorePixelRatio || 1;
+                    var context = egret.sys.canvasHitTestBuffer.context;
+                    var backingStore = context.backingStorePixelRatio ||
+                        context.webkitBackingStorePixelRatio ||
+                        context.mozBackingStorePixelRatio ||
+                        context.msBackingStorePixelRatio ||
+                        context.oBackingStorePixelRatio ||
+                        context.backingStorePixelRatio || 1;
                     canvasScaleFactor = (window.devicePixelRatio || 1) / backingStore;
                 }
                 egret.sys.DisplayList.$canvasScaleFactor = canvasScaleFactor;
@@ -6256,9 +6262,9 @@ var egret;
                     if (!this._defaultEmptyTexture) {
                         var size = 16;
                         var canvas = egret.sys.createCanvas(size, size);
-                        var context_2 = egret.sys.getContext2d(canvas); //canvas.getContext('2d');
-                        context_2.fillStyle = 'white';
-                        context_2.fillRect(0, 0, size, size);
+                        var context = egret.sys.getContext2d(canvas); //canvas.getContext('2d');
+                        context.fillStyle = 'white';
+                        context.fillRect(0, 0, size, size);
                         this._defaultEmptyTexture = this.createTexture(canvas);
                         this._defaultEmptyTexture[egret.engine_default_empty_texture] = true;
                     }
@@ -9067,9 +9073,9 @@ var egret;
                 if (debug) {
                     //做一个黑底子的，方便调试代码
                     var canvas = egret.sys.createCanvas(width, width);
-                    var context_3 = egret.sys.getContext2d(canvas);
-                    context_3.fillStyle = 'black';
-                    context_3.fillRect(0, 0, width, width);
+                    var context = egret.sys.getContext2d(canvas);
+                    context.fillStyle = 'black';
+                    context.fillRect(0, 0, width, width);
                     texture = egret.sys.createTexture(this.webglRenderContext, canvas);
                 }
                 else {
