@@ -80,6 +80,7 @@ namespace egret.web {
 
             Html5Capatibility._canUseBlob = false;
             let canUseWebAudio = window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"];
+            let isIos = ua.indexOf("iphone") >= 0 || ua.indexOf("ipad") >= 0 || ua.indexOf("ipod") >= 0;
             if (canUseWebAudio) {
                 try {
                     //防止某些chrome版本创建异常问题
@@ -95,6 +96,11 @@ namespace egret.web {
                 checkAudioType = false;
                 Html5Capatibility.setAudioType(audioType);
             }
+            else if(!isIos && ua.indexOf("safari") >=0 && ua.indexOf("chrome") === -1){
+                // In Safari browser on Mac,use web audio
+                checkAudioType = false;
+                Html5Capatibility.setAudioType(AudioType.WEB_AUDIO);
+            }
             else {
                 checkAudioType = true;
                 Html5Capatibility.setAudioType(AudioType.HTML5_AUDIO);
@@ -105,7 +111,7 @@ namespace egret.web {
                     Html5Capatibility.setAudioType(AudioType.WEB_AUDIO);
                 }
             }
-            else if (ua.indexOf("iphone") >= 0 || ua.indexOf("ipad") >= 0 || ua.indexOf("ipod") >= 0) {//ios
+            else if (isIos) {//ios
                 if (Html5Capatibility.getIOSVersion() >= 7) {
                     Html5Capatibility._canUseBlob = true;
                     if (checkAudioType && canUseWebAudio) {
