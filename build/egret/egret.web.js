@@ -8666,7 +8666,7 @@ var egret;
                     return null;
                 }
                 if (textBlock.width > this._maxSize || textBlock.height > this._maxSize) {
-                    console.error('textBlock.width = ' + textBlock.width + ', ' + 'textBlock.height = ' + textBlock.height);
+                    //console.log('this._maxSize = ' + this._maxSize + ', textBlock.width = ' + textBlock.width + ', textBlock.height = ' + textBlock.height);
                     return null;
                 }
                 //找到最合适的
