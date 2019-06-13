@@ -1,0 +1,5 @@
+# Egret Engine 5.2.22 Release Notes
+
+
+## 2D Rendering - JavaScript 
+- **[fix]** Fix an error in destroying `htmlSound` audio when it was initially loaded
