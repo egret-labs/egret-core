@@ -112,10 +112,12 @@ namespace egret.web {
             this.format = format;
             this.font = getFontString(textNode, this.format);
             //描述用于生成hashcode
-            this.description = '' + this.font;
             const textColor = (!format.textColor ? textNode.textColor : format.textColor);
             const strokeColor = (!format.strokeColor ? textNode.strokeColor : format.strokeColor);
             const stroke = (!format.stroke ? textNode.stroke : format.stroke);
+            const size = (!format.size ? textNode.size : format.size);
+            //
+            this.description = '' + this.font + '-' + size;
             this.description += '-' + toColorString(textColor);
             this.description += '-' + toColorString(strokeColor);
             if (stroke) {
@@ -169,9 +171,10 @@ namespace egret.web {
             const textColor = (!format.textColor ? this.styleInfo.textColor : format.textColor);
             const strokeColor = (!format.strokeColor ? this.styleInfo.strokeColor : format.strokeColor);
             const stroke = (!format.stroke ? this.styleInfo.stroke : format.stroke);
+            const size = (!format.size ? this.styleInfo.size : format.size);
             //开始测量---------------------------------------
-            this.measureWidth = this.measure(text, this.styleInfo);
-            this.measureHeight = this.styleInfo.size;
+            this.measureWidth = this.measure(text, this.styleInfo, size);
+            this.measureHeight = size;//this.styleInfo.size;
             //调整 参考TextField: $getRenderBounds(): Rectangle {
             let canvasWidth = this.measureWidth;
             let canvasHeight = this.measureHeight;
@@ -208,14 +211,14 @@ namespace egret.web {
             context.restore();
         }
 
-        private measure(text: string, styleKey: StyleInfo): number {
+        private measure(text: string, styleKey: StyleInfo, textFlowSize: number): number {
             const isChinese = CharImageRender.chineseCharactersRegExp.test(text);
             if (isChinese) {
                 if (CharImageRender.chineseCharacterMeasureFastMap[styleKey.font]) {
                     return CharImageRender.chineseCharacterMeasureFastMap[styleKey.font];
                 }
             }
-            const measureTextWidth = egret.sys.measureText(text, styleKey.fontFamily, styleKey.size, styleKey.bold, styleKey.italic);
+            const measureTextWidth = egret.sys.measureText(text, styleKey.fontFamily, textFlowSize || styleKey.size, styleKey.bold, styleKey.italic);
             if (isChinese) {
                 CharImageRender.chineseCharacterMeasureFastMap[styleKey.font] = measureTextWidth;
             }
@@ -249,7 +252,7 @@ namespace egret.web {
             if (!__textAtlasRender__) {
                 //创建，后续会转移给WebGLRenderContext
                 const webglcontext = egret.web.WebGLRenderContext.getInstance(0, 0);
-                __textAtlasRender__ = new TextAtlasRender(webglcontext, 512, textAtlasDebug ? 12 : 1);
+                __textAtlasRender__ = new TextAtlasRender(webglcontext, textAtlasDebug ? 512 : webglcontext.$maxTextureSize, textAtlasDebug ? 12 : 1);
             }
             //清除命令
             textNode[property_drawLabel] = textNode[property_drawLabel] || [];

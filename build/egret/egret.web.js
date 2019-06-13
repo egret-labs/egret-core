@@ -298,7 +298,7 @@ var egret;
                     delete HtmlSound.clearAudios[this.url];
                 }
                 function onAudioLoaded() {
-                    HtmlSound.$recycle(this.url, audio);
+                    HtmlSound.$recycle(self.url, audio);
                     removeListeners();
                     if (ua.indexOf("firefox") >= 0) {
                         audio.pause();
@@ -8128,7 +8128,7 @@ var egret;
                             if (j > 0) {
                                 buffer.$offsetX -= tb.canvasWidthOffset;
                             }
-                            buffer.$offsetY = saveOffsetY + anchorY - (tb.measureHeight / 2);
+                            buffer.$offsetY = saveOffsetY + anchorY - (tb.measureHeight + tb.canvasHeightOffset) / 2;
                             page = tb.line.page;
                             buffer.context.drawTexture(page.webGLTexture, tb.u, tb.v, tb.contentWidth, tb.contentHeight, 0, 0, tb.contentWidth, tb.contentHeight, page.pageWidth, page.pageHeight);
                             buffer.$offsetX += (tb.contentWidth - tb.canvasWidthOffset);
@@ -8838,10 +8838,12 @@ var egret;
                 _this.format = format;
                 _this.font = egret.getFontString(textNode, _this.format);
                 //描述用于生成hashcode
-                _this.description = '' + _this.font;
                 var textColor = (!format.textColor ? textNode.textColor : format.textColor);
                 var strokeColor = (!format.strokeColor ? textNode.strokeColor : format.strokeColor);
                 var stroke = (!format.stroke ? textNode.stroke : format.stroke);
+                var size = (!format.size ? textNode.size : format.size);
+                //
+                _this.description = '' + _this.font + '-' + size;
                 _this.description += '-' + egret.toColorString(textColor);
                 _this.description += '-' + egret.toColorString(strokeColor);
                 if (stroke) {
@@ -8897,9 +8899,10 @@ var egret;
                 var textColor = (!format.textColor ? this.styleInfo.textColor : format.textColor);
                 var strokeColor = (!format.strokeColor ? this.styleInfo.strokeColor : format.strokeColor);
                 var stroke = (!format.stroke ? this.styleInfo.stroke : format.stroke);
+                var size = (!format.size ? this.styleInfo.size : format.size);
                 //开始测量---------------------------------------
-                this.measureWidth = this.measure(text, this.styleInfo);
-                this.measureHeight = this.styleInfo.size;
+                this.measureWidth = this.measure(text, this.styleInfo, size);
+                this.measureHeight = size; //this.styleInfo.size;
                 //调整 参考TextField: $getRenderBounds(): Rectangle {
                 var canvasWidth = this.measureWidth;
                 var canvasHeight = this.measureHeight;
@@ -8935,14 +8938,14 @@ var egret;
                 context.fillText(text, canvas.width / 2, canvas.height / 2);
                 context.restore();
             };
-            CharImageRender.prototype.measure = function (text, styleKey) {
+            CharImageRender.prototype.measure = function (text, styleKey, textFlowSize) {
                 var isChinese = CharImageRender.chineseCharactersRegExp.test(text);
                 if (isChinese) {
                     if (CharImageRender.chineseCharacterMeasureFastMap[styleKey.font]) {
                         return CharImageRender.chineseCharacterMeasureFastMap[styleKey.font];
                     }
                 }
-                var measureTextWidth = egret.sys.measureText(text, styleKey.fontFamily, styleKey.size, styleKey.bold, styleKey.italic);
+                var measureTextWidth = egret.sys.measureText(text, styleKey.fontFamily, textFlowSize || styleKey.size, styleKey.bold, styleKey.italic);
                 if (isChinese) {
                     CharImageRender.chineseCharacterMeasureFastMap[styleKey.font] = measureTextWidth;
                 }
@@ -8979,7 +8982,7 @@ var egret;
                 if (!web.__textAtlasRender__) {
                     //创建，后续会转移给WebGLRenderContext
                     var webglcontext = egret.web.WebGLRenderContext.getInstance(0, 0);
-                    web.__textAtlasRender__ = new TextAtlasRender(webglcontext, 512, textAtlasDebug ? 12 : 1);
+                    web.__textAtlasRender__ = new TextAtlasRender(webglcontext, textAtlasDebug ? 512 : webglcontext.$maxTextureSize, textAtlasDebug ? 12 : 1);
                 }
                 //清除命令
                 textNode[web.property_drawLabel] = textNode[web.property_drawLabel] || [];
