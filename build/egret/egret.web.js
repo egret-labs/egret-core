@@ -8125,10 +8125,13 @@ var egret;
                         buffer.$offsetX = saveOffsetX + anchorX;
                         for (var j = 0, length1 = textBlocks.length; j < length1; ++j) {
                             tb = textBlocks[j];
+                            if (j > 0) {
+                                buffer.$offsetX -= tb.canvasWidthOffset;
+                            }
                             buffer.$offsetY = saveOffsetY + anchorY - (tb.measureHeight / 2);
                             page = tb.line.page;
                             buffer.context.drawTexture(page.webGLTexture, tb.u, tb.v, tb.contentWidth, tb.contentHeight, 0, 0, tb.contentWidth, tb.contentHeight, page.pageWidth, page.pageHeight);
-                            buffer.$offsetX += (tb.contentWidth - tb.canvasWidthOffset * 2);
+                            buffer.$offsetX += (tb.contentWidth - tb.canvasWidthOffset);
                         }
                     }
                     //还原回去
@@ -8910,6 +8913,11 @@ var egret;
                 canvas.height = canvasHeight = Math.ceil(canvasHeight) + 2 * 2;
                 this.canvasWidthOffset = (canvas.width - this.measureWidth) / 2;
                 this.canvasHeightOffset = (canvas.height - this.measureHeight) / 2;
+                //全部保留numberOfPrecision位小数
+                var numberOfPrecision = 3;
+                var precision = Math.pow(10, numberOfPrecision);
+                this.canvasWidthOffset = Math.floor(this.canvasWidthOffset * precision) / precision;
+                this.canvasHeightOffset = Math.floor(this.canvasHeightOffset * precision) / precision;
                 //再开始绘制---------------------------------------
                 var context = egret.sys.getContext2d(canvas);
                 context.save();

@@ -185,6 +185,11 @@ namespace egret.web {
             canvas.height = canvasHeight = Math.ceil(canvasHeight) + 2 * 2;
             this.canvasWidthOffset = (canvas.width - this.measureWidth) / 2;
             this.canvasHeightOffset = (canvas.height - this.measureHeight) / 2;
+            //全部保留numberOfPrecision位小数
+            const numberOfPrecision = 3;
+            const precision = Math.pow(10, numberOfPrecision);
+            this.canvasWidthOffset = Math.floor(this.canvasWidthOffset * precision) / precision;
+            this.canvasHeightOffset = Math.floor(this.canvasHeightOffset * precision) / precision;
             //再开始绘制---------------------------------------
             const context = egret.sys.getContext2d(canvas);
             context.save();

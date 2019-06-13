@@ -893,15 +893,17 @@ namespace egret.web {
                     buffer.$offsetX = saveOffsetX + anchorX;
                     for (let j = 0, length1 = textBlocks.length; j < length1; ++j) {
                         tb = textBlocks[j];
+                        if (j > 0) {
+                            buffer.$offsetX -= tb.canvasWidthOffset;
+                        }
                         buffer.$offsetY = saveOffsetY + anchorY - (tb.measureHeight / 2);
-
                         page = tb.line.page;
                         buffer.context.drawTexture(page.webGLTexture,
                             tb.u, tb.v, tb.contentWidth, tb.contentHeight, 
                             0, 0, tb.contentWidth, tb.contentHeight,
                              page.pageWidth, page.pageHeight);
 
-                        buffer.$offsetX += (tb.contentWidth - tb.canvasWidthOffset * 2);
+                        buffer.$offsetX += (tb.contentWidth - tb.canvasWidthOffset);
                     }
                 }
                 //还原回去
