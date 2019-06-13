@@ -8533,8 +8533,10 @@ var egret;
                     return false; //宽度不够
                 }
                 //
-                if (this.dynamicMaxHeight > 0 && posy + textBlock.height > this.dynamicMaxHeight) {
-                    return false; //如果有已经有动态高度，到这里，说明高度也不够
+                if (this.dynamicMaxHeight > 0) {
+                    if (textBlock.height > this.dynamicMaxHeight || (textBlock.height / this.dynamicMaxHeight < 0.5)) {
+                        return false; //如果有已经有动态高度，到这里，要么高度不够，要么小于动态高度的0.6差距, 就不填充
+                    }
                 }
                 return true;
             };
