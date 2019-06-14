@@ -3771,13 +3771,13 @@ var egret;
                 }
                 else {
                     //based on : https://github.com/jondavidjohn/hidpi-canvas-polyfill
-                    var context = egret.sys.canvasHitTestBuffer.context;
-                    var backingStore = context.backingStorePixelRatio ||
-                        context.webkitBackingStorePixelRatio ||
-                        context.mozBackingStorePixelRatio ||
-                        context.msBackingStorePixelRatio ||
-                        context.oBackingStorePixelRatio ||
-                        context.backingStorePixelRatio || 1;
+                    var context_1 = egret.sys.canvasHitTestBuffer.context;
+                    var backingStore = context_1.backingStorePixelRatio ||
+                        context_1.webkitBackingStorePixelRatio ||
+                        context_1.mozBackingStorePixelRatio ||
+                        context_1.msBackingStorePixelRatio ||
+                        context_1.oBackingStorePixelRatio ||
+                        context_1.backingStorePixelRatio || 1;
                     canvasScaleFactor = (window.devicePixelRatio || 1) / backingStore;
                 }
                 egret.sys.DisplayList.$canvasScaleFactor = canvasScaleFactor;
@@ -6262,9 +6262,9 @@ var egret;
                     if (!this._defaultEmptyTexture) {
                         var size = 16;
                         var canvas = egret.sys.createCanvas(size, size);
-                        var context = egret.sys.getContext2d(canvas); //canvas.getContext('2d');
-                        context.fillStyle = 'white';
-                        context.fillRect(0, 0, size, size);
+                        var context_2 = egret.sys.getContext2d(canvas); //canvas.getContext('2d');
+                        context_2.fillStyle = 'white';
+                        context_2.fillRect(0, 0, size, size);
                         this._defaultEmptyTexture = this.createTexture(canvas);
                         this._defaultEmptyTexture[egret.engine_default_empty_texture] = true;
                     }
@@ -8995,7 +8995,8 @@ var egret;
                 if (!web.__textAtlasRender__) {
                     //创建，后续会转移给WebGLRenderContext
                     var webglcontext = egret.web.WebGLRenderContext.getInstance(0, 0);
-                    web.__textAtlasRender__ = new TextAtlasRender(webglcontext, textAtlasDebug ? 512 : webglcontext.$maxTextureSize, textAtlasDebug ? 12 : 1);
+                    //初期先512，因为不会大规模batch, 老项目最好不要直接使用这个，少数几个总变内容的TextField可以用，所以先不用$maxTextureSize
+                    web.__textAtlasRender__ = new TextAtlasRender(webglcontext, textAtlasDebug ? 512 : 512 /*webglcontext.$maxTextureSize*/, textAtlasDebug ? 12 : 1);
                 }
                 //清除命令
                 textNode[web.property_drawLabel] = textNode[web.property_drawLabel] || [];
@@ -9073,9 +9074,9 @@ var egret;
                 if (debug) {
                     //做一个黑底子的，方便调试代码
                     var canvas = egret.sys.createCanvas(width, width);
-                    var context = egret.sys.getContext2d(canvas);
-                    context.fillStyle = 'black';
-                    context.fillRect(0, 0, width, width);
+                    var context_3 = egret.sys.getContext2d(canvas);
+                    context_3.fillStyle = 'black';
+                    context_3.fillRect(0, 0, width, width);
                     texture = egret.sys.createTexture(this.webglRenderContext, canvas);
                 }
                 else {

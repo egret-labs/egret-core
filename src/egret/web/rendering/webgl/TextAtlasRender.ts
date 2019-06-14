@@ -255,7 +255,8 @@ namespace egret.web {
             if (!__textAtlasRender__) {
                 //创建，后续会转移给WebGLRenderContext
                 const webglcontext = egret.web.WebGLRenderContext.getInstance(0, 0);
-                __textAtlasRender__ = new TextAtlasRender(webglcontext, textAtlasDebug ? 512 : webglcontext.$maxTextureSize, textAtlasDebug ? 12 : 1);
+                //初期先512，因为不会大规模batch, 老项目最好不要直接使用这个，少数几个总变内容的TextField可以用，所以先不用$maxTextureSize
+                __textAtlasRender__ = new TextAtlasRender(webglcontext, textAtlasDebug ? 512 : 512/*webglcontext.$maxTextureSize*/, textAtlasDebug ? 12 : 1);
             }
             //清除命令
             textNode[property_drawLabel] = textNode[property_drawLabel] || [];
