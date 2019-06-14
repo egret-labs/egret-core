@@ -28,6 +28,9 @@
 //////////////////////////////////////////////////////////////////////////////////////
 namespace egret.web {
 
+    //
+    export const VAO_REFACTOR = true;
+
     /**
      * @private
      * 顶点数组管理对象
@@ -66,19 +69,20 @@ namespace egret.web {
         * refactor: 
         */
         private _vertices: ArrayBuffer = null;
-        private _verticesFloatView: Float32Array = null;
-        private _verticesU32View: Float32Array = null;
+        private _verticesFloat32View: Float32Array = null;
+        private _verticesUint32View: Uint32Array = null;
 
         constructor() {
             //old
-            //const numVerts = this.maxVertexCount * this.vertSize;
-            //this.vertices = new Float32Array(numVerts);
+            const numVerts = this.maxVertexCount * this.vertSize;
+            this.vertices = new Float32Array(numVerts);
             ///
-            this._vertices = new ArrayBuffer(this.maxVertexCount * this.vertByteSize);
-            this._verticesFloatView = new Float32Array(this._vertices);
-            this._verticesU32View = new Uint32Array(this._vertices);
-            this.vertices = this._verticesFloatView;
-
+            if (VAO_REFACTOR) {
+                this._vertices = new ArrayBuffer(this.maxVertexCount * this.vertByteSize);
+                this._verticesFloat32View = new Float32Array(this._vertices);
+                this._verticesUint32View = new Uint32Array(this._vertices);
+                this.vertices = this._verticesFloat32View;
+            }
             //索引缓冲，最大索引数
             const numIndices = this.maxIndicesCount;
             this.indices = new Uint16Array(numIndices);

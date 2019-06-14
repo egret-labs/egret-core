@@ -5418,6 +5418,8 @@ var egret;
 (function (egret) {
     var web;
     (function (web) {
+        //
+        web.VAO_REFACTOR = true;
         /**
          * @private
          * 顶点数组管理对象
@@ -5452,16 +5454,18 @@ var egret;
                 * refactor:
                 */
                 this._vertices = null;
-                this._verticesFloatView = null;
-                this._verticesU32View = null;
-                //老的
-                //const numVerts = this.maxVertexCount * this.vertSize;
-                //this.vertices = new Float32Array(numVerts);
+                this._verticesFloat32View = null;
+                this._verticesUint32View = null;
+                //old
+                var numVerts = this.maxVertexCount * this.vertSize;
+                this.vertices = new Float32Array(numVerts);
                 ///
-                this._vertices = new ArrayBuffer(this.maxVertexCount * this.vertByteSize);
-                this._verticesFloatView = new Float32Array(this._vertices);
-                this._verticesU32View = new Uint32Array(this._vertices);
-                this.vertices = this._verticesFloatView;
+                if (web.VAO_REFACTOR) {
+                    this._vertices = new ArrayBuffer(this.maxVertexCount * this.vertByteSize);
+                    this._verticesFloat32View = new Float32Array(this._vertices);
+                    this._verticesUint32View = new Uint32Array(this._vertices);
+                    this.vertices = this._verticesFloat32View;
+                }
                 //索引缓冲，最大索引数
                 var numIndices = this.maxIndicesCount;
                 this.indices = new Uint16Array(numIndices);
