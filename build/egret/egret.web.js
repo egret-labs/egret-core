@@ -5425,19 +5425,45 @@ var egret;
          */
         var WebGLVertexArrayObject = (function () {
             function WebGLVertexArrayObject() {
-                this.size = 2000;
-                this.vertexMaxSize = this.size * 4;
-                this.indicesMaxSize = this.size * 6;
+                /*定义顶点格式
+                * (x: 8 * 4 = 32) + (y: 8 * 4 = 32) + (u: 8 * 4 = 32) + (v: 8 * 4 = 32) + (a: 8 * 4 = 32) = (8 * 4 = 32) * (x + y + u + v + a: 5);
+                */
                 this.vertSize = 5;
+                this.vertByteSize = this.vertSize * 4;
+                /*
+                *最多单次提交maxQuadsCount这么多quad
+                */
+                this.maxQuadsCount = 2048;
+                /*
+                *quad = 4个Vertex
+                */
+                this.maxVertexCount = this.maxQuadsCount * 4;
+                /*
+                *配套的Indices = quad * 6.
+                */
+                this.maxIndicesCount = this.maxQuadsCount * 6;
                 this.vertices = null;
                 this.indices = null;
                 this.indicesForMesh = null;
                 this.vertexIndex = 0;
                 this.indexIndex = 0;
                 this.hasMesh = false;
-                var numVerts = this.vertexMaxSize * this.vertSize;
-                var numIndices = this.indicesMaxSize;
-                this.vertices = new Float32Array(numVerts);
+                /*
+                * refactor:
+                */
+                this._vertices = null;
+                this._verticesFloatView = null;
+                this._verticesU32View = null;
+                //老的
+                //const numVerts = this.maxVertexCount * this.vertSize;
+                //this.vertices = new Float32Array(numVerts);
+                ///
+                this._vertices = new ArrayBuffer(this.maxVertexCount * this.vertByteSize);
+                this._verticesFloatView = new Float32Array(this._vertices);
+                this._verticesU32View = new Uint32Array(this._vertices);
+                this.vertices = this._verticesFloatView;
+                //索引缓冲，最大索引数
+                var numIndices = this.maxIndicesCount;
                 this.indices = new Uint16Array(numIndices);
                 this.indicesForMesh = new Uint16Array(numIndices);
                 for (var i = 0, j = 0; i < numIndices; i += 6, j += 4) {
@@ -5455,7 +5481,7 @@ var egret;
             WebGLVertexArrayObject.prototype.reachMaxSize = function (vertexCount, indexCount) {
                 if (vertexCount === void 0) { vertexCount = 4; }
                 if (indexCount === void 0) { indexCount = 6; }
-                return this.vertexIndex > this.vertexMaxSize - vertexCount || this.indexIndex > this.indicesMaxSize - indexCount;
+                return this.vertexIndex > this.maxVertexCount - vertexCount || this.indexIndex > this.maxIndicesCount - indexCount;
             };
             /**
              * 获取缓存完成的顶点数组

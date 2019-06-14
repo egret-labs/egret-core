@@ -35,10 +35,23 @@ namespace egret.web {
      */
     export class WebGLVertexArrayObject {
 
-        private size: number = 2000;
-        private vertexMaxSize: number = this.size * 4;
-        private indicesMaxSize: number = this.size * 6;
-        private vertSize: number = 5;
+        /*定义顶点格式
+        * (x: 8 * 4 = 32) + (y: 8 * 4 = 32) + (u: 8 * 4 = 32) + (v: 8 * 4 = 32) + (a: 8 * 4 = 32) = (8 * 4 = 32) * (x + y + u + v + a: 5);
+        */
+        private readonly vertSize: number = 5;
+        private readonly vertByteSize = this.vertSize * 4;
+        /*
+        *最多单次提交maxQuadsCount这么多quad
+        */
+        private readonly maxQuadsCount: number = 2048;
+        /*
+        *quad = 4个Vertex
+        */
+        private readonly maxVertexCount: number = this.maxQuadsCount * 4;
+        /*
+        *配套的Indices = quad * 6. 
+        */
+        private readonly maxIndicesCount: number = this.maxQuadsCount * 6;
 
         private vertices: Float32Array = null;
         private indices: Uint16Array = null;
@@ -49,14 +62,27 @@ namespace egret.web {
 
         private hasMesh: boolean = false;
 
-        public constructor() {
-            let numVerts = this.vertexMaxSize * this.vertSize;
-            let numIndices = this.indicesMaxSize;
+        /*
+        * refactor: 
+        */
+        private _vertices: ArrayBuffer = null;
+        private _verticesFloatView: Float32Array = null;
+        private _verticesU32View: Float32Array = null;
 
-            this.vertices = new Float32Array(numVerts);
+        constructor() {
+            //old
+            //const numVerts = this.maxVertexCount * this.vertSize;
+            //this.vertices = new Float32Array(numVerts);
+            ///
+            this._vertices = new ArrayBuffer(this.maxVertexCount * this.vertByteSize);
+            this._verticesFloatView = new Float32Array(this._vertices);
+            this._verticesU32View = new Uint32Array(this._vertices);
+            this.vertices = this._verticesFloatView;
+
+            //索引缓冲，最大索引数
+            const numIndices = this.maxIndicesCount;
             this.indices = new Uint16Array(numIndices);
             this.indicesForMesh = new Uint16Array(numIndices);
-
             for (let i = 0, j = 0; i < numIndices; i += 6, j += 4) {
                 this.indices[i + 0] = j + 0;
                 this.indices[i + 1] = j + 1;
@@ -71,7 +97,7 @@ namespace egret.web {
          * 是否达到最大缓存数量
          */
         public reachMaxSize(vertexCount: number = 4, indexCount: number = 6): boolean {
-            return this.vertexIndex > this.vertexMaxSize - vertexCount || this.indexIndex > this.indicesMaxSize - indexCount;
+            return this.vertexIndex > this.maxVertexCount - vertexCount || this.indexIndex > this.maxIndicesCount - indexCount;
         }
 
         /**
