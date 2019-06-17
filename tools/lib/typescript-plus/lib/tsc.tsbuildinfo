@@ -1,8 +1,8 @@
 {
   "bundle": {
-    "commonSourceDirectory": "D:/github/TypeScript/src/",
+    "commonSourceDirectory": "E:/github/TypeScript/src/",
     "sourceFiles": [
-      "D:/github/TypeScript/src/tsc/tsc.ts"
+      "E:/github/TypeScript/src/tsc/tsc.ts"
     ],
     "js": {
       "sections": [
@@ -32,20 +32,20 @@
         },
         {
           "pos": 2417,
-          "end": 5476371,
+          "end": 5542703,
           "kind": "prepend",
-          "data": "D:/github/TypeScript/built/local/compiler.js",
+          "data": "E:/github/TypeScript/built/local/compiler.js",
           "texts": [
             {
               "pos": 2417,
-              "end": 5476371,
+              "end": 5542703,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 5476371,
-          "end": 5496084,
+          "pos": 5542703,
+          "end": 5562717,
           "kind": "text"
         }
       ],
@@ -70,5 +70,5 @@
       }
     }
   },
-  "version": "3.4.1"
+  "version": "3.5.2"
 }

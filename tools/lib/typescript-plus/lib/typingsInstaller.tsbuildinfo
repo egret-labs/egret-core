@@ -1,8 +1,8 @@
 {
   "bundle": {
-    "commonSourceDirectory": "D:/github/TypeScript/src/",
+    "commonSourceDirectory": "E:/github/TypeScript/src/",
     "sourceFiles": [
-      "D:/github/TypeScript/src/typingsInstaller/nodeTypingsInstaller.ts"
+      "E:/github/TypeScript/src/typingsInstaller/nodeTypingsInstaller.ts"
     ],
     "js": {
       "sections": [
@@ -38,46 +38,46 @@
         },
         {
           "pos": 3003,
-          "end": 5476957,
+          "end": 5543289,
           "kind": "prepend",
-          "data": "D:/github/TypeScript/built/local/compiler.js",
+          "data": "E:/github/TypeScript/built/local/compiler.js",
           "texts": [
             {
               "pos": 3003,
-              "end": 5476957,
+              "end": 5543289,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 5476957,
-          "end": 5495106,
+          "pos": 5543289,
+          "end": 5561696,
           "kind": "prepend",
-          "data": "D:/github/TypeScript/built/local/jsTyping.js",
+          "data": "E:/github/TypeScript/built/local/jsTyping.js",
           "texts": [
             {
-              "pos": 5476957,
-              "end": 5495106,
+              "pos": 5543289,
+              "end": 5561696,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 5495106,
-          "end": 5524976,
+          "pos": 5561696,
+          "end": 5591566,
           "kind": "prepend",
-          "data": "D:/github/TypeScript/built/local/typingsInstallerCore.js",
+          "data": "E:/github/TypeScript/built/local/typingsInstallerCore.js",
           "texts": [
             {
-              "pos": 5495106,
-              "end": 5524976,
+              "pos": 5561696,
+              "end": 5591566,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 5524976,
-          "end": 5537809,
+          "pos": 5591566,
+          "end": 5604626,
           "kind": "text"
         }
       ],
@@ -106,5 +106,5 @@
       }
     }
   },
-  "version": "3.4.1"
+  "version": "3.5.2"
 }

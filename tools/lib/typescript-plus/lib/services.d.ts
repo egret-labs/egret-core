@@ -153,7 +153,6 @@ declare namespace ts {
         getCustomTransformers?(): CustomTransformers | undefined;
         isKnownTypesPackageName?(name: string): boolean;
         installPackage?(options: InstallPackageOptions): Promise<ApplyCodeActionCommandResult>;
-        inspectValue?(options: InspectValueOptions): Promise<ValueInfo>;
         writeFile?(fileName: string, content: string): void;
         getDocumentPositionMapper?(generatedFileName: string, sourceFileName?: string): DocumentPositionMapper | undefined;
         getSourceFileLike?(fileName: string): SourceFileLike | undefined;
@@ -188,6 +187,7 @@ declare namespace ts {
         getSignatureHelpItems(fileName: string, position: number, options: SignatureHelpItemsOptions | undefined): SignatureHelpItems | undefined;
         getRenameInfo(fileName: string, position: number, options?: RenameInfoOptions): RenameInfo;
         findRenameLocations(fileName: string, position: number, findInStrings: boolean, findInComments: boolean, providePrefixAndSuffixTextForRename?: boolean): ReadonlyArray<RenameLocation> | undefined;
+        getSmartSelectionRange(fileName: string, position: number): SelectionRange;
         getDefinitionAtPosition(fileName: string, position: number): ReadonlyArray<DefinitionInfo> | undefined;
         getDefinitionAndBoundSpan(fileName: string, position: number): DefinitionInfoAndBoundSpan | undefined;
         getTypeDefinitionAtPosition(fileName: string, position: number): ReadonlyArray<DefinitionInfo> | undefined;
@@ -385,19 +385,11 @@ declare namespace ts {
         changes: ReadonlyArray<FileTextChanges>;
         commands?: ReadonlyArray<CodeActionCommand>;
     }
-    type CodeActionCommand = InstallPackageAction | GenerateTypesAction;
+    type CodeActionCommand = InstallPackageAction;
     interface InstallPackageAction {
         readonly type: "install package";
         readonly file: string;
         readonly packageName: string;
-    }
-    interface GenerateTypesAction extends GenerateTypesOptions {
-        readonly type: "generate types";
-    }
-    interface GenerateTypesOptions {
-        readonly file: string;
-        readonly fileToGenerateTypesFor: string;
-        readonly outputFileName: string;
     }
     /**
      * A set of one or more available refactoring actions, grouped under a parent refactoring.
@@ -646,6 +638,10 @@ declare namespace ts {
         documentation: SymbolDisplayPart[];
         displayParts: SymbolDisplayPart[];
         isOptional: boolean;
+    }
+    interface SelectionRange {
+        textSpan: TextSpan;
+        parent?: SelectionRange;
     }
     /**
      * Represents a single signature to show in signature help.
@@ -1206,6 +1202,13 @@ declare namespace ts.Completions.StringCompletions {
     function getStringLiteralCompletionDetails(name: string, sourceFile: SourceFile, position: number, contextToken: Node | undefined, checker: TypeChecker, options: CompilerOptions, host: LanguageServiceHost, cancellationToken: CancellationToken): CompletionEntryDetails | undefined;
 }
 declare namespace ts.Completions {
+    enum SortText {
+        LocationPriority = "0",
+        SuggestedClassMembers = "1",
+        GlobalsOrKeywords = "2",
+        AutoImportSuggestions = "3",
+        JavascriptIdentifiers = "4"
+    }
     type Log = (message: string) => void;
     const enum SymbolOriginInfoKind {
         ThisType = 0,
@@ -1228,8 +1231,9 @@ declare namespace ts.Completions {
      * Only populated for symbols that come from other modules.
      */
     type SymbolOriginInfoMap = (SymbolOriginInfo | undefined)[];
+    type SymbolSortTextMap = (SortText | undefined)[];
     function getCompletionsAtPosition(host: LanguageServiceHost, program: Program, log: Log, sourceFile: SourceFile, position: number, preferences: UserPreferences, triggerCharacter: CompletionsTriggerCharacter | undefined): CompletionInfo | undefined;
-    function getCompletionEntriesFromSymbols(symbols: ReadonlyArray<Symbol>, entries: Push<CompletionEntry>, location: Node | undefined, sourceFile: SourceFile, typeChecker: TypeChecker, target: ScriptTarget, log: Log, kind: CompletionKind, preferences: UserPreferences, propertyAccessToConvert?: PropertyAccessExpression | undefined, isJsxInitializer?: IsJsxInitializer, recommendedCompletion?: Symbol, symbolToOriginInfoMap?: SymbolOriginInfoMap): Map<true>;
+    function getCompletionEntriesFromSymbols(symbols: ReadonlyArray<Symbol>, entries: Push<CompletionEntry>, location: Node | undefined, sourceFile: SourceFile, typeChecker: TypeChecker, target: ScriptTarget, log: Log, kind: CompletionKind, preferences: UserPreferences, propertyAccessToConvert?: PropertyAccessExpression | undefined, isJsxInitializer?: IsJsxInitializer, recommendedCompletion?: Symbol, symbolToOriginInfoMap?: SymbolOriginInfoMap, symbolToSortTextMap?: SymbolSortTextMap): Map<true>;
     interface CompletionEntryIdentifier {
         name: string;
         source?: string;
@@ -1350,7 +1354,9 @@ declare namespace ts.FindAllReferences {
         Import = 0,
         Export = 1
     }
-    type ModuleReference = {
+    type ModuleReference = 
+    /** "import" also includes require() calls. */
+    {
         kind: "import";
         literal: StringLiteralLike;
     }
@@ -1580,6 +1586,9 @@ declare namespace ts {
 }
 declare namespace ts.Rename {
     function getRenameInfo(program: Program, sourceFile: SourceFile, position: number, options?: RenameInfoOptions): RenameInfo;
+}
+declare namespace ts.SmartSelectionRange {
+    function getSmartSelectionRange(pos: number, sourceFile: SourceFile): SelectionRange;
 }
 declare namespace ts.SignatureHelp {
     function getSignatureHelpItems(program: Program, sourceFile: SourceFile, position: number, triggerReason: SignatureHelpTriggerReason | undefined, cancellationToken: CancellationToken): SignatureHelpItems | undefined;
@@ -2096,17 +2105,6 @@ declare namespace ts.codefix {
 }
 declare namespace ts.codefix {
 }
-declare namespace ts {
-    function generateTypesForModule(name: string, moduleValue: unknown, formatSettings: FormatCodeSettings): string;
-    function generateTypesForGlobal(name: string, globalValue: unknown, formatSettings: FormatCodeSettings): string;
-    function valueInfoToDeclarationFileText(valueInfo: ValueInfo, formatSettings: FormatCodeSettings, outputKind?: OutputKind.ExportEquals | OutputKind.Global): string;
-    const enum OutputKind {
-        ExportEquals = 0,
-        NamedExport = 1,
-        NamespaceMember = 2,
-        Global = 3
-    }
-}
 declare namespace ts.codefix {
 }
 declare namespace ts.codefix {
@@ -2190,6 +2188,8 @@ declare namespace ts.refactor.extractSymbol {
      * not shown to the user, but can be used by us diagnostically)
      */
     function getRangeToExtract(sourceFile: SourceFile, span: TextSpan): RangeToExtract;
+}
+declare namespace ts.refactor {
 }
 declare namespace ts.refactor.generateGetAccessorAndSetAccessor {
 }
@@ -2363,6 +2363,7 @@ declare namespace ts {
          * { canRename: boolean, localizedErrorMessage: string, displayName: string, fullDisplayName: string, kind: string, kindModifiers: string, triggerSpan: { start; length } }
          */
         getRenameInfo(fileName: string, position: number, options?: RenameInfoOptions): string;
+        getSmartSelectionRange(fileName: string, position: number): string;
         /**
          * Returns a JSON-encoded value of the type:
          * { fileName: string, textSpan: { start: number, length: number } }[]
@@ -2526,5 +2527,5 @@ declare namespace ts {
 declare namespace TypeScript.Services {
     const TypeScriptServicesFactory: typeof ts.TypeScriptServicesFactory;
 }
-declare const toolsVersion = "3.4";
+declare const toolsVersion = "3.5";
 //# sourceMappingURL=services.d.ts.map

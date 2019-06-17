@@ -1,8 +1,8 @@
 {
   "bundle": {
-    "commonSourceDirectory": "D:/github/TypeScript/src/",
+    "commonSourceDirectory": "E:/github/TypeScript/src/",
     "sourceFiles": [
-      "D:/github/TypeScript/src/tsserverlibrary/tsserverlibrary.ts"
+      "E:/github/TypeScript/src/tsserverlibrary/tsserverlibrary.ts"
     ],
     "js": {
       "sections": [
@@ -38,58 +38,58 @@
         },
         {
           "pos": 3003,
-          "end": 3410,
+          "end": 3493,
           "kind": "emitHelpers",
           "data": "typescript:rest"
         },
         {
-          "pos": 3411,
-          "end": 5477365,
+          "pos": 3494,
+          "end": 5543780,
           "kind": "prepend",
-          "data": "D:/github/TypeScript/built/local/compiler.js",
+          "data": "E:/github/TypeScript/built/local/compiler.js",
           "texts": [
             {
-              "pos": 3411,
-              "end": 5477365,
+              "pos": 3494,
+              "end": 5543780,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 5477365,
-          "end": 5495514,
+          "pos": 5543780,
+          "end": 5562187,
           "kind": "prepend",
-          "data": "D:/github/TypeScript/built/local/jsTyping.js",
+          "data": "E:/github/TypeScript/built/local/jsTyping.js",
           "texts": [
             {
-              "pos": 5477365,
-              "end": 5495514,
+              "pos": 5543780,
+              "end": 5562187,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 5495514,
-          "end": 7185431,
+          "pos": 5562187,
+          "end": 7263502,
           "kind": "prepend",
-          "data": "D:/github/TypeScript/built/local/services.js",
+          "data": "E:/github/TypeScript/built/local/services.js",
           "texts": [
             {
-              "pos": 5495514,
-              "end": 7185431,
+              "pos": 5562187,
+              "end": 7263502,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 7185431,
-          "end": 7655543,
+          "pos": 7263502,
+          "end": 7736286,
           "kind": "prepend",
-          "data": "D:/github/TypeScript/built/local/server.js",
+          "data": "E:/github/TypeScript/built/local/server.js",
           "texts": [
             {
-              "pos": 7185431,
-              "end": 7655543,
+              "pos": 7263502,
+              "end": 7736286,
               "kind": "text"
             }
           ]
@@ -100,52 +100,52 @@
       "sections": [
         {
           "pos": 0,
-          "end": 239825,
+          "end": 241266,
           "kind": "prepend",
-          "data": "D:/github/TypeScript/built/local/compiler.d.ts",
+          "data": "E:/github/TypeScript/built/local/compiler.d.ts",
           "texts": [
             {
               "pos": 0,
-              "end": 239825,
+              "end": 241266,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 239825,
-          "end": 242886,
+          "pos": 241266,
+          "end": 244246,
           "kind": "prepend",
-          "data": "D:/github/TypeScript/built/local/jsTyping.d.ts",
+          "data": "E:/github/TypeScript/built/local/jsTyping.d.ts",
           "texts": [
             {
-              "pos": 239825,
-              "end": 242886,
+              "pos": 241266,
+              "end": 244246,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 242886,
-          "end": 290659,
+          "pos": 244246,
+          "end": 291685,
           "kind": "prepend",
-          "data": "D:/github/TypeScript/built/local/services.d.ts",
+          "data": "E:/github/TypeScript/built/local/services.d.ts",
           "texts": [
             {
-              "pos": 242886,
-              "end": 290659,
+              "pos": 244246,
+              "end": 291685,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 290659,
-          "end": 416883,
+          "pos": 291685,
+          "end": 418663,
           "kind": "prepend",
-          "data": "D:/github/TypeScript/built/local/server.d.ts",
+          "data": "E:/github/TypeScript/built/local/server.d.ts",
           "texts": [
             {
-              "pos": 290659,
-              "end": 416883,
+              "pos": 291685,
+              "end": 418663,
               "kind": "text"
             }
           ]
@@ -153,5 +153,5 @@
       ]
     }
   },
-  "version": "3.4.1"
+  "version": "3.5.2"
 }

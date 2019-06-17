@@ -1,8 +1,8 @@
 {
   "bundle": {
-    "commonSourceDirectory": "D:/github/TypeScript/src/",
+    "commonSourceDirectory": "E:/github/TypeScript/src/",
     "sourceFiles": [
-      "D:/github/TypeScript/src/typingsInstallerCore/typingsInstaller.ts"
+      "E:/github/TypeScript/src/typingsInstallerCore/typingsInstaller.ts"
     ],
     "js": {
       "sections": [
@@ -68,5 +68,5 @@
       ]
     }
   },
-  "version": "3.4.1"
+  "version": "3.5.2"
 }

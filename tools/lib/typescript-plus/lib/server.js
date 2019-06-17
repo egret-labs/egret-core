@@ -28,8 +28,10 @@ var __rest = (this && this.__rest) || function (s, e) {
     for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
         t[p] = s[p];
     if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
-            t[p[i]] = s[p[i]];
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
     return t;
 };
 var ts;
@@ -367,6 +369,9 @@ var ts;
                 /* @internal */
                 CommandTypes["GetEditsForFileRenameFull"] = "getEditsForFileRename-full";
                 CommandTypes["ConfigurePlugin"] = "configurePlugin";
+                CommandTypes["SelectionRange"] = "selectionRange";
+                /* @internal */
+                CommandTypes["SelectionRangeFull"] = "selectionRange-full";
                 // NOTE: If updating this, be sure to also update `allCommandNames` in `harness/unittests/session.ts`.
             })(CommandTypes = protocol.CommandTypes || (protocol.CommandTypes = {}));
             var IndentStyle;
@@ -411,6 +416,9 @@ var ts;
                 ScriptTarget["ES2015"] = "ES2015";
                 ScriptTarget["ES2016"] = "ES2016";
                 ScriptTarget["ES2017"] = "ES2017";
+                ScriptTarget["ES2018"] = "ES2018";
+                ScriptTarget["ES2019"] = "ES2019";
+                ScriptTarget["ES2020"] = "ES2020";
                 ScriptTarget["ESNext"] = "ESNext";
             })(ScriptTarget = protocol.ScriptTarget || (protocol.ScriptTarget = {}));
         })(protocol = server.protocol || (server.protocol = {}));
@@ -918,7 +926,6 @@ var ts;
             isKnownTypesPackageName: ts.returnFalse,
             // Should never be called because we never provide a types registry.
             installPackage: ts.notImplemented,
-            inspectValue: ts.notImplemented,
             enqueueInstallTypingsRequest: ts.noop,
             attach: ts.noop,
             onProjectClosed: ts.noop,
@@ -979,9 +986,6 @@ var ts;
             };
             TypingsCache.prototype.installPackage = function (options) {
                 return this.installer.installPackage(options);
-            };
-            TypingsCache.prototype.inspectValue = function (options) {
-                return this.installer.inspectValue(options);
             };
             TypingsCache.prototype.enqueueInstallTypingsForProject = function (project, unresolvedImports, forceRefresh) {
                 var typeAcquisition = project.getTypeAcquisition();
@@ -1195,13 +1199,13 @@ var ts;
                 server.updateProjectIfDirty(this);
                 return hasOneOrMoreJsAndNoTsFiles(this);
             };
-            Project.resolveModule = function (moduleName, initialDir, host, log) {
+            Project.resolveModule = function (moduleName, initialDir, host, log, logErrors) {
                 var resolvedPath = ts.normalizeSlashes(host.resolvePath(ts.combinePaths(initialDir, "node_modules")));
                 log("Loading " + moduleName + " from " + initialDir + " (resolved to " + resolvedPath + ")");
                 var result = host.require(resolvedPath, moduleName); // TODO: GH#18217
                 if (result.error) {
                     var err = result.error.stack || result.error.message || JSON.stringify(result.error);
-                    log("Failed to load module '" + moduleName + "': " + err);
+                    (logErrors || log)("Failed to load module '" + moduleName + "' from " + resolvedPath + ": " + err);
                     return undefined;
                 }
                 return result.module;
@@ -1211,10 +1215,6 @@ var ts;
             };
             Project.prototype.installPackage = function (options) {
                 return this.typingsCache.installPackage(__assign({}, options, { projectName: this.projectName, projectRootPath: this.toPath(this.currentDirectory) }));
-            };
-            /* @internal */
-            Project.prototype.inspectValue = function (options) {
-                return this.typingsCache.inspectValue(options);
             };
             Object.defineProperty(Project.prototype, "typingsCache", {
                 get: function () {
@@ -1352,6 +1352,10 @@ var ts;
             /*@internal*/
             Project.prototype.getGlobalCache = function () {
                 return this.getTypeAcquisition().enable ? this.projectService.typingsInstaller.globalTypingsCacheLocation : undefined;
+            };
+            /*@internal*/
+            Project.prototype.fileIsOpen = function (filePath) {
+                return this.projectService.openFiles.has(filePath);
             };
             /*@internal*/
             Project.prototype.writeLog = function (s) {
@@ -1796,6 +1800,9 @@ var ts;
                 }, function (removed) { return _this.detachScriptInfoFromProject(removed); });
                 var elapsed = ts.timestamp() - start;
                 this.writeLog("Finishing updateGraphWorker: Project: " + this.getProjectName() + " Version: " + this.getProjectVersion() + " structureChanged: " + hasNewProgram + " Elapsed: " + elapsed + "ms");
+                if (this.program !== oldProgram) {
+                    this.print();
+                }
                 return hasNewProgram;
             };
             Project.prototype.detachScriptInfoFromProject = function (uncheckedFileName, noRemoveResolution) {
@@ -1960,11 +1967,11 @@ var ts;
             Project.prototype.enablePlugin = function (pluginConfigEntry, searchPaths, pluginConfigOverrides) {
                 var _this = this;
                 this.projectService.logger.info("Enabling plugin " + pluginConfigEntry.name + " from candidate paths: " + searchPaths.join(","));
-                var log = function (message) {
-                    _this.projectService.logger.info(message);
-                };
+                var log = function (message) { return _this.projectService.logger.info(message); };
+                var errorLogs;
+                var logError = function (message) { (errorLogs || (errorLogs = [])).push(message); };
                 var resolvedModule = ts.firstDefined(searchPaths, function (searchPath) {
-                    return Project.resolveModule(pluginConfigEntry.name, searchPath, _this.projectService.host, log);
+                    return Project.resolveModule(pluginConfigEntry.name, searchPath, _this.projectService.host, log, logError);
                 });
                 if (resolvedModule) {
                     var configurationOverride = pluginConfigOverrides && pluginConfigOverrides.get(pluginConfigEntry.name);
@@ -1977,6 +1984,7 @@ var ts;
                     this.enableProxy(resolvedModule, pluginConfigEntry);
                 }
                 else {
+                    ts.forEach(errorLogs, log);
                     this.projectService.logger.info("Couldn't find " + pluginConfigEntry.name);
                 }
             };
@@ -2329,12 +2337,13 @@ var ts;
         var ExternalProject = /** @class */ (function (_super) {
             __extends(ExternalProject, _super);
             /*@internal*/
-            function ExternalProject(externalProjectName, projectService, documentRegistry, compilerOptions, lastFileExceededProgramSize, compileOnSaveEnabled, projectFilePath) {
+            function ExternalProject(externalProjectName, projectService, documentRegistry, compilerOptions, lastFileExceededProgramSize, compileOnSaveEnabled, projectFilePath, pluginConfigOverrides) {
                 var _this = _super.call(this, externalProjectName, ProjectKind.External, projectService, documentRegistry, 
                 /*hasExplicitListOfFiles*/ true, lastFileExceededProgramSize, compilerOptions, compileOnSaveEnabled, projectService.host, ts.getDirectoryPath(projectFilePath || ts.normalizeSlashes(externalProjectName))) || this;
                 _this.externalProjectName = externalProjectName;
                 _this.compileOnSaveEnabled = compileOnSaveEnabled;
                 _this.excludedFiles = [];
+                _this.enableGlobalPlugins(_this.getCompilerOptions(), pluginConfigOverrides);
                 return _this;
             }
             ExternalProject.prototype.updateGraph = function () {
@@ -3025,6 +3034,10 @@ var ts;
                 return this.watchFactory.watchDirectory(this.host, directory, function (fileOrDirectory) {
                     var fileOrDirectoryPath = _this.toPath(fileOrDirectory);
                     project.getCachedDirectoryStructureHost().addOrDeleteFileOrDirectory(fileOrDirectory, fileOrDirectoryPath);
+                    // don't trigger callback on open, existing files
+                    if (project.fileIsOpen(fileOrDirectoryPath)) {
+                        return;
+                    }
                     if (ts.isPathIgnored(fileOrDirectoryPath))
                         return;
                     var configFilename = project.getConfigFilePath();
@@ -3555,7 +3568,8 @@ var ts;
             ProjectService.prototype.createExternalProject = function (projectFileName, files, options, typeAcquisition, excludedFiles) {
                 var compilerOptions = convertCompilerOptions(options);
                 var project = new server.ExternalProject(projectFileName, this, this.documentRegistry, compilerOptions, 
-                /*lastFileExceededProgramSize*/ this.getFilenameForExceededTotalSizeLimitForNonTsFiles(projectFileName, compilerOptions, files, externalFilePropertyReader), options.compileOnSave === undefined ? true : options.compileOnSave);
+                /*lastFileExceededProgramSize*/ this.getFilenameForExceededTotalSizeLimitForNonTsFiles(projectFileName, compilerOptions, files, externalFilePropertyReader), options.compileOnSave === undefined ? true : options.compileOnSave, 
+                /*projectFilePath*/ undefined, this.currentPluginConfigOverrides);
                 project.excludedFiles = excludedFiles;
                 this.addFilesToNonInferredProject(project, files, externalFilePropertyReader, typeAcquisition);
                 this.externalProjects.push(project);
@@ -5362,8 +5376,8 @@ var ts;
         }
         var Session = /** @class */ (function () {
             function Session(opts) {
-                var _this = this;
                 var _a;
+                var _this = this;
                 this.changeSeq = 0;
                 this.handlers = ts.createMapFromTemplate((_a = {},
                     _a[server.CommandNames.Status] = function () {
@@ -5692,7 +5706,14 @@ var ts;
                     },
                     _a[server.CommandNames.ConfigurePlugin] = function (request) {
                         _this.configurePlugin(request.arguments);
+                        _this.doOutput(/*info*/ undefined, server.CommandNames.ConfigurePlugin, request.seq, /*success*/ true);
                         return _this.notRequired();
+                    },
+                    _a[server.CommandNames.SelectionRange] = function (request) {
+                        return _this.requiredResponse(_this.getSmartSelectionRange(request.arguments, /*simplifiedResult*/ true));
+                    },
+                    _a[server.CommandNames.SelectionRangeFull] = function (request) {
+                        return _this.requiredResponse(_this.getSmartSelectionRange(request.arguments, /*simplifiedResult*/ false));
                     },
                     _a));
                 this.host = opts.host;
@@ -7029,6 +7050,26 @@ var ts;
             };
             Session.prototype.configurePlugin = function (args) {
                 this.projectService.configurePlugin(args);
+            };
+            Session.prototype.getSmartSelectionRange = function (args, simplifiedResult) {
+                var _this = this;
+                var locations = args.locations;
+                var _a = this.getFileAndLanguageServiceForSyntacticOperation(args), file = _a.file, languageService = _a.languageService;
+                var scriptInfo = ts.Debug.assertDefined(this.projectService.getScriptInfo(file));
+                return ts.map(locations, function (location) {
+                    var pos = _this.getPosition(location, scriptInfo);
+                    var selectionRange = languageService.getSmartSelectionRange(file, pos);
+                    return simplifiedResult ? _this.mapSelectionRange(selectionRange, scriptInfo) : selectionRange;
+                });
+            };
+            Session.prototype.mapSelectionRange = function (selectionRange, scriptInfo) {
+                var result = {
+                    textSpan: this.toLocationTextSpan(selectionRange.textSpan, scriptInfo),
+                };
+                if (selectionRange.parent) {
+                    result.parent = this.mapSelectionRange(selectionRange.parent, scriptInfo);
+                }
+                return result;
             };
             Session.prototype.getCanonicalFileName = function (fileName) {
                 var name = this.host.useCaseSensitiveFileNames ? fileName : fileName.toLowerCase();

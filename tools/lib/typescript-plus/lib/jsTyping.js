@@ -8,7 +8,6 @@ var ts;
         server.ActionSet = "action::set";
         server.ActionInvalidate = "action::invalidate";
         server.ActionPackageInstalled = "action::packageInstalled";
-        server.ActionValueInspected = "action::valueInspected";
         server.EventTypesRegistry = "event::typesRegistry";
         server.EventBeginInstallTypes = "event::beginInstallTypes";
         server.EventEndInstallTypes = "event::endInstallTypes";
@@ -25,6 +24,11 @@ var ts;
              * typingsInstaller will run the command with `${npmLocation} install ...`.
              */
             Arguments.NpmLocation = "--npmLocation";
+            /**
+             * Flag indicating that the typings installer should try to validate the default npm location.
+             * If the default npm is not found when this flag is enabled, fallback to `npm install`
+             */
+            Arguments.ValidateDefaultNpmLocation = "--validateDefaultNpmLocation";
         })(Arguments = server.Arguments || (server.Arguments = {}));
         function hasArgument(argumentName) {
             return ts.sys.args.indexOf(argumentName) >= 0;

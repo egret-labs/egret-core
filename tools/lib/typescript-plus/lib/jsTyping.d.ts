@@ -2,7 +2,6 @@ declare namespace ts.server {
     const ActionSet: ActionSet;
     const ActionInvalidate: ActionInvalidate;
     const ActionPackageInstalled: ActionPackageInstalled;
-    const ActionValueInspected: ActionValueInspected;
     const EventTypesRegistry: EventTypesRegistry;
     const EventBeginInstallTypes: EventBeginInstallTypes;
     const EventEndInstallTypes: EventEndInstallTypes;
@@ -18,6 +17,11 @@ declare namespace ts.server {
          * typingsInstaller will run the command with `${npmLocation} install ...`.
          */
         const NpmLocation = "--npmLocation";
+        /**
+         * Flag indicating that the typings installer should try to validate the default npm location.
+         * If the default npm is not found when this flag is enabled, fallback to `npm install`
+         */
+        const ValidateDefaultNpmLocation = "--validateDefaultNpmLocation";
     }
     function hasArgument(argumentName: string): boolean;
     function findArgument(argumentName: string): string | undefined;
@@ -27,18 +31,17 @@ declare namespace ts.server {
     type ActionSet = "action::set";
     type ActionInvalidate = "action::invalidate";
     type ActionPackageInstalled = "action::packageInstalled";
-    type ActionValueInspected = "action::valueInspected";
     type EventTypesRegistry = "event::typesRegistry";
     type EventBeginInstallTypes = "event::beginInstallTypes";
     type EventEndInstallTypes = "event::endInstallTypes";
     type EventInitializationFailed = "event::initializationFailed";
     interface TypingInstallerResponse {
-        readonly kind: ActionSet | ActionInvalidate | EventTypesRegistry | ActionPackageInstalled | ActionValueInspected | EventBeginInstallTypes | EventEndInstallTypes | EventInitializationFailed;
+        readonly kind: ActionSet | ActionInvalidate | EventTypesRegistry | ActionPackageInstalled | EventBeginInstallTypes | EventEndInstallTypes | EventInitializationFailed;
     }
     interface TypingInstallerRequestWithProjectName {
         readonly projectName: string;
     }
-    type TypingInstallerRequestUnion = DiscoverTypings | CloseProject | TypesRegistryRequest | InstallPackageRequest | InspectValueRequest;
+    type TypingInstallerRequestUnion = DiscoverTypings | CloseProject | TypesRegistryRequest | InstallPackageRequest;
     interface DiscoverTypings extends TypingInstallerRequestWithProjectName {
         readonly fileNames: string[];
         readonly projectRootPath: Path;
@@ -60,10 +63,6 @@ declare namespace ts.server {
         readonly packageName: string;
         readonly projectRootPath: Path;
     }
-    interface InspectValueRequest {
-        readonly kind: "inspectValue";
-        readonly options: InspectValueOptions;
-    }
     interface TypesRegistryResponse extends TypingInstallerResponse {
         readonly kind: EventTypesRegistry;
         readonly typesRegistry: MapLike<MapLike<string>>;
@@ -72,10 +71,6 @@ declare namespace ts.server {
         readonly kind: ActionPackageInstalled;
         readonly success: boolean;
         readonly message: string;
-    }
-    interface InspectValueResponse {
-        readonly kind: ActionValueInspected;
-        readonly result: ValueInfo;
     }
     interface InitializationFailedResponse extends TypingInstallerResponse {
         readonly kind: EventInitializationFailed;
@@ -114,7 +109,7 @@ declare namespace ts.server {
         readonly unresolvedImports: SortedReadonlyArray<string>;
         readonly kind: ActionSet;
     }
-    type TypingInstallerResponseUnion = SetTypings | InvalidateCachedTypings | TypesRegistryResponse | PackageInstalledResponse | InspectValueResponse | InstallTypes | InitializationFailedResponse;
+    type TypingInstallerResponseUnion = SetTypings | InvalidateCachedTypings | TypesRegistryResponse | PackageInstalledResponse | InstallTypes | InitializationFailedResponse;
 }
 declare namespace ts.JsTyping {
     interface TypingResolutionHost {
