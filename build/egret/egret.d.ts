@@ -1298,6 +1298,11 @@ declare namespace egret {
         private _tintRGB;
         tint: number;
         readonly tintRGB: number;
+        sortDirty: boolean;
+        sortChildren(): void;
+        private _zIndex;
+        zIndex: number;
+        _lastSortedIndex: number;
     }
 }
 declare namespace egret {
@@ -2995,6 +3000,8 @@ declare namespace egret {
          * @private
          */
         $hitTest(stageX: number, stageY: number): DisplayObject;
+        private _sortChildrenFunc(a, b);
+        sortChildren(): void;
     }
 }
 declare namespace egret {

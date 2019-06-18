@@ -7487,6 +7487,9 @@ var egret;
                 }
                 var children = displayObject.$children;
                 if (children) {
+                    if (displayObject.sortDirty) {
+                        displayObject.sortChildren();
+                    }
                     var length_8 = children.length;
                     for (var i = 0; i < length_8; i++) {
                         var child = children[i];

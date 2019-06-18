@@ -692,6 +692,12 @@ var egret;
              */
             _this._tint = 0;
             _this._tintRGB = 0;
+            /*
+            * inspired by pixi.js
+            */
+            _this.sortDirty = false;
+            _this._zIndex = 0;
+            _this._lastSortedIndex = 0;
             if (egret.nativeRender) {
                 _this.createNativeDisplayObject();
             }
@@ -2700,6 +2706,22 @@ var egret;
         Object.defineProperty(DisplayObject.prototype, "tintRGB", {
             get: function () {
                 return this._tintRGB;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        DisplayObject.prototype.sortChildren = function () {
+            this.sortDirty = false;
+        };
+        Object.defineProperty(DisplayObject.prototype, "zIndex", {
+            get: function () {
+                return this._zIndex;
+            },
+            set: function (value) {
+                this._zIndex = value;
+                if (this.parent) {
+                    this.parent.sortDirty = true;
+                }
             },
             enumerable: true,
             configurable: true
@@ -5209,6 +5231,32 @@ var egret;
                 return this;
             }
             return _super.prototype.$hitTest.call(this, stageX, stageY);
+        };
+        DisplayObjectContainer.prototype._sortChildrenFunc = function (a, b) {
+            if (a.zIndex === b.zIndex) {
+                return a._lastSortedIndex - b._lastSortedIndex;
+            }
+            return a.zIndex - b.zIndex;
+        };
+        DisplayObjectContainer.prototype.sortChildren = function () {
+            //关掉脏的标记
+            _super.prototype.sortChildren.call(this);
+            this.sortDirty = false;
+            //准备重新排序
+            var sortRequired = false;
+            var children = this.$children;
+            var child = null;
+            for (var i = 0, j = children.length; i < j; ++i) {
+                child = children[i];
+                child._lastSortedIndex = i;
+                if (!sortRequired && child.zIndex !== 0) {
+                    sortRequired = true;
+                }
+            }
+            if (sortRequired && children.length > 1) {
+                //开始排
+                children.sort(this._sortChildrenFunc);
+            }
         };
         /**
          * @private

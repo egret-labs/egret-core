@@ -2301,10 +2301,30 @@ namespace egret {
         public get tintRGB(): number {
             return this._tintRGB;
         }
-        public set tint(value)  {
+        public set tint(value: number) {
             this._tint = value;
             this._tintRGB = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
         }
+        /*
+        * inspired by pixi.js
+        */
+        public sortDirty: boolean = false;
+        public sortChildren(): void {
+            this.sortDirty = false;
+        }
+
+        private _zIndex: number = 0;
+        public get zIndex(): number {
+            return this._zIndex;
+        }
+        public set zIndex(value: number) {
+            this._zIndex = value;
+            if (this.parent) {
+                this.parent.sortDirty = true;
+            }
+        }
+
+        public _lastSortedIndex: number = 0;
     }
 
 }

@@ -858,5 +858,31 @@ namespace egret {
             }
             return super.$hitTest(stageX, stageY);
         }
+        private _sortChildrenFunc(a: DisplayObject, b: DisplayObject): number {
+            if (a.zIndex === b.zIndex) {
+                return a._lastSortedIndex - b._lastSortedIndex;
+            }
+            return a.zIndex - b.zIndex;
+        }
+        public sortChildren(): void {
+            //关掉脏的标记
+            super.sortChildren();
+            this.sortDirty = false;
+            //准备重新排序
+            let sortRequired = false;
+            const children = this.$children;
+            let child: DisplayObject = null;
+            for (let i = 0, j = children.length; i < j; ++i) {
+                child = children[i];
+                child._lastSortedIndex = i;
+                if (!sortRequired && child.zIndex !== 0) {
+                    sortRequired = true;
+                }
+            }
+            if (sortRequired && children.length > 1) {
+                //开始排
+                children.sort(this._sortChildrenFunc);
+            }
+        }
     }
 }
