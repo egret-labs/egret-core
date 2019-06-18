@@ -84,10 +84,19 @@ namespace egret.web {
                 this.vertices = this._verticesFloat32View;
             }
             //索引缓冲，最大索引数
-            const numIndices = this.maxIndicesCount;
-            this.indices = new Uint16Array(numIndices);
-            this.indicesForMesh = new Uint16Array(numIndices);
-            for (let i = 0, j = 0; i < numIndices; i += 6, j += 4) {
+            /*
+            0-------1
+            |       |
+            |       |
+            3-------2  
+            0->1->2
+            0->2->3 
+            两个三角形
+            */
+            const maxIndicesCount = this.maxIndicesCount;
+            this.indices = new Uint16Array(maxIndicesCount);
+            this.indicesForMesh = new Uint16Array(maxIndicesCount);
+            for (let i = 0, j = 0; i < maxIndicesCount; i += 6, j += 4) {
                 this.indices[i + 0] = j + 0;
                 this.indices[i + 1] = j + 1;
                 this.indices[i + 2] = j + 2;
