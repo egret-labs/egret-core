@@ -9715,6 +9715,13 @@ declare namespace egret.sys {
      * 画texture
      **/
     function drawTextureElements(renderContext: RenderContext, data: any, offset: number): number;
+    /**
+     * @private
+     * 测量文本的宽度
+     * @param context
+     * @param text
+     */
+    function measureTextWith(context: CanvasRenderingContext2D, text: string): number;
 }
 declare namespace egret.sys {
     /**

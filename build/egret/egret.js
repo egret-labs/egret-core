@@ -14629,6 +14629,17 @@ var egret;
             return 0;
         }
         sys.drawTextureElements = drawTextureElements;
+        /**
+         * @private
+         * 测量文本的宽度
+         * @param context
+         * @param text
+         */
+        function measureTextWith(context, text) {
+            console.error("empty sys.measureTextWith = " + context + ", " + text);
+            return 0;
+        }
+        sys.measureTextWith = measureTextWith;
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////

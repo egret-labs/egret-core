@@ -114,4 +114,15 @@ namespace egret.sys {
         console.error(`empty sys.drawTextureElements = ${renderContext}, ${data}, ${offset}`);
         return 0;
     }
+
+    /**
+     * @private
+     * 测量文本的宽度
+     * @param context 
+     * @param text 
+     */
+    export function measureTextWith(context: CanvasRenderingContext2D, text: string): number {
+        console.error(`empty sys.measureTextWith = ${context}, ${text}`);
+        return 0;
+    }
 }
