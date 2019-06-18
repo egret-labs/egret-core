@@ -698,6 +698,7 @@ var egret;
             _this.sortDirty = false;
             _this._zIndex = 0;
             _this._lastSortedIndex = 0;
+            _this.sortableChildren = false;
             if (egret.nativeRender) {
                 _this.createNativeDisplayObject();
             }

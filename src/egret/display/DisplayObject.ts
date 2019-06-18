@@ -2323,8 +2323,8 @@ namespace egret {
                 this.parent.sortDirty = true;
             }
         }
-
         public _lastSortedIndex: number = 0;
+        public sortableChildren: boolean = false;
     }
 
 }

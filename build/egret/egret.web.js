@@ -7487,7 +7487,8 @@ var egret;
                 }
                 var children = displayObject.$children;
                 if (children) {
-                    if (displayObject.sortDirty) {
+                    if (displayObject.sortableChildren && displayObject.sortDirty) {
+                        //绘制排序
                         displayObject.sortChildren();
                     }
                     var length_8 = children.length;

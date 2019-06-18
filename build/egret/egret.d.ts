@@ -1303,6 +1303,7 @@ declare namespace egret {
         private _zIndex;
         zIndex: number;
         _lastSortedIndex: number;
+        sortableChildren: boolean;
     }
 }
 declare namespace egret {

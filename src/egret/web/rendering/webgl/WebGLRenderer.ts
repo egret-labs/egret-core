@@ -146,7 +146,8 @@ namespace egret.web {
             }
             let children = displayObject.$children;
             if (children) {
-                if (displayObject.sortDirty) {//绘制排序
+                if (displayObject.sortableChildren && displayObject.sortDirty) {
+                    //绘制排序
                     displayObject.sortChildren();
                 }
                 let length = children.length;
