@@ -5419,8 +5419,6 @@ var egret;
 (function (egret) {
     var web;
     (function (web) {
-        //
-        web.VAO_REFACTOR = true;
         /**
          * @private
          * 顶点数组管理对象
@@ -5429,7 +5427,7 @@ var egret;
         var WebGLVertexArrayObject = (function () {
             function WebGLVertexArrayObject() {
                 /*定义顶点格式
-                * (x: 8 * 4 = 32) + (y: 8 * 4 = 32) + (u: 8 * 4 = 32) + (v: 8 * 4 = 32) + (a: 8 * 4 = 32) = (8 * 4 = 32) * (x + y + u + v + a: 5);
+                * (x: 8 * 4 = 32) + (y: 8 * 4 = 32) + (u: 8 * 4 = 32) + (v: 8 * 4 = 32) + (tintcolor: 8 * 4 = 32) = (8 * 4 = 32) * (x + y + u + v + tintcolor: 5);
                 */
                 this.vertSize = 5;
                 this.vertByteSize = this.vertSize * 4;
@@ -5461,12 +5459,10 @@ var egret;
                 var numVerts = this.maxVertexCount * this.vertSize;
                 this.vertices = new Float32Array(numVerts);
                 ///
-                if (web.VAO_REFACTOR) {
-                    this._vertices = new ArrayBuffer(this.maxVertexCount * this.vertByteSize);
-                    this._verticesFloat32View = new Float32Array(this._vertices);
-                    this._verticesUint32View = new Uint32Array(this._vertices);
-                    this.vertices = this._verticesFloat32View;
-                }
+                this._vertices = new ArrayBuffer(this.maxVertexCount * this.vertByteSize);
+                this._verticesFloat32View = new Float32Array(this._vertices);
+                this._verticesUint32View = new Uint32Array(this._vertices);
+                this.vertices = this._verticesFloat32View;
                 //索引缓冲，最大索引数
                 /*
                 0-------1
@@ -5545,16 +5541,17 @@ var egret;
             /**
              * 缓存一组顶点
              */
-            WebGLVertexArrayObject.prototype.__cacheArrays__ = function (buffer, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices, rotated) {
+            WebGLVertexArrayObject.prototype.cacheArrays = function (buffer, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices, rotated) {
                 var alpha = buffer.globalAlpha;
-                //
-                alpha = Math.min(alpha, 1.0);
                 /*
-                临时测试
+                * 混入tintcolor => alpha
                 */
-                //const currentTexture = buffer.currentTexture;
-                alpha = 0xFFFFFF /*16777215*/ + (alpha * 255 << 24);
-                //alpha = alpha < 1.0 && currentTexture[UNPACK_PREMULTIPLY_ALPHA_WEBGL] ? WebGLUtils.premultiplyTint(element._tintRGB, alpha) : element._tintRGB + (alpha * 255 << 24);
+                alpha = Math.min(alpha, 1.0);
+                var globalTintColor = buffer.globalTintColor;
+                var currentTexture = buffer.currentTexture;
+                alpha = ((alpha < 1.0 && currentTexture && currentTexture[egret.UNPACK_PREMULTIPLY_ALPHA_WEBGL]) ?
+                    egret.WebGLUtils.premultiplyTint(globalTintColor, alpha)
+                    : globalTintColor + (alpha * 255 << 24));
                 /*
                 临时测试
                 */
@@ -5708,174 +5705,6 @@ var egret;
                         vertices[index++] = sourceHeight + sourceY;
                         // alpha
                         verticesUint32View[index++] = alpha;
-                    }
-                    // 缓存索引数组
-                    if (this.hasMesh) {
-                        var indicesForMesh = this.indicesForMesh;
-                        indicesForMesh[this.indexIndex + 0] = 0 + this.vertexIndex;
-                        indicesForMesh[this.indexIndex + 1] = 1 + this.vertexIndex;
-                        indicesForMesh[this.indexIndex + 2] = 2 + this.vertexIndex;
-                        indicesForMesh[this.indexIndex + 3] = 0 + this.vertexIndex;
-                        indicesForMesh[this.indexIndex + 4] = 2 + this.vertexIndex;
-                        indicesForMesh[this.indexIndex + 5] = 3 + this.vertexIndex;
-                    }
-                    this.vertexIndex += 4;
-                    this.indexIndex += 6;
-                }
-            };
-            WebGLVertexArrayObject.prototype.cacheArrays = function (buffer, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices, rotated) {
-                if (web.VAO_REFACTOR) {
-                    return this.__cacheArrays__(buffer, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices, rotated);
-                }
-                var alpha = buffer.globalAlpha;
-                //计算出绘制矩阵，之后把矩阵还原回之前的
-                var locWorldTransform = buffer.globalMatrix;
-                var a = locWorldTransform.a;
-                var b = locWorldTransform.b;
-                var c = locWorldTransform.c;
-                var d = locWorldTransform.d;
-                var tx = locWorldTransform.tx;
-                var ty = locWorldTransform.ty;
-                var offsetX = buffer.$offsetX;
-                var offsetY = buffer.$offsetY;
-                if (offsetX != 0 || offsetY != 0) {
-                    tx = offsetX * a + offsetY * c + tx;
-                    ty = offsetX * b + offsetY * d + ty;
-                }
-                if (!meshVertices) {
-                    if (destX != 0 || destY != 0) {
-                        tx = destX * a + destY * c + tx;
-                        ty = destX * b + destY * d + ty;
-                    }
-                    var a1 = destWidth / sourceWidth;
-                    if (a1 != 1) {
-                        a = a1 * a;
-                        b = a1 * b;
-                    }
-                    var d1 = destHeight / sourceHeight;
-                    if (d1 != 1) {
-                        c = d1 * c;
-                        d = d1 * d;
-                    }
-                }
-                if (meshVertices) {
-                    // 计算索引位置与赋值
-                    var vertices = this.vertices;
-                    var index = this.vertexIndex * this.vertSize;
-                    // 缓存顶点数组
-                    var i = 0, iD = 0, l = 0;
-                    var u = 0, v = 0, x = 0, y = 0;
-                    for (i = 0, l = meshUVs.length; i < l; i += 2) {
-                        iD = index + i * 5 / 2;
-                        x = meshVertices[i];
-                        y = meshVertices[i + 1];
-                        u = meshUVs[i];
-                        v = meshUVs[i + 1];
-                        // xy
-                        vertices[iD + 0] = a * x + c * y + tx;
-                        vertices[iD + 1] = b * x + d * y + ty;
-                        // uv
-                        if (rotated) {
-                            vertices[iD + 2] = (sourceX + (1.0 - v) * sourceHeight) / textureSourceWidth;
-                            vertices[iD + 3] = (sourceY + u * sourceWidth) / textureSourceHeight;
-                        }
-                        else {
-                            vertices[iD + 2] = (sourceX + u * sourceWidth) / textureSourceWidth;
-                            vertices[iD + 3] = (sourceY + v * sourceHeight) / textureSourceHeight;
-                        }
-                        // alpha
-                        vertices[iD + 4] = alpha;
-                    }
-                    // 缓存索引数组
-                    if (this.hasMesh) {
-                        for (var i_2 = 0, l_2 = meshIndices.length; i_2 < l_2; ++i_2) {
-                            this.indicesForMesh[this.indexIndex + i_2] = meshIndices[i_2] + this.vertexIndex;
-                        }
-                    }
-                    this.vertexIndex += meshUVs.length / 2;
-                    this.indexIndex += meshIndices.length;
-                }
-                else {
-                    var width = textureSourceWidth;
-                    var height = textureSourceHeight;
-                    var w = sourceWidth;
-                    var h = sourceHeight;
-                    sourceX = sourceX / width;
-                    sourceY = sourceY / height;
-                    var vertices = this.vertices;
-                    var index = this.vertexIndex * this.vertSize;
-                    if (rotated) {
-                        var temp = sourceWidth;
-                        sourceWidth = sourceHeight / width;
-                        sourceHeight = temp / height;
-                        // xy
-                        vertices[index++] = tx;
-                        vertices[index++] = ty;
-                        // uv
-                        vertices[index++] = sourceWidth + sourceX;
-                        vertices[index++] = sourceY;
-                        // alpha
-                        vertices[index++] = alpha;
-                        // xy
-                        vertices[index++] = a * w + tx;
-                        vertices[index++] = b * w + ty;
-                        // uv
-                        vertices[index++] = sourceWidth + sourceX;
-                        vertices[index++] = sourceHeight + sourceY;
-                        // alpha
-                        vertices[index++] = alpha;
-                        // xy
-                        vertices[index++] = a * w + c * h + tx;
-                        vertices[index++] = d * h + b * w + ty;
-                        // uv
-                        vertices[index++] = sourceX;
-                        vertices[index++] = sourceHeight + sourceY;
-                        // alpha
-                        vertices[index++] = alpha;
-                        // xy
-                        vertices[index++] = c * h + tx;
-                        vertices[index++] = d * h + ty;
-                        // uv
-                        vertices[index++] = sourceX;
-                        vertices[index++] = sourceY;
-                        // alpha
-                        vertices[index++] = alpha;
-                    }
-                    else {
-                        sourceWidth = sourceWidth / width;
-                        sourceHeight = sourceHeight / height;
-                        // xy
-                        vertices[index++] = tx;
-                        vertices[index++] = ty;
-                        // uv
-                        vertices[index++] = sourceX;
-                        vertices[index++] = sourceY;
-                        // alpha
-                        vertices[index++] = alpha;
-                        // xy
-                        vertices[index++] = a * w + tx;
-                        vertices[index++] = b * w + ty;
-                        // uv
-                        vertices[index++] = sourceWidth + sourceX;
-                        vertices[index++] = sourceY;
-                        // alpha
-                        vertices[index++] = alpha;
-                        // xy
-                        vertices[index++] = a * w + c * h + tx;
-                        vertices[index++] = d * h + b * w + ty;
-                        // uv
-                        vertices[index++] = sourceWidth + sourceX;
-                        vertices[index++] = sourceHeight + sourceY;
-                        // alpha
-                        vertices[index++] = alpha;
-                        // xy
-                        vertices[index++] = c * h + tx;
-                        vertices[index++] = d * h + ty;
-                        // uv
-                        vertices[index++] = sourceX;
-                        vertices[index++] = sourceHeight + sourceY;
-                        // alpha
-                        vertices[index++] = alpha;
                     }
                     // 缓存索引数组
                     if (this.hasMesh) {
@@ -6888,14 +6717,8 @@ var egret;
                             gl.enableVertexAttribArray(attribute["aTextureCoord"].location);
                         }
                         else if (key === "aColor") {
-                            if (web.VAO_REFACTOR) {
-                                gl.vertexAttribPointer(attribute["aColor"].location, 4, gl.UNSIGNED_BYTE, true, 5 * 4, 4 * 4);
-                                gl.enableVertexAttribArray(attribute["aColor"].location);
-                            }
-                            else {
-                                gl.vertexAttribPointer(attribute["aColor"].location, 1, gl.FLOAT, false, 5 * 4, 4 * 4);
-                                gl.enableVertexAttribArray(attribute["aColor"].location);
-                            }
+                            gl.vertexAttribPointer(attribute["aColor"].location, 4, gl.UNSIGNED_BYTE, true, 5 * 4, 4 * 4);
+                            gl.enableVertexAttribArray(attribute["aColor"].location);
                         }
                     }
                     this.currentProgram = program;
@@ -7151,6 +6974,7 @@ var egret;
                 //
                 _this.currentTexture = null;
                 _this.globalAlpha = 1;
+                _this.globalTintColor = 0xFFFFFF;
                 /**
                  * stencil state
                  * 模版开关状态
@@ -7652,9 +7476,14 @@ var egret;
                         var offsetX2 = void 0;
                         var offsetY2 = void 0;
                         var tempAlpha = void 0;
+                        var tempTintColor = void 0;
                         if (child.$alpha != 1) {
                             tempAlpha = buffer.globalAlpha;
                             buffer.globalAlpha *= child.$alpha;
+                        }
+                        if (child.tint !== 0xFFFFFF) {
+                            tempTintColor = buffer.globalTintColor;
+                            buffer.globalTintColor = child.tintRGB;
                         }
                         var savedMatrix = void 0;
                         if (child.$useTranslate) {
@@ -7695,6 +7524,9 @@ var egret;
                         }
                         if (tempAlpha) {
                             buffer.globalAlpha = tempAlpha;
+                        }
+                        if (tempTintColor) {
+                            buffer.globalTintColor = tempTintColor;
                         }
                         if (savedMatrix) {
                             var m = buffer.globalMatrix;
@@ -9798,7 +9630,7 @@ var egret;
             }
             EgretShaderLib.blur_frag = "precision mediump float;\r\nuniform vec2 blur;\r\nuniform sampler2D uSampler;\r\nvarying vec2 vTextureCoord;\r\nuniform vec2 uTextureSize;\r\nvoid main()\r\n{\r\n    const int sampleRadius = 5;\r\n    const int samples = sampleRadius * 2 + 1;\r\n    vec2 blurUv = blur / uTextureSize;\r\n    vec4 color = vec4(0, 0, 0, 0);\r\n    vec2 uv = vec2(0.0, 0.0);\r\n    blurUv /= float(sampleRadius);\r\n\r\n    for (int i = -sampleRadius; i <= sampleRadius; i++) {\r\n        uv.x = vTextureCoord.x + float(i) * blurUv.x;\r\n        uv.y = vTextureCoord.y + float(i) * blurUv.y;\r\n        color += texture2D(uSampler, uv);\r\n    }\r\n\r\n    color /= float(samples);\r\n    gl_FragColor = color;\r\n}";
             EgretShaderLib.colorTransform_frag = "precision mediump float;\r\nvarying vec2 vTextureCoord;\r\nvarying vec4 vColor;\r\nuniform mat4 matrix;\r\nuniform vec4 colorAdd;\r\nuniform sampler2D uSampler;\r\n\r\nvoid main(void) {\r\n    vec4 texColor = texture2D(uSampler, vTextureCoord);\r\n    if(texColor.a > 0.) {\r\n        // 抵消预乘的alpha通道\r\n        texColor = vec4(texColor.rgb / texColor.a, texColor.a);\r\n    }\r\n    vec4 locColor = clamp(texColor * matrix + colorAdd, 0., 1.);\r\n    gl_FragColor = vColor * vec4(locColor.rgb * locColor.a, locColor.a);\r\n}";
-            EgretShaderLib.default_vert = "attribute vec2 aVertexPosition;\r\nattribute vec2 aTextureCoord;\r\nattribute vec2 aColor;\r\n\r\nuniform vec2 projectionVector;\r\n// uniform vec2 offsetVector;\r\n\r\nvarying vec2 vTextureCoord;\r\nvarying vec4 vColor;\r\n\r\nconst vec2 center = vec2(-1.0, 1.0);\r\n\r\nvoid main(void) {\r\n   gl_Position = vec4( (aVertexPosition / projectionVector) + center , 0.0, 1.0);\r\n   vTextureCoord = aTextureCoord;\r\n   vColor = vec4(aColor.x, aColor.x, aColor.x, aColor.x);\r\n}";
+            EgretShaderLib.default_vert = "attribute vec2 aVertexPosition;\r\nattribute vec2 aTextureCoord;\r\nattribute vec4 aColor;\r\n\r\nuniform vec2 projectionVector;\r\n// uniform vec2 offsetVector;\r\n\r\nvarying vec2 vTextureCoord;\r\nvarying vec4 vColor;\r\n\r\nconst vec2 center = vec2(-1.0, 1.0);\r\n\r\nvoid main(void) {\r\n   gl_Position = vec4( (aVertexPosition / projectionVector) + center , 0.0, 1.0);\r\n   vTextureCoord = aTextureCoord;\r\n   vColor = aColor;\r\n}";
             EgretShaderLib.glow_frag = "precision highp float;\r\nvarying vec2 vTextureCoord;\r\n\r\nuniform sampler2D uSampler;\r\n\r\nuniform float dist;\r\nuniform float angle;\r\nuniform vec4 color;\r\nuniform float alpha;\r\nuniform float blurX;\r\nuniform float blurY;\r\n// uniform vec4 quality;\r\nuniform float strength;\r\nuniform float inner;\r\nuniform float knockout;\r\nuniform float hideObject;\r\n\r\nuniform vec2 uTextureSize;\r\n\r\nfloat random(vec2 scale)\r\n{\r\n    return fract(sin(dot(gl_FragCoord.xy, scale)) * 43758.5453);\r\n}\r\n\r\nvoid main(void) {\r\n    vec2 px = vec2(1.0 / uTextureSize.x, 1.0 / uTextureSize.y);\r\n    // TODO 自动调节采样次数？\r\n    const float linearSamplingTimes = 7.0;\r\n    const float circleSamplingTimes = 12.0;\r\n    vec4 ownColor = texture2D(uSampler, vTextureCoord);\r\n    vec4 curColor;\r\n    float totalAlpha = 0.0;\r\n    float maxTotalAlpha = 0.0;\r\n    float curDistanceX = 0.0;\r\n    float curDistanceY = 0.0;\r\n    float offsetX = dist * cos(angle) * px.x;\r\n    float offsetY = dist * sin(angle) * px.y;\r\n\r\n    const float PI = 3.14159265358979323846264;\r\n    float cosAngle;\r\n    float sinAngle;\r\n    float offset = PI * 2.0 / circleSamplingTimes * random(vec2(12.9898, 78.233));\r\n    float stepX = blurX * px.x / linearSamplingTimes;\r\n    float stepY = blurY * px.y / linearSamplingTimes;\r\n    for (float a = 0.0; a <= PI * 2.0; a += PI * 2.0 / circleSamplingTimes) {\r\n        cosAngle = cos(a + offset);\r\n        sinAngle = sin(a + offset);\r\n        for (float i = 1.0; i <= linearSamplingTimes; i++) {\r\n            curDistanceX = i * stepX * cosAngle;\r\n            curDistanceY = i * stepY * sinAngle;\r\n            if (vTextureCoord.x + curDistanceX - offsetX >= 0.0 && vTextureCoord.y + curDistanceY + offsetY <= 1.0){\r\n                curColor = texture2D(uSampler, vec2(vTextureCoord.x + curDistanceX - offsetX, vTextureCoord.y + curDistanceY + offsetY));\r\n                totalAlpha += (linearSamplingTimes - i) * curColor.a;\r\n            }\r\n            maxTotalAlpha += (linearSamplingTimes - i);\r\n        }\r\n    }\r\n\r\n    ownColor.a = max(ownColor.a, 0.0001);\r\n    ownColor.rgb = ownColor.rgb / ownColor.a;\r\n\r\n    float outerGlowAlpha = (totalAlpha / maxTotalAlpha) * strength * alpha * (1. - inner) * max(min(hideObject, knockout), 1. - ownColor.a);\r\n    float innerGlowAlpha = ((maxTotalAlpha - totalAlpha) / maxTotalAlpha) * strength * alpha * inner * ownColor.a;\r\n\r\n    ownColor.a = max(ownColor.a * knockout * (1. - hideObject), 0.0001);\r\n    vec3 mix1 = mix(ownColor.rgb, color.rgb, innerGlowAlpha / (innerGlowAlpha + ownColor.a));\r\n    vec3 mix2 = mix(mix1, color.rgb, outerGlowAlpha / (innerGlowAlpha + ownColor.a + outerGlowAlpha));\r\n    float resultAlpha = min(ownColor.a + outerGlowAlpha + innerGlowAlpha, 1.);\r\n    gl_FragColor = vec4(mix2 * resultAlpha, resultAlpha);\r\n}";
             EgretShaderLib.primitive_frag = "precision lowp float;\r\nvarying vec2 vTextureCoord;\r\nvarying vec4 vColor;\r\n\r\nvoid main(void) {\r\n    gl_FragColor = vColor;\r\n}";
             EgretShaderLib.texture_frag = "precision lowp float;\r\nvarying vec2 vTextureCoord;\r\nvarying vec4 vColor;\r\nuniform sampler2D uSampler;\r\n\r\nvoid main(void) {\r\n    gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor;\r\n}";

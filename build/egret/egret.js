@@ -2697,6 +2697,13 @@ var egret;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(DisplayObject.prototype, "tintRGB", {
+            get: function () {
+                return this._tintRGB;
+            },
+            enumerable: true,
+            configurable: true
+        });
         /**
          * @private
          * The default touchEnabled property of DisplayObject

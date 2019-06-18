@@ -1297,6 +1297,7 @@ declare namespace egret {
         private _tint;
         private _tintRGB;
         tint: number;
+        readonly tintRGB: number;
     }
 }
 declare namespace egret {

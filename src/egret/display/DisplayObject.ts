@@ -2298,6 +2298,9 @@ namespace egret {
         public get tint(): number {
             return this._tint;
         }
+        public get tintRGB(): number {
+            return this._tintRGB;
+        }
         public set tint(value)  {
             this._tint = value;
             this._tintRGB = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);

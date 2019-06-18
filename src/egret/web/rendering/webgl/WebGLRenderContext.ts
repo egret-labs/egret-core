@@ -1008,14 +1008,8 @@ namespace egret.web {
                         gl.vertexAttribPointer(attribute["aTextureCoord"].location, 2, gl.FLOAT, false, 5 * 4, 2 * 4);
                         gl.enableVertexAttribArray(attribute["aTextureCoord"].location);
                     } else if (key === "aColor") {
-                        if (VAO_REFACTOR) {
-                            gl.vertexAttribPointer(attribute["aColor"].location, 4, gl.UNSIGNED_BYTE, true, 5 * 4, 4 * 4);
-                            gl.enableVertexAttribArray(attribute["aColor"].location);
-                        }
-                        else {
-                            gl.vertexAttribPointer(attribute["aColor"].location, 1, gl.FLOAT, false, 5 * 4, 4 * 4);
-                            gl.enableVertexAttribArray(attribute["aColor"].location);
-                        }   
+                        gl.vertexAttribPointer(attribute["aColor"].location, 4, gl.UNSIGNED_BYTE, true, 5 * 4, 4 * 4);
+                        gl.enableVertexAttribArray(attribute["aColor"].location);  
                     }
                 }
 
