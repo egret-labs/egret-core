@@ -168,9 +168,199 @@ namespace egret.web {
         /**
          * 缓存一组顶点
          */
+        private __cacheArrays__(buffer: WebGLRenderBuffer, sourceX: number, sourceY: number, sourceWidth: number, sourceHeight: number,
+            destX: number, destY: number, destWidth: number, destHeight: number, textureSourceWidth: number, textureSourceHeight: number,
+            meshUVs?: number[], meshVertices?: number[], meshIndices?: number[], rotated?: boolean): void {
+            let alpha = buffer.globalAlpha;
+            //
+            alpha = Math.min(alpha, 1.0);
+            /*
+            临时测试
+            */
+            //const currentTexture = buffer.currentTexture;
+            alpha = 0xFFFFFF/*16777215*/ + (alpha * 255 << 24)
+	        //alpha = alpha < 1.0 && currentTexture[UNPACK_PREMULTIPLY_ALPHA_WEBGL] ? WebGLUtils.premultiplyTint(element._tintRGB, alpha) : element._tintRGB + (alpha * 255 << 24);
+            /*
+            临时测试
+            */
+            //计算出绘制矩阵，之后把矩阵还原回之前的
+            let locWorldTransform = buffer.globalMatrix;
+
+            let a = locWorldTransform.a;
+            let b = locWorldTransform.b;
+            let c = locWorldTransform.c;
+            let d = locWorldTransform.d;
+            let tx = locWorldTransform.tx;
+            let ty = locWorldTransform.ty;
+
+            let offsetX = buffer.$offsetX;
+            let offsetY = buffer.$offsetY;
+            if (offsetX != 0 || offsetY != 0) {
+                tx = offsetX * a + offsetY * c + tx;
+                ty = offsetX * b + offsetY * d + ty;
+            }
+
+            if (!meshVertices) {
+                if (destX != 0 || destY != 0) {
+                    tx = destX * a + destY * c + tx;
+                    ty = destX * b + destY * d + ty;
+                }
+
+                let a1 = destWidth / sourceWidth;
+                if (a1 != 1) {
+                    a = a1 * a;
+                    b = a1 * b;
+                }
+                let d1 = destHeight / sourceHeight;
+                if (d1 != 1) {
+                    c = d1 * c;
+                    d = d1 * d;
+                }
+            }
+
+            if (meshVertices) {
+                // 计算索引位置与赋值
+                const vertices = this.vertices;
+                const verticesUint32View = this._verticesUint32View;
+                let index = this.vertexIndex * this.vertSize;
+                // 缓存顶点数组
+                let i = 0, iD = 0, l = 0;
+                let u = 0, v = 0, x = 0, y = 0;
+                for (i = 0, l = meshUVs.length; i < l; i += 2) {
+                    iD = index + i * 5 / 2;
+                    x = meshVertices[i];
+                    y = meshVertices[i + 1];
+                    u = meshUVs[i];
+                    v = meshUVs[i + 1];
+                    // xy
+                    vertices[iD + 0] = a * x + c * y + tx;
+                    vertices[iD + 1] = b * x + d * y + ty;
+                    // uv
+                    if (rotated) {
+                        vertices[iD + 2] = (sourceX + (1.0 - v) * sourceHeight) / textureSourceWidth;
+                        vertices[iD + 3] = (sourceY + u * sourceWidth) / textureSourceHeight;
+                    }
+                    else {
+                        vertices[iD + 2] = (sourceX + u * sourceWidth) / textureSourceWidth;
+                        vertices[iD + 3] = (sourceY + v * sourceHeight) / textureSourceHeight;
+                    }
+                    // alpha
+                    verticesUint32View[iD + 4] = alpha;
+                }
+                // 缓存索引数组
+                if (this.hasMesh) {
+                    for (let i = 0, l = meshIndices.length; i < l; ++i) {
+                        this.indicesForMesh[this.indexIndex + i] = meshIndices[i] + this.vertexIndex;
+                    }
+                }
+                this.vertexIndex += meshUVs.length / 2;
+                this.indexIndex += meshIndices.length;
+            } else {
+                let width = textureSourceWidth;
+                let height = textureSourceHeight;
+                let w = sourceWidth;
+                let h = sourceHeight;
+                sourceX = sourceX / width;
+                sourceY = sourceY / height;
+                let vertices = this.vertices;
+                const verticesUint32View = this._verticesUint32View;
+                let index = this.vertexIndex * this.vertSize;
+                if (rotated) {
+                    let temp = sourceWidth;
+                    sourceWidth = sourceHeight / width;
+                    sourceHeight = temp / height;
+                    // xy
+                    vertices[index++] = tx;
+                    vertices[index++] = ty;
+                    // uv
+                    vertices[index++] = sourceWidth + sourceX;
+                    vertices[index++] = sourceY;
+                    // alpha
+                    verticesUint32View[index++] = alpha;
+                    // xy
+                    vertices[index++] = a * w + tx;
+                    vertices[index++] = b * w + ty;
+                    // uv
+                    vertices[index++] = sourceWidth + sourceX;
+                    vertices[index++] = sourceHeight + sourceY;
+                    // alpha
+                    verticesUint32View[index++] = alpha;
+                    // xy
+                    vertices[index++] = a * w + c * h + tx;
+                    vertices[index++] = d * h + b * w + ty;
+                    // uv
+                    vertices[index++] = sourceX;
+                    vertices[index++] = sourceHeight + sourceY;
+                    // alpha
+                    verticesUint32View[index++] = alpha;
+                    // xy
+                    vertices[index++] = c * h + tx;
+                    vertices[index++] = d * h + ty;
+                    // uv
+                    vertices[index++] = sourceX;
+                    vertices[index++] = sourceY;
+                    // alpha
+                    verticesUint32View[index++] = alpha;
+                }
+                else {
+                    sourceWidth = sourceWidth / width;
+                    sourceHeight = sourceHeight / height;
+                    // xy
+                    vertices[index++] = tx;
+                    vertices[index++] = ty;
+                    // uv
+                    vertices[index++] = sourceX;
+                    vertices[index++] = sourceY;
+                    // alpha
+                    verticesUint32View[index++] = alpha;
+                    // xy
+                    vertices[index++] = a * w + tx;
+                    vertices[index++] = b * w + ty;
+                    // uv
+                    vertices[index++] = sourceWidth + sourceX;
+                    vertices[index++] = sourceY;
+                    // alpha
+                    verticesUint32View[index++] = alpha;
+                    // xy
+                    vertices[index++] = a * w + c * h + tx;
+                    vertices[index++] = d * h + b * w + ty;
+                    // uv
+                    vertices[index++] = sourceWidth + sourceX;
+                    vertices[index++] = sourceHeight + sourceY;
+                    // alpha
+                    verticesUint32View[index++] = alpha;
+                    // xy
+                    vertices[index++] = c * h + tx;
+                    vertices[index++] = d * h + ty;
+                    // uv
+                    vertices[index++] = sourceX;
+                    vertices[index++] = sourceHeight + sourceY;
+                    // alpha
+                    verticesUint32View[index++] = alpha;
+                }
+                // 缓存索引数组
+                if (this.hasMesh) {
+                    let indicesForMesh = this.indicesForMesh;
+                    indicesForMesh[this.indexIndex + 0] = 0 + this.vertexIndex;
+                    indicesForMesh[this.indexIndex + 1] = 1 + this.vertexIndex;
+                    indicesForMesh[this.indexIndex + 2] = 2 + this.vertexIndex;
+                    indicesForMesh[this.indexIndex + 3] = 0 + this.vertexIndex;
+                    indicesForMesh[this.indexIndex + 4] = 2 + this.vertexIndex;
+                    indicesForMesh[this.indexIndex + 5] = 3 + this.vertexIndex;
+                }
+
+                this.vertexIndex += 4;
+                this.indexIndex += 6;
+            }
+        }
         public cacheArrays(buffer: WebGLRenderBuffer, sourceX: number, sourceY: number, sourceWidth: number, sourceHeight: number,
             destX: number, destY: number, destWidth: number, destHeight: number, textureSourceWidth: number, textureSourceHeight: number,
             meshUVs?: number[], meshVertices?: number[], meshIndices?: number[], rotated?: boolean): void {
+            if (VAO_REFACTOR) {
+                return this.__cacheArrays__(buffer, sourceX, sourceY, sourceWidth, sourceHeight,
+                    destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight,
+                    meshUVs, meshVertices, meshIndices, rotated);
+            }
             let alpha = buffer.globalAlpha;
             //计算出绘制矩阵，之后把矩阵还原回之前的
             let locWorldTransform = buffer.globalMatrix;

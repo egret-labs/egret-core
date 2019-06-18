@@ -3587,6 +3587,7 @@ var egret;
             texture[egret.glContext] = gl;
             gl.bindTexture(gl.TEXTURE_2D, texture);
             gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
+            texture[egret.UNPACK_PREMULTIPLY_ALPHA_WEBGL] = true;
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, bitmapData);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
@@ -5544,7 +5545,188 @@ var egret;
             /**
              * 缓存一组顶点
              */
+            WebGLVertexArrayObject.prototype.__cacheArrays__ = function (buffer, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices, rotated) {
+                var alpha = buffer.globalAlpha;
+                //
+                alpha = Math.min(alpha, 1.0);
+                /*
+                临时测试
+                */
+                //const currentTexture = buffer.currentTexture;
+                alpha = 0xFFFFFF /*16777215*/ + (alpha * 255 << 24);
+                //alpha = alpha < 1.0 && currentTexture[UNPACK_PREMULTIPLY_ALPHA_WEBGL] ? WebGLUtils.premultiplyTint(element._tintRGB, alpha) : element._tintRGB + (alpha * 255 << 24);
+                /*
+                临时测试
+                */
+                //计算出绘制矩阵，之后把矩阵还原回之前的
+                var locWorldTransform = buffer.globalMatrix;
+                var a = locWorldTransform.a;
+                var b = locWorldTransform.b;
+                var c = locWorldTransform.c;
+                var d = locWorldTransform.d;
+                var tx = locWorldTransform.tx;
+                var ty = locWorldTransform.ty;
+                var offsetX = buffer.$offsetX;
+                var offsetY = buffer.$offsetY;
+                if (offsetX != 0 || offsetY != 0) {
+                    tx = offsetX * a + offsetY * c + tx;
+                    ty = offsetX * b + offsetY * d + ty;
+                }
+                if (!meshVertices) {
+                    if (destX != 0 || destY != 0) {
+                        tx = destX * a + destY * c + tx;
+                        ty = destX * b + destY * d + ty;
+                    }
+                    var a1 = destWidth / sourceWidth;
+                    if (a1 != 1) {
+                        a = a1 * a;
+                        b = a1 * b;
+                    }
+                    var d1 = destHeight / sourceHeight;
+                    if (d1 != 1) {
+                        c = d1 * c;
+                        d = d1 * d;
+                    }
+                }
+                if (meshVertices) {
+                    // 计算索引位置与赋值
+                    var vertices = this.vertices;
+                    var verticesUint32View = this._verticesUint32View;
+                    var index = this.vertexIndex * this.vertSize;
+                    // 缓存顶点数组
+                    var i = 0, iD = 0, l = 0;
+                    var u = 0, v = 0, x = 0, y = 0;
+                    for (i = 0, l = meshUVs.length; i < l; i += 2) {
+                        iD = index + i * 5 / 2;
+                        x = meshVertices[i];
+                        y = meshVertices[i + 1];
+                        u = meshUVs[i];
+                        v = meshUVs[i + 1];
+                        // xy
+                        vertices[iD + 0] = a * x + c * y + tx;
+                        vertices[iD + 1] = b * x + d * y + ty;
+                        // uv
+                        if (rotated) {
+                            vertices[iD + 2] = (sourceX + (1.0 - v) * sourceHeight) / textureSourceWidth;
+                            vertices[iD + 3] = (sourceY + u * sourceWidth) / textureSourceHeight;
+                        }
+                        else {
+                            vertices[iD + 2] = (sourceX + u * sourceWidth) / textureSourceWidth;
+                            vertices[iD + 3] = (sourceY + v * sourceHeight) / textureSourceHeight;
+                        }
+                        // alpha
+                        verticesUint32View[iD + 4] = alpha;
+                    }
+                    // 缓存索引数组
+                    if (this.hasMesh) {
+                        for (var i_1 = 0, l_1 = meshIndices.length; i_1 < l_1; ++i_1) {
+                            this.indicesForMesh[this.indexIndex + i_1] = meshIndices[i_1] + this.vertexIndex;
+                        }
+                    }
+                    this.vertexIndex += meshUVs.length / 2;
+                    this.indexIndex += meshIndices.length;
+                }
+                else {
+                    var width = textureSourceWidth;
+                    var height = textureSourceHeight;
+                    var w = sourceWidth;
+                    var h = sourceHeight;
+                    sourceX = sourceX / width;
+                    sourceY = sourceY / height;
+                    var vertices = this.vertices;
+                    var verticesUint32View = this._verticesUint32View;
+                    var index = this.vertexIndex * this.vertSize;
+                    if (rotated) {
+                        var temp = sourceWidth;
+                        sourceWidth = sourceHeight / width;
+                        sourceHeight = temp / height;
+                        // xy
+                        vertices[index++] = tx;
+                        vertices[index++] = ty;
+                        // uv
+                        vertices[index++] = sourceWidth + sourceX;
+                        vertices[index++] = sourceY;
+                        // alpha
+                        verticesUint32View[index++] = alpha;
+                        // xy
+                        vertices[index++] = a * w + tx;
+                        vertices[index++] = b * w + ty;
+                        // uv
+                        vertices[index++] = sourceWidth + sourceX;
+                        vertices[index++] = sourceHeight + sourceY;
+                        // alpha
+                        verticesUint32View[index++] = alpha;
+                        // xy
+                        vertices[index++] = a * w + c * h + tx;
+                        vertices[index++] = d * h + b * w + ty;
+                        // uv
+                        vertices[index++] = sourceX;
+                        vertices[index++] = sourceHeight + sourceY;
+                        // alpha
+                        verticesUint32View[index++] = alpha;
+                        // xy
+                        vertices[index++] = c * h + tx;
+                        vertices[index++] = d * h + ty;
+                        // uv
+                        vertices[index++] = sourceX;
+                        vertices[index++] = sourceY;
+                        // alpha
+                        verticesUint32View[index++] = alpha;
+                    }
+                    else {
+                        sourceWidth = sourceWidth / width;
+                        sourceHeight = sourceHeight / height;
+                        // xy
+                        vertices[index++] = tx;
+                        vertices[index++] = ty;
+                        // uv
+                        vertices[index++] = sourceX;
+                        vertices[index++] = sourceY;
+                        // alpha
+                        verticesUint32View[index++] = alpha;
+                        // xy
+                        vertices[index++] = a * w + tx;
+                        vertices[index++] = b * w + ty;
+                        // uv
+                        vertices[index++] = sourceWidth + sourceX;
+                        vertices[index++] = sourceY;
+                        // alpha
+                        verticesUint32View[index++] = alpha;
+                        // xy
+                        vertices[index++] = a * w + c * h + tx;
+                        vertices[index++] = d * h + b * w + ty;
+                        // uv
+                        vertices[index++] = sourceWidth + sourceX;
+                        vertices[index++] = sourceHeight + sourceY;
+                        // alpha
+                        verticesUint32View[index++] = alpha;
+                        // xy
+                        vertices[index++] = c * h + tx;
+                        vertices[index++] = d * h + ty;
+                        // uv
+                        vertices[index++] = sourceX;
+                        vertices[index++] = sourceHeight + sourceY;
+                        // alpha
+                        verticesUint32View[index++] = alpha;
+                    }
+                    // 缓存索引数组
+                    if (this.hasMesh) {
+                        var indicesForMesh = this.indicesForMesh;
+                        indicesForMesh[this.indexIndex + 0] = 0 + this.vertexIndex;
+                        indicesForMesh[this.indexIndex + 1] = 1 + this.vertexIndex;
+                        indicesForMesh[this.indexIndex + 2] = 2 + this.vertexIndex;
+                        indicesForMesh[this.indexIndex + 3] = 0 + this.vertexIndex;
+                        indicesForMesh[this.indexIndex + 4] = 2 + this.vertexIndex;
+                        indicesForMesh[this.indexIndex + 5] = 3 + this.vertexIndex;
+                    }
+                    this.vertexIndex += 4;
+                    this.indexIndex += 6;
+                }
+            };
             WebGLVertexArrayObject.prototype.cacheArrays = function (buffer, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices, rotated) {
+                if (web.VAO_REFACTOR) {
+                    return this.__cacheArrays__(buffer, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices, rotated);
+                }
                 var alpha = buffer.globalAlpha;
                 //计算出绘制矩阵，之后把矩阵还原回之前的
                 var locWorldTransform = buffer.globalMatrix;
@@ -5606,8 +5788,8 @@ var egret;
                     }
                     // 缓存索引数组
                     if (this.hasMesh) {
-                        for (var i_1 = 0, l_1 = meshIndices.length; i_1 < l_1; ++i_1) {
-                            this.indicesForMesh[this.indexIndex + i_1] = meshIndices[i_1] + this.vertexIndex;
+                        for (var i_2 = 0, l_2 = meshIndices.length; i_2 < l_2; ++i_2) {
+                            this.indicesForMesh[this.indexIndex + i_2] = meshIndices[i_2] + this.vertexIndex;
                         }
                     }
                     this.vertexIndex += meshUVs.length / 2;
@@ -5822,9 +6004,13 @@ var egret;
                 }
             };
             WebGLRenderTarget.prototype.createTexture = function () {
-                var gl = this.gl;
-                var texture = gl.createTexture();
-                texture[egret.glContext] = gl;
+                //就是创建空的纹理
+                var webglrendercontext = web.WebGLRenderContext.getInstance(0, 0);
+                return egret.sys._createTexture(webglrendercontext, this.width, this.height, null);
+                /*
+                const gl = this.gl;
+                const texture: WebGLTexture = gl.createTexture();
+                texture[glContext] = gl;
                 gl.bindTexture(gl.TEXTURE_2D, texture);
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.width, this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
@@ -5832,6 +6018,7 @@ var egret;
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
                 return texture;
+                */
             };
             WebGLRenderTarget.prototype.clear = function (bind) {
                 var gl = this.gl;
@@ -6200,26 +6387,6 @@ var egret;
              */
             WebGLRenderContext.prototype.createTexture = function (bitmapData) {
                 return egret.sys.createTexture(this, bitmapData);
-                /*
-                let gl: any = this.context;
-    
-                let texture = gl.createTexture();
-    
-                if (!texture) {
-                    //先创建texture失败,然后lost事件才发出来..
-                    this.contextLost = true;
-                    return;
-                }
-                texture[glContext] = gl;
-                gl.bindTexture(gl.TEXTURE_2D, texture);
-                gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
-                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, bitmapData as any);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-                return texture;
-                */
             };
             /*
             * TO DO
@@ -6280,6 +6447,7 @@ var egret;
                 texture[egret.is_compressed_texture] = true;
                 gl.bindTexture(gl.TEXTURE_2D, texture);
                 gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
+                texture[egret.UNPACK_PREMULTIPLY_ALPHA_WEBGL] = true;
                 gl.compressedTexImage2D(gl.TEXTURE_2D, levels, internalFormat, width, height, 0, data);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
@@ -6482,6 +6650,7 @@ var egret;
                 var count = meshIndices ? meshIndices.length / 3 : 2;
                 // 应用$filter，因为只可能是colorMatrixFilter，最后两个参数可不传
                 this.drawCmdManager.pushDrawTexture(texture, count, this.$filter, textureWidth, textureHeight);
+                buffer.currentTexture = texture;
                 this.vao.cacheArrays(buffer, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices, rotated);
             };
             /**
@@ -6496,6 +6665,7 @@ var egret;
                     this.$drawWebGL();
                 }
                 this.drawCmdManager.pushDrawRect();
+                buffer.currentTexture = null;
                 this.vao.cacheArrays(buffer, 0, 0, width, height, x, y, width, height, width, height);
             };
             /**
@@ -6511,6 +6681,7 @@ var egret;
                     this.$drawWebGL();
                 }
                 this.drawCmdManager.pushPushMask();
+                buffer.currentTexture = null;
                 this.vao.cacheArrays(buffer, 0, 0, width, height, x, y, width, height, width, height);
             };
             /**
@@ -6526,6 +6697,7 @@ var egret;
                     this.$drawWebGL();
                 }
                 this.drawCmdManager.pushPopMask();
+                buffer.currentTexture = null;
                 this.vao.cacheArrays(buffer, 0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
             };
             /**
@@ -6716,8 +6888,14 @@ var egret;
                             gl.enableVertexAttribArray(attribute["aTextureCoord"].location);
                         }
                         else if (key === "aColor") {
-                            gl.vertexAttribPointer(attribute["aColor"].location, 1, gl.FLOAT, false, 5 * 4, 4 * 4);
-                            gl.enableVertexAttribArray(attribute["aColor"].location);
+                            if (web.VAO_REFACTOR) {
+                                gl.vertexAttribPointer(attribute["aColor"].location, 4, gl.UNSIGNED_BYTE, true, 5 * 4, 4 * 4);
+                                gl.enableVertexAttribArray(attribute["aColor"].location);
+                            }
+                            else {
+                                gl.vertexAttribPointer(attribute["aColor"].location, 1, gl.FLOAT, false, 5 * 4, 4 * 4);
+                                gl.enableVertexAttribArray(attribute["aColor"].location);
+                            }
                         }
                     }
                     this.currentProgram = program;
@@ -6903,6 +7081,7 @@ var egret;
                 // 绘制input结果到舞台
                 output.saveTransform();
                 output.transform(1, 0, 0, -1, 0, height);
+                output.currentTexture = input.rootRenderTarget.texture;
                 this.vao.cacheArrays(output, 0, 0, width, height, 0, 0, width, height, width, height);
                 output.restoreTransform();
                 this.drawCmdManager.pushDrawTexture(input.rootRenderTarget.texture, 2, filter, width, height);
@@ -6969,6 +7148,8 @@ var egret;
             __extends(WebGLRenderBuffer, _super);
             function WebGLRenderBuffer(width, height, root) {
                 var _this = _super.call(this) || this;
+                //
+                _this.currentTexture = null;
                 _this.globalAlpha = 1;
                 /**
                  * stencil state
@@ -9101,8 +9282,10 @@ var egret;
                         page.webGLTexture = this.createTextTextureAtlas(page.pageWidth, page.pageHeight, textAtlasDebug);
                     }
                     var gl = this.webglRenderContext.context;
+                    page.webGLTexture[egret.glContext] = gl;
                     gl.bindTexture(gl.TEXTURE_2D, page.webGLTexture);
                     gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+                    page.webGLTexture[egret.UNPACK_PREMULTIPLY_ALPHA_WEBGL] = true;
                     gl.texSubImage2D(gl.TEXTURE_2D, 0, txtBlock.subImageOffsetX, txtBlock.subImageOffsetY, gl.RGBA, gl.UNSIGNED_BYTE, canvas);
                     gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
                 }

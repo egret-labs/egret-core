@@ -1291,6 +1291,12 @@ declare namespace egret {
          * @platform Web,Native
          */
         willTrigger(type: string): boolean;
+        /**
+         * inspired by pixi.js
+         */
+        private _tint;
+        private _tintRGB;
+        tint: number;
     }
 }
 declare namespace egret {
@@ -4401,6 +4407,10 @@ declare namespace egret {
         private static canUseWebGL;
         static checkCanUseWebGL(): boolean;
         static deleteWebGLTexture(webglTexture: WebGLTexture): void;
+        /**
+         * inspired by pixi.js
+         */
+        static premultiplyTint(tint: number, alpha: number): number;
     }
 }
 declare namespace egret {
@@ -5643,6 +5653,7 @@ declare namespace egret {
     const engine_default_empty_texture = "engine_default_empty_texture";
     const is_compressed_texture = "is_compressed_texture";
     const glContext = "glContext";
+    const UNPACK_PREMULTIPLY_ALPHA_WEBGL = "UNPACK_PREMULTIPLY_ALPHA_WEBGL";
     /**
      * A BitmapData object contains an array of pixel data. This data can represent either a fully opaque bitmap or a
      * transparent bitmap that contains alpha channel data. Either type of BitmapData object is stored as a buffer of 32-bit

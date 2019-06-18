@@ -59,6 +59,9 @@ namespace egret.web {
          */
         private root: boolean;
 
+        //
+        public currentTexture: WebGLTexture = null;
+
 
         public constructor(width?: number, height?: number, root?: boolean) {
             super();
