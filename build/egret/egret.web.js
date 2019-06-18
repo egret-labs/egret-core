@@ -2813,7 +2813,7 @@ var egret;
          */
         var CanvasRenderBuffer = (function () {
             function CanvasRenderBuffer(width, height, root) {
-                this.surface = __createCanvas__(width, height);
+                this.surface = egret.sys.createCanvasRenderBufferSurface(__createCanvas__, width, height);
                 this.context = this.surface.getContext("2d");
                 if (this.context) {
                     this.context.$offsetX = 0;
@@ -2849,33 +2849,7 @@ var egret;
              * @param useMaxSize 若传入true，则将改变后的尺寸与已有尺寸对比，保留较大的尺寸。
              */
             CanvasRenderBuffer.prototype.resize = function (width, height, useMaxSize) {
-                var surface = this.surface;
-                if (useMaxSize) {
-                    var change = false;
-                    if (surface.width < width) {
-                        surface.width = width;
-                        change = true;
-                    }
-                    if (surface.height < height) {
-                        surface.height = height;
-                        change = true;
-                    }
-                    //尺寸没有变化时,将绘制属性重置
-                    if (!change) {
-                        this.context.globalCompositeOperation = "source-over";
-                        this.context.setTransform(1, 0, 0, 1, 0, 0);
-                        this.context.globalAlpha = 1;
-                    }
-                }
-                else {
-                    if (surface.width != width) {
-                        surface.width = width;
-                    }
-                    if (surface.height != height) {
-                        surface.height = height;
-                    }
-                }
-                this.clear();
+                egret.sys.resizeCanvasRenderBuffer(this, width, height, useMaxSize);
             };
             /**
              * 获取指定区域的像素
@@ -3579,6 +3553,55 @@ var egret;
             return context.measureText(text).width;
         }
         egret.sys.measureTextWith = measureTextWith;
+        /**
+         * 为CanvasRenderBuffer创建一个HTMLCanvasElement
+         * @param defaultFunc
+         * @param width
+         * @param height
+         * @param root
+         */
+        function createCanvasRenderBufferSurface(defaultFunc, width, height, root) {
+            return defaultFunc(width, height);
+        }
+        egret.sys.createCanvasRenderBufferSurface = createCanvasRenderBufferSurface;
+        /**
+         * 改变渲染缓冲的大小并清空缓冲区
+         * @param renderContext
+         * @param width
+         * @param height
+         * @param useMaxSize
+         */
+        function resizeCanvasRenderBuffer(renderContext, width, height, useMaxSize) {
+            var canvasRenderBuffer = renderContext;
+            var surface = canvasRenderBuffer.surface;
+            if (useMaxSize) {
+                var change = false;
+                if (surface.width < width) {
+                    surface.width = width;
+                    change = true;
+                }
+                if (surface.height < height) {
+                    surface.height = height;
+                    change = true;
+                }
+                //尺寸没有变化时,将绘制属性重置
+                if (!change) {
+                    canvasRenderBuffer.context.globalCompositeOperation = "source-over";
+                    canvasRenderBuffer.context.setTransform(1, 0, 0, 1, 0, 0);
+                    canvasRenderBuffer.context.globalAlpha = 1;
+                }
+            }
+            else {
+                if (surface.width != width) {
+                    surface.width = width;
+                }
+                if (surface.height != height) {
+                    surface.height = height;
+                }
+            }
+            canvasRenderBuffer.clear();
+        }
+        egret.sys.resizeCanvasRenderBuffer = resizeCanvasRenderBuffer;
         egret.Geolocation = egret.web.WebGeolocation;
         egret.Motion = egret.web.WebMotion;
     })(web = egret.web || (egret.web = {}));

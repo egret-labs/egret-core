@@ -14630,7 +14630,6 @@ var egret;
         }
         sys.drawTextureElements = drawTextureElements;
         /**
-         * @private
          * 测量文本的宽度
          * @param context
          * @param text
@@ -14640,6 +14639,29 @@ var egret;
             return 0;
         }
         sys.measureTextWith = measureTextWith;
+        /**
+         * 为CanvasRenderBuffer创建一个canvas
+         * @param defaultFunc
+         * @param width
+         * @param height
+         * @param root
+         */
+        function createCanvasRenderBufferSurface(defaultFunc, width, height, root) {
+            console.error("empty sys.createCanvasRenderBufferSurface = " + width + ", " + height);
+            return null;
+        }
+        sys.createCanvasRenderBufferSurface = createCanvasRenderBufferSurface;
+        /**
+         * 改变渲染缓冲的大小并清空缓冲区
+         * @param renderContext
+         * @param width
+         * @param height
+         * @param useMaxSize
+         */
+        function resizeCanvasRenderBuffer(renderContext, width, height, useMaxSize) {
+            console.error("empty sys.resizeContext = " + renderContext + ", " + width + ", " + height + ", " + useMaxSize);
+        }
+        sys.resizeCanvasRenderBuffer = resizeCanvasRenderBuffer;
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////

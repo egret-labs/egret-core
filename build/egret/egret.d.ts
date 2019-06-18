@@ -9716,12 +9716,27 @@ declare namespace egret.sys {
      **/
     function drawTextureElements(renderContext: RenderContext, data: any, offset: number): number;
     /**
-     * @private
      * 测量文本的宽度
      * @param context
      * @param text
      */
     function measureTextWith(context: CanvasRenderingContext2D, text: string): number;
+    /**
+     * 为CanvasRenderBuffer创建一个canvas
+     * @param defaultFunc
+     * @param width
+     * @param height
+     * @param root
+     */
+    function createCanvasRenderBufferSurface(defaultFunc: (width?: number, height?: number) => HTMLCanvasElement, width?: number, height?: number, root?: boolean): HTMLCanvasElement;
+    /**
+     * 改变渲染缓冲的大小并清空缓冲区
+     * @param renderContext
+     * @param width
+     * @param height
+     * @param useMaxSize
+     */
+    function resizeCanvasRenderBuffer(renderContext: RenderContext, width: number, height: number, useMaxSize?: boolean): void;
 }
 declare namespace egret.sys {
     /**
