@@ -151,6 +151,7 @@ namespace egret.web {
     egret.sys.drawTextureElements = drawTextureElements;
     
     egret.Geolocation = egret.web.WebGeolocation;
+    egret.Motion = egret.web.WebMotion;
 }
 
 
