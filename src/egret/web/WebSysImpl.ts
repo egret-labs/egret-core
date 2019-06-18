@@ -149,6 +149,8 @@ namespace egret.web {
         return size;
     }
     egret.sys.drawTextureElements = drawTextureElements;
+    
+    egret.Geolocation = egret.web.WebGeolocation;
 }
 
 
