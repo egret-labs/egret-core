@@ -52,8 +52,8 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static isNumber(value:any):boolean {
-            return typeof(value) === "number" && !isNaN(value);
+        public static isNumber(value: any): boolean {
+            return typeof (value) === "number" && !isNaN(value);
         }
 
         /**
@@ -72,14 +72,14 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static sin(value:number):number {
-            let valueFloor:number = Math.floor(value);
-            let valueCeil:number = valueFloor + 1;
-            let resultFloor:number = NumberUtils.sinInt(valueFloor);
+        public static sin(value: number): number {
+            let valueFloor: number = Math.floor(value);
+            let valueCeil: number = valueFloor + 1;
+            let resultFloor: number = NumberUtils.sinInt(valueFloor);
             if (valueFloor == value) {
                 return resultFloor;
             }
-            let resultCeil:number = NumberUtils.sinInt(valueCeil);
+            let resultCeil: number = NumberUtils.sinInt(valueCeil);
 
             return (value - valueFloor) * resultCeil + (valueCeil - value) * resultFloor;
         }
@@ -90,8 +90,7 @@ namespace egret {
          * @param value 
          * @returns 
          */
-        private static sinInt(value:number):number
-        {
+        private static sinInt(value: number): number {
             value = value % 360;
             if (value < 0) {
                 value += 360;
@@ -115,14 +114,14 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static cos(value:number):number {
-            let valueFloor:number = Math.floor(value);
-            let valueCeil:number = valueFloor + 1;
-            let resultFloor:number = NumberUtils.cosInt(valueFloor);
+        public static cos(value: number): number {
+            let valueFloor: number = Math.floor(value);
+            let valueCeil: number = valueFloor + 1;
+            let resultFloor: number = NumberUtils.cosInt(valueFloor);
             if (valueFloor == value) {
                 return resultFloor;
             }
-            let resultCeil:number = NumberUtils.cosInt(valueCeil);
+            let resultCeil: number = NumberUtils.cosInt(valueCeil);
 
             return (value - valueFloor) * resultCeil + (valueCeil - value) * resultFloor;
         }
@@ -133,8 +132,7 @@ namespace egret {
          * @param value 
          * @returns 
          */
-        private static cosInt(value:number):number
-        {
+        private static cosInt(value: number): number {
             value = value % 360;
             if (value < 0) {
                 value += 360;
@@ -156,6 +154,27 @@ namespace egret {
             return hash;
         }
 
+        /**
+         * inspired by pixi.js
+         * Rounds to next power of two.
+         *
+         * @function isPow2
+         * @memberof PIXI.utils
+         * @param {number} v input value
+         * @return {number}
+         */
+        public static nextPow2(param: number): number {
+            let v = param;
+            v += (+(v === 0));
+            --v;
+            v |= v >>> 1;
+            v |= v >>> 2;
+            v |= v >>> 4;
+            v |= v >>> 8;
+            v |= v >>> 16;
+            return v + 1;
+        }
+
     }
 }
 
@@ -170,7 +189,7 @@ let egret_cos_map = {};
 /**
  * @private
  */
-let DEG_TO_RAD:number = Math.PI / 180;
+let DEG_TO_RAD: number = Math.PI / 180;
 
 for (let NumberUtils_i = 0; NumberUtils_i < 360; NumberUtils_i++) {
     egret_sin_map[NumberUtils_i] = Math.sin(NumberUtils_i * DEG_TO_RAD);
@@ -197,8 +216,8 @@ if (!Function.prototype.bind) {
             },
             fBound = function () {
                 return fToBind.apply(this instanceof fNOP && oThis
-                        ? this
-                        : oThis,
+                    ? this
+                    : oThis,
                     aArgs.concat(Array.prototype.slice.call(arguments)));
             };
 

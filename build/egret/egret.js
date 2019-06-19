@@ -24495,6 +24495,26 @@ var egret;
             }
             return hash;
         };
+        /**
+         * inspired by pixi.js
+         * Rounds to next power of two.
+         *
+         * @function isPow2
+         * @memberof PIXI.utils
+         * @param {number} v input value
+         * @return {number}
+         */
+        NumberUtils.nextPow2 = function (param) {
+            var v = param;
+            v += (+(v === 0));
+            --v;
+            v |= v >>> 1;
+            v |= v >>> 2;
+            v |= v >>> 4;
+            v |= v >>> 8;
+            v |= v >>> 16;
+            return v + 1;
+        };
         return NumberUtils;
     }());
     egret.NumberUtils = NumberUtils;

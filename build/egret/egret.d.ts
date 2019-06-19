@@ -14471,6 +14471,16 @@ declare namespace egret {
          */
         private static cosInt(value);
         static convertStringToHashCode(str: string): number;
+        /**
+         * inspired by pixi.js
+         * Rounds to next power of two.
+         *
+         * @function isPow2
+         * @memberof PIXI.utils
+         * @param {number} v input value
+         * @return {number}
+         */
+        static nextPow2(param: number): number;
     }
 }
 /**

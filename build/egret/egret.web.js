@@ -5455,6 +5455,12 @@ var egret;
                 this._vertices = null;
                 this._verticesFloat32View = null;
                 this._verticesUint32View = null;
+                /**
+                 * 获取缓存完成的顶点数组
+                 * sizeMatchingBufferCache
+        
+                 */
+                this.sizeMatchBufferViewCache = {};
                 //old
                 var numVerts = this.maxVertexCount * this.vertSize;
                 this.vertices = new Float32Array(numVerts);
@@ -5493,12 +5499,24 @@ var egret;
                 if (indexCount === void 0) { indexCount = 6; }
                 return this.vertexIndex > this.maxVertexCount - vertexCount || this.indexIndex > this.maxIndicesCount - indexCount;
             };
-            /**
-             * 获取缓存完成的顶点数组
-             */
             WebGLVertexArrayObject.prototype.getVertices = function () {
-                var view = this.vertices.subarray(0, this.vertexIndex * this.vertSize);
-                return view;
+                var length = this.vertexIndex * this.vertSize;
+                //旧有的subarray从给定的起始位置返回一个新的Float32Array,每次都是创建新对象，不是最优，时间长了容易引起gc.
+                //let view = this.vertices.subarray(0, length);
+                //return view;
+                /*
+                * 新的策略:只选取下一个power2的最优体积
+                */
+                var nextPow2Length = egret.NumberUtils.nextPow2(length);
+                var bufferView = this.sizeMatchBufferViewCache[nextPow2Length];
+                if (!bufferView) {
+                    bufferView = this.sizeMatchBufferViewCache[nextPow2Length] = new Float32Array(this._vertices, 0, 4 * nextPow2Length);
+                }
+                return bufferView;
+            };
+            WebGLVertexArrayObject.prototype.clearSizeMatchBufferViewCache = function () {
+                //弃了就好
+                this.sizeMatchBufferViewCache = {};
             };
             /**
              * 获取缓存完成的索引数组

@@ -110,10 +110,30 @@ namespace egret.web {
 
         /**
          * 获取缓存完成的顶点数组
+         * sizeMatchingBufferCache
+
          */
-        public getVertices(): any {
-            let view = this.vertices.subarray(0, this.vertexIndex * this.vertSize);
-            return view;
+        private sizeMatchBufferViewCache: { [index: number]: Float32Array } = {};
+        public getVertices(): Float32Array {
+            const length = this.vertexIndex * this.vertSize;
+            //旧有的subarray从给定的起始位置返回一个新的Float32Array,每次都是创建新对象，不是最优，时间长了容易引起gc.
+            //let view = this.vertices.subarray(0, length);
+            //return view;
+            
+            /*
+            * 新的策略:只选取下一个power2的最优体积
+            */
+            const nextPow2Length = NumberUtils.nextPow2(length);
+            let bufferView = this.sizeMatchBufferViewCache[nextPow2Length];
+            if (!bufferView) {
+                bufferView = this.sizeMatchBufferViewCache[nextPow2Length] = new Float32Array(this._vertices, 0, 4 * nextPow2Length);
+            }
+            return bufferView;
+        }
+
+        public clearSizeMatchBufferViewCache(): void {
+            //弃了就好
+            this.sizeMatchBufferViewCache = {};
         }
 
         /**
