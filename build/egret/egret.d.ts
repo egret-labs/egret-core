@@ -9737,6 +9737,8 @@ declare namespace egret.sys {
      * @param useMaxSize
      */
     function resizeCanvasRenderBuffer(renderContext: RenderContext, width: number, height: number, useMaxSize?: boolean): void;
+    function printWebAudioDecodeError(url: string): void;
+    function loadWebAudioSound(context: RenderContext, url: string, onAudioLoaded: () => void, onAudioError: () => void): void;
 }
 declare namespace egret.sys {
     /**

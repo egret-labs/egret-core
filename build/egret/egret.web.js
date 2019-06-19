@@ -616,7 +616,7 @@ var egret;
                     WebAudioDecode.isDecoding = false;
                     WebAudioDecode.decodeAudios();
                 }, function () {
-                    egret.log('sound decode error');
+                    egret.sys.printWebAudioDecodeError("");
                     if (decodeInfo["fail"]) {
                         decodeInfo["fail"]();
                     }
@@ -674,29 +674,7 @@ var egret;
                 if (true && !url) {
                     egret.$error(3002);
                 }
-                var request = new XMLHttpRequest();
-                request.open("GET", url, true);
-                request.responseType = "arraybuffer";
-                request.addEventListener("load", function () {
-                    var ioError = (request.status >= 400);
-                    if (ioError) {
-                        self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
-                    }
-                    else {
-                        WebAudioDecode.decodeArr.push({
-                            "buffer": request.response,
-                            "success": onAudioLoaded,
-                            "fail": onAudioError,
-                            "self": self,
-                            "url": self.url
-                        });
-                        WebAudioDecode.decodeAudios();
-                    }
-                });
-                request.addEventListener("error", function () {
-                    self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
-                });
-                request.send();
+                egret.sys.loadWebAudioSound(self, url, onAudioLoaded, onAudioError);
                 function onAudioLoaded() {
                     self.loaded = true;
                     self.dispatchEventWith(egret.Event.COMPLETE);
@@ -3602,6 +3580,49 @@ var egret;
             canvasRenderBuffer.clear();
         }
         egret.sys.resizeCanvasRenderBuffer = resizeCanvasRenderBuffer;
+        /**
+         * sys.printWebAudioDecodeError
+         * @param url
+         */
+        function printWebAudioDecodeError(url) {
+            egret.log('sound decode error');
+        }
+        egret.sys.printWebAudioDecodeError = printWebAudioDecodeError;
+        /**
+         * sys.loadWebAudioSound
+         * @param context
+         * @param url
+         * @param onAudioLoaded
+         * @param onAudioError
+         */
+        function loadWebAudioSound(context, url, onAudioLoaded, onAudioError) {
+            var self = context;
+            var request = new XMLHttpRequest();
+            request.open("GET", url, true);
+            request.responseType = "arraybuffer";
+            request.addEventListener("load", function () {
+                var ioError = (request.status >= 400);
+                if (ioError) {
+                    self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
+                }
+                else {
+                    web.WebAudioDecode.decodeArr.push({
+                        "buffer": request.response,
+                        "success": onAudioLoaded,
+                        "fail": onAudioError,
+                        "self": self,
+                        "url": url
+                    });
+                    web.WebAudioDecode.decodeAudios();
+                }
+            });
+            request.addEventListener("error", function () {
+                self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
+            });
+            request.send();
+        }
+        web.loadWebAudioSound = loadWebAudioSound;
+        egret.sys.loadWebAudioSound = loadWebAudioSound;
         egret.Geolocation = egret.web.WebGeolocation;
         egret.Motion = egret.web.WebMotion;
     })(web = egret.web || (egret.web = {}));

@@ -147,4 +147,12 @@ namespace egret.sys {
     export function resizeCanvasRenderBuffer(renderContext: RenderContext, width: number, height: number, useMaxSize?: boolean): void {
         console.error(`empty sys.resizeContext = ${renderContext}, ${width}, ${height}, ${useMaxSize}`);
     }
+
+    export function printWebAudioDecodeError(url: string): void {
+        console.error(`empty sys.printWebAudioDecodeError = ${url}`);
+    }
+
+    export function loadWebAudioSound(context: RenderContext, url: string, onAudioLoaded: () => void, onAudioError: () => void): void {
+        console.error(`empty sys.loadWebAudioSound = ${url}`);
+    }
 }
