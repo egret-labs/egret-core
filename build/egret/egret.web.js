@@ -5941,6 +5941,10 @@ var egret;
             function WebGLRenderContext(width, height) {
                 //
                 this._defaultEmptyTexture = null;
+                /**
+                 * 上传顶点数据
+                 */
+                this.lastUploadVertexBufferLength = 0;
                 this.glID = null;
                 this.projectionX = NaN;
                 this.projectionY = NaN;
@@ -6014,13 +6018,17 @@ var egret;
                 buffer.restoreScissor();
                 this.onResize(width, height);
             };
-            /**
-             * 上传顶点数据
-             */
             WebGLRenderContext.prototype.uploadVerticesArray = function (array) {
                 var gl = this.context;
-                gl.bufferData(gl.ARRAY_BUFFER, array, gl.STREAM_DRAW);
-                // gl.bufferSubData(gl.ARRAY_BUFFER, 0, array);
+                //gl.bufferData(gl.ARRAY_BUFFER, array, gl.STREAM_DRAW);
+                //gl.bufferSubData(gl.ARRAY_BUFFER, 0, array);
+                if (this.lastUploadVertexBufferLength >= array.length) {
+                    gl.bufferSubData(gl.ARRAY_BUFFER, 0, array);
+                }
+                else {
+                    this.lastUploadVertexBufferLength = array.length;
+                    gl.bufferData(gl.ARRAY_BUFFER, array, gl.DYNAMIC_DRAW);
+                }
             };
             /**
              * 上传索引数据

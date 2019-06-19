@@ -159,11 +159,18 @@ namespace egret.web {
         /**
          * 上传顶点数据
          */
-        private uploadVerticesArray(array: any): void {
-            let gl: any = this.context;
-
-            gl.bufferData(gl.ARRAY_BUFFER, array, gl.STREAM_DRAW);
-            // gl.bufferSubData(gl.ARRAY_BUFFER, 0, array);
+        private lastUploadVertexBufferLength: number = 0;
+        private uploadVerticesArray(array: Float32Array): void {
+            const gl = this.context;
+            //gl.bufferData(gl.ARRAY_BUFFER, array, gl.STREAM_DRAW);
+            //gl.bufferSubData(gl.ARRAY_BUFFER, 0, array);
+            if (this.lastUploadVertexBufferLength >= array.length) {
+                gl.bufferSubData(gl.ARRAY_BUFFER, 0, array);
+            }
+            else {
+                this.lastUploadVertexBufferLength = array.length;
+                gl.bufferData(gl.ARRAY_BUFFER, array, gl.DYNAMIC_DRAW);
+            }
         }
 
         /**
@@ -261,7 +268,7 @@ namespace egret.web {
 
         //refactor
         private _supportedCompressedTextureInfo: SupportedCompressedTextureInfo[] = [];
-        public pvrtc: any; 
+        public pvrtc: any;
         public etc1: any;
         private _buildSupportedCompressedTextureInfo(/*gl: WebGLRenderingContext, compressedTextureExNames: string[],*/ extensions: any[]): SupportedCompressedTextureInfo[] {
             // if (compressedTextureExNames.length === 0) {
@@ -329,19 +336,19 @@ namespace egret.web {
             //
             this.pvrtc = gl.getExtension('WEBGL_compressed_texture_pvrtc') || gl.getExtension('WEBKIT_WEBGL_compressed_texture_pvrtc');
             if (this.pvrtc) {
-                this.pvrtc.name = 'WEBGL_compressed_texture_pvrtc';                
+                this.pvrtc.name = 'WEBGL_compressed_texture_pvrtc';
             }
             //
             this.etc1 = gl.getExtension('WEBGL_compressed_texture_etc1') || gl.getExtension('WEBKIT_WEBGL_compressed_texture_etc1');
             if (this.etc1) {
-                this.etc1.name = 'WEBGL_compressed_texture_etc1';                
+                this.etc1.name = 'WEBGL_compressed_texture_etc1';
             }
             //
             egret.Capabilities.supportedCompressedTexture = egret.Capabilities.supportedCompressedTexture || {} as SupportedCompressedTexture;
             egret.Capabilities.supportedCompressedTexture.pvrtc = !!this.pvrtc;
             egret.Capabilities.supportedCompressedTexture.etc1 = !!this.etc1;
             //
-            this._supportedCompressedTextureInfo = this._buildSupportedCompressedTextureInfo(/*this.context, compressedTextureExNames,*/ [this.etc1, this.pvrtc]);
+            this._supportedCompressedTextureInfo = this._buildSupportedCompressedTextureInfo(/*this.context, compressedTextureExNames,*/[this.etc1, this.pvrtc]);
         }
 
         private handleContextLost() {
@@ -1009,7 +1016,7 @@ namespace egret.web {
                         gl.enableVertexAttribArray(attribute["aTextureCoord"].location);
                     } else if (key === "aColor") {
                         gl.vertexAttribPointer(attribute["aColor"].location, 4, gl.UNSIGNED_BYTE, true, 5 * 4, 4 * 4);
-                        gl.enableVertexAttribArray(attribute["aColor"].location);  
+                        gl.enableVertexAttribArray(attribute["aColor"].location);
                     }
                 }
 
