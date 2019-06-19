@@ -119,11 +119,11 @@ namespace egret.web {
             //旧有的subarray从给定的起始位置返回一个新的Float32Array,每次都是创建新对象，不是最优，时间长了容易引起gc.
             //let view = this.vertices.subarray(0, length);
             //return view;
-            
             /*
             * 新的策略:只选取下一个power2的最优体积
             */
-            const nextPow2Length = NumberUtils.nextPow2(length);
+            let nextPow2Length = NumberUtils.nextPow2(length);
+            nextPow2Length = Math.min(this._verticesFloat32View.length, nextPow2Length);
             let bufferView = this.sizeMatchBufferViewCache[nextPow2Length];
             if (!bufferView) {
                 bufferView = this.sizeMatchBufferViewCache[nextPow2Length] = new Float32Array(this._vertices, 0, 4 * nextPow2Length);

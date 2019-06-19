@@ -5508,6 +5508,7 @@ var egret;
                 * 新的策略:只选取下一个power2的最优体积
                 */
                 var nextPow2Length = egret.NumberUtils.nextPow2(length);
+                nextPow2Length = Math.min(this._verticesFloat32View.length, nextPow2Length);
                 var bufferView = this.sizeMatchBufferViewCache[nextPow2Length];
                 if (!bufferView) {
                     bufferView = this.sizeMatchBufferViewCache[nextPow2Length] = new Float32Array(this._vertices, 0, 4 * nextPow2Length);
