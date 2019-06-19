@@ -14438,14 +14438,12 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        static sin(value: number): number;
         /**
          * @private
          *
          * @param value
          * @returns
          */
-        private static sinInt(value);
         /**
          * Obtain the approximate cos value of the corresponding angle value
          * @param value {number} Angle value
@@ -14462,14 +14460,12 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        static cos(value: number): number;
         /**
          * @private
          *
          * @param value
          * @returns
          */
-        private static cosInt(value);
         static convertStringToHashCode(str: string): number;
         /**
          * inspired by pixi.js
@@ -14481,20 +14477,17 @@ declare namespace egret {
          * @return {number}
          */
         static nextPow2(param: number): number;
+        static sin(value: number): number;
+        static cos(value: number): number;
     }
 }
 /**
  * @private
  */
-declare let egret_sin_map: {};
 /**
  * @private
  */
-declare let egret_cos_map: {};
-/**
- * @private
- */
-declare let DEG_TO_RAD: number;
+declare const DEG_TO_RAD: number;
 declare namespace egret {
     /**
      * The Timer class is the interface to timers, which let you run code on a specified time sequence. Use the start()

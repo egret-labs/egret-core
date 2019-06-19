@@ -72,6 +72,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
+        /*
         public static sin(value: number): number {
             let valueFloor: number = Math.floor(value);
             let valueCeil: number = valueFloor + 1;
@@ -83,6 +84,7 @@ namespace egret {
 
             return (value - valueFloor) * resultCeil + (valueCeil - value) * resultFloor;
         }
+        */
 
         /**
          * @private
@@ -90,6 +92,7 @@ namespace egret {
          * @param value 
          * @returns 
          */
+        /*
         private static sinInt(value: number): number {
             value = value % 360;
             if (value < 0) {
@@ -97,6 +100,7 @@ namespace egret {
             }
             return egret_sin_map[value];
         }
+        */
 
         /**
          * Obtain the approximate cos value of the corresponding angle value
@@ -114,6 +118,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
+        /*
         public static cos(value: number): number {
             let valueFloor: number = Math.floor(value);
             let valueCeil: number = valueFloor + 1;
@@ -125,6 +130,7 @@ namespace egret {
 
             return (value - valueFloor) * resultCeil + (valueCeil - value) * resultFloor;
         }
+        */
 
         /**
          * @private
@@ -132,6 +138,7 @@ namespace egret {
          * @param value 
          * @returns 
          */
+        /*
         private static cosInt(value: number): number {
             value = value % 360;
             if (value < 0) {
@@ -139,7 +146,7 @@ namespace egret {
             }
             return egret_cos_map[value];
         }
-
+        */
 
         public static convertStringToHashCode(str: string): number {
             if (str.length === 0) {
@@ -175,32 +182,39 @@ namespace egret {
             return v + 1;
         }
 
+        //private readonly DEG_TO_RAD = Math.PI / 180;
+        public static sin(value: number): number {
+            return Math.sin(value * DEG_TO_RAD);
+        }
+        public static cos(value: number): number {
+            return Math.cos(value * DEG_TO_RAD);
+        }
     }
 }
 
 /**
  * @private
  */
-let egret_sin_map = {};
+// let egret_sin_map = {};
+// /**
+//  * @private
+//  */
+// let egret_cos_map = {};
 /**
  * @private
  */
-let egret_cos_map = {};
-/**
- * @private
- */
-let DEG_TO_RAD: number = Math.PI / 180;
+const DEG_TO_RAD: number = Math.PI / 180;
 
-for (let NumberUtils_i = 0; NumberUtils_i < 360; NumberUtils_i++) {
-    egret_sin_map[NumberUtils_i] = Math.sin(NumberUtils_i * DEG_TO_RAD);
-    egret_cos_map[NumberUtils_i] = Math.cos(NumberUtils_i * DEG_TO_RAD);
-}
-egret_sin_map[90] = 1;
-egret_cos_map[90] = 0;
-egret_sin_map[180] = 0;
-egret_cos_map[180] = -1;
-egret_sin_map[270] = -1;
-egret_cos_map[270] = 0;
+// for (let NumberUtils_i = 0; NumberUtils_i < 360; NumberUtils_i++) {
+//     egret_sin_map[NumberUtils_i] = Math.sin(NumberUtils_i * DEG_TO_RAD);
+//     egret_cos_map[NumberUtils_i] = Math.cos(NumberUtils_i * DEG_TO_RAD);
+// }
+// egret_sin_map[90] = 1;
+// egret_cos_map[90] = 0;
+// egret_sin_map[180] = 0;
+// egret_cos_map[180] = -1;
+// egret_sin_map[270] = -1;
+// egret_cos_map[270] = 0;
 
 //对未提供bind的浏览器实现bind机制
 if (!Function.prototype.bind) {

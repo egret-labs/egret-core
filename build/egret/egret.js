@@ -24421,29 +24421,34 @@ var egret;
          * @platform Web,Native
          * @language zh_CN
          */
-        NumberUtils.sin = function (value) {
-            var valueFloor = Math.floor(value);
-            var valueCeil = valueFloor + 1;
-            var resultFloor = NumberUtils.sinInt(valueFloor);
+        /*
+        public static sin(value: number): number {
+            let valueFloor: number = Math.floor(value);
+            let valueCeil: number = valueFloor + 1;
+            let resultFloor: number = NumberUtils.sinInt(valueFloor);
             if (valueFloor == value) {
                 return resultFloor;
             }
-            var resultCeil = NumberUtils.sinInt(valueCeil);
+            let resultCeil: number = NumberUtils.sinInt(valueCeil);
+
             return (value - valueFloor) * resultCeil + (valueCeil - value) * resultFloor;
-        };
+        }
+        */
         /**
          * @private
          *
          * @param value
          * @returns
          */
-        NumberUtils.sinInt = function (value) {
+        /*
+        private static sinInt(value: number): number {
             value = value % 360;
             if (value < 0) {
                 value += 360;
             }
             return egret_sin_map[value];
-        };
+        }
+        */
         /**
          * Obtain the approximate cos value of the corresponding angle value
          * @param value {number} Angle value
@@ -24460,29 +24465,34 @@ var egret;
          * @platform Web,Native
          * @language zh_CN
          */
-        NumberUtils.cos = function (value) {
-            var valueFloor = Math.floor(value);
-            var valueCeil = valueFloor + 1;
-            var resultFloor = NumberUtils.cosInt(valueFloor);
+        /*
+        public static cos(value: number): number {
+            let valueFloor: number = Math.floor(value);
+            let valueCeil: number = valueFloor + 1;
+            let resultFloor: number = NumberUtils.cosInt(valueFloor);
             if (valueFloor == value) {
                 return resultFloor;
             }
-            var resultCeil = NumberUtils.cosInt(valueCeil);
+            let resultCeil: number = NumberUtils.cosInt(valueCeil);
+
             return (value - valueFloor) * resultCeil + (valueCeil - value) * resultFloor;
-        };
+        }
+        */
         /**
          * @private
          *
          * @param value
          * @returns
          */
-        NumberUtils.cosInt = function (value) {
+        /*
+        private static cosInt(value: number): number {
             value = value % 360;
             if (value < 0) {
                 value += 360;
             }
             return egret_cos_map[value];
-        };
+        }
+        */
         NumberUtils.convertStringToHashCode = function (str) {
             if (str.length === 0) {
                 return 0;
@@ -24515,6 +24525,13 @@ var egret;
             v |= v >>> 16;
             return v + 1;
         };
+        //private readonly DEG_TO_RAD = Math.PI / 180;
+        NumberUtils.sin = function (value) {
+            return Math.sin(value * DEG_TO_RAD);
+        };
+        NumberUtils.cos = function (value) {
+            return Math.cos(value * DEG_TO_RAD);
+        };
         return NumberUtils;
     }());
     egret.NumberUtils = NumberUtils;
@@ -24523,25 +24540,25 @@ var egret;
 /**
  * @private
  */
-var egret_sin_map = {};
-/**
- * @private
- */
-var egret_cos_map = {};
+// let egret_sin_map = {};
+// /**
+//  * @private
+//  */
+// let egret_cos_map = {};
 /**
  * @private
  */
 var DEG_TO_RAD = Math.PI / 180;
-for (var NumberUtils_i = 0; NumberUtils_i < 360; NumberUtils_i++) {
-    egret_sin_map[NumberUtils_i] = Math.sin(NumberUtils_i * DEG_TO_RAD);
-    egret_cos_map[NumberUtils_i] = Math.cos(NumberUtils_i * DEG_TO_RAD);
-}
-egret_sin_map[90] = 1;
-egret_cos_map[90] = 0;
-egret_sin_map[180] = 0;
-egret_cos_map[180] = -1;
-egret_sin_map[270] = -1;
-egret_cos_map[270] = 0;
+// for (let NumberUtils_i = 0; NumberUtils_i < 360; NumberUtils_i++) {
+//     egret_sin_map[NumberUtils_i] = Math.sin(NumberUtils_i * DEG_TO_RAD);
+//     egret_cos_map[NumberUtils_i] = Math.cos(NumberUtils_i * DEG_TO_RAD);
+// }
+// egret_sin_map[90] = 1;
+// egret_cos_map[90] = 0;
+// egret_sin_map[180] = 0;
+// egret_cos_map[180] = -1;
+// egret_sin_map[270] = -1;
+// egret_cos_map[270] = 0;
 //对未提供bind的浏览器实现bind机制
 if (!Function.prototype.bind) {
     Function.prototype.bind = function (oThis) {
