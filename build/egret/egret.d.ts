@@ -15172,6 +15172,35 @@ declare namespace egret.web {
         UNSIGNED_SHORT = 5123,
     }
 }
+declare namespace egret.web {
+    /**
+     * @private
+     */
+    const enum WEBGL_UNIFORM_TYPE {
+        FLOAT_VEC2 = 35664,
+        FLOAT_VEC3 = 35665,
+        FLOAT_VEC4 = 35666,
+        INT_VEC2 = 35667,
+        INT_VEC3 = 35668,
+        INT_VEC4 = 35669,
+        BOOL = 35670,
+        BOOL_VEC2 = 35671,
+        BOOL_VEC3 = 35672,
+        BOOL_VEC4 = 35673,
+        FLOAT_MAT2 = 35674,
+        FLOAT_MAT3 = 35675,
+        FLOAT_MAT4 = 35676,
+        SAMPLER_2D = 35678,
+        SAMPLER_CUBE = 35680,
+        BYTE = 5120,
+        UNSIGNED_BYTE = 5121,
+        SHORT = 5122,
+        UNSIGNED_SHORT = 5123,
+        INT = 5124,
+        UNSIGNED_INT = 5125,
+        FLOAT = 5126,
+    }
+}
 declare namespace egret.sys {
     /**
      * @private
