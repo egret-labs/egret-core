@@ -84,7 +84,7 @@ namespace egret.web {
                 WebAudioDecode.isDecoding = false;
                 WebAudioDecode.decodeAudios();
             }, function () {
-                egret.sys.printWebAudioDecodeError("");
+                egret.log('sound decode error')
                 if (decodeInfo["fail"]) {
                     decodeInfo["fail"]();
                 }
@@ -180,7 +180,28 @@ namespace egret.web {
                 egret.$error(3002);
             }
 
-            egret.sys.loadWebAudioSound(self, url, onAudioLoaded, onAudioError);
+            let request = new XMLHttpRequest();
+            request.open("GET", url, true);
+            request.responseType = "arraybuffer";
+            request.addEventListener("load", function() {
+                var ioError = (request.status >= 400);
+                if (ioError) {
+                    self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
+                } else {
+                    WebAudioDecode.decodeArr.push({
+                        "buffer": request.response,
+                        "success": onAudioLoaded,
+                        "fail": onAudioError,
+                        "self": self,
+                        "url": self.url
+                    });
+                    WebAudioDecode.decodeAudios();
+                }
+            });
+            request.addEventListener("error", function() {
+                self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
+            });
+            request.send();
 
             function onAudioLoaded():void {
                 self.loaded = true;

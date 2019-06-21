@@ -14662,14 +14662,6 @@ var egret;
             console.error("empty sys.resizeContext = " + renderContext + ", " + width + ", " + height + ", " + useMaxSize);
         }
         sys.resizeCanvasRenderBuffer = resizeCanvasRenderBuffer;
-        function printWebAudioDecodeError(url) {
-            console.error("empty sys.printWebAudioDecodeError = " + url);
-        }
-        sys.printWebAudioDecodeError = printWebAudioDecodeError;
-        function loadWebAudioSound(context, url, onAudioLoaded, onAudioError) {
-            console.error("empty sys.loadWebAudioSound = " + url);
-        }
-        sys.loadWebAudioSound = loadWebAudioSound;
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////

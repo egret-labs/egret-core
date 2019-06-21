@@ -210,49 +210,6 @@ namespace egret.web {
         canvasRenderBuffer.clear();
     }
     egret.sys.resizeCanvasRenderBuffer = resizeCanvasRenderBuffer;
-    
-    /**
-     * sys.printWebAudioDecodeError
-     * @param url 
-     */
-    function printWebAudioDecodeError(url: string): void {
-        egret.log('sound decode error')
-    }
-    egret.sys.printWebAudioDecodeError = printWebAudioDecodeError;
-
-    /**
-     * sys.loadWebAudioSound
-     * @param context 
-     * @param url 
-     * @param onAudioLoaded 
-     * @param onAudioError 
-     */
-    function loadWebAudioSound(context: egret.sys.RenderContext, url: string, onAudioLoaded: () => void, onAudioError: () => void): void {
-        let self = <WebAudioSound>context;
-        let request = new XMLHttpRequest();
-        request.open("GET", url, true);
-        request.responseType = "arraybuffer";
-        request.addEventListener("load", function() {
-            var ioError = (request.status >= 400);
-            if (ioError) {
-                self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
-            } else {
-                WebAudioDecode.decodeArr.push({
-                    "buffer": request.response,
-                    "success": onAudioLoaded,
-                    "fail": onAudioError,
-                    "self": self,
-                    "url": url
-                });
-                WebAudioDecode.decodeAudios();
-            }
-        });
-        request.addEventListener("error", function() {
-            self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
-        });
-        request.send();
-    }
-    egret.sys.loadWebAudioSound = loadWebAudioSound;
 
     egret.Geolocation = egret.web.WebGeolocation;
     egret.Motion = egret.web.WebMotion;
