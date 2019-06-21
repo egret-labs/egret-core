@@ -3602,6 +3602,10 @@ var egret;
             canvasRenderBuffer.clear();
         }
         egret.sys.resizeCanvasRenderBuffer = resizeCanvasRenderBuffer;
+        function getDOMParser() {
+            return new DOMParser();
+        }
+        egret.sys.getDOMParser = getDOMParser;
         egret.Geolocation = egret.web.WebGeolocation;
         egret.Motion = egret.web.WebMotion;
     })(web = egret.web || (egret.web = {}));
@@ -4582,13 +4586,16 @@ var egret;
         }(XMLNode));
         web.XMLText = XMLText;
         __reflect(XMLText.prototype, "egret.web.XMLText");
-        var parser = new DOMParser();
+        var parser;
         /**
          * @private
          * 解析字符串为XML对象
          * @param text 要解析的字符串
          */
         function parse(text) {
+            if (!parser) {
+                parser = egret.sys.getDOMParser();
+            }
             var xmlDoc = parser.parseFromString(text, "text/xml");
             var length = xmlDoc.childNodes.length;
             for (var i = 0; i < length; i++) {

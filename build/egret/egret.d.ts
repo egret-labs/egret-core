@@ -9737,6 +9737,7 @@ declare namespace egret.sys {
      * @param useMaxSize
      */
     function resizeCanvasRenderBuffer(renderContext: RenderContext, width: number, height: number, useMaxSize?: boolean): void;
+    function getDOMParser(): DOMParser;
 }
 declare namespace egret.sys {
     /**

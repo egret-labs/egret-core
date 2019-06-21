@@ -147,4 +147,9 @@ namespace egret.sys {
     export function resizeCanvasRenderBuffer(renderContext: RenderContext, width: number, height: number, useMaxSize?: boolean): void {
         console.error(`empty sys.resizeContext = ${renderContext}, ${width}, ${height}, ${useMaxSize}`);
     }
+
+    export function getDOMParser(): DOMParser {
+        console.error(`empty sys.getDOMParser`);
+        return null;
+    }
 }

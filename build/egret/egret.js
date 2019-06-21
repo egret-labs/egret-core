@@ -14662,6 +14662,11 @@ var egret;
             console.error("empty sys.resizeContext = " + renderContext + ", " + width + ", " + height + ", " + useMaxSize);
         }
         sys.resizeCanvasRenderBuffer = resizeCanvasRenderBuffer;
+        function getDOMParser() {
+            console.error("empty sys.getDOMParser");
+            return null;
+        }
+        sys.getDOMParser = getDOMParser;
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////

@@ -211,6 +211,11 @@ namespace egret.web {
     }
     egret.sys.resizeCanvasRenderBuffer = resizeCanvasRenderBuffer;
 
+    function getDOMParser(): DOMParser {
+        return new DOMParser();
+    }
+    egret.sys.getDOMParser = getDOMParser;
+
     egret.Geolocation = egret.web.WebGeolocation;
     egret.Motion = egret.web.WebMotion;
 }

@@ -38,7 +38,7 @@ namespace egret.web {
         /**
          * @private
          */
-        public constructor(nodeType:number, parent:XML) {
+        public constructor(nodeType: number, parent: XML) {
             this.nodeType = nodeType;
             this.parent = parent;
         }
@@ -47,12 +47,12 @@ namespace egret.web {
          * @private
          * 节点类型，1：XML，2：XMLAttribute，3：XMLText
          */
-        public nodeType:number;
+        public nodeType: number;
         /**
          * @private
          * 节点所属的父级节点
          */
-        public parent:XML;
+        public parent: XML;
     }
 
     /**
@@ -64,7 +64,7 @@ namespace egret.web {
         /**
          * @private
          */
-        public constructor(localName:string, parent:XML, prefix:string, namespace:string, name:string) {
+        public constructor(localName: string, parent: XML, prefix: string, namespace: string, name: string) {
             super(1, parent);
             this.localName = localName;
             this.prefix = prefix;
@@ -76,32 +76,32 @@ namespace egret.web {
          * @private
          * 当前节点上的属性列表
          */
-        public attributes:{[key:string]:string} = {};
+        public attributes: { [key: string]: string } = {};
         /**
          * @private
          * 当前节点的子节点列表
          */
-        public children:XMLNode[] = [];
+        public children: XMLNode[] = [];
         /**
          * @private
          * 节点完整名称。例如节点 <s:Button/> 的 name 为：s:Button
          */
-        public name:string;
+        public name: string;
         /**
          * @private
          * 节点的命名空间前缀。例如节点 <s:Button/> 的 prefix 为：s
          */
-        public prefix:string;
+        public prefix: string;
         /**
          * @private
          * 节点的本地名称。例如节点 <s:Button/> 的 localName 为：Button
          */
-        public localName:string;
+        public localName: string;
         /**
          * @private
          * 节点的命名空间地址。例如节点 <s:Skin xmlns:s="http://ns.egret.com/eui"/> 的 namespace 为： http://ns.egret.com/eui
          */
-        public namespace:string;
+        public namespace: string;
     }
 
     /**
@@ -112,7 +112,7 @@ namespace egret.web {
         /**
          * @private
          */
-        public  constructor(text:string, parent:XML) {
+        public constructor(text: string, parent: XML) {
             super(3, parent);
             this.text = text;
         }
@@ -121,18 +121,21 @@ namespace egret.web {
          * @private
          * 文本内容
          */
-        public text:string;
+        public text: string;
     }
 
 
-    let parser = new DOMParser();
+    let parser;
 
     /**
      * @private
      * 解析字符串为XML对象
      * @param text 要解析的字符串
      */
-    function parse(text:string):XML {
+    function parse(text: string): XML {
+        if (!parser) {
+            parser = egret.sys.getDOMParser();
+        }
         let xmlDoc = parser.parseFromString(text, "text/xml");
         let length = xmlDoc.childNodes.length;
         for (let i = 0; i < length; i++) {
@@ -148,8 +151,8 @@ namespace egret.web {
      * @private
      * 解析一个节点
      */
-    function parseNode(node:Node, parent:XML):XML {
-        if(node.localName=="parsererror"){
+    function parseNode(node: Node, parent: XML): XML {
+        if (node.localName == "parsererror") {
             throw new Error(node.textContent);
         }
         let xml = new XML(node.localName, parent, node["prefix"], node.namespaceURI, node.nodeName);
@@ -171,7 +174,7 @@ namespace egret.web {
         for (let i = 0; i < length; i++) {
             let childNode = childNodes[i];
             let nodeType = childNode.nodeType;
-            let childXML:any = null;
+            let childXML: any = null;
             if (nodeType == 1) {
                 childXML = parseNode(childNode, xml);
             }
@@ -188,5 +191,5 @@ namespace egret.web {
         return xml;
     }
 
-    egret.XML = {parse: parse};
+    egret.XML = { parse: parse };
 }
