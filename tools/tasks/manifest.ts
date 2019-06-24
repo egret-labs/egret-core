@@ -17,6 +17,8 @@ type ManifestPluginOptions = {
     verbose?: boolean
 
     hash?: "crc32"
+
+    info?: any
 }
 
 export class ManifestPlugin {
@@ -27,6 +29,7 @@ export class ManifestPlugin {
         if (!this.options) {
             this.options = { output: "manifest.json" }
         }
+
         if (options.hash) {
             console.log('ManifestPlugin 在未来的 5.3.x 版本中将不再支持 hash 参数，请使用 RenamePlugin 代替')
         }
@@ -50,8 +53,11 @@ export class ManifestPlugin {
             }
             file.outputDir = "";
             file.path = path.join(file.base, new_file_path);
-
             const relative = file.relative.split("\\").join('/');
+
+            if (this.options.info && this.options.info.target == 'vivogame') {
+                file.path = path.join(file.base, '../', 'engine', new_file_path);
+            }
 
             if (file.origin.indexOf('libs/') >= 0) {
                 manifest.initial.push(relative);
@@ -69,12 +75,17 @@ export class ManifestPlugin {
         const output = this.options.output;
         const extname = path.extname(output);
         let contents = '';
+        let target = pluginContext.buildConfig.target
         switch (extname) {
             case ".json":
                 contents = JSON.stringify(manifest, null, '\t');
                 break;
             case ".js":
-                contents = manifest.initial.concat(manifest.game).map((fileName) => `require("./${fileName}")`).join("\n")
+                if (target == 'vivogame') {
+                    contents = manifest.initial.concat(manifest.game).map((fileName) => `require("${fileName}")`).join("\n")
+                } else {
+                    contents = manifest.initial.concat(manifest.game).map((fileName) => `require("./${fileName}")`).join("\n")
+                }
                 break;
         }
         pluginContext.createFile(this.options.output, new Buffer(contents));
