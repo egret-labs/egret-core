@@ -1,7 +1,6 @@
 
 import * as path from 'path';
 import { Plugin, File } from './index';
-
 const manifest = {
     initial: [],
     game: [],
@@ -19,6 +18,8 @@ type ManifestPluginOptions = {
     hash?: "crc32"
 
     info?: any
+
+    useWxPlugin?: boolean  //use wechat engine plugin
 }
 
 export class ManifestPlugin {
@@ -33,6 +34,9 @@ export class ManifestPlugin {
         if (options.hash) {
             console.log('ManifestPlugin 在未来的 5.3.x 版本中将不再支持 hash 参数，请使用 RenamePlugin 代替')
         }
+        if (!this.options.useWxPlugin) {
+            this.options.useWxPlugin = false;
+        }
     }
 
     async onFile(file: File) {
@@ -41,23 +45,37 @@ export class ManifestPlugin {
         if (extname == ".js") {
             let new_file_path;
             const basename = path.basename(filename);
-            if (this.options.hash == 'crc32') {
+            let { useWxPlugin, hash, verbose } = this.options;
+            let new_basename = basename.substr(0, basename.length - file.extname.length)
+            let isEngineJS = false;
+            if (useWxPlugin) {
+                //use the egret engine inside wechat
+                let engineJS = ['assetsmanager', 'dragonBones', 'egret', 'game', 'eui', 'socket', 'tween']
+                for (let i in engineJS) {
+                    let jsName = engineJS[i]
+                    let engine_path = jsName + '.min.js'
+                    if (filename.indexOf(engine_path) > 0) {
+                        isEngineJS = true;
+                        break;
+                    }
+                }
+            }
+            if (isEngineJS) {
+                new_file_path = "egret-library/" + new_basename + file.extname;
+            } else if (hash == 'crc32') {
                 const crc32 = globals.getCrc32();
                 const crc32_file_path = crc32(file.contents);
-                new_file_path = "js/" + basename.substr(0, basename.length - file.extname.length) + "_" + crc32_file_path + file.extname;
-
-            }
-            else {
-                new_file_path = "js/" + basename.substr(0, basename.length - file.extname.length) + file.extname;
-
+                new_file_path = "js/" + new_basename + "_" + crc32_file_path + file.extname;
+            } else {
+                new_file_path = "js/" + new_basename + file.extname;
             }
             file.outputDir = "";
             file.path = path.join(file.base, new_file_path);
-            const relative = file.relative.split("\\").join('/');
 
             if (this.options.info && this.options.info.target == 'vivogame') {
                 file.path = path.join(file.base, '../', 'engine', new_file_path);
             }
+            const relative = file.relative.split("\\").join('/');
 
             if (file.origin.indexOf('libs/') >= 0) {
                 manifest.initial.push(relative);
@@ -65,7 +83,7 @@ export class ManifestPlugin {
             else {
                 manifest.game.push(relative);
             }
-            if (this.options.verbose) {
+            if (verbose) {
                 this.verboseInfo.push({ filename, new_file_path })
             }
         }
@@ -84,7 +102,15 @@ export class ManifestPlugin {
                 if (target == 'vivogame') {
                     contents = manifest.initial.concat(manifest.game).map((fileName) => `require("${fileName}")`).join("\n")
                 } else {
-                    contents = manifest.initial.concat(manifest.game).map((fileName) => `require("./${fileName}")`).join("\n")
+                    contents = manifest.initial.concat(manifest.game).map((fileName) => {
+                        let result = `require("./${fileName}")`
+                        if (this.options.useWxPlugin) {
+                            if (fileName.indexOf('egret-library') == 0) {
+                                result = `requirePlugin("${fileName}")`
+                            }
+                        }
+                        return result;
+                    }).join("\n")
                 }
                 break;
         }
