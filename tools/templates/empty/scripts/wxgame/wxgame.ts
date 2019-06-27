@@ -50,7 +50,8 @@ export class WxgamePlugin implements plugins.Command {
         return file;
     }
     async onFinish(pluginContext: plugins.CommandContext) {
-        let { projectRoot, outputDir } = pluginContext
+        let useWxPlugin:boolean = true;//是否使用微信分离插件
+        let { projectRoot, outputDir, buildConfig } = pluginContext
         //同步 index.html 配置到 game.js
         const gameJSPath = path.join(outputDir, "game.js");
         if (!fs.existsSync(gameJSPath)) {
@@ -58,7 +59,7 @@ export class WxgamePlugin implements plugins.Command {
             return;
         }
         let gameJSContent = fs.readFileSync(gameJSPath, { encoding: "utf8" });
-        const projectConfig = pluginContext.buildConfig.projectConfig;
+        const projectConfig = buildConfig.projectConfig;
         const optionStr =
             `entryClassName: ${projectConfig.entryClassName},\n\t\t` +
             `orientation: ${projectConfig.orientation},\n\t\t` +
@@ -88,7 +89,11 @@ export class WxgamePlugin implements plugins.Command {
         gameJSONContent.deviceOrientation = orientation;
         this.writeData(gameJSONContent, gameJSONPath)
 
-        //下面的部分是开启微信引擎分离插件功能，如果不需要，注释掉即可
+        
+        if (buildConfig.command !== "publish" || !useWxPlugin) {
+            return
+        }
+        //下面的流程是配置开启微信插件的功能
         let engineVersion = this.readData(path.join(projectRoot, "egretProperties.json")).engineVersion;
         gameJSONContent.plugins = {
             "egret-library": {
@@ -102,7 +107,7 @@ export class WxgamePlugin implements plugins.Command {
         fs.mkdirSync(libDir)
         let pluginData = { "main": "index.js" }
         this.writeData(pluginData, path.join(libDir, "plugin.json"))
-        let engineJS = ['assetsmanager', 'dragonBones', 'egret' , 'game', 'eui', 'socket', 'tween']
+        let engineJS = ['assetsmanager', 'dragonBones', 'egret', 'game', 'eui', 'socket', 'tween']
         let signatureData: any = {
             "provider": "wx7e2186943221985d",
             "signature": []
@@ -118,7 +123,7 @@ export class WxgamePlugin implements plugins.Command {
             }
         }
         this.writeData(signatureData, path.join(libDir, "signature.json"))
-        
+
 
     }
 
