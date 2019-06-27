@@ -1,8 +1,14 @@
 import * as fs from 'fs';
 import * as path from 'path';
+const crypto = require('crypto');
 export class WxgamePlugin implements plugins.Command {
 
     constructor() {
+    }
+    md5Obj = {}
+    md5(content) {
+        let md5 = crypto.createHash('md5');
+        return md5.update(content).digest('hex');
     }
     async onFile(file: plugins.File) {
         if (file.extname == '.js') {
@@ -14,6 +20,7 @@ export class WxgamePlugin implements plugins.Command {
                 let content = file.contents.toString();
                 content += `;window.egret = egret;`;
                 content = content.replace(/definition = __global/, "definition = window");
+                this.md5Obj[path.basename(filename)] = this.md5(content)
                 file.contents = new Buffer(content);
             }
             else {
@@ -36,15 +43,17 @@ export class WxgamePlugin implements plugins.Command {
                 if (filename == 'main.js') {
                     content += "\n;window.Main = Main;"
                 }
+                this.md5Obj[path.basename(filename)] = this.md5(content)
                 file.contents = new Buffer(content);
             }
         }
         return file;
     }
     async onFinish(pluginContext: plugins.CommandContext) {
+        let { projectRoot, outputDir } = pluginContext
         //同步 index.html 配置到 game.js
-        const gameJSPath = path.join(pluginContext.outputDir, "game.js");
-        if(!fs.existsSync(gameJSPath)) {
+        const gameJSPath = path.join(outputDir, "game.js");
+        if (!fs.existsSync(gameJSPath)) {
             console.log(`${gameJSPath}不存在，请先使用 Launcher 发布微信小游戏`);
             return;
         }
@@ -74,9 +83,49 @@ export class WxgamePlugin implements plugins.Command {
         else {
             orientation = "portrait";
         }
-        const gameJSONPath = path.join(pluginContext.outputDir, "game.json");
-        let gameJSONContent = JSON.parse(fs.readFileSync(gameJSONPath, { encoding: "utf8" }));
+        const gameJSONPath = path.join(outputDir, "game.json");
+        let gameJSONContent = this.readData(gameJSONPath)
         gameJSONContent.deviceOrientation = orientation;
-        fs.writeFileSync(gameJSONPath, JSON.stringify(gameJSONContent, null, "\t"));
+        this.writeData(gameJSONContent, gameJSONPath)
+
+        //下面的部分是开启微信引擎分离插件功能，如果不需要，注释掉即可
+        let engineVersion = this.readData(path.join(projectRoot, "egretProperties.json")).engineVersion;
+        gameJSONContent.plugins = {
+            "egret-library": {
+                "provider": "wx7e2186943221985d",
+                "version": engineVersion,
+                "path": "egret-library"
+            }
+        }
+        this.writeData(gameJSONContent, gameJSONPath)
+        let libDir = path.join(outputDir, "egret-library")
+        fs.mkdirSync(libDir)
+        let pluginData = { "main": "index.js" }
+        this.writeData(pluginData, path.join(libDir, "plugin.json"))
+        let engineJS = ['assetsmanager', 'dragonBones', 'egret' , 'game', 'eui', 'socket', 'tween']
+        let signatureData: any = {
+            "provider": "wx7e2186943221985d",
+            "signature": []
+        }
+        for (let i in engineJS) {
+            let name = engineJS[i] + '.min.js'
+            if (this.md5Obj[name]) {
+                let jsInfo: any = {
+                    "path": name,
+                    "md5": this.md5Obj[name]
+                }
+                signatureData.signature.push(jsInfo)
+            }
+        }
+        this.writeData(signatureData, path.join(libDir, "signature.json"))
+        
+
+    }
+
+    readData(filePath: string): any {
+        return JSON.parse(fs.readFileSync(filePath, { encoding: "utf8" }));
+    }
+    writeData(data: object, filePath: string) {
+        fs.writeFileSync(filePath, JSON.stringify(data, null, "\t"));
     }
 }
