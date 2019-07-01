@@ -855,6 +855,15 @@ module RES {
                 }
                 return Promise.reject(new ResourceManagerError(2006, key));
             }
+
+            let data = this.getRes(key);
+            if (data) {
+                if (compFunc) {
+                    compFunc.call(thisObject, data, paramKey);
+                }
+                return Promise.resolve(data);
+            }
+
             var { r, subkey } = tempResult;
             return queue.pushResItem(r).then(value => {
                 host.save(r, value);

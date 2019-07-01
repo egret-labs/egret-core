@@ -1568,6 +1568,13 @@ var RES;
                 }
                 return Promise.reject(new RES.ResourceManagerError(2006, key));
             }
+            var data = this.getRes(key);
+            if (data) {
+                if (compFunc) {
+                    compFunc.call(thisObject, data, paramKey);
+                }
+                return Promise.resolve(data);
+            }
             var r = tempResult.r, subkey = tempResult.subkey;
             return RES.queue.pushResItem(r).then(function (value) {
                 RES.host.save(r, value);
