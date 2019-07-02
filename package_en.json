@@ -257,6 +257,10 @@
             "platform": "web"
           },
           {
+            "path": "web/rendering/webgl/WebGLRenderBatchState.ts",
+            "platform": "web"
+          },
+          {
             "path": "web/rendering/webgl/WebGLRenderBuffer.ts",
             "platform": "web"
           },
