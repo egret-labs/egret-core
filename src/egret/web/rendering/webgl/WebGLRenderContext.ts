@@ -64,7 +64,7 @@ namespace egret.web {
 
         public setBatchSystemByRenderNode(renderNode: sys.RenderNode): boolean {
             if (renderNode.type === sys.RenderNodeType.GraphicsNode) {
-                return true;
+                return false;
             }
             const system = this.batchSystems[renderNode.type];
             return this.changeToBatchSystem(system);
@@ -82,6 +82,11 @@ namespace egret.web {
             this.currentBatchSystem.start();
             return true;
         }
+
+        public $flush(): void {
+            this.currentBatchSystem.flush();
+        }
+
     
         public static antialias: boolean;
 
@@ -768,11 +773,11 @@ namespace egret.web {
 
             if (meshVertices && meshIndices) {
                 if (this.vao.reachMaxSize(meshVertices.length / 2, meshIndices.length)) {
-                    this.$drawWebGL();
+                    this.$flush();//this.$drawWebGL();
                 }
             } else {
                 if (this.vao.reachMaxSize()) {
-                    this.$drawWebGL();
+                    this.$flush();//this.$drawWebGL();
                 }
             }
 
@@ -803,7 +808,7 @@ namespace egret.web {
             }
 
             if (this.vao.reachMaxSize()) {
-                this.$drawWebGL();
+                this.$flush();//this.$drawWebGL();
             }
 
             this.drawCmdManager.pushDrawRect();
@@ -821,7 +826,7 @@ namespace egret.web {
             }
             buffer.$stencilList.push({ x, y, width, height });
             if (this.vao.reachMaxSize()) {
-                this.$drawWebGL();
+                this.$flush();//this.$drawWebGL();
             }
             this.drawCmdManager.pushPushMask();
             buffer.currentTexture = null;
@@ -840,7 +845,7 @@ namespace egret.web {
             let mask = buffer.$stencilList.pop();
 
             if (this.vao.reachMaxSize()) {
-                this.$drawWebGL();
+                this.$flush();//this.$drawWebGL();
             }
             this.drawCmdManager.pushPopMask();
             buffer.currentTexture = null;
@@ -1249,7 +1254,7 @@ namespace egret.web {
             }
 
             if (this.vao.reachMaxSize()) {
-                this.$drawWebGL();
+                this.$flush();//this.$drawWebGL();
             }
 
             this.pushBuffer(output);

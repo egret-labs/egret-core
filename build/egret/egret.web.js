@@ -5985,7 +5985,7 @@ var egret;
             };
             WebGLRenderContext.prototype.setBatchSystemByRenderNode = function (renderNode) {
                 if (renderNode.type === 3 /* GraphicsNode */) {
-                    return true;
+                    return false;
                 }
                 var system = this.batchSystems[renderNode.type];
                 return this.changeToBatchSystem(system);
@@ -6001,6 +6001,9 @@ var egret;
                 this.currentBatchSystem = system;
                 this.currentBatchSystem.start();
                 return true;
+            };
+            WebGLRenderContext.prototype.$flush = function () {
+                this.currentBatchSystem.flush();
             };
             WebGLRenderContext.getInstance = function (width, height) {
                 if (this.instance) {
@@ -6526,12 +6529,12 @@ var egret;
                 }
                 if (meshVertices && meshIndices) {
                     if (this.vao.reachMaxSize(meshVertices.length / 2, meshIndices.length)) {
-                        this.$drawWebGL();
+                        this.$flush(); //this.$drawWebGL();
                     }
                 }
                 else {
                     if (this.vao.reachMaxSize()) {
-                        this.$drawWebGL();
+                        this.$flush(); //this.$drawWebGL();
                     }
                 }
                 if (smoothing != undefined && texture["smoothing"] != smoothing) {
@@ -6555,7 +6558,7 @@ var egret;
                     return;
                 }
                 if (this.vao.reachMaxSize()) {
-                    this.$drawWebGL();
+                    this.$flush(); //this.$drawWebGL();
                 }
                 this.drawCmdManager.pushDrawRect();
                 buffer.currentTexture = null;
@@ -6571,7 +6574,7 @@ var egret;
                 }
                 buffer.$stencilList.push({ x: x, y: y, width: width, height: height });
                 if (this.vao.reachMaxSize()) {
-                    this.$drawWebGL();
+                    this.$flush(); //this.$drawWebGL();
                 }
                 this.drawCmdManager.pushPushMask();
                 buffer.currentTexture = null;
@@ -6587,7 +6590,7 @@ var egret;
                 }
                 var mask = buffer.$stencilList.pop();
                 if (this.vao.reachMaxSize()) {
-                    this.$drawWebGL();
+                    this.$flush(); //this.$drawWebGL();
                 }
                 this.drawCmdManager.pushPopMask();
                 buffer.currentTexture = null;
@@ -6942,7 +6945,7 @@ var egret;
                     return;
                 }
                 if (this.vao.reachMaxSize()) {
-                    this.$drawWebGL();
+                    this.$flush(); //this.$drawWebGL();
                 }
                 this.pushBuffer(output);
                 var originInput = input, temp, width = input.rootRenderTarget.width, height = input.rootRenderTarget.height;
@@ -7377,45 +7380,57 @@ var egret;
              * @param width 宽度
              * @param height 高度
              */
-            WebGLRenderBuffer.prototype.drawFrameBufferToSurface = function (sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, clear) {
-                if (clear === void 0) { clear = false; }
+            /*
+            private drawFrameBufferToSurface(sourceX: number,
+                sourceY: number, sourceWidth: number, sourceHeight: number, destX: number, destY: number, destWidth: number, destHeight: number, clear: boolean = false): void {
                 this.rootRenderTarget.useFrameBuffer = false;
                 this.rootRenderTarget.activate();
-                this.context.disableStencilTest(); // 切换frameBuffer注意要禁用STENCIL_TEST
+    
+                this.context.disableStencilTest();// 切换frameBuffer注意要禁用STENCIL_TEST
                 this.context.disableScissorTest();
+    
                 this.setTransform(1, 0, 0, 1, 0, 0);
                 this.globalAlpha = 1;
                 this.context.setGlobalCompositeOperation("source-over");
                 clear && this.context.clear();
-                this.context.drawImage(this.rootRenderTarget, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight, false);
+                this.context.drawImage(<BitmapData><any>this.rootRenderTarget, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight, false);
                 this.context.$drawWebGL();
+    
                 this.rootRenderTarget.useFrameBuffer = true;
                 this.rootRenderTarget.activate();
+    
                 this.restoreStencil();
                 this.restoreScissor();
-            };
+            }
+            */
             /**
              * 交换surface的图像到frameBuffer中
              * @param width 宽度
              * @param height 高度
              */
-            WebGLRenderBuffer.prototype.drawSurfaceToFrameBuffer = function (sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, clear) {
-                if (clear === void 0) { clear = false; }
+            /*
+            private drawSurfaceToFrameBuffer(sourceX: number,
+                sourceY: number, sourceWidth: number, sourceHeight: number, destX: number, destY: number, destWidth: number, destHeight: number, clear: boolean = false): void {
                 this.rootRenderTarget.useFrameBuffer = true;
                 this.rootRenderTarget.activate();
-                this.context.disableStencilTest(); // 切换frameBuffer注意要禁用STENCIL_TEST
+    
+                this.context.disableStencilTest();// 切换frameBuffer注意要禁用STENCIL_TEST
                 this.context.disableScissorTest();
+    
                 this.setTransform(1, 0, 0, 1, 0, 0);
                 this.globalAlpha = 1;
                 this.context.setGlobalCompositeOperation("source-over");
                 clear && this.context.clear();
-                this.context.drawImage(this.context.surface, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight, false);
+                this.context.drawImage(<BitmapData><any>this.context.surface, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight, false);
                 this.context.$drawWebGL();
+    
                 this.rootRenderTarget.useFrameBuffer = false;
                 this.rootRenderTarget.activate();
+    
                 this.restoreStencil();
                 this.restoreScissor();
-            };
+            }
+            */
             /**
              * 清空缓冲区数据
              */
@@ -7579,7 +7594,7 @@ var egret;
                 //绘制显示对象
                 webglBuffer.transform(matrix.a, matrix.b, matrix.c, matrix.d, 0, 0);
                 this.drawDisplayObject(displayObject, webglBuffer, matrix.tx, matrix.ty, true);
-                webglBufferContext.$drawWebGL();
+                webglBufferContext.$flush(); // webglBufferContext.$drawWebGL();
                 var drawCall = webglBuffer.$drawCalls;
                 webglBuffer.onRenderFinish();
                 webglBufferContext.popBuffer();
@@ -7629,6 +7644,9 @@ var egret;
                     drawCalls++;
                     buffer.$offsetX = offsetX;
                     buffer.$offsetY = offsetY;
+                    ///
+                    buffer.context.setBatchSystemByRenderNode(node);
+                    ///
                     switch (node.type) {
                         case 1 /* BitmapNode */:
                             this.renderBitmap(node, buffer);
@@ -8068,7 +8086,7 @@ var egret;
                 webglBuffer.context.pushBuffer(webglBuffer);
                 webglBuffer.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
                 this.renderNode(node, buffer, 0, 0, forHitTest);
-                webglBuffer.context.$drawWebGL();
+                webglBuffer.context.$flush(); //webglBuffer.context.$drawWebGL();
                 webglBuffer.onRenderFinish();
                 //popRenderTARGET
                 webglBuffer.context.popBuffer();
@@ -8094,6 +8112,9 @@ var egret;
                 var drawCalls = 0;
                 if (node) {
                     drawCalls++;
+                    ///
+                    buffer.context.setBatchSystemByRenderNode(node);
+                    ///
                     switch (node.type) {
                         case 1 /* BitmapNode */:
                             this.renderBitmap(node, buffer);
@@ -8138,7 +8159,7 @@ var egret;
                         }
                     }
                 }
-                buffer.context.$drawWebGL();
+                buffer.context.$flush(); //buffer.context.$drawWebGL();
                 buffer.onRenderFinish();
                 buffer.context.popBuffer();
                 return drawCalls;
@@ -8149,6 +8170,9 @@ var egret;
             WebGLRenderer.prototype.renderNode = function (node, buffer, offsetX, offsetY, forHitTest) {
                 buffer.$offsetX = offsetX;
                 buffer.$offsetY = offsetY;
+                ///
+                buffer.context.setBatchSystemByRenderNode(node);
+                ///
                 switch (node.type) {
                     case 1 /* BitmapNode */:
                         this.renderBitmap(node, buffer);

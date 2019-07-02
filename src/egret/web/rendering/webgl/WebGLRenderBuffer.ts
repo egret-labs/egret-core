@@ -286,6 +286,7 @@ namespace egret.web {
          * @param width 宽度
          * @param height 高度
          */
+        /*
         private drawFrameBufferToSurface(sourceX: number,
             sourceY: number, sourceWidth: number, sourceHeight: number, destX: number, destY: number, destWidth: number, destHeight: number, clear: boolean = false): void {
             this.rootRenderTarget.useFrameBuffer = false;
@@ -307,12 +308,14 @@ namespace egret.web {
             this.restoreStencil();
             this.restoreScissor();
         }
+        */
 
         /**
          * 交换surface的图像到frameBuffer中
          * @param width 宽度
          * @param height 高度
          */
+        /*
         private drawSurfaceToFrameBuffer(sourceX: number,
             sourceY: number, sourceWidth: number, sourceHeight: number, destX: number, destY: number, destWidth: number, destHeight: number, clear: boolean = false): void {
             this.rootRenderTarget.useFrameBuffer = true;
@@ -334,6 +337,7 @@ namespace egret.web {
             this.restoreStencil();
             this.restoreScissor();
         }
+        */
 
         /**
          * 清空缓冲区数据

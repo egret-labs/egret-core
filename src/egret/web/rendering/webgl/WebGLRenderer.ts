@@ -65,7 +65,7 @@ namespace egret.web {
             //绘制显示对象
             webglBuffer.transform(matrix.a, matrix.b, matrix.c, matrix.d, 0, 0);
             this.drawDisplayObject(displayObject, webglBuffer, matrix.tx, matrix.ty, true);
-            webglBufferContext.$drawWebGL();
+            webglBufferContext.$flush();// webglBufferContext.$drawWebGL();
             let drawCall = webglBuffer.$drawCalls;
             webglBuffer.onRenderFinish();
 
@@ -118,6 +118,9 @@ namespace egret.web {
                 drawCalls++;
                 buffer.$offsetX = offsetX;
                 buffer.$offsetY = offsetY;
+                ///
+                buffer.context.setBatchSystemByRenderNode(node);
+                ///
                 switch (node.type) {
                     case sys.RenderNodeType.BitmapNode:
                         this.renderBitmap(<sys.BitmapNode>node, buffer);
@@ -582,7 +585,7 @@ namespace egret.web {
 
             webglBuffer.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
             this.renderNode(node, buffer, 0, 0, forHitTest);
-            webglBuffer.context.$drawWebGL();
+            webglBuffer.context.$flush();//webglBuffer.context.$drawWebGL();
             webglBuffer.onRenderFinish();
 
             //popRenderTARGET
@@ -610,6 +613,9 @@ namespace egret.web {
             let drawCalls = 0;
             if (node) {
                 drawCalls++;
+                ///
+                buffer.context.setBatchSystemByRenderNode(node);
+                ///
                 switch (node.type) {
                     case sys.RenderNodeType.BitmapNode:
                         this.renderBitmap(<sys.BitmapNode>node, buffer);
@@ -655,7 +661,7 @@ namespace egret.web {
                 }
             }
 
-            buffer.context.$drawWebGL();
+            buffer.context.$flush();//buffer.context.$drawWebGL();
             buffer.onRenderFinish();
             buffer.context.popBuffer();
 
@@ -668,6 +674,9 @@ namespace egret.web {
         private renderNode(node: sys.RenderNode, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number, forHitTest?: boolean): void {
             buffer.$offsetX = offsetX;
             buffer.$offsetY = offsetY;
+            ///
+            buffer.context.setBatchSystemByRenderNode(node);
+            ///
             switch (node.type) {
                 case sys.RenderNodeType.BitmapNode:
                     this.renderBitmap(<sys.BitmapNode>node, buffer);
