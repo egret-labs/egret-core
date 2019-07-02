@@ -257,7 +257,7 @@
             "platform": "web"
           },
           {
-            "path": "web/rendering/webgl/WebGLRenderBatchState.ts",
+            "path": "web/rendering/webgl/WebGLRenderBatchSystem.ts",
             "platform": "web"
           },
           {

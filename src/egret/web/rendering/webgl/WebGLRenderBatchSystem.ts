@@ -29,5 +29,84 @@
 
 namespace egret.web {
 
+    export class WebGLRenderBatchSystem {
 
+        private readonly _webglContext: WebGLRenderContext;
+
+        constructor(_webglContext: WebGLRenderContext) {
+            this._webglContext = _webglContext;
+        }
+
+        public start(): void {
+        }
+
+        public stop(): void {
+            this.flush();
+        }
+
+        public flush(): void {
+            this._webglContext.$drawWebGL();
+        }
+
+        public render(): void {
+
+        }
+    }
+
+    export class EmptyBatchSystem extends WebGLRenderBatchSystem {
+
+        constructor(_webglContext: WebGLRenderContext) {
+            super(_webglContext);
+        }
+
+        public start(): void {
+            console.log('EmptyBatchSystem start');
+        }
+
+        public stop(): void {
+            this.flush();
+            console.log('EmptyBatchSystem stop');
+        }
+
+        public flush(): void {
+        }
+    }
+
+    export class SpriteBatchSystem extends WebGLRenderBatchSystem {
+
+        constructor(_webglContext: WebGLRenderContext) {
+            super(_webglContext);
+        }
+
+        public start(): void {
+            console.log('SpriteBatchSystem start');
+        }
+
+        public stop(): void {
+            this.flush();
+            console.log('SpriteBatchSystem stop');
+        }
+
+        public flush(): void {
+        }
+    }
+
+    export class MeshBatchSystem extends WebGLRenderBatchSystem {
+
+        constructor(_webglContext: WebGLRenderContext) {
+            super(_webglContext);
+        }
+
+        public start(): void {
+            console.log('MeshBatchSystem start');
+        }
+
+        public stop(): void {
+            this.flush();
+            console.log('MeshBatchSystem stop');
+        }
+
+        public flush(): void {
+        }
+    }
 }

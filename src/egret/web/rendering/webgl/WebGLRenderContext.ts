@@ -45,6 +45,44 @@ namespace egret.web {
      */
     export class WebGLRenderContext implements egret.sys.RenderContext {
 
+        private readonly batchSystems: { [index: number]: WebGLRenderBatchSystem } = {};
+        private currentBatchSystem: WebGLRenderBatchSystem = null;
+
+        private clearBatchSystems(): void {
+            this.currentBatchSystem = null;
+            for (const pro in this.batchSystems) {
+                delete this.batchSystems[pro];
+            }
+        }
+        
+        private registerBatchSystemByRenderNodeType(renderNodeType: sys.RenderNodeType, system: WebGLRenderBatchSystem): void {
+            if (!system) {
+                return;
+            }
+            this.batchSystems[renderNodeType] = system;
+        }
+
+        public setBatchSystemByRenderNode(renderNode: sys.RenderNode): boolean {
+            if (renderNode.type === sys.RenderNodeType.GraphicsNode) {
+                return true;
+            }
+            const system = this.batchSystems[renderNode.type];
+            return this.changeToBatchSystem(system);
+        }
+
+        private changeToBatchSystem(system: WebGLRenderBatchSystem): boolean {
+            if (!system || system === this.currentBatchSystem) {
+                return false;
+            }
+            if (this.currentBatchSystem) {
+                this.currentBatchSystem.stop();
+                this.currentBatchSystem = null;
+            }
+            this.currentBatchSystem = system;
+            this.currentBatchSystem.start();
+            return true;
+        }
+    
         public static antialias: boolean;
 
         //
@@ -318,22 +356,7 @@ namespace egret.web {
 
             let gl = this.context;
             this.$maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
-
-            //refactor
-            // this._caps.astc = this._gl.getExtension('WEBGL_compressed_texture_astc') || this._gl.getExtension('WEBKIT_WEBGL_compressed_texture_astc');
-            // this._caps.s3tc = this._gl.getExtension('WEBGL_compressed_texture_s3tc') || this._gl.getExtension('WEBKIT_WEBGL_compressed_texture_s3tc');
-            // this._caps.pvrtc = this._gl.getExtension('WEBGL_compressed_texture_pvrtc') || this._gl.getExtension('WEBKIT_WEBGL_compressed_texture_pvrtc');
-            // this._caps.etc1 = this._gl.getExtension('WEBGL_compressed_texture_etc1') || this._gl.getExtension('WEBKIT_WEBGL_compressed_texture_etc1');
-            // this._caps.etc2 = this._gl.getExtension('WEBGL_compressed_texture_etc') || this._gl.getExtension('WEBKIT_WEBGL_compressed_texture_etc') ||
-            //     this._gl.getExtension('WEBGL_compressed_texture_es3_0'); // also a requirement of OpenGL ES 3
-            // const compressedTextureExNames = [
-            //     'WEBGL_compressed_texture_pvrtc', 'WEBKIT_WEBGL_compressed_texture_pvrtc',
-            //     'WEBGL_compressed_texture_etc1', 'WEBKIT_WEBGL_compressed_texture_etc1',
-            //     'WEBGL_compressed_texture_etc', 'WEBKIT_WEBGL_compressed_texture_etc',
-            //     'WEBGL_compressed_texture_astc', 'WEBKIT_WEBGL_compressed_texture_astc',
-            //     'WEBGL_compressed_texture_s3tc', 'WEBKIT_WEBGL_compressed_texture_s3tc',
-            //     'WEBGL_compressed_texture_es3_0'];
-            //
+            ////
             this.pvrtc = gl.getExtension('WEBGL_compressed_texture_pvrtc') || gl.getExtension('WEBKIT_WEBGL_compressed_texture_pvrtc');
             if (this.pvrtc) {
                 this.pvrtc.name = 'WEBGL_compressed_texture_pvrtc';
@@ -348,7 +371,26 @@ namespace egret.web {
             egret.Capabilities.supportedCompressedTexture.pvrtc = !!this.pvrtc;
             egret.Capabilities.supportedCompressedTexture.etc1 = !!this.etc1;
             //
-            this._supportedCompressedTextureInfo = this._buildSupportedCompressedTextureInfo(/*this.context, compressedTextureExNames,*/[this.etc1, this.pvrtc]);
+            this._supportedCompressedTextureInfo = this._buildSupportedCompressedTextureInfo([this.etc1, this.pvrtc]);
+            //
+            this.initBatchSystems();
+        }
+
+        private initBatchSystems(): void {
+            //全部清除
+            this.clearBatchSystems();
+            //注册这个系统
+            const spriteBatchSystem = new SpriteBatchSystem(this);
+            this.registerBatchSystemByRenderNodeType(sys.RenderNodeType.BitmapNode, spriteBatchSystem);
+            this.registerBatchSystemByRenderNodeType(sys.RenderNodeType.TextNode, spriteBatchSystem);
+            this.registerBatchSystemByRenderNodeType(sys.RenderNodeType.GraphicsNode, spriteBatchSystem);
+            this.registerBatchSystemByRenderNodeType(sys.RenderNodeType.NormalBitmapNode, spriteBatchSystem);
+            //注册mesh的系统
+            const meshBatchSystem = new MeshBatchSystem(this);
+            this.registerBatchSystemByRenderNodeType(sys.RenderNodeType.MeshNode, meshBatchSystem);
+            //默认空系统
+            const emptyBatchSystem = new EmptyBatchSystem(this);
+            this.changeToBatchSystem(emptyBatchSystem);
         }
 
         private handleContextLost() {

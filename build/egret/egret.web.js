@@ -5940,6 +5940,8 @@ var egret;
          */
         var WebGLRenderContext = (function () {
             function WebGLRenderContext(width, height) {
+                this.batchSystems = {};
+                this.currentBatchSystem = null;
                 //
                 this._defaultEmptyTexture = null;
                 /**
@@ -5969,6 +5971,37 @@ var egret;
                 this.vao = new web.WebGLVertexArrayObject();
                 this.setGlobalCompositeOperation("source-over");
             }
+            WebGLRenderContext.prototype.clearBatchSystems = function () {
+                this.currentBatchSystem = null;
+                for (var pro in this.batchSystems) {
+                    delete this.batchSystems[pro];
+                }
+            };
+            WebGLRenderContext.prototype.registerBatchSystemByRenderNodeType = function (renderNodeType, system) {
+                if (!system) {
+                    return;
+                }
+                this.batchSystems[renderNodeType] = system;
+            };
+            WebGLRenderContext.prototype.setBatchSystemByRenderNode = function (renderNode) {
+                if (renderNode.type === 3 /* GraphicsNode */) {
+                    return true;
+                }
+                var system = this.batchSystems[renderNode.type];
+                return this.changeToBatchSystem(system);
+            };
+            WebGLRenderContext.prototype.changeToBatchSystem = function (system) {
+                if (!system || system === this.currentBatchSystem) {
+                    return false;
+                }
+                if (this.currentBatchSystem) {
+                    this.currentBatchSystem.stop();
+                    this.currentBatchSystem = null;
+                }
+                this.currentBatchSystem = system;
+                this.currentBatchSystem.start();
+                return true;
+            };
             WebGLRenderContext.getInstance = function (width, height) {
                 if (this.instance) {
                     return this.instance;
@@ -6127,21 +6160,7 @@ var egret;
                 this.getWebGLContext();
                 var gl = this.context;
                 this.$maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
-                //refactor
-                // this._caps.astc = this._gl.getExtension('WEBGL_compressed_texture_astc') || this._gl.getExtension('WEBKIT_WEBGL_compressed_texture_astc');
-                // this._caps.s3tc = this._gl.getExtension('WEBGL_compressed_texture_s3tc') || this._gl.getExtension('WEBKIT_WEBGL_compressed_texture_s3tc');
-                // this._caps.pvrtc = this._gl.getExtension('WEBGL_compressed_texture_pvrtc') || this._gl.getExtension('WEBKIT_WEBGL_compressed_texture_pvrtc');
-                // this._caps.etc1 = this._gl.getExtension('WEBGL_compressed_texture_etc1') || this._gl.getExtension('WEBKIT_WEBGL_compressed_texture_etc1');
-                // this._caps.etc2 = this._gl.getExtension('WEBGL_compressed_texture_etc') || this._gl.getExtension('WEBKIT_WEBGL_compressed_texture_etc') ||
-                //     this._gl.getExtension('WEBGL_compressed_texture_es3_0'); // also a requirement of OpenGL ES 3
-                // const compressedTextureExNames = [
-                //     'WEBGL_compressed_texture_pvrtc', 'WEBKIT_WEBGL_compressed_texture_pvrtc',
-                //     'WEBGL_compressed_texture_etc1', 'WEBKIT_WEBGL_compressed_texture_etc1',
-                //     'WEBGL_compressed_texture_etc', 'WEBKIT_WEBGL_compressed_texture_etc',
-                //     'WEBGL_compressed_texture_astc', 'WEBKIT_WEBGL_compressed_texture_astc',
-                //     'WEBGL_compressed_texture_s3tc', 'WEBKIT_WEBGL_compressed_texture_s3tc',
-                //     'WEBGL_compressed_texture_es3_0'];
-                //
+                ////
                 this.pvrtc = gl.getExtension('WEBGL_compressed_texture_pvrtc') || gl.getExtension('WEBKIT_WEBGL_compressed_texture_pvrtc');
                 if (this.pvrtc) {
                     this.pvrtc.name = 'WEBGL_compressed_texture_pvrtc';
@@ -6156,7 +6175,25 @@ var egret;
                 egret.Capabilities.supportedCompressedTexture.pvrtc = !!this.pvrtc;
                 egret.Capabilities.supportedCompressedTexture.etc1 = !!this.etc1;
                 //
-                this._supportedCompressedTextureInfo = this._buildSupportedCompressedTextureInfo(/*this.context, compressedTextureExNames,*/ [this.etc1, this.pvrtc]);
+                this._supportedCompressedTextureInfo = this._buildSupportedCompressedTextureInfo([this.etc1, this.pvrtc]);
+                //
+                this.initBatchSystems();
+            };
+            WebGLRenderContext.prototype.initBatchSystems = function () {
+                //全部清除
+                this.clearBatchSystems();
+                //注册这个系统
+                var spriteBatchSystem = new web.SpriteBatchSystem(this);
+                this.registerBatchSystemByRenderNodeType(1 /* BitmapNode */, spriteBatchSystem);
+                this.registerBatchSystemByRenderNodeType(2 /* TextNode */, spriteBatchSystem);
+                this.registerBatchSystemByRenderNodeType(3 /* GraphicsNode */, spriteBatchSystem);
+                this.registerBatchSystemByRenderNodeType(6 /* NormalBitmapNode */, spriteBatchSystem);
+                //注册mesh的系统
+                var meshBatchSystem = new web.MeshBatchSystem(this);
+                this.registerBatchSystemByRenderNodeType(5 /* MeshNode */, meshBatchSystem);
+                //默认空系统
+                var emptyBatchSystem = new web.EmptyBatchSystem(this);
+                this.changeToBatchSystem(emptyBatchSystem);
             };
             WebGLRenderContext.prototype.handleContextLost = function () {
                 this.contextLost = true;
@@ -7003,6 +7040,84 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var web;
+    (function (web) {
+        var WebGLRenderBatchSystem = (function () {
+            function WebGLRenderBatchSystem(_webglContext) {
+                this._webglContext = _webglContext;
+            }
+            WebGLRenderBatchSystem.prototype.start = function () {
+            };
+            WebGLRenderBatchSystem.prototype.stop = function () {
+                this.flush();
+            };
+            WebGLRenderBatchSystem.prototype.flush = function () {
+                this._webglContext.$drawWebGL();
+            };
+            WebGLRenderBatchSystem.prototype.render = function () {
+            };
+            return WebGLRenderBatchSystem;
+        }());
+        web.WebGLRenderBatchSystem = WebGLRenderBatchSystem;
+        __reflect(WebGLRenderBatchSystem.prototype, "egret.web.WebGLRenderBatchSystem");
+        var EmptyBatchSystem = (function (_super) {
+            __extends(EmptyBatchSystem, _super);
+            function EmptyBatchSystem(_webglContext) {
+                return _super.call(this, _webglContext) || this;
+            }
+            EmptyBatchSystem.prototype.start = function () {
+                console.log('EmptyBatchSystem start');
+            };
+            EmptyBatchSystem.prototype.stop = function () {
+                this.flush();
+                console.log('EmptyBatchSystem stop');
+            };
+            EmptyBatchSystem.prototype.flush = function () {
+            };
+            return EmptyBatchSystem;
+        }(WebGLRenderBatchSystem));
+        web.EmptyBatchSystem = EmptyBatchSystem;
+        __reflect(EmptyBatchSystem.prototype, "egret.web.EmptyBatchSystem");
+        var SpriteBatchSystem = (function (_super) {
+            __extends(SpriteBatchSystem, _super);
+            function SpriteBatchSystem(_webglContext) {
+                return _super.call(this, _webglContext) || this;
+            }
+            SpriteBatchSystem.prototype.start = function () {
+                console.log('SpriteBatchSystem start');
+            };
+            SpriteBatchSystem.prototype.stop = function () {
+                this.flush();
+                console.log('SpriteBatchSystem stop');
+            };
+            SpriteBatchSystem.prototype.flush = function () {
+            };
+            return SpriteBatchSystem;
+        }(WebGLRenderBatchSystem));
+        web.SpriteBatchSystem = SpriteBatchSystem;
+        __reflect(SpriteBatchSystem.prototype, "egret.web.SpriteBatchSystem");
+        var MeshBatchSystem = (function (_super) {
+            __extends(MeshBatchSystem, _super);
+            function MeshBatchSystem(_webglContext) {
+                return _super.call(this, _webglContext) || this;
+            }
+            MeshBatchSystem.prototype.start = function () {
+                console.log('MeshBatchSystem start');
+            };
+            MeshBatchSystem.prototype.stop = function () {
+                this.flush();
+                console.log('MeshBatchSystem stop');
+            };
+            MeshBatchSystem.prototype.flush = function () {
+            };
+            return MeshBatchSystem;
+        }(WebGLRenderBatchSystem));
+        web.MeshBatchSystem = MeshBatchSystem;
+        __reflect(MeshBatchSystem.prototype, "egret.web.MeshBatchSystem");
+    })(web = egret.web || (egret.web = {}));
+})(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
