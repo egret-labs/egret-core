@@ -14614,13 +14614,21 @@ var egret;
         }
         sys.getContext2d = getContext2d;
         /**
-        * 重新设置主canvas的大小
+        * 仅通过bitmapData创建纹理
         */
         function createTexture(renderContext, bitmapData) {
             console.error("empty sys.createTexture = " + bitmapData);
             return null;
         }
         sys.createTexture = createTexture;
+        /**
+        * 通过 width, height, data创建纹理
+        */
+        function _createTexture(renderContext, width, height, data) {
+            console.error("empty sys._createTexture = " + width + ", " + height + ", " + data);
+            return null;
+        }
+        sys._createTexture = _createTexture;
         /**
          * 画texture
          **/
@@ -17848,7 +17856,7 @@ var egret;
          * @platform Web,Native
          * @language zh_CN
          */
-        Capabilities.engineVersion = "5.2.21";
+        Capabilities.engineVersion = "5.2.22";
         /***
          * current render mode.
          * @type {string}
@@ -24414,6 +24422,18 @@ var egret;
                 value += 360;
             }
             return egret_cos_map[value];
+        };
+        NumberUtils.convertStringToHashCode = function (str) {
+            if (str.length === 0) {
+                return 0;
+            }
+            var hash = 0;
+            for (var i = 0, length_9 = str.length; i < length_9; ++i) {
+                var chr = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + chr;
+                hash |= 0; // Convert to 32bit integer
+            }
+            return hash;
         };
         return NumberUtils;
     }());

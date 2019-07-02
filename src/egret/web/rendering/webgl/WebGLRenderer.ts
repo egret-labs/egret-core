@@ -843,7 +843,85 @@ namespace egret.web {
         /**
          * @private
          */
+        private ___renderText____(node: sys.TextNode, buffer: WebGLRenderBuffer): void {
+            let width = node.width - node.x;
+            let height = node.height - node.y;
+            if (width <= 0 || height <= 0 || !width || !height || node.drawData.length === 0) {
+                return;
+            }
+            let canvasScaleX = sys.DisplayList.$canvasScaleX;
+            let canvasScaleY = sys.DisplayList.$canvasScaleY;
+            const maxTextureSize = buffer.context.$maxTextureSize;
+            if (width * canvasScaleX > maxTextureSize) {
+                canvasScaleX *= maxTextureSize / (width * canvasScaleX);
+            }
+            if (height * canvasScaleY > maxTextureSize) {
+                canvasScaleY *= maxTextureSize / (height * canvasScaleY);
+            }
+            width *= canvasScaleX;
+            height *= canvasScaleY;
+            const x = node.x * canvasScaleX;
+            const y = node.y * canvasScaleY;
+            if (node.$canvasScaleX !== canvasScaleX || node.$canvasScaleY !== canvasScaleY) {
+                node.$canvasScaleX = canvasScaleX;
+                node.$canvasScaleY = canvasScaleY;
+                node.dirtyRender = true;
+            }
+            if (x || y) {
+                buffer.transform(1, 0, 0, 1, x / canvasScaleX, y / canvasScaleY);
+            }
+            if (node.dirtyRender) {
+                TextAtlasRender.analysisTextNodeAndFlushDrawLabel(node);
+            }
+            const drawCommands = node[property_drawLabel] as Array<DrawLabel>;
+            if (drawCommands && drawCommands.length > 0) {
+                //存一下
+                const saveOffsetX = buffer.$offsetX;
+                const saveOffsetY = buffer.$offsetY;
+                //开始画
+                let cmd: DrawLabel = null;
+                let anchorX = 0;
+                let anchorY = 0;
+                let textBlocks: TextBlock[] = null;
+                let tb: TextBlock = null;
+                let page: Page = null;
+                for (let i = 0, length = drawCommands.length; i < length; ++i) {
+                    cmd = drawCommands[i];
+                    anchorX = cmd.anchorX;
+                    anchorY = cmd.anchorY;
+                    textBlocks = cmd.textBlocks;
+                    buffer.$offsetX = saveOffsetX + anchorX;
+                    for (let j = 0, length1 = textBlocks.length; j < length1; ++j) {
+                        tb = textBlocks[j];
+                        if (j > 0) {
+                            buffer.$offsetX -= tb.canvasWidthOffset;
+                        }
+                        buffer.$offsetY = saveOffsetY + anchorY - (tb.measureHeight + (tb.stroke2 ? tb.canvasHeightOffset : 0)) / 2;
+                        page = tb.line.page;
+                        buffer.context.drawTexture(page.webGLTexture,
+                            tb.u, tb.v, tb.contentWidth, tb.contentHeight, 
+                            0, 0, tb.contentWidth, tb.contentHeight,
+                             page.pageWidth, page.pageHeight);
+
+                        buffer.$offsetX += (tb.contentWidth - tb.canvasWidthOffset);
+                    }
+                }
+                //还原回去
+                buffer.$offsetX = saveOffsetX;
+                buffer.$offsetY = saveOffsetY;
+            }
+            if (x || y) {
+                buffer.transform(1, 0, 0, 1, -x / canvasScaleX, -y / canvasScaleY);
+            }
+            node.dirtyRender = false;
+        }
+
         private renderText(node: sys.TextNode, buffer: WebGLRenderBuffer): void {
+            if (textAtlasRenderEnable) {
+                //新的文字渲染机制
+                this.___renderText____(node, buffer);
+                return;
+            }
             let width = node.width - node.x;
             let height = node.height - node.y;
             if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) {
