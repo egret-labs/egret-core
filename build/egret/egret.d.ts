@@ -9674,9 +9674,13 @@ declare namespace egret.sys {
     function getContextWebGL(surface: HTMLCanvasElement): WebGLRenderingContext;
     function getContext2d(surface: HTMLCanvasElement): CanvasRenderingContext2D;
     /**
-    * 重新设置主canvas的大小
+    * 仅通过bitmapData创建纹理
     */
     function createTexture(renderContext: RenderContext, bitmapData: BitmapData | HTMLCanvasElement): WebGLTexture;
+    /**
+    * 通过 width, height, data创建纹理
+    */
+    function _createTexture(renderContext: RenderContext, width: number, height: number, data: any): WebGLTexture;
     /**
      * 画texture
      **/
@@ -14435,6 +14439,7 @@ declare namespace egret {
          * @returns
          */
         private static cosInt(value);
+        static convertStringToHashCode(str: string): number;
     }
 }
 /**

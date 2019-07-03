@@ -1,6 +1,6 @@
 {
   "name": "egret",
-  "version": "5.2.21",
+  "version": "5.2.22",
   "private": true,
   "author": "egret-labs",
   "bin": {
@@ -154,6 +154,14 @@
           },
           {
             "path": "web/rendering/webgl/WebGLRenderer.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/TextAtlasStrategy.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/TextAtlasRender.ts",
             "platform": "web"
           },
           {
