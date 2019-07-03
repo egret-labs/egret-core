@@ -33,11 +33,7 @@ namespace egret.web {
      * 创建一个canvas。
      */
     function __createCanvas__(width?: number, height?: number): HTMLCanvasElement {
-        let canvas: HTMLCanvasElement = document.createElement("canvas");
-        if (!isNaN(width) && !isNaN(height)) {
-            canvas.width = width;
-            canvas.height = height;
-        }
+        let canvas = egret.sys.createCanvas(width,height);
         let context = canvas.getContext("2d");
         if (context["imageSmoothingEnabled"] === undefined) {
             let keys = ["webkitImageSmoothingEnabled", "mozImageSmoothingEnabled", "msImageSmoothingEnabled"];
