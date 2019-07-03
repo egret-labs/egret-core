@@ -74,7 +74,7 @@ namespace egret.web {
     export class CanvasRenderBuffer implements sys.RenderBuffer {
 
         public constructor(width?: number, height?: number, root?: boolean) {
-            this.surface = egret.sys.createCanvasRenderBufferSurface(__createCanvas__, width, height);
+            this.surface = egret.sys.createCanvasRenderBufferSurface(__createCanvas__, width, height, root);
             this.context = this.surface.getContext("2d");
             if (this.context) {
                 this.context.$offsetX = 0;
