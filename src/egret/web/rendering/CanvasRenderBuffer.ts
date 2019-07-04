@@ -33,11 +33,7 @@ namespace egret.web {
      * 创建一个canvas。
      */
     function __createCanvas__(width?: number, height?: number): HTMLCanvasElement {
-        let canvas: HTMLCanvasElement = document.createElement("canvas");
-        if (!isNaN(width) && !isNaN(height)) {
-            canvas.width = width;
-            canvas.height = height;
-        }
+        let canvas = egret.sys.createCanvas(width, height);
         let context = canvas.getContext("2d");
         if (context["imageSmoothingEnabled"] === undefined) {
             let keys = ["webkitImageSmoothingEnabled", "mozImageSmoothingEnabled", "msImageSmoothingEnabled"];
@@ -74,12 +70,13 @@ namespace egret.web {
     export class CanvasRenderBuffer implements sys.RenderBuffer {
 
         public constructor(width?: number, height?: number, root?: boolean) {
-            this.surface = egret.sys.createCanvasRenderBufferSurface(__createCanvas__, width, height);
+            this.surface = egret.sys.createCanvasRenderBufferSurface(__createCanvas__, width, height, root);
             this.context = this.surface.getContext("2d");
             if (this.context) {
                 this.context.$offsetX = 0;
                 this.context.$offsetY = 0;
             }
+            this.resize(width, height)
         }
 
         /**
