@@ -212,7 +212,10 @@ namespace egret {
                     return dataFormat;
             }
         }
-
+        /**
+         * @private
+         */
+        private sound: egret.Sound;
         /**
          * @private
          *
@@ -223,84 +226,68 @@ namespace egret {
             let virtualUrl: string = loader._request.url;
 
             let sound: egret.Sound = new egret.Sound();
-            sound.addEventListener(egret.Event.COMPLETE, onLoadComplete, self);
-            sound.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
-            sound.addEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
+            this.sound = sound;
+            sound.addEventListener(egret.Event.COMPLETE, this.onSoundoadComplete, this);
+            sound.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onSoundLoaderError, this);
+            sound.addEventListener(egret.ProgressEvent.PROGRESS, this.onSoundLoaderPostProgress, this);
             sound.load(virtualUrl);
-
-            function onPostProgress(event: egret.ProgressEvent): void {
-                loader.dispatchEvent(event);
-            }
-
-            function onError(event: egret.IOErrorEvent) {
-                removeListeners();
-                loader.dispatchEvent(event);
-            }
-
-            function onLoadComplete(e) {
-                removeListeners();
-
-                loader.data = sound;
-
-                window.setTimeout(function () {
-                    loader.dispatchEventWith(Event.COMPLETE);
-                }, 0);
-            }
-
-            function removeListeners(): void {
-                sound.removeEventListener(egret.Event.COMPLETE, onLoadComplete, self);
-                sound.removeEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
-                sound.removeEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
-            }
         }
+        private onSoundoadComplete(event): void {
+            this.removeSoundLoaderListeners();
+            this.data = this.sound;
+            window.setTimeout(()=> {
+                this.dispatchEventWith(Event.COMPLETE);
+            }, 0);
 
+        }
+        private onSoundLoaderPostProgress(event: egret.ProgressEvent): void {
+            this.dispatchEvent(event);
+        }
+        private onSoundLoaderError(event: egret.ProgressEvent): void {
+            this.dispatchEvent(event);
+        }
+        private removeSoundLoaderListeners(): void {
+            this.sound.addEventListener(egret.Event.COMPLETE, this.onSoundoadComplete, this);
+            this.sound.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onSoundLoaderError, this);
+            this.sound.addEventListener(egret.ProgressEvent.PROGRESS, this.onSoundLoaderPostProgress, this);
+        }
+        /**
+         * @private
+         */
+        private imageLoader: ImageLoader
         /**
          * @private
          *
          * @param loader
          */
         private loadTexture(loader: URLLoader): void {
-            let self = this;
-
             let virtualUrl: string = loader._request.url;
             let imageLoader: ImageLoader = new ImageLoader();
-            imageLoader.addEventListener(egret.Event.COMPLETE, onLoadComplete, self);
-            imageLoader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
-            imageLoader.addEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
+            this.imageLoader = imageLoader;
+            imageLoader.addEventListener(egret.Event.COMPLETE, this.onImageLoadComplete, this);
+            imageLoader.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onImageLoaderError, this);
+            imageLoader.addEventListener(egret.ProgressEvent.PROGRESS, this.onImageLoaderPostProgress, this);
             imageLoader.load(virtualUrl);
-
-            function onPostProgress(event: egret.ProgressEvent): void {
-                loader.dispatchEvent(event);
-            }
-
-            function onError(event: egret.IOErrorEvent) {
-                removeListeners();
-                loader.dispatchEvent(event);
-            }
-
-            function onLoadComplete(e) {
-                removeListeners();
-
-                let bitmapData = imageLoader.data;
-                if(bitmapData.source.setAttribute){
-                    bitmapData.source.setAttribute("bitmapSrc", virtualUrl);
-                }
-
-                let texture: Texture = new Texture();
-                texture._setBitmapData(bitmapData);
-
-                loader.data = texture;
-
-                window.setTimeout(function () {
-                    loader.dispatchEventWith(Event.COMPLETE);
-                }, 0);
-            }
-
-            function removeListeners(): void {
-                imageLoader.removeEventListener(egret.Event.COMPLETE, onLoadComplete, self);
-                imageLoader.removeEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
-                imageLoader.removeEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
-            }
+        }
+        private onImageLoadComplete(event): void {
+            this.removeImageLoaderListeners();
+            let texture: Texture = new Texture();
+            texture.bitmapData = event.target.data;
+            this.data = texture;
+            window.setTimeout(()=> {
+                this.dispatchEventWith(Event.COMPLETE);
+            }, 0);
+        }
+        private onImageLoaderPostProgress(event: egret.ProgressEvent): void {
+            this.dispatchEvent(event);
+        }
+        private onImageLoaderError(event: egret.ProgressEvent): void {
+            this.dispatchEvent(event);
+        }
+        private removeImageLoaderListeners(): void {
+            this.imageLoader.removeEventListener(egret.Event.COMPLETE, this.onImageLoadComplete, this);
+            this.imageLoader.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onImageLoaderError, this);
+            this.imageLoader.addEventListener(egret.ProgressEvent.PROGRESS, this.onImageLoaderPostProgress, this);
         }
 
         /**
@@ -319,6 +306,4 @@ namespace egret {
         }
 
     }
-
-
 }
