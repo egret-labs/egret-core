@@ -98,7 +98,7 @@ namespace egret {
          * @platform All
          * @language zh_CN
          */
-        const MYGAME = "mygame";
+        export const MYGAME = "mygame";
         /**
          * Running on WeChat mini game
          * @version Egret 5.1.5
