@@ -87,11 +87,13 @@ export class VivogamePlugin implements plugins.Command {
         let gameJSONContent = JSON.parse(fs.readFileSync(gameJSONPath, { encoding: "utf8" }));
         gameJSONContent.deviceOrientation = orientation;
         fs.writeFileSync(gameJSONPath, JSON.stringify(gameJSONContent, null, "\t"));
-
-        
+        let isPublish = pluginContext.buildConfig.command == "publish" ? true : false;
         let configOption = "webpackConf.externals = Object.assign(webpackConf.externals || {\n\t\t"
         for (var i = 0, len = this.jsFileList.length; i < len; i++) {
             let jsFile = this.jsFileList[i];
+            if(isPublish && jsFile == "main.js"){
+                jsFile = 'main.min.js'
+            }
             configOption += `"js/${jsFile}":"commonjs js/${jsFile}"`
             if (i < len - 1) {
                 configOption += ",\n\t\t"
