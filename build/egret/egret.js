@@ -17706,7 +17706,7 @@ var egret;
          * @platform All
          * @language zh_CN
          */
-        var MYGAME = "mygame";
+        RuntimeType.MYGAME = "mygame";
         /**
          * Running on WeChat mini game
          * @version Egret 5.1.5
