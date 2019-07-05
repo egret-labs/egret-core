@@ -251,25 +251,33 @@ namespace egret {
         /**
          * @private
          */
-        private imageLoader: ImageLoader
+        private imageLoader: ImageLoader;
+        /**
+         * @private
+         */
+        private virtualUrl: string;
         /**
          * @private
          *
          * @param loader
          */
         private loadTexture(loader: URLLoader): void {
-            let virtualUrl: string = loader._request.url;
+            this.virtualUrl = loader._request.url;
             let imageLoader: ImageLoader = new ImageLoader();
             this.imageLoader = imageLoader;
             imageLoader.addEventListener(egret.Event.COMPLETE, this.onImageLoadComplete, this);
             imageLoader.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onImageLoaderError, this);
             imageLoader.addEventListener(egret.ProgressEvent.PROGRESS, this.onImageLoaderPostProgress, this);
-            imageLoader.load(virtualUrl);
+            imageLoader.load(this.virtualUrl);
         }
         private onImageLoadComplete(event): void {
             this.removeImageLoaderListeners();
             let texture: Texture = new Texture();
-            texture.bitmapData = event.target.data;
+            let bitmapData = this.imageLoader.data;
+            if (bitmapData.source.setAttribute) {
+                bitmapData.source.setAttribute("bitmapSrc", this.virtualUrl);
+            }
+            texture._setBitmapData(bitmapData);
             this.data = texture;
             this.dispatchEventWith(Event.COMPLETE);
         }

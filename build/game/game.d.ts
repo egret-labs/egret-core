@@ -1488,6 +1488,10 @@ declare namespace egret {
         private imageLoader;
         /**
          * @private
+         */
+        private virtualUrl;
+        /**
+         * @private
          *
          * @param loader
          */

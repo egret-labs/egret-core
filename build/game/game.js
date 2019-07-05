@@ -2823,18 +2823,22 @@ var egret;
          * @param loader
          */
         URLLoader.prototype.loadTexture = function (loader) {
-            var virtualUrl = loader._request.url;
+            this.virtualUrl = loader._request.url;
             var imageLoader = new egret.ImageLoader();
             this.imageLoader = imageLoader;
             imageLoader.addEventListener(egret.Event.COMPLETE, this.onImageLoadComplete, this);
             imageLoader.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onImageLoaderError, this);
             imageLoader.addEventListener(egret.ProgressEvent.PROGRESS, this.onImageLoaderPostProgress, this);
-            imageLoader.load(virtualUrl);
+            imageLoader.load(this.virtualUrl);
         };
         URLLoader.prototype.onImageLoadComplete = function (event) {
             this.removeImageLoaderListeners();
             var texture = new egret.Texture();
-            texture.bitmapData = event.target.data;
+            var bitmapData = this.imageLoader.data;
+            if (bitmapData.source.setAttribute) {
+                bitmapData.source.setAttribute("bitmapSrc", this.virtualUrl);
+            }
+            texture._setBitmapData(bitmapData);
             this.data = texture;
             this.dispatchEventWith(egret.Event.COMPLETE);
         };
