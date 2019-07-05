@@ -13,8 +13,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
         while (_) try {
-            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [0, t.value];
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
                 case 0: case 1: t = op; break;
                 case 4: _.label++; return { value: op[1], done: false };
@@ -44,8 +44,7 @@ function buildBefore(context) {
             switch (_a.label) {
                 case 0:
                     target = egret.args.target;
-                    if (!(target != 'web')) return [3 /*break*/, 3];
-                    // target = 'qgame'
+                    if (!(target != 'web' && target != "mygame")) return [3 /*break*/, 3];
                     targetRoot = project_1.launcher.getLauncherLibrary().getTarget(target);
                     if (!targetRoot) {
                         throw "\u627E\u4E0D\u5230 target " + target + ",\u8BF7\u5728 Egret Launcher \u4E2D\u5B89\u88C5";
