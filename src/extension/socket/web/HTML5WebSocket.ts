@@ -90,7 +90,6 @@ namespace egret.web {
             };
             socket.onmessage = function (e) {
                 if (that.onSocketData) {
-                    console.log('socket message',e)
                     if(e.data){
                         that.onSocketData.call(that.thisObject, e.data);
                     }else{
