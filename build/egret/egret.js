@@ -16087,6 +16087,10 @@ var egret;
                  */
                 _this.fontFamily = "Arial";
                 /**
+                 * 使用纹理文字渲染机制
+                 */
+                _this.atlasRender = false;
+                /**
                  * 脏渲染标记
                  */
                 _this.dirtyRender = true;
@@ -19988,7 +19992,8 @@ var egret;
                 35: null,
                 36: null,
                 37: egret.TextFieldInputType.TEXT,
-                38: false //textLinesChangedForNativeRender
+                38: false,
+                39: false //atlasRender
             };
             return _this;
         }
@@ -21494,6 +21499,28 @@ var egret;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(TextField.prototype, "atlasRender", {
+            get: function () {
+                return this.$TextField[39 /* atlasRender */];
+            },
+            /**
+             * use atlasRender
+             * @version Egret 5.2.23
+             * @platform Web
+             * @language en_US
+             */
+            /**
+             * 使用纹理文字渲染机制
+             * @version Egret 5.2.23
+             * @platform Web
+             * @language zh_CN
+             */
+            set: function (value) {
+                this.$TextField[39 /* atlasRender */] = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
         /**
          * @private
          * @param text
@@ -21789,6 +21816,7 @@ var egret;
             node.stroke = values[27 /* stroke */];
             node.strokeColor = values[25 /* strokeColor */];
             node.textColor = values[2 /* textColor */];
+            node.atlasRender = values[39 /* atlasRender */];
             //先算出需要的数值
             var lines = this.$getLinesArr();
             if (values[5 /* textWidth */] == 0) {

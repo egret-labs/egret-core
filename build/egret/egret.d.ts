@@ -10341,6 +10341,10 @@ declare namespace egret.sys {
          */
         fontFamily: string;
         /**
+         * 使用纹理文字渲染机制
+         */
+        atlasRender: boolean;
+        /**
          * 绘制一行文本
          */
         drawText(x: number, y: number, text: string, format: TextFormat): void;
@@ -12397,6 +12401,10 @@ declare namespace egret.sys {
          * @private
          */
         textLinesChangedForNativeRender = 38,
+        /**
+         * @private
+         */
+        atlasRender = 39,
     }
 }
 declare namespace egret {
@@ -13127,6 +13135,19 @@ declare namespace egret {
          * @language zh_CN
          */
         readonly textHeight: number;
+        /**
+         * use atlasRender
+         * @version Egret 5.2.23
+         * @platform Web
+         * @language en_US
+         */
+        /**
+         * 使用纹理文字渲染机制
+         * @version Egret 5.2.23
+         * @platform Web
+         * @language zh_CN
+         */
+        atlasRender: boolean;
         /**
          * @private
          * @param text

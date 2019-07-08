@@ -899,9 +899,9 @@ namespace egret.web {
                         buffer.$offsetY = saveOffsetY + anchorY - (tb.measureHeight + (tb.stroke2 ? tb.canvasHeightOffset : 0)) / 2;
                         page = tb.line.page;
                         buffer.context.drawTexture(page.webGLTexture,
-                            tb.u, tb.v, tb.contentWidth, tb.contentHeight, 
+                            tb.u, tb.v, tb.contentWidth, tb.contentHeight,
                             0, 0, tb.contentWidth, tb.contentHeight,
-                             page.pageWidth, page.pageHeight);
+                            page.pageWidth, page.pageHeight);
 
                         buffer.$offsetX += (tb.contentWidth - tb.canvasWidthOffset);
                     }
@@ -917,7 +917,7 @@ namespace egret.web {
         }
 
         private renderText(node: sys.TextNode, buffer: WebGLRenderBuffer): void {
-            if (textAtlasRenderEnable) {
+            if (node.atlasRender) {
                 //新的文字渲染机制
                 this.___renderText____(node, buffer);
                 return;

@@ -43,36 +43,40 @@ namespace egret.sys {
         /**
          * 颜色值
          */
-        public textColor:number = 0xFFFFFF;
+        public textColor: number = 0xFFFFFF;
         /**
          * 描边颜色值
          */
-        public strokeColor:number = 0x000000;
+        public strokeColor: number = 0x000000;
         /**
          * 字号
          */
-        public size:number = 30;
+        public size: number = 30;
         /**
          * 描边大小
          */
-        public stroke:number = 0;
+        public stroke: number = 0;
         /**
          * 是否加粗
          */
-        public bold:boolean = false;
+        public bold: boolean = false;
         /**
          * 是否倾斜
          */
-        public italic:boolean = false;
+        public italic: boolean = false;
         /**
          * 字体名称
          */
-        public fontFamily:string = "Arial";
+        public fontFamily: string = "Arial";
+        /**
+         * 使用纹理文字渲染机制
+         */
+        public atlasRender: boolean = false;
 
         /**
          * 绘制一行文本
          */
-        public drawText(x:number, y:number, text:string, format:TextFormat):void {
+        public drawText(x: number, y: number, text: string, format: TextFormat): void {
             this.drawData.push(x, y, text, format);
             this.renderCount++;
             this.dirtyRender = true;
@@ -82,34 +86,34 @@ namespace egret.sys {
         /**
          * 绘制x偏移
          */
-        public x:number;
+        public x: number;
         /**
          * 绘制y偏移
          */
-        public y:number;
+        public y: number;
         /**
          * 绘制宽度
          */
-        public width:number;
+        public width: number;
         /**
          * 绘制高度
          */
-        public height:number;
+        public height: number;
         /**
          * 脏渲染标记
          */
-        public dirtyRender:boolean = true;
-        public $texture:WebGLTexture;
-        public $textureWidth:number;
-        public $textureHeight:number;
-        public $canvasScaleX:number;
-        public $canvasScaleY:number;
+        public dirtyRender: boolean = true;
+        public $texture: WebGLTexture;
+        public $textureWidth: number;
+        public $textureHeight: number;
+        public $canvasScaleX: number;
+        public $canvasScaleY: number;
 
         /**
          * 清除非绘制的缓存数据
          */
-        public clean():void {
-            if(this.$texture) {
+        public clean(): void {
+            if (this.$texture) {
                 WebGLUtils.deleteWebGLTexture(this.$texture);
                 this.$texture = null;
                 this.dirtyRender = true;
@@ -119,7 +123,7 @@ namespace egret.sys {
         /**
          * 在显示对象的$updateRenderNode()方法被调用前，自动清空自身的drawData数据。
          */
-        public cleanBeforeRender():void{
+        public cleanBeforeRender(): void {
             super.cleanBeforeRender();
             this.dirtyRender = true;
         }

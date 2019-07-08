@@ -187,7 +187,11 @@ namespace egret.sys {
         /**
          * @private
          */
-        textLinesChangedForNativeRender
+        textLinesChangedForNativeRender,
+        /**
+         * @private
+         */
+        atlasRender
     }
 }
 
@@ -327,7 +331,8 @@ namespace egret {
                 35: null,           //restrictAnd
                 36: null,           //restrictNot
                 37: TextFieldInputType.TEXT,            //inputType
-                38: false            //textLinesChangedForNativeRender
+                38: false,            //textLinesChangedForNativeRender
+                39: false //atlasRender
             };
         }
 
@@ -694,7 +699,7 @@ namespace egret {
                 this.$nativeDisplayObject.setWordWrap(value);
             }
         }
-        
+
         protected inputUtils: InputController = null;
 
         /**
@@ -1882,6 +1887,24 @@ namespace egret {
             }
             return TextFieldUtils.$getTextHeight(this);
         }
+        /**
+         * use atlasRender
+         * @version Egret 5.2.23
+         * @platform Web
+         * @language en_US
+         */
+        /**
+         * 使用纹理文字渲染机制
+         * @version Egret 5.2.23
+         * @platform Web
+         * @language zh_CN
+         */
+        public set atlasRender(value: boolean) {
+            this.$TextField[sys.TextKeys.atlasRender] = value;
+        }
+        public get atlasRender():boolean {
+            return this.$TextField[sys.TextKeys.atlasRender]
+        }
 
         /**
          * @private
@@ -2221,6 +2244,7 @@ namespace egret {
             node.stroke = values[sys.TextKeys.stroke];
             node.strokeColor = values[sys.TextKeys.strokeColor];
             node.textColor = values[sys.TextKeys.textColor];
+            node.atlasRender = values[sys.TextKeys.atlasRender];
             //先算出需要的数值
             let lines: Array<egret.ILineElement> = this.$getLinesArr();
             if (values[sys.TextKeys.textWidth] == 0) {

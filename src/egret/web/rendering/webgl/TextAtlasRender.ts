@@ -29,9 +29,6 @@
 
 namespace egret.web {
 
-    //测试开关,打开会截住老的字体渲染
-    export const textAtlasRenderEnable: boolean = false;
-
     //测试对象, 先不用singleton的，后续整理代码，就new一个，放在全局的context上做成员变量
     export let __textAtlasRender__: TextAtlasRender = null;
 

@@ -4051,6 +4051,7 @@ var egret;
                     all.style.left = this.panelX + 'px';
                     all.style.top = this.panelY + 'px';
                     all.style.pointerEvents = 'none';
+                    all.id = 'egret-fps-panel';
                     document.body.appendChild(all);
                     var container = document.createElement('div');
                     container.style.color = this.fontColor;
@@ -8167,7 +8168,7 @@ var egret;
                 node.dirtyRender = false;
             };
             WebGLRenderer.prototype.renderText = function (node, buffer) {
-                if (web.textAtlasRenderEnable) {
+                if (node.atlasRender) {
                     //新的文字渲染机制
                     this.___renderText____(node, buffer);
                     return;
@@ -8788,8 +8789,6 @@ var egret;
 (function (egret) {
     var web;
     (function (web) {
-        //测试开关,打开会截住老的字体渲染
-        web.textAtlasRenderEnable = false;
         //测试对象, 先不用singleton的，后续整理代码，就new一个，放在全局的context上做成员变量
         web.__textAtlasRender__ = null;
         //不想改TextNode的代码了，先用这种方式实现，以后稳了再改
