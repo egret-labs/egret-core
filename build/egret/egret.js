@@ -17662,6 +17662,19 @@ var egret;
          */
         RuntimeType.RUNTIME2 = "runtime2";
         /**
+         * Running on Alipay
+         * @version Egret 5.2.23
+         * @platform All
+         * @language en_US
+         */
+        /**
+         * 运行在支付宝小游戏上
+         * @version Egret 5.2.23
+         * @platform All
+         * @language zh_CN
+         */
+        RuntimeType.MYGAME = "mygame";
+        /**
          * Running on WeChat mini game
          * @version Egret 5.1.5
          * @platform All
@@ -17823,7 +17836,7 @@ var egret;
          * @platform Web,Native
          * @language zh_CN
          */
-        Capabilities.engineVersion = "5.2.22";
+        Capabilities.engineVersion = "5.2.23";
         /***
          * current render mode.
          * @type {string}

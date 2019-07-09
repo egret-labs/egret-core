@@ -4051,6 +4051,7 @@ var egret;
                     all.style.left = this.panelX + 'px';
                     all.style.top = this.panelY + 'px';
                     all.style.pointerEvents = 'none';
+                    all.id = 'egret-fps-panel';
                     document.body.appendChild(all);
                     var container = document.createElement('div');
                     container.style.color = this.fontColor;

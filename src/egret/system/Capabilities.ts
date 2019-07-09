@@ -87,6 +87,19 @@ namespace egret {
         export const RUNTIME2 = "runtime2";
 
         /**
+         * Running on Alipay
+         * @version Egret 5.2.23
+         * @platform All
+         * @language en_US
+         */
+        /**
+         * 运行在支付宝小游戏上
+         * @version Egret 5.2.23
+         * @platform All
+         * @language zh_CN
+         */
+        export const MYGAME = "mygame";
+        /**
          * Running on WeChat mini game
          * @version Egret 5.1.5
          * @platform All
@@ -271,7 +284,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static readonly engineVersion: string = "5.2.22";
+        public static readonly engineVersion: string = "5.2.23";
 
         /***
          * current render mode.
