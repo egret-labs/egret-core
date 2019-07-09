@@ -73,6 +73,7 @@ var UpgradeCommand = /** @class */ (function () {
                             { "v": "5.2.17", command: Upgrade_5_2_17 },
                             { "v": "5.2.19", command: Upgrade_5_2_19 },
                             { "v": "5.2.22", command: Upgrade_5_2_22 },
+                            { "v": "5.2.23", command: Upgrade_5_2_23 },
                             { "v": "5.2.24", command: Upgrade_5_2_24 }
                         ];
                         _a.label = 1;
@@ -236,6 +237,19 @@ var Upgrade_5_2_22 = /** @class */ (function () {
         });
     };
     return Upgrade_5_2_22;
+}());
+var Upgrade_5_2_23 = /** @class */ (function () {
+    function Upgrade_5_2_23() {
+    }
+    Upgrade_5_2_23.prototype.execute = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "vivogame"), path.join(egret.args.projectDir, "scripts", "vivogame"));
+                return [2 /*return*/, 0];
+            });
+        });
+    };
+    return Upgrade_5_2_23;
 }());
 var Upgrade_5_2_24 = /** @class */ (function () {
     function Upgrade_5_2_24() {
