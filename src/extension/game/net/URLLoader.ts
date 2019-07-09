@@ -244,9 +244,9 @@ namespace egret {
             this.dispatchEvent(event);
         }
         private removeSoundLoaderListeners(): void {
-            this.sound.addEventListener(egret.Event.COMPLETE, this.onSoundoadComplete, this);
-            this.sound.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onSoundLoaderError, this);
-            this.sound.addEventListener(egret.ProgressEvent.PROGRESS, this.onSoundLoaderPostProgress, this);
+            this.sound.removeEventListener(egret.Event.COMPLETE, this.onSoundoadComplete, this);
+            this.sound.removeEventListener(egret.IOErrorEvent.IO_ERROR, this.onSoundLoaderError, this);
+            this.sound.removeEventListener(egret.ProgressEvent.PROGRESS, this.onSoundLoaderPostProgress, this);
         }
         /**
          * @private
@@ -289,8 +289,8 @@ namespace egret {
         }
         private removeImageLoaderListeners(): void {
             this.imageLoader.removeEventListener(egret.Event.COMPLETE, this.onImageLoadComplete, this);
-            this.imageLoader.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onImageLoaderError, this);
-            this.imageLoader.addEventListener(egret.ProgressEvent.PROGRESS, this.onImageLoaderPostProgress, this);
+            this.imageLoader.removeEventListener(egret.IOErrorEvent.IO_ERROR, this.onImageLoaderError, this);
+            this.imageLoader.removeEventListener(egret.ProgressEvent.PROGRESS, this.onImageLoaderPostProgress, this);
         }
 
         /**
