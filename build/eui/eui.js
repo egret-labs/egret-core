@@ -11236,8 +11236,8 @@ var eui;
         };
         Label.prototype.$setFontFamily = function (value) {
             if (!this.$changeFromStyle) {
-                delete this.$revertStyle["fontFanily"];
-                this.$styleSetMap["fontFanily"] = false;
+                delete this.$revertStyle["fontFamily"];
+                this.$styleSetMap["fontFamily"] = false;
             }
             return _super.prototype.$setFontFamily.call(this, value);
         };
