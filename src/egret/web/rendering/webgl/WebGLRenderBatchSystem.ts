@@ -67,9 +67,6 @@ namespace egret.web {
             this.flush();
             console.log('EmptyBatchSystem stop');
         }
-
-        public flush(): void {
-        }
     }
 
     export class SpriteBatchSystem extends WebGLRenderBatchSystem {
@@ -86,9 +83,6 @@ namespace egret.web {
             this.flush();
             console.log('SpriteBatchSystem stop');
         }
-
-        public flush(): void {
-        }
     }
 
     export class MeshBatchSystem extends WebGLRenderBatchSystem {
@@ -104,9 +98,6 @@ namespace egret.web {
         public stop(): void {
             this.flush();
             console.log('MeshBatchSystem stop');
-        }
-
-        public flush(): void {
         }
     }
 }

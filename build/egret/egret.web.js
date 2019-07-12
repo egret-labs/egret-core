@@ -7077,8 +7077,6 @@ var egret;
                 this.flush();
                 console.log('EmptyBatchSystem stop');
             };
-            EmptyBatchSystem.prototype.flush = function () {
-            };
             return EmptyBatchSystem;
         }(WebGLRenderBatchSystem));
         web.EmptyBatchSystem = EmptyBatchSystem;
@@ -7095,8 +7093,6 @@ var egret;
                 this.flush();
                 console.log('SpriteBatchSystem stop');
             };
-            SpriteBatchSystem.prototype.flush = function () {
-            };
             return SpriteBatchSystem;
         }(WebGLRenderBatchSystem));
         web.SpriteBatchSystem = SpriteBatchSystem;
@@ -7112,8 +7108,6 @@ var egret;
             MeshBatchSystem.prototype.stop = function () {
                 this.flush();
                 console.log('MeshBatchSystem stop');
-            };
-            MeshBatchSystem.prototype.flush = function () {
             };
             return MeshBatchSystem;
         }(WebGLRenderBatchSystem));
