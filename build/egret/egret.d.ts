@@ -9679,6 +9679,10 @@ declare namespace egret.sys {
     /**
      * @private
      */
+    let __drawCall__: number;
+    /**
+     * @private
+     */
     let systemRenderer: SystemRenderer;
     /**
      * @private

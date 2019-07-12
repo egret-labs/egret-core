@@ -171,7 +171,9 @@ namespace egret.sys {
 
             let stage = this.stage;
             let t1 = egret.getTimer();
+            sys.__drawCall__ = 0;
             let drawCalls = stage.$displayList.drawToSurface();
+            drawCalls = sys.__drawCall__;
             let t2 = egret.getTimer();
             if (triggerByFrame && this.showFPS) {
                 fpsDisplay.update(drawCalls, t2 - t1, costTicker);

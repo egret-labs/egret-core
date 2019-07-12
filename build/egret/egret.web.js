@@ -6822,6 +6822,7 @@ var egret;
              * 画texture
              **/
             WebGLRenderContext.prototype.drawTextureElements = function (data, offset) {
+                ++egret.sys.__drawCall__;
                 return egret.sys.drawTextureElements(this, data, offset);
                 /*
                 let gl: any = this.context;
@@ -6841,6 +6842,7 @@ var egret;
                 // gl.bindTexture(gl.TEXTURE_2D, null);
                 var size = data.count * 3;
                 gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
+                ++egret.sys.__drawCall__;
                 return size;
             };
             /**
@@ -6868,6 +6870,7 @@ var egret;
                     gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
                     gl.colorMask(true, true, true, true);
                     gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+                    ++egret.sys.__drawCall__;
                 }
                 return size;
             };
@@ -6893,6 +6896,7 @@ var egret;
                         gl.stencilFunc(gl.EQUAL, level, 0xFF);
                         gl.colorMask(true, true, true, true);
                         gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+                        ++egret.sys.__drawCall__;
                     }
                 }
                 return size;
@@ -7713,14 +7717,21 @@ var egret;
                             case 1 /* NONE */:
                                 break;
                             case 2 /* FILTER */:
-                                drawCalls += this.drawWithFilter(child, buffer, offsetX2, offsetY2);
-                                break;
                             case 3 /* CLIP */:
-                                drawCalls += this.drawWithClip(child, buffer, offsetX2, offsetY2);
-                                break;
                             case 4 /* SCROLLRECT */:
-                                drawCalls += this.drawWithScrollRect(child, buffer, offsetX2, offsetY2);
+                                drawCalls += this.drawDisplayObjectAdvanced(child, buffer, offsetX2, offsetY2);
                                 break;
+                            /*
+                        case RenderMode.FILTER:
+                            drawCalls += this.drawWithFilter(child, buffer, offsetX2, offsetY2);
+                            break;
+                        case RenderMode.CLIP:
+                            drawCalls += this.drawWithClip(child, buffer, offsetX2, offsetY2);
+                            break;
+                        case RenderMode.SCROLLRECT:
+                            drawCalls += this.drawWithScrollRect(child, buffer, offsetX2, offsetY2);
+                            break;
+                            */
                             default:
                                 drawCalls += this.drawDisplayObject(child, buffer, offsetX2, offsetY2);
                                 break;
@@ -8139,14 +8150,21 @@ var egret;
                             case 1 /* NONE */:
                                 break;
                             case 2 /* FILTER */:
-                                drawCalls += this.drawWithFilter(child, buffer, 0, 0);
-                                break;
                             case 3 /* CLIP */:
-                                drawCalls += this.drawWithClip(child, buffer, 0, 0);
-                                break;
                             case 4 /* SCROLLRECT */:
-                                drawCalls += this.drawWithScrollRect(child, buffer, 0, 0);
+                                drawCalls += this.drawDisplayObjectAdvanced(child, buffer, 0, 0);
                                 break;
+                            /*
+                        case RenderMode.FILTER:
+                            drawCalls += this.drawWithFilter(child, buffer, 0, 0);
+                            break;
+                        case RenderMode.CLIP:
+                            drawCalls += this.drawWithClip(child, buffer, 0, 0);
+                            break;
+                        case RenderMode.SCROLLRECT:
+                            drawCalls += this.drawWithScrollRect(child, buffer, 0, 0);
+                            break;
+                            */
                             default:
                                 drawCalls += this.drawDisplayObject(child, buffer, 0, 0);
                                 break;
@@ -8625,6 +8643,32 @@ var egret;
                     buffer.$computeDrawCall = false;
                 }
                 return buffer;
+            };
+            /*
+            * 全部集中于这个函数里面，后续做整体重构和解决嵌套问题
+            */
+            WebGLRenderer.prototype.drawDisplayObjectAdvanced = function (displayObject, buffer, offsetX, offsetY, isStage) {
+                var webglctx = buffer.context;
+                webglctx.$flush();
+                var drawCalls = 0;
+                switch (displayObject.$renderMode) {
+                    case 1 /* NONE */:
+                        break;
+                    case 2 /* FILTER */:
+                        drawCalls += this.drawWithFilter(displayObject, buffer, offsetX, offsetY);
+                        break;
+                    case 3 /* CLIP */:
+                        drawCalls += this.drawWithClip(displayObject, buffer, offsetX, offsetY);
+                        break;
+                    case 4 /* SCROLLRECT */:
+                        drawCalls += this.drawWithScrollRect(displayObject, buffer, offsetX, offsetY);
+                        break;
+                    default:
+                        //drawCalls += this.drawDisplayObject(child, buffer, offsetX2, offsetY2);
+                        break;
+                }
+                webglctx.$flush();
+                return drawCalls;
             };
             return WebGLRenderer;
         }());

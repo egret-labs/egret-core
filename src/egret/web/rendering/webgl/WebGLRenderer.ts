@@ -193,6 +193,12 @@ namespace egret.web {
                         case RenderMode.NONE:
                             break;
                         case RenderMode.FILTER:
+                        case RenderMode.CLIP:
+                        case RenderMode.SCROLLRECT:
+                            drawCalls += this.drawDisplayObjectAdvanced(child, buffer, offsetX2, offsetY2);
+                            break;
+                            /*
+                        case RenderMode.FILTER:
                             drawCalls += this.drawWithFilter(child, buffer, offsetX2, offsetY2);
                             break;
                         case RenderMode.CLIP:
@@ -201,6 +207,7 @@ namespace egret.web {
                         case RenderMode.SCROLLRECT:
                             drawCalls += this.drawWithScrollRect(child, buffer, offsetX2, offsetY2);
                             break;
+                            */
                         default:
                             drawCalls += this.drawDisplayObject(child, buffer, offsetX2, offsetY2);
                             break;
@@ -646,6 +653,12 @@ namespace egret.web {
                         case RenderMode.NONE:
                             break;
                         case RenderMode.FILTER:
+                        case RenderMode.CLIP:
+                        case RenderMode.SCROLLRECT:
+                            drawCalls += this.drawDisplayObjectAdvanced(child, buffer, 0, 0);
+                            break;
+                            /*
+                        case RenderMode.FILTER:
                             drawCalls += this.drawWithFilter(child, buffer, 0, 0);
                             break;
                         case RenderMode.CLIP:
@@ -654,6 +667,7 @@ namespace egret.web {
                         case RenderMode.SCROLLRECT:
                             drawCalls += this.drawWithScrollRect(child, buffer, 0, 0);
                             break;
+                            */
                         default:
                             drawCalls += this.drawDisplayObject(child, buffer, 0, 0);
                             break;
@@ -1162,6 +1176,32 @@ namespace egret.web {
                 buffer.$computeDrawCall = false;
             }
             return buffer;
+        }
+        /*
+        * 全部集中于这个函数里面，后续做整体重构和解决嵌套问题
+        */
+        private drawDisplayObjectAdvanced(displayObject: DisplayObject, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number, isStage?: boolean): number {
+            const webglctx = buffer.context;
+            webglctx.$flush();
+            let drawCalls = 0;
+            switch (displayObject.$renderMode) {
+                case RenderMode.NONE:
+                    break;
+                case RenderMode.FILTER:
+                    drawCalls += this.drawWithFilter(displayObject, buffer, offsetX, offsetY);
+                    break;
+                case RenderMode.CLIP:
+                    drawCalls += this.drawWithClip(displayObject, buffer, offsetX, offsetY);
+                    break;
+                case RenderMode.SCROLLRECT:
+                    drawCalls += this.drawWithScrollRect(displayObject, buffer, offsetX, offsetY);
+                    break;
+                default:
+                    //drawCalls += this.drawDisplayObject(child, buffer, offsetX2, offsetY2);
+                    break;
+            }
+            webglctx.$flush();
+            return drawCalls;
         }
     }
 }

@@ -1100,6 +1100,7 @@ namespace egret.web {
          * 画texture
          **/
         private drawTextureElements(data: any, offset: number): number {
+            ++sys.__drawCall__;
             return egret.sys.drawTextureElements(this, data, offset);
             /*
             let gl: any = this.context;
@@ -1120,6 +1121,7 @@ namespace egret.web {
             // gl.bindTexture(gl.TEXTURE_2D, null);
             let size = data.count * 3;
             gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
+            ++sys.__drawCall__;
             return size;
         }
 
@@ -1154,6 +1156,8 @@ namespace egret.web {
                 gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
                 gl.colorMask(true, true, true, true);
                 gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+
+                ++sys.__drawCall__;
             }
 
             return size;
@@ -1185,6 +1189,8 @@ namespace egret.web {
                     gl.stencilFunc(gl.EQUAL, level, 0xFF);
                     gl.colorMask(true, true, true, true);
                     gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+
+                    ++sys.__drawCall__;
                 }
             }
 

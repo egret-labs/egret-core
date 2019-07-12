@@ -13870,7 +13870,9 @@ var egret;
                 }
                 var stage = this.stage;
                 var t1 = egret.getTimer();
+                sys.__drawCall__ = 0;
                 var drawCalls = stage.$displayList.drawToSurface();
+                drawCalls = sys.__drawCall__;
                 var t2 = egret.getTimer();
                 if (triggerByFrame && this.showFPS) {
                     fpsDisplay.update(drawCalls, t2 - t1, costTicker);
@@ -14673,6 +14675,10 @@ var egret;
 (function (egret) {
     var sys;
     (function (sys) {
+        /**
+         * @private
+         */
+        sys.__drawCall__ = 0;
         /**
          * 创建一个canvas。
          */
