@@ -119,7 +119,7 @@ namespace egret.web {
         /**
          * 顶点数组管理器
          */
-        private vao: WebGLVertexArrayObject;
+        private _vao: WebGLVertexArrayObject;
 
         /**
          * 绘制命令管理器
@@ -385,20 +385,20 @@ namespace egret.web {
 
         private initBatchSystems(): void {
             ///???
-            this.vao = this.vao || new WebGLVertexArrayObject(2048);
+            const spriteVAO = new WebGLVertexArrayObject(2048);
             //全部清除
             this.clearBatchSystems();
             //注册这个系统
-            const spriteBatchSystem = new SpriteBatchSystem(this, this.vao);
+            const spriteBatchSystem = new SpriteBatchSystem(this, spriteVAO);
             this.registerBatchSystemByRenderNodeType(sys.RenderNodeType.BitmapNode, spriteBatchSystem);
             this.registerBatchSystemByRenderNodeType(sys.RenderNodeType.TextNode, spriteBatchSystem);
             this.registerBatchSystemByRenderNodeType(sys.RenderNodeType.GraphicsNode, spriteBatchSystem);
             this.registerBatchSystemByRenderNodeType(sys.RenderNodeType.NormalBitmapNode, spriteBatchSystem);
             //注册mesh的系统
-            const meshBatchSystem = new MeshBatchSystem(this, this.vao);
+            const meshBatchSystem = new MeshBatchSystem(this, spriteVAO);
             this.registerBatchSystemByRenderNodeType(sys.RenderNodeType.MeshNode, meshBatchSystem);
             //默认空系统
-            const emptyBatchSystem = new EmptyBatchSystem(this, this.vao);
+            const emptyBatchSystem = new EmptyBatchSystem(this, spriteVAO);
             this.changeToBatchSystem(emptyBatchSystem);
         }
 
@@ -1351,6 +1351,10 @@ namespace egret.web {
             this.vao.cacheArrays(buffer, sourceX, sourceY, sourceWidth, sourceHeight,
                 destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight,
                 meshUVs, meshVertices, meshIndices, rotated);
+        }
+
+        public get vao(): WebGLVertexArrayObject {
+            return this.currentBatchSystem._vao;
         }
     }
 

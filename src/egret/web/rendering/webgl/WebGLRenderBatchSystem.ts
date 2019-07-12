@@ -32,7 +32,7 @@ namespace egret.web {
     export class WebGLRenderBatchSystem {
 
         private readonly _webglContext: WebGLRenderContext;
-        private readonly _vao: WebGLVertexArrayObject;
+        public readonly _vao: WebGLVertexArrayObject;
 
         constructor(_webglContext: WebGLRenderContext, _vao: WebGLVertexArrayObject) {
             this._webglContext = _webglContext;

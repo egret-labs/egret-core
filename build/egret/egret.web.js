@@ -5515,7 +5515,7 @@ var egret;
                 nextPow2Length = Math.min(this._verticesFloat32View.length, nextPow2Length);
                 var bufferView = this.sizeMatchBufferViewCache[nextPow2Length];
                 if (!bufferView) {
-                    bufferView = this.sizeMatchBufferViewCache[nextPow2Length] = new Float32Array(this._vertices, 0, 4 * nextPow2Length);
+                    bufferView = this.sizeMatchBufferViewCache[nextPow2Length] = new Float32Array(this._vertices, 0, nextPow2Length);
                 }
                 return bufferView;
             };
@@ -6187,20 +6187,20 @@ var egret;
             };
             WebGLRenderContext.prototype.initBatchSystems = function () {
                 ///???
-                this.vao = this.vao || new web.WebGLVertexArrayObject(2048);
+                var spriteVAO = new web.WebGLVertexArrayObject(2048);
                 //全部清除
                 this.clearBatchSystems();
                 //注册这个系统
-                var spriteBatchSystem = new web.SpriteBatchSystem(this, this.vao);
+                var spriteBatchSystem = new web.SpriteBatchSystem(this, spriteVAO);
                 this.registerBatchSystemByRenderNodeType(1 /* BitmapNode */, spriteBatchSystem);
                 this.registerBatchSystemByRenderNodeType(2 /* TextNode */, spriteBatchSystem);
                 this.registerBatchSystemByRenderNodeType(3 /* GraphicsNode */, spriteBatchSystem);
                 this.registerBatchSystemByRenderNodeType(6 /* NormalBitmapNode */, spriteBatchSystem);
                 //注册mesh的系统
-                var meshBatchSystem = new web.MeshBatchSystem(this, this.vao);
+                var meshBatchSystem = new web.MeshBatchSystem(this, spriteVAO);
                 this.registerBatchSystemByRenderNodeType(5 /* MeshNode */, meshBatchSystem);
                 //默认空系统
-                var emptyBatchSystem = new web.EmptyBatchSystem(this, this.vao);
+                var emptyBatchSystem = new web.EmptyBatchSystem(this, spriteVAO);
                 this.changeToBatchSystem(emptyBatchSystem);
             };
             WebGLRenderContext.prototype.handleContextLost = function () {
@@ -7023,6 +7023,13 @@ var egret;
             WebGLRenderContext.prototype.$cacheArrays = function (buffer, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices, rotated) {
                 this.vao.cacheArrays(buffer, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices, rotated);
             };
+            Object.defineProperty(WebGLRenderContext.prototype, "vao", {
+                get: function () {
+                    return this.currentBatchSystem._vao;
+                },
+                enumerable: true,
+                configurable: true
+            });
             WebGLRenderContext.glContextId = 0;
             WebGLRenderContext.blendModesForGL = null;
             return WebGLRenderContext;
