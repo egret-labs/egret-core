@@ -772,11 +772,11 @@ namespace egret.web {
             }
 
             if (meshVertices && meshIndices) {
-                if (this.vao.reachMaxSize(meshVertices.length / 2, meshIndices.length)) {
+                if (this.$reachMaxSize(meshVertices.length / 2, meshIndices.length)) {
                     this.$flush();//this.$drawWebGL();
                 }
             } else {
-                if (this.vao.reachMaxSize()) {
+                if (this.$reachMaxSize()) {
                     this.$flush();//this.$drawWebGL();
                 }
             }
@@ -807,7 +807,7 @@ namespace egret.web {
                 return;
             }
 
-            if (this.vao.reachMaxSize()) {
+            if (this.$reachMaxSize()) {
                 this.$flush();//this.$drawWebGL();
             }
 
@@ -825,7 +825,7 @@ namespace egret.web {
                 return;
             }
             buffer.$stencilList.push({ x, y, width, height });
-            if (this.vao.reachMaxSize()) {
+            if (this.$reachMaxSize()) {
                 this.$flush();//this.$drawWebGL();
             }
             this.drawCmdManager.pushPushMask();
@@ -844,7 +844,7 @@ namespace egret.web {
 
             let mask = buffer.$stencilList.pop();
 
-            if (this.vao.reachMaxSize()) {
+            if (this.$reachMaxSize()) {
                 this.$flush();//this.$drawWebGL();
             }
             this.drawCmdManager.pushPopMask();
@@ -1259,7 +1259,7 @@ namespace egret.web {
                 return;
             }
 
-            if (this.vao.reachMaxSize()) {
+            if (this.$reachMaxSize()) {
                 this.$flush();//this.$drawWebGL();
             }
 
@@ -1334,6 +1334,10 @@ namespace egret.web {
             WebGLRenderContext.blendModesForGL["lighter-in"] = [770, 771];
             WebGLRenderContext.blendModesForGL["destination-out"] = [0, 771];
             WebGLRenderContext.blendModesForGL["destination-in"] = [0, 770];
+        }
+
+        public $reachMaxSize(vertexCount: number = 4, indexCount: number = 6): boolean {
+            return this.vao.reachMaxSize(vertexCount, indexCount);
         }
     }
 

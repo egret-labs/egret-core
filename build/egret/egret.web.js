@@ -6528,12 +6528,12 @@ var egret;
                     return;
                 }
                 if (meshVertices && meshIndices) {
-                    if (this.vao.reachMaxSize(meshVertices.length / 2, meshIndices.length)) {
+                    if (this.$reachMaxSize(meshVertices.length / 2, meshIndices.length)) {
                         this.$flush(); //this.$drawWebGL();
                     }
                 }
                 else {
-                    if (this.vao.reachMaxSize()) {
+                    if (this.$reachMaxSize()) {
                         this.$flush(); //this.$drawWebGL();
                     }
                 }
@@ -6557,7 +6557,7 @@ var egret;
                 if (this.contextLost || !buffer) {
                     return;
                 }
-                if (this.vao.reachMaxSize()) {
+                if (this.$reachMaxSize()) {
                     this.$flush(); //this.$drawWebGL();
                 }
                 this.drawCmdManager.pushDrawRect();
@@ -6573,7 +6573,7 @@ var egret;
                     return;
                 }
                 buffer.$stencilList.push({ x: x, y: y, width: width, height: height });
-                if (this.vao.reachMaxSize()) {
+                if (this.$reachMaxSize()) {
                     this.$flush(); //this.$drawWebGL();
                 }
                 this.drawCmdManager.pushPushMask();
@@ -6589,7 +6589,7 @@ var egret;
                     return;
                 }
                 var mask = buffer.$stencilList.pop();
-                if (this.vao.reachMaxSize()) {
+                if (this.$reachMaxSize()) {
                     this.$flush(); //this.$drawWebGL();
                 }
                 this.drawCmdManager.pushPopMask();
@@ -6948,7 +6948,7 @@ var egret;
                 if (this.contextLost) {
                     return;
                 }
-                if (this.vao.reachMaxSize()) {
+                if (this.$reachMaxSize()) {
                     this.$flush(); //this.$drawWebGL();
                 }
                 this.pushBuffer(output);
@@ -7009,6 +7009,11 @@ var egret;
                 WebGLRenderContext.blendModesForGL["lighter-in"] = [770, 771];
                 WebGLRenderContext.blendModesForGL["destination-out"] = [0, 771];
                 WebGLRenderContext.blendModesForGL["destination-in"] = [0, 770];
+            };
+            WebGLRenderContext.prototype.$reachMaxSize = function (vertexCount, indexCount) {
+                if (vertexCount === void 0) { vertexCount = 4; }
+                if (indexCount === void 0) { indexCount = 6; }
+                return this.vao.reachMaxSize(vertexCount, indexCount);
             };
             WebGLRenderContext.glContextId = 0;
             WebGLRenderContext.blendModesForGL = null;
