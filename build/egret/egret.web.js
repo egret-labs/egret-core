@@ -6547,7 +6547,7 @@ var egret;
                 // 应用$filter，因为只可能是colorMatrixFilter，最后两个参数可不传
                 this.drawCmdManager.pushDrawTexture(texture, count, this.$filter, textureWidth, textureHeight);
                 buffer.currentTexture = texture;
-                this.vao.cacheArrays(buffer, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices, rotated);
+                this.$cacheArrays(buffer, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices, rotated);
             };
             /**
              * 绘制矩形（仅用于遮罩擦除等）
@@ -6562,7 +6562,7 @@ var egret;
                 }
                 this.drawCmdManager.pushDrawRect();
                 buffer.currentTexture = null;
-                this.vao.cacheArrays(buffer, 0, 0, width, height, x, y, width, height, width, height);
+                this.$cacheArrays(buffer, 0, 0, width, height, x, y, width, height, width, height);
             };
             /**
              * 绘制遮罩
@@ -6578,7 +6578,7 @@ var egret;
                 }
                 this.drawCmdManager.pushPushMask();
                 buffer.currentTexture = null;
-                this.vao.cacheArrays(buffer, 0, 0, width, height, x, y, width, height, width, height);
+                this.$cacheArrays(buffer, 0, 0, width, height, x, y, width, height, width, height);
             };
             /**
              * 恢复遮罩
@@ -6594,7 +6594,7 @@ var egret;
                 }
                 this.drawCmdManager.pushPopMask();
                 buffer.currentTexture = null;
-                this.vao.cacheArrays(buffer, 0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
+                this.$cacheArrays(buffer, 0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
             };
             /**
              * 清除颜色缓存
@@ -6976,7 +6976,7 @@ var egret;
                 output.saveTransform();
                 output.transform(1, 0, 0, -1, 0, height);
                 output.currentTexture = input.rootRenderTarget.texture;
-                this.vao.cacheArrays(output, 0, 0, width, height, 0, 0, width, height, width, height);
+                this.$cacheArrays(output, 0, 0, width, height, 0, 0, width, height, width, height);
                 output.restoreTransform();
                 this.drawCmdManager.pushDrawTexture(input.rootRenderTarget.texture, 2, filter, width, height);
                 // 释放掉input
@@ -7014,6 +7014,9 @@ var egret;
                 if (vertexCount === void 0) { vertexCount = 4; }
                 if (indexCount === void 0) { indexCount = 6; }
                 return this.vao.reachMaxSize(vertexCount, indexCount);
+            };
+            WebGLRenderContext.prototype.$cacheArrays = function (buffer, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices, rotated) {
+                this.vao.cacheArrays(buffer, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices, rotated);
             };
             WebGLRenderContext.glContextId = 0;
             WebGLRenderContext.blendModesForGL = null;

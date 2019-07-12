@@ -793,7 +793,7 @@ namespace egret.web {
             // 应用$filter，因为只可能是colorMatrixFilter，最后两个参数可不传
             this.drawCmdManager.pushDrawTexture(texture, count, this.$filter, textureWidth, textureHeight);
             buffer.currentTexture = texture;
-            this.vao.cacheArrays(buffer, sourceX, sourceY, sourceWidth, sourceHeight,
+            this.$cacheArrays(buffer, sourceX, sourceY, sourceWidth, sourceHeight,
                 destX, destY, destWidth, destHeight, textureWidth, textureHeight,
                 meshUVs, meshVertices, meshIndices, rotated);
         }
@@ -813,7 +813,7 @@ namespace egret.web {
 
             this.drawCmdManager.pushDrawRect();
             buffer.currentTexture = null;
-            this.vao.cacheArrays(buffer, 0, 0, width, height, x, y, width, height, width, height);
+            this.$cacheArrays(buffer, 0, 0, width, height, x, y, width, height, width, height);
         }
 
         /**
@@ -830,7 +830,7 @@ namespace egret.web {
             }
             this.drawCmdManager.pushPushMask();
             buffer.currentTexture = null;
-            this.vao.cacheArrays(buffer, 0, 0, width, height, x, y, width, height, width, height);
+            this.$cacheArrays(buffer, 0, 0, width, height, x, y, width, height, width, height);
         }
 
         /**
@@ -849,7 +849,7 @@ namespace egret.web {
             }
             this.drawCmdManager.pushPopMask();
             buffer.currentTexture = null;
-            this.vao.cacheArrays(buffer, 0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
+            this.$cacheArrays(buffer, 0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
         }
 
         /**
@@ -1295,7 +1295,7 @@ namespace egret.web {
             output.saveTransform();
             output.transform(1, 0, 0, -1, 0, height);
             output.currentTexture = input.rootRenderTarget.texture;
-            this.vao.cacheArrays(output, 0, 0, width, height, 0, 0, width, height, width, height);
+            this.$cacheArrays(output, 0, 0, width, height, 0, 0, width, height, width, height);
             output.restoreTransform();
 
             this.drawCmdManager.pushDrawTexture(input.rootRenderTarget.texture, 2, filter, width, height);
@@ -1338,6 +1338,15 @@ namespace egret.web {
 
         public $reachMaxSize(vertexCount: number = 4, indexCount: number = 6): boolean {
             return this.vao.reachMaxSize(vertexCount, indexCount);
+        }
+
+        public $cacheArrays(buffer: WebGLRenderBuffer, sourceX: number, sourceY: number, sourceWidth: number, sourceHeight: number,
+            destX: number, destY: number, destWidth: number, destHeight: number, textureSourceWidth: number, textureSourceHeight: number,
+            meshUVs?: number[], meshVertices?: number[], meshIndices?: number[], rotated?: boolean): void {
+
+            this.vao.cacheArrays(buffer, sourceX, sourceY, sourceWidth, sourceHeight,
+                destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight,
+                meshUVs, meshVertices, meshIndices, rotated);
         }
     }
 
