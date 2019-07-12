@@ -236,6 +236,8 @@ namespace egret.web {
                 return;
             }
 
+            
+
             this.initWebGL();
 
             this.$bufferStack = [];
@@ -248,7 +250,7 @@ namespace egret.web {
 
             this.drawCmdManager = new WebGLDrawCmdManager();
 
-            this.vao = new WebGLVertexArrayObject();
+            
 
             this.setGlobalCompositeOperation("source-over");
         }
@@ -382,19 +384,21 @@ namespace egret.web {
         }
 
         private initBatchSystems(): void {
+            ///???
+            this.vao = this.vao || new WebGLVertexArrayObject(2048);
             //全部清除
             this.clearBatchSystems();
             //注册这个系统
-            const spriteBatchSystem = new SpriteBatchSystem(this);
+            const spriteBatchSystem = new SpriteBatchSystem(this, this.vao);
             this.registerBatchSystemByRenderNodeType(sys.RenderNodeType.BitmapNode, spriteBatchSystem);
             this.registerBatchSystemByRenderNodeType(sys.RenderNodeType.TextNode, spriteBatchSystem);
             this.registerBatchSystemByRenderNodeType(sys.RenderNodeType.GraphicsNode, spriteBatchSystem);
             this.registerBatchSystemByRenderNodeType(sys.RenderNodeType.NormalBitmapNode, spriteBatchSystem);
             //注册mesh的系统
-            const meshBatchSystem = new MeshBatchSystem(this);
+            const meshBatchSystem = new MeshBatchSystem(this, this.vao);
             this.registerBatchSystemByRenderNodeType(sys.RenderNodeType.MeshNode, meshBatchSystem);
             //默认空系统
-            const emptyBatchSystem = new EmptyBatchSystem(this);
+            const emptyBatchSystem = new EmptyBatchSystem(this, this.vao);
             this.changeToBatchSystem(emptyBatchSystem);
         }
 

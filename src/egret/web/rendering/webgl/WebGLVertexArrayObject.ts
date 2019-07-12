@@ -69,7 +69,11 @@ namespace egret.web {
         private _verticesFloat32View: Float32Array = null;
         private _verticesUint32View: Uint32Array = null;
 
-        constructor() {
+        constructor(maxQuadsCount: number) {
+            ///
+            this.maxQuadsCount = maxQuadsCount;
+            this.maxVertexCount = maxQuadsCount * 4;
+            this.maxIndicesCount = maxQuadsCount * 6;
             //old
             const numVerts = this.maxVertexCount * this.vertSize;
             this.vertices = new Float32Array(numVerts);

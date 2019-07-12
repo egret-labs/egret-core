@@ -5425,7 +5425,7 @@ var egret;
          * 用来维护顶点数组
          */
         var WebGLVertexArrayObject = (function () {
-            function WebGLVertexArrayObject() {
+            function WebGLVertexArrayObject(maxQuadsCount) {
                 /*定义顶点格式
                 * (x: 8 * 4 = 32) + (y: 8 * 4 = 32) + (u: 8 * 4 = 32) + (v: 8 * 4 = 32) + (tintcolor: 8 * 4 = 32) = (8 * 4 = 32) * (x + y + u + v + tintcolor: 5);
                 */
@@ -5461,6 +5461,10 @@ var egret;
         
                  */
                 this.sizeMatchBufferViewCache = {};
+                ///
+                this.maxQuadsCount = maxQuadsCount;
+                this.maxVertexCount = maxQuadsCount * 4;
+                this.maxIndicesCount = maxQuadsCount * 6;
                 //old
                 var numVerts = this.maxVertexCount * this.vertSize;
                 this.vertices = new Float32Array(numVerts);
@@ -5968,7 +5972,6 @@ var egret;
                 gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
                 this.drawCmdManager = new web.WebGLDrawCmdManager();
-                this.vao = new web.WebGLVertexArrayObject();
                 this.setGlobalCompositeOperation("source-over");
             }
             WebGLRenderContext.prototype.clearBatchSystems = function () {
@@ -6183,19 +6186,21 @@ var egret;
                 this.initBatchSystems();
             };
             WebGLRenderContext.prototype.initBatchSystems = function () {
+                ///???
+                this.vao = this.vao || new web.WebGLVertexArrayObject(2048);
                 //全部清除
                 this.clearBatchSystems();
                 //注册这个系统
-                var spriteBatchSystem = new web.SpriteBatchSystem(this);
+                var spriteBatchSystem = new web.SpriteBatchSystem(this, this.vao);
                 this.registerBatchSystemByRenderNodeType(1 /* BitmapNode */, spriteBatchSystem);
                 this.registerBatchSystemByRenderNodeType(2 /* TextNode */, spriteBatchSystem);
                 this.registerBatchSystemByRenderNodeType(3 /* GraphicsNode */, spriteBatchSystem);
                 this.registerBatchSystemByRenderNodeType(6 /* NormalBitmapNode */, spriteBatchSystem);
                 //注册mesh的系统
-                var meshBatchSystem = new web.MeshBatchSystem(this);
+                var meshBatchSystem = new web.MeshBatchSystem(this, this.vao);
                 this.registerBatchSystemByRenderNodeType(5 /* MeshNode */, meshBatchSystem);
                 //默认空系统
-                var emptyBatchSystem = new web.EmptyBatchSystem(this);
+                var emptyBatchSystem = new web.EmptyBatchSystem(this, this.vao);
                 this.changeToBatchSystem(emptyBatchSystem);
             };
             WebGLRenderContext.prototype.handleContextLost = function () {
@@ -7060,8 +7065,9 @@ var egret;
     var web;
     (function (web) {
         var WebGLRenderBatchSystem = (function () {
-            function WebGLRenderBatchSystem(_webglContext) {
+            function WebGLRenderBatchSystem(_webglContext, _vao) {
                 this._webglContext = _webglContext;
+                this._vao = _vao;
             }
             WebGLRenderBatchSystem.prototype.start = function () {
             };
@@ -7079,9 +7085,12 @@ var egret;
         __reflect(WebGLRenderBatchSystem.prototype, "egret.web.WebGLRenderBatchSystem");
         var EmptyBatchSystem = (function (_super) {
             __extends(EmptyBatchSystem, _super);
-            function EmptyBatchSystem(_webglContext) {
-                return _super.call(this, _webglContext) || this;
+            function EmptyBatchSystem() {
+                return _super !== null && _super.apply(this, arguments) || this;
             }
+            // constructor(_webglContext: WebGLRenderContext) {
+            //     super(_webglContext);
+            // }
             EmptyBatchSystem.prototype.start = function () {
                 console.log('EmptyBatchSystem start');
             };
@@ -7095,9 +7104,12 @@ var egret;
         __reflect(EmptyBatchSystem.prototype, "egret.web.EmptyBatchSystem");
         var SpriteBatchSystem = (function (_super) {
             __extends(SpriteBatchSystem, _super);
-            function SpriteBatchSystem(_webglContext) {
-                return _super.call(this, _webglContext) || this;
+            function SpriteBatchSystem() {
+                return _super !== null && _super.apply(this, arguments) || this;
             }
+            // constructor(_webglContext: WebGLRenderContext) {
+            //     super(_webglContext);
+            // }
             SpriteBatchSystem.prototype.start = function () {
                 console.log('SpriteBatchSystem start');
             };
@@ -7111,9 +7123,12 @@ var egret;
         __reflect(SpriteBatchSystem.prototype, "egret.web.SpriteBatchSystem");
         var MeshBatchSystem = (function (_super) {
             __extends(MeshBatchSystem, _super);
-            function MeshBatchSystem(_webglContext) {
-                return _super.call(this, _webglContext) || this;
+            function MeshBatchSystem() {
+                return _super !== null && _super.apply(this, arguments) || this;
             }
+            // constructor(_webglContext: WebGLRenderContext) {
+            //     super(_webglContext);
+            // }
             MeshBatchSystem.prototype.start = function () {
                 console.log('MeshBatchSystem start');
             };

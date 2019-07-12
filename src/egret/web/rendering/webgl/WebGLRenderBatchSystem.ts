@@ -32,9 +32,11 @@ namespace egret.web {
     export class WebGLRenderBatchSystem {
 
         private readonly _webglContext: WebGLRenderContext;
+        private readonly _vao: WebGLVertexArrayObject;
 
-        constructor(_webglContext: WebGLRenderContext) {
+        constructor(_webglContext: WebGLRenderContext, _vao: WebGLVertexArrayObject) {
             this._webglContext = _webglContext;
+            this._vao = _vao;
         }
 
         public start(): void {
@@ -55,9 +57,9 @@ namespace egret.web {
 
     export class EmptyBatchSystem extends WebGLRenderBatchSystem {
 
-        constructor(_webglContext: WebGLRenderContext) {
-            super(_webglContext);
-        }
+        // constructor(_webglContext: WebGLRenderContext) {
+        //     super(_webglContext);
+        // }
 
         public start(): void {
             console.log('EmptyBatchSystem start');
@@ -71,9 +73,9 @@ namespace egret.web {
 
     export class SpriteBatchSystem extends WebGLRenderBatchSystem {
 
-        constructor(_webglContext: WebGLRenderContext) {
-            super(_webglContext);
-        }
+        // constructor(_webglContext: WebGLRenderContext) {
+        //     super(_webglContext);
+        // }
 
         public start(): void {
             console.log('SpriteBatchSystem start');
@@ -87,9 +89,9 @@ namespace egret.web {
 
     export class MeshBatchSystem extends WebGLRenderBatchSystem {
 
-        constructor(_webglContext: WebGLRenderContext) {
-            super(_webglContext);
-        }
+        // constructor(_webglContext: WebGLRenderContext) {
+        //     super(_webglContext);
+        // }
 
         public start(): void {
             console.log('MeshBatchSystem start');
