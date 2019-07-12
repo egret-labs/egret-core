@@ -68,6 +68,7 @@ namespace egret.web {
         private _vertices: ArrayBuffer = null;
         private _verticesFloat32View: Float32Array = null;
         private _verticesUint32View: Uint32Array = null;
+        public debugName: string = '';
 
         constructor(maxQuadsCount: number) {
             ///

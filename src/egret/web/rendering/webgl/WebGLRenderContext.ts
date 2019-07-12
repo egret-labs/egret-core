@@ -386,6 +386,9 @@ namespace egret.web {
         private initBatchSystems(): void {
             ///???
             const spriteVAO = new WebGLVertexArrayObject(2048);
+            spriteVAO.debugName = 'spriteVAO';
+            const meshVAO = new WebGLVertexArrayObject(1024);
+            meshVAO.debugName = 'meshVAO';
             //全部清除
             this.clearBatchSystems();
             //注册这个系统
@@ -395,7 +398,7 @@ namespace egret.web {
             this.registerBatchSystemByRenderNodeType(sys.RenderNodeType.GraphicsNode, spriteBatchSystem);
             this.registerBatchSystemByRenderNodeType(sys.RenderNodeType.NormalBitmapNode, spriteBatchSystem);
             //注册mesh的系统
-            const meshBatchSystem = new MeshBatchSystem(this, spriteVAO);
+            const meshBatchSystem = new MeshBatchSystem(this, meshVAO);
             this.registerBatchSystemByRenderNodeType(sys.RenderNodeType.MeshNode, meshBatchSystem);
             //默认空系统
             const emptyBatchSystem = new EmptyBatchSystem(this, spriteVAO);

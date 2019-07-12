@@ -5455,6 +5455,7 @@ var egret;
                 this._vertices = null;
                 this._verticesFloat32View = null;
                 this._verticesUint32View = null;
+                this.debugName = '';
                 /**
                  * 获取缓存完成的顶点数组
                  * sizeMatchingBufferCache
@@ -6188,6 +6189,9 @@ var egret;
             WebGLRenderContext.prototype.initBatchSystems = function () {
                 ///???
                 var spriteVAO = new web.WebGLVertexArrayObject(2048);
+                spriteVAO.debugName = 'spriteVAO';
+                var meshVAO = new web.WebGLVertexArrayObject(1024);
+                meshVAO.debugName = 'meshVAO';
                 //全部清除
                 this.clearBatchSystems();
                 //注册这个系统
@@ -6197,7 +6201,7 @@ var egret;
                 this.registerBatchSystemByRenderNodeType(3 /* GraphicsNode */, spriteBatchSystem);
                 this.registerBatchSystemByRenderNodeType(6 /* NormalBitmapNode */, spriteBatchSystem);
                 //注册mesh的系统
-                var meshBatchSystem = new web.MeshBatchSystem(this, spriteVAO);
+                var meshBatchSystem = new web.MeshBatchSystem(this, meshVAO);
                 this.registerBatchSystemByRenderNodeType(5 /* MeshNode */, meshBatchSystem);
                 //默认空系统
                 var emptyBatchSystem = new web.EmptyBatchSystem(this, spriteVAO);
@@ -7077,12 +7081,15 @@ var egret;
                 this._vao = _vao;
             }
             WebGLRenderBatchSystem.prototype.start = function () {
+                this._vao.clear();
             };
             WebGLRenderBatchSystem.prototype.stop = function () {
                 this.flush();
             };
             WebGLRenderBatchSystem.prototype.flush = function () {
+                //this._vao.bind();
                 this._webglContext.$drawWebGL();
+                this._vao.clear();
             };
             WebGLRenderBatchSystem.prototype.render = function () {
             };
@@ -7095,16 +7102,6 @@ var egret;
             function EmptyBatchSystem() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-            // constructor(_webglContext: WebGLRenderContext) {
-            //     super(_webglContext);
-            // }
-            EmptyBatchSystem.prototype.start = function () {
-                console.log('EmptyBatchSystem start');
-            };
-            EmptyBatchSystem.prototype.stop = function () {
-                this.flush();
-                console.log('EmptyBatchSystem stop');
-            };
             return EmptyBatchSystem;
         }(WebGLRenderBatchSystem));
         web.EmptyBatchSystem = EmptyBatchSystem;
@@ -7114,15 +7111,11 @@ var egret;
             function SpriteBatchSystem() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-            // constructor(_webglContext: WebGLRenderContext) {
-            //     super(_webglContext);
-            // }
             SpriteBatchSystem.prototype.start = function () {
-                console.log('SpriteBatchSystem start');
+                _super.prototype.start.call(this);
             };
             SpriteBatchSystem.prototype.stop = function () {
-                this.flush();
-                console.log('SpriteBatchSystem stop');
+                _super.prototype.stop.call(this);
             };
             return SpriteBatchSystem;
         }(WebGLRenderBatchSystem));
@@ -7133,15 +7126,11 @@ var egret;
             function MeshBatchSystem() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-            // constructor(_webglContext: WebGLRenderContext) {
-            //     super(_webglContext);
-            // }
             MeshBatchSystem.prototype.start = function () {
-                console.log('MeshBatchSystem start');
+                _super.prototype.start.call(this);
             };
             MeshBatchSystem.prototype.stop = function () {
-                this.flush();
-                console.log('MeshBatchSystem stop');
+                _super.prototype.stop.call(this);
             };
             return MeshBatchSystem;
         }(WebGLRenderBatchSystem));

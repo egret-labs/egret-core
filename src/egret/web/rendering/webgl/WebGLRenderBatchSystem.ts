@@ -40,6 +40,7 @@ namespace egret.web {
         }
 
         public start(): void {
+            this._vao.clear();
         }
 
         public stop(): void {
@@ -47,7 +48,9 @@ namespace egret.web {
         }
 
         public flush(): void {
+            //this._vao.bind();
             this._webglContext.$drawWebGL();
+            this._vao.clear();
         }
 
         public render(): void {
@@ -56,50 +59,27 @@ namespace egret.web {
     }
 
     export class EmptyBatchSystem extends WebGLRenderBatchSystem {
-
-        // constructor(_webglContext: WebGLRenderContext) {
-        //     super(_webglContext);
-        // }
-
-        public start(): void {
-            console.log('EmptyBatchSystem start');
-        }
-
-        public stop(): void {
-            this.flush();
-            console.log('EmptyBatchSystem stop');
-        }
     }
 
     export class SpriteBatchSystem extends WebGLRenderBatchSystem {
 
-        // constructor(_webglContext: WebGLRenderContext) {
-        //     super(_webglContext);
-        // }
-
         public start(): void {
-            console.log('SpriteBatchSystem start');
+            super.start();
         }
 
         public stop(): void {
-            this.flush();
-            console.log('SpriteBatchSystem stop');
+            super.stop();
         }
     }
 
     export class MeshBatchSystem extends WebGLRenderBatchSystem {
 
-        // constructor(_webglContext: WebGLRenderContext) {
-        //     super(_webglContext);
-        // }
-
         public start(): void {
-            console.log('MeshBatchSystem start');
+            super.start();
         }
 
         public stop(): void {
-            this.flush();
-            console.log('MeshBatchSystem stop');
+            super.stop();
         }
     }
 }
