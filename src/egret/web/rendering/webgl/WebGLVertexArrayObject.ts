@@ -38,58 +38,61 @@ namespace egret.web {
         /*定义顶点格式
         * (x: 8 * 4 = 32) + (y: 8 * 4 = 32) + (u: 8 * 4 = 32) + (v: 8 * 4 = 32) + (tintcolor: 8 * 4 = 32) = (8 * 4 = 32) * (x + y + u + v + tintcolor: 5);
         */
-        private readonly vertSize: number = 5;
-        private readonly vertByteSize = this.vertSize * 4;
+        private readonly _vertSize: number = 5;
+        private readonly _vertByteSize = this._vertSize * 4;
         /*
         *最多单次提交maxQuadsCount这么多quad
         */
-        private readonly maxQuadsCount: number = 2048;
+        private readonly _maxQuadsCount: number = 2048;
         /*
         *quad = 4个Vertex
         */
-        private readonly maxVertexCount: number = this.maxQuadsCount * 4;
+        private readonly _maxVertexCount: number = this._maxQuadsCount * 4;
         /*
         *配套的Indices = quad * 6. 
         */
-        private readonly maxIndicesCount: number = this.maxQuadsCount * 6;
+        private readonly _maxIndicesCount: number = this._maxQuadsCount * 6;
 
-        private readonly vertices: Float32Array = null;
-        private readonly indices: Uint16Array = null;
-        private readonly indicesForMesh: Uint16Array = null;
+        //private readonly vertices: Float32Array = null;
+        private readonly _indexArrayBuffer: Uint16Array;
+        //private readonly indicesForMesh: Uint16Array = null;
 
-        private vertexIndex: number = 0;
-        private indexIndex: number = 0;
+        private _vertexIndex: number = 0;
+        private _indexIndex: number = 0;
 
-        private hasMesh: boolean = false;
+        //private hasMesh: boolean = false;
 
         /*
         * refactor: 
         */
-        private readonly _vertices: ArrayBuffer = null;
-        private readonly _verticesFloat32View: Float32Array = null;
-        private readonly _verticesUint32View: Uint32Array = null;
+        private readonly _vertices: ArrayBuffer;
+        private readonly _verticesFloat32View: Float32Array;
+        private readonly _verticesUint32View: Uint32Array;
         private readonly _name: string = '';
         private readonly _webGLRenderContext: WebGLRenderContext;
         private _indexBufferId: number = 0;
         private _currentIndexBufferId: number = 0;
         private readonly _indexBufferUsage: number = 0;
+        private _webglVertexBuffer: WebGLBuffer;
+        private _webglIndexBuffer: WebGLBuffer;
+        private _sizeMatchVertexBufferCache: { [index: number]: Float32Array } = {};
 
         constructor(webGLRenderContext: WebGLRenderContext, maxQuadsCount: number, indexBufferUsage: number, name: string) {
             ///
             this._webGLRenderContext = webGLRenderContext;
-            this.maxQuadsCount = maxQuadsCount;
-            this.maxVertexCount = maxQuadsCount * 4;
-            this.maxIndicesCount = maxQuadsCount * 6;
+            this._maxQuadsCount = maxQuadsCount;
+            this._maxVertexCount = maxQuadsCount * 4;
+            this._maxIndicesCount = maxQuadsCount * 6;
             this._indexBufferUsage = indexBufferUsage;
             this._name = name;
             //old
-            const numVerts = this.maxVertexCount * this.vertSize;
-            this.vertices = new Float32Array(numVerts);
+            //const numVerts = this.maxVertexCount * this.vertSize;
+            //this.vertices = new Float32Array(numVerts);
             ///
-            this._vertices = new ArrayBuffer(this.maxVertexCount * this.vertByteSize);
+            this._vertices = new ArrayBuffer(this._maxVertexCount * this._vertByteSize);
             this._verticesFloat32View = new Float32Array(this._vertices);
             this._verticesUint32View = new Uint32Array(this._vertices);
-            this.vertices = this._verticesFloat32View;
+            //this.vertices = this._verticesFloat32View;
             //索引缓冲，最大索引数
             /*
             0-------1
@@ -100,16 +103,16 @@ namespace egret.web {
             0->2->3 
             两个三角形
             */
-            const maxIndicesCount = this.maxIndicesCount;
-            this.indices = new Uint16Array(maxIndicesCount);
-            this.indicesForMesh = this.indices;//new Uint16Array(maxIndicesCount);
+            const maxIndicesCount = this._maxIndicesCount;
+            this._indexArrayBuffer = new Uint16Array(maxIndicesCount);
+            //this.indicesForMesh = this.indices;//new Uint16Array(maxIndicesCount);
             for (let i = 0, j = 0; i < maxIndicesCount; i += 6, j += 4) {
-                this.indices[i + 0] = j + 0;
-                this.indices[i + 1] = j + 1;
-                this.indices[i + 2] = j + 2;
-                this.indices[i + 3] = j + 0;
-                this.indices[i + 4] = j + 2;
-                this.indices[i + 5] = j + 3;
+                this._indexArrayBuffer[i + 0] = j + 0;
+                this._indexArrayBuffer[i + 1] = j + 1;
+                this._indexArrayBuffer[i + 2] = j + 2;
+                this._indexArrayBuffer[i + 3] = j + 0;
+                this._indexArrayBuffer[i + 4] = j + 2;
+                this._indexArrayBuffer[i + 5] = j + 3;
             }
             ++this._indexBufferId;
         }
@@ -118,7 +121,7 @@ namespace egret.web {
          * 是否达到最大缓存数量
          */
         public reachMaxSize(vertexCount: number = 4, indexCount: number = 6): boolean {
-            return this.vertexIndex > this.maxVertexCount - vertexCount || this.indexIndex > this.maxIndicesCount - indexCount;
+            return this._vertexIndex > this._maxVertexCount - vertexCount || this._indexIndex > this._maxIndicesCount - indexCount;
         }
 
         /**
@@ -126,9 +129,8 @@ namespace egret.web {
          * sizeMatchingBufferCache
 
          */
-        private sizeMatchVertexBufferCache: { [index: number]: Float32Array } = {};
-        public getVertices(): Float32Array {
-            const length = this.vertexIndex * this.vertSize;
+        private getVertexArrayBuffer(): Float32Array {
+            const length = this._vertexIndex * this._vertSize;
             //旧有的subarray从给定的起始位置返回一个新的Float32Array,每次都是创建新对象，不是最优，时间长了容易引起gc.
             //let view = this.vertices.subarray(0, length);
             //return view;
@@ -137,48 +139,48 @@ namespace egret.web {
             */
             let nextPow2Length = NumberUtils.nextPow2(length);
             nextPow2Length = Math.min(this._verticesFloat32View.length, nextPow2Length);
-            let bufferView = this.sizeMatchVertexBufferCache[nextPow2Length];
+            let bufferView = this._sizeMatchVertexBufferCache[nextPow2Length];
             if (!bufferView) {
-                bufferView = this.sizeMatchVertexBufferCache[nextPow2Length] = new Float32Array(this._vertices, 0, nextPow2Length);
+                bufferView = this._sizeMatchVertexBufferCache[nextPow2Length] = new Float32Array(this._vertices, 0, nextPow2Length);
             }
             return bufferView;
         }
 
         public clearSizeMatchBuffersCache(): void {
-            this.sizeMatchVertexBufferCache = {};
+            this._sizeMatchVertexBufferCache = {};
         }
 
         /**
          * 获取缓存完成的索引数组
          */
-        public getIndices(): Uint16Array {
-            return this.indices;
+        private getIndexArrayBuffer(): Uint16Array {
+            return this._indexArrayBuffer;
         }
 
         /**
          * 获取缓存完成的mesh索引数组
          */
-        public getMeshIndices(): Uint16Array {
-            return this.indicesForMesh;
-        }
+        // public getMeshIndices(): Uint16Array {
+        //     return this._indexArrayBuffer;//indicesForMesh;
+        // }
 
         /**
          * 切换成mesh索引缓存方式
          */
-        public changeToMeshIndices(): void {
-            if (!this.hasMesh) {
-                // 拷贝默认index信息到for mesh中
-                for (let i = 0, l = this.indexIndex; i < l; ++i) {
-                    this.indicesForMesh[i] = this.indices[i];
-                }
-                ++this._indexBufferId;
-                this.hasMesh = true;
-            }
-        }
+        // public changeToMeshIndices(): void {
+        //     if (!this.hasMesh) {
+        //         // 拷贝默认index信息到for mesh中
+        //         for (let i = 0, l = this.indexIndex; i < l; ++i) {
+        //             //this.indicesForMesh[i] = this.indices[i];
+        //         }
+        //         ++this._indexBufferId;
+        //         this.hasMesh = true;
+        //     }
+        // }
 
-        public isMesh(): boolean {
-            return this.hasMesh;
-        }
+        // public isMesh(): boolean {
+        //     return this.hasMesh;
+        // }
 
         /**
          * 默认构成矩形
@@ -248,9 +250,9 @@ namespace egret.web {
 
             if (meshVertices) {
                 // 计算索引位置与赋值
-                const vertices = this.vertices;
+                const vertices = this._verticesFloat32View/*vertices*/;
                 const verticesUint32View = this._verticesUint32View;
-                let index = this.vertexIndex * this.vertSize;
+                let index = this._vertexIndex * this._vertSize;
                 // 缓存顶点数组
                 let i = 0, iD = 0, l = 0;
                 let u = 0, v = 0, x = 0, y = 0;
@@ -276,14 +278,14 @@ namespace egret.web {
                     verticesUint32View[iD + 4] = alpha;
                 }
                 // 缓存索引数组
-                if (this.hasMesh) {
+                //if (this.hasMesh) {
                     for (let i = 0, l = meshIndices.length; i < l; ++i) {
-                        this.indicesForMesh[this.indexIndex + i] = meshIndices[i] + this.vertexIndex;
+                        this._indexArrayBuffer/*indicesForMesh*/[this._indexIndex + i] = meshIndices[i] + this._vertexIndex;
                     }
                     ++this._indexBufferId;
-                }
-                this.vertexIndex += meshUVs.length / 2;
-                this.indexIndex += meshIndices.length;
+                //}
+                this._vertexIndex += meshUVs.length / 2;
+                this._indexIndex += meshIndices.length;
             } else {
                 let width = textureSourceWidth;
                 let height = textureSourceHeight;
@@ -291,9 +293,9 @@ namespace egret.web {
                 let h = sourceHeight;
                 sourceX = sourceX / width;
                 sourceY = sourceY / height;
-                let vertices = this.vertices;
+                let vertices = this._verticesFloat32View/*vertices*/;
                 const verticesUint32View = this._verticesUint32View;
-                let index = this.vertexIndex * this.vertSize;
+                let index = this._vertexIndex * this._vertSize;
                 if (rotated) {
                     let temp = sourceWidth;
                     sourceWidth = sourceHeight / width;
@@ -368,47 +370,45 @@ namespace egret.web {
                     verticesUint32View[index++] = alpha;
                 }
                 // 缓存索引数组
-                if (this.hasMesh) {
-                    let indicesForMesh = this.indicesForMesh;
-                    indicesForMesh[this.indexIndex + 0] = 0 + this.vertexIndex;
-                    indicesForMesh[this.indexIndex + 1] = 1 + this.vertexIndex;
-                    indicesForMesh[this.indexIndex + 2] = 2 + this.vertexIndex;
-                    indicesForMesh[this.indexIndex + 3] = 0 + this.vertexIndex;
-                    indicesForMesh[this.indexIndex + 4] = 2 + this.vertexIndex;
-                    indicesForMesh[this.indexIndex + 5] = 3 + this.vertexIndex;
-                    ++this._indexBufferId;
-                }
+                // if (this.hasMesh) {
+                //     const indicesForMesh = this.indices/*indicesForMesh*/;
+                //     indicesForMesh[this.indexIndex + 0] = 0 + this.vertexIndex;
+                //     indicesForMesh[this.indexIndex + 1] = 1 + this.vertexIndex;
+                //     indicesForMesh[this.indexIndex + 2] = 2 + this.vertexIndex;
+                //     indicesForMesh[this.indexIndex + 3] = 0 + this.vertexIndex;
+                //     indicesForMesh[this.indexIndex + 4] = 2 + this.vertexIndex;
+                //     indicesForMesh[this.indexIndex + 5] = 3 + this.vertexIndex;
+                //     ++this._indexBufferId;
+                // }
 
-                this.vertexIndex += 4;
-                this.indexIndex += 6;
+                this._vertexIndex += 4;
+                this._indexIndex += 6;
             }
         }
 
         public clear(): void {
-            this.hasMesh = false;
-            this.vertexIndex = 0;
-            this.indexIndex = 0;
+            //this.hasMesh = false;
+            this._vertexIndex = 0;
+            this._indexIndex = 0;
         }
 
-        private vertexBuffer: WebGLBuffer;
-        private indexBuffer: WebGLBuffer;
         public bind(): void {
             const gl = this._webGLRenderContext.context;
-            if (!this.vertexBuffer) {
-                this.vertexBuffer = gl.createBuffer();
+            if (!this._webglVertexBuffer) {
+                this._webglVertexBuffer = gl.createBuffer();
             }
-            if (!this.indexBuffer) {
-                this.indexBuffer = gl.createBuffer();
+            if (!this._webglIndexBuffer) {
+                this._webglIndexBuffer = gl.createBuffer();
             }
             //
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-            const vb = this.getVertices();
+            gl.bindBuffer(gl.ARRAY_BUFFER, this._webglVertexBuffer);
+            const vb = this.getVertexArrayBuffer();
             this.$uploadVerticesArray(vb);
             //
-            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._webglIndexBuffer);
             if (this._currentIndexBufferId !== this._indexBufferId) {
                 this._currentIndexBufferId = this._indexBufferId;
-                const ib = this.getIndices();
+                const ib = this.getIndexArrayBuffer();
                 this.$uploadIndicesArray(ib);
             }
         }

@@ -189,9 +189,9 @@ namespace egret.web {
 
             buffer.rootRenderTarget.activate();
 
-            if (!this.bindIndices) {
-                this.uploadIndicesArray(this.vao.getIndices());
-            }
+            // if (!this.bindIndices) {
+            //     //this.uploadIndicesArray(this.vao.getIndexArrayBuffer());
+            // }
 
             buffer.restoreStencil();
 
@@ -220,12 +220,12 @@ namespace egret.web {
         /**
          * 上传索引数据
          */
-        private uploadIndicesArray(array: any): void {
-            // let gl: any = this.context;
-            // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-            // gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, gl.STATIC_DRAW);
-            // this.bindIndices = true;
-        }
+        // private uploadIndicesArray(array: any): void {
+        //     // let gl: any = this.context;
+        //     // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+        //     // gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, gl.STATIC_DRAW);
+        //     // this.bindIndices = true;
+        // }
 
         //private vertexBuffer;
         //private indexBuffer;
@@ -794,7 +794,7 @@ namespace egret.web {
             }
 
             if (meshUVs) {
-                this.vao.changeToMeshIndices();
+                //this.vao.changeToMeshIndices();
             }
 
             let count = meshIndices ? meshIndices.length / 3 : 2;
@@ -902,9 +902,9 @@ namespace egret.web {
             //this.uploadVerticesArray(vb);
 
             // 有mesh，则使用indicesForMesh
-            if (this.vao.isMesh()) {
-                this.uploadIndicesArray(this.vao.getMeshIndices());
-            }
+            // if (this.vao.isMesh()) {
+            //     this.uploadIndicesArray(this.vao.getMeshIndices());
+            // }
 
             let length = this.drawCmdManager.drawDataLen;
             let offset = 0;
@@ -923,9 +923,9 @@ namespace egret.web {
             }
 
             // 切换回默认indices
-            if (this.vao.isMesh()) {
-                this.uploadIndicesArray(this.vao.getIndices());
-            }
+            // if (this.vao.isMesh()) {
+            //     this.uploadIndicesArray(this.vao.getIndices());
+            // }
 
             // 清空数据
             this.drawCmdManager.clear();

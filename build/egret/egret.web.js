@@ -5429,59 +5429,45 @@ var egret;
                 /*定义顶点格式
                 * (x: 8 * 4 = 32) + (y: 8 * 4 = 32) + (u: 8 * 4 = 32) + (v: 8 * 4 = 32) + (tintcolor: 8 * 4 = 32) = (8 * 4 = 32) * (x + y + u + v + tintcolor: 5);
                 */
-                this.vertSize = 5;
-                this.vertByteSize = this.vertSize * 4;
+                this._vertSize = 5;
+                this._vertByteSize = this._vertSize * 4;
                 /*
                 *最多单次提交maxQuadsCount这么多quad
                 */
-                this.maxQuadsCount = 2048;
+                this._maxQuadsCount = 2048;
                 /*
                 *quad = 4个Vertex
                 */
-                this.maxVertexCount = this.maxQuadsCount * 4;
+                this._maxVertexCount = this._maxQuadsCount * 4;
                 /*
                 *配套的Indices = quad * 6.
                 */
-                this.maxIndicesCount = this.maxQuadsCount * 6;
-                this.vertices = null;
-                this.indices = null;
-                this.indicesForMesh = null;
-                this.vertexIndex = 0;
-                this.indexIndex = 0;
-                this.hasMesh = false;
-                /*
-                * refactor:
-                */
-                this._vertices = null;
-                this._verticesFloat32View = null;
-                this._verticesUint32View = null;
+                this._maxIndicesCount = this._maxQuadsCount * 6;
+                //private readonly indicesForMesh: Uint16Array = null;
+                this._vertexIndex = 0;
+                this._indexIndex = 0;
                 this._name = '';
                 this._indexBufferId = 0;
                 this._currentIndexBufferId = 0;
                 this._indexBufferUsage = 0;
-                /**
-                 * 获取缓存完成的顶点数组
-                 * sizeMatchingBufferCache
-        
-                 */
-                this.sizeMatchVertexBufferCache = {};
+                this._sizeMatchVertexBufferCache = {};
                 this.lastUploadVertexBufferLength = 0;
                 this.lastUploadIndexBufferLength = 0;
                 ///
                 this._webGLRenderContext = webGLRenderContext;
-                this.maxQuadsCount = maxQuadsCount;
-                this.maxVertexCount = maxQuadsCount * 4;
-                this.maxIndicesCount = maxQuadsCount * 6;
+                this._maxQuadsCount = maxQuadsCount;
+                this._maxVertexCount = maxQuadsCount * 4;
+                this._maxIndicesCount = maxQuadsCount * 6;
                 this._indexBufferUsage = indexBufferUsage;
                 this._name = name;
                 //old
-                var numVerts = this.maxVertexCount * this.vertSize;
-                this.vertices = new Float32Array(numVerts);
+                //const numVerts = this.maxVertexCount * this.vertSize;
+                //this.vertices = new Float32Array(numVerts);
                 ///
-                this._vertices = new ArrayBuffer(this.maxVertexCount * this.vertByteSize);
+                this._vertices = new ArrayBuffer(this._maxVertexCount * this._vertByteSize);
                 this._verticesFloat32View = new Float32Array(this._vertices);
                 this._verticesUint32View = new Uint32Array(this._vertices);
-                this.vertices = this._verticesFloat32View;
+                //this.vertices = this._verticesFloat32View;
                 //索引缓冲，最大索引数
                 /*
                 0-------1
@@ -5492,16 +5478,16 @@ var egret;
                 0->2->3
                 两个三角形
                 */
-                var maxIndicesCount = this.maxIndicesCount;
-                this.indices = new Uint16Array(maxIndicesCount);
-                this.indicesForMesh = this.indices; //new Uint16Array(maxIndicesCount);
+                var maxIndicesCount = this._maxIndicesCount;
+                this._indexArrayBuffer = new Uint16Array(maxIndicesCount);
+                //this.indicesForMesh = this.indices;//new Uint16Array(maxIndicesCount);
                 for (var i = 0, j = 0; i < maxIndicesCount; i += 6, j += 4) {
-                    this.indices[i + 0] = j + 0;
-                    this.indices[i + 1] = j + 1;
-                    this.indices[i + 2] = j + 2;
-                    this.indices[i + 3] = j + 0;
-                    this.indices[i + 4] = j + 2;
-                    this.indices[i + 5] = j + 3;
+                    this._indexArrayBuffer[i + 0] = j + 0;
+                    this._indexArrayBuffer[i + 1] = j + 1;
+                    this._indexArrayBuffer[i + 2] = j + 2;
+                    this._indexArrayBuffer[i + 3] = j + 0;
+                    this._indexArrayBuffer[i + 4] = j + 2;
+                    this._indexArrayBuffer[i + 5] = j + 3;
                 }
                 ++this._indexBufferId;
             }
@@ -5511,10 +5497,15 @@ var egret;
             WebGLVertexArrayObject.prototype.reachMaxSize = function (vertexCount, indexCount) {
                 if (vertexCount === void 0) { vertexCount = 4; }
                 if (indexCount === void 0) { indexCount = 6; }
-                return this.vertexIndex > this.maxVertexCount - vertexCount || this.indexIndex > this.maxIndicesCount - indexCount;
+                return this._vertexIndex > this._maxVertexCount - vertexCount || this._indexIndex > this._maxIndicesCount - indexCount;
             };
-            WebGLVertexArrayObject.prototype.getVertices = function () {
-                var length = this.vertexIndex * this.vertSize;
+            /**
+             * 获取缓存完成的顶点数组
+             * sizeMatchingBufferCache
+    
+             */
+            WebGLVertexArrayObject.prototype.getVertexArrayBuffer = function () {
+                var length = this._vertexIndex * this._vertSize;
                 //旧有的subarray从给定的起始位置返回一个新的Float32Array,每次都是创建新对象，不是最优，时间长了容易引起gc.
                 //let view = this.vertices.subarray(0, length);
                 //return view;
@@ -5523,43 +5514,43 @@ var egret;
                 */
                 var nextPow2Length = egret.NumberUtils.nextPow2(length);
                 nextPow2Length = Math.min(this._verticesFloat32View.length, nextPow2Length);
-                var bufferView = this.sizeMatchVertexBufferCache[nextPow2Length];
+                var bufferView = this._sizeMatchVertexBufferCache[nextPow2Length];
                 if (!bufferView) {
-                    bufferView = this.sizeMatchVertexBufferCache[nextPow2Length] = new Float32Array(this._vertices, 0, nextPow2Length);
+                    bufferView = this._sizeMatchVertexBufferCache[nextPow2Length] = new Float32Array(this._vertices, 0, nextPow2Length);
                 }
                 return bufferView;
             };
             WebGLVertexArrayObject.prototype.clearSizeMatchBuffersCache = function () {
-                this.sizeMatchVertexBufferCache = {};
+                this._sizeMatchVertexBufferCache = {};
             };
             /**
              * 获取缓存完成的索引数组
              */
-            WebGLVertexArrayObject.prototype.getIndices = function () {
-                return this.indices;
+            WebGLVertexArrayObject.prototype.getIndexArrayBuffer = function () {
+                return this._indexArrayBuffer;
             };
             /**
              * 获取缓存完成的mesh索引数组
              */
-            WebGLVertexArrayObject.prototype.getMeshIndices = function () {
-                return this.indicesForMesh;
-            };
+            // public getMeshIndices(): Uint16Array {
+            //     return this._indexArrayBuffer;//indicesForMesh;
+            // }
             /**
              * 切换成mesh索引缓存方式
              */
-            WebGLVertexArrayObject.prototype.changeToMeshIndices = function () {
-                if (!this.hasMesh) {
-                    // 拷贝默认index信息到for mesh中
-                    for (var i = 0, l = this.indexIndex; i < l; ++i) {
-                        this.indicesForMesh[i] = this.indices[i];
-                    }
-                    ++this._indexBufferId;
-                    this.hasMesh = true;
-                }
-            };
-            WebGLVertexArrayObject.prototype.isMesh = function () {
-                return this.hasMesh;
-            };
+            // public changeToMeshIndices(): void {
+            //     if (!this.hasMesh) {
+            //         // 拷贝默认index信息到for mesh中
+            //         for (let i = 0, l = this.indexIndex; i < l; ++i) {
+            //             //this.indicesForMesh[i] = this.indices[i];
+            //         }
+            //         ++this._indexBufferId;
+            //         this.hasMesh = true;
+            //     }
+            // }
+            // public isMesh(): boolean {
+            //     return this.hasMesh;
+            // }
             /**
              * 默认构成矩形
              */
@@ -5620,9 +5611,9 @@ var egret;
                 }
                 if (meshVertices) {
                     // 计算索引位置与赋值
-                    var vertices = this.vertices;
+                    var vertices = this._verticesFloat32View /*vertices*/;
                     var verticesUint32View = this._verticesUint32View;
-                    var index = this.vertexIndex * this.vertSize;
+                    var index = this._vertexIndex * this._vertSize;
                     // 缓存顶点数组
                     var i = 0, iD = 0, l = 0;
                     var u = 0, v = 0, x = 0, y = 0;
@@ -5648,14 +5639,14 @@ var egret;
                         verticesUint32View[iD + 4] = alpha;
                     }
                     // 缓存索引数组
-                    if (this.hasMesh) {
-                        for (var i_1 = 0, l_1 = meshIndices.length; i_1 < l_1; ++i_1) {
-                            this.indicesForMesh[this.indexIndex + i_1] = meshIndices[i_1] + this.vertexIndex;
-                        }
-                        ++this._indexBufferId;
+                    //if (this.hasMesh) {
+                    for (var i_1 = 0, l_1 = meshIndices.length; i_1 < l_1; ++i_1) {
+                        this._indexArrayBuffer /*indicesForMesh*/[this._indexIndex + i_1] = meshIndices[i_1] + this._vertexIndex;
                     }
-                    this.vertexIndex += meshUVs.length / 2;
-                    this.indexIndex += meshIndices.length;
+                    ++this._indexBufferId;
+                    //}
+                    this._vertexIndex += meshUVs.length / 2;
+                    this._indexIndex += meshIndices.length;
                 }
                 else {
                     var width = textureSourceWidth;
@@ -5664,9 +5655,9 @@ var egret;
                     var h = sourceHeight;
                     sourceX = sourceX / width;
                     sourceY = sourceY / height;
-                    var vertices = this.vertices;
+                    var vertices = this._verticesFloat32View /*vertices*/;
                     var verticesUint32View = this._verticesUint32View;
-                    var index = this.vertexIndex * this.vertSize;
+                    var index = this._vertexIndex * this._vertSize;
                     if (rotated) {
                         var temp = sourceWidth;
                         sourceWidth = sourceHeight / width;
@@ -5741,42 +5732,42 @@ var egret;
                         verticesUint32View[index++] = alpha;
                     }
                     // 缓存索引数组
-                    if (this.hasMesh) {
-                        var indicesForMesh = this.indicesForMesh;
-                        indicesForMesh[this.indexIndex + 0] = 0 + this.vertexIndex;
-                        indicesForMesh[this.indexIndex + 1] = 1 + this.vertexIndex;
-                        indicesForMesh[this.indexIndex + 2] = 2 + this.vertexIndex;
-                        indicesForMesh[this.indexIndex + 3] = 0 + this.vertexIndex;
-                        indicesForMesh[this.indexIndex + 4] = 2 + this.vertexIndex;
-                        indicesForMesh[this.indexIndex + 5] = 3 + this.vertexIndex;
-                        ++this._indexBufferId;
-                    }
-                    this.vertexIndex += 4;
-                    this.indexIndex += 6;
+                    // if (this.hasMesh) {
+                    //     const indicesForMesh = this.indices/*indicesForMesh*/;
+                    //     indicesForMesh[this.indexIndex + 0] = 0 + this.vertexIndex;
+                    //     indicesForMesh[this.indexIndex + 1] = 1 + this.vertexIndex;
+                    //     indicesForMesh[this.indexIndex + 2] = 2 + this.vertexIndex;
+                    //     indicesForMesh[this.indexIndex + 3] = 0 + this.vertexIndex;
+                    //     indicesForMesh[this.indexIndex + 4] = 2 + this.vertexIndex;
+                    //     indicesForMesh[this.indexIndex + 5] = 3 + this.vertexIndex;
+                    //     ++this._indexBufferId;
+                    // }
+                    this._vertexIndex += 4;
+                    this._indexIndex += 6;
                 }
             };
             WebGLVertexArrayObject.prototype.clear = function () {
-                this.hasMesh = false;
-                this.vertexIndex = 0;
-                this.indexIndex = 0;
+                //this.hasMesh = false;
+                this._vertexIndex = 0;
+                this._indexIndex = 0;
             };
             WebGLVertexArrayObject.prototype.bind = function () {
                 var gl = this._webGLRenderContext.context;
-                if (!this.vertexBuffer) {
-                    this.vertexBuffer = gl.createBuffer();
+                if (!this._webglVertexBuffer) {
+                    this._webglVertexBuffer = gl.createBuffer();
                 }
-                if (!this.indexBuffer) {
-                    this.indexBuffer = gl.createBuffer();
+                if (!this._webglIndexBuffer) {
+                    this._webglIndexBuffer = gl.createBuffer();
                 }
                 //
-                gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-                var vb = this.getVertices();
+                gl.bindBuffer(gl.ARRAY_BUFFER, this._webglVertexBuffer);
+                var vb = this.getVertexArrayBuffer();
                 this.$uploadVerticesArray(vb);
                 //
-                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._webglIndexBuffer);
                 if (this._currentIndexBufferId !== this._indexBufferId) {
                     this._currentIndexBufferId = this._indexBufferId;
-                    var ib = this.getIndices();
+                    var ib = this.getIndexArrayBuffer();
                     this.$uploadIndicesArray(ib);
                 }
             };
@@ -5995,6 +5986,31 @@ var egret;
          * 抽象出此类，以实现共用一个context
          */
         var WebGLRenderContext = (function () {
+            /**
+             * 上传顶点数据
+             */
+            // private lastUploadVertexBufferLength: number = 0;
+            // private uploadVerticesArray(array: Float32Array): void {
+            //     const gl = this.context;
+            //     //gl.bufferData(gl.ARRAY_BUFFER, array, gl.STREAM_DRAW);
+            //     //gl.bufferSubData(gl.ARRAY_BUFFER, 0, array);
+            //     if (this.lastUploadVertexBufferLength >= array.length) {
+            //         gl.bufferSubData(gl.ARRAY_BUFFER, 0, array);
+            //     }
+            //     else {
+            //         this.lastUploadVertexBufferLength = array.length;
+            //         gl.bufferData(gl.ARRAY_BUFFER, array, gl.DYNAMIC_DRAW);
+            //     }
+            // }
+            /**
+             * 上传索引数据
+             */
+            // private uploadIndicesArray(array: any): void {
+            //     // let gl: any = this.context;
+            //     // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+            //     // gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, gl.STATIC_DRAW);
+            //     // this.bindIndices = true;
+            // }
             //private vertexBuffer;
             //private indexBuffer;
             function WebGLRenderContext(width, height) {
@@ -6102,37 +6118,12 @@ var egret;
              */
             WebGLRenderContext.prototype.activateBuffer = function (buffer, width, height) {
                 buffer.rootRenderTarget.activate();
-                if (!this.bindIndices) {
-                    this.uploadIndicesArray(this.vao.getIndices());
-                }
+                // if (!this.bindIndices) {
+                //     //this.uploadIndicesArray(this.vao.getIndexArrayBuffer());
+                // }
                 buffer.restoreStencil();
                 buffer.restoreScissor();
                 this.onResize(width, height);
-            };
-            /**
-             * 上传顶点数据
-             */
-            // private lastUploadVertexBufferLength: number = 0;
-            // private uploadVerticesArray(array: Float32Array): void {
-            //     const gl = this.context;
-            //     //gl.bufferData(gl.ARRAY_BUFFER, array, gl.STREAM_DRAW);
-            //     //gl.bufferSubData(gl.ARRAY_BUFFER, 0, array);
-            //     if (this.lastUploadVertexBufferLength >= array.length) {
-            //         gl.bufferSubData(gl.ARRAY_BUFFER, 0, array);
-            //     }
-            //     else {
-            //         this.lastUploadVertexBufferLength = array.length;
-            //         gl.bufferData(gl.ARRAY_BUFFER, array, gl.DYNAMIC_DRAW);
-            //     }
-            // }
-            /**
-             * 上传索引数据
-             */
-            WebGLRenderContext.prototype.uploadIndicesArray = function (array) {
-                // let gl: any = this.context;
-                // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-                // gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, gl.STATIC_DRAW);
-                // this.bindIndices = true;
             };
             /**
              * 销毁绘制对象
@@ -6604,7 +6595,7 @@ var egret;
                     this.drawCmdManager.pushChangeSmoothing(texture, smoothing);
                 }
                 if (meshUVs) {
-                    this.vao.changeToMeshIndices();
+                    //this.vao.changeToMeshIndices();
                 }
                 var count = meshIndices ? meshIndices.length / 3 : 2;
                 // 应用$filter，因为只可能是colorMatrixFilter，最后两个参数可不传
@@ -6692,9 +6683,9 @@ var egret;
                 //const vb = this.vao.getVertices();
                 //this.uploadVerticesArray(vb);
                 // 有mesh，则使用indicesForMesh
-                if (this.vao.isMesh()) {
-                    this.uploadIndicesArray(this.vao.getMeshIndices());
-                }
+                // if (this.vao.isMesh()) {
+                //     this.uploadIndicesArray(this.vao.getMeshIndices());
+                // }
                 var length = this.drawCmdManager.drawDataLen;
                 var offset = 0;
                 for (var i = 0; i < length; i++) {
@@ -6711,9 +6702,9 @@ var egret;
                     }
                 }
                 // 切换回默认indices
-                if (this.vao.isMesh()) {
-                    this.uploadIndicesArray(this.vao.getIndices());
-                }
+                // if (this.vao.isMesh()) {
+                //     this.uploadIndicesArray(this.vao.getIndices());
+                // }
                 // 清空数据
                 this.drawCmdManager.clear();
                 this.vao.clear();
