@@ -5511,7 +5511,7 @@ var egret;
                 nextPow2Length = Math.min(this._verticesFloat32View.length, nextPow2Length);
                 var bufferView = this.sizeMatchBufferViewCache[nextPow2Length];
                 if (!bufferView) {
-                    bufferView = this.sizeMatchBufferViewCache[nextPow2Length] = new Float32Array(this._vertices, 0, 4 * nextPow2Length);
+                    bufferView = this.sizeMatchBufferViewCache[nextPow2Length] = new Float32Array(this._vertices, 0, nextPow2Length);
                 }
                 return bufferView;
             };
