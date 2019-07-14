@@ -244,7 +244,7 @@ namespace egret.web {
 
             this.$bufferStack = [];
 
-            let gl = this.context;
+            //let gl = this.context;
             //this.vertexBuffer = gl.createBuffer();
             //this.indexBuffer = gl.createBuffer();
             // gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
@@ -386,20 +386,19 @@ namespace egret.web {
         }
 
         private initBatchSystems(): void {
-            ///???
-            const spriteVAO = new WebGLVertexArrayObject(this, 2048);
-            spriteVAO.debugName = 'spriteVAO';
-            const meshVAO = new WebGLVertexArrayObject(this, 1024);
-            meshVAO.debugName = 'meshVAO';
+            ///
+            const gl = this.context;
             //全部清除
             this.clearBatchSystems();
             //注册这个系统
+            const spriteVAO = new WebGLVertexArrayObject(this, 2048, gl.STATIC_DRAW, 'SpriteVAO');
             const spriteBatchSystem = new SpriteBatchSystem(this, spriteVAO);
             this.registerBatchSystemByRenderNodeType(sys.RenderNodeType.BitmapNode, spriteBatchSystem);
             this.registerBatchSystemByRenderNodeType(sys.RenderNodeType.TextNode, spriteBatchSystem);
             this.registerBatchSystemByRenderNodeType(sys.RenderNodeType.GraphicsNode, spriteBatchSystem);
             this.registerBatchSystemByRenderNodeType(sys.RenderNodeType.NormalBitmapNode, spriteBatchSystem);
             //注册mesh的系统
+            const meshVAO = new WebGLVertexArrayObject(this, 1024, gl.DYNAMIC_DRAW, 'MeshVAO');
             const meshBatchSystem = new MeshBatchSystem(this, meshVAO);
             this.registerBatchSystemByRenderNodeType(sys.RenderNodeType.MeshNode, meshBatchSystem);
             //默认空系统
@@ -1364,7 +1363,7 @@ namespace egret.web {
         }
 
         public get vao(): WebGLVertexArrayObject {
-            return this.currentBatchSystem._vao;
+            return this.currentBatchSystem.vao;
         }
     }
 

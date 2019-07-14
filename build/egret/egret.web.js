@@ -5425,7 +5425,7 @@ var egret;
          * 用来维护顶点数组
          */
         var WebGLVertexArrayObject = (function () {
-            function WebGLVertexArrayObject(webGLRenderContext, maxQuadsCount) {
+            function WebGLVertexArrayObject(webGLRenderContext, maxQuadsCount, indexBufferUsage, name) {
                 /*定义顶点格式
                 * (x: 8 * 4 = 32) + (y: 8 * 4 = 32) + (u: 8 * 4 = 32) + (v: 8 * 4 = 32) + (tintcolor: 8 * 4 = 32) = (8 * 4 = 32) * (x + y + u + v + tintcolor: 5);
                 */
@@ -5455,7 +5455,10 @@ var egret;
                 this._vertices = null;
                 this._verticesFloat32View = null;
                 this._verticesUint32View = null;
-                this.debugName = '';
+                this._name = '';
+                this._indexBufferId = 0;
+                this._currentIndexBufferId = 0;
+                this._indexBufferUsage = 0;
                 /**
                  * 获取缓存完成的顶点数组
                  * sizeMatchingBufferCache
@@ -5469,6 +5472,8 @@ var egret;
                 this.maxQuadsCount = maxQuadsCount;
                 this.maxVertexCount = maxQuadsCount * 4;
                 this.maxIndicesCount = maxQuadsCount * 6;
+                this._indexBufferUsage = indexBufferUsage;
+                this._name = name;
                 //old
                 var numVerts = this.maxVertexCount * this.vertSize;
                 this.vertices = new Float32Array(numVerts);
@@ -5489,7 +5494,7 @@ var egret;
                 */
                 var maxIndicesCount = this.maxIndicesCount;
                 this.indices = new Uint16Array(maxIndicesCount);
-                this.indicesForMesh = new Uint16Array(maxIndicesCount);
+                this.indicesForMesh = this.indices; //new Uint16Array(maxIndicesCount);
                 for (var i = 0, j = 0; i < maxIndicesCount; i += 6, j += 4) {
                     this.indices[i + 0] = j + 0;
                     this.indices[i + 1] = j + 1;
@@ -5498,6 +5503,7 @@ var egret;
                     this.indices[i + 4] = j + 2;
                     this.indices[i + 5] = j + 3;
                 }
+                ++this._indexBufferId;
             }
             /**
              * 是否达到最大缓存数量
@@ -5547,6 +5553,7 @@ var egret;
                     for (var i = 0, l = this.indexIndex; i < l; ++i) {
                         this.indicesForMesh[i] = this.indices[i];
                     }
+                    ++this._indexBufferId;
                     this.hasMesh = true;
                 }
             };
@@ -5645,6 +5652,7 @@ var egret;
                         for (var i_1 = 0, l_1 = meshIndices.length; i_1 < l_1; ++i_1) {
                             this.indicesForMesh[this.indexIndex + i_1] = meshIndices[i_1] + this.vertexIndex;
                         }
+                        ++this._indexBufferId;
                     }
                     this.vertexIndex += meshUVs.length / 2;
                     this.indexIndex += meshIndices.length;
@@ -5741,6 +5749,7 @@ var egret;
                         indicesForMesh[this.indexIndex + 3] = 0 + this.vertexIndex;
                         indicesForMesh[this.indexIndex + 4] = 2 + this.vertexIndex;
                         indicesForMesh[this.indexIndex + 5] = 3 + this.vertexIndex;
+                        ++this._indexBufferId;
                     }
                     this.vertexIndex += 4;
                     this.indexIndex += 6;
@@ -5759,16 +5768,16 @@ var egret;
                 if (!this.indexBuffer) {
                     this.indexBuffer = gl.createBuffer();
                 }
+                //
                 gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
                 var vb = this.getVertices();
                 this.$uploadVerticesArray(vb);
-                //每次强行传
+                //
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-                if (this.isMesh()) {
-                    this.uploadIndicesArray(this.getMeshIndices());
-                }
-                else {
-                    this.uploadIndicesArray(this.getIndices());
+                if (this._currentIndexBufferId !== this._indexBufferId) {
+                    this._currentIndexBufferId = this._indexBufferId;
+                    var ib = this.getIndices();
+                    this.$uploadIndicesArray(ib);
                 }
             };
             WebGLVertexArrayObject.prototype.$uploadVerticesArray = function (array) {
@@ -5781,14 +5790,14 @@ var egret;
                     gl.bufferData(gl.ARRAY_BUFFER, array, gl.DYNAMIC_DRAW);
                 }
             };
-            WebGLVertexArrayObject.prototype.uploadIndicesArray = function (array) {
+            WebGLVertexArrayObject.prototype.$uploadIndicesArray = function (array) {
                 var gl = this._webGLRenderContext.context;
                 if (this.lastUploadIndexBufferLength >= array.length) {
                     gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, 0, array);
                 }
                 else {
                     this.lastUploadIndexBufferLength = array.length;
-                    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, gl.STATIC_DRAW);
+                    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, /*gl.STATIC_DRAW*/ this._indexBufferUsage); //gl.DYNAMIC_DRAW
                 }
             };
             return WebGLVertexArrayObject;
@@ -6008,7 +6017,7 @@ var egret;
                 }
                 this.initWebGL();
                 this.$bufferStack = [];
-                var gl = this.context;
+                //let gl = this.context;
                 //this.vertexBuffer = gl.createBuffer();
                 //this.indexBuffer = gl.createBuffer();
                 // gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
@@ -6233,20 +6242,19 @@ var egret;
                 this.initBatchSystems();
             };
             WebGLRenderContext.prototype.initBatchSystems = function () {
-                ///???
-                var spriteVAO = new web.WebGLVertexArrayObject(this, 2048);
-                spriteVAO.debugName = 'spriteVAO';
-                var meshVAO = new web.WebGLVertexArrayObject(this, 1024);
-                meshVAO.debugName = 'meshVAO';
+                ///
+                var gl = this.context;
                 //全部清除
                 this.clearBatchSystems();
                 //注册这个系统
+                var spriteVAO = new web.WebGLVertexArrayObject(this, 2048, gl.STATIC_DRAW, 'SpriteVAO');
                 var spriteBatchSystem = new web.SpriteBatchSystem(this, spriteVAO);
                 this.registerBatchSystemByRenderNodeType(1 /* BitmapNode */, spriteBatchSystem);
                 this.registerBatchSystemByRenderNodeType(2 /* TextNode */, spriteBatchSystem);
                 this.registerBatchSystemByRenderNodeType(3 /* GraphicsNode */, spriteBatchSystem);
                 this.registerBatchSystemByRenderNodeType(6 /* NormalBitmapNode */, spriteBatchSystem);
                 //注册mesh的系统
+                var meshVAO = new web.WebGLVertexArrayObject(this, 1024, gl.DYNAMIC_DRAW, 'MeshVAO');
                 var meshBatchSystem = new web.MeshBatchSystem(this, meshVAO);
                 this.registerBatchSystemByRenderNodeType(5 /* MeshNode */, meshBatchSystem);
                 //默认空系统
@@ -7081,7 +7089,7 @@ var egret;
             };
             Object.defineProperty(WebGLRenderContext.prototype, "vao", {
                 get: function () {
-                    return this.currentBatchSystem._vao;
+                    return this.currentBatchSystem.vao;
                 },
                 enumerable: true,
                 configurable: true
@@ -7128,21 +7136,20 @@ var egret;
     var web;
     (function (web) {
         var WebGLRenderBatchSystem = (function () {
-            function WebGLRenderBatchSystem(webGLRenderContext, _vao) {
+            function WebGLRenderBatchSystem(webGLRenderContext, vao) {
                 this._webGLRenderContext = webGLRenderContext;
-                this._vao = _vao;
+                this.vao = vao;
             }
             WebGLRenderBatchSystem.prototype.start = function () {
                 this._webGLRenderContext.resetVertexAttribPointer = true;
-                this._vao.clear();
+                this.vao.clear();
             };
             WebGLRenderBatchSystem.prototype.stop = function () {
                 this.flush();
             };
             WebGLRenderBatchSystem.prototype.flush = function () {
-                //this._vao.bind();
-                this._webGLRenderContext.$drawWebGL(this._vao);
-                this._vao.clear();
+                this._webGLRenderContext.$drawWebGL(this.vao);
+                this.vao.clear();
             };
             WebGLRenderBatchSystem.prototype.render = function () {
             };

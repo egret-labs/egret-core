@@ -53,9 +53,9 @@ namespace egret.web {
         */
         private readonly maxIndicesCount: number = this.maxQuadsCount * 6;
 
-        private vertices: Float32Array = null;
-        private indices: Uint16Array = null;
-        private indicesForMesh: Uint16Array = null;
+        private readonly vertices: Float32Array = null;
+        private readonly indices: Uint16Array = null;
+        private readonly indicesForMesh: Uint16Array = null;
 
         private vertexIndex: number = 0;
         private indexIndex: number = 0;
@@ -65,18 +65,23 @@ namespace egret.web {
         /*
         * refactor: 
         */
-        private _vertices: ArrayBuffer = null;
-        private _verticesFloat32View: Float32Array = null;
-        private _verticesUint32View: Uint32Array = null;
-        public debugName: string = '';
+        private readonly _vertices: ArrayBuffer = null;
+        private readonly _verticesFloat32View: Float32Array = null;
+        private readonly _verticesUint32View: Uint32Array = null;
+        private readonly _name: string = '';
         private readonly _webGLRenderContext: WebGLRenderContext;
+        private _indexBufferId: number = 0;
+        private _currentIndexBufferId: number = 0;
+        private readonly _indexBufferUsage: number = 0;
 
-        constructor(webGLRenderContext: WebGLRenderContext, maxQuadsCount: number) {
+        constructor(webGLRenderContext: WebGLRenderContext, maxQuadsCount: number, indexBufferUsage: number, name: string) {
             ///
             this._webGLRenderContext = webGLRenderContext;
             this.maxQuadsCount = maxQuadsCount;
             this.maxVertexCount = maxQuadsCount * 4;
             this.maxIndicesCount = maxQuadsCount * 6;
+            this._indexBufferUsage = indexBufferUsage;
+            this._name = name;
             //old
             const numVerts = this.maxVertexCount * this.vertSize;
             this.vertices = new Float32Array(numVerts);
@@ -97,7 +102,7 @@ namespace egret.web {
             */
             const maxIndicesCount = this.maxIndicesCount;
             this.indices = new Uint16Array(maxIndicesCount);
-            this.indicesForMesh = new Uint16Array(maxIndicesCount);
+            this.indicesForMesh = this.indices;//new Uint16Array(maxIndicesCount);
             for (let i = 0, j = 0; i < maxIndicesCount; i += 6, j += 4) {
                 this.indices[i + 0] = j + 0;
                 this.indices[i + 1] = j + 1;
@@ -106,6 +111,7 @@ namespace egret.web {
                 this.indices[i + 4] = j + 2;
                 this.indices[i + 5] = j + 3;
             }
+            ++this._indexBufferId;
         }
 
         /**
@@ -165,7 +171,7 @@ namespace egret.web {
                 for (let i = 0, l = this.indexIndex; i < l; ++i) {
                     this.indicesForMesh[i] = this.indices[i];
                 }
-
+                ++this._indexBufferId;
                 this.hasMesh = true;
             }
         }
@@ -274,6 +280,7 @@ namespace egret.web {
                     for (let i = 0, l = meshIndices.length; i < l; ++i) {
                         this.indicesForMesh[this.indexIndex + i] = meshIndices[i] + this.vertexIndex;
                     }
+                    ++this._indexBufferId;
                 }
                 this.vertexIndex += meshUVs.length / 2;
                 this.indexIndex += meshIndices.length;
@@ -369,6 +376,7 @@ namespace egret.web {
                     indicesForMesh[this.indexIndex + 3] = 0 + this.vertexIndex;
                     indicesForMesh[this.indexIndex + 4] = 2 + this.vertexIndex;
                     indicesForMesh[this.indexIndex + 5] = 3 + this.vertexIndex;
+                    ++this._indexBufferId;
                 }
 
                 this.vertexIndex += 4;
@@ -392,17 +400,16 @@ namespace egret.web {
             if (!this.indexBuffer) {
                 this.indexBuffer = gl.createBuffer();
             }
+            //
             gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
             const vb = this.getVertices();
             this.$uploadVerticesArray(vb);
-
-            //每次强行传
+            //
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-            if (this.isMesh()) {
-                this.uploadIndicesArray(this.getMeshIndices());
-            }
-            else {
-                this.uploadIndicesArray(this.getIndices());
+            if (this._currentIndexBufferId !== this._indexBufferId) {
+                this._currentIndexBufferId = this._indexBufferId;
+                const ib = this.getIndices();
+                this.$uploadIndicesArray(ib);
             }
         }
 
@@ -419,14 +426,14 @@ namespace egret.web {
         }
 
         private lastUploadIndexBufferLength: number = 0;
-        private uploadIndicesArray(array: Uint16Array): void {
+        private $uploadIndicesArray(array: Uint16Array): void {
            const gl = this._webGLRenderContext.context;
            if (this.lastUploadIndexBufferLength >= array.length) {
                gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, 0, array);
            }
            else {
                this.lastUploadIndexBufferLength = array.length;
-               gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, gl.STATIC_DRAW);
+               gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, /*gl.STATIC_DRAW*/this._indexBufferUsage);//gl.DYNAMIC_DRAW
            }
         }
     }
