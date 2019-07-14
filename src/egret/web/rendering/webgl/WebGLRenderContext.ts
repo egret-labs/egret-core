@@ -47,6 +47,7 @@ namespace egret.web {
 
         private readonly batchSystems: { [index: number]: WebGLRenderBatchSystem } = {};
         private currentBatchSystem: WebGLRenderBatchSystem = null;
+        public resetVertexAttribPointer: boolean = true;
 
         private clearBatchSystems(): void {
             this.currentBatchSystem = null;
@@ -63,7 +64,7 @@ namespace egret.web {
         }
 
         public setBatchSystemByRenderNode(renderNode: sys.RenderNode): boolean {
-            if (renderNode.type === sys.RenderNodeType.GraphicsNode) {
+            if (renderNode.type === sys.RenderNodeType.GroupNode) {
                 return false;
             }
             const system = this.batchSystems[renderNode.type];
@@ -202,30 +203,31 @@ namespace egret.web {
         /**
          * 上传顶点数据
          */
-        private lastUploadVertexBufferLength: number = 0;
-        private uploadVerticesArray(array: Float32Array): void {
-            const gl = this.context;
-            //gl.bufferData(gl.ARRAY_BUFFER, array, gl.STREAM_DRAW);
-            //gl.bufferSubData(gl.ARRAY_BUFFER, 0, array);
-            if (this.lastUploadVertexBufferLength >= array.length) {
-                gl.bufferSubData(gl.ARRAY_BUFFER, 0, array);
-            }
-            else {
-                this.lastUploadVertexBufferLength = array.length;
-                gl.bufferData(gl.ARRAY_BUFFER, array, gl.DYNAMIC_DRAW);
-            }
-        }
+        // private lastUploadVertexBufferLength: number = 0;
+        // private uploadVerticesArray(array: Float32Array): void {
+        //     const gl = this.context;
+        //     //gl.bufferData(gl.ARRAY_BUFFER, array, gl.STREAM_DRAW);
+        //     //gl.bufferSubData(gl.ARRAY_BUFFER, 0, array);
+        //     if (this.lastUploadVertexBufferLength >= array.length) {
+        //         gl.bufferSubData(gl.ARRAY_BUFFER, 0, array);
+        //     }
+        //     else {
+        //         this.lastUploadVertexBufferLength = array.length;
+        //         gl.bufferData(gl.ARRAY_BUFFER, array, gl.DYNAMIC_DRAW);
+        //     }
+        // }
 
         /**
          * 上传索引数据
          */
         private uploadIndicesArray(array: any): void {
             let gl: any = this.context;
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
             gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, gl.STATIC_DRAW);
             this.bindIndices = true;
         }
 
-        private vertexBuffer;
+        //private vertexBuffer;
         private indexBuffer;
 
         public constructor(width?: number, height?: number) {
@@ -243,10 +245,10 @@ namespace egret.web {
             this.$bufferStack = [];
 
             let gl = this.context;
-            this.vertexBuffer = gl.createBuffer();
+            //this.vertexBuffer = gl.createBuffer();
             this.indexBuffer = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+            // gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
+            // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
 
             this.drawCmdManager = new WebGLDrawCmdManager();
 
@@ -385,9 +387,9 @@ namespace egret.web {
 
         private initBatchSystems(): void {
             ///???
-            const spriteVAO = new WebGLVertexArrayObject(2048);
+            const spriteVAO = new WebGLVertexArrayObject(this, 2048);
             spriteVAO.debugName = 'spriteVAO';
-            const meshVAO = new WebGLVertexArrayObject(1024);
+            const meshVAO = new WebGLVertexArrayObject(this, 1024);
             meshVAO.debugName = 'meshVAO';
             //全部清除
             this.clearBatchSystems();
@@ -889,12 +891,16 @@ namespace egret.web {
          * 执行目前缓存在命令列表里的命令并清空
          */
         public activatedBuffer: WebGLRenderBuffer;
-        public $drawWebGL() {
+        public $drawWebGL(vao: WebGLVertexArrayObject) {
             if (this.drawCmdManager.drawDataLen == 0 || this.contextLost) {
                 return;
             }
-
-            this.uploadVerticesArray(this.vao.getVertices());
+            if (vao) {
+                //!vao.vertexBuffer ? vao.vertexBuffer = this.vertexBuffer : void 0;
+                vao.bind();
+            }
+            //const vb = this.vao.getVertices();
+            //this.uploadVerticesArray(vb);
 
             // 有mesh，则使用indicesForMesh
             if (this.vao.isMesh()) {
@@ -1055,7 +1061,8 @@ namespace egret.web {
 
         public currentProgram: EgretWebGLProgram;
         private activeProgram(gl: WebGLRenderingContext, program: EgretWebGLProgram): void {
-            if (program != this.currentProgram) {
+            if (program != this.currentProgram || this.resetVertexAttribPointer) {
+                this.resetVertexAttribPointer = false;
                 gl.useProgram(program.id);
 
                 // 目前所有attribute buffer的绑定方法都是一致的

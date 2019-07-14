@@ -31,15 +31,16 @@ namespace egret.web {
 
     export class WebGLRenderBatchSystem {
 
-        private readonly _webglContext: WebGLRenderContext;
+        private readonly _webGLRenderContext: WebGLRenderContext;
         public readonly _vao: WebGLVertexArrayObject;
 
-        constructor(_webglContext: WebGLRenderContext, _vao: WebGLVertexArrayObject) {
-            this._webglContext = _webglContext;
+        constructor(webGLRenderContext: WebGLRenderContext, _vao: WebGLVertexArrayObject) {
+            this._webGLRenderContext = webGLRenderContext;
             this._vao = _vao;
         }
 
         public start(): void {
+            this._webGLRenderContext.resetVertexAttribPointer = true;
             this._vao.clear();
         }
 
@@ -49,7 +50,7 @@ namespace egret.web {
 
         public flush(): void {
             //this._vao.bind();
-            this._webglContext.$drawWebGL();
+            this._webGLRenderContext.$drawWebGL(this._vao);
             this._vao.clear();
         }
 
@@ -63,23 +64,25 @@ namespace egret.web {
 
     export class SpriteBatchSystem extends WebGLRenderBatchSystem {
 
-        public start(): void {
-            super.start();
-        }
+        // public start(): void {
+        //     window['a'] = 1;
+        //     super.start();
+        // }
 
-        public stop(): void {
-            super.stop();
-        }
+        // public stop(): void {
+        //     super.stop();
+        // }
     }
 
     export class MeshBatchSystem extends WebGLRenderBatchSystem {
 
-        public start(): void {
-            super.start();
-        }
+        // public start(): void {
+        //     window['a'] = 1;
+        //     super.start();
+        // }
 
-        public stop(): void {
-            super.stop();
-        }
+        // public stop(): void {
+        //     super.stop();
+        // }
     }
 }

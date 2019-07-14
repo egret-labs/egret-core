@@ -69,9 +69,11 @@ namespace egret.web {
         private _verticesFloat32View: Float32Array = null;
         private _verticesUint32View: Uint32Array = null;
         public debugName: string = '';
+        private readonly _webGLRenderContext: WebGLRenderContext;
 
-        constructor(maxQuadsCount: number) {
+        constructor(webGLRenderContext: WebGLRenderContext, maxQuadsCount: number) {
             ///
+            this._webGLRenderContext = webGLRenderContext;
             this.maxQuadsCount = maxQuadsCount;
             this.maxVertexCount = maxQuadsCount * 4;
             this.maxIndicesCount = maxQuadsCount * 6;
@@ -379,6 +381,29 @@ namespace egret.web {
             this.hasMesh = false;
             this.vertexIndex = 0;
             this.indexIndex = 0;
+        }
+
+        public vertexBuffer: WebGLBuffer;
+        public bind(): void {
+            const gl = this._webGLRenderContext.context;
+            if (!this.vertexBuffer) {
+                this.vertexBuffer = gl.createBuffer();
+            }
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
+            const vb = this.getVertices();
+            this.$uploadVerticesArray(vb);
+        }
+
+        private lastUploadVertexBufferLength: number = 0;
+        private $uploadVerticesArray(array: Float32Array): void {
+            const gl = this._webGLRenderContext.context;
+            if (this.lastUploadVertexBufferLength >= array.length) {
+                gl.bufferSubData(gl.ARRAY_BUFFER, 0, array);
+            }
+            else {
+                this.lastUploadVertexBufferLength = array.length;
+                gl.bufferData(gl.ARRAY_BUFFER, array, gl.DYNAMIC_DRAW);
+            }
         }
 
     }
