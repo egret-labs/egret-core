@@ -5461,8 +5461,9 @@ var egret;
                  * sizeMatchingBufferCache
         
                  */
-                this.sizeMatchBufferViewCache = {};
+                this.sizeMatchVertexBufferCache = {};
                 this.lastUploadVertexBufferLength = 0;
+                this.lastUploadIndexBufferLength = 0;
                 ///
                 this._webGLRenderContext = webGLRenderContext;
                 this.maxQuadsCount = maxQuadsCount;
@@ -5516,15 +5517,14 @@ var egret;
                 */
                 var nextPow2Length = egret.NumberUtils.nextPow2(length);
                 nextPow2Length = Math.min(this._verticesFloat32View.length, nextPow2Length);
-                var bufferView = this.sizeMatchBufferViewCache[nextPow2Length];
+                var bufferView = this.sizeMatchVertexBufferCache[nextPow2Length];
                 if (!bufferView) {
-                    bufferView = this.sizeMatchBufferViewCache[nextPow2Length] = new Float32Array(this._vertices, 0, nextPow2Length);
+                    bufferView = this.sizeMatchVertexBufferCache[nextPow2Length] = new Float32Array(this._vertices, 0, nextPow2Length);
                 }
                 return bufferView;
             };
-            WebGLVertexArrayObject.prototype.clearSizeMatchBufferViewCache = function () {
-                //弃了就好
-                this.sizeMatchBufferViewCache = {};
+            WebGLVertexArrayObject.prototype.clearSizeMatchBuffersCache = function () {
+                this.sizeMatchVertexBufferCache = {};
             };
             /**
              * 获取缓存完成的索引数组
@@ -5756,9 +5756,20 @@ var egret;
                 if (!this.vertexBuffer) {
                     this.vertexBuffer = gl.createBuffer();
                 }
+                if (!this.indexBuffer) {
+                    this.indexBuffer = gl.createBuffer();
+                }
                 gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
                 var vb = this.getVertices();
                 this.$uploadVerticesArray(vb);
+                //每次强行传
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+                if (this.isMesh()) {
+                    this.uploadIndicesArray(this.getMeshIndices());
+                }
+                else {
+                    this.uploadIndicesArray(this.getIndices());
+                }
             };
             WebGLVertexArrayObject.prototype.$uploadVerticesArray = function (array) {
                 var gl = this._webGLRenderContext.context;
@@ -5768,6 +5779,16 @@ var egret;
                 else {
                     this.lastUploadVertexBufferLength = array.length;
                     gl.bufferData(gl.ARRAY_BUFFER, array, gl.DYNAMIC_DRAW);
+                }
+            };
+            WebGLVertexArrayObject.prototype.uploadIndicesArray = function (array) {
+                var gl = this._webGLRenderContext.context;
+                if (this.lastUploadIndexBufferLength >= array.length) {
+                    gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, 0, array);
+                }
+                else {
+                    this.lastUploadIndexBufferLength = array.length;
+                    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, gl.STATIC_DRAW);
                 }
             };
             return WebGLVertexArrayObject;
@@ -5965,6 +5986,8 @@ var egret;
          * 抽象出此类，以实现共用一个context
          */
         var WebGLRenderContext = (function () {
+            //private vertexBuffer;
+            //private indexBuffer;
             function WebGLRenderContext(width, height) {
                 this.batchSystems = {};
                 this.currentBatchSystem = null;
@@ -5987,7 +6010,7 @@ var egret;
                 this.$bufferStack = [];
                 var gl = this.context;
                 //this.vertexBuffer = gl.createBuffer();
-                this.indexBuffer = gl.createBuffer();
+                //this.indexBuffer = gl.createBuffer();
                 // gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
                 // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
                 this.drawCmdManager = new web.WebGLDrawCmdManager();
@@ -6097,10 +6120,10 @@ var egret;
              * 上传索引数据
              */
             WebGLRenderContext.prototype.uploadIndicesArray = function (array) {
-                var gl = this.context;
-                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, gl.STATIC_DRAW);
-                this.bindIndices = true;
+                // let gl: any = this.context;
+                // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+                // gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, gl.STATIC_DRAW);
+                // this.bindIndices = true;
             };
             /**
              * 销毁绘制对象

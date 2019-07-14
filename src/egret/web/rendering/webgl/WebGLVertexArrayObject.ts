@@ -120,7 +120,7 @@ namespace egret.web {
          * sizeMatchingBufferCache
 
          */
-        private sizeMatchBufferViewCache: { [index: number]: Float32Array } = {};
+        private sizeMatchVertexBufferCache: { [index: number]: Float32Array } = {};
         public getVertices(): Float32Array {
             const length = this.vertexIndex * this.vertSize;
             //旧有的subarray从给定的起始位置返回一个新的Float32Array,每次都是创建新对象，不是最优，时间长了容易引起gc.
@@ -131,29 +131,28 @@ namespace egret.web {
             */
             let nextPow2Length = NumberUtils.nextPow2(length);
             nextPow2Length = Math.min(this._verticesFloat32View.length, nextPow2Length);
-            let bufferView = this.sizeMatchBufferViewCache[nextPow2Length];
+            let bufferView = this.sizeMatchVertexBufferCache[nextPow2Length];
             if (!bufferView) {
-                bufferView = this.sizeMatchBufferViewCache[nextPow2Length] = new Float32Array(this._vertices, 0, nextPow2Length);
+                bufferView = this.sizeMatchVertexBufferCache[nextPow2Length] = new Float32Array(this._vertices, 0, nextPow2Length);
             }
             return bufferView;
         }
 
-        public clearSizeMatchBufferViewCache(): void {
-            //弃了就好
-            this.sizeMatchBufferViewCache = {};
+        public clearSizeMatchBuffersCache(): void {
+            this.sizeMatchVertexBufferCache = {};
         }
 
         /**
          * 获取缓存完成的索引数组
          */
-        public getIndices(): any {
+        public getIndices(): Uint16Array {
             return this.indices;
         }
 
         /**
          * 获取缓存完成的mesh索引数组
          */
-        public getMeshIndices(): any {
+        public getMeshIndices(): Uint16Array {
             return this.indicesForMesh;
         }
 
@@ -383,15 +382,28 @@ namespace egret.web {
             this.indexIndex = 0;
         }
 
-        public vertexBuffer: WebGLBuffer;
+        private vertexBuffer: WebGLBuffer;
+        private indexBuffer: WebGLBuffer;
         public bind(): void {
             const gl = this._webGLRenderContext.context;
             if (!this.vertexBuffer) {
                 this.vertexBuffer = gl.createBuffer();
             }
+            if (!this.indexBuffer) {
+                this.indexBuffer = gl.createBuffer();
+            }
             gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
             const vb = this.getVertices();
             this.$uploadVerticesArray(vb);
+
+            //每次强行传
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+            if (this.isMesh()) {
+                this.uploadIndicesArray(this.getMeshIndices());
+            }
+            else {
+                this.uploadIndicesArray(this.getIndices());
+            }
         }
 
         private lastUploadVertexBufferLength: number = 0;
@@ -406,5 +418,16 @@ namespace egret.web {
             }
         }
 
+        private lastUploadIndexBufferLength: number = 0;
+        private uploadIndicesArray(array: Uint16Array): void {
+           const gl = this._webGLRenderContext.context;
+           if (this.lastUploadIndexBufferLength >= array.length) {
+               gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, 0, array);
+           }
+           else {
+               this.lastUploadIndexBufferLength = array.length;
+               gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, gl.STATIC_DRAW);
+           }
+        }
     }
 }

@@ -221,14 +221,14 @@ namespace egret.web {
          * 上传索引数据
          */
         private uploadIndicesArray(array: any): void {
-            let gl: any = this.context;
-            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-            gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, gl.STATIC_DRAW);
-            this.bindIndices = true;
+            // let gl: any = this.context;
+            // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+            // gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, gl.STATIC_DRAW);
+            // this.bindIndices = true;
         }
 
         //private vertexBuffer;
-        private indexBuffer;
+        //private indexBuffer;
 
         public constructor(width?: number, height?: number) {
 
@@ -246,7 +246,7 @@ namespace egret.web {
 
             let gl = this.context;
             //this.vertexBuffer = gl.createBuffer();
-            this.indexBuffer = gl.createBuffer();
+            //this.indexBuffer = gl.createBuffer();
             // gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
             // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
 
