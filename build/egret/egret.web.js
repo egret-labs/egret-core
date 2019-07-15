@@ -6110,6 +6110,7 @@ var egret;
                     this.currentBatchSystem = null;
                 }
                 this.currentBatchSystem = system;
+                this.vao = system.vao;
                 this.currentBatchSystem.start();
                 return true;
             };
@@ -6624,12 +6625,12 @@ var egret;
                     return;
                 }
                 if (meshVertices && meshIndices) {
-                    if (this.$reachMaxSize(meshVertices.length / 2, meshIndices.length)) {
+                    if (this.vao.reachMaxSize(meshVertices.length / 2, meshIndices.length)) {
                         this.$flush(); //this.$drawWebGL();
                     }
                 }
                 else {
-                    if (this.$reachMaxSize()) {
+                    if (this.vao.reachMaxSize()) {
                         this.$flush(); //this.$drawWebGL();
                     }
                 }
@@ -6643,7 +6644,7 @@ var egret;
                 // 应用$filter，因为只可能是colorMatrixFilter，最后两个参数可不传
                 this.drawCmdManager.pushDrawTexture(texture, count, this.$filter, textureWidth, textureHeight);
                 buffer.currentTexture = texture;
-                this.$cacheArrays(buffer, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices, rotated);
+                this.vao.cacheArrays(buffer, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices, rotated);
             };
             /**
              * 绘制矩形（仅用于遮罩擦除等）
@@ -6653,12 +6654,12 @@ var egret;
                 if (this.contextLost || !buffer) {
                     return;
                 }
-                if (this.$reachMaxSize()) {
+                if (this.vao.reachMaxSize()) {
                     this.$flush(); //this.$drawWebGL();
                 }
                 this.drawCmdManager.pushDrawRect();
                 buffer.currentTexture = null;
-                this.$cacheArrays(buffer, 0, 0, width, height, x, y, width, height, width, height);
+                this.vao.cacheArrays(buffer, 0, 0, width, height, x, y, width, height, width, height);
             };
             /**
              * 绘制遮罩
@@ -6669,12 +6670,12 @@ var egret;
                     return;
                 }
                 buffer.$stencilList.push({ x: x, y: y, width: width, height: height });
-                if (this.$reachMaxSize()) {
+                if (this.vao.reachMaxSize()) {
                     this.$flush(); //this.$drawWebGL();
                 }
                 this.drawCmdManager.pushPushMask();
                 buffer.currentTexture = null;
-                this.$cacheArrays(buffer, 0, 0, width, height, x, y, width, height, width, height);
+                this.vao.cacheArrays(buffer, 0, 0, width, height, x, y, width, height, width, height);
             };
             /**
              * 恢复遮罩
@@ -6685,12 +6686,12 @@ var egret;
                     return;
                 }
                 var mask = buffer.$stencilList.pop();
-                if (this.$reachMaxSize()) {
+                if (this.vao.reachMaxSize()) {
                     this.$flush(); //this.$drawWebGL();
                 }
                 this.drawCmdManager.pushPopMask();
                 buffer.currentTexture = null;
-                this.$cacheArrays(buffer, 0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
+                this.vao.cacheArrays(buffer, 0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
             };
             /**
              * 清除颜色缓存
@@ -7050,7 +7051,7 @@ var egret;
                 if (this.contextLost) {
                     return;
                 }
-                if (this.$reachMaxSize()) {
+                if (this.vao.reachMaxSize()) {
                     this.$flush(); //this.$drawWebGL();
                 }
                 this.pushBuffer(output);
@@ -7078,7 +7079,7 @@ var egret;
                 output.saveTransform();
                 output.transform(1, 0, 0, -1, 0, height);
                 output.currentTexture = input.rootRenderTarget.texture;
-                this.$cacheArrays(output, 0, 0, width, height, 0, 0, width, height, width, height);
+                this.vao.cacheArrays(output, 0, 0, width, height, 0, 0, width, height, width, height);
                 output.restoreTransform();
                 this.drawCmdManager.pushDrawTexture(input.rootRenderTarget.texture, 2, filter, width, height);
                 // 释放掉input
@@ -7112,21 +7113,6 @@ var egret;
                 WebGLRenderContext.blendModesForGL["destination-out"] = [0, 771];
                 WebGLRenderContext.blendModesForGL["destination-in"] = [0, 770];
             };
-            WebGLRenderContext.prototype.$reachMaxSize = function (vertexCount, indexCount) {
-                if (vertexCount === void 0) { vertexCount = 4; }
-                if (indexCount === void 0) { indexCount = 6; }
-                return this.vao.reachMaxSize(vertexCount, indexCount);
-            };
-            WebGLRenderContext.prototype.$cacheArrays = function (buffer, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices, rotated) {
-                this.vao.cacheArrays(buffer, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices, rotated);
-            };
-            Object.defineProperty(WebGLRenderContext.prototype, "vao", {
-                get: function () {
-                    return this.currentBatchSystem.vao;
-                },
-                enumerable: true,
-                configurable: true
-            });
             WebGLRenderContext.glContextId = 0;
             WebGLRenderContext.blendModesForGL = null;
             return WebGLRenderContext;
