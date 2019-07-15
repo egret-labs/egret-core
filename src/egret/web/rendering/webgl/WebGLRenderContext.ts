@@ -50,6 +50,26 @@ namespace egret.web {
         private dynamicGroupSystem: GroupBatchSystem;
         private currentBatchSystem: WebGLRenderBatchSystem;
         public resetVertexAttribPointer: boolean = true;
+        private _currentVertexBuffer: WebGLBuffer;
+        private _currentIndexBuffer: WebGLBuffer;
+
+        public bindVertexBuffer(vertexBuffer: WebGLBuffer): void {
+            if (this._currentVertexBuffer === vertexBuffer) {
+                return;
+            }
+            const gl = this.context;
+            this._currentVertexBuffer = vertexBuffer;
+            gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+        }
+
+        public bindIndexBuffer(indexBuffer: WebGLBuffer): void {
+            if (this._currentIndexBuffer === indexBuffer) {
+                return;
+            }
+            const gl = this.context;
+            this._currentIndexBuffer = indexBuffer;
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+        }
 
         private clearBatchSystems(): void {
             this.batchSystems = {};

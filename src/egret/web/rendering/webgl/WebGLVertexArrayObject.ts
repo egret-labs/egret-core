@@ -422,14 +422,15 @@ namespace egret.web {
                 this._webglIndexBuffer = gl.createBuffer();
             }
             //
-            gl.bindBuffer(gl.ARRAY_BUFFER, this._webglVertexBuffer);
+            //gl.bindBuffer(gl.ARRAY_BUFFER, this._webglVertexBuffer);
+            this._webGLRenderContext.bindVertexBuffer(this._webglVertexBuffer);
             if (this._vertexIndex > 0) {
                 const vb = this.getVertexArrayBuffer();
                 this.$uploadVerticesArray(vb);
             }
-            
             //
-            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._webglIndexBuffer);
+            //gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._webglIndexBuffer);
+            this._webGLRenderContext.bindIndexBuffer(this._webglIndexBuffer);
             if (this._indexIndex > 0 && this._currentIndexBufferId !== this._indexBufferId) {
                 this._currentIndexBufferId = this._indexBufferId;
                 const ib = this.getIndexArrayBuffer();

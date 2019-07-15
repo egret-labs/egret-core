@@ -5779,13 +5779,15 @@ var egret;
                     this._webglIndexBuffer = gl.createBuffer();
                 }
                 //
-                gl.bindBuffer(gl.ARRAY_BUFFER, this._webglVertexBuffer);
+                //gl.bindBuffer(gl.ARRAY_BUFFER, this._webglVertexBuffer);
+                this._webGLRenderContext.bindVertexBuffer(this._webglVertexBuffer);
                 if (this._vertexIndex > 0) {
                     var vb = this.getVertexArrayBuffer();
                     this.$uploadVerticesArray(vb);
                 }
                 //
-                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._webglIndexBuffer);
+                //gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._webglIndexBuffer);
+                this._webGLRenderContext.bindIndexBuffer(this._webglIndexBuffer);
                 if (this._indexIndex > 0 && this._currentIndexBufferId !== this._indexBufferId) {
                     this._currentIndexBufferId = this._indexBufferId;
                     var ib = this.getIndexArrayBuffer();
@@ -6062,6 +6064,22 @@ var egret;
                 this.drawCmdManager = new web.WebGLDrawCmdManager();
                 this.setGlobalCompositeOperation("source-over");
             }
+            WebGLRenderContext.prototype.bindVertexBuffer = function (vertexBuffer) {
+                if (this._currentVertexBuffer === vertexBuffer) {
+                    return;
+                }
+                var gl = this.context;
+                this._currentVertexBuffer = vertexBuffer;
+                gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+            };
+            WebGLRenderContext.prototype.bindIndexBuffer = function (indexBuffer) {
+                if (this._currentIndexBuffer === indexBuffer) {
+                    return;
+                }
+                var gl = this.context;
+                this._currentIndexBuffer = indexBuffer;
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+            };
             WebGLRenderContext.prototype.clearBatchSystems = function () {
                 this.batchSystems = {};
                 this.currentBatchSystem = null;
