@@ -6036,7 +6036,6 @@ var egret;
             //private indexBuffer;
             function WebGLRenderContext(width, height) {
                 this.batchSystems = {};
-                this.currentBatchSystem = null;
                 this.resetVertexAttribPointer = true;
                 //
                 this._defaultEmptyTexture = null;
@@ -6070,36 +6069,33 @@ var egret;
                 this.dynamicGroupSystem = null;
                 this.resetVertexAttribPointer = true;
             };
-            WebGLRenderContext.prototype.registerBatchSystem = function (renderNodeType, system) {
-                if (!system || renderNodeType === 4 /* GroupNode */) {
-                    return;
-                }
-                this.batchSystems[renderNodeType] = system;
-            };
             WebGLRenderContext.prototype.setBatchSystem = function (renderNode) {
                 if (!renderNode) {
                     return false;
                 }
                 if (!renderNode.batchSystem) {
+                    var gl = this.context;
                     if (renderNode.type === 4 /* GroupNode */) {
                         var groupNode = renderNode;
                         groupNode.analysisAllNodes();
-                        renderNode.batchSystem = groupNode.hasMeshNode ? this.dynamicGroupSystem : this.staticGroupSystem;
+                        if (groupNode.hasMeshNode) {
+                            renderNode.batchSystem = this.dynamicGroupSystem = this.dynamicGroupSystem
+                                || new web.GroupBatchSystem(this, new web.WebGLVertexArrayObject(this, 2048, gl.DYNAMIC_DRAW, 'DynamicGroupVAO'));
+                        }
+                        else {
+                            renderNode.batchSystem = this.staticGroupSystem = this.staticGroupSystem
+                                || new web.GroupBatchSystem(this, new web.WebGLVertexArrayObject(this, 2048, gl.STATIC_DRAW, 'StaticGroupVAO'));
+                        }
                     }
                     else {
+                        if (renderNode.type === 5 /* MeshNode */) {
+                            this.batchSystems[renderNode.type] = this.batchSystems[renderNode.type]
+                                || new web.MeshBatchSystem(this, new web.WebGLVertexArrayObject(this, 2048, gl.DYNAMIC_DRAW, 'MeshVAO'));
+                        }
                         renderNode.batchSystem = this.batchSystems[renderNode.type];
                     }
                 }
                 return this.changeBatchSystem(renderNode.batchSystem);
-                /*
-                if (renderNode.type === sys.RenderNodeType.GroupNode) {
-                    const groupNode = renderNode as sys.GroupNode;
-                    groupNode.analysisAllNodes();
-                    const targetSystem = groupNode.hasMeshNode ? this.dynamicGroupSystem : this.staticGroupSystem;
-                    return this.changeBatchSystem(targetSystem);
-                }
-                return this.changeBatchSystem(this.batchSystems[renderNode.type]);
-                */
             };
             WebGLRenderContext.prototype.changeBatchSystem = function (system) {
                 if (!system || system === this.currentBatchSystem) {
@@ -6277,20 +6273,12 @@ var egret;
                 var gl = this.context;
                 //全部清除
                 this.clearBatchSystems();
-                //注册这个系统
-                var spriteVAO = new web.WebGLVertexArrayObject(this, 2048, gl.STATIC_DRAW, 'SpriteVAO');
-                var spriteBatchSystem = new web.SpriteBatchSystem(this, spriteVAO);
-                this.registerBatchSystem(1 /* BitmapNode */, spriteBatchSystem);
-                this.registerBatchSystem(2 /* TextNode */, spriteBatchSystem);
-                this.registerBatchSystem(3 /* GraphicsNode */, spriteBatchSystem);
-                this.registerBatchSystem(6 /* NormalBitmapNode */, spriteBatchSystem);
-                //注册mesh的系统
-                var meshVAO = new web.WebGLVertexArrayObject(this, 2048, gl.DYNAMIC_DRAW, 'MeshVAO');
-                var meshBatchSystem = new web.MeshBatchSystem(this, meshVAO);
-                this.registerBatchSystem(5 /* MeshNode */, meshBatchSystem);
-                //注册group的系统
-                this.dynamicGroupSystem = new web.GroupBatchSystem(this, new web.WebGLVertexArrayObject(this, 2048, gl.DYNAMIC_DRAW, 'DynamicGroupVAO'));
-                this.staticGroupSystem = new web.GroupBatchSystem(this, new web.WebGLVertexArrayObject(this, 2048, gl.STATIC_DRAW, 'StaticGroupVAO'));
+                //注册这个系统 this.batchSystems[
+                var spriteBatchSystem = new web.SpriteBatchSystem(this, new web.WebGLVertexArrayObject(this, 2048, gl.STATIC_DRAW, 'SpriteVAO'));
+                this.batchSystems[1 /* BitmapNode */] = spriteBatchSystem;
+                this.batchSystems[2 /* TextNode */] = spriteBatchSystem;
+                this.batchSystems[3 /* GraphicsNode */] = spriteBatchSystem;
+                this.batchSystems[6 /* NormalBitmapNode */] = spriteBatchSystem;
                 //默认切换精灵系统
                 this.changeBatchSystem(spriteBatchSystem);
             };
