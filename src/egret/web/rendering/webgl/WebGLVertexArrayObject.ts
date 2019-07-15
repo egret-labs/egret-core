@@ -54,7 +54,7 @@ namespace egret.web {
         private readonly _maxIndicesCount: number = this._maxQuadsCount * 6;
 
         //private readonly vertices: Float32Array = null;
-        private readonly _indexArrayBuffer: Uint16Array;
+        private readonly _indicesUint16View: Uint16Array;
         //private readonly indicesForMesh: Uint16Array = null;
 
         private _vertexIndex: number = 0;
@@ -66,6 +66,7 @@ namespace egret.web {
         * refactor: 
         */
         private readonly _vertices: ArrayBuffer;
+        private readonly _indices: ArrayBuffer;
         private readonly _verticesFloat32View: Float32Array;
         private readonly _verticesUint32View: Uint32Array;
         private readonly _name: string = '';
@@ -76,15 +77,17 @@ namespace egret.web {
         private _webglVertexBuffer: WebGLBuffer;
         private _webglIndexBuffer: WebGLBuffer;
         private _sizeMatchVertexBufferCache: { [index: number]: Float32Array } = {};
+        private _sizeMatchIndexBufferCache: { [index: number]: Uint16Array } = {};
 
         constructor(webGLRenderContext: WebGLRenderContext, maxQuadsCount: number, indexBufferUsage: number, name: string) {
             ///
+            this._name = name;
             this._webGLRenderContext = webGLRenderContext;
             this._maxQuadsCount = maxQuadsCount;
             this._maxVertexCount = maxQuadsCount * 4;
             this._maxIndicesCount = maxQuadsCount * 6;
             this._indexBufferUsage = indexBufferUsage;
-            this._name = name;
+            
             //old
             //const numVerts = this.maxVertexCount * this.vertSize;
             //this.vertices = new Float32Array(numVerts);
@@ -104,17 +107,20 @@ namespace egret.web {
             两个三角形
             */
             const maxIndicesCount = this._maxIndicesCount;
-            this._indexArrayBuffer = new Uint16Array(maxIndicesCount);
-            //this.indicesForMesh = this.indices;//new Uint16Array(maxIndicesCount);
-            for (let i = 0, j = 0; i < maxIndicesCount; i += 6, j += 4) {
-                this._indexArrayBuffer[i + 0] = j + 0;
-                this._indexArrayBuffer[i + 1] = j + 1;
-                this._indexArrayBuffer[i + 2] = j + 2;
-                this._indexArrayBuffer[i + 3] = j + 0;
-                this._indexArrayBuffer[i + 4] = j + 2;
-                this._indexArrayBuffer[i + 5] = j + 3;
+            this._indices = new ArrayBuffer(maxIndicesCount * 2);
+            this._indicesUint16View = new Uint16Array(this._indices);
+            if (this._indexBufferUsage === this._webGLRenderContext.context.STATIC_DRAW) {
+                const _indexArrayBuffer = this._indicesUint16View;
+                for (let i = 0, j = 0; i < maxIndicesCount; i += 6, j += 4) {
+                    _indexArrayBuffer[i + 0] = j + 0;
+                    _indexArrayBuffer[i + 1] = j + 1;
+                    _indexArrayBuffer[i + 2] = j + 2;
+                    _indexArrayBuffer[i + 3] = j + 0;
+                    _indexArrayBuffer[i + 4] = j + 2;
+                    _indexArrayBuffer[i + 5] = j + 3;
+                }
+                ++this._indexBufferId;
             }
-            ++this._indexBufferId;
         }
 
         /**
@@ -127,8 +133,12 @@ namespace egret.web {
         /**
          * 获取缓存完成的顶点数组
          * sizeMatchingBufferCache
-
          */
+        public clearSizeMatchBuffersCache(): void {
+            this._sizeMatchVertexBufferCache = {};
+            this._sizeMatchIndexBufferCache = {};
+        }
+
         private getVertexArrayBuffer(): Float32Array {
             const length = this._vertexIndex * this._vertSize;
             //旧有的subarray从给定的起始位置返回一个新的Float32Array,每次都是创建新对象，不是最优，时间长了容易引起gc.
@@ -146,15 +156,23 @@ namespace egret.web {
             return bufferView;
         }
 
-        public clearSizeMatchBuffersCache(): void {
-            this._sizeMatchVertexBufferCache = {};
-        }
-
         /**
          * 获取缓存完成的索引数组
          */
         private getIndexArrayBuffer(): Uint16Array {
-            return this._indexArrayBuffer;
+            const gl = this._webGLRenderContext.context;
+            if (this._indexBufferUsage === gl.STATIC_DRAW) {
+                //静态的不会总动，直接提交一次就好
+                return this._indicesUint16View;
+            }
+            const length = this._indexIndex;
+            let nextPow2Length = NumberUtils.nextPow2(length);
+            nextPow2Length = Math.min(this._indicesUint16View.length, nextPow2Length);
+            let bufferView = this._sizeMatchIndexBufferCache[nextPow2Length];
+            if (!bufferView) {
+                bufferView = this._sizeMatchIndexBufferCache[nextPow2Length] = new Uint16Array(this._indices, 0, nextPow2Length);
+            }
+            return bufferView;
         }
 
         /**
@@ -280,7 +298,7 @@ namespace egret.web {
                 // 缓存索引数组
                 //if (this.hasMesh) {
                     for (let i = 0, l = meshIndices.length; i < l; ++i) {
-                        this._indexArrayBuffer/*indicesForMesh*/[this._indexIndex + i] = meshIndices[i] + this._vertexIndex;
+                        this._indicesUint16View/*indicesForMesh*/[this._indexIndex + i] = meshIndices[i] + this._vertexIndex;
                     }
                     ++this._indexBufferId;
                 //}
@@ -402,11 +420,14 @@ namespace egret.web {
             }
             //
             gl.bindBuffer(gl.ARRAY_BUFFER, this._webglVertexBuffer);
-            const vb = this.getVertexArrayBuffer();
-            this.$uploadVerticesArray(vb);
+            if (this._vertexIndex > 0) {
+                const vb = this.getVertexArrayBuffer();
+                this.$uploadVerticesArray(vb);
+            }
+            
             //
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._webglIndexBuffer);
-            if (this._currentIndexBufferId !== this._indexBufferId) {
+            if (this._indexIndex > 0 && this._currentIndexBufferId !== this._indexBufferId) {
                 this._currentIndexBufferId = this._indexBufferId;
                 const ib = this.getIndexArrayBuffer();
                 this.$uploadIndicesArray(ib);
