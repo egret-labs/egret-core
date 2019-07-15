@@ -29,7 +29,7 @@
 
 namespace egret.web {
 
-    export class WebGLRenderBatchSystem {
+    export class WebGLRenderBatchSystem implements sys.RenderBatchSystem {
 
         private readonly _webGLRenderContext: WebGLRenderContext;
         public readonly vao: WebGLVertexArrayObject;

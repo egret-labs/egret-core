@@ -6080,13 +6080,26 @@ var egret;
                 if (!renderNode) {
                     return false;
                 }
-                if (renderNode.type === 4 /* GroupNode */) {
-                    var groupNode = renderNode;
+                if (!renderNode.batchSystem) {
+                    if (renderNode.type === 4 /* GroupNode */) {
+                        var groupNode = renderNode;
+                        groupNode.analysisAllNodes();
+                        renderNode.batchSystem = groupNode.hasMeshNode ? this.dynamicGroupSystem : this.staticGroupSystem;
+                    }
+                    else {
+                        renderNode.batchSystem = this.batchSystems[renderNode.type];
+                    }
+                }
+                return this.changeBatchSystem(renderNode.batchSystem);
+                /*
+                if (renderNode.type === sys.RenderNodeType.GroupNode) {
+                    const groupNode = renderNode as sys.GroupNode;
                     groupNode.analysisAllNodes();
-                    var targetSystem = groupNode.hasMeshNode ? this.dynamicGroupSystem : this.staticGroupSystem;
+                    const targetSystem = groupNode.hasMeshNode ? this.dynamicGroupSystem : this.staticGroupSystem;
                     return this.changeBatchSystem(targetSystem);
                 }
                 return this.changeBatchSystem(this.batchSystems[renderNode.type]);
+                */
             };
             WebGLRenderContext.prototype.changeBatchSystem = function (system) {
                 if (!system || system === this.currentBatchSystem) {
@@ -6271,12 +6284,12 @@ var egret;
                 this.registerBatchSystem(3 /* GraphicsNode */, spriteBatchSystem);
                 this.registerBatchSystem(6 /* NormalBitmapNode */, spriteBatchSystem);
                 //注册mesh的系统
-                var meshVAO = new web.WebGLVertexArrayObject(this, 1024, gl.DYNAMIC_DRAW, 'MeshVAO');
+                var meshVAO = new web.WebGLVertexArrayObject(this, 2048, gl.DYNAMIC_DRAW, 'MeshVAO');
                 var meshBatchSystem = new web.MeshBatchSystem(this, meshVAO);
                 this.registerBatchSystem(5 /* MeshNode */, meshBatchSystem);
                 //注册group的系统
-                this.dynamicGroupSystem = new web.GroupBatchSystem(this, new web.WebGLVertexArrayObject(this, 1024, gl.DYNAMIC_DRAW, 'DynamicGroupVAO'));
-                this.staticGroupSystem = new web.GroupBatchSystem(this, new web.WebGLVertexArrayObject(this, 1024, gl.STATIC_DRAW, 'StaticGroupVAO'));
+                this.dynamicGroupSystem = new web.GroupBatchSystem(this, new web.WebGLVertexArrayObject(this, 2048, gl.DYNAMIC_DRAW, 'DynamicGroupVAO'));
+                this.staticGroupSystem = new web.GroupBatchSystem(this, new web.WebGLVertexArrayObject(this, 2048, gl.STATIC_DRAW, 'StaticGroupVAO'));
                 //默认切换精灵系统
                 this.changeBatchSystem(spriteBatchSystem);
             };
@@ -6623,9 +6636,9 @@ var egret;
                 if (smoothing != undefined && texture["smoothing"] != smoothing) {
                     this.drawCmdManager.pushChangeSmoothing(texture, smoothing);
                 }
-                if (meshUVs) {
-                    //this.vao.changeToMeshIndices();
-                }
+                //if (meshUVs) {
+                //this.vao.changeToMeshIndices();
+                //}
                 var count = meshIndices ? meshIndices.length / 3 : 2;
                 // 应用$filter，因为只可能是colorMatrixFilter，最后两个参数可不传
                 this.drawCmdManager.pushDrawTexture(texture, count, this.$filter, textureWidth, textureHeight);
@@ -7176,7 +7189,7 @@ var egret;
             return WebGLRenderBatchSystem;
         }());
         web.WebGLRenderBatchSystem = WebGLRenderBatchSystem;
-        __reflect(WebGLRenderBatchSystem.prototype, "egret.web.WebGLRenderBatchSystem");
+        __reflect(WebGLRenderBatchSystem.prototype, "egret.web.WebGLRenderBatchSystem", ["egret.sys.RenderBatchSystem"]);
         var EmptyBatchSystem = (function (_super) {
             __extends(EmptyBatchSystem, _super);
             function EmptyBatchSystem() {

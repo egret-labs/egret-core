@@ -3439,6 +3439,7 @@ declare namespace egret.sys {
          * 绘制次数
          */
         protected renderCount: number;
+        batchSystem: sys.RenderBatchSystem;
         /**
          * 在显示对象的$updateRenderNode()方法被调用前，自动清空自身的drawData数据。
          */
@@ -9743,6 +9744,12 @@ declare namespace egret.sys {
      * 画texture
      **/
     function drawTextureElements(renderContext: RenderContext, data: any, offset: number): number;
+    interface RenderBatchSystem {
+        start(): void;
+        stop(): void;
+        flush(): void;
+        render(): void;
+    }
 }
 declare namespace egret.sys {
     /**

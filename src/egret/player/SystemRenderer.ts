@@ -126,4 +126,11 @@ namespace egret.sys {
         console.error(`empty sys.drawTextureElements = ${renderContext}, ${data}, ${offset}`);
         return 0;
     }
+
+    export interface RenderBatchSystem {
+        start(): void;
+        stop(): void;
+        flush(): void;
+        render(): void;
+    }
 }

@@ -70,6 +70,18 @@ namespace egret.web {
             if (!renderNode) {
                 return false;
             }
+            if (!renderNode.batchSystem) {
+                if (renderNode.type === sys.RenderNodeType.GroupNode) {
+                    const groupNode = renderNode as sys.GroupNode;
+                    groupNode.analysisAllNodes();
+                    renderNode.batchSystem = groupNode.hasMeshNode ? this.dynamicGroupSystem : this.staticGroupSystem;
+                }
+                else {
+                    renderNode.batchSystem = this.batchSystems[renderNode.type];
+                }
+            }
+            return this.changeBatchSystem(renderNode.batchSystem as WebGLRenderBatchSystem);
+            /*
             if (renderNode.type === sys.RenderNodeType.GroupNode) {
                 const groupNode = renderNode as sys.GroupNode;
                 groupNode.analysisAllNodes();
@@ -77,6 +89,7 @@ namespace egret.web {
                 return this.changeBatchSystem(targetSystem);
             }
             return this.changeBatchSystem(this.batchSystems[renderNode.type]);
+            */
         }
 
         private changeBatchSystem(system: WebGLRenderBatchSystem): boolean {
@@ -405,12 +418,12 @@ namespace egret.web {
             this.registerBatchSystem(sys.RenderNodeType.GraphicsNode, spriteBatchSystem);
             this.registerBatchSystem(sys.RenderNodeType.NormalBitmapNode, spriteBatchSystem);
             //注册mesh的系统
-            const meshVAO = new WebGLVertexArrayObject(this, 1024, gl.DYNAMIC_DRAW, 'MeshVAO');
+            const meshVAO = new WebGLVertexArrayObject(this, 2048, gl.DYNAMIC_DRAW, 'MeshVAO');
             const meshBatchSystem = new MeshBatchSystem(this, meshVAO);
             this.registerBatchSystem(sys.RenderNodeType.MeshNode, meshBatchSystem);
             //注册group的系统
-            this.dynamicGroupSystem = new GroupBatchSystem(this, new WebGLVertexArrayObject(this, 1024, gl.DYNAMIC_DRAW, 'DynamicGroupVAO'));
-            this.staticGroupSystem = new GroupBatchSystem(this, new WebGLVertexArrayObject(this, 1024, gl.STATIC_DRAW, 'StaticGroupVAO'))
+            this.dynamicGroupSystem = new GroupBatchSystem(this, new WebGLVertexArrayObject(this, 2048, gl.DYNAMIC_DRAW, 'DynamicGroupVAO'));
+            this.staticGroupSystem = new GroupBatchSystem(this, new WebGLVertexArrayObject(this, 2048, gl.STATIC_DRAW, 'StaticGroupVAO'))
             //默认切换精灵系统
             this.changeBatchSystem(spriteBatchSystem);
         }
@@ -803,9 +816,9 @@ namespace egret.web {
                 this.drawCmdManager.pushChangeSmoothing(texture, smoothing);
             }
 
-            if (meshUVs) {
+            //if (meshUVs) {
                 //this.vao.changeToMeshIndices();
-            }
+            //}
 
             let count = meshIndices ? meshIndices.length / 3 : 2;
             // 应用$filter，因为只可能是colorMatrixFilter，最后两个参数可不传
