@@ -45,32 +45,41 @@ namespace egret.web {
      */
     export class WebGLRenderContext implements egret.sys.RenderContext {
 
-        private readonly batchSystems: { [index: number]: WebGLRenderBatchSystem } = {};
+        private batchSystems: { [index: number]: WebGLRenderBatchSystem } = {};
+        private staticGroupSystem: GroupBatchSystem;
+        private dynamicGroupSystem: GroupBatchSystem;
         private currentBatchSystem: WebGLRenderBatchSystem = null;
         public resetVertexAttribPointer: boolean = true;
 
         private clearBatchSystems(): void {
+            this.batchSystems = {};
             this.currentBatchSystem = null;
-            for (const pro in this.batchSystems) {
-                delete this.batchSystems[pro];
-            }
+            this.staticGroupSystem = null;
+            this.dynamicGroupSystem = null;
+            this.resetVertexAttribPointer = true;
         }
         
-        private registerBatchSystemByRenderNodeType(renderNodeType: sys.RenderNodeType, system: WebGLRenderBatchSystem): void {
-            if (system) {
-                this.batchSystems[renderNodeType] = system;
+        private registerBatchSystem(renderNodeType: sys.RenderNodeType, system: WebGLRenderBatchSystem): void {
+            if (!system || renderNodeType === sys.RenderNodeType.GroupNode) {
+                return;
             }
+            this.batchSystems[renderNodeType] = system;
         }
 
-        public setBatchSystemByRenderNode(renderNode: sys.RenderNode): boolean {
-            // if (renderNode.type === sys.RenderNodeType.GroupNode) {
-            //     return false;
-            // }
-            const system = this.batchSystems[renderNode.type];
-            return this.changeToBatchSystem(system);
+        public setBatchSystem(renderNode: sys.RenderNode): boolean {
+            if (!renderNode) {
+                return false;
+            }
+            if (renderNode.type === sys.RenderNodeType.GroupNode) {
+                const groupNode = renderNode as sys.GroupNode;
+                groupNode.analysisAllNodes();
+                const targetSystem = groupNode.hasMeshNode ? this.dynamicGroupSystem : this.staticGroupSystem;
+                return this.changeBatchSystem(targetSystem);
+            }
+            return this.changeBatchSystem(this.batchSystems[renderNode.type]);
         }
 
-        private changeToBatchSystem(system: WebGLRenderBatchSystem): boolean {
+        private changeBatchSystem(system: WebGLRenderBatchSystem): boolean {
             if (!system || system === this.currentBatchSystem) {
                 return false;
             }
@@ -240,6 +249,7 @@ namespace egret.web {
             
 
             this.initWebGL();
+            this.initBatchSystems();
 
             this.$bufferStack = [];
 
@@ -380,8 +390,6 @@ namespace egret.web {
             egret.Capabilities.supportedCompressedTexture.etc1 = !!this.etc1;
             //
             this._supportedCompressedTextureInfo = this._buildSupportedCompressedTextureInfo([this.etc1, this.pvrtc]);
-            //
-            this.initBatchSystems();
         }
 
         private initBatchSystems(): void {
@@ -392,21 +400,19 @@ namespace egret.web {
             //注册这个系统
             const spriteVAO = new WebGLVertexArrayObject(this, 2048, gl.STATIC_DRAW, 'SpriteVAO');
             const spriteBatchSystem = new SpriteBatchSystem(this, spriteVAO);
-            this.registerBatchSystemByRenderNodeType(sys.RenderNodeType.BitmapNode, spriteBatchSystem);
-            this.registerBatchSystemByRenderNodeType(sys.RenderNodeType.TextNode, spriteBatchSystem);
-            this.registerBatchSystemByRenderNodeType(sys.RenderNodeType.GraphicsNode, spriteBatchSystem);
-            this.registerBatchSystemByRenderNodeType(sys.RenderNodeType.NormalBitmapNode, spriteBatchSystem);
+            this.registerBatchSystem(sys.RenderNodeType.BitmapNode, spriteBatchSystem);
+            this.registerBatchSystem(sys.RenderNodeType.TextNode, spriteBatchSystem);
+            this.registerBatchSystem(sys.RenderNodeType.GraphicsNode, spriteBatchSystem);
+            this.registerBatchSystem(sys.RenderNodeType.NormalBitmapNode, spriteBatchSystem);
             //注册mesh的系统
             const meshVAO = new WebGLVertexArrayObject(this, 1024, gl.DYNAMIC_DRAW, 'MeshVAO');
             const meshBatchSystem = new MeshBatchSystem(this, meshVAO);
-            this.registerBatchSystemByRenderNodeType(sys.RenderNodeType.MeshNode, meshBatchSystem);
+            this.registerBatchSystem(sys.RenderNodeType.MeshNode, meshBatchSystem);
             //注册group的系统
-            const groupVAO = new WebGLVertexArrayObject(this, 1024, gl.DYNAMIC_DRAW, 'GroupVAO');
-            const groupBatchSystem = new GroupBatchSystem(this, groupVAO);
-            this.registerBatchSystemByRenderNodeType(sys.RenderNodeType.GroupNode, groupBatchSystem);
-            //默认空系统
-            const emptyBatchSystem = new EmptyBatchSystem(this, spriteVAO);
-            this.changeToBatchSystem(emptyBatchSystem);
+            this.dynamicGroupSystem = new GroupBatchSystem(this, new WebGLVertexArrayObject(this, 1024, gl.DYNAMIC_DRAW, 'DynamicGroupVAO'));
+            this.staticGroupSystem = new GroupBatchSystem(this, new WebGLVertexArrayObject(this, 1024, gl.STATIC_DRAW, 'StaticGroupVAO'))
+            //默认切换精灵系统
+            this.changeBatchSystem(spriteBatchSystem);
         }
 
         private handleContextLost() {
@@ -415,6 +421,7 @@ namespace egret.web {
 
         private handleContextRestored() {
             this.initWebGL();
+            this.initBatchSystems();
             this.contextLost = false;
         }
 

@@ -38,34 +38,56 @@ namespace egret.sys {
          * 相对偏移矩阵。
          */
         public matrix: egret.Matrix;
-        
+
+        /*
+        * 有mesh节点，用vao的时候，就应该使用动态的ib
+        */
+        public hasMeshNode: boolean = false;
+
         public constructor() {
             super();
             this.type = RenderNodeType.GroupNode;
         }
 
-        public addNode(node:RenderNode):void {
+        public addNode(node: RenderNode): void {
             this.drawData.push(node);
+
         }
 
         /**
          * 覆盖父类方法，不自动清空缓存的绘图数据，改为手动调用clear()方法清空。
          * 这里只是想清空绘制命令，因此不调用super
          */
-        public cleanBeforeRender():void {
+        public cleanBeforeRender(): void {
             let data = this.drawData;
             for (let i = data.length - 1; i >= 0; i--) {
                 data[i].cleanBeforeRender();
             }
         }
 
-        public $getRenderCount():number {
+        public $getRenderCount(): number {
             let result = 0;
             let data = this.drawData;
             for (let i = data.length - 1; i >= 0; i--) {
                 result += data[i].$getRenderCount();
             }
             return result;
+        }
+
+        private _analysisAllNodes: boolean = false;
+        public analysisAllNodes(): void {
+            if (this._analysisAllNodes) {
+                return;
+            }
+            this._analysisAllNodes = true;
+            let nd: sys.RenderNode;
+            for (const da of this.drawData) {
+                nd = da as sys.RenderNode;
+                if (nd.type === sys.RenderNodeType.MeshNode) {
+                    this.hasMeshNode = true;
+                    break;
+                }
+            }
         }
     }
 }

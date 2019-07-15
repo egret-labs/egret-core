@@ -6053,6 +6053,7 @@ var egret;
                     return;
                 }
                 this.initWebGL();
+                this.initBatchSystems();
                 this.$bufferStack = [];
                 //let gl = this.context;
                 //this.vertexBuffer = gl.createBuffer();
@@ -6063,24 +6064,31 @@ var egret;
                 this.setGlobalCompositeOperation("source-over");
             }
             WebGLRenderContext.prototype.clearBatchSystems = function () {
+                this.batchSystems = {};
                 this.currentBatchSystem = null;
-                for (var pro in this.batchSystems) {
-                    delete this.batchSystems[pro];
+                this.staticGroupSystem = null;
+                this.dynamicGroupSystem = null;
+                this.resetVertexAttribPointer = true;
+            };
+            WebGLRenderContext.prototype.registerBatchSystem = function (renderNodeType, system) {
+                if (!system || renderNodeType === 4 /* GroupNode */) {
+                    return;
                 }
+                this.batchSystems[renderNodeType] = system;
             };
-            WebGLRenderContext.prototype.registerBatchSystemByRenderNodeType = function (renderNodeType, system) {
-                if (system) {
-                    this.batchSystems[renderNodeType] = system;
+            WebGLRenderContext.prototype.setBatchSystem = function (renderNode) {
+                if (!renderNode) {
+                    return false;
                 }
+                if (renderNode.type === 4 /* GroupNode */) {
+                    var groupNode = renderNode;
+                    groupNode.analysisAllNodes();
+                    var targetSystem = groupNode.hasMeshNode ? this.dynamicGroupSystem : this.staticGroupSystem;
+                    return this.changeBatchSystem(targetSystem);
+                }
+                return this.changeBatchSystem(this.batchSystems[renderNode.type]);
             };
-            WebGLRenderContext.prototype.setBatchSystemByRenderNode = function (renderNode) {
-                // if (renderNode.type === sys.RenderNodeType.GroupNode) {
-                //     return false;
-                // }
-                var system = this.batchSystems[renderNode.type];
-                return this.changeToBatchSystem(system);
-            };
-            WebGLRenderContext.prototype.changeToBatchSystem = function (system) {
+            WebGLRenderContext.prototype.changeBatchSystem = function (system) {
                 if (!system || system === this.currentBatchSystem) {
                     return false;
                 }
@@ -6249,8 +6257,6 @@ var egret;
                 egret.Capabilities.supportedCompressedTexture.etc1 = !!this.etc1;
                 //
                 this._supportedCompressedTextureInfo = this._buildSupportedCompressedTextureInfo([this.etc1, this.pvrtc]);
-                //
-                this.initBatchSystems();
             };
             WebGLRenderContext.prototype.initBatchSystems = function () {
                 ///
@@ -6260,27 +6266,26 @@ var egret;
                 //注册这个系统
                 var spriteVAO = new web.WebGLVertexArrayObject(this, 2048, gl.STATIC_DRAW, 'SpriteVAO');
                 var spriteBatchSystem = new web.SpriteBatchSystem(this, spriteVAO);
-                this.registerBatchSystemByRenderNodeType(1 /* BitmapNode */, spriteBatchSystem);
-                this.registerBatchSystemByRenderNodeType(2 /* TextNode */, spriteBatchSystem);
-                this.registerBatchSystemByRenderNodeType(3 /* GraphicsNode */, spriteBatchSystem);
-                this.registerBatchSystemByRenderNodeType(6 /* NormalBitmapNode */, spriteBatchSystem);
+                this.registerBatchSystem(1 /* BitmapNode */, spriteBatchSystem);
+                this.registerBatchSystem(2 /* TextNode */, spriteBatchSystem);
+                this.registerBatchSystem(3 /* GraphicsNode */, spriteBatchSystem);
+                this.registerBatchSystem(6 /* NormalBitmapNode */, spriteBatchSystem);
                 //注册mesh的系统
                 var meshVAO = new web.WebGLVertexArrayObject(this, 1024, gl.DYNAMIC_DRAW, 'MeshVAO');
                 var meshBatchSystem = new web.MeshBatchSystem(this, meshVAO);
-                this.registerBatchSystemByRenderNodeType(5 /* MeshNode */, meshBatchSystem);
+                this.registerBatchSystem(5 /* MeshNode */, meshBatchSystem);
                 //注册group的系统
-                var groupVAO = new web.WebGLVertexArrayObject(this, 1024, gl.DYNAMIC_DRAW, 'GroupVAO');
-                var groupBatchSystem = new web.GroupBatchSystem(this, groupVAO);
-                this.registerBatchSystemByRenderNodeType(4 /* GroupNode */, groupBatchSystem);
-                //默认空系统
-                var emptyBatchSystem = new web.EmptyBatchSystem(this, spriteVAO);
-                this.changeToBatchSystem(emptyBatchSystem);
+                this.dynamicGroupSystem = new web.GroupBatchSystem(this, new web.WebGLVertexArrayObject(this, 1024, gl.DYNAMIC_DRAW, 'DynamicGroupVAO'));
+                this.staticGroupSystem = new web.GroupBatchSystem(this, new web.WebGLVertexArrayObject(this, 1024, gl.STATIC_DRAW, 'StaticGroupVAO'));
+                //默认切换精灵系统
+                this.changeBatchSystem(spriteBatchSystem);
             };
             WebGLRenderContext.prototype.handleContextLost = function () {
                 this.contextLost = true;
             };
             WebGLRenderContext.prototype.handleContextRestored = function () {
                 this.initWebGL();
+                this.initBatchSystems();
                 this.contextLost = false;
             };
             WebGLRenderContext.prototype.getWebGLContext = function () {
@@ -7734,7 +7739,7 @@ var egret;
                     buffer.$offsetX = offsetX;
                     buffer.$offsetY = offsetY;
                     ///
-                    buffer.context.setBatchSystemByRenderNode(node);
+                    buffer.context.setBatchSystem(node);
                     ///
                     switch (node.type) {
                         case 1 /* BitmapNode */:
@@ -8209,7 +8214,7 @@ var egret;
                 if (node) {
                     drawCalls++;
                     ///
-                    buffer.context.setBatchSystemByRenderNode(node);
+                    buffer.context.setBatchSystem(node);
                     ///
                     switch (node.type) {
                         case 1 /* BitmapNode */:

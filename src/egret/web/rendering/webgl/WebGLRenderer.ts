@@ -119,7 +119,7 @@ namespace egret.web {
                 buffer.$offsetX = offsetX;
                 buffer.$offsetY = offsetY;
                 ///
-                buffer.context.setBatchSystemByRenderNode(node);
+                buffer.context.setBatchSystem(node);
                 ///
                 switch (node.type) {
                     case sys.RenderNodeType.BitmapNode:
@@ -621,7 +621,7 @@ namespace egret.web {
             if (node) {
                 drawCalls++;
                 ///
-                buffer.context.setBatchSystemByRenderNode(node);
+                buffer.context.setBatchSystem(node);
                 ///
                 switch (node.type) {
                     case sys.RenderNodeType.BitmapNode:

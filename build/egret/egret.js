@@ -15744,6 +15744,11 @@ var egret;
             __extends(GroupNode, _super);
             function GroupNode() {
                 var _this = _super.call(this) || this;
+                /*
+                * 有mesh节点，用vao的时候，就应该使用动态的ib
+                */
+                _this.hasMeshNode = false;
+                _this._analysisAllNodes = false;
                 _this.type = 4 /* GroupNode */;
                 return _this;
             }
@@ -15767,6 +15772,21 @@ var egret;
                     result += data[i].$getRenderCount();
                 }
                 return result;
+            };
+            GroupNode.prototype.analysisAllNodes = function () {
+                if (this._analysisAllNodes) {
+                    return;
+                }
+                this._analysisAllNodes = true;
+                var nd;
+                for (var _i = 0, _a = this.drawData; _i < _a.length; _i++) {
+                    var da = _a[_i];
+                    nd = da;
+                    if (nd.type === 5 /* MeshNode */) {
+                        this.hasMeshNode = true;
+                        break;
+                    }
+                }
             };
             return GroupNode;
         }(sys.RenderNode));

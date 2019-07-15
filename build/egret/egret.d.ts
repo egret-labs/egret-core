@@ -10139,6 +10139,7 @@ declare namespace egret.sys {
          * 相对偏移矩阵。
          */
         matrix: egret.Matrix;
+        hasMeshNode: boolean;
         constructor();
         addNode(node: RenderNode): void;
         /**
@@ -10147,6 +10148,8 @@ declare namespace egret.sys {
          */
         cleanBeforeRender(): void;
         $getRenderCount(): number;
+        private _analysisAllNodes;
+        analysisAllNodes(): void;
     }
 }
 declare namespace egret.sys {
