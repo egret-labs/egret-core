@@ -689,7 +689,7 @@ namespace egret.web {
             buffer.$offsetX = offsetX;
             buffer.$offsetY = offsetY;
             ///
-            buffer.context.setBatchSystemByRenderNode(node);
+            //buffer.context.setBatchSystemByRenderNode(node);
             ///
             switch (node.type) {
                 case sys.RenderNodeType.BitmapNode:

@@ -65,4 +65,7 @@ namespace egret.web {
 
     export class MeshBatchSystem extends WebGLRenderBatchSystem {
     }
+
+    export class GroupBatchSystem extends WebGLRenderBatchSystem {
+    }
 }

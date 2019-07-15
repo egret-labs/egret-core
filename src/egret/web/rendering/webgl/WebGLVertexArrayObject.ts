@@ -110,6 +110,7 @@ namespace egret.web {
             this._indices = new ArrayBuffer(maxIndicesCount * 2);
             this._indicesUint16View = new Uint16Array(this._indices);
             if (this._indexBufferUsage === this._webGLRenderContext.context.STATIC_DRAW) {
+                //先按着quad的初始化
                 const _indexArrayBuffer = this._indicesUint16View;
                 for (let i = 0, j = 0; i < maxIndicesCount; i += 6, j += 4) {
                     _indexArrayBuffer[i + 0] = j + 0;
@@ -186,6 +187,7 @@ namespace egret.web {
          * 切换成mesh索引缓存方式
          */
         // public changeToMeshIndices(): void {
+        //     /*
         //     if (!this.hasMesh) {
         //         // 拷贝默认index信息到for mesh中
         //         for (let i = 0, l = this.indexIndex; i < l; ++i) {
@@ -194,6 +196,7 @@ namespace egret.web {
         //         ++this._indexBufferId;
         //         this.hasMesh = true;
         //     }
+        //     */
         // }
 
         // public isMesh(): boolean {
@@ -388,16 +391,16 @@ namespace egret.web {
                     verticesUint32View[index++] = alpha;
                 }
                 // 缓存索引数组
-                // if (this.hasMesh) {
-                //     const indicesForMesh = this.indices/*indicesForMesh*/;
-                //     indicesForMesh[this.indexIndex + 0] = 0 + this.vertexIndex;
-                //     indicesForMesh[this.indexIndex + 1] = 1 + this.vertexIndex;
-                //     indicesForMesh[this.indexIndex + 2] = 2 + this.vertexIndex;
-                //     indicesForMesh[this.indexIndex + 3] = 0 + this.vertexIndex;
-                //     indicesForMesh[this.indexIndex + 4] = 2 + this.vertexIndex;
-                //     indicesForMesh[this.indexIndex + 5] = 3 + this.vertexIndex;
-                //     ++this._indexBufferId;
-                // }
+                 if (/*this.hasMesh*/this._indexBufferUsage === this._webGLRenderContext.context.DYNAMIC_DRAW) {
+                    const indicesForMesh = this._indicesUint16View/*indicesForMesh*/;
+                    indicesForMesh[this._indexIndex + 0] = 0 + this._vertexIndex;
+                    indicesForMesh[this._indexIndex + 1] = 1 + this._vertexIndex;
+                    indicesForMesh[this._indexIndex + 2] = 2 + this._vertexIndex;
+                    indicesForMesh[this._indexIndex + 3] = 0 + this._vertexIndex;
+                    indicesForMesh[this._indexIndex + 4] = 2 + this._vertexIndex;
+                    indicesForMesh[this._indexIndex + 5] = 3 + this._vertexIndex;
+                    ++this._indexBufferId;
+                 }
 
                 this._vertexIndex += 4;
                 this._indexIndex += 6;

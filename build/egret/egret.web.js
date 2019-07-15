@@ -5483,6 +5483,7 @@ var egret;
                 this._indices = new ArrayBuffer(maxIndicesCount * 2);
                 this._indicesUint16View = new Uint16Array(this._indices);
                 if (this._indexBufferUsage === this._webGLRenderContext.context.STATIC_DRAW) {
+                    //先按着quad的初始化
                     var _indexArrayBuffer = this._indicesUint16View;
                     for (var i = 0, j = 0; i < maxIndicesCount; i += 6, j += 4) {
                         _indexArrayBuffer[i + 0] = j + 0;
@@ -5555,6 +5556,7 @@ var egret;
              * 切换成mesh索引缓存方式
              */
             // public changeToMeshIndices(): void {
+            //     /*
             //     if (!this.hasMesh) {
             //         // 拷贝默认index信息到for mesh中
             //         for (let i = 0, l = this.indexIndex; i < l; ++i) {
@@ -5563,6 +5565,7 @@ var egret;
             //         ++this._indexBufferId;
             //         this.hasMesh = true;
             //     }
+            //     */
             // }
             // public isMesh(): boolean {
             //     return this.hasMesh;
@@ -5748,16 +5751,16 @@ var egret;
                         verticesUint32View[index++] = alpha;
                     }
                     // 缓存索引数组
-                    // if (this.hasMesh) {
-                    //     const indicesForMesh = this.indices/*indicesForMesh*/;
-                    //     indicesForMesh[this.indexIndex + 0] = 0 + this.vertexIndex;
-                    //     indicesForMesh[this.indexIndex + 1] = 1 + this.vertexIndex;
-                    //     indicesForMesh[this.indexIndex + 2] = 2 + this.vertexIndex;
-                    //     indicesForMesh[this.indexIndex + 3] = 0 + this.vertexIndex;
-                    //     indicesForMesh[this.indexIndex + 4] = 2 + this.vertexIndex;
-                    //     indicesForMesh[this.indexIndex + 5] = 3 + this.vertexIndex;
-                    //     ++this._indexBufferId;
-                    // }
+                    if (this._indexBufferUsage === this._webGLRenderContext.context.DYNAMIC_DRAW) {
+                        var indicesForMesh = this._indicesUint16View /*indicesForMesh*/;
+                        indicesForMesh[this._indexIndex + 0] = 0 + this._vertexIndex;
+                        indicesForMesh[this._indexIndex + 1] = 1 + this._vertexIndex;
+                        indicesForMesh[this._indexIndex + 2] = 2 + this._vertexIndex;
+                        indicesForMesh[this._indexIndex + 3] = 0 + this._vertexIndex;
+                        indicesForMesh[this._indexIndex + 4] = 2 + this._vertexIndex;
+                        indicesForMesh[this._indexIndex + 5] = 3 + this._vertexIndex;
+                        ++this._indexBufferId;
+                    }
                     this._vertexIndex += 4;
                     this._indexIndex += 6;
                 }
@@ -6066,15 +6069,14 @@ var egret;
                 }
             };
             WebGLRenderContext.prototype.registerBatchSystemByRenderNodeType = function (renderNodeType, system) {
-                if (!system) {
-                    return;
+                if (system) {
+                    this.batchSystems[renderNodeType] = system;
                 }
-                this.batchSystems[renderNodeType] = system;
             };
             WebGLRenderContext.prototype.setBatchSystemByRenderNode = function (renderNode) {
-                if (renderNode.type === 4 /* GroupNode */) {
-                    return false;
-                }
+                // if (renderNode.type === sys.RenderNodeType.GroupNode) {
+                //     return false;
+                // }
                 var system = this.batchSystems[renderNode.type];
                 return this.changeToBatchSystem(system);
             };
@@ -6266,6 +6268,10 @@ var egret;
                 var meshVAO = new web.WebGLVertexArrayObject(this, 1024, gl.DYNAMIC_DRAW, 'MeshVAO');
                 var meshBatchSystem = new web.MeshBatchSystem(this, meshVAO);
                 this.registerBatchSystemByRenderNodeType(5 /* MeshNode */, meshBatchSystem);
+                //注册group的系统
+                var groupVAO = new web.WebGLVertexArrayObject(this, 1024, gl.DYNAMIC_DRAW, 'GroupVAO');
+                var groupBatchSystem = new web.GroupBatchSystem(this, groupVAO);
+                this.registerBatchSystemByRenderNodeType(4 /* GroupNode */, groupBatchSystem);
                 //默认空系统
                 var emptyBatchSystem = new web.EmptyBatchSystem(this, spriteVAO);
                 this.changeToBatchSystem(emptyBatchSystem);
@@ -7193,6 +7199,15 @@ var egret;
         }(WebGLRenderBatchSystem));
         web.MeshBatchSystem = MeshBatchSystem;
         __reflect(MeshBatchSystem.prototype, "egret.web.MeshBatchSystem");
+        var GroupBatchSystem = (function (_super) {
+            __extends(GroupBatchSystem, _super);
+            function GroupBatchSystem() {
+                return _super !== null && _super.apply(this, arguments) || this;
+            }
+            return GroupBatchSystem;
+        }(WebGLRenderBatchSystem));
+        web.GroupBatchSystem = GroupBatchSystem;
+        __reflect(GroupBatchSystem.prototype, "egret.web.GroupBatchSystem");
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -8259,7 +8274,7 @@ var egret;
                 buffer.$offsetX = offsetX;
                 buffer.$offsetY = offsetY;
                 ///
-                buffer.context.setBatchSystemByRenderNode(node);
+                //buffer.context.setBatchSystemByRenderNode(node);
                 ///
                 switch (node.type) {
                     case 1 /* BitmapNode */:

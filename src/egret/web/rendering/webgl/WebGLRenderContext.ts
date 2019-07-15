@@ -57,16 +57,15 @@ namespace egret.web {
         }
         
         private registerBatchSystemByRenderNodeType(renderNodeType: sys.RenderNodeType, system: WebGLRenderBatchSystem): void {
-            if (!system) {
-                return;
+            if (system) {
+                this.batchSystems[renderNodeType] = system;
             }
-            this.batchSystems[renderNodeType] = system;
         }
 
         public setBatchSystemByRenderNode(renderNode: sys.RenderNode): boolean {
-            if (renderNode.type === sys.RenderNodeType.GroupNode) {
-                return false;
-            }
+            // if (renderNode.type === sys.RenderNodeType.GroupNode) {
+            //     return false;
+            // }
             const system = this.batchSystems[renderNode.type];
             return this.changeToBatchSystem(system);
         }
@@ -401,6 +400,10 @@ namespace egret.web {
             const meshVAO = new WebGLVertexArrayObject(this, 1024, gl.DYNAMIC_DRAW, 'MeshVAO');
             const meshBatchSystem = new MeshBatchSystem(this, meshVAO);
             this.registerBatchSystemByRenderNodeType(sys.RenderNodeType.MeshNode, meshBatchSystem);
+            //注册group的系统
+            const groupVAO = new WebGLVertexArrayObject(this, 1024, gl.DYNAMIC_DRAW, 'GroupVAO');
+            const groupBatchSystem = new GroupBatchSystem(this, groupVAO);
+            this.registerBatchSystemByRenderNodeType(sys.RenderNodeType.GroupNode, groupBatchSystem);
             //默认空系统
             const emptyBatchSystem = new EmptyBatchSystem(this, spriteVAO);
             this.changeToBatchSystem(emptyBatchSystem);
