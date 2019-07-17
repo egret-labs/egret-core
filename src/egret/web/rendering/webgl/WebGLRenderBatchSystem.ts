@@ -28,44 +28,75 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 namespace egret.web {
-
+    /**
+     * WebGLRenderBatchSystem base class
+     */
     export class WebGLRenderBatchSystem implements sys.RenderBatchSystem {
-
+        /**
+         * WebGLRenderContext
+         */
         private readonly _webGLRenderContext: WebGLRenderContext;
+        /**
+         * WebGLVertexArrayObject
+         */
         public readonly vao: WebGLVertexArrayObject;
-
+        /**
+        * @constructor
+        * @param webGLRenderContext _webGLRenderContext
+        * @param vao vao
+        */
         constructor(webGLRenderContext: WebGLRenderContext, vao: WebGLVertexArrayObject) {
             this._webGLRenderContext = webGLRenderContext;
             this.vao = vao;
         }
-
+        /**
+        * start
+        * @public
+        */
         public start(): void {
             this._webGLRenderContext.resetVertexAttribPointer = true;
             this.vao.clear();
         }
-
+        /**
+         * stop
+         * @public
+         */
         public stop(): void {
             this.flush();
         }
-
+        /**
+         * flush
+         * @public
+         */
         public flush(): void {
             this._webGLRenderContext.$drawWebGL(this.vao);
             this.vao.clear();
         }
-
+        /**
+         * render
+         * @public
+         */
         public render(): void {
         }
     }
-
+    /**
+     * for nothing
+     */
     export class EmptyBatchSystem extends WebGLRenderBatchSystem {
     }
-
+    /**
+     * for bitmap batch 
+     */
     export class SpriteBatchSystem extends WebGLRenderBatchSystem {
     }
-
+    /**
+     * for mesh batch 
+     */
     export class MeshBatchSystem extends WebGLRenderBatchSystem {
     }
-
+    /**
+     * for group node batch 
+     */
     export class GroupBatchSystem extends WebGLRenderBatchSystem {
     }
 }

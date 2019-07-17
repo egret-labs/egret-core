@@ -5420,71 +5420,88 @@ var egret;
     var web;
     (function (web) {
         /**
-         * @private
-         * 顶点数组管理对象
-         * 用来维护顶点数组
+         * virtual vao object, mainly managing vertexbuffer and indexbuffer
          */
         var WebGLVertexArrayObject = (function () {
+            /**
+             * @constructor
+             * @param webGLRenderContext _webGLRenderContext
+             * @param maxQuadsCount _maxQuadsCount
+             * @param indexBufferUsage _indexBufferUsage
+             * @param name _name
+             */
             function WebGLVertexArrayObject(webGLRenderContext, maxQuadsCount, indexBufferUsage, name) {
-                /*定义顶点格式
-                * (x: 8 * 4 = 32) + (y: 8 * 4 = 32) + (u: 8 * 4 = 32) + (v: 8 * 4 = 32) + (tintcolor: 8 * 4 = 32) = (8 * 4 = 32) * (x + y + u + v + tintcolor: 5);
-                */
+                /**
+                 * define vertex format: (x: 8 * 4 = 32) + (y: 8 * 4 = 32) + (u: 8 * 4 = 32) + (v: 8 * 4 = 32) + (tintcolor: 8 * 4 = 32) = (8 * 4 = 32) * (x + y + u + v + tintcolor: 5);
+                 */
                 this._vertSize = 5;
+                /**
+                 * vertex byte size = float(4) * components
+                 */
                 this._vertByteSize = this._vertSize * 4;
-                /*
-                *最多单次提交maxQuadsCount这么多quad
+                /**
+                * submit a maximum of single quad quads Count so many quads
                 */
                 this._maxQuadsCount = 2048;
-                /*
-                *quad = 4个Vertex
-                */
+                /**
+                 * quad = 4 * vertex
+                 */
                 this._maxVertexCount = this._maxQuadsCount * 4;
-                /*
-                *配套的Indices = quad * 6.
-                */
+                /**
+                 * index = _maxVertexCount * 6
+                 */
                 this._maxIndicesCount = this._maxQuadsCount * 6;
-                //private readonly indicesForMesh: Uint16Array = null;
+                /**
+                 * status of buffer data processing
+                 */
                 this._vertexIndex = 0;
                 this._indexIndex = 0;
+                /**
+                 * debugging name
+                 */
                 this._name = '';
+                /**
+                 * dirty mark of index buffer
+                 */
                 this._indexBufferId = 0;
                 this._currentIndexBufferId = 0;
+                /**
+                 * gl.STATIC_DRAW or gl.DYNAMIC_DRAW
+                 */
                 this._indexBufferUsage = 0;
+                /**
+                 * best matching buffer data
+                 */
                 this._sizeMatchVertexBufferCache = {};
                 this._sizeMatchIndexBufferCache = {};
+                /**
+                 * last upload length record, optimize
+                 */
                 this.lastUploadVertexBufferLength = 0;
                 this.lastUploadIndexBufferLength = 0;
-                ///
                 this._name = name;
                 this._webGLRenderContext = webGLRenderContext;
                 this._maxQuadsCount = maxQuadsCount;
                 this._maxVertexCount = maxQuadsCount * 4;
                 this._maxIndicesCount = maxQuadsCount * 6;
                 this._indexBufferUsage = indexBufferUsage;
-                //old
-                //const numVerts = this.maxVertexCount * this.vertSize;
-                //this.vertices = new Float32Array(numVerts);
-                ///
                 this._vertices = new ArrayBuffer(this._maxVertexCount * this._vertByteSize);
                 this._verticesFloat32View = new Float32Array(this._vertices);
                 this._verticesUint32View = new Uint32Array(this._vertices);
-                //this.vertices = this._verticesFloat32View;
-                //索引缓冲，最大索引数
-                /*
-                0-------1
-                |       |
-                |       |
-                3-------2
-                0->1->2
-                0->2->3
-                两个三角形
-                */
                 var maxIndicesCount = this._maxIndicesCount;
                 this._indices = new ArrayBuffer(maxIndicesCount * 2);
                 this._indicesUint16View = new Uint16Array(this._indices);
+                //only static indexbuffers need to be initialized in the order of quad.
                 if (this._indexBufferUsage === this._webGLRenderContext.context.STATIC_DRAW) {
-                    //先按着quad的初始化
                     var _indexArrayBuffer = this._indicesUint16View;
+                    /*
+                    0-------1
+                    |       |
+                    |       |
+                    3-------2
+                    0->1->2
+                    0->2->3
+                    */
                     for (var i = 0, j = 0; i < maxIndicesCount; i += 6, j += 4) {
                         _indexArrayBuffer[i + 0] = j + 0;
                         _indexArrayBuffer[i + 1] = j + 1;
@@ -5497,7 +5514,10 @@ var egret;
                 }
             }
             /**
-             * 是否达到最大缓存数量
+             * whether it reaches the overflow, can't be batched again
+             * @public
+             * @param vertexCount
+             * @param indexCount
              */
             WebGLVertexArrayObject.prototype.reachMaxSize = function (vertexCount, indexCount) {
                 if (vertexCount === void 0) { vertexCount = 4; }
@@ -5505,21 +5525,19 @@ var egret;
                 return this._vertexIndex > this._maxVertexCount - vertexCount || this._indexIndex > this._maxIndicesCount - indexCount;
             };
             /**
-             * 获取缓存完成的顶点数组
-             * sizeMatchingBufferCache
+             * clear cache
+             * @public
              */
             WebGLVertexArrayObject.prototype.clearSizeMatchBuffersCache = function () {
                 this._sizeMatchVertexBufferCache = {};
                 this._sizeMatchIndexBufferCache = {};
             };
+            /**
+             * get the best match vertex buffer
+             * @public
+             */
             WebGLVertexArrayObject.prototype.getVertexArrayBuffer = function () {
                 var length = this._vertexIndex * this._vertSize;
-                //旧有的subarray从给定的起始位置返回一个新的Float32Array,每次都是创建新对象，不是最优，时间长了容易引起gc.
-                //let view = this.vertices.subarray(0, length);
-                //return view;
-                /*
-                * 新的策略:只选取下一个power2的最优体积
-                */
                 var nextPow2Length = egret.NumberUtils.nextPow2(length);
                 nextPow2Length = Math.min(this._verticesFloat32View.length, nextPow2Length);
                 var bufferView = this._sizeMatchVertexBufferCache[nextPow2Length];
@@ -5529,12 +5547,12 @@ var egret;
                 return bufferView;
             };
             /**
-             * 获取缓存完成的索引数组
+             * get the best match index buffer
+             * @public
              */
             WebGLVertexArrayObject.prototype.getIndexArrayBuffer = function () {
                 var gl = this._webGLRenderContext.context;
                 if (this._indexBufferUsage === gl.STATIC_DRAW) {
-                    //静态的不会总动，直接提交一次就好
                     return this._indicesUint16View;
                 }
                 var length = this._indexIndex;
@@ -5547,58 +5565,19 @@ var egret;
                 return bufferView;
             };
             /**
-             * 获取缓存完成的mesh索引数组
-             */
-            // public getMeshIndices(): Uint16Array {
-            //     return this._indexArrayBuffer;//indicesForMesh;
-            // }
-            /**
-             * 切换成mesh索引缓存方式
-             */
-            // public changeToMeshIndices(): void {
-            //     /*
-            //     if (!this.hasMesh) {
-            //         // 拷贝默认index信息到for mesh中
-            //         for (let i = 0, l = this.indexIndex; i < l; ++i) {
-            //             //this.indicesForMesh[i] = this.indices[i];
-            //         }
-            //         ++this._indexBufferId;
-            //         this.hasMesh = true;
-            //     }
-            //     */
-            // }
-            // public isMesh(): boolean {
-            //     return this.hasMesh;
-            // }
-            /**
-             * 默认构成矩形
-             */
-            // private defaultMeshVertices = [0, 0, 1, 0, 1, 1, 0, 1];
-            // private defaultMeshUvs = [
-            //     0, 0,
-            //     1, 0,
-            //     1, 1,
-            //     0, 1
-            // ];
-            // private defaultMeshIndices = [0, 1, 2, 0, 2, 3];
-            /**
-             * 缓存一组顶点
+             * pack geometry
+             * @public
              */
             WebGLVertexArrayObject.prototype.cacheArrays = function (buffer, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices, rotated) {
                 var alpha = buffer.globalAlpha;
-                /*
-                * 混入tintcolor => alpha
-                */
+                //tintcolor => alpha
                 alpha = Math.min(alpha, 1.0);
                 var globalTintColor = buffer.globalTintColor;
                 var currentTexture = buffer.currentTexture;
                 alpha = ((alpha < 1.0 && currentTexture && currentTexture[egret.UNPACK_PREMULTIPLY_ALPHA_WEBGL]) ?
                     egret.WebGLUtils.premultiplyTint(globalTintColor, alpha)
                     : globalTintColor + (alpha * 255 << 24));
-                /*
-                临时测试
-                */
-                //计算出绘制矩阵，之后把矩阵还原回之前的
+                //
                 var locWorldTransform = buffer.globalMatrix;
                 var a = locWorldTransform.a;
                 var b = locWorldTransform.b;
@@ -5629,11 +5608,11 @@ var egret;
                     }
                 }
                 if (meshVertices) {
-                    // 计算索引位置与赋值
-                    var vertices = this._verticesFloat32View /*vertices*/;
+                    // 
+                    var vertices = this._verticesFloat32View;
                     var verticesUint32View = this._verticesUint32View;
                     var index = this._vertexIndex * this._vertSize;
-                    // 缓存顶点数组
+                    //
                     var i = 0, iD = 0, l = 0;
                     var u = 0, v = 0, x = 0, y = 0;
                     for (i = 0, l = meshUVs.length; i < l; i += 2) {
@@ -5657,13 +5636,11 @@ var egret;
                         // alpha
                         verticesUint32View[iD + 4] = alpha;
                     }
-                    // 缓存索引数组
-                    //if (this.hasMesh) {
+                    //
                     for (var i_1 = 0, l_1 = meshIndices.length; i_1 < l_1; ++i_1) {
-                        this._indicesUint16View /*indicesForMesh*/[this._indexIndex + i_1] = meshIndices[i_1] + this._vertexIndex;
+                        this._indicesUint16View[this._indexIndex + i_1] = meshIndices[i_1] + this._vertexIndex;
                     }
                     ++this._indexBufferId;
-                    //}
                     this._vertexIndex += meshUVs.length / 2;
                     this._indexIndex += meshIndices.length;
                 }
@@ -5674,7 +5651,7 @@ var egret;
                     var h = sourceHeight;
                     sourceX = sourceX / width;
                     sourceY = sourceY / height;
-                    var vertices = this._verticesFloat32View /*vertices*/;
+                    var vertices = this._verticesFloat32View;
                     var verticesUint32View = this._verticesUint32View;
                     var index = this._vertexIndex * this._vertSize;
                     if (rotated) {
@@ -5750,51 +5727,60 @@ var egret;
                         // alpha
                         verticesUint32View[index++] = alpha;
                     }
-                    // 缓存索引数组
+                    //
                     if (this._indexBufferUsage === this._webGLRenderContext.context.DYNAMIC_DRAW) {
-                        var indicesForMesh = this._indicesUint16View /*indicesForMesh*/;
-                        indicesForMesh[this._indexIndex + 0] = 0 + this._vertexIndex;
-                        indicesForMesh[this._indexIndex + 1] = 1 + this._vertexIndex;
-                        indicesForMesh[this._indexIndex + 2] = 2 + this._vertexIndex;
-                        indicesForMesh[this._indexIndex + 3] = 0 + this._vertexIndex;
-                        indicesForMesh[this._indexIndex + 4] = 2 + this._vertexIndex;
-                        indicesForMesh[this._indexIndex + 5] = 3 + this._vertexIndex;
+                        var _indicesUint16View = this._indicesUint16View;
+                        var _indexIndex = this._indexIndex;
+                        var _vertexIndex = this._vertexIndex;
+                        _indicesUint16View[_indexIndex + 0] = 0 + _vertexIndex;
+                        _indicesUint16View[_indexIndex + 1] = 1 + _vertexIndex;
+                        _indicesUint16View[_indexIndex + 2] = 2 + _vertexIndex;
+                        _indicesUint16View[_indexIndex + 3] = 0 + _vertexIndex;
+                        _indicesUint16View[_indexIndex + 4] = 2 + _vertexIndex;
+                        _indicesUint16View[_indexIndex + 5] = 3 + _vertexIndex;
                         ++this._indexBufferId;
                     }
                     this._vertexIndex += 4;
                     this._indexIndex += 6;
                 }
             };
+            /**
+             * reset _vertexIndex and _indexIndex
+             * @public
+             */
             WebGLVertexArrayObject.prototype.clear = function () {
-                //this.hasMesh = false;
                 this._vertexIndex = 0;
                 this._indexIndex = 0;
             };
+            /**
+             * bind and bufferdata
+             * @public
+             */
             WebGLVertexArrayObject.prototype.bind = function () {
                 var gl = this._webGLRenderContext.context;
                 if (!this._webglVertexBuffer) {
                     this._webglVertexBuffer = gl.createBuffer();
                 }
-                if (!this._webglIndexBuffer) {
-                    this._webglIndexBuffer = gl.createBuffer();
-                }
-                //
-                //gl.bindBuffer(gl.ARRAY_BUFFER, this._webglVertexBuffer);
                 this._webGLRenderContext.bindVertexBuffer(this._webglVertexBuffer);
                 if (this._vertexIndex > 0) {
                     var vb = this.getVertexArrayBuffer();
-                    this.$uploadVerticesArray(vb);
+                    this._uploadVerticesArray(vb);
                 }
-                //
-                //gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._webglIndexBuffer);
+                if (!this._webglIndexBuffer) {
+                    this._webglIndexBuffer = gl.createBuffer();
+                }
                 this._webGLRenderContext.bindIndexBuffer(this._webglIndexBuffer);
                 if (this._indexIndex > 0 && this._currentIndexBufferId !== this._indexBufferId) {
                     this._currentIndexBufferId = this._indexBufferId;
                     var ib = this.getIndexArrayBuffer();
-                    this.$uploadIndicesArray(ib);
+                    this._uploadIndicesArray(ib);
                 }
             };
-            WebGLVertexArrayObject.prototype.$uploadVerticesArray = function (array) {
+            /**
+             * buffer data vertex data
+             * @private
+             */
+            WebGLVertexArrayObject.prototype._uploadVerticesArray = function (array) {
                 var gl = this._webGLRenderContext.context;
                 if (this.lastUploadVertexBufferLength >= array.length) {
                     gl.bufferSubData(gl.ARRAY_BUFFER, 0, array);
@@ -5804,14 +5790,18 @@ var egret;
                     gl.bufferData(gl.ARRAY_BUFFER, array, gl.DYNAMIC_DRAW);
                 }
             };
-            WebGLVertexArrayObject.prototype.$uploadIndicesArray = function (array) {
+            /**
+             * buffer data index data
+             * @private
+             */
+            WebGLVertexArrayObject.prototype._uploadIndicesArray = function (array) {
                 var gl = this._webGLRenderContext.context;
                 if (this.lastUploadIndexBufferLength >= array.length) {
                     gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, 0, array);
                 }
                 else {
                     this.lastUploadIndexBufferLength = array.length;
-                    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, /*gl.STATIC_DRAW*/ this._indexBufferUsage); //gl.DYNAMIC_DRAW
+                    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, this._indexBufferUsage);
                 }
             };
             return WebGLVertexArrayObject;
@@ -7160,28 +7150,55 @@ var egret;
 (function (egret) {
     var web;
     (function (web) {
+        /**
+         * WebGLRenderBatchSystem base class
+         */
         var WebGLRenderBatchSystem = (function () {
+            /**
+            * @constructor
+            * @param webGLRenderContext _webGLRenderContext
+            * @param vao vao
+            */
             function WebGLRenderBatchSystem(webGLRenderContext, vao) {
                 this._webGLRenderContext = webGLRenderContext;
                 this.vao = vao;
             }
+            /**
+            * start
+            * @public
+            */
             WebGLRenderBatchSystem.prototype.start = function () {
                 this._webGLRenderContext.resetVertexAttribPointer = true;
                 this.vao.clear();
             };
+            /**
+             * stop
+             * @public
+             */
             WebGLRenderBatchSystem.prototype.stop = function () {
                 this.flush();
             };
+            /**
+             * flush
+             * @public
+             */
             WebGLRenderBatchSystem.prototype.flush = function () {
                 this._webGLRenderContext.$drawWebGL(this.vao);
                 this.vao.clear();
             };
+            /**
+             * render
+             * @public
+             */
             WebGLRenderBatchSystem.prototype.render = function () {
             };
             return WebGLRenderBatchSystem;
         }());
         web.WebGLRenderBatchSystem = WebGLRenderBatchSystem;
         __reflect(WebGLRenderBatchSystem.prototype, "egret.web.WebGLRenderBatchSystem", ["egret.sys.RenderBatchSystem"]);
+        /**
+         * for nothing
+         */
         var EmptyBatchSystem = (function (_super) {
             __extends(EmptyBatchSystem, _super);
             function EmptyBatchSystem() {
@@ -7191,6 +7208,9 @@ var egret;
         }(WebGLRenderBatchSystem));
         web.EmptyBatchSystem = EmptyBatchSystem;
         __reflect(EmptyBatchSystem.prototype, "egret.web.EmptyBatchSystem");
+        /**
+         * for bitmap batch
+         */
         var SpriteBatchSystem = (function (_super) {
             __extends(SpriteBatchSystem, _super);
             function SpriteBatchSystem() {
@@ -7200,6 +7220,9 @@ var egret;
         }(WebGLRenderBatchSystem));
         web.SpriteBatchSystem = SpriteBatchSystem;
         __reflect(SpriteBatchSystem.prototype, "egret.web.SpriteBatchSystem");
+        /**
+         * for mesh batch
+         */
         var MeshBatchSystem = (function (_super) {
             __extends(MeshBatchSystem, _super);
             function MeshBatchSystem() {
@@ -7209,6 +7232,9 @@ var egret;
         }(WebGLRenderBatchSystem));
         web.MeshBatchSystem = MeshBatchSystem;
         __reflect(MeshBatchSystem.prototype, "egret.web.MeshBatchSystem");
+        /**
+         * for group node batch
+         */
         var GroupBatchSystem = (function (_super) {
             __extends(GroupBatchSystem, _super);
             function GroupBatchSystem() {
