@@ -28,7 +28,45 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 namespace egret.web {
-
+    /**
+     * @private  
+     */
+    export const enum WEBGL_ATTRIBUTE_TYPE {
+        FLOAT_VEC2 = 0x8B50,
+        FLOAT_VEC3 = 0x8B51,
+        FLOAT_VEC4 = 0x8B52,
+        FLOAT = 0x1406,
+        BYTE = 0x1400,
+        UNSIGNED_BYTE = 0x1401,
+        UNSIGNED_SHORT = 0x1403
+    }
+    /**
+     * @private  
+     */
+    export const enum WEBGL_UNIFORM_TYPE {
+        FLOAT_VEC2 = 0x8B50,
+        FLOAT_VEC3 = 0x8B51,
+        FLOAT_VEC4 = 0x8B52,
+        INT_VEC2 = 0x8B53,
+        INT_VEC3 = 0x8B54,
+        INT_VEC4 = 0x8B55,
+        BOOL = 0x8B56,
+        BOOL_VEC2 = 0x8B57,
+        BOOL_VEC3 = 0x8B58,
+        BOOL_VEC4 = 0x8B59,
+        FLOAT_MAT2 = 0x8B5A,
+        FLOAT_MAT3 = 0x8B5B,
+        FLOAT_MAT4 = 0x8B5C,
+        SAMPLER_2D = 0x8B5E,
+        SAMPLER_CUBE = 0x8B60,
+        BYTE = 0x1400,
+        UNSIGNED_BYTE = 0x1401,
+        SHORT = 0x1402,
+        UNSIGNED_SHORT = 0x1403,
+        INT = 0x1404,
+        UNSIGNED_INT = 0x1405,
+        FLOAT = 0x1406
+    }
     /**
      * 创建一个canvas。
      */
@@ -173,6 +211,70 @@ namespace egret.web {
         return size;
     }
     egret.sys.drawTextureElements = drawTextureElements;
+    
+    /**
+     * 测量文本的宽度
+     * @param context 
+     * @param text 
+     */
+    function measureTextWith(context: CanvasRenderingContext2D, text: string): number {
+        return context.measureText(text).width;
+    }
+    egret.sys.measureTextWith = measureTextWith;
+
+    /**
+     * 为CanvasRenderBuffer创建一个HTMLCanvasElement
+     * @param defaultFunc 
+     * @param width 
+     * @param height 
+     * @param root 
+     */
+    function createCanvasRenderBufferSurface(defaultFunc: (width?: number, height?: number) => HTMLCanvasElement, width?: number, height?: number, root?: boolean): HTMLCanvasElement {
+        return defaultFunc(width, height);
+    }
+    egret.sys.createCanvasRenderBufferSurface = createCanvasRenderBufferSurface;
+    
+    /**
+     * 改变渲染缓冲的大小并清空缓冲区
+     * @param renderContext 
+     * @param width 
+     * @param height 
+     * @param useMaxSize 
+     */
+    function resizeCanvasRenderBuffer(renderContext: egret.sys.RenderContext, width: number, height: number, useMaxSize?: boolean): void {
+        let canvasRenderBuffer = <CanvasRenderBuffer>renderContext;
+        let surface = canvasRenderBuffer.surface;
+        if (useMaxSize) {
+            let change = false;
+            if (surface.width < width) {
+                surface.width = width;
+                change = true;
+            }
+            if (surface.height < height) {
+                surface.height = height;
+                change = true;
+            }
+            //尺寸没有变化时,将绘制属性重置
+            if (!change) {
+                canvasRenderBuffer.context.globalCompositeOperation = "source-over";
+                canvasRenderBuffer.context.setTransform(1, 0, 0, 1, 0, 0);
+                canvasRenderBuffer.context.globalAlpha = 1;
+            }
+        }
+        else {
+            if (surface.width != width) {
+                surface.width = width;
+            }
+            if (surface.height != height) {
+                surface.height = height;
+            }
+        }
+        canvasRenderBuffer.clear();
+    }
+    egret.sys.resizeCanvasRenderBuffer = resizeCanvasRenderBuffer;
+
+    egret.Geolocation = egret.web.WebGeolocation;
+    egret.Motion = egret.web.WebMotion;
 }
 
 
