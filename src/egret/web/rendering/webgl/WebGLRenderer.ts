@@ -155,9 +155,14 @@ namespace egret.web {
                     let offsetX2;
                     let offsetY2;
                     let tempAlpha;
+                    let tempTintColor;
                     if (child.$alpha != 1) {
                         tempAlpha = buffer.globalAlpha;
                         buffer.globalAlpha *= child.$alpha;
+                    }
+                    if (child.tint !== 0xFFFFFF) {
+                        tempTintColor = buffer.globalTintColor;
+                        buffer.globalTintColor = child.tintRGB;
                     }
                     let savedMatrix: Matrix;
                     if (child.$useTranslate) {
@@ -198,6 +203,9 @@ namespace egret.web {
                     }
                     if (tempAlpha) {
                         buffer.globalAlpha = tempAlpha;
+                    }
+                    if (tempTintColor) {
+                        buffer.globalTintColor = tempTintColor;
                     }
                     if (savedMatrix) {
                         let m = buffer.globalMatrix;

@@ -687,9 +687,16 @@ var egret;
             _this.$renderNode = null;
             _this.$renderDirty = false;
             _this.$renderMode = null;
+            /**
+             * inspired by pixi.js
+             */
+            _this._tint = 0;
+            _this._tintRGB = 0;
             if (egret.nativeRender) {
                 _this.createNativeDisplayObject();
             }
+            //默认都是纯白
+            _this.tint = 0xFFFFFF;
             return _this;
         }
         DisplayObject.prototype.createNativeDisplayObject = function () {
@@ -2679,6 +2686,24 @@ var egret;
             }
             return false;
         };
+        Object.defineProperty(DisplayObject.prototype, "tint", {
+            get: function () {
+                return this._tint;
+            },
+            set: function (value) {
+                this._tint = value;
+                this._tintRGB = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DisplayObject.prototype, "tintRGB", {
+            get: function () {
+                return this._tintRGB;
+            },
+            enumerable: true,
+            configurable: true
+        });
         /**
          * @private
          * The default touchEnabled property of DisplayObject
@@ -7589,6 +7614,24 @@ var egret;
             }
             */
         };
+        /**
+         * inspired by pixi.js
+         */
+        WebGLUtils.premultiplyTint = function (tint, alpha) {
+            if (alpha === 1.0) {
+                return (alpha * 255 << 24) + tint;
+            }
+            if (alpha === 0.0) {
+                return 0;
+            }
+            var R = ((tint >> 16) & 0xFF);
+            var G = ((tint >> 8) & 0xFF);
+            var B = (tint & 0xFF);
+            R = ((R * alpha) + 0.5) | 0;
+            G = ((G * alpha) + 0.5) | 0;
+            B = ((B * alpha) + 0.5) | 0;
+            return (alpha * 255 << 24) + (R << 16) + (G << 8) + B;
+        };
         return WebGLUtils;
     }());
     egret.WebGLUtils = WebGLUtils;
@@ -8814,6 +8857,7 @@ var egret;
     egret.engine_default_empty_texture = 'engine_default_empty_texture';
     egret.is_compressed_texture = 'is_compressed_texture';
     egret.glContext = 'glContext';
+    egret.UNPACK_PREMULTIPLY_ALPHA_WEBGL = 'UNPACK_PREMULTIPLY_ALPHA_WEBGL';
     /**
      * A BitmapData object contains an array of pixel data. This data can represent either a fully opaque bitmap or a
      * transparent bitmap that contains alpha channel data. Either type of BitmapData object is stored as a buffer of 32-bit
