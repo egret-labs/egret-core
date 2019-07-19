@@ -2317,6 +2317,38 @@ namespace egret {
             this._tint = value;
             this.$tintRGB = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
         }
+        /*
+        * inspired by pixi.js
+        */
+        public sortDirty: boolean = false;
+        public sortChildren(): void {
+            this.sortDirty = false;
+        }
+
+        private _zIndex: number = 0;
+        /**
+         * the z-order (front-to-back order) of the object
+         * @version Egret 5.2.24
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 设置对象的 Z 轴顺序（前后顺序）
+         * @version Egret 5.2.24
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        public get zIndex(): number {
+            return this._zIndex;
+        }
+        public set zIndex(value: number) {
+            this._zIndex = value;
+            if (this.parent) {
+                this.parent.sortDirty = true;
+            }
+        }
+        public _lastSortedIndex: number = 0;
+        public sortableChildren: boolean = false;
     }
 
 }

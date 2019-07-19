@@ -7521,6 +7521,10 @@ var egret;
                 }
                 var children = displayObject.$children;
                 if (children) {
+                    if (displayObject.sortableChildren && displayObject.sortDirty) {
+                        //绘制排序
+                        displayObject.sortChildren();
+                    }
                     var length_8 = children.length;
                     for (var i = 0; i < length_8; i++) {
                         var child = children[i];
