@@ -2294,16 +2294,16 @@ namespace egret {
          * inspired by pixi.js    
          */
         private _tint: number = 0;
-        private _tintRGB: number = 0;
+        /**
+         * @private
+         */
+        $tintRGB: number = 0;
         public get tint(): number {
             return this._tint;
         }
-        public get tintRGB(): number {
-            return this._tintRGB;
-        }
         public set tint(value)  {
             this._tint = value;
-            this._tintRGB = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
+            this.$tintRGB = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
         }
     }
 

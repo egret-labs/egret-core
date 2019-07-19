@@ -1295,9 +1295,11 @@ declare namespace egret {
          * inspired by pixi.js
          */
         private _tint;
-        private _tintRGB;
+        /**
+         * @private
+         */
+        $tintRGB: number;
         tint: number;
-        readonly tintRGB: number;
     }
 }
 declare namespace egret {

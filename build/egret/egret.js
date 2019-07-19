@@ -691,7 +691,10 @@ var egret;
              * inspired by pixi.js
              */
             _this._tint = 0;
-            _this._tintRGB = 0;
+            /**
+             * @private
+             */
+            _this.$tintRGB = 0;
             if (egret.nativeRender) {
                 _this.createNativeDisplayObject();
             }
@@ -2692,14 +2695,7 @@ var egret;
             },
             set: function (value) {
                 this._tint = value;
-                this._tintRGB = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(DisplayObject.prototype, "tintRGB", {
-            get: function () {
-                return this._tintRGB;
+                this.$tintRGB = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
             },
             enumerable: true,
             configurable: true

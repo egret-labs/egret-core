@@ -162,7 +162,7 @@ namespace egret.web {
                     }
                     if (child.tint !== 0xFFFFFF) {
                         tempTintColor = buffer.globalTintColor;
-                        buffer.globalTintColor = child.tintRGB;
+                        buffer.globalTintColor = child.$tintRGB;
                     }
                     let savedMatrix: Matrix;
                     if (child.$useTranslate) {

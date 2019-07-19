@@ -2587,11 +2587,7 @@ var egret;
          * 创建一个canvas。
          */
         function __createCanvas__(width, height) {
-            var canvas = document.createElement("canvas");
-            if (!isNaN(width) && !isNaN(height)) {
-                canvas.width = width;
-                canvas.height = height;
-            }
+            var canvas = egret.sys.createCanvas(width, height);
             var context = canvas.getContext("2d");
             if (context["imageSmoothingEnabled"] === undefined) {
                 var keys = ["webkitImageSmoothingEnabled", "mozImageSmoothingEnabled", "msImageSmoothingEnabled"];
@@ -2625,12 +2621,13 @@ var egret;
          */
         var CanvasRenderBuffer = (function () {
             function CanvasRenderBuffer(width, height, root) {
-                this.surface = egret.sys.createCanvasRenderBufferSurface(__createCanvas__, width, height);
+                this.surface = egret.sys.createCanvasRenderBufferSurface(__createCanvas__, width, height, root);
                 this.context = this.surface.getContext("2d");
                 if (this.context) {
                     this.context.$offsetX = 0;
                     this.context.$offsetY = 0;
                 }
+                this.resize(width, height);
             }
             Object.defineProperty(CanvasRenderBuffer.prototype, "width", {
                 /**
@@ -4394,7 +4391,7 @@ var egret;
          */
         function convertImageToCanvas(texture, rect) {
             if (!sharedCanvas) {
-                sharedCanvas = document.createElement("canvas");
+                sharedCanvas = egret.sys.createCanvas();
                 sharedContext = sharedCanvas.getContext("2d");
             }
             var w = texture.$getTextureWidth();
@@ -7422,6 +7419,10 @@ var egret;
          */
         var WebGLRenderer = (function () {
             function WebGLRenderer() {
+                /**
+                 * Do special treatment on wechat ios10
+                 */
+                this.wxiOS10 = false;
                 this.nestLevel = 0; //渲染的嵌套层次，0表示在调用堆栈的最外层。
             }
             /**
@@ -7533,7 +7534,7 @@ var egret;
                         }
                         if (child.tint !== 0xFFFFFF) {
                             tempTintColor = buffer.globalTintColor;
-                            buffer.globalTintColor = child.tintRGB;
+                            buffer.globalTintColor = child.$tintRGB;
                         }
                         var savedMatrix = void 0;
                         if (child.$useTranslate) {
@@ -8251,6 +8252,9 @@ var egret;
                 }
                 node.dirtyRender = false;
             };
+            /**
+             * @private
+             */
             WebGLRenderer.prototype.renderText = function (node, buffer) {
                 if (web.textAtlasRenderEnable) {
                     //新的文字渲染机制
@@ -8280,12 +8284,22 @@ var egret;
                     node.$canvasScaleY = canvasScaleY;
                     node.dirtyRender = true;
                 }
-                if (!this.canvasRenderBuffer || !this.canvasRenderBuffer.context) {
-                    this.canvasRenderer = new egret.CanvasRenderer();
-                    this.canvasRenderBuffer = new web.CanvasRenderBuffer(width, height);
+                if (this.wxiOS10) {
+                    if (!this.canvasRenderer) {
+                        this.canvasRenderer = new egret.CanvasRenderer();
+                    }
+                    if (node.dirtyRender) {
+                        this.canvasRenderBuffer = new web.CanvasRenderBuffer(width, height);
+                    }
                 }
-                else if (node.dirtyRender) {
-                    this.canvasRenderBuffer.resize(width, height);
+                else {
+                    if (!this.canvasRenderBuffer || !this.canvasRenderBuffer.context) {
+                        this.canvasRenderer = new egret.CanvasRenderer();
+                        this.canvasRenderBuffer = new web.CanvasRenderBuffer(width, height);
+                    }
+                    else if (node.dirtyRender) {
+                        this.canvasRenderBuffer.resize(width, height);
+                    }
                 }
                 if (!this.canvasRenderBuffer.context) {
                     return;
@@ -8305,15 +8319,21 @@ var egret;
                 if (node.dirtyRender) {
                     var surface = this.canvasRenderBuffer.surface;
                     this.canvasRenderer.renderText(node, this.canvasRenderBuffer.context);
-                    // 拷贝canvas到texture
-                    var texture = node.$texture;
-                    if (!texture) {
-                        texture = buffer.context.createTexture(surface);
-                        node.$texture = texture;
+                    if (this.wxiOS10) {
+                        surface["isCanvas"] = true;
+                        node.$texture = surface;
                     }
                     else {
-                        // 重新拷贝新的图像
-                        buffer.context.updateTexture(texture, surface);
+                        // 拷贝canvas到texture
+                        var texture = node.$texture;
+                        if (!texture) {
+                            texture = buffer.context.createTexture(surface);
+                            node.$texture = texture;
+                        }
+                        else {
+                            // 重新拷贝新的图像
+                            buffer.context.updateTexture(texture, surface);
+                        }
                     }
                     // 保存材质尺寸
                     node.$textureWidth = surface.width;
@@ -8358,12 +8378,22 @@ var egret;
                 canvasScaleY *= height2 / height;
                 width = width2;
                 height = height2;
-                if (!this.canvasRenderBuffer || !this.canvasRenderBuffer.context) {
-                    this.canvasRenderer = new egret.CanvasRenderer();
-                    this.canvasRenderBuffer = new web.CanvasRenderBuffer(width, height);
+                if (this.wxiOS10) {
+                    if (!this.canvasRenderer) {
+                        this.canvasRenderer = new egret.CanvasRenderer();
+                    }
+                    if (node.dirtyRender) {
+                        this.canvasRenderBuffer = new web.CanvasRenderBuffer(width, height);
+                    }
                 }
-                else if (node.dirtyRender || forHitTest) {
-                    this.canvasRenderBuffer.resize(width, height);
+                else {
+                    if (!this.canvasRenderBuffer || !this.canvasRenderBuffer.context) {
+                        this.canvasRenderer = new egret.CanvasRenderer();
+                        this.canvasRenderBuffer = new web.CanvasRenderBuffer(width, height);
+                    }
+                    else if (node.dirtyRender) {
+                        this.canvasRenderBuffer.resize(width, height);
+                    }
                 }
                 if (!this.canvasRenderBuffer.context) {
                     return;
@@ -8380,22 +8410,35 @@ var egret;
                 var surface = this.canvasRenderBuffer.surface;
                 if (forHitTest) {
                     this.canvasRenderer.renderGraphics(node, this.canvasRenderBuffer.context, true);
-                    egret.WebGLUtils.deleteWebGLTexture(surface);
-                    var texture = buffer.context.getWebGLTexture(surface);
+                    var texture = void 0;
+                    if (this.wxiOS10) {
+                        surface["isCanvas"] = true;
+                        texture = surface;
+                    }
+                    else {
+                        egret.WebGLUtils.deleteWebGLTexture(surface);
+                        texture = buffer.context.getWebGLTexture(surface);
+                    }
                     buffer.context.drawTexture(texture, 0, 0, width, height, 0, 0, width, height, surface.width, surface.height);
                 }
                 else {
                     if (node.dirtyRender) {
                         this.canvasRenderer.renderGraphics(node, this.canvasRenderBuffer.context);
-                        // 拷贝canvas到texture
-                        var texture = node.$texture;
-                        if (!texture) {
-                            texture = buffer.context.createTexture(surface);
-                            node.$texture = texture;
+                        if (this.wxiOS10) {
+                            surface["isCanvas"] = true;
+                            node.$texture = surface;
                         }
                         else {
-                            // 重新拷贝新的图像
-                            buffer.context.updateTexture(texture, surface);
+                            // 拷贝canvas到texture
+                            var texture = node.$texture;
+                            if (!texture) {
+                                texture = buffer.context.createTexture(surface);
+                                node.$texture = texture;
+                            }
+                            else {
+                                // 重新拷贝新的图像
+                                buffer.context.updateTexture(texture, surface);
+                            }
                         }
                         // 保存材质尺寸
                         node.$textureWidth = surface.width;
