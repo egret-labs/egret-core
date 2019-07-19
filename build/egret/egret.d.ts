@@ -1299,6 +1299,18 @@ declare namespace egret {
          * @private
          */
         $tintRGB: number;
+        /**
+         * Set a tint color for the current object
+         * @version Egret 5.2.24
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 给当前对象设置填充色
+         * @version Egret 5.2.24
+         * @platform Web,Native
+         * @language zh_CN
+         */
         tint: number;
     }
 }
