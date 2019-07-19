@@ -1312,11 +1312,45 @@ declare namespace egret {
          * @language zh_CN
          */
         tint: number;
-        sortDirty: boolean;
+        /**
+         * @private
+         * inspired by pixi.js
+         */
+        $sortDirty: boolean;
         sortChildren(): void;
+        /**
+         * @private
+         */
         private _zIndex;
+        /**
+         * the z-order (front-to-back order) of the object
+         * @version Egret 5.2.24
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 设置对象的 Z 轴顺序（前后顺序）
+         * @version Egret 5.2.24
+         * @platform Web,Native
+         * @language zh_CN
+         */
         zIndex: number;
-        _lastSortedIndex: number;
+        /**
+         * @private
+         */
+        $lastSortedIndex: number;
+        /**
+         * Allow objects to use zIndex sorting
+         * @version Egret 5.2.24
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 允许对象使用 zIndex 排序
+         * @version Egret 5.2.24
+         * @platform Web,Native
+         * @language zh_CN
+         */
         sortableChildren: boolean;
     }
 }

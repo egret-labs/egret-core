@@ -695,12 +695,31 @@ var egret;
              * @private
              */
             _this.$tintRGB = 0;
-            /*
-            * inspired by pixi.js
-            */
-            _this.sortDirty = false;
+            /**
+             * @private
+             * inspired by pixi.js
+             */
+            _this.$sortDirty = false;
+            /**
+             * @private
+             */
             _this._zIndex = 0;
-            _this._lastSortedIndex = 0;
+            /**
+             * @private
+             */
+            _this.$lastSortedIndex = 0;
+            /**
+             * Allow objects to use zIndex sorting
+             * @version Egret 5.2.24
+             * @platform Web,Native
+             * @language en_US
+             */
+            /**
+             * 允许对象使用 zIndex 排序
+             * @version Egret 5.2.24
+             * @platform Web,Native
+             * @language zh_CN
+             */
             _this.sortableChildren = false;
             if (egret.nativeRender) {
                 _this.createNativeDisplayObject();
@@ -2720,16 +2739,28 @@ var egret;
             configurable: true
         });
         DisplayObject.prototype.sortChildren = function () {
-            this.sortDirty = false;
+            this.$sortDirty = false;
         };
         Object.defineProperty(DisplayObject.prototype, "zIndex", {
+            /**
+             * the z-order (front-to-back order) of the object
+             * @version Egret 5.2.24
+             * @platform Web,Native
+             * @language en_US
+             */
+            /**
+             * 设置对象的 Z 轴顺序（前后顺序）
+             * @version Egret 5.2.24
+             * @platform Web,Native
+             * @language zh_CN
+             */
             get: function () {
                 return this._zIndex;
             },
             set: function (value) {
                 this._zIndex = value;
                 if (this.parent) {
-                    this.parent.sortDirty = true;
+                    this.parent.$sortDirty = true;
                 }
             },
             enumerable: true,
@@ -5243,21 +5274,21 @@ var egret;
         };
         DisplayObjectContainer.prototype._sortChildrenFunc = function (a, b) {
             if (a.zIndex === b.zIndex) {
-                return a._lastSortedIndex - b._lastSortedIndex;
+                return a.$lastSortedIndex - b.$lastSortedIndex;
             }
             return a.zIndex - b.zIndex;
         };
         DisplayObjectContainer.prototype.sortChildren = function () {
             //关掉脏的标记
             _super.prototype.sortChildren.call(this);
-            this.sortDirty = false;
+            this.$sortDirty = false;
             //准备重新排序
             var sortRequired = false;
             var children = this.$children;
             var child = null;
             for (var i = 0, j = children.length; i < j; ++i) {
                 child = children[i];
-                child._lastSortedIndex = i;
+                child.$lastSortedIndex = i;
                 if (!sortRequired && child.zIndex !== 0) {
                     sortRequired = true;
                 }

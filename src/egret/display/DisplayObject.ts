@@ -2352,7 +2352,6 @@ namespace egret {
         }
         /**
          * @private
-         * inspired by pixi.js
          */
         $lastSortedIndex: number = 0;
         /**
