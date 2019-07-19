@@ -2317,14 +2317,17 @@ namespace egret {
             this._tint = value;
             this.$tintRGB = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
         }
-        /*
-        * inspired by pixi.js
-        */
-        public sortDirty: boolean = false;
+        /**
+         * @private
+         * inspired by pixi.js
+         */
+        $sortDirty: boolean = false;
         public sortChildren(): void {
-            this.sortDirty = false;
+            this.$sortDirty = false;
         }
-
+        /**
+         * @private
+         */
         private _zIndex: number = 0;
         /**
          * the z-order (front-to-back order) of the object
@@ -2344,10 +2347,26 @@ namespace egret {
         public set zIndex(value: number) {
             this._zIndex = value;
             if (this.parent) {
-                this.parent.sortDirty = true;
+                this.parent.$sortDirty = true;
             }
         }
-        public _lastSortedIndex: number = 0;
+        /**
+         * @private
+         * inspired by pixi.js
+         */
+        $lastSortedIndex: number = 0;
+        /**
+         * Allow objects to use zIndex sorting
+         * @version Egret 5.2.24
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 允许对象使用 zIndex 排序
+         * @version Egret 5.2.24
+         * @platform Web,Native
+         * @language zh_CN
+         */
         public sortableChildren: boolean = false;
     }
 
