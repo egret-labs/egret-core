@@ -73,7 +73,8 @@ var UpgradeCommand = /** @class */ (function () {
                             { "v": "5.2.17", command: Upgrade_5_2_17 },
                             { "v": "5.2.19", command: Upgrade_5_2_19 },
                             { "v": "5.2.22", command: Upgrade_5_2_22 },
-                            { "v": "5.2.23", command: Upgrade_5_2_23 }
+                            { "v": "5.2.23", command: Upgrade_5_2_23 },
+                            { "v": "5.2.24" }
                         ];
                         _a.label = 1;
                     case 1:
