@@ -2802,9 +2802,12 @@ var egret;
             sound.load(virtualUrl);
         };
         URLLoader.prototype.onSoundoadComplete = function (event) {
+            var _this = this;
             this.removeSoundLoaderListeners();
             this.data = this.sound;
-            this.dispatchEventWith(egret.Event.COMPLETE);
+            window.setTimeout(function () {
+                _this.dispatchEventWith(egret.Event.COMPLETE);
+            }, 0);
         };
         URLLoader.prototype.onSoundLoaderPostProgress = function (event) {
             this.dispatchEvent(event);
@@ -2832,6 +2835,7 @@ var egret;
             imageLoader.load(this.virtualUrl);
         };
         URLLoader.prototype.onImageLoadComplete = function (event) {
+            var _this = this;
             this.removeImageLoaderListeners();
             var texture = new egret.Texture();
             var bitmapData = this.imageLoader.data;
@@ -2840,7 +2844,9 @@ var egret;
             }
             texture._setBitmapData(bitmapData);
             this.data = texture;
-            this.dispatchEventWith(egret.Event.COMPLETE);
+            window.setTimeout(function () {
+                _this.dispatchEventWith(egret.Event.COMPLETE);
+            }, 0);
         };
         URLLoader.prototype.onImageLoaderPostProgress = function (event) {
             this.dispatchEvent(event);

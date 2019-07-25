@@ -235,7 +235,9 @@ namespace egret {
         private onSoundoadComplete(event): void {
             this.removeSoundLoaderListeners();
             this.data = this.sound;
-            this.dispatchEventWith(Event.COMPLETE);
+            window.setTimeout(()=> {
+                this.dispatchEventWith(Event.COMPLETE);
+            }, 0);
         }
         private onSoundLoaderPostProgress(event: egret.ProgressEvent): void {
             this.dispatchEvent(event);
@@ -279,7 +281,9 @@ namespace egret {
             }
             texture._setBitmapData(bitmapData);
             this.data = texture;
-            this.dispatchEventWith(Event.COMPLETE);
+            window.setTimeout(()=> {
+                this.dispatchEventWith(Event.COMPLETE);
+            }, 0);
         }
         private onImageLoaderPostProgress(event: egret.ProgressEvent): void {
             this.dispatchEvent(event);
