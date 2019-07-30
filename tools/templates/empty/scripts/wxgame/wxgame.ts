@@ -127,7 +127,7 @@ export class WxgamePlugin implements plugins.Command {
             }
         }
         this.writeData(signatureData, path.join(libDir, "signature.json"))
-
+        fs.writeFileSync(path.join(libDir, "index.js"), null);
 
     }
 
