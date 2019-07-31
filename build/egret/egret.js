@@ -17834,7 +17834,7 @@ var egret;
          */
         /**
          * 运行在支付宝小游戏上
-         * @version Egret 5.2.23
+         * @version Egret 5.2.26
          * @platform All
          * @language zh_CN
          */
@@ -17879,12 +17879,44 @@ var egret;
          */
         RuntimeType.QGAME = "qgame";
         /**
+         * Running on OPPO mini game
+         * @version Egret 5.2.14
+         * @platform All
+         * @language en_US
+         */
+        /**
          * 运行在 Oppo 小游戏上
          * @version Egret 5.2.14
          * @platform All
          * @language zh_CN
          */
         RuntimeType.OPPOGAME = "oppogame";
+        /**
+        * Running on QQ mini game
+        * @version Egret 5.2.25
+        * @platform All
+        * @language en_US
+        */
+        /**
+        * 运行在 QQ 小游戏上
+        * @version Egret 5.2.25
+        * @platform All
+        * @language zh_CN
+        */
+        RuntimeType.QQGAME = "qqgame";
+        /**
+         * Running on vivo mini game
+         * @version Egret 5.2.23
+         * @platform All
+         * @language en_US
+         */
+        /**
+        * 运行在 vivo 小游戏上
+        * @version Egret 5.2.23
+        * @platform All
+        * @language zh_CN
+        */
+        RuntimeType.VIVOGAME = "vivogame";
     })(RuntimeType = egret.RuntimeType || (egret.RuntimeType = {}));
     /**
      * The Capabilities class provides properties that describe the system and runtime that are hosting the application.
@@ -18001,7 +18033,7 @@ var egret;
          * @platform Web,Native
          * @language zh_CN
          */
-        Capabilities.engineVersion = "5.2.24";
+        Capabilities.engineVersion = "5.2.25";
         /***
          * current render mode.
          * @type {string}

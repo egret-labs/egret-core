@@ -94,7 +94,7 @@ namespace egret {
          */
         /**
          * 运行在支付宝小游戏上
-         * @version Egret 5.2.23
+         * @version Egret 5.2.26
          * @platform All
          * @language zh_CN
          */
@@ -140,12 +140,44 @@ namespace egret {
          */
         export const QGAME = "qgame";
         /**
+         * Running on OPPO mini game
+         * @version Egret 5.2.14
+         * @platform All
+         * @language en_US
+         */
+        /**
          * 运行在 Oppo 小游戏上
          * @version Egret 5.2.14
          * @platform All
          * @language zh_CN
          */
         export const OPPOGAME = "oppogame";
+         /**
+         * Running on QQ mini game
+         * @version Egret 5.2.25
+         * @platform All
+         * @language en_US
+         */
+         /**
+         * 运行在 QQ 小游戏上
+         * @version Egret 5.2.25
+         * @platform All
+         * @language zh_CN
+         */
+        export const QQGAME = "qqgame";
+        /**
+         * Running on vivo mini game
+         * @version Egret 5.2.23
+         * @platform All
+         * @language en_US
+         */
+         /**
+         * 运行在 vivo 小游戏上
+         * @version Egret 5.2.23
+         * @platform All
+         * @language zh_CN
+         */
+        export const VIVOGAME = "vivogame";
 
     }
 
@@ -284,7 +316,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static readonly engineVersion: string = "5.2.24";
+        public static readonly engineVersion: string = "5.2.25";
 
         /***
          * current render mode.
