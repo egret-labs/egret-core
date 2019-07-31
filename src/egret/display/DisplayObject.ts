@@ -127,6 +127,8 @@ namespace egret {
             if (egret.nativeRender) {
                 this.createNativeDisplayObject();
             }
+            //默认都是纯白
+            this.tint = 0xFFFFFF;
         }
 
         $nativeDisplayObject: egret_native.NativeDisplayObject;
@@ -2288,6 +2290,83 @@ namespace egret {
             return false;
         }
 
+        /**
+         * inspired by pixi.js    
+         */
+        private _tint: number = 0;
+        /**
+         * @private
+         */
+        $tintRGB: number = 0;
+        /**
+         * Set a tint color for the current object
+         * @version Egret 5.2.24
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 给当前对象设置填充色
+         * @version Egret 5.2.24
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        public get tint(): number {
+            return this._tint;
+        }
+        public set tint(value)  {
+            this._tint = value;
+            this.$tintRGB = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
+        }
+        /**
+         * @private
+         * inspired by pixi.js
+         */
+        $sortDirty: boolean = false;
+        public sortChildren(): void {
+            this.$sortDirty = false;
+        }
+        /**
+         * @private
+         */
+        private _zIndex: number = 0;
+        /**
+         * the z-order (front-to-back order) of the object
+         * @version Egret 5.2.24
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 设置对象的 Z 轴顺序（前后顺序）
+         * @version Egret 5.2.24
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        public get zIndex(): number {
+            return this._zIndex;
+        }
+        public set zIndex(value: number) {
+            this._zIndex = value;
+            if (this.parent) {
+                this.parent.$sortDirty = true;
+            }
+        }
+        /**
+         * @private
+         */
+        $lastSortedIndex: number = 0;
+        /**
+         * Allow objects to use zIndex sorting
+         * @version Egret 5.2.24
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 允许对象使用 zIndex 排序
+         * @version Egret 5.2.24
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        public sortableChildren: boolean = false;
     }
 
 }

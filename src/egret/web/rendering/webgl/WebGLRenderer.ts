@@ -149,15 +149,24 @@ namespace egret.web {
             }
             let children = displayObject.$children;
             if (children) {
+                if (displayObject.sortableChildren && displayObject.$sortDirty) {
+                    //绘制排序
+                    displayObject.sortChildren();
+                }
                 let length = children.length;
                 for (let i = 0; i < length; i++) {
                     let child = children[i];
                     let offsetX2;
                     let offsetY2;
                     let tempAlpha;
+                    let tempTintColor;
                     if (child.$alpha != 1) {
                         tempAlpha = buffer.globalAlpha;
                         buffer.globalAlpha *= child.$alpha;
+                    }
+                    if (child.tint !== 0xFFFFFF) {
+                        tempTintColor = buffer.globalTintColor;
+                        buffer.globalTintColor = child.$tintRGB;
                     }
                     let savedMatrix: Matrix;
                     if (child.$useTranslate) {
@@ -198,6 +207,9 @@ namespace egret.web {
                     }
                     if (tempAlpha) {
                         buffer.globalAlpha = tempAlpha;
+                    }
+                    if (tempTintColor) {
+                        buffer.globalTintColor = tempTintColor;
                     }
                     if (savedMatrix) {
                         let m = buffer.globalMatrix;

@@ -12,7 +12,7 @@
              alt="stars">
     </a>
     <a href="https://github.com/egret-labs/egret-core">
-        <img src="https://img.shields.io/badge/version-5.2.24-green.svg"
+        <img src="https://img.shields.io/badge/version-5.2.25-green.svg"
              alt="version">
     </a>
     <a href="./LICENSE.md">
