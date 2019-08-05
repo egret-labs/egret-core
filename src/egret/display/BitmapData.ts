@@ -43,6 +43,7 @@ namespace egret {
     export const engine_default_empty_texture = 'engine_default_empty_texture';
     export const is_compressed_texture = 'is_compressed_texture';
     export const glContext = 'glContext';
+    export const UNPACK_PREMULTIPLY_ALPHA_WEBGL = 'UNPACK_PREMULTIPLY_ALPHA_WEBGL';
 
     
 

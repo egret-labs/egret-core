@@ -49,5 +49,4 @@ namespace egret.web {
             this.dispatchEvent(event);
         }
     }
-    egret.Motion = egret.web.WebMotion;
 }

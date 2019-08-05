@@ -41,8 +41,11 @@ namespace egret.web {
     export class WebGLRenderer implements sys.SystemRenderer {
 
         public constructor() {
-
         }
+        /**
+         * Do special treatment on wechat ios10
+         */
+        public wxiOS10: boolean = false;
 
         private nestLevel: number = 0;//渲染的嵌套层次，0表示在调用堆栈的最外层。
         /**
@@ -146,15 +149,24 @@ namespace egret.web {
             }
             let children = displayObject.$children;
             if (children) {
+                if (displayObject.sortableChildren && displayObject.$sortDirty) {
+                    //绘制排序
+                    displayObject.sortChildren();
+                }
                 let length = children.length;
                 for (let i = 0; i < length; i++) {
                     let child = children[i];
                     let offsetX2;
                     let offsetY2;
                     let tempAlpha;
+                    let tempTintColor;
                     if (child.$alpha != 1) {
                         tempAlpha = buffer.globalAlpha;
                         buffer.globalAlpha *= child.$alpha;
+                    }
+                    if (child.tint !== 0xFFFFFF) {
+                        tempTintColor = buffer.globalTintColor;
+                        buffer.globalTintColor = child.$tintRGB;
                     }
                     let savedMatrix: Matrix;
                     if (child.$useTranslate) {
@@ -195,6 +207,9 @@ namespace egret.web {
                     }
                     if (tempAlpha) {
                         buffer.globalAlpha = tempAlpha;
+                    }
+                    if (tempTintColor) {
+                        buffer.globalTintColor = tempTintColor;
                     }
                     if (savedMatrix) {
                         let m = buffer.globalMatrix;
@@ -839,7 +854,6 @@ namespace egret.web {
 
         private canvasRenderer: CanvasRenderer;
         private canvasRenderBuffer: CanvasRenderBuffer;
-
         /**
          * @private
          */
@@ -915,7 +929,9 @@ namespace egret.web {
             }
             node.dirtyRender = false;
         }
-
+        /**
+         * @private
+         */
         private renderText(node: sys.TextNode, buffer: WebGLRenderBuffer): void {
             if (node.atlasRender) {
                 //新的文字渲染机制
@@ -945,14 +961,23 @@ namespace egret.web {
                 node.$canvasScaleY = canvasScaleY;
                 node.dirtyRender = true;
             }
-            if (!this.canvasRenderBuffer || !this.canvasRenderBuffer.context) {
-                this.canvasRenderer = new CanvasRenderer();
-                this.canvasRenderBuffer = new CanvasRenderBuffer(width, height);
+            if (this.wxiOS10) {
+                if (!this.canvasRenderer) {
+                    this.canvasRenderer = new CanvasRenderer();
+                }
+                if (node.dirtyRender) {
+                    this.canvasRenderBuffer = new CanvasRenderBuffer(width, height);
+                }
             }
-            else if (node.dirtyRender) {
-                this.canvasRenderBuffer.resize(width, height);
+            else {
+                if (!this.canvasRenderBuffer || !this.canvasRenderBuffer.context) {
+                    this.canvasRenderer = new CanvasRenderer();
+                    this.canvasRenderBuffer = new CanvasRenderBuffer(width, height);
+                }
+                else if (node.dirtyRender) {
+                    this.canvasRenderBuffer.resize(width, height);
+                }
             }
-
             if (!this.canvasRenderBuffer.context) {
                 return;
             }
@@ -975,14 +1000,20 @@ namespace egret.web {
                 let surface = this.canvasRenderBuffer.surface;
                 this.canvasRenderer.renderText(node, this.canvasRenderBuffer.context);
 
-                // 拷贝canvas到texture
-                let texture = node.$texture;
-                if (!texture) {
-                    texture = buffer.context.createTexture(<BitmapData><any>surface);
-                    node.$texture = texture;
-                } else {
-                    // 重新拷贝新的图像
-                    buffer.context.updateTexture(texture, <BitmapData><any>surface);
+                if (this.wxiOS10) {
+                    surface["isCanvas"] = true;
+                    node.$texture = surface;
+                }
+                else {
+                    // 拷贝canvas到texture
+                    let texture = node.$texture;
+                    if (!texture) {
+                        texture = buffer.context.createTexture(<BitmapData><any>surface);
+                        node.$texture = texture;
+                    } else {
+                        // 重新拷贝新的图像
+                        buffer.context.updateTexture(texture, <BitmapData><any>surface);
+                    }
                 }
                 // 保存材质尺寸
                 node.$textureWidth = surface.width;
@@ -1030,13 +1061,25 @@ namespace egret.web {
             canvasScaleY *= height2 / height;
             width = width2;
             height = height2;
-            if (!this.canvasRenderBuffer || !this.canvasRenderBuffer.context) {
-                this.canvasRenderer = new CanvasRenderer();
-                this.canvasRenderBuffer = new CanvasRenderBuffer(width, height);
+
+            if (this.wxiOS10) {
+                if (!this.canvasRenderer) {
+                    this.canvasRenderer = new CanvasRenderer();
+                }
+                if (node.dirtyRender) {
+                    this.canvasRenderBuffer = new CanvasRenderBuffer(width, height);
+                }
             }
-            else if (node.dirtyRender || forHitTest) {
-                this.canvasRenderBuffer.resize(width, height);
+            else {
+                if (!this.canvasRenderBuffer || !this.canvasRenderBuffer.context) {
+                    this.canvasRenderer = new CanvasRenderer();
+                    this.canvasRenderBuffer = new CanvasRenderBuffer(width, height);
+                }
+                else if (node.dirtyRender) {
+                    this.canvasRenderBuffer.resize(width, height);
+                }
             }
+
             if (!this.canvasRenderBuffer.context) {
                 return;
             }
@@ -1052,21 +1095,34 @@ namespace egret.web {
             let surface = this.canvasRenderBuffer.surface;
             if (forHitTest) {
                 this.canvasRenderer.renderGraphics(node, this.canvasRenderBuffer.context, true);
-                WebGLUtils.deleteWebGLTexture(surface);
-                let texture = buffer.context.getWebGLTexture(<BitmapData><any>surface);
+                let texture;
+                if (this.wxiOS10) {
+                    surface["isCanvas"] = true;
+                    texture = surface;
+                }
+                else {
+                    WebGLUtils.deleteWebGLTexture(surface);
+                    texture = buffer.context.getWebGLTexture(<BitmapData><any>surface);
+                }
                 buffer.context.drawTexture(texture, 0, 0, width, height, 0, 0, width, height, surface.width, surface.height);
             } else {
                 if (node.dirtyRender) {
                     this.canvasRenderer.renderGraphics(node, this.canvasRenderBuffer.context);
 
-                    // 拷贝canvas到texture
-                    let texture: WebGLTexture = node.$texture;
-                    if (!texture) {
-                        texture = buffer.context.createTexture(<BitmapData><any>surface);
-                        node.$texture = texture;
-                    } else {
-                        // 重新拷贝新的图像
-                        buffer.context.updateTexture(texture, <BitmapData><any>surface);
+                    if (this.wxiOS10) {
+                        surface["isCanvas"] = true;
+                        node.$texture = surface;
+                    }
+                    else {
+                        // 拷贝canvas到texture
+                        let texture = node.$texture;
+                        if (!texture) {
+                            texture = buffer.context.createTexture(<BitmapData><any>surface);
+                            node.$texture = texture;
+                        } else {
+                            // 重新拷贝新的图像
+                            buffer.context.updateTexture(texture, <BitmapData><any>surface);
+                        }
                     }
                     // 保存材质尺寸
                     node.$textureWidth = surface.width;

@@ -35,10 +35,23 @@ namespace egret.web {
      */
     export class WebGLVertexArrayObject {
 
-        private size: number = 2000;
-        private vertexMaxSize: number = this.size * 4;
-        private indicesMaxSize: number = this.size * 6;
-        private vertSize: number = 5;
+        /*定义顶点格式
+        * (x: 8 * 4 = 32) + (y: 8 * 4 = 32) + (u: 8 * 4 = 32) + (v: 8 * 4 = 32) + (tintcolor: 8 * 4 = 32) = (8 * 4 = 32) * (x + y + u + v + tintcolor: 5);
+        */
+        private readonly vertSize: number = 5;
+        private readonly vertByteSize = this.vertSize * 4;
+        /*
+        *最多单次提交maxQuadsCount这么多quad
+        */
+        private readonly maxQuadsCount: number = 2048;
+        /*
+        *quad = 4个Vertex
+        */
+        private readonly maxVertexCount: number = this.maxQuadsCount * 4;
+        /*
+        *配套的Indices = quad * 6. 
+        */
+        private readonly maxIndicesCount: number = this.maxQuadsCount * 6;
 
         private vertices: Float32Array = null;
         private indices: Uint16Array = null;
@@ -49,15 +62,36 @@ namespace egret.web {
 
         private hasMesh: boolean = false;
 
-        public constructor() {
-            let numVerts = this.vertexMaxSize * this.vertSize;
-            let numIndices = this.indicesMaxSize;
+        /*
+        * refactor: 
+        */
+        private _vertices: ArrayBuffer = null;
+        private _verticesFloat32View: Float32Array = null;
+        private _verticesUint32View: Uint32Array = null;
 
+        constructor() {
+            //old
+            const numVerts = this.maxVertexCount * this.vertSize;
             this.vertices = new Float32Array(numVerts);
-            this.indices = new Uint16Array(numIndices);
-            this.indicesForMesh = new Uint16Array(numIndices);
-
-            for (let i = 0, j = 0; i < numIndices; i += 6, j += 4) {
+            ///
+            this._vertices = new ArrayBuffer(this.maxVertexCount * this.vertByteSize);
+            this._verticesFloat32View = new Float32Array(this._vertices);
+            this._verticesUint32View = new Uint32Array(this._vertices);
+            this.vertices = this._verticesFloat32View;
+            //索引缓冲，最大索引数
+            /*
+            0-------1
+            |       |
+            |       |
+            3-------2  
+            0->1->2
+            0->2->3 
+            两个三角形
+            */
+            const maxIndicesCount = this.maxIndicesCount;
+            this.indices = new Uint16Array(maxIndicesCount);
+            this.indicesForMesh = new Uint16Array(maxIndicesCount);
+            for (let i = 0, j = 0; i < maxIndicesCount; i += 6, j += 4) {
                 this.indices[i + 0] = j + 0;
                 this.indices[i + 1] = j + 1;
                 this.indices[i + 2] = j + 2;
@@ -71,7 +105,7 @@ namespace egret.web {
          * 是否达到最大缓存数量
          */
         public reachMaxSize(vertexCount: number = 4, indexCount: number = 6): boolean {
-            return this.vertexIndex > this.vertexMaxSize - vertexCount || this.indexIndex > this.indicesMaxSize - indexCount;
+            return this.vertexIndex > this.maxVertexCount - vertexCount || this.indexIndex > this.maxIndicesCount - indexCount;
         }
 
         /**
@@ -133,6 +167,18 @@ namespace egret.web {
             destX: number, destY: number, destWidth: number, destHeight: number, textureSourceWidth: number, textureSourceHeight: number,
             meshUVs?: number[], meshVertices?: number[], meshIndices?: number[], rotated?: boolean): void {
             let alpha = buffer.globalAlpha;
+            /*
+            * 混入tintcolor => alpha
+            */
+            alpha = Math.min(alpha, 1.0);
+            const globalTintColor = buffer.globalTintColor || 0xFFFFFF;
+            const currentTexture = buffer.currentTexture;
+            alpha = ( (alpha < 1.0 && currentTexture && currentTexture[UNPACK_PREMULTIPLY_ALPHA_WEBGL]) ?
+                 WebGLUtils.premultiplyTint(globalTintColor, alpha) 
+                 : globalTintColor + (alpha * 255 << 24));
+            /*
+            临时测试
+            */
             //计算出绘制矩阵，之后把矩阵还原回之前的
             let locWorldTransform = buffer.globalMatrix;
 
@@ -170,7 +216,8 @@ namespace egret.web {
 
             if (meshVertices) {
                 // 计算索引位置与赋值
-                let vertices = this.vertices;
+                const vertices = this.vertices;
+                const verticesUint32View = this._verticesUint32View;
                 let index = this.vertexIndex * this.vertSize;
                 // 缓存顶点数组
                 let i = 0, iD = 0, l = 0;
@@ -194,7 +241,7 @@ namespace egret.web {
                         vertices[iD + 3] = (sourceY + v * sourceHeight) / textureSourceHeight;
                     }
                     // alpha
-                    vertices[iD + 4] = alpha;
+                    verticesUint32View[iD + 4] = alpha;
                 }
                 // 缓存索引数组
                 if (this.hasMesh) {
@@ -212,6 +259,7 @@ namespace egret.web {
                 sourceX = sourceX / width;
                 sourceY = sourceY / height;
                 let vertices = this.vertices;
+                const verticesUint32View = this._verticesUint32View;
                 let index = this.vertexIndex * this.vertSize;
                 if (rotated) {
                     let temp = sourceWidth;
@@ -224,7 +272,7 @@ namespace egret.web {
                     vertices[index++] = sourceWidth + sourceX;
                     vertices[index++] = sourceY;
                     // alpha
-                    vertices[index++] = alpha;
+                    verticesUint32View[index++] = alpha;
                     // xy
                     vertices[index++] = a * w + tx;
                     vertices[index++] = b * w + ty;
@@ -232,7 +280,7 @@ namespace egret.web {
                     vertices[index++] = sourceWidth + sourceX;
                     vertices[index++] = sourceHeight + sourceY;
                     // alpha
-                    vertices[index++] = alpha;
+                    verticesUint32View[index++] = alpha;
                     // xy
                     vertices[index++] = a * w + c * h + tx;
                     vertices[index++] = d * h + b * w + ty;
@@ -240,7 +288,7 @@ namespace egret.web {
                     vertices[index++] = sourceX;
                     vertices[index++] = sourceHeight + sourceY;
                     // alpha
-                    vertices[index++] = alpha;
+                    verticesUint32View[index++] = alpha;
                     // xy
                     vertices[index++] = c * h + tx;
                     vertices[index++] = d * h + ty;
@@ -248,7 +296,7 @@ namespace egret.web {
                     vertices[index++] = sourceX;
                     vertices[index++] = sourceY;
                     // alpha
-                    vertices[index++] = alpha;
+                    verticesUint32View[index++] = alpha;
                 }
                 else {
                     sourceWidth = sourceWidth / width;
@@ -260,7 +308,7 @@ namespace egret.web {
                     vertices[index++] = sourceX;
                     vertices[index++] = sourceY;
                     // alpha
-                    vertices[index++] = alpha;
+                    verticesUint32View[index++] = alpha;
                     // xy
                     vertices[index++] = a * w + tx;
                     vertices[index++] = b * w + ty;
@@ -268,7 +316,7 @@ namespace egret.web {
                     vertices[index++] = sourceWidth + sourceX;
                     vertices[index++] = sourceY;
                     // alpha
-                    vertices[index++] = alpha;
+                    verticesUint32View[index++] = alpha;
                     // xy
                     vertices[index++] = a * w + c * h + tx;
                     vertices[index++] = d * h + b * w + ty;
@@ -276,7 +324,7 @@ namespace egret.web {
                     vertices[index++] = sourceWidth + sourceX;
                     vertices[index++] = sourceHeight + sourceY;
                     // alpha
-                    vertices[index++] = alpha;
+                    verticesUint32View[index++] = alpha;
                     // xy
                     vertices[index++] = c * h + tx;
                     vertices[index++] = d * h + ty;
@@ -284,7 +332,7 @@ namespace egret.web {
                     vertices[index++] = sourceX;
                     vertices[index++] = sourceHeight + sourceY;
                     // alpha
-                    vertices[index++] = alpha;
+                    verticesUint32View[index++] = alpha;
                 }
                 // 缓存索引数组
                 if (this.hasMesh) {
