@@ -67,7 +67,7 @@ namespace egret.web {
                         DisplayObjectTransform.transformText(displayObject, <sys.TextNode>node, buffer);
                         break;
                     case sys.RenderNodeType.GraphicsNode:
-                        //this.renderGraphics(<sys.GraphicsNode>node, buffer);
+                        DisplayObjectTransform.transformGraphics(displayObject, <sys.GraphicsNode>node, buffer);
                         break;
                     case sys.RenderNodeType.GroupNode:
                         //this.renderGroup(<sys.GroupNode>node, buffer);
@@ -157,7 +157,7 @@ namespace egret.web {
             }
         }
 
-        public static transformNormalBitmap(displayObject: DisplayObject, node: sys.NormalBitmapNode, buffer: WebGLRenderBuffer): void {
+        private static transformNormalBitmap(displayObject: DisplayObject, node: sys.NormalBitmapNode, buffer: WebGLRenderBuffer): void {
             const image = node.image;
             if (!image) {
                 return;
@@ -193,7 +193,7 @@ namespace egret.web {
             }
         }
 
-        public static transformText(displayObject: DisplayObject, node: sys.TextNode, buffer: WebGLRenderBuffer): void {
+        private static transformText(displayObject: DisplayObject, node: sys.TextNode, buffer: WebGLRenderBuffer): void {
             let width = node.width - node.x;
             let height = node.height - node.y;
             if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) {
@@ -236,6 +236,52 @@ namespace egret.web {
             //
             if (x || y) {
                 buffer.transform(1, 0, 0, 1, -x / canvasScaleX, -y / canvasScaleY);
+            }
+        }
+
+        private static transformGraphics(displayObject: DisplayObject, node: sys.GraphicsNode, buffer: WebGLRenderBuffer): void {
+            let width = node.width;
+            let height = node.height;
+            if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) {
+                return;
+            }
+            let canvasScaleX = egret.sys.DisplayList.$canvasScaleX;
+            let canvasScaleY = egret.sys.DisplayList.$canvasScaleY;
+            if (width * canvasScaleX < 1 || height * canvasScaleY < 1) {
+                canvasScaleX = canvasScaleY = 1;
+            }
+            if (node.$canvasScaleX != canvasScaleX || node.$canvasScaleY != canvasScaleY) {
+                node.$canvasScaleX = canvasScaleX;
+                node.$canvasScaleY = canvasScaleY;
+            }
+            width = width * canvasScaleX;
+            height = height * canvasScaleY;
+            let width2 = Math.ceil(width);
+            let height2 = Math.ceil(height);
+            canvasScaleX *= width2 / width;
+            canvasScaleY *= height2 / height;
+            width = width2;
+            height = height2;
+            if (canvasScaleX !== 1 || canvasScaleY !== 1) {
+            }
+            if (node.x || node.y) {
+                buffer.transform(1, 0, 0, 1, node.x, node.y);
+            }
+            ///
+            const _textureTransform = displayObject._textureTransform;
+            _textureTransform._offsetX = buffer.$offsetX;
+            _textureTransform._offsetY = buffer.$offsetY;
+            const _matrix = _textureTransform._matrix;
+            const globalMatrix = buffer.globalMatrix;
+            _matrix.a = globalMatrix.a;
+            _matrix.b = globalMatrix.b;
+            _matrix.c = globalMatrix.c;
+            _matrix.d = globalMatrix.d;
+            _matrix.tx = globalMatrix.tx;
+            _matrix.ty = globalMatrix.ty;
+            ///
+            if (node.x || node.y) {
+                buffer.transform(1, 0, 0, 1, -node.x, -node.y);
             }
         }
     }

@@ -8966,7 +8966,7 @@ var egret;
                             DisplayObjectTransform.transformText(displayObject, node, buffer);
                             break;
                         case 3 /* GraphicsNode */:
-                            //this.renderGraphics(<sys.GraphicsNode>node, buffer);
+                            DisplayObjectTransform.transformGraphics(displayObject, node, buffer);
                             break;
                         case 4 /* GroupNode */:
                             //this.renderGroup(<sys.GroupNode>node, buffer);
@@ -9133,6 +9133,51 @@ var egret;
                 //
                 if (x || y) {
                     buffer.transform(1, 0, 0, 1, -x / canvasScaleX, -y / canvasScaleY);
+                }
+            };
+            DisplayObjectTransform.transformGraphics = function (displayObject, node, buffer) {
+                var width = node.width;
+                var height = node.height;
+                if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) {
+                    return;
+                }
+                var canvasScaleX = egret.sys.DisplayList.$canvasScaleX;
+                var canvasScaleY = egret.sys.DisplayList.$canvasScaleY;
+                if (width * canvasScaleX < 1 || height * canvasScaleY < 1) {
+                    canvasScaleX = canvasScaleY = 1;
+                }
+                if (node.$canvasScaleX != canvasScaleX || node.$canvasScaleY != canvasScaleY) {
+                    node.$canvasScaleX = canvasScaleX;
+                    node.$canvasScaleY = canvasScaleY;
+                }
+                width = width * canvasScaleX;
+                height = height * canvasScaleY;
+                var width2 = Math.ceil(width);
+                var height2 = Math.ceil(height);
+                canvasScaleX *= width2 / width;
+                canvasScaleY *= height2 / height;
+                width = width2;
+                height = height2;
+                if (canvasScaleX !== 1 || canvasScaleY !== 1) {
+                }
+                if (node.x || node.y) {
+                    buffer.transform(1, 0, 0, 1, node.x, node.y);
+                }
+                ///
+                var _textureTransform = displayObject._textureTransform;
+                _textureTransform._offsetX = buffer.$offsetX;
+                _textureTransform._offsetY = buffer.$offsetY;
+                var _matrix = _textureTransform._matrix;
+                var globalMatrix = buffer.globalMatrix;
+                _matrix.a = globalMatrix.a;
+                _matrix.b = globalMatrix.b;
+                _matrix.c = globalMatrix.c;
+                _matrix.d = globalMatrix.d;
+                _matrix.tx = globalMatrix.tx;
+                _matrix.ty = globalMatrix.ty;
+                ///
+                if (node.x || node.y) {
+                    buffer.transform(1, 0, 0, 1, -node.x, -node.y);
                 }
             };
             return DisplayObjectTransform;
