@@ -31,9 +31,9 @@ namespace egret {
 
     export class Transform {
         public readonly worldMatrix: egret.Matrix = new egret.Matrix;
-        public  offsetX: number = 0;
-        public  offsetY: number = 0;
-       // offsetX, offsetY
+        public offsetX: number = 0;
+        public offsetY: number = 0;
+        // offsetX, offsetY
     }
 }
 

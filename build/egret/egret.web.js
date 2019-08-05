@@ -6535,36 +6535,33 @@ var egret;
             /**
              * 清除矩形区域
              */
-            WebGLRenderContext.prototype.clearRect = function (x, y, width, height) {
-                if (x != 0 || y != 0 || width != this.surface.width || height != this.surface.height) {
-                    var buffer = this.currentBuffer;
-                    if (buffer.$hasScissor) {
-                        this.setGlobalCompositeOperation("destination-out");
-                        this.drawRect(x, y, width, height);
-                        this.setGlobalCompositeOperation("source-over");
-                    }
-                    else {
-                        var m = buffer.globalMatrix;
-                        if (m.b == 0 && m.c == 0) {
-                            x = x * m.a + m.tx;
-                            y = y * m.d + m.ty;
-                            width = width * m.a;
-                            height = height * m.d;
-                            this.enableScissor(x, -y - height + buffer.height, width, height);
-                            this.clear();
-                            this.disableScissor();
-                        }
-                        else {
-                            this.setGlobalCompositeOperation("destination-out");
-                            this.drawRect(x, y, width, height);
-                            this.setGlobalCompositeOperation("source-over");
-                        }
-                    }
-                }
-                else {
-                    this.clear();
-                }
-            };
+            // public clearRect(x: number, y: number, width: number, height: number): void {
+            //     if (x != 0 || y != 0 || width != this.surface.width || height != this.surface.height) {
+            //         let buffer = this.currentBuffer;
+            //         if (buffer.$hasScissor) {
+            //             this.setGlobalCompositeOperation("destination-out");
+            //             this.drawRect(x, y, width, height);
+            //             this.setGlobalCompositeOperation("source-over");
+            //         } else {
+            //             let m = buffer.globalMatrix;
+            //             if (m.b == 0 && m.c == 0) {
+            //                 x = x * m.a + m.tx;
+            //                 y = y * m.d + m.ty;
+            //                 width = width * m.a;
+            //                 height = height * m.d;
+            //                 this.enableScissor(x, - y - height + buffer.height, width, height);
+            //                 this.clear();
+            //                 this.disableScissor();
+            //             } else {
+            //                 this.setGlobalCompositeOperation("destination-out");
+            //                 this.drawRect(x, y, width, height);
+            //                 this.setGlobalCompositeOperation("source-over");
+            //             }
+            //         }
+            //     } else {
+            //         this.clear();
+            //     }
+            // }
             /**
              * 设置混色
              */
@@ -6676,18 +6673,18 @@ var egret;
             /**
              * 绘制矩形（仅用于遮罩擦除等）
              */
-            WebGLRenderContext.prototype.drawRect = function (x, y, width, height) {
-                var buffer = this.currentBuffer;
-                if (this.contextLost || !buffer) {
-                    return;
-                }
-                if (this.vao.reachMaxSize()) {
-                    this.$flush(); //this.$drawWebGL();
-                }
-                this.drawCmdManager.pushDrawRect();
-                buffer.currentTexture = null;
-                this.vao.cacheArrays(buffer, 0, 0, width, height, x, y, width, height, width, height);
-            };
+            // public drawRect(x: number, y: number, width: number, height: number): void {
+            //     let buffer = this.currentBuffer;
+            //     if (this.contextLost || !buffer) {
+            //         return;
+            //     }
+            //     if (this.vao.reachMaxSize()) {
+            //         this.$flush();//this.$drawWebGL();
+            //     }
+            //     this.drawCmdManager.pushDrawRect();
+            //     buffer.currentTexture = null;
+            //     this.vao.cacheArrays(buffer, 0, 0, width, height, x, y, width, height, width, height);
+            // }
             /**
              * 绘制遮罩
              */
@@ -8924,11 +8921,166 @@ var egret;
 (function (egret) {
     var web;
     (function (web) {
-        // WebGLRendererTransform.ts
         var WebGLRendererTransform = (function () {
             function WebGLRendererTransform() {
             }
             WebGLRendererTransform.transformDisplayObject = function (displayObject, buffer, offsetX, offsetY) {
+                // let drawCalls = 0;
+                // let node: sys.RenderNode;
+                // let displayList = displayObject.$displayList;
+                // if (displayList && !isStage) {
+                //     if (displayObject.$cacheDirty || displayObject.$renderDirty ||
+                //         displayList.$canvasScaleX != sys.DisplayList.$canvasScaleX ||
+                //         displayList.$canvasScaleY != sys.DisplayList.$canvasScaleY) {
+                //         drawCalls += displayList.drawToSurface();
+                //     }
+                //     node = displayList.$renderNode;
+                // }
+                // else {
+                //     if (displayObject.$renderDirty) {
+                //         node = displayObject.$getRenderNode();
+                //     }
+                //     else {
+                //         node = displayObject.$renderNode;
+                //     }
+                // }
+                // displayObject.$cacheDirty = false;
+                var node = displayObject.$getRenderNode();
+                if (node) {
+                    //drawCalls++;
+                    buffer.$offsetX = offsetX;
+                    buffer.$offsetY = offsetY;
+                    ///
+                    //buffer.context.setBatchSystem(node);
+                    ///
+                    switch (node.type) {
+                        case 1 /* BitmapNode */:
+                            //this.renderBitmap(<sys.BitmapNode>node, buffer);
+                            break;
+                        case 2 /* TextNode */:
+                            //this.renderText(<sys.TextNode>node, buffer);
+                            break;
+                        case 3 /* GraphicsNode */:
+                            //this.renderGraphics(<sys.GraphicsNode>node, buffer);
+                            break;
+                        case 4 /* GroupNode */:
+                            //this.renderGroup(<sys.GroupNode>node, buffer);
+                            break;
+                        case 5 /* MeshNode */:
+                            //this.renderMesh(<sys.MeshNode>node, buffer);
+                            break;
+                        case 6 /* NormalBitmapNode */:
+                            //this.renderNormalBitmap(<sys.NormalBitmapNode>node, buffer);
+                            break;
+                    }
+                    buffer.$offsetX = 0;
+                    buffer.$offsetY = 0;
+                }
+                // if (displayList && !isStage) {
+                //     return drawCalls;
+                // }
+                var children = displayObject.$children;
+                if (children) {
+                    if (displayObject.sortableChildren && displayObject.$sortDirty) {
+                        //绘制排序
+                        displayObject.sortChildren();
+                    }
+                    var length_10 = children.length;
+                    var child = void 0;
+                    var offsetX2 = 0;
+                    var offsetY2 = 0;
+                    for (var i = 0; i < length_10; ++i) {
+                        child = children[i];
+                        // offsetX2;
+                        // offsetY2;
+                        // let tempAlpha;
+                        // let tempTintColor;
+                        // if (child.$alpha != 1) {
+                        //     tempAlpha = buffer.globalAlpha;
+                        //     buffer.globalAlpha *= child.$alpha;
+                        // }
+                        // if (child.tint !== 0xFFFFFF) {
+                        //     tempTintColor = buffer.globalTintColor;
+                        //     buffer.globalTintColor = child.$tintRGB;
+                        // }
+                        var savedMatrix = void 0;
+                        if (child.$useTranslate) {
+                            var m = child.$getMatrix();
+                            offsetX2 = offsetX + child.$x;
+                            offsetY2 = offsetY + child.$y;
+                            var m2 = buffer.globalMatrix;
+                            savedMatrix = egret.Matrix.create();
+                            savedMatrix.a = m2.a;
+                            savedMatrix.b = m2.b;
+                            savedMatrix.c = m2.c;
+                            savedMatrix.d = m2.d;
+                            savedMatrix.tx = m2.tx;
+                            savedMatrix.ty = m2.ty;
+                            buffer.transform(m.a, m.b, m.c, m.d, offsetX2, offsetY2);
+                            offsetX2 = -child.$anchorOffsetX;
+                            offsetY2 = -child.$anchorOffsetY;
+                        }
+                        else {
+                            offsetX2 = offsetX + child.$x - child.$anchorOffsetX;
+                            offsetY2 = offsetY + child.$y - child.$anchorOffsetY;
+                        }
+                        //
+                        var transform = displayObject.transform;
+                        transform.offsetX = offsetX2;
+                        transform.offsetY = offsetY2;
+                        //
+                        var worldMatrix = transform.worldMatrix;
+                        var globalMatrix = buffer.globalMatrix;
+                        worldMatrix.a = globalMatrix.a;
+                        worldMatrix.b = globalMatrix.b;
+                        worldMatrix.c = globalMatrix.c;
+                        worldMatrix.d = globalMatrix.d;
+                        worldMatrix.tx = globalMatrix.tx;
+                        worldMatrix.ty = globalMatrix.ty;
+                        //
+                        switch (child.$renderMode) {
+                            case 1 /* NONE */:
+                                break;
+                            case 2 /* FILTER */:
+                            case 3 /* CLIP */:
+                                break;
+                            case 4 /* SCROLLRECT */:
+                                //drawCalls += this.drawDisplayObjectAdvanced(child, buffer, offsetX2, offsetY2);
+                                break;
+                            /*
+                        case RenderMode.FILTER:
+                            drawCalls += this.drawWithFilter(child, buffer, offsetX2, offsetY2);
+                            break;
+                        case RenderMode.CLIP:
+                            drawCalls += this.drawWithClip(child, buffer, offsetX2, offsetY2);
+                            break;
+                        case RenderMode.SCROLLRECT:
+                            drawCalls += this.drawWithScrollRect(child, buffer, offsetX2, offsetY2);
+                            break;
+                            */
+                            default:
+                                //drawCalls += this.drawDisplayObject(child, buffer, offsetX2, offsetY2);
+                                break;
+                        }
+                        // if (tempAlpha) {
+                        //     buffer.globalAlpha = tempAlpha;
+                        // }
+                        // if (tempTintColor) {
+                        //     buffer.globalTintColor = tempTintColor;
+                        // }
+                        if (savedMatrix) {
+                            var m = buffer.globalMatrix;
+                            m.a = savedMatrix.a;
+                            m.b = savedMatrix.b;
+                            m.c = savedMatrix.c;
+                            m.d = savedMatrix.d;
+                            m.tx = savedMatrix.tx;
+                            m.ty = savedMatrix.ty;
+                            egret.Matrix.release(savedMatrix);
+                        }
+                    }
+                }
+                //return drawCalls;
             };
             return WebGLRendererTransform;
         }());
@@ -9242,7 +9394,7 @@ var egret;
                 }
                 //找到最合适的
                 var _sortLines = this._sortLines;
-                for (var i = 0, length_10 = _sortLines.length; i < length_10; ++i) {
+                for (var i = 0, length_11 = _sortLines.length; i < length_11; ++i) {
                     var line = _sortLines[i];
                     if (!line.isCapacityOf(textBlock)) {
                         continue;
@@ -9259,7 +9411,7 @@ var egret;
                 }
                 //现有的page中插入
                 var _pages = this._pages;
-                for (var i = 0, length_11 = _pages.length; i < length_11; ++i) {
+                for (var i = 0, length_12 = _pages.length; i < length_12; ++i) {
                     var page = _pages[i];
                     if (page.addLine(newLine)) {
                         return [page, newLine];
@@ -9580,7 +9732,7 @@ var egret;
                 var labelString = '';
                 var labelFormat = {};
                 var resultAsRenderTextBlocks = [];
-                for (var i = 0, length_12 = drawData.length; i < length_12; i += offset) {
+                for (var i = 0, length_13 = drawData.length; i < length_13; i += offset) {
                     anchorX = drawData[i + 0];
                     anchorY = drawData[i + 1];
                     labelString = drawData[i + 2];
