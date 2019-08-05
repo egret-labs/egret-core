@@ -67,6 +67,9 @@ namespace egret.web {
 
             //绘制显示对象
             webglBuffer.transform(matrix.a, matrix.b, matrix.c, matrix.d, 0, 0);
+            /////
+            WebGLRendererTransform.transformDisplayObject(displayObject, webglBuffer, matrix.tx, matrix.ty);
+            /////
             this.drawDisplayObject(displayObject, webglBuffer, matrix.tx, matrix.ty, true);
             webglBufferContext.$flush();// webglBufferContext.$drawWebGL();
             let drawCall = webglBuffer.$drawCalls;
@@ -294,7 +297,7 @@ namespace egret.web {
             // 为显示对象创建一个新的buffer
             let displayBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
             displayBuffer.context.pushBuffer(displayBuffer);
-
+            
             //todo 可以优化减少draw次数
             if (displayObject.$mask) {
                 drawCalls += this.drawWithClip(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
@@ -303,6 +306,9 @@ namespace egret.web {
                 drawCalls += this.drawWithScrollRect(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
             }
             else {
+                /////
+                WebGLRendererTransform.transformDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
+                /////
                 drawCalls += this.drawDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
             }
 
@@ -423,6 +429,9 @@ namespace egret.web {
                 //绘制显示对象自身，若有scrollRect，应用clip
                 let displayBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
                 displayBuffer.context.pushBuffer(displayBuffer);
+                /////
+                WebGLRendererTransform.transformDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
+                /////
                 drawCalls += this.drawDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
                 //绘制遮罩
                 if (mask) {
@@ -434,6 +443,9 @@ namespace egret.web {
                     maskMatrix.translate(-displayBoundsX, -displayBoundsY);
                     maskBuffer.setTransform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
                     Matrix.release(maskMatrix);
+                    /////
+                    WebGLRendererTransform.transformDisplayObject(mask, maskBuffer, 0, 0);
+                    /////
                     drawCalls += this.drawDisplayObject(mask, maskBuffer, 0, 0);
                     maskBuffer.context.popBuffer();
                     displayBuffer.context.setGlobalCompositeOperation("destination-in");
@@ -608,82 +620,82 @@ namespace egret.web {
          * @param buffer 渲染缓冲
          * @param matrix 要叠加的矩阵
          */
-        public drawDisplayToBuffer(displayObject: DisplayObject, buffer: WebGLRenderBuffer, matrix: Matrix): number {
-            buffer.context.pushBuffer(buffer);
-            if (matrix) {
-                buffer.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
-            }
-            let node: sys.RenderNode;
-            if (displayObject.$renderDirty) {
-                node = displayObject.$getRenderNode();
-            }
-            else {
-                node = displayObject.$renderNode;
-            }
-            let drawCalls = 0;
-            if (node) {
-                drawCalls++;
-                ///
-                buffer.context.setBatchSystem(node);
-                ///
-                switch (node.type) {
-                    case sys.RenderNodeType.BitmapNode:
-                        this.renderBitmap(<sys.BitmapNode>node, buffer);
-                        break;
-                    case sys.RenderNodeType.TextNode:
-                        this.renderText(<sys.TextNode>node, buffer);
-                        break;
-                    case sys.RenderNodeType.GraphicsNode:
-                        this.renderGraphics(<sys.GraphicsNode>node, buffer);
-                        break;
-                    case sys.RenderNodeType.GroupNode:
-                        this.renderGroup(<sys.GroupNode>node, buffer);
-                        break;
-                    case sys.RenderNodeType.MeshNode:
-                        this.renderMesh(<sys.MeshNode>node, buffer);
-                        break;
-                    case sys.RenderNodeType.NormalBitmapNode:
-                        this.renderNormalBitmap(<sys.NormalBitmapNode>node, buffer);
-                        break;
-                }
-            }
-            let children = displayObject.$children;
-            if (children) {
-                let length = children.length;
-                for (let i = 0; i < length; i++) {
-                    let child = children[i];
-                    switch (child.$renderMode) {
-                        case RenderMode.NONE:
-                            break;
-                        case RenderMode.FILTER:
-                        case RenderMode.CLIP:
-                        case RenderMode.SCROLLRECT:
-                            drawCalls += this.drawDisplayObjectAdvanced(child, buffer, 0, 0);
-                            break;
-                            /*
-                        case RenderMode.FILTER:
-                            drawCalls += this.drawWithFilter(child, buffer, 0, 0);
-                            break;
-                        case RenderMode.CLIP:
-                            drawCalls += this.drawWithClip(child, buffer, 0, 0);
-                            break;
-                        case RenderMode.SCROLLRECT:
-                            drawCalls += this.drawWithScrollRect(child, buffer, 0, 0);
-                            break;
-                            */
-                        default:
-                            drawCalls += this.drawDisplayObject(child, buffer, 0, 0);
-                            break;
-                    }
-                }
-            }
+        // public drawDisplayToBuffer(displayObject: DisplayObject, buffer: WebGLRenderBuffer, matrix: Matrix): number {
+        //     buffer.context.pushBuffer(buffer);
+        //     if (matrix) {
+        //         buffer.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
+        //     }
+        //     let node: sys.RenderNode;
+        //     if (displayObject.$renderDirty) {
+        //         node = displayObject.$getRenderNode();
+        //     }
+        //     else {
+        //         node = displayObject.$renderNode;
+        //     }
+        //     let drawCalls = 0;
+        //     if (node) {
+        //         drawCalls++;
+        //         ///
+        //         buffer.context.setBatchSystem(node);
+        //         ///
+        //         switch (node.type) {
+        //             case sys.RenderNodeType.BitmapNode:
+        //                 this.renderBitmap(<sys.BitmapNode>node, buffer);
+        //                 break;
+        //             case sys.RenderNodeType.TextNode:
+        //                 this.renderText(<sys.TextNode>node, buffer);
+        //                 break;
+        //             case sys.RenderNodeType.GraphicsNode:
+        //                 this.renderGraphics(<sys.GraphicsNode>node, buffer);
+        //                 break;
+        //             case sys.RenderNodeType.GroupNode:
+        //                 this.renderGroup(<sys.GroupNode>node, buffer);
+        //                 break;
+        //             case sys.RenderNodeType.MeshNode:
+        //                 this.renderMesh(<sys.MeshNode>node, buffer);
+        //                 break;
+        //             case sys.RenderNodeType.NormalBitmapNode:
+        //                 this.renderNormalBitmap(<sys.NormalBitmapNode>node, buffer);
+        //                 break;
+        //         }
+        //     }
+        //     let children = displayObject.$children;
+        //     if (children) {
+        //         let length = children.length;
+        //         for (let i = 0; i < length; i++) {
+        //             let child = children[i];
+        //             switch (child.$renderMode) {
+        //                 case RenderMode.NONE:
+        //                     break;
+        //                 case RenderMode.FILTER:
+        //                 case RenderMode.CLIP:
+        //                 case RenderMode.SCROLLRECT:
+        //                     drawCalls += this.drawDisplayObjectAdvanced(child, buffer, 0, 0);
+        //                     break;
+        //                     /*
+        //                 case RenderMode.FILTER:
+        //                     drawCalls += this.drawWithFilter(child, buffer, 0, 0);
+        //                     break;
+        //                 case RenderMode.CLIP:
+        //                     drawCalls += this.drawWithClip(child, buffer, 0, 0);
+        //                     break;
+        //                 case RenderMode.SCROLLRECT:
+        //                     drawCalls += this.drawWithScrollRect(child, buffer, 0, 0);
+        //                     break;
+        //                     */
+        //                 default:
+        //                     drawCalls += this.drawDisplayObject(child, buffer, 0, 0);
+        //                     break;
+        //             }
+        //         }
+        //     }
 
-            buffer.context.$flush();//buffer.context.$drawWebGL();
-            buffer.onRenderFinish();
-            buffer.context.popBuffer();
+        //     buffer.context.$flush();//buffer.context.$drawWebGL();
+        //     buffer.onRenderFinish();
+        //     buffer.context.popBuffer();
 
-            return drawCalls;
-        }
+        //     return drawCalls;
+        // }
 
         /**
          * @private

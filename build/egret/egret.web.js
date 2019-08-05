@@ -7753,6 +7753,9 @@ var egret;
                 webglBufferContext.pushBuffer(webglBuffer);
                 //绘制显示对象
                 webglBuffer.transform(matrix.a, matrix.b, matrix.c, matrix.d, 0, 0);
+                /////
+                web.WebGLRendererTransform.transformDisplayObject(displayObject, webglBuffer, matrix.tx, matrix.ty);
+                /////
                 this.drawDisplayObject(displayObject, webglBuffer, matrix.tx, matrix.ty, true);
                 webglBufferContext.$flush(); // webglBufferContext.$drawWebGL();
                 var drawCall = webglBuffer.$drawCalls;
@@ -7977,6 +7980,9 @@ var egret;
                     drawCalls += this.drawWithScrollRect(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
                 }
                 else {
+                    /////
+                    web.WebGLRendererTransform.transformDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
+                    /////
                     drawCalls += this.drawDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
                 }
                 displayBuffer.context.popBuffer();
@@ -8092,6 +8098,9 @@ var egret;
                     //绘制显示对象自身，若有scrollRect，应用clip
                     var displayBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
                     displayBuffer.context.pushBuffer(displayBuffer);
+                    /////
+                    web.WebGLRendererTransform.transformDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
+                    /////
                     drawCalls += this.drawDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
                     //绘制遮罩
                     if (mask) {
@@ -8103,6 +8112,9 @@ var egret;
                         maskMatrix.translate(-displayBoundsX, -displayBoundsY);
                         maskBuffer.setTransform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
                         egret.Matrix.release(maskMatrix);
+                        /////
+                        web.WebGLRendererTransform.transformDisplayObject(mask, maskBuffer, 0, 0);
+                        /////
                         drawCalls += this.drawDisplayObject(mask, maskBuffer, 0, 0);
                         maskBuffer.context.popBuffer();
                         displayBuffer.context.setGlobalCompositeOperation("destination-in");
@@ -8264,80 +8276,80 @@ var egret;
              * @param buffer 渲染缓冲
              * @param matrix 要叠加的矩阵
              */
-            WebGLRenderer.prototype.drawDisplayToBuffer = function (displayObject, buffer, matrix) {
-                buffer.context.pushBuffer(buffer);
-                if (matrix) {
-                    buffer.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
-                }
-                var node;
-                if (displayObject.$renderDirty) {
-                    node = displayObject.$getRenderNode();
-                }
-                else {
-                    node = displayObject.$renderNode;
-                }
-                var drawCalls = 0;
-                if (node) {
-                    drawCalls++;
-                    ///
-                    buffer.context.setBatchSystem(node);
-                    ///
-                    switch (node.type) {
-                        case 1 /* BitmapNode */:
-                            this.renderBitmap(node, buffer);
-                            break;
-                        case 2 /* TextNode */:
-                            this.renderText(node, buffer);
-                            break;
-                        case 3 /* GraphicsNode */:
-                            this.renderGraphics(node, buffer);
-                            break;
-                        case 4 /* GroupNode */:
-                            this.renderGroup(node, buffer);
-                            break;
-                        case 5 /* MeshNode */:
-                            this.renderMesh(node, buffer);
-                            break;
-                        case 6 /* NormalBitmapNode */:
-                            this.renderNormalBitmap(node, buffer);
-                            break;
-                    }
-                }
-                var children = displayObject.$children;
-                if (children) {
-                    var length_9 = children.length;
-                    for (var i = 0; i < length_9; i++) {
-                        var child = children[i];
-                        switch (child.$renderMode) {
-                            case 1 /* NONE */:
-                                break;
-                            case 2 /* FILTER */:
-                            case 3 /* CLIP */:
-                            case 4 /* SCROLLRECT */:
-                                drawCalls += this.drawDisplayObjectAdvanced(child, buffer, 0, 0);
-                                break;
-                            /*
-                        case RenderMode.FILTER:
-                            drawCalls += this.drawWithFilter(child, buffer, 0, 0);
-                            break;
-                        case RenderMode.CLIP:
-                            drawCalls += this.drawWithClip(child, buffer, 0, 0);
-                            break;
-                        case RenderMode.SCROLLRECT:
-                            drawCalls += this.drawWithScrollRect(child, buffer, 0, 0);
-                            break;
-                            */
-                            default:
-                                drawCalls += this.drawDisplayObject(child, buffer, 0, 0);
-                                break;
-                        }
-                    }
-                }
-                buffer.context.$flush(); //buffer.context.$drawWebGL();
-                buffer.onRenderFinish();
-                buffer.context.popBuffer();
-                return drawCalls;
-            };
+            // public drawDisplayToBuffer(displayObject: DisplayObject, buffer: WebGLRenderBuffer, matrix: Matrix): number {
+            //     buffer.context.pushBuffer(buffer);
+            //     if (matrix) {
+            //         buffer.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
+            //     }
+            //     let node: sys.RenderNode;
+            //     if (displayObject.$renderDirty) {
+            //         node = displayObject.$getRenderNode();
+            //     }
+            //     else {
+            //         node = displayObject.$renderNode;
+            //     }
+            //     let drawCalls = 0;
+            //     if (node) {
+            //         drawCalls++;
+            //         ///
+            //         buffer.context.setBatchSystem(node);
+            //         ///
+            //         switch (node.type) {
+            //             case sys.RenderNodeType.BitmapNode:
+            //                 this.renderBitmap(<sys.BitmapNode>node, buffer);
+            //                 break;
+            //             case sys.RenderNodeType.TextNode:
+            //                 this.renderText(<sys.TextNode>node, buffer);
+            //                 break;
+            //             case sys.RenderNodeType.GraphicsNode:
+            //                 this.renderGraphics(<sys.GraphicsNode>node, buffer);
+            //                 break;
+            //             case sys.RenderNodeType.GroupNode:
+            //                 this.renderGroup(<sys.GroupNode>node, buffer);
+            //                 break;
+            //             case sys.RenderNodeType.MeshNode:
+            //                 this.renderMesh(<sys.MeshNode>node, buffer);
+            //                 break;
+            //             case sys.RenderNodeType.NormalBitmapNode:
+            //                 this.renderNormalBitmap(<sys.NormalBitmapNode>node, buffer);
+            //                 break;
+            //         }
+            //     }
+            //     let children = displayObject.$children;
+            //     if (children) {
+            //         let length = children.length;
+            //         for (let i = 0; i < length; i++) {
+            //             let child = children[i];
+            //             switch (child.$renderMode) {
+            //                 case RenderMode.NONE:
+            //                     break;
+            //                 case RenderMode.FILTER:
+            //                 case RenderMode.CLIP:
+            //                 case RenderMode.SCROLLRECT:
+            //                     drawCalls += this.drawDisplayObjectAdvanced(child, buffer, 0, 0);
+            //                     break;
+            //                     /*
+            //                 case RenderMode.FILTER:
+            //                     drawCalls += this.drawWithFilter(child, buffer, 0, 0);
+            //                     break;
+            //                 case RenderMode.CLIP:
+            //                     drawCalls += this.drawWithClip(child, buffer, 0, 0);
+            //                     break;
+            //                 case RenderMode.SCROLLRECT:
+            //                     drawCalls += this.drawWithScrollRect(child, buffer, 0, 0);
+            //                     break;
+            //                     */
+            //                 default:
+            //                     drawCalls += this.drawDisplayObject(child, buffer, 0, 0);
+            //                     break;
+            //             }
+            //         }
+            //     }
+            //     buffer.context.$flush();//buffer.context.$drawWebGL();
+            //     buffer.onRenderFinish();
+            //     buffer.context.popBuffer();
+            //     return drawCalls;
+            // }
             /**
              * @private
              */
@@ -8564,7 +8576,7 @@ var egret;
                     var textBlocks = null;
                     var tb = null;
                     var page = null;
-                    for (var i = 0, length_10 = drawCommands.length; i < length_10; ++i) {
+                    for (var i = 0, length_9 = drawCommands.length; i < length_9; ++i) {
                         cmd = drawCommands[i];
                         anchorX = cmd.anchorX;
                         anchorY = cmd.anchorY;
@@ -8908,6 +8920,50 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var web;
+    (function (web) {
+        // WebGLRendererTransform.ts
+        var WebGLRendererTransform = (function () {
+            function WebGLRendererTransform() {
+            }
+            WebGLRendererTransform.transformDisplayObject = function (displayObject, buffer, offsetX, offsetY) {
+            };
+            return WebGLRendererTransform;
+        }());
+        web.WebGLRendererTransform = WebGLRendererTransform;
+        __reflect(WebGLRendererTransform.prototype, "egret.web.WebGLRendererTransform");
+    })(web = egret.web || (egret.web = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 /*
 *** 一个管理模型，逐级包含: back -> page -> line -> textBlock
 */
@@ -9186,7 +9242,7 @@ var egret;
                 }
                 //找到最合适的
                 var _sortLines = this._sortLines;
-                for (var i = 0, length_11 = _sortLines.length; i < length_11; ++i) {
+                for (var i = 0, length_10 = _sortLines.length; i < length_10; ++i) {
                     var line = _sortLines[i];
                     if (!line.isCapacityOf(textBlock)) {
                         continue;
@@ -9203,7 +9259,7 @@ var egret;
                 }
                 //现有的page中插入
                 var _pages = this._pages;
-                for (var i = 0, length_12 = _pages.length; i < length_12; ++i) {
+                for (var i = 0, length_11 = _pages.length; i < length_11; ++i) {
                     var page = _pages[i];
                     if (page.addLine(newLine)) {
                         return [page, newLine];
@@ -9524,7 +9580,7 @@ var egret;
                 var labelString = '';
                 var labelFormat = {};
                 var resultAsRenderTextBlocks = [];
-                for (var i = 0, length_13 = drawData.length; i < length_13; i += offset) {
+                for (var i = 0, length_12 = drawData.length; i < length_12; i += offset) {
                     anchorX = drawData[i + 0];
                     anchorY = drawData[i + 1];
                     labelString = drawData[i + 2];

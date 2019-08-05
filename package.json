@@ -161,6 +161,10 @@
             "platform": "web"
           },
           {
+            "path": "web/rendering/webgl/WebGLRendererTransform.ts",
+            "platform": "web"
+          },
+          {
             "path": "web/rendering/webgl/TextAtlasStrategy.ts",
             "platform": "web"
           },

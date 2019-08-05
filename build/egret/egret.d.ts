@@ -1352,6 +1352,7 @@ declare namespace egret {
          * @language zh_CN
          */
         sortableChildren: boolean;
+        transform: Transform;
     }
 }
 declare namespace egret {
@@ -4411,6 +4412,13 @@ declare namespace egret.sys {
      * 转换数字为 blendMode 字符串。
      */
     function numberToBlendMode(blendMode: number): string;
+}
+declare namespace egret {
+    class Transform {
+        readonly worldMatrix: egret.Matrix;
+        offsetX: number;
+        offsetY: number;
+    }
 }
 declare namespace egret {
     /**

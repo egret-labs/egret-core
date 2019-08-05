@@ -2367,6 +2367,9 @@ namespace egret {
          * @language zh_CN
          */
         public sortableChildren: boolean = false;
+
+        //
+        public transform: Transform = new Transform;
     }
 
 }
