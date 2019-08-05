@@ -14213,6 +14213,34 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
     /** !!!!!!!!inspired by Babylon.js!!!!!!!!!!!!!
@@ -14343,40 +14371,6 @@ var egret;
     }());
     egret.KTXContainer = KTXContainer;
     __reflect(KTXContainer.prototype, "egret.KTXContainer");
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var sys;
-    (function (sys) {
-    })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -16251,10 +16245,6 @@ var egret;
                  * 字体名称
                  */
                 _this.fontFamily = "Arial";
-                /**
-                 * 使用纹理文字渲染机制
-                 */
-                _this.atlasRender = false;
                 /**
                  * 脏渲染标记
                  */
@@ -20190,7 +20180,7 @@ var egret;
                 36: null,
                 37: egret.TextFieldInputType.TEXT,
                 38: false,
-                39: false //atlasRender
+                39: egret.TextRenderStrategyType.LABEL //renderStrategy
             };
             return _this;
         }
@@ -21696,24 +21686,25 @@ var egret;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(TextField.prototype, "atlasRender", {
+        Object.defineProperty(TextField.prototype, "renderStrategy", {
             get: function () {
-                return this.$TextField[39 /* atlasRender */];
+                return this.$TextField[39 /* renderStrategy */];
             },
             /**
-             * use atlasRender
-             * @version Egret 5.2.23
+             * Text rendering strategy
+             * @version Egret 5.2.26
              * @platform Web
              * @language en_US
              */
             /**
-             * 使用纹理文字渲染机制
-             * @version Egret 5.2.23
+             * 文字渲染策略
+             * @default: egret.TextRenderStrategyType.LABEL
+             * @version Egret 5.2.26
              * @platform Web
              * @language zh_CN
              */
             set: function (value) {
-                this.$TextField[39 /* atlasRender */] = value;
+                this.$TextField[39 /* renderStrategy */] = value;
             },
             enumerable: true,
             configurable: true
@@ -22013,7 +22004,7 @@ var egret;
             node.stroke = values[27 /* stroke */];
             node.strokeColor = values[25 /* strokeColor */];
             node.textColor = values[2 /* textColor */];
-            node.atlasRender = values[39 /* atlasRender */];
+            node.renderStrategy = values[39 /* renderStrategy */];
             //先算出需要的数值
             var lines = this.$getLinesArr();
             if (values[5 /* textWidth */] == 0) {
@@ -22559,6 +22550,82 @@ var egret;
     var sys;
     (function (sys) {
     })(sys = egret.sys || (egret.sys = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    /**
+     * TextRenderStrategyType class is an enumeration of constant value used in setting the renderStrategy property of the TextField class.
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * TextRenderStrategyType 类是在设置 TextField 类的 renderStrategy 属性时使用的常数值的枚举。
+     * @version Egret 5.2.26
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    var TextRenderStrategyType = (function () {
+        function TextRenderStrategyType() {
+        }
+        /**
+         * normal mode
+         * @version Egret 5.2.26
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 普通模式
+         * @version Egret 5.2.26
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        TextRenderStrategyType.LABEL = "label";
+        /**
+         * textatlas mode
+         * @version Egret 5.2.26
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 位图纹理模式
+         * @version Egret 5.2.26
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        TextRenderStrategyType.TEXTATLAS = "textatlas";
+        return TextRenderStrategyType;
+    }());
+    egret.TextRenderStrategyType = TextRenderStrategyType;
+    __reflect(TextRenderStrategyType.prototype, "egret.TextRenderStrategyType");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -25871,3 +25938,9 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var sys;
+    (function (sys) {
+    })(sys = egret.sys || (egret.sys = {}));
+})(egret || (egret = {}));

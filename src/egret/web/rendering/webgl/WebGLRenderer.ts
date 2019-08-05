@@ -126,7 +126,17 @@ namespace egret.web {
                         this.renderBitmap(<sys.BitmapNode>node, buffer);
                         break;
                     case sys.RenderNodeType.TextNode:
-                        this.renderText(<sys.TextNode>node, buffer);
+                        switch ((node as sys.TextNode).renderStrategy) {
+                            case TextRenderStrategyType.TEXTATLAS:
+                                this.renderTextAtlas(<sys.TextNode>node, buffer)
+                                break;
+                            case TextRenderStrategyType.LABEL:
+                                this.renderText(<sys.TextNode>node, buffer);
+                                break;
+                            default:
+                                this.renderText(<sys.TextNode>node, buffer);
+                                break;
+                        }
                         break;
                     case sys.RenderNodeType.GraphicsNode:
                         this.renderGraphics(<sys.GraphicsNode>node, buffer);
@@ -857,7 +867,7 @@ namespace egret.web {
         /**
          * @private
          */
-        private ___renderText____(node: sys.TextNode, buffer: WebGLRenderBuffer): void {
+        private renderTextAtlas(node: sys.TextNode, buffer: WebGLRenderBuffer): void {
             let width = node.width - node.x;
             let height = node.height - node.y;
             if (width <= 0 || height <= 0 || !width || !height || node.drawData.length === 0) {
@@ -933,11 +943,6 @@ namespace egret.web {
          * @private
          */
         private renderText(node: sys.TextNode, buffer: WebGLRenderBuffer): void {
-            if (node.atlasRender) {
-                //新的文字渲染机制
-                this.___renderText____(node, buffer);
-                return;
-            }
             let width = node.width - node.x;
             let height = node.height - node.y;
             if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) {

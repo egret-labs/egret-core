@@ -69,9 +69,9 @@ namespace egret.sys {
          */
         public fontFamily: string = "Arial";
         /**
-         * 使用纹理文字渲染机制
+         * 文字渲染策略
          */
-        public atlasRender: boolean = false;
+        public renderStrategy: string
 
         /**
          * 绘制一行文本

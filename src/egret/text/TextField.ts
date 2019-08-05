@@ -191,7 +191,7 @@ namespace egret.sys {
         /**
          * @private
          */
-        atlasRender
+        renderStrategy,
     }
 }
 
@@ -332,7 +332,7 @@ namespace egret {
                 36: null,           //restrictNot
                 37: TextFieldInputType.TEXT,            //inputType
                 38: false,            //textLinesChangedForNativeRender
-                39: false //atlasRender
+                39: TextRenderStrategyType.LABEL //renderStrategy
             };
         }
 
@@ -1888,22 +1888,23 @@ namespace egret {
             return TextFieldUtils.$getTextHeight(this);
         }
         /**
-         * use atlasRender
-         * @version Egret 5.2.23
+         * Text rendering strategy
+         * @version Egret 5.2.26
          * @platform Web
          * @language en_US
          */
         /**
-         * 使用纹理文字渲染机制
-         * @version Egret 5.2.23
+         * 文字渲染策略
+         * @default: egret.TextRenderStrategyType.LABEL
+         * @version Egret 5.2.26
          * @platform Web
          * @language zh_CN
          */
-        public set atlasRender(value: boolean) {
-            this.$TextField[sys.TextKeys.atlasRender] = value;
+        public set renderStrategy(value: string) {
+            this.$TextField[sys.TextKeys.renderStrategy] = value;
         }
-        public get atlasRender():boolean {
-            return this.$TextField[sys.TextKeys.atlasRender]
+        public get renderStrategy():string {
+            return this.$TextField[sys.TextKeys.renderStrategy]
         }
 
         /**
@@ -2244,7 +2245,7 @@ namespace egret {
             node.stroke = values[sys.TextKeys.stroke];
             node.strokeColor = values[sys.TextKeys.strokeColor];
             node.textColor = values[sys.TextKeys.textColor];
-            node.atlasRender = values[sys.TextKeys.atlasRender];
+            node.renderStrategy = values[sys.TextKeys.renderStrategy];
             //先算出需要的数值
             let lines: Array<egret.ILineElement> = this.$getLinesArr();
             if (values[sys.TextKeys.textWidth] == 0) {

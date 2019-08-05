@@ -7498,7 +7498,17 @@ var egret;
                             this.renderBitmap(node, buffer);
                             break;
                         case 2 /* TextNode */:
-                            this.renderText(node, buffer);
+                            switch (node.renderStrategy) {
+                                case egret.TextRenderStrategyType.TEXTATLAS:
+                                    this.renderTextAtlas(node, buffer);
+                                    break;
+                                case egret.TextRenderStrategyType.LABEL:
+                                    this.renderText(node, buffer);
+                                    break;
+                                default:
+                                    this.renderText(node, buffer);
+                                    break;
+                            }
                             break;
                         case 3 /* GraphicsNode */:
                             this.renderGraphics(node, buffer);
@@ -8188,7 +8198,7 @@ var egret;
             /**
              * @private
              */
-            WebGLRenderer.prototype.___renderText____ = function (node, buffer) {
+            WebGLRenderer.prototype.renderTextAtlas = function (node, buffer) {
                 var width = node.width - node.x;
                 var height = node.height - node.y;
                 if (width <= 0 || height <= 0 || !width || !height || node.drawData.length === 0) {
@@ -8260,11 +8270,6 @@ var egret;
              * @private
              */
             WebGLRenderer.prototype.renderText = function (node, buffer) {
-                if (node.atlasRender) {
-                    //新的文字渲染机制
-                    this.___renderText____(node, buffer);
-                    return;
-                }
                 var width = node.width - node.x;
                 var height = node.height - node.y;
                 if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) {
