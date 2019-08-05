@@ -3675,6 +3675,7 @@ var egret;
             if (isRunning) {
                 return;
             }
+            console.log('egret engineVersion version: ' + egret.Capabilities.engineVersion);
             isRunning = true;
             if (!options) {
                 options = {};
