@@ -117,10 +117,12 @@ namespace egret.web {
         public getVertices(): Float32Array {
             const length = this.vertexIndex * this.vertSize;
             //旧有的subarray从给定的起始位置返回一个新的Float32Array,每次都是创建新对象，不是最优，时间长了容易引起gc.
+            //The old subarray returns a new Float32Array from a given starting position, creating a new object each time, not optimal, and a long time is easy to cause gc
             //let view = this.vertices.subarray(0, length);
             //return view;
             /*
             * 新的策略:只选取下一个power2的最优体积
+            * New strategy: Select only the optimal volume of the next power2
             */
             let nextPow2Length = NumberUtils.nextPow2(length);
             nextPow2Length = Math.min(this._verticesFloat32View.length, nextPow2Length);
@@ -132,7 +134,6 @@ namespace egret.web {
         }
 
         public clearSizeMatchBufferViewCache(): void {
-            //弃了就好
             this.sizeMatchBufferViewCache = {};
         }
 
