@@ -8934,7 +8934,18 @@ var egret;
             }
             //
             WebGLRendererTransform.checkData = function (displayObject, buffer) {
-                return false;
+                return true;
+                var _textureTransform = displayObject._textureTransform;
+                if (!egret.NumberUtils.matrixEqual(_textureTransform._matrix, buffer.globalMatrix)) {
+                    console.error('WebGLRendererTransform checkData matrixEqual');
+                    return false;
+                }
+                if (!egret.NumberUtils.fequal(_textureTransform._offsetX, buffer.$offsetX)
+                    || !egret.NumberUtils.fequal(_textureTransform._offsetY, buffer.$offsetY)) {
+                    console.error('WebGLRendererTransform checkData offset');
+                    return false;
+                }
+                return true;
             };
             //
             WebGLRendererTransform.transformDisplayObject = function (displayObject, buffer, offsetX, offsetY) {

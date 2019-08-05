@@ -28,13 +28,24 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 namespace egret.web {
+    
     export class WebGLRendererTransform {
         //
         public static debugCheck: boolean = true;
-
         //
         public static checkData(displayObject: DisplayObject, buffer: WebGLRenderBuffer): boolean {
-            return false;
+            return true;
+            const _textureTransform = displayObject._textureTransform;
+            if (!NumberUtils.matrixEqual(_textureTransform._matrix, buffer.globalMatrix)) {
+                console.error('WebGLRendererTransform checkData matrixEqual');
+                return false;
+            }
+            if (!NumberUtils.fequal(_textureTransform._offsetX, buffer.$offsetX)
+                || !NumberUtils.fequal(_textureTransform._offsetY, buffer.$offsetY)) {
+                console.error('WebGLRendererTransform checkData offset');
+                return false;
+            }
+            return true;
         }
 
         //

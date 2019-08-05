@@ -14617,6 +14617,9 @@ declare namespace egret {
         static nextPow2(param: number): number;
         static sin(value: number): number;
         static cos(value: number): number;
+        private static readonly EPSILON;
+        static fequal(left: number, right: number): boolean;
+        static matrixEqual(left: Matrix, right: Matrix): boolean;
     }
 }
 /**

@@ -189,6 +189,39 @@ namespace egret {
         public static cos(value: number): number {
             return Math.cos(value * DEG_TO_RAD);
         }
+
+        //
+        private static readonly EPSILON = 0.000001; //根据精度需要;
+        public static fequal(left: number, right: number) {
+            return Math.abs(left - right) < NumberUtils.EPSILON;
+        }
+        //
+        /*
+        public static __transform__(globalMatrix: Matrix, a: number, b: number, c: number, d: number, tx: number, ty: number): void {
+            //globalMatrix = globalMatrix * [a: number, b: number, c: number, d: number, tx: number, ty: number]
+            let matrix = globalMatrix;//this.globalMatrix;
+            let a1 = matrix.a;
+            let b1 = matrix.b;
+            let c1 = matrix.c;
+            let d1 = matrix.d;
+            if (a !== 1 || b !== 0 || c !== 0 || d !== 1) {
+                matrix.a = a * a1 + b * c1;
+                matrix.b = a * b1 + b * d1;
+                matrix.c = c * a1 + d * c1;
+                matrix.d = c * b1 + d * d1;
+            }
+            matrix.tx = tx * a1 + ty * c1 + matrix.tx;
+            matrix.ty = tx * b1 + ty * d1 + matrix.ty;
+        }
+        */
+        public static matrixEqual(left: Matrix, right: Matrix) {
+            return NumberUtils.fequal(left.a, right.a)
+                && NumberUtils.fequal(left.b, right.b)
+                && NumberUtils.fequal(left.c, right.c)
+                && NumberUtils.fequal(left.d, right.d)
+                && NumberUtils.fequal(left.tx, right.tx)
+                && NumberUtils.fequal(left.ty, right.ty);
+        }
     }
 }
 
