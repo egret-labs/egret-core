@@ -81,5 +81,4 @@ namespace egret.web {
             this.dispatchEvent(event);
         };
     }
-    egret.Geolocation = egret.web.WebGeolocation;
 }

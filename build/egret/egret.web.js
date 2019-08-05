@@ -8,6 +8,138 @@ var __extends = this && this.__extends || function __extends(t, e) {
 for (var i in e) e.hasOwnProperty(i) && (t[i] = e[i]);
 r.prototype = e.prototype, t.prototype = new r();
 };
+var egret;
+(function (egret) {
+    var web;
+    (function (web) {
+        /**
+         * @private
+         */
+        var WebGeolocation = (function (_super) {
+            __extends(WebGeolocation, _super);
+            /**
+             * @private
+             */
+            function WebGeolocation(option) {
+                var _this = _super.call(this) || this;
+                /**
+                 * @private
+                 */
+                _this.onUpdate = function (position) {
+                    var event = new egret.GeolocationEvent(egret.Event.CHANGE);
+                    var coords = position.coords;
+                    event.altitude = coords.altitude;
+                    event.heading = coords.heading;
+                    event.accuracy = coords.accuracy;
+                    event.latitude = coords.latitude;
+                    event.longitude = coords.longitude;
+                    event.speed = coords.speed;
+                    event.altitudeAccuracy = coords.altitudeAccuracy;
+                    _this.dispatchEvent(event);
+                };
+                /**
+                 * @private
+                 */
+                _this.onError = function (error) {
+                    var errorType = egret.GeolocationEvent.UNAVAILABLE;
+                    if (error.code == error.PERMISSION_DENIED)
+                        errorType = egret.GeolocationEvent.PERMISSION_DENIED;
+                    var event = new egret.GeolocationEvent(egret.IOErrorEvent.IO_ERROR);
+                    event.errorType = errorType;
+                    event.errorMessage = error.message;
+                    _this.dispatchEvent(event);
+                };
+                _this.geolocation = navigator.geolocation;
+                return _this;
+            }
+            /**
+             * @private
+             *
+             */
+            WebGeolocation.prototype.start = function () {
+                var geo = this.geolocation;
+                if (geo)
+                    this.watchId = geo.watchPosition(this.onUpdate, this.onError);
+                else
+                    this.onError({
+                        code: 2,
+                        message: egret.sys.tr(3004),
+                        PERMISSION_DENIED: 1,
+                        POSITION_UNAVAILABLE: 2
+                    });
+            };
+            /**
+             * @private
+             *
+             */
+            WebGeolocation.prototype.stop = function () {
+                var geo = this.geolocation;
+                geo.clearWatch(this.watchId);
+            };
+            return WebGeolocation;
+        }(egret.EventDispatcher));
+        web.WebGeolocation = WebGeolocation;
+        __reflect(WebGeolocation.prototype, "egret.web.WebGeolocation", ["egret.Geolocation"]);
+    })(web = egret.web || (egret.web = {}));
+})(egret || (egret = {}));
+var egret;
+(function (egret) {
+    var web;
+    (function (web) {
+        /**
+         * @private
+         */
+        var WebMotion = (function (_super) {
+            __extends(WebMotion, _super);
+            function WebMotion() {
+                var _this = _super !== null && _super.apply(this, arguments) || this;
+                /**
+                 * @private
+                 */
+                _this.onChange = function (e) {
+                    var event = new egret.MotionEvent(egret.Event.CHANGE);
+                    var acceleration = {
+                        x: e.acceleration.x,
+                        y: e.acceleration.y,
+                        z: e.acceleration.z
+                    };
+                    var accelerationIncludingGravity = {
+                        x: e.accelerationIncludingGravity.x,
+                        y: e.accelerationIncludingGravity.y,
+                        z: e.accelerationIncludingGravity.z
+                    };
+                    var rotation = {
+                        alpha: e.rotationRate.alpha,
+                        beta: e.rotationRate.beta,
+                        gamma: e.rotationRate.gamma
+                    };
+                    event.acceleration = acceleration;
+                    event.accelerationIncludingGravity = accelerationIncludingGravity;
+                    event.rotationRate = rotation;
+                    _this.dispatchEvent(event);
+                };
+                return _this;
+            }
+            /**
+             * @private
+             *
+             */
+            WebMotion.prototype.start = function () {
+                window.addEventListener("devicemotion", this.onChange);
+            };
+            /**
+             * @private
+             *
+             */
+            WebMotion.prototype.stop = function () {
+                window.removeEventListener("devicemotion", this.onChange);
+            };
+            return WebMotion;
+        }(egret.EventDispatcher));
+        web.WebMotion = WebMotion;
+        __reflect(WebMotion.prototype, "egret.web.WebMotion", ["egret.Motion"]);
+    })(web = egret.web || (egret.web = {}));
+})(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -236,358 +368,6 @@ var egret;
         }(egret.HashObject));
         web.WebPlayer = WebPlayer;
         __reflect(WebPlayer.prototype, "egret.web.WebPlayer", ["egret.sys.Screen"]);
-    })(web = egret.web || (egret.web = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var web;
-    (function (web) {
-        /**
-         * @private
-         */
-        var WebExternalInterface = (function () {
-            function WebExternalInterface() {
-            }
-            /**
-             * @private
-             * @param functionName
-             * @param value
-             */
-            WebExternalInterface.call = function (functionName, value) {
-            };
-            /**
-             * @private
-             * @param functionName
-             * @param listener
-             */
-            WebExternalInterface.addCallback = function (functionName, listener) {
-            };
-            return WebExternalInterface;
-        }());
-        web.WebExternalInterface = WebExternalInterface;
-        __reflect(WebExternalInterface.prototype, "egret.web.WebExternalInterface", ["egret.ExternalInterface"]);
-        var ua = navigator.userAgent.toLowerCase();
-        if (ua.indexOf("egretnative") < 0) {
-            egret.ExternalInterface = WebExternalInterface;
-        }
-    })(web = egret.web || (egret.web = {}));
-})(egret || (egret = {}));
-(function (egret) {
-    var web;
-    (function (web) {
-        var callBackDic = {};
-        /**
-         * @private
-         */
-        var NativeExternalInterface = (function () {
-            function NativeExternalInterface() {
-            }
-            NativeExternalInterface.call = function (functionName, value) {
-                var data = {};
-                data.functionName = functionName;
-                data.value = value;
-                egret_native.sendInfoToPlugin(JSON.stringify(data));
-            };
-            NativeExternalInterface.addCallback = function (functionName, listener) {
-                callBackDic[functionName] = listener;
-            };
-            return NativeExternalInterface;
-        }());
-        web.NativeExternalInterface = NativeExternalInterface;
-        __reflect(NativeExternalInterface.prototype, "egret.web.NativeExternalInterface", ["egret.ExternalInterface"]);
-        /**
-         * @private
-         * @param info
-         */
-        function onReceivedPluginInfo(info) {
-            var data = JSON.parse(info);
-            var functionName = data.functionName;
-            var listener = callBackDic[functionName];
-            if (listener) {
-                var value = data.value;
-                listener.call(null, value);
-            }
-            else {
-                egret.$warn(1050, functionName);
-            }
-        }
-        var ua = navigator.userAgent.toLowerCase();
-        if (ua.indexOf("egretnative") >= 0) {
-            egret.ExternalInterface = NativeExternalInterface;
-            egret_native.receivedPluginInfo = onReceivedPluginInfo;
-        }
-    })(web = egret.web || (egret.web = {}));
-})(egret || (egret = {}));
-(function (egret) {
-    var web;
-    (function (web) {
-        var callBackDic = {};
-        /**
-         * @private
-         */
-        var WebViewExternalInterface = (function () {
-            function WebViewExternalInterface() {
-            }
-            WebViewExternalInterface.call = function (functionName, value) {
-                __global.ExternalInterface.call(functionName, value);
-            };
-            WebViewExternalInterface.addCallback = function (functionName, listener) {
-                callBackDic[functionName] = listener;
-            };
-            WebViewExternalInterface.invokeCallback = function (functionName, value) {
-                var listener = callBackDic[functionName];
-                if (listener) {
-                    listener.call(null, value);
-                }
-                else {
-                    egret.$warn(1050, functionName);
-                }
-            };
-            return WebViewExternalInterface;
-        }());
-        web.WebViewExternalInterface = WebViewExternalInterface;
-        __reflect(WebViewExternalInterface.prototype, "egret.web.WebViewExternalInterface", ["egret.ExternalInterface"]);
-        var ua = navigator.userAgent.toLowerCase();
-        if (ua.indexOf("egretwebview") >= 0) {
-            egret.ExternalInterface = WebViewExternalInterface;
-        }
-    })(web = egret.web || (egret.web = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var web;
-    (function (web) {
-        /**
-         * @private
-         * @inheritDoc
-         */
-        var HtmlSound = (function (_super) {
-            __extends(HtmlSound, _super);
-            /**
-             * @private
-             * @inheritDoc
-             */
-            function HtmlSound() {
-                var _this = _super.call(this) || this;
-                /**
-                 * @private
-                 */
-                _this.loaded = false;
-                return _this;
-            }
-            Object.defineProperty(HtmlSound.prototype, "length", {
-                get: function () {
-                    if (this.originAudio) {
-                        return this.originAudio.duration;
-                    }
-                    throw new Error("sound not loaded!");
-                    //return 0;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            /**
-             * @inheritDoc
-             */
-            HtmlSound.prototype.load = function (url) {
-                var self = this;
-                this.url = url;
-                if (true && !url) {
-                    egret.$error(3002);
-                }
-                var audio = new Audio(url);
-                audio.addEventListener("canplaythrough", onAudioLoaded);
-                audio.addEventListener("error", onAudioError);
-                var ua = navigator.userAgent.toLowerCase();
-                if (ua.indexOf("firefox") >= 0) {
-                    audio.autoplay = !0;
-                    audio.muted = true;
-                }
-                //edge and ie11
-                var ie = ua.indexOf("edge") >= 0 || ua.indexOf("trident") >= 0;
-                if (ie) {
-                    document.body.appendChild(audio);
-                }
-                audio.load();
-                this.originAudio = audio;
-                if (HtmlSound.clearAudios[this.url]) {
-                    delete HtmlSound.clearAudios[this.url];
-                }
-                function onAudioLoaded() {
-                    HtmlSound.$recycle(self.url, audio);
-                    removeListeners();
-                    if (ua.indexOf("firefox") >= 0) {
-                        audio.pause();
-                        audio.muted = false;
-                    }
-                    if (ie) {
-                        document.body.appendChild(audio);
-                    }
-                    self.loaded = true;
-                    self.dispatchEventWith(egret.Event.COMPLETE);
-                }
-                function onAudioError() {
-                    removeListeners();
-                    self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
-                }
-                function removeListeners() {
-                    audio.removeEventListener("canplaythrough", onAudioLoaded);
-                    audio.removeEventListener("error", onAudioError);
-                    if (ie) {
-                        document.body.removeChild(audio);
-                    }
-                }
-            };
-            /**
-             * @inheritDoc
-             */
-            HtmlSound.prototype.play = function (startTime, loops) {
-                startTime = +startTime || 0;
-                loops = +loops || 0;
-                if (true && this.loaded == false) {
-                    egret.$error(1049);
-                }
-                var audio = HtmlSound.$pop(this.url);
-                if (audio == null) {
-                    audio = this.originAudio.cloneNode();
-                }
-                else {
-                    //audio.load();
-                }
-                audio.autoplay = true;
-                var channel = new web.HtmlSoundChannel(audio);
-                channel.$url = this.url;
-                channel.$loops = loops;
-                channel.$startTime = startTime;
-                channel.$play();
-                egret.sys.$pushSoundChannel(channel);
-                return channel;
-            };
-            /**
-             * @inheritDoc
-             */
-            HtmlSound.prototype.close = function () {
-                if (this.loaded == false && this.originAudio)
-                    this.originAudio.src = "";
-                if (this.originAudio)
-                    this.originAudio = null;
-                HtmlSound.$clear(this.url);
-            };
-            HtmlSound.$clear = function (url) {
-                HtmlSound.clearAudios[url] = true;
-                var array = HtmlSound.audios[url];
-                if (array) {
-                    array.length = 0;
-                }
-            };
-            HtmlSound.$pop = function (url) {
-                var array = HtmlSound.audios[url];
-                if (array && array.length > 0) {
-                    return array.pop();
-                }
-                return null;
-            };
-            HtmlSound.$recycle = function (url, audio) {
-                if (HtmlSound.clearAudios[url]) {
-                    return;
-                }
-                var array = HtmlSound.audios[url];
-                if (HtmlSound.audios[url] == null) {
-                    array = HtmlSound.audios[url] = [];
-                }
-                array.push(audio);
-            };
-            /**
-             * Background music
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language en_US
-             */
-            /**
-             * 背景音乐
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language zh_CN
-             */
-            HtmlSound.MUSIC = "music";
-            /**
-             * EFFECT
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language en_US
-             */
-            /**
-             * 音效
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language zh_CN
-             */
-            HtmlSound.EFFECT = "effect";
-            /**
-             * @private
-             */
-            HtmlSound.audios = {};
-            HtmlSound.clearAudios = {};
-            return HtmlSound;
-        }(egret.EventDispatcher));
-        web.HtmlSound = HtmlSound;
-        __reflect(HtmlSound.prototype, "egret.web.HtmlSound", ["egret.Sound"]);
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -2930,7 +2710,7 @@ var egret;
             font += (fontSize || 12) + "px ";
             font += (fontFamily || "Arial");
             context.font = font;
-            return context.measureText(text).width;
+            return egret.sys.measureTextWith(context, text);
         }
         /**
          * @private
@@ -2979,11 +2759,7 @@ var egret;
          * 创建一个canvas。
          */
         function __createCanvas__(width, height) {
-            var canvas = document.createElement("canvas");
-            if (!isNaN(width) && !isNaN(height)) {
-                canvas.width = width;
-                canvas.height = height;
-            }
+            var canvas = egret.sys.createCanvas(width, height);
             var context = canvas.getContext("2d");
             if (context["imageSmoothingEnabled"] === undefined) {
                 var keys = ["webkitImageSmoothingEnabled", "mozImageSmoothingEnabled", "msImageSmoothingEnabled"];
@@ -3017,12 +2793,13 @@ var egret;
          */
         var CanvasRenderBuffer = (function () {
             function CanvasRenderBuffer(width, height, root) {
-                this.surface = __createCanvas__(width, height);
+                this.surface = egret.sys.createCanvasRenderBufferSurface(__createCanvas__, width, height, root);
                 this.context = this.surface.getContext("2d");
                 if (this.context) {
                     this.context.$offsetX = 0;
                     this.context.$offsetY = 0;
                 }
+                this.resize(width, height);
             }
             Object.defineProperty(CanvasRenderBuffer.prototype, "width", {
                 /**
@@ -3053,33 +2830,7 @@ var egret;
              * @param useMaxSize 若传入true，则将改变后的尺寸与已有尺寸对比，保留较大的尺寸。
              */
             CanvasRenderBuffer.prototype.resize = function (width, height, useMaxSize) {
-                var surface = this.surface;
-                if (useMaxSize) {
-                    var change = false;
-                    if (surface.width < width) {
-                        surface.width = width;
-                        change = true;
-                    }
-                    if (surface.height < height) {
-                        surface.height = height;
-                        change = true;
-                    }
-                    //尺寸没有变化时,将绘制属性重置
-                    if (!change) {
-                        this.context.globalCompositeOperation = "source-over";
-                        this.context.setTransform(1, 0, 0, 1, 0, 0);
-                        this.context.globalAlpha = 1;
-                    }
-                }
-                else {
-                    if (surface.width != width) {
-                        surface.width = width;
-                    }
-                    if (surface.height != height) {
-                        surface.height = height;
-                    }
-                }
-                this.clear();
+                egret.sys.resizeCanvasRenderBuffer(this, width, height, useMaxSize);
             };
             /**
              * 获取指定区域的像素
@@ -3804,6 +3555,66 @@ var egret;
             return size;
         }
         egret.sys.drawTextureElements = drawTextureElements;
+        /**
+         * 测量文本的宽度
+         * @param context
+         * @param text
+         */
+        function measureTextWith(context, text) {
+            return context.measureText(text).width;
+        }
+        egret.sys.measureTextWith = measureTextWith;
+        /**
+         * 为CanvasRenderBuffer创建一个HTMLCanvasElement
+         * @param defaultFunc
+         * @param width
+         * @param height
+         * @param root
+         */
+        function createCanvasRenderBufferSurface(defaultFunc, width, height, root) {
+            return defaultFunc(width, height);
+        }
+        egret.sys.createCanvasRenderBufferSurface = createCanvasRenderBufferSurface;
+        /**
+         * 改变渲染缓冲的大小并清空缓冲区
+         * @param renderContext
+         * @param width
+         * @param height
+         * @param useMaxSize
+         */
+        function resizeCanvasRenderBuffer(renderContext, width, height, useMaxSize) {
+            var canvasRenderBuffer = renderContext;
+            var surface = canvasRenderBuffer.surface;
+            if (useMaxSize) {
+                var change = false;
+                if (surface.width < width) {
+                    surface.width = width;
+                    change = true;
+                }
+                if (surface.height < height) {
+                    surface.height = height;
+                    change = true;
+                }
+                //尺寸没有变化时,将绘制属性重置
+                if (!change) {
+                    canvasRenderBuffer.context.globalCompositeOperation = "source-over";
+                    canvasRenderBuffer.context.setTransform(1, 0, 0, 1, 0, 0);
+                    canvasRenderBuffer.context.globalAlpha = 1;
+                }
+            }
+            else {
+                if (surface.width != width) {
+                    surface.width = width;
+                }
+                if (surface.height != height) {
+                    surface.height = height;
+                }
+            }
+            canvasRenderBuffer.clear();
+        }
+        egret.sys.resizeCanvasRenderBuffer = resizeCanvasRenderBuffer;
+        egret.Geolocation = egret.web.WebGeolocation;
+        egret.Motion = egret.web.WebMotion;
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -4224,6 +4035,7 @@ var egret;
                     all.style.left = this.panelX + 'px';
                     all.style.top = this.panelY + 'px';
                     all.style.pointerEvents = 'none';
+                    all.id = 'egret-fps-panel';
                     document.body.appendChild(all);
                     var container = document.createElement('div');
                     container.style.color = this.fontColor;
@@ -4579,7 +4391,7 @@ var egret;
          */
         function convertImageToCanvas(texture, rect) {
             if (!sharedCanvas) {
-                sharedCanvas = document.createElement("canvas");
+                sharedCanvas = egret.sys.createCanvas();
                 sharedContext = sharedCanvas.getContext("2d");
             }
             var w = texture.$getTextureWidth();
@@ -4905,6 +4717,34 @@ var egret;
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 egret.DeviceOrientation = egret.web.WebDeviceOrientation;
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
     var web;
@@ -4912,131 +4752,321 @@ var egret;
         /**
          * @private
          */
-        var WebGeolocation = (function (_super) {
-            __extends(WebGeolocation, _super);
+        var WebExternalInterface = (function () {
+            function WebExternalInterface() {
+            }
             /**
              * @private
+             * @param functionName
+             * @param value
              */
-            function WebGeolocation(option) {
+            WebExternalInterface.call = function (functionName, value) {
+            };
+            /**
+             * @private
+             * @param functionName
+             * @param listener
+             */
+            WebExternalInterface.addCallback = function (functionName, listener) {
+            };
+            return WebExternalInterface;
+        }());
+        web.WebExternalInterface = WebExternalInterface;
+        __reflect(WebExternalInterface.prototype, "egret.web.WebExternalInterface", ["egret.ExternalInterface"]);
+        var ua = navigator.userAgent.toLowerCase();
+        if (ua.indexOf("egretnative") < 0) {
+            egret.ExternalInterface = WebExternalInterface;
+        }
+    })(web = egret.web || (egret.web = {}));
+})(egret || (egret = {}));
+(function (egret) {
+    var web;
+    (function (web) {
+        var callBackDic = {};
+        /**
+         * @private
+         */
+        var NativeExternalInterface = (function () {
+            function NativeExternalInterface() {
+            }
+            NativeExternalInterface.call = function (functionName, value) {
+                var data = {};
+                data.functionName = functionName;
+                data.value = value;
+                egret_native.sendInfoToPlugin(JSON.stringify(data));
+            };
+            NativeExternalInterface.addCallback = function (functionName, listener) {
+                callBackDic[functionName] = listener;
+            };
+            return NativeExternalInterface;
+        }());
+        web.NativeExternalInterface = NativeExternalInterface;
+        __reflect(NativeExternalInterface.prototype, "egret.web.NativeExternalInterface", ["egret.ExternalInterface"]);
+        /**
+         * @private
+         * @param info
+         */
+        function onReceivedPluginInfo(info) {
+            var data = JSON.parse(info);
+            var functionName = data.functionName;
+            var listener = callBackDic[functionName];
+            if (listener) {
+                var value = data.value;
+                listener.call(null, value);
+            }
+            else {
+                egret.$warn(1050, functionName);
+            }
+        }
+        var ua = navigator.userAgent.toLowerCase();
+        if (ua.indexOf("egretnative") >= 0) {
+            egret.ExternalInterface = NativeExternalInterface;
+            egret_native.receivedPluginInfo = onReceivedPluginInfo;
+        }
+    })(web = egret.web || (egret.web = {}));
+})(egret || (egret = {}));
+(function (egret) {
+    var web;
+    (function (web) {
+        var callBackDic = {};
+        /**
+         * @private
+         */
+        var WebViewExternalInterface = (function () {
+            function WebViewExternalInterface() {
+            }
+            WebViewExternalInterface.call = function (functionName, value) {
+                __global.ExternalInterface.call(functionName, value);
+            };
+            WebViewExternalInterface.addCallback = function (functionName, listener) {
+                callBackDic[functionName] = listener;
+            };
+            WebViewExternalInterface.invokeCallback = function (functionName, value) {
+                var listener = callBackDic[functionName];
+                if (listener) {
+                    listener.call(null, value);
+                }
+                else {
+                    egret.$warn(1050, functionName);
+                }
+            };
+            return WebViewExternalInterface;
+        }());
+        web.WebViewExternalInterface = WebViewExternalInterface;
+        __reflect(WebViewExternalInterface.prototype, "egret.web.WebViewExternalInterface", ["egret.ExternalInterface"]);
+        var ua = navigator.userAgent.toLowerCase();
+        if (ua.indexOf("egretwebview") >= 0) {
+            egret.ExternalInterface = WebViewExternalInterface;
+        }
+    })(web = egret.web || (egret.web = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var web;
+    (function (web) {
+        /**
+         * @private
+         * @inheritDoc
+         */
+        var HtmlSound = (function (_super) {
+            __extends(HtmlSound, _super);
+            /**
+             * @private
+             * @inheritDoc
+             */
+            function HtmlSound() {
                 var _this = _super.call(this) || this;
                 /**
                  * @private
                  */
-                _this.onUpdate = function (position) {
-                    var event = new egret.GeolocationEvent(egret.Event.CHANGE);
-                    var coords = position.coords;
-                    event.altitude = coords.altitude;
-                    event.heading = coords.heading;
-                    event.accuracy = coords.accuracy;
-                    event.latitude = coords.latitude;
-                    event.longitude = coords.longitude;
-                    event.speed = coords.speed;
-                    event.altitudeAccuracy = coords.altitudeAccuracy;
-                    _this.dispatchEvent(event);
-                };
-                /**
-                 * @private
-                 */
-                _this.onError = function (error) {
-                    var errorType = egret.GeolocationEvent.UNAVAILABLE;
-                    if (error.code == error.PERMISSION_DENIED)
-                        errorType = egret.GeolocationEvent.PERMISSION_DENIED;
-                    var event = new egret.GeolocationEvent(egret.IOErrorEvent.IO_ERROR);
-                    event.errorType = errorType;
-                    event.errorMessage = error.message;
-                    _this.dispatchEvent(event);
-                };
-                _this.geolocation = navigator.geolocation;
+                _this.loaded = false;
                 return _this;
             }
+            Object.defineProperty(HtmlSound.prototype, "length", {
+                get: function () {
+                    if (this.originAudio) {
+                        return this.originAudio.duration;
+                    }
+                    throw new Error("sound not loaded!");
+                    //return 0;
+                },
+                enumerable: true,
+                configurable: true
+            });
             /**
-             * @private
-             *
+             * @inheritDoc
              */
-            WebGeolocation.prototype.start = function () {
-                var geo = this.geolocation;
-                if (geo)
-                    this.watchId = geo.watchPosition(this.onUpdate, this.onError);
-                else
-                    this.onError({
-                        code: 2,
-                        message: egret.sys.tr(3004),
-                        PERMISSION_DENIED: 1,
-                        POSITION_UNAVAILABLE: 2
-                    });
+            HtmlSound.prototype.load = function (url) {
+                var self = this;
+                this.url = url;
+                if (true && !url) {
+                    egret.$error(3002);
+                }
+                var audio = new Audio(url);
+                audio.addEventListener("canplaythrough", onAudioLoaded);
+                audio.addEventListener("error", onAudioError);
+                var ua = navigator.userAgent.toLowerCase();
+                if (ua.indexOf("firefox") >= 0) {
+                    audio.autoplay = !0;
+                    audio.muted = true;
+                }
+                //edge and ie11
+                var ie = ua.indexOf("edge") >= 0 || ua.indexOf("trident") >= 0;
+                if (ie) {
+                    document.body.appendChild(audio);
+                }
+                audio.load();
+                this.originAudio = audio;
+                if (HtmlSound.clearAudios[this.url]) {
+                    delete HtmlSound.clearAudios[this.url];
+                }
+                function onAudioLoaded() {
+                    HtmlSound.$recycle(self.url, audio);
+                    removeListeners();
+                    if (ua.indexOf("firefox") >= 0) {
+                        audio.pause();
+                        audio.muted = false;
+                    }
+                    if (ie) {
+                        document.body.appendChild(audio);
+                    }
+                    self.loaded = true;
+                    self.dispatchEventWith(egret.Event.COMPLETE);
+                }
+                function onAudioError() {
+                    removeListeners();
+                    self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
+                }
+                function removeListeners() {
+                    audio.removeEventListener("canplaythrough", onAudioLoaded);
+                    audio.removeEventListener("error", onAudioError);
+                    if (ie) {
+                        document.body.removeChild(audio);
+                    }
+                }
             };
             /**
-             * @private
-             *
+             * @inheritDoc
              */
-            WebGeolocation.prototype.stop = function () {
-                var geo = this.geolocation;
-                geo.clearWatch(this.watchId);
+            HtmlSound.prototype.play = function (startTime, loops) {
+                startTime = +startTime || 0;
+                loops = +loops || 0;
+                if (true && this.loaded == false) {
+                    egret.$error(1049);
+                }
+                var audio = HtmlSound.$pop(this.url);
+                if (audio == null) {
+                    audio = this.originAudio.cloneNode();
+                }
+                else {
+                    //audio.load();
+                }
+                audio.autoplay = true;
+                var channel = new web.HtmlSoundChannel(audio);
+                channel.$url = this.url;
+                channel.$loops = loops;
+                channel.$startTime = startTime;
+                channel.$play();
+                egret.sys.$pushSoundChannel(channel);
+                return channel;
             };
-            return WebGeolocation;
+            /**
+             * @inheritDoc
+             */
+            HtmlSound.prototype.close = function () {
+                if (this.loaded == false && this.originAudio)
+                    this.originAudio.src = "";
+                if (this.originAudio)
+                    this.originAudio = null;
+                HtmlSound.$clear(this.url);
+            };
+            HtmlSound.$clear = function (url) {
+                HtmlSound.clearAudios[url] = true;
+                var array = HtmlSound.audios[url];
+                if (array) {
+                    array.length = 0;
+                }
+            };
+            HtmlSound.$pop = function (url) {
+                var array = HtmlSound.audios[url];
+                if (array && array.length > 0) {
+                    return array.pop();
+                }
+                return null;
+            };
+            HtmlSound.$recycle = function (url, audio) {
+                if (HtmlSound.clearAudios[url]) {
+                    return;
+                }
+                var array = HtmlSound.audios[url];
+                if (HtmlSound.audios[url] == null) {
+                    array = HtmlSound.audios[url] = [];
+                }
+                array.push(audio);
+            };
+            /**
+             * Background music
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language en_US
+             */
+            /**
+             * 背景音乐
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language zh_CN
+             */
+            HtmlSound.MUSIC = "music";
+            /**
+             * EFFECT
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language en_US
+             */
+            /**
+             * 音效
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language zh_CN
+             */
+            HtmlSound.EFFECT = "effect";
+            /**
+             * @private
+             */
+            HtmlSound.audios = {};
+            HtmlSound.clearAudios = {};
+            return HtmlSound;
         }(egret.EventDispatcher));
-        web.WebGeolocation = WebGeolocation;
-        __reflect(WebGeolocation.prototype, "egret.web.WebGeolocation", ["egret.Geolocation"]);
-        egret.Geolocation = egret.web.WebGeolocation;
-    })(web = egret.web || (egret.web = {}));
-})(egret || (egret = {}));
-var egret;
-(function (egret) {
-    var web;
-    (function (web) {
-        /**
-         * @private
-         */
-        var WebMotion = (function (_super) {
-            __extends(WebMotion, _super);
-            function WebMotion() {
-                var _this = _super !== null && _super.apply(this, arguments) || this;
-                /**
-                 * @private
-                 */
-                _this.onChange = function (e) {
-                    var event = new egret.MotionEvent(egret.Event.CHANGE);
-                    var acceleration = {
-                        x: e.acceleration.x,
-                        y: e.acceleration.y,
-                        z: e.acceleration.z
-                    };
-                    var accelerationIncludingGravity = {
-                        x: e.accelerationIncludingGravity.x,
-                        y: e.accelerationIncludingGravity.y,
-                        z: e.accelerationIncludingGravity.z
-                    };
-                    var rotation = {
-                        alpha: e.rotationRate.alpha,
-                        beta: e.rotationRate.beta,
-                        gamma: e.rotationRate.gamma
-                    };
-                    event.acceleration = acceleration;
-                    event.accelerationIncludingGravity = accelerationIncludingGravity;
-                    event.rotationRate = rotation;
-                    _this.dispatchEvent(event);
-                };
-                return _this;
-            }
-            /**
-             * @private
-             *
-             */
-            WebMotion.prototype.start = function () {
-                window.addEventListener("devicemotion", this.onChange);
-            };
-            /**
-             * @private
-             *
-             */
-            WebMotion.prototype.stop = function () {
-                window.removeEventListener("devicemotion", this.onChange);
-            };
-            return WebMotion;
-        }(egret.EventDispatcher));
-        web.WebMotion = WebMotion;
-        __reflect(WebMotion.prototype, "egret.web.WebMotion", ["egret.Motion"]);
-        egret.Motion = egret.web.WebMotion;
+        web.HtmlSound = HtmlSound;
+        __reflect(HtmlSound.prototype, "egret.web.HtmlSound", ["egret.Sound"]);
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -5572,7 +5602,7 @@ var egret;
                 var alpha = buffer.globalAlpha;
                 //tintcolor => alpha
                 alpha = Math.min(alpha, 1.0);
-                var globalTintColor = buffer.globalTintColor;
+                var globalTintColor = buffer.globalTintColor || 0xFFFFFF;
                 var currentTexture = buffer.currentTexture;
                 alpha = ((alpha < 1.0 && currentTexture && currentTexture[egret.UNPACK_PREMULTIPLY_ALPHA_WEBGL]) ?
                     egret.WebGLUtils.premultiplyTint(globalTintColor, alpha)
@@ -7699,6 +7729,10 @@ var egret;
          */
         var WebGLRenderer = (function () {
             function WebGLRenderer() {
+                /**
+                 * Do special treatment on wechat ios10
+                 */
+                this.wxiOS10 = false;
                 this.nestLevel = 0; //渲染的嵌套层次，0表示在调用堆栈的最外层。
             }
             /**
@@ -7800,7 +7834,7 @@ var egret;
                 }
                 var children = displayObject.$children;
                 if (children) {
-                    if (displayObject.sortableChildren && displayObject.sortDirty) {
+                    if (displayObject.sortableChildren && displayObject.$sortDirty) {
                         //绘制排序
                         displayObject.sortChildren();
                     }
@@ -7817,7 +7851,7 @@ var egret;
                         }
                         if (child.tint !== 0xFFFFFF) {
                             tempTintColor = buffer.globalTintColor;
-                            buffer.globalTintColor = child.tintRGB;
+                            buffer.globalTintColor = child.$tintRGB;
                         }
                         var savedMatrix = void 0;
                         if (child.$useTranslate) {
@@ -8555,6 +8589,9 @@ var egret;
                 }
                 node.dirtyRender = false;
             };
+            /**
+             * @private
+             */
             WebGLRenderer.prototype.renderText = function (node, buffer) {
                 if (web.textAtlasRenderEnable) {
                     //新的文字渲染机制
@@ -8584,12 +8621,22 @@ var egret;
                     node.$canvasScaleY = canvasScaleY;
                     node.dirtyRender = true;
                 }
-                if (!this.canvasRenderBuffer || !this.canvasRenderBuffer.context) {
-                    this.canvasRenderer = new egret.CanvasRenderer();
-                    this.canvasRenderBuffer = new web.CanvasRenderBuffer(width, height);
+                if (this.wxiOS10) {
+                    if (!this.canvasRenderer) {
+                        this.canvasRenderer = new egret.CanvasRenderer();
+                    }
+                    if (node.dirtyRender) {
+                        this.canvasRenderBuffer = new web.CanvasRenderBuffer(width, height);
+                    }
                 }
-                else if (node.dirtyRender) {
-                    this.canvasRenderBuffer.resize(width, height);
+                else {
+                    if (!this.canvasRenderBuffer || !this.canvasRenderBuffer.context) {
+                        this.canvasRenderer = new egret.CanvasRenderer();
+                        this.canvasRenderBuffer = new web.CanvasRenderBuffer(width, height);
+                    }
+                    else if (node.dirtyRender) {
+                        this.canvasRenderBuffer.resize(width, height);
+                    }
                 }
                 if (!this.canvasRenderBuffer.context) {
                     return;
@@ -8609,15 +8656,21 @@ var egret;
                 if (node.dirtyRender) {
                     var surface = this.canvasRenderBuffer.surface;
                     this.canvasRenderer.renderText(node, this.canvasRenderBuffer.context);
-                    // 拷贝canvas到texture
-                    var texture = node.$texture;
-                    if (!texture) {
-                        texture = buffer.context.createTexture(surface);
-                        node.$texture = texture;
+                    if (this.wxiOS10) {
+                        surface["isCanvas"] = true;
+                        node.$texture = surface;
                     }
                     else {
-                        // 重新拷贝新的图像
-                        buffer.context.updateTexture(texture, surface);
+                        // 拷贝canvas到texture
+                        var texture = node.$texture;
+                        if (!texture) {
+                            texture = buffer.context.createTexture(surface);
+                            node.$texture = texture;
+                        }
+                        else {
+                            // 重新拷贝新的图像
+                            buffer.context.updateTexture(texture, surface);
+                        }
                     }
                     // 保存材质尺寸
                     node.$textureWidth = surface.width;
@@ -8662,12 +8715,22 @@ var egret;
                 canvasScaleY *= height2 / height;
                 width = width2;
                 height = height2;
-                if (!this.canvasRenderBuffer || !this.canvasRenderBuffer.context) {
-                    this.canvasRenderer = new egret.CanvasRenderer();
-                    this.canvasRenderBuffer = new web.CanvasRenderBuffer(width, height);
+                if (this.wxiOS10) {
+                    if (!this.canvasRenderer) {
+                        this.canvasRenderer = new egret.CanvasRenderer();
+                    }
+                    if (node.dirtyRender) {
+                        this.canvasRenderBuffer = new web.CanvasRenderBuffer(width, height);
+                    }
                 }
-                else if (node.dirtyRender || forHitTest) {
-                    this.canvasRenderBuffer.resize(width, height);
+                else {
+                    if (!this.canvasRenderBuffer || !this.canvasRenderBuffer.context) {
+                        this.canvasRenderer = new egret.CanvasRenderer();
+                        this.canvasRenderBuffer = new web.CanvasRenderBuffer(width, height);
+                    }
+                    else if (node.dirtyRender) {
+                        this.canvasRenderBuffer.resize(width, height);
+                    }
                 }
                 if (!this.canvasRenderBuffer.context) {
                     return;
@@ -8684,22 +8747,35 @@ var egret;
                 var surface = this.canvasRenderBuffer.surface;
                 if (forHitTest) {
                     this.canvasRenderer.renderGraphics(node, this.canvasRenderBuffer.context, true);
-                    egret.WebGLUtils.deleteWebGLTexture(surface);
-                    var texture = buffer.context.getWebGLTexture(surface);
+                    var texture = void 0;
+                    if (this.wxiOS10) {
+                        surface["isCanvas"] = true;
+                        texture = surface;
+                    }
+                    else {
+                        egret.WebGLUtils.deleteWebGLTexture(surface);
+                        texture = buffer.context.getWebGLTexture(surface);
+                    }
                     buffer.context.drawTexture(texture, 0, 0, width, height, 0, 0, width, height, surface.width, surface.height);
                 }
                 else {
                     if (node.dirtyRender) {
                         this.canvasRenderer.renderGraphics(node, this.canvasRenderBuffer.context);
-                        // 拷贝canvas到texture
-                        var texture = node.$texture;
-                        if (!texture) {
-                            texture = buffer.context.createTexture(surface);
-                            node.$texture = texture;
+                        if (this.wxiOS10) {
+                            surface["isCanvas"] = true;
+                            node.$texture = surface;
                         }
                         else {
-                            // 重新拷贝新的图像
-                            buffer.context.updateTexture(texture, surface);
+                            // 拷贝canvas到texture
+                            var texture = node.$texture;
+                            if (!texture) {
+                                texture = buffer.context.createTexture(surface);
+                                node.$texture = texture;
+                            }
+                            else {
+                                // 重新拷贝新的图像
+                                buffer.context.updateTexture(texture, surface);
+                            }
                         }
                         // 保存材质尺寸
                         node.$textureWidth = surface.width;
@@ -10040,7 +10116,7 @@ var egret;
             uniform sampler2D uSamplerAlphaMask;
     
             void main(void){
-                float alpha = texture2D(uSamplerAlphaMask, vTextureCoord);
+                float alpha = texture2D(uSamplerAlphaMask, vTextureCoord).r;
                 if (alpha < 0.0039) { discard; }
                 vec4 texColor = texture2D(uSampler, vTextureCoord);
                 if(texColor.a > 0.0) {
@@ -10053,7 +10129,7 @@ var egret;
                 gl_FragColor = v4Color * vColor;
             }"
             */
-            EgretShaderLib.colorTransform_frag_etc_alphamask_frag = "precision mediump float;\r\nvarying vec2 vTextureCoord;\r\nvarying vec4 vColor;\r\nuniform mat4 matrix;\r\nuniform vec4 colorAdd;\r\nuniform sampler2D uSampler;\r\nuniform sampler2D uSamplerAlphaMask;\r\n\r\nvoid main(void){\r\nfloat alpha = texture2D(uSamplerAlphaMask, vTextureCoord);\r\nif (alpha < 0.0039) { discard; }\r\nvec4 texColor = texture2D(uSampler, vTextureCoord);\r\nif(texColor.a > 0.0) {\r\n // 抵消预乘的alpha通道\r\ntexColor = vec4(texColor.rgb / texColor.a, texColor.a);\r\n}\r\nvec4 v4Color = clamp(texColor * matrix + colorAdd, 0.0, 1.0);\r\nv4Color.rgb = v4Color.rgb * alpha;\r\nv4Color.a = alpha;\r\ngl_FragColor = v4Color * vColor;\r\n}";
+            EgretShaderLib.colorTransform_frag_etc_alphamask_frag = "precision mediump float;\r\nvarying vec2 vTextureCoord;\r\nvarying vec4 vColor;\r\nuniform mat4 matrix;\r\nuniform vec4 colorAdd;\r\nuniform sampler2D uSampler;\r\nuniform sampler2D uSamplerAlphaMask;\r\n\r\nvoid main(void){\r\nfloat alpha = texture2D(uSamplerAlphaMask, vTextureCoord).r;\r\nif (alpha < 0.0039) { discard; }\r\nvec4 texColor = texture2D(uSampler, vTextureCoord);\r\nif(texColor.a > 0.0) {\r\n // 抵消预乘的alpha通道\r\ntexColor = vec4(texColor.rgb / texColor.a, texColor.a);\r\n}\r\nvec4 v4Color = clamp(texColor * matrix + colorAdd, 0.0, 1.0);\r\nv4Color.rgb = v4Color.rgb * alpha;\r\nv4Color.a = alpha;\r\ngl_FragColor = v4Color * vColor;\r\n}";
             return EgretShaderLib;
         }());
         web.EgretShaderLib = EgretShaderLib;

@@ -133,4 +133,37 @@ namespace egret.sys {
         flush(): void;
         render(): void;
     }
+        
+    /**
+     * 测量文本的宽度
+     * @param context 
+     * @param text 
+     */
+    export function measureTextWith(context: CanvasRenderingContext2D, text: string): number {
+        console.error(`empty sys.measureTextWith = ${context}, ${text}`);
+        return 0;
+    }
+
+    /**
+     * 为CanvasRenderBuffer创建一个canvas
+     * @param defaultFunc 
+     * @param width 
+     * @param height 
+     * @param root 
+     */
+    export function createCanvasRenderBufferSurface(defaultFunc: (width?: number, height?: number) => HTMLCanvasElement, width?: number, height?: number, root?: boolean): HTMLCanvasElement {
+        console.error(`empty sys.createCanvasRenderBufferSurface = ${width}, ${height}`);
+        return null;
+    }
+
+    /**
+     * 改变渲染缓冲的大小并清空缓冲区
+     * @param renderContext 
+     * @param width 
+     * @param height 
+     * @param useMaxSize 
+     */
+    export function resizeCanvasRenderBuffer(renderContext: RenderContext, width: number, height: number, useMaxSize?: boolean): void {
+        console.error(`empty sys.resizeContext = ${renderContext}, ${width}, ${height}, ${useMaxSize}`);
+    }
 }

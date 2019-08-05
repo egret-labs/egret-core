@@ -204,7 +204,7 @@ namespace egret.web {
             let alpha = buffer.globalAlpha;
             //tintcolor => alpha
             alpha = Math.min(alpha, 1.0);
-            const globalTintColor = buffer.globalTintColor;
+            const globalTintColor = buffer.globalTintColor || 0xFFFFFF;
             const currentTexture = buffer.currentTexture;
             alpha = ((alpha < 1.0 && currentTexture && currentTexture[UNPACK_PREMULTIPLY_ALPHA_WEBGL]) ?
                 WebGLUtils.premultiplyTint(globalTintColor, alpha)

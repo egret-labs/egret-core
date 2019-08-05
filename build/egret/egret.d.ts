@@ -1295,14 +1295,62 @@ declare namespace egret {
          * inspired by pixi.js
          */
         private _tint;
-        private _tintRGB;
+        /**
+         * @private
+         */
+        $tintRGB: number;
+        /**
+         * Set a tint color for the current object
+         * @version Egret 5.2.24
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 给当前对象设置填充色
+         * @version Egret 5.2.24
+         * @platform Web,Native
+         * @language zh_CN
+         */
         tint: number;
-        readonly tintRGB: number;
-        sortDirty: boolean;
+        /**
+         * @private
+         * inspired by pixi.js
+         */
+        $sortDirty: boolean;
         sortChildren(): void;
+        /**
+         * @private
+         */
         private _zIndex;
+        /**
+         * the z-order (front-to-back order) of the object
+         * @version Egret 5.2.24
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 设置对象的 Z 轴顺序（前后顺序）
+         * @version Egret 5.2.24
+         * @platform Web,Native
+         * @language zh_CN
+         */
         zIndex: number;
-        _lastSortedIndex: number;
+        /**
+         * @private
+         */
+        $lastSortedIndex: number;
+        /**
+         * Allow objects to use zIndex sorting
+         * @version Egret 5.2.24
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 允许对象使用 zIndex 排序
+         * @version Egret 5.2.24
+         * @platform Web,Native
+         * @language zh_CN
+         */
         sortableChildren: boolean;
     }
 }
@@ -9750,6 +9798,28 @@ declare namespace egret.sys {
         flush(): void;
         render(): void;
     }
+    /**
+     * 测量文本的宽度
+     * @param context
+     * @param text
+     */
+    function measureTextWith(context: CanvasRenderingContext2D, text: string): number;
+    /**
+     * 为CanvasRenderBuffer创建一个canvas
+     * @param defaultFunc
+     * @param width
+     * @param height
+     * @param root
+     */
+    function createCanvasRenderBufferSurface(defaultFunc: (width?: number, height?: number) => HTMLCanvasElement, width?: number, height?: number, root?: boolean): HTMLCanvasElement;
+    /**
+     * 改变渲染缓冲的大小并清空缓冲区
+     * @param renderContext
+     * @param width
+     * @param height
+     * @param useMaxSize
+     */
+    function resizeCanvasRenderBuffer(renderContext: RenderContext, width: number, height: number, useMaxSize?: boolean): void;
 }
 declare namespace egret.sys {
     /**
@@ -10903,6 +10973,19 @@ declare namespace egret {
          */
         const RUNTIME2 = "runtime2";
         /**
+         * Running on Alipay
+         * @version Egret 5.2.23
+         * @platform All
+         * @language en_US
+         */
+        /**
+         * 运行在支付宝小游戏上
+         * @version Egret 5.2.26
+         * @platform All
+         * @language zh_CN
+         */
+        const MYGAME = "mygame";
+        /**
          * Running on WeChat mini game
          * @version Egret 5.1.5
          * @platform All
@@ -10942,12 +11025,44 @@ declare namespace egret {
          */
         const QGAME = "qgame";
         /**
+         * Running on OPPO mini game
+         * @version Egret 5.2.14
+         * @platform All
+         * @language en_US
+         */
+        /**
          * 运行在 Oppo 小游戏上
          * @version Egret 5.2.14
          * @platform All
          * @language zh_CN
          */
         const OPPOGAME = "oppogame";
+        /**
+        * Running on QQ mini game
+        * @version Egret 5.2.25
+        * @platform All
+        * @language en_US
+        */
+        /**
+        * 运行在 QQ 小游戏上
+        * @version Egret 5.2.25
+        * @platform All
+        * @language zh_CN
+        */
+        const QQGAME = "qqgame";
+        /**
+         * Running on vivo mini game
+         * @version Egret 5.2.23
+         * @platform All
+         * @language en_US
+         */
+        /**
+        * 运行在 vivo 小游戏上
+        * @version Egret 5.2.23
+        * @platform All
+        * @language zh_CN
+        */
+        const VIVOGAME = "vivogame";
     }
     interface SupportedCompressedTexture {
         pvrtc: boolean;
