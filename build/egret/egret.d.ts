@@ -1352,8 +1352,10 @@ declare namespace egret {
          * @language zh_CN
          */
         sortableChildren: boolean;
-        _worldTransform: Transform;
-        _textureTransform: Transform;
+        readonly _worldTransform: Transform;
+        readonly _textureAtlasTransforms: Transform[];
+        _textureAtlasIndex: number;
+        readonly textureTransform: Transform;
     }
 }
 declare namespace egret {

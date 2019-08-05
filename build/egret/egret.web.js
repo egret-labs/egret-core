@@ -8937,7 +8937,7 @@ var egret;
                 if (!useDisplayObjectTransform) {
                     return true;
                 }
-                var _textureTransform = displayObject._textureTransform;
+                var _textureTransform = displayObject.textureTransform;
                 if (!egret.NumberUtils.matrixEqual(_textureTransform._matrix, buffer.globalMatrix)) {
                     console.error('WebGLRendererTransform checkData matrixEqual');
                     return false;
@@ -8960,7 +8960,7 @@ var egret;
                     buffer.$offsetY = offsetY;
                     switch (node.type) {
                         case 1 /* BitmapNode */:
-                            //this.renderBitmap(<sys.BitmapNode>node, buffer);
+                            DisplayObjectTransform.transformAtlasBitmap(displayObject, node, buffer);
                             break;
                         case 2 /* TextNode */:
                             DisplayObjectTransform.transformText(displayObject, node, buffer);
@@ -9055,15 +9055,15 @@ var egret;
                     }
                 }
             };
-            DisplayObjectTransform.transformNormalBitmap = function (displayObject, node, buffer) {
-                var image = node.image;
-                if (!image) {
-                    return;
-                }
+            DisplayObjectTransform._transformImage_ = function (_textureTransform, image, buffer, destHeight, destY) {
+                // const image = node.image;
+                // if (!image) {
+                //     return;
+                // }
                 var offsetX = 0;
                 var offsetY = 0;
-                var destHeight = node.drawH;
-                var destY = node.drawY;
+                // const destHeight = node.drawH;
+                // const destY = node.drawY;
                 if (image["texture"] || (image.source && image.source["texture"])) {
                     buffer.saveTransform();
                     offsetX = buffer.$offsetX;
@@ -9072,7 +9072,7 @@ var egret;
                     buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2); // 翻转
                 }
                 //
-                var _textureTransform = displayObject._textureTransform;
+                //const _textureTransform = displayObject._textureTransform;
                 _textureTransform._offsetX = buffer.$offsetX;
                 _textureTransform._offsetY = buffer.$offsetY;
                 var _matrix = _textureTransform._matrix;
@@ -9089,6 +9089,52 @@ var egret;
                     buffer.$offsetY = offsetY;
                     buffer.restoreTransform();
                 }
+            };
+            DisplayObjectTransform.transformNormalBitmap = function (displayObject, node, buffer) {
+                // const image = node.image;
+                // if (!image) {
+                //     return;
+                // }
+                // let offsetX = 0;
+                // let offsetY = 0;
+                // const destHeight = node.drawH;
+                // const destY = node.drawY;
+                DisplayObjectTransform._transformImage_(displayObject.textureTransform, node.image, buffer, node.drawH, node.drawY);
+                /*
+                const image = node.image;
+                if (!image) {
+                    return;
+                }
+                let offsetX = 0;
+                let offsetY = 0;
+                const destHeight = node.drawH;
+                const destY = node.drawY;
+                if (image["texture"] || (image.source && image.source["texture"])) {
+                    buffer.saveTransform();
+                    offsetX = buffer.$offsetX;
+                    offsetY = buffer.$offsetY;
+                    buffer.useOffset();
+                    buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2); // 翻转
+                }
+                //
+                const _textureTransform = displayObject._textureTransform;
+                _textureTransform._offsetX = buffer.$offsetX;
+                _textureTransform._offsetY = buffer.$offsetY;
+                const _matrix = _textureTransform._matrix;
+                const globalMatrix = buffer.globalMatrix;
+                _matrix.a = globalMatrix.a;
+                _matrix.b = globalMatrix.b;
+                _matrix.c = globalMatrix.c;
+                _matrix.d = globalMatrix.d;
+                _matrix.tx = globalMatrix.tx;
+                _matrix.ty = globalMatrix.ty;
+                //
+                if (image.source && image.source["texture"]) {
+                    buffer.$offsetX = offsetX;
+                    buffer.$offsetY = offsetY;
+                    buffer.restoreTransform();
+                }
+                */
             };
             DisplayObjectTransform.transformText = function (displayObject, node, buffer) {
                 var width = node.width - node.x;
@@ -9119,7 +9165,7 @@ var egret;
                     buffer.transform(1, 0, 0, 1, x / canvasScaleX, y / canvasScaleY);
                 }
                 //
-                var _textureTransform = displayObject._textureTransform;
+                var _textureTransform = displayObject.textureTransform;
                 _textureTransform._offsetX = buffer.$offsetX;
                 _textureTransform._offsetY = buffer.$offsetY;
                 var _matrix = _textureTransform._matrix;
@@ -9164,7 +9210,7 @@ var egret;
                     buffer.transform(1, 0, 0, 1, node.x, node.y);
                 }
                 ///
-                var _textureTransform = displayObject._textureTransform;
+                var _textureTransform = displayObject.textureTransform;
                 _textureTransform._offsetX = buffer.$offsetX;
                 _textureTransform._offsetY = buffer.$offsetY;
                 var _matrix = _textureTransform._matrix;
@@ -9178,6 +9224,103 @@ var egret;
                 ///
                 if (node.x || node.y) {
                     buffer.transform(1, 0, 0, 1, -node.x, -node.y);
+                }
+            };
+            DisplayObjectTransform.transformAtlasBitmap = function (displayObject, node, buffer) {
+                var image = node.image;
+                if (!image) {
+                    return;
+                }
+                //buffer.imageSmoothingEnabled = node.smoothing;
+                var data = node.drawData;
+                var length = data.length;
+                var pos = 0;
+                var m = node.matrix;
+                // var blendMode = node.blendMode;
+                // var alpha = node.alpha;
+                var savedMatrix;
+                var offsetX = 0;
+                var offsetY = 0;
+                if (m) {
+                    savedMatrix = egret.Matrix.create();
+                    var curMatrix = buffer.globalMatrix;
+                    savedMatrix.a = curMatrix.a;
+                    savedMatrix.b = curMatrix.b;
+                    savedMatrix.c = curMatrix.c;
+                    savedMatrix.d = curMatrix.d;
+                    savedMatrix.tx = curMatrix.tx;
+                    savedMatrix.ty = curMatrix.ty;
+                    offsetX = buffer.$offsetX;
+                    offsetY = buffer.$offsetY;
+                    buffer.useOffset();
+                    buffer.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+                }
+                //这里不考虑嵌套
+                // if (blendMode) {
+                //     buffer.context.setGlobalCompositeOperation(blendModes[blendMode]);
+                // }
+                // var originAlpha;
+                // if (alpha == alpha) {
+                //     originAlpha = buffer.globalAlpha;
+                //     buffer.globalAlpha *= alpha;
+                // }
+                var _textureAtlasTransforms = displayObject._textureAtlasTransforms;
+                if (_textureAtlasTransforms.length !== length) {
+                    _textureAtlasTransforms.length = 0;
+                    for (var i = 0; i < length; ++i) {
+                        _textureAtlasTransforms.push(new egret.Transform);
+                    }
+                }
+                if (node.filter) {
+                    //buffer.context.$filter = node.filter;
+                    while (pos < length) {
+                        //DisplayObjectTransform ._transformNormalBitmap(displayObject._textureAtlasTransforms[length/8], node.image, buffer, );
+                        //buffer.context.__drawImage__(displayObject, image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.rotated, node.smoothing);
+                    }
+                    //buffer.context.$filter = null;
+                }
+                else {
+                    while (pos < length) {
+                        //DisplayObjectTransform ._transformNormalBitmap(displayObject._textureTransform, node, buffer);
+                        //buffer.context.__drawImage__(displayObject, image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.rotated, node.smoothing);
+                    }
+                }
+                // WebGLRenderContext.prototype.__drawImage__ = function
+                //  (displayObject, image, 
+                //     sourceX, sourceY, sourceWidth, sourceHeight, 
+                //     destX, destY, destWidth, destHeight,
+                //      imageSourceWidth, imageSourceHeight,
+                //       rotated, smoothing) {
+                //     var buffer = this.currentBuffer;
+                //     if (this.contextLost || !image || !buffer) {
+                var offsetLength = 8;
+                var textureAtlasTransformIndex = 0;
+                //const image = node.image;
+                while (pos < length) {
+                    var destHeight = data[pos + 7];
+                    var destY = data[pos + 5];
+                    DisplayObjectTransform._transformImage_(displayObject._textureAtlasTransforms[textureAtlasTransformIndex], image, buffer, destHeight, destY);
+                    //
+                    ++textureAtlasTransformIndex;
+                    pos += offsetLength;
+                }
+                // if (blendMode) {
+                //     buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
+                // }
+                // if (alpha == alpha) {
+                //     buffer.globalAlpha = originAlpha;
+                // }
+                if (m) {
+                    var matrix = buffer.globalMatrix;
+                    matrix.a = savedMatrix.a;
+                    matrix.b = savedMatrix.b;
+                    matrix.c = savedMatrix.c;
+                    matrix.d = savedMatrix.d;
+                    matrix.tx = savedMatrix.tx;
+                    matrix.ty = savedMatrix.ty;
+                    buffer.$offsetX = offsetX;
+                    buffer.$offsetY = offsetY;
+                    egret.Matrix.release(savedMatrix);
                 }
             };
             return DisplayObjectTransform;

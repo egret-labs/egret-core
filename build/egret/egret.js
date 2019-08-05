@@ -723,7 +723,8 @@ var egret;
             _this.sortableChildren = false;
             //
             _this._worldTransform = new egret.Transform;
-            _this._textureTransform = new egret.Transform;
+            _this._textureAtlasTransforms = [];
+            _this._textureAtlasIndex = 0;
             if (egret.nativeRender) {
                 _this.createNativeDisplayObject();
             }
@@ -2765,6 +2766,17 @@ var egret;
                 if (this.parent) {
                     this.parent.$sortDirty = true;
                 }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DisplayObject.prototype, "textureTransform", {
+            get: function () {
+                var _textureAtlasTransforms = this._textureAtlasTransforms;
+                if (_textureAtlasTransforms.length === 0) {
+                    _textureAtlasTransforms.push(new egret.Transform);
+                }
+                return _textureAtlasTransforms[this._textureAtlasIndex];
             },
             enumerable: true,
             configurable: true
