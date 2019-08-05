@@ -282,9 +282,11 @@ declare module 'built-in' {
         /**
          * 是否输出转换过程
          */
-        verbose?: boolean
-
-
+        verbose?: boolean,
+        /**
+         * 其他传递的消息参数
+         */
+        info?:any
     }
 
     /** 

@@ -59,7 +59,7 @@ namespace egret.web {
         font += (fontSize || 12) + "px ";
         font += (fontFamily || "Arial");
         context.font = font;
-        return context.measureText(text).width;
+        return egret.sys.measureTextWith(context, text);
     }
 
     /**

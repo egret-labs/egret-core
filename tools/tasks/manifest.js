@@ -13,8 +13,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
         while (_) try {
-            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [0, t.value];
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
                 case 0: case 1: t = op; break;
                 case 4: _.label++; return { value: op[1], done: false };
@@ -70,6 +70,9 @@ var ManifestPlugin = /** @class */ (function () {
                     file.outputDir = "";
                     file.path = path.join(file.base, new_file_path);
                     relative = file.relative.split("\\").join('/');
+                    if (this.options.info && this.options.info.target == 'vivogame') {
+                        file.path = path.join(file.base, '../', 'engine', new_file_path);
+                    }
                     if (file.origin.indexOf('libs/') >= 0) {
                         manifest.initial.push(relative);
                     }
@@ -86,17 +89,23 @@ var ManifestPlugin = /** @class */ (function () {
     };
     ManifestPlugin.prototype.onFinish = function (pluginContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var output, extname, contents;
+            var output, extname, contents, target;
             return __generator(this, function (_a) {
                 output = this.options.output;
                 extname = path.extname(output);
                 contents = '';
+                target = pluginContext.buildConfig.target;
                 switch (extname) {
                     case ".json":
                         contents = JSON.stringify(manifest, null, '\t');
                         break;
                     case ".js":
-                        contents = manifest.initial.concat(manifest.game).map(function (fileName) { return "require(\"./" + fileName + "\")"; }).join("\n");
+                        if (target == 'vivogame') {
+                            contents = manifest.initial.concat(manifest.game).map(function (fileName) { return "require(\"" + fileName + "\")"; }).join("\n");
+                        }
+                        else {
+                            contents = manifest.initial.concat(manifest.game).map(function (fileName) { return "require(\"./" + fileName + "\")"; }).join("\n");
+                        }
                         break;
                 }
                 pluginContext.createFile(this.options.output, new Buffer(contents));
