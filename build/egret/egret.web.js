@@ -5599,7 +5599,13 @@ var egret;
              * pack geometry
              * @public
              */
-            WebGLVertexArrayObject.prototype.cacheArrays = function (buffer, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices, rotated) {
+            WebGLVertexArrayObject.prototype.cacheArrays = function (displayObject, buffer, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices, rotated) {
+                if (displayObject) {
+                    //这里要处理
+                    if (web.WebGLRendererTransform.debugCheck) {
+                        web.WebGLRendererTransform.checkData(displayObject, buffer);
+                    }
+                }
                 var alpha = buffer.globalAlpha;
                 //tintcolor => alpha
                 alpha = Math.min(alpha, 1.0);
@@ -6571,7 +6577,7 @@ var egret;
             /**
              * 绘制图片，image参数可以是BitmapData或者renderTarget
              */
-            WebGLRenderContext.prototype.drawImage = function (image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, imageSourceWidth, imageSourceHeight, rotated, smoothing) {
+            WebGLRenderContext.prototype.__drawImage__ = function (displayObject, image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, imageSourceWidth, imageSourceHeight, rotated, smoothing) {
                 var buffer = this.currentBuffer;
                 if (this.contextLost || !image || !buffer) {
                     return;
@@ -6597,7 +6603,7 @@ var egret;
                 if (!texture) {
                     return;
                 }
-                this.drawTexture(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, imageSourceWidth, imageSourceHeight, undefined, undefined, undefined, undefined, rotated, smoothing);
+                this.__drawTexture__(displayObject, texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, imageSourceWidth, imageSourceHeight, undefined, undefined, undefined, undefined, rotated, smoothing);
                 if (image.source && image.source["texture"]) {
                     buffer.$offsetX = offsetX;
                     buffer.$offsetY = offsetY;
@@ -6607,7 +6613,7 @@ var egret;
             /**
              * 绘制Mesh
              */
-            WebGLRenderContext.prototype.drawMesh = function (image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, imageSourceWidth, imageSourceHeight, meshUVs, meshVertices, meshIndices, bounds, rotated, smoothing) {
+            WebGLRenderContext.prototype.drawMesh = function (displayObject, image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, imageSourceWidth, imageSourceHeight, meshUVs, meshVertices, meshIndices, bounds, rotated, smoothing) {
                 var buffer = this.currentBuffer;
                 if (this.contextLost || !image || !buffer) {
                     return;
@@ -6633,7 +6639,7 @@ var egret;
                 if (!texture) {
                     return;
                 }
-                this.drawTexture(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, imageSourceWidth, imageSourceHeight, meshUVs, meshVertices, meshIndices, bounds, rotated, smoothing);
+                this.__drawTexture__(displayObject, texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, imageSourceWidth, imageSourceHeight, meshUVs, meshVertices, meshIndices, bounds, rotated, smoothing);
                 if (image["texture"] || (image.source && image.source["texture"])) {
                     buffer.$offsetX = offsetX;
                     buffer.$offsetY = offsetY;
@@ -6643,7 +6649,7 @@ var egret;
             /**
              * 绘制材质
              */
-            WebGLRenderContext.prototype.drawTexture = function (texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices, bounds, rotated, smoothing) {
+            WebGLRenderContext.prototype.__drawTexture__ = function (displayObject, texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices, bounds, rotated, smoothing) {
                 var buffer = this.currentBuffer;
                 if (this.contextLost || !texture || !buffer) {
                     return;
@@ -6668,7 +6674,7 @@ var egret;
                 // 应用$filter，因为只可能是colorMatrixFilter，最后两个参数可不传
                 this.drawCmdManager.pushDrawTexture(texture, count, this.$filter, textureWidth, textureHeight);
                 buffer.currentTexture = texture;
-                this.vao.cacheArrays(buffer, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices, rotated);
+                this.vao.cacheArrays(displayObject, buffer, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices, rotated);
             };
             /**
              * 绘制矩形（仅用于遮罩擦除等）
@@ -6699,7 +6705,7 @@ var egret;
                 }
                 this.drawCmdManager.pushPushMask();
                 buffer.currentTexture = null;
-                this.vao.cacheArrays(buffer, 0, 0, width, height, x, y, width, height, width, height);
+                this.vao.cacheArrays(null, buffer, 0, 0, width, height, x, y, width, height, width, height);
             };
             /**
              * 恢复遮罩
@@ -6715,7 +6721,7 @@ var egret;
                 }
                 this.drawCmdManager.pushPopMask();
                 buffer.currentTexture = null;
-                this.vao.cacheArrays(buffer, 0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
+                this.vao.cacheArrays(null, buffer, 0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
             };
             /**
              * 清除颜色缓存
@@ -7103,7 +7109,7 @@ var egret;
                 output.saveTransform();
                 output.transform(1, 0, 0, -1, 0, height);
                 output.currentTexture = input.rootRenderTarget.texture;
-                this.vao.cacheArrays(output, 0, 0, width, height, 0, 0, width, height, width, height);
+                this.vao.cacheArrays(null, output, 0, 0, width, height, 0, 0, width, height, width, height);
                 output.restoreTransform();
                 this.drawCmdManager.pushDrawTexture(input.rootRenderTarget.texture, 2, filter, width, height);
                 // 释放掉input
@@ -7809,22 +7815,22 @@ var egret;
                     ///
                     switch (node.type) {
                         case 1 /* BitmapNode */:
-                            this.renderBitmap(node, buffer);
+                            this.renderBitmap(displayObject, node, buffer);
                             break;
                         case 2 /* TextNode */:
-                            this.renderText(node, buffer);
+                            this.renderText(displayObject, node, buffer);
                             break;
                         case 3 /* GraphicsNode */:
-                            this.renderGraphics(node, buffer);
+                            this.renderGraphics(displayObject, node, buffer);
                             break;
                         case 4 /* GroupNode */:
-                            this.renderGroup(node, buffer);
+                            this.renderGroup(displayObject, node, buffer);
                             break;
                         case 5 /* MeshNode */:
-                            this.renderMesh(node, buffer);
+                            this.renderMesh(displayObject, node, buffer);
                             break;
                         case 6 /* NormalBitmapNode */:
-                            this.renderNormalBitmap(node, buffer);
+                            this.renderNormalBitmap(displayObject, node, buffer);
                             break;
                     }
                     buffer.$offsetX = 0;
@@ -7881,7 +7887,9 @@ var egret;
                             case 2 /* FILTER */:
                             case 3 /* CLIP */:
                             case 4 /* SCROLLRECT */:
+                                web.WebGLRendererTransform.debugCheck = false;
                                 drawCalls += this.drawDisplayObjectAdvanced(child, buffer, offsetX2, offsetY2);
+                                web.WebGLRendererTransform.debugCheck = true;
                                 break;
                             /*
                         case RenderMode.FILTER:
@@ -8118,7 +8126,7 @@ var egret;
                         displayBuffer.setTransform(1, 0, 0, -1, 0, maskBuffer.height);
                         var maskBufferWidth = maskBuffer.rootRenderTarget.width;
                         var maskBufferHeight = maskBuffer.rootRenderTarget.height;
-                        displayBuffer.context.drawTexture(maskBuffer.rootRenderTarget.texture, 0, 0, maskBufferWidth, maskBufferHeight, 0, 0, maskBufferWidth, maskBufferHeight, maskBufferWidth, maskBufferHeight);
+                        displayBuffer.context.__drawTexture__(null, maskBuffer.rootRenderTarget.texture, 0, 0, maskBufferWidth, maskBufferHeight, 0, 0, maskBufferWidth, maskBufferHeight, maskBufferWidth, maskBufferHeight);
                         displayBuffer.setTransform(1, 0, 0, 1, 0, 0);
                         displayBuffer.context.setGlobalCompositeOperation("source-over");
                         maskBuffer.setTransform(1, 0, 0, 1, 0, 0);
@@ -8146,7 +8154,7 @@ var egret;
                         curMatrix.append(1, 0, 0, -1, offsetX + displayBoundsX, offsetY + displayBoundsY + displayBuffer.height);
                         var displayBufferWidth = displayBuffer.rootRenderTarget.width;
                         var displayBufferHeight = displayBuffer.rootRenderTarget.height;
-                        buffer.context.drawTexture(displayBuffer.rootRenderTarget.texture, 0, 0, displayBufferWidth, displayBufferHeight, 0, 0, displayBufferWidth, displayBufferHeight, displayBufferWidth, displayBufferHeight);
+                        buffer.context.__drawTexture__(null, displayBuffer.rootRenderTarget.texture, 0, 0, displayBufferWidth, displayBufferHeight, 0, 0, displayBufferWidth, displayBufferHeight, displayBufferWidth, displayBufferHeight);
                         if (scrollRect) {
                             displayBuffer.context.popMask();
                         }
@@ -8261,7 +8269,7 @@ var egret;
                 //pushRenderTARGET
                 webglBuffer.context.pushBuffer(webglBuffer);
                 webglBuffer.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
-                this.renderNode(node, buffer, 0, 0, forHitTest);
+                this.renderNode(null, node, buffer, 0, 0, forHitTest);
                 webglBuffer.context.$flush(); //webglBuffer.context.$drawWebGL();
                 webglBuffer.onRenderFinish();
                 //popRenderTARGET
@@ -8350,7 +8358,7 @@ var egret;
             /**
              * @private
              */
-            WebGLRenderer.prototype.renderNode = function (node, buffer, offsetX, offsetY, forHitTest) {
+            WebGLRenderer.prototype.renderNode = function (displayObject, node, buffer, offsetX, offsetY, forHitTest) {
                 buffer.$offsetX = offsetX;
                 buffer.$offsetY = offsetY;
                 ///
@@ -8358,39 +8366,39 @@ var egret;
                 ///
                 switch (node.type) {
                     case 1 /* BitmapNode */:
-                        this.renderBitmap(node, buffer);
+                        this.renderBitmap(displayObject, node, buffer);
                         break;
                     case 2 /* TextNode */:
-                        this.renderText(node, buffer);
+                        this.renderText(displayObject, node, buffer);
                         break;
                     case 3 /* GraphicsNode */:
-                        this.renderGraphics(node, buffer, forHitTest);
+                        this.renderGraphics(displayObject, node, buffer, forHitTest);
                         break;
                     case 4 /* GroupNode */:
-                        this.renderGroup(node, buffer);
+                        this.renderGroup(displayObject, node, buffer);
                         break;
                     case 5 /* MeshNode */:
-                        this.renderMesh(node, buffer);
+                        this.renderMesh(displayObject, node, buffer);
                         break;
                     case 6 /* NormalBitmapNode */:
-                        this.renderNormalBitmap(node, buffer);
+                        this.renderNormalBitmap(displayObject, node, buffer);
                         break;
                 }
             };
             /**
              * @private
              */
-            WebGLRenderer.prototype.renderNormalBitmap = function (node, buffer) {
+            WebGLRenderer.prototype.renderNormalBitmap = function (displayObject, node, buffer) {
                 var image = node.image;
                 if (!image) {
                     return;
                 }
-                buffer.context.drawImage(image, node.sourceX, node.sourceY, node.sourceW, node.sourceH, node.drawX, node.drawY, node.drawW, node.drawH, node.imageWidth, node.imageHeight, node.rotated, node.smoothing);
+                buffer.context.__drawImage__(displayObject, image, node.sourceX, node.sourceY, node.sourceW, node.sourceH, node.drawX, node.drawY, node.drawW, node.drawH, node.imageWidth, node.imageHeight, node.rotated, node.smoothing);
             };
             /**
              * @private
              */
-            WebGLRenderer.prototype.renderBitmap = function (node, buffer) {
+            WebGLRenderer.prototype.renderBitmap = function (displayObject, node, buffer) {
                 var image = node.image;
                 if (!image) {
                     return;
@@ -8431,13 +8439,13 @@ var egret;
                 if (node.filter) {
                     buffer.context.$filter = node.filter;
                     while (pos < length) {
-                        buffer.context.drawImage(image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.rotated, node.smoothing);
+                        buffer.context.__drawImage__(displayObject, image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.rotated, node.smoothing);
                     }
                     buffer.context.$filter = null;
                 }
                 else {
                     while (pos < length) {
-                        buffer.context.drawImage(image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.rotated, node.smoothing);
+                        buffer.context.__drawImage__(displayObject, image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.rotated, node.smoothing);
                     }
                 }
                 if (blendMode) {
@@ -8462,7 +8470,7 @@ var egret;
             /**
              * @private
              */
-            WebGLRenderer.prototype.renderMesh = function (node, buffer) {
+            WebGLRenderer.prototype.renderMesh = function (displayObject, node, buffer) {
                 var image = node.image;
                 //buffer.imageSmoothingEnabled = node.smoothing;
                 var data = node.drawData;
@@ -8500,13 +8508,13 @@ var egret;
                 if (node.filter) {
                     buffer.context.$filter = node.filter;
                     while (pos < length) {
-                        buffer.context.drawMesh(image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds, node.rotated, node.smoothing);
+                        buffer.context.drawMesh(displayObject, image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds, node.rotated, node.smoothing);
                     }
                     buffer.context.$filter = null;
                 }
                 else {
                     while (pos < length) {
-                        buffer.context.drawMesh(image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds, node.rotated, node.smoothing);
+                        buffer.context.drawMesh(displayObject, image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds, node.rotated, node.smoothing);
                     }
                 }
                 if (blendMode) {
@@ -8531,7 +8539,7 @@ var egret;
             /**
              * @private
              */
-            WebGLRenderer.prototype.___renderText____ = function (node, buffer) {
+            WebGLRenderer.prototype.___renderText____ = function (displayObject, node, buffer) {
                 var width = node.width - node.x;
                 var height = node.height - node.y;
                 if (width <= 0 || height <= 0 || !width || !height || node.drawData.length === 0) {
@@ -8586,7 +8594,7 @@ var egret;
                             }
                             buffer.$offsetY = saveOffsetY + anchorY - (tb.measureHeight + (tb.stroke2 ? tb.canvasHeightOffset : 0)) / 2;
                             page = tb.line.page;
-                            buffer.context.drawTexture(page.webGLTexture, tb.u, tb.v, tb.contentWidth, tb.contentHeight, 0, 0, tb.contentWidth, tb.contentHeight, page.pageWidth, page.pageHeight);
+                            buffer.context.__drawTexture__(displayObject, page.webGLTexture, tb.u, tb.v, tb.contentWidth, tb.contentHeight, 0, 0, tb.contentWidth, tb.contentHeight, page.pageWidth, page.pageHeight);
                             buffer.$offsetX += (tb.contentWidth - tb.canvasWidthOffset);
                         }
                     }
@@ -8602,10 +8610,10 @@ var egret;
             /**
              * @private
              */
-            WebGLRenderer.prototype.renderText = function (node, buffer) {
+            WebGLRenderer.prototype.renderText = function (displayObject, node, buffer) {
                 if (web.textAtlasRenderEnable) {
                     //新的文字渲染机制
-                    this.___renderText____(node, buffer);
+                    this.___renderText____(displayObject, node, buffer);
                     return;
                 }
                 var width = node.width - node.x;
@@ -8688,7 +8696,7 @@ var egret;
                 }
                 var textureWidth = node.$textureWidth;
                 var textureHeight = node.$textureHeight;
-                buffer.context.drawTexture(node.$texture, 0, 0, textureWidth, textureHeight, 0, 0, textureWidth / canvasScaleX, textureHeight / canvasScaleY, textureWidth, textureHeight);
+                buffer.context.__drawTexture__(displayObject, node.$texture, 0, 0, textureWidth, textureHeight, 0, 0, textureWidth / canvasScaleX, textureHeight / canvasScaleY, textureWidth, textureHeight);
                 if (x || y) {
                     if (node.dirtyRender) {
                         this.canvasRenderBuffer.context.setTransform(canvasScaleX, 0, 0, canvasScaleY, 0, 0);
@@ -8700,7 +8708,7 @@ var egret;
             /**
              * @private
              */
-            WebGLRenderer.prototype.renderGraphics = function (node, buffer, forHitTest) {
+            WebGLRenderer.prototype.renderGraphics = function (displayObject, node, buffer, forHitTest) {
                 var width = node.width;
                 var height = node.height;
                 if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) {
@@ -8766,7 +8774,7 @@ var egret;
                         egret.WebGLUtils.deleteWebGLTexture(surface);
                         texture = buffer.context.getWebGLTexture(surface);
                     }
-                    buffer.context.drawTexture(texture, 0, 0, width, height, 0, 0, width, height, surface.width, surface.height);
+                    buffer.context.__drawTexture__(displayObject, texture, 0, 0, width, height, 0, 0, width, height, surface.width, surface.height);
                 }
                 else {
                     if (node.dirtyRender) {
@@ -8793,7 +8801,7 @@ var egret;
                     }
                     var textureWidth = node.$textureWidth;
                     var textureHeight = node.$textureHeight;
-                    buffer.context.drawTexture(node.$texture, 0, 0, textureWidth, textureHeight, 0, 0, textureWidth / canvasScaleX, textureHeight / canvasScaleY, textureWidth, textureHeight);
+                    buffer.context.__drawTexture__(displayObject, node.$texture, 0, 0, textureWidth, textureHeight, 0, 0, textureWidth / canvasScaleX, textureHeight / canvasScaleY, textureWidth, textureHeight);
                 }
                 if (node.x || node.y) {
                     if (node.dirtyRender || forHitTest) {
@@ -8805,7 +8813,7 @@ var egret;
                     node.dirtyRender = false;
                 }
             };
-            WebGLRenderer.prototype.renderGroup = function (groupNode, buffer) {
+            WebGLRenderer.prototype.renderGroup = function (displayObject, groupNode, buffer) {
                 var m = groupNode.matrix;
                 var savedMatrix;
                 var offsetX;
@@ -8828,7 +8836,7 @@ var egret;
                 var length = children.length;
                 for (var i = 0; i < length; i++) {
                     var node = children[i];
-                    this.renderNode(node, buffer, buffer.$offsetX, buffer.$offsetY);
+                    this.renderNode(displayObject, node, buffer, buffer.$offsetX, buffer.$offsetY);
                 }
                 if (m) {
                     var matrix = buffer.globalMatrix;
@@ -8924,7 +8932,13 @@ var egret;
         var WebGLRendererTransform = (function () {
             function WebGLRendererTransform() {
             }
+            //
+            WebGLRendererTransform.checkData = function (displayObject, buffer) {
+                return false;
+            };
+            //
             WebGLRendererTransform.transformDisplayObject = function (displayObject, buffer, offsetX, offsetY) {
+                return;
                 // let drawCalls = 0;
                 // let node: sys.RenderNode;
                 // let displayList = displayObject.$displayList;
@@ -9025,18 +9039,18 @@ var egret;
                             offsetY2 = offsetY + child.$y - child.$anchorOffsetY;
                         }
                         //
-                        var transform = displayObject.transform;
-                        transform.offsetX = offsetX2;
-                        transform.offsetY = offsetY2;
+                        var _worldTransform = displayObject._worldTransform;
+                        _worldTransform._offsetX = offsetX2;
+                        _worldTransform._offsetY = offsetY2;
                         //
-                        var worldMatrix = transform.worldMatrix;
+                        var _matrix = _worldTransform._matrix;
                         var globalMatrix = buffer.globalMatrix;
-                        worldMatrix.a = globalMatrix.a;
-                        worldMatrix.b = globalMatrix.b;
-                        worldMatrix.c = globalMatrix.c;
-                        worldMatrix.d = globalMatrix.d;
-                        worldMatrix.tx = globalMatrix.tx;
-                        worldMatrix.ty = globalMatrix.ty;
+                        _matrix.a = globalMatrix.a;
+                        _matrix.b = globalMatrix.b;
+                        _matrix.c = globalMatrix.c;
+                        _matrix.d = globalMatrix.d;
+                        _matrix.tx = globalMatrix.tx;
+                        _matrix.ty = globalMatrix.ty;
                         //
                         switch (child.$renderMode) {
                             case 1 /* NONE */:
@@ -9082,6 +9096,8 @@ var egret;
                 }
                 //return drawCalls;
             };
+            //
+            WebGLRendererTransform.debugCheck = true;
             return WebGLRendererTransform;
         }());
         web.WebGLRendererTransform = WebGLRendererTransform;

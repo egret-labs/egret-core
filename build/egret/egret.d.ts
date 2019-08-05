@@ -1352,7 +1352,8 @@ declare namespace egret {
          * @language zh_CN
          */
         sortableChildren: boolean;
-        transform: Transform;
+        _worldTransform: Transform;
+        _textureTransform: Transform;
     }
 }
 declare namespace egret {
@@ -4415,9 +4416,9 @@ declare namespace egret.sys {
 }
 declare namespace egret {
     class Transform {
-        readonly worldMatrix: egret.Matrix;
-        offsetX: number;
-        offsetY: number;
+        readonly _matrix: egret.Matrix;
+        _offsetX: number;
+        _offsetY: number;
     }
 }
 declare namespace egret {

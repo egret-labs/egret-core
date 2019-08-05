@@ -722,7 +722,8 @@ var egret;
              */
             _this.sortableChildren = false;
             //
-            _this.transform = new egret.Transform;
+            _this._worldTransform = new egret.Transform;
+            _this._textureTransform = new egret.Transform;
             if (egret.nativeRender) {
                 _this.createNativeDisplayObject();
             }
@@ -7456,10 +7457,9 @@ var egret;
 (function (egret) {
     var Transform = (function () {
         function Transform() {
-            this.worldMatrix = new egret.Matrix;
-            this.offsetX = 0;
-            this.offsetY = 0;
-            // offsetX, offsetY
+            this._matrix = new egret.Matrix;
+            this._offsetX = 0;
+            this._offsetY = 0;
         }
         return Transform;
     }());

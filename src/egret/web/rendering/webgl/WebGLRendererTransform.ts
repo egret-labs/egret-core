@@ -29,8 +29,17 @@
 
 namespace egret.web {
     export class WebGLRendererTransform {
-        public static transformDisplayObject(displayObject: DisplayObject, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number): void {
+        //
+        public static debugCheck: boolean = true;
 
+        //
+        public static checkData(displayObject: DisplayObject, buffer: WebGLRenderBuffer): boolean {
+            return false;
+        }
+
+        //
+        public static transformDisplayObject(displayObject: DisplayObject, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number): void {
+            return;
             // let drawCalls = 0;
             // let node: sys.RenderNode;
             // let displayList = displayObject.$displayList;
@@ -131,18 +140,18 @@ namespace egret.web {
                         offsetY2 = offsetY + child.$y - child.$anchorOffsetY;
                     }
                     //
-                    const transform = displayObject.transform;
-                    transform.offsetX = offsetX2;
-                    transform.offsetY = offsetY2;
+                    const _worldTransform = displayObject._worldTransform;
+                    _worldTransform._offsetX = offsetX2;
+                    _worldTransform._offsetY = offsetY2;
                     //
-                    const worldMatrix = transform.worldMatrix;
+                    const _matrix = _worldTransform._matrix;
                     const globalMatrix = buffer.globalMatrix;
-                    worldMatrix.a = globalMatrix.a;
-                    worldMatrix.b = globalMatrix.b;
-                    worldMatrix.c = globalMatrix.c;
-                    worldMatrix.d = globalMatrix.d;
-                    worldMatrix.tx = globalMatrix.tx;
-                    worldMatrix.ty = globalMatrix.ty;
+                    _matrix.a = globalMatrix.a;
+                    _matrix.b = globalMatrix.b;
+                    _matrix.c = globalMatrix.c;
+                    _matrix.d = globalMatrix.d;
+                    _matrix.tx = globalMatrix.tx;
+                    _matrix.ty = globalMatrix.ty;
                     //
                     switch (child.$renderMode) {
                         case RenderMode.NONE:

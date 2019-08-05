@@ -2369,7 +2369,8 @@ namespace egret {
         public sortableChildren: boolean = false;
 
         //
-        public transform: Transform = new Transform;
+        public _worldTransform: Transform = new Transform;
+        public _textureTransform: Transform = new Transform;
     }
 
 }

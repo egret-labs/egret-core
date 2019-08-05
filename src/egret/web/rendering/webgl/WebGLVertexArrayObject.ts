@@ -198,9 +198,17 @@ namespace egret.web {
          * pack geometry
          * @public
          */
-        public cacheArrays(buffer: WebGLRenderBuffer, sourceX: number, sourceY: number, sourceWidth: number, sourceHeight: number,
+        public cacheArrays(displayObject: DisplayObject, buffer: WebGLRenderBuffer, sourceX: number, sourceY: number, sourceWidth: number, sourceHeight: number,
             destX: number, destY: number, destWidth: number, destHeight: number, textureSourceWidth: number, textureSourceHeight: number,
             meshUVs?: number[], meshVertices?: number[], meshIndices?: number[], rotated?: boolean): void {
+
+            if (displayObject) {
+                //这里要处理
+                if (WebGLRendererTransform.debugCheck) {
+                    WebGLRendererTransform.checkData(displayObject, buffer);
+                }
+            }
+
             let alpha = buffer.globalAlpha;
             //tintcolor => alpha
             alpha = Math.min(alpha, 1.0);

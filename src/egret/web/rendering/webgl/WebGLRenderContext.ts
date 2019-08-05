@@ -709,7 +709,7 @@ namespace egret.web {
         /**
          * 绘制图片，image参数可以是BitmapData或者renderTarget
          */
-        public drawImage(image: BitmapData,
+        public __drawImage__(displayObject: DisplayObject, image: BitmapData,
             sourceX: number, sourceY: number, sourceWidth: number, sourceHeight: number,
             destX: number, destY: number, destWidth: number, destHeight: number,
             imageSourceWidth: number, imageSourceHeight: number, rotated: boolean, smoothing?: boolean): void {
@@ -739,7 +739,7 @@ namespace egret.web {
                 return;
             }
 
-            this.drawTexture(texture,
+            this.__drawTexture__(displayObject, texture,
                 sourceX, sourceY, sourceWidth, sourceHeight,
                 destX, destY, destWidth, destHeight,
                 imageSourceWidth, imageSourceHeight,
@@ -755,7 +755,7 @@ namespace egret.web {
         /**
          * 绘制Mesh
          */
-        public drawMesh(image: BitmapData,
+        public drawMesh(displayObject: DisplayObject , image: BitmapData,
             sourceX: number, sourceY: number, sourceWidth: number, sourceHeight: number,
             destX: number, destY: number, destWidth: number, destHeight: number,
             imageSourceWidth: number, imageSourceHeight: number,
@@ -787,7 +787,7 @@ namespace egret.web {
                 return;
             }
 
-            this.drawTexture(texture,
+            this.__drawTexture__(displayObject, texture,
                 sourceX, sourceY, sourceWidth, sourceHeight,
                 destX, destY, destWidth, destHeight,
                 imageSourceWidth, imageSourceHeight, meshUVs, meshVertices, meshIndices, bounds, rotated, smoothing);
@@ -802,7 +802,7 @@ namespace egret.web {
         /**
          * 绘制材质
          */
-        public drawTexture(texture: WebGLTexture,
+        public __drawTexture__(displayObject: DisplayObject, texture: WebGLTexture,
             sourceX: number, sourceY: number, sourceWidth: number, sourceHeight: number,
             destX: number, destY: number, destWidth: number, destHeight: number, textureWidth: number, textureHeight: number,
             meshUVs?: number[], meshVertices?: number[], meshIndices?: number[], bounds?: Rectangle, rotated?: boolean, smoothing?: boolean): void {
@@ -833,7 +833,7 @@ namespace egret.web {
             // 应用$filter，因为只可能是colorMatrixFilter，最后两个参数可不传
             this.drawCmdManager.pushDrawTexture(texture, count, this.$filter, textureWidth, textureHeight);
             buffer.currentTexture = texture;
-            this.vao.cacheArrays(buffer, sourceX, sourceY, sourceWidth, sourceHeight,
+            this.vao.cacheArrays(displayObject, buffer, sourceX, sourceY, sourceWidth, sourceHeight,
                 destX, destY, destWidth, destHeight, textureWidth, textureHeight,
                 meshUVs, meshVertices, meshIndices, rotated);
         }
@@ -870,7 +870,7 @@ namespace egret.web {
             }
             this.drawCmdManager.pushPushMask();
             buffer.currentTexture = null;
-            this.vao.cacheArrays(buffer, 0, 0, width, height, x, y, width, height, width, height);
+            this.vao.cacheArrays(null, buffer, 0, 0, width, height, x, y, width, height, width, height);
         }
 
         /**
@@ -889,7 +889,7 @@ namespace egret.web {
             }
             this.drawCmdManager.pushPopMask();
             buffer.currentTexture = null;
-            this.vao.cacheArrays(buffer, 0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
+            this.vao.cacheArrays(null, buffer, 0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
         }
 
         /**
@@ -1340,7 +1340,7 @@ namespace egret.web {
             output.saveTransform();
             output.transform(1, 0, 0, -1, 0, height);
             output.currentTexture = input.rootRenderTarget.texture;
-            this.vao.cacheArrays(output, 0, 0, width, height, 0, 0, width, height, width, height);
+            this.vao.cacheArrays(null, output, 0, 0, width, height, 0, 0, width, height, width, height);
             output.restoreTransform();
 
             this.drawCmdManager.pushDrawTexture(input.rootRenderTarget.texture, 2, filter, width, height);
