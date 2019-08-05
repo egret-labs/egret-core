@@ -204,9 +204,10 @@ namespace egret.web {
 
             if (displayObject) {
                 //这里要处理
-                if (WebGLRendererTransform.debugCheck) {
-                    WebGLRendererTransform.checkData(displayObject, buffer);
-                }
+                DisplayObjectTransform.checkData(displayObject, buffer);
+            }
+            else {
+                //drawDisplayObjectAdvanced 走进来的，没有显示对象，可能是一张单独的纹理
             }
 
             let alpha = buffer.globalAlpha;

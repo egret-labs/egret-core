@@ -27,16 +27,14 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-const useWebGLRendererTransform: boolean = false;
+const useDisplayObjectTransform: boolean = false;
 
 namespace egret.web {
 
-    export class WebGLRendererTransform {
-        //
-        public static debugCheck: boolean = true;
+    export class DisplayObjectTransform {
         //
         public static checkData(displayObject: DisplayObject, buffer: WebGLRenderBuffer): boolean {
-            if (!useWebGLRendererTransform) {
+            if (!useDisplayObjectTransform) {
                 return true;
             }
             const _textureTransform = displayObject._textureTransform;
@@ -54,43 +52,19 @@ namespace egret.web {
 
         //
         public static transformDisplayObject(displayObject: DisplayObject, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number): void {
-            if (!useWebGLRendererTransform) {
+            if (!useDisplayObjectTransform) {
                 return;
             }
-            // let drawCalls = 0;
-            // let node: sys.RenderNode;
-            // let displayList = displayObject.$displayList;
-            // if (displayList && !isStage) {
-            //     if (displayObject.$cacheDirty || displayObject.$renderDirty ||
-            //         displayList.$canvasScaleX != sys.DisplayList.$canvasScaleX ||
-            //         displayList.$canvasScaleY != sys.DisplayList.$canvasScaleY) {
-            //         drawCalls += displayList.drawToSurface();
-            //     }
-            //     node = displayList.$renderNode;
-            // }
-            // else {
-            //     if (displayObject.$renderDirty) {
-            //         node = displayObject.$getRenderNode();
-            //     }
-            //     else {
-            //         node = displayObject.$renderNode;
-            //     }
-            // }
-            // displayObject.$cacheDirty = false;
             const node = displayObject.$getRenderNode();
             if (node) {
-                //drawCalls++;
                 buffer.$offsetX = offsetX;
                 buffer.$offsetY = offsetY;
-                ///
-                //buffer.context.setBatchSystem(node);
-                ///
                 switch (node.type) {
                     case sys.RenderNodeType.BitmapNode:
                         //this.renderBitmap(<sys.BitmapNode>node, buffer);
                         break;
                     case sys.RenderNodeType.TextNode:
-                        //this.renderText(<sys.TextNode>node, buffer);
+                        DisplayObjectTransform.transformText(displayObject, <sys.TextNode>node, buffer);
                         break;
                     case sys.RenderNodeType.GraphicsNode:
                         //this.renderGraphics(<sys.GraphicsNode>node, buffer);
@@ -102,15 +76,12 @@ namespace egret.web {
                         //this.renderMesh(<sys.MeshNode>node, buffer);
                         break;
                     case sys.RenderNodeType.NormalBitmapNode:
-                        WebGLRendererTransform.transformNormalBitmap(displayObject, <sys.NormalBitmapNode>node, buffer);
+                        DisplayObjectTransform.transformNormalBitmap(displayObject, <sys.NormalBitmapNode>node, buffer);
                         break;
                 }
                 buffer.$offsetX = 0;
                 buffer.$offsetY = 0;
             }
-            // if (displayList && !isStage) {
-            //     return drawCalls;
-            // }
             const children = displayObject.$children;
             if (children) {
                 if (displayObject.sortableChildren && displayObject.$sortDirty) {
@@ -123,18 +94,6 @@ namespace egret.web {
                 let offsetY2 = 0;
                 for (let i = 0; i < length; ++i) {
                     child = children[i];
-                    // offsetX2;
-                    // offsetY2;
-                    // let tempAlpha;
-                    // let tempTintColor;
-                    // if (child.$alpha != 1) {
-                    //     tempAlpha = buffer.globalAlpha;
-                    //     buffer.globalAlpha *= child.$alpha;
-                    // }
-                    // if (child.tint !== 0xFFFFFF) {
-                    //     tempTintColor = buffer.globalTintColor;
-                    //     buffer.globalTintColor = child.$tintRGB;
-                    // }
                     let savedMatrix: Matrix;
                     if (child.$useTranslate) {
                         const m = child.$getMatrix();
@@ -179,28 +138,11 @@ namespace egret.web {
                         case RenderMode.SCROLLRECT:
                             //drawCalls += this.drawDisplayObjectAdvanced(child, buffer, offsetX2, offsetY2);
                             break;
-                        /*
-                    case RenderMode.FILTER:
-                        drawCalls += this.drawWithFilter(child, buffer, offsetX2, offsetY2);
-                        break;
-                    case RenderMode.CLIP:
-                        drawCalls += this.drawWithClip(child, buffer, offsetX2, offsetY2);
-                        break;
-                    case RenderMode.SCROLLRECT:
-                        drawCalls += this.drawWithScrollRect(child, buffer, offsetX2, offsetY2);
-                        break;
-                        */
                         default:
                             //drawCalls += this.drawDisplayObject(child, buffer, offsetX2, offsetY2);
-                            WebGLRendererTransform.transformDisplayObject(child, buffer, offsetX2, offsetY2);
+                            DisplayObjectTransform.transformDisplayObject(child, buffer, offsetX2, offsetY2);
                             break;
                     }
-                    // if (tempAlpha) {
-                    //     buffer.globalAlpha = tempAlpha;
-                    // }
-                    // if (tempTintColor) {
-                    //     buffer.globalTintColor = tempTintColor;
-                    // }
                     if (savedMatrix) {
                         const m = buffer.globalMatrix;
                         m.a = savedMatrix.a;
@@ -213,11 +155,9 @@ namespace egret.web {
                     }
                 }
             }
-            //return drawCalls;
         }
 
         public static transformNormalBitmap(displayObject: DisplayObject, node: sys.NormalBitmapNode, buffer: WebGLRenderBuffer): void {
-
             const image = node.image;
             if (!image) {
                 return;
@@ -227,8 +167,6 @@ namespace egret.web {
             const destHeight = node.drawH;
             const destY = node.drawY;
             if (image["texture"] || (image.source && image.source["texture"])) {
-                // 如果是render target
-                //texture = image["texture"] || image.source["texture"];
                 buffer.saveTransform();
                 offsetX = buffer.$offsetX;
                 offsetY = buffer.$offsetY;
@@ -253,8 +191,52 @@ namespace egret.web {
                 buffer.$offsetY = offsetY;
                 buffer.restoreTransform();
             }
+        }
 
+        public static transformText(displayObject: DisplayObject, node: sys.TextNode, buffer: WebGLRenderBuffer): void {
+            let width = node.width - node.x;
+            let height = node.height - node.y;
+            if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) {
+                return;
+            }
+            let canvasScaleX = egret.sys.DisplayList.$canvasScaleX;
+            let canvasScaleY = egret.sys.DisplayList.$canvasScaleY;
+            const maxTextureSize = buffer.context.$maxTextureSize;
+            if (width * canvasScaleX > maxTextureSize) {
+                canvasScaleX *= maxTextureSize / (width * canvasScaleX);
+            }
+            if (height * canvasScaleY > maxTextureSize) {
+                canvasScaleY *= maxTextureSize / (height * canvasScaleY);
+            }
+            width *= canvasScaleX;
+            height *= canvasScaleY;
+            const x = node.x * canvasScaleX;
+            const y = node.y * canvasScaleY;
+            if (node.$canvasScaleX != canvasScaleX || node.$canvasScaleY != canvasScaleY) {
+                node.$canvasScaleX = canvasScaleX;
+                node.$canvasScaleY = canvasScaleY;
+            }
+            if (canvasScaleX !== 1 || canvasScaleY !== 1) {
+            }
+            if (x || y) {
+                buffer.transform(1, 0, 0, 1, x / canvasScaleX, y / canvasScaleY);
+            }
+            //
+            const _textureTransform = displayObject._textureTransform;
+            _textureTransform._offsetX = buffer.$offsetX;
+            _textureTransform._offsetY = buffer.$offsetY;
+            const _matrix = _textureTransform._matrix;
+            const globalMatrix = buffer.globalMatrix;
+            _matrix.a = globalMatrix.a;
+            _matrix.b = globalMatrix.b;
+            _matrix.c = globalMatrix.c;
+            _matrix.d = globalMatrix.d;
+            _matrix.tx = globalMatrix.tx;
+            _matrix.ty = globalMatrix.ty;
+            //
+            if (x || y) {
+                buffer.transform(1, 0, 0, 1, -x / canvasScaleX, -y / canvasScaleY);
+            }
         }
     }
-
 }

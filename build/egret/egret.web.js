@@ -5602,9 +5602,10 @@ var egret;
             WebGLVertexArrayObject.prototype.cacheArrays = function (displayObject, buffer, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices, rotated) {
                 if (displayObject) {
                     //这里要处理
-                    if (web.WebGLRendererTransform.debugCheck) {
-                        web.WebGLRendererTransform.checkData(displayObject, buffer);
-                    }
+                    web.DisplayObjectTransform.checkData(displayObject, buffer);
+                }
+                else {
+                    //drawDisplayObjectAdvanced 走进来的，没有显示对象，可能是一张单独的纹理
                 }
                 var alpha = buffer.globalAlpha;
                 //tintcolor => alpha
@@ -7757,7 +7758,7 @@ var egret;
                 //绘制显示对象
                 webglBuffer.transform(matrix.a, matrix.b, matrix.c, matrix.d, 0, 0);
                 /////
-                web.WebGLRendererTransform.transformDisplayObject(displayObject, webglBuffer, matrix.tx, matrix.ty);
+                web.DisplayObjectTransform.transformDisplayObject(displayObject, webglBuffer, matrix.tx, matrix.ty);
                 /////
                 this.drawDisplayObject(displayObject, webglBuffer, matrix.tx, matrix.ty, true);
                 webglBufferContext.$flush(); // webglBufferContext.$drawWebGL();
@@ -7887,9 +7888,7 @@ var egret;
                             case 2 /* FILTER */:
                             case 3 /* CLIP */:
                             case 4 /* SCROLLRECT */:
-                                web.WebGLRendererTransform.debugCheck = false;
                                 drawCalls += this.drawDisplayObjectAdvanced(child, buffer, offsetX2, offsetY2);
-                                web.WebGLRendererTransform.debugCheck = true;
                                 break;
                             /*
                         case RenderMode.FILTER:
@@ -7986,7 +7985,7 @@ var egret;
                 }
                 else {
                     /////
-                    web.WebGLRendererTransform.transformDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
+                    web.DisplayObjectTransform.transformDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
                     /////
                     drawCalls += this.drawDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
                 }
@@ -8104,7 +8103,7 @@ var egret;
                     var displayBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
                     displayBuffer.context.pushBuffer(displayBuffer);
                     /////
-                    web.WebGLRendererTransform.transformDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
+                    web.DisplayObjectTransform.transformDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
                     /////
                     drawCalls += this.drawDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
                     //绘制遮罩
@@ -8118,7 +8117,7 @@ var egret;
                         maskBuffer.setTransform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
                         egret.Matrix.release(maskMatrix);
                         /////
-                        web.WebGLRendererTransform.transformDisplayObject(mask, maskBuffer, 0, 0);
+                        web.DisplayObjectTransform.transformDisplayObject(mask, maskBuffer, 0, 0);
                         /////
                         drawCalls += this.drawDisplayObject(mask, maskBuffer, 0, 0);
                         maskBuffer.context.popBuffer();
@@ -8925,17 +8924,17 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-var useWebGLRendererTransform = false;
+var useDisplayObjectTransform = false;
 var egret;
 (function (egret) {
     var web;
     (function (web) {
-        var WebGLRendererTransform = (function () {
-            function WebGLRendererTransform() {
+        var DisplayObjectTransform = (function () {
+            function DisplayObjectTransform() {
             }
             //
-            WebGLRendererTransform.checkData = function (displayObject, buffer) {
-                if (!useWebGLRendererTransform) {
+            DisplayObjectTransform.checkData = function (displayObject, buffer) {
+                if (!useDisplayObjectTransform) {
                     return true;
                 }
                 var _textureTransform = displayObject._textureTransform;
@@ -8951,44 +8950,20 @@ var egret;
                 return true;
             };
             //
-            WebGLRendererTransform.transformDisplayObject = function (displayObject, buffer, offsetX, offsetY) {
-                if (!useWebGLRendererTransform) {
+            DisplayObjectTransform.transformDisplayObject = function (displayObject, buffer, offsetX, offsetY) {
+                if (!useDisplayObjectTransform) {
                     return;
                 }
-                // let drawCalls = 0;
-                // let node: sys.RenderNode;
-                // let displayList = displayObject.$displayList;
-                // if (displayList && !isStage) {
-                //     if (displayObject.$cacheDirty || displayObject.$renderDirty ||
-                //         displayList.$canvasScaleX != sys.DisplayList.$canvasScaleX ||
-                //         displayList.$canvasScaleY != sys.DisplayList.$canvasScaleY) {
-                //         drawCalls += displayList.drawToSurface();
-                //     }
-                //     node = displayList.$renderNode;
-                // }
-                // else {
-                //     if (displayObject.$renderDirty) {
-                //         node = displayObject.$getRenderNode();
-                //     }
-                //     else {
-                //         node = displayObject.$renderNode;
-                //     }
-                // }
-                // displayObject.$cacheDirty = false;
                 var node = displayObject.$getRenderNode();
                 if (node) {
-                    //drawCalls++;
                     buffer.$offsetX = offsetX;
                     buffer.$offsetY = offsetY;
-                    ///
-                    //buffer.context.setBatchSystem(node);
-                    ///
                     switch (node.type) {
                         case 1 /* BitmapNode */:
                             //this.renderBitmap(<sys.BitmapNode>node, buffer);
                             break;
                         case 2 /* TextNode */:
-                            //this.renderText(<sys.TextNode>node, buffer);
+                            DisplayObjectTransform.transformText(displayObject, node, buffer);
                             break;
                         case 3 /* GraphicsNode */:
                             //this.renderGraphics(<sys.GraphicsNode>node, buffer);
@@ -9000,15 +8975,12 @@ var egret;
                             //this.renderMesh(<sys.MeshNode>node, buffer);
                             break;
                         case 6 /* NormalBitmapNode */:
-                            WebGLRendererTransform.transformNormalBitmap(displayObject, node, buffer);
+                            DisplayObjectTransform.transformNormalBitmap(displayObject, node, buffer);
                             break;
                     }
                     buffer.$offsetX = 0;
                     buffer.$offsetY = 0;
                 }
-                // if (displayList && !isStage) {
-                //     return drawCalls;
-                // }
                 var children = displayObject.$children;
                 if (children) {
                     if (displayObject.sortableChildren && displayObject.$sortDirty) {
@@ -9021,18 +8993,6 @@ var egret;
                     var offsetY2 = 0;
                     for (var i = 0; i < length_10; ++i) {
                         child = children[i];
-                        // offsetX2;
-                        // offsetY2;
-                        // let tempAlpha;
-                        // let tempTintColor;
-                        // if (child.$alpha != 1) {
-                        //     tempAlpha = buffer.globalAlpha;
-                        //     buffer.globalAlpha *= child.$alpha;
-                        // }
-                        // if (child.tint !== 0xFFFFFF) {
-                        //     tempTintColor = buffer.globalTintColor;
-                        //     buffer.globalTintColor = child.$tintRGB;
-                        // }
                         var savedMatrix = void 0;
                         if (child.$useTranslate) {
                             var m = child.$getMatrix();
@@ -9077,28 +9037,11 @@ var egret;
                             case 4 /* SCROLLRECT */:
                                 //drawCalls += this.drawDisplayObjectAdvanced(child, buffer, offsetX2, offsetY2);
                                 break;
-                            /*
-                        case RenderMode.FILTER:
-                            drawCalls += this.drawWithFilter(child, buffer, offsetX2, offsetY2);
-                            break;
-                        case RenderMode.CLIP:
-                            drawCalls += this.drawWithClip(child, buffer, offsetX2, offsetY2);
-                            break;
-                        case RenderMode.SCROLLRECT:
-                            drawCalls += this.drawWithScrollRect(child, buffer, offsetX2, offsetY2);
-                            break;
-                            */
                             default:
                                 //drawCalls += this.drawDisplayObject(child, buffer, offsetX2, offsetY2);
-                                WebGLRendererTransform.transformDisplayObject(child, buffer, offsetX2, offsetY2);
+                                DisplayObjectTransform.transformDisplayObject(child, buffer, offsetX2, offsetY2);
                                 break;
                         }
-                        // if (tempAlpha) {
-                        //     buffer.globalAlpha = tempAlpha;
-                        // }
-                        // if (tempTintColor) {
-                        //     buffer.globalTintColor = tempTintColor;
-                        // }
                         if (savedMatrix) {
                             var m = buffer.globalMatrix;
                             m.a = savedMatrix.a;
@@ -9111,9 +9054,8 @@ var egret;
                         }
                     }
                 }
-                //return drawCalls;
             };
-            WebGLRendererTransform.transformNormalBitmap = function (displayObject, node, buffer) {
+            DisplayObjectTransform.transformNormalBitmap = function (displayObject, node, buffer) {
                 var image = node.image;
                 if (!image) {
                     return;
@@ -9123,8 +9065,6 @@ var egret;
                 var destHeight = node.drawH;
                 var destY = node.drawY;
                 if (image["texture"] || (image.source && image.source["texture"])) {
-                    // 如果是render target
-                    //texture = image["texture"] || image.source["texture"];
                     buffer.saveTransform();
                     offsetX = buffer.$offsetX;
                     offsetY = buffer.$offsetY;
@@ -9150,12 +9090,55 @@ var egret;
                     buffer.restoreTransform();
                 }
             };
-            //
-            WebGLRendererTransform.debugCheck = true;
-            return WebGLRendererTransform;
+            DisplayObjectTransform.transformText = function (displayObject, node, buffer) {
+                var width = node.width - node.x;
+                var height = node.height - node.y;
+                if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) {
+                    return;
+                }
+                var canvasScaleX = egret.sys.DisplayList.$canvasScaleX;
+                var canvasScaleY = egret.sys.DisplayList.$canvasScaleY;
+                var maxTextureSize = buffer.context.$maxTextureSize;
+                if (width * canvasScaleX > maxTextureSize) {
+                    canvasScaleX *= maxTextureSize / (width * canvasScaleX);
+                }
+                if (height * canvasScaleY > maxTextureSize) {
+                    canvasScaleY *= maxTextureSize / (height * canvasScaleY);
+                }
+                width *= canvasScaleX;
+                height *= canvasScaleY;
+                var x = node.x * canvasScaleX;
+                var y = node.y * canvasScaleY;
+                if (node.$canvasScaleX != canvasScaleX || node.$canvasScaleY != canvasScaleY) {
+                    node.$canvasScaleX = canvasScaleX;
+                    node.$canvasScaleY = canvasScaleY;
+                }
+                if (canvasScaleX !== 1 || canvasScaleY !== 1) {
+                }
+                if (x || y) {
+                    buffer.transform(1, 0, 0, 1, x / canvasScaleX, y / canvasScaleY);
+                }
+                //
+                var _textureTransform = displayObject._textureTransform;
+                _textureTransform._offsetX = buffer.$offsetX;
+                _textureTransform._offsetY = buffer.$offsetY;
+                var _matrix = _textureTransform._matrix;
+                var globalMatrix = buffer.globalMatrix;
+                _matrix.a = globalMatrix.a;
+                _matrix.b = globalMatrix.b;
+                _matrix.c = globalMatrix.c;
+                _matrix.d = globalMatrix.d;
+                _matrix.tx = globalMatrix.tx;
+                _matrix.ty = globalMatrix.ty;
+                //
+                if (x || y) {
+                    buffer.transform(1, 0, 0, 1, -x / canvasScaleX, -y / canvasScaleY);
+                }
+            };
+            return DisplayObjectTransform;
         }());
-        web.WebGLRendererTransform = WebGLRendererTransform;
-        __reflect(WebGLRendererTransform.prototype, "egret.web.WebGLRendererTransform");
+        web.DisplayObjectTransform = DisplayObjectTransform;
+        __reflect(DisplayObjectTransform.prototype, "egret.web.DisplayObjectTransform");
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////

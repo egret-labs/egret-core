@@ -161,7 +161,7 @@
             "platform": "web"
           },
           {
-            "path": "web/rendering/webgl/WebGLRendererTransform.ts",
+            "path": "web/rendering/webgl/DisplayObjectTransform.ts",
             "platform": "web"
           },
           {
