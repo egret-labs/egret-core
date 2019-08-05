@@ -27,14 +27,18 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
+const useWebGLRendererTransform: boolean = false;
+
 namespace egret.web {
-    
+
     export class WebGLRendererTransform {
         //
         public static debugCheck: boolean = true;
         //
         public static checkData(displayObject: DisplayObject, buffer: WebGLRenderBuffer): boolean {
-            return true;
+            if (!useWebGLRendererTransform) {
+                return true;
+            }
             const _textureTransform = displayObject._textureTransform;
             if (!NumberUtils.matrixEqual(_textureTransform._matrix, buffer.globalMatrix)) {
                 console.error('WebGLRendererTransform checkData matrixEqual');
@@ -50,7 +54,9 @@ namespace egret.web {
 
         //
         public static transformDisplayObject(displayObject: DisplayObject, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number): void {
-            return;
+            if (!useWebGLRendererTransform) {
+                return;
+            }
             // let drawCalls = 0;
             // let node: sys.RenderNode;
             // let displayList = displayObject.$displayList;
@@ -96,7 +102,7 @@ namespace egret.web {
                         //this.renderMesh(<sys.MeshNode>node, buffer);
                         break;
                     case sys.RenderNodeType.NormalBitmapNode:
-                        //this.renderNormalBitmap(<sys.NormalBitmapNode>node, buffer);
+                        WebGLRendererTransform.transformNormalBitmap(displayObject, <sys.NormalBitmapNode>node, buffer);
                         break;
                 }
                 buffer.$offsetX = 0;
@@ -186,6 +192,7 @@ namespace egret.web {
                         */
                         default:
                             //drawCalls += this.drawDisplayObject(child, buffer, offsetX2, offsetY2);
+                            WebGLRendererTransform.transformDisplayObject(child, buffer, offsetX2, offsetY2);
                             break;
                     }
                     // if (tempAlpha) {
@@ -208,5 +215,46 @@ namespace egret.web {
             }
             //return drawCalls;
         }
+
+        public static transformNormalBitmap(displayObject: DisplayObject, node: sys.NormalBitmapNode, buffer: WebGLRenderBuffer): void {
+
+            const image = node.image;
+            if (!image) {
+                return;
+            }
+            let offsetX = 0;
+            let offsetY = 0;
+            const destHeight = node.drawH;
+            const destY = node.drawY;
+            if (image["texture"] || (image.source && image.source["texture"])) {
+                // 如果是render target
+                //texture = image["texture"] || image.source["texture"];
+                buffer.saveTransform();
+                offsetX = buffer.$offsetX;
+                offsetY = buffer.$offsetY;
+                buffer.useOffset();
+                buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2); // 翻转
+            }
+            //
+            const _textureTransform = displayObject._textureTransform;
+            _textureTransform._offsetX = buffer.$offsetX;
+            _textureTransform._offsetY = buffer.$offsetY;
+            const _matrix = _textureTransform._matrix;
+            const globalMatrix = buffer.globalMatrix;
+            _matrix.a = globalMatrix.a;
+            _matrix.b = globalMatrix.b;
+            _matrix.c = globalMatrix.c;
+            _matrix.d = globalMatrix.d;
+            _matrix.tx = globalMatrix.tx;
+            _matrix.ty = globalMatrix.ty;
+            //
+            if (image.source && image.source["texture"]) {
+                buffer.$offsetX = offsetX;
+                buffer.$offsetY = offsetY;
+                buffer.restoreTransform();
+            }
+
+        }
     }
+
 }

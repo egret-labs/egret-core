@@ -8925,6 +8925,7 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+var useWebGLRendererTransform = false;
 var egret;
 (function (egret) {
     var web;
@@ -8934,7 +8935,9 @@ var egret;
             }
             //
             WebGLRendererTransform.checkData = function (displayObject, buffer) {
-                return true;
+                if (!useWebGLRendererTransform) {
+                    return true;
+                }
                 var _textureTransform = displayObject._textureTransform;
                 if (!egret.NumberUtils.matrixEqual(_textureTransform._matrix, buffer.globalMatrix)) {
                     console.error('WebGLRendererTransform checkData matrixEqual');
@@ -8949,7 +8952,9 @@ var egret;
             };
             //
             WebGLRendererTransform.transformDisplayObject = function (displayObject, buffer, offsetX, offsetY) {
-                return;
+                if (!useWebGLRendererTransform) {
+                    return;
+                }
                 // let drawCalls = 0;
                 // let node: sys.RenderNode;
                 // let displayList = displayObject.$displayList;
@@ -8995,7 +9000,7 @@ var egret;
                             //this.renderMesh(<sys.MeshNode>node, buffer);
                             break;
                         case 6 /* NormalBitmapNode */:
-                            //this.renderNormalBitmap(<sys.NormalBitmapNode>node, buffer);
+                            WebGLRendererTransform.transformNormalBitmap(displayObject, node, buffer);
                             break;
                     }
                     buffer.$offsetX = 0;
@@ -9085,6 +9090,7 @@ var egret;
                             */
                             default:
                                 //drawCalls += this.drawDisplayObject(child, buffer, offsetX2, offsetY2);
+                                WebGLRendererTransform.transformDisplayObject(child, buffer, offsetX2, offsetY2);
                                 break;
                         }
                         // if (tempAlpha) {
@@ -9106,6 +9112,43 @@ var egret;
                     }
                 }
                 //return drawCalls;
+            };
+            WebGLRendererTransform.transformNormalBitmap = function (displayObject, node, buffer) {
+                var image = node.image;
+                if (!image) {
+                    return;
+                }
+                var offsetX = 0;
+                var offsetY = 0;
+                var destHeight = node.drawH;
+                var destY = node.drawY;
+                if (image["texture"] || (image.source && image.source["texture"])) {
+                    // 如果是render target
+                    //texture = image["texture"] || image.source["texture"];
+                    buffer.saveTransform();
+                    offsetX = buffer.$offsetX;
+                    offsetY = buffer.$offsetY;
+                    buffer.useOffset();
+                    buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2); // 翻转
+                }
+                //
+                var _textureTransform = displayObject._textureTransform;
+                _textureTransform._offsetX = buffer.$offsetX;
+                _textureTransform._offsetY = buffer.$offsetY;
+                var _matrix = _textureTransform._matrix;
+                var globalMatrix = buffer.globalMatrix;
+                _matrix.a = globalMatrix.a;
+                _matrix.b = globalMatrix.b;
+                _matrix.c = globalMatrix.c;
+                _matrix.d = globalMatrix.d;
+                _matrix.tx = globalMatrix.tx;
+                _matrix.ty = globalMatrix.ty;
+                //
+                if (image.source && image.source["texture"]) {
+                    buffer.$offsetX = offsetX;
+                    buffer.$offsetY = offsetY;
+                    buffer.restoreTransform();
+                }
             };
             //
             WebGLRendererTransform.debugCheck = true;
