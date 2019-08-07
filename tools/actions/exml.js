@@ -135,8 +135,8 @@ function publishEXML(exmls, exmlPublishPolicy, themeDatas) {
     var files = themeDatas.map(function (thmData) {
         var path = thmData.path;
         if (exmlPublishPolicy == "commonjs") {
-            var content = "\n                function __extends(d, b) {\n                    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];\n                        function __() {\n                            this.constructor = d;\n                        }\n                    __.prototype = b.prototype;\n                    d.prototype = new __();\n                };";
-            content += "\n                window.generateEUI = {};\n                generateEUI.paths = {};\n                generateEUI.styles = " + JSON.stringify(thmData.styles) + ";\n                generateEUI.skins = " + JSON.stringify(thmData.skins) + ";";
+            var content = "\n                var __extends == this && this.__extends|| function (d, b) {\n                    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];\n                        function __() {\n                            this.constructor = d;\n                        }\n                    __.prototype = b.prototype;\n                    d.prototype = new __();\n                };";
+            content += "\n                window.generateEUI = window.generateEUI||{};\n                generateEUI.paths = generateEUI.paths||{};\n                generateEUI.styles = " + JSON.stringify(thmData.styles) + ";\n                generateEUI.skins = " + JSON.stringify(thmData.skins) + ";";
             var namespaces = [];
             for (var _i = 0, _a = thmData.exmls; _i < _a.length; _i++) {
                 var item = _a[_i];

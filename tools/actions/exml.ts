@@ -141,7 +141,7 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string, t
         let path = thmData.path;
         if (exmlPublishPolicy == "commonjs") {
             let content = `
-                function __extends(d, b) {
+                var __extends == this && this.__extends|| function (d, b) {
                     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
                         function __() {
                             this.constructor = d;
@@ -150,8 +150,8 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string, t
                     d.prototype = new __();
                 };`;
             content += `
-                window.generateEUI = {};
-                generateEUI.paths = {};
+                window.generateEUI = window.generateEUI||{};
+                generateEUI.paths = generateEUI.paths||{};
                 generateEUI.styles = ${JSON.stringify(thmData.styles)};
                 generateEUI.skins = ${JSON.stringify(thmData.skins)};`;
 
