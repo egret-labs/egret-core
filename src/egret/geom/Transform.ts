@@ -30,9 +30,16 @@
 namespace egret {
 
     export class Transform extends HashObject {
+        
         public readonly _matrix: egret.Matrix = new egret.Matrix;
         public _offsetX: number = 0;
         public _offsetY: number = 0;
+
+        public set(matrix: egret.Matrix, offsetX: number, offsetY: number): void {
+            this._matrix.setTo(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
+            this._offsetX = offsetX;
+            this._offsetY = offsetY;
+        }
     }
 }
 

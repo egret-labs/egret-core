@@ -12954,6 +12954,11 @@ var egret;
             _this._offsetY = 0;
             return _this;
         }
+        Transform.prototype.set = function (matrix, offsetX, offsetY) {
+            this._matrix.setTo(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
+            this._offsetX = offsetX;
+            this._offsetY = offsetY;
+        };
         return Transform;
     }(egret.HashObject));
     egret.Transform = Transform;

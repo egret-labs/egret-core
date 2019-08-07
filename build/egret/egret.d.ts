@@ -8146,6 +8146,7 @@ declare namespace egret {
         readonly _matrix: egret.Matrix;
         _offsetX: number;
         _offsetY: number;
+        set(matrix: egret.Matrix, offsetX: number, offsetY: number): void;
     }
 }
 declare namespace egret {
