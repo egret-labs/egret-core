@@ -1571,7 +1571,9 @@ var RES;
             var data = this.getRes(key);
             if (data) {
                 if (compFunc) {
-                    compFunc.call(thisObject, data, paramKey);
+                    egret.callLater(function () {
+                        compFunc.call(thisObject, data, paramKey);
+                    }, this);
                 }
                 return Promise.resolve(data);
             }

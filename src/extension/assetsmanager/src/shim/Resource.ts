@@ -859,7 +859,9 @@ module RES {
             let data = this.getRes(key);
             if (data) {
                 if (compFunc) {
-                    compFunc.call(thisObject, data, paramKey);
+                    egret.callLater(()=>{
+                        compFunc.call(thisObject, data, paramKey);
+                    },this)
                 }
                 return Promise.resolve(data);
             }

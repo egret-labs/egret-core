@@ -9174,6 +9174,10 @@ declare namespace egret {
         antialias?: boolean;
         canvasScaleFactor?: number;
         calculateCanvasScaleFactor?: (context: CanvasRenderingContext2D) => number;
+        /**
+         * 以下目前仅供小游戏使用
+         * The following are for mini-games only
+         */
         entryClassName?: string;
         scaleMode?: string;
         frameRate?: number;
@@ -9181,6 +9185,9 @@ declare namespace egret {
         contentHeight?: number;
         orientation?: string;
         maxTouches?: number;
+        showFPS?: boolean;
+        showLog?: boolean;
+        fpsStyles?: string;
     };
     /**
      * egret project entry function
