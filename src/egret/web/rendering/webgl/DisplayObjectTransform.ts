@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-const useDisplayObjectTransform: boolean = false;
+const useDisplayObjectTransform: boolean = true;
 
 namespace egret.web {
 

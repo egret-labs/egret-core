@@ -275,6 +275,7 @@ namespace egret.web {
                     }
 
                     buffer.context.$filter = <ColorMatrixFilter>filters[0];
+                    DisplayObjectTransform.transformDisplayObject(displayObject, buffer, offsetX, offsetY);
                     if (displayObject.$mask) {
                         drawCalls += this.drawWithClip(displayObject, buffer, offsetX, offsetY);
                     }

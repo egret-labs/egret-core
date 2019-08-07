@@ -7959,6 +7959,7 @@ var egret;
                             buffer.context.setGlobalCompositeOperation(compositeOp);
                         }
                         buffer.context.$filter = filters[0];
+                        web.DisplayObjectTransform.transformDisplayObject(displayObject, buffer, offsetX, offsetY);
                         if (displayObject.$mask) {
                             drawCalls += this.drawWithClip(displayObject, buffer, offsetX, offsetY);
                         }
@@ -8927,7 +8928,7 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-var useDisplayObjectTransform = false;
+var useDisplayObjectTransform = true;
 var egret;
 (function (egret) {
     var web;
