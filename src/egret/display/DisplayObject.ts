@@ -2370,14 +2370,5 @@ namespace egret {
 
         //
         public readonly _worldTransform: Transform = new Transform;
-        public readonly _textureAtlasTransforms: Transform[] = [];
-        public _textureAtlasIndex: number = 0;
-        public get textureTransform(): Transform {
-            const _textureAtlasTransforms = this._textureAtlasTransforms;
-            if (_textureAtlasTransforms.length === 0) {
-                _textureAtlasTransforms.push(new Transform);
-            }
-            return _textureAtlasTransforms[this._textureAtlasIndex];
-        }
     }
 }

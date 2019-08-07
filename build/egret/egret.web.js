@@ -5602,7 +5602,7 @@ var egret;
             WebGLVertexArrayObject.prototype.cacheArrays = function (displayObject, buffer, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices, rotated) {
                 if (displayObject) {
                     //这里要处理
-                    web.DisplayObjectTransform.checkData(displayObject, buffer);
+                    web.DisplayObjectTransform.debugCheckTransformMatchesExactly(displayObject, buffer);
                 }
                 else {
                     //drawDisplayObjectAdvanced 走进来的，没有显示对象，可能是一张单独的纹理
@@ -7345,6 +7345,7 @@ var egret;
                 _this.savedGlobalMatrix = new egret.Matrix();
                 _this.$offsetX = 0;
                 _this.$offsetY = 0;
+                _this.currentRenderNode = null;
                 // 获取webglRenderContext
                 _this.context = web.WebGLRenderContext.getInstance(width, height);
                 if (egret.nativeRender) {
@@ -7813,6 +7814,7 @@ var egret;
                     buffer.$offsetY = offsetY;
                     ///
                     buffer.context.setBatchSystem(node);
+                    buffer.currentRenderNode = node;
                     ///
                     switch (node.type) {
                         case 1 /* BitmapNode */:
@@ -8835,6 +8837,7 @@ var egret;
                 var length = children.length;
                 for (var i = 0; i < length; i++) {
                     var node = children[i];
+                    buffer.currentRenderNode = node;
                     this.renderNode(displayObject, node, buffer, buffer.$offsetX, buffer.$offsetY);
                 }
                 if (m) {
@@ -8932,20 +8935,25 @@ var egret;
         var DisplayObjectTransform = (function () {
             function DisplayObjectTransform() {
             }
-            //
-            DisplayObjectTransform.checkData = function (displayObject, buffer) {
+            DisplayObjectTransform.debugCheckTransformMatchesExactly = function (displayObject, buffer) {
                 if (!useDisplayObjectTransform) {
                     return true;
                 }
-                var _textureTransform = displayObject.textureTransform;
-                if (!egret.NumberUtils.matrixEqual(_textureTransform._matrix, buffer.globalMatrix)) {
-                    console.error('WebGLRendererTransform checkData matrixEqual');
+                if (!displayObject) {
                     return false;
                 }
-                if (!egret.NumberUtils.fequal(_textureTransform._offsetX, buffer.$offsetX)
-                    || !egret.NumberUtils.fequal(_textureTransform._offsetY, buffer.$offsetY)) {
-                    console.error('WebGLRendererTransform checkData offset');
-                    return false;
+                var currentRenderNode = buffer.currentRenderNode;
+                if (currentRenderNode) {
+                    var _textureTransform = currentRenderNode.textureTransform;
+                    if (!egret.NumberUtils.matrixEqual(_textureTransform._matrix, buffer.globalMatrix)) {
+                        console.error('WebGLRendererTransform checkData matrixEqual');
+                        return false;
+                    }
+                    if (!egret.NumberUtils.fequal(_textureTransform._offsetX, buffer.$offsetX)
+                        || !egret.NumberUtils.fequal(_textureTransform._offsetY, buffer.$offsetY)) {
+                        console.error('WebGLRendererTransform checkData offset');
+                        return false;
+                    }
                 }
                 return true;
             };
@@ -8960,7 +8968,7 @@ var egret;
                     buffer.$offsetY = offsetY;
                     switch (node.type) {
                         case 1 /* BitmapNode */:
-                            DisplayObjectTransform.transformAtlasBitmap(displayObject, node, buffer);
+                            DisplayObjectTransform.transformBitmap(displayObject, node, buffer);
                             break;
                         case 2 /* TextNode */:
                             DisplayObjectTransform.transformText(displayObject, node, buffer);
@@ -8969,10 +8977,10 @@ var egret;
                             DisplayObjectTransform.transformGraphics(displayObject, node, buffer);
                             break;
                         case 4 /* GroupNode */:
-                            //this.renderGroup(<sys.GroupNode>node, buffer);
+                            DisplayObjectTransform.transformGroup(displayObject, node, buffer);
                             break;
                         case 5 /* MeshNode */:
-                            //this.renderMesh(<sys.MeshNode>node, buffer);
+                            DisplayObjectTransform.transformMesh(displayObject, node, buffer);
                             break;
                         case 6 /* NormalBitmapNode */:
                             DisplayObjectTransform.transformNormalBitmap(displayObject, node, buffer);
@@ -9055,15 +9063,9 @@ var egret;
                     }
                 }
             };
-            DisplayObjectTransform._transformImage_ = function (_textureTransform, image, buffer, destHeight, destY) {
-                // const image = node.image;
-                // if (!image) {
-                //     return;
-                // }
+            DisplayObjectTransform._transform_ = function (_textureTransform, image, buffer, destHeight, destY) {
                 var offsetX = 0;
                 var offsetY = 0;
-                // const destHeight = node.drawH;
-                // const destY = node.drawY;
                 if (image["texture"] || (image.source && image.source["texture"])) {
                     buffer.saveTransform();
                     offsetX = buffer.$offsetX;
@@ -9072,7 +9074,6 @@ var egret;
                     buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2); // 翻转
                 }
                 //
-                //const _textureTransform = displayObject._textureTransform;
                 _textureTransform._offsetX = buffer.$offsetX;
                 _textureTransform._offsetY = buffer.$offsetY;
                 var _matrix = _textureTransform._matrix;
@@ -9091,50 +9092,7 @@ var egret;
                 }
             };
             DisplayObjectTransform.transformNormalBitmap = function (displayObject, node, buffer) {
-                // const image = node.image;
-                // if (!image) {
-                //     return;
-                // }
-                // let offsetX = 0;
-                // let offsetY = 0;
-                // const destHeight = node.drawH;
-                // const destY = node.drawY;
-                DisplayObjectTransform._transformImage_(displayObject.textureTransform, node.image, buffer, node.drawH, node.drawY);
-                /*
-                const image = node.image;
-                if (!image) {
-                    return;
-                }
-                let offsetX = 0;
-                let offsetY = 0;
-                const destHeight = node.drawH;
-                const destY = node.drawY;
-                if (image["texture"] || (image.source && image.source["texture"])) {
-                    buffer.saveTransform();
-                    offsetX = buffer.$offsetX;
-                    offsetY = buffer.$offsetY;
-                    buffer.useOffset();
-                    buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2); // 翻转
-                }
-                //
-                const _textureTransform = displayObject._textureTransform;
-                _textureTransform._offsetX = buffer.$offsetX;
-                _textureTransform._offsetY = buffer.$offsetY;
-                const _matrix = _textureTransform._matrix;
-                const globalMatrix = buffer.globalMatrix;
-                _matrix.a = globalMatrix.a;
-                _matrix.b = globalMatrix.b;
-                _matrix.c = globalMatrix.c;
-                _matrix.d = globalMatrix.d;
-                _matrix.tx = globalMatrix.tx;
-                _matrix.ty = globalMatrix.ty;
-                //
-                if (image.source && image.source["texture"]) {
-                    buffer.$offsetX = offsetX;
-                    buffer.$offsetY = offsetY;
-                    buffer.restoreTransform();
-                }
-                */
+                DisplayObjectTransform._transform_(node.textureTransform, node.image, buffer, node.drawH, node.drawY);
             };
             DisplayObjectTransform.transformText = function (displayObject, node, buffer) {
                 var width = node.width - node.x;
@@ -9165,7 +9123,7 @@ var egret;
                     buffer.transform(1, 0, 0, 1, x / canvasScaleX, y / canvasScaleY);
                 }
                 //
-                var _textureTransform = displayObject.textureTransform;
+                var _textureTransform = node.textureTransform;
                 _textureTransform._offsetX = buffer.$offsetX;
                 _textureTransform._offsetY = buffer.$offsetY;
                 var _matrix = _textureTransform._matrix;
@@ -9210,7 +9168,7 @@ var egret;
                     buffer.transform(1, 0, 0, 1, node.x, node.y);
                 }
                 ///
-                var _textureTransform = displayObject.textureTransform;
+                var _textureTransform = node.textureTransform;
                 _textureTransform._offsetX = buffer.$offsetX;
                 _textureTransform._offsetY = buffer.$offsetY;
                 var _matrix = _textureTransform._matrix;
@@ -9226,11 +9184,119 @@ var egret;
                     buffer.transform(1, 0, 0, 1, -node.x, -node.y);
                 }
             };
-            DisplayObjectTransform.transformAtlasBitmap = function (displayObject, node, buffer) {
+            DisplayObjectTransform.transformBitmap = function (displayObject, node, buffer) {
                 var image = node.image;
                 if (!image) {
                     return;
                 }
+                var data = node.drawData;
+                var length = data.length;
+                var pos = 0;
+                var m = node.matrix;
+                var savedMatrix;
+                var offsetX = 0;
+                var offsetY = 0;
+                if (m) {
+                    savedMatrix = egret.Matrix.create();
+                    var curMatrix = buffer.globalMatrix;
+                    savedMatrix.a = curMatrix.a;
+                    savedMatrix.b = curMatrix.b;
+                    savedMatrix.c = curMatrix.c;
+                    savedMatrix.d = curMatrix.d;
+                    savedMatrix.tx = curMatrix.tx;
+                    savedMatrix.ty = curMatrix.ty;
+                    offsetX = buffer.$offsetX;
+                    offsetY = buffer.$offsetY;
+                    buffer.useOffset();
+                    buffer.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+                }
+                //
+                var dataGroupCount = Math.floor(length / 8 /* MAX_SIZE */);
+                node.resizeTextureTransformGroup(dataGroupCount);
+                //
+                var textureTransformIndex = 0;
+                while (pos < length) {
+                    var destHeight = data[pos + 7 /* destHeight */];
+                    var destY = data[pos + 5 /* destY */];
+                    node.textureTransformIndex(textureTransformIndex);
+                    DisplayObjectTransform._transform_(node.textureTransform, image, buffer, destHeight, destY);
+                    //
+                    ++textureTransformIndex;
+                    pos += 8 /* MAX_SIZE */;
+                }
+                //
+                if (m) {
+                    var matrix = buffer.globalMatrix;
+                    matrix.a = savedMatrix.a;
+                    matrix.b = savedMatrix.b;
+                    matrix.c = savedMatrix.c;
+                    matrix.d = savedMatrix.d;
+                    matrix.tx = savedMatrix.tx;
+                    matrix.ty = savedMatrix.ty;
+                    buffer.$offsetX = offsetX;
+                    buffer.$offsetY = offsetY;
+                    egret.Matrix.release(savedMatrix);
+                }
+            };
+            DisplayObjectTransform.transformGroup = function (displayObject, groupNode, buffer) {
+                var m = groupNode.matrix;
+                var savedMatrix;
+                var offsetX = 0;
+                var offsetY = 0;
+                if (m) {
+                    savedMatrix = egret.Matrix.create();
+                    var curMatrix = buffer.globalMatrix;
+                    savedMatrix.a = curMatrix.a;
+                    savedMatrix.b = curMatrix.b;
+                    savedMatrix.c = curMatrix.c;
+                    savedMatrix.d = curMatrix.d;
+                    savedMatrix.tx = curMatrix.tx;
+                    savedMatrix.ty = curMatrix.ty;
+                    offsetX = buffer.$offsetX;
+                    offsetY = buffer.$offsetY;
+                    buffer.useOffset();
+                    buffer.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+                }
+                var children = groupNode.drawData;
+                var length = children.length;
+                for (var i = 0; i < length; i++) {
+                    var node = children[i];
+                    switch (node.type) {
+                        case 1 /* BitmapNode */:
+                            DisplayObjectTransform.transformBitmap(displayObject, node, buffer);
+                            break;
+                        case 2 /* TextNode */:
+                            DisplayObjectTransform.transformText(displayObject, node, buffer);
+                            break;
+                        case 3 /* GraphicsNode */:
+                            DisplayObjectTransform.transformGraphics(displayObject, node, buffer);
+                            break;
+                        case 4 /* GroupNode */:
+                            DisplayObjectTransform.transformGroup(displayObject, node, buffer);
+                            break;
+                        case 5 /* MeshNode */:
+                            DisplayObjectTransform.transformMesh(displayObject, node, buffer);
+                            break;
+                        case 6 /* NormalBitmapNode */:
+                            DisplayObjectTransform.transformNormalBitmap(displayObject, node, buffer);
+                            break;
+                    }
+                }
+                if (m) {
+                    var matrix = buffer.globalMatrix;
+                    matrix.a = savedMatrix.a;
+                    matrix.b = savedMatrix.b;
+                    matrix.c = savedMatrix.c;
+                    matrix.d = savedMatrix.d;
+                    matrix.tx = savedMatrix.tx;
+                    matrix.ty = savedMatrix.ty;
+                    buffer.$offsetX = offsetX;
+                    buffer.$offsetY = offsetY;
+                    egret.Matrix.release(savedMatrix);
+                }
+            };
+            DisplayObjectTransform.transformMesh = function (displayObject, node, buffer) {
+                var image = node.image;
                 //buffer.imageSmoothingEnabled = node.smoothing;
                 var data = node.drawData;
                 var length = data.length;
@@ -9255,61 +9321,21 @@ var egret;
                     buffer.useOffset();
                     buffer.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
                 }
-                //这里不考虑嵌套
-                // if (blendMode) {
-                //     buffer.context.setGlobalCompositeOperation(blendModes[blendMode]);
-                // }
-                // var originAlpha;
-                // if (alpha == alpha) {
-                //     originAlpha = buffer.globalAlpha;
-                //     buffer.globalAlpha *= alpha;
-                // }
-                var _textureAtlasTransforms = displayObject._textureAtlasTransforms;
-                if (_textureAtlasTransforms.length !== length) {
-                    _textureAtlasTransforms.length = 0;
-                    for (var i = 0; i < length; ++i) {
-                        _textureAtlasTransforms.push(new egret.Transform);
-                    }
-                }
-                if (node.filter) {
-                    //buffer.context.$filter = node.filter;
-                    while (pos < length) {
-                        //DisplayObjectTransform ._transformNormalBitmap(displayObject._textureAtlasTransforms[length/8], node.image, buffer, );
-                        //buffer.context.__drawImage__(displayObject, image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.rotated, node.smoothing);
-                    }
-                    //buffer.context.$filter = null;
-                }
-                else {
-                    while (pos < length) {
-                        //DisplayObjectTransform ._transformNormalBitmap(displayObject._textureTransform, node, buffer);
-                        //buffer.context.__drawImage__(displayObject, image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.rotated, node.smoothing);
-                    }
-                }
-                // WebGLRenderContext.prototype.__drawImage__ = function
-                //  (displayObject, image, 
-                //     sourceX, sourceY, sourceWidth, sourceHeight, 
-                //     destX, destY, destWidth, destHeight,
-                //      imageSourceWidth, imageSourceHeight,
-                //       rotated, smoothing) {
-                //     var buffer = this.currentBuffer;
-                //     if (this.contextLost || !image || !buffer) {
-                var offsetLength = 8;
-                var textureAtlasTransformIndex = 0;
-                //const image = node.image;
+                //
+                var dataGroupCount = Math.floor(length / 8 /* MAX_SIZE */);
+                node.resizeTextureTransformGroup(dataGroupCount);
+                //
+                var textureTransformIndex = 0;
                 while (pos < length) {
-                    var destHeight = data[pos + 7];
-                    var destY = data[pos + 5];
-                    DisplayObjectTransform._transformImage_(displayObject._textureAtlasTransforms[textureAtlasTransformIndex], image, buffer, destHeight, destY);
+                    var destHeight = data[pos + 7 /* destHeight */];
+                    var destY = data[pos + 5 /* destY */];
+                    node.textureTransformIndex(textureTransformIndex);
+                    DisplayObjectTransform._transform_(node.textureTransform, image, buffer, destHeight, destY);
                     //
-                    ++textureAtlasTransformIndex;
-                    pos += offsetLength;
+                    ++textureTransformIndex;
+                    pos += 8 /* MAX_SIZE */;
                 }
-                // if (blendMode) {
-                //     buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
-                // }
-                // if (alpha == alpha) {
-                //     buffer.globalAlpha = originAlpha;
-                // }
+                //
                 if (m) {
                     var matrix = buffer.globalMatrix;
                     matrix.a = savedMatrix.a;

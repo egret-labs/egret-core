@@ -65,6 +65,10 @@ namespace egret.sys {
      */
     export class RenderNode {
 
+        constructor () {
+            this.resizeTextureTransformGroup(1);
+        }
+
         /**
          * 节点类型..
          */
@@ -91,6 +95,28 @@ namespace egret.sys {
 
         public $getRenderCount():number {
             return this.renderCount;
+        }
+
+        private readonly _textureTransformGroup: Transform[] = [];
+        private _textureTransformIndex: number = 0;
+
+        public textureTransformIndex(index: number): void {
+            this._textureTransformIndex = index;
+        }
+
+        public get textureTransform(): Transform {
+            return this._textureTransformGroup[this._textureTransformIndex];
+        }
+
+        public resizeTextureTransformGroup(newLength: number): void {
+            const _textureTransformGroup = this._textureTransformGroup;
+            const oldLength = _textureTransformGroup.length;
+            _textureTransformGroup.length = newLength;
+            for (let i = oldLength; i < newLength; ++i) {
+                if (!_textureTransformGroup[i]) {
+                    _textureTransformGroup[i] = new Transform;
+                }
+            }
         }
     }
 }

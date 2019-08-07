@@ -204,7 +204,7 @@ namespace egret.web {
 
             if (displayObject) {
                 //这里要处理
-                DisplayObjectTransform.checkData(displayObject, buffer);
+                DisplayObjectTransform.debugCheckTransformMatchesExactly(displayObject, buffer);
             }
             else {
                 //drawDisplayObjectAdvanced 走进来的，没有显示对象，可能是一张单独的纹理

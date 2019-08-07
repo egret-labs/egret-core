@@ -723,8 +723,6 @@ var egret;
             _this.sortableChildren = false;
             //
             _this._worldTransform = new egret.Transform;
-            _this._textureAtlasTransforms = [];
-            _this._textureAtlasIndex = 0;
             if (egret.nativeRender) {
                 _this.createNativeDisplayObject();
             }
@@ -2766,17 +2764,6 @@ var egret;
                 if (this.parent) {
                     this.parent.$sortDirty = true;
                 }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(DisplayObject.prototype, "textureTransform", {
-            get: function () {
-                var _textureAtlasTransforms = this._textureAtlasTransforms;
-                if (_textureAtlasTransforms.length === 0) {
-                    _textureAtlasTransforms.push(new egret.Transform);
-                }
-                return _textureAtlasTransforms[this._textureAtlasIndex];
             },
             enumerable: true,
             configurable: true
@@ -6214,6 +6201,9 @@ var egret;
                  * 绘制次数
                  */
                 this.renderCount = 0;
+                this._textureTransformGroup = [];
+                this._textureTransformIndex = 0;
+                this.resizeTextureTransformGroup(1);
             }
             /**
              * 在显示对象的$updateRenderNode()方法被调用前，自动清空自身的drawData数据。
@@ -6224,6 +6214,26 @@ var egret;
             };
             RenderNode.prototype.$getRenderCount = function () {
                 return this.renderCount;
+            };
+            RenderNode.prototype.textureTransformIndex = function (index) {
+                this._textureTransformIndex = index;
+            };
+            Object.defineProperty(RenderNode.prototype, "textureTransform", {
+                get: function () {
+                    return this._textureTransformGroup[this._textureTransformIndex];
+                },
+                enumerable: true,
+                configurable: true
+            });
+            RenderNode.prototype.resizeTextureTransformGroup = function (newLength) {
+                var _textureTransformGroup = this._textureTransformGroup;
+                var oldLength = _textureTransformGroup.length;
+                _textureTransformGroup.length = newLength;
+                for (var i = oldLength; i < newLength; ++i) {
+                    if (!_textureTransformGroup[i]) {
+                        _textureTransformGroup[i] = new egret.Transform;
+                    }
+                }
             };
             return RenderNode;
         }());
@@ -7436,47 +7446,6 @@ var egret;
         }
         sys.numberToBlendMode = numberToBlendMode;
     })(sys = egret.sys || (egret.sys = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var Transform = (function () {
-        function Transform() {
-            this._matrix = new egret.Matrix;
-            this._offsetX = 0;
-            this._offsetY = 0;
-        }
-        return Transform;
-    }());
-    egret.Transform = Transform;
-    __reflect(Transform.prototype, "egret.Transform");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -12945,6 +12914,50 @@ var egret;
      * 仅供框架内复用，要防止暴露引用到外部。
      */
     egret.$TempRectangle = new Rectangle();
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var Transform = (function (_super) {
+        __extends(Transform, _super);
+        function Transform() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this._matrix = new egret.Matrix;
+            _this._offsetX = 0;
+            _this._offsetY = 0;
+            return _this;
+        }
+        return Transform;
+    }(egret.HashObject));
+    egret.Transform = Transform;
+    __reflect(Transform.prototype, "egret.Transform");
 })(egret || (egret = {}));
 var egret;
 (function (egret) {

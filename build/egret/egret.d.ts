@@ -1353,9 +1353,6 @@ declare namespace egret {
          */
         sortableChildren: boolean;
         readonly _worldTransform: Transform;
-        readonly _textureAtlasTransforms: Transform[];
-        _textureAtlasIndex: number;
-        readonly textureTransform: Transform;
     }
 }
 declare namespace egret {
@@ -3479,6 +3476,7 @@ declare namespace egret.sys {
      * 渲染节点基类
      */
     class RenderNode {
+        constructor();
         /**
          * 节点类型..
          */
@@ -3497,6 +3495,11 @@ declare namespace egret.sys {
          */
         cleanBeforeRender(): void;
         $getRenderCount(): number;
+        private readonly _textureTransformGroup;
+        private _textureTransformIndex;
+        textureTransformIndex(index: number): void;
+        readonly textureTransform: Transform;
+        resizeTextureTransformGroup(newLength: number): void;
     }
 }
 declare namespace egret.sys {
@@ -4415,13 +4418,6 @@ declare namespace egret.sys {
      * 转换数字为 blendMode 字符串。
      */
     function numberToBlendMode(blendMode: number): string;
-}
-declare namespace egret {
-    class Transform {
-        readonly _matrix: egret.Matrix;
-        _offsetX: number;
-        _offsetY: number;
-    }
 }
 declare namespace egret {
     /**
@@ -8146,6 +8142,13 @@ declare namespace egret {
     let $TempRectangle: Rectangle;
 }
 declare namespace egret {
+    class Transform extends HashObject {
+        readonly _matrix: egret.Matrix;
+        _offsetX: number;
+        _offsetY: number;
+    }
+}
+declare namespace egret {
 }
 declare namespace egret {
     /**
@@ -10080,6 +10083,17 @@ declare namespace egret.sys {
     }
 }
 declare namespace egret.sys {
+    const enum BitmapNodeDrawDataIndex {
+        sourceX = 0,
+        sourceY = 1,
+        sourceWidth = 2,
+        sourceHeight = 3,
+        destX = 4,
+        destY = 5,
+        destWidth = 6,
+        destHeight = 7,
+        MAX_SIZE = 8,
+    }
     /**
      * @private
      * 位图渲染节点

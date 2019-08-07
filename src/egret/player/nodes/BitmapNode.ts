@@ -30,6 +30,17 @@
 namespace egret.sys {
 
 
+    export const enum BitmapNodeDrawDataIndex {
+        sourceX = 0,
+        sourceY,
+        sourceWidth,
+        sourceHeight,
+        destX,
+        destY,
+        destWidth,
+        destHeight,
+        MAX_SIZE,
+    }
 
     /**
      * @private

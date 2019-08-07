@@ -126,6 +126,7 @@ namespace egret.web {
                 buffer.$offsetY = offsetY;
                 ///
                 buffer.context.setBatchSystem(node);
+                buffer.currentRenderNode = node;
                 ///
                 switch (node.type) {
                     case sys.RenderNodeType.BitmapNode:
@@ -1203,6 +1204,7 @@ namespace egret.web {
             let length = children.length;
             for (let i = 0; i < length; i++) {
                 let node: sys.RenderNode = children[i];
+                buffer.currentRenderNode = node;
                 this.renderNode(displayObject, node, buffer, buffer.$offsetX, buffer.$offsetY);
             }
             if (m) {

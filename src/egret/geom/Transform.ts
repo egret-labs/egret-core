@@ -29,7 +29,7 @@
 
 namespace egret {
 
-    export class Transform {
+    export class Transform extends HashObject {
         public readonly _matrix: egret.Matrix = new egret.Matrix;
         public _offsetX: number = 0;
         public _offsetY: number = 0;
