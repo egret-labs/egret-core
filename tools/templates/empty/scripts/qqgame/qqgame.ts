@@ -1,13 +1,12 @@
 import * as fs from 'fs';
 import * as path from 'path';
-export class VivogamePlugin implements plugins.Command {
-    jsFileList: any = []
+export class QQgamePlugin implements plugins.Command {
+
     constructor() {
     }
     async onFile(file: plugins.File) {
         if (file.extname == '.js') {
             const filename = file.origin;
-            this.jsFileList.push(file.basename)
             if (filename == "libs/modules/promise/promise.js" || filename == 'libs/modules/promise/promise.min.js') {
                 return null;
             }
@@ -29,19 +28,11 @@ export class VivogamePlugin implements plugins.Command {
                 }
                 if (filename == "libs/modules/eui/eui.js" || filename == 'libs/modules/eui/eui.min.js') {
                     content += ";window.eui = eui;"
-                    if (filename == "libs/modules/eui/eui.js") {
-                        content = content.replace("function getRepeatedIds", "window.getRepeatedIds=function getRepeatedIds");
-                        content = content.replace("function getIds", "window.getIds=function getIds");
-                        content = content.replace("function toXMLString", "window.toXMLString=function toXMLString");
-                        content = content.replace("function checkDeclarations", "window.checkDeclarations=function checkDeclarations");
-                        content = content.replace("function getPropertyStr", "window.getPropertyStr=function getPropertyStr");
-                    }
                 }
                 if (filename == 'libs/modules/dragonBones/dragonBones.js' || filename == 'libs/modules/dragonBones/dragonBones.min.js') {
                     content += ';window.dragonBones = dragonBones';
                 }
                 content = "var egret = window.egret;" + content;
-
                 if (filename == 'main.js') {
                     content += "\n;window.Main = Main;"
                 }
@@ -53,8 +44,8 @@ export class VivogamePlugin implements plugins.Command {
     async onFinish(pluginContext: plugins.CommandContext) {
         //同步 index.html 配置到 game.js
         const gameJSPath = path.join(pluginContext.outputDir, "game.js");
-        if (!fs.existsSync(gameJSPath)) {
-            console.log(`${gameJSPath}不存在，请先使用 Launcher 发布 Vivo 小游戏`);
+        if(!fs.existsSync(gameJSPath)) {
+            console.log(`${gameJSPath}不存在，请先使用 Launcher 发布QQ小游戏`);
             return;
         }
         let gameJSContent = fs.readFileSync(gameJSPath, { encoding: "utf8" });
@@ -83,30 +74,9 @@ export class VivogamePlugin implements plugins.Command {
         else {
             orientation = "portrait";
         }
-        const gameJSONPath = path.join(pluginContext.outputDir, "manifest.json");
+        const gameJSONPath = path.join(pluginContext.outputDir, "game.json");
         let gameJSONContent = JSON.parse(fs.readFileSync(gameJSONPath, { encoding: "utf8" }));
         gameJSONContent.deviceOrientation = orientation;
         fs.writeFileSync(gameJSONPath, JSON.stringify(gameJSONContent, null, "\t"));
-        let isPublish = pluginContext.buildConfig.command == "publish" ? true : false;
-        let configOption = "webpackConf.externals = Object.assign(webpackConf.externals || {\n\t\t"
-        for (var i = 0, len = this.jsFileList.length; i < len; i++) {
-            let jsFile = this.jsFileList[i];
-            if(isPublish && jsFile == "main.js"){
-                jsFile = 'main.min.js'
-            }
-            configOption += `"js/${jsFile}":"commonjs js/${jsFile}"`
-            if (i < len - 1) {
-                configOption += ",\n\t\t"
-            } else {
-                configOption += "\n\t\t"
-            }
-        }
-        configOption += "})"
-        const replaceConfigStr = '\/\/----auto option start----\n\t\t' + configOption + '\n\t\t\/\/----auto option end----';
-
-        const webpackConfigPath = path.join(pluginContext.outputDir, '../config', "webpack.config.js");
-        let configJSContent = fs.readFileSync(webpackConfigPath, { encoding: "utf8" });
-        configJSContent = configJSContent.replace(reg, replaceConfigStr);
-        fs.writeFileSync(webpackConfigPath, configJSContent);
     }
 }

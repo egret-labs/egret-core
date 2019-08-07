@@ -37,7 +37,10 @@ namespace egret {
         canvasScaleFactor?: number;
         calculateCanvasScaleFactor?: (context: CanvasRenderingContext2D) => number;
 
-        //以下目前仅供微信小游戏使用
+        /**
+         * 以下目前仅供小游戏使用
+         * The following are for mini-games only
+         */
         entryClassName?: string;
         scaleMode?: string;
         frameRate?: number;
@@ -45,6 +48,9 @@ namespace egret {
         contentHeight?: number;
         orientation?: string;
         maxTouches?: number;
+        showFPS?: boolean;
+        showLog?: boolean;
+        fpsStyles?: string;
     };
 
     /**
