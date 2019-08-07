@@ -135,7 +135,7 @@ function publishEXML(exmls, exmlPublishPolicy, themeDatas) {
     var files = themeDatas.map(function (thmData) {
         var path = thmData.path;
         if (exmlPublishPolicy == "commonjs") {
-            var content = "\n                var __extends == this && this.__extends|| function (d, b) {\n                    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];\n                        function __() {\n                            this.constructor = d;\n                        }\n                    __.prototype = b.prototype;\n                    d.prototype = new __();\n                };";
+            var content = "\n                var __extends = this && this.__extends|| function (d, b) {\n                    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];\n                        function __() {\n                            this.constructor = d;\n                        }\n                    __.prototype = b.prototype;\n                    d.prototype = new __();\n                };";
             content += "\n                window.generateEUI = window.generateEUI||{};\n                generateEUI.paths = generateEUI.paths||{};\n                generateEUI.styles = " + JSON.stringify(thmData.styles) + ";\n                generateEUI.skins = " + JSON.stringify(thmData.skins) + ";";
             var namespaces = [];
             for (var _i = 0, _a = thmData.exmls; _i < _a.length; _i++) {
@@ -163,7 +163,7 @@ function publishEXML(exmls, exmlPublishPolicy, themeDatas) {
             var jsonParserStr = file.read(Path.join(egret.root, "tools/lib/eui/JsonParserFactory.js"));
             var content = "" + jsonParserStr;
             content +=
-                "window.generateEUI2 = {};\ngenerateEUI2.paths = {};\ngenerateEUI2.styles = " + JSON.stringify(thmData.styles) + ";\ngenerateEUI2.skins = " + JSON.stringify(thmData.skins) + ";";
+                "window.generateEUI2 = window.generateEUI2||{};\n                generateEUI2.paths = generateEUI2.paths||{};\n                generateEUI2.styles = " + JSON.stringify(thmData.styles) + ";\n                generateEUI2.skins = " + JSON.stringify(thmData.skins) + ";";
             path = path.replace("thm.json", "thm.js");
             if (exmlPublishPolicy == "json") {
                 content = content.replace(/generateEUI2/g, "generateJSON");
