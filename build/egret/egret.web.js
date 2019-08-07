@@ -8964,6 +8964,18 @@ var egret;
                 if (node) {
                     buffer.$offsetX = offsetX;
                     buffer.$offsetY = offsetY;
+                    //
+                    var dirty = true;
+                    if (dirty && displayObject.parent) {
+                        //父级的空间拷贝过来
+                        var _worldTransform = displayObject.parent._worldTransform;
+                        var _matrix = _worldTransform._matrix;
+                        //
+                        buffer.globalMatrix.setTo(_matrix.a, _matrix.b, _matrix.c, _matrix.d, _matrix.tx, _matrix.ty);
+                        buffer.$offsetX = _worldTransform._offsetX;
+                        buffer.$offsetY = _worldTransform._offsetY;
+                    }
+                    //
                     DisplayObjectTransform.transformRenderNode(displayObject, node, buffer);
                     buffer.$offsetX = 0;
                     buffer.$offsetY = 0;
@@ -9201,6 +9213,14 @@ var egret;
                 }
             };
             DisplayObjectTransform.transformRenderNode = function (displayObject, node, buffer) {
+                // const dirty = false;
+                // if (dirty) {
+                //     const _worldTransform = displayObject._worldTransform;
+                //     const _matrix = _worldTransform._matrix;
+                //     buffer.globalMatrix.setTo(_matrix.a, _matrix.b, _matrix.c, _matrix.d, _matrix.tx, _matrix.ty);
+                //     buffer.$offsetX = _worldTransform._offsetX;
+                //     buffer.$offsetY = _worldTransform._offsetY;
+                // }
                 switch (node.type) {
                     case 1 /* BitmapNode */:
                         DisplayObjectTransform.transformBitmap(displayObject, node, buffer);

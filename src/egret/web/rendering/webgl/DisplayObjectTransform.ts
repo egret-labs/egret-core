@@ -62,6 +62,18 @@ namespace egret.web {
             if (node) {
                 buffer.$offsetX = offsetX;
                 buffer.$offsetY = offsetY;
+                //临时, 这里需要再次重构
+                const dirty = true;
+                if (dirty && displayObject.parent) {
+                    //父级的空间拷贝过来
+                    const _worldTransform = displayObject.parent._worldTransform;
+                    const _matrix = _worldTransform._matrix;
+                    //
+                    buffer.globalMatrix.setTo(_matrix.a, _matrix.b, _matrix.c, _matrix.d, _matrix.tx, _matrix.ty);
+                    buffer.$offsetX = _worldTransform._offsetX;
+                    buffer.$offsetY = _worldTransform._offsetY;
+                }
+                //
                 DisplayObjectTransform.transformRenderNode(displayObject, node, buffer);
                 buffer.$offsetX = 0;
                 buffer.$offsetY = 0;
@@ -305,6 +317,14 @@ namespace egret.web {
         }
 
         private static transformRenderNode(displayObject: DisplayObject, node: sys.RenderNode, buffer: WebGLRenderBuffer): void {
+            // const dirty = false;
+            // if (dirty) {
+            //     const _worldTransform = displayObject._worldTransform;
+            //     const _matrix = _worldTransform._matrix;
+            //     buffer.globalMatrix.setTo(_matrix.a, _matrix.b, _matrix.c, _matrix.d, _matrix.tx, _matrix.ty);
+            //     buffer.$offsetX = _worldTransform._offsetX;
+            //     buffer.$offsetY = _worldTransform._offsetY;
+            // }
             switch (node.type) {
                 case sys.RenderNodeType.BitmapNode:
                     DisplayObjectTransform.transformBitmap(displayObject, <sys.BitmapNode>node, buffer);
