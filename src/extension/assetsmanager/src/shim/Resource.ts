@@ -373,7 +373,7 @@ module RES {
      * @platform Web,Native
      * @language zh_CN
      */
-    export function getResAsync(key: string): Promise<any> | void
+    export function getResAsync(key: string): Promise<any>
     /**
      * Asynchronous mode to get the resources in the configuration. As long as the resources exist in the configuration file, you can get it in an asynchronous way.
      * @param key A sbuKeys attribute or name property in a configuration file.
