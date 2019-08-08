@@ -34,11 +34,46 @@ namespace egret {
         public readonly _matrix: egret.Matrix = new egret.Matrix;
         public _offsetX: number = 0;
         public _offsetY: number = 0;
+        private _flipY: boolean = false;
+        private _flipYHeight: number = 0;
 
         public set(matrix: egret.Matrix, offsetX: number, offsetY: number): void {
             this._matrix.setTo(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
             this._offsetX = offsetX;
             this._offsetY = offsetY;
+        }
+
+        public transform(a: number, b: number, c: number, d: number, tx: number, ty: number): void {
+            let matrix = this._matrix;
+            let a1 = matrix.a;
+            let b1 = matrix.b;
+            let c1 = matrix.c;
+            let d1 = matrix.d;
+            if (a != 1 || b != 0 || c != 0 || d != 1) {
+                matrix.a = a * a1 + b * c1;
+                matrix.b = a * b1 + b * d1;
+                matrix.c = c * a1 + d * c1;
+                matrix.d = c * b1 + d * d1;
+            }
+            matrix.tx = tx * a1 + ty * c1 + matrix.tx;
+            matrix.ty = tx * b1 + ty * d1 + matrix.ty;
+        }
+
+        public useOffset(): void {
+            let self = this;
+            if (self._offsetX != 0 || self._offsetY != 0) {
+                self._matrix.append(1, 0, 0, 1, self._offsetX, self._offsetY);
+                self._offsetX = self._offsetY = 0;
+            }
+        }
+
+        public flipY(height: number): void {
+            if (!this._flipY) {
+                this._flipY = true;
+                this._flipYHeight = height;
+                this.useOffset();
+                this.transform(1, 0, 0, -1, 0, height); // 翻转
+            }
         }
     }
 }

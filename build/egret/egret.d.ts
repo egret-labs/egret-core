@@ -8146,7 +8146,12 @@ declare namespace egret {
         readonly _matrix: egret.Matrix;
         _offsetX: number;
         _offsetY: number;
+        private _flipY;
+        private _flipYHeight;
         set(matrix: egret.Matrix, offsetX: number, offsetY: number): void;
+        transform(a: number, b: number, c: number, d: number, tx: number, ty: number): void;
+        useOffset(): void;
+        flipY(height: number): void;
     }
 }
 declare namespace egret {
