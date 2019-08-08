@@ -54,14 +54,15 @@ namespace egret.web {
         }
 
         //
-
-        public static setDisplayObjectTransform(displayObject: DisplayObject, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number): void {
-            const _worldTransform = displayObject._worldTransform;
-            _worldTransform.set(buffer.globalMatrix, offsetX, offsetY);
+        public static transformRoot(displayObject: DisplayObject, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number): void {
+            //设置为根节点，不再重复设置
+            displayObject._worldTransform.set(buffer.globalMatrix, offsetX, offsetY);
+            //开始遍历进行transform
+            this.transformObject(displayObject, buffer, offsetX, offsetY);
         }
 
         //
-        public static transformDisplayObject(displayObject: DisplayObject, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number): void {
+        public static transformObject(displayObject: DisplayObject, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number): void {
             if (!useDisplayObjectTransform) {
                 return;
             }
@@ -132,7 +133,7 @@ namespace egret.web {
                             DisplayObjectTransform.transformScrollRect(child, buffer, offsetX2, offsetY2);
                             break;
                         default:
-                            DisplayObjectTransform.transformDisplayObject(child, buffer, offsetX2, offsetY2);
+                            DisplayObjectTransform.transformObject(child, buffer, offsetX2, offsetY2);
                             break;
                     }
                     if (savedMatrix) {
@@ -314,14 +315,6 @@ namespace egret.web {
         }
 
         private static transformRenderNode(displayObject: DisplayObject, node: sys.RenderNode, buffer: WebGLRenderBuffer): void {
-            // const dirty = false;
-            // if (dirty) {
-            //     const _worldTransform = displayObject._worldTransform;
-            //     const _matrix = _worldTransform._matrix;
-            //     buffer.globalMatrix.setTo(_matrix.a, _matrix.b, _matrix.c, _matrix.d, _matrix.tx, _matrix.ty);
-            //     buffer.$offsetX = _worldTransform._offsetX;
-            //     buffer.$offsetY = _worldTransform._offsetY;
-            // }
             switch (node.type) {
                 case sys.RenderNodeType.BitmapNode:
                     DisplayObjectTransform.transformBitmap(displayObject, <sys.BitmapNode>node, buffer);
@@ -446,7 +439,7 @@ namespace egret.web {
                 offsetX -= scrollRect.x;
                 offsetY -= scrollRect.y;
             }
-            DisplayObjectTransform.transformDisplayObject(displayObject, buffer, offsetX, offsetY);
+            DisplayObjectTransform.transformObject(displayObject, buffer, offsetX, offsetY);
         }
     }
 }

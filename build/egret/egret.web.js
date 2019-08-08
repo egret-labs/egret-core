@@ -7759,8 +7759,7 @@ var egret;
                 //绘制显示对象
                 webglBuffer.transform(matrix.a, matrix.b, matrix.c, matrix.d, 0, 0);
                 /////
-                web.DisplayObjectTransform.setDisplayObjectTransform(displayObject, webglBuffer, matrix.tx, matrix.ty);
-                web.DisplayObjectTransform.transformDisplayObject(displayObject, webglBuffer, matrix.tx, matrix.ty);
+                web.DisplayObjectTransform.transformRoot(displayObject, webglBuffer, matrix.tx, matrix.ty);
                 /////
                 this.drawDisplayObject(displayObject, webglBuffer, matrix.tx, matrix.ty, true);
                 webglBufferContext.$flush(); // webglBufferContext.$drawWebGL();
@@ -7960,7 +7959,7 @@ var egret;
                             buffer.context.setGlobalCompositeOperation(compositeOp);
                         }
                         buffer.context.$filter = filters[0];
-                        web.DisplayObjectTransform.transformDisplayObject(displayObject, buffer, offsetX, offsetY);
+                        web.DisplayObjectTransform.transformObject(displayObject, buffer, offsetX, offsetY);
                         if (displayObject.$mask) {
                             drawCalls += this.drawWithClip(displayObject, buffer, offsetX, offsetY);
                         }
@@ -7989,8 +7988,7 @@ var egret;
                 }
                 else {
                     /////
-                    web.DisplayObjectTransform.setDisplayObjectTransform(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
-                    web.DisplayObjectTransform.transformDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
+                    web.DisplayObjectTransform.transformRoot(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
                     /////
                     drawCalls += this.drawDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
                 }
@@ -8108,8 +8106,7 @@ var egret;
                     var displayBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
                     displayBuffer.context.pushBuffer(displayBuffer);
                     /////
-                    web.DisplayObjectTransform.setDisplayObjectTransform(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
-                    web.DisplayObjectTransform.transformDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
+                    web.DisplayObjectTransform.transformRoot(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
                     /////
                     drawCalls += this.drawDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
                     //绘制遮罩
@@ -8123,8 +8120,7 @@ var egret;
                         maskBuffer.setTransform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
                         egret.Matrix.release(maskMatrix);
                         /////
-                        web.DisplayObjectTransform.setDisplayObjectTransform(mask, maskBuffer, 0, 0);
-                        web.DisplayObjectTransform.transformDisplayObject(mask, maskBuffer, 0, 0);
+                        web.DisplayObjectTransform.transformRoot(mask, maskBuffer, 0, 0);
                         /////
                         drawCalls += this.drawDisplayObject(mask, maskBuffer, 0, 0);
                         maskBuffer.context.popBuffer();
@@ -8960,12 +8956,14 @@ var egret;
                 return true;
             };
             //
-            DisplayObjectTransform.setDisplayObjectTransform = function (displayObject, buffer, offsetX, offsetY) {
-                var _worldTransform = displayObject._worldTransform;
-                _worldTransform.set(buffer.globalMatrix, offsetX, offsetY);
+            DisplayObjectTransform.transformRoot = function (displayObject, buffer, offsetX, offsetY) {
+                //设置为根节点，不再重复设置
+                displayObject._worldTransform.set(buffer.globalMatrix, offsetX, offsetY);
+                //开始遍历进行transform
+                this.transformObject(displayObject, buffer, offsetX, offsetY);
             };
             //
-            DisplayObjectTransform.transformDisplayObject = function (displayObject, buffer, offsetX, offsetY) {
+            DisplayObjectTransform.transformObject = function (displayObject, buffer, offsetX, offsetY) {
                 if (!useDisplayObjectTransform) {
                     return;
                 }
@@ -9036,7 +9034,7 @@ var egret;
                                 DisplayObjectTransform.transformScrollRect(child, buffer, offsetX2, offsetY2);
                                 break;
                             default:
-                                DisplayObjectTransform.transformDisplayObject(child, buffer, offsetX2, offsetY2);
+                                DisplayObjectTransform.transformObject(child, buffer, offsetX2, offsetY2);
                                 break;
                         }
                         if (savedMatrix) {
@@ -9212,14 +9210,6 @@ var egret;
                 }
             };
             DisplayObjectTransform.transformRenderNode = function (displayObject, node, buffer) {
-                // const dirty = false;
-                // if (dirty) {
-                //     const _worldTransform = displayObject._worldTransform;
-                //     const _matrix = _worldTransform._matrix;
-                //     buffer.globalMatrix.setTo(_matrix.a, _matrix.b, _matrix.c, _matrix.d, _matrix.tx, _matrix.ty);
-                //     buffer.$offsetX = _worldTransform._offsetX;
-                //     buffer.$offsetY = _worldTransform._offsetY;
-                // }
                 switch (node.type) {
                     case 1 /* BitmapNode */:
                         DisplayObjectTransform.transformBitmap(displayObject, node, buffer);
@@ -9341,7 +9331,7 @@ var egret;
                     offsetX -= scrollRect.x;
                     offsetY -= scrollRect.y;
                 }
-                DisplayObjectTransform.transformDisplayObject(displayObject, buffer, offsetX, offsetY);
+                DisplayObjectTransform.transformObject(displayObject, buffer, offsetX, offsetY);
             };
             return DisplayObjectTransform;
         }());
