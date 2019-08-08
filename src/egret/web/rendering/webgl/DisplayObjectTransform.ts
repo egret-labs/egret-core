@@ -61,6 +61,23 @@ namespace egret.web {
             this.transformObject(displayObject, buffer, offsetX, offsetY);
         }
 
+
+        private static $matrixTransform(globalMatrix: Matrix, a: number, b: number, c: number, d: number, tx: number, ty: number): void {
+            let matrix = globalMatrix;//this.globalMatrix;
+            let a1 = matrix.a;
+            let b1 = matrix.b;
+            let c1 = matrix.c;
+            let d1 = matrix.d;
+            if (a != 1 || b != 0 || c != 0 || d != 1) {
+                matrix.a = a * a1 + b * c1;
+                matrix.b = a * b1 + b * d1;
+                matrix.c = c * a1 + d * c1;
+                matrix.d = c * b1 + d * d1;
+            }
+            matrix.tx = tx * a1 + ty * c1 + matrix.tx;
+            matrix.ty = tx * b1 + ty * d1 + matrix.ty;
+        }
+
         //
         public static transformObject(displayObject: DisplayObject, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number): void {
             if (!useDisplayObjectTransform) {
@@ -98,12 +115,21 @@ namespace egret.web {
                 let offsetY2 = 0;
                 for (let i = 0; i < length; ++i) {
                     child = children[i];
+                    //
+                    const _worldTransform = child._worldTransform;
+                    ////
+                    const m3 = buffer.globalMatrix;
+                    _worldTransform._matrix.setTo(m3.a, m3.b, m3.c, m3.d, m3.tx, m3.ty);
+                    ////
                     let savedMatrix: Matrix;
                     if (child.$useTranslate) {
                         const m = child.$getMatrix();
                         offsetX2 = offsetX + child.$x;
                         offsetY2 = offsetY + child.$y;
                         const m2 = buffer.globalMatrix;
+                        ////////////////////////////////////
+                        DisplayObjectTransform.$matrixTransform(_worldTransform._matrix, m.a, m.b, m.c, m.d, offsetX2, offsetY2);
+                        ////////////////////////////////////
                         savedMatrix = Matrix.create();
                         savedMatrix.a = m2.a;
                         savedMatrix.b = m2.b;
@@ -112,6 +138,7 @@ namespace egret.web {
                         savedMatrix.tx = m2.tx;
                         savedMatrix.ty = m2.ty;
                         buffer.transform(m.a, m.b, m.c, m.d, offsetX2, offsetY2);
+                        //////
                         offsetX2 = -child.$anchorOffsetX;
                         offsetY2 = -child.$anchorOffsetY;
                     }
@@ -119,9 +146,8 @@ namespace egret.web {
                         offsetX2 = offsetX + child.$x - child.$anchorOffsetX;
                         offsetY2 = offsetY + child.$y - child.$anchorOffsetY;
                     }
-                    //
-                    const _worldTransform = child._worldTransform;
-                    _worldTransform.set(buffer.globalMatrix, offsetX2, offsetY2);
+                    //  
+                    _worldTransform.set(_worldTransform._matrix, offsetX2, offsetY2);
                     //
                     switch (child.$renderMode) {
                         case RenderMode.NONE:

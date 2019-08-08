@@ -8962,6 +8962,21 @@ var egret;
                 //开始遍历进行transform
                 this.transformObject(displayObject, buffer, offsetX, offsetY);
             };
+            DisplayObjectTransform.$matrixTransform = function (globalMatrix, a, b, c, d, tx, ty) {
+                var matrix = globalMatrix; //this.globalMatrix;
+                var a1 = matrix.a;
+                var b1 = matrix.b;
+                var c1 = matrix.c;
+                var d1 = matrix.d;
+                if (a != 1 || b != 0 || c != 0 || d != 1) {
+                    matrix.a = a * a1 + b * c1;
+                    matrix.b = a * b1 + b * d1;
+                    matrix.c = c * a1 + d * c1;
+                    matrix.d = c * b1 + d * d1;
+                }
+                matrix.tx = tx * a1 + ty * c1 + matrix.tx;
+                matrix.ty = tx * b1 + ty * d1 + matrix.ty;
+            };
             //
             DisplayObjectTransform.transformObject = function (displayObject, buffer, offsetX, offsetY) {
                 if (!useDisplayObjectTransform) {
@@ -8999,12 +9014,21 @@ var egret;
                     var offsetY2 = 0;
                     for (var i = 0; i < length_10; ++i) {
                         child = children[i];
+                        //
+                        var _worldTransform = child._worldTransform;
+                        ////
+                        var m3 = buffer.globalMatrix;
+                        _worldTransform._matrix.setTo(m3.a, m3.b, m3.c, m3.d, m3.tx, m3.ty);
+                        ////
                         var savedMatrix = void 0;
                         if (child.$useTranslate) {
                             var m = child.$getMatrix();
                             offsetX2 = offsetX + child.$x;
                             offsetY2 = offsetY + child.$y;
                             var m2 = buffer.globalMatrix;
+                            ////////////////////////////////////
+                            DisplayObjectTransform.$matrixTransform(_worldTransform._matrix, m.a, m.b, m.c, m.d, offsetX2, offsetY2);
+                            ////////////////////////////////////
                             savedMatrix = egret.Matrix.create();
                             savedMatrix.a = m2.a;
                             savedMatrix.b = m2.b;
@@ -9013,6 +9037,7 @@ var egret;
                             savedMatrix.tx = m2.tx;
                             savedMatrix.ty = m2.ty;
                             buffer.transform(m.a, m.b, m.c, m.d, offsetX2, offsetY2);
+                            //////
                             offsetX2 = -child.$anchorOffsetX;
                             offsetY2 = -child.$anchorOffsetY;
                         }
@@ -9020,9 +9045,8 @@ var egret;
                             offsetX2 = offsetX + child.$x - child.$anchorOffsetX;
                             offsetY2 = offsetY + child.$y - child.$anchorOffsetY;
                         }
-                        //
-                        var _worldTransform = child._worldTransform;
-                        _worldTransform.set(buffer.globalMatrix, offsetX2, offsetY2);
+                        //  
+                        _worldTransform.set(_worldTransform._matrix, offsetX2, offsetY2);
                         //
                         switch (child.$renderMode) {
                             case 1 /* NONE */:
