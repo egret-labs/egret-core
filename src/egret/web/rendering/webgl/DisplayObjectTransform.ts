@@ -54,30 +54,37 @@ namespace egret.web {
         }
 
         //
+
+        public static setDisplayObjectTransform(displayObject: DisplayObject, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number): void {
+            const _worldTransform = displayObject._worldTransform;
+            _worldTransform.set(buffer.globalMatrix, offsetX, offsetY);
+        }
+
+        //
         public static transformDisplayObject(displayObject: DisplayObject, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number): void {
             if (!useDisplayObjectTransform) {
                 return;
             }
+            //
             const node = displayObject.$getRenderNode();
             if (node) {
                 buffer.$offsetX = offsetX;
                 buffer.$offsetY = offsetY;
                 //临时, 这里需要再次重构
                 const dirty = true;
-                if (dirty && displayObject.parent) {
+                if (dirty && displayObject) {
                     //父级的空间拷贝过来
-                    const _worldTransform = displayObject.parent._worldTransform;
+                    const _worldTransform = displayObject._worldTransform;
                     const _matrix = _worldTransform._matrix;
-                    //
                     buffer.globalMatrix.setTo(_matrix.a, _matrix.b, _matrix.c, _matrix.d, _matrix.tx, _matrix.ty);
                     buffer.$offsetX = _worldTransform._offsetX;
                     buffer.$offsetY = _worldTransform._offsetY;
                 }
-                //
                 DisplayObjectTransform.transformRenderNode(displayObject, node, buffer);
                 buffer.$offsetX = 0;
                 buffer.$offsetY = 0;
             }
+            //
             const children = displayObject.$children;
             if (children) {
                 if (displayObject.sortableChildren && displayObject.$sortDirty) {
@@ -112,18 +119,8 @@ namespace egret.web {
                         offsetY2 = offsetY + child.$y - child.$anchorOffsetY;
                     }
                     //
-                    const _worldTransform = displayObject._worldTransform;
-                    _worldTransform._offsetX = offsetX2;
-                    _worldTransform._offsetY = offsetY2;
-                    //
-                    const _matrix = _worldTransform._matrix;
-                    const globalMatrix = buffer.globalMatrix;
-                    _matrix.a = globalMatrix.a;
-                    _matrix.b = globalMatrix.b;
-                    _matrix.c = globalMatrix.c;
-                    _matrix.d = globalMatrix.d;
-                    _matrix.tx = globalMatrix.tx;
-                    _matrix.ty = globalMatrix.ty;
+                    const _worldTransform = child._worldTransform;
+                    _worldTransform.set(buffer.globalMatrix, offsetX2, offsetY2);
                     //
                     switch (child.$renderMode) {
                         case RenderMode.NONE:

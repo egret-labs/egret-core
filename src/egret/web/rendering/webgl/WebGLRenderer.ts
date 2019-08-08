@@ -68,6 +68,7 @@ namespace egret.web {
             //绘制显示对象
             webglBuffer.transform(matrix.a, matrix.b, matrix.c, matrix.d, 0, 0);
             /////
+            DisplayObjectTransform.setDisplayObjectTransform(displayObject, webglBuffer, matrix.tx, matrix.ty);
             DisplayObjectTransform.transformDisplayObject(displayObject, webglBuffer, matrix.tx, matrix.ty);
             /////
             this.drawDisplayObject(displayObject, webglBuffer, matrix.tx, matrix.ty, true);
@@ -309,6 +310,7 @@ namespace egret.web {
             }
             else {
                 /////
+                DisplayObjectTransform.setDisplayObjectTransform(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
                 DisplayObjectTransform.transformDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
                 /////
                 drawCalls += this.drawDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
@@ -432,6 +434,7 @@ namespace egret.web {
                 let displayBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
                 displayBuffer.context.pushBuffer(displayBuffer);
                 /////
+                DisplayObjectTransform.setDisplayObjectTransform(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
                 DisplayObjectTransform.transformDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
                 /////
                 drawCalls += this.drawDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
@@ -446,6 +449,7 @@ namespace egret.web {
                     maskBuffer.setTransform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
                     Matrix.release(maskMatrix);
                     /////
+                    DisplayObjectTransform.setDisplayObjectTransform(mask, maskBuffer, 0, 0);
                     DisplayObjectTransform.transformDisplayObject(mask, maskBuffer, 0, 0);
                     /////
                     drawCalls += this.drawDisplayObject(mask, maskBuffer, 0, 0);

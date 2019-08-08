@@ -7759,6 +7759,7 @@ var egret;
                 //绘制显示对象
                 webglBuffer.transform(matrix.a, matrix.b, matrix.c, matrix.d, 0, 0);
                 /////
+                web.DisplayObjectTransform.setDisplayObjectTransform(displayObject, webglBuffer, matrix.tx, matrix.ty);
                 web.DisplayObjectTransform.transformDisplayObject(displayObject, webglBuffer, matrix.tx, matrix.ty);
                 /////
                 this.drawDisplayObject(displayObject, webglBuffer, matrix.tx, matrix.ty, true);
@@ -7988,6 +7989,7 @@ var egret;
                 }
                 else {
                     /////
+                    web.DisplayObjectTransform.setDisplayObjectTransform(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
                     web.DisplayObjectTransform.transformDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
                     /////
                     drawCalls += this.drawDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
@@ -8106,6 +8108,7 @@ var egret;
                     var displayBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
                     displayBuffer.context.pushBuffer(displayBuffer);
                     /////
+                    web.DisplayObjectTransform.setDisplayObjectTransform(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
                     web.DisplayObjectTransform.transformDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
                     /////
                     drawCalls += this.drawDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
@@ -8120,6 +8123,7 @@ var egret;
                         maskBuffer.setTransform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
                         egret.Matrix.release(maskMatrix);
                         /////
+                        web.DisplayObjectTransform.setDisplayObjectTransform(mask, maskBuffer, 0, 0);
                         web.DisplayObjectTransform.transformDisplayObject(mask, maskBuffer, 0, 0);
                         /////
                         drawCalls += this.drawDisplayObject(mask, maskBuffer, 0, 0);
@@ -8956,30 +8960,35 @@ var egret;
                 return true;
             };
             //
+            DisplayObjectTransform.setDisplayObjectTransform = function (displayObject, buffer, offsetX, offsetY) {
+                var _worldTransform = displayObject._worldTransform;
+                _worldTransform.set(buffer.globalMatrix, offsetX, offsetY);
+            };
+            //
             DisplayObjectTransform.transformDisplayObject = function (displayObject, buffer, offsetX, offsetY) {
                 if (!useDisplayObjectTransform) {
                     return;
                 }
+                //
                 var node = displayObject.$getRenderNode();
                 if (node) {
                     buffer.$offsetX = offsetX;
                     buffer.$offsetY = offsetY;
-                    //
+                    //临时, 这里需要再次重构
                     var dirty = true;
-                    if (dirty && displayObject.parent) {
+                    if (dirty && displayObject) {
                         //父级的空间拷贝过来
-                        var _worldTransform = displayObject.parent._worldTransform;
+                        var _worldTransform = displayObject._worldTransform;
                         var _matrix = _worldTransform._matrix;
-                        //
                         buffer.globalMatrix.setTo(_matrix.a, _matrix.b, _matrix.c, _matrix.d, _matrix.tx, _matrix.ty);
                         buffer.$offsetX = _worldTransform._offsetX;
                         buffer.$offsetY = _worldTransform._offsetY;
                     }
-                    //
                     DisplayObjectTransform.transformRenderNode(displayObject, node, buffer);
                     buffer.$offsetX = 0;
                     buffer.$offsetY = 0;
                 }
+                //
                 var children = displayObject.$children;
                 if (children) {
                     if (displayObject.sortableChildren && displayObject.$sortDirty) {
@@ -9014,18 +9023,8 @@ var egret;
                             offsetY2 = offsetY + child.$y - child.$anchorOffsetY;
                         }
                         //
-                        var _worldTransform = displayObject._worldTransform;
-                        _worldTransform._offsetX = offsetX2;
-                        _worldTransform._offsetY = offsetY2;
-                        //
-                        var _matrix = _worldTransform._matrix;
-                        var globalMatrix = buffer.globalMatrix;
-                        _matrix.a = globalMatrix.a;
-                        _matrix.b = globalMatrix.b;
-                        _matrix.c = globalMatrix.c;
-                        _matrix.d = globalMatrix.d;
-                        _matrix.tx = globalMatrix.tx;
-                        _matrix.ty = globalMatrix.ty;
+                        var _worldTransform = child._worldTransform;
+                        _worldTransform.set(buffer.globalMatrix, offsetX2, offsetY2);
                         //
                         switch (child.$renderMode) {
                             case 1 /* NONE */:
