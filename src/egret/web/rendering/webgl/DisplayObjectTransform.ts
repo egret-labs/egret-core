@@ -61,23 +61,6 @@ namespace egret.web {
             this.transformObject(displayObject, buffer, offsetX, offsetY);
         }
 
-
-        // private static $matrixTransform(globalMatrix: Matrix, a: number, b: number, c: number, d: number, tx: number, ty: number): void {
-        //     let matrix = globalMatrix;//this.globalMatrix;
-        //     let a1 = matrix.a;
-        //     let b1 = matrix.b;
-        //     let c1 = matrix.c;
-        //     let d1 = matrix.d;
-        //     if (a != 1 || b != 0 || c != 0 || d != 1) {
-        //         matrix.a = a * a1 + b * c1;
-        //         matrix.b = a * b1 + b * d1;
-        //         matrix.c = c * a1 + d * c1;
-        //         matrix.d = c * b1 + d * d1;
-        //     }
-        //     matrix.tx = tx * a1 + ty * c1 + matrix.tx;
-        //     matrix.ty = tx * b1 + ty * d1 + matrix.ty;
-        // }
-
         //
         public static transformObject(displayObject: DisplayObject, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number): void {
             if (!useDisplayObjectTransform) {
@@ -98,8 +81,12 @@ namespace egret.web {
                     buffer.globalMatrix.setTo(_matrix.a, _matrix.b, _matrix.c, _matrix.d, _matrix.tx, _matrix.ty);
                     buffer.$offsetX = _worldTransform._offsetX;
                     buffer.$offsetY = _worldTransform._offsetY;
+                    //
+                    if (node.type === sys.RenderNodeType.GroupNode) {
+                        node.textureTransform.from(displayObject._worldTransform);
+                    }
                 }
-                DisplayObjectTransform.transformRenderNode(displayObject, node, buffer);
+                DisplayObjectTransform.transformRenderNode(displayObject, node, buffer, null);
                 buffer.$offsetX = 0;
                 buffer.$offsetY = 0;
             }
@@ -178,7 +165,7 @@ namespace egret.web {
             }
         }
 
-        private static _transform_(_textureTransform: Transform, image: BitmapData, buffer: WebGLRenderBuffer, destHeight: number, destY: number, worldTransform: Transform): void {
+        private static _transform_(_textureTransform: Transform, image: BitmapData, buffer: WebGLRenderBuffer, destHeight: number, destY: number): void {
             let offsetX = 0;
             let offsetY = 0;
             if (image) {
@@ -190,9 +177,7 @@ namespace egret.web {
                     buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2); // 翻转
 
                     //
-                    worldTransform.flipY(destHeight + destY * 2);
-                    // worldTransform.useOffset();
-                    // worldTransform.transform(1, 0, 0, -1, 0, destHeight + destY * 2); // 翻转
+                    _textureTransform.flipY(destHeight + destY * 2);
                 }
             }
             //
@@ -207,9 +192,9 @@ namespace egret.web {
             // _matrix.tx = globalMatrix.tx;
             // _matrix.ty = globalMatrix.ty;
             //
-            _textureTransform.set(buffer.globalMatrix, buffer.$offsetX, buffer.$offsetY);
+            //_textureTransform.set(buffer.globalMatrix, buffer.$offsetX, buffer.$offsetY);
             //
-            _textureTransform.set(worldTransform._matrix, worldTransform._offsetX, worldTransform._offsetY);
+            //_textureTransform.set(_textureTransform._matrix, _textureTransform._offsetX, _textureTransform._offsetY);
             //
             if (image) {
                 if (image.source && image.source["texture"]) {
@@ -221,10 +206,11 @@ namespace egret.web {
         }
 
         private static transformNormalBitmap(displayObject: DisplayObject, node: sys.NormalBitmapNode, buffer: WebGLRenderBuffer): void {
-            DisplayObjectTransform._transform_(node.textureTransform, node.image, buffer, node.drawH, node.drawY, displayObject._worldTransform);
+            node.textureTransform.from(displayObject._worldTransform);
+            DisplayObjectTransform._transform_(node.textureTransform, node.image, buffer, node.drawH, node.drawY);
         }
 
-        private static transformText(displayObject: DisplayObject, node: sys.TextNode, buffer: WebGLRenderBuffer, worldTransform: Transform): void {
+        private static transformText(displayObject: DisplayObject, node: sys.TextNode, buffer: WebGLRenderBuffer): void {
             let width = node.width - node.x;
             let height = node.height - node.y;
             if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) {
@@ -249,20 +235,25 @@ namespace egret.web {
             }
             if (canvasScaleX !== 1 || canvasScaleY !== 1) {
             }
+
+            ///
+            const textureTransform = node.textureTransform;
+            textureTransform.from(displayObject._worldTransform);
+            ///
             if (x || y) {
                 buffer.transform(1, 0, 0, 1, x / canvasScaleX, y / canvasScaleY);
-                worldTransform.transform(1, 0, 0, 1, x / canvasScaleX, y / canvasScaleY);
+                textureTransform.transform(1, 0, 0, 1, x / canvasScaleX, y / canvasScaleY);
             }
             //
             node.textureTransform.set(buffer.globalMatrix, buffer.$offsetX, buffer.$offsetY);
-            node.textureTransform.set(worldTransform._matrix, worldTransform._offsetX, worldTransform._offsetY);
+            node.textureTransform.set(textureTransform._matrix, textureTransform._offsetX, textureTransform._offsetY);
             //
             if (x || y) {
                 buffer.transform(1, 0, 0, 1, -x / canvasScaleX, -y / canvasScaleY);
             }
         }
 
-        private static transformGraphics(displayObject: DisplayObject, node: sys.GraphicsNode, buffer: WebGLRenderBuffer, worldTransform: Transform): void {
+        private static transformGraphics(displayObject: DisplayObject, node: sys.GraphicsNode, buffer: WebGLRenderBuffer): void {
             let width = node.width;
             let height = node.height;
             if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) {
@@ -287,13 +278,17 @@ namespace egret.web {
             height = height2;
             if (canvasScaleX !== 1 || canvasScaleY !== 1) {
             }
+            //
+            const textureTransform = node.textureTransform;
+            textureTransform.from(displayObject._worldTransform);
+            //
             if (node.x || node.y) {
                 buffer.transform(1, 0, 0, 1, node.x, node.y);
-                worldTransform.transform(1, 0, 0, 1, node.x, node.y);
+                textureTransform.transform(1, 0, 0, 1, node.x, node.y);
             }
             ///
             node.textureTransform.set(buffer.globalMatrix, buffer.$offsetX, buffer.$offsetY);
-            node.textureTransform.set(worldTransform._matrix, worldTransform._offsetX, worldTransform._offsetY);
+            node.textureTransform.set(textureTransform._matrix, textureTransform._offsetX, textureTransform._offsetY);
             ///
             if (node.x || node.y) {
                 buffer.transform(1, 0, 0, 1, -node.x, -node.y);
@@ -325,6 +320,11 @@ namespace egret.web {
                 offsetY = buffer.$offsetY;
                 buffer.useOffset();
                 buffer.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+
+                ////////////////////////////////
+                //textureTransform.useOffset();
+                //textureTransform.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+                ////////////////////////////////
             }
             //
             const dataGroupCount = Math.floor(length / sys.BitmapNodeDrawDataIndex.MAX_SIZE);
@@ -335,7 +335,7 @@ namespace egret.web {
                 const destHeight = data[pos + sys.BitmapNodeDrawDataIndex.destHeight];
                 const destY = data[pos + sys.BitmapNodeDrawDataIndex.destY];
                 node.textureTransformIndex(textureTransformIndex);
-                DisplayObjectTransform._transform_(node.textureTransform, image, buffer, destHeight, destY, displayObject._worldTransform);
+                DisplayObjectTransform._transform_(node.textureTransform, image, buffer, destHeight, destY);
                 //
                 ++textureTransformIndex;
                 pos += sys.BitmapNodeDrawDataIndex.MAX_SIZE;
@@ -355,19 +355,19 @@ namespace egret.web {
             }
         }
 
-        private static transformRenderNode(displayObject: DisplayObject, node: sys.RenderNode, buffer: WebGLRenderBuffer): void {
+        private static transformRenderNode(displayObject: DisplayObject, node: sys.RenderNode, buffer: WebGLRenderBuffer, textureTransform: Transform): void {
             switch (node.type) {
                 case sys.RenderNodeType.BitmapNode:
                     DisplayObjectTransform.transformBitmap(displayObject, <sys.BitmapNode>node, buffer);
                     break;
                 case sys.RenderNodeType.TextNode:
-                    DisplayObjectTransform.transformText(displayObject, <sys.TextNode>node, buffer, displayObject._worldTransform);
+                    DisplayObjectTransform.transformText(displayObject, <sys.TextNode>node, buffer);
                     break;
                 case sys.RenderNodeType.GraphicsNode:
-                    DisplayObjectTransform.transformGraphics(displayObject, <sys.GraphicsNode>node, buffer, displayObject._worldTransform);
+                    DisplayObjectTransform.transformGraphics(displayObject, <sys.GraphicsNode>node, buffer);
                     break;
                 case sys.RenderNodeType.GroupNode:
-                    DisplayObjectTransform.transformGroup(displayObject, <sys.GroupNode>node, buffer);
+                    DisplayObjectTransform.transformGroup(displayObject, <sys.GroupNode>node, buffer, textureTransform);
                     break;
                 case sys.RenderNodeType.MeshNode:
                     DisplayObjectTransform.transformMesh(displayObject, <sys.MeshNode>node, buffer);
@@ -380,7 +380,10 @@ namespace egret.web {
             }
         }
 
-        private static transformGroup(displayObject: DisplayObject, groupNode: sys.GroupNode, buffer: WebGLRenderBuffer): void {
+        private static transformGroup(displayObject: DisplayObject, groupNode: sys.GroupNode, buffer: WebGLRenderBuffer, textureTransform: Transform): void {
+            //解决递归的问题，传进来有，那就是递归来的，如果没有，就是初始，用groupNode自带的textureTransform来弄
+            textureTransform = textureTransform || groupNode.textureTransform;
+            //
             const m = groupNode.matrix;
             let savedMatrix: Matrix;
             let offsetX = 0;
@@ -398,12 +401,15 @@ namespace egret.web {
                 offsetY = buffer.$offsetY;
                 buffer.useOffset();
                 buffer.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+                ///
+                textureTransform.useOffset();
+                textureTransform.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             }
             const children = groupNode.drawData;
             const length = children.length;
             for (let i = 0; i < length; i++) {
                 const node = children[i];
-                DisplayObjectTransform.transformRenderNode(displayObject, node, buffer);
+                DisplayObjectTransform.transformRenderNode(displayObject, node, buffer, textureTransform);
             }
             if (m) {
                 const matrix = buffer.globalMatrix;
@@ -451,7 +457,7 @@ namespace egret.web {
                 const destHeight = data[pos + sys.BitmapNodeDrawDataIndex.destHeight];
                 const destY = data[pos + sys.BitmapNodeDrawDataIndex.destY];
                 node.textureTransformIndex(textureTransformIndex);
-                DisplayObjectTransform._transform_(node.textureTransform, image, buffer, destHeight, destY, displayObject._worldTransform);
+                DisplayObjectTransform._transform_(node.textureTransform, image, buffer, destHeight, destY);
                 //
                 ++textureTransformIndex;
                 pos += sys.BitmapNodeDrawDataIndex.MAX_SIZE;

@@ -12961,6 +12961,9 @@ var egret;
             this._offsetX = offsetX;
             this._offsetY = offsetY;
         };
+        Transform.prototype.from = function (target) {
+            this.set(target._matrix, target._offsetX, target._offsetY);
+        };
         Transform.prototype.transform = function (a, b, c, d, tx, ty) {
             var matrix = this._matrix;
             var a1 = matrix.a;
