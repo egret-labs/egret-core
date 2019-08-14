@@ -1,6 +1,6 @@
 {
   "name": "egret",
-  "version": "5.2.25",
+  "version": "5.2.26",
   "private": true,
   "author": "egret-labs",
   "bin": {
@@ -236,16 +236,6 @@
         "description_en": "socket network communication lib",
         "files": [],
         "root": "src/extension/socket",
-        "dependencies": [
-          "egret"
-        ]
-      },
-      {
-        "name": "experimental",
-        "description": "egret实验功能库",
-        "description_en": "egret experimental function lib",
-        "files": [],
-        "root": "src/extension/experimental",
         "dependencies": [
           "egret"
         ]
