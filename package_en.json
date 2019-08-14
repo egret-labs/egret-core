@@ -357,16 +357,6 @@
         "dependencies": []
       },
       {
-        "name": "experimental",
-        "description": "egret experimental function lib",
-        "description_en": "egret experimental function lib",
-        "files": [],
-        "root": "src/extension/experimental",
-        "dependencies": [
-          "egret"
-        ]
-      },
-      {
         "name": "egret-facebook",
         "description": "Facebook Instant Games SDK",
         "description_en": "Facebook Instant Games SDK",
