@@ -34,6 +34,9 @@ const config: ResourceManagerConfig = {
                     new ExmlPlugin('commonjs'), // 非 EUI 项目关闭此设置
                     new WxgamePlugin(),
                     new UglifyPlugin([{
+                        sources: ["resource/default.thm.js"],
+                        target: "default.thm.min.js"
+                    }, {
                         sources: ["main.js"],
                         target: "main.min.js"
                     }
