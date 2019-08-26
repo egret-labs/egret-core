@@ -12952,10 +12952,10 @@ var egret;
             _this._matrix = new egret.Matrix;
             _this._offsetX = 0;
             _this._offsetY = 0;
-            _this._flipY = false;
-            _this._flipYHeight = 0;
             return _this;
         }
+        // private _flipY: boolean = false;
+        // private _flipYHeight: number = 0;
         Transform.prototype.set = function (matrix, offsetX, offsetY) {
             this._matrix.setTo(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
             this._offsetX = offsetX;
@@ -12970,7 +12970,7 @@ var egret;
             var b1 = matrix.b;
             var c1 = matrix.c;
             var d1 = matrix.d;
-            if (a != 1 || b != 0 || c != 0 || d != 1) {
+            if (a !== 1 || b !== 0 || c !== 0 || d !== 1) {
                 matrix.a = a * a1 + b * c1;
                 matrix.b = a * b1 + b * d1;
                 matrix.c = c * a1 + d * c1;
@@ -12987,12 +12987,12 @@ var egret;
             }
         };
         Transform.prototype.flipY = function (height) {
-            if (!this._flipY) {
-                this._flipY = true;
-                this._flipYHeight = height;
-                this.useOffset();
-                this.transform(1, 0, 0, -1, 0, height); // 翻转
-            }
+            //if (!this._flipY) {
+            // this._flipY = true;
+            // this._flipYHeight = height;
+            this.useOffset();
+            this.transform(1, 0, 0, -1, 0, height); // 翻转
+            //}
         };
         return Transform;
     }(egret.HashObject));

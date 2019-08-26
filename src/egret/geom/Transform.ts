@@ -34,8 +34,8 @@ namespace egret {
         public readonly _matrix: egret.Matrix = new egret.Matrix;
         public _offsetX: number = 0;
         public _offsetY: number = 0;
-        private _flipY: boolean = false;
-        private _flipYHeight: number = 0;
+        // private _flipY: boolean = false;
+        // private _flipYHeight: number = 0;
 
         public set(matrix: egret.Matrix, offsetX: number, offsetY: number): void {
             this._matrix.setTo(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
@@ -53,7 +53,7 @@ namespace egret {
             let b1 = matrix.b;
             let c1 = matrix.c;
             let d1 = matrix.d;
-            if (a != 1 || b != 0 || c != 0 || d != 1) {
+            if (a !== 1 || b !== 0 || c !== 0 || d !== 1) {
                 matrix.a = a * a1 + b * c1;
                 matrix.b = a * b1 + b * d1;
                 matrix.c = c * a1 + d * c1;
@@ -72,12 +72,12 @@ namespace egret {
         }
 
         public flipY(height: number): void {
-            if (!this._flipY) {
-                this._flipY = true;
-                this._flipYHeight = height;
-                this.useOffset();
-                this.transform(1, 0, 0, -1, 0, height); // 翻转
-            }
+            //if (!this._flipY) {
+            // this._flipY = true;
+            // this._flipYHeight = height;
+            this.useOffset();
+            this.transform(1, 0, 0, -1, 0, height); // 翻转
+            //}
         }
     }
 }
