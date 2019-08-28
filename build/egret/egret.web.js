@@ -8928,14 +8928,23 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+//测试开关
 var useDisplayObjectTransform = true;
 var egret;
 (function (egret) {
     var web;
     (function (web) {
+        /**
+         * 转换的整体封装
+         */
         var DisplayObjectTransform = (function () {
             function DisplayObjectTransform() {
             }
+            /**
+             * 测试用, 检查重构的结果
+             * @param displayObject
+             * @param buffer
+             */
             DisplayObjectTransform.debugCheckTransformMatchesExactly = function (displayObject, buffer) {
                 if (!useDisplayObjectTransform || !displayObject) {
                     return false;
@@ -8955,13 +8964,24 @@ var egret;
                 }
                 return true;
             };
-            //
+            /**
+             * 将displayObject作为根部，做整体转换
+             * @param displayObject
+             * @param buffer
+             * @param offsetX
+             * @param offsetY
+             */
             DisplayObjectTransform.transformRoot = function (displayObject, buffer, offsetX, offsetY) {
                 //设置为根节点，不再重复设置
                 displayObject._worldTransform.set(buffer.globalMatrix, offsetX, offsetY);
                 //开始遍历进行transform
                 this.transformObject(displayObject, buffer, offsetX, offsetY);
             };
+            /**
+             * 把一个transform复制给目标RenderNode的所有TextureTransform;
+             * @param worldTransform
+             * @param renderNode
+             */
             DisplayObjectTransform.copyTransformToRenderNodeTextureTransform = function (worldTransform, renderNode) {
                 switch (renderNode.type) {
                     case 6 /* NormalBitmapNode */:
@@ -8971,18 +8991,21 @@ var egret;
                         renderNode.textureTransform.from(worldTransform);
                         break;
                     }
-                    case 1 /* BitmapNode */: {
+                    case 1 /* BitmapNode */:
+                    case 5 /* MeshNode */: {
                         //
-                        var data = renderNode.drawData;
+                        var node = (renderNode.type === 1 /* BitmapNode */ ? renderNode : renderNode);
+                        //
+                        var data = node.drawData;
                         var length_10 = data.length;
                         var dataGroupCount = Math.floor(length_10 / 8 /* MAX_SIZE */);
-                        renderNode.resizeTextureTransformGroup(dataGroupCount);
+                        node.resizeTextureTransformGroup(dataGroupCount);
                         //
                         var textureTransformIndex = 0;
                         var pos = 0;
                         while (pos < length_10) {
-                            renderNode.textureTransformIndex(textureTransformIndex);
-                            renderNode.textureTransform.from(worldTransform);
+                            node.textureTransformIndex(textureTransformIndex);
+                            node.textureTransform.from(worldTransform);
                             ++textureTransformIndex;
                             pos += 8 /* MAX_SIZE */;
                         }
@@ -8992,7 +9015,13 @@ var egret;
                         break;
                 }
             };
-            //
+            /**
+             * 处理一个对象
+             * @param displayObject
+             * @param buffer
+             * @param offsetX
+             * @param offsetY
+             */
             DisplayObjectTransform.transformObject = function (displayObject, buffer, offsetX, offsetY) {
                 if (!useDisplayObjectTransform) {
                     return;
@@ -9093,6 +9122,14 @@ var egret;
                     }
                 }
             };
+            /**
+             * 转换的最后一步
+             * @param _textureTransform
+             * @param image
+             * @param buffer
+             * @param destHeight
+             * @param destY
+             */
             DisplayObjectTransform._transform_ = function (_textureTransform, image, buffer, destHeight, destY) {
                 var offsetX = 0;
                 var offsetY = 0;
@@ -9118,9 +9155,21 @@ var egret;
                     }
                 }
             };
+            /**
+             * 转换单图
+             * @param displayObject
+             * @param node
+             * @param buffer
+             */
             DisplayObjectTransform.transformBitmapSingle = function (displayObject, node, buffer) {
                 DisplayObjectTransform._transform_(node.textureTransform, node.image, buffer, node.drawH, node.drawY);
             };
+            /**
+             * 转换文字
+             * @param displayObject
+             * @param node
+             * @param buffer
+             */
             DisplayObjectTransform.transformText = function (displayObject, node, buffer) {
                 var width = node.width - node.x;
                 var height = node.height - node.y;
@@ -9153,13 +9202,16 @@ var egret;
                     textureTransform.transform(1, 0, 0, 1, x / canvasScaleX, y / canvasScaleY);
                 }
                 //
-                node.textureTransform.set(buffer.globalMatrix, buffer.$offsetX, buffer.$offsetY);
-                node.textureTransform.set(textureTransform._matrix, textureTransform._offsetX, textureTransform._offsetY);
-                //
                 if (x || y) {
                     buffer.transform(1, 0, 0, 1, -x / canvasScaleX, -y / canvasScaleY);
                 }
             };
+            /**
+             * 转换矢量绘图
+             * @param displayObject
+             * @param node
+             * @param buffer
+             */
             DisplayObjectTransform.transformGraphics = function (displayObject, node, buffer) {
                 var width = node.width;
                 var height = node.height;
@@ -9192,13 +9244,110 @@ var egret;
                     textureTransform.transform(1, 0, 0, 1, node.x, node.y);
                 }
                 ///
-                node.textureTransform.set(buffer.globalMatrix, buffer.$offsetX, buffer.$offsetY);
-                node.textureTransform.set(textureTransform._matrix, textureTransform._offsetX, textureTransform._offsetY);
-                ///
                 if (node.x || node.y) {
                     buffer.transform(1, 0, 0, 1, -node.x, -node.y);
                 }
             };
+            /**
+             * 在转换Group里面做递归使用
+             * @param displayObject
+             * @param fromNode
+             * @param toNode
+             * @param buffer
+             */
+            DisplayObjectTransform.transformRenderNodeRecursive = function (displayObject, fromNode, toNode, buffer) {
+                if (!fromNode) {
+                    return;
+                }
+                if (fromNode.type === 4 /* GroupNode */) {
+                    DisplayObjectTransform.copyTransformToRenderNodeTextureTransform(fromNode.textureTransform, toNode);
+                }
+                DisplayObjectTransform.transformRenderNode(displayObject, toNode, buffer);
+            };
+            /**
+             * 转换一个RenderNode的TextureTransform
+             * @param displayObject
+             * @param node
+             * @param buffer
+             */
+            DisplayObjectTransform.transformRenderNode = function (displayObject, node, buffer) {
+                switch (node.type) {
+                    case 1 /* BitmapNode */:
+                        DisplayObjectTransform.transformBitmapAtlas(displayObject, node, buffer);
+                        break;
+                    case 2 /* TextNode */:
+                        DisplayObjectTransform.transformText(displayObject, node, buffer);
+                        break;
+                    case 3 /* GraphicsNode */:
+                        DisplayObjectTransform.transformGraphics(displayObject, node, buffer);
+                        break;
+                    case 4 /* GroupNode */:
+                        DisplayObjectTransform.transformGroup(displayObject, node, buffer);
+                        break;
+                    case 5 /* MeshNode */:
+                        DisplayObjectTransform.transformMesh(displayObject, node, buffer);
+                        break;
+                    case 6 /* NormalBitmapNode */:
+                        DisplayObjectTransform.transformBitmapSingle(displayObject, node, buffer);
+                        break;
+                    default:
+                        break;
+                }
+            };
+            /**
+             * 转换Group
+             * @param displayObject
+             * @param groupNode
+             * @param buffer
+             */
+            DisplayObjectTransform.transformGroup = function (displayObject, groupNode, buffer) {
+                var m = groupNode.matrix;
+                var savedMatrix;
+                var offsetX = 0;
+                var offsetY = 0;
+                if (m) {
+                    savedMatrix = egret.Matrix.create();
+                    var curMatrix = buffer.globalMatrix;
+                    savedMatrix.a = curMatrix.a;
+                    savedMatrix.b = curMatrix.b;
+                    savedMatrix.c = curMatrix.c;
+                    savedMatrix.d = curMatrix.d;
+                    savedMatrix.tx = curMatrix.tx;
+                    savedMatrix.ty = curMatrix.ty;
+                    offsetX = buffer.$offsetX;
+                    offsetY = buffer.$offsetY;
+                    buffer.useOffset();
+                    buffer.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+                    ///
+                    var textureTransform = groupNode.textureTransform;
+                    textureTransform.useOffset();
+                    textureTransform.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+                }
+                var children = groupNode.drawData;
+                var length = children.length;
+                for (var i = 0; i < length; i++) {
+                    var node = children[i];
+                    DisplayObjectTransform.transformRenderNodeRecursive(displayObject, groupNode, node, buffer);
+                }
+                if (m) {
+                    var matrix = buffer.globalMatrix;
+                    matrix.a = savedMatrix.a;
+                    matrix.b = savedMatrix.b;
+                    matrix.c = savedMatrix.c;
+                    matrix.d = savedMatrix.d;
+                    matrix.tx = savedMatrix.tx;
+                    matrix.ty = savedMatrix.ty;
+                    buffer.$offsetX = offsetX;
+                    buffer.$offsetY = offsetY;
+                    egret.Matrix.release(savedMatrix);
+                }
+            };
+            /**
+             * 转换图集处理
+             * @param displayObject
+             * @param node
+             * @param buffer
+             */
             DisplayObjectTransform.transformBitmapAtlas = function (displayObject, node, buffer) {
                 var image = node.image;
                 if (!image) {
@@ -9225,10 +9374,6 @@ var egret;
                     buffer.useOffset();
                     buffer.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
                 }
-                //
-                // const dataGroupCount = Math.floor(length / sys.BitmapNodeDrawDataIndex.MAX_SIZE);
-                // node.resizeTextureTransformGroup(dataGroupCount);
-                //
                 var textureTransformIndex = 0;
                 while (pos < length) {
                     var destHeight = data[pos + 7 /* destHeight */];
@@ -9258,84 +9403,13 @@ var egret;
                     egret.Matrix.release(savedMatrix);
                 }
             };
-            DisplayObjectTransform.transformRenderNodeRecursive = function (displayObject, fromNode, toNode, buffer) {
-                if (!fromNode) {
-                    return;
-                }
-                if (fromNode.type === 4 /* GroupNode */) {
-                    DisplayObjectTransform.copyTransformToRenderNodeTextureTransform(fromNode.textureTransform, toNode);
-                }
-                DisplayObjectTransform.transformRenderNode(displayObject, toNode, buffer);
-            };
-            DisplayObjectTransform.transformRenderNode = function (displayObject, node, buffer) {
-                switch (node.type) {
-                    case 1 /* BitmapNode */:
-                        DisplayObjectTransform.transformBitmapAtlas(displayObject, node, buffer);
-                        break;
-                    case 2 /* TextNode */:
-                        DisplayObjectTransform.transformText(displayObject, node, buffer);
-                        break;
-                    case 3 /* GraphicsNode */:
-                        DisplayObjectTransform.transformGraphics(displayObject, node, buffer);
-                        break;
-                    case 4 /* GroupNode */:
-                        DisplayObjectTransform.transformGroup(displayObject, node, buffer);
-                        break;
-                    case 5 /* MeshNode */:
-                        DisplayObjectTransform.transformMesh(displayObject, node, buffer);
-                        break;
-                    case 6 /* NormalBitmapNode */:
-                        DisplayObjectTransform.transformBitmapSingle(displayObject, node, buffer);
-                        break;
-                    default:
-                        break;
-                }
-            };
-            DisplayObjectTransform.transformGroup = function (displayObject, groupNode, buffer) {
-                var m = groupNode.matrix;
-                var savedMatrix;
-                var offsetX = 0;
-                var offsetY = 0;
-                if (m) {
-                    savedMatrix = egret.Matrix.create();
-                    var curMatrix = buffer.globalMatrix;
-                    savedMatrix.a = curMatrix.a;
-                    savedMatrix.b = curMatrix.b;
-                    savedMatrix.c = curMatrix.c;
-                    savedMatrix.d = curMatrix.d;
-                    savedMatrix.tx = curMatrix.tx;
-                    savedMatrix.ty = curMatrix.ty;
-                    offsetX = buffer.$offsetX;
-                    offsetY = buffer.$offsetY;
-                    buffer.useOffset();
-                    buffer.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-                    ///
-                    var textureTransform = groupNode.textureTransform;
-                    textureTransform.useOffset();
-                    textureTransform.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-                }
-                var children = groupNode.drawData;
-                var length = children.length;
-                for (var i = 0; i < length; i++) {
-                    var node = children[i];
-                    //DisplayObjectTransform.transformRenderNode(displayObject, node, buffer);
-                    DisplayObjectTransform.transformRenderNodeRecursive(displayObject, groupNode, node, buffer);
-                }
-                if (m) {
-                    var matrix = buffer.globalMatrix;
-                    matrix.a = savedMatrix.a;
-                    matrix.b = savedMatrix.b;
-                    matrix.c = savedMatrix.c;
-                    matrix.d = savedMatrix.d;
-                    matrix.tx = savedMatrix.tx;
-                    matrix.ty = savedMatrix.ty;
-                    buffer.$offsetX = offsetX;
-                    buffer.$offsetY = offsetY;
-                    egret.Matrix.release(savedMatrix);
-                }
-            };
+            /**
+             * 转换一个mesh
+             * @param displayObject
+             * @param node
+             * @param buffer
+             */
             DisplayObjectTransform.transformMesh = function (displayObject, node, buffer) {
-                var textureTransform = node.textureTransform;
                 var image = node.image;
                 var data = node.drawData;
                 var length = data.length;
@@ -9357,23 +9431,18 @@ var egret;
                     offsetY = buffer.$offsetY;
                     buffer.useOffset();
                     buffer.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-                    ////////////////////////////////
-                    textureTransform.useOffset();
-                    textureTransform.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-                    ////////////////////////////////
                 }
-                //
-                var dataGroupCount = Math.floor(length / 8 /* MAX_SIZE */);
-                node.resizeTextureTransformGroup(dataGroupCount);
-                //
                 var textureTransformIndex = 0;
-                //const targetTransform = textureTransform || displayObject._worldTransform;
                 while (pos < length) {
                     var destHeight = data[pos + 7 /* destHeight */];
                     var destY = data[pos + 5 /* destY */];
                     node.textureTransformIndex(textureTransformIndex);
-                    DisplayObjectTransform._transform_(node.textureTransform, image, buffer, destHeight, destY);
-                    //
+                    var curTextureTransform = node.textureTransform;
+                    if (m) {
+                        curTextureTransform.useOffset();
+                        curTextureTransform.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+                    }
+                    DisplayObjectTransform._transform_(curTextureTransform, image, buffer, destHeight, destY);
                     ++textureTransformIndex;
                     pos += 8 /* MAX_SIZE */;
                 }
@@ -9391,6 +9460,13 @@ var egret;
                     egret.Matrix.release(savedMatrix);
                 }
             };
+            /**
+             * 转换一个SrcollRect
+             * @param displayObject
+             * @param buffer
+             * @param offsetX
+             * @param offsetY
+             */
             DisplayObjectTransform.transformScrollRect = function (displayObject, buffer, offsetX, offsetY) {
                 var scrollRect = displayObject.$scrollRect ? displayObject.$scrollRect : displayObject.$maskRect;
                 if (scrollRect.isEmpty()) {
