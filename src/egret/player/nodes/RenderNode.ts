@@ -109,6 +109,10 @@ namespace egret.sys {
         }
 
         public resizeTextureTransformGroup(newLength: number): void {
+            if (newLength === 0) {
+                this._textureTransformGroup.length = 0;
+                return;
+            }
             const _textureTransformGroup = this._textureTransformGroup;
             const oldLength = _textureTransformGroup.length;
             _textureTransformGroup.length = newLength;

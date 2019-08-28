@@ -29,7 +29,7 @@
 
 namespace egret.sys {
 
-
+    //需要严格按着顺序
     export const enum BitmapNodeDrawDataIndex {
         sourceX = 0,
         sourceY,

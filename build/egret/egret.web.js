@@ -8962,7 +8962,7 @@ var egret;
                 //开始遍历进行transform
                 this.transformObject(displayObject, buffer, offsetX, offsetY);
             };
-            DisplayObjectTransform.worldTransformToRenderNodeTextureTransform = function (worldTransform, renderNode) {
+            DisplayObjectTransform.copyTransformToRenderNodeTextureTransform = function (worldTransform, renderNode) {
                 switch (renderNode.type) {
                     case 6 /* NormalBitmapNode */:
                     case 3 /* GraphicsNode */:
@@ -9013,7 +9013,7 @@ var egret;
                         buffer.$offsetX = _worldTransform._offsetX;
                         buffer.$offsetY = _worldTransform._offsetY;
                         //根部拷贝worldTransform => every textureTransform
-                        DisplayObjectTransform.worldTransformToRenderNodeTextureTransform(displayObject._worldTransform, node);
+                        DisplayObjectTransform.copyTransformToRenderNodeTextureTransform(displayObject._worldTransform, node);
                     }
                     DisplayObjectTransform.transformRenderNode(displayObject, node, buffer);
                     buffer.$offsetX = 0;
@@ -9118,7 +9118,7 @@ var egret;
                     }
                 }
             };
-            DisplayObjectTransform.transformNormalBitmap = function (displayObject, node, buffer) {
+            DisplayObjectTransform.transformBitmapSingle = function (displayObject, node, buffer) {
                 DisplayObjectTransform._transform_(node.textureTransform, node.image, buffer, node.drawH, node.drawY);
             };
             DisplayObjectTransform.transformText = function (displayObject, node, buffer) {
@@ -9199,7 +9199,7 @@ var egret;
                     buffer.transform(1, 0, 0, 1, -node.x, -node.y);
                 }
             };
-            DisplayObjectTransform.transformBitmap = function (displayObject, node, buffer) {
+            DisplayObjectTransform.transformBitmapAtlas = function (displayObject, node, buffer) {
                 var image = node.image;
                 if (!image) {
                     return;
@@ -9226,8 +9226,8 @@ var egret;
                     buffer.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
                 }
                 //
-                var dataGroupCount = Math.floor(length / 8 /* MAX_SIZE */);
-                node.resizeTextureTransformGroup(dataGroupCount);
+                // const dataGroupCount = Math.floor(length / sys.BitmapNodeDrawDataIndex.MAX_SIZE);
+                // node.resizeTextureTransformGroup(dataGroupCount);
                 //
                 var textureTransformIndex = 0;
                 while (pos < length) {
@@ -9258,10 +9258,19 @@ var egret;
                     egret.Matrix.release(savedMatrix);
                 }
             };
+            DisplayObjectTransform.transformRenderNodeRecursive = function (displayObject, fromNode, toNode, buffer) {
+                if (!fromNode) {
+                    return;
+                }
+                if (fromNode.type === 4 /* GroupNode */) {
+                    DisplayObjectTransform.copyTransformToRenderNodeTextureTransform(fromNode.textureTransform, toNode);
+                }
+                DisplayObjectTransform.transformRenderNode(displayObject, toNode, buffer);
+            };
             DisplayObjectTransform.transformRenderNode = function (displayObject, node, buffer) {
                 switch (node.type) {
                     case 1 /* BitmapNode */:
-                        DisplayObjectTransform.transformBitmap(displayObject, node, buffer);
+                        DisplayObjectTransform.transformBitmapAtlas(displayObject, node, buffer);
                         break;
                     case 2 /* TextNode */:
                         DisplayObjectTransform.transformText(displayObject, node, buffer);
@@ -9276,16 +9285,13 @@ var egret;
                         DisplayObjectTransform.transformMesh(displayObject, node, buffer);
                         break;
                     case 6 /* NormalBitmapNode */:
-                        DisplayObjectTransform.transformNormalBitmap(displayObject, node, buffer);
+                        DisplayObjectTransform.transformBitmapSingle(displayObject, node, buffer);
                         break;
                     default:
                         break;
                 }
             };
             DisplayObjectTransform.transformGroup = function (displayObject, groupNode, buffer) {
-                //解决递归的问题，传进来有，那就是递归来的，如果没有，就是初始，用groupNode自带的textureTransform来弄
-                var textureTransform = groupNode.textureTransform;
-                //
                 var m = groupNode.matrix;
                 var savedMatrix;
                 var offsetX = 0;
@@ -9304,6 +9310,7 @@ var egret;
                     buffer.useOffset();
                     buffer.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
                     ///
+                    var textureTransform = groupNode.textureTransform;
                     textureTransform.useOffset();
                     textureTransform.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
                 }
@@ -9311,7 +9318,8 @@ var egret;
                 var length = children.length;
                 for (var i = 0; i < length; i++) {
                     var node = children[i];
-                    DisplayObjectTransform.transformRenderNode(displayObject, node, buffer);
+                    //DisplayObjectTransform.transformRenderNode(displayObject, node, buffer);
+                    DisplayObjectTransform.transformRenderNodeRecursive(displayObject, groupNode, node, buffer);
                 }
                 if (m) {
                     var matrix = buffer.globalMatrix;

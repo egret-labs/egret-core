@@ -6226,6 +6226,10 @@ var egret;
                 configurable: true
             });
             RenderNode.prototype.resizeTextureTransformGroup = function (newLength) {
+                if (newLength === 0) {
+                    this._textureTransformGroup.length = 0;
+                    return;
+                }
                 var _textureTransformGroup = this._textureTransformGroup;
                 var oldLength = _textureTransformGroup.length;
                 _textureTransformGroup.length = newLength;
