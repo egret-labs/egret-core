@@ -68,7 +68,7 @@ namespace egret.web {
             //绘制显示对象
             webglBuffer.transform(matrix.a, matrix.b, matrix.c, matrix.d, 0, 0);
             /////
-            DisplayObjectTransform.transformRoot(displayObject, webglBuffer, matrix.tx, matrix.ty);
+            DisplayObjectTransform.transformObjectAsRoot(displayObject, webglBuffer, matrix.tx, matrix.ty);
             /////
             this.drawDisplayObject(displayObject, webglBuffer, matrix.tx, matrix.ty, true);
             webglBufferContext.$flush();// webglBufferContext.$drawWebGL();
@@ -275,7 +275,7 @@ namespace egret.web {
                     }
 
                     buffer.context.$filter = <ColorMatrixFilter>filters[0];
-                    DisplayObjectTransform.transformObject(displayObject, buffer, offsetX, offsetY);
+                    DisplayObjectTransform.transformObject(displayObject, offsetX, offsetY);
                     if (displayObject.$mask) {
                         drawCalls += this.drawWithClip(displayObject, buffer, offsetX, offsetY);
                     }
@@ -309,7 +309,7 @@ namespace egret.web {
             }
             else {
                 /////
-                DisplayObjectTransform.transformRoot(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
+                DisplayObjectTransform.transformObjectAsRoot(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
                 /////
                 drawCalls += this.drawDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
             }
@@ -432,7 +432,7 @@ namespace egret.web {
                 let displayBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
                 displayBuffer.context.pushBuffer(displayBuffer);
                 /////
-                DisplayObjectTransform.transformRoot(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
+                DisplayObjectTransform.transformObjectAsRoot(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
                 /////
                 drawCalls += this.drawDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
                 //绘制遮罩
@@ -446,7 +446,7 @@ namespace egret.web {
                     maskBuffer.setTransform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
                     Matrix.release(maskMatrix);
                     /////
-                    DisplayObjectTransform.transformRoot(mask, maskBuffer, 0, 0);
+                    DisplayObjectTransform.transformObjectAsRoot(mask, maskBuffer, 0, 0);
                     /////
                     drawCalls += this.drawDisplayObject(mask, maskBuffer, 0, 0);
                     maskBuffer.context.popBuffer();

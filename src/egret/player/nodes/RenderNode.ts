@@ -97,17 +97,26 @@ namespace egret.sys {
             return this.renderCount;
         }
 
+        //现在这个是个中间件，后续可以通过重构手段移除，直接达成worldtransform => x, y, u, v, tint, 现在需要worldtransform => some texturetransforms => x, y, u, v, tint
         private readonly _textureTransformGroup: Transform[] = [];
         private _textureTransformIndex: number = 0;
-
+        /**
+         * 定位一个textureTransform
+         * @param index 定位下标
+         */
         public textureTransformIndex(index: number): void {
             this._textureTransformIndex = index;
         }
-
+        /**
+         * 获取当前定位的textureTransform
+         */
         public get textureTransform(): Transform {
             return this._textureTransformGroup[this._textureTransformIndex];
         }
-
+        /**
+         * 改变_textureTransformGroup长度，可以清零
+         * @param newLength 新的长度
+         */
         public resizeTextureTransformGroup(newLength: number): void {
             if (newLength === 0) {
                 this._textureTransformGroup.length = 0;

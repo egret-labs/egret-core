@@ -3497,8 +3497,19 @@ declare namespace egret.sys {
         $getRenderCount(): number;
         private readonly _textureTransformGroup;
         private _textureTransformIndex;
+        /**
+         * 定位一个textureTransform
+         * @param index 定位下标
+         */
         textureTransformIndex(index: number): void;
+        /**
+         * 获取当前定位的textureTransform
+         */
         readonly textureTransform: Transform;
+        /**
+         * 改变_textureTransformGroup长度，可以清零
+         * @param newLength 新的长度
+         */
         resizeTextureTransformGroup(newLength: number): void;
     }
 }
