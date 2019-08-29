@@ -4168,6 +4168,7 @@ var egret;
                 return _this;
             }
             WebPlayer.prototype.init = function (container, options) {
+                console.log("Egret Engine Version:", egret.Capabilities.engineVersion);
                 var option = this.readOption(container, options);
                 var stage = new egret.Stage();
                 stage.$screen = this;

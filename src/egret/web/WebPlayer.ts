@@ -40,6 +40,7 @@ namespace egret.web {
         }
 
         private init(container: HTMLDivElement, options: runEgretOptions): void {
+            console.log("Egret Engine Version:", egret.Capabilities.engineVersion)
             let option = this.readOption(container, options);
             let stage = new egret.Stage();
             stage.$screen = this;
@@ -244,7 +245,7 @@ namespace egret.web {
             this.webInput.$updateSize();
             this.player.updateStageSize(stageWidth, stageHeight);//不要在这个方法后面修改属性
             // todo
-            if(egret.nativeRender) {
+            if (egret.nativeRender) {
                 canvas.width = stageWidth * canvasScaleX;
                 canvas.height = stageHeight * canvasScaleY;
             }
