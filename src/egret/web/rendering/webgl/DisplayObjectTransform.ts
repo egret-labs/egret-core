@@ -66,9 +66,9 @@ namespace egret.web {
          * @param offsetX 
          * @param offsetY 
          */
-        public static transformObjectAsRoot(displayObject: DisplayObject, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number): void {
+        public static transformObjectAsRoot(displayObject: DisplayObject, globalMatrix: Matrix, offsetX: number, offsetY: number): void {
             //设置为根节点，不再重复设置
-            displayObject._worldTransform.set(buffer.globalMatrix, offsetX, offsetY);
+            displayObject._worldTransform.set(globalMatrix, offsetX, offsetY);
             //开始遍历进行transform
             this.transformObject(displayObject, offsetX, offsetY);
         }

@@ -7759,7 +7759,7 @@ var egret;
                 //绘制显示对象
                 webglBuffer.transform(matrix.a, matrix.b, matrix.c, matrix.d, 0, 0);
                 /////
-                web.DisplayObjectTransform.transformObjectAsRoot(displayObject, webglBuffer, matrix.tx, matrix.ty);
+                web.DisplayObjectTransform.transformObjectAsRoot(displayObject, webglBuffer.globalMatrix, matrix.tx, matrix.ty);
                 /////
                 this.drawDisplayObject(displayObject, webglBuffer, matrix.tx, matrix.ty, true);
                 webglBufferContext.$flush(); // webglBufferContext.$drawWebGL();
@@ -7988,7 +7988,7 @@ var egret;
                 }
                 else {
                     /////
-                    web.DisplayObjectTransform.transformObjectAsRoot(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
+                    web.DisplayObjectTransform.transformObjectAsRoot(displayObject, displayBuffer.globalMatrix, -displayBoundsX, -displayBoundsY);
                     /////
                     drawCalls += this.drawDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
                 }
@@ -8106,7 +8106,7 @@ var egret;
                     var displayBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
                     displayBuffer.context.pushBuffer(displayBuffer);
                     /////
-                    web.DisplayObjectTransform.transformObjectAsRoot(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
+                    web.DisplayObjectTransform.transformObjectAsRoot(displayObject, displayBuffer.globalMatrix, -displayBoundsX, -displayBoundsY);
                     /////
                     drawCalls += this.drawDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
                     //绘制遮罩
@@ -8120,7 +8120,7 @@ var egret;
                         maskBuffer.setTransform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
                         egret.Matrix.release(maskMatrix);
                         /////
-                        web.DisplayObjectTransform.transformObjectAsRoot(mask, maskBuffer, 0, 0);
+                        web.DisplayObjectTransform.transformObjectAsRoot(mask, maskBuffer.globalMatrix, 0, 0);
                         /////
                         drawCalls += this.drawDisplayObject(mask, maskBuffer, 0, 0);
                         maskBuffer.context.popBuffer();
@@ -8971,9 +8971,9 @@ var egret;
              * @param offsetX
              * @param offsetY
              */
-            DisplayObjectTransform.transformObjectAsRoot = function (displayObject, buffer, offsetX, offsetY) {
+            DisplayObjectTransform.transformObjectAsRoot = function (displayObject, globalMatrix, offsetX, offsetY) {
                 //设置为根节点，不再重复设置
-                displayObject._worldTransform.set(buffer.globalMatrix, offsetX, offsetY);
+                displayObject._worldTransform.set(globalMatrix, offsetX, offsetY);
                 //开始遍历进行transform
                 this.transformObject(displayObject, offsetX, offsetY);
             };
