@@ -106,6 +106,9 @@ namespace egret.web {
                 let offsetY2 = 0;
                 for (let i = 0; i < length; ++i) {
                     child = children[i];
+                    if (!child.visible || child.$alpha <= 0) {
+                        continue;
+                    }
                     const childWorldTransform = child._worldTransform;
                     const parentWorldTransform = displayObject._worldTransform;
                     const m3 = parentWorldTransform._matrix;

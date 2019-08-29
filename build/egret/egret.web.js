@@ -9011,6 +9011,9 @@ var egret;
                     var offsetY2 = 0;
                     for (var i = 0; i < length_10; ++i) {
                         child = children[i];
+                        if (!child.visible || child.$alpha <= 0) {
+                            continue;
+                        }
                         var childWorldTransform = child._worldTransform;
                         var parentWorldTransform = displayObject._worldTransform;
                         var m3 = parentWorldTransform._matrix;
