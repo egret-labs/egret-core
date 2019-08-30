@@ -72,9 +72,6 @@ export class ManifestPlugin {
             file.outputDir = "";
             file.path = path.join(file.base, new_file_path);
 
-            if (this.options.info && this.options.info.target == 'vivogame') {
-                file.path = path.join(file.base, '../', 'engine', new_file_path);
-            }
             const relative = file.relative.split("\\").join('/');
 
             if (file.origin.indexOf('libs/') >= 0) {
@@ -99,19 +96,17 @@ export class ManifestPlugin {
                 contents = JSON.stringify(manifest, null, '\t');
                 break;
             case ".js":
-                if (target == 'vivogame') {
-                    contents = manifest.initial.concat(manifest.game).map((fileName) => `require("${fileName}")`).join("\n")
-                } else {
-                    contents = manifest.initial.concat(manifest.game).map((fileName) => {
-                        let result = `require("./${fileName}")`
-                        if (this.options.useWxPlugin) {
-                            if (fileName.indexOf('egret-library') == 0) {
-                                result = `requirePlugin("${fileName}")`
-                            }
+                contents = manifest.initial.concat(manifest.game).map((fileName) => {
+                    let result = `require("./${fileName}")`
+                    if(target == 'vivogame'){
+                        result = `require("${fileName}")`
+                    }else if (this.options.useWxPlugin) {
+                        if (fileName.indexOf('egret-library') == 0) {
+                            result = `requirePlugin("${fileName}")`
                         }
-                        return result;
-                    }).join("\n")
-                }
+                    }
+                    return result;
+                }).join("\n")
                 break;
         }
         pluginContext.createFile(this.options.output, new Buffer(contents));
@@ -120,10 +115,6 @@ export class ManifestPlugin {
                 console.log(`manifest-plugin: ${item.filename} => ${item.new_file_path}`)
             });
         }
-
-
     }
-
-
 
 }

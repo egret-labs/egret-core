@@ -89,9 +89,6 @@ var ManifestPlugin = /** @class */ (function () {
                     }
                     file.outputDir = "";
                     file.path = path.join(file.base, new_file_path);
-                    if (this.options.info && this.options.info.target == 'vivogame') {
-                        file.path = path.join(file.base, '../', 'engine', new_file_path);
-                    }
                     relative = file.relative.split("\\").join('/');
                     if (file.origin.indexOf('libs/') >= 0) {
                         manifest.initial.push(relative);
@@ -121,20 +118,18 @@ var ManifestPlugin = /** @class */ (function () {
                         contents = JSON.stringify(manifest, null, '\t');
                         break;
                     case ".js":
-                        if (target == 'vivogame') {
-                            contents = manifest.initial.concat(manifest.game).map(function (fileName) { return "require(\"" + fileName + "\")"; }).join("\n");
-                        }
-                        else {
-                            contents = manifest.initial.concat(manifest.game).map(function (fileName) {
-                                var result = "require(\"./" + fileName + "\")";
-                                if (_this.options.useWxPlugin) {
-                                    if (fileName.indexOf('egret-library') == 0) {
-                                        result = "requirePlugin(\"" + fileName + "\")";
-                                    }
+                        contents = manifest.initial.concat(manifest.game).map(function (fileName) {
+                            var result = "require(\"./" + fileName + "\")";
+                            if (target == 'vivogame') {
+                                result = "require(\"" + fileName + "\")";
+                            }
+                            else if (_this.options.useWxPlugin) {
+                                if (fileName.indexOf('egret-library') == 0) {
+                                    result = "requirePlugin(\"" + fileName + "\")";
                                 }
-                                return result;
-                            }).join("\n");
-                        }
+                            }
+                            return result;
+                        }).join("\n");
                         break;
                 }
                 pluginContext.createFile(this.options.output, new Buffer(contents));
