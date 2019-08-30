@@ -35,6 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var path = require("path");
+var fs = require("fs");
 var manifest = {
     initial: [],
     game: [],
@@ -121,6 +122,10 @@ var ManifestPlugin = /** @class */ (function () {
                         contents = manifest.initial.concat(manifest.game).map(function (fileName) {
                             var result = "require(\"./" + fileName + "\")";
                             if (target == 'vivogame') {
+                                var configPath = path.join(pluginContext.outputDir, "../", "minigame.config.js");
+                                if (!fs.existsSync(configPath)) {
+                                    fs.writeFileSync(path.join(pluginContext.outputDir, "../", "vivo更新了项目结构，请重新创建vivo小游戏项目.js"), "vivo更新了项目结构，请重新创建vivo小游戏项目");
+                                }
                                 result = "require(\"" + fileName + "\")";
                             }
                             else if (_this.options.useWxPlugin) {

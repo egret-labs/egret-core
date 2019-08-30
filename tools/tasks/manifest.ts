@@ -1,5 +1,6 @@
 
 import * as path from 'path';
+import * as fs from 'fs';
 import { Plugin, File } from './index';
 const manifest = {
     initial: [],
@@ -99,6 +100,10 @@ export class ManifestPlugin {
                 contents = manifest.initial.concat(manifest.game).map((fileName) => {
                     let result = `require("./${fileName}")`
                     if(target == 'vivogame'){
+                        let configPath = path.join(pluginContext.outputDir,"../","minigame.config.js")
+                        if(!fs.existsSync(configPath)){
+                            fs.writeFileSync(path.join(pluginContext.outputDir,"../","vivo更新了项目结构，请重新创建vivo小游戏项目.js"), "vivo更新了项目结构，请重新创建vivo小游戏项目");
+                        }
                         result = `require("${fileName}")`
                     }else if (this.options.useWxPlugin) {
                         if (fileName.indexOf('egret-library') == 0) {
