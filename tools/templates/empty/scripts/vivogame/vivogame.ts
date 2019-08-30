@@ -88,7 +88,7 @@ export class VivogamePlugin implements plugins.Command {
         gameJSONContent.deviceOrientation = orientation;
         fs.writeFileSync(gameJSONPath, JSON.stringify(gameJSONContent, null, "\t"));
         let isPublish = pluginContext.buildConfig.command == "publish" ? true : false;
-        let configOption = "webpackConf.externals = Object.assign(webpackConf.externals || {\n\t\t"
+        let configArr: any[] = []
         for (var i = 0, len = this.jsFileList.length; i < len; i++) {
             let jsFile = this.jsFileList[i];
             if (isPublish) {
@@ -98,19 +98,17 @@ export class VivogamePlugin implements plugins.Command {
                     jsFile = "default.thm.min.js"
                 }
             }
-            configOption += `"js/${jsFile}":"commonjs js/${jsFile}"`
-            if (i < len - 1) {
-                configOption += ",\n\t\t"
-            } else {
-                configOption += "\n\t\t"
-            }
+            configArr.push(JSON.stringify({
+                module_name: `./js/${jsFile}`,
+                module_path: `./js/${jsFile}`,
+                module_from: `engine/js/${jsFile}`,
+            }, null, "\t"))
         }
-        configOption += "})"
-        const replaceConfigStr = '\/\/----auto option start----\n\t\t' + configOption + '\n\t\t\/\/----auto option end----';
+        const replaceConfigStr = '\/\/----auto option start----\n\t\t' + configArr.toString()  + '\n\t\t\/\/----auto option end----';
 
-        const webpackConfigPath = path.join(pluginContext.outputDir, '../config', "webpack.config.js");
-        let configJSContent = fs.readFileSync(webpackConfigPath, { encoding: "utf8" });
+        const minigameConfigPath = path.join(pluginContext.outputDir,"../",  "minigame.config.js");
+        let configJSContent = fs.readFileSync(minigameConfigPath, { encoding: "utf8" });
         configJSContent = configJSContent.replace(reg, replaceConfigStr);
-        fs.writeFileSync(webpackConfigPath, configJSContent);
+        fs.writeFileSync(minigameConfigPath, configJSContent);
     }
 }
