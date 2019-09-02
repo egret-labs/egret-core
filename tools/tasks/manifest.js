@@ -131,7 +131,7 @@ var ManifestPlugin = /** @class */ (function () {
                                     fs.writeFileSync(path.join(pluginContext.outputDir, "../", "vivo更新了项目结构，请重新创建vivo小游戏项目.js"), "vivo更新了项目结构，请重新创建vivo小游戏项目");
                                 }
                                 var _name = path.basename(fileName);
-                                result = "require(/js\"" + _name + "\")";
+                                result = "require(\"./js/" + _name + "\")";
                             }
                             else if (_this.options.useWxPlugin) {
                                 if (fileName.indexOf('egret-library') == 0) {
