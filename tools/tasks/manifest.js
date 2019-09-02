@@ -90,6 +90,9 @@ var ManifestPlugin = /** @class */ (function () {
                     }
                     file.outputDir = "";
                     file.path = path.join(file.base, new_file_path);
+                    if (this.options.info && this.options.info.target == 'vivogame') {
+                        file.path = path.join(file.base, '../', 'engine', new_file_path);
+                    }
                     relative = file.relative.split("\\").join('/');
                     if (file.origin.indexOf('libs/') >= 0) {
                         manifest.initial.push(relative);
@@ -124,6 +127,7 @@ var ManifestPlugin = /** @class */ (function () {
                             if (target == 'vivogame') {
                                 var configPath = path.join(pluginContext.outputDir, "../", "minigame.config.js");
                                 if (!fs.existsSync(configPath)) {
+                                    //5.2.28版本，vivo更新了项目结构，老项目需要升级
                                     fs.writeFileSync(path.join(pluginContext.outputDir, "../", "vivo更新了项目结构，请重新创建vivo小游戏项目.js"), "vivo更新了项目结构，请重新创建vivo小游戏项目");
                                 }
                                 result = "require(\"" + fileName + "\")";
