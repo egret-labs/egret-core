@@ -107,7 +107,8 @@ export class ManifestPlugin {
                             //5.2.28版本，vivo更新了项目结构，老项目需要升级
                             fs.writeFileSync(path.join(pluginContext.outputDir,"../","vivo更新了项目结构，请重新创建vivo小游戏项目.js"), "vivo更新了项目结构，请重新创建vivo小游戏项目");
                         }
-                        result = `require("${fileName}")`
+                        let _name = path.basename(fileName)
+                        result = `require(/js"${_name}")`
                     }else if (this.options.useWxPlugin) {
                         if (fileName.indexOf('egret-library') == 0) {
                             result = `requirePlugin("${fileName}")`

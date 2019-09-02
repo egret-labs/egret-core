@@ -7,10 +7,11 @@ export class VivogamePlugin implements plugins.Command {
     async onFile(file: plugins.File) {
         if (file.extname == '.js') {
             const filename = file.origin;
-            this.jsFileList.push(file.basename)
+            
             if (filename == "libs/modules/promise/promise.js" || filename == 'libs/modules/promise/promise.min.js') {
                 return null;
             }
+            this.jsFileList.push(file.basename)
             if (filename == 'libs/modules/egret/egret.js' || filename == 'libs/modules/egret/egret.min.js') {
                 let content = file.contents.toString();
                 content += `;window.egret = egret;`;
