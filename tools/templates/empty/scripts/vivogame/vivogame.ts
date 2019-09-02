@@ -105,10 +105,15 @@ export class VivogamePlugin implements plugins.Command {
             }, null, "\t"))
         }
         const replaceConfigStr = '\/\/----auto option start----\n\t\t' + configArr.toString()  + '\n\t\t\/\/----auto option end----';
-
         const minigameConfigPath = path.join(pluginContext.outputDir,"../",  "minigame.config.js");
-        let configJSContent = fs.readFileSync(minigameConfigPath, { encoding: "utf8" });
-        configJSContent = configJSContent.replace(reg, replaceConfigStr);
-        fs.writeFileSync(minigameConfigPath, configJSContent);
+        if(!fs.existsSync(minigameConfigPath)){
+            //5.2.28版本，vivo更新了项目结构，老项目需要升级
+            fs.writeFileSync(path.join(pluginContext.outputDir,"../","vivo更新了项目结构，请重新创建vivo小游戏项目.js"), "vivo更新了项目结构，请重新创建vivo小游戏项目");
+        }else{
+            let configJSContent = fs.readFileSync(minigameConfigPath, { encoding: "utf8" });
+            configJSContent = configJSContent.replace(reg, replaceConfigStr);
+            fs.writeFileSync(minigameConfigPath, configJSContent);
+        }
+        
     }
 }
