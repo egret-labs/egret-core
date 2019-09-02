@@ -204,17 +204,17 @@ namespace egret.web {
                         case RenderMode.SCROLLRECT:
                             drawCalls += this.drawDisplayObjectAdvanced(child, buffer, offsetX2, offsetY2);
                             break;
-                            /*
-                        case RenderMode.FILTER:
-                            drawCalls += this.drawWithFilter(child, buffer, offsetX2, offsetY2);
-                            break;
-                        case RenderMode.CLIP:
-                            drawCalls += this.drawWithClip(child, buffer, offsetX2, offsetY2);
-                            break;
-                        case RenderMode.SCROLLRECT:
-                            drawCalls += this.drawWithScrollRect(child, buffer, offsetX2, offsetY2);
-                            break;
-                            */
+                        /*
+                    case RenderMode.FILTER:
+                        drawCalls += this.drawWithFilter(child, buffer, offsetX2, offsetY2);
+                        break;
+                    case RenderMode.CLIP:
+                        drawCalls += this.drawWithClip(child, buffer, offsetX2, offsetY2);
+                        break;
+                    case RenderMode.SCROLLRECT:
+                        drawCalls += this.drawWithScrollRect(child, buffer, offsetX2, offsetY2);
+                        break;
+                        */
                         default:
                             drawCalls += this.drawDisplayObject(child, buffer, offsetX2, offsetY2);
                             break;
@@ -275,7 +275,7 @@ namespace egret.web {
                     }
 
                     buffer.context.$filter = <ColorMatrixFilter>filters[0];
-                    DisplayObjectTransform.transformObject(displayObject, offsetX, offsetY);
+                    DisplayObjectTransform.transformObjectAsRoot(displayObject, buffer.globalMatrix, offsetX, offsetY);
                     if (displayObject.$mask) {
                         drawCalls += this.drawWithClip(displayObject, buffer, offsetX, offsetY);
                     }
@@ -299,7 +299,7 @@ namespace egret.web {
             // 为显示对象创建一个新的buffer
             let displayBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
             displayBuffer.context.pushBuffer(displayBuffer);
-            
+
             //todo 可以优化减少draw次数
             if (displayObject.$mask) {
                 drawCalls += this.drawWithClip(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
@@ -950,9 +950,9 @@ namespace egret.web {
                         buffer.$offsetY = saveOffsetY + anchorY - (tb.measureHeight + (tb.stroke2 ? tb.canvasHeightOffset : 0)) / 2;
                         page = tb.line.page;
                         buffer.context.__drawTexture__(displayObject, page.webGLTexture,
-                            tb.u, tb.v, tb.contentWidth, tb.contentHeight, 
+                            tb.u, tb.v, tb.contentWidth, tb.contentHeight,
                             0, 0, tb.contentWidth, tb.contentHeight,
-                             page.pageWidth, page.pageHeight);
+                            page.pageWidth, page.pageHeight);
 
                         buffer.$offsetX += (tb.contentWidth - tb.canvasWidthOffset);
                     }

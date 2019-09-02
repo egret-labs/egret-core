@@ -7959,7 +7959,7 @@ var egret;
                             buffer.context.setGlobalCompositeOperation(compositeOp);
                         }
                         buffer.context.$filter = filters[0];
-                        web.DisplayObjectTransform.transformObject(displayObject, offsetX, offsetY);
+                        web.DisplayObjectTransform.transformObjectAsRoot(displayObject, buffer.globalMatrix, offsetX, offsetY);
                         if (displayObject.$mask) {
                             drawCalls += this.drawWithClip(displayObject, buffer, offsetX, offsetY);
                         }
