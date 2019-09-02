@@ -87,6 +87,10 @@ export class VivogamePlugin implements plugins.Command {
         const gameJSONPath = path.join(pluginContext.outputDir, "manifest.json");
         let gameJSONContent = JSON.parse(fs.readFileSync(gameJSONPath, { encoding: "utf8" }));
         gameJSONContent.deviceOrientation = orientation;
+        let engineVersion = this.readData(path.join(pluginContext.projectRoot, "egretProperties.json")).engineVersion
+        if(!gameJSONContent.thirdEngine)gameJSONContent.thirdEngine={}
+        gameJSONContent.thirdEngine.egret = engineVersion
+        
         fs.writeFileSync(gameJSONPath, JSON.stringify(gameJSONContent, null, "\t"));
         let isPublish = pluginContext.buildConfig.command == "publish" ? true : false;
         let configArr: any[] = []
@@ -115,6 +119,8 @@ export class VivogamePlugin implements plugins.Command {
             configJSContent = configJSContent.replace(reg, replaceConfigStr);
             fs.writeFileSync(minigameConfigPath, configJSContent);
         }
-        
+    }
+    readData(filePath: string): any {
+        return JSON.parse(fs.readFileSync(filePath, { encoding: "utf8" }));
     }
 }
