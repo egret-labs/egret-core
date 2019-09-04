@@ -1995,12 +1995,28 @@ var egret;
              * @private
              *
              */
+            HTML5StageText.prototype.onFocusHandler = function () {
+                //the soft keyboard will cover the input box in some cases
+                var self = this;
+                window.setTimeout(function () {
+                    if (self.inputElement) {
+                        self.inputElement.scrollIntoView();
+                    }
+                }, 200);
+            };
+            /**
+             * @private
+             *
+             */
             HTML5StageText.prototype.executeShow = function () {
                 var self = this;
                 //打开
                 this.inputElement.value = this.$getText();
                 if (this.inputElement.onblur == null) {
                     this.inputElement.onblur = this.onBlurHandler.bind(this);
+                }
+                if (this.inputElement.onfocus == null) {
+                    this.inputElement.onfocus = this.onFocusHandler.bind(this);
                 }
                 this.$resetStageText();
                 if (this.$textfield.maxChars > 0) {
@@ -2369,10 +2385,10 @@ var egret;
              */
             HTMLInput.prototype.disconnectStageText = function (stageText) {
                 if (this._stageText == null || this._stageText == stageText) {
-                    this.clearInputElement();
                     if (this._inputElement) {
                         this._inputElement.blur();
                     }
+                    this.clearInputElement();
                 }
                 this._needShow = false;
             };
@@ -2385,6 +2401,7 @@ var egret;
                 if (self._inputElement) {
                     self._inputElement.value = "";
                     self._inputElement.onblur = null;
+                    self._inputElement.onfocus = null;
                     self._inputElement.style.width = "1px";
                     self._inputElement.style.height = "12px";
                     self._inputElement.style.left = "0px";
