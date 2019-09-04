@@ -173,7 +173,27 @@ namespace egret.web {
          */
         private onBlurHandler(): void {
             this.htmlInput.clearInputElement();
-            window.scrollTo(0, 0);
+            
+            window.setTimeout( ()=> {
+                // if (self.inputElement) {
+                //     self.inputElement.scrollIntoView();
+                // }
+                window.scrollTo(0, 0);
+            }, 200);
+        }
+
+        /**
+         * @private
+         * 
+         */
+        private onFocusHandler(): void {
+            //the soft keyboard will cover the input box in some cases
+            let self = this;
+            window.setTimeout(function () {
+                if (self.inputElement) {
+                    self.inputElement.scrollIntoView();
+                }
+            }, 200);
         }
 
         /**
@@ -187,6 +207,9 @@ namespace egret.web {
 
             if (this.inputElement.onblur == null) {
                 this.inputElement.onblur = this.onBlurHandler.bind(this);
+            }
+            if (this.inputElement.onfocus == null) {
+                this.inputElement.onfocus = this.onFocusHandler.bind(this);
             }
 
             this.$resetStageText();
@@ -653,11 +676,10 @@ namespace egret.web {
          */
         public disconnectStageText(stageText): void {
             if (this._stageText == null || this._stageText == stageText) {
-                this.clearInputElement();
-
                 if (this._inputElement) {
                     this._inputElement.blur();
                 }
+                this.clearInputElement();
             }
             this._needShow = false;
         }
@@ -672,6 +694,7 @@ namespace egret.web {
                 self._inputElement.value = "";
 
                 self._inputElement.onblur = null;
+                self._inputElement.onfocus = null;
 
                 self._inputElement.style.width = "1px";
                 self._inputElement.style.height = "12px";
