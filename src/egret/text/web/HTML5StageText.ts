@@ -173,13 +173,7 @@ namespace egret.web {
          */
         private onBlurHandler(): void {
             this.htmlInput.clearInputElement();
-            
-            window.setTimeout( ()=> {
-                // if (self.inputElement) {
-                //     self.inputElement.scrollIntoView();
-                // }
-                window.scrollTo(0, 0);
-            }, 200);
+            window.scrollTo(0, 0);
         }
 
         /**
