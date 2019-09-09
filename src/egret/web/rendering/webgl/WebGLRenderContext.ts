@@ -52,6 +52,7 @@ namespace egret.web {
         public resetVertexAttribPointer: boolean = true;
         private _currentVertexBuffer: WebGLBuffer;
         private _currentIndexBuffer: WebGLBuffer;
+        public readonly filterSystem: FilterSystem;
 
         public bindVertexBuffer(vertexBuffer: WebGLBuffer): void {
             if (this._currentVertexBuffer === vertexBuffer) {
@@ -294,6 +295,8 @@ namespace egret.web {
             
 
             this.setGlobalCompositeOperation("source-over");
+
+            this.filterSystem = new FilterSystem(this);
         }
 
         /**

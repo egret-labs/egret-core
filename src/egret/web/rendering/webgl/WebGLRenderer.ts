@@ -1240,6 +1240,8 @@ namespace egret.web {
         * 全部集中于这个函数里面，后续做整体重构和解决嵌套问题
         */
         private drawDisplayObjectAdvanced(displayObject: DisplayObject, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number, isStage?: boolean): number {
+            this.___drawDisplayObjectAdvanced____(displayObject, buffer, offsetX, offsetY);
+            //return;
             const webglctx = buffer.context;
             webglctx.$flush();
             let drawCalls = 0;
@@ -1261,6 +1263,50 @@ namespace egret.web {
             }
             webglctx.$flush();
             return drawCalls;
+        }
+
+        /*
+        * 准备重构用
+        */
+        private ___drawDisplayObjectAdvanced____(displayObject: DisplayObject, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number): void {
+            const webglctx = buffer.context;
+            webglctx.$flush();
+            //
+            const webglRenderContext = buffer.context;
+            const filterSystem = webglRenderContext.filterSystem;
+            filterSystem._webglRender = this;
+            //
+            const filters = displayObject.filters;
+            const mask = displayObject.$mask || displayObject.$maskRect || displayObject.$scrollRect;
+
+            //
+            if (filters && filters.length > 0) {
+                /*
+                这里面有可能会改掉_drawAdvancedTargetData;
+                */
+                filterSystem.push(displayObject, displayObject.filters, buffer, offsetX, offsetY);
+            }
+            if (mask) {
+                //webglRenderContext.maskSystem.push(child, buffer, offsetX2, offsetY2, drawAdvancedData);
+            }
+            ////////////////
+            // draw something;
+            const testDraw = false;
+            if (testDraw) {
+                DisplayObjectTransform.transformObjectAsRoot(displayObject, buffer.globalMatrix, offsetX, offsetY);
+                this.drawDisplayObject(displayObject, buffer, offsetX, offsetY);
+            }
+            //
+            ////////////////
+            //
+            webglctx.$flush();
+            //
+            if (mask) {
+                //webglRenderContext.maskSystem.pop();
+            }
+            if (filters && filters.length > 0) {
+                filterSystem.pop();
+            }
         }
     }
 }

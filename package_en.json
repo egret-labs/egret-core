@@ -257,6 +257,10 @@
             "platform": "web"
           },
           {
+            "path": "web/rendering/webgl/FilterSystem.ts",
+            "platform": "web"
+          },
+          {
             "path": "web/rendering/webgl/WebGLRenderBatchSystem.ts",
             "platform": "web"
           },
