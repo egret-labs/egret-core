@@ -29,11 +29,11 @@
 
 namespace egret.web {
 
-    let blendModes = ["source-over", "lighter", "destination-out"];
-    let defaultCompositeOp = "source-over";
+    export let blendModes = ["source-over", "lighter", "destination-out"];
+    export let defaultCompositeOp = "source-over";
     let BLACK_COLOR = "#000000";
     let CAPS_STYLES = { none: 'butt', square: 'square', round: 'round' };
-    let renderBufferPool: WebGLRenderBuffer[] = [];//渲染缓冲区对象池
+    export let renderBufferPool: WebGLRenderBuffer[] = [];//渲染缓冲区对象池
     /**
      * @private
      * WebGL渲染器
@@ -99,7 +99,7 @@ namespace egret.web {
          * @private
          * 绘制一个显示对象
          */
-        private drawDisplayObject(displayObject: DisplayObject, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number, isStage?: boolean): number {
+        public drawDisplayObject(displayObject: DisplayObject, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number, isStage?: boolean): number {
             let drawCalls = 0;
             let node: sys.RenderNode;
             let displayList = displayObject.$displayList;
@@ -243,7 +243,7 @@ namespace egret.web {
         /**
          * @private
          */
-        private drawWithFilter(displayObject: DisplayObject, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number): number {
+        public drawWithFilter(displayObject: DisplayObject, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number): number {
             let drawCalls = 0;
             if (displayObject.$children && displayObject.$children.length == 0 && (!displayObject.$renderNode || displayObject.$renderNode.$getRenderCount() == 0)) {
                 return drawCalls;
@@ -380,7 +380,7 @@ namespace egret.web {
         /**
          * @private
          */
-        private drawWithClip(displayObject: DisplayObject, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number): number {
+        public drawWithClip(displayObject: DisplayObject, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number): number {
             let drawCalls = 0;
             let hasBlendMode = (displayObject.$blendMode !== 0);
             let compositeOp: string;
@@ -510,7 +510,7 @@ namespace egret.web {
         /**
          * @private
          */
-        private drawWithScrollRect(displayObject: DisplayObject, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number): number {
+        public drawWithScrollRect(displayObject: DisplayObject, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number): number {
             let drawCalls = 0;
             let scrollRect = displayObject.$scrollRect ? displayObject.$scrollRect : displayObject.$maskRect;
             if (scrollRect.isEmpty()) {
