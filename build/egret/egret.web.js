@@ -6183,13 +6183,16 @@ var egret;
             /**
              * 推出一个RenderBuffer并绑定上一个RenderBuffer
              */
-            WebGLRenderContext.prototype.popBuffer = function () {
+            WebGLRenderContext.prototype.popBuffer = function (popBuffer) {
                 // 如果只剩下一个buffer，则不执行pop操作
                 // 保证舞台buffer永远在最开始
                 if (this.$bufferStack.length <= 1) {
                     return;
                 }
                 var buffer = this.$bufferStack.pop();
+                if (popBuffer && popBuffer !== buffer) {
+                    console.error('popBuffer: The order of the calls has an error');
+                }
                 var lastBuffer = this.$bufferStack[this.$bufferStack.length - 1];
                 // 重新绑定
                 if (buffer != lastBuffer) {
@@ -7192,7 +7195,7 @@ var egret;
             function FilterState() {
                 //public rootRenderTarget: egret.web.WebGLRenderBuffer = null;
                 this.filters = [];
-                this.currentCompositeOp = '';
+                this.compositeOp = '';
                 // public displayBoundsX: number = 0;
                 // public displayBoundsY: number = 0;
                 // public displayBoundsWidth: number = 0;
@@ -7205,7 +7208,7 @@ var egret;
                 this.renderTarget = null;
                 // this.rootRenderTarget = null;
                 this.filters = null;
-                this.currentCompositeOp = '';
+                this.compositeOp = '';
                 // this.displayBoundsX = 0;
                 // this.displayBoundsY = 0;
                 // this.displayBoundsWidth = 0;
@@ -7248,8 +7251,8 @@ var egret;
                 // state.displayBoundsY = displayBounds.y;
                 // state.displayBoundsWidth = displayBounds.width;
                 // state.displayBoundsHeight = displayBounds.height;
-                state.offsetX = offsetX;
-                state.offsetY = offsetY;
+                state.offsetX = displayObject._worldTransform._offsetX;
+                state.offsetY = displayObject._worldTransform._offsetY;
                 if (offsetX !== displayObject._worldTransform._offsetX || offsetY !== displayObject._worldTransform._offsetY) {
                     console.error('offsetX !== displayObject._worldTransform._offsetX || offsetY !== displayObject._worldTransform._offset');
                 }
@@ -7258,29 +7261,20 @@ var egret;
                 // state.rootRenderTexture = renderTargetRoot;
                 state.filters = filters;
                 //save blendFunc;
-                state.currentCompositeOp = web.blendModes[displayObject.$blendMode] || web.defaultCompositeOp;
+                state.compositeOp = web.blendModes[displayObject.$blendMode] || web.defaultCompositeOp;
                 ///这里做绘制到纹理
-                var drawCalls = 0;
+                //let drawCalls = 0;
                 var displayBoundsX = displayBounds.x;
                 var displayBoundsY = displayBounds.y;
-                var _webglRender = this._webglRender;
+                //const _webglRender = this._webglRender;
                 // 为显示对象创建一个新的buffer
                 var displayBuffer = state.renderTarget; //this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
-                displayBuffer.context.pushBuffer(displayBuffer);
+                this._webglRenderContext.pushBuffer(displayBuffer);
                 //todo 可以优化减少draw次数
-                if (displayObject.$mask) {
-                    drawCalls += _webglRender.drawWithClip(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
-                }
-                else if (displayObject.$scrollRect || displayObject.$maskRect) {
-                    drawCalls += _webglRender.drawWithScrollRect(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
-                }
-                else {
-                    /////
-                    web.DisplayObjectTransform.transformObjectAsRoot(displayObject, displayBuffer.globalMatrix, -displayBoundsX, -displayBoundsY);
-                    /////
-                    drawCalls += _webglRender.drawDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
-                }
-                displayBuffer.context.popBuffer();
+                //
+                var cmd = web.AdvancedRenderCommand.create(displayObject, buffer, offsetX, offsetY);
+                web.AdvancedRenderCommand.pushCommand(cmd);
+                web.DisplayObjectTransform.transformObjectAsRoot(displayObject, displayBuffer.globalMatrix, -displayBoundsX, -displayBoundsY);
                 /*
                 if (filters.length <= 0) {
                     console.error('FilterSystem:push:filters.length = ' + filters.length);
@@ -7339,6 +7333,7 @@ var egret;
                 //const _webglRenderContext = this._webglRenderContext;
                 //unbind target
                 //_webglRenderContext.popBuffer(state.renderTexture);
+                this._webglRenderContext.popBuffer(state.renderTarget);
                 //
                 //_webglRenderContext.setGlobalCompositeOperation(state.currentCompositeOp);
                 //
@@ -7352,7 +7347,7 @@ var egret;
                     else {
                         var drawCalls = 1;
                         var buffer = lastState.renderTarget;
-                        var compositeOp = state.currentCompositeOp;
+                        var compositeOp = state.compositeOp;
                         var offsetX = state.offsetX;
                         var offsetY = state.offsetY;
                         var displayBounds = state.displayObject.$getOriginalBounds();
@@ -7574,6 +7569,73 @@ var egret;
         }());
         web.FilterSystem = FilterSystem;
         __reflect(FilterSystem.prototype, "egret.web.FilterSystem");
+    })(web = egret.web || (egret.web = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var web;
+    (function (web) {
+        var AdvancedRenderCommand = (function () {
+            function AdvancedRenderCommand(displayObject, buffer, offsetX, offsetY) {
+                this.displayObject = displayObject;
+                this.buffer = buffer;
+                this.offsetX = offsetX;
+                this.offsetY = offsetY;
+            }
+            AdvancedRenderCommand.prototype.clear = function () {
+                this.displayObject = null;
+                this.buffer = null;
+                this.offsetX = 0;
+                this.offsetY = 0;
+            };
+            AdvancedRenderCommand.create = function (displayObject, buffer, offsetX, offsetY) {
+                var cmd = AdvancedRenderCommand.advancedRenderCommandPool.pop()
+                    || new AdvancedRenderCommand(displayObject, buffer, offsetX, offsetY);
+                return cmd;
+            };
+            AdvancedRenderCommand.release = function (cmd) {
+                AdvancedRenderCommand.advancedRenderCommandPool.push(cmd);
+            };
+            AdvancedRenderCommand.pushCommand = function (cmd) {
+                AdvancedRenderCommand.advancedRenderCommandStack.push(cmd);
+            };
+            AdvancedRenderCommand.popCommand = function () {
+                return AdvancedRenderCommand.advancedRenderCommandStack.pop();
+            };
+            AdvancedRenderCommand.advancedRenderCommandStack = [];
+            AdvancedRenderCommand.advancedRenderCommandPool = [];
+            return AdvancedRenderCommand;
+        }());
+        web.AdvancedRenderCommand = AdvancedRenderCommand;
+        __reflect(AdvancedRenderCommand.prototype, "egret.web.AdvancedRenderCommand");
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -9296,7 +9358,7 @@ var egret;
             */
             WebGLRenderer.prototype.drawDisplayObjectAdvanced = function (displayObject, buffer, offsetX, offsetY, isStage) {
                 this.___drawDisplayObjectAdvanced____(displayObject, buffer, offsetX, offsetY);
-                //return;
+                return;
                 var webglctx = buffer.context;
                 webglctx.$flush();
                 var drawCalls = 0;
@@ -9332,22 +9394,29 @@ var egret;
                 //
                 var filters = displayObject.filters;
                 var mask = displayObject.$mask || displayObject.$maskRect || displayObject.$scrollRect;
+                var advancedSystemActive = false;
                 //
                 if (filters && filters.length > 0) {
                     /*
                     这里面有可能会改掉_drawAdvancedTargetData;
                     */
                     filterSystem.push(displayObject, displayObject.filters, buffer, offsetX, offsetY);
+                    advancedSystemActive = true;
                 }
                 if (mask) {
                     //webglRenderContext.maskSystem.push(child, buffer, offsetX2, offsetY2, drawAdvancedData);
+                    advancedSystemActive = true;
                 }
                 ////////////////
                 // draw something;
-                var testDraw = false;
-                if (testDraw) {
-                    web.DisplayObjectTransform.transformObjectAsRoot(displayObject, buffer.globalMatrix, offsetX, offsetY);
-                    this.drawDisplayObject(displayObject, buffer, offsetX, offsetY);
+                // DisplayObjectTransform.transformObjectAsRoot(displayObject, buffer.globalMatrix, offsetX, offsetY);
+                // this.drawDisplayObject(displayObject, buffer, offsetX, offsetY);
+                if (advancedSystemActive) {
+                    var cmd = web.AdvancedRenderCommand.popCommand();
+                    if (cmd) {
+                        this.drawDisplayObject(cmd.displayObject, cmd.buffer, cmd.offsetX, cmd.offsetY);
+                        web.AdvancedRenderCommand.release(cmd);
+                    }
                 }
                 //
                 ////////////////

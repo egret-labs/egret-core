@@ -1241,7 +1241,7 @@ namespace egret.web {
         */
         private drawDisplayObjectAdvanced(displayObject: DisplayObject, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number, isStage?: boolean): number {
             this.___drawDisplayObjectAdvanced____(displayObject, buffer, offsetX, offsetY);
-            //return;
+            return;
             const webglctx = buffer.context;
             webglctx.$flush();
             let drawCalls = 0;
@@ -1278,6 +1278,7 @@ namespace egret.web {
             //
             const filters = displayObject.filters;
             const mask = displayObject.$mask || displayObject.$maskRect || displayObject.$scrollRect;
+            let advancedSystemActive = false;
 
             //
             if (filters && filters.length > 0) {
@@ -1285,16 +1286,23 @@ namespace egret.web {
                 这里面有可能会改掉_drawAdvancedTargetData;
                 */
                 filterSystem.push(displayObject, displayObject.filters, buffer, offsetX, offsetY);
+                advancedSystemActive = true;
             }
             if (mask) {
                 //webglRenderContext.maskSystem.push(child, buffer, offsetX2, offsetY2, drawAdvancedData);
+                advancedSystemActive = true;
             }
             ////////////////
             // draw something;
-            const testDraw = false;
-            if (testDraw) {
-                DisplayObjectTransform.transformObjectAsRoot(displayObject, buffer.globalMatrix, offsetX, offsetY);
-                this.drawDisplayObject(displayObject, buffer, offsetX, offsetY);
+            // DisplayObjectTransform.transformObjectAsRoot(displayObject, buffer.globalMatrix, offsetX, offsetY);
+            // this.drawDisplayObject(displayObject, buffer, offsetX, offsetY);
+
+            if (advancedSystemActive) {
+                const cmd = AdvancedRenderCommand.popCommand();
+                if (cmd) {
+                    this.drawDisplayObject(cmd.displayObject, cmd.buffer, cmd.offsetX, cmd.offsetY);
+                    AdvancedRenderCommand.release(cmd);
+                }
             }
             //
             ////////////////

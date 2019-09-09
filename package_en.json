@@ -261,6 +261,10 @@
             "platform": "web"
           },
           {
+            "path": "web/rendering/webgl/AdvancedRenderCommand.ts",
+            "platform": "web"
+          },
+          {
             "path": "web/rendering/webgl/WebGLRenderBatchSystem.ts",
             "platform": "web"
           },

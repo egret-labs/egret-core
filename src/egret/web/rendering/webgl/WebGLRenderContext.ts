@@ -199,7 +199,7 @@ namespace egret.web {
         /**
          * 推出一个RenderBuffer并绑定上一个RenderBuffer
          */
-        public popBuffer(): void {
+        public popBuffer(popBuffer?: WebGLRenderBuffer): void {
             // 如果只剩下一个buffer，则不执行pop操作
             // 保证舞台buffer永远在最开始
             if (this.$bufferStack.length <= 1) {
@@ -207,6 +207,9 @@ namespace egret.web {
             }
 
             let buffer = this.$bufferStack.pop();
+            if (popBuffer && popBuffer !== buffer) {
+                console.error('popBuffer: The order of the calls has an error');
+            }
 
             let lastBuffer = this.$bufferStack[this.$bufferStack.length - 1];
 

@@ -37,7 +37,7 @@ namespace egret.web {
         public renderTarget: egret.web.WebGLRenderBuffer;
         //public rootRenderTarget: egret.web.WebGLRenderBuffer = null;
         public filters: Array<Filter | CustomFilter> = [];
-        public currentCompositeOp: string = '';
+        public compositeOp: string = '';
         // public displayBoundsX: number = 0;
         // public displayBoundsY: number = 0;
         // public displayBoundsWidth: number = 0;
@@ -53,7 +53,7 @@ namespace egret.web {
             this.renderTarget = null;
             // this.rootRenderTarget = null;
             this.filters = null;
-            this.currentCompositeOp = '';
+            this.compositeOp = '';
             // this.displayBoundsX = 0;
             // this.displayBoundsY = 0;
             // this.displayBoundsWidth = 0;
@@ -105,19 +105,17 @@ namespace egret.web {
             // state.displayBoundsY = displayBounds.y;
             // state.displayBoundsWidth = displayBounds.width;
             // state.displayBoundsHeight = displayBounds.height;
-            state.offsetX = offsetX;
-            state.offsetY = offsetY;
-
+            state.offsetX = displayObject._worldTransform._offsetX;
+            state.offsetY = displayObject._worldTransform._offsetY;
             if (offsetX !== displayObject._worldTransform._offsetX || offsetY !== displayObject._worldTransform._offsetY) {
                 console.error('offsetX !== displayObject._worldTransform._offsetX || offsetY !== displayObject._worldTransform._offset');
             }
-
             //render target
             state.renderTarget = WebGLRenderBuffer.create(displayBounds.width, displayBounds.height);
             // state.rootRenderTexture = renderTargetRoot;
             state.filters = filters;
             //save blendFunc;
-            state.currentCompositeOp = blendModes[displayObject.$blendMode] || defaultCompositeOp;
+            state.compositeOp = blendModes[displayObject.$blendMode] || defaultCompositeOp;
 
 
 
@@ -126,63 +124,20 @@ namespace egret.web {
 
 
             ///这里做绘制到纹理
-            let drawCalls = 0;
+            //let drawCalls = 0;
             const displayBoundsX = displayBounds.x;
             const displayBoundsY = displayBounds.y;
-            const _webglRender = this._webglRender;
+            //const _webglRender = this._webglRender;
+
             // 为显示对象创建一个新的buffer
-            var displayBuffer = state.renderTarget;//this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
-            displayBuffer.context.pushBuffer(displayBuffer);
+            const displayBuffer = state.renderTarget;//this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
+            this._webglRenderContext.pushBuffer(displayBuffer);
             //todo 可以优化减少draw次数
-            if (displayObject.$mask) {
-                drawCalls += _webglRender.drawWithClip(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
-            }
-            else if (displayObject.$scrollRect || displayObject.$maskRect) {
-                drawCalls += _webglRender.drawWithScrollRect(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
-            }
-            else {
-                /////
-                web.DisplayObjectTransform.transformObjectAsRoot(displayObject, displayBuffer.globalMatrix, -displayBoundsX, -displayBoundsY);
-                /////
-                drawCalls += _webglRender.drawDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
-            }
-            displayBuffer.context.popBuffer();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            //
+            const cmd = AdvancedRenderCommand.create(displayObject, buffer, offsetX, offsetY);
+            AdvancedRenderCommand.pushCommand(cmd);
+            web.DisplayObjectTransform.transformObjectAsRoot(displayObject, displayBuffer.globalMatrix, -displayBoundsX, -displayBoundsY);
 
 
 
@@ -246,6 +201,7 @@ namespace egret.web {
             //const _webglRenderContext = this._webglRenderContext;
             //unbind target
             //_webglRenderContext.popBuffer(state.renderTexture);
+            this._webglRenderContext.popBuffer(state.renderTarget);
             //
             //_webglRenderContext.setGlobalCompositeOperation(state.currentCompositeOp);
             //
@@ -261,7 +217,7 @@ namespace egret.web {
 
                     let drawCalls = 1;
                     const buffer = lastState.renderTarget;
-                    const compositeOp = state.currentCompositeOp;
+                    const compositeOp = state.compositeOp;
                     const offsetX = state.offsetX;
                     const offsetY = state.offsetY;
                     const displayBounds = state.displayObject.$getOriginalBounds();
