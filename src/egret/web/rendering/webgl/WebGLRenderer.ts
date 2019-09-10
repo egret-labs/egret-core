@@ -350,7 +350,7 @@ namespace egret.web {
             return drawCalls;
         }
 
-        private getRenderCount(displayObject: DisplayObject): number {
+        public getRenderCount(displayObject: DisplayObject): number {
             let drawCount = 0;
             const node = displayObject.$getRenderNode();
             if (node) {
@@ -1225,7 +1225,7 @@ namespace egret.web {
         /**
          * @private
          */
-        private createRenderBuffer(width: number, height: number): WebGLRenderBuffer {
+        public createRenderBuffer(width: number, height: number): WebGLRenderBuffer {
             let buffer = renderBufferPool.pop();
             if (buffer) {
                 buffer.resize(width, height);
@@ -1241,7 +1241,7 @@ namespace egret.web {
         */
         private drawDisplayObjectAdvanced(displayObject: DisplayObject, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number, isStage?: boolean): number {
             this.___drawDisplayObjectAdvanced____(displayObject, buffer, offsetX, offsetY);
-            return;
+            //return;
             const webglctx = buffer.context;
             webglctx.$flush();
             let drawCalls = 0;
@@ -1296,14 +1296,13 @@ namespace egret.web {
             // draw something;
             // DisplayObjectTransform.transformObjectAsRoot(displayObject, buffer.globalMatrix, offsetX, offsetY);
             // this.drawDisplayObject(displayObject, buffer, offsetX, offsetY);
-
-            if (advancedSystemActive) {
-                const cmd = AdvancedRenderCommand.popCommand();
-                if (cmd) {
-                    this.drawDisplayObject(cmd.displayObject, cmd.buffer, cmd.offsetX, cmd.offsetY);
-                    AdvancedRenderCommand.release(cmd);
-                }
-            }
+            // if (advancedSystemActive) {
+            //     const cmd = AdvancedRenderCommand.popCommand();
+            //     if (cmd) {
+            //         this.drawDisplayObject(cmd.displayObject, cmd.buffer, cmd.offsetX, cmd.offsetY);
+            //         AdvancedRenderCommand.release(cmd);
+            //     }
+            // }
             //
             ////////////////
             //
