@@ -1,5 +1,6 @@
 
 import * as path from 'path';
+import * as fs from 'fs';
 import { Plugin, File } from './index';
 const manifest = {
     initial: [],
@@ -71,7 +72,6 @@ export class ManifestPlugin {
             }
             file.outputDir = "";
             file.path = path.join(file.base, new_file_path);
-
             if (this.options.info && this.options.info.target == 'vivogame') {
                 file.path = path.join(file.base, '../', 'engine', new_file_path);
             }
@@ -99,19 +99,23 @@ export class ManifestPlugin {
                 contents = JSON.stringify(manifest, null, '\t');
                 break;
             case ".js":
-                if (target == 'vivogame') {
-                    contents = manifest.initial.concat(manifest.game).map((fileName) => `require("${fileName}")`).join("\n")
-                } else {
-                    contents = manifest.initial.concat(manifest.game).map((fileName) => {
-                        let result = `require("./${fileName}")`
-                        if (this.options.useWxPlugin) {
-                            if (fileName.indexOf('egret-library') == 0) {
-                                result = `requirePlugin("${fileName}")`
-                            }
+                contents = manifest.initial.concat(manifest.game).map((fileName) => {
+                    let result = `require("./${fileName}")`
+                    if(target == 'vivogame'){
+                        let configPath = path.join(pluginContext.outputDir,"../","minigame.config.js")
+                        if(!fs.existsSync(configPath)){
+                            //5.2.28版本，vivo更新了项目结构，老项目需要升级
+                            fs.writeFileSync(path.join(pluginContext.outputDir,"../","vivo更新了项目结构，请重新创建vivo小游戏项目.js"), "vivo更新了项目结构，请重新创建vivo小游戏项目");
                         }
-                        return result;
-                    }).join("\n")
-                }
+                        let _name = path.basename(fileName)
+                        result = `require("./js/${_name}")`
+                    }else if (this.options.useWxPlugin) {
+                        if (fileName.indexOf('egret-library') == 0) {
+                            result = `requirePlugin("${fileName}")`
+                        }
+                    }
+                    return result;
+                }).join("\n")
                 break;
         }
         pluginContext.createFile(this.options.output, new Buffer(contents));
@@ -120,10 +124,6 @@ export class ManifestPlugin {
                 console.log(`manifest-plugin: ${item.filename} => ${item.new_file_path}`)
             });
         }
-
-
     }
-
-
 
 }

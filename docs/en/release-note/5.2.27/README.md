@@ -1,5 +1,5 @@
 # Egret Engine 5.2.27 Release Notes
-The Egret Engine released the 5.2.267 stable version on August 23, 2019.
+The Egret Engine released the 5.2.27 stable version on August 23, 2019.
 
 ## 2D Rendering - JavaScript 
 - **[fix]** RenderTexture setting alpha display error
