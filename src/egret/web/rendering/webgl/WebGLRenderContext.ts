@@ -68,6 +68,10 @@ namespace egret.web {
                 return this.instance;
             }
             this.instance = new WebGLRenderContext(width, height);
+            /**
+             * bell game hack: 这里做唯一赋值 
+             */
+            globalWebGLRenderContext = this.instance;
             return this.instance;
         }
 

@@ -27,6 +27,13 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 namespace egret {
+
+    /**
+     * bell game hack: 全局定义定一个WebGLRenderContext 
+     */
+    export let globalWebGLRenderContext: any;
+    console.warn('for bell game = ' + egret.Capabilities.engineVersion);
+
     /**
      * @private
      */
@@ -132,6 +139,30 @@ namespace egret {
             G = ((G * alpha) + 0.5) | 0;
             B = ((B * alpha) + 0.5) | 0;
             return (alpha * 255 << 24) + (R << 16) + (G << 8) + B;
+        }
+
+
+        /**
+         * bell game hack: 创建一个空的纹理
+         * @param width 
+         * @param height 
+         * @param debug 
+         */
+        public static createEmptyTexture(width: number, height: number, debug: boolean): WebGLTexture {
+            let texture: WebGLTexture = null;
+            if (debug) {
+                //做一个黑底子的，方便调试代码
+                const canvas = egret.sys.createCanvas(width, width);
+                const context = egret.sys.getContext2d(canvas);
+                context.fillStyle = 'black';
+                context.fillRect(0, 0, width, width);
+                texture = egret.sys.createTexture(globalWebGLRenderContext, canvas);
+            }
+            else {
+                //真的
+                texture = egret.sys._createTexture(globalWebGLRenderContext, width, height, null);
+            }
+            return texture;
         }
     }
 }
