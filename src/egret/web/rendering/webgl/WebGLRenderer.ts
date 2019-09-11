@@ -1296,13 +1296,13 @@ namespace egret.web {
             // draw something;
             // DisplayObjectTransform.transformObjectAsRoot(displayObject, buffer.globalMatrix, offsetX, offsetY);
             // this.drawDisplayObject(displayObject, buffer, offsetX, offsetY);
-            // if (advancedSystemActive) {
-            //     const cmd = AdvancedRenderCommand.popCommand();
-            //     if (cmd) {
-            //         this.drawDisplayObject(cmd.displayObject, cmd.buffer, cmd.offsetX, cmd.offsetY);
-            //         AdvancedRenderCommand.release(cmd);
-            //     }
-            // }
+            if (advancedSystemActive) {
+                const cmd = AdvancedRenderCommand.popCommand();
+                if (cmd) {
+                    this.drawDisplayObject(cmd.displayObject, cmd.buffer, cmd.offsetX, cmd.offsetY);
+                    AdvancedRenderCommand.release(cmd);
+                }
+            }
             //
             ////////////////
             //

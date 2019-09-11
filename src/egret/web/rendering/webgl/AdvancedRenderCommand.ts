@@ -39,11 +39,7 @@ namespace egret.web {
         public offsetX: number;
         public offsetY: number;
 
-        private constructor(displayObject: DisplayObject, buffer: egret.web.WebGLRenderBuffer, offsetX: number, offsetY: number) {
-            this.displayObject = displayObject;
-            this.buffer = buffer;
-            this.offsetX = offsetX;
-            this.offsetY = offsetY;
+        private constructor() {
         }
 
         public clear() {
@@ -54,8 +50,11 @@ namespace egret.web {
         }
 
         public static create(displayObject: DisplayObject, buffer: egret.web.WebGLRenderBuffer, offsetX: number, offsetY: number): AdvancedRenderCommand {
-            const cmd = AdvancedRenderCommand.advancedRenderCommandPool.pop()
-                || new AdvancedRenderCommand(displayObject, buffer, offsetX, offsetY);
+            const cmd = AdvancedRenderCommand.advancedRenderCommandPool.pop() || new AdvancedRenderCommand();
+            cmd.displayObject = displayObject;
+            cmd.buffer = buffer;
+            cmd.offsetX = offsetX;
+            cmd.offsetY = offsetY;
             return cmd;
         }
 

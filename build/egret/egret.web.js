@@ -7189,22 +7189,43 @@ var egret;
 (function (egret) {
     var web;
     (function (web) {
+        /**
+         * 一个数据
+         */
         var FilterState = (function () {
+            /**
+             * constructor
+             */
             function FilterState() {
+                /**
+                 * 记录filters
+                 */
                 this.filters = [];
-                this.compositeOp = '';
+                /**
+                 * 记录blend
+                 */
+                this.blend = '';
+                /**
+                * 记录displayBounds
+                */
                 this.displayBoundsX = 0;
                 this.displayBoundsY = 0;
                 this.displayBoundsWidth = 0;
                 this.displayBoundsHeight = 0;
+                /**
+                 * 记录目标绘制的绝对偏移
+                 */
                 this.offsetX = 0;
                 this.offsetY = 0;
             }
+            /**
+             * 因为是池化的管理，全部都是引用和字面值，弃掉就好
+             */
             FilterState.prototype.clear = function () {
                 this.displayObject = null;
                 this.renderTarget = null;
                 this.filters = null;
-                this.compositeOp = '';
+                this.blend = '';
                 this.displayBoundsX = 0;
                 this.displayBoundsY = 0;
                 this.displayBoundsWidth = 0;
@@ -7215,216 +7236,132 @@ var egret;
             return FilterState;
         }());
         __reflect(FilterState.prototype, "FilterState");
+        /**
+         * FilterSystem
+         */
         var FilterSystem = (function () {
+            /**
+             * constructor
+             * @param webglRenderContext
+             */
             function FilterSystem(webglRenderContext) {
+                /**
+                 * FilterState的对象池
+                 */
                 this._statePool = [];
+                /**
+                * 执行栈
+                */
                 this._defaultFilterStack = [];
+                /**
+                 * 引用记录 WebGLRenderer
+                 */
                 this._webglRender = null;
                 this._statePool = [];
                 this._defaultFilterStack.push(new FilterState);
                 this._webglRenderContext = webglRenderContext;
             }
+            /**
+             * 压入执行
+             * @param displayObject
+             * @param filters
+             * @param buffer
+             * @param offsetX
+             * @param offsetY
+             */
             FilterSystem.prototype.push = function (displayObject, filters, buffer, offsetX, offsetY) {
-                var drawCalls = 0;
-                if (displayObject.$children && displayObject.$children.length == 0 && (!displayObject.$renderNode || displayObject.$renderNode.$getRenderCount() == 0)) {
-                    //return drawCalls;
+                //基本检查
+                if (filters.length <= 0) {
+                    //走到这里就是错误
+                    console.error('FilterSystem:push:filters.length = ' + filters.length);
                 }
-                //let filters = displayObject.$filters;
-                var hasBlendMode = (displayObject.$blendMode !== 0);
-                var compositeOp;
-                if (hasBlendMode) {
-                    compositeOp = web.blendModes[displayObject.$blendMode];
-                    if (!compositeOp) {
-                        compositeOp = web.defaultCompositeOp;
-                    }
+                //从对象池中创建
+                var state = this._statePool.pop() || new FilterState();
+                //初始化栈，并压入新的
+                var _defaultFilterStack = this._defaultFilterStack;
+                if (_defaultFilterStack.length === 1) {
+                    //压入默认的, 第一个压入的，必是根
+                    this._defaultFilterStack[0].renderTarget = buffer;
                 }
+                _defaultFilterStack.push(state);
+                //声明一些数据
+                var _webglRender = this._webglRender;
                 var displayBounds = displayObject.$getOriginalBounds();
                 var displayBoundsX = displayBounds.x;
                 var displayBoundsY = displayBounds.y;
                 var displayBoundsWidth = displayBounds.width;
                 var displayBoundsHeight = displayBounds.height;
-                if (displayBoundsWidth <= 0 || displayBoundsHeight <= 0) {
-                    //return drawCalls;
-                }
-                var _webglRender = this._webglRender;
-                // if (!displayObject.mask && filters.length == 1 && (filters[0].type == "colorTransform" || (filters[0].type === "custom" && (<CustomFilter>filters[0]).padding === 0))) {
-                //     let childrenDrawCount = _webglRender.getRenderCount(displayObject);
-                //     if (!displayObject.$children || childrenDrawCount == 1) {
-                //         if (hasBlendMode) {
-                //             buffer.context.setGlobalCompositeOperation(compositeOp);
-                //         }
-                //         buffer.context.$filter = <ColorMatrixFilter>filters[0];
-                //         DisplayObjectTransform.transformObjectAsRoot(displayObject, buffer.globalMatrix, offsetX, offsetY);
-                //         if (displayObject.$mask) {
-                //             drawCalls += _webglRender.drawWithClip(displayObject, buffer, offsetX, offsetY);
-                //         }
-                //         else if (displayObject.$scrollRect || displayObject.$maskRect) {
-                //             drawCalls += _webglRender.drawWithScrollRect(displayObject, buffer, offsetX, offsetY);
-                //         }
-                //         else {
-                //             drawCalls += _webglRender.drawDisplayObject(displayObject, buffer, offsetX, offsetY);
-                //         }
-                //         buffer.context.$filter = null;
-                //         if (hasBlendMode) {
-                //             buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
-                //         }
-                //         return drawCalls;
-                //     }
-                // }
-                // 为显示对象创建一个新的buffer
-                var displayBuffer = _webglRender.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
-                this._webglRenderContext.pushBuffer(displayBuffer);
-                ///?????
-                if (filters.length <= 0) {
-                    console.error('FilterSystem:push:filters.length = ' + filters.length);
-                }
-                //
-                var _defaultFilterStack = this._defaultFilterStack;
-                var state = this._statePool.pop() || new FilterState();
-                //
-                if (_defaultFilterStack.length === 1) {
-                    this._defaultFilterStack[0].renderTarget = buffer;
-                }
-                _defaultFilterStack.push(state);
-                //install
+                //开始装配数据, 全部记录下来
                 state.displayObject = displayObject;
-                //width, height
-                //const displayBounds = target.$getOriginalBounds();
                 state.displayBoundsX = displayBounds.x;
                 state.displayBoundsY = displayBounds.y;
                 state.displayBoundsWidth = displayBounds.width;
                 state.displayBoundsHeight = displayBounds.height;
                 state.offsetX = offsetX;
                 state.offsetY = offsetY;
-                //render target
-                state.renderTarget = displayBuffer; //this.getOptimalFilterTexture(displayBounds.width, displayBounds.height);
-                //state.rootRenderTexture = renderTargetRoot;
+                state.renderTarget = _webglRender.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
                 state.filters = filters;
-                //save blendFunc;
-                state.compositeOp = web.blendModes[displayObject.$blendMode] || web.defaultCompositeOp;
-                ////重新变换
-                // const _webglRenderContext = this._webglRenderContext;
-                // const targetTexture = state.renderTexture;
-                ///?????
-                //todo 可以优化减少draw次数
-                // if (displayObject.$mask) {
-                //     drawCalls += _webglRender.drawWithClip(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
-                // }
-                // else if (displayObject.$scrollRect || displayObject.$maskRect) {
-                //     drawCalls += _webglRender.drawWithScrollRect(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
-                // }
-                // else {
-                /////
-                web.DisplayObjectTransform.transformObjectAsRoot(displayObject, displayBuffer.globalMatrix, -displayBoundsX, -displayBoundsY);
-                /////
-                drawCalls += _webglRender.drawDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
-                //}
-                // displayBuffer.context.popBuffer();
-                // //绘制结果到屏幕
-                // if (drawCalls > 0) {
-                //     if (hasBlendMode) {
-                //         buffer.context.setGlobalCompositeOperation(compositeOp);
-                //     }
-                //     drawCalls++;
-                //     // 绘制结果的时候，应用滤镜
-                //     buffer.$offsetX = offsetX + displayBoundsX;
-                //     buffer.$offsetY = offsetY + displayBoundsY;
-                //     let savedMatrix = Matrix.create();
-                //     let curMatrix = buffer.globalMatrix;
-                //     savedMatrix.a = curMatrix.a;
-                //     savedMatrix.b = curMatrix.b;
-                //     savedMatrix.c = curMatrix.c;
-                //     savedMatrix.d = curMatrix.d;
-                //     savedMatrix.tx = curMatrix.tx;
-                //     savedMatrix.ty = curMatrix.ty;
-                //     buffer.useOffset();
-                //     buffer.context.drawTargetWidthFilters(filters, displayBuffer);
-                //     curMatrix.a = savedMatrix.a;
-                //     curMatrix.b = savedMatrix.b;
-                //     curMatrix.c = savedMatrix.c;
-                //     curMatrix.d = savedMatrix.d;
-                //     curMatrix.tx = savedMatrix.tx;
-                //     curMatrix.ty = savedMatrix.ty;
-                //     Matrix.release(savedMatrix);
-                //     if (hasBlendMode) {
-                //         buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
-                //     }
-                // }
-                // renderBufferPool.push(displayBuffer);
-                return drawCalls;
+                state.blend = web.blendModes[displayObject.$blendMode] || web.defaultCompositeOp;
+                //重新基于新的目标，做transform
+                web.DisplayObjectTransform.transformObjectAsRoot(displayObject, state.renderTarget.globalMatrix, -displayBoundsX, -displayBoundsY);
+                //记录命令，给WebGLRender调用
+                var cmd = web.AdvancedRenderCommand.create(displayObject, state.renderTarget, -displayBoundsX, -displayBoundsY);
+                web.AdvancedRenderCommand.pushCommand(cmd);
+                //切换目标
+                this._webglRenderContext.pushBuffer(state.renderTarget);
             };
+            /**
+             * 弹出一个执行
+             */
             FilterSystem.prototype.pop = function () {
-                //
+                //弹出操作
                 var _defaultFilterStack = this._defaultFilterStack;
                 var state = _defaultFilterStack.pop();
                 var lastState = _defaultFilterStack[_defaultFilterStack.length - 1];
                 var filters = state.filters;
-                //this.activeState = state;
                 var _webglRenderContext = this._webglRenderContext;
-                //unbind target
                 _webglRenderContext.popBuffer(state.renderTarget);
-                //
-                //_webglRenderContext.setGlobalCompositeOperation(state.compositeOp);
-                //
+                //单一滤镜和滤镜嵌套分开处理
                 if (filters.length === 1) {
-                    var filters0 = filters[0];
-                    var drawCalls = 1;
-                    var compositeOp = state.compositeOp;
+                    //const filters0 = filters[0];
+                    //声明数据
+                    var compositeOp = state.blend;
                     var buffer = lastState.renderTarget;
                     var offsetX = state.offsetX;
                     var offsetY = state.offsetY;
                     var displayBoundsX = state.displayBoundsX;
                     var displayBoundsY = state.displayBoundsY;
-                    // displayBuffer.context.popBuffer();
                     //绘制结果到屏幕
-                    if (drawCalls > 0) {
-                        //if (hasBlendMode) {
-                        _webglRenderContext.setGlobalCompositeOperation(compositeOp);
-                        //}
-                        drawCalls++;
-                        // 绘制结果的时候，应用滤镜
-                        var bufferOffsetX = buffer.$offsetX;
-                        var bufferOffsetY = buffer.$offsetY;
-                        buffer.$offsetX = offsetX + displayBoundsX;
-                        buffer.$offsetY = offsetY + displayBoundsY;
-                        var savedMatrix = egret.Matrix.create();
-                        var curMatrix = buffer.globalMatrix;
-                        savedMatrix.a = curMatrix.a;
-                        savedMatrix.b = curMatrix.b;
-                        savedMatrix.c = curMatrix.c;
-                        savedMatrix.d = curMatrix.d;
-                        savedMatrix.tx = curMatrix.tx;
-                        savedMatrix.ty = curMatrix.ty;
-                        buffer.useOffset();
-                        buffer.context.drawTargetWidthFilters(filters, state.renderTarget);
-                        curMatrix.a = savedMatrix.a;
-                        curMatrix.b = savedMatrix.b;
-                        curMatrix.c = savedMatrix.c;
-                        curMatrix.d = savedMatrix.d;
-                        curMatrix.tx = savedMatrix.tx;
-                        curMatrix.ty = savedMatrix.ty;
-                        egret.Matrix.release(savedMatrix);
-                        //
-                        buffer.$offsetX = bufferOffsetX;
-                        buffer.$offsetY = bufferOffsetY;
-                        //if (hasBlendMode) {
-                        _webglRenderContext.setGlobalCompositeOperation(web.defaultCompositeOp);
-                        //}
-                    }
+                    _webglRenderContext.setGlobalCompositeOperation(compositeOp);
+                    // 绘制结果的时候，应用滤镜
+                    var bufferOffsetX = buffer.$offsetX;
+                    var bufferOffsetY = buffer.$offsetY;
+                    buffer.$offsetX = offsetX + displayBoundsX;
+                    buffer.$offsetY = offsetY + displayBoundsY;
+                    var savedMatrix = egret.Matrix.create();
+                    var curMatrix = buffer.globalMatrix;
+                    savedMatrix.a = curMatrix.a;
+                    savedMatrix.b = curMatrix.b;
+                    savedMatrix.c = curMatrix.c;
+                    savedMatrix.d = curMatrix.d;
+                    savedMatrix.tx = curMatrix.tx;
+                    savedMatrix.ty = curMatrix.ty;
+                    buffer.useOffset();
+                    buffer.context.drawTargetWidthFilters(filters, state.renderTarget);
+                    curMatrix.a = savedMatrix.a;
+                    curMatrix.b = savedMatrix.b;
+                    curMatrix.c = savedMatrix.c;
+                    curMatrix.d = savedMatrix.d;
+                    curMatrix.tx = savedMatrix.tx;
+                    curMatrix.ty = savedMatrix.ty;
+                    egret.Matrix.release(savedMatrix);
+                    //
+                    buffer.$offsetX = bufferOffsetX;
+                    buffer.$offsetY = bufferOffsetY;
+                    _webglRenderContext.setGlobalCompositeOperation(web.defaultCompositeOp);
+                    //还原回去，因为是池子的
                     web.renderBufferPool.push(state.renderTarget);
                     state.renderTarget = null;
-                    //return drawCalls;
-                    // if (filters0.type === 'SpriteMaskFilter') {
-                    //     //SpriteMaskFilter单独处理
-                    //     //this.applySpriteMaskFilter(filters0, state.renderTexture, lastState.renderTexture, false, state);
-                    // }
-                    // else {
-                    //     // //后处理
-                    //     // this.applyFilter(filters[0], state.renderTexture, lastState.renderTexture, false, state);
-                    //     // //return 不管用没用，都还回去
-                    //     // this.returnFilterTexture(state.renderTexture);
-                    //     // state.renderTexture = null;
-                    // }
                 }
                 else {
                     // //
@@ -7458,6 +7395,14 @@ var egret;
                 state.clear();
                 this._statePool.push(state);
             };
+            /**
+             * 应用一个滤镜效果到output
+             * @param filter
+             * @param input
+             * @param output
+             * @param clear
+             * @param state
+             */
             FilterSystem.prototype.applyFilter = function (filter, input, output, clear, state) {
             };
             return FilterSystem;
@@ -7499,11 +7444,7 @@ var egret;
     var web;
     (function (web) {
         var AdvancedRenderCommand = (function () {
-            function AdvancedRenderCommand(displayObject, buffer, offsetX, offsetY) {
-                this.displayObject = displayObject;
-                this.buffer = buffer;
-                this.offsetX = offsetX;
-                this.offsetY = offsetY;
+            function AdvancedRenderCommand() {
             }
             AdvancedRenderCommand.prototype.clear = function () {
                 this.displayObject = null;
@@ -7512,8 +7453,11 @@ var egret;
                 this.offsetY = 0;
             };
             AdvancedRenderCommand.create = function (displayObject, buffer, offsetX, offsetY) {
-                var cmd = AdvancedRenderCommand.advancedRenderCommandPool.pop()
-                    || new AdvancedRenderCommand(displayObject, buffer, offsetX, offsetY);
+                var cmd = AdvancedRenderCommand.advancedRenderCommandPool.pop() || new AdvancedRenderCommand();
+                cmd.displayObject = displayObject;
+                cmd.buffer = buffer;
+                cmd.offsetX = offsetX;
+                cmd.offsetY = offsetY;
                 return cmd;
             };
             AdvancedRenderCommand.release = function (cmd) {
@@ -9306,13 +9250,13 @@ var egret;
                 // draw something;
                 // DisplayObjectTransform.transformObjectAsRoot(displayObject, buffer.globalMatrix, offsetX, offsetY);
                 // this.drawDisplayObject(displayObject, buffer, offsetX, offsetY);
-                // if (advancedSystemActive) {
-                //     const cmd = AdvancedRenderCommand.popCommand();
-                //     if (cmd) {
-                //         this.drawDisplayObject(cmd.displayObject, cmd.buffer, cmd.offsetX, cmd.offsetY);
-                //         AdvancedRenderCommand.release(cmd);
-                //     }
-                // }
+                if (advancedSystemActive) {
+                    var cmd = web.AdvancedRenderCommand.popCommand();
+                    if (cmd) {
+                        this.drawDisplayObject(cmd.displayObject, cmd.buffer, cmd.offsetX, cmd.offsetY);
+                        web.AdvancedRenderCommand.release(cmd);
+                    }
+                }
                 //
                 ////////////////
                 //
