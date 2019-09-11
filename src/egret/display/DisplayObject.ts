@@ -1592,6 +1592,8 @@ namespace egret {
         }
 
         public $filters: Array<Filter | CustomFilter>;
+        public $_shader: Filter | CustomFilter = null;
+        public readonly $_filters: Array<Filter> = [];
 
         /**
          * An indexed array that contains each filter object currently associated with the display object.
@@ -1909,6 +1911,7 @@ namespace egret {
                 self.$renderMode = RenderMode.NONE;
             }
             else if (self.filters && self.filters.length > 0) {
+                this.analysisAndRebuildFilters();
                 self.$renderMode = RenderMode.FILTER;
             }
             else if (self.$blendMode !== 0 || (self.$mask && self.$mask.$stage)) {
@@ -2370,5 +2373,34 @@ namespace egret {
 
         //
         public readonly _worldTransform: Transform = new Transform;
+
+        //
+        private analysisAndRebuildFilters(): void {
+            //清除，准备重新构建
+            this.$_shader = null;
+            const $_filters =  this.$_filters;
+            $_filters.length = 0;
+            //开始循环
+            const filters = this.filters;
+            for (let i = 0, length = filters.length; i < length; ++i) {
+                const f = filters[i];
+                if (!f) {
+                    continue;
+                }
+                if (f.post) {
+                    //后处理的放在这里
+                    $_filters.push(f);
+                }
+                else {
+                    if (!this.$_shader) {
+                        //单次设置，这里就是在绘制过程中直接应用，而不是后处理
+                        this.$_shader = f;
+                    }
+                    else {
+                        console.warn('$_shader repeat');
+                    }
+                }
+            }
+        }
     }
 }

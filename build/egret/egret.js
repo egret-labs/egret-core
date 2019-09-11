@@ -461,6 +461,10 @@ var egret;
              * @private
              */
             _this.paddingRight = 0;
+            /**
+             * 后处理类型，否则就是直接绘制
+             */
+            _this.post = true;
             _this.$uniforms = {};
             if (egret.nativeRender) {
                 egret_native.NativeDisplayObject.createFilter(_this);
@@ -676,6 +680,8 @@ var egret;
              * @private
              */
             _this.$maskRect = null;
+            _this.$_shader = null;
+            _this.$_filters = [];
             /**
              * @private
              */
@@ -2362,6 +2368,7 @@ var egret;
                 self.$renderMode = 1 /* NONE */;
             }
             else if (self.filters && self.filters.length > 0) {
+                this.analysisAndRebuildFilters();
                 self.$renderMode = 2 /* FILTER */;
             }
             else if (self.$blendMode !== 0 || (self.$mask && self.$mask.$stage)) {
@@ -2768,6 +2775,34 @@ var egret;
             enumerable: true,
             configurable: true
         });
+        //
+        DisplayObject.prototype.analysisAndRebuildFilters = function () {
+            //清除，准备重新构建
+            this.$_shader = null;
+            var $_filters = this.$_filters;
+            $_filters.length = 0;
+            //开始循环
+            var filters = this.filters;
+            for (var i = 0, length_2 = filters.length; i < length_2; ++i) {
+                var f = filters[i];
+                if (!f) {
+                    continue;
+                }
+                if (f.post) {
+                    //后处理的放在这里
+                    $_filters.push(f);
+                }
+                else {
+                    if (!this.$_shader) {
+                        //单次设置，这里就是在绘制过程中直接应用，而不是后处理
+                        this.$_shader = f;
+                    }
+                    else {
+                        console.warn('$_shader repeat');
+                    }
+                }
+            }
+        };
         /**
          * @private
          * The default touchEnabled property of DisplayObject
@@ -9976,6 +10011,7 @@ var egret;
             _this.$uniforms.colorAdd = { x: 0, y: 0, z: 0, w: 0 };
             _this.setMatrix(matrix);
             _this.onPropertyChange();
+            _this.post = false;
             return _this;
         }
         Object.defineProperty(ColorMatrixFilter.prototype, "matrix", {
@@ -10156,6 +10192,7 @@ var egret;
             _this.$shaderKey = SOURCE_KEY_MAP[tempKey];
             _this.$uniforms = uniforms;
             _this.type = "custom";
+            _this.post = false;
             return _this;
         }
         Object.defineProperty(CustomFilter.prototype, "padding", {
@@ -15268,8 +15305,8 @@ var egret;
                     egret.$callLaterArgsList = [];
                 }
                 if (functionList) {
-                    var length_2 = functionList.length;
-                    for (var i = 0; i < length_2; i++) {
+                    var length_3 = functionList.length;
+                    for (var i = 0; i < length_3; i++) {
                         var func = functionList[i];
                         if (func != null) {
                             func.apply(thisList[i], argsList[i]);
@@ -16698,8 +16735,8 @@ var egret;
                 if (renderBufferPool.length > 6) {
                     renderBufferPool.length = 6;
                 }
-                var length_3 = renderBufferPool.length;
-                for (var i = 0; i < length_3; i++) {
+                var length_4 = renderBufferPool.length;
+                for (var i = 0; i < length_4; i++) {
                     renderBufferPool[i].resize(0, 0);
                 }
             }
@@ -16762,8 +16799,8 @@ var egret;
             }
             var children = displayObject.$children;
             if (children) {
-                var length_4 = children.length;
-                for (var i = 0; i < length_4; i++) {
+                var length_5 = children.length;
+                for (var i = 0; i < length_5; i++) {
                     var child = children[i];
                     var offsetX2 = void 0;
                     var offsetY2 = void 0;
@@ -17092,8 +17129,8 @@ var egret;
             }
             var children = displayObject.$children;
             if (children) {
-                var length_5 = children.length;
-                for (var i = 0; i < length_5; i++) {
+                var length_6 = children.length;
+                for (var i = 0; i < length_6; i++) {
                     var child = children[i];
                     switch (child.$renderMode) {
                         case 1 /* NONE */:
@@ -18745,7 +18782,7 @@ var egret;
          */
         BitmapFont.prototype.getConfigByKey = function (configText, key) {
             var itemConfigTextList = configText.split(" ");
-            for (var i = 0, length_6 = itemConfigTextList.length; i < length_6; i++) {
+            for (var i = 0, length_7 = itemConfigTextList.length; i < length_7; i++) {
                 var itemConfigText = itemConfigTextList[i];
                 if (key == itemConfigText.substring(0, key.length)) {
                     var value = itemConfigText.substring(key.length + 1);
@@ -21567,8 +21604,8 @@ var egret;
                 if (lines && lines.length > 0) {
                     var textColor = values[2 /* textColor */];
                     var lastColor = -1;
-                    var length_7 = lines.length;
-                    for (var i = 0; i < length_7; i += 4) {
+                    var length_8 = lines.length;
+                    for (var i = 0; i < length_8; i += 4) {
                         var x = lines[i];
                         var y = lines[i + 1];
                         var w = lines[i + 2];
@@ -24345,8 +24382,8 @@ var egret;
         }
         var superTypes = prototype.__types__;
         if (prototype.__types__) {
-            var length_8 = superTypes.length;
-            for (var i = 0; i < length_8; i++) {
+            var length_9 = superTypes.length;
+            for (var i = 0; i < length_9; i++) {
                 var name_1 = superTypes[i];
                 if (types.indexOf(name_1) == -1) {
                     types.push(name_1);
@@ -24766,7 +24803,7 @@ var egret;
                 return 0;
             }
             var hash = 0;
-            for (var i = 0, length_9 = str.length; i < length_9; ++i) {
+            for (var i = 0, length_10 = str.length; i < length_10; ++i) {
                 var chr = str.charCodeAt(i);
                 hash = ((hash << 5) - hash) + chr;
                 hash |= 0; // Convert to 32bit integer

@@ -293,6 +293,10 @@ declare namespace egret {
          * @native Render
          */
         $obj: any;
+        /**
+         * 后处理类型，否则就是直接绘制
+         */
+        post: boolean;
         constructor();
         /**
          * @private
@@ -1061,6 +1065,8 @@ declare namespace egret {
         mask: DisplayObject | Rectangle;
         private $setMaskRect(value);
         $filters: Array<Filter | CustomFilter>;
+        $_shader: Filter | CustomFilter;
+        readonly $_filters: Array<Filter>;
         /**
          * An indexed array that contains each filter object currently associated with the display object.
          * @version Egret 3.1.0
@@ -1353,6 +1359,7 @@ declare namespace egret {
          */
         sortableChildren: boolean;
         readonly _worldTransform: Transform;
+        private analysisAndRebuildFilters();
     }
 }
 declare namespace egret {

@@ -179,6 +179,8 @@ namespace egret {
             this.$uniforms = uniforms;
 
             this.type = "custom";
+
+            this.post = false;
         }
 
         public onPropertyChange(): void {

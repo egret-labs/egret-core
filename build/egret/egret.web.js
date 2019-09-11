@@ -9211,15 +9211,12 @@ var egret;
                 var filterSystem = webglRenderContext.filterSystem;
                 filterSystem._webglRender = this;
                 //
-                var filters = displayObject.filters;
+                var filters = displayObject.$_filters;
                 var mask = displayObject.$mask || displayObject.$maskRect || displayObject.$scrollRect;
                 var advancedSystemActive = false;
                 //
                 if (filters && filters.length > 0) {
-                    /*
-                    这里面有可能会改掉_drawAdvancedTargetData;
-                    */
-                    filterSystem.push(displayObject, displayObject.filters, buffer, offsetX, offsetY);
+                    filterSystem.push(displayObject, filters, buffer, offsetX, offsetY);
                     advancedSystemActive = true;
                 }
                 if (mask) {
@@ -9230,6 +9227,11 @@ var egret;
                 // draw something;
                 // DisplayObjectTransform.transformObjectAsRoot(displayObject, buffer.globalMatrix, offsetX, offsetY);
                 // this.drawDisplayObject(displayObject, buffer, offsetX, offsetY);
+                //自定义shader ===  webglRenderContext.$filter
+                webglRenderContext.$filter = displayObject.$_shader;
+                var blend = web.blendModes[displayObject.$blendMode] || web.defaultCompositeOp;
+                webglRenderContext.setGlobalCompositeOperation(blend);
+                //
                 if (advancedSystemActive) {
                     var cmd = web.AdvancedRenderCommand.popCommand();
                     if (cmd) {
@@ -9237,8 +9239,13 @@ var egret;
                         web.AdvancedRenderCommand.release(cmd);
                     }
                 }
+                else {
+                    web.DisplayObjectTransform.transformObjectAsRoot(displayObject, buffer.globalMatrix, offsetX, offsetY);
+                    this.drawDisplayObject(displayObject, buffer, offsetX, offsetY);
+                }
                 //
-                ////////////////
+                webglRenderContext.setGlobalCompositeOperation(web.defaultCompositeOp);
+                webglRenderContext.$filter = null;
                 //
                 webglctx.$flush();
                 //

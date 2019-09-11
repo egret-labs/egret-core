@@ -74,6 +74,11 @@ namespace egret {
          */
         public $obj: any;
 
+        /**
+         * 后处理类型，否则就是直接绘制
+         */
+        public post: boolean = true;
+
         constructor() {
             super();
             this.$uniforms = {};
