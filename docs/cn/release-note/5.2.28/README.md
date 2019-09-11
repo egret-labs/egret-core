@@ -3,7 +3,7 @@
 
 ## 2D 渲染 - JavaScript 
 - **[新增]** 引擎启动后，增加引擎版本号的输出信息
-- **[优化]** vivo 小游戏更新项目结构，之前创建的项目需要升级，[详情请看升级指南](http://developer.egret.com/cn/github/egret-docs/Engine2D/minigamevivo/getStart/index.html#%E5%8D%87%E7%BA%A7%E6%8C%87%E5%8D%97)
+- **[优化]** vivo 小游戏更新项目结构，引擎进行适配，之前创建的项目需要升级，[详情请看升级指南](http://developer.egret.com/cn/github/egret-docs/Engine2D/minigamevivo/getStart/index.html#%E5%8D%87%E7%BA%A7%E6%8C%87%E5%8D%97)
 - **[修复]** 修复 iOS 弹起输入键盘时，游戏页面不能跟随弹起的问题
 
 
@@ -23,7 +23,7 @@
 - **[新增]** 引擎启动后，增加引擎版本号的输出信息
 - **[优化]** 当适配模式是平台不支持的 `SHOW_ALL` 时，自动替换为 `FIXED_WIDTH` 模式
 
-## 小米快游戏 v0.2.8
+## 小米快游戏 v0.2.9
 - **[优化]** 适配小米 runtime 新版的声音API
 - **[优化]** 小米原生 API 更新，重新进行适配
 - **[新增]** 引擎启动后，增加引擎版本号的输出信息
