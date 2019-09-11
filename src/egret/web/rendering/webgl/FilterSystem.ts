@@ -26,9 +26,7 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-
 namespace egret.web {
-
     /**
      * 一个数据
      */
@@ -138,7 +136,6 @@ namespace egret.web {
                 this._defaultFilterStack[0].renderTarget = buffer;
             }
             _defaultFilterStack.push(state);
-
             //声明一些数据
             const _webglRender = this._webglRender;
             const displayBounds = displayObject.$getOriginalBounds();
@@ -146,7 +143,6 @@ namespace egret.web {
             const displayBoundsY = displayBounds.y;
             const displayBoundsWidth = displayBounds.width;
             const displayBoundsHeight = displayBounds.height;
-
             //开始装配数据, 全部记录下来
             state.displayObject = displayObject;
             state.displayBoundsX = displayBounds.x;
@@ -158,7 +154,6 @@ namespace egret.web {
             state.renderTarget = _webglRender.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
             state.filters = filters;
             state.blend = blendModes[displayObject.$blendMode] || defaultCompositeOp;
-
             //重新基于新的目标，做transform
             DisplayObjectTransform.transformObjectAsRoot(displayObject, state.renderTarget.globalMatrix, -displayBoundsX, -displayBoundsY);
             //记录命令，给WebGLRender调用
@@ -176,84 +171,24 @@ namespace egret.web {
             const state = _defaultFilterStack.pop();
             const lastState = _defaultFilterStack[_defaultFilterStack.length - 1];
             const filters = state.filters;
-            const _webglRenderContext = this._webglRenderContext;
-            _webglRenderContext.popBuffer(state.renderTarget);
+            this._webglRenderContext.popBuffer(state.renderTarget);
             //单一滤镜和滤镜嵌套分开处理
             if (filters.length === 1) {
-                //const filters0 = filters[0];
-                //声明数据
-                const compositeOp = state.blend;
-                const buffer = lastState.renderTarget;
-                const offsetX = state.offsetX;
-                const offsetY = state.offsetY;
-                const displayBoundsX = state.displayBoundsX;
-                const displayBoundsY = state.displayBoundsY;
-
-                //绘制结果到屏幕
-                _webglRenderContext.setGlobalCompositeOperation(compositeOp);
-      
-                // 绘制结果的时候，应用滤镜
-                const bufferOffsetX = buffer.$offsetX;
-                const bufferOffsetY = buffer.$offsetY;
-
-                buffer.$offsetX = offsetX + displayBoundsX;
-                buffer.$offsetY = offsetY + displayBoundsY;
-                let savedMatrix = Matrix.create();
-                let curMatrix = buffer.globalMatrix;
-                savedMatrix.a = curMatrix.a;
-                savedMatrix.b = curMatrix.b;
-                savedMatrix.c = curMatrix.c;
-                savedMatrix.d = curMatrix.d;
-                savedMatrix.tx = curMatrix.tx;
-                savedMatrix.ty = curMatrix.ty;
-                buffer.useOffset();
-                buffer.context.drawTargetWidthFilters(filters, state.renderTarget);
-                curMatrix.a = savedMatrix.a;
-                curMatrix.b = savedMatrix.b;
-                curMatrix.c = savedMatrix.c;
-                curMatrix.d = savedMatrix.d;
-                curMatrix.tx = savedMatrix.tx;
-                curMatrix.ty = savedMatrix.ty;
-                Matrix.release(savedMatrix);
-
-                //
-                buffer.$offsetX = bufferOffsetX;
-                buffer.$offsetY = bufferOffsetY;
-
-                _webglRenderContext.setGlobalCompositeOperation(defaultCompositeOp);
-
-                //还原回去，因为是池子的
-                renderBufferPool.push(state.renderTarget);
-                state.renderTarget = null;
+                const filters0 = filters[0];
+                if (filters0 && false) {
+                    console.error('FilterSystem pop: Not implemented!');
+                }
+                else {
+                    //引用这个滤镜
+                    this.applyFilter(filters[0], state.renderTarget, lastState.renderTarget, false, state);
+                    //不要这个renderTarget了，回池子
+                    renderBufferPool.push(state.renderTarget);
+                    state.renderTarget = null;
+                }
             }
             else {
-                // //
-                // let input = state.renderTexture;
-                // const filtersLen = filters.length;
-                // if (filtersLen > 1) {
-                //     for (let i = 0; i < filtersLen - 1; ++i) {
-                //         const filter = filters[i];
-                //         const output = this.getOptimalFilterTexture(state.displayBoundsWidth, state.displayBoundsHeight);
-                //         output.debugCurrentRenderNode = null;
-                //         _webglRenderContext.___drawToRenderTarget___(filter, input, output);
-                //         this.returnFilterTexture(input);
-                //         input = output;
-                //     }
-                // }
-                // //应用最后一个滤镜并绘制到当前场景中
-                // const lastFilter = filters[filtersLen - 1];
-                // if (lastFilter) {
-                //     lastState.renderTexture.debugCurrentRenderNode = null;
-                //     this.applyFilter(lastFilter, input, lastState.renderTexture, false, state);
-                //     this.returnFilterTexture(input);
-                //     input = null;
-                // }
-                // else {
-                //     console.error('FilterSystem:pop:filtersLen = ' + filtersLen);
-                // }
+                console.error('FilterSystem pop: Not implemented!');
             }
-            //
-            // _webglRenderContext.setGlobalCompositeOperation(defaultCompositeOp);
             //清除，回池
             state.clear();
             this._statePool.push(state);
@@ -267,6 +202,40 @@ namespace egret.web {
          * @param state 
          */
         public applyFilter(filter: Filter, input: WebGLRenderBuffer, output: WebGLRenderBuffer, clear: boolean, state: FilterState): void {
+            const _webglRenderContext = this._webglRenderContext;
+            //设置混合
+            _webglRenderContext.setGlobalCompositeOperation(state.blend);
+            //绝对偏移记录
+            const bufferOffsetX = output.$offsetX;
+            const bufferOffsetY = output.$offsetY;
+            output.$offsetX = state.offsetX + state.displayBoundsX;
+            output.$offsetY = state.offsetY + state.displayBoundsY;
+            //矩阵记录
+            const savedMatrix = Matrix.create();
+            const globalMatrix = output.globalMatrix;
+            savedMatrix.a = globalMatrix.a;
+            savedMatrix.b = globalMatrix.b;
+            savedMatrix.c = globalMatrix.c;
+            savedMatrix.d = globalMatrix.d;
+            savedMatrix.tx = globalMatrix.tx;
+            savedMatrix.ty = globalMatrix.ty;
+            //需要做合并处理，消除绝对偏移
+            output.useOffset();
+            //开始绘制
+            _webglRenderContext.drawTargetWidthFilters([filter], input);
+            //矩阵还原回去
+            globalMatrix.a = savedMatrix.a;
+            globalMatrix.b = savedMatrix.b;
+            globalMatrix.c = savedMatrix.c;
+            globalMatrix.d = savedMatrix.d;
+            globalMatrix.tx = savedMatrix.tx;
+            globalMatrix.ty = savedMatrix.ty;
+            Matrix.release(savedMatrix);
+            //绝对偏移还原回去
+            output.$offsetX = bufferOffsetX;
+            output.$offsetY = bufferOffsetY;
+            //混合还原回去
+            _webglRenderContext.setGlobalCompositeOperation(defaultCompositeOp);
         }
     }
 }
