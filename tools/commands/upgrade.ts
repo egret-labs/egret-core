@@ -53,7 +53,7 @@ class UpgradeCommand implements egret.Command {
             { "v": "5.2.22", command: Upgrade_5_2_22 },
             { "v": "5.2.23", command: Upgrade_5_2_23 },
             { "v": "5.2.25", command: Upgrade_5_2_25 },
-            { "v": "5.2.28" }
+            { "v": "5.2.28", command: Upgrade_5_2_28 }
         ];
 
         try {
@@ -195,6 +195,14 @@ class Upgrade_5_2_25 {
     async execute() {
         file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "qqgame"), path.join(egret.args.projectDir, "scripts", "qqgame"));
         file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.qqgame.ts"), path.join(egret.args.projectDir, "scripts", "config.qqgame.ts"));    
+        return 0;
+    }
+}
+
+class Upgrade_5_2_28 {
+    async execute() {
+        file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "vivogame"), path.join(egret.args.projectDir, "scripts", "vivogame"));
+        file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.vivogame.ts"), path.join(egret.args.projectDir, "scripts", "config.vivogame.ts"));
         return 0;
     }
 }
