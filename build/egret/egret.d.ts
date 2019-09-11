@@ -10145,9 +10145,9 @@ declare namespace egret.sys {
          */
         alpha: number;
         /**
-         * 颜色变换滤镜
+         * 颜色变换滤镜, 应该废弃
          */
-        filter: ColorMatrixFilter;
+        filter2: ColorMatrixFilter;
         /**
          * 翻转
          */
@@ -10322,9 +10322,9 @@ declare namespace egret.sys {
          */
         alpha: number;
         /**
-         * 颜色变换滤镜
+         * 颜色变换滤镜, 应该废弃
          */
-        filter: ColorMatrixFilter;
+        filter1: ColorMatrixFilter;
         /**
          * 翻转
          */

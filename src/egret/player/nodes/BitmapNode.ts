@@ -81,9 +81,9 @@ namespace egret.sys {
          */
         public alpha: number = NaN;
         /**
-         * 颜色变换滤镜
+         * 颜色变换滤镜, 应该废弃
          */
-        public filter: ColorMatrixFilter = null;
+        public filter2: ColorMatrixFilter = null;
         /**
          * 翻转
          */
@@ -106,7 +106,7 @@ namespace egret.sys {
             this.matrix = null;
             this.blendMode = null;
             this.alpha = NaN;
-            this.filter = null;
+            this.filter2 = null;
         }
 
         static $updateTextureData(node: sys.NormalBitmapNode, image: BitmapData,

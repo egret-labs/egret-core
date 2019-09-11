@@ -87,9 +87,9 @@ namespace egret.sys {
          */
         public alpha: number = NaN;
         /**
-         * 颜色变换滤镜
+         * 颜色变换滤镜, 应该废弃
          */
-        public filter: ColorMatrixFilter = null;
+        public filter1: ColorMatrixFilter = null;
         /**
          * 翻转
          */

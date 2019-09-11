@@ -783,8 +783,8 @@ namespace egret.web {
                 originAlpha = buffer.globalAlpha;
                 buffer.globalAlpha *= alpha;
             }
-            if (node.filter) {
-                buffer.context.$filter = node.filter;
+            if (node.filter2) {
+                buffer.context.$filter = node.filter2;
                 while (pos < length) {
                     buffer.context.__drawImage__(displayObject, image, data[pos++], data[pos++], data[pos++], data[pos++],
                         data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.rotated, node.smoothing);
@@ -855,8 +855,8 @@ namespace egret.web {
                 originAlpha = buffer.globalAlpha;
                 buffer.globalAlpha *= alpha;
             }
-            if (node.filter) {
-                buffer.context.$filter = node.filter;
+            if (node.filter1) {
+                buffer.context.$filter = node.filter1;
                 while (pos < length) {
                     buffer.context.drawMesh(displayObject, image, data[pos++], data[pos++], data[pos++], data[pos++],
                         data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds, node.rotated, node.smoothing);

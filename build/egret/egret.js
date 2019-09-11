@@ -15553,9 +15553,9 @@ var egret;
                  */
                 _this.alpha = NaN;
                 /**
-                 * 颜色变换滤镜
+                 * 颜色变换滤镜, 应该废弃
                  */
-                _this.filter = null;
+                _this.filter2 = null;
                 /**
                  * 翻转
                  */
@@ -15579,7 +15579,7 @@ var egret;
                 this.matrix = null;
                 this.blendMode = null;
                 this.alpha = NaN;
-                this.filter = null;
+                this.filter2 = null;
             };
             BitmapNode.$updateTextureData = function (node, image, bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH, sourceWidth, sourceHeight, fillMode, smoothing) {
                 if (!image) {
@@ -16052,9 +16052,9 @@ var egret;
                  */
                 _this.alpha = NaN;
                 /**
-                 * 颜色变换滤镜
+                 * 颜色变换滤镜, 应该废弃
                  */
-                _this.filter = null;
+                _this.filter1 = null;
                 /**
                  * 翻转
                  */
@@ -17207,7 +17207,7 @@ var egret;
                 context.globalAlpha *= alpha;
             }
             var drawCalls = 0;
-            var filter = node.filter;
+            var filter = node.filter2;
             //todo 暂时只考虑绘制一次的情况
             if (filter && length == 8) {
                 var sourceX = data[0];

@@ -594,7 +594,7 @@ namespace egret {
                 context.globalAlpha *= alpha;
             }
             let drawCalls: number = 0;
-            let filter = node.filter;
+            let filter = node.filter2;
             //todo 暂时只考虑绘制一次的情况
             if (filter && length == 8) {
                 let sourceX = data[0];
