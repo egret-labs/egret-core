@@ -9900,7 +9900,8 @@ var egret;
         });
         return BlurXFilter;
     }(egret.Filter));
-    __reflect(BlurXFilter.prototype, "BlurXFilter", ["egret.IBlurXFilter"]);
+    egret.BlurXFilter = BlurXFilter;
+    __reflect(BlurXFilter.prototype, "egret.BlurXFilter", ["egret.IBlurXFilter"]);
     var BlurYFilter = (function (_super) {
         __extends(BlurYFilter, _super);
         function BlurYFilter(blurY) {
@@ -9928,7 +9929,8 @@ var egret;
         });
         return BlurYFilter;
     }(egret.Filter));
-    __reflect(BlurYFilter.prototype, "BlurYFilter", ["egret.IBlurYFilter"]);
+    egret.BlurYFilter = BlurYFilter;
+    __reflect(BlurYFilter.prototype, "egret.BlurYFilter", ["egret.IBlurYFilter"]);
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //

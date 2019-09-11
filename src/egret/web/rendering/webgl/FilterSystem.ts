@@ -99,13 +99,14 @@ namespace egret.web {
         /**
          * 引用记录 WebGLRenderer
          */
-        public _webglRender: WebGLRenderer = null;
+        public _webglRender: WebGLRenderer;
         /**
          * constructor
          * @param webglRenderContext 
          */
         constructor(webglRenderContext: WebGLRenderContext) {
             this._statePool = [];
+            //必须有根
             this._defaultFilterStack.push(new FilterState);
             this._webglRenderContext = webglRenderContext;
         }
@@ -137,7 +138,6 @@ namespace egret.web {
             }
             _defaultFilterStack.push(state);
             //声明一些数据
-            const _webglRender = this._webglRender;
             const displayBounds = displayObject.$getOriginalBounds();
             const displayBoundsX = displayBounds.x;
             const displayBoundsY = displayBounds.y;
@@ -151,7 +151,7 @@ namespace egret.web {
             state.displayBoundsHeight = displayBounds.height;
             state.offsetX = offsetX;
             state.offsetY = offsetY;
-            state.renderTarget = _webglRender.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
+            state.renderTarget = WebGLRenderBuffer.create(displayBoundsWidth, displayBoundsHeight);
             state.filters = filters;
             state.blend = blendModes[displayObject.$blendMode] || defaultCompositeOp;
             //重新基于新的目标，做transform
@@ -182,12 +182,34 @@ namespace egret.web {
                     //引用这个滤镜
                     this.applyFilter(filters[0], state.renderTarget, lastState.renderTarget, false, state);
                     //不要这个renderTarget了，回池子
-                    renderBufferPool.push(state.renderTarget);
+                    WebGLRenderBuffer.release(state.renderTarget);
                     state.renderTarget = null;
                 }
             }
             else {
-                console.error('FilterSystem pop: Not implemented!');
+                //
+                const _webglRenderContext = this._webglRenderContext;
+                let input = state.renderTarget;
+                const filtersLen = filters.length;
+                if (filtersLen > 1) {
+                    for (let i = 0; i < filtersLen - 1; ++i) {
+                        const filter = filters[i];
+                        const output = WebGLRenderBuffer.create(state.displayBoundsWidth, state.displayBoundsHeight);
+                        _webglRenderContext.__renderToTargetWithFilter__(filter, input, output);
+                        WebGLRenderBuffer.release(input);
+                        input = output;
+                    }
+                }
+                //应用最后一个滤镜并绘制到当前场景中
+                const lastFilter = filters[filtersLen - 1];
+                if (lastFilter) {
+                    this.applyFilter(lastFilter, input, lastState.renderTarget, false, state);
+                    WebGLRenderBuffer.release(input);
+                    input = null;
+                }
+                else {
+                    console.error('FilterSystem:pop:filtersLen = ' + filtersLen);
+                }
             }
             //清除，回池
             state.clear();

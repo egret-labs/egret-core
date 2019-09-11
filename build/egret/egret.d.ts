@@ -6358,6 +6358,14 @@ declare namespace egret {
         $uniforms: any;
         blurY: number;
     }
+    class BlurXFilter extends Filter implements IBlurXFilter {
+        constructor(blurX?: number);
+        blurX: number;
+    }
+    class BlurYFilter extends Filter implements IBlurYFilter {
+        constructor(blurY?: number);
+        blurY: number;
+    }
 }
 declare namespace egret {
     /**

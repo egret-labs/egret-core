@@ -7123,6 +7123,28 @@ var egret;
                 }
                 this.popBuffer();
             };
+            /**
+             * 向一个renderTarget中绘制
+             * */
+            WebGLRenderContext.prototype.__renderToTargetWithFilter__ = function (filter, input, output) {
+                if (this.contextLost) {
+                    return;
+                }
+                if (this.vao.reachMaxSize()) {
+                    this.$flush();
+                }
+                this.pushBuffer(output);
+                var width = input.rootRenderTarget.width;
+                var height = input.rootRenderTarget.height;
+                // 绘制input结果到舞台
+                output.saveTransform();
+                output.transform(1, 0, 0, -1, 0, height);
+                this.vao.cacheArrays(null, output, 0, 0, width, height, 0, 0, width, height, width, height);
+                output.restoreTransform();
+                //
+                this.drawCmdManager.pushDrawTexture(input.rootRenderTarget.texture, 2, filter, width, height);
+                this.popBuffer();
+            };
             WebGLRenderContext.initBlendMode = function () {
                 /*参考
                 gl.ZERO = 0
@@ -7253,11 +7275,8 @@ var egret;
                 * 执行栈
                 */
                 this._defaultFilterStack = [];
-                /**
-                 * 引用记录 WebGLRenderer
-                 */
-                this._webglRender = null;
                 this._statePool = [];
+                //必须有根
                 this._defaultFilterStack.push(new FilterState);
                 this._webglRenderContext = webglRenderContext;
             }
@@ -7285,7 +7304,6 @@ var egret;
                 }
                 _defaultFilterStack.push(state);
                 //声明一些数据
-                var _webglRender = this._webglRender;
                 var displayBounds = displayObject.$getOriginalBounds();
                 var displayBoundsX = displayBounds.x;
                 var displayBoundsY = displayBounds.y;
@@ -7299,7 +7317,7 @@ var egret;
                 state.displayBoundsHeight = displayBounds.height;
                 state.offsetX = offsetX;
                 state.offsetY = offsetY;
-                state.renderTarget = _webglRender.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
+                state.renderTarget = web.WebGLRenderBuffer.create(displayBoundsWidth, displayBoundsHeight);
                 state.filters = filters;
                 state.blend = web.blendModes[displayObject.$blendMode] || web.defaultCompositeOp;
                 //重新基于新的目标，做transform
@@ -7330,12 +7348,34 @@ var egret;
                         //引用这个滤镜
                         this.applyFilter(filters[0], state.renderTarget, lastState.renderTarget, false, state);
                         //不要这个renderTarget了，回池子
-                        web.renderBufferPool.push(state.renderTarget);
+                        web.WebGLRenderBuffer.release(state.renderTarget);
                         state.renderTarget = null;
                     }
                 }
                 else {
-                    console.error('FilterSystem pop: Not implemented!');
+                    //
+                    var _webglRenderContext = this._webglRenderContext;
+                    var input = state.renderTarget;
+                    var filtersLen = filters.length;
+                    if (filtersLen > 1) {
+                        for (var i = 0; i < filtersLen - 1; ++i) {
+                            var filter = filters[i];
+                            var output = web.WebGLRenderBuffer.create(state.displayBoundsWidth, state.displayBoundsHeight);
+                            _webglRenderContext.__renderToTargetWithFilter__(filter, input, output);
+                            web.WebGLRenderBuffer.release(input);
+                            input = output;
+                        }
+                    }
+                    //应用最后一个滤镜并绘制到当前场景中
+                    var lastFilter = filters[filtersLen - 1];
+                    if (lastFilter) {
+                        this.applyFilter(lastFilter, input, lastState.renderTarget, false, state);
+                        web.WebGLRenderBuffer.release(input);
+                        input = null;
+                    }
+                    else {
+                        console.error('FilterSystem:pop:filtersLen = ' + filtersLen);
+                    }
                 }
                 //清除，回池
                 state.clear();

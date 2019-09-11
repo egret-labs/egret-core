@@ -198,7 +198,7 @@ namespace egret {
         blurY:number;
     }
 
-    class BlurXFilter extends Filter implements IBlurXFilter {
+    export class BlurXFilter extends Filter implements IBlurXFilter {
         constructor(blurX:number = 4) {
             super();
 
@@ -222,7 +222,7 @@ namespace egret {
         }
     }
 
-    class BlurYFilter extends Filter implements IBlurYFilter {
+    export class BlurYFilter extends Filter implements IBlurYFilter {
         constructor(blurY:number = 4) {
             super();
 

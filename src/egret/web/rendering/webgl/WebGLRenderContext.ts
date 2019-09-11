@@ -79,7 +79,7 @@ namespace egret.web {
             this.dynamicGroupSystem = null;
             this.resetVertexAttribPointer = true;
         }
-        
+
         public setBatchSystem(renderNode: sys.RenderNode): boolean {
             if (!renderNode) {
                 return false;
@@ -90,18 +90,18 @@ namespace egret.web {
                     const groupNode = renderNode as sys.GroupNode;
                     groupNode.analysisAllNodes();
                     if (groupNode.hasMeshNode) {
-                        renderNode.batchSystem = this.dynamicGroupSystem = this.dynamicGroupSystem 
-                        || new GroupBatchSystem(this, new WebGLVertexArrayObject(this, 2048, gl.DYNAMIC_DRAW, 'DynamicGroupVAO'));
+                        renderNode.batchSystem = this.dynamicGroupSystem = this.dynamicGroupSystem
+                            || new GroupBatchSystem(this, new WebGLVertexArrayObject(this, 2048, gl.DYNAMIC_DRAW, 'DynamicGroupVAO'));
                     }
                     else {
-                        renderNode.batchSystem = this.staticGroupSystem = this.staticGroupSystem 
-                        || new GroupBatchSystem(this, new WebGLVertexArrayObject(this, 2048, gl.STATIC_DRAW, 'StaticGroupVAO'));
+                        renderNode.batchSystem = this.staticGroupSystem = this.staticGroupSystem
+                            || new GroupBatchSystem(this, new WebGLVertexArrayObject(this, 2048, gl.STATIC_DRAW, 'StaticGroupVAO'));
                     }
                 }
                 else {
                     if (renderNode.type === sys.RenderNodeType.MeshNode) {
-                        this.batchSystems[renderNode.type] = this.batchSystems[renderNode.type] 
-                        || new MeshBatchSystem(this, new WebGLVertexArrayObject(this, 2048, gl.DYNAMIC_DRAW, 'MeshVAO'));
+                        this.batchSystems[renderNode.type] = this.batchSystems[renderNode.type]
+                            || new MeshBatchSystem(this, new WebGLVertexArrayObject(this, 2048, gl.DYNAMIC_DRAW, 'MeshVAO'));
                     }
                     renderNode.batchSystem = this.batchSystems[renderNode.type];
                 }
@@ -127,7 +127,7 @@ namespace egret.web {
             this.currentBatchSystem.flush();
         }
 
-    
+
         public static antialias: boolean;
 
         //
@@ -280,7 +280,7 @@ namespace egret.web {
                 return;
             }
 
-            
+
 
             this.initWebGL();
             this.initBatchSystems();
@@ -295,7 +295,7 @@ namespace egret.web {
 
             this.drawCmdManager = new WebGLDrawCmdManager();
 
-            
+
 
             this.setGlobalCompositeOperation("source-over");
 
@@ -761,7 +761,7 @@ namespace egret.web {
         /**
          * 绘制Mesh
          */
-        public drawMesh(displayObject: DisplayObject , image: BitmapData,
+        public drawMesh(displayObject: DisplayObject, image: BitmapData,
             sourceX: number, sourceY: number, sourceWidth: number, sourceHeight: number,
             destX: number, destY: number, destWidth: number, destHeight: number,
             imageSourceWidth: number, imageSourceHeight: number,
@@ -832,7 +832,7 @@ namespace egret.web {
             }
 
             //if (meshUVs) {
-                //this.vao.changeToMeshIndices();
+            //this.vao.changeToMeshIndices();
             //}
 
             let count = meshIndices ? meshIndices.length / 3 : 2;
@@ -1359,6 +1359,29 @@ namespace egret.web {
             this.popBuffer();
         }
 
+        /**
+         * 向一个renderTarget中绘制
+         * */
+        public __renderToTargetWithFilter__(filter: Filter, input: WebGLRenderBuffer, output: WebGLRenderBuffer): void {
+            if (this.contextLost) {
+                return;
+            }
+            if (this.vao.reachMaxSize()) {
+                this.$flush();
+            }
+            this.pushBuffer(output);
+            const width = input.rootRenderTarget.width;
+            const height = input.rootRenderTarget.height;
+            // 绘制input结果到舞台
+            output.saveTransform();
+            output.transform(1, 0, 0, -1, 0, height);
+            this.vao.cacheArrays(null, output, 0, 0, width, height, 0, 0, width, height, width, height);
+            output.restoreTransform();
+            //
+            this.drawCmdManager.pushDrawTexture(input.rootRenderTarget.texture, 2, filter, width, height);
+            this.popBuffer();
+        }
+
         public static blendModesForGL: any = null;
 
         public static initBlendMode(): void {
@@ -1386,6 +1409,8 @@ namespace egret.web {
             WebGLRenderContext.blendModesForGL["destination-out"] = [0, 771];
             WebGLRenderContext.blendModesForGL["destination-in"] = [0, 770];
         }
+
+        
     }
 
     WebGLRenderContext.initBlendMode();
