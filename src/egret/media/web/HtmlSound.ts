@@ -139,7 +139,6 @@ namespace egret.web {
                 if (ie) {
                     document.body.appendChild(audio);
                 }
-                
 
                 self.loaded = true;
                 self.dispatchEventWith(egret.Event.COMPLETE);
@@ -194,11 +193,13 @@ namespace egret.web {
          * @inheritDoc
          */
         public close() {
-            if (this.loaded == false && this.originAudio)
+            if (this.loaded && this.originAudio) {
                 this.originAudio.src = "";
+            }
             if (this.originAudio)
                 this.originAudio = null;
             HtmlSound.$clear(this.url);
+            this.loaded = false;
         }
 
         /**
