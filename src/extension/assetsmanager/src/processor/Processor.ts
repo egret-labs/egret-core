@@ -479,6 +479,8 @@ module RES.processor {
             });
         },
         onRemoveStart(host, resource) {
+            const sound: egret.Sound = host.get(resource);
+            sound.close();
         }
     }
     /**
