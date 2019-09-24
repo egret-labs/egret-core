@@ -7,10 +7,6 @@ The Egret Engine released the 5.2.28 stable version on September 11, 2019.
 - **[FIX]** Fix an issue where the game page can't bounce when iOS bounces up the input keyboard
 
 
-## Baidu Game v0.2.7
-
-
-
 ## WeChat Game v1.2.9
 - **[OPTIMIZE]** Support for multiple websocket connections
 - **[NEW]** Increase the output information of the engine version number after the engine starts
