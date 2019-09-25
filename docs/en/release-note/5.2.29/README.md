@@ -1,6 +1,8 @@
 # Egret Engine 5.2.29 Release Notes
 The Egret Engine released the 5.2.29 stable version on September 25, 2019.
 
+This update mainly solves the problem that the sound is occupied in the memory. The small game platform adds support for the `egret.log` method.
+
 ## 2D Rendering - JavaScript 
 - **[OPTIMIZE]** Fix problems where the RES module can't destroy sound
 - **[OPTIMIZE]** Optimize the logic of destroying sound within the engine
