@@ -42,7 +42,7 @@ namespace egret.web {
             let ua = navigator.userAgent.toLowerCase();
             capabilities["isMobile" + ""] = (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
             if (capabilities.isMobile) {
-                if (ua.indexOf("windows") < 0 && (ua.indexOf("iphone") != -1 || ua.indexOf("ipad") != -1 || ua.indexOf("ipod") != -1)) {
+                if (ua.indexOf("windows") < 0 && (ua.indexOf("iphone") != -1 || ua.indexOf("ipad") != -1 || ua.indexOf("ipod") != -1 || ua.indexOf("Mac OS X") != -1;)) {
                     capabilities["os" + ""] = "iOS";
                 }
                 else if (ua.indexOf("android") != -1 && ua.indexOf("linux") != -1) {
