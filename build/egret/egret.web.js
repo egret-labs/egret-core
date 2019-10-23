@@ -3758,6 +3758,9 @@ var egret;
                     if (ua.indexOf("windows nt") != -1) {
                         capabilities["os" + ""] = "Windows PC";
                     }
+                    else if (navigator.platform == "MacIntel" && navigator.maxTouchPoints > 1) {
+                        capabilities["os" + ""] = "iOS";
+                    }
                     else if (ua.indexOf("mac os") != -1) {
                         capabilities["os" + ""] = "Mac OS";
                     }
