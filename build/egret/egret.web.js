@@ -3760,6 +3760,7 @@ var egret;
                     }
                     else if (navigator.platform == "MacIntel" && navigator.maxTouchPoints > 1) {
                         capabilities["os" + ""] = "iOS";
+                        capabilities["isMobile" + ""] = true;
                     }
                     else if (ua.indexOf("mac os") != -1) {
                         capabilities["os" + ""] = "Mac OS";

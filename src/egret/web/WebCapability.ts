@@ -56,6 +56,7 @@ namespace egret.web {
                     capabilities["os" + ""] = "Windows PC";
                 }else if(navigator.platform == "MacIntel" && navigator.maxTouchPoints > 1){//ios 13 Request Desktop Website
                     capabilities["os" + ""] = "iOS";
+                    capabilities["isMobile" + ""] = true;
                 }else if (ua.indexOf("mac os") != -1) {
                     capabilities["os" + ""] = "Mac OS";
                 }
