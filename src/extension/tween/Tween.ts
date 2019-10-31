@@ -330,6 +330,31 @@ namespace egret {
             }
             tweens.length = 0;
         }
+	/**
+         * 暂停所有 Tween
+         */
+       public static pauseAllTweens(): void {
+            let tweens = Tween._tweens;
+            for (let i = 0, l = tweens.length; i < l; i++) {
+                let tween: Tween = tweens[i];
+                if(!tween.paused){
+                    tween.paused = true;
+                }
+
+            }
+        };
+        /**
+         * 开始所有 Tween
+         */
+         public static playAllTweens(): void {
+            let tweens = Tween._tweens;
+            for (let i = 0, l = tweens.length; i < l; i++) {
+                let tween: Tween = tweens[i];
+                if(tween.paused){
+                    tween.paused = false;
+                }
+            }
+        };
 
         /**
          * 创建一个 egret.Tween 对象
