@@ -54,7 +54,7 @@ class UpgradeCommand implements egret.Command {
             { "v": "5.2.23", command: Upgrade_5_2_23 },
             { "v": "5.2.25", command: Upgrade_5_2_25 },
             { "v": "5.2.28", command: Upgrade_5_2_28 },
-            { "v": "5.2.30" }
+            { "v": "5.2.31", command: Upgrade_5_2_31 }
         ];
 
         try {
@@ -207,7 +207,7 @@ class Upgrade_5_2_28 {
         return 0;
     }
 }
-class Upgrade_wxplugin {
+class Upgrade_5_2_31 {
     async execute() {
         file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "wxgame"), path.join(egret.args.projectDir, "scripts", "wxgame"));
         file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.wxgame.ts"), path.join(egret.args.projectDir, "scripts", "config.wxgame.ts"));

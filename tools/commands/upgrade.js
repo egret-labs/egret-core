@@ -76,7 +76,7 @@ var UpgradeCommand = /** @class */ (function () {
                             { "v": "5.2.23", command: Upgrade_5_2_23 },
                             { "v": "5.2.25", command: Upgrade_5_2_25 },
                             { "v": "5.2.28", command: Upgrade_5_2_28 },
-                            { "v": "5.2.30" }
+                            { "v": "5.2.31", command: Upgrade_5_2_31 }
                         ];
                         _a.label = 1;
                     case 1:
@@ -281,10 +281,10 @@ var Upgrade_5_2_28 = /** @class */ (function () {
     };
     return Upgrade_5_2_28;
 }());
-var Upgrade_wxplugin = /** @class */ (function () {
-    function Upgrade_wxplugin() {
+var Upgrade_5_2_31 = /** @class */ (function () {
+    function Upgrade_5_2_31() {
     }
-    Upgrade_wxplugin.prototype.execute = function () {
+    Upgrade_5_2_31.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "wxgame"), path.join(egret.args.projectDir, "scripts", "wxgame"));
@@ -294,6 +294,6 @@ var Upgrade_wxplugin = /** @class */ (function () {
             });
         });
     };
-    return Upgrade_wxplugin;
+    return Upgrade_5_2_31;
 }());
 module.exports = UpgradeCommand;
