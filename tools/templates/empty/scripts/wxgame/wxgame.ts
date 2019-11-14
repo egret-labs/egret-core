@@ -2,8 +2,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 const crypto = require('crypto');
 export class WxgamePlugin implements plugins.Command {
-
-    constructor() {
+    private useWxPlugin:boolean = false;
+    constructor(useWxPlugin:boolean) {
+        this.useWxPlugin = useWxPlugin
     }
     md5Obj = {}
     md5(content) {
@@ -50,7 +51,6 @@ export class WxgamePlugin implements plugins.Command {
         return file;
     }
     async onFinish(pluginContext: plugins.CommandContext) {
-        let useWxPlugin: boolean = true;//是否使用微信分离插件
         let { projectRoot, outputDir, buildConfig } = pluginContext
         //同步 index.html 配置到 game.js
         const gameJSPath = path.join(outputDir, "game.js");
@@ -92,21 +92,27 @@ export class WxgamePlugin implements plugins.Command {
         }
         this.writeData(gameJSONContent, gameJSONPath)
 
-
-        if (buildConfig.command !== "publish" || !useWxPlugin) {
-            return
-        }
         //下面的流程是配置开启微信插件的功能
         let engineVersion = this.readData(path.join(projectRoot, "egretProperties.json")).engineVersion;
         if (!gameJSONContent.plugins) {
             gameJSONContent.plugins = {}
         }
-        gameJSONContent.plugins["egret-library"] = {
-            "provider": "wx7e2186943221985d",
-            "version": engineVersion,
-            "path": "egret-library"
+        if(buildConfig.command == "publish" && this.useWxPlugin){
+            gameJSONContent.plugins["egret-library"] = {
+                "provider": "wx7e2186943221985d",
+                "version": engineVersion,
+                "path": "egret-library"
+            }
+        }else{
+            gameJSONContent.plugins = {}
         }
+        
         this.writeData(gameJSONContent, gameJSONPath)
+
+        if (buildConfig.command !== "publish" || !this.useWxPlugin) {
+            return
+        }
+        
         let libDir = path.join(outputDir, "egret-library")
         fs.mkdirSync(libDir)
         let pluginData = { "main": "index.js" }
