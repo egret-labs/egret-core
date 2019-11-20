@@ -1,10 +1,10 @@
 {
   "bundle": {
-    "commonSourceDirectory": "E:/github/TypeScript/src/",
+    "commonSourceDirectory": "../../src",
     "sourceFiles": [
-      "E:/github/TypeScript/src/jsTyping/shared.ts",
-      "E:/github/TypeScript/src/jsTyping/types.ts",
-      "E:/github/TypeScript/src/jsTyping/jsTyping.ts"
+      "../../src/jsTyping/shared.ts",
+      "../../src/jsTyping/types.ts",
+      "../../src/jsTyping/jsTyping.ts"
     ],
     "js": {
       "sections": [
@@ -16,7 +16,7 @@
         },
         {
           "pos": 14,
-          "end": 18421,
+          "end": 19434,
           "kind": "text"
         }
       ],
@@ -69,36 +69,36 @@
         },
         {
           "pos": 3268,
-          "end": 4367,
+          "end": 4363,
           "kind": "text"
         },
         {
-          "pos": 4367,
-          "end": 4802,
+          "pos": 4363,
+          "end": 4798,
           "kind": "internal"
         },
         {
-          "pos": 4803,
-          "end": 5097,
+          "pos": 4799,
+          "end": 5093,
           "kind": "text"
         },
         {
-          "pos": 5097,
-          "end": 5271,
+          "pos": 5093,
+          "end": 5267,
           "kind": "internal"
         },
         {
-          "pos": 5272,
-          "end": 5274,
+          "pos": 5268,
+          "end": 5270,
           "kind": "text"
         },
         {
-          "pos": 5274,
-          "end": 7939,
+          "pos": 5270,
+          "end": 8189,
           "kind": "internal"
         }
       ]
     }
   },
-  "version": "3.5.2"
+  "version": "3.7.2"
 }

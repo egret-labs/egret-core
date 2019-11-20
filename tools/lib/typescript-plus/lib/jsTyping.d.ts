@@ -86,7 +86,7 @@ declare namespace ts.server {
         readonly kind: EventBeginInstallTypes | EventEndInstallTypes;
         readonly eventId: number;
         readonly typingsInstallerVersion: string;
-        readonly packagesToInstall: ReadonlyArray<string>;
+        readonly packagesToInstall: readonly string[];
     }
     interface BeginInstallTypes extends InstallTypes {
         readonly kind: EventBeginInstallTypes;
@@ -116,15 +116,16 @@ declare namespace ts.JsTyping {
         directoryExists(path: string): boolean;
         fileExists(fileName: string): boolean;
         readFile(path: string, encoding?: string): string | undefined;
-        readDirectory(rootDir: string, extensions: ReadonlyArray<string>, excludes: ReadonlyArray<string> | undefined, includes: ReadonlyArray<string> | undefined, depth?: number): string[];
+        readDirectory(rootDir: string, extensions: readonly string[], excludes: readonly string[] | undefined, includes: readonly string[] | undefined, depth?: number): string[];
     }
     interface CachedTyping {
         typingLocation: string;
         version: Version;
     }
     function isTypingUpToDate(cachedTyping: CachedTyping, availableTypingVersions: MapLike<string>): boolean;
-    const nodeCoreModuleList: ReadonlyArray<string>;
+    const nodeCoreModuleList: readonly string[];
     const nodeCoreModules: Map<true>;
+    function nonRelativeModuleNameForTypingCache(moduleName: string): string;
     /**
      * A map of loose file names to library names that we are confident require typings
      */
@@ -140,20 +141,25 @@ declare namespace ts.JsTyping {
      * @param typeAcquisition is used to customize the typing acquisition process
      * @param compilerOptions are used as a source for typing inference
      */
-    function discoverTypings(host: TypingResolutionHost, log: ((message: string) => void) | undefined, fileNames: string[], projectRootPath: Path, safeList: SafeList, packageNameToTypingLocation: ReadonlyMap<CachedTyping>, typeAcquisition: TypeAcquisition, unresolvedImports: ReadonlyArray<string>, typesRegistry: ReadonlyMap<MapLike<string>>): {
+    function discoverTypings(host: TypingResolutionHost, log: ((message: string) => void) | undefined, fileNames: string[], projectRootPath: Path, safeList: SafeList, packageNameToTypingLocation: ReadonlyMap<CachedTyping>, typeAcquisition: TypeAcquisition, unresolvedImports: readonly string[], typesRegistry: ReadonlyMap<MapLike<string>>): {
         cachedTypingPaths: string[];
         newTypingNames: string[];
         filesToWatch: string[];
     };
-    const enum PackageNameValidationResult {
+    const enum NameValidationResult {
         Ok = 0,
-        ScopedPackagesNotSupported = 1,
-        EmptyName = 2,
-        NameTooLong = 3,
-        NameStartsWithDot = 4,
-        NameStartsWithUnderscore = 5,
-        NameContainsNonURISafeCharacters = 6
+        EmptyName = 1,
+        NameTooLong = 2,
+        NameStartsWithDot = 3,
+        NameStartsWithUnderscore = 4,
+        NameContainsNonURISafeCharacters = 5
     }
+    interface ScopedPackageNameValidationResult {
+        name: string;
+        isScopeName: boolean;
+        result: NameValidationResult;
+    }
+    type PackageNameValidationResult = NameValidationResult | ScopedPackageNameValidationResult;
     /**
      * Validates package name using rules defined at https://docs.npmjs.com/files/package.json
      */

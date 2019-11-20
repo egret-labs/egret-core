@@ -1,88 +1,95 @@
 {
   "bundle": {
-    "commonSourceDirectory": "E:/github/TypeScript/src/",
+    "commonSourceDirectory": "../../src",
     "sourceFiles": [
-      "E:/github/TypeScript/src/services/types.ts",
-      "E:/github/TypeScript/src/services/utilities.ts",
-      "E:/github/TypeScript/src/services/classifier.ts",
-      "E:/github/TypeScript/src/services/stringCompletions.ts",
-      "E:/github/TypeScript/src/services/completions.ts",
-      "E:/github/TypeScript/src/services/documentHighlights.ts",
-      "E:/github/TypeScript/src/services/documentRegistry.ts",
-      "E:/github/TypeScript/src/services/importTracker.ts",
-      "E:/github/TypeScript/src/services/findAllReferences.ts",
-      "E:/github/TypeScript/src/services/getEditsForFileRename.ts",
-      "E:/github/TypeScript/src/services/goToDefinition.ts",
-      "E:/github/TypeScript/src/services/jsDoc.ts",
-      "E:/github/TypeScript/src/services/navigateTo.ts",
-      "E:/github/TypeScript/src/services/navigationBar.ts",
-      "E:/github/TypeScript/src/services/organizeImports.ts",
-      "E:/github/TypeScript/src/services/outliningElementsCollector.ts",
-      "E:/github/TypeScript/src/services/patternMatcher.ts",
-      "E:/github/TypeScript/src/services/preProcess.ts",
-      "E:/github/TypeScript/src/services/rename.ts",
-      "E:/github/TypeScript/src/services/smartSelection.ts",
-      "E:/github/TypeScript/src/services/signatureHelp.ts",
-      "E:/github/TypeScript/src/services/sourcemaps.ts",
-      "E:/github/TypeScript/src/services/suggestionDiagnostics.ts",
-      "E:/github/TypeScript/src/services/symbolDisplay.ts",
-      "E:/github/TypeScript/src/services/transpile.ts",
-      "E:/github/TypeScript/src/services/formatting/formattingContext.ts",
-      "E:/github/TypeScript/src/services/formatting/formattingScanner.ts",
-      "E:/github/TypeScript/src/services/formatting/rule.ts",
-      "E:/github/TypeScript/src/services/formatting/rules.ts",
-      "E:/github/TypeScript/src/services/formatting/rulesMap.ts",
-      "E:/github/TypeScript/src/services/formatting/formatting.ts",
-      "E:/github/TypeScript/src/services/formatting/smartIndenter.ts",
-      "E:/github/TypeScript/src/services/textChanges.ts",
-      "E:/github/TypeScript/src/services/codeFixProvider.ts",
-      "E:/github/TypeScript/src/services/refactorProvider.ts",
-      "E:/github/TypeScript/src/services/codefixes/addConvertToUnknownForNonOverlappingTypes.ts",
-      "E:/github/TypeScript/src/services/codefixes/addMissingInvocationForDecorator.ts",
-      "E:/github/TypeScript/src/services/codefixes/addNameToNamelessParameter.ts",
-      "E:/github/TypeScript/src/services/codefixes/annotateWithTypeFromJSDoc.ts",
-      "E:/github/TypeScript/src/services/codefixes/inferFromUsage.ts",
-      "E:/github/TypeScript/src/services/codefixes/convertFunctionToEs6Class.ts",
-      "E:/github/TypeScript/src/services/codefixes/convertToAsyncFunction.ts",
-      "E:/github/TypeScript/src/services/codefixes/convertToEs6Module.ts",
-      "E:/github/TypeScript/src/services/codefixes/correctQualifiedNameToIndexedAccessType.ts",
-      "E:/github/TypeScript/src/services/codefixes/fixClassIncorrectlyImplementsInterface.ts",
-      "E:/github/TypeScript/src/services/codefixes/importFixes.ts",
-      "E:/github/TypeScript/src/services/codefixes/fixSpelling.ts",
-      "E:/github/TypeScript/src/services/codefixes/fixAddMissingMember.ts",
-      "E:/github/TypeScript/src/services/codefixes/fixAddMissingNewOperator.ts",
-      "E:/github/TypeScript/src/services/codefixes/fixCannotFindModule.ts",
-      "E:/github/TypeScript/src/services/codefixes/fixClassDoesntImplementInheritedAbstractMember.ts",
-      "E:/github/TypeScript/src/services/codefixes/fixClassSuperMustPrecedeThisAccess.ts",
-      "E:/github/TypeScript/src/services/codefixes/fixConstructorForDerivedNeedSuperCall.ts",
-      "E:/github/TypeScript/src/services/codefixes/fixEnableExperimentalDecorators.ts",
-      "E:/github/TypeScript/src/services/codefixes/fixExtendsInterfaceBecomesImplements.ts",
-      "E:/github/TypeScript/src/services/codefixes/fixForgottenThisPropertyAccess.ts",
-      "E:/github/TypeScript/src/services/codefixes/fixUnusedIdentifier.ts",
-      "E:/github/TypeScript/src/services/codefixes/fixUnreachableCode.ts",
-      "E:/github/TypeScript/src/services/codefixes/fixUnusedLabel.ts",
-      "E:/github/TypeScript/src/services/codefixes/fixJSDocTypes.ts",
-      "E:/github/TypeScript/src/services/codefixes/fixAwaitInSyncFunction.ts",
-      "E:/github/TypeScript/src/services/codefixes/disableJsDiagnostics.ts",
-      "E:/github/TypeScript/src/services/codefixes/helpers.ts",
-      "E:/github/TypeScript/src/services/codefixes/fixInvalidImportSyntax.ts",
-      "E:/github/TypeScript/src/services/codefixes/fixStrictClassInitialization.ts",
-      "E:/github/TypeScript/src/services/codefixes/requireInTs.ts",
-      "E:/github/TypeScript/src/services/codefixes/useDefaultImport.ts",
-      "E:/github/TypeScript/src/services/codefixes/fixAddModuleReferTypeMissingTypeof.ts",
-      "E:/github/TypeScript/src/services/codefixes/convertToMappedObjectType.ts",
-      "E:/github/TypeScript/src/services/refactors/convertExport.ts",
-      "E:/github/TypeScript/src/services/refactors/convertImport.ts",
-      "E:/github/TypeScript/src/services/refactors/extractSymbol.ts",
-      "E:/github/TypeScript/src/services/refactors/extractType.ts",
-      "E:/github/TypeScript/src/services/refactors/generateGetAccessorAndSetAccessor.ts",
-      "E:/github/TypeScript/src/services/refactors/moveToNewFile.ts",
-      "E:/github/TypeScript/src/services/refactors/addOrRemoveBracesToArrowFunction.ts",
-      "E:/github/TypeScript/src/services/refactors/convertParamsToDestructuredObject.ts",
-      "E:/github/TypeScript/src/services/services.ts",
-      "E:/github/TypeScript/src/services/breakpoints.ts",
-      "E:/github/TypeScript/src/services/transform.ts",
-      "E:/github/TypeScript/src/services/shims.ts"
+      "../../src/services/types.ts",
+      "../../src/services/utilities.ts",
+      "../../src/services/classifier.ts",
+      "../../src/services/stringCompletions.ts",
+      "../../src/services/completions.ts",
+      "../../src/services/documentHighlights.ts",
+      "../../src/services/documentRegistry.ts",
+      "../../src/services/importTracker.ts",
+      "../../src/services/findAllReferences.ts",
+      "../../src/services/getEditsForFileRename.ts",
+      "../../src/services/goToDefinition.ts",
+      "../../src/services/jsDoc.ts",
+      "../../src/services/navigateTo.ts",
+      "../../src/services/navigationBar.ts",
+      "../../src/services/organizeImports.ts",
+      "../../src/services/outliningElementsCollector.ts",
+      "../../src/services/patternMatcher.ts",
+      "../../src/services/preProcess.ts",
+      "../../src/services/rename.ts",
+      "../../src/services/smartSelection.ts",
+      "../../src/services/signatureHelp.ts",
+      "../../src/services/sourcemaps.ts",
+      "../../src/services/suggestionDiagnostics.ts",
+      "../../src/services/symbolDisplay.ts",
+      "../../src/services/transpile.ts",
+      "../../src/services/formatting/formattingContext.ts",
+      "../../src/services/formatting/formattingScanner.ts",
+      "../../src/services/formatting/rule.ts",
+      "../../src/services/formatting/rules.ts",
+      "../../src/services/formatting/rulesMap.ts",
+      "../../src/services/formatting/formatting.ts",
+      "../../src/services/formatting/smartIndenter.ts",
+      "../../src/services/textChanges.ts",
+      "../../src/services/codeFixProvider.ts",
+      "../../src/services/refactorProvider.ts",
+      "../../src/services/codefixes/addConvertToUnknownForNonOverlappingTypes.ts",
+      "../../src/services/codefixes/addMissingAwait.ts",
+      "../../src/services/codefixes/addMissingConst.ts",
+      "../../src/services/codefixes/addMissingDeclareProperty.ts",
+      "../../src/services/codefixes/addMissingInvocationForDecorator.ts",
+      "../../src/services/codefixes/addNameToNamelessParameter.ts",
+      "../../src/services/codefixes/annotateWithTypeFromJSDoc.ts",
+      "../../src/services/codefixes/inferFromUsage.ts",
+      "../../src/services/codefixes/convertFunctionToEs6Class.ts",
+      "../../src/services/codefixes/convertToAsyncFunction.ts",
+      "../../src/services/codefixes/convertToEs6Module.ts",
+      "../../src/services/codefixes/correctQualifiedNameToIndexedAccessType.ts",
+      "../../src/services/codefixes/fixClassIncorrectlyImplementsInterface.ts",
+      "../../src/services/codefixes/importFixes.ts",
+      "../../src/services/codefixes/fixSpelling.ts",
+      "../../src/services/codefixes/fixAddMissingMember.ts",
+      "../../src/services/codefixes/fixAddMissingNewOperator.ts",
+      "../../src/services/codefixes/fixCannotFindModule.ts",
+      "../../src/services/codefixes/fixClassDoesntImplementInheritedAbstractMember.ts",
+      "../../src/services/codefixes/fixClassSuperMustPrecedeThisAccess.ts",
+      "../../src/services/codefixes/fixConstructorForDerivedNeedSuperCall.ts",
+      "../../src/services/codefixes/fixEnableExperimentalDecorators.ts",
+      "../../src/services/codefixes/fixEnableJsxFlag.ts",
+      "../../src/services/codefixes/fixExtendsInterfaceBecomesImplements.ts",
+      "../../src/services/codefixes/fixForgottenThisPropertyAccess.ts",
+      "../../src/services/codefixes/fixUnusedIdentifier.ts",
+      "../../src/services/codefixes/fixUnreachableCode.ts",
+      "../../src/services/codefixes/fixUnusedLabel.ts",
+      "../../src/services/codefixes/fixJSDocTypes.ts",
+      "../../src/services/codefixes/fixAwaitInSyncFunction.ts",
+      "../../src/services/codefixes/disableJsDiagnostics.ts",
+      "../../src/services/codefixes/helpers.ts",
+      "../../src/services/codefixes/fixInvalidImportSyntax.ts",
+      "../../src/services/codefixes/fixStrictClassInitialization.ts",
+      "../../src/services/codefixes/requireInTs.ts",
+      "../../src/services/codefixes/useDefaultImport.ts",
+      "../../src/services/codefixes/useBigintLiteral.ts",
+      "../../src/services/codefixes/fixAddModuleReferTypeMissingTypeof.ts",
+      "../../src/services/codefixes/convertToMappedObjectType.ts",
+      "../../src/services/codefixes/removeUnnecessaryAwait.ts",
+      "../../src/services/codefixes/convertConstToLet.ts",
+      "../../src/services/refactors/convertExport.ts",
+      "../../src/services/refactors/convertImport.ts",
+      "../../src/services/refactors/extractSymbol.ts",
+      "../../src/services/refactors/extractType.ts",
+      "../../src/services/refactors/generateGetAccessorAndSetAccessor.ts",
+      "../../src/services/refactors/moveToNewFile.ts",
+      "../../src/services/refactors/addOrRemoveBracesToArrowFunction.ts",
+      "../../src/services/refactors/convertParamsToDestructuredObject.ts",
+      "../../src/services/services.ts",
+      "../../src/services/breakpoints.ts",
+      "../../src/services/transform.ts",
+      "../../src/services/shims.ts"
     ],
     "js": {
       "sections": [
@@ -100,13 +107,19 @@
         },
         {
           "pos": 397,
-          "end": 982,
+          "end": 724,
+          "kind": "emitHelpers",
+          "data": "typescript:spreadArrays"
+        },
+        {
+          "pos": 725,
+          "end": 1310,
           "kind": "emitHelpers",
           "data": "typescript:extends"
         },
         {
-          "pos": 983,
-          "end": 1702298,
+          "pos": 1311,
+          "end": 1845889,
           "kind": "text"
         }
       ],
@@ -130,6 +143,7 @@
         ],
         "helpers": [
           "typescript:assign",
+          "typescript:spreadArrays",
           "typescript:extends"
         ]
       }
@@ -158,246 +172,286 @@
         },
         {
           "pos": 483,
-          "end": 2907,
+          "end": 862,
           "kind": "text"
         },
         {
-          "pos": 2907,
-          "end": 3110,
+          "pos": 862,
+          "end": 931,
           "kind": "internal"
         },
         {
-          "pos": 3111,
-          "end": 3439,
+          "pos": 932,
+          "end": 997,
           "kind": "text"
         },
         {
-          "pos": 3439,
-          "end": 3485,
+          "pos": 997,
+          "end": 1065,
           "kind": "internal"
         },
         {
-          "pos": 3486,
-          "end": 7148,
+          "pos": 1066,
+          "end": 2135,
           "kind": "text"
         },
         {
-          "pos": 7148,
-          "end": 7265,
+          "pos": 2135,
+          "end": 2205,
           "kind": "internal"
         },
         {
-          "pos": 7266,
-          "end": 7693,
+          "pos": 2206,
+          "end": 3186,
           "kind": "text"
         },
         {
-          "pos": 7693,
-          "end": 7890,
+          "pos": 3186,
+          "end": 3385,
           "kind": "internal"
         },
         {
-          "pos": 7891,
-          "end": 7897,
+          "pos": 3386,
+          "end": 3710,
           "kind": "text"
         },
         {
-          "pos": 7897,
-          "end": 7924,
+          "pos": 3710,
+          "end": 3756,
           "kind": "internal"
         },
         {
-          "pos": 7925,
-          "end": 13102,
+          "pos": 3757,
+          "end": 5686,
           "kind": "text"
         },
         {
-          "pos": 13102,
-          "end": 13167,
+          "pos": 5686,
+          "end": 6275,
           "kind": "internal"
         },
         {
-          "pos": 13168,
-          "end": 15420,
+          "pos": 6276,
+          "end": 8035,
           "kind": "text"
         },
         {
-          "pos": 15420,
-          "end": 15480,
+          "pos": 8035,
+          "end": 8214,
           "kind": "internal"
         },
         {
-          "pos": 15481,
-          "end": 21304,
+          "pos": 8215,
+          "end": 8642,
           "kind": "text"
         },
         {
-          "pos": 21304,
-          "end": 21414,
+          "pos": 8642,
+          "end": 9179,
           "kind": "internal"
         },
         {
-          "pos": 21415,
-          "end": 27990,
+          "pos": 9180,
+          "end": 9186,
           "kind": "text"
         },
         {
-          "pos": 27990,
-          "end": 28039,
+          "pos": 9186,
+          "end": 9213,
           "kind": "internal"
         },
         {
-          "pos": 28040,
-          "end": 41627,
+          "pos": 9214,
+          "end": 14371,
           "kind": "text"
         },
         {
-          "pos": 41627,
-          "end": 59179,
+          "pos": 14371,
+          "end": 14436,
           "kind": "internal"
         },
         {
-          "pos": 59180,
-          "end": 59248,
+          "pos": 14437,
+          "end": 16697,
           "kind": "text"
         },
         {
-          "pos": 59248,
-          "end": 59955,
+          "pos": 16697,
+          "end": 16757,
           "kind": "internal"
         },
         {
-          "pos": 59956,
-          "end": 59958,
+          "pos": 16758,
+          "end": 22582,
           "kind": "text"
         },
         {
-          "pos": 59958,
-          "end": 64080,
+          "pos": 22582,
+          "end": 22692,
           "kind": "internal"
         },
         {
-          "pos": 64081,
-          "end": 67997,
+          "pos": 22693,
+          "end": 29699,
           "kind": "text"
         },
         {
-          "pos": 67997,
-          "end": 68077,
+          "pos": 29699,
+          "end": 29748,
           "kind": "internal"
         },
         {
-          "pos": 68078,
-          "end": 68115,
+          "pos": 29749,
+          "end": 43332,
           "kind": "text"
         },
         {
-          "pos": 68115,
-          "end": 68342,
+          "pos": 43332,
+          "end": 63128,
           "kind": "internal"
         },
         {
-          "pos": 68343,
-          "end": 68543,
+          "pos": 63129,
+          "end": 63286,
           "kind": "text"
         },
         {
-          "pos": 68543,
-          "end": 68708,
+          "pos": 63286,
+          "end": 63993,
           "kind": "internal"
         },
         {
-          "pos": 68709,
-          "end": 68711,
+          "pos": 63994,
+          "end": 63996,
           "kind": "text"
         },
         {
-          "pos": 68711,
-          "end": 83258,
+          "pos": 63996,
+          "end": 68862,
           "kind": "internal"
         },
         {
-          "pos": 83259,
-          "end": 83417,
+          "pos": 68863,
+          "end": 72779,
           "kind": "text"
         },
         {
-          "pos": 83417,
-          "end": 86777,
+          "pos": 72779,
+          "end": 72859,
           "kind": "internal"
         },
         {
-          "pos": 86778,
-          "end": 87448,
+          "pos": 72860,
+          "end": 72897,
           "kind": "text"
         },
         {
-          "pos": 87448,
-          "end": 87658,
+          "pos": 72897,
+          "end": 73124,
           "kind": "internal"
         },
         {
-          "pos": 87659,
-          "end": 87661,
+          "pos": 73125,
+          "end": 73325,
           "kind": "text"
         },
         {
-          "pos": 87661,
-          "end": 115746,
+          "pos": 73325,
+          "end": 73490,
           "kind": "internal"
         },
         {
-          "pos": 115747,
-          "end": 115856,
+          "pos": 73491,
+          "end": 73493,
           "kind": "text"
         },
         {
-          "pos": 115856,
-          "end": 116070,
+          "pos": 73493,
+          "end": 88535,
           "kind": "internal"
         },
         {
-          "pos": 116071,
-          "end": 116810,
+          "pos": 88536,
+          "end": 88694,
           "kind": "text"
         },
         {
-          "pos": 116810,
-          "end": 117267,
+          "pos": 88694,
+          "end": 92090,
           "kind": "internal"
         },
         {
-          "pos": 117268,
-          "end": 117407,
+          "pos": 92091,
+          "end": 92761,
           "kind": "text"
         },
         {
-          "pos": 117407,
-          "end": 118260,
+          "pos": 92761,
+          "end": 92971,
           "kind": "internal"
         },
         {
-          "pos": 118261,
-          "end": 118562,
+          "pos": 92972,
+          "end": 92974,
           "kind": "text"
         },
         {
-          "pos": 118562,
-          "end": 118777,
+          "pos": 92974,
+          "end": 122397,
           "kind": "internal"
         },
         {
-          "pos": 118778,
-          "end": 119274,
+          "pos": 122398,
+          "end": 122507,
           "kind": "text"
         },
         {
-          "pos": 119274,
-          "end": 133966,
+          "pos": 122507,
+          "end": 122721,
+          "kind": "internal"
+        },
+        {
+          "pos": 122722,
+          "end": 123461,
+          "kind": "text"
+        },
+        {
+          "pos": 123461,
+          "end": 123918,
+          "kind": "internal"
+        },
+        {
+          "pos": 123919,
+          "end": 124058,
+          "kind": "text"
+        },
+        {
+          "pos": 124058,
+          "end": 124907,
+          "kind": "internal"
+        },
+        {
+          "pos": 124908,
+          "end": 125209,
+          "kind": "text"
+        },
+        {
+          "pos": 125209,
+          "end": 125424,
+          "kind": "internal"
+        },
+        {
+          "pos": 125425,
+          "end": 125921,
+          "kind": "text"
+        },
+        {
+          "pos": 125921,
+          "end": 140593,
           "kind": "internal"
         }
       ]
     }
   },
-  "version": "3.5.2"
+  "version": "3.7.2"
 }

@@ -1,8 +1,8 @@
 {
   "bundle": {
-    "commonSourceDirectory": "E:/github/TypeScript/src/",
+    "commonSourceDirectory": "../../src",
     "sourceFiles": [
-      "E:/github/TypeScript/src/tsserver/server.ts"
+      "../../src/tsserver/server.ts"
     ],
     "js": {
       "sections": [
@@ -14,89 +14,95 @@
         },
         {
           "pos": 14,
-          "end": 396,
+          "end": 341,
+          "kind": "emitHelpers",
+          "data": "typescript:spreadArrays"
+        },
+        {
+          "pos": 342,
+          "end": 724,
           "kind": "emitHelpers",
           "data": "typescript:assign"
         },
         {
-          "pos": 397,
-          "end": 2187,
+          "pos": 725,
+          "end": 2515,
           "kind": "emitHelpers",
           "data": "typescript:generator"
         },
         {
-          "pos": 2188,
-          "end": 2416,
+          "pos": 2516,
+          "end": 2744,
           "kind": "emitHelpers",
           "data": "typescript:makeTemplateObject"
         },
         {
-          "pos": 2417,
-          "end": 3002,
+          "pos": 2745,
+          "end": 3330,
           "kind": "emitHelpers",
           "data": "typescript:extends"
         },
         {
-          "pos": 3003,
-          "end": 3493,
+          "pos": 3331,
+          "end": 3821,
           "kind": "emitHelpers",
           "data": "typescript:rest"
         },
         {
-          "pos": 3494,
-          "end": 5543780,
+          "pos": 3822,
+          "end": 5974077,
           "kind": "prepend",
-          "data": "E:/github/TypeScript/built/local/compiler.js",
+          "data": "./compiler.js",
           "texts": [
             {
-              "pos": 3494,
-              "end": 5543780,
+              "pos": 3822,
+              "end": 5974077,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 5543780,
-          "end": 7245095,
+          "pos": 5974077,
+          "end": 7818655,
           "kind": "prepend",
-          "data": "E:/github/TypeScript/built/local/services.js",
+          "data": "./services.js",
           "texts": [
             {
-              "pos": 5543780,
-              "end": 7245095,
+              "pos": 5974077,
+              "end": 7818655,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 7245095,
-          "end": 7263502,
+          "pos": 7818655,
+          "end": 7838075,
           "kind": "prepend",
-          "data": "E:/github/TypeScript/built/local/jsTyping.js",
+          "data": "./jsTyping.js",
           "texts": [
             {
-              "pos": 7245095,
-              "end": 7263502,
+              "pos": 7818655,
+              "end": 7838075,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 7263502,
-          "end": 7736286,
+          "pos": 7838075,
+          "end": 8346774,
           "kind": "prepend",
-          "data": "E:/github/TypeScript/built/local/server.js",
+          "data": "./server.js",
           "texts": [
             {
-              "pos": 7263502,
-              "end": 7736286,
+              "pos": 7838075,
+              "end": 8346774,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 7736286,
-          "end": 7777191,
+          "pos": 8346774,
+          "end": 8389301,
           "kind": "text"
         }
       ],
@@ -125,5 +131,5 @@
       }
     }
   },
-  "version": "3.5.2"
+  "version": "3.7.2"
 }

@@ -4,7 +4,6 @@ var ts;
 (function (ts) {
     var server;
     (function (server) {
-        // tslint:disable variable-name
         server.ActionSet = "action::set";
         server.ActionInvalidate = "action::invalidate";
         server.ActionPackageInstalled = "action::packageInstalled";
@@ -98,6 +97,10 @@ var ts;
             "zlib"
         ];
         JsTyping.nodeCoreModules = ts.arrayToSet(JsTyping.nodeCoreModuleList);
+        function nonRelativeModuleNameForTypingCache(moduleName) {
+            return JsTyping.nodeCoreModules.has(moduleName) ? "node" : moduleName;
+        }
+        JsTyping.nonRelativeModuleNameForTypingCache = nonRelativeModuleNameForTypingCache;
         function loadSafeList(host, safeListPath) {
             var result = ts.readConfigFile(safeListPath, function (path) { return host.readFile(path); });
             return ts.createMapFromTemplate(result.config);
@@ -153,7 +156,7 @@ var ts;
             getTypingNamesFromSourceFileNames(fileNames);
             // add typings for unresolved imports
             if (unresolvedImports) {
-                var module_1 = ts.deduplicate(unresolvedImports.map(function (moduleId) { return JsTyping.nodeCoreModules.has(moduleId) ? "node" : moduleId; }), ts.equateStringsCaseSensitive, ts.compareStringsCaseSensitive);
+                var module_1 = ts.deduplicate(unresolvedImports.map(nonRelativeModuleNameForTypingCache), ts.equateStringsCaseSensitive, ts.compareStringsCaseSensitive);
                 addInferredTypings(module_1, "Inferred typings from unresolved imports");
             }
             // Add the cached typing locations for inferred typings that are already installed
@@ -281,66 +284,82 @@ var ts;
             }
         }
         JsTyping.discoverTypings = discoverTypings;
-        var PackageNameValidationResult;
-        (function (PackageNameValidationResult) {
-            PackageNameValidationResult[PackageNameValidationResult["Ok"] = 0] = "Ok";
-            PackageNameValidationResult[PackageNameValidationResult["ScopedPackagesNotSupported"] = 1] = "ScopedPackagesNotSupported";
-            PackageNameValidationResult[PackageNameValidationResult["EmptyName"] = 2] = "EmptyName";
-            PackageNameValidationResult[PackageNameValidationResult["NameTooLong"] = 3] = "NameTooLong";
-            PackageNameValidationResult[PackageNameValidationResult["NameStartsWithDot"] = 4] = "NameStartsWithDot";
-            PackageNameValidationResult[PackageNameValidationResult["NameStartsWithUnderscore"] = 5] = "NameStartsWithUnderscore";
-            PackageNameValidationResult[PackageNameValidationResult["NameContainsNonURISafeCharacters"] = 6] = "NameContainsNonURISafeCharacters";
-        })(PackageNameValidationResult = JsTyping.PackageNameValidationResult || (JsTyping.PackageNameValidationResult = {}));
+        var NameValidationResult;
+        (function (NameValidationResult) {
+            NameValidationResult[NameValidationResult["Ok"] = 0] = "Ok";
+            NameValidationResult[NameValidationResult["EmptyName"] = 1] = "EmptyName";
+            NameValidationResult[NameValidationResult["NameTooLong"] = 2] = "NameTooLong";
+            NameValidationResult[NameValidationResult["NameStartsWithDot"] = 3] = "NameStartsWithDot";
+            NameValidationResult[NameValidationResult["NameStartsWithUnderscore"] = 4] = "NameStartsWithUnderscore";
+            NameValidationResult[NameValidationResult["NameContainsNonURISafeCharacters"] = 5] = "NameContainsNonURISafeCharacters";
+        })(NameValidationResult = JsTyping.NameValidationResult || (JsTyping.NameValidationResult = {}));
         var maxPackageNameLength = 214;
         /**
          * Validates package name using rules defined at https://docs.npmjs.com/files/package.json
          */
         function validatePackageName(packageName) {
+            return validatePackageNameWorker(packageName, /*supportScopedPackage*/ true);
+        }
+        JsTyping.validatePackageName = validatePackageName;
+        function validatePackageNameWorker(packageName, supportScopedPackage) {
             if (!packageName) {
-                return 2 /* EmptyName */;
+                return 1 /* EmptyName */;
             }
             if (packageName.length > maxPackageNameLength) {
-                return 3 /* NameTooLong */;
+                return 2 /* NameTooLong */;
             }
             if (packageName.charCodeAt(0) === 46 /* dot */) {
-                return 4 /* NameStartsWithDot */;
+                return 3 /* NameStartsWithDot */;
             }
             if (packageName.charCodeAt(0) === 95 /* _ */) {
-                return 5 /* NameStartsWithUnderscore */;
+                return 4 /* NameStartsWithUnderscore */;
             }
             // check if name is scope package like: starts with @ and has one '/' in the middle
             // scoped packages are not currently supported
-            // TODO: when support will be added we'll need to split and check both scope and package name
-            if (/^@[^/]+\/[^/]+$/.test(packageName)) {
-                return 1 /* ScopedPackagesNotSupported */;
+            if (supportScopedPackage) {
+                var matches = /^@([^/]+)\/([^/]+)$/.exec(packageName);
+                if (matches) {
+                    var scopeResult = validatePackageNameWorker(matches[1], /*supportScopedPackage*/ false);
+                    if (scopeResult !== 0 /* Ok */) {
+                        return { name: matches[1], isScopeName: true, result: scopeResult };
+                    }
+                    var packageResult = validatePackageNameWorker(matches[2], /*supportScopedPackage*/ false);
+                    if (packageResult !== 0 /* Ok */) {
+                        return { name: matches[2], isScopeName: false, result: packageResult };
+                    }
+                    return 0 /* Ok */;
+                }
             }
             if (encodeURIComponent(packageName) !== packageName) {
-                return 6 /* NameContainsNonURISafeCharacters */;
+                return 5 /* NameContainsNonURISafeCharacters */;
             }
             return 0 /* Ok */;
         }
-        JsTyping.validatePackageName = validatePackageName;
         function renderPackageNameValidationFailure(result, typing) {
+            return typeof result === "object" ?
+                renderPackageNameValidationFailureWorker(typing, result.result, result.name, result.isScopeName) :
+                renderPackageNameValidationFailureWorker(typing, result, typing, /*isScopeName*/ false);
+        }
+        JsTyping.renderPackageNameValidationFailure = renderPackageNameValidationFailure;
+        function renderPackageNameValidationFailureWorker(typing, result, name, isScopeName) {
+            var kind = isScopeName ? "Scope" : "Package";
             switch (result) {
-                case 2 /* EmptyName */:
-                    return "Package name '" + typing + "' cannot be empty";
-                case 3 /* NameTooLong */:
-                    return "Package name '" + typing + "' should be less than " + maxPackageNameLength + " characters";
-                case 4 /* NameStartsWithDot */:
-                    return "Package name '" + typing + "' cannot start with '.'";
-                case 5 /* NameStartsWithUnderscore */:
-                    return "Package name '" + typing + "' cannot start with '_'";
-                case 1 /* ScopedPackagesNotSupported */:
-                    return "Package '" + typing + "' is scoped and currently is not supported";
-                case 6 /* NameContainsNonURISafeCharacters */:
-                    return "Package name '" + typing + "' contains non URI safe characters";
+                case 1 /* EmptyName */:
+                    return "'" + typing + "':: " + kind + " name '" + name + "' cannot be empty";
+                case 2 /* NameTooLong */:
+                    return "'" + typing + "':: " + kind + " name '" + name + "' should be less than " + maxPackageNameLength + " characters";
+                case 3 /* NameStartsWithDot */:
+                    return "'" + typing + "':: " + kind + " name '" + name + "' cannot start with '.'";
+                case 4 /* NameStartsWithUnderscore */:
+                    return "'" + typing + "':: " + kind + " name '" + name + "' cannot start with '_'";
+                case 5 /* NameContainsNonURISafeCharacters */:
+                    return "'" + typing + "':: " + kind + " name '" + name + "' contains non URI safe characters";
                 case 0 /* Ok */:
                     return ts.Debug.fail(); // Shouldn't have called this.
                 default:
                     throw ts.Debug.assertNever(result);
             }
         }
-        JsTyping.renderPackageNameValidationFailure = renderPackageNameValidationFailure;
     })(JsTyping = ts.JsTyping || (ts.JsTyping = {}));
 })(ts || (ts = {}));
 //# sourceMappingURL=jsTyping.js.map

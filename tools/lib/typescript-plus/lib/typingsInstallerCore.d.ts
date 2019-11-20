@@ -1,21 +1,21 @@
 declare namespace ts.server.typingsInstaller {
-    interface Log {
+    export interface Log {
         isEnabled(): boolean;
         writeLine(text: string): void;
     }
-    function installNpmPackages(npmPath: string, tsVersion: string, packageNames: string[], install: (command: string) => boolean): boolean;
-    function getNpmCommandForInstallation(npmPath: string, tsVersion: string, packageNames: string[], remaining: number): {
+    export function installNpmPackages(npmPath: string, tsVersion: string, packageNames: string[], install: (command: string) => boolean): boolean;
+    export function getNpmCommandForInstallation(npmPath: string, tsVersion: string, packageNames: string[], remaining: number): {
         command: string;
         remaining: number;
     };
-    type RequestCompletedAction = (success: boolean) => void;
+    export type RequestCompletedAction = (success: boolean) => void;
     interface PendingRequest {
         requestId: number;
         packageNames: string[];
         cwd: string;
         onRequestCompleted: RequestCompletedAction;
     }
-    abstract class TypingsInstaller {
+    export abstract class TypingsInstaller {
         protected readonly installTypingHost: InstallTypingHost;
         private readonly globalCachePath;
         private readonly safeListPath;
@@ -51,6 +51,7 @@ declare namespace ts.server.typingsInstaller {
         protected abstract sendResponse(response: SetTypings | InvalidateCachedTypings | BeginInstallTypes | EndInstallTypes): void;
         protected readonly latestDistTag = "latest";
     }
-    function typingsName(packageName: string): string;
+    export function typingsName(packageName: string): string;
+    export {};
 }
 //# sourceMappingURL=typingsInstallerCore.d.ts.map

@@ -1,8 +1,8 @@
 {
   "bundle": {
-    "commonSourceDirectory": "E:/github/TypeScript/src/",
+    "commonSourceDirectory": "../../src",
     "sourceFiles": [
-      "E:/github/TypeScript/src/typingsInstallerCore/typingsInstaller.ts"
+      "../../src/typingsInstallerCore/typingsInstaller.ts"
     ],
     "js": {
       "sections": [
@@ -14,7 +14,7 @@
         },
         {
           "pos": 14,
-          "end": 29884,
+          "end": 30338,
           "kind": "text"
         }
       ],
@@ -42,31 +42,31 @@
       "sections": [
         {
           "pos": 0,
-          "end": 142,
+          "end": 149,
           "kind": "text"
         },
         {
-          "pos": 142,
-          "end": 465,
+          "pos": 149,
+          "end": 486,
           "kind": "internal"
         },
         {
-          "pos": 466,
-          "end": 2508,
+          "pos": 487,
+          "end": 2543,
           "kind": "text"
         },
         {
-          "pos": 2508,
-          "end": 2562,
+          "pos": 2543,
+          "end": 2604,
           "kind": "internal"
         },
         {
-          "pos": 2563,
-          "end": 2565,
+          "pos": 2605,
+          "end": 2622,
           "kind": "text"
         }
       ]
     }
   },
-  "version": "3.5.2"
+  "version": "3.7.2"
 }

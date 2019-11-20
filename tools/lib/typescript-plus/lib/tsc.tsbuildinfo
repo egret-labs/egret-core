@@ -1,8 +1,9 @@
 {
   "bundle": {
-    "commonSourceDirectory": "E:/github/TypeScript/src/",
+    "commonSourceDirectory": "../../src",
     "sourceFiles": [
-      "E:/github/TypeScript/src/tsc/tsc.ts"
+      "../../src/tsc/executeCommandLine.ts",
+      "../../src/tsc/tsc.ts"
     ],
     "js": {
       "sections": [
@@ -14,38 +15,44 @@
         },
         {
           "pos": 14,
-          "end": 396,
+          "end": 341,
+          "kind": "emitHelpers",
+          "data": "typescript:spreadArrays"
+        },
+        {
+          "pos": 342,
+          "end": 724,
           "kind": "emitHelpers",
           "data": "typescript:assign"
         },
         {
-          "pos": 397,
-          "end": 2187,
+          "pos": 725,
+          "end": 2515,
           "kind": "emitHelpers",
           "data": "typescript:generator"
         },
         {
-          "pos": 2188,
-          "end": 2416,
+          "pos": 2516,
+          "end": 2744,
           "kind": "emitHelpers",
           "data": "typescript:makeTemplateObject"
         },
         {
-          "pos": 2417,
-          "end": 5542703,
+          "pos": 2745,
+          "end": 5973000,
           "kind": "prepend",
-          "data": "E:/github/TypeScript/built/local/compiler.js",
+          "data": "./compiler.js",
           "texts": [
             {
-              "pos": 2417,
-              "end": 5542703,
+              "pos": 2745,
+              "end": 5973000,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 5542703,
-          "end": 5562717,
+          "pos": 5973000,
+          "end": 6000974,
           "kind": "text"
         }
       ],
@@ -66,9 +73,12 @@
               }
             ]
           }
+        ],
+        "helpers": [
+          "typescript:assign"
         ]
       }
     }
   },
-  "version": "3.5.2"
+  "version": "3.7.2"
 }

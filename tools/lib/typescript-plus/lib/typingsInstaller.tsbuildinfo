@@ -1,8 +1,8 @@
 {
   "bundle": {
-    "commonSourceDirectory": "E:/github/TypeScript/src/",
+    "commonSourceDirectory": "../../src",
     "sourceFiles": [
-      "E:/github/TypeScript/src/typingsInstaller/nodeTypingsInstaller.ts"
+      "../../src/typingsInstaller/nodeTypingsInstaller.ts"
     ],
     "js": {
       "sections": [
@@ -14,70 +14,76 @@
         },
         {
           "pos": 14,
-          "end": 396,
+          "end": 341,
+          "kind": "emitHelpers",
+          "data": "typescript:spreadArrays"
+        },
+        {
+          "pos": 342,
+          "end": 724,
           "kind": "emitHelpers",
           "data": "typescript:assign"
         },
         {
-          "pos": 397,
-          "end": 2187,
+          "pos": 725,
+          "end": 2515,
           "kind": "emitHelpers",
           "data": "typescript:generator"
         },
         {
-          "pos": 2188,
-          "end": 2416,
+          "pos": 2516,
+          "end": 2744,
           "kind": "emitHelpers",
           "data": "typescript:makeTemplateObject"
         },
         {
-          "pos": 2417,
-          "end": 3002,
+          "pos": 2745,
+          "end": 3330,
           "kind": "emitHelpers",
           "data": "typescript:extends"
         },
         {
-          "pos": 3003,
-          "end": 5543289,
+          "pos": 3331,
+          "end": 5973586,
           "kind": "prepend",
-          "data": "E:/github/TypeScript/built/local/compiler.js",
+          "data": "./compiler.js",
           "texts": [
             {
-              "pos": 3003,
-              "end": 5543289,
+              "pos": 3331,
+              "end": 5973586,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 5543289,
-          "end": 5561696,
+          "pos": 5973586,
+          "end": 5993006,
           "kind": "prepend",
-          "data": "E:/github/TypeScript/built/local/jsTyping.js",
+          "data": "./jsTyping.js",
           "texts": [
             {
-              "pos": 5543289,
-              "end": 5561696,
+              "pos": 5973586,
+              "end": 5993006,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 5561696,
-          "end": 5591566,
+          "pos": 5993006,
+          "end": 6023330,
           "kind": "prepend",
-          "data": "E:/github/TypeScript/built/local/typingsInstallerCore.js",
+          "data": "./typingsInstallerCore.js",
           "texts": [
             {
-              "pos": 5561696,
-              "end": 5591566,
+              "pos": 5993006,
+              "end": 6023330,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 5591566,
-          "end": 5604626,
+          "pos": 6023330,
+          "end": 6036400,
           "kind": "text"
         }
       ],
@@ -106,5 +112,5 @@
       }
     }
   },
-  "version": "3.5.2"
+  "version": "3.7.2"
 }

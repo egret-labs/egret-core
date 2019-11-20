@@ -121,7 +121,10 @@ declare namespace ts {
         ClosedScriptInfo = "Closed Script info",
         ConfigFileForInferredRoot = "Config file for the inferred project root",
         NodeModulesForClosedScriptInfo = "node_modules for closed script infos in them",
-        MissingSourceMapFile = "Missing source map file"
+        MissingSourceMapFile = "Missing source map file",
+        NoopConfigFileForInferredRoot = "Noop Config file for the inferred project root",
+        MissingGeneratedFile = "Missing generated file",
+        PackageJsonFile = "package.json file for import suggestions"
     }
 }
 /**
@@ -196,6 +199,7 @@ declare namespace ts.server.protocol {
         SynchronizeProjectList = "synchronizeProjectList",
         ApplyChangedToOpenFiles = "applyChangedToOpenFiles",
         UpdateOpen = "updateOpen",
+        EncodedSyntacticClassificationsFull = "encodedSyntacticClassifications-full",
         EncodedSemanticClassificationsFull = "encodedSemanticClassifications-full",
         Cleanup = "cleanup",
         GetOutliningSpans = "getOutliningSpans",
@@ -641,7 +645,7 @@ declare namespace ts.server.protocol {
         scope: OrganizeImportsScope;
     }
     interface OrganizeImportsResponse extends Response {
-        body: ReadonlyArray<FileCodeEdits>;
+        body: readonly FileCodeEdits[];
     }
     interface GetEditsForFileRenameRequest extends Request {
         command: CommandTypes.GetEditsForFileRename;
@@ -653,7 +657,7 @@ declare namespace ts.server.protocol {
         readonly newFilePath: string;
     }
     interface GetEditsForFileRenameResponse extends Response {
-        body: ReadonlyArray<FileCodeEdits>;
+        body: readonly FileCodeEdits[];
     }
     /**
      * Request for the available codefixes at a specific position.
@@ -708,7 +712,7 @@ declare namespace ts.server.protocol {
         /**
          * Errorcodes we want to get the fixes for.
          */
-        errorCodes: ReadonlyArray<number>;
+        errorCodes: readonly number[];
     }
     interface GetCombinedCodeFixRequestArgs {
         scope: GetCombinedCodeFixScope;
@@ -750,6 +754,27 @@ declare namespace ts.server.protocol {
         body?: string[];
     }
     /**
+     * A request to get encoded Syntactic classifications for a span in the file
+     */
+    /** @internal */
+    interface EncodedSyntacticClassificationsRequest extends FileRequest {
+        arguments: EncodedSyntacticClassificationsRequestArgs;
+    }
+    /**
+     * Arguments for EncodedSyntacticClassificationsRequest request.
+     */
+    /** @internal */
+    interface EncodedSyntacticClassificationsRequestArgs extends FileRequestArgs {
+        /**
+         * Start position of the span.
+         */
+        start: number;
+        /**
+         * Length of the span.
+         */
+        length: number;
+    }
+    /**
      * A request to get encoded semantic classifications for a span in the file
      */
     /** @internal */
@@ -759,6 +784,7 @@ declare namespace ts.server.protocol {
     /**
      * Arguments for EncodedSemanticClassificationsRequest request.
      */
+    /** @internal */
     interface EncodedSemanticClassificationsRequestArgs extends FileRequestArgs {
         /**
          * Start position of the span.
@@ -845,30 +871,38 @@ declare namespace ts.server.protocol {
          */
         file: string;
     }
+    interface TextSpanWithContext extends TextSpan {
+        contextStart?: Location;
+        contextEnd?: Location;
+    }
+    interface FileSpanWithContext extends FileSpan, TextSpanWithContext {
+    }
     interface DefinitionInfoAndBoundSpan {
-        definitions: ReadonlyArray<FileSpan>;
+        definitions: readonly FileSpanWithContext[];
         textSpan: TextSpan;
     }
     /**
      * Definition response message.  Gives text range for definition.
      */
     interface DefinitionResponse extends Response {
-        body?: FileSpan[];
+        body?: FileSpanWithContext[];
     }
-    interface DefinitionInfoAndBoundSpanReponse extends Response {
+    interface DefinitionInfoAndBoundSpanResponse extends Response {
         body?: DefinitionInfoAndBoundSpan;
     }
+    /** @deprecated Use `DefinitionInfoAndBoundSpanResponse` instead. */
+    type DefinitionInfoAndBoundSpanReponse = DefinitionInfoAndBoundSpanResponse;
     /**
      * Definition response message.  Gives text range for definition.
      */
     interface TypeDefinitionResponse extends Response {
-        body?: FileSpan[];
+        body?: FileSpanWithContext[];
     }
     /**
      * Implementation response message.  Gives text range for implementations.
      */
     interface ImplementationResponse extends Response {
-        body?: FileSpan[];
+        body?: FileSpanWithContext[];
     }
     /**
      * Request to get brace completion for a location in the file.
@@ -905,7 +939,7 @@ declare namespace ts.server.protocol {
         command: CommandTypes.Occurrences;
     }
     /** @deprecated */
-    interface OccurrencesResponseItem extends FileSpan {
+    interface OccurrencesResponseItem extends FileSpanWithContext {
         /**
          * True if the occurrence is a write location, false otherwise.
          */
@@ -931,7 +965,7 @@ declare namespace ts.server.protocol {
     /**
      * Span augmented with extra information that denotes the kind of the highlighting to be used for span.
      */
-    interface HighlightSpan extends TextSpan {
+    interface HighlightSpan extends TextSpanWithContext {
         kind: HighlightSpanKind;
     }
     /**
@@ -961,7 +995,7 @@ declare namespace ts.server.protocol {
     interface ReferencesRequest extends FileLocationRequest {
         command: CommandTypes.References;
     }
-    interface ReferencesResponseItem extends FileSpan {
+    interface ReferencesResponseItem extends FileSpanWithContext {
         /** Text of line containing the reference.  Including this
          *  with the response avoids latency of editor loading files
          * to show text of reference line (the server already has
@@ -984,7 +1018,7 @@ declare namespace ts.server.protocol {
         /**
          * The file locations referencing the symbol.
          */
-        refs: ReadonlyArray<ReferencesResponseItem>;
+        refs: readonly ReferencesResponseItem[];
         /**
          * The name of the symbol.
          */
@@ -1032,7 +1066,7 @@ declare namespace ts.server.protocol {
         readonly arguments: RenameRequestArgs;
     }
     interface RenameFullResponse extends Response {
-        readonly body: ReadonlyArray<RenameLocation>;
+        readonly body: readonly RenameLocation[];
     }
     /**
      * Information about the item to be renamed.
@@ -1083,7 +1117,7 @@ declare namespace ts.server.protocol {
         /** The text spans in this group */
         locs: RenameTextSpan[];
     }
-    interface RenameTextSpan extends TextSpan {
+    interface RenameTextSpan extends TextSpanWithContext {
         readonly prefixText?: string;
         readonly suffixText?: string;
     }
@@ -1095,7 +1129,7 @@ declare namespace ts.server.protocol {
         /**
          * An array of span groups (one per file) that refer to the item to be renamed.
          */
-        locs: ReadonlyArray<SpanGroup>;
+        locs: readonly SpanGroup[];
     }
     /**
      * Rename response message.
@@ -1688,8 +1722,8 @@ declare namespace ts.server.protocol {
         commands?: {}[];
     }
     interface CombinedCodeActions {
-        changes: ReadonlyArray<FileCodeEdits>;
-        commands?: ReadonlyArray<{}>;
+        changes: readonly FileCodeEdits[];
+        commands?: readonly {}[];
     }
     interface CodeFixAction extends CodeAction {
         /** Short name to identify the fix, for use by telemetry. */
@@ -1896,7 +1930,7 @@ declare namespace ts.server.protocol {
         readonly isGlobalCompletion: boolean;
         readonly isMemberCompletion: boolean;
         readonly isNewIdentifierLocation: boolean;
-        readonly entries: ReadonlyArray<CompletionEntry>;
+        readonly entries: readonly CompletionEntry[];
     }
     interface CompletionDetailsResponse extends Response {
         body?: CompletionEntryDetails[];
@@ -2576,7 +2610,7 @@ declare namespace ts.server.protocol {
         /**
          * list of packages to install
          */
-        packages: ReadonlyArray<string>;
+        packages: readonly string[];
     }
     interface BeginInstallTypesEventBody extends InstallTypesEventBody {
     }
@@ -2596,6 +2630,11 @@ declare namespace ts.server.protocol {
         None = "None",
         Block = "Block",
         Smart = "Smart"
+    }
+    enum SemicolonPreference {
+        Ignore = "ignore",
+        Insert = "insert",
+        Remove = "remove"
     }
     interface EditorSettings {
         baseIndentSize?: number;
@@ -2622,6 +2661,7 @@ declare namespace ts.server.protocol {
         placeOpenBraceOnNewLineForFunctions?: boolean;
         placeOpenBraceOnNewLineForControlBlocks?: boolean;
         insertSpaceBeforeTypeAnnotation?: boolean;
+        semicolons?: SemicolonPreference;
     }
     interface UserPreferences {
         readonly disableSuggestions?: boolean;
@@ -2636,6 +2676,12 @@ declare namespace ts.server.protocol {
          * For those entries, The `insertText` and `replacementSpan` properties will be set to change from `.x` property access to `["x"]`.
          */
         readonly includeCompletionsWithInsertText?: boolean;
+        /**
+         * Unless this option is `false`, or `includeCompletionsWithInsertText` is not enabled,
+         * member completion lists triggered with `.` will include entries on potentially-null and potentially-undefined
+         * values, with insertion text to replace preceding `.` tokens with `?.`.
+         */
+        readonly includeAutomaticOptionalChainCompletions?: boolean;
         readonly importModuleSpecifierPreference?: "relative" | "non-relative";
         readonly allowTextChangesInNewFiles?: boolean;
         readonly lazyConfiguredProjectsFromExternalProject?: boolean;
@@ -2705,6 +2751,7 @@ declare namespace ts.server.protocol {
         strictNullChecks?: boolean;
         suppressExcessPropertyErrors?: boolean;
         suppressImplicitAnyIndexErrors?: boolean;
+        useDefineForClassFields?: boolean;
         target?: ScriptTarget | ts.ScriptTarget;
         traceResolution?: boolean;
         resolveJsonModule?: boolean;
@@ -2960,7 +3007,7 @@ declare namespace ts.server {
     function allFilesAreJsOrDts(project: Project): boolean;
     function hasNoTypeScriptSource(fileNames: string[]): boolean;
     interface ProjectFilesWithTSDiagnostics extends protocol.ProjectFiles {
-        projectErrors: ReadonlyArray<Diagnostic>;
+        projectErrors: readonly Diagnostic[];
     }
     interface PluginCreateInfo {
         project: Project;
@@ -2999,7 +3046,9 @@ declare namespace ts.server {
         private program;
         private externalFiles;
         private missingFilesMap;
+        private generatedFilesMap;
         private plugins;
+        private packageJsonFilesMap;
         /**
          * This is map from files to unresolved imports in it
          * Maop does not contain entries for files that do not have unresolved imports
@@ -3045,6 +3094,7 @@ declare namespace ts.server {
         hasChangedAutomaticTypeDirectiveNames: boolean;
         typingFiles: SortedReadonlyArray<string>;
         originalConfiguredProjects: Map<true> | undefined;
+        getResolvedProjectReferenceToRedirect(_fileName: string): ResolvedProjectReference | undefined;
         private readonly cancellationToken;
         isNonTsProject(): boolean;
         isJsOnlyProject(): boolean;
@@ -3052,15 +3102,21 @@ declare namespace ts.server {
         readonly currentDirectory: string;
         directoryStructureHost: DirectoryStructureHost;
         readonly getCanonicalFileName: GetCanonicalFileName;
-        constructor(projectName: string, projectKind: ProjectKind, projectService: ProjectService, documentRegistry: DocumentRegistry, hasExplicitListOfFiles: boolean, lastFileExceededProgramSize: string | undefined, compilerOptions: CompilerOptions, compileOnSaveEnabled: boolean, directoryStructureHost: DirectoryStructureHost, currentDirectory: string | undefined);
+        readonly packageJsonCache: PackageJsonCache;
+        private importSuggestionsCache;
+        private dirtyFilesForSuggestions;
+        private symlinks;
+        constructor(projectName: string, projectKind: ProjectKind, projectService: ProjectService, documentRegistry: DocumentRegistry, hasExplicitListOfFiles: boolean, lastFileExceededProgramSize: string | undefined, compilerOptions: CompilerOptions, compileOnSaveEnabled: boolean, directoryStructureHost: DirectoryStructureHost, currentDirectory: string | undefined, customRealpath?: (s: string) => string);
         isKnownTypesPackageName(name: string): boolean;
         installPackage(options: InstallPackageOptions): Promise<ApplyCodeActionCommandResult>;
-        private readonly typingsCache;
+        getGlobalTypingsCacheLocation(): string | undefined;
+        private get typingsCache();
+        getProbableSymlinks(files: readonly SourceFile[]): ReadonlyMap<string>;
         getCompilationSettings(): CompilerOptions;
         getCompilerOptions(): CompilerOptions;
         getNewLine(): string;
         getProjectVersion(): string;
-        getProjectReferences(): ReadonlyArray<ProjectReference> | undefined;
+        getProjectReferences(): readonly ProjectReference[] | undefined;
         getScriptFileNames(): string[];
         private getOrCreateScriptInfoAndAttachToProject;
         getScriptKind(fileName: string): ScriptKind;
@@ -3070,10 +3126,11 @@ declare namespace ts.server {
         getCurrentDirectory(): string;
         getDefaultLibFileName(): string;
         useCaseSensitiveFileNames(): boolean;
-        readDirectory(path: string, extensions?: ReadonlyArray<string>, exclude?: ReadonlyArray<string>, include?: ReadonlyArray<string>, depth?: number): string[];
+        readDirectory(path: string, extensions?: readonly string[], exclude?: readonly string[], include?: readonly string[], depth?: number): string[];
         readFile(fileName: string): string | undefined;
         writeFile(fileName: string, content: string): void;
         fileExists(file: string): boolean;
+        fileExistsWithCache(file: string): boolean;
         resolveModuleNames(moduleNames: string[], containingFile: string, reusedNames?: string[], redirectedReference?: ResolvedProjectReference): (ResolvedModuleFull | undefined)[];
         getResolvedModuleWithFailedLookupLocationsFromCache(moduleName: string, containingFile: string): ResolvedModuleWithFailedLookupLocations | undefined;
         resolveTypeReferenceDirectives(typeDirectiveNames: string[], containingFile: string, redirectedReference?: ResolvedProjectReference): (ResolvedTypeReferenceDirective | undefined)[];
@@ -3086,6 +3143,7 @@ declare namespace ts.server {
         watchTypeRootsDirectory(directory: string, cb: DirectoryWatcherCallback, flags: WatchDirectoryFlags): FileWatcher;
         onChangedAutomaticTypeDirectiveNames(): void;
         getGlobalCache(): string | undefined;
+        globalCacheResolutionModuleName: typeof JsTyping.nonRelativeModuleNameForTypingCache;
         fileIsOpen(filePath: Path): boolean;
         writeLog(s: string): void;
         log(s: string): void;
@@ -3094,14 +3152,14 @@ declare namespace ts.server {
         /**
          * Get the errors that dont have any file name associated
          */
-        getGlobalProjectErrors(): ReadonlyArray<Diagnostic>;
-        getAllProjectErrors(): ReadonlyArray<Diagnostic>;
+        getGlobalProjectErrors(): readonly Diagnostic[];
+        getAllProjectErrors(): readonly Diagnostic[];
         getLanguageService(ensureSynchronized?: boolean): LanguageService;
         /** @internal */
         getSourceMapper(): SourceMapper;
         getDocumentPositionMapper(generatedFileName: string, sourceFileName?: string): DocumentPositionMapper | undefined;
         getSourceFileLike(fileName: string): SourceFileLike | undefined;
-        private shouldEmitFile;
+        shouldEmitFile(scriptInfo: ScriptInfo | undefined): boolean | undefined;
         getCompileOnSaveAffectedFileList(scriptInfo: ScriptInfo): string[];
         /**
          * Returns true if emit was conducted
@@ -3124,7 +3182,7 @@ declare namespace ts.server {
         getRootFilesMap(): Map<ProjectRoot>;
         getRootScriptInfos(): ScriptInfo[];
         getScriptInfos(): ScriptInfo[];
-        getExcludedFiles(): ReadonlyArray<NormalizedPath>;
+        getExcludedFiles(): readonly NormalizedPath[];
         getFileNames(excludeFilesFromExternalLibraries?: boolean, excludeConfigFiles?: boolean): NormalizedPath[];
         hasConfigFile(configFilePath: NormalizedPath): boolean;
         containsScriptInfo(info: ScriptInfo): boolean;
@@ -3134,6 +3192,7 @@ declare namespace ts.server {
         addMissingFileRoot(fileName: NormalizedPath): void;
         removeFile(info: ScriptInfo, fileExists: boolean, detachFromProject: boolean): void;
         registerFileUpdate(fileName: string): void;
+        markFileAsDirty(changedFile: Path): void;
         markAsDirty(): void;
         onFileAddedOrRemoved(): void;
         /**
@@ -3145,9 +3204,15 @@ declare namespace ts.server {
         getCurrentProgram(): Program | undefined;
         protected removeExistingTypings(include: string[]): string[];
         private updateGraphWorker;
+        private sourceFileHasChangedOwnImportSuggestions;
+        private ambientModuleDeclarationsAreEqual;
         private detachScriptInfoFromProject;
         private addMissingFileWatcher;
         private isWatchedMissingFile;
+        addGeneratedFileWatch(generatedFile: string, sourceFile: string): void;
+        private createGeneratedFileWatcher;
+        private isValidGeneratedFileWatcher;
+        private clearGeneratedFileWatch;
         getScriptInfoForNormalizedPath(fileName: NormalizedPath): ScriptInfo | undefined;
         getScriptInfo(uncheckedFileName: string): ScriptInfo | undefined;
         filesToString(writeProjectFileNames: boolean): string;
@@ -3155,12 +3220,17 @@ declare namespace ts.server {
         setCompilerOptions(compilerOptions: CompilerOptions): void;
         getChangesSinceVersion(lastKnownVersion?: number): ProjectFilesWithTSDiagnostics;
         protected removeRoot(info: ScriptInfo): void;
+        isSourceOfProjectReferenceRedirect(fileName: string): boolean;
         protected enableGlobalPlugins(options: CompilerOptions, pluginConfigOverrides: Map<any> | undefined): void;
         protected enablePlugin(pluginConfigEntry: PluginImport, searchPaths: string[], pluginConfigOverrides: Map<any> | undefined): void;
         private enableProxy;
         onPluginConfigurationChanged(pluginName: string, configuration: any): void;
         /** Starts a new check for diagnostics. Call this if some file has updated that would cause diagnostics to be changed. */
         refreshDiagnostics(): void;
+        getPackageJsonsVisibleToFile(fileName: string, rootDir?: string): readonly PackageJsonInfo[];
+        onAddPackageJson(path: Path): void;
+        getImportSuggestionsCache(): Completions.ImportSuggestionsForFileCache;
+        private watchPackageJsonFile;
     }
     /**
      * If a file is opened and no tsconfig (or jsconfig) is found,
@@ -3193,6 +3263,10 @@ declare namespace ts.server {
         configFileWatcher: FileWatcher | undefined;
         private directoriesWatchedForWildcards;
         readonly canonicalConfigFilePath: NormalizedPath;
+        private projectReferenceCallbacks;
+        private mapOfDeclarationDirectories;
+        private symlinkedDirectories;
+        private symlinkedFiles;
         pendingReload: ConfigFileProgramReloadLevel | undefined;
         pendingReloadReason: string | undefined;
         configFileSpecs: ConfigFileSpecs | undefined;
@@ -3205,6 +3279,26 @@ declare namespace ts.server {
         protected isInitialLoadPending: () => boolean;
         sendLoadingProjectFinish: boolean;
         constructor(configFileName: NormalizedPath, projectService: ProjectService, documentRegistry: DocumentRegistry, cachedDirectoryStructureHost: CachedDirectoryStructureHost);
+        setResolvedProjectReferenceCallbacks(projectReferenceCallbacks: ResolvedProjectReferenceCallbacks): void;
+        useSourceOfProjectReferenceRedirect: () => boolean;
+        private fileExistsIfProjectReferenceDts;
+        /**
+         * This implementation of fileExists checks if the file being requested is
+         * .d.ts file for the referenced Project.
+         * If it is it returns true irrespective of whether that file exists on host
+         */
+        fileExists(file: string): boolean;
+        private directoryExistsIfProjectReferenceDeclDir;
+        /**
+         * This implementation of directoryExists checks if the directory being requested is
+         * directory of .d.ts file for the referenced Project.
+         * If it is it returns true irrespective of whether that directory exists on host
+         */
+        directoryExists(path: string): boolean;
+        private realpathIfSymlinkedProjectReferenceDts;
+        private getRealpath;
+        private handleDirectoryCouldBeSymlink;
+        private fileOrDirectoryExistsUsingSource;
         /**
          * If the project has reload from disk pending, it reloads (and then updates graph as part of that) instead of just updating the graph
          * @returns: true if set of files in the project stays the same and false - otherwise.
@@ -3212,18 +3306,19 @@ declare namespace ts.server {
         updateGraph(): boolean;
         getCachedDirectoryStructureHost(): CachedDirectoryStructureHost;
         getConfigFilePath(): NormalizedPath;
-        getProjectReferences(): ReadonlyArray<ProjectReference> | undefined;
-        updateReferences(refs: ReadonlyArray<ProjectReference> | undefined): void;
+        getProjectReferences(): readonly ProjectReference[] | undefined;
+        updateReferences(refs: readonly ProjectReference[] | undefined): void;
         forEachResolvedProjectReference<T>(cb: (resolvedProjectReference: ResolvedProjectReference | undefined, resolvedProjectReferencePath: Path) => T | undefined): T | undefined;
+        getResolvedProjectReferenceToRedirect(fileName: string): ResolvedProjectReference | undefined;
         enablePluginsWithOptions(options: CompilerOptions, pluginConfigOverrides: Map<any> | undefined): void;
         /**
          * Get the errors that dont have any file name associated
          */
-        getGlobalProjectErrors(): ReadonlyArray<Diagnostic>;
+        getGlobalProjectErrors(): readonly Diagnostic[];
         /**
          * Get all the project errors
          */
-        getAllProjectErrors(): ReadonlyArray<Diagnostic>;
+        getAllProjectErrors(): readonly Diagnostic[];
         setProjectErrors(projectErrors: Diagnostic[]): void;
         setTypeAcquisition(newTypeAcquisition: TypeAcquisition): void;
         getTypeAcquisition(): TypeAcquisition;
@@ -3245,7 +3340,7 @@ declare namespace ts.server {
     class ExternalProject extends Project {
         externalProjectName: string;
         compileOnSaveEnabled: boolean;
-        excludedFiles: ReadonlyArray<NormalizedPath>;
+        excludedFiles: readonly NormalizedPath[];
         private typeAcquisition;
         constructor(externalProjectName: string, projectService: ProjectService, documentRegistry: DocumentRegistry, compilerOptions: CompilerOptions, lastFileExceededProgramSize: string | undefined, compileOnSaveEnabled: boolean, projectFilePath?: string, pluginConfigOverrides?: Map<any>);
         updateGraph(): boolean;
@@ -3255,36 +3350,36 @@ declare namespace ts.server {
     }
 }
 declare namespace ts.server {
-    const maxProgramSizeForNonTsFiles: number;
-    const maxFileSize: number;
-    const ProjectsUpdatedInBackgroundEvent = "projectsUpdatedInBackground";
-    const ProjectLoadingStartEvent = "projectLoadingStart";
-    const ProjectLoadingFinishEvent = "projectLoadingFinish";
-    const LargeFileReferencedEvent = "largeFileReferenced";
-    const ConfigFileDiagEvent = "configFileDiag";
-    const ProjectLanguageServiceStateEvent = "projectLanguageServiceState";
-    const ProjectInfoTelemetryEvent = "projectInfo";
-    const OpenFileInfoTelemetryEvent = "openFileInfo";
-    interface ProjectsUpdatedInBackgroundEvent {
+    export const maxProgramSizeForNonTsFiles: number;
+    export const maxFileSize: number;
+    export const ProjectsUpdatedInBackgroundEvent = "projectsUpdatedInBackground";
+    export const ProjectLoadingStartEvent = "projectLoadingStart";
+    export const ProjectLoadingFinishEvent = "projectLoadingFinish";
+    export const LargeFileReferencedEvent = "largeFileReferenced";
+    export const ConfigFileDiagEvent = "configFileDiag";
+    export const ProjectLanguageServiceStateEvent = "projectLanguageServiceState";
+    export const ProjectInfoTelemetryEvent = "projectInfo";
+    export const OpenFileInfoTelemetryEvent = "openFileInfo";
+    export interface ProjectsUpdatedInBackgroundEvent {
         eventName: typeof ProjectsUpdatedInBackgroundEvent;
         data: {
             openFiles: string[];
         };
     }
-    interface ProjectLoadingStartEvent {
+    export interface ProjectLoadingStartEvent {
         eventName: typeof ProjectLoadingStartEvent;
         data: {
             project: Project;
             reason: string;
         };
     }
-    interface ProjectLoadingFinishEvent {
+    export interface ProjectLoadingFinishEvent {
         eventName: typeof ProjectLoadingFinishEvent;
         data: {
             project: Project;
         };
     }
-    interface LargeFileReferencedEvent {
+    export interface LargeFileReferencedEvent {
         eventName: typeof LargeFileReferencedEvent;
         data: {
             file: string;
@@ -3292,15 +3387,15 @@ declare namespace ts.server {
             maxFileSize: number;
         };
     }
-    interface ConfigFileDiagEvent {
+    export interface ConfigFileDiagEvent {
         eventName: typeof ConfigFileDiagEvent;
         data: {
             triggerFile: string;
             configFileName: string;
-            diagnostics: ReadonlyArray<Diagnostic>;
+            diagnostics: readonly Diagnostic[];
         };
     }
-    interface ProjectLanguageServiceStateEvent {
+    export interface ProjectLanguageServiceStateEvent {
         eventName: typeof ProjectLanguageServiceStateEvent;
         data: {
             project: Project;
@@ -3308,11 +3403,11 @@ declare namespace ts.server {
         };
     }
     /** This will be converted to the payload of a protocol.TelemetryEvent in session.defaultEventHandler. */
-    interface ProjectInfoTelemetryEvent {
+    export interface ProjectInfoTelemetryEvent {
         readonly eventName: typeof ProjectInfoTelemetryEvent;
         readonly data: ProjectInfoTelemetryEventData;
     }
-    interface ProjectInfoTelemetryEventData {
+    export interface ProjectInfoTelemetryEventData {
         /** Cryptographically secure hash of project file location. */
         readonly projectId: string;
         /** Count of file extensions seen in the project. */
@@ -3339,19 +3434,19 @@ declare namespace ts.server {
      * Info about a file will only be sent once per session, even if the file changes in ways that might affect the info.
      * Currently this is only sent for '.js' files.
      */
-    interface OpenFileInfoTelemetryEvent {
+    export interface OpenFileInfoTelemetryEvent {
         readonly eventName: typeof OpenFileInfoTelemetryEvent;
         readonly data: OpenFileInfoTelemetryEventData;
     }
-    interface OpenFileInfoTelemetryEventData {
+    export interface OpenFileInfoTelemetryEventData {
         readonly info: OpenFileInfo;
     }
-    interface ProjectInfoTypeAcquisitionData {
+    export interface ProjectInfoTypeAcquisitionData {
         readonly enable: boolean | undefined;
         readonly include: boolean;
         readonly exclude: boolean;
     }
-    interface FileStats {
+    export interface FileStats {
         readonly js: number;
         readonly jsSize?: number;
         readonly jsx: number;
@@ -3365,38 +3460,38 @@ declare namespace ts.server {
         readonly deferred: number;
         readonly deferredSize?: number;
     }
-    interface OpenFileInfo {
+    export interface OpenFileInfo {
         readonly checkJs: boolean;
     }
-    type ProjectServiceEvent = LargeFileReferencedEvent | ProjectsUpdatedInBackgroundEvent | ProjectLoadingStartEvent | ProjectLoadingFinishEvent | ConfigFileDiagEvent | ProjectLanguageServiceStateEvent | ProjectInfoTelemetryEvent | OpenFileInfoTelemetryEvent;
-    type ProjectServiceEventHandler = (event: ProjectServiceEvent) => void;
-    interface SafeList {
+    export type ProjectServiceEvent = LargeFileReferencedEvent | ProjectsUpdatedInBackgroundEvent | ProjectLoadingStartEvent | ProjectLoadingFinishEvent | ConfigFileDiagEvent | ProjectLanguageServiceStateEvent | ProjectInfoTelemetryEvent | OpenFileInfoTelemetryEvent;
+    export type ProjectServiceEventHandler = (event: ProjectServiceEvent) => void;
+    export interface SafeList {
         [name: string]: {
             match: RegExp;
             exclude?: (string | number)[][];
             types?: string[];
         };
     }
-    interface TypesMapFile {
+    export interface TypesMapFile {
         typesMap: SafeList;
         simpleMap: {
             [libName: string]: string;
         };
     }
-    function convertFormatOptions(protocolOptions: protocol.FormatCodeSettings): FormatCodeSettings;
-    function convertCompilerOptions(protocolOptions: protocol.ExternalProjectCompilerOptions): CompilerOptions & protocol.CompileOnSaveMixin;
-    function tryConvertScriptKindName(scriptKindName: protocol.ScriptKindName | ScriptKind): ScriptKind;
-    function convertScriptKindName(scriptKindName: protocol.ScriptKindName): ScriptKind.Unknown | ScriptKind.JS | ScriptKind.JSX | ScriptKind.TS | ScriptKind.TSX;
-    function convertUserPreferences(preferences: protocol.UserPreferences): UserPreferences;
-    interface HostConfiguration {
+    export function convertFormatOptions(protocolOptions: protocol.FormatCodeSettings): FormatCodeSettings;
+    export function convertCompilerOptions(protocolOptions: protocol.ExternalProjectCompilerOptions): CompilerOptions & protocol.CompileOnSaveMixin;
+    export function tryConvertScriptKindName(scriptKindName: protocol.ScriptKindName | ScriptKind): ScriptKind;
+    export function convertScriptKindName(scriptKindName: protocol.ScriptKindName): ScriptKind.Unknown | ScriptKind.JS | ScriptKind.JSX | ScriptKind.TS | ScriptKind.TSX;
+    export function convertUserPreferences(preferences: protocol.UserPreferences): UserPreferences;
+    export interface HostConfiguration {
         formatCodeOptions: FormatCodeSettings;
         preferences: protocol.UserPreferences;
         hostInfo: string;
         extraFileExtensions?: FileExtensionInfo[];
     }
-    interface OpenConfiguredProjectResult {
+    export interface OpenConfiguredProjectResult {
         configFileName?: NormalizedPath;
-        configFileErrors?: ReadonlyArray<Diagnostic>;
+        configFileErrors?: readonly Diagnostic[];
     }
     interface ConfigFileExistenceInfo {
         /**
@@ -3422,7 +3517,7 @@ declare namespace ts.server {
          */
         configFileWatcherForRootOfInferredProject?: FileWatcher;
     }
-    interface ProjectServiceOptions {
+    export interface ProjectServiceOptions {
         host: ServerHost;
         logger: Logger;
         cancellationToken: HostCancellationToken;
@@ -3432,25 +3527,25 @@ declare namespace ts.server {
         eventHandler?: ProjectServiceEventHandler;
         suppressDiagnosticEvents?: boolean;
         throttleWaitMilliseconds?: number;
-        globalPlugins?: ReadonlyArray<string>;
-        pluginProbeLocations?: ReadonlyArray<string>;
+        globalPlugins?: readonly string[];
+        pluginProbeLocations?: readonly string[];
         allowLocalPluginLoads?: boolean;
         typesMapLocation?: string;
         syntaxOnly?: boolean;
     }
-    function updateProjectIfDirty(project: Project): boolean;
-    interface OpenFileArguments {
+    export function updateProjectIfDirty(project: Project): boolean;
+    export interface OpenFileArguments {
         fileName: string;
         content?: string;
         scriptKind?: protocol.ScriptKindName | ScriptKind;
         hasMixedContent?: boolean;
         projectRootPath?: string;
     }
-    interface ChangeFileArguments {
+    export interface ChangeFileArguments {
         fileName: string;
         changes: Iterator<TextChange>;
     }
-    class ProjectService {
+    export class ProjectService {
         readonly typingsCache: TypingsCache;
         readonly documentRegistry: DocumentRegistry;
         /**
@@ -3525,8 +3620,8 @@ declare namespace ts.server {
         readonly throttleWaitMilliseconds?: number;
         private readonly eventHandler?;
         private readonly suppressDiagnosticEvents?;
-        readonly globalPlugins: ReadonlyArray<string>;
-        readonly pluginProbeLocations: ReadonlyArray<string>;
+        readonly globalPlugins: readonly string[];
+        readonly pluginProbeLocations: readonly string[];
         readonly allowLocalPluginLoads: boolean;
         private currentPluginConfigOverrides;
         readonly typesMapLocation: string | undefined;
@@ -3642,6 +3737,7 @@ declare namespace ts.server {
          * the newly opened file.
          */
         private forEachConfigFileLocation;
+        findDefaultConfiguredProject(info: ScriptInfo): ConfiguredProject | undefined;
         /**
          * This function tries to search for a tsconfig.json for the given file.
          * This is different from the method the compiler uses because
@@ -3782,8 +3878,19 @@ declare namespace ts.server {
         hasDeferredExtension(): boolean;
         configurePlugin(args: protocol.ConfigurePluginRequestArguments): void;
     }
-    type ScriptInfoOrConfig = ScriptInfo | TsConfigSourceFile;
-    function isConfigFile(config: ScriptInfoOrConfig): config is TsConfigSourceFile;
+    export type ScriptInfoOrConfig = ScriptInfo | TsConfigSourceFile;
+    export function isConfigFile(config: ScriptInfoOrConfig): config is TsConfigSourceFile;
+    export {};
+}
+declare namespace ts.server {
+    interface PackageJsonCache {
+        addOrUpdate(fileName: Path): void;
+        delete(fileName: Path): void;
+        getInDirectory(directory: Path): PackageJsonInfo | undefined;
+        directoryHasPackageJson(directory: Path): Ternary;
+        searchDirectoryAndAncestors(directory: Path): void;
+    }
+    function createPackageJsonCache(project: Project): PackageJsonCache;
 }
 declare namespace ts.server {
     interface ServerCancellationToken extends HostCancellationToken {
@@ -3823,8 +3930,8 @@ declare namespace ts.server {
         syntaxOnly?: boolean;
         throttleWaitMilliseconds?: number;
         noGetErrOnBackgroundUpdate?: boolean;
-        globalPlugins?: ReadonlyArray<string>;
-        pluginProbeLocations?: ReadonlyArray<string>;
+        globalPlugins?: readonly string[];
+        pluginProbeLocations?: readonly string[];
         allowLocalPluginLoads?: boolean;
         typesMapLocation?: string;
     }
@@ -3863,6 +3970,7 @@ declare namespace ts.server {
         private updateErrorCheck;
         private cleanProjects;
         private cleanup;
+        private getEncodedSyntacticClassifications;
         private getEncodedSemanticClassifications;
         private getProject;
         private getConfigFileAndProject;
@@ -3878,6 +3986,7 @@ declare namespace ts.server {
         private mapDefinitionInfo;
         private static mapToOriginalLocation;
         private toFileSpan;
+        private toFileSpanWithContext;
         private getTypeDefinition;
         private mapImplementationLocations;
         private getImplementation;
@@ -3935,7 +4044,6 @@ declare namespace ts.server {
         private mapLocationNavigationBarItems;
         private getNavigationBarItems;
         private toLocationNavigationTree;
-        private toLocationTextSpan;
         private getNavigationTree;
         private getNavigateToItems;
         private getFullNavigateToItems;
@@ -3980,7 +4088,7 @@ declare namespace ts.server {
         response?: {};
         responseRequired?: boolean;
     }
-    function getLocationInNewDocument(oldText: string, renameFilename: string, renameLocation: number, edits: ReadonlyArray<FileTextChanges>): protocol.Location;
+    function getLocationInNewDocument(oldText: string, renameFilename: string, renameLocation: number, edits: readonly FileTextChanges[]): protocol.Location;
 }
 declare namespace ts.server {
     interface LineCollection {
@@ -3989,7 +4097,7 @@ declare namespace ts.server {
         isLeaf(): this is LineLeaf;
         walk(rangeStart: number, rangeLength: number, walkFns: LineIndexWalker): void;
     }
-    interface AbsolutePositionAndLineText {
+    export interface AbsolutePositionAndLineText {
         absolutePosition: number;
         lineText: string | undefined;
     }
@@ -4008,7 +4116,7 @@ declare namespace ts.server {
         pre?(relativeStart: number, relativeLength: number, lineCollection: LineCollection, parent: LineNode, nodeType: CharRangeSection): void;
         post?(relativeStart: number, relativeLength: number, lineCollection: LineCollection, parent: LineNode, nodeType: CharRangeSection): void;
     }
-    class ScriptVersionCache {
+    export class ScriptVersionCache {
         private changes;
         private readonly versions;
         private minVersion;
@@ -4030,7 +4138,7 @@ declare namespace ts.server {
         getLineCount(): number;
         static fromString(script: string): ScriptVersionCache;
     }
-    class LineIndex {
+    export class LineIndex {
         root: LineNode;
         checkEdits: boolean;
         absolutePositionOfStartOfLine(oneBasedLine: number): number;
@@ -4090,5 +4198,6 @@ declare namespace ts.server {
         charCount(): number;
         lineCount(): number;
     }
+    export {};
 }
 //# sourceMappingURL=server.d.ts.map
