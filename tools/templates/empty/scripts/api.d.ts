@@ -291,6 +291,10 @@ declare module 'built-in' {
          * use wechat engine plugin
          */
         useWxPlugin?: boolean
+        /**
+         * use QQgame engine plugin
+         */
+        qqPlugin?: { use: boolean, pluginList: string[] }
     }
 
     /** 

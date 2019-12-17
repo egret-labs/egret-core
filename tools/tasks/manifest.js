@@ -53,6 +53,9 @@ var ManifestPlugin = /** @class */ (function () {
         if (!this.options.useWxPlugin) {
             this.options.useWxPlugin = false;
         }
+        if (!this.options.qqPlugin) {
+            this.options.qqPlugin = { use: false, pluginList: [] };
+        }
     }
     ManifestPlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
@@ -110,10 +113,9 @@ var ManifestPlugin = /** @class */ (function () {
     };
     ManifestPlugin.prototype.onFinish = function (pluginContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var output, extname, contents, target;
-            var _this = this;
-            return __generator(this, function (_a) {
-                output = this.options.output;
+            var _a, output, useWxPlugin, qqPlugin, extname, contents, target;
+            return __generator(this, function (_b) {
+                _a = this.options, output = _a.output, useWxPlugin = _a.useWxPlugin, qqPlugin = _a.qqPlugin;
                 extname = path.extname(output);
                 contents = '';
                 target = pluginContext.buildConfig.target;
@@ -133,7 +135,7 @@ var ManifestPlugin = /** @class */ (function () {
                                 var _name = path.basename(fileName);
                                 result = "require(\"./js/" + _name + "\")";
                             }
-                            else if (_this.options.useWxPlugin) {
+                            else if (useWxPlugin) {
                                 if (fileName.indexOf('egret-library') == 0) {
                                     result = "requirePlugin(\"" + fileName + "\")";
                                 }
@@ -142,7 +144,10 @@ var ManifestPlugin = /** @class */ (function () {
                         }).join("\n");
                         break;
                 }
-                pluginContext.createFile(this.options.output, new Buffer(contents));
+                if (qqPlugin.use) {
+                    contents = qqPlugin.pluginList.join("\n") + "\n" + contents;
+                }
+                pluginContext.createFile(output, new Buffer(contents));
                 if (this.options.verbose) {
                     this.verboseInfo.forEach(function (item) {
                         console.log("manifest-plugin: " + item.filename + " => " + item.new_file_path);
