@@ -10,6 +10,8 @@ The Egret Engine released the 5.2.32 stable version on December 19, 2019.
 ## Xiaomi QGame v0.2.12
 - **[NEW]**  Support for subcontracting loading
 
+## OPPO Game v0.2.9
+- **[FIX]**  Fixed the problem of resource cache module error during sub-package loading
 
 ## vivo Game v0.2.13
 - **[NEW]**  Support accelerometer
