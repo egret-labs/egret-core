@@ -54,7 +54,8 @@ class UpgradeCommand implements egret.Command {
             { "v": "5.2.23", command: Upgrade_5_2_23 },
             { "v": "5.2.25", command: Upgrade_5_2_25 },
             { "v": "5.2.28", command: Upgrade_5_2_28 },
-            { "v": "5.2.31", command: Upgrade_5_2_31 }
+            { "v": "5.2.31", command: Upgrade_5_2_31 },
+            { "v": "5.2.32", command: Upgrade_5_2_32 }
         ];
 
         try {
@@ -211,6 +212,14 @@ class Upgrade_5_2_31 {
     async execute() {
         file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "wxgame"), path.join(egret.args.projectDir, "scripts", "wxgame"));
         file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.wxgame.ts"), path.join(egret.args.projectDir, "scripts", "config.wxgame.ts"));
+        file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "api.d.ts"), path.join(egret.args.projectDir, "scripts", "api.d.ts"));
+        return 0;
+    }
+}
+class Upgrade_5_2_32 {
+    async execute() {
+        file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "qqgame"), path.join(egret.args.projectDir, "scripts", "qqgame"));
+        file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.qqgame.ts"), path.join(egret.args.projectDir, "scripts", "config.qqgame.ts"));
         file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "api.d.ts"), path.join(egret.args.projectDir, "scripts", "api.d.ts"));
         return 0;
     }
