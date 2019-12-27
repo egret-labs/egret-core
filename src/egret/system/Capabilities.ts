@@ -88,13 +88,13 @@ namespace egret {
 
         /**
          * Running on Alipay
-         * @version Egret 5.2.23
+         * @version Egret 5.2.33
          * @platform All
          * @language en_US
          */
         /**
          * 运行在支付宝小游戏上
-         * @version Egret 5.2.26
+         * @version Egret 5.2.33
          * @platform All
          * @language zh_CN
          */
@@ -316,7 +316,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static readonly engineVersion: string = "5.2.32";
+        public static readonly engineVersion: string = "5.2.33";
 
         /***
          * current render mode.

@@ -77,7 +77,8 @@ var UpgradeCommand = /** @class */ (function () {
                             { "v": "5.2.25", command: Upgrade_5_2_25 },
                             { "v": "5.2.28", command: Upgrade_5_2_28 },
                             { "v": "5.2.31", command: Upgrade_5_2_31 },
-                            { "v": "5.2.32", command: Upgrade_5_2_32 }
+                            { "v": "5.2.32", command: Upgrade_5_2_32 },
+                            { "v": "5.2.33", command: Upgrade_5_2_33 }
                         ];
                         _a.label = 1;
                     case 1:
@@ -262,7 +263,6 @@ var Upgrade_5_2_25 = /** @class */ (function () {
             return __generator(this, function (_a) {
                 file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "qqgame"), path.join(egret.args.projectDir, "scripts", "qqgame"));
                 file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.qqgame.ts"), path.join(egret.args.projectDir, "scripts", "config.qqgame.ts"));
-
                 file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "mygame"), path.join(egret.args.projectDir, "scripts", "mygame"));
                 file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.mygame.ts"), path.join(egret.args.projectDir, "scripts", "config.mygame.ts"));
                 return [2 /*return*/, 0];
@@ -314,5 +314,19 @@ var Upgrade_5_2_32 = /** @class */ (function () {
         });
     };
     return Upgrade_5_2_32;
+}());
+var Upgrade_5_2_33 = /** @class */ (function () {
+    function Upgrade_5_2_33() {
+    }
+    Upgrade_5_2_33.prototype.execute = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "mygame"), path.join(egret.args.projectDir, "scripts", "mygame"));
+                file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.mygame.ts"), path.join(egret.args.projectDir, "scripts", "config.mygame.ts"));
+                return [2 /*return*/, 0];
+            });
+        });
+    };
+    return Upgrade_5_2_33;
 }());
 module.exports = UpgradeCommand;

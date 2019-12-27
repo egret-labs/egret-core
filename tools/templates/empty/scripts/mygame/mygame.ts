@@ -32,9 +32,6 @@ export class MygamePlugin implements plugins.Command {
                 if (filename == 'libs/modules/dragonBones/dragonBones.js' || filename == 'libs/modules/dragonBones/dragonBones.min.js') {
                     content += ';window.dragonBones = dragonBones';
                 }
-                if (filename == 'particle/bin/particle/particle.js' || filename == 'particle/bin/particle/particle.min.js') {
-                    content += ';window.particle = particle;';
-                }
                 content = "var egret = window.egret;" + content;
                 if (filename == 'main.js') {
                     content += "\n;window.Main = Main;"
@@ -47,7 +44,7 @@ export class MygamePlugin implements plugins.Command {
     async onFinish(pluginContext: plugins.CommandContext) {
         //同步 index.html 配置到 game.js
         const gameJSPath = path.join(pluginContext.outputDir, "game.js");
-        if(!fs.existsSync(gameJSPath)) {
+        if (!fs.existsSync(gameJSPath)) {
             console.log(`${gameJSPath}不存在，请先使用 Launcher 发布支付宝小游戏`);
             return;
         }
