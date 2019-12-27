@@ -75,6 +75,9 @@ var UpgradeCommand = /** @class */ (function () {
                             { "v": "5.2.22", command: Upgrade_5_2_22 },
                             { "v": "5.2.23", command: Upgrade_5_2_23 },
                             { "v": "5.2.25", command: Upgrade_5_2_25 },
+                            { "v": "5.2.28", command: Upgrade_5_2_28 },
+                            { "v": "5.2.31", command: Upgrade_5_2_31 },
+                            { "v": "5.2.32", command: Upgrade_5_2_32 }
                         ];
                         _a.label = 1;
                     case 1:
@@ -267,5 +270,49 @@ var Upgrade_5_2_25 = /** @class */ (function () {
         });
     };
     return Upgrade_5_2_25;
+}());
+var Upgrade_5_2_28 = /** @class */ (function () {
+    function Upgrade_5_2_28() {
+    }
+    Upgrade_5_2_28.prototype.execute = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "vivogame"), path.join(egret.args.projectDir, "scripts", "vivogame"));
+                file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.vivogame.ts"), path.join(egret.args.projectDir, "scripts", "config.vivogame.ts"));
+                return [2 /*return*/, 0];
+            });
+        });
+    };
+    return Upgrade_5_2_28;
+}());
+var Upgrade_5_2_31 = /** @class */ (function () {
+    function Upgrade_5_2_31() {
+    }
+    Upgrade_5_2_31.prototype.execute = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "wxgame"), path.join(egret.args.projectDir, "scripts", "wxgame"));
+                file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.wxgame.ts"), path.join(egret.args.projectDir, "scripts", "config.wxgame.ts"));
+                file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "api.d.ts"), path.join(egret.args.projectDir, "scripts", "api.d.ts"));
+                return [2 /*return*/, 0];
+            });
+        });
+    };
+    return Upgrade_5_2_31;
+}());
+var Upgrade_5_2_32 = /** @class */ (function () {
+    function Upgrade_5_2_32() {
+    }
+    Upgrade_5_2_32.prototype.execute = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "qqgame"), path.join(egret.args.projectDir, "scripts", "qqgame"));
+                file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.qqgame.ts"), path.join(egret.args.projectDir, "scripts", "config.qqgame.ts"));
+                file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "api.d.ts"), path.join(egret.args.projectDir, "scripts", "api.d.ts"));
+                return [2 /*return*/, 0];
+            });
+        });
+    };
+    return Upgrade_5_2_32;
 }());
 module.exports = UpgradeCommand;

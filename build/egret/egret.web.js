@@ -1995,12 +1995,28 @@ var egret;
              * @private
              *
              */
+            HTML5StageText.prototype.onFocusHandler = function () {
+                //the soft keyboard will cover the input box in some cases
+                var self = this;
+                window.setTimeout(function () {
+                    if (self.inputElement) {
+                        self.inputElement.scrollIntoView();
+                    }
+                }, 200);
+            };
+            /**
+             * @private
+             *
+             */
             HTML5StageText.prototype.executeShow = function () {
                 var self = this;
                 //打开
                 this.inputElement.value = this.$getText();
                 if (this.inputElement.onblur == null) {
                     this.inputElement.onblur = this.onBlurHandler.bind(this);
+                }
+                if (this.inputElement.onfocus == null) {
+                    this.inputElement.onfocus = this.onFocusHandler.bind(this);
                 }
                 this.$resetStageText();
                 if (this.$textfield.maxChars > 0) {
@@ -2369,10 +2385,10 @@ var egret;
              */
             HTMLInput.prototype.disconnectStageText = function (stageText) {
                 if (this._stageText == null || this._stageText == stageText) {
-                    this.clearInputElement();
                     if (this._inputElement) {
                         this._inputElement.blur();
                     }
+                    this.clearInputElement();
                 }
                 this._needShow = false;
             };
@@ -2385,6 +2401,7 @@ var egret;
                 if (self._inputElement) {
                     self._inputElement.value = "";
                     self._inputElement.onblur = null;
+                    self._inputElement.onfocus = null;
                     self._inputElement.style.width = "1px";
                     self._inputElement.style.height = "12px";
                     self._inputElement.style.left = "0px";
@@ -3362,6 +3379,8 @@ var egret;
             //
             texture[egret.glContext] = gl;
             gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
+            texture[egret.UNPACK_PREMULTIPLY_ALPHA_WEBGL] = true;
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, data);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
@@ -3738,6 +3757,10 @@ var egret;
                 else {
                     if (ua.indexOf("windows nt") != -1) {
                         capabilities["os" + ""] = "Windows PC";
+                    }
+                    else if (navigator.platform == "MacIntel" && navigator.maxTouchPoints > 1) {
+                        capabilities["os" + ""] = "iOS";
+                        capabilities["isMobile" + ""] = true;
                     }
                     else if (ua.indexOf("mac os") != -1) {
                         capabilities["os" + ""] = "Mac OS";
@@ -4166,6 +4189,7 @@ var egret;
                 return _this;
             }
             WebPlayer.prototype.init = function (container, options) {
+                console.log("Egret Engine Version:", egret.Capabilities.engineVersion);
                 var option = this.readOption(container, options);
                 var stage = new egret.Stage();
                 stage.$screen = this;
@@ -5002,11 +5026,13 @@ var egret;
              * @inheritDoc
              */
             HtmlSound.prototype.close = function () {
-                if (this.loaded == false && this.originAudio)
+                if (this.loaded && this.originAudio) {
                     this.originAudio.src = "";
+                }
                 if (this.originAudio)
                     this.originAudio = null;
                 HtmlSound.$clear(this.url);
+                this.loaded = false;
             };
             HtmlSound.$clear = function (url) {
                 HtmlSound.clearAudios[url] = true;

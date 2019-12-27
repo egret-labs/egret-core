@@ -141,7 +141,7 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string, t
         let path = thmData.path;
         if (exmlPublishPolicy == "commonjs") {
             let content = `
-                function __extends(d, b) {
+                var __extends = this && this.__extends|| function (d, b) {
                     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
                         function __() {
                             this.constructor = d;
@@ -150,8 +150,8 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string, t
                     d.prototype = new __();
                 };`;
             content += `
-                window.generateEUI = {};
-                generateEUI.paths = {};
+                window.generateEUI = window.generateEUI||{};
+                generateEUI.paths = generateEUI.paths||{};
                 generateEUI.styles = ${JSON.stringify(thmData.styles)};
                 generateEUI.skins = ${JSON.stringify(thmData.skins)};`;
 
@@ -182,10 +182,10 @@ export function publishEXML(exmls: exml.EXMLFile[], exmlPublishPolicy: string, t
             let jsonParserStr = file.read(Path.join(egret.root, "tools/lib/eui/JsonParserFactory.js"));
             let content = `${jsonParserStr}`
             content +=
-                `window.generateEUI2 = {};
-generateEUI2.paths = {};
-generateEUI2.styles = ${JSON.stringify(thmData.styles)};
-generateEUI2.skins = ${JSON.stringify(thmData.skins)};`;
+                `window.generateEUI2 = window.generateEUI2||{};
+                generateEUI2.paths = generateEUI2.paths||{};
+                generateEUI2.styles = ${JSON.stringify(thmData.styles)};
+                generateEUI2.skins = ${JSON.stringify(thmData.skins)};`;
             path = path.replace("thm.json", "thm.js");
             if (exmlPublishPolicy == "json") {
                 content = content.replace(/generateEUI2/g, "generateJSON")

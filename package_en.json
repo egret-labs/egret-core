@@ -1,6 +1,6 @@
 {
   "name": "egret",
-  "version": "5.2.25",
+  "version": "5.2.32",
   "private": true,
   "author": "egret-labs",
   "bin": {
@@ -355,16 +355,6 @@
         "files": [],
         "root": "",
         "dependencies": []
-      },
-      {
-        "name": "experimental",
-        "description": "egret experimental function lib",
-        "description_en": "egret experimental function lib",
-        "files": [],
-        "root": "src/extension/experimental",
-        "dependencies": [
-          "egret"
-        ]
       },
       {
         "name": "egret-facebook",

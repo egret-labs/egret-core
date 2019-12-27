@@ -287,6 +287,14 @@ declare module 'built-in' {
          * 其他传递的消息参数
          */
         info?:any
+        /**
+         * use wechat engine plugin
+         */
+        useWxPlugin?: boolean
+        /**
+         * use QQgame engine plugin
+         */
+        qqPlugin?: { use: boolean, pluginList: string[] }
     }
 
     /** 

@@ -16,7 +16,7 @@ const config: ResourceManagerConfig = {
             return {
                 outputDir,
                 commands: [
-                    new CleanPlugin({ matchers: ["../engine", "resource"] }),
+                    new CleanPlugin({ matchers: ["../engine/js", "resource"] }),
                     new CompilePlugin({ libraryType: "debug", defines: { DEBUG: true, RELEASE: false } }),
                     new ExmlPlugin('commonjs'), // 非 EUI 项目关闭此设置
                     new VivogamePlugin(),
@@ -28,11 +28,14 @@ const config: ResourceManagerConfig = {
             return {
                 outputDir,
                 commands: [
-                    new CleanPlugin({ matchers: ["../engine", "resource"] }),
+                    new CleanPlugin({ matchers: ["../engine/js", "resource"] }),
                     new CompilePlugin({ libraryType: "release", defines: { DEBUG: false, RELEASE: true } }),
                     new ExmlPlugin('commonjs'), // 非 EUI 项目关闭此设置
                     new VivogamePlugin(),
                     new UglifyPlugin([{
+                        sources: ["resource/default.thm.js"],
+                        target: "default.thm.min.js"
+                    }, {
                         sources: ["main.js"],
                         target: "main.min.js"
                     }

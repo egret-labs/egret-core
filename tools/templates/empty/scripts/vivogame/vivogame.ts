@@ -7,10 +7,11 @@ export class VivogamePlugin implements plugins.Command {
     async onFile(file: plugins.File) {
         if (file.extname == '.js') {
             const filename = file.origin;
-            this.jsFileList.push(file.basename)
+            
             if (filename == "libs/modules/promise/promise.js" || filename == 'libs/modules/promise/promise.min.js') {
                 return null;
             }
+            this.jsFileList.push(file.basename)
             if (filename == 'libs/modules/egret/egret.js' || filename == 'libs/modules/egret/egret.min.js') {
                 let content = file.contents.toString();
                 content += `;window.egret = egret;`;
@@ -86,27 +87,40 @@ export class VivogamePlugin implements plugins.Command {
         const gameJSONPath = path.join(pluginContext.outputDir, "manifest.json");
         let gameJSONContent = JSON.parse(fs.readFileSync(gameJSONPath, { encoding: "utf8" }));
         gameJSONContent.deviceOrientation = orientation;
+        let engineVersion = this.readData(path.join(pluginContext.projectRoot, "egretProperties.json")).engineVersion
+        if(!gameJSONContent.thirdEngine)gameJSONContent.thirdEngine={}
+        gameJSONContent.thirdEngine.egret = engineVersion
+        
         fs.writeFileSync(gameJSONPath, JSON.stringify(gameJSONContent, null, "\t"));
         let isPublish = pluginContext.buildConfig.command == "publish" ? true : false;
-        let configOption = "webpackConf.externals = Object.assign(webpackConf.externals || {\n\t\t"
+        let configArr: any[] = []
         for (var i = 0, len = this.jsFileList.length; i < len; i++) {
             let jsFile = this.jsFileList[i];
-            if(isPublish && jsFile == "main.js"){
-                jsFile = 'main.min.js'
+            if (isPublish) {
+                if (jsFile == "main.js") {
+                    jsFile = 'main.min.js'
+                } else if (jsFile == "default.thm.js") {
+                    jsFile = "default.thm.min.js"
+                }
             }
-            configOption += `"js/${jsFile}":"commonjs js/${jsFile}"`
-            if (i < len - 1) {
-                configOption += ",\n\t\t"
-            } else {
-                configOption += "\n\t\t"
-            }
+            configArr.push(JSON.stringify({
+                module_name: `./js/${jsFile}`,
+                module_path: `./js/${jsFile}`,
+                module_from: `engine/js/${jsFile}`,
+            }, null, "\t"))
         }
-        configOption += "})"
-        const replaceConfigStr = '\/\/----auto option start----\n\t\t' + configOption + '\n\t\t\/\/----auto option end----';
-
-        const webpackConfigPath = path.join(pluginContext.outputDir, '../config', "webpack.config.js");
-        let configJSContent = fs.readFileSync(webpackConfigPath, { encoding: "utf8" });
-        configJSContent = configJSContent.replace(reg, replaceConfigStr);
-        fs.writeFileSync(webpackConfigPath, configJSContent);
+        const replaceConfigStr = '\/\/----auto option start----\n\t\t' + configArr.toString()  + '\n\t\t\/\/----auto option end----';
+        const minigameConfigPath = path.join(pluginContext.outputDir,"../",  "minigame.config.js");
+        if(!fs.existsSync(minigameConfigPath)){
+            //5.2.28版本，vivo更新了项目结构，老项目需要升级
+            fs.writeFileSync(path.join(pluginContext.outputDir,"../","vivo更新了项目结构，请重新创建vivo小游戏项目.js"), "vivo更新了项目结构，请重新创建vivo小游戏项目");
+        }else{
+            let configJSContent = fs.readFileSync(minigameConfigPath, { encoding: "utf8" });
+            configJSContent = configJSContent.replace(reg, replaceConfigStr);
+            fs.writeFileSync(minigameConfigPath, configJSContent);
+        }
+    }
+    readData(filePath: string): any {
+        return JSON.parse(fs.readFileSync(filePath, { encoding: "utf8" }));
     }
 }

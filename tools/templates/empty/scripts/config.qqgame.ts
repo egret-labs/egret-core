@@ -6,7 +6,9 @@ import { UglifyPlugin, CompilePlugin, ManifestPlugin, ExmlPlugin, EmitResConfigF
 import { QQgamePlugin } from './qqgame/qqgame';
 import { CustomPlugin } from './myplugin';
 import * as defaultConfig from './config';
-
+//是否使用QQ小游戏引擎插件
+const useQQPlugin: boolean = true;
+let pluginList: string[] = []
 const config: ResourceManagerConfig = {
 
     buildConfig: (params) => {
@@ -20,8 +22,8 @@ const config: ResourceManagerConfig = {
                     new CleanPlugin({ matchers: ["js", "resource"] }),
                     new CompilePlugin({ libraryType: "debug", defines: { DEBUG: true, RELEASE: false } }),
                     new ExmlPlugin('commonjs'), // 非 EUI 项目关闭此设置
-                    new QQgamePlugin(),
-                    new ManifestPlugin({ output: 'manifest.js' })
+                    new QQgamePlugin(useQQPlugin, pluginList),
+                    new ManifestPlugin({ output: 'manifest.js', qqPlugin: { use: useQQPlugin, pluginList: pluginList } })
                 ]
             }
         }
@@ -32,13 +34,16 @@ const config: ResourceManagerConfig = {
                     new CleanPlugin({ matchers: ["js", "resource"] }),
                     new CompilePlugin({ libraryType: "release", defines: { DEBUG: false, RELEASE: true } }),
                     new ExmlPlugin('commonjs'), // 非 EUI 项目关闭此设置
-                    new QQgamePlugin(),
+                    new QQgamePlugin(useQQPlugin, pluginList),
                     new UglifyPlugin([{
+                        sources: ["resource/default.thm.js"],
+                        target: "default.thm.min.js"
+                    }, {
                         sources: ["main.js"],
                         target: "main.min.js"
                     }
                     ]),
-                    new ManifestPlugin({ output: 'manifest.js' })
+                    new ManifestPlugin({ output: 'manifest.js', qqPlugin: { use: useQQPlugin, pluginList: pluginList } })
                 ]
             }
         }

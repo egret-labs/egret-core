@@ -1568,6 +1568,15 @@ var RES;
                 }
                 return Promise.reject(new RES.ResourceManagerError(2006, key));
             }
+            var data = this.getRes(key);
+            if (data) {
+                if (compFunc) {
+                    egret.callLater(function () {
+                        compFunc.call(thisObject, data, paramKey);
+                    }, this);
+                }
+                return Promise.resolve(data);
+            }
             var r = tempResult.r, subkey = tempResult.subkey;
             return RES.queue.pushResItem(r).then(function (value) {
                 RES.host.save(r, value);
@@ -2257,6 +2266,8 @@ var RES;
                 });
             },
             onRemoveStart: function (host, resource) {
+                var sound = host.get(resource);
+                sound.close();
             }
         };
         /**

@@ -7,6 +7,8 @@ import { WxgamePlugin } from './wxgame/wxgame';
 import { CustomPlugin } from './myplugin';
 import * as defaultConfig from './config';
 
+//是否使用微信分离插件
+const useWxPlugin:boolean = false;
 const config: ResourceManagerConfig = {
 
     buildConfig: (params) => {
@@ -17,10 +19,10 @@ const config: ResourceManagerConfig = {
             return {
                 outputDir,
                 commands: [
-                    new CleanPlugin({ matchers: ["js", "resource"] }),
+                    new CleanPlugin({ matchers: ["js", "resource", "egret-library"] }),
                     new CompilePlugin({ libraryType: "debug", defines: { DEBUG: true, RELEASE: false } }),
                     new ExmlPlugin('commonjs'), // 非 EUI 项目关闭此设置
-                    new WxgamePlugin(),
+                    new WxgamePlugin(useWxPlugin),
                     new ManifestPlugin({ output: 'manifest.js' })
                 ]
             }
@@ -29,16 +31,19 @@ const config: ResourceManagerConfig = {
             return {
                 outputDir,
                 commands: [
-                    new CleanPlugin({ matchers: ["js", "resource"] }),
+                    new CleanPlugin({ matchers: ["js", "resource", "egret-library"] }),
                     new CompilePlugin({ libraryType: "release", defines: { DEBUG: false, RELEASE: true } }),
                     new ExmlPlugin('commonjs'), // 非 EUI 项目关闭此设置
-                    new WxgamePlugin(),
+                    new WxgamePlugin(useWxPlugin),
                     new UglifyPlugin([{
+                        sources: ["resource/default.thm.js"],
+                        target: "default.thm.min.js"
+                    }, {
                         sources: ["main.js"],
                         target: "main.min.js"
                     }
                     ]),
-                    new ManifestPlugin({ output: 'manifest.js' })
+                    new ManifestPlugin({ output: 'manifest.js', useWxPlugin: useWxPlugin })
                 ]
             }
         }

@@ -1,14 +1,31 @@
 import * as fs from 'fs';
 import * as path from 'path';
 export class QQgamePlugin implements plugins.Command {
-
-    constructor() {
+    private useQQPlugin: boolean = false;
+    private pliginList: string[] = [];//qq engine plugin
+    constructor(useQQPlugin: boolean, pliginList: string[]) {
+        this.useQQPlugin = useQQPlugin
+        this.pliginList = pliginList
     }
+
     async onFile(file: plugins.File) {
         if (file.extname == '.js') {
+
             const filename = file.origin;
             if (filename == "libs/modules/promise/promise.js" || filename == 'libs/modules/promise/promise.min.js') {
                 return null;
+            }
+            if (this.useQQPlugin) {
+                const basename = file.basename
+                //QQ 小游戏引擎插件，支持下列官方库
+                let engineJS = ['assetsmanager', 'dragonBones', 'egret', 'game', 'eui', 'socket', 'tween']
+                for (let i in engineJS) {
+                    let jsName = engineJS[i]
+                    if (basename == jsName + ".js" || basename == jsName + ".min.js") {
+                        this.pliginList.push(`requirePlugin("egret-library/${jsName}.min.js")`);
+                        return null
+                    }
+                }
             }
             if (filename == 'libs/modules/egret/egret.js' || filename == 'libs/modules/egret/egret.min.js') {
                 let content = file.contents.toString();
@@ -42,14 +59,15 @@ export class QQgamePlugin implements plugins.Command {
         return file;
     }
     async onFinish(pluginContext: plugins.CommandContext) {
+        let { projectRoot, outputDir, buildConfig } = pluginContext
         //同步 index.html 配置到 game.js
-        const gameJSPath = path.join(pluginContext.outputDir, "game.js");
-        if(!fs.existsSync(gameJSPath)) {
+        const gameJSPath = path.join(outputDir, "game.js");
+        if (!fs.existsSync(gameJSPath)) {
             console.log(`${gameJSPath}不存在，请先使用 Launcher 发布QQ小游戏`);
             return;
         }
         let gameJSContent = fs.readFileSync(gameJSPath, { encoding: "utf8" });
-        const projectConfig = pluginContext.buildConfig.projectConfig;
+        const projectConfig = buildConfig.projectConfig;
         const optionStr =
             `entryClassName: ${projectConfig.entryClassName},\n\t\t` +
             `orientation: ${projectConfig.orientation},\n\t\t` +
@@ -74,9 +92,27 @@ export class QQgamePlugin implements plugins.Command {
         else {
             orientation = "portrait";
         }
-        const gameJSONPath = path.join(pluginContext.outputDir, "game.json");
-        let gameJSONContent = JSON.parse(fs.readFileSync(gameJSONPath, { encoding: "utf8" }));
+        const gameJSONPath = path.join(outputDir, "game.json");
+        let gameJSONContent = this.readData(gameJSONPath);
         gameJSONContent.deviceOrientation = orientation;
-        fs.writeFileSync(gameJSONPath, JSON.stringify(gameJSONContent, null, "\t"));
+        if (!gameJSONContent.plugins) {
+            gameJSONContent.plugins = {}
+        }
+        if (!this.useQQPlugin) {
+            delete gameJSONContent.plugins["egret-library"]
+        } else {
+            let engineVersion = this.readData(path.join(projectRoot, "egretProperties.json")).engineVersion;
+            gameJSONContent.plugins["egret-library"] = {
+                "provider": "1110108620",
+                "version": engineVersion
+            }
+        }
+        this.writeData(gameJSONContent, gameJSONPath)
+    }
+    readData(filePath: string): any {
+        return JSON.parse(fs.readFileSync(filePath, { encoding: "utf8" }));
+    }
+    writeData(data: object, filePath: string) {
+        fs.writeFileSync(filePath, JSON.stringify(data, null, "\t"));
     }
 }
