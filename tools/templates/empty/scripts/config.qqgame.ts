@@ -35,13 +35,16 @@ const config: ResourceManagerConfig = {
                     new CompilePlugin({ libraryType: "release", defines: { DEBUG: false, RELEASE: true } }),
                     new ExmlPlugin('commonjs'), // 非 EUI 项目关闭此设置
                     new QQgamePlugin(useQQPlugin, pluginList),
-                    new UglifyPlugin([{
-                        sources: ["resource/default.thm.js"],
-                        target: "default.thm.min.js"
-                    }, {
-                        sources: ["main.js"],
-                        target: "main.min.js"
-                    }
+                    new UglifyPlugin([
+                        // 使用 EUI 项目，要压缩皮肤文件，可以开启这个压缩配置
+                        // {
+                        //     sources: ["resource/default.thm.js"],
+                        //     target: "default.thm.min.js"
+                        // },
+                        {
+                            sources: ["main.js"],
+                            target: "main.min.js"
+                        }
                     ]),
                     new ManifestPlugin({ output: 'manifest.js', qqPlugin: { use: useQQPlugin, pluginList: pluginList } })
                 ]
