@@ -7,7 +7,7 @@ import { QQgamePlugin } from './qqgame/qqgame';
 import { CustomPlugin } from './myplugin';
 import * as defaultConfig from './config';
 //是否使用QQ小游戏引擎插件
-const useQQPlugin: boolean = true;
+const useQQPlugin: boolean = false;
 let pluginList: string[] = []
 const config: ResourceManagerConfig = {
 
