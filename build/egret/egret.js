@@ -7022,6 +7022,34 @@ var egret;
             _this.$scaleMode = egret.StageScaleMode.SHOW_ALL;
             _this.$orientation = egret.OrientationMode.AUTO;
             _this.$maxTouches = 99;
+            //for 3D&2D
+            /**
+             * @private
+             */
+            _this.$drawToSurfaceAutoClear = function () {
+                if (this.$displayList) {
+                    this.$displayList.drawToSurface();
+                }
+            };
+            //for 3D&2D
+            /**
+             * @private
+             */
+            _this.$drawToSurface = function () {
+                if (this.$displayList) {
+                    this.$displayList.$stageRenderToSurface();
+                }
+            };
+            //for 3D&2D
+            /**
+             * @private
+             */
+            _this.$resize = function (width, height) {
+                this.$stageWidth = width;
+                this.$stageHeight = height;
+                this.$displayList.renderBuffer.resize(width, height);
+                this.dispatchEventWith(egret.Event.RESIZE);
+            };
             _this.$stage = _this;
             _this.$nestLevel = 1;
             return _this;
@@ -13590,6 +13618,14 @@ var egret;
                 _this.offsetMatrix = new egret.Matrix();
                 _this.$canvasScaleX = 1;
                 _this.$canvasScaleY = 1;
+                //for 3D&2D
+                /**
+                 * @private
+                 * stage渲染
+                 */
+                _this.$stageRenderToSurface = function () {
+                    sys.systemRenderer.render(this.root, this.renderBuffer, this.offsetMatrix);
+                };
                 _this.root = root;
                 _this.isStage = (root instanceof egret.Stage);
                 return _this;
@@ -14889,6 +14925,23 @@ var egret;
                  * 是否被暂停
                  */
                 this.isPaused = false;
+                //for 3D&2D
+                /**
+                 * @private
+                 */
+                this.$beforeRender = function () {
+                    if (sys.$invalidateRenderFlag) {
+                        this.broadcastRender();
+                        sys.$invalidateRenderFlag = false;
+                    }
+                };
+                //for 3D&2D
+                /**
+                 * @private
+                 */
+                this.$afterRender = function () {
+                    this.broadcastEnterFrame();
+                };
                 if (true && egret.ticker) {
                     egret.$error(1008, "egret.sys.SystemTicker");
                 }
@@ -15276,6 +15329,14 @@ var egret;
                  * @private
                  */
                 _this.lastTouchY = -1;
+                //for 3D&2D
+                /**
+                 * @private
+                 * 设置同时触摸数量
+                 */
+                _this.$updateMaxTouches = function (value) {
+                    this.maxTouches = value;
+                };
                 _this.stage = stage;
                 return _this;
             }
@@ -15305,6 +15366,8 @@ var egret;
                     this.useTouchesCount++;
                 }
                 egret.TouchEvent.dispatchTouchEvent(target, egret.TouchEvent.TOUCH_BEGIN, true, true, x, y, touchPointID, true);
+                //for 3D&2D
+                return target !== this.stage;
             };
             /**
              * @private
@@ -15324,6 +15387,8 @@ var egret;
                 this.lastTouchY = y;
                 var target = this.findTarget(x, y);
                 egret.TouchEvent.dispatchTouchEvent(target, egret.TouchEvent.TOUCH_MOVE, true, true, x, y, touchPointID, true);
+                //for 3D&2D
+                return target !== this.stage;
             };
             /**
              * @private
@@ -15347,6 +15412,8 @@ var egret;
                 else {
                     egret.TouchEvent.dispatchTouchEvent(oldTarget, egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, true, true, x, y, touchPointID, false);
                 }
+                //for 3D&2D
+                return target !== this.stage;
             };
             /**
              * @private

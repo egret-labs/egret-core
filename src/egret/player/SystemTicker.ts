@@ -395,6 +395,25 @@ namespace egret.sys {
                 }
             }
         }
+
+        //for 3D&2D
+        /**
+         * @private
+         */
+        public $beforeRender = function () {
+            if (sys.$invalidateRenderFlag) {
+                this.broadcastRender();
+                sys.$invalidateRenderFlag = false;
+            }
+        };
+
+        //for 3D&2D
+        /**
+         * @private
+         */
+        public $afterRender = function () {
+            this.broadcastEnterFrame();
+        };
     }
 }
 

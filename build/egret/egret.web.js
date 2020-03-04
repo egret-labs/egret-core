@@ -5976,7 +5976,8 @@ var egret;
          * 抽象出此类，以实现共用一个context
          */
         var WebGLRenderContext = (function () {
-            function WebGLRenderContext(width, height) {
+            //for 3D&2D
+            function WebGLRenderContext(width, height, context) {
                 //
                 this._defaultEmptyTexture = null;
                 this.glID = null;
@@ -5987,11 +5988,30 @@ var egret;
                 this._supportedCompressedTextureInfo = [];
                 this.$scissorState = false;
                 this.vertSize = 5;
+                //for 3D&2D
+                /**
+                 * @private
+                 */
+                this.$beforeRender = function () {
+                    var gl = this.context;
+                    gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
+                    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+                    gl.disable(gl.DEPTH_TEST);
+                    gl.disable(gl.CULL_FACE);
+                    gl.enable(gl.BLEND);
+                    gl.disable(gl.STENCIL_TEST);
+                    gl.colorMask(true, true, true, true);
+                    this.setBlendMode("source-over");
+                    // 目前只使用0号材质单元，默认开启
+                    gl.activeTexture(gl.TEXTURE0);
+                    this.currentProgram = null;
+                };
                 this.surface = egret.sys.mainCanvas(width, height);
                 if (egret.nativeRender) {
                     return;
                 }
-                this.initWebGL();
+                //for 3D&2D
+                this.initWebGL(context);
                 this.$bufferStack = [];
                 var gl = this.context;
                 this.vertexBuffer = gl.createBuffer();
@@ -6002,11 +6022,13 @@ var egret;
                 this.vao = new web.WebGLVertexArrayObject();
                 this.setGlobalCompositeOperation("source-over");
             }
-            WebGLRenderContext.getInstance = function (width, height) {
+            //for 3D&2D
+            WebGLRenderContext.getInstance = function (width, height, context) {
                 if (this.instance) {
                     return this.instance;
                 }
-                this.instance = new WebGLRenderContext(width, height);
+                //for 3D&2D
+                this.instance = new WebGLRenderContext(width, height, context);
                 return this.instance;
             };
             /**
@@ -6149,11 +6171,12 @@ var egret;
                 }
                 return returnValue;
             };
-            WebGLRenderContext.prototype.initWebGL = function () {
+            //for 3D&2D
+            WebGLRenderContext.prototype.initWebGL = function (context) {
                 this.onResize();
                 this.surface.addEventListener("webglcontextlost", this.handleContextLost.bind(this), false);
                 this.surface.addEventListener("webglcontextrestored", this.handleContextRestored.bind(this), false);
-                this.getWebGLContext();
+                this.setContext(context ? context : this.getWebGLContext());
                 var gl = this.context;
                 this.$maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
                 //refactor
