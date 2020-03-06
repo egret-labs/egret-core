@@ -383,6 +383,7 @@ namespace egret.web {
             */
             const gl = egret.sys.getContextWebGL(this.surface);
             this.setContext(gl);
+            return gl;
         }
 
         private setContext(gl: any) {

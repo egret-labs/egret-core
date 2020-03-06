@@ -6242,6 +6242,7 @@ var egret;
                 */
                 var gl = egret.sys.getContextWebGL(this.surface);
                 this.setContext(gl);
+                return gl;
             };
             WebGLRenderContext.prototype.setContext = function (gl) {
                 this.context = gl;
