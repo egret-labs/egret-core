@@ -203,6 +203,9 @@ namespace egret.web {
         }
     }
 
+
+    egret.sys.setRenderMode = setRenderMode;
+
     /**
      * @private
      * 启动心跳计时器。

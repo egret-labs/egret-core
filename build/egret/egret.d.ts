@@ -9365,6 +9365,10 @@ declare namespace egret.sys {
      * @private
      */
     let $errorToFPS: (info: string) => void;
+    let setRenderMode: (renderMode: string) => void;
+    let WebGLRenderContext: {
+        new (width?: number, height?: number, context?: WebGLRenderingContext): RenderContext;
+    };
 }
 /**
  * @private

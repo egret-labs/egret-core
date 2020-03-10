@@ -1304,4 +1304,6 @@ namespace egret.web {
 
     WebGLRenderContext.initBlendMode();
 
+    egret.sys.WebGLRenderContext = WebGLRenderContext;
+
 }

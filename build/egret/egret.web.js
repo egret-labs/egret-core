@@ -3656,6 +3656,7 @@ var egret;
                 egret.Capabilities["renderMode" + ""] = "canvas";
             }
         }
+        egret.sys.setRenderMode = setRenderMode;
         /**
          * @private
          * 启动心跳计时器。
@@ -7026,6 +7027,7 @@ var egret;
         web.WebGLRenderContext = WebGLRenderContext;
         __reflect(WebGLRenderContext.prototype, "egret.web.WebGLRenderContext", ["egret.sys.RenderContext"]);
         WebGLRenderContext.initBlendMode();
+        egret.sys.WebGLRenderContext = WebGLRenderContext;
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
