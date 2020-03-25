@@ -3568,6 +3568,7 @@ var egret;
                         var player = new web.WebPlayer(container, options);
                         container["egret-player"] = player;
                     }
+                    web.WebGLRenderContext.getInstance().getSupportedCompressedTexture();
                     window.addEventListener("resize", function () {
                         if (isNaN(resizeTimer)) {
                             resizeTimer = window.setTimeout(doResize, 300);
@@ -6013,6 +6014,7 @@ var egret;
                 }
                 //for 3D&2D
                 this.initWebGL(context);
+                this.getSupportedCompressedTexture();
                 this.$bufferStack = [];
                 var gl = this.context;
                 this.vertexBuffer = gl.createBuffer();
@@ -6177,7 +6179,7 @@ var egret;
                 this.onResize();
                 this.surface.addEventListener("webglcontextlost", this.handleContextLost.bind(this), false);
                 this.surface.addEventListener("webglcontextrestored", this.handleContextRestored.bind(this), false);
-                this.setContext(context ? context : this.getWebGLContext());
+                context ? this.setContext(context) : this.getWebGLContext();
                 var gl = this.context;
                 this.$maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
                 //refactor
@@ -6195,6 +6197,9 @@ var egret;
                 //     'WEBGL_compressed_texture_s3tc', 'WEBKIT_WEBGL_compressed_texture_s3tc',
                 //     'WEBGL_compressed_texture_es3_0'];
                 //
+            };
+            WebGLRenderContext.prototype.getSupportedCompressedTexture = function () {
+                var gl = this.context ? this.context : egret.sys.getContextWebGL(this.surface);
                 this.pvrtc = gl.getExtension('WEBGL_compressed_texture_pvrtc') || gl.getExtension('WEBKIT_WEBGL_compressed_texture_pvrtc');
                 if (this.pvrtc) {
                     this.pvrtc.name = 'WEBGL_compressed_texture_pvrtc';

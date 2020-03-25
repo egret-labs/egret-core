@@ -64,7 +64,7 @@ namespace egret.web {
          */
         private static instance: WebGLRenderContext;
         //for 3D&2D
-        public static getInstance(width: number, height: number, context?: WebGLRenderingContext): WebGLRenderContext {
+        public static getInstance(width?: number, height?: number, context?: WebGLRenderingContext): WebGLRenderContext {
             if (this.instance) {
                 return this.instance;
             }
@@ -192,6 +192,8 @@ namespace egret.web {
             //for 3D&2D
             this.initWebGL(context);
 
+            this.getSupportedCompressedTexture();
+
             this.$bufferStack = [];
 
             let gl = this.context;
@@ -312,7 +314,7 @@ namespace egret.web {
             this.surface.addEventListener("webglcontextlost", this.handleContextLost.bind(this), false);
             this.surface.addEventListener("webglcontextrestored", this.handleContextRestored.bind(this), false);
 
-            this.setContext(context ? context : this.getWebGLContext());
+            context ? this.setContext(context) : this.getWebGLContext()
 
             let gl = this.context;
             this.$maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
@@ -332,6 +334,11 @@ namespace egret.web {
             //     'WEBGL_compressed_texture_s3tc', 'WEBKIT_WEBGL_compressed_texture_s3tc',
             //     'WEBGL_compressed_texture_es3_0'];
             //
+
+        }
+
+        public getSupportedCompressedTexture() {
+            let gl = this.context ? this.context : egret.sys.getContextWebGL(this.surface);
             this.pvrtc = gl.getExtension('WEBGL_compressed_texture_pvrtc') || gl.getExtension('WEBKIT_WEBGL_compressed_texture_pvrtc');
             if (this.pvrtc) {
                 this.pvrtc.name = 'WEBGL_compressed_texture_pvrtc';
@@ -348,6 +355,8 @@ namespace egret.web {
             //
             this._supportedCompressedTextureInfo = this._buildSupportedCompressedTextureInfo(/*this.context, compressedTextureExNames,*/[this.etc1, this.pvrtc]);
         }
+
+
 
         private handleContextLost() {
             this.contextLost = true;
