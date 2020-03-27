@@ -9045,9 +9045,6 @@ var egret;
                 _this.$nativeBitmapData = nativeBitmapData;
             }
             _this.source = source;
-            // this.width = source.width;
-            // this.height = source.height;
-            _this.source = source;
             if (_this.source) {
                 _this.width = +source.width;
                 _this.height = +source.height;

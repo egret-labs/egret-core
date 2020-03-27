@@ -1990,6 +1990,7 @@ var egret;
             HTML5StageText.prototype.onBlurHandler = function () {
                 this.htmlInput.clearInputElement();
                 window.scrollTo(0, 0);
+                this.$hide();
             };
             /**
              * @private
