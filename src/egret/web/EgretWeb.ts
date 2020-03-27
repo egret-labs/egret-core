@@ -108,6 +108,7 @@ namespace egret.web {
                     let player = new WebPlayer(container, options);
                     container["egret-player"] = player;
                 }
+                WebGLRenderContext.getInstance().getSupportedCompressedTexture();
                 window.addEventListener("resize", function () {
                     if (isNaN(resizeTimer)) {
                         resizeTimer = window.setTimeout(doResize, 300);
@@ -202,6 +203,9 @@ namespace egret.web {
             Capabilities["renderMode" + ""] = "canvas";
         }
     }
+
+
+    egret.sys.setRenderMode = setRenderMode;
 
     /**
      * @private

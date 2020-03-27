@@ -299,7 +299,7 @@ namespace egret.sys {
         updateError(info: string): void;
     }
 
-    declare let FPS: { new (stage: Stage, showFPS: boolean, showLog: boolean, logFilter: string, styles: Object): FPS };
+    declare let FPS: { new(stage: Stage, showFPS: boolean, showLog: boolean, logFilter: string, styles: Object): FPS };
 
     /**
      * @private
@@ -490,6 +490,10 @@ namespace egret.sys {
     egret.log = function () {
         console.log.apply(console, toArray(arguments));
     };
+
+    export let setRenderMode: (renderMode: string) => void;
+
+    export let WebGLRenderContext: { new(width?: number, height?: number, context?: WebGLRenderingContext): RenderContext };
 }
 
 

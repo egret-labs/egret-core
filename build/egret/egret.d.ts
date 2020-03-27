@@ -1,4 +1,4 @@
-declare var global: any;
+declare var global: NodeJS.Global;
 declare var __global: any;
 declare let __define: any;
 declare namespace egret {
@@ -4328,6 +4328,18 @@ declare namespace egret {
          * @language zh_CN
          */
         setContentSize(width: number, height: number): void;
+        /**
+         * @private
+         */
+        $drawToSurfaceAutoClear: () => void;
+        /**
+         * @private
+         */
+        $drawToSurface: () => void;
+        /**
+         * @private
+         */
+        $resize: (width: any, height: any) => void;
     }
 }
 declare namespace egret {
@@ -9164,6 +9176,11 @@ declare namespace egret.sys {
          * @private
          */
         static $setCanvasScale(x: number, y: number): void;
+        /**
+         * @private
+         * stage渲染
+         */
+        $stageRenderToSurface: () => void;
     }
 }
 declare namespace egret {
@@ -9348,6 +9365,10 @@ declare namespace egret.sys {
      * @private
      */
     let $errorToFPS: (info: string) => void;
+    let setRenderMode: (renderMode: string) => void;
+    let WebGLRenderContext: {
+        new (width?: number, height?: number, context?: WebGLRenderingContext): RenderContext;
+    };
 }
 /**
  * @private
@@ -9969,6 +9990,14 @@ declare namespace egret.sys {
          * @private
          */
         private callLaterAsyncs();
+        /**
+         * @private
+         */
+        $beforeRender: () => void;
+        /**
+         * @private
+         */
+        $afterRender: () => void;
     }
 }
 declare module egret {
@@ -10032,7 +10061,7 @@ declare namespace egret.sys {
          * @param y 事件发生处相对于舞台的坐标y
          * @param touchPointID 分配给触摸点的唯一标识号
          */
-        onTouchBegin(x: number, y: number, touchPointID: number): void;
+        onTouchBegin(x: number, y: number, touchPointID: number): boolean;
         /**
          * @private
          */
@@ -10048,7 +10077,7 @@ declare namespace egret.sys {
          * @param y 事件发生处相对于舞台的坐标y
          * @param touchPointID 分配给触摸点的唯一标识号
          */
-        onTouchMove(x: number, y: number, touchPointID: number): void;
+        onTouchMove(x: number, y: number, touchPointID: number): boolean;
         /**
          * @private
          * 触摸结束（弹起）
@@ -10056,12 +10085,17 @@ declare namespace egret.sys {
          * @param y 事件发生处相对于舞台的坐标y
          * @param touchPointID 分配给触摸点的唯一标识号
          */
-        onTouchEnd(x: number, y: number, touchPointID: number): void;
+        onTouchEnd(x: number, y: number, touchPointID: number): boolean;
         /**
          * @private
          * 获取舞台坐标下的触摸对象
          */
         private findTarget(stageX, stageY);
+        /**
+         * @private
+         * 设置同时触摸数量
+         */
+        $updateMaxTouches: (value: any) => void;
     }
 }
 declare namespace egret.sys {

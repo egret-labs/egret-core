@@ -201,5 +201,14 @@ namespace egret.sys {
                 egret_native.nrSetCanvasScaleFactor(DisplayList.$canvasScaleFactor, x, y);
             }
         }
+
+        //for 3D&2D
+        /**
+         * @private
+         * stage渲染
+         */
+        public $stageRenderToSurface = function () {
+            sys.systemRenderer.render(this.root, this.renderBuffer, this.offsetMatrix);
+        };
     }
 }

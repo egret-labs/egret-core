@@ -35,13 +35,13 @@ namespace egret.sys {
      */
     export class TouchHandler extends HashObject {
 
-        private maxTouches:number = 0;
-        private useTouchesCount:number = 0;
+        private maxTouches: number = 0;
+        private useTouchesCount: number = 0;
 
         /**
          * @private
          */
-        public constructor(stage:Stage) {
+        public constructor(stage: Stage) {
             super();
             this.stage = stage;
         }
@@ -50,19 +50,19 @@ namespace egret.sys {
          * @private
          * 设置同时触摸数量
          */
-        $initMaxTouches():void {
+        $initMaxTouches(): void {
             this.maxTouches = this.stage.$maxTouches;
         }
 
         /**
          * @private
          */
-        private stage:Stage;
+        private stage: Stage;
 
         /**
          * @private
          */
-        private touchDownTarget:{[key:number]:DisplayObject} = {};
+        private touchDownTarget: { [key: number]: DisplayObject } = {};
 
         /**
          * @private
@@ -71,7 +71,7 @@ namespace egret.sys {
          * @param y 事件发生处相对于舞台的坐标y
          * @param touchPointID 分配给触摸点的唯一标识号
          */
-        public onTouchBegin(x:number, y:number, touchPointID:number):void {
+        public onTouchBegin(x: number, y: number, touchPointID: number): boolean {
             if (this.useTouchesCount >= this.maxTouches) {
                 return;
             }
@@ -84,16 +84,18 @@ namespace egret.sys {
                 this.useTouchesCount++;
             }
             TouchEvent.dispatchTouchEvent(target, TouchEvent.TOUCH_BEGIN, true, true, x, y, touchPointID, true);
+            //for 3D&2D
+            return target !== this.stage;
         }
 
         /**
          * @private
          */
-        private lastTouchX:number = -1;
+        private lastTouchX: number = -1;
         /**
          * @private
          */
-        private lastTouchY:number = -1;
+        private lastTouchY: number = -1;
 
         /**
          * @private
@@ -102,7 +104,7 @@ namespace egret.sys {
          * @param y 事件发生处相对于舞台的坐标y
          * @param touchPointID 分配给触摸点的唯一标识号
          */
-        public onTouchMove(x:number, y:number, touchPointID:number):void {
+        public onTouchMove(x: number, y: number, touchPointID: number): boolean {
             if (this.touchDownTarget[touchPointID] == null) {
                 return;
             }
@@ -116,6 +118,8 @@ namespace egret.sys {
 
             let target = this.findTarget(x, y);
             TouchEvent.dispatchTouchEvent(target, TouchEvent.TOUCH_MOVE, true, true, x, y, touchPointID, true);
+            //for 3D&2D
+            return target !== this.stage;
         }
 
         /**
@@ -125,7 +129,7 @@ namespace egret.sys {
          * @param y 事件发生处相对于舞台的坐标y
          * @param touchPointID 分配给触摸点的唯一标识号
          */
-        public onTouchEnd(x:number, y:number, touchPointID:number):void {
+        public onTouchEnd(x: number, y: number, touchPointID: number): boolean {
             if (this.touchDownTarget[touchPointID] == null) {
                 return;
             }
@@ -142,18 +146,29 @@ namespace egret.sys {
             else {
                 TouchEvent.dispatchTouchEvent(oldTarget, TouchEvent.TOUCH_RELEASE_OUTSIDE, true, true, x, y, touchPointID, false);
             }
+            //for 3D&2D
+            return target !== this.stage;
         }
 
         /**
          * @private
          * 获取舞台坐标下的触摸对象
          */
-        private findTarget(stageX:number, stageY:number):DisplayObject {
+        private findTarget(stageX: number, stageY: number): DisplayObject {
             let target = this.stage.$hitTest(stageX, stageY);
             if (!target) {
                 target = this.stage;
             }
             return target;
         }
+
+        //for 3D&2D
+        /**
+         * @private
+         * 设置同时触摸数量
+         */
+        public $updateMaxTouches = function (value) {
+            this.maxTouches = value;
+        };
     }
 }
