@@ -1,4 +1,4 @@
-declare var global: NodeJS.Global;
+declare var global: any;
 declare var __global: any;
 declare let __define: any;
 declare namespace egret {
@@ -10624,6 +10624,7 @@ declare namespace egret {
         private renderNormalBitmap(node, context);
         private renderBitmap(node, context);
         private renderMesh(node, context);
+        private drawMesh(image, sourceX, sourceY, sourceWidth, sourceHeight, offsetX, offsetY, destWidth, destHeight, meshUVs, meshVertices, meshIndices, bounds, rotated, context);
         renderText(node: sys.TextNode, context: CanvasRenderingContext2D): void;
         private renderingMask;
         /**
