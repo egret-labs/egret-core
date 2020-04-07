@@ -2153,7 +2153,7 @@ var egret;
                 if (this.inputElement) {
                     if (this._styleInfoes[style] != value) {
                         this.inputElement.style[style] = value;
-                        this._styleInfoes[style] = value;
+                        //this._styleInfoes[style] = value;
                     }
                 }
             };

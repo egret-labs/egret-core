@@ -705,19 +705,18 @@ namespace egret {
                 context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             }
 
-            // 暂不考虑混色
-            // if (blendMode) {
-            //     context.setGlobalCompositeOperation(blendModes[blendMode]);
-            // }
+            //这里不考虑嵌套
+            if (blendMode) {
+                context.globalCompositeOperation = blendModes[blendMode];
+            }
 
 
             // 设置alpha
-            // let originAlpha: number;
-            // if (alpha == alpha) {
-            //     originAlpha = buffer.globalAlpha;
-            //     buffer.globalAlpha *= alpha;
-            // }
-
+            let originAlpha: number;
+            if (alpha == alpha) {
+                originAlpha = context.globalAlpha;
+                context.globalAlpha *= alpha;
+            }
             //暂不考虑滤镜
             // if (node.filter) {
             //     buffer.context.$filter = node.filter;
@@ -732,17 +731,14 @@ namespace egret {
                 drawCalls += this.drawMesh(image, data[pos++], data[pos++], data[pos++], data[pos++],
                     data[pos++], data[pos++], data[pos++], data[pos++], node.uvs, node.vertices, node.indices, node.bounds, node.rotated, context);
             }
-            // }
+            if (blendMode) {
+                context.globalCompositeOperation = defaultCompositeOp;
+            }
 
-            // 混色还原
-            // if (blendMode) {
-            //     buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
-            // }
+            if (alpha == alpha) {
+                context.globalAlpha = originAlpha;
+            }
 
-            // alpha还原
-            // if (alpha == alpha) {
-            //     buffer.globalAlpha = originAlpha;
-            // }
             if (offsetX) {
                 context.$offsetX = offsetX;
             }
