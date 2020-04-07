@@ -17307,7 +17307,6 @@ var egret;
                 context.lineTo(x2, y2);
                 context.closePath();
                 context.clip();
-                context.stroke();
                 var ratio = 1 / ((u0 * v1) + (v0 * u2) + (u1 * v2) - (v1 * u2) - (v0 * u1) - (u0 * v2));
                 a = (x0 * v1) + (v0 * x2) + (x1 * v2) - (v1 * x2) - (v0 * x1) - (x0 * v2);
                 b = (y0 * v1) + (v0 * y2) + (y1 * v2) - (v1 * y2) - (v0 * y1) - (y0 * v2);
