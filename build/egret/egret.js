@@ -14894,6 +14894,7 @@ var egret;
              * @private
              */
             function SystemTicker() {
+                var _this = this;
                 /**
                  * @private
                  */
@@ -14930,8 +14931,28 @@ var egret;
                  * @private
                  */
                 this.$beforeRender = function () {
+                    var callBackList = _this.callBackList;
+                    var thisObjectList = _this.thisObjectList;
+                    var length = callBackList.length;
+                    var timeStamp = egret.getTimer();
+                    var contexts = egret.lifecycle.contexts;
+                    for (var _i = 0, contexts_1 = contexts; _i < contexts_1.length; _i++) {
+                        var c = contexts_1[_i];
+                        if (c.onUpdate) {
+                            c.onUpdate();
+                        }
+                    }
+                    if (_this.isPaused) {
+                        _this.lastTimeStamp = timeStamp;
+                        return;
+                    }
+                    _this.callLaterAsyncs();
+                    for (var i = 0; i < length; i++) {
+                        callBackList[i].call(thisObjectList[i], timeStamp);
+                    }
+                    _this.callLaters();
                     if (sys.$invalidateRenderFlag) {
-                        this.broadcastRender();
+                        _this.broadcastRender();
                         sys.$invalidateRenderFlag = false;
                     }
                 };
@@ -14940,7 +14961,7 @@ var egret;
                  * @private
                  */
                 this.$afterRender = function () {
-                    this.broadcastEnterFrame();
+                    _this.broadcastEnterFrame();
                 };
                 if (true && egret.ticker) {
                     egret.$error(1008, "egret.sys.SystemTicker");
@@ -15086,8 +15107,8 @@ var egret;
                 var requestRenderingFlag = sys.$requestRenderingFlag;
                 var timeStamp = egret.getTimer();
                 var contexts = egret.lifecycle.contexts;
-                for (var _i = 0, contexts_1 = contexts; _i < contexts_1.length; _i++) {
-                    var c = contexts_1[_i];
+                for (var _i = 0, contexts_2 = contexts; _i < contexts_2.length; _i++) {
+                    var c = contexts_2[_i];
                     if (c.onUpdate) {
                         c.onUpdate();
                     }

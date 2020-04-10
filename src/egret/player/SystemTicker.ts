@@ -400,7 +400,27 @@ namespace egret.sys {
         /**
          * @private
          */
-        public $beforeRender = function () {
+        public $beforeRender = () => {
+            let callBackList = this.callBackList;
+            let thisObjectList = this.thisObjectList;
+            let length = callBackList.length;
+            let timeStamp = egret.getTimer();
+            let contexts = lifecycle.contexts;
+            for (let c of contexts) {
+                if (c.onUpdate) {
+                    c.onUpdate();
+                }
+            }
+            if (this.isPaused) {
+                this.lastTimeStamp = timeStamp;
+                return;
+            }
+            this.callLaterAsyncs();
+            for (let i = 0; i < length; i++) {
+                callBackList[i].call(thisObjectList[i], timeStamp)
+            }
+
+            this.callLaters();
             if (sys.$invalidateRenderFlag) {
                 this.broadcastRender();
                 sys.$invalidateRenderFlag = false;
@@ -411,7 +431,7 @@ namespace egret.sys {
         /**
          * @private
          */
-        public $afterRender = function () {
+        public $afterRender = () => {
             this.broadcastEnterFrame();
         };
     }
