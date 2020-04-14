@@ -2458,11 +2458,11 @@ var egret;
          */
         DisplayObject.prototype.$getConcatenatedMatrixAt = function (root, matrix) {
             var invertMatrix = root.$getInvertedConcatenatedMatrix();
-            if ((invertMatrix.a === 0 || invertMatrix.d === 0) && (matrix.a !== 0 && matrix.d !== 0)) {
+            if ((invertMatrix.a === 0 || invertMatrix.d === 0) && (invertMatrix.b === 0 || invertMatrix.c === 0)) {
                 var target = this;
                 var rootLevel = root.$nestLevel;
                 matrix.identity();
-                while (target.$nestLevel >= rootLevel) {
+                while (target.$nestLevel > rootLevel) {
                     var rect = target.$scrollRect;
                     if (rect) {
                         matrix.concat(egret.$TempMatrix.setTo(1, 0, 0, 1, -rect.x, -rect.y));

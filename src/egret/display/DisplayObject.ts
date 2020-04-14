@@ -2010,11 +2010,11 @@ namespace egret {
          */
         $getConcatenatedMatrixAt(root: DisplayObject, matrix: Matrix): void {
             let invertMatrix = root.$getInvertedConcatenatedMatrix();
-            if ((invertMatrix.a === 0 || invertMatrix.d === 0) && (matrix.a !== 0 && matrix.d !== 0)) {//缩放值为0，逆矩阵无效
+            if ((invertMatrix.a === 0 || invertMatrix.d === 0) && (invertMatrix.b === 0 || invertMatrix.c === 0)) {//缩放值为0，逆矩阵无效
                 let target: DisplayObject = this;
                 let rootLevel = root.$nestLevel;
                 matrix.identity();
-                while (target.$nestLevel >= rootLevel) {
+                while (target.$nestLevel > rootLevel) {
                     let rect = target.$scrollRect;
                     if (rect) {
                         matrix.concat($TempMatrix.setTo(1, 0, 0, 1, -rect.x, -rect.y));
