@@ -178,6 +178,19 @@ namespace egret {
          * @language zh_CN
          */
         export const VIVOGAME = "vivogame";
+        /**
+         * Running on 360 mini game
+         * @version Egret 5.2.23
+         * @platform All
+         * @language en_US
+         */
+         /**
+         * 运行在 360 小游戏上
+         * @version Egret 5.2.23
+         * @platform All
+         * @language zh_CN
+         */
+        export const QHGAME = "qhgame";
 
     }
 

@@ -18128,6 +18128,19 @@ var egret;
         * @language zh_CN
         */
         RuntimeType.VIVOGAME = "vivogame";
+        /**
+         * Running on 360 mini game
+         * @version Egret 5.2.23
+         * @platform All
+         * @language en_US
+         */
+        /**
+        * 运行在 360 小游戏上
+        * @version Egret 5.2.23
+        * @platform All
+        * @language zh_CN
+        */
+        RuntimeType.QHGAME = "qhgame";
     })(RuntimeType = egret.RuntimeType || (egret.RuntimeType = {}));
     /**
      * The Capabilities class provides properties that describe the system and runtime that are hosting the application.

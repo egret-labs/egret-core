@@ -11091,6 +11091,19 @@ declare namespace egret {
         * @language zh_CN
         */
         const VIVOGAME = "vivogame";
+        /**
+         * Running on 360 mini game
+         * @version Egret 5.2.23
+         * @platform All
+         * @language en_US
+         */
+        /**
+        * 运行在 360 小游戏上
+        * @version Egret 5.2.23
+        * @platform All
+        * @language zh_CN
+        */
+        const QHGAME = "qhgame";
     }
     interface SupportedCompressedTexture {
         pvrtc: boolean;
