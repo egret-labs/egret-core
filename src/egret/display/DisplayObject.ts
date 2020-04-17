@@ -2010,7 +2010,7 @@ namespace egret {
          */
         $getConcatenatedMatrixAt(root: DisplayObject, matrix: Matrix): void {
             let invertMatrix = root.$getInvertedConcatenatedMatrix();
-            if (invertMatrix.a === 0 || invertMatrix.d === 0) {//缩放值为0，逆矩阵无效
+            if ((invertMatrix.a === 0 || invertMatrix.d === 0) && (invertMatrix.b === 0 || invertMatrix.c === 0)) {//缩放值为0，逆矩阵无效
                 let target: DisplayObject = this;
                 let rootLevel = root.$nestLevel;
                 matrix.identity();
@@ -2313,7 +2313,7 @@ namespace egret {
         public get tint(): number {
             return this._tint;
         }
-        public set tint(value)  {
+        public set tint(value) {
             this._tint = value;
             this.$tintRGB = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
         }
