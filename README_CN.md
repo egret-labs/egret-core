@@ -49,7 +49,7 @@ Egret Engine包含了白鹭时代研发的遵循HTML5标准的游戏引擎，他
 
 首先获得 Egret Engine
 
-* 首先 [下载](https://egret.com/products/engine.html) Egret Engine 管理器
+* 首先 [下载](https://egret.com/products) Egret Engine 管理器
 
 * 下载成功后进行 [安装与部署](http://developer.egret.com/cn/github/egret-docs/Engine2D/projectConfig/installation/index.html) 
 
