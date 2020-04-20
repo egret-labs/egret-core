@@ -12296,6 +12296,7 @@ declare namespace egret {
         private blurHandler(event);
         private tempStage;
         private onMouseDownHandler(event);
+        private onMouseMoveHandler(event);
         $onFocus(): void;
         private onStageDownHandler(event);
         /**

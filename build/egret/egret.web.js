@@ -2272,6 +2272,9 @@ var egret;
                 dom.style.top = "0px";
                 dom.style.border = "none";
                 dom.style.padding = "0";
+                dom.ontouchmove = function (e) {
+                    e.preventDefault();
+                };
             };
             /**
              * @private

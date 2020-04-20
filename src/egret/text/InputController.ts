@@ -90,6 +90,7 @@ namespace egret {
 
             this.stageText.addEventListener("updateText", this.updateTextHandler, this);
             this._text.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
+            this._text.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onMouseMoveHandler, this);
 
             this.stageText.addEventListener("blur", this.blurHandler, this);
             this.stageText.addEventListener("focus", this.focusHandler, this);
@@ -113,6 +114,7 @@ namespace egret {
 
             this.stageText.removeEventListener("updateText", this.updateTextHandler, this);
             this._text.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
+            this._text.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onMouseMoveHandler, this);
             this.tempStage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
 
             this.stageText.removeEventListener("blur", this.blurHandler, this);
@@ -187,6 +189,10 @@ namespace egret {
             this.$onFocus();
         }
 
+        private onMouseMoveHandler(event: TouchEvent) {
+            this.stageText.$hide();
+        }
+
         $onFocus(): void {
             let self = this;
             if (!this._text.visible) {
@@ -202,7 +208,7 @@ namespace egret {
                 this.tempStage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
             }, this);
 
-            if(egret.nativeRender) {
+            if (egret.nativeRender) {
                 this.stageText.$setText(this._text.$TextField[egret.sys.TextKeys.text]);
             }
 
