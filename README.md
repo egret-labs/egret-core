@@ -47,7 +47,7 @@ The Egret Engine is a HTML5 game engine. It provides modules to handle common ga
 
 To Install the Egret Engine:
 
-* [Download](https://egret.com/products/engine.html) the Egret Engine Manager.
+* [Download](https://egret.com/products) the Egret Engine Manager.
 
 * Then, follow the [installation and deployment instructions](http://developer.egret.com/cn/github/egret-docs/Engine2D/projectConfig/installation/index.html) 
 

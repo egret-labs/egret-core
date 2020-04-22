@@ -2020,7 +2020,7 @@ var egret;
                 }
                 this.$resetStageText();
                 if (this.$textfield.maxChars > 0) {
-                    this.inputElement.setAttribute("maxlength", this.$textfield.maxChars);
+                    this.inputElement.setAttribute("maxlength", this.$textfield.maxChars + "");
                 }
                 else {
                     this.inputElement.removeAttribute("maxlength");
@@ -2272,6 +2272,9 @@ var egret;
                 dom.style.top = "0px";
                 dom.style.border = "none";
                 dom.style.padding = "0";
+                dom.ontouchmove = function (e) {
+                    e.preventDefault();
+                };
             };
             /**
              * @private
@@ -2359,7 +2362,7 @@ var egret;
                 inputElement.style.overflow = "hidden";
                 inputElement.style.wordBreak = "break-all";
                 //隐藏输入框
-                inputElement.style.opacity = 0;
+                inputElement.style.opacity = "0";
                 inputElement.oninput = function () {
                     if (self._stageText) {
                         self._stageText._onInput();
@@ -2375,7 +2378,7 @@ var egret;
                 var inputElement = self._inputElement;
                 //隐藏输入框
                 egret.$callAsync(function () {
-                    inputElement.style.opacity = 1;
+                    inputElement.style.opacity = "1";
                 }, self);
             };
             /**
@@ -2406,7 +2409,7 @@ var egret;
                     self._inputElement.style.height = "12px";
                     self._inputElement.style.left = "0px";
                     self._inputElement.style.top = "0px";
-                    self._inputElement.style.opacity = 0;
+                    self._inputElement.style.opacity = "0";
                     var otherElement = void 0;
                     if (self._simpleElement == self._inputElement) {
                         otherElement = self._multiElement;
@@ -2419,6 +2422,7 @@ var egret;
                     self._inputDIV.style.top = "-100px";
                     self._inputDIV.style.height = 0 + "px";
                     self._inputDIV.style.width = 0 + "px";
+                    self._inputElement.blur();
                 }
                 if (self._stageText) {
                     self._stageText._onDisconnect();

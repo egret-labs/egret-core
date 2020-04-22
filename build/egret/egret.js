@@ -20047,6 +20047,7 @@ var egret;
             this.stageText.$addToStage();
             this.stageText.addEventListener("updateText", this.updateTextHandler, this);
             this._text.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
+            this._text.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onMouseMoveHandler, this);
             this.stageText.addEventListener("blur", this.blurHandler, this);
             this.stageText.addEventListener("focus", this.focusHandler, this);
             this.stageTextAdded = true;
@@ -20065,6 +20066,7 @@ var egret;
             this.stageText.$removeFromStage();
             this.stageText.removeEventListener("updateText", this.updateTextHandler, this);
             this._text.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
+            this._text.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onMouseMoveHandler, this);
             this.tempStage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
             this.stageText.removeEventListener("blur", this.blurHandler, this);
             this.stageText.removeEventListener("focus", this.focusHandler, this);
@@ -20126,6 +20128,9 @@ var egret;
         //点中文本
         InputController.prototype.onMouseDownHandler = function (event) {
             this.$onFocus();
+        };
+        InputController.prototype.onMouseMoveHandler = function (event) {
+            this.stageText.$hide();
         };
         InputController.prototype.$onFocus = function () {
             var _this = this;

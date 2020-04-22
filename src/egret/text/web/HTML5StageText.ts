@@ -69,7 +69,7 @@ namespace egret.web {
         /**
          * @private
          */
-        private inputElement: any = null;
+        private inputElement: HTMLTextAreaElement | HTMLInputElement = null;
         /**
          * @private
          */
@@ -148,10 +148,10 @@ namespace egret.web {
             if (!this.htmlInput.isCurrentStageText(this)) {
                 this.inputElement = this.htmlInput.getInputElement(this);
                 if (!this.$textfield.multiline) {
-                    this.inputElement.type = this.$textfield.inputType;
+                    (this.inputElement as any).type = this.$textfield.inputType;
                 }
                 else {
-                    this.inputElement.type = "text";
+                    (this.inputElement as any).type = "text";
                 }
                 this.inputDiv = this.htmlInput._inputDIV;
             }
@@ -209,7 +209,7 @@ namespace egret.web {
             this.$resetStageText();
 
             if (this.$textfield.maxChars > 0) {
-                this.inputElement.setAttribute("maxlength", this.$textfield.maxChars);
+                this.inputElement.setAttribute("maxlength", this.$textfield.maxChars + "");
             }
             else {
                 this.inputElement.removeAttribute("maxlength");
@@ -467,16 +467,16 @@ namespace egret.web {
         /**
          * @private
          */
-        private _simpleElement: any;
+        private _simpleElement: HTMLInputElement;
         /**
          * @private
          */
-        private _multiElement: any;
+        private _multiElement: HTMLTextAreaElement;
 
         /**
          * @private
          */
-        private _inputElement: any;
+        private _inputElement: HTMLTextAreaElement | HTMLInputElement;
         /**
          * @private
          */
@@ -512,6 +512,9 @@ namespace egret.web {
             dom.style.top = "0px";
             dom.style.border = "none";
             dom.style.padding = "0";
+            dom.ontouchmove = (e) => {
+                e.preventDefault();
+            }
         }
 
         /**
@@ -613,7 +616,7 @@ namespace egret.web {
             let self = this;
 
             //增加1个空的textarea
-            let inputElement: any;
+            let inputElement: HTMLInputElement | HTMLTextAreaElement;
             if (multiline) {
                 inputElement = document.createElement("textarea");
                 inputElement.style["resize"] = "none";
@@ -626,7 +629,7 @@ namespace egret.web {
                 inputElement.id = "egretInput";
             }
 
-            inputElement.type = "text";
+            (inputElement as any).type = "text";
 
             self._inputDIV.appendChild(inputElement);
             inputElement.setAttribute("tabindex", "-1");
@@ -641,7 +644,7 @@ namespace egret.web {
             inputElement.style.wordBreak = "break-all";
 
             //隐藏输入框
-            inputElement.style.opacity = 0;
+            inputElement.style.opacity = "0";
 
             inputElement.oninput = function () {
                 if (self._stageText) {
@@ -659,7 +662,7 @@ namespace egret.web {
             let inputElement = self._inputElement;
             //隐藏输入框
             egret.$callAsync(function () {
-                inputElement.style.opacity = 1;
+                inputElement.style.opacity = "1";
             }, self);
         }
 
@@ -694,7 +697,7 @@ namespace egret.web {
                 self._inputElement.style.height = "12px";
                 self._inputElement.style.left = "0px";
                 self._inputElement.style.top = "0px";
-                self._inputElement.style.opacity = 0;
+                self._inputElement.style.opacity = "0";
 
                 let otherElement;
                 if (self._simpleElement == self._inputElement) {
@@ -709,6 +712,7 @@ namespace egret.web {
                 self._inputDIV.style.top = "-100px";
                 self._inputDIV.style.height = 0 + "px";
                 self._inputDIV.style.width = 0 + "px";
+                self._inputElement.blur();
 
             }
 
@@ -725,7 +729,7 @@ namespace egret.web {
          * @param stageText 
          * @returns 
          */
-        public getInputElement(stageText): any {
+        public getInputElement(stageText) {
             let self = this;
             self.clearInputElement();
 
