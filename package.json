@@ -1,6 +1,6 @@
 {
   "name": "egret",
-  "version": "5.2.33",
+  "version": "5.2.34",
   "private": true,
   "author": "egret-labs",
   "bin": {
@@ -10,13 +10,11 @@
   "egret": {
     "registerClass": "egret",
     "typeScriptVersion": "1.8",
-    "modules": [
-      {
+    "modules": [{
         "name": "egret",
         "description": "egret 核心库",
         "description_en": "egret core lib",
-        "files": [
-          {
+        "files": [{
             "path": "../Defines.debug.ts",
             "debug": true
           },
@@ -261,8 +259,7 @@
         ]
       }
     ],
-    "platforms": [
-      {
+    "platforms": [{
         "name": "any",
         "declaration": true,
         "hidden": true
@@ -276,8 +273,7 @@
         "description": "Native"
       }
     ],
-    "templates": [
-      {
+    "templates": [{
         "name": "game",
         "displayName": "Egret 游戏项目",
         "displayName_en": "Egret game project",
@@ -330,8 +326,7 @@
         ]
       }
     ],
-    "scaleModes": [
-      {
+    "scaleModes": [{
         "name": "showAll",
         "description": "保持原始宽高比缩放应用程序内容，缩放后应用程序内容的较宽方向填满播放器视口，另一个方向的两侧可能会不够宽而留有黑边。在此模式下，舞台尺寸(Stage.stageWidth,Stage.stageHeight)始终等于初始化时外部传入的应用程序内容尺寸。",
         "description_en": "Scale app content with original aspect ratio. The wider direction of the scaled app content fills the player window while the other direction may not be wide enough and leave some black bars. In this mode, stage size (Stage.stageWidth,Stage.stageHeight) stays the same as app content size passed externally upon initiation."
@@ -372,8 +367,7 @@
         "description_en": "Scale app content with original aspect ratio and scaled content fills player window both horizontally and vertically. The wider direction of app content may outgrow player window and be cropped. In this mode, stage height (Stage.stageHeight) and stage width (Stage.stageWidth) will be determined by current scale ratio and player window's width and height"
       }
     ],
-    "orientationModes": [
-      {
+    "orientationModes": [{
         "name": "auto",
         "description": "不强制旋转应用程序。应用程序随设备旋转而旋转",
         "description_en": "Don't force app to rotate. App rotates with device"
