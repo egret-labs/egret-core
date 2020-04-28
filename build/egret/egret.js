@@ -9045,9 +9045,6 @@ var egret;
                 _this.$nativeBitmapData = nativeBitmapData;
             }
             _this.source = source;
-            // this.width = source.width;
-            // this.height = source.height;
-            _this.source = source;
             if (_this.source) {
                 _this.width = +source.width;
                 _this.height = +source.height;
@@ -18124,13 +18121,13 @@ var egret;
         RuntimeType.VIVOGAME = "vivogame";
         /**
          * Running on 360 mini game
-         * @version Egret 5.2.23
+         * @version Egret 5.3.5
          * @platform All
          * @language en_US
          */
         /**
         * 运行在 360 小游戏上
-        * @version Egret 5.2.23
+        * @version Egret 5.3.5
         * @platform All
         * @language zh_CN
         */
@@ -18251,7 +18248,7 @@ var egret;
          * @platform Web,Native
          * @language zh_CN
          */
-        Capabilities.engineVersion = "5.2.33";
+        Capabilities.engineVersion = "5.3.5";
         /***
          * current render mode.
          * @type {string}

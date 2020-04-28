@@ -11059,13 +11059,13 @@ declare namespace egret {
         const VIVOGAME = "vivogame";
         /**
          * Running on 360 mini game
-         * @version Egret 5.2.23
+         * @version Egret 5.3.5
          * @platform All
          * @language en_US
          */
         /**
         * 运行在 360 小游戏上
-        * @version Egret 5.2.23
+        * @version Egret 5.3.5
         * @platform All
         * @language zh_CN
         */
