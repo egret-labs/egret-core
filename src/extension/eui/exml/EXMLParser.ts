@@ -54,6 +54,101 @@ namespace eui.sys {
     let htmlEntities:string[][] = [["<", "&lt;"], [">", "&gt;"], ["&", "&amp;"], ["\"", "&quot;"], ["'", "&apos;"]];
     let jsKeyWords:string[] = ["null", "NaN", "undefined", "true", "false"];
 
+    let getRepeatedIds: (xml: egret.XML) => string[];
+    let getIds: (xml: any, result: string[]) => void;
+    let checkDeclarations: (declarations: egret.XML, list: string[]) => void;
+    if (DEBUG) {
+        /**
+         * 获取重复的ID名
+         */
+        getRepeatedIds = function(xml:egret.XML):string[] {
+            let result:string[] = [];
+            this.repeatedIdMap = {};
+            this.getIds(xml, result);
+            return result;
+        }
+
+        getIds = function(xml:any, result:any[]):void {
+            if (xml.namespace != NS_W && xml.attributes.id) {
+                let id:string = xml.attributes.id;
+                if (this.repeatedIdMap[id]) {
+                    result.push(toXMLString(xml));
+                }
+                else {
+                    this.repeatedIdMap[id] = true;
+                }
+            }
+            let children:any[] = xml.children;
+            if (children) {
+                let length:number = children.length;
+                for (let i:number = 0; i < length; i++) {
+                    let node:any = children[i];
+                    if (node.nodeType !== 1 || this.isInnerClass(node)) {
+                        continue;
+                    }
+                    this.getIds(node, result);
+                }
+            }
+        }
+
+        function toXMLString(node:egret.XML):string {
+            if (!node) {
+                return "";
+            }
+            let str:string = "  at <" + node.name;
+            let attributes = node.attributes;
+            let keys = Object.keys(attributes);
+            let length = keys.length;
+            for (let i = 0; i < length; i++) {
+                let key = keys[i];
+                let value:string = attributes[key];
+                if (key == "id" && value.substring(0, 2) == "__") {
+                    continue;
+                }
+                str += " " + key + "=\"" + value + "\"";
+            }
+            if (node.children.length == 0) {
+                str += "/>";
+            }
+            else {
+                str += ">";
+            }
+            return str;
+        }
+
+        /**
+         * 清理声明节点里的状态标志
+         */
+        checkDeclarations = function(declarations:egret.XML, list:string[]):void {
+            if (!declarations) {
+                return;
+            }
+            let children = declarations.children;
+            if (children) {
+                let length = children.length;
+                for (let i = 0; i < length; i++) {
+                    let node:any = children[i];
+                    if (node.nodeType != 1) {
+                        continue;
+                    }
+                    if (node.attributes.includeIn) {
+                        list.push(toXMLString(node));
+                    }
+                    if (node.attributes.excludeFrom) {
+                        list.push(toXMLString(node))
+                    }
+                    checkDeclarations(node, list);
+                }
+            }
+        }
+
+        function getPropertyStr(child:any):string {
+            let parentStr = toXMLString(child.parent);
+            let childStr = toXMLString(child).substring(5);
+            return parentStr + "\n      \t" + childStr;
+        }
+
+    }
     /**
      * @private
      */
@@ -1596,96 +1691,5 @@ namespace eui.sys {
 
     }
 
-    if (DEBUG) {
-        /**
-         * 获取重复的ID名
-         */
-        function getRepeatedIds(xml:egret.XML):string[] {
-            let result:string[] = [];
-            this.repeatedIdMap = {};
-            this.getIds(xml, result);
-            return result;
-        }
 
-        function getIds(xml:any, result:any[]):void {
-            if (xml.namespace != NS_W && xml.attributes.id) {
-                let id:string = xml.attributes.id;
-                if (this.repeatedIdMap[id]) {
-                    result.push(toXMLString(xml));
-                }
-                else {
-                    this.repeatedIdMap[id] = true;
-                }
-            }
-            let children:any[] = xml.children;
-            if (children) {
-                let length:number = children.length;
-                for (let i:number = 0; i < length; i++) {
-                    let node:any = children[i];
-                    if (node.nodeType !== 1 || this.isInnerClass(node)) {
-                        continue;
-                    }
-                    this.getIds(node, result);
-                }
-            }
-        }
-
-        function toXMLString(node:egret.XML):string {
-            if (!node) {
-                return "";
-            }
-            let str:string = "  at <" + node.name;
-            let attributes = node.attributes;
-            let keys = Object.keys(attributes);
-            let length = keys.length;
-            for (let i = 0; i < length; i++) {
-                let key = keys[i];
-                let value:string = attributes[key];
-                if (key == "id" && value.substring(0, 2) == "__") {
-                    continue;
-                }
-                str += " " + key + "=\"" + value + "\"";
-            }
-            if (node.children.length == 0) {
-                str += "/>";
-            }
-            else {
-                str += ">";
-            }
-            return str;
-        }
-
-        /**
-         * 清理声明节点里的状态标志
-         */
-        function checkDeclarations(declarations:egret.XML, list:string[]):void {
-            if (!declarations) {
-                return;
-            }
-            let children = declarations.children;
-            if (children) {
-                let length = children.length;
-                for (let i = 0; i < length; i++) {
-                    let node:any = children[i];
-                    if (node.nodeType != 1) {
-                        continue;
-                    }
-                    if (node.attributes.includeIn) {
-                        list.push(toXMLString(node));
-                    }
-                    if (node.attributes.excludeFrom) {
-                        list.push(toXMLString(node))
-                    }
-                    checkDeclarations(node, list);
-                }
-            }
-        }
-
-        function getPropertyStr(child:any):string {
-            let parentStr = toXMLString(child.parent);
-            let childStr = toXMLString(child).substring(5);
-            return parentStr + "\n      \t" + childStr;
-        }
-
-    }
 }
