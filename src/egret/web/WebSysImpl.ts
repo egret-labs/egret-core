@@ -296,6 +296,7 @@ namespace egret.web {
     function loadFontByFontFace(name: string, path: string): void {
         const fontResCache = egret.sys.fontResourceCache;
         if (!fontResCache || !fontResCache[path]) {
+            console.warn(`registerFontMapping_WARN: Can not find TTF file:${path}, please load file first.`);
             return;
         }
         const resCache = fontResCache[path];
@@ -318,14 +319,7 @@ namespace egret.web {
         styleElement.onerror = (err) => {
             console.error(`loadFontError:`, err);
         }
-        styleElement.onended = (e) => {
-            console.error("onEnded");
-            console.error(e);
-        }
-        styleElement.onload = (e) => {
-            console.log("onload");
-            console.log(e);
-        }
+        document.body.appendChild(styleElement);
     }
 }
 

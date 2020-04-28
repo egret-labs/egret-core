@@ -3483,6 +3483,7 @@ var egret;
         function loadFontByFontFace(name, path) {
             var fontResCache = egret.sys.fontResourceCache;
             if (!fontResCache || !fontResCache[path]) {
+                console.warn("registerFontMapping_WARN: Can not find TTF file:" + path + ", please load file first.");
                 return;
             }
             var resCache = fontResCache[path];
@@ -3500,14 +3501,7 @@ var egret;
             styleElement.onerror = function (err) {
                 console.error("loadFontError:", err);
             };
-            styleElement.onended = function (e) {
-                console.error("onEnded");
-                console.error(e);
-            };
-            styleElement.onload = function (e) {
-                console.log("onload");
-                console.log(e);
-            };
+            document.body.appendChild(styleElement);
         }
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
