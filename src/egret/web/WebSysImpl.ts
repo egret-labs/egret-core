@@ -278,6 +278,55 @@ namespace egret.web {
 
     egret.Geolocation = egret.web.WebGeolocation;
     egret.Motion = egret.web.WebMotion;
+
+    /**
+     * 
+     * @param name 
+     * @param path 
+     */
+    function registerFontMapping(name: string, path: string): void {
+        if ((window as any).FontFace) {
+            return loadFontByFontFace(name, path);
+        } else {
+            return loadFontByWebStyle(name, path);
+        }
+    }
+    egret.sys.registerFontMapping = registerFontMapping;
+
+    function loadFontByFontFace(name: string, path: string): void {
+        const fontResCache = egret.sys.fontResourceCache;
+        if (!fontResCache || !fontResCache[path]) {
+            return;
+        }
+        const resCache = fontResCache[path];
+        const fontFace = new (window as any).FontFace(name, resCache);
+        (document as any).fonts.add(fontFace);
+        fontFace.load().catch((err) => {
+            console.error(`loadFontError:`, err);
+        })
+    };
+
+    function loadFontByWebStyle(name: string, path: string): void {
+        const styleElement = document.createElement("style");
+        styleElement.type = "text/css";
+        styleElement.textContent = `
+            @font-face
+            {
+                font-family:"${name}";
+                src:url("${path}");
+            }`;
+        styleElement.onerror = (err) => {
+            console.error(`loadFontError:`, err);
+        }
+        styleElement.onended = (e) => {
+            console.error("onEnded");
+            console.error(e);
+        }
+        styleElement.onload = (e) => {
+            console.log("onload");
+            console.log(e);
+        }
+    }
 }
 
 

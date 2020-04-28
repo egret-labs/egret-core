@@ -554,6 +554,32 @@ module RES.processor {
         }
     }
 
+
+    /**
+     * @internal
+     */
+    export const TTFProcessor: Processor = {
+        onLoadStart(host, resource) {
+            return host.load(resource, "bin").then((data) => {
+                if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB) {
+                    if (!egret.sys.fontResourceCache) {
+                        egret.sys.fontResourceCache = {};
+                    }
+                    egret.sys.fontResourceCache[resource.root + resource.url] = data;
+                }
+            });
+        },
+
+        onRemoveStart(host, resource) {
+            if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB) {
+                const fontResCache = egret.sys.fontResourceCache;
+                if (fontResCache && fontResCache[resource.url]) {
+                    fontResCache[resource.root + resource.url] = null;
+                }
+            }
+        }
+    }
+
     type LegacyResourceConfig = {
         groups: LegacyGroupInfo[],
         resources: LegacyResourceInfo[],
@@ -666,6 +692,7 @@ module RES.processor {
         "ktx": KTXTextureProcessor,
         "etc1.ktx": ETC1KTXProcessor,
         "pvrtc.ktx": KTXTextureProcessor,
+        "ttf": TTFProcessor
         // "zip": ZipProcessor
     }
 }

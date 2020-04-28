@@ -149,7 +149,19 @@ module RES {
 		 * @language zh_CN
 		 */
 		export const TYPE_SOUND: string = "sound";
-
+		/**
+		 * TTF file.
+		 * @version Egret 5.3
+		 * @platform Web,Native
+		 * @language en_US
+		 */
+		/**
+		 * TTF字体文件。
+		 * @version Egret 5.3
+		 * @platform Web,Native
+		 * @language zh_CN
+		 */
+		export const TYPE_TTF: string = "ttf";
 		export function convertToResItem(r: ResourceInfo): ResourceItem {
 
 			let name = r.name;

@@ -3466,6 +3466,49 @@ var egret;
         egret.sys.resizeCanvasRenderBuffer = resizeCanvasRenderBuffer;
         egret.Geolocation = egret.web.WebGeolocation;
         egret.Motion = egret.web.WebMotion;
+        /**
+         *
+         * @param name
+         * @param path
+         */
+        function registerFontMapping(name, path) {
+            if (window.FontFace) {
+                return loadFontByFontFace(name, path);
+            }
+            else {
+                return loadFontByWebStyle(name, path);
+            }
+        }
+        egret.sys.registerFontMapping = registerFontMapping;
+        function loadFontByFontFace(name, path) {
+            var fontResCache = egret.sys.fontResourceCache;
+            if (!fontResCache || !fontResCache[path]) {
+                return;
+            }
+            var resCache = fontResCache[path];
+            var fontFace = new window.FontFace(name, resCache);
+            document.fonts.add(fontFace);
+            fontFace.load().catch(function (err) {
+                console.error("loadFontError:", err);
+            });
+        }
+        ;
+        function loadFontByWebStyle(name, path) {
+            var styleElement = document.createElement("style");
+            styleElement.type = "text/css";
+            styleElement.textContent = "\n            @font-face\n            {\n                font-family:\"" + name + "\";\n                src:url(\"" + path + "\");\n            }";
+            styleElement.onerror = function (err) {
+                console.error("loadFontError:", err);
+            };
+            styleElement.onended = function (e) {
+                console.error("onEnded");
+                console.error(e);
+            };
+            styleElement.onload = function (e) {
+                console.log("onload");
+                console.log(e);
+            };
+        }
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////

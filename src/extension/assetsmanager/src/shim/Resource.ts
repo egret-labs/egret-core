@@ -110,6 +110,8 @@ module RES {
             case "pvr":
                 type = ext;
                 break;
+            case "ttf":
+                type = ResourceItem.TYPE_TTF;
             default:
                 type = ResourceItem.TYPE_BIN;
                 break;
@@ -456,7 +458,7 @@ module RES {
      * @language zh_CN
      */
     export function getResByUrl(url: string, compFunc?: Function, thisObject?: any, type: string = ""): Promise<any> {
-        if(!instance){
+        if (!instance) {
             let message = egret.sys.tr(3200)
             egret.warn(message)
             return Promise.reject(message);
@@ -859,9 +861,9 @@ module RES {
             let data = this.getRes(key);
             if (data) {
                 if (compFunc) {
-                    egret.callLater(()=>{
+                    egret.callLater(() => {
                         compFunc.call(thisObject, data, paramKey);
-                    },this)
+                    }, this)
                 }
                 return Promise.resolve(data);
             }
@@ -939,7 +941,7 @@ module RES {
             const group = config.getGroupByName(name);
             if (group && group.length > 0) {
                 const index = config.config.loadGroup.indexOf(name);
-                if(index == -1) {
+                if (index == -1) {
                     return false;
                 }
                 if (force || (config.config.loadGroup.length == 1 && config.config.loadGroup[0] == name)) {
