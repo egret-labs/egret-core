@@ -688,7 +688,7 @@ namespace egret.web {
         public clearInputElement(): void {
             let self = this;
             if (self._inputElement) {
-                self._inputElement.value = "";
+                self._inputElement.value = " ";
 
                 self._inputElement.onblur = null;
                 self._inputElement.onfocus = null;
