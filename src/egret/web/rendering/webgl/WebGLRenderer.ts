@@ -282,7 +282,8 @@ namespace egret.web {
             }
 
             // 为显示对象创建一个新的buffer
-            let displayBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
+            let displayBuffer = this.createRenderBuffer(buffer.width, buffer.height);
+            displayBuffer.setTransform(buffer.globalMatrix.a, buffer.globalMatrix.b, buffer.globalMatrix.c, buffer.globalMatrix.d, buffer.globalMatrix.tx, buffer.globalMatrix.ty);
             displayBuffer.context.pushBuffer(displayBuffer);
 
             //todo 可以优化减少draw次数
@@ -913,9 +914,9 @@ namespace egret.web {
                         buffer.$offsetY = saveOffsetY + anchorY - (tb.measureHeight + (tb.stroke2 ? tb.canvasHeightOffset : 0)) / 2;
                         page = tb.line.page;
                         buffer.context.drawTexture(page.webGLTexture,
-                            tb.u, tb.v, tb.contentWidth, tb.contentHeight, 
+                            tb.u, tb.v, tb.contentWidth, tb.contentHeight,
                             0, 0, tb.contentWidth, tb.contentHeight,
-                             page.pageWidth, page.pageHeight);
+                            page.pageWidth, page.pageHeight);
 
                         buffer.$offsetX += (tb.contentWidth - tb.canvasWidthOffset);
                     }
