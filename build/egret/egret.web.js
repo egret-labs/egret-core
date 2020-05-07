@@ -6870,6 +6870,9 @@ var egret;
                     else {
                         var value = filter.$uniforms[key];
                         if (value !== undefined) {
+                            if (filter instanceof egret.GlowFilter && (key == "blurX" || key == "blurY" || key == "dist")) {
+                                value = value * filter.$filterScale;
+                            }
                             uniforms[key].setValue(value);
                         }
                         else {
@@ -7030,6 +7033,7 @@ var egret;
                 }
                 // 绘制input结果到舞台
                 output.saveTransform();
+                output.setTransform(1, 0, 0, 1, output.globalMatrix.tx, output.globalMatrix.ty);
                 output.transform(1, 0, 0, -1, 0, height);
                 output.currentTexture = input.rootRenderTarget.texture;
                 this.vao.cacheArrays(output, 0, 0, width, height, 0, 0, width, height, width, height);
@@ -7744,7 +7748,17 @@ var egret;
                     }
                 }
                 // 为显示对象创建一个新的buffer
-                var displayBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
+                var scaleX = buffer.globalMatrix.a;
+                var scaleY = buffer.globalMatrix.d;
+                var scale = Math.max(scaleX, scaleY);
+                filters.forEach(function (filter) {
+                    if (filter instanceof egret.GlowFilter) {
+                        filter.$filterScale = scale;
+                    }
+                });
+                var displayBuffer = this.createRenderBuffer(displayBoundsWidth * scaleX, displayBoundsHeight * scaleY);
+                displayBuffer.saveTransform();
+                displayBuffer.setTransform(buffer.globalMatrix.a, buffer.globalMatrix.b, buffer.globalMatrix.c, buffer.globalMatrix.d, buffer.globalMatrix.tx, buffer.globalMatrix.ty);
                 displayBuffer.context.pushBuffer(displayBuffer);
                 //todo 可以优化减少draw次数
                 if (displayObject.$mask) {
@@ -7757,6 +7771,7 @@ var egret;
                     drawCalls += this.drawDisplayObject(displayObject, displayBuffer, -displayBoundsX, -displayBoundsY);
                 }
                 displayBuffer.context.popBuffer();
+                displayBuffer.restoreTransform();
                 //绘制结果到屏幕
                 if (drawCalls > 0) {
                     if (hasBlendMode) {

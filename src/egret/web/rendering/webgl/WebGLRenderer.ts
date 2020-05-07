@@ -282,7 +282,17 @@ namespace egret.web {
             }
 
             // 为显示对象创建一个新的buffer
-            let displayBuffer = this.createRenderBuffer(buffer.width, buffer.height);
+
+            const scaleX = buffer.globalMatrix.a;
+            const scaleY = buffer.globalMatrix.d;
+            const scale = Math.max(scaleX, scaleY);
+            filters.forEach((filter) => {
+                if (filter instanceof GlowFilter) {
+                    filter.$filterScale = scale;
+                }
+            })
+            let displayBuffer = this.createRenderBuffer(displayBoundsWidth * scaleX, displayBoundsHeight * scaleY);
+            displayBuffer.saveTransform();
             displayBuffer.setTransform(buffer.globalMatrix.a, buffer.globalMatrix.b, buffer.globalMatrix.c, buffer.globalMatrix.d, buffer.globalMatrix.tx, buffer.globalMatrix.ty);
             displayBuffer.context.pushBuffer(displayBuffer);
 
@@ -298,6 +308,7 @@ namespace egret.web {
             }
 
             displayBuffer.context.popBuffer();
+            displayBuffer.restoreTransform();
 
             //绘制结果到屏幕
             if (drawCalls > 0) {

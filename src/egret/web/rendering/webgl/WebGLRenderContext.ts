@@ -1049,6 +1049,9 @@ namespace egret.web {
                 else {
                     let value = filter.$uniforms[key];
                     if (value !== undefined) {
+                        if (filter instanceof GlowFilter && (key == "blurX" || key == "blurY" || key == "dist")) {
+                            value = value * filter.$filterScale;
+                        }
                         uniforms[key].setValue(value);
                     } else {
                         // egret.warn("filter custom: uniform " + key + " not defined!");
@@ -1253,9 +1256,7 @@ namespace egret.web {
             output.currentTexture = input.rootRenderTarget.texture;
             this.vao.cacheArrays(output, 0, 0, width, height, 0, 0, width, height, width, height);
             output.restoreTransform();
-
             this.drawCmdManager.pushDrawTexture(input.rootRenderTarget.texture, 2, filter, width, height);
-
             // 释放掉input
             if (input != originInput) {
                 WebGLRenderBuffer.release(input);
