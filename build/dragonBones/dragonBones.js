@@ -16311,11 +16311,11 @@ var dragonBones;
             configurable: true
         });
         EgretFactory.prototype._isSupportMesh = function () {
-            if (egret.Capabilities.renderMode === "webgl" || egret.Capabilities.runtimeType === egret.RuntimeType.NATIVE) {
+            // if (egret.Capabilities.renderMode === "webgl" || egret.Capabilities.runtimeType === egret.RuntimeType.NATIVE) {
                 return true;
-            }
-            console.warn("Canvas can not support mesh, please change renderMode to webgl.");
-            return false;
+            // }
+            // console.warn("Canvas can not support mesh, please change renderMode to webgl.");
+            // return false;
         };
         EgretFactory.prototype._buildTextureAtlasData = function (textureAtlasData, textureAtlas) {
             if (textureAtlasData != null) {
