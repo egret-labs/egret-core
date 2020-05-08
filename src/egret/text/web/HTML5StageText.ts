@@ -677,6 +677,10 @@ namespace egret.web {
                     this._inputElement.blur();
                 }
                 this.clearInputElement();
+
+                if (this._inputElement && this._inputDIV.contains(this._inputElement)) {
+                    this._inputDIV.removeChild(this._inputElement);
+                }
             }
             this._needShow = false;
         }
@@ -752,7 +756,9 @@ namespace egret.web {
                 otherElement = self._simpleElement;
             }
             otherElement.style.display = "none";
-
+            if (this._inputElement && !this._inputDIV.contains(this._inputElement)) {
+                this._inputDIV.appendChild(this._inputElement);
+            }
             return self._inputElement;
         }
     }
