@@ -179,6 +179,8 @@ namespace egret {
             this.$uniforms = uniforms;
 
             this.type = "custom";
+
+            this.onPropertyChange();
         }
         /**
          * When native rendering acceleration is turned on, custom shaders need to be called manually when creating and updating properties
