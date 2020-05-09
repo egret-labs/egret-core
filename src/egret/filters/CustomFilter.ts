@@ -180,7 +180,18 @@ namespace egret {
 
             this.type = "custom";
         }
-
+        /**
+         * When native rendering acceleration is turned on, custom shaders need to be called manually when creating and updating properties
+         * @version Egret 5.0.3
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 开启原生渲染加速后，自定义shader需要在创建和更新属性时手动调用
+         * @version Egret 5.0.3
+         * @platform Web,Native
+         * @language zh_CN
+         */
         public onPropertyChange(): void {
             if (egret.nativeRender) {
                 let self = this;
