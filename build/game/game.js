@@ -3409,8 +3409,8 @@ var egret;
                     self.offsetPoint.x, self.offsetPoint.y, texture.$getScaleBitmapWidth(), texture.$getScaleBitmapHeight(),
                     texture.$sourceWidth, texture.$sourceHeight]);
                 //todo 负数offsetPoint
-                self.$nativeDisplayObject.setWidth(texture.$getTextureWidth() + self.offsetPoint.x);
-                self.$nativeDisplayObject.setHeight(texture.$getTextureHeight() + self.offsetPoint.y);
+                self.$nativeDisplayObject.setWidth(texture.$getTextureWidth());
+                self.$nativeDisplayObject.setHeight(texture.$getTextureHeight());
             }
             else {
                 var p = self.$parent;
