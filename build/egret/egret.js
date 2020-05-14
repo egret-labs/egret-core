@@ -10144,6 +10144,7 @@ var egret;
             _this.$shaderKey = SOURCE_KEY_MAP[tempKey];
             _this.$uniforms = uniforms;
             _this.type = "custom";
+            _this.onPropertyChange();
             return _this;
         }
         Object.defineProperty(CustomFilter.prototype, "padding", {
@@ -10194,6 +10195,18 @@ var egret;
             enumerable: true,
             configurable: true
         });
+        /**
+         * When native rendering acceleration is turned on, custom shaders need to be called manually when creating and updating properties
+         * @version Egret 5.0.3
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 开启原生渲染加速后，自定义shader需要在创建和更新属性时手动调用
+         * @version Egret 5.0.3
+         * @platform Web,Native
+         * @language zh_CN
+         */
         CustomFilter.prototype.onPropertyChange = function () {
             if (egret.nativeRender) {
                 var self_1 = this;
@@ -18252,7 +18265,7 @@ var egret;
          * @platform Web,Native
          * @language zh_CN
          */
-        Capabilities.engineVersion = "5.3.5";
+        Capabilities.engineVersion = "5.3.6";
         /***
          * current render mode.
          * @type {string}
