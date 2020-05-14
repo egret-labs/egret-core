@@ -23,6 +23,8 @@ type ManifestPluginOptions = {
     useWxPlugin?: boolean  //use wechat engine plugin
 
     qqPlugin?: { use: boolean, pluginList: string[] } //use QQgame engine plugin
+
+    vivoPlugin?: { use: boolean, pluginList: any[] } //use vivo game engine plugin
 }
 
 export class ManifestPlugin {
@@ -43,6 +45,9 @@ export class ManifestPlugin {
         if (!this.options.qqPlugin) {
             this.options.qqPlugin = { use: false, pluginList: [] };
         }
+        if (!this.options.vivoPlugin) {
+            this.options.vivoPlugin = { use: false, pluginList: [] };
+        }
     }
 
     async onFile(file: File) {
@@ -51,7 +56,7 @@ export class ManifestPlugin {
         if (extname == ".js") {
             let new_file_path;
             const basename = path.basename(filename);
-            let { useWxPlugin, hash, verbose } = this.options;
+            let { useWxPlugin, hash, verbose, vivoPlugin } = this.options;
             let new_basename = basename.substr(0, basename.length - file.extname.length)
             let isEngineJS = false;
             if (useWxPlugin) {
@@ -79,6 +84,13 @@ export class ManifestPlugin {
             file.path = path.join(file.base, new_file_path);
             if (this.options.info && this.options.info.target == 'vivogame') {
                 file.path = path.join(file.base, '../', 'engine', new_file_path);
+                if (vivoPlugin.use) {//使用插件
+                    if (vivoPlugin.pluginList[0].indexOf(basename) > -1) {
+                        file.path = path.join(file.base, '../', 'egret-library', new_basename + file.extname);
+                    } else {
+                        vivoPlugin.pluginList[4].push(`require("./js/${basename}")`)
+                    }
+                }
             }
             const relative = file.relative.split("\\").join('/');
 
@@ -95,7 +107,7 @@ export class ManifestPlugin {
         return file;
     }
     async onFinish(pluginContext) {
-        let { output, useWxPlugin, qqPlugin } = this.options
+        let { output, useWxPlugin, qqPlugin, vivoPlugin } = this.options
         const extname = path.extname(output);
         let contents = '';
         let target = pluginContext.buildConfig.target
@@ -125,6 +137,9 @@ export class ManifestPlugin {
         }
         if (qqPlugin.use) {
             contents = qqPlugin.pluginList.join("\n") + "\n" + contents;
+        }
+        if (vivoPlugin.use) {
+            contents = `if(window.requirePlugin){\n${vivoPlugin.pluginList[2].join("\n")}\n}else{\n${vivoPlugin.pluginList[3].join("\n")}\n}\n${vivoPlugin.pluginList[4].join("\n")}`
         }
         pluginContext.createFile(output, new Buffer(contents));
 

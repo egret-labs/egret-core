@@ -57,7 +57,8 @@ class UpgradeCommand implements egret.Command {
             { "v": "5.2.31", command: Upgrade_5_2_31 },
             { "v": "5.2.32", command: Upgrade_5_2_32 },
             { "v": "5.2.33", command: Upgrade_5_2_33 },
-            { "v": "5.3.5", command: Upgrade_5_3_5}
+            { "v": "5.3.5", command: Upgrade_5_3_5},
+            { "v": "5.3.6", command: Upgrade_5_3_6}
         ];
 
         try {
@@ -240,6 +241,15 @@ class Upgrade_5_3_5 {
     async execute() {
         file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "qhgame"), path.join(egret.args.projectDir, "scripts", "qhgame"));
         file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.qhgame.ts"), path.join(egret.args.projectDir, "scripts", "config.qhgame.ts"));
+        return 0;
+    }
+}
+
+class Upgrade_5_3_6 {
+    async execute() {
+        file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "vivogame"), path.join(egret.args.projectDir, "scripts", "vivogame"));
+        file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.vivogame.ts"), path.join(egret.args.projectDir, "scripts", "config.vivogame.ts"));
+        file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "api.d.ts"), path.join(egret.args.projectDir, "scripts", "api.d.ts"));
         return 0;
     }
 }

@@ -295,6 +295,10 @@ declare module 'built-in' {
          * use QQgame engine plugin
          */
         qqPlugin?: { use: boolean, pluginList: string[] }
+        /**
+         * use vivo game engine plugin
+         */
+        vivoPlugin?: { use: boolean, pluginList: any[] }
     }
 
     /** 

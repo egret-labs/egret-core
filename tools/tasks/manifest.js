@@ -56,17 +56,20 @@ var ManifestPlugin = /** @class */ (function () {
         if (!this.options.qqPlugin) {
             this.options.qqPlugin = { use: false, pluginList: [] };
         }
+        if (!this.options.vivoPlugin) {
+            this.options.vivoPlugin = { use: false, pluginList: [] };
+        }
     }
     ManifestPlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
-            var filename, extname, new_file_path, basename, _a, useWxPlugin, hash, verbose, new_basename, isEngineJS, engineJS, i, jsName, engine_path, crc32, crc32_file_path, relative;
+            var filename, extname, new_file_path, basename, _a, useWxPlugin, hash, verbose, vivoPlugin, new_basename, isEngineJS, engineJS, i, jsName, engine_path, crc32, crc32_file_path, relative;
             return __generator(this, function (_b) {
                 filename = file.relative;
                 extname = path.extname(filename);
                 if (extname == ".js") {
                     new_file_path = void 0;
                     basename = path.basename(filename);
-                    _a = this.options, useWxPlugin = _a.useWxPlugin, hash = _a.hash, verbose = _a.verbose;
+                    _a = this.options, useWxPlugin = _a.useWxPlugin, hash = _a.hash, verbose = _a.verbose, vivoPlugin = _a.vivoPlugin;
                     new_basename = basename.substr(0, basename.length - file.extname.length);
                     isEngineJS = false;
                     if (useWxPlugin) {
@@ -95,6 +98,14 @@ var ManifestPlugin = /** @class */ (function () {
                     file.path = path.join(file.base, new_file_path);
                     if (this.options.info && this.options.info.target == 'vivogame') {
                         file.path = path.join(file.base, '../', 'engine', new_file_path);
+                        if (vivoPlugin.use) { //使用插件
+                            if (vivoPlugin.pluginList[0].indexOf(basename) > -1) {
+                                file.path = path.join(file.base, '../', 'egret-library', new_basename + file.extname);
+                            }
+                            else {
+                                vivoPlugin.pluginList[4].push("require(\"./js/" + basename + "\")");
+                            }
+                        }
                     }
                     relative = file.relative.split("\\").join('/');
                     if (file.origin.indexOf('libs/') >= 0) {
@@ -113,9 +124,9 @@ var ManifestPlugin = /** @class */ (function () {
     };
     ManifestPlugin.prototype.onFinish = function (pluginContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, output, useWxPlugin, qqPlugin, extname, contents, target;
+            var _a, output, useWxPlugin, qqPlugin, vivoPlugin, extname, contents, target;
             return __generator(this, function (_b) {
-                _a = this.options, output = _a.output, useWxPlugin = _a.useWxPlugin, qqPlugin = _a.qqPlugin;
+                _a = this.options, output = _a.output, useWxPlugin = _a.useWxPlugin, qqPlugin = _a.qqPlugin, vivoPlugin = _a.vivoPlugin;
                 extname = path.extname(output);
                 contents = '';
                 target = pluginContext.buildConfig.target;
@@ -146,6 +157,9 @@ var ManifestPlugin = /** @class */ (function () {
                 }
                 if (qqPlugin.use) {
                     contents = qqPlugin.pluginList.join("\n") + "\n" + contents;
+                }
+                if (vivoPlugin.use) {
+                    contents = "if(window.requirePlugin){\n" + vivoPlugin.pluginList[2].join("\n") + "\n}else{\n" + vivoPlugin.pluginList[3].join("\n") + "\n}\n" + vivoPlugin.pluginList[4].join("\n");
                 }
                 pluginContext.createFile(output, new Buffer(contents));
                 if (this.options.verbose) {
