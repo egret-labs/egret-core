@@ -283,17 +283,17 @@ namespace egret.web {
 
             // 为显示对象创建一个新的buffer
 
-            // const scaleX = buffer.globalMatrix.a;
-            // const scaleY = buffer.globalMatrix.d;
-            // const scale = Math.max(scaleX, scaleY);
-            // filters.forEach((filter) => {
-            //     if (filter instanceof GlowFilter) {
-            //         filter.$filterScale = scale;
-            //     }
-            // })
-            let displayBuffer = this.createRenderBuffer(displayBoundsWidth /* * scaleX*/, displayBoundsHeight /* * scaleY*/);
+            const scaleX = buffer.globalMatrix.a;
+            const scaleY = buffer.globalMatrix.d;
+            const scale = Math.max(scaleX, scaleY);
+            filters.forEach((filter) => {
+                if (filter instanceof GlowFilter) {
+                    filter.$filterScale = scale;
+                }
+            })
+            let displayBuffer = this.createRenderBuffer(displayBoundsWidth * scaleX, displayBoundsHeight * scaleY);
             displayBuffer.saveTransform();
-            // displayBuffer.setTransform(buffer.globalMatrix.a, buffer.globalMatrix.b, buffer.globalMatrix.c, buffer.globalMatrix.d, buffer.globalMatrix.tx, buffer.globalMatrix.ty);
+            displayBuffer.setTransform(buffer.globalMatrix.a, 0, 0, buffer.globalMatrix.d, 0, 0);
             displayBuffer.context.pushBuffer(displayBuffer);
 
             //todo 可以优化减少draw次数

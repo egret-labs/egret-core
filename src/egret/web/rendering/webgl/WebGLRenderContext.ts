@@ -1252,6 +1252,9 @@ namespace egret.web {
             // 绘制input结果到舞台
             output.saveTransform();
             // output.setTransform(1, 0, 0, 1, output.globalMatrix.tx, output.globalMatrix.ty);
+            const matrix = new egret.Matrix(output.globalMatrix.a, 0, 0, output.globalMatrix.d);
+            matrix.invert();
+            output.transform(matrix.a, 0, 0, matrix.d, 0, 0);
             output.transform(1, 0, 0, -1, 0, height);
             output.currentTexture = input.rootRenderTarget.texture;
             this.vao.cacheArrays(output, 0, 0, width, height, 0, 0, width, height, width, height);

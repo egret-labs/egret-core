@@ -7040,6 +7040,9 @@ var egret;
                 // 绘制input结果到舞台
                 output.saveTransform();
                 // output.setTransform(1, 0, 0, 1, output.globalMatrix.tx, output.globalMatrix.ty);
+                var matrix = new egret.Matrix(output.globalMatrix.a, 0, 0, output.globalMatrix.d);
+                matrix.invert();
+                output.transform(matrix.a, 0, 0, matrix.d, 0, 0);
                 output.transform(1, 0, 0, -1, 0, height);
                 output.currentTexture = input.rootRenderTarget.texture;
                 this.vao.cacheArrays(output, 0, 0, width, height, 0, 0, width, height, width, height);
@@ -7754,17 +7757,17 @@ var egret;
                     }
                 }
                 // 为显示对象创建一个新的buffer
-                // const scaleX = buffer.globalMatrix.a;
-                // const scaleY = buffer.globalMatrix.d;
-                // const scale = Math.max(scaleX, scaleY);
-                // filters.forEach((filter) => {
-                //     if (filter instanceof GlowFilter) {
-                //         filter.$filterScale = scale;
-                //     }
-                // })
-                var displayBuffer = this.createRenderBuffer(displayBoundsWidth /* * scaleX*/, displayBoundsHeight /* * scaleY*/);
+                var scaleX = buffer.globalMatrix.a;
+                var scaleY = buffer.globalMatrix.d;
+                var scale = Math.max(scaleX, scaleY);
+                filters.forEach(function (filter) {
+                    if (filter instanceof egret.GlowFilter) {
+                        filter.$filterScale = scale;
+                    }
+                });
+                var displayBuffer = this.createRenderBuffer(displayBoundsWidth * scaleX, displayBoundsHeight * scaleY);
                 displayBuffer.saveTransform();
-                // displayBuffer.setTransform(buffer.globalMatrix.a, buffer.globalMatrix.b, buffer.globalMatrix.c, buffer.globalMatrix.d, buffer.globalMatrix.tx, buffer.globalMatrix.ty);
+                displayBuffer.setTransform(buffer.globalMatrix.a, 0, 0, buffer.globalMatrix.d, 0, 0);
                 displayBuffer.context.pushBuffer(displayBuffer);
                 //todo 可以优化减少draw次数
                 if (displayObject.$mask) {
