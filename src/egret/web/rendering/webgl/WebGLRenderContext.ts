@@ -1189,7 +1189,8 @@ namespace egret.web {
                     let width: number = input.rootRenderTarget.width;
                     let height: number = input.rootRenderTarget.height;
                     output = WebGLRenderBuffer.create(width, height);
-                    output.setTransform(1, 0, 0, 1, 0, 0);
+                    const scale = Math.max(egret.sys.DisplayList.$canvasScaleFactor, 2);
+                    output.setTransform(scale, 0, 0, scale, 0, 0);
                     output.globalAlpha = 1;
                     this.drawToRenderTarget(filter, input, output);
                     if (input != originInput) {
@@ -1251,10 +1252,8 @@ namespace egret.web {
 
             // 绘制input结果到舞台
             output.saveTransform();
-            // output.setTransform(1, 0, 0, 1, output.globalMatrix.tx, output.globalMatrix.ty);
-            const matrix = new egret.Matrix(output.globalMatrix.a, 0, 0, output.globalMatrix.d);
-            matrix.invert();
-            output.transform(matrix.a, 0, 0, matrix.d, 0, 0);
+            const scale = Math.max(egret.sys.DisplayList.$canvasScaleFactor, 2);
+            output.transform(1 / scale, 0, 0, 1 / scale, 0, 0);
             output.transform(1, 0, 0, -1, 0, height);
             output.currentTexture = input.rootRenderTarget.texture;
             this.vao.cacheArrays(output, 0, 0, width, height, 0, 0, width, height, width, height);
