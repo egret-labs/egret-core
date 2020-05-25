@@ -19596,26 +19596,12 @@ var egret;
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 (function (egret) {
-    /**
-     * Register font mapping.
-     * @param name The font family name to register.
-     * @param path The font path.
-     * @version Egret 5.3
-     * @platform Web,Native
-     * @language en_US
-     */
-    /**
-     * 注册字体映射
-     * @param name 要注册的字体名称
-     * @param path 注册的字体地址
-     * @version Egret 5.3
-     * @platform Web,Native
-     * @language zh_CN
-     */
-    function registerFontMapping(name, path) {
+    function _registerFontMapping(name, path) {
         egret.sys.registerFontMapping(name, path);
     }
-    egret.registerFontMapping = registerFontMapping;
+    if (!egret.registerFontMapping) {
+        egret.registerFontMapping = _registerFontMapping;
+    }
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
