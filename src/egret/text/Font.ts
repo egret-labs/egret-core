@@ -51,7 +51,14 @@ namespace egret {
      * @platform Web,Native
      * @language zh_CN
      */
-    export function registerFontMapping(name: string, path: string): void {
+    export declare function registerFontMapping(name: string, path: string): void;
+
+
+    function _registerFontMapping(name: string, path: string): void {
         egret.sys.registerFontMapping(name, path);
+    }
+
+    if (!egret.registerFontMapping) {
+        egret.registerFontMapping = _registerFontMapping;
     }
 }
