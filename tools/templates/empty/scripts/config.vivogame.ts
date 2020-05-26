@@ -6,9 +6,6 @@ import { UglifyPlugin, CompilePlugin, ManifestPlugin, ExmlPlugin, ResSplitPlugin
 import { VivogamePlugin } from './vivogame/vivogame';
 import * as defaultConfig from './config';
 
-//是否使用引擎分离插件
-const useVivoPlugin: boolean = true;
-let pluginList: any[] = [[], [], [], [], []]
 const config: ResourceManagerConfig = {
 
     buildConfig: (params) => {
@@ -22,8 +19,8 @@ const config: ResourceManagerConfig = {
                     new CleanPlugin({ matchers: ["../engine/js", "../egret-library", "resource"] }),
                     new CompilePlugin({ libraryType: "debug", defines: { DEBUG: true, RELEASE: false } }),
                     new ExmlPlugin('commonjs'), // 非 EUI 项目关闭此设置
-                    new VivogamePlugin(useVivoPlugin, pluginList),
-                    new ManifestPlugin({ output: 'manifest.js', info: { target: 'vivogame' }, vivoPlugin: { use: useVivoPlugin, pluginList: pluginList } })
+                    new VivogamePlugin(),
+                    new ManifestPlugin({ output: 'manifest.js', info: { target: 'vivogame' } })
                 ]
             }
         }
@@ -34,7 +31,7 @@ const config: ResourceManagerConfig = {
                     new CleanPlugin({ matchers: ["../engine/js", "../egret-library", "resource"] }),
                     new CompilePlugin({ libraryType: "release", defines: { DEBUG: false, RELEASE: true } }),
                     new ExmlPlugin('commonjs'), // 非 EUI 项目关闭此设置
-                    new VivogamePlugin(useVivoPlugin, pluginList),
+                    new VivogamePlugin(),
                     new UglifyPlugin([
                         // 使用 EUI 项目，要压缩皮肤文件，可以开启这个压缩配置
                         // {
@@ -46,7 +43,7 @@ const config: ResourceManagerConfig = {
                             target: "main.min.js"
                         }
                     ]),
-                    new ManifestPlugin({ output: 'manifest.js', info: { target: 'vivogame' }, vivoPlugin: { use: useVivoPlugin, pluginList: pluginList } })
+                    new ManifestPlugin({ output: 'manifest.js', info: { target: 'vivogame' } })
                 ]
             }
         }

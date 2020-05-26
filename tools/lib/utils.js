@@ -27,9 +27,12 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -51,8 +54,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
         while (_) try {
-            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [0, t.value];
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
                 case 0: case 1: t = op; break;
                 case 4: _.label++; return { value: op[1], done: false };
@@ -78,6 +81,9 @@ var file = require("./FileUtil");
 var UglifyJS = require("./uglify-js/uglifyjs");
 var net = require("net");
 var timers_1 = require("timers");
+var EgretProject = require("../project");
+var project = require("../project");
+var fs = require("fs");
 //第三方调用时，可能不支持颜色显示，可通过添加 -nocoloroutput 移除颜色信息
 var ColorOutputReplacements = {
     "{color_green}": "\033[1;32;1m",
@@ -355,6 +361,127 @@ function checkEgret() {
     }
 }
 exports.checkEgret = checkEgret;
+function checkPlugin() {
+    //check if use plugin
+    var target = egret.args.target;
+    var config = EgretProject.projectData;
+    if (target == "vivogame") { //use vivo plugin
+        var vivo = config.egretProperties.vivo;
+        vivo.plugins = [];
+        vivo.userLibs = [];
+        vivo.userPlugs = [];
+        if (vivo.usePlugin == true) {
+            var userLibs_1 = []; //用户的自定义库
+            var userPlugs_1 = []; //用户用到的插件
+            var plugins_1 = ['egret', 'game', 'eui', 'socket', 'tween', 'assetsmanager', 'dragonBones'];
+            var extra_1 = egret.args.command === 'publish' ? '.min.js' : '.js';
+            var modules_1 = config.egretProperties.modules.map(function (item) {
+                if (item.name != 'promise') {
+                    if (plugins_1.indexOf(item.name) == -1) {
+                        userLibs_1.push(item.name + extra_1);
+                    }
+                    else {
+                        userPlugs_1.push(item.name + extra_1);
+                    }
+                }
+                return item.name;
+            });
+            vivo.plugins = plugins_1.map(function (item) {
+                if (modules_1.indexOf(item) < 0) { //用户没用到的库，也全量放进去
+                    config.egretProperties.modules.push({ "name": item });
+                }
+                return item + extra_1;
+            });
+            vivo.userLibs = userLibs_1;
+            vivo.userPlugs = userPlugs_1;
+            project.manager.copyToLibs(); //把新的库拷贝进去
+        }
+    }
+}
+exports.checkPlugin = checkPlugin;
+function pluginManifest(manifest, outputDir) {
+    return __awaiter(this, void 0, void 0, function () {
+        var target, egretProperties, contents, vivo_1, jsonPath, configPath, jsonData, plugins, userLibs, userPlugs, game, contents2_1, configArr_1, configContent, reg, replaceConfigStr, extra;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    target = egret.args.target;
+                    egretProperties = EgretProject.projectData.egretProperties;
+                    contents = null;
+                    if (!(target == "vivogame")) return [3 /*break*/, 3];
+                    vivo_1 = egretProperties.vivo;
+                    jsonPath = path.join(outputDir, 'manifest.json');
+                    configPath = path.join(outputDir, '../', "minigame.config.js");
+                    jsonData = JSON.parse(file.readFileSync(jsonPath, 'utf-8'));
+                    plugins = vivo_1.plugins, userLibs = vivo_1.userLibs, userPlugs = vivo_1.userPlugs;
+                    game = manifest.game;
+                    contents = "if(window.requirePlugin){\n";
+                    contents2_1 = "";
+                    configArr_1 = [];
+                    plugins.map(function (item) {
+                        if (vivo_1.usePlugin == true) {
+                            configArr_1.push(JSON.stringify({
+                                module_name: "egret-library/" + item,
+                                module_path: "egret-library/" + item,
+                                module_from: "egret-library/" + item,
+                            }, null, "\t"));
+                        }
+                        else {
+                            configArr_1.push(JSON.stringify({
+                                module_name: "./js/" + item,
+                                module_path: "./js/" + item,
+                                module_from: "engine/js/" + item,
+                            }, null, "\t"));
+                        }
+                    });
+                    userPlugs.map(function (item) {
+                        contents += "  requirePlugin(\"egret-library/" + item + "\");\n";
+                        contents2_1 += "  require(\"egret-library/" + item + "\");\n";
+                    });
+                    contents = contents + "}else{\n" + contents2_1 + "}\n";
+                    userLibs.concat(game).map(function (item) {
+                        var basename = path.basename(item);
+                        contents += "require(\"./js/" + basename + "\");\n";
+                        configArr_1.push(JSON.stringify({
+                            module_name: "./js/" + basename,
+                            module_path: "./js/" + basename,
+                            module_from: "engine/js/" + basename,
+                        }, null, "\t"));
+                    });
+                    if (vivo_1.usePlugin == true) {
+                        jsonData.plugins = {
+                            "egret-library": {
+                                "provider": "",
+                                "version": egretProperties.engineVersion,
+                                "path": "egret-library"
+                            }
+                        };
+                    }
+                    else {
+                        contents = null;
+                        delete jsonData.plugins;
+                    }
+                    file.writeFileAsync(jsonPath, JSON.stringify(jsonData, null, "\t"), 'utf-8');
+                    if (!(vivo_1.usePlugin == true && file.existsSync(configPath))) return [3 /*break*/, 3];
+                    configContent = fs.readFileSync(configPath, { encoding: "utf8" });
+                    reg = /\/\/----auto option start----[\s\S]*\/\/----auto option end----/;
+                    replaceConfigStr = '\/\/----auto option start----\n\t\t' + configArr_1.toString() + '\n\t\t\/\/----auto option end----';
+                    configContent = configContent.replace(reg, replaceConfigStr);
+                    return [4 /*yield*/, file.writeFileAsync(configPath, configContent, 'utf-8')];
+                case 1:
+                    _a.sent();
+                    extra = egret.args.command === 'publish' ? '.min.js' : '.js';
+                    file.createDirectory(path.join(outputDir, "../egret-library"));
+                    return [4 /*yield*/, file.writeJSONAsync(path.join(outputDir, "../egret-library", "plugin.json"), { 'main': "egret" + extra })];
+                case 2:
+                    _a.sent();
+                    _a.label = 3;
+                case 3: return [2 /*return*/, contents];
+            }
+        });
+    });
+}
+exports.pluginManifest = pluginManifest;
 function isFormatString(text) {
     if (text) {
         if (text.indexOf("\n") != -1) {

@@ -34,8 +34,10 @@ import UglifyJS = require("./uglify-js/uglifyjs");
 import net = require('net');
 import { setTimeout } from 'timers';
 import { resolve } from 'url';
-
-
+import * as EgretProject from '../project';
+import * as project from '../project';
+import { constants } from 'os';
+import * as fs from 'fs';
 
 
 //第三方调用时，可能不支持颜色显示，可通过添加 -nocoloroutput 移除颜色信息
@@ -311,6 +313,118 @@ export function checkEgret() {
         file.exists(options.templateDir) == false) {
         exit(10015, options.projectDir);
     }
+}
+
+export function checkPlugin() {
+    //check if use plugin
+    const target = egret.args.target;
+    var config: any = EgretProject.projectData;
+
+    if (target == "vivogame") {//use vivo plugin
+        let vivo = config.egretProperties.vivo
+        vivo.plugins = [];
+        vivo.userLibs = [];
+        vivo.userPlugs = [];
+        if (vivo.usePlugin == true) {
+            let userLibs = [];//用户的自定义库
+            let userPlugs = [];//用户用到的插件
+            const plugins = ['egret', 'game', 'eui', 'socket', 'tween', 'assetsmanager', 'dragonBones']
+            let extra = egret.args.command === 'publish' ? '.min.js' : '.js'
+            let modules: string[] = config.egretProperties.modules.map(item => {
+                if (item.name != 'promise') {
+                    if (plugins.indexOf(item.name) == -1) {
+                        userLibs.push(item.name + extra)
+                    } else {
+                        userPlugs.push(item.name + extra)
+                    }
+                }
+                return item.name
+            })
+            vivo.plugins = plugins.map(item => {
+                if (modules.indexOf(item) < 0) {//用户没用到的库，也全量放进去
+                    config.egretProperties.modules.push({ "name": item })
+                }
+                return item + extra
+            })
+
+            vivo.userLibs = userLibs;
+            vivo.userPlugs = userPlugs;
+
+            project.manager.copyToLibs();//把新的库拷贝进去
+        }
+    }
+}
+export async function pluginManifest(manifest: any, outputDir: string) {
+    const target = egret.args.target;
+    var { egretProperties }: any = EgretProject.projectData;
+    let contents = null;
+    if (target == "vivogame") {//use vivo plugin
+        let vivo = egretProperties.vivo
+        const jsonPath = path.join(outputDir, 'manifest.json');
+        const configPath = path.join(outputDir, '../', "minigame.config.js")
+        let jsonData = JSON.parse(file.readFileSync(jsonPath, 'utf-8'))
+        const { plugins, userLibs, userPlugs } = vivo;
+        const { game } = manifest;
+        contents = `if(window.requirePlugin){\n`
+        let contents2 = ""
+        let configArr = [];
+
+        plugins.map(item => {
+            if (vivo.usePlugin == true) {
+                configArr.push(JSON.stringify({
+                    module_name: `egret-library/${item}`,
+                    module_path: `egret-library/${item}`,
+                    module_from: `egret-library/${item}`,
+                }, null, "\t"))
+            } else {
+                configArr.push(JSON.stringify({
+                    module_name: `./js/${item}`,
+                    module_path: `./js/${item}`,
+                    module_from: `engine/js/${item}`,
+                }, null, "\t"))
+            }
+        })
+        userPlugs.map(item => {
+            contents += `  requirePlugin("egret-library/${item}");\n`
+            contents2 += `  require("egret-library/${item}");\n`
+        })
+        contents = `${contents}}else{\n${contents2}}\n`
+        userLibs.concat(game).map(item => {
+            let basename = path.basename(item)
+            contents += `require("./js/${basename}");\n`
+
+            configArr.push(JSON.stringify({
+                module_name: `./js/${basename}`,
+                module_path: `./js/${basename}`,
+                module_from: `engine/js/${basename}`,
+            }, null, "\t"))
+        })
+        if (vivo.usePlugin == true) {
+            jsonData.plugins = {
+                "egret-library": {
+                    "provider": "",
+                    "version": egretProperties.engineVersion,
+                    "path": "egret-library"
+                }
+            }
+        } else {
+            contents = null;
+            delete jsonData.plugins
+        }
+        file.writeFileAsync(jsonPath, JSON.stringify(jsonData, null, "\t"), 'utf-8')
+        if (vivo.usePlugin == true && file.existsSync(configPath)) {
+            let configContent = fs.readFileSync(configPath, { encoding: "utf8" });
+            const reg = /\/\/----auto option start----[\s\S]*\/\/----auto option end----/;
+            const replaceConfigStr = '\/\/----auto option start----\n\t\t' + configArr.toString() + '\n\t\t\/\/----auto option end----';
+            configContent = configContent.replace(reg, replaceConfigStr);
+            await file.writeFileAsync(configPath, configContent, 'utf-8')
+
+            let extra = egret.args.command === 'publish' ? '.min.js' : '.js'
+            file.createDirectory(path.join(outputDir, "../egret-library"))
+            await file.writeJSONAsync(path.join(outputDir, "../egret-library", "plugin.json"), { 'main': "egret" + extra })
+        }
+    }
+    return contents;
 }
 
 export function isFormatString(text: string): boolean {

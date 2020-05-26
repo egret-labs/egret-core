@@ -1,11 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 export class VivogamePlugin implements plugins.Command {
-    private useVivoPlugin: boolean = false;
-    private pluginList: any[] = [[], [], [], [], []];//vivo engine plugin
-    constructor(useVivoPlugin: boolean, pluginList: any[]) {
-        this.useVivoPlugin = useVivoPlugin
-        this.pluginList = pluginList
+    jsFileList: any = []
+    constructor() {
     }
     async onFile(file: plugins.File) {
         if (file.extname == '.js') {
@@ -14,24 +11,7 @@ export class VivogamePlugin implements plugins.Command {
             if (filename == "libs/modules/promise/promise.js" || filename == 'libs/modules/promise/promise.min.js') {
                 return null;
             }
-            let jsPlugin = false;//当前的js是否为插件
-            if (this.useVivoPlugin) {
-                const basename = file.basename
-                //vivo 小游戏引擎插件，支持下列官方库
-                let engineJS = ['assetsmanager', 'dragonBones', 'egret', 'game', 'eui', 'socket', 'tween']
-                for (let i in engineJS) {
-                    let jsName = engineJS[i]
-                    if (basename == jsName + ".js" || basename == jsName + ".min.js") {
-                        this.pluginList[0].push(basename)
-                        this.pluginList[2].push(`requirePlugin("egret-library/${basename}")`)
-                        this.pluginList[3].push(`require("egret-library/${basename}")`)
-                        jsPlugin = true;
-                        break;
-                    }
-                }
-            }
-            this.pluginList[1].push({ jsFile: file.basename, plugin: jsPlugin })
-
+            this.jsFileList.push(file.basename)
             if (filename == 'libs/modules/egret/egret.js' || filename == 'libs/modules/egret/egret.min.js') {
                 let content = file.contents.toString();
                 content += `;window.egret = egret;`;
@@ -110,47 +90,22 @@ export class VivogamePlugin implements plugins.Command {
         let engineVersion = this.readData(path.join(pluginContext.projectRoot, "egretProperties.json")).engineVersion
         if (!gameJSONContent.thirdEngine) gameJSONContent.thirdEngine = {}
         gameJSONContent.thirdEngine.egret = engineVersion
-        if (!gameJSONContent.plugins) {
-            gameJSONContent.plugins = {}
-        }
-        if (this.useVivoPlugin) {
-            gameJSONContent.plugins = {
-                "egret-library": {
-                    "provider": "",
-                    "version": engineVersion,
-                    "path": "egret-library"
-                }
-            }
-        } else {
-            delete gameJSONContent.plugins
-        }
+
         fs.writeFileSync(gameJSONPath, JSON.stringify(gameJSONContent, null, "\t"));
         let isPublish = pluginContext.buildConfig.command == "publish" ? true : false;
         let configArr: any[] = []
-        for (var i = 0, len = this.pluginList[1].length; i < len; i++) {
-            let { jsFile, plugin } = this.pluginList[1][i];
+        for (var i = 0, len = this.jsFileList.length; i < len; i++) {
+            let jsFile = this.jsFileList[i];
             if (isPublish) {
                 if (jsFile == "main.js") {
                     jsFile = 'main.min.js'
                 }
-                // else if (jsFile == "default.thm.js") {//如果在 UglifyPlugin 里压缩了皮肤，请开启该配置
-                //     jsFile = "default.thm.min.js"
-                // }
             }
-            if (this.useVivoPlugin && plugin) {
-                configArr.push(JSON.stringify({
-                    module_name: `egret-library/${jsFile}`,
-                    module_path: `egret-library/${jsFile}`,
-                    module_from: `egret-library/${jsFile}`,
-                }, null, "\t"))
-            } else {
-                configArr.push(JSON.stringify({
-                    module_name: `./js/${jsFile}`,
-                    module_path: `./js/${jsFile}`,
-                    module_from: `engine/js/${jsFile}`,
-                }, null, "\t"))
-            }
-
+            configArr.push(JSON.stringify({
+                module_name: `./js/${jsFile}`,
+                module_path: `./js/${jsFile}`,
+                module_from: `engine/js/${jsFile}`,
+            }, null, "\t"))
         }
         const replaceConfigStr = '\/\/----auto option start----\n\t\t' + configArr.toString() + '\n\t\t\/\/----auto option end----';
         const minigameConfigPath = path.join(pluginContext.outputDir, "../", "minigame.config.js");
@@ -161,17 +116,6 @@ export class VivogamePlugin implements plugins.Command {
             let configJSContent = fs.readFileSync(minigameConfigPath, { encoding: "utf8" });
             configJSContent = configJSContent.replace(reg, replaceConfigStr);
             fs.writeFileSync(minigameConfigPath, configJSContent);
-        }
-
-        if (this.useVivoPlugin) {
-            let pluginJson = { "main": "egret.js" }
-            if (isPublish) pluginJson.main = "egret.min.js"
-            const pluginDir = path.join(pluginContext.outputDir, "../egret-library");
-            const pluginJsonPath = path.join(pluginContext.outputDir, "../egret-library", "plugin.json");
-            try {
-                fs.mkdirSync(pluginDir)
-            } catch (e) { }
-            fs.writeFileSync(pluginJsonPath, JSON.stringify(pluginJson));
         }
     }
     readData(filePath: string): any {

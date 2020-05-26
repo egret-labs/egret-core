@@ -36,6 +36,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var path = require("path");
 var fs = require("fs");
+var EgretProject = require("../project");
+var utils = require("../lib/utils");
 var manifest = {
     initial: [],
     game: [],
@@ -56,20 +58,17 @@ var ManifestPlugin = /** @class */ (function () {
         if (!this.options.qqPlugin) {
             this.options.qqPlugin = { use: false, pluginList: [] };
         }
-        if (!this.options.vivoPlugin) {
-            this.options.vivoPlugin = { use: false, pluginList: [] };
-        }
     }
     ManifestPlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
-            var filename, extname, new_file_path, basename, _a, useWxPlugin, hash, verbose, vivoPlugin, new_basename, isEngineJS, engineJS, i, jsName, engine_path, crc32, crc32_file_path, relative;
+            var filename, extname, new_file_path, basename, _a, useWxPlugin, hash, verbose, new_basename, isEngineJS, engineJS, i, jsName, engine_path, crc32, crc32_file_path, target, config, vivoData, relative;
             return __generator(this, function (_b) {
                 filename = file.relative;
                 extname = path.extname(filename);
                 if (extname == ".js") {
                     new_file_path = void 0;
                     basename = path.basename(filename);
-                    _a = this.options, useWxPlugin = _a.useWxPlugin, hash = _a.hash, verbose = _a.verbose, vivoPlugin = _a.vivoPlugin;
+                    _a = this.options, useWxPlugin = _a.useWxPlugin, hash = _a.hash, verbose = _a.verbose;
                     new_basename = basename.substr(0, basename.length - file.extname.length);
                     isEngineJS = false;
                     if (useWxPlugin) {
@@ -96,14 +95,14 @@ var ManifestPlugin = /** @class */ (function () {
                     }
                     file.outputDir = "";
                     file.path = path.join(file.base, new_file_path);
-                    if (this.options.info && this.options.info.target == 'vivogame') {
+                    target = egret.args.target;
+                    if (target == 'vivogame') {
+                        config = EgretProject.projectData;
+                        vivoData = config.egretProperties.vivo;
                         file.path = path.join(file.base, '../', 'engine', new_file_path);
-                        if (vivoPlugin.use) { //使用插件
-                            if (vivoPlugin.pluginList[0].indexOf(basename) > -1) {
-                                file.path = path.join(file.base, '../', 'egret-library', new_basename + file.extname);
-                            }
-                            else {
-                                vivoPlugin.pluginList[4].push("require(\"./js/" + basename + "\")");
+                        if (vivoData.usePlugin) { //使用插件
+                            if (vivoData.plugins.indexOf(basename) > -1) {
+                                file.path = path.join(file.base, '../', 'egret-library', basename);
                             }
                         }
                     }
@@ -124,50 +123,55 @@ var ManifestPlugin = /** @class */ (function () {
     };
     ManifestPlugin.prototype.onFinish = function (pluginContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, output, useWxPlugin, qqPlugin, vivoPlugin, extname, contents, target;
+            var _a, output, useWxPlugin, qqPlugin, outputDir, extname, contents, target, pluginContents;
             return __generator(this, function (_b) {
-                _a = this.options, output = _a.output, useWxPlugin = _a.useWxPlugin, qqPlugin = _a.qqPlugin, vivoPlugin = _a.vivoPlugin;
-                extname = path.extname(output);
-                contents = '';
-                target = pluginContext.buildConfig.target;
-                switch (extname) {
-                    case ".json":
-                        contents = JSON.stringify(manifest, null, '\t');
-                        break;
-                    case ".js":
-                        contents = manifest.initial.concat(manifest.game).map(function (fileName) {
-                            var result = "require(\"./" + fileName + "\")";
-                            if (target == 'vivogame') {
-                                var configPath = path.join(pluginContext.outputDir, "../", "minigame.config.js");
-                                if (!fs.existsSync(configPath)) {
-                                    //5.2.28版本，vivo更新了项目结构，老项目需要升级
-                                    fs.writeFileSync(path.join(pluginContext.outputDir, "../", "vivo更新了项目结构，请重新创建vivo小游戏项目.js"), "vivo更新了项目结构，请重新创建vivo小游戏项目");
-                                }
-                                var _name = path.basename(fileName);
-                                result = "require(\"./js/" + _name + "\")";
-                            }
-                            else if (useWxPlugin) {
-                                if (fileName.indexOf('egret-library') == 0) {
-                                    result = "requirePlugin(\"" + fileName + "\")";
-                                }
-                            }
-                            return result;
-                        }).join("\n");
-                        break;
+                switch (_b.label) {
+                    case 0:
+                        _a = this.options, output = _a.output, useWxPlugin = _a.useWxPlugin, qqPlugin = _a.qqPlugin;
+                        outputDir = pluginContext.outputDir;
+                        extname = path.extname(output);
+                        contents = '';
+                        target = pluginContext.buildConfig.target;
+                        switch (extname) {
+                            case ".json":
+                                contents = JSON.stringify(manifest, null, '\t');
+                                break;
+                            case ".js":
+                                contents = manifest.initial.concat(manifest.game).map(function (fileName) {
+                                    var result = "require(\"./" + fileName + "\")";
+                                    if (target == 'vivogame') {
+                                        var configPath = path.join(outputDir, "../", "minigame.config.js");
+                                        if (!fs.existsSync(configPath)) {
+                                            //5.2.28版本，vivo更新了项目结构，老项目需要升级
+                                            fs.writeFileSync(path.join(outputDir, "../", "vivo更新了项目结构，请重新创建vivo小游戏项目.js"), "vivo更新了项目结构，请重新创建vivo小游戏项目");
+                                        }
+                                        var _name = path.basename(fileName);
+                                        result = "require(\"./js/" + _name + "\")";
+                                    }
+                                    else if (useWxPlugin) {
+                                        if (fileName.indexOf('egret-library') == 0) {
+                                            result = "requirePlugin(\"" + fileName + "\")";
+                                        }
+                                    }
+                                    return result;
+                                }).join("\n");
+                                break;
+                        }
+                        if (qqPlugin.use) {
+                            contents = qqPlugin.pluginList.join("\n") + "\n" + contents;
+                        }
+                        return [4 /*yield*/, utils.pluginManifest(manifest, outputDir)];
+                    case 1:
+                        pluginContents = _b.sent();
+                        contents = pluginContents === null ? contents : pluginContents;
+                        pluginContext.createFile(output, new Buffer(contents));
+                        if (this.options.verbose) {
+                            this.verboseInfo.forEach(function (item) {
+                                console.log("manifest-plugin: " + item.filename + " => " + item.new_file_path);
+                            });
+                        }
+                        return [2 /*return*/];
                 }
-                if (qqPlugin.use) {
-                    contents = qqPlugin.pluginList.join("\n") + "\n" + contents;
-                }
-                if (vivoPlugin.use) {
-                    contents = "if(window.requirePlugin){\n" + vivoPlugin.pluginList[2].join("\n") + "\n}else{\n" + vivoPlugin.pluginList[3].join("\n") + "\n}\n" + vivoPlugin.pluginList[4].join("\n");
-                }
-                pluginContext.createFile(output, new Buffer(contents));
-                if (this.options.verbose) {
-                    this.verboseInfo.forEach(function (item) {
-                        console.log("manifest-plugin: " + item.filename + " => " + item.new_file_path);
-                    });
-                }
-                return [2 /*return*/];
             });
         });
     };
