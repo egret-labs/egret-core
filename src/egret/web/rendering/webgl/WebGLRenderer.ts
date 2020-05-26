@@ -282,18 +282,15 @@ namespace egret.web {
             }
 
             // 为显示对象创建一个新的buffer
-
-            const scaleX = buffer.globalMatrix.a;
-            const scaleY = buffer.globalMatrix.d;
-            const scale = Math.max(scaleX, scaleY);
+            const scale = Math.max(egret.sys.DisplayList.$canvasScaleFactor, 2);
             filters.forEach((filter) => {
                 if (filter instanceof GlowFilter) {
                     filter.$filterScale = scale;
                 }
             })
-            let displayBuffer = this.createRenderBuffer(displayBoundsWidth * scaleX, displayBoundsHeight * scaleY);
+            let displayBuffer = this.createRenderBuffer(scale * displayBoundsWidth, scale * displayBoundsHeight);
             displayBuffer.saveTransform();
-            displayBuffer.setTransform(buffer.globalMatrix.a, buffer.globalMatrix.b, buffer.globalMatrix.c, buffer.globalMatrix.d, buffer.globalMatrix.tx, buffer.globalMatrix.ty);
+            displayBuffer.transform(scale, 0, 0, scale, 0, 0);
             displayBuffer.context.pushBuffer(displayBuffer);
 
             //todo 可以优化减少draw次数
