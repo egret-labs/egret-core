@@ -366,6 +366,8 @@ function checkPlugin() {
     var target = egret.args.target;
     var config = EgretProject.projectData;
     if (target == "vivogame") { //use vivo plugin
+        if (!config.egretProperties.vivo)
+            config.egretProperties.vivo = {};
         var vivo = config.egretProperties.vivo;
         vivo.plugins = [];
         vivo.userLibs = [];
