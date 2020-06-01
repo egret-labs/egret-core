@@ -17,6 +17,7 @@ class Publish implements egret.Command {
 
     async execute(): Promise<number> {
         utils.checkEgret();
+        utils.checkPlugin();
 
         const options = egret.args;
         const config = EgretProject.projectData;

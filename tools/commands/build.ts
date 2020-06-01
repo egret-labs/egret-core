@@ -31,6 +31,7 @@ class Build implements egret.Command {
         }
         
         utils.checkEgret();
+        utils.checkPlugin();
         if (!FileUtil.exists(FileUtil.joinPath(options.projectDir, 'libs/modules/egret/'))) {
             project.manager.copyToLibs();
         }
