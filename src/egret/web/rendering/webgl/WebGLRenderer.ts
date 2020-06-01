@@ -1200,6 +1200,7 @@ namespace egret.web {
             let buffer = renderBufferPool.pop();
             if (buffer) {
                 buffer.resize(width, height);
+                buffer.setTransform(1, 0, 0, 1, 0, 0);
             }
             else {
                 buffer = new WebGLRenderBuffer(width, height);
