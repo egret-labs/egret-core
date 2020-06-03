@@ -18167,6 +18167,21 @@ var egret;
     var Capabilities = (function () {
         function Capabilities() {
         }
+        Object.defineProperty(Capabilities, "supportedCompressedTexture", {
+            get: function () {
+                if (this._supportedCompressedTexture && this._supportedCompressedTexture.pvrtc != undefined && this._supportedCompressedTexture != undefined) {
+                    return this._supportedCompressedTexture;
+                }
+                else {
+                    // 只有 native 环境
+                    egret.web ? egret.web.WebGLRenderContext.getInstance().getSupportedCompressedTexture() : null;
+                    return this._supportedCompressedTexture;
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        ;
         /**
          * Specifies the language code of the system on which the content is running. The language is specified as a lowercase
          * two-letter language code from ISO 639-1. For Chinese, an additional uppercase two-letter country code from ISO 3166
@@ -18315,6 +18330,19 @@ var egret;
          * @language zh_CN
          */
         Capabilities.boundingClientHeight = 0;
+        /***
+         * supported compressed texture
+         * @version Egret 5.2.19
+         * @platform Web,Native
+         * @language en_US
+         */
+        /***
+         * supported compressed texture
+         * @version Egret 5.2.19
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        Capabilities._supportedCompressedTexture = {};
         return Capabilities;
     }());
     egret.Capabilities = Capabilities;

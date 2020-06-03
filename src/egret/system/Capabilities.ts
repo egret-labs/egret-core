@@ -395,6 +395,17 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        static supportedCompressedTexture: SupportedCompressedTexture;
+
+        static _supportedCompressedTexture: SupportedCompressedTexture = {} as SupportedCompressedTexture;
+
+        static get supportedCompressedTexture(): SupportedCompressedTexture {
+            if (this._supportedCompressedTexture && this._supportedCompressedTexture.pvrtc != undefined && this._supportedCompressedTexture != undefined) {
+                return this._supportedCompressedTexture;
+            } else {
+                // 只有 native 环境
+                egret.web ? egret.web.WebGLRenderContext.getInstance().getSupportedCompressedTexture() : null;
+                return this._supportedCompressedTexture;
+            }
+        };
     }
 }
