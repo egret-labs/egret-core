@@ -5,6 +5,8 @@ import * as path from 'path';
 import { UglifyPlugin, CompilePlugin, ManifestPlugin, ExmlPlugin, ResSplitPlugin, CleanPlugin } from 'built-in';
 import { VivogamePlugin } from './vivogame/vivogame';
 import * as defaultConfig from './config';
+import { EuiCompilerPlugin } from './plugins/eui-compiler-plugin';
+import { WebpackBundlePlugin } from './plugins/webpack-plugin';
 
 const config: ResourceManagerConfig = {
 
@@ -19,6 +21,7 @@ const config: ResourceManagerConfig = {
                     new CleanPlugin({ matchers: ["../engine/js", "../egret-library", "resource"] }),
                     new CompilePlugin({ libraryType: "debug", defines: { DEBUG: true, RELEASE: false } }),
                     new ExmlPlugin('commonjs'), // 非 EUI 项目关闭此设置
+                    // new EuiCompilerPlugin(),//新的 eui 编译器
                     new VivogamePlugin(),
                     new ManifestPlugin({ output: 'manifest.js', info: { target: 'vivogame' } })
                 ]
@@ -30,7 +33,9 @@ const config: ResourceManagerConfig = {
                 commands: [
                     new CleanPlugin({ matchers: ["../engine/js", "../egret-library", "resource"] }),
                     new CompilePlugin({ libraryType: "release", defines: { DEBUG: false, RELEASE: true } }),
+                    // new WebpackBundlePlugin({ libraryType: "debug", defines: { DEBUG: false, RELEASE: true } }),//新的 Webpack 编译器
                     new ExmlPlugin('commonjs'), // 非 EUI 项目关闭此设置
+                    // new EuiCompilerPlugin(),//新的 eui 编译器
                     new VivogamePlugin(),
                     new UglifyPlugin([
                         // 使用 EUI 项目，要压缩皮肤文件，可以开启这个压缩配置
