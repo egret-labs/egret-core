@@ -403,7 +403,7 @@ namespace egret {
                 return this._supportedCompressedTexture;
             } else {
                 // 只有 native 环境
-                egret.web ? egret.web.WebGLRenderContext.getInstance().getSupportedCompressedTexture() : null;
+                egret['web'] ? egret['web'].WebGLRenderContext.getInstance().getSupportedCompressedTexture() : null;
                 return this._supportedCompressedTexture;
             }
         };
