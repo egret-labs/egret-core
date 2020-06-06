@@ -13957,6 +13957,7 @@ var egret;
                     egret_native.nrRender();
                     return;
                 }
+                egret.sys.systemRenderer.renderClear();
                 var stage = this.stage;
                 var t1 = egret.getTimer();
                 var drawCalls = stage.$displayList.drawToSurface();
@@ -17502,6 +17503,8 @@ var egret;
                 buffer = new egret.sys.CanvasRenderBuffer(width, height);
             }
             return buffer;
+        };
+        CanvasRenderer.prototype.renderClear = function () {
         };
         return CanvasRenderer;
     }());

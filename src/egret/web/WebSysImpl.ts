@@ -71,7 +71,11 @@ namespace egret.web {
      * 创建一个canvas。
      */
     function mainCanvas(width?: number, height?: number): HTMLCanvasElement {
-        return createCanvas(width, height);
+        let canvas = createCanvas(width, height);
+        if (window['Mode2d_3d']) {
+            window['egret2dCanvas'] = canvas;
+            return canvas;
+        }
     }
     egret.sys.mainCanvas = mainCanvas;
 

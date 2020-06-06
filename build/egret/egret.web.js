@@ -3273,7 +3273,11 @@ var egret;
          * 创建一个canvas。
          */
         function mainCanvas(width, height) {
-            return createCanvas(width, height);
+            var canvas = createCanvas(width, height);
+            if (window['Mode2d_3d']) {
+                window['egret2dCanvas'] = canvas;
+                return canvas;
+            }
         }
         egret.sys.mainCanvas = mainCanvas;
         function createCanvas(width, height) {
@@ -8632,6 +8636,12 @@ var egret;
                     buffer.$computeDrawCall = false;
                 }
                 return buffer;
+            };
+            WebGLRenderer.prototype.renderClear = function () {
+                var renderContext = web.WebGLRenderContext.getInstance();
+                var gl = renderContext.context;
+                renderContext.$beforeRender();
+                gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
             };
             return WebGLRenderer;
         }());

@@ -246,6 +246,7 @@ namespace egret.web {
         resizeTimer = NaN;
         egret.updateAllScreens();
     }
+
 }
 
 if (DEBUG) {
