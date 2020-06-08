@@ -2231,6 +2231,7 @@ var egret;
          */
         var HTMLInput = (function () {
             function HTMLInput() {
+                var _this = this;
                 /**
                  * @private
                  */
@@ -2243,6 +2244,20 @@ var egret;
                  * @private
                  */
                 this.$scaleY = 1;
+                this.stageTextClickHandler = function (e) {
+                    if (_this._needShow) {
+                        _this._needShow = false;
+                        _this._stageText._onClickHandler(e);
+                        _this.show();
+                    }
+                    else {
+                        if (_this._inputElement) {
+                            _this.clearInputElement();
+                            _this._inputElement.blur();
+                            _this._inputElement = null;
+                        }
+                    }
+                };
             }
             /**
              * @private
@@ -2300,6 +2315,7 @@ var egret;
              * @returns
              */
             HTMLInput.prototype._initStageDelegateDiv = function (container, canvas) {
+                var _this = this;
                 this.canvas = canvas;
                 var self = this;
                 var stageDelegateDiv;
@@ -2317,20 +2333,34 @@ var egret;
                     self._inputDIV.style.top = "-100px";
                     self._inputDIV.style[egret.web.getPrefixStyleName("transformOrigin")] = "0% 0% 0px";
                     stageDelegateDiv.appendChild(self._inputDIV);
-                    this.canvas.addEventListener("click", function (e) {
-                        if (self._needShow) {
-                            self._needShow = false;
-                            self._stageText._onClickHandler(e);
-                            self.show();
-                        }
-                        else {
-                            if (self._inputElement) {
-                                self.clearInputElement();
-                                self._inputElement.blur();
-                                self._inputElement = null;
+                    if (egret.Capabilities.isMobile) {
+                        var downTime_1 = 0;
+                        var screenX_1, screenY_1;
+                        this.canvas.addEventListener("touchstart", function (e) {
+                            downTime_1 = egret.getTimer();
+                            for (var _i = 0, _a = e.touches; _i < _a.length; _i++) {
+                                var touch = _a[_i];
+                                screenX_1 = touch.screenX;
+                                screenY_1 = touch.screenY;
                             }
-                        }
-                    });
+                        });
+                        this.canvas.addEventListener("touchend", function (e) {
+                            var upTime = egret.getTimer();
+                            var timeDelay = upTime - downTime_1;
+                            for (var _i = 0, _a = e.changedTouches; _i < _a.length; _i++) {
+                                var touch = _a[_i];
+                                var offset = Math.sqrt(Math.pow(touch.screenX - screenX_1, 2) + Math.pow(touch.screenY - screenY_1, 2));
+                                if (timeDelay < 300 && offset < 3) {
+                                    _this.stageTextClickHandler(e);
+                                }
+                            }
+                            downTime_1 = 0;
+                            screenX_1 = screenY_1 = 0;
+                        });
+                    }
+                    else {
+                        this.canvas.addEventListener("click", this.stageTextClickHandler);
+                    }
                     self.initInputElement(true);
                     self.initInputElement(false);
                 }
