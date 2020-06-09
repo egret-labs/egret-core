@@ -349,9 +349,15 @@ namespace egret.web {
                 this.etc1.name = 'WEBGL_compressed_texture_etc1';
             }
             //
-            egret.Capabilities._supportedCompressedTexture = egret.Capabilities._supportedCompressedTexture || {} as SupportedCompressedTexture;
-            egret.Capabilities._supportedCompressedTexture.pvrtc = !!this.pvrtc;
-            egret.Capabilities._supportedCompressedTexture.etc1 = !!this.etc1;
+            if (egret.Capabilities._supportedCompressedTexture) {
+                egret.Capabilities._supportedCompressedTexture = egret.Capabilities._supportedCompressedTexture || {} as SupportedCompressedTexture;
+                egret.Capabilities._supportedCompressedTexture.pvrtc = !!this.pvrtc;
+                egret.Capabilities._supportedCompressedTexture.etc1 = !!this.etc1;
+            } else {
+                (egret.Capabilities as any)['supportedCompressedTexture'] = egret.Capabilities._supportedCompressedTexture || {} as SupportedCompressedTexture;
+                (egret.Capabilities as any)['supportedCompressedTexture'].pvrtc = !!this.pvrtc;
+                (egret.Capabilities as any)['supportedCompressedTexture'].etc1 = !!this.etc1;
+            }
             //
             this._supportedCompressedTextureInfo = this._buildSupportedCompressedTextureInfo(/*this.context, compressedTextureExNames,*/[this.etc1, this.pvrtc]);
         }

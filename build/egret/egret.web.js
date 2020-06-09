@@ -6286,9 +6286,16 @@ var egret;
                     this.etc1.name = 'WEBGL_compressed_texture_etc1';
                 }
                 //
-                egret.Capabilities._supportedCompressedTexture = egret.Capabilities._supportedCompressedTexture || {};
-                egret.Capabilities._supportedCompressedTexture.pvrtc = !!this.pvrtc;
-                egret.Capabilities._supportedCompressedTexture.etc1 = !!this.etc1;
+                if (egret.Capabilities._supportedCompressedTexture) {
+                    egret.Capabilities._supportedCompressedTexture = egret.Capabilities._supportedCompressedTexture || {};
+                    egret.Capabilities._supportedCompressedTexture.pvrtc = !!this.pvrtc;
+                    egret.Capabilities._supportedCompressedTexture.etc1 = !!this.etc1;
+                }
+                else {
+                    egret.Capabilities['supportedCompressedTexture'] = egret.Capabilities._supportedCompressedTexture || {};
+                    egret.Capabilities['supportedCompressedTexture'].pvrtc = !!this.pvrtc;
+                    egret.Capabilities['supportedCompressedTexture'].etc1 = !!this.etc1;
+                }
                 //
                 this._supportedCompressedTextureInfo = this._buildSupportedCompressedTextureInfo(/*this.context, compressedTextureExNames,*/ [this.etc1, this.pvrtc]);
             };
