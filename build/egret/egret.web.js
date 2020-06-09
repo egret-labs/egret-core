@@ -3274,8 +3274,8 @@ var egret;
          */
         function mainCanvas(width, height) {
             var canvas = createCanvas(width, height);
-            if (window['Mode2d_3d']) {
-                window['egret2dCanvas'] = canvas;
+            if (egret.pro.egret2dDriveMode) {
+                egret.pro.mainCanvas = canvas;
                 return canvas;
             }
         }
