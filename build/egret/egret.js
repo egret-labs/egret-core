@@ -14334,9 +14334,74 @@ var egret;
         function getTextureFrom3dScene(scenePath, textureWidth, textureHeight) {
             if (textureWidth === void 0) { textureWidth = 512; }
             if (textureHeight === void 0) { textureHeight = 512; }
-            return Application.instance.egretProUtil.getTextureFromScene(scenePath, textureWidth, textureHeight);
+            return Application.instance.egretProUtil.execute("getTextureFromScene", scenePath, textureWidth, textureHeight);
         }
         pro.getTextureFrom3dScene = getTextureFrom3dScene;
+        /**
+         * 执行方法
+         * 通过传入命令的字符串，获取已注册的方法并执行，参数为可变参数
+         * 执行方法可获取到方法的返回值
+         * 若找到注册该方法，会报出警告并返回 null
+         * @param command
+         * @param thisObject
+         * @param args
+         */
+        function execute(command) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            return (_a = Application.instance.egretProUtil).execute.apply(_a, [command].concat(args));
+            var _a;
+        }
+        pro.execute = execute;
+        /**
+         * 注册方法
+         * 根据传入字符串名称，注册方法
+         * 同一个名称的方法只能注册一次，相同名称会报出警告
+         * @param command
+         * @param func
+         * @param thisObject
+         */
+        function register(command, func, thisObject) {
+            return Application.instance.egretProUtil.register(command, func, thisObject);
+        }
+        pro.register = register;
+        /**
+         * 注册事件
+         * @param eventType
+         * @param func
+         * @param thisObject
+         */
+        function addEventListener(eventType, func, thisObject) {
+            return Application.instance.egretProUtil.addEventListener(eventType, func, thisObject);
+        }
+        pro.addEventListener = addEventListener;
+        /**
+         * 移除事件
+         * @param eventType
+         * @param func
+         * @param thisObject
+         */
+        function removeEventListener(eventType, func, thisObject) {
+            return Application.instance.egretProUtil.removeEventListener(eventType, func, thisObject);
+        }
+        pro.removeEventListener = removeEventListener;
+        /**
+         * 派发事件
+         * @param command
+         * @param thisObject
+         * @param args
+         */
+        function dispatch(command, thisObject) {
+            var args = [];
+            for (var _i = 2; _i < arguments.length; _i++) {
+                args[_i - 2] = arguments[_i];
+            }
+            return (_a = Application.instance.egretProUtil).dispatch.apply(_a, [command, thisObject].concat(args));
+            var _a;
+        }
+        pro.dispatch = dispatch;
     })(pro = egret.pro || (egret.pro = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
