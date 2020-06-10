@@ -6,6 +6,8 @@ import { UglifyPlugin, CompilePlugin, ManifestPlugin, ExmlPlugin, EmitResConfigF
 import { BricksPlugin } from './bricks/bricks';
 import { CustomPlugin } from './myplugin';
 import * as defaultConfig from './config';
+import { EuiCompilerPlugin } from './plugins/eui-compiler-plugin';
+import { WebpackBundlePlugin } from './plugins/webpack-plugin';
 
 const config: ResourceManagerConfig = {
 
@@ -19,6 +21,7 @@ const config: ResourceManagerConfig = {
                 commands: [
                     new CompilePlugin({ libraryType: "debug", defines: { DEBUG: true, RELEASE: false } }),
                     new ExmlPlugin('commonjs'), // 非 EUI 项目关闭此设置
+                    // new EuiCompilerPlugin(),//新的 eui 编译器
                     new ManifestPlugin({ output: 'manifest.json' }),
                     new BricksPlugin()
                 ]
@@ -30,7 +33,9 @@ const config: ResourceManagerConfig = {
                 outputDir,
                 commands: [
                     new CompilePlugin({ libraryType: "debug", defines: { DEBUG: true, RELEASE: false } }),
+                    // new WebpackBundlePlugin({ libraryType: "debug", defines: { DEBUG: false, RELEASE: true } }),//新的 Webpack 编译器
                     new ExmlPlugin('commonjs'), // 非 EUI 项目关闭此设置
+                    // new EuiCompilerPlugin(),//新的 eui 编译器
                     new ManifestPlugin({ output: 'manifest.json' }),
                     new UglifyPlugin([{
                         sources: ["main.js"],

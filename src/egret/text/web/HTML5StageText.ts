@@ -588,26 +588,50 @@ namespace egret.web {
                 self._inputDIV.style[egret.web.getPrefixStyleName("transformOrigin")] = "0% 0% 0px";
                 stageDelegateDiv.appendChild(self._inputDIV);
 
-                this.canvas.addEventListener("click", function (e) {
-                    if (self._needShow) {
-                        self._needShow = false;
-
-                        self._stageText._onClickHandler(e);
-
-                        self.show();
-
-                    }
-                    else {
-                        if (self._inputElement) {
-                            self.clearInputElement();
-                            self._inputElement.blur();
-                            self._inputElement = null;
+                if (egret.Capabilities.isMobile) {
+                    let downTime = 0;
+                    let screenX: number, screenY: number;
+                    this.canvas.addEventListener("touchstart", (e) => {
+                        downTime = egret.getTimer();
+                        for (let touch of e.touches) {
+                            screenX = touch.screenX;
+                            screenY = touch.screenY;
                         }
-                    }
-                });
 
+                    });
+                    this.canvas.addEventListener("touchend", (e) => {
+                        const upTime = egret.getTimer();
+                        const timeDelay = upTime - downTime;
+                        for (let touch of e.changedTouches) {
+                            const offset = Math.sqrt(Math.pow(touch.screenX - screenX, 2) + Math.pow(touch.screenY - screenY, 2))
+                            if (timeDelay < 300 && offset < 3) {
+                                this.stageTextClickHandler(e);
+                            }
+                        }
+                        downTime = 0;
+                        screenX = screenY = 0;
+                    });
+
+                } else {
+                    this.canvas.addEventListener("click", this.stageTextClickHandler);
+                }
                 self.initInputElement(true);
                 self.initInputElement(false);
+            }
+        }
+
+        private stageTextClickHandler = (e) => {
+            if (this._needShow) {
+                this._needShow = false;
+                this._stageText._onClickHandler(e);
+                this.show();
+            }
+            else {
+                if (this._inputElement) {
+                    this.clearInputElement();
+                    this._inputElement.blur();
+                    this._inputElement = null;
+                }
             }
         }
 
