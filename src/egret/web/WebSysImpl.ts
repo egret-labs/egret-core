@@ -74,8 +74,8 @@ namespace egret.web {
         let canvas = createCanvas(width, height);
         if (egret.pro.egret2dDriveMode) {
             egret.pro.mainCanvas = canvas;
-            return canvas;
         }
+        return canvas;
     }
     egret.sys.mainCanvas = mainCanvas;
 

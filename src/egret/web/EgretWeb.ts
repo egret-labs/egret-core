@@ -65,6 +65,20 @@ namespace egret.web {
             Capabilities["runtimeType" + ""] = egret.RuntimeType.RUNTIME2;
         }
 
+        // 是否启动3d环境
+        if (options.pro) {
+            egret.pro.egret2dDriveMode = true;
+            try {
+                if (window['startup']) {
+                    window['startup']();
+                } else {
+                    console.error("EgretPro.js don't has function:window.startup");
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
         if (ua.indexOf("egretnative") >= 0 && egret.nativeRender) {// Egret Native
             egret_native.addModuleCallback(function () {
                 Html5Capatibility.$init();
