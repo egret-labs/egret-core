@@ -20217,7 +20217,6 @@ var egret;
         };
         InputController.prototype.$onFocus = function () {
             var _this = this;
-            var self = this;
             if (!this._text.visible) {
                 return;
             }

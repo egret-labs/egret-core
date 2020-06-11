@@ -2315,7 +2315,6 @@ var egret;
              * @returns
              */
             HTMLInput.prototype._initStageDelegateDiv = function (container, canvas) {
-                var _this = this;
                 this.canvas = canvas;
                 var self = this;
                 var stageDelegateDiv;
@@ -2333,34 +2332,31 @@ var egret;
                     self._inputDIV.style.top = "-100px";
                     self._inputDIV.style[egret.web.getPrefixStyleName("transformOrigin")] = "0% 0% 0px";
                     stageDelegateDiv.appendChild(self._inputDIV);
-                    if (egret.Capabilities.isMobile) {
-                        var downTime_1 = 0;
-                        var screenX_1, screenY_1;
-                        this.canvas.addEventListener("touchstart", function (e) {
-                            downTime_1 = egret.getTimer();
-                            for (var _i = 0, _a = e.touches; _i < _a.length; _i++) {
-                                var touch = _a[_i];
-                                screenX_1 = touch.screenX;
-                                screenY_1 = touch.screenY;
-                            }
-                        });
-                        this.canvas.addEventListener("touchend", function (e) {
-                            var upTime = egret.getTimer();
-                            var timeDelay = upTime - downTime_1;
-                            for (var _i = 0, _a = e.changedTouches; _i < _a.length; _i++) {
-                                var touch = _a[_i];
-                                var offset = Math.sqrt(Math.pow(touch.screenX - screenX_1, 2) + Math.pow(touch.screenY - screenY_1, 2));
-                                if (timeDelay < 300 && offset < 3) {
-                                    _this.stageTextClickHandler(e);
-                                }
-                            }
-                            downTime_1 = 0;
-                            screenX_1 = screenY_1 = 0;
-                        });
-                    }
-                    else {
-                        this.canvas.addEventListener("click", this.stageTextClickHandler);
-                    }
+                    // if (egret.Capabilities.isMobile) {
+                    //     let downTime = 0;
+                    //     let screenX: number, screenY: number;
+                    //     this.canvas.addEventListener("touchstart", (e) => {
+                    //         downTime = egret.getTimer();
+                    //         for (let touch of e.touches) {
+                    //             screenX = touch.screenX;
+                    //             screenY = touch.screenY;
+                    //         }
+                    //     });
+                    //     this.canvas.addEventListener("touchend", (e) => {
+                    //         const upTime = egret.getTimer();
+                    //         const timeDelay = upTime - downTime;
+                    //         for (let touch of e.changedTouches) {
+                    //             const offset = Math.sqrt(Math.pow(touch.screenX - screenX, 2) + Math.pow(touch.screenY - screenY, 2))
+                    //             if (timeDelay < 300 && offset < 3) {
+                    //                 this.stageTextClickHandler(e);
+                    //             }
+                    //         }
+                    //         downTime = 0;
+                    //         screenX = screenY = 0;
+                    //     });
+                    // } else {
+                    this.canvas.addEventListener("click", this.stageTextClickHandler);
+                    // }
                     self.initInputElement(true);
                     self.initInputElement(false);
                 }
@@ -2425,8 +2421,8 @@ var egret;
                     if (this._inputElement && this._inputDIV.contains(this._inputElement)) {
                         this._inputDIV.removeChild(this._inputElement);
                     }
+                    this._needShow = false;
                 }
-                this._needShow = false;
             };
             /**
              * @private
