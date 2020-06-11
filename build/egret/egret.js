@@ -14331,12 +14331,12 @@ var egret;
     var pro;
     (function (pro) {
         pro.egret2dDriveMode = false;
-        function getTextureFrom3dScene(scenePath, textureWidth, textureHeight) {
+        function createTextureFrom3dScene(scenePath, textureWidth, textureHeight) {
             if (textureWidth === void 0) { textureWidth = 512; }
             if (textureHeight === void 0) { textureHeight = 512; }
-            return Application.instance.egretProUtil.execute("getTextureFromScene", scenePath, textureWidth, textureHeight);
+            return Application.instance.egretProUtil.execute("createTextureFrom3dScene", scenePath, textureWidth, textureHeight);
         }
-        pro.getTextureFrom3dScene = getTextureFrom3dScene;
+        pro.createTextureFrom3dScene = createTextureFrom3dScene;
         /**
          * 执行方法
          * 通过传入命令的字符串，获取已注册的方法并执行，参数为可变参数

@@ -1,8 +1,8 @@
 namespace egret.pro {
     export let egret2dDriveMode: boolean = false;
     export let mainCanvas: HTMLCanvasElement;
-    export function getTextureFrom3dScene(scenePath: string, textureWidth: number = 512, textureHeight: number = 512): Promise<egret.Texture> {
-        return Application.instance.egretProUtil.execute("getTextureFromScene", scenePath, textureWidth, textureHeight);
+    export function createTextureFrom3dScene(scenePath: string, textureWidth: number = 512, textureHeight: number = 512): Promise<egret.Texture> {
+        return Application.instance.egretProUtil.execute("createTextureFrom3dScene", scenePath, textureWidth, textureHeight);
     }
 
     /**

@@ -9424,7 +9424,7 @@ declare module egret {
 declare namespace egret.pro {
     let egret2dDriveMode: boolean;
     let mainCanvas: HTMLCanvasElement;
-    function getTextureFrom3dScene(scenePath: string, textureWidth?: number, textureHeight?: number): Promise<egret.Texture>;
+    function createTextureFrom3dScene(scenePath: string, textureWidth?: number, textureHeight?: number): Promise<egret.Texture>;
     /**
      * 执行方法
      * 通过传入命令的字符串，获取已注册的方法并执行，参数为可变参数
