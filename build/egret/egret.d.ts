@@ -9443,7 +9443,7 @@ declare namespace egret.pro {
      * @param func
      * @param thisObject
      */
-    function register(command: string, func: (...args: any[]) => any, thisObject: any): any;
+    function register(command: string, func: (...args: any[]) => any, thisObject: any): void;
     /**
      * 注册事件
      * @param eventType

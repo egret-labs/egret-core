@@ -23,7 +23,7 @@ declare class EgretProUtil {
      * @param func 
      * @param thisObject 
      */
-    register(command: string, func: (...args: any[]) => any, thisObject: any);
+    register(command: string, func: (...args: any[]) => any, thisObject: any): void;
 
     /**
      * 注册事件
