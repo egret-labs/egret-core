@@ -2457,6 +2457,9 @@ var egret;
                     self._stageText._onDisconnect();
                     self._stageText = null;
                     this.canvas['userTyping'] = false;
+                    if (this.finishUserTyping) {
+                        this.finishUserTyping();
+                    }
                 }
             };
             /**
@@ -4258,11 +4261,13 @@ var egret;
             __extends(WebPlayer, _super);
             function WebPlayer(container, options) {
                 var _this = _super.call(this) || this;
+                _this.updateAfterTyping = false;
                 _this.init(container, options);
                 _this.initOrientation();
                 return _this;
             }
             WebPlayer.prototype.init = function (container, options) {
+                var _this = this;
                 console.log("Egret Engine Version:", egret.Capabilities.engineVersion);
                 var option = this.readOption(container, options);
                 var stage = new egret.Stage();
@@ -4292,6 +4297,12 @@ var egret;
                 this.player = player;
                 this.webTouchHandler = webTouch;
                 this.webInput = webInput;
+                webInput.finishUserTyping = function () {
+                    if (_this.updateAfterTyping) {
+                        _this.updateScreenSize();
+                        _this.updateAfterTyping = false;
+                    }
+                };
                 egret.web.$cacheTextAdapter(webInput, stage, container, canvas);
                 this.updateScreenSize();
                 this.updateMaxTouches();
@@ -4354,8 +4365,10 @@ var egret;
              */
             WebPlayer.prototype.updateScreenSize = function () {
                 var canvas = this.canvas;
-                if (canvas['userTyping'])
+                if (canvas['userTyping']) {
+                    this.updateAfterTyping = true;
                     return;
+                }
                 var option = this.playerOption;
                 var screenRect = this.container.getBoundingClientRect();
                 var top = 0;

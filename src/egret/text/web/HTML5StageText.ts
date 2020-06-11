@@ -748,6 +748,9 @@ namespace egret.web {
                 self._stageText._onDisconnect();
                 self._stageText = null;
                 this.canvas['userTyping'] = false;
+                if (this.finishUserTyping) {
+                    this.finishUserTyping();
+                }
             }
         }
 
@@ -785,6 +788,9 @@ namespace egret.web {
             }
             return self._inputElement;
         }
+
+
+        public finishUserTyping: Function;
     }
 }
 
