@@ -77,8 +77,10 @@ namespace egret.web {
 
             webInput.finishUserTyping = () => {
                 if (this.updateAfterTyping) {
-                    this.updateScreenSize();
-                    this.updateAfterTyping = false;
+                    setTimeout(() => {
+                        this.updateScreenSize();
+                        this.updateAfterTyping = false;
+                    }, 300);
                 }
             }
             egret.web.$cacheTextAdapter(webInput, stage, container, canvas);

@@ -4299,8 +4299,10 @@ var egret;
                 this.webInput = webInput;
                 webInput.finishUserTyping = function () {
                     if (_this.updateAfterTyping) {
-                        _this.updateScreenSize();
-                        _this.updateAfterTyping = false;
+                        setTimeout(function () {
+                            _this.updateScreenSize();
+                            _this.updateAfterTyping = false;
+                        }, 300);
                     }
                 };
                 egret.web.$cacheTextAdapter(webInput, stage, container, canvas);
