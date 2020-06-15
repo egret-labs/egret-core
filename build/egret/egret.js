@@ -14370,35 +14370,36 @@ var egret;
         /**
          * 注册事件
          * @param eventType
+         * @param target
          * @param func
          * @param thisObject
          */
-        function addEventListener(eventType, func, thisObject) {
-            return Application.instance.egretProUtil.addEventListener(eventType, func, thisObject);
+        function addEventListener(eventType, target, func, thisObject) {
+            return Application.instance.egretProUtil.addEventListener(eventType, target, func, thisObject);
         }
         pro.addEventListener = addEventListener;
         /**
          * 移除事件
          * @param eventType
+         * @param target
          * @param func
-         * @param thisObject
          */
-        function removeEventListener(eventType, func, thisObject) {
-            return Application.instance.egretProUtil.removeEventListener(eventType, func, thisObject);
+        function removeEventListener(eventType, target, func) {
+            return Application.instance.egretProUtil.removeEventListener(eventType, target, func);
         }
         pro.removeEventListener = removeEventListener;
         /**
          * 派发事件
          * @param command
-         * @param thisObject
+         * @param target
          * @param args
          */
-        function dispatch(command, thisObject) {
+        function dispatch(command, target) {
             var args = [];
             for (var _i = 2; _i < arguments.length; _i++) {
                 args[_i - 2] = arguments[_i];
             }
-            return (_a = Application.instance.egretProUtil).dispatch.apply(_a, [command, thisObject].concat(args));
+            return (_a = Application.instance.egretProUtil).dispatch.apply(_a, [command, target].concat(args));
             var _a;
         }
         pro.dispatch = dispatch;

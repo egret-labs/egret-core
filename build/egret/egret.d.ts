@@ -9447,24 +9447,25 @@ declare namespace egret.pro {
     /**
      * 注册事件
      * @param eventType
+     * @param target
      * @param func
      * @param thisObject
      */
-    function addEventListener(eventType: string, func: (...args: any[]) => void, thisObject: any): void;
+    function addEventListener(eventType: string, target: any, func: (...args: any[]) => void, thisObject: any): void;
     /**
      * 移除事件
      * @param eventType
+     * @param target
      * @param func
-     * @param thisObject
      */
-    function removeEventListener(eventType: string, func: (...args: any[]) => void, thisObject: any): void;
+    function removeEventListener(eventType: string, target: any, func: (...args: any[]) => void): void;
     /**
      * 派发事件
      * @param command
-     * @param thisObject
+     * @param target
      * @param args
      */
-    function dispatch(command: string, thisObject: any, ...args: any[]): void;
+    function dispatch(command: string, target: any, ...args: any[]): void;
 }
 declare namespace egret.sys {
     /**

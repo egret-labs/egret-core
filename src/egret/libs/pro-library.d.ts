@@ -28,23 +28,24 @@ declare class EgretProUtil {
     /**
      * 注册事件
      * @param eventType 
+     * @param target
      * @param func 
      * @param thisObject 
      */
-    addEventListener(eventType: string, func: (...args: any[]) => void, thisObject: any): void;
+    addEventListener(eventType: string, target: any, func: (...args: any[]) => void, thisObject: any): void;
 
     /**
      * 移除事件
      * @param eventType 
-     * @param func 
-     * @param thisObject 
+     * @param target
+     * @param func
      */
-    removeEventListener(eventType: string, func: (...args: any[]) => void, thisObject: any): void;
+    removeEventListener(eventType: string, target: any, func: (...args: any[]) => void): void;
     /**
      * 派发事件
      * @param command 
-     * @param thisObject 
+     * @param target
      * @param args 
      */
-    dispatch(command: string, thisObject: any, ...args: any[]): void;
+    dispatch(command: string, target: any, ...args: any[]): void;
 }

@@ -33,30 +33,31 @@ namespace egret.pro {
     /**
      * 注册事件
      * @param eventType 
+     * @param target 
      * @param func 
      * @param thisObject 
      */
-    export function addEventListener(eventType: string, func: (...args: any[]) => void, thisObject: any): void {
-        return Application.instance.egretProUtil.addEventListener(eventType, func, thisObject);
+    export function addEventListener(eventType: string, target: any, func: (...args: any[]) => void, thisObject: any): void {
+        return Application.instance.egretProUtil.addEventListener(eventType, target, func, thisObject);
     }
 
     /**
      * 移除事件
      * @param eventType 
+     * @param target 
      * @param func 
-     * @param thisObject 
      */
-    export function removeEventListener(eventType: string, func: (...args: any[]) => void, thisObject: any): void {
-        return Application.instance.egretProUtil.removeEventListener(eventType, func, thisObject);
+    export function removeEventListener(eventType: string, target: any, func: (...args: any[]) => void): void {
+        return Application.instance.egretProUtil.removeEventListener(eventType, target, func);
     }
 
     /**
      * 派发事件
      * @param command 
-     * @param thisObject 
+     * @param target 
      * @param args 
      */
-    export function dispatch(command: string, thisObject: any, ...args: any[]): void {
-        return Application.instance.egretProUtil.dispatch(command, thisObject, ...args);
+    export function dispatch(command: string, target: any, ...args: any[]): void {
+        return Application.instance.egretProUtil.dispatch(command, target, ...args);
     }
 }
