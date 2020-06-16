@@ -18406,7 +18406,7 @@ var egret;
          * @platform Web,Native
          * @language zh_CN
          */
-        Capabilities.engineVersion = "5.3.6";
+        Capabilities.engineVersion = "5.3.7";
         /***
          * current render mode.
          * @type {string}
@@ -20279,7 +20279,6 @@ var egret;
         };
         InputController.prototype.$onFocus = function () {
             var _this = this;
-            var self = this;
             if (!this._text.visible) {
                 return;
             }

@@ -194,7 +194,6 @@ namespace egret {
         }
 
         $onFocus(): void {
-            let self = this;
             if (!this._text.visible) {
                 return;
             }
