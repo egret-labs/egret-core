@@ -124,6 +124,8 @@ namespace egret.web {
             video.src = url;
             video.setAttribute("autoplay", "autoplay");
             video.setAttribute("webkit-playsinline", "true");
+            video.setAttribute("playsinline","true");
+            video.setAttribute("x5-video-player-type", "h5-page");
             video.addEventListener("canplay", this.onVideoLoaded);
             video.addEventListener("error", () => this.onVideoError());
             video.addEventListener("ended", () => this.onVideoEnded());
@@ -210,6 +212,7 @@ namespace egret.web {
             if (playFullScreen) {
                 if (video.parentElement == null) {
                     video.removeAttribute("webkit-playsinline");
+                    video.removeAttribute("playsinline");
                     document.body.appendChild(video);
                 }
                 egret.stopTick(this.markDirty, this);
@@ -220,6 +223,7 @@ namespace egret.web {
                     video.parentElement.removeChild(video);
                 }
                 video.setAttribute("webkit-playsinline", "true");
+                video.setAttribute("playsinline","true");
 
                 this.setFullScreenMonitor(false);
 
@@ -302,6 +306,10 @@ namespace egret.web {
             } else if (document['webkitExitFullscreen']) {
                 document['webkitExitFullscreen']();
             } else {
+                this.video.style.display = "none";
+            }
+            if (this.video && this.video.parentElement) {
+                this.video.parentElement.removeChild(this.video);
             }
         }
 
@@ -312,7 +320,9 @@ namespace egret.web {
         private onVideoEnded() {
             this.pause();
             this.isPlayed = false;
-
+            if (this._fullscreen) {
+                this.exitFullscreen();
+            }
             this.dispatchEventWith(egret.Event.ENDED);
         }
 
@@ -321,6 +331,7 @@ namespace egret.web {
          *
          */
         private onVideoError() {
+            console.error("video errorCode:", this.video.error.code);
             this.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
         }
 
@@ -563,7 +574,7 @@ namespace egret.web {
             if (this.paused) { // 在暂停和播放结束后，修改视频大小时，没有重绘导致的bug
                 const self = this;
                 this.$renderDirty = true;
-                window.setTimeout(function() {
+                window.setTimeout(function () {
                     self.$renderDirty = false;
                 }, 200);
             }
@@ -579,7 +590,7 @@ namespace egret.web {
             if (this.paused) { // 在暂停和播放结束后，修改视频大小时，没有重绘导致的bug
                 const self = this;
                 this.$renderDirty = true;
-                window.setTimeout(function() {
+                window.setTimeout(function () {
                     self.$renderDirty = false;
                 }, 200);
             }
