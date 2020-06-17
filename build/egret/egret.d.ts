@@ -2256,7 +2256,7 @@ declare namespace egret {
          * @language zh_CN
          */
         static create<T extends Event>(EventClass: {
-            new (type: string, bubbles?: boolean, cancelable?: boolean): T;
+            new(type: string, bubbles?: boolean, cancelable?: boolean): T;
             eventPool?: Event[];
         }, type: string, bubbles?: boolean, cancelable?: boolean): T;
         /**
@@ -8388,7 +8388,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        new (): Sound;
+        new(): Sound;
         /**
          * Background music
          * @default "music"
@@ -8701,7 +8701,7 @@ declare namespace egret {
      * @copy egret.Video
      */
     let Video: {
-        new (url?: string, cache?: boolean): Video;
+        new(url?: string, cache?: boolean): Video;
     };
 }
 declare namespace egret {
@@ -8955,7 +8955,7 @@ declare namespace egret {
      * @language zh_CN
      */
     let HttpRequest: {
-        new (): HttpRequest;
+        new(): HttpRequest;
     };
 }
 declare namespace egret {
@@ -9102,7 +9102,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        new (): ImageLoader;
+        new(): ImageLoader;
         /**
          * Specifies whether to enable cross-origin resource sharing, If ImageLoader instance has been set crossOrigin property will be used to set the property.
          * @version Egret 2.5.7
@@ -9269,7 +9269,7 @@ declare namespace egret {
      * @private
      */
     let FPSDisplay: {
-        new (stage: Stage, showFPS: boolean, showLog: boolean, logFilter: string, styles: Object): FPSDisplay;
+        new(stage: Stage, showFPS: boolean, showLog: boolean, logFilter: string, styles: Object): FPSDisplay;
     };
 }
 /**
@@ -9383,7 +9383,7 @@ declare namespace egret.sys {
     let $errorToFPS: (info: string) => void;
     let setRenderMode: (renderMode: string) => void;
     let WebGLRenderContext: {
-        new (width?: number, height?: number, context?: WebGLRenderingContext): RenderContext;
+        new(width?: number, height?: number, context?: WebGLRenderingContext): RenderContext;
     };
 }
 /**
@@ -10680,7 +10680,7 @@ declare namespace egret {
      * @copy egret.Orientation
      */
     let DeviceOrientation: {
-        new (): DeviceOrientation;
+        new(): DeviceOrientation;
     };
 }
 declare namespace egret {
@@ -10757,7 +10757,7 @@ declare namespace egret {
          * @platform Web
          * @language zh_CN
          */
-        new (): Geolocation;
+        new(): Geolocation;
     };
 }
 declare namespace egret {
@@ -10765,7 +10765,7 @@ declare namespace egret {
      * @copy egret.Motion
      */
     let Motion: {
-        new (): Motion;
+        new(): Motion;
     };
     /**
      * The Motion class emits events based on activity detected by the device's motion sensor.
@@ -12419,7 +12419,7 @@ declare namespace egret {
      * @platform Web,Native
      */
     let StageText: {
-        new (): StageText;
+        new(): StageText;
     };
 }
 declare namespace egret.sys {
@@ -15445,7 +15445,7 @@ declare namespace egret.sys {
          * @param height 渲染缓冲的初始高
          * @param root 是否为舞台buffer
          */
-        new (width?: number, height?: number, root?: boolean): RenderBuffer;
+        new(width?: number, height?: number, root?: boolean): RenderBuffer;
     };
     /**
      * @private
@@ -15457,6 +15457,6 @@ declare namespace egret.sys {
          * @param width 渲染缓冲的初始宽
          * @param height 渲染缓冲的初始高
          */
-        new (width?: number, height?: number): RenderBuffer;
+        new(width?: number, height?: number): RenderBuffer;
     };
 }

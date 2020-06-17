@@ -329,6 +329,9 @@ namespace egret {
                 37: TextFieldInputType.TEXT,            //inputType
                 38: false            //textLinesChangedForNativeRender
             };
+            if (egret.nativeRender) {
+                this.$nativeDisplayObject.setFontFamily(TextField.default_fontFamily);
+            }
         }
 
         protected createNativeDisplayObject(): void {
