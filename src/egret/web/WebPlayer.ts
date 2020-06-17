@@ -75,6 +75,14 @@ namespace egret.web {
             this.webTouchHandler = webTouch;
             this.webInput = webInput;
 
+            webInput.finishUserTyping = () => {
+                if (this.updateAfterTyping) {
+                    setTimeout(() => {
+                        this.updateScreenSize();
+                        this.updateAfterTyping = false;
+                    }, 300);
+                }
+            }
             egret.web.$cacheTextAdapter(webInput, stage, container, canvas);
 
             this.updateScreenSize();
@@ -163,14 +171,19 @@ namespace egret.web {
         private player: egret.sys.Player;
         private webInput: egret.web.HTMLInput;
 
+
+        private updateAfterTyping: boolean = false;
+
         /**
          * @private
          * 更新播放器视口尺寸
          */
         public updateScreenSize(): void {
             let canvas = this.canvas;
-            if (canvas['userTyping'])
+            if (canvas['userTyping']) {
+                this.updateAfterTyping = true;
                 return;
+            }
             let option = this.playerOption;
             let screenRect = this.container.getBoundingClientRect();
             let top = 0;
