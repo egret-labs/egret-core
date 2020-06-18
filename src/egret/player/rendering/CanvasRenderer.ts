@@ -980,6 +980,10 @@ namespace egret {
             }
             return buffer;
         }
+
+        public renderClear() {
+
+        }
     }
 
     /**
