@@ -168,7 +168,10 @@ namespace egret.sys {
                 egret_native.nrRender();
                 return;
             }
-            egret.sys.systemRenderer.renderClear();
+
+            if (egret.sys.systemRenderer.renderClear) {
+                egret.sys.systemRenderer.renderClear();
+            }
 
             let stage = this.stage;
             let t1 = egret.getTimer();

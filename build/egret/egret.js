@@ -14047,7 +14047,9 @@ var egret;
                     egret_native.nrRender();
                     return;
                 }
-                egret.sys.systemRenderer.renderClear();
+                if (egret.sys.systemRenderer.renderClear) {
+                    egret.sys.systemRenderer.renderClear();
+                }
                 var stage = this.stage;
                 var t1 = egret.getTimer();
                 var drawCalls = stage.$displayList.drawToSurface();
