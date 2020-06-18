@@ -20498,6 +20498,9 @@ var egret;
                 37: egret.TextFieldInputType.TEXT,
                 38: false //textLinesChangedForNativeRender
             };
+            if (egret.nativeRender) {
+                _this.$nativeDisplayObject.setFontFamily(TextField.default_fontFamily);
+            }
             return _this;
         }
         TextField.prototype.createNativeDisplayObject = function () {
