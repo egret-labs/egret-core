@@ -284,8 +284,13 @@ namespace egret.web {
             // 为显示对象创建一个新的buffer
             const scale = Math.max(egret.sys.DisplayList.$canvasScaleFactor, 2);
             filters.forEach((filter) => {
-                if (filter instanceof GlowFilter) {
-                    filter.$filterScale = scale;
+                if (filter instanceof GlowFilter || filter instanceof BlurFilter) {
+                    filter.$uniforms.$filterScale = scale;
+                    if(filter.type == 'blur'){
+                        const blurFilter = filter as egret.BlurFilter
+                        blurFilter.blurXFilter.$uniforms.$filterScale = scale;
+                        blurFilter.blurYFilter.$uniforms.$filterScale = scale;
+                    }
                 }
             })
             let displayBuffer = this.createRenderBuffer(scale * displayBoundsWidth, scale * displayBoundsHeight);

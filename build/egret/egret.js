@@ -5704,10 +5704,6 @@ var egret;
             if (inner === void 0) { inner = false; }
             if (knockout === void 0) { knockout = false; }
             var _this = _super.call(this) || this;
-            /**
-             * @private
-             */
-            _this.$filterScale = 1;
             var self = _this;
             self.type = "glow";
             self.$color = color;

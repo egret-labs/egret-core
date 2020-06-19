@@ -1042,6 +1042,9 @@ namespace egret.web {
             let uniforms = program.uniforms;
             let isCustomFilter: boolean = filter && filter.type === "custom";
             for (let key in uniforms) {
+                if (key == "$filterScale") {// 用于滤镜buffer缩放，忽略
+                    continue;
+                }
                 if (key === "projectionVector") {
                     uniforms[key].setValue({ x: this.projectionX, y: this.projectionY });
                 } else if (key === "uTextureSize") {
@@ -1055,10 +1058,17 @@ namespace egret.web {
                 else {
                     let value = filter.$uniforms[key];
                     if (value !== undefined) {
-                        if (filter instanceof GlowFilter && (key == "blurX" || key == "blurY" || key == "dist")) {
-                            value = value * filter.$filterScale;
+                        if ((filter.type == "glow" || filter.type.indexOf("blur") == 0)) {
+                            if ((key == "blurX" || key == "blurY" || key == "dist")) {
+                                value = value * (filter.$uniforms.$filterScale | 1);
+                                uniforms[key].setValue(value);
+                            } else if (key == "blur" && value.x != undefined && value.y != undefined) {
+                                const newValue = { x: 0, y: 0 };
+                                newValue.x = value.x * (filter.$uniforms.$filterScale != undefined ? filter.$uniforms.$filterScale : 1);
+                                newValue.y = value.y * (filter.$uniforms.$filterScale != undefined ? filter.$uniforms.$filterScale : 1);
+                                uniforms[key].setValue(newValue);
+                            }
                         }
-                        uniforms[key].setValue(value);
                     } else {
                         // egret.warn("filter custom: uniform " + key + " not defined!");
                     }
@@ -1242,7 +1252,9 @@ namespace egret.web {
 
                 if (blurXFilter.blurX != 0 && blurYFilter.blurY != 0) {
                     temp = WebGLRenderBuffer.create(width, height);
+                    const scale = Math.max(egret.sys.DisplayList.$canvasScaleFactor, 2);
                     temp.setTransform(1, 0, 0, 1, 0, 0);
+                    temp.transform(scale, 0, 0, scale, 0, 0);
                     temp.globalAlpha = 1;
                     this.drawToRenderTarget((<BlurFilter>filter).blurXFilter, input, temp);
                     if (input != originInput) {
