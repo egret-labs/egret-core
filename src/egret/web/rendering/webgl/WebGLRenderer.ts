@@ -1208,5 +1208,14 @@ namespace egret.web {
             }
             return buffer;
         }
+
+
+
+        public renderClear() {
+            const renderContext = WebGLRenderContext.getInstance();
+            const gl = renderContext.context;
+            renderContext.$beforeRender();
+            gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight)
+        }
     }
 }

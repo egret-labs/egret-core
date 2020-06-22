@@ -889,6 +889,8 @@ var egret;
                 video.src = url;
                 video.setAttribute("autoplay", "autoplay");
                 video.setAttribute("webkit-playsinline", "true");
+                video.setAttribute("playsinline", "true");
+                video.setAttribute("x5-video-player-type", "h5-page");
                 video.addEventListener("canplay", this.onVideoLoaded);
                 video.addEventListener("error", function () { return _this.onVideoError(); });
                 video.addEventListener("ended", function () { return _this.onVideoEnded(); });
@@ -969,6 +971,7 @@ var egret;
                 if (playFullScreen) {
                     if (video.parentElement == null) {
                         video.removeAttribute("webkit-playsinline");
+                        video.removeAttribute("playsinline");
                         document.body.appendChild(video);
                     }
                     egret.stopTick(this.markDirty, this);
@@ -979,6 +982,7 @@ var egret;
                         video.parentElement.removeChild(video);
                     }
                     video.setAttribute("webkit-playsinline", "true");
+                    video.setAttribute("playsinline", "true");
                     this.setFullScreenMonitor(false);
                     egret.startTick(this.markDirty, this);
                     if (egret.Capabilities.isMobile) {
@@ -1040,6 +1044,10 @@ var egret;
                     document['webkitExitFullscreen']();
                 }
                 else {
+                    this.video.style.display = "none";
+                }
+                if (this.video && this.video.parentElement) {
+                    this.video.parentElement.removeChild(this.video);
                 }
             };
             /**
@@ -1049,6 +1057,9 @@ var egret;
             WebVideo.prototype.onVideoEnded = function () {
                 this.pause();
                 this.isPlayed = false;
+                if (this._fullscreen) {
+                    this.exitFullscreen();
+                }
                 this.dispatchEventWith(egret.Event.ENDED);
             };
             /**
@@ -1056,6 +1067,7 @@ var egret;
              *
              */
             WebVideo.prototype.onVideoError = function () {
+                console.error("video errorCode:", this.video.error.code);
                 this.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
             };
             /**
@@ -3303,7 +3315,11 @@ var egret;
          * 创建一个canvas。
          */
         function mainCanvas(width, height) {
-            return createCanvas(width, height);
+            var canvas = createCanvas(width, height);
+            if (egret.pro.egret2dDriveMode) {
+                egret.pro.mainCanvas = canvas;
+            }
+            return canvas;
         }
         egret.sys.mainCanvas = mainCanvas;
         function createCanvas(width, height) {
@@ -3606,6 +3622,21 @@ var egret;
             var ua = navigator.userAgent.toLowerCase();
             if (ua.indexOf("egretnative") >= 0 && ua.indexOf("egretwebview") == -1) {
                 egret.Capabilities["runtimeType" + ""] = egret.RuntimeType.RUNTIME2;
+            }
+            // 是否启动3d环境
+            if (options.pro) {
+                egret.pro.egret2dDriveMode = true;
+                try {
+                    if (window['startup']) {
+                        window['startup']();
+                    }
+                    else {
+                        console.error("EgretPro.js don't has function:window.startup");
+                    }
+                }
+                catch (e) {
+                    console.error(e);
+                }
             }
             if (ua.indexOf("egretnative") >= 0 && egret.nativeRender) {
                 egret_native.addModuleCallback(function () {
@@ -8681,6 +8712,12 @@ var egret;
                     buffer.$computeDrawCall = false;
                 }
                 return buffer;
+            };
+            WebGLRenderer.prototype.renderClear = function () {
+                var renderContext = web.WebGLRenderContext.getInstance();
+                var gl = renderContext.context;
+                renderContext.$beforeRender();
+                gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
             };
             return WebGLRenderer;
         }());

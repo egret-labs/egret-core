@@ -1,6 +1,6 @@
 require('./npm').installDependencies(["@egret/egret-webpack-bundler"]);
 
-import { EgretWebpackBundler, WebpackBundleOptions } from '@egret/egret-webpack-bundler';
+import { EgretWebpackBundler, WebpackBundleOptions, WebpackDevServerOptions } from '@egret/egret-webpack-bundler';
 
 /**
  * Webpack 插件
@@ -8,7 +8,7 @@ import { EgretWebpackBundler, WebpackBundleOptions } from '@egret/egret-webpack-
  */
 export class WebpackDevServerPlugin implements plugins.Command {
 
-    constructor() {
+    constructor(private options: WebpackBundleOptions & WebpackDevServerOptions) {
     }
 
     async onFile(file: plugins.File) {
@@ -18,7 +18,7 @@ export class WebpackDevServerPlugin implements plugins.Command {
     onFinish(commandContext: plugins.CommandContext) {
         return new Promise<void>((resolve, reject) => {
             const bundler = new EgretWebpackBundler(commandContext.projectRoot, commandContext.buildConfig.target);
-            bundler.startDevServer({ libraryType: "debug" })
+            bundler.startDevServer(this.options)
         })
     }
 }

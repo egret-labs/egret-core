@@ -36,6 +36,7 @@ namespace egret {
         antialias?: boolean;
         canvasScaleFactor?: number;
         calculateCanvasScaleFactor?: (context: CanvasRenderingContext2D) => number;
+        pro?:boolean;
 
         /**
          * 以下目前仅供小游戏使用

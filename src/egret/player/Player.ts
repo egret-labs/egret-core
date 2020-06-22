@@ -169,6 +169,10 @@ namespace egret.sys {
                 return;
             }
 
+            if (egret.sys.systemRenderer.renderClear) {
+                egret.sys.systemRenderer.renderClear();
+            }
+
             let stage = this.stage;
             let t1 = egret.getTimer();
             let drawCalls = stage.$displayList.drawToSurface();

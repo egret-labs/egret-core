@@ -29,7 +29,11 @@ const config: ResourceManagerConfig = {
                     // }),
                     new ExmlPlugin('debug'), // 非 EUI 项目关闭此设置
                     new IncrementCompilePlugin(),
-                    // new WebpackDevServerPlugin(),//新的 Webpack 编译器
+                    // new WebpackDevServerPlugin({ //新的 Webpack 编译器
+                    //     libraryType: "debug",
+                    //     defines: { DEBUG: true, RELEASE: false },
+                    //     typescript: { mode: 'legacy' }
+                    // }),
                 ]
             }
         }
@@ -40,7 +44,11 @@ const config: ResourceManagerConfig = {
                 commands: [
                     new CustomPlugin(),
                     new CompilePlugin({ libraryType: "release", defines: { DEBUG: false, RELEASE: true } }),
-                    // new WebpackBundlePlugin({ libraryType: "debug", defines: { DEBUG: false, RELEASE: true } }),//新的 Webpack 编译器
+                    // new WebpackBundlePlugin({ //新的 Webpack 编译器
+                    //     libraryType: "debug",
+                    //     defines: { DEBUG: false, RELEASE: true },
+                    //     typescript: { mode: 'legacy' }
+                    // }),
                     new ExmlPlugin('commonjs'), // 非 EUI 项目关闭此设置
                     // new EuiCompilerPlugin(),//新的 eui 编译器
                     new UglifyPlugin([{
