@@ -540,6 +540,7 @@ namespace egret.web {
         public updateTexture(texture: WebGLTexture, bitmapData: BitmapData): void {
             let gl: any = this.context;
             gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, bitmapData);
         }
 
