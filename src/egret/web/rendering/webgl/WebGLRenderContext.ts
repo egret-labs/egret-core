@@ -1060,15 +1060,16 @@ namespace egret.web {
                     if (value !== undefined) {
                         if ((filter.type == "glow" || filter.type.indexOf("blur") == 0)) {
                             if ((key == "blurX" || key == "blurY" || key == "dist")) {
-                                value = value * (filter.$uniforms.$filterScale | 1);
-                                uniforms[key].setValue(value);
+                                value = value * (filter.$uniforms.$filterScale || 1);
                             } else if (key == "blur" && value.x != undefined && value.y != undefined) {
                                 const newValue = { x: 0, y: 0 };
                                 newValue.x = value.x * (filter.$uniforms.$filterScale != undefined ? filter.$uniforms.$filterScale : 1);
                                 newValue.y = value.y * (filter.$uniforms.$filterScale != undefined ? filter.$uniforms.$filterScale : 1);
                                 uniforms[key].setValue(newValue);
+                                continue;
                             }
                         }
+                        uniforms[key].setValue(value);
                     } else {
                         // egret.warn("filter custom: uniform " + key + " not defined!");
                     }

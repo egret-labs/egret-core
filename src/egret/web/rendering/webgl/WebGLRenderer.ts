@@ -286,7 +286,7 @@ namespace egret.web {
             filters.forEach((filter) => {
                 if (filter instanceof GlowFilter || filter instanceof BlurFilter) {
                     filter.$uniforms.$filterScale = scale;
-                    if(filter.type == 'blur'){
+                    if (filter.type == 'blur') {
                         const blurFilter = filter as egret.BlurFilter
                         blurFilter.blurXFilter.$uniforms.$filterScale = scale;
                         blurFilter.blurYFilter.$uniforms.$filterScale = scale;
