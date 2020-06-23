@@ -889,6 +889,8 @@ var egret;
                 video.src = url;
                 video.setAttribute("autoplay", "autoplay");
                 video.setAttribute("webkit-playsinline", "true");
+                video.setAttribute("playsinline", "true");
+                video.setAttribute("x5-video-player-type", "h5-page");
                 video.addEventListener("canplay", this.onVideoLoaded);
                 video.addEventListener("error", function () { return _this.onVideoError(); });
                 video.addEventListener("ended", function () { return _this.onVideoEnded(); });
@@ -969,6 +971,7 @@ var egret;
                 if (playFullScreen) {
                     if (video.parentElement == null) {
                         video.removeAttribute("webkit-playsinline");
+                        video.removeAttribute("playsinline");
                         document.body.appendChild(video);
                     }
                     egret.stopTick(this.markDirty, this);
@@ -979,6 +982,7 @@ var egret;
                         video.parentElement.removeChild(video);
                     }
                     video.setAttribute("webkit-playsinline", "true");
+                    video.setAttribute("playsinline", "true");
                     this.setFullScreenMonitor(false);
                     egret.startTick(this.markDirty, this);
                     if (egret.Capabilities.isMobile) {
@@ -1040,6 +1044,10 @@ var egret;
                     document['webkitExitFullscreen']();
                 }
                 else {
+                    this.video.style.display = "none";
+                }
+                if (this.video && this.video.parentElement) {
+                    this.video.parentElement.removeChild(this.video);
                 }
             };
             /**
@@ -1049,6 +1057,9 @@ var egret;
             WebVideo.prototype.onVideoEnded = function () {
                 this.pause();
                 this.isPlayed = false;
+                if (this._fullscreen) {
+                    this.exitFullscreen();
+                }
                 this.dispatchEventWith(egret.Event.ENDED);
             };
             /**
@@ -1056,6 +1067,7 @@ var egret;
              *
              */
             WebVideo.prototype.onVideoError = function () {
+                console.error("video errorCode:", this.video.error.code);
                 this.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
             };
             /**
@@ -2009,9 +2021,10 @@ var egret;
              *
              */
             HTML5StageText.prototype.executeShow = function () {
-                var self = this;
                 //打开
-                this.inputElement.value = this.$getText();
+                if (this.inputElement.value !== this.$getText()) {
+                    this.inputElement.value = this.$getText();
+                }
                 if (this.inputElement.onblur == null) {
                     this.inputElement.onblur = this.onBlurHandler.bind(this);
                 }
@@ -2131,8 +2144,8 @@ var egret;
                     e.stopImmediatePropagation();
                     //e.preventDefault();
                     this._isNeedShow = false;
-                    this.executeShow();
                     this.dispatchEvent(new egret.Event("focus"));
+                    this.executeShow();
                 }
             };
             /**
