@@ -367,10 +367,5 @@ namespace egret {
             self.paddingBottom = self.blurY;
         }
 
-        
-        /**
-         * @private
-         */
-        public $filterScale:number = 1;
     }
 }

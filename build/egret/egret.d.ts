@@ -3295,10 +3295,6 @@ declare namespace egret {
          */
         $toJson(): string;
         protected updatePadding(): void;
-        /**
-         * @private
-         */
-        $filterScale: number;
     }
 }
 declare namespace egret {
