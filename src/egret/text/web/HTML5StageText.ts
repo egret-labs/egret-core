@@ -195,9 +195,10 @@ namespace egret.web {
          * 
          */
         private executeShow(): void {
-            let self = this;
             //打开
-            this.inputElement.value = this.$getText();
+            if (this.inputElement.value !== this.$getText()) {
+                this.inputElement.value = this.$getText();
+            }
 
             if (this.inputElement.onblur == null) {
                 this.inputElement.onblur = this.onBlurHandler.bind(this);
@@ -348,9 +349,10 @@ namespace egret.web {
                 //e.preventDefault();
                 this._isNeedShow = false;
 
+                this.dispatchEvent(new egret.Event("focus"));
+
                 this.executeShow();
 
-                this.dispatchEvent(new egret.Event("focus"));
             }
         }
 

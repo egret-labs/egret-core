@@ -2021,9 +2021,10 @@ var egret;
              *
              */
             HTML5StageText.prototype.executeShow = function () {
-                var self = this;
                 //打开
-                this.inputElement.value = this.$getText();
+                if (this.inputElement.value !== this.$getText()) {
+                    this.inputElement.value = this.$getText();
+                }
                 if (this.inputElement.onblur == null) {
                     this.inputElement.onblur = this.onBlurHandler.bind(this);
                 }
@@ -2143,8 +2144,8 @@ var egret;
                     e.stopImmediatePropagation();
                     //e.preventDefault();
                     this._isNeedShow = false;
-                    this.executeShow();
                     this.dispatchEvent(new egret.Event("focus"));
+                    this.executeShow();
                 }
             };
             /**
