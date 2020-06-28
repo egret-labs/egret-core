@@ -4563,6 +4563,9 @@ var egret;
                 var renderTexture = void 0;
                 //webgl下非RenderTexture纹理先画到RenderTexture
                 if (!texture.$renderBuffer) {
+                    if (egret.sys.systemRenderer.renderClear) {
+                        egret.sys.systemRenderer.renderClear();
+                    }
                     renderTexture = new egret.RenderTexture();
                     renderTexture.drawToTexture(new egret.Bitmap(texture));
                 }
