@@ -1220,7 +1220,9 @@ namespace egret.web {
             const renderContext = WebGLRenderContext.getInstance();
             const gl = renderContext.context;
             renderContext.$beforeRender();
-            gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight)
+            const width = renderContext.surface.width;
+            const height = renderContext.surface.height;
+            gl.viewport(0, 0, width, height)
         }
     }
 }
