@@ -1,4 +1,4 @@
-declare var global: NodeJS.Global;
+declare var global: any;
 declare var __global: any;
 declare let __define: any;
 declare namespace egret {
@@ -9425,8 +9425,9 @@ declare namespace egret.pro {
      * @param scenePath 场景路径（相对与3d项目resource文件夹）
      * @param textureWidth 贴图宽度 ，默认为512
      * @param textureHeight 贴图高度 ，默认为512
+     * @param scaleFactor 贴图质量。系数越大，贴图越清晰
      */
-    function createTextureFrom3dScene(scenePath: string, textureWidth?: number, textureHeight?: number): Promise<egret.Texture>;
+    function createTextureFrom3dScene(scenePath: string, textureWidth?: number, textureHeight?: number, scaleFactor?: number): Promise<egret.Texture>;
     /**
      * 执行方法
      * 通过传入命令的字符串，获取已注册的方法并执行，参数为可变参数

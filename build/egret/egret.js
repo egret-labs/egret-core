@@ -14334,11 +14334,13 @@ var egret;
          * @param scenePath 场景路径（相对与3d项目resource文件夹）
          * @param textureWidth 贴图宽度 ，默认为512
          * @param textureHeight 贴图高度 ，默认为512
+         * @param scaleFactor 贴图质量。系数越大，贴图越清晰
          */
-        function createTextureFrom3dScene(scenePath, textureWidth, textureHeight) {
+        function createTextureFrom3dScene(scenePath, textureWidth, textureHeight, scaleFactor) {
             if (textureWidth === void 0) { textureWidth = 512; }
             if (textureHeight === void 0) { textureHeight = 512; }
-            return Application.instance.egretProUtil.execute("createTextureFrom3dScene", scenePath, textureWidth, textureHeight);
+            if (scaleFactor === void 0) { scaleFactor = 1; }
+            return Application.instance.egretProUtil.execute("createTextureFrom3dScene", scenePath, textureWidth, textureHeight, scaleFactor);
         }
         pro.createTextureFrom3dScene = createTextureFrom3dScene;
         /**
