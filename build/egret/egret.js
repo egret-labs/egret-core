@@ -14329,6 +14329,12 @@ var egret;
     var pro;
     (function (pro) {
         pro.egret2dDriveMode = false;
+        /**
+         *
+         * @param scenePath 场景路径（相对与3d项目resource文件夹）
+         * @param textureWidth 贴图宽度 ，默认为512
+         * @param textureHeight 贴图高度 ，默认为512
+         */
         function createTextureFrom3dScene(scenePath, textureWidth, textureHeight) {
             if (textureWidth === void 0) { textureWidth = 512; }
             if (textureHeight === void 0) { textureHeight = 512; }
