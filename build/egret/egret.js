@@ -20568,6 +20568,7 @@ var egret;
             };
             if (egret.nativeRender) {
                 _this.$nativeDisplayObject.setFontFamily(TextField.default_fontFamily);
+                _this.$nativeDisplayObject.setFontSize(TextField.default_size);
             }
             return _this;
         }

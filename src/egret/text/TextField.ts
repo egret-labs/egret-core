@@ -331,6 +331,7 @@ namespace egret {
             };
             if (egret.nativeRender) {
                 this.$nativeDisplayObject.setFontFamily(TextField.default_fontFamily);
+                this.$nativeDisplayObject.setFontSize(TextField.default_size);
             }
         }
 
