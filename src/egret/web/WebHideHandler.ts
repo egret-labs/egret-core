@@ -33,18 +33,30 @@ namespace egret.web {
      */
     export let WebLifeCycleHandler: egret.lifecycle.LifecyclePlugin = (context) => {
 
+        const resume = () => {
+            context.resume();
+            /** 解决 ios13 页面切到后台再拉起，声音无法播放 */
+            if (WebAudioDecode.initAudioContext) {
+                WebAudioDecode.initAudioContext();
+            }
+        }
+
+        const pause = () => {
+            context.pause();
+        }
+
 
         let handleVisibilityChange = function () {
             if (!document[hidden]) {
-                context.resume();
+                resume();
             }
             else {
-                context.pause();
+                pause();
             }
         };
 
-        window.addEventListener("focus", context.resume, false);
-        window.addEventListener("blur", context.pause, false);
+        window.addEventListener("focus", resume, false);
+        window.addEventListener("blur", pause, false);
 
         let hidden, visibilityChange;
         if (typeof document.hidden !== "undefined") {
@@ -64,8 +76,8 @@ namespace egret.web {
             visibilityChange = "ovisibilitychange";
         }
         if ("onpageshow" in window && "onpagehide" in window) {
-            window.addEventListener("pageshow", context.resume, false);
-            window.addEventListener("pagehide", context.pause, false);
+            window.addEventListener("pageshow", resume, false);
+            window.addEventListener("pagehide", pause, false);
         }
         if (hidden && visibilityChange) {
             document.addEventListener(visibilityChange, handleVisibilityChange, false);
@@ -85,10 +97,10 @@ namespace egret.web {
             browser.execWebFn.postX5GamePlayerMessage = function (event) {
                 let eventType = event.type;
                 if (eventType == "app_enter_background") {
-                    context.pause();
+                    pause();
                 }
                 else if (eventType == "app_enter_foreground") {
-                    context.resume();
+                    resume();
                 }
             };
             window["browser"] = browser;

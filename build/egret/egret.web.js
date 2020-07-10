@@ -656,14 +656,17 @@ var egret;
                  * @private
                  */
                 _this._startTime = 0;
-                if (_this.context["createGain"]) {
-                    _this.gain = _this.context["createGain"]();
-                }
-                else {
-                    _this.gain = _this.context["createGainNode"]();
-                }
+                _this.initGainNode();
                 return _this;
             }
+            WebAudioSoundChannel.prototype.initGainNode = function () {
+                if (this.context["createGain"]) {
+                    this.gain = this.context["createGain"]();
+                }
+                else {
+                    this.gain = this.context["createGainNode"]();
+                }
+            };
             WebAudioSoundChannel.prototype.$play = function () {
                 if (this.isStopped) {
                     egret.$error(1036);
@@ -3017,16 +3020,26 @@ var egret;
          * @private
          */
         web.WebLifeCycleHandler = function (context) {
-            var handleVisibilityChange = function () {
-                if (!document[hidden]) {
-                    context.resume();
-                }
-                else {
-                    context.pause();
+            var resume = function () {
+                context.resume();
+                /** 解决 ios13 页面切到后台再拉起，声音无法播放 */
+                if (web.WebAudioDecode.initAudioContext) {
+                    web.WebAudioDecode.initAudioContext();
                 }
             };
-            window.addEventListener("focus", context.resume, false);
-            window.addEventListener("blur", context.pause, false);
+            var pause = function () {
+                context.pause();
+            };
+            var handleVisibilityChange = function () {
+                if (!document[hidden]) {
+                    resume();
+                }
+                else {
+                    pause();
+                }
+            };
+            window.addEventListener("focus", resume, false);
+            window.addEventListener("blur", pause, false);
             var hidden, visibilityChange;
             if (typeof document.hidden !== "undefined") {
                 hidden = "hidden";
@@ -3049,8 +3062,8 @@ var egret;
                 visibilityChange = "ovisibilitychange";
             }
             if ("onpageshow" in window && "onpagehide" in window) {
-                window.addEventListener("pageshow", context.resume, false);
-                window.addEventListener("pagehide", context.pause, false);
+                window.addEventListener("pageshow", resume, false);
+                window.addEventListener("pagehide", pause, false);
             }
             if (hidden && visibilityChange) {
                 document.addEventListener(visibilityChange, handleVisibilityChange, false);
@@ -3068,10 +3081,10 @@ var egret;
                 browser.execWebFn.postX5GamePlayerMessage = function (event) {
                     var eventType = event.type;
                     if (eventType == "app_enter_background") {
-                        context.pause();
+                        pause();
                     }
                     else if (eventType == "app_enter_foreground") {
-                        context.resume();
+                        resume();
                     }
                 };
                 window["browser"] = browser;
@@ -3154,7 +3167,10 @@ var egret;
                 if (canUseWebAudio) {
                     try {
                         //防止某些chrome版本创建异常问题
-                        web.WebAudioDecode.ctx = new (window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"])();
+                        web.WebAudioDecode.initAudioContext = function () {
+                            web.WebAudioDecode.ctx = new (window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"])();
+                        };
+                        web.WebAudioDecode.initAudioContext();
                     }
                     catch (e) {
                         canUseWebAudio = false;
