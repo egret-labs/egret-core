@@ -656,17 +656,14 @@ var egret;
                  * @private
                  */
                 _this._startTime = 0;
-                _this.initGainNode();
-                return _this;
-            }
-            WebAudioSoundChannel.prototype.initGainNode = function () {
-                if (this.context["createGain"]) {
-                    this.gain = this.context["createGain"]();
+                if (_this.context["createGain"]) {
+                    _this.gain = _this.context["createGain"]();
                 }
                 else {
-                    this.gain = this.context["createGainNode"]();
+                    _this.gain = _this.context["createGainNode"]();
                 }
-            };
+                return _this;
+            }
             WebAudioSoundChannel.prototype.$play = function () {
                 if (this.isStopped) {
                     egret.$error(1036);
@@ -3168,6 +3165,13 @@ var egret;
                     try {
                         //防止某些chrome版本创建异常问题
                         web.WebAudioDecode.initAudioContext = function () {
+                            if (web.WebAudioDecode.ctx) {
+                                try {
+                                    web.WebAudioDecode.ctx.close();
+                                }
+                                catch (e) {
+                                }
+                            }
                             web.WebAudioDecode.ctx = new (window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"])();
                         };
                         web.WebAudioDecode.initAudioContext();
