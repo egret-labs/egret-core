@@ -2001,7 +2001,7 @@ var egret;
             };
             HTML5StageText.prototype.activeShowKeyboard = function () {
                 if (this.htmlInput._needShow) {
-                    this.htmlInput._needShow = false;
+                    // this.htmlInput._needShow = false;
                     this._isNeedShow = false;
                     this.dispatchEvent(new egret.Event("focus"));
                     this.executeShow();
