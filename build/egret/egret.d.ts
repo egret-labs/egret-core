@@ -1,4 +1,4 @@
-declare var global: NodeJS.Global;
+declare var global: any;
 declare var __global: any;
 declare let __define: any;
 declare namespace egret {
@@ -12368,7 +12368,7 @@ declare namespace egret {
         private tempStage;
         private onMouseDownHandler(event);
         private onMouseMoveHandler(event);
-        $onFocus(): void;
+        $onFocus(active?: boolean): void;
         private onStageDownHandler(event);
         /**
          * @private
@@ -12442,7 +12442,7 @@ declare namespace egret {
          * @private
          *
          */
-        $show(): void;
+        $show(active?: boolean): void;
         /**
          * @private
          *

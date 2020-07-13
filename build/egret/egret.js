@@ -20283,8 +20283,9 @@ var egret;
         InputController.prototype.onMouseMoveHandler = function (event) {
             this.stageText.$hide();
         };
-        InputController.prototype.$onFocus = function () {
+        InputController.prototype.$onFocus = function (active) {
             var _this = this;
+            if (active === void 0) { active = false; }
             if (!this._text.visible) {
                 return;
             }
@@ -20299,7 +20300,7 @@ var egret;
                 this.stageText.$setText(this._text.$TextField[13 /* text */]);
             }
             //强制更新输入框位置
-            this.stageText.$show();
+            this.stageText.$show(active);
         };
         //未点中文本
         InputController.prototype.onStageDownHandler = function (event) {
@@ -21837,7 +21838,7 @@ var egret;
          */
         TextField.prototype.setFocus = function () {
             if (this.type == egret.TextFieldType.INPUT && this.$stage) {
-                this.inputUtils.$onFocus();
+                this.inputUtils.$onFocus(true);
             }
         };
         /**

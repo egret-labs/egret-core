@@ -1631,7 +1631,7 @@ namespace egret {
          */
         public setFocus(): void {
             if (this.type == egret.TextFieldType.INPUT && this.$stage) {
-                this.inputUtils.$onFocus();
+                this.inputUtils.$onFocus(true);
             }
         }
 

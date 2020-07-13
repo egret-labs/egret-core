@@ -1976,7 +1976,8 @@ var egret;
              * @private
              *
              */
-            HTML5StageText.prototype.$show = function () {
+            HTML5StageText.prototype.$show = function (active) {
+                if (active === void 0) { active = true; }
                 if (!this.htmlInput.isCurrentStageText(this)) {
                     this.inputElement = this.htmlInput.getInputElement(this);
                     if (!this.$textfield.multiline) {
@@ -1994,6 +1995,22 @@ var egret;
                 //标记当前文本被选中
                 this._isNeedShow = true;
                 this._initElement();
+                if (active) {
+                    this.activeShowKeyboard();
+                }
+            };
+            HTML5StageText.prototype.activeShowKeyboard = function () {
+                if (this.htmlInput._needShow) {
+                    this.htmlInput._needShow = false;
+                    this._isNeedShow = false;
+                    this.dispatchEvent(new egret.Event("focus"));
+                    this.executeShow();
+                    this.htmlInput.show();
+                }
+                else {
+                    this.htmlInput.blurInputElement();
+                    this.htmlInput.disposeInputElement();
+                }
             };
             /**
              * @private
@@ -2264,11 +2281,8 @@ var egret;
                         _this.show();
                     }
                     else {
-                        if (_this._inputElement) {
-                            _this.clearInputElement();
-                            _this._inputElement.blur();
-                            _this._inputElement = null;
-                        }
+                        _this.blurInputElement();
+                        _this.disposeInputElement();
                     }
                 };
             }
@@ -2504,6 +2518,21 @@ var egret;
                     this._inputDIV.appendChild(this._inputElement);
                 }
                 return self._inputElement;
+            };
+            /**
+             * @private
+             */
+            HTMLInput.prototype.blurInputElement = function () {
+                if (this._inputElement) {
+                    this.clearInputElement();
+                    this._inputElement.blur();
+                }
+            };
+            /**
+             * @private
+             */
+            HTMLInput.prototype.disposeInputElement = function () {
+                this._inputElement = null;
             };
             return HTMLInput;
         }());
