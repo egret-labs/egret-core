@@ -1302,6 +1302,7 @@ declare namespace egret {
          * @language zh_CN
          */
         sortableChildren: boolean;
+        private _sortableChildren;
     }
 }
 declare namespace egret {
@@ -4005,6 +4006,9 @@ declare namespace egret_native {
         setCubicCurveTo(controlX1: number, controlY1: number, controlX2: number, controlY2: number, anchorX: number, anchorY: number): void;
         setDrawArc(x: number, y: number, radius: number, startAngle: number, endAngle: number, anticlockwise?: boolean): void;
         setGraphicsClear(): void;
+        setZIndex(value: number): void;
+        sortChildren(): void;
+        setSortableChildren(value: boolean): void;
     }
 }
 /**

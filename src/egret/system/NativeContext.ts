@@ -41,8 +41,8 @@ namespace egret {
  */
 declare namespace egret_native {
 
-    function readUpdateFileSync(filePath):any;
-    function readResourceFileSync(filePath):any;
+    function readUpdateFileSync(filePath): any;
+    function readResourceFileSync(filePath): any;
 
     function sendInfoToPlugin(info: string): void;
 
@@ -191,6 +191,9 @@ declare namespace egret_native {
         public setCubicCurveTo(controlX1: number, controlY1: number, controlX2: number, controlY2: number, anchorX: number, anchorY: number): void;
         public setDrawArc(x: number, y: number, radius: number, startAngle: number, endAngle: number, anticlockwise?: boolean): void;
         public setGraphicsClear(): void;
+        public setZIndex(value: number): void;
+        public sortChildren(): void;
+        public setSortableChildren(value: boolean): void;
     }
 }
 /**
