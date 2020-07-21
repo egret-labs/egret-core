@@ -14355,7 +14355,8 @@ var egret;
     (function (pro) {
         pro.egret2dDriveMode = false;
         /**
-         *
+         * 根据场景地址获取场景，并将主摄像机Main Camera渲染为2d贴图并返回
+         * 只能在场景中只有一个相机（Main Camera）时使用
          * @param scenePath 场景路径（相对与3d项目resource文件夹）
          * @param textureWidth 贴图宽度 ，默认为512
          * @param textureHeight 贴图高度 ，默认为512
@@ -14368,6 +14369,23 @@ var egret;
             return Application.instance.egretProUtil.execute("createTextureFrom3dScene", scenePath, textureWidth, textureHeight, scaleFactor);
         }
         pro.createTextureFrom3dScene = createTextureFrom3dScene;
+        /**
+         * 根据场景地址获取场景，并根据过滤器，获取所有符合条件的相机，渲染为2d贴图并返回
+         * 单一场景需要用到多个摄像机时可使用此方法
+         * 被filter过滤掉的Camera组件会将enable设为false
+         * @param scenePath
+         * @param filter 判断该树节点的相机组件是否需要作为egret.Texture返回
+         * @param textureWidth
+         * @param textureHeight
+         * @param scaleFactor
+         */
+        function createTextureForCameras(scenePath, filter, textureWidth, textureHeight, scaleFactor) {
+            if (textureWidth === void 0) { textureWidth = 512; }
+            if (textureHeight === void 0) { textureHeight = 512; }
+            if (scaleFactor === void 0) { scaleFactor = 1; }
+            return Application.instance.egretProUtil.execute("createTextureForCameras", scenePath, filter, textureWidth, textureHeight, scaleFactor);
+        }
+        pro.createTextureForCameras = createTextureForCameras;
         /**
          * 执行方法
          * 通过传入命令的字符串，获取已注册的方法并执行，参数为可变参数
