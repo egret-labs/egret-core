@@ -127,6 +127,8 @@ declare module egret {
             "path": string;
         },
         "egret_version"?: string;
+        "vivo"?:{}
+        "ttgame"?:{}
     }
 
     export interface EgretProjectConfig {

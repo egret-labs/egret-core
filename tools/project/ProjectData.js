@@ -12,7 +12,9 @@ var EgretProjectData = /** @class */ (function () {
     function EgretProjectData() {
         this.egretProperties = {
             modules: [],
-            target: { current: "web" }
+            target: { current: "web" },
+            vivo: {},
+            ttgame: {}
         };
         this.projectRoot = "";
     }
@@ -104,6 +106,12 @@ var EgretProjectData = /** @class */ (function () {
             return _path.resolve(this.getProjectRoot(), this.egretProperties.native[platform + "_path"]);
         }
         return null;
+    };
+    EgretProjectData.prototype.getMiniGame = function (type) {
+        return this.egretProperties[type];
+    };
+    EgretProjectData.prototype.setMiniGameData = function (type, key, value) {
+        this.egretProperties[type][key] = value;
     };
     EgretProjectData.prototype.getModulePath2 = function (m) {
         var p = m.path;

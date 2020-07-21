@@ -40,8 +40,9 @@ type SourceCode = {
 class EgretProjectData {
     private egretProperties: egret.EgretProperty = {
         modules: [],
-        target: { current: "web" }
-
+        target: { current: "web" },
+        vivo: {},
+        ttgame: {}
     };
 
     projectRoot = "";
@@ -145,6 +146,12 @@ class EgretProjectData {
             return _path.resolve(this.getProjectRoot(), this.egretProperties.native[platform + "_path"]);
         }
         return null;
+    }
+    getMiniGame(type: string) {
+        return this.egretProperties[type]
+    }
+    setMiniGameData(type: string, key: string, value: any) {
+        this.egretProperties[type][key] = value
     }
 
     private getModulePath2(m: egret.EgretPropertyModule) {
@@ -299,7 +306,7 @@ type LauncherAPI = {
 
 }
 
-type LauncherAPI_MinVersion = {[P in keyof LauncherAPI]: string }
+type LauncherAPI_MinVersion = { [P in keyof LauncherAPI]: string }
 
 class EgretLauncherProxy {
 
