@@ -331,6 +331,7 @@ namespace egret {
             };
             if (egret.nativeRender) {
                 this.$nativeDisplayObject.setFontFamily(TextField.default_fontFamily);
+                this.$nativeDisplayObject.setFontSize(TextField.default_size);
             }
         }
 
@@ -1630,7 +1631,7 @@ namespace egret {
          */
         public setFocus(): void {
             if (this.type == egret.TextFieldType.INPUT && this.$stage) {
-                this.inputUtils.$onFocus();
+                this.inputUtils.$onFocus(true);
             }
         }
 

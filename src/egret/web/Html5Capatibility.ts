@@ -84,7 +84,17 @@ namespace egret.web {
             if (canUseWebAudio) {
                 try {
                     //防止某些chrome版本创建异常问题
-                    WebAudioDecode.ctx = new (window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"])();
+                    WebAudioDecode.initAudioContext = () => {
+                        if (WebAudioDecode.ctx) {
+                            try {
+                                WebAudioDecode.ctx.close();
+                            } catch (e) {
+
+                            }
+                        }
+                        WebAudioDecode.ctx = new (window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"])();
+                    }
+                    WebAudioDecode.initAudioContext();
                 }
                 catch (e) {
                     canUseWebAudio = false;

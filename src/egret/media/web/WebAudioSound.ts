@@ -93,6 +93,9 @@ namespace egret.web {
             });
         }
 
+        /** 解决 ios13 页面切到后台再拉起，声音无法播放 */
+        static initAudioContext:Function;
+
     }
 
     /**

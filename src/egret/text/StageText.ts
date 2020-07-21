@@ -74,7 +74,7 @@ namespace egret {
          * @private
          * 
          */
-        $show():void;
+        $show(active?: boolean):void;
         /**
          * @private
          * 

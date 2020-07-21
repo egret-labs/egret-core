@@ -1,8 +1,16 @@
 namespace egret.pro {
     export let egret2dDriveMode: boolean = false;
     export let mainCanvas: HTMLCanvasElement;
-    export function createTextureFrom3dScene(scenePath: string, textureWidth: number = 512, textureHeight: number = 512): Promise<egret.Texture> {
-        return Application.instance.egretProUtil.execute("createTextureFrom3dScene", scenePath, textureWidth, textureHeight);
+
+    /**
+     * 
+     * @param scenePath 场景路径（相对与3d项目resource文件夹）
+     * @param textureWidth 贴图宽度 ，默认为512
+     * @param textureHeight 贴图高度 ，默认为512
+     * @param scaleFactor 贴图质量。系数越大，贴图越清晰
+     */
+    export function createTextureFrom3dScene(scenePath: string, textureWidth: number = 512, textureHeight: number = 512, scaleFactor: number = 1): Promise<egret.Texture> {
+        return Application.instance.egretProUtil.execute("createTextureFrom3dScene", scenePath, textureWidth, textureHeight, scaleFactor);
     }
 
     /**

@@ -1976,7 +1976,8 @@ var egret;
              * @private
              *
              */
-            HTML5StageText.prototype.$show = function () {
+            HTML5StageText.prototype.$show = function (active) {
+                if (active === void 0) { active = true; }
                 if (!this.htmlInput.isCurrentStageText(this)) {
                     this.inputElement = this.htmlInput.getInputElement(this);
                     if (!this.$textfield.multiline) {
@@ -1994,6 +1995,22 @@ var egret;
                 //标记当前文本被选中
                 this._isNeedShow = true;
                 this._initElement();
+                if (active) {
+                    this.activeShowKeyboard();
+                }
+            };
+            HTML5StageText.prototype.activeShowKeyboard = function () {
+                if (this.htmlInput._needShow) {
+                    // this.htmlInput._needShow = false;
+                    this._isNeedShow = false;
+                    this.dispatchEvent(new egret.Event("focus"));
+                    this.executeShow();
+                    this.htmlInput.show();
+                }
+                else {
+                    this.htmlInput.blurInputElement();
+                    this.htmlInput.disposeInputElement();
+                }
             };
             /**
              * @private
@@ -2264,11 +2281,8 @@ var egret;
                         _this.show();
                     }
                     else {
-                        if (_this._inputElement) {
-                            _this.clearInputElement();
-                            _this._inputElement.blur();
-                            _this._inputElement = null;
-                        }
+                        _this.blurInputElement();
+                        _this.disposeInputElement();
                     }
                 };
             }
@@ -2504,6 +2518,21 @@ var egret;
                     this._inputDIV.appendChild(this._inputElement);
                 }
                 return self._inputElement;
+            };
+            /**
+             * @private
+             */
+            HTMLInput.prototype.blurInputElement = function () {
+                if (this._inputElement) {
+                    this.clearInputElement();
+                    this._inputElement.blur();
+                }
+            };
+            /**
+             * @private
+             */
+            HTMLInput.prototype.disposeInputElement = function () {
+                this._inputElement = null;
             };
             return HTMLInput;
         }());
@@ -3017,16 +3046,26 @@ var egret;
          * @private
          */
         web.WebLifeCycleHandler = function (context) {
-            var handleVisibilityChange = function () {
-                if (!document[hidden]) {
-                    context.resume();
-                }
-                else {
-                    context.pause();
+            var resume = function () {
+                context.resume();
+                /** 解决 ios13 页面切到后台再拉起，声音无法播放 */
+                if (web.WebAudioDecode.initAudioContext) {
+                    web.WebAudioDecode.initAudioContext();
                 }
             };
-            window.addEventListener("focus", context.resume, false);
-            window.addEventListener("blur", context.pause, false);
+            var pause = function () {
+                context.pause();
+            };
+            var handleVisibilityChange = function () {
+                if (!document[hidden]) {
+                    resume();
+                }
+                else {
+                    pause();
+                }
+            };
+            window.addEventListener("focus", resume, false);
+            window.addEventListener("blur", pause, false);
             var hidden, visibilityChange;
             if (typeof document.hidden !== "undefined") {
                 hidden = "hidden";
@@ -3049,8 +3088,8 @@ var egret;
                 visibilityChange = "ovisibilitychange";
             }
             if ("onpageshow" in window && "onpagehide" in window) {
-                window.addEventListener("pageshow", context.resume, false);
-                window.addEventListener("pagehide", context.pause, false);
+                window.addEventListener("pageshow", resume, false);
+                window.addEventListener("pagehide", pause, false);
             }
             if (hidden && visibilityChange) {
                 document.addEventListener(visibilityChange, handleVisibilityChange, false);
@@ -3068,10 +3107,10 @@ var egret;
                 browser.execWebFn.postX5GamePlayerMessage = function (event) {
                     var eventType = event.type;
                     if (eventType == "app_enter_background") {
-                        context.pause();
+                        pause();
                     }
                     else if (eventType == "app_enter_foreground") {
-                        context.resume();
+                        resume();
                     }
                 };
                 window["browser"] = browser;
@@ -3154,7 +3193,17 @@ var egret;
                 if (canUseWebAudio) {
                     try {
                         //防止某些chrome版本创建异常问题
-                        web.WebAudioDecode.ctx = new (window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"])();
+                        web.WebAudioDecode.initAudioContext = function () {
+                            if (web.WebAudioDecode.ctx) {
+                                try {
+                                    web.WebAudioDecode.ctx.close();
+                                }
+                                catch (e) {
+                                }
+                            }
+                            web.WebAudioDecode.ctx = new (window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"])();
+                        };
+                        web.WebAudioDecode.initAudioContext();
                     }
                     catch (e) {
                         canUseWebAudio = false;

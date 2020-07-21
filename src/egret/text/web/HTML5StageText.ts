@@ -144,7 +144,7 @@ namespace egret.web {
          * @private
          * 
          */
-        $show(): void {
+        $show(active: boolean = true): void {
             if (!this.htmlInput.isCurrentStageText(this)) {
                 this.inputElement = this.htmlInput.getInputElement(this);
                 if (!this.$textfield.multiline) {
@@ -165,6 +165,25 @@ namespace egret.web {
             this._isNeedShow = true;
 
             this._initElement();
+
+            if (active) {
+                this.activeShowKeyboard();
+            }
+        }
+
+
+        activeShowKeyboard() {
+            if (this.htmlInput._needShow) {
+                // this.htmlInput._needShow = false;
+                this._isNeedShow = false;
+                this.dispatchEvent(new egret.Event("focus"));
+                this.executeShow();
+                this.htmlInput.show();
+            }
+            else {
+                this.htmlInput.blurInputElement();
+                this.htmlInput.disposeInputElement();
+            }
         }
 
         /**
@@ -348,11 +367,8 @@ namespace egret.web {
                 e.stopImmediatePropagation();
                 //e.preventDefault();
                 this._isNeedShow = false;
-
                 this.dispatchEvent(new egret.Event("focus"));
-
                 this.executeShow();
-
             }
         }
 
@@ -629,11 +645,8 @@ namespace egret.web {
                 this.show();
             }
             else {
-                if (this._inputElement) {
-                    this.clearInputElement();
-                    this._inputElement.blur();
-                    this._inputElement = null;
-                }
+                this.blurInputElement();
+                this.disposeInputElement();
             }
         }
 
@@ -793,6 +806,25 @@ namespace egret.web {
 
 
         public finishUserTyping: Function;
+
+
+        /**
+         * @private
+         */
+        blurInputElement() {
+            if (this._inputElement) {
+                this.clearInputElement();
+                this._inputElement.blur();
+            }
+        }
+
+
+        /**
+         * @private
+         */
+        disposeInputElement() {
+            this._inputElement = null;
+        }
     }
 }
 

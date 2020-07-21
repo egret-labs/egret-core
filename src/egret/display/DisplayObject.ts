@@ -2346,8 +2346,15 @@ namespace egret {
         }
         public set zIndex(value: number) {
             this._zIndex = value;
-            if (this.parent) {
-                this.parent.$sortDirty = true;
+            if (egret.nativeRender) {
+                if (this.$nativeDisplayObject.setZIndex) {
+                    this.$nativeDisplayObject.setZIndex(value);
+                }
+            }
+            else {
+                if (this.parent) {
+                    this.parent.$sortDirty = true;
+                }
             }
         }
         /**
@@ -2366,7 +2373,18 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public sortableChildren: boolean = false;
+        public get sortableChildren(): boolean {
+            return this._sortableChildren;
+        }
+
+        public set sortableChildren(value: boolean) {
+            this._sortableChildren = value;
+            if (this.$nativeDisplayObject && this.$nativeDisplayObject.setSortableChildren) {
+                this.$nativeDisplayObject.setSortableChildren(value);
+            }
+        }
+
+        private _sortableChildren: boolean = false;
     }
 
 }
