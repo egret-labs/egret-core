@@ -488,8 +488,8 @@ function pluginManifest(manifest, outputDir) {
                 case 5:
                     gameJsonContent = _a.sent();
                     gameJsonContent.plugins = {};
-                    if (!(ttgame.usePlugin && command === "publish")) return [3 /*break*/, 9];
-                    provider = "tt7e2186943221985d";
+                    if (!(ttgame && ttgame.usePlugin && command === "publish")) return [3 /*break*/, 9];
+                    provider = ttgame.provider;
                     ttPluginPath = path.join(outputDir, "egret-library");
                     file.createDirectory(ttPluginPath);
                     return [4 /*yield*/, file.writeFileAsync(path.join(ttPluginPath, "index.js"), "console.log(\"egret-plugin\")", 'utf-8')];
@@ -510,9 +510,7 @@ function pluginManifest(manifest, outputDir) {
                         "path": "egret-library"
                     };
                     _a.label = 9;
-                case 9:
-                    console.log('gameJsonContent', gameJsonContent);
-                    return [4 /*yield*/, file.writeJSONAsync(path.join(outputDir, 'game.json'), gameJsonContent)];
+                case 9: return [4 /*yield*/, file.writeJSONAsync(path.join(outputDir, 'game.json'), gameJsonContent)];
                 case 10:
                     _a.sent();
                     _a.label = 11;

@@ -148,6 +148,8 @@ class EgretProjectData {
         return null;
     }
     getMiniGame(type: string) {
+        if(!this.egretProperties.ttgame) this.egretProperties.ttgame = {}
+        if(!this.egretProperties.ttgame["usePlugin"]) this.egretProperties.ttgame["usePlugin"] = false
         return this.egretProperties[type]
     }
     setMiniGameData(type: string, key: string, value: any) {
@@ -353,7 +355,7 @@ class EgretLauncherProxy {
                     const result = target[p];
                     if (!result) {
                         const minVersion = minVersions[p];
-                        throw `找不到 LauncherAPI:${p},请安装最新的白鹭引擎启动器客户端解决此问题,最低版本要求:${minVersion},下载地址:https://egret.com/products`//i18n
+                        throw `找不到 LauncherAPI:${String(p)},请安装最新的白鹭引擎启动器客户端解决此问题,最低版本要求:${minVersion},下载地址:https://egret.com/products`//i18n
                     }
                     return result.bind(target)
                 }

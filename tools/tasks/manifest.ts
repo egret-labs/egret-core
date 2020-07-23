@@ -59,7 +59,7 @@ export class ManifestPlugin {
             let ttgame = EgretProject.projectData.getMiniGame('ttgame')
             let new_basename = basename.substr(0, basename.length - file.extname.length)
             let isEngineJS = false;
-            if (useWxPlugin || ttgame.usePlugin) {
+            if ((target == "ttgame" && ttgame.usePlugin) || (target == "wxgame" && useWxPlugin)) {
                 //use the egret engine inside wechat
                 let engineJS = ['assetsmanager', 'dragonBones', 'egret', 'game', 'eui', 'socket', 'tween']
                 for (let i in engineJS) {
@@ -67,10 +67,10 @@ export class ManifestPlugin {
                     let engine_path = jsName + '.min.js'
                     if (filename.indexOf(engine_path) > 0) {
                         isEngineJS = true;
-                        if(target == "ttgame"){
+                        if (target == "ttgame") {
                             this.ttSignature.push({
-                                "path":engine_path,
-                                "md5":utils.createHash(String(file.contents))
+                                "path": engine_path,
+                                "md5": utils.createHash(String(file.contents))
                             })
                         }
                     }
@@ -87,7 +87,7 @@ export class ManifestPlugin {
             }
             file.outputDir = "";
             file.path = path.join(file.base, new_file_path);
-            
+
             if (target == 'vivogame') {
                 var config: any = EgretProject.projectData;
                 const vivoData = config.egretProperties.vivo
@@ -97,8 +97,8 @@ export class ManifestPlugin {
                         file.path = path.join(file.base, '../', 'egret-library', basename);
                     }
                 }
-            }else if(target == "ttgame"){
-                EgretProject.projectData.setMiniGameData('ttgame','signature',this.ttSignature)
+            } else if (target == "ttgame") {
+                EgretProject.projectData.setMiniGameData('ttgame', 'signature', this.ttSignature)
             }
             const relative = file.relative.split("\\").join('/');
 
@@ -118,6 +118,7 @@ export class ManifestPlugin {
         let { output, useWxPlugin, qqPlugin } = this.options
         const { outputDir } = pluginContext
         const extname = path.extname(output);
+        let ttgame = EgretProject.projectData.getMiniGame('ttgame')
         let contents = '';
         let target = pluginContext.buildConfig.target
         switch (extname) {
@@ -135,7 +136,7 @@ export class ManifestPlugin {
                         }
                         let _name = path.basename(fileName)
                         result = `require("./js/${_name}")`
-                    } else if (useWxPlugin) {
+                    } else if ((target == "ttgame" && ttgame.usePlugin) || (target == "wxgame" && useWxPlugin)) {
                         if (fileName.indexOf('egret-library') == 0) {
                             result = `requirePlugin("${fileName}")`
                         }

@@ -74,7 +74,7 @@ var ManifestPlugin = /** @class */ (function () {
                     ttgame = EgretProject.projectData.getMiniGame('ttgame');
                     new_basename = basename.substr(0, basename.length - file.extname.length);
                     isEngineJS = false;
-                    if (useWxPlugin || ttgame.usePlugin) {
+                    if ((target == "ttgame" && ttgame.usePlugin) || (target == "wxgame" && useWxPlugin)) {
                         engineJS = ['assetsmanager', 'dragonBones', 'egret', 'game', 'eui', 'socket', 'tween'];
                         for (i in engineJS) {
                             jsName = engineJS[i];
@@ -133,13 +133,14 @@ var ManifestPlugin = /** @class */ (function () {
     };
     ManifestPlugin.prototype.onFinish = function (pluginContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, output, useWxPlugin, qqPlugin, outputDir, extname, contents, target, pluginContents;
+            var _a, output, useWxPlugin, qqPlugin, outputDir, extname, ttgame, contents, target, pluginContents;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         _a = this.options, output = _a.output, useWxPlugin = _a.useWxPlugin, qqPlugin = _a.qqPlugin;
                         outputDir = pluginContext.outputDir;
                         extname = path.extname(output);
+                        ttgame = EgretProject.projectData.getMiniGame('ttgame');
                         contents = '';
                         target = pluginContext.buildConfig.target;
                         switch (extname) {
@@ -158,7 +159,7 @@ var ManifestPlugin = /** @class */ (function () {
                                         var _name = path.basename(fileName);
                                         result = "require(\"./js/" + _name + "\")";
                                     }
-                                    else if (useWxPlugin) {
+                                    else if ((target == "ttgame" && ttgame.usePlugin) || (target == "wxgame" && useWxPlugin)) {
                                         if (fileName.indexOf('egret-library') == 0) {
                                             result = "requirePlugin(\"" + fileName + "\")";
                                         }

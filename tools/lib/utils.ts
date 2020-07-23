@@ -429,8 +429,8 @@ export async function pluginManifest(manifest: any, outputDir: string) {
         let ttgame = EgretProject.projectData.getMiniGame('ttgame')
         let gameJsonContent = await file.readJSONAsync(path.join(outputDir, 'game.json'))
         gameJsonContent.plugins = {}
-        if (ttgame.usePlugin && command === "publish") {//console.log('使用tt插件')
-            const provider = "tt7e2186943221985d"
+        if (ttgame && ttgame.usePlugin && command === "publish") {//console.log('使用tt插件')
+            const provider = ttgame.provider
             let ttPluginPath = path.join(outputDir, "egret-library")
             file.createDirectory(ttPluginPath)
             await file.writeFileAsync(path.join(ttPluginPath, "index.js"), `console.log("egret-plugin")`, 'utf-8')
