@@ -1028,7 +1028,7 @@ var dragonBones;
     var UserData = /** @class */ (function (_super) {
         __extends(UserData, _super);
         function UserData() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             /**
              * - The custom int numbers.
              * @version DragonBones 5.0
@@ -1141,7 +1141,7 @@ var dragonBones;
     var ActionData = /** @class */ (function (_super) {
         __extends(ActionData, _super);
         function ActionData() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             _this.data = null; //
             return _this;
         }
@@ -1203,7 +1203,7 @@ var dragonBones;
     var DragonBonesData = /** @class */ (function (_super) {
         __extends(DragonBonesData, _super);
         function DragonBonesData() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             /**
              * @internal
              */
@@ -1331,7 +1331,7 @@ var dragonBones;
     var ArmatureData = /** @class */ (function (_super) {
         __extends(ArmatureData, _super);
         function ArmatureData() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             /**
              * @private
              */
@@ -1707,7 +1707,7 @@ var dragonBones;
     var BoneData = /** @class */ (function (_super) {
         __extends(BoneData, _super);
         function BoneData() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             /**
              * @private
              */
@@ -1746,7 +1746,7 @@ var dragonBones;
     var SurfaceData = /** @class */ (function (_super) {
         __extends(SurfaceData, _super);
         function SurfaceData() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             _this.geometry = new dragonBones.GeometryData();
             return _this;
         }
@@ -1776,7 +1776,7 @@ var dragonBones;
     var SlotData = /** @class */ (function (_super) {
         __extends(SlotData, _super);
         function SlotData() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             /**
              * @private
              */
@@ -1848,7 +1848,7 @@ var dragonBones;
     var CanvasData = /** @class */ (function (_super) {
         __extends(CanvasData, _super);
         function CanvasData() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         CanvasData.toString = function () {
             return "[class dragonBones.CanvasData]";
@@ -1902,7 +1902,7 @@ var dragonBones;
     var SkinData = /** @class */ (function (_super) {
         __extends(SkinData, _super);
         function SkinData() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             /**
              * @private
              */
@@ -1998,7 +1998,7 @@ var dragonBones;
     var ConstraintData = /** @class */ (function (_super) {
         __extends(ConstraintData, _super);
         function ConstraintData() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         ConstraintData.prototype._onClear = function () {
             this.order = 0;
@@ -2017,7 +2017,7 @@ var dragonBones;
     var IKConstraintData = /** @class */ (function (_super) {
         __extends(IKConstraintData, _super);
         function IKConstraintData() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         IKConstraintData.toString = function () {
             return "[class dragonBones.IKConstraintData]";
@@ -2037,7 +2037,7 @@ var dragonBones;
     var PathConstraintData = /** @class */ (function (_super) {
         __extends(PathConstraintData, _super);
         function PathConstraintData() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             _this.bones = [];
             return _this;
         }
@@ -2136,7 +2136,7 @@ var dragonBones;
     var DisplayData = /** @class */ (function (_super) {
         __extends(DisplayData, _super);
         function DisplayData() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             _this.transform = new dragonBones.Transform();
             return _this;
         }
@@ -2155,7 +2155,7 @@ var dragonBones;
     var ImageDisplayData = /** @class */ (function (_super) {
         __extends(ImageDisplayData, _super);
         function ImageDisplayData() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             _this.pivot = new dragonBones.Point();
             return _this;
         }
@@ -2177,7 +2177,7 @@ var dragonBones;
     var ArmatureDisplayData = /** @class */ (function (_super) {
         __extends(ArmatureDisplayData, _super);
         function ArmatureDisplayData() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             _this.actions = [];
             return _this;
         }
@@ -2210,7 +2210,7 @@ var dragonBones;
     var MeshDisplayData = /** @class */ (function (_super) {
         __extends(MeshDisplayData, _super);
         function MeshDisplayData() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             _this.geometry = new GeometryData();
             return _this;
         }
@@ -2232,7 +2232,7 @@ var dragonBones;
     var BoundingBoxDisplayData = /** @class */ (function (_super) {
         __extends(BoundingBoxDisplayData, _super);
         function BoundingBoxDisplayData() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             _this.boundingBox = null; // Initial value.
             return _this;
         }
@@ -2256,7 +2256,7 @@ var dragonBones;
     var PathDisplayData = /** @class */ (function (_super) {
         __extends(PathDisplayData, _super);
         function PathDisplayData() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             _this.geometry = new GeometryData();
             _this.curveLengths = [];
             return _this;
@@ -2281,7 +2281,7 @@ var dragonBones;
     var WeightData = /** @class */ (function (_super) {
         __extends(WeightData, _super);
         function WeightData() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             _this.bones = [];
             return _this;
         }
@@ -2343,7 +2343,7 @@ var dragonBones;
     var BoundingBoxData = /** @class */ (function (_super) {
         __extends(BoundingBoxData, _super);
         function BoundingBoxData() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         BoundingBoxData.prototype._onClear = function () {
             this.color = 0x000000;
@@ -2366,7 +2366,7 @@ var dragonBones;
     var RectangleBoundingBoxData = /** @class */ (function (_super) {
         __extends(RectangleBoundingBoxData, _super);
         function RectangleBoundingBoxData() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         RectangleBoundingBoxData.toString = function () {
             return "[class dragonBones.RectangleBoundingBoxData]";
@@ -2556,7 +2556,7 @@ var dragonBones;
     var EllipseBoundingBoxData = /** @class */ (function (_super) {
         __extends(EllipseBoundingBoxData, _super);
         function EllipseBoundingBoxData() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         EllipseBoundingBoxData.toString = function () {
             return "[class dragonBones.EllipseData]";
@@ -2693,7 +2693,7 @@ var dragonBones;
     var PolygonBoundingBoxData = /** @class */ (function (_super) {
         __extends(PolygonBoundingBoxData, _super);
         function PolygonBoundingBoxData() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             /**
              * - The polygon vertices.
              * @version DragonBones 5.1
@@ -2915,7 +2915,7 @@ var dragonBones;
     var AnimationData = /** @class */ (function (_super) {
         __extends(AnimationData, _super);
         function AnimationData() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             /**
              * @private
              */
@@ -3131,7 +3131,7 @@ var dragonBones;
     var TimelineData = /** @class */ (function (_super) {
         __extends(TimelineData, _super);
         function TimelineData() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         TimelineData.toString = function () {
             return "[class dragonBones.TimelineData]";
@@ -3150,7 +3150,7 @@ var dragonBones;
     var AnimationTimelineData = /** @class */ (function (_super) {
         __extends(AnimationTimelineData, _super);
         function AnimationTimelineData() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         AnimationTimelineData.toString = function () {
             return "[class dragonBones.AnimationTimelineData]";
@@ -3207,7 +3207,7 @@ var dragonBones;
     var AnimationConfig = /** @class */ (function (_super) {
         __extends(AnimationConfig, _super);
         function AnimationConfig() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             /**
              * @private
              */
@@ -3318,7 +3318,7 @@ var dragonBones;
     var TextureAtlasData = /** @class */ (function (_super) {
         __extends(TextureAtlasData, _super);
         function TextureAtlasData() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             /**
              * @private
              */
@@ -3385,7 +3385,7 @@ var dragonBones;
     var TextureData = /** @class */ (function (_super) {
         __extends(TextureData, _super);
         function TextureData() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             _this.region = new dragonBones.Rectangle();
             _this.frame = null; // Initial value.
             return _this;
@@ -3464,7 +3464,7 @@ var dragonBones;
     var Armature = /** @class */ (function (_super) {
         __extends(Armature, _super);
         function Armature() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             _this._bones = [];
             _this._slots = [];
             /**
@@ -4358,7 +4358,7 @@ var dragonBones;
     var TransformObject = /** @class */ (function (_super) {
         __extends(TransformObject, _super);
         function TransformObject() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             /**
              * - A matrix relative to the armature coordinate system.
              * @version DragonBones 3.0
@@ -4510,7 +4510,7 @@ var dragonBones;
     var Bone = /** @class */ (function (_super) {
         __extends(Bone, _super);
         function Bone() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             /**
              * @internal
              */
@@ -5009,7 +5009,7 @@ var dragonBones;
     var Surface = /** @class */ (function (_super) {
         __extends(Surface, _super);
         function Surface() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             _this._vertices = [];
             _this._deformVertices = [];
             /**
@@ -5474,7 +5474,7 @@ var dragonBones;
     var DisplayFrame = /** @class */ (function (_super) {
         __extends(DisplayFrame, _super);
         function DisplayFrame() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             _this.deformVertices = [];
             return _this;
         }
@@ -5594,7 +5594,7 @@ var dragonBones;
     var Slot = /** @class */ (function (_super) {
         __extends(Slot, _super);
         function Slot() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             _this._localMatrix = new dragonBones.Matrix();
             /**
              * @internal
@@ -6640,7 +6640,7 @@ var dragonBones;
     var Constraint = /** @class */ (function (_super) {
         __extends(Constraint, _super);
         function Constraint() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         Constraint.prototype._onClear = function () {
             this._armature = null; //
@@ -6667,7 +6667,7 @@ var dragonBones;
     var IKConstraint = /** @class */ (function (_super) {
         __extends(IKConstraint, _super);
         function IKConstraint() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         IKConstraint.toString = function () {
             return "[class dragonBones.IKConstraint]";
@@ -6801,7 +6801,7 @@ var dragonBones;
     var PathConstraint = /** @class */ (function (_super) {
         __extends(PathConstraint, _super);
         function PathConstraint() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             _this._bones = [];
             _this._spaces = [];
             _this._positions = [];
@@ -7605,7 +7605,7 @@ var dragonBones;
     var Animation = /** @class */ (function (_super) {
         __extends(Animation, _super);
         function Animation() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             _this._animationNames = [];
             _this._animationStates = [];
             _this._animations = {};
@@ -8523,7 +8523,7 @@ var dragonBones;
     var AnimationState = /** @class */ (function (_super) {
         __extends(AnimationState, _super);
         function AnimationState() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             _this._boneMask = [];
             _this._boneTimelines = [];
             _this._boneBlendTimelines = [];
@@ -8836,30 +8836,15 @@ var dragonBones;
                                         break;
                                     }
                                     case 22 /* SlotDeform */: {
-                                        var dragonBonesData = this._animationData.parent.parent;
-                                        var timelineArray = dragonBonesData.timelineArray;
-                                        var frameIntOffset = this._animationData.frameIntOffset + timelineArray[timelineData.offset + 3 /* TimelineFrameValueCount */];
-                                        var frameIntArray = dragonBonesData.frameIntArray;
-                                        var geometryOffset = frameIntArray[frameIntOffset + 0 /* DeformVertexOffset */];
-                                        if (geometryOffset < 0) {
-                                            geometryOffset += 65536; // Fixed out of bounds bug. 
+                                        var timeline = dragonBones.BaseObject.borrowObject(dragonBones.DeformTimelineState);
+                                        timeline.target = this._armature.animation.getBlendState(BlendState.SLOT_DEFORM, slot.name, slot);
+                                        timeline.init(this._armature, this, timelineData);
+                                        if (timeline.target != null) {
+                                            this._slotBlendTimelines.push(timeline);
+                                            ffdFlags.push(timeline.geometryOffset);
                                         }
-                                        for (var i = 0, l = slot.displayFrameCount; i < l; ++i) {
-                                            var displayFrame = slot.getDisplayFrameAt(i);
-                                            var geometryData = displayFrame.getGeometryData();
-                                            if (geometryData === null) {
-                                                continue;
-                                            }
-                                            if (geometryData.offset === geometryOffset) {
-                                                var timeline = dragonBones.BaseObject.borrowObject(dragonBones.DeformTimelineState);
-                                                timeline.target = this._armature.animation.getBlendState(BlendState.SLOT_DEFORM, displayFrame.rawDisplayData.name, slot);
-                                                timeline.displayFrame = displayFrame;
-                                                timeline.init(this._armature, this, timelineData);
-                                                this._slotBlendTimelines.push(timeline);
-                                                displayFrame.updateDeformVertices();
-                                                ffdFlags.push(geometryOffset);
-                                                break;
-                                            }
+                                        else {
+                                            timeline.returnToPool();
                                         }
                                         break;
                                     }
@@ -8898,6 +8883,7 @@ var dragonBones;
                                 var geometryData = displayFrame.getGeometryData();
                                 if (geometryData != null && ffdFlags.indexOf(geometryData.offset) < 0) {
                                     var timeline = dragonBones.BaseObject.borrowObject(dragonBones.DeformTimelineState);
+                                    timeline.geometryOffset = geometryData.offset; //
                                     timeline.displayFrame = displayFrame; //
                                     timeline.target = this._armature.animation.getBlendState(BlendState.SLOT_DEFORM, slot.name, slot);
                                     timeline.init(this._armature, this, null);
@@ -9757,7 +9743,7 @@ var dragonBones;
     var BlendState = /** @class */ (function (_super) {
         __extends(BlendState, _super);
         function BlendState() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         BlendState.toString = function () {
             return "[class dragonBones.BlendState]";
@@ -9845,7 +9831,7 @@ var dragonBones;
     var TimelineState = /** @class */ (function (_super) {
         __extends(TimelineState, _super);
         function TimelineState() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         TimelineState.prototype._onClear = function () {
             this.dirty = false;
@@ -9997,7 +9983,7 @@ var dragonBones;
     var TweenTimelineState = /** @class */ (function (_super) {
         __extends(TweenTimelineState, _super);
         function TweenTimelineState() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         TweenTimelineState._getEasingValue = function (tweenType, progress, easing) {
             var value = progress;
@@ -10105,7 +10091,7 @@ var dragonBones;
     var SingleValueTimelineState = /** @class */ (function (_super) {
         __extends(SingleValueTimelineState, _super);
         function SingleValueTimelineState() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         SingleValueTimelineState.prototype._onClear = function () {
             _super.prototype._onClear.call(this);
@@ -10156,7 +10142,7 @@ var dragonBones;
     var DoubleValueTimelineState = /** @class */ (function (_super) {
         __extends(DoubleValueTimelineState, _super);
         function DoubleValueTimelineState() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         DoubleValueTimelineState.prototype._onClear = function () {
             _super.prototype._onClear.call(this);
@@ -10217,7 +10203,7 @@ var dragonBones;
     var MutilpleValueTimelineState = /** @class */ (function (_super) {
         __extends(MutilpleValueTimelineState, _super);
         function MutilpleValueTimelineState() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             _this._rd = [];
             return _this;
         }
@@ -10323,7 +10309,7 @@ var dragonBones;
     var ActionTimelineState = /** @class */ (function (_super) {
         __extends(ActionTimelineState, _super);
         function ActionTimelineState() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         ActionTimelineState.toString = function () {
             return "[class dragonBones.ActionTimelineState]";
@@ -10536,7 +10522,7 @@ var dragonBones;
     var ZOrderTimelineState = /** @class */ (function (_super) {
         __extends(ZOrderTimelineState, _super);
         function ZOrderTimelineState() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         ZOrderTimelineState.toString = function () {
             return "[class dragonBones.ZOrderTimelineState]";
@@ -10562,7 +10548,7 @@ var dragonBones;
     var BoneAllTimelineState = /** @class */ (function (_super) {
         __extends(BoneAllTimelineState, _super);
         function BoneAllTimelineState() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         BoneAllTimelineState.toString = function () {
             return "[class dragonBones.BoneAllTimelineState]";
@@ -10627,7 +10613,7 @@ var dragonBones;
     var BoneTranslateTimelineState = /** @class */ (function (_super) {
         __extends(BoneTranslateTimelineState, _super);
         function BoneTranslateTimelineState() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         BoneTranslateTimelineState.toString = function () {
             return "[class dragonBones.BoneTranslateTimelineState]";
@@ -10669,7 +10655,7 @@ var dragonBones;
     var BoneRotateTimelineState = /** @class */ (function (_super) {
         __extends(BoneRotateTimelineState, _super);
         function BoneRotateTimelineState() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         BoneRotateTimelineState.toString = function () {
             return "[class dragonBones.BoneRotateTimelineState]";
@@ -10722,7 +10708,7 @@ var dragonBones;
     var BoneScaleTimelineState = /** @class */ (function (_super) {
         __extends(BoneScaleTimelineState, _super);
         function BoneScaleTimelineState() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         BoneScaleTimelineState.toString = function () {
             return "[class dragonBones.BoneScaleTimelineState]";
@@ -10770,7 +10756,7 @@ var dragonBones;
     var SurfaceTimelineState = /** @class */ (function (_super) {
         __extends(SurfaceTimelineState, _super);
         function SurfaceTimelineState() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         SurfaceTimelineState.toString = function () {
             return "[class dragonBones.SurfaceTimelineState]";
@@ -10849,7 +10835,7 @@ var dragonBones;
     var AlphaTimelineState = /** @class */ (function (_super) {
         __extends(AlphaTimelineState, _super);
         function AlphaTimelineState() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         AlphaTimelineState.toString = function () {
             return "[class dragonBones.AlphaTimelineState]";
@@ -10893,7 +10879,7 @@ var dragonBones;
     var SlotDisplayTimelineState = /** @class */ (function (_super) {
         __extends(SlotDisplayTimelineState, _super);
         function SlotDisplayTimelineState() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         SlotDisplayTimelineState.toString = function () {
             return "[class dragonBones.SlotDisplayTimelineState]";
@@ -10918,7 +10904,7 @@ var dragonBones;
     var SlotColorTimelineState = /** @class */ (function (_super) {
         __extends(SlotColorTimelineState, _super);
         function SlotColorTimelineState() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             _this._current = [0, 0, 0, 0, 0, 0, 0, 0];
             _this._difference = [0, 0, 0, 0, 0, 0, 0, 0];
             _this._result = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
@@ -11064,7 +11050,7 @@ var dragonBones;
     var SlotZIndexTimelineState = /** @class */ (function (_super) {
         __extends(SlotZIndexTimelineState, _super);
         function SlotZIndexTimelineState() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         SlotZIndexTimelineState.toString = function () {
             return "[class dragonBones.SlotZIndexTimelineState]";
@@ -11106,13 +11092,14 @@ var dragonBones;
     var DeformTimelineState = /** @class */ (function (_super) {
         __extends(DeformTimelineState, _super);
         function DeformTimelineState() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         DeformTimelineState.toString = function () {
             return "[class dragonBones.DeformTimelineState]";
         };
         DeformTimelineState.prototype._onClear = function () {
             _super.prototype._onClear.call(this);
+            this.geometryOffset = 0;
             this.displayFrame = null;
             this._deformCount = 0;
             this._deformOffset = 0;
@@ -11124,15 +11111,32 @@ var dragonBones;
                 var frameIntOffset = this._animationData.frameIntOffset + this._timelineArray[this._timelineData.offset + 3 /* TimelineFrameValueCount */];
                 var dragonBonesData = this._animationData.parent.parent;
                 var frameIntArray = dragonBonesData.frameIntArray;
+                var slot = this.target.target;
+                this.geometryOffset = frameIntArray[frameIntOffset + 0 /* DeformVertexOffset */];
+                if (this.geometryOffset < 0) {
+                    this.geometryOffset += 65536; // Fixed out of bounds bug. 
+                }
+                for (var i = 0, l = slot.displayFrameCount; i < l; ++i) {
+                    var displayFrame = slot.getDisplayFrameAt(i);
+                    var geometryData = displayFrame.getGeometryData();
+                    if (geometryData === null) {
+                        continue;
+                    }
+                    if (geometryData.offset === this.geometryOffset) {
+                        this.displayFrame = displayFrame;
+                        this.displayFrame.updateDeformVertices();
+                        break;
+                    }
+                }
+                if (this.displayFrame === null) {
+                    this.returnToPool(); //
+                    return;
+                }
                 this._valueOffset = this._animationData.frameFloatOffset;
                 this._valueCount = frameIntArray[frameIntOffset + 2 /* DeformValueCount */];
                 this._deformCount = frameIntArray[frameIntOffset + 1 /* DeformCount */];
                 this._deformOffset = frameIntArray[frameIntOffset + 3 /* DeformValueOffset */];
-                this._sameValueOffset = frameIntArray[frameIntOffset + 4 /* DeformFloatOffset */];
-                if (this._sameValueOffset < 0) {
-                    this._sameValueOffset += 65536; // Fixed out of bounds bug. 
-                }
-                this._sameValueOffset += this._animationData.frameFloatOffset;
+                this._sameValueOffset = frameIntArray[frameIntOffset + 4 /* DeformFloatOffset */] + this._animationData.frameFloatOffset;
                 this._valueScale = this._armature.armatureData.scale;
                 this._valueArray = dragonBonesData.frameFloatArray;
                 this._rd.length = this._valueCount * 2;
@@ -11192,7 +11196,7 @@ var dragonBones;
     var IKConstraintTimelineState = /** @class */ (function (_super) {
         __extends(IKConstraintTimelineState, _super);
         function IKConstraintTimelineState() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         IKConstraintTimelineState.toString = function () {
             return "[class dragonBones.IKConstraintTimelineState]";
@@ -11227,7 +11231,7 @@ var dragonBones;
     var AnimationProgressTimelineState = /** @class */ (function (_super) {
         __extends(AnimationProgressTimelineState, _super);
         function AnimationProgressTimelineState() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         AnimationProgressTimelineState.toString = function () {
             return "[class dragonBones.AnimationProgressTimelineState]";
@@ -11255,7 +11259,7 @@ var dragonBones;
     var AnimationWeightTimelineState = /** @class */ (function (_super) {
         __extends(AnimationWeightTimelineState, _super);
         function AnimationWeightTimelineState() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         AnimationWeightTimelineState.toString = function () {
             return "[class dragonBones.AnimationWeightTimelineState]";
@@ -11283,7 +11287,7 @@ var dragonBones;
     var AnimationParametersTimelineState = /** @class */ (function (_super) {
         __extends(AnimationParametersTimelineState, _super);
         function AnimationParametersTimelineState() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         AnimationParametersTimelineState.toString = function () {
             return "[class dragonBones.AnimationParametersTimelineState]";
@@ -11345,7 +11349,7 @@ var dragonBones;
     var EventObject = /** @class */ (function (_super) {
         __extends(EventObject, _super);
         function EventObject() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         /**
          * @internal
@@ -11828,7 +11832,7 @@ var dragonBones;
     var ObjectDataParser = /** @class */ (function (_super) {
         __extends(ObjectDataParser, _super);
         function ObjectDataParser() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             _this._rawTextureAtlasIndex = 0;
             _this._rawBones = [];
             _this._data = null; //
@@ -13828,7 +13832,7 @@ var dragonBones;
     var BinaryDataParser = /** @class */ (function (_super) {
         __extends(BinaryDataParser, _super);
         function BinaryDataParser() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         BinaryDataParser.prototype._inRange = function (a, min, max) {
             return min <= a && a <= max;
@@ -15193,7 +15197,7 @@ var dragonBones;
     var EgretTextureAtlasData = /** @class */ (function (_super) {
         __extends(EgretTextureAtlasData, _super);
         function EgretTextureAtlasData() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             _this._renderTexture = null; // Initial value.
             return _this;
         }
@@ -15273,7 +15277,7 @@ var dragonBones;
     var EgretTextureData = /** @class */ (function (_super) {
         __extends(EgretTextureData, _super);
         function EgretTextureData() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             _this.renderTexture = null; // Initial value.
             return _this;
         }
@@ -15329,7 +15333,7 @@ var dragonBones;
     var EgretEvent = /** @class */ (function (_super) {
         __extends(EgretEvent, _super);
         function EgretEvent() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super != null && _super.apply(this, arguments) || this;
         }
         Object.defineProperty(EgretEvent.prototype, "eventObject", {
             /**
@@ -15359,7 +15363,7 @@ var dragonBones;
     var EgretArmatureDisplay = /** @class */ (function (_super) {
         __extends(EgretArmatureDisplay, _super);
         function EgretArmatureDisplay() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             /**
              * @private
              */
@@ -15759,7 +15763,7 @@ var dragonBones;
     var EgretSlot = /** @class */ (function (_super) {
         __extends(EgretSlot, _super);
         function EgretSlot() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super != null && _super.apply(this, arguments) || this;
             /**
              * - Whether to update the transform properties of the display object.
              * For better performance, the transform properties of display object (x, y, rotation, ScaleX, ScaleX) are not updated and need to be set to true if these properties need to be accessed correctly.
@@ -16311,11 +16315,7 @@ var dragonBones;
             configurable: true
         });
         EgretFactory.prototype._isSupportMesh = function () {
-            // if (egret.Capabilities.renderMode === "webgl" || egret.Capabilities.runtimeType === egret.RuntimeType.NATIVE) {
-                return true;
-            // }
-            // console.warn("Canvas can not support mesh, please change renderMode to webgl.");
-            // return false;
+            return true;
         };
         EgretFactory.prototype._buildTextureAtlasData = function (textureAtlasData, textureAtlas) {
             if (textureAtlasData != null) {
