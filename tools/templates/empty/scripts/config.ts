@@ -28,12 +28,14 @@ const config: ResourceManagerConfig = {
                     //     groupSelector: p => "preload"
                     // }),
                     new ExmlPlugin('debug'), // 非 EUI 项目关闭此设置
-                    new IncrementCompilePlugin(),
-                    // new WebpackDevServerPlugin({ //新的 Webpack 编译器
-                    //     libraryType: "debug",
-                    //     defines: { DEBUG: true, RELEASE: false },
-                    //     typescript: { mode: 'legacy' }
-                    // }),
+                    // new EuiCompilerPlugin(),//新的 eui 编译器
+                    // new IncrementCompilePlugin(),
+                    new WebpackDevServerPlugin({ //新的 Webpack 编译器
+                        libraryType: "debug",
+                        defines: { DEBUG: true, RELEASE: false },
+                        typescript: { mode: 'legacy', minify: { mode: 'debug' } },
+                        open: true
+                    }),
                 ]
             }
         }
@@ -43,12 +45,12 @@ const config: ResourceManagerConfig = {
                 outputDir,
                 commands: [
                     new CustomPlugin(),
-                    new CompilePlugin({ libraryType: "release", defines: { DEBUG: false, RELEASE: true } }),
-                    // new WebpackBundlePlugin({ //新的 Webpack 编译器
-                    //     libraryType: "debug",
-                    //     defines: { DEBUG: false, RELEASE: true },
-                    //     typescript: { mode: 'legacy' }
-                    // }),
+                    // new CompilePlugin({ libraryType: "release", defines: { DEBUG: false, RELEASE: true } }),
+                    new WebpackBundlePlugin({ //新的 Webpack 编译器
+                        libraryType: "debug",
+                        defines: { DEBUG: false, RELEASE: true },
+                        typescript: { mode: 'legacy', minify: { mode: 'release' } }
+                    }),
                     new ExmlPlugin('commonjs'), // 非 EUI 项目关闭此设置
                     // new EuiCompilerPlugin(),//新的 eui 编译器
                     new UglifyPlugin([{
