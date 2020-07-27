@@ -360,4 +360,18 @@ var Upgrade_5_3_6 = /** @class */ (function () {
     };
     return Upgrade_5_3_6;
 }());
+var Upgrade_5_3_8 = /** @class */ (function () {
+    function Upgrade_5_3_8() {
+    }
+    Upgrade_5_3_8.prototype.execute = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.ttgame.ts"), path.join(egret.args.projectDir, "scripts", "config.ttgame.ts"));
+                file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "ttgame"), path.join(egret.args.projectDir, "scripts", "ttgame"));
+                return [2 /*return*/, 0];
+            });
+        });
+    };
+    return Upgrade_5_3_8;
+}());
 module.exports = UpgradeCommand;

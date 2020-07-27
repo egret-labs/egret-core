@@ -1,4 +1,5 @@
-require('./npm').installDependencies(["@egret/eui-compiler"]);
+require('./npm').installFromLauncher(["@egret/eui-compiler"]);
+// require('./npm').installDependencies(["@egret/eui-compiler"]);
 
 import * as eui from '@egret/eui-compiler';
 
@@ -8,19 +9,21 @@ import * as eui from '@egret/eui-compiler';
  */
 export class EuiCompilerPlugin implements plugins.Command {
 
-    constructor() {
+    constructor(private mode: string) {
     }
 
     async onFile(file: plugins.File) {
-        if(file.extname === '.exml'){
-            return null
-        }else{
+        if (file.extname === '.exml') {
+            return null;
+        }
+        else {
             return file;
         }
+
     }
 
     async onFinish(commandContext: plugins.CommandContext) {
-        const compiler = new eui.EuiCompiler(commandContext.projectRoot);
+        const compiler = new eui.EuiCompiler(commandContext.projectRoot, this.mode);
         compiler.setCustomTransformers([
             transformer
         ])

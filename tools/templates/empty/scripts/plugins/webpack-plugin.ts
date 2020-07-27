@@ -1,4 +1,6 @@
-require('./npm').installDependencies(["@egret/egret-webpack-bundler"]);
+require('./npm').installFromLauncher(['@egret/egret-webpack-bundler']);
+// require('./npm').installDependencies(["@egret/egret-webpack-bundler"]);
+
 
 import { EgretWebpackBundler, WebpackBundleOptions, WebpackDevServerOptions } from '@egret/egret-webpack-bundler';
 
