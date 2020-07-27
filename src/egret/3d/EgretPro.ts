@@ -3,7 +3,8 @@ namespace egret.pro {
     export let mainCanvas: HTMLCanvasElement;
 
     /**
-     * 
+     * 根据场景地址获取场景，并将主摄像机Main Camera渲染为2d贴图并返回
+     * 只能在场景中只有一个相机（Main Camera）时使用
      * @param scenePath 场景路径（相对与3d项目resource文件夹）
      * @param textureWidth 贴图宽度 ，默认为512
      * @param textureHeight 贴图高度 ，默认为512
@@ -11,6 +12,23 @@ namespace egret.pro {
      */
     export function createTextureFrom3dScene(scenePath: string, textureWidth: number = 512, textureHeight: number = 512, scaleFactor: number = 1): Promise<egret.Texture> {
         return Application.instance.egretProUtil.execute("createTextureFrom3dScene", scenePath, textureWidth, textureHeight, scaleFactor);
+    }
+
+
+    /**
+     * 根据场景地址获取场景，并根据过滤器，获取所有符合条件的相机，渲染为2d贴图并返回
+     * 单一场景需要用到多个摄像机时可使用此方法
+     * 被filter过滤掉的Camera组件会将enable设为false
+     * @param scenePath 
+     * @param filter 判断该树节点的相机组件是否需要作为egret.Texture返回
+     * @param textureWidth 
+     * @param textureHeight 
+     * @param scaleFactor 
+     */
+    export function createTextureForCameras(scenePath: string, filter: (child: TreeNode) => boolean, textureWidth: number = 512, textureHeight: number = 512, scaleFactor: number = 1): Promise<{
+        [key: string]: egret.Texture;
+    }> {
+        return Application.instance.egretProUtil.execute("createTextureForCameras", scenePath, filter, textureWidth, textureHeight, scaleFactor);
     }
 
     /**
@@ -68,4 +86,17 @@ namespace egret.pro {
     export function dispatch(command: string, target: any, ...args: any[]): void {
         return Application.instance.egretProUtil.dispatch(command, target, ...args);
     }
+
+    /**
+     * egret Pro中TreeNode部分对外属性
+     */
+    export type TreeNode = {
+        name: string,
+        tag: string,
+        layer: number,
+        path: string,
+        childCount: number
+    }
 }
+
+
