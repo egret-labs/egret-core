@@ -46,6 +46,7 @@ var ManifestPlugin = /** @class */ (function () {
     function ManifestPlugin(options) {
         this.options = options;
         this.verboseInfo = [];
+        this.ttSignature = []; //tt小游戏的签名列表
         if (!this.options) {
             this.options = { output: "manifest.json" };
         }
@@ -61,24 +62,31 @@ var ManifestPlugin = /** @class */ (function () {
     }
     ManifestPlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
-            var filename, extname, new_file_path, basename, _a, useWxPlugin, hash, verbose, new_basename, isEngineJS, engineJS, i, jsName, engine_path, crc32, crc32_file_path, target, config, vivoData, relative;
+            var filename, extname, new_file_path, basename, target, _a, useWxPlugin, hash, verbose, ttgame, new_basename, isEngineJS, engineJS, i, jsName, engine_path, crc32, crc32_file_path, config, vivoData, relative;
             return __generator(this, function (_b) {
                 filename = file.relative;
                 extname = path.extname(filename);
                 if (extname == ".js") {
                     new_file_path = void 0;
                     basename = path.basename(filename);
+                    target = egret.args.target;
                     _a = this.options, useWxPlugin = _a.useWxPlugin, hash = _a.hash, verbose = _a.verbose;
+                    ttgame = EgretProject.projectData.getMiniGame('ttgame');
                     new_basename = basename.substr(0, basename.length - file.extname.length);
                     isEngineJS = false;
-                    if (useWxPlugin) {
+                    if ((target == "ttgame" && ttgame.usePlugin) || (target == "wxgame" && useWxPlugin)) {
                         engineJS = ['assetsmanager', 'dragonBones', 'egret', 'game', 'eui', 'socket', 'tween'];
                         for (i in engineJS) {
                             jsName = engineJS[i];
                             engine_path = jsName + '.min.js';
                             if (filename.indexOf(engine_path) > 0) {
                                 isEngineJS = true;
-                                break;
+                                if (target == "ttgame") {
+                                    this.ttSignature.push({
+                                        "path": engine_path,
+                                        "md5": utils.createHash(String(file.contents))
+                                    });
+                                }
                             }
                         }
                     }
@@ -95,7 +103,6 @@ var ManifestPlugin = /** @class */ (function () {
                     }
                     file.outputDir = "";
                     file.path = path.join(file.base, new_file_path);
-                    target = egret.args.target;
                     if (target == 'vivogame') {
                         config = EgretProject.projectData;
                         vivoData = config.egretProperties.vivo;
@@ -105,6 +112,9 @@ var ManifestPlugin = /** @class */ (function () {
                                 file.path = path.join(file.base, '../', 'egret-library', basename);
                             }
                         }
+                    }
+                    else if (target == "ttgame") {
+                        EgretProject.projectData.setMiniGameData('ttgame', 'signature', this.ttSignature);
                     }
                     relative = file.relative.split("\\").join('/');
                     if (file.origin.indexOf('libs/') >= 0) {
@@ -123,13 +133,14 @@ var ManifestPlugin = /** @class */ (function () {
     };
     ManifestPlugin.prototype.onFinish = function (pluginContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, output, useWxPlugin, qqPlugin, outputDir, extname, contents, target, pluginContents;
+            var _a, output, useWxPlugin, qqPlugin, outputDir, extname, ttgame, contents, target, pluginContents;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         _a = this.options, output = _a.output, useWxPlugin = _a.useWxPlugin, qqPlugin = _a.qqPlugin;
                         outputDir = pluginContext.outputDir;
                         extname = path.extname(output);
+                        ttgame = EgretProject.projectData.getMiniGame('ttgame');
                         contents = '';
                         target = pluginContext.buildConfig.target;
                         switch (extname) {
@@ -148,7 +159,7 @@ var ManifestPlugin = /** @class */ (function () {
                                         var _name = path.basename(fileName);
                                         result = "require(\"./js/" + _name + "\")";
                                     }
-                                    else if (useWxPlugin) {
+                                    else if ((target == "ttgame" && ttgame.usePlugin) || (target == "wxgame" && useWxPlugin)) {
                                         if (fileName.indexOf('egret-library') == 0) {
                                             result = "requirePlugin(\"" + fileName + "\")";
                                         }

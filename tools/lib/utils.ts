@@ -38,7 +38,7 @@ import * as EgretProject from '../project';
 import * as project from '../project';
 import { constants } from 'os';
 import * as fs from 'fs';
-
+const crypto = require('crypto');
 
 //第三方调用时，可能不支持颜色显示，可通过添加 -nocoloroutput 移除颜色信息
 var ColorOutputReplacements = {
@@ -358,6 +358,7 @@ export function checkPlugin() {
 export async function pluginManifest(manifest: any, outputDir: string) {
     const target = egret.args.target;
     var { egretProperties }: any = EgretProject.projectData;
+    let command = egret.args.command;//publish build
     let contents = null;
     if (target == "vivogame") {//use vivo plugin
         let vivo = egretProperties.vivo
@@ -424,6 +425,27 @@ export async function pluginManifest(manifest: any, outputDir: string) {
             file.createDirectory(path.join(outputDir, "../egret-library"))
             await file.writeJSONAsync(path.join(outputDir, "../egret-library", "plugin.json"), { 'main': "egret" + extra })
         }
+    } else if (target == "ttgame") {//use ttgame plugin
+        let ttgame = EgretProject.projectData.getMiniGame('ttgame')
+        let gameJsonContent = await file.readJSONAsync(path.join(outputDir, 'game.json'))
+        gameJsonContent.plugins = {}
+        if (ttgame && ttgame.usePlugin && command === "publish") {//console.log('使用tt插件')
+            const provider = ttgame.provider
+            let ttPluginPath = path.join(outputDir, "egret-library")
+            file.createDirectory(ttPluginPath)
+            await file.writeFileAsync(path.join(ttPluginPath, "index.js"), `console.log("egret-plugin")`, 'utf-8')
+            await file.writeJSONAsync(path.join(ttPluginPath, "plugin.json"), { 'main': "index.js" })
+            await file.writeJSONAsync(path.join(ttPluginPath, "signature.json"), {
+                "provider": provider,
+                "signature": ttgame.signature
+            })
+            gameJsonContent.plugins["egret-library"] = {
+                "provider": provider,
+                "version": egretProperties.engineVersion,
+                "path": "egret-library"
+            }
+        }
+        await file.writeJSONAsync(path.join(outputDir, 'game.json'), gameJsonContent)
     }
     return contents;
 }
@@ -593,4 +615,10 @@ export const cache: MethodDecorator = (target, propertyKey, descriptor: TypedPro
         }
         return cacheValue;
     }
+}
+
+export function createHash(data: string) {
+    var hash = crypto.createHash("md5");
+    hash.update(data);
+    return hash.digest("hex");
 }

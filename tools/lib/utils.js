@@ -84,6 +84,7 @@ var timers_1 = require("timers");
 var EgretProject = require("../project");
 var project = require("../project");
 var fs = require("fs");
+var crypto = require('crypto');
 //第三方调用时，可能不支持颜色显示，可通过添加 -nocoloroutput 移除颜色信息
 var ColorOutputReplacements = {
     "{color_green}": "\033[1;32;1m",
@@ -403,14 +404,15 @@ function checkPlugin() {
 exports.checkPlugin = checkPlugin;
 function pluginManifest(manifest, outputDir) {
     return __awaiter(this, void 0, void 0, function () {
-        var target, egretProperties, contents, vivo_1, jsonPath, configPath, jsonData, plugins, userLibs, userPlugs, game, contents2_1, configArr_1, configContent, reg, replaceConfigStr, extra;
+        var target, egretProperties, command, contents, vivo_1, jsonPath, configPath, jsonData, plugins, userLibs, userPlugs, game, contents2_1, configArr_1, configContent, reg, replaceConfigStr, extra, ttgame, gameJsonContent, provider, ttPluginPath;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     target = egret.args.target;
                     egretProperties = EgretProject.projectData.egretProperties;
+                    command = egret.args.command;
                     contents = null;
-                    if (!(target == "vivogame")) return [3 /*break*/, 3];
+                    if (!(target == "vivogame")) return [3 /*break*/, 4];
                     vivo_1 = egretProperties.vivo;
                     jsonPath = path.join(outputDir, 'manifest.json');
                     configPath = path.join(outputDir, '../', "minigame.config.js");
@@ -478,7 +480,41 @@ function pluginManifest(manifest, outputDir) {
                 case 2:
                     _a.sent();
                     _a.label = 3;
-                case 3: return [2 /*return*/, contents];
+                case 3: return [3 /*break*/, 11];
+                case 4:
+                    if (!(target == "ttgame")) return [3 /*break*/, 11];
+                    ttgame = EgretProject.projectData.getMiniGame('ttgame');
+                    return [4 /*yield*/, file.readJSONAsync(path.join(outputDir, 'game.json'))];
+                case 5:
+                    gameJsonContent = _a.sent();
+                    gameJsonContent.plugins = {};
+                    if (!(ttgame && ttgame.usePlugin && command === "publish")) return [3 /*break*/, 9];
+                    provider = ttgame.provider;
+                    ttPluginPath = path.join(outputDir, "egret-library");
+                    file.createDirectory(ttPluginPath);
+                    return [4 /*yield*/, file.writeFileAsync(path.join(ttPluginPath, "index.js"), "console.log(\"egret-plugin\")", 'utf-8')];
+                case 6:
+                    _a.sent();
+                    return [4 /*yield*/, file.writeJSONAsync(path.join(ttPluginPath, "plugin.json"), { 'main': "index.js" })];
+                case 7:
+                    _a.sent();
+                    return [4 /*yield*/, file.writeJSONAsync(path.join(ttPluginPath, "signature.json"), {
+                            "provider": provider,
+                            "signature": ttgame.signature
+                        })];
+                case 8:
+                    _a.sent();
+                    gameJsonContent.plugins["egret-library"] = {
+                        "provider": provider,
+                        "version": egretProperties.engineVersion,
+                        "path": "egret-library"
+                    };
+                    _a.label = 9;
+                case 9: return [4 /*yield*/, file.writeJSONAsync(path.join(outputDir, 'game.json'), gameJsonContent)];
+                case 10:
+                    _a.sent();
+                    _a.label = 11;
+                case 11: return [2 /*return*/, contents];
             }
         });
     });
@@ -637,3 +673,9 @@ exports.cache = function (target, propertyKey, descriptor) {
         return cacheValue;
     };
 };
+function createHash(data) {
+    var hash = crypto.createHash("md5");
+    hash.update(data);
+    return hash.digest("hex");
+}
+exports.createHash = createHash;
