@@ -47,7 +47,7 @@ const config: ResourceManagerConfig = {
                     new CustomPlugin(),
                     // new CompilePlugin({ libraryType: "release", defines: { DEBUG: false, RELEASE: true } }),
                     new WebpackBundlePlugin({ //新的 Webpack 编译器
-                        libraryType: "debug",
+                        libraryType: "release",
                         defines: { DEBUG: false, RELEASE: true },
                         typescript: { mode: 'legacy', minify: { mode: 'release' } }
                     }),

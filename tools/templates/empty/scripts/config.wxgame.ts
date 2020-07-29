@@ -22,6 +22,7 @@ const config: ResourceManagerConfig = {
                 commands: [
                     new CleanPlugin({ matchers: ["js", "resource", "egret-library"] }),
                     new CompilePlugin({ libraryType: "debug", defines: { DEBUG: true, RELEASE: false } }),
+                    // new WebpackBundlePlugin({ libraryType: "debug", defines: { DEBUG: true, RELEASE: false } }),//新的 Webpack 编译器
                     new ExmlPlugin('commonjs'), // 非 EUI 项目关闭此设置
                     // new EuiCompilerPlugin(),//新的 eui 编译器
                     new WxgamePlugin(useWxPlugin),
@@ -35,7 +36,7 @@ const config: ResourceManagerConfig = {
                 commands: [
                     new CleanPlugin({ matchers: ["js", "resource", "egret-library"] }),
                     new CompilePlugin({ libraryType: "release", defines: { DEBUG: false, RELEASE: true } }),
-                    // new WebpackBundlePlugin({ libraryType: "debug", defines: { DEBUG: false, RELEASE: true } }),//新的 Webpack 编译器
+                    // new WebpackBundlePlugin({ libraryType: "release", defines: { DEBUG: false, RELEASE: true } }),//新的 Webpack 编译器
                     new ExmlPlugin('commonjs'), // 非 EUI 项目关闭此设置
                     // new EuiCompilerPlugin(),//新的 eui 编译器
                     new WxgamePlugin(useWxPlugin),
