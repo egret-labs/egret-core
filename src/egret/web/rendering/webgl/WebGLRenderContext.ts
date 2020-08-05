@@ -1016,7 +1016,7 @@ namespace egret.web {
 
         public currentProgram: EgretWebGLProgram;
         private activeProgram(gl: WebGLRenderingContext, program: EgretWebGLProgram): void {
-            if (program != this.currentProgram) {
+            if (egret.pro.egret2dDriveMode || program != this.currentProgram) {
                 gl.useProgram(program.id);
 
                 // 目前所有attribute buffer的绑定方法都是一致的
