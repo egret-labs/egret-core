@@ -255,8 +255,8 @@ class Upgrade_5_3_6 {
 }
 class Upgrade_5_3_8 {
     async execute() {
-        file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.ttgame.ts"), path.join(egret.args.projectDir, "scripts", "config.ttgame.ts"));
         file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "ttgame"), path.join(egret.args.projectDir, "scripts", "ttgame"));
+        file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.ttgame.ts"), path.join(egret.args.projectDir, "scripts", "config.ttgame.ts"));
         return 0;
     }
 }
