@@ -3,8 +3,6 @@
 
 import * as path from 'path';
 import { UglifyPlugin, IncrementCompilePlugin, CompilePlugin, ManifestPlugin, ExmlPlugin, EmitResConfigFilePlugin, TextureMergerPlugin, RenamePlugin } from 'built-in';
-import { WxgamePlugin } from './wxgame/wxgame';
-import { BricksPlugin } from './bricks/bricks';
 import { CustomPlugin } from './myplugin';
 import { EuiCompilerPlugin } from './plugins/eui-compiler-plugin';
 import { WebpackDevServerPlugin, WebpackBundlePlugin } from './plugins/webpack-plugin';
@@ -28,6 +26,7 @@ const config: ResourceManagerConfig = {
                     //     groupSelector: p => "preload"
                     // }),
                     new ExmlPlugin('debug'), // 非 EUI 项目关闭此设置
+                    // new EuiCompilerPlugin(),//新的 eui 编译器
                     // new IncrementCompilePlugin(),
                     new WebpackDevServerPlugin({ //新的 Webpack 编译器
                         libraryType: "debug",
