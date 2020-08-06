@@ -6968,7 +6968,7 @@ var egret;
                 return offset;
             };
             WebGLRenderContext.prototype.activeProgram = function (gl, program) {
-                if (program != this.currentProgram) {
+                if (egret.pro.egret2dDriveMode || program != this.currentProgram) {
                     gl.useProgram(program.id);
                     // 目前所有attribute buffer的绑定方法都是一致的
                     var attribute = program.attributes;

@@ -11214,6 +11214,19 @@ declare namespace egret {
         * @language zh_CN
         */
         const QHGAME = "qhgame";
+        /**
+         * Running on bytedance mini game
+         * @version Egret 5.3.8
+         * @platform All
+         * @language en_US
+         */
+        /**
+        * 运行在字节跳动小游戏上
+        * @version Egret 5.3.8
+        * @platform All
+        * @language zh_CN
+        */
+        const TTGAME = "ttgame";
     }
     interface SupportedCompressedTexture {
         pvrtc: boolean;
