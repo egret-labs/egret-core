@@ -32,7 +32,10 @@ const config: ResourceManagerConfig = {
                     new WebpackDevServerPlugin({ //新的 Webpack 编译器
                         libraryType: "debug",
                         defines: { DEBUG: true, RELEASE: false },
-                        typescript: { mode: 'legacy', minify: { mode: 'debug' } },
+                        typescript: { mode: 'legacy'},
+                        html:{
+                            templateFilePath:"template/web/index.html"
+                        },
                         open: true
                     }),
                 ]
@@ -48,7 +51,10 @@ const config: ResourceManagerConfig = {
                     new WebpackBundlePlugin({ //新的 Webpack 编译器
                         libraryType: "release",
                         defines: { DEBUG: false, RELEASE: true },
-                        typescript: { mode: 'legacy', minify: { mode: 'release' } }
+                        typescript: { mode: 'legacy'},
+                        html:{
+                            templateFilePath:"template/web/index.html"
+                        },
                     }),
                     new ExmlPlugin('commonjs'), // 非 EUI 项目关闭此设置
                     // new EuiCompilerPlugin(),//新的 eui 编译器
