@@ -122,9 +122,12 @@ function parseUsedClass(xml) {
         var className = getClassNameById(xml.localName, xml.namespace);
         if (className)
             classes.push(className);
-        var skinName = xml["$skinName"];
-        if (skinName && skinName.toLowerCase().indexOf(".exml") != skinName.length - 5)
-            classes.push(skinName);
+        var skinAttrs = ["$skinName", "$itemRendererSkinName"];
+        skinAttrs.forEach(function (attr) {
+            var skinName = xml[attr];
+            if (skinName && skinName.toLowerCase().indexOf(".exml") != skinName.length - 5)
+                classes.push(skinName);
+        });
         if (classes.length)
             return classes;
         return null;
@@ -137,9 +140,12 @@ function parseUsedEXML(xml) {
     function parseEXMLPathInAttributes(xml) {
         if (!xml)
             return null;
-        var skinName = xml["$skinName"];
-        if (skinName && skinName.toLowerCase().indexOf(".exml") == skinName.length - 5)
-            return skinName;
+        var skinAttrs = ["$skinName", "$itemRendererSkinName"];
+        skinAttrs.forEach(function (attr) {
+            var skinName = xml[attr];
+            if (skinName && skinName.toLowerCase().indexOf(".exml") == skinName.length - 5)
+                return skinName;
+        });
         return null;
     }
 }
