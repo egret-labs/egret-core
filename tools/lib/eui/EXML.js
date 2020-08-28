@@ -135,17 +135,20 @@ function parseUsedClass(xml) {
 }
 function parseUsedEXML(xml) {
     var files = [];
-    visitNodes(xml, function (node) { return parseEXMLPathInAttributes(node); }, function (path) { return files.push(path); });
+    visitNodes(xml, function (node) { return parseEXMLPathInAttributes(node); }, function (paths) { return paths.forEach(function (path) { return files.push(path); }); });
     return files;
     function parseEXMLPathInAttributes(xml) {
         if (!xml)
             return null;
+        var skins = [];
         var skinAttrs = ["$skinName", "$itemRendererSkinName"];
         skinAttrs.forEach(function (attr) {
             var skinName = xml[attr];
             if (skinName && skinName.toLowerCase().indexOf(".exml") == skinName.length - 5)
-                return skinName;
+                skins.push(skinName);
         });
+        if (skins.length)
+            return skins;
         return null;
     }
 }
