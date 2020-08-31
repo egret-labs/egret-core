@@ -36,6 +36,8 @@ export class QhgamePlugin implements plugins.Command {
                     content += ";window.eui = eui;"
                 }
                 if (filename == 'libs/modules/dragonBones/dragonBones.js' || filename == 'libs/modules/dragonBones/dragonBones.min.js') {
+                    content = content.replace(`    define(["dragonBones"], function () { return dragonBones; });`, `    // define(["dragonBones"], function () { return dragonBones; });`);
+                    content = content.replace(`{define(["dragonBones"],function(){return dragonBones})}`, `{/*define(["dragonBones"],function(){return dragonBones})*/}`);
                     content += ';window.dragonBones = dragonBones';
                 }
                 content = "var egret = window.egret;" + content;
