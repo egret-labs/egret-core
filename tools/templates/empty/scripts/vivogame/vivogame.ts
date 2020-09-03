@@ -92,6 +92,15 @@ export class VivogamePlugin implements plugins.Command {
         gameJSONContent.thirdEngine.egret = engineVersion
 
         fs.writeFileSync(gameJSONPath, JSON.stringify(gameJSONContent, null, "\t"));
+
+        // 自动生成分包目录的game.js文件
+        if(gameJSONContent.subpackages && gameJSONContent.subpackages.length > 0) {
+            for(var i = 0; i < gameJSONContent.subpackages.length; ++i) {
+                let gameJsPath = path.join(pluginContext.outputDir, gameJSONContent.subpackages[i].root, "game.js");
+                fs.writeFileSync(gameJsPath, "");
+            }
+        }
+
         let isPublish = pluginContext.buildConfig.command == "publish" ? true : false;
         let configArr: any[] = []
         for (var i = 0, len = this.jsFileList.length; i < len; i++) {
