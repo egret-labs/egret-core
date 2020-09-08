@@ -7,7 +7,7 @@ import { OppogamePlugin } from './oppogame/oppogame';
 import * as defaultConfig from './config';
 import { EuiCompilerPlugin } from './plugins/eui-compiler-plugin';
 import { WebpackBundlePlugin } from './plugins/webpack-plugin';
-
+//OPPO 小游戏
 const config: ResourceManagerConfig = {
 
     buildConfig: (params) => {

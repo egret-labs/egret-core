@@ -8,7 +8,7 @@ import { CustomPlugin } from './myplugin';
 import * as defaultConfig from './config';
 import { EuiCompilerPlugin } from './plugins/eui-compiler-plugin';
 import { WebpackBundlePlugin } from './plugins/webpack-plugin';
-
+//360小游戏
 const config: ResourceManagerConfig = {
 
     buildConfig: (params) => {

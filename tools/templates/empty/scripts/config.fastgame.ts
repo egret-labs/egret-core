@@ -7,7 +7,7 @@ import { FastgamePlugin } from './fastgame/fastgame';
 import * as defaultConfig from './config';
 import { EuiCompilerPlugin } from './plugins/eui-compiler-plugin';
 import { WebpackBundlePlugin } from './plugins/webpack-plugin';
-
+//华为快游戏
 const config: ResourceManagerConfig = {
 
     buildConfig: (params) => {
