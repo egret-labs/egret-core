@@ -18337,6 +18337,19 @@ var egret;
         * @language zh_CN
         */
         RuntimeType.TTGAME = "ttgame";
+        /**
+         * Running on huawei fastgame
+         * @version Egret 5.3.8
+         * @platform All
+         * @language en_US
+         */
+        /**
+        * 运行在华为快游戏上
+        * @version Egret 5.3.9
+        * @platform All
+        * @language zh_CN
+        */
+        RuntimeType.FASTGAME = "fastgame";
     })(RuntimeType = egret.RuntimeType || (egret.RuntimeType = {}));
     /**
      * The Capabilities class provides properties that describe the system and runtime that are hosting the application.
@@ -18468,7 +18481,7 @@ var egret;
          * @platform Web,Native
          * @language zh_CN
          */
-        Capabilities.engineVersion = "5.3.8";
+        Capabilities.engineVersion = "5.3.9";
         /***
          * current render mode.
          * @type {string}

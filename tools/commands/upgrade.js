@@ -81,7 +81,8 @@ var UpgradeCommand = /** @class */ (function () {
                             { "v": "5.2.33", command: Upgrade_5_2_33 },
                             { "v": "5.3.5", command: Upgrade_5_3_5 },
                             { "v": "5.3.6", command: Upgrade_5_3_6 },
-                            { "v": "5.3.8", command: Upgrade_5_3_8 }
+                            { "v": "5.3.8", command: Upgrade_5_3_8 },
+                            { "v": "5.3.9", command: Upgrade_5_3_9 }
                         ];
                         _a.label = 1;
                     case 1:
@@ -373,5 +374,19 @@ var Upgrade_5_3_8 = /** @class */ (function () {
         });
     };
     return Upgrade_5_3_8;
+}());
+var Upgrade_5_3_9 = /** @class */ (function () {
+    function Upgrade_5_3_9() {
+    }
+    Upgrade_5_3_9.prototype.execute = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "fastgame"), path.join(egret.args.projectDir, "scripts", "fastgame"));
+                file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.fastgame.ts"), path.join(egret.args.projectDir, "scripts", "config.fastgame.ts"));
+                return [2 /*return*/, 0];
+            });
+        });
+    };
+    return Upgrade_5_3_9;
 }());
 module.exports = UpgradeCommand;

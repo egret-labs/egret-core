@@ -7,7 +7,7 @@ import { MiqgamePlugin } from './qgame/qgame';
 import * as defaultConfig from './config';
 import { EuiCompilerPlugin } from './plugins/eui-compiler-plugin';
 import { WebpackBundlePlugin } from './plugins/webpack-plugin';
-
+//小米快游戏
 const config: ResourceManagerConfig = {
 
     buildConfig: (params) => {

@@ -204,6 +204,19 @@ namespace egret {
          * @language zh_CN
          */
         export const TTGAME = "ttgame";
+        /**
+         * Running on huawei fastgame
+         * @version Egret 5.3.8
+         * @platform All
+         * @language en_US
+         */
+         /**
+         * 运行在华为快游戏上
+         * @version Egret 5.3.9
+         * @platform All
+         * @language zh_CN
+         */
+        export const FASTGAME = "fastgame";
 
     }
 
@@ -342,7 +355,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static readonly engineVersion: string = "5.3.8";
+        public static readonly engineVersion: string = "5.3.9";
 
         /***
          * current render mode.
