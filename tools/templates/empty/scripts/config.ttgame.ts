@@ -7,7 +7,7 @@ import { TtgamePlugin } from './ttgame/ttgame';
 import { CustomPlugin } from './myplugin';
 import { WebpackBundlePlugin } from './plugins/webpack-plugin';
 import * as defaultConfig from './config';
-
+//字节跳动小游戏
 const config: ResourceManagerConfig = {
 
     buildConfig: (params) => {
