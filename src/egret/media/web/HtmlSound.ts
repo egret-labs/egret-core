@@ -98,6 +98,8 @@ namespace egret.web {
             //return 0;
         }
 
+        private static loadingSoundMap: { [url: string]: HTMLAudioElement } = {};
+
         /**
          * @inheritDoc
          */
@@ -124,12 +126,14 @@ namespace egret.web {
                 document.body.appendChild(audio);
             }
             audio.load();
+            HtmlSound.loadingSoundMap[url] = audio;
             this.originAudio = audio;
             if (HtmlSound.clearAudios[this.url]) {
                 delete HtmlSound.clearAudios[this.url];
             }
 
             function onAudioLoaded(): void {
+                delete HtmlSound.loadingSoundMap[url];
                 HtmlSound.$recycle(self.url, audio);
                 removeListeners();
                 if (ua.indexOf("firefox") >= 0) {//火狐兼容

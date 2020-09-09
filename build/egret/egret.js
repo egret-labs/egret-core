@@ -2630,7 +2630,14 @@ var egret;
             },
             set: function (value) {
                 this._tint = value;
-                this.$tintRGB = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
+                if (egret.nativeRender) {
+                    if (this.$nativeDisplayObject.setTint) {
+                        this.$nativeDisplayObject.setTint(value);
+                    }
+                }
+                else {
+                    this.$tintRGB = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
+                }
             },
             enumerable: true,
             configurable: true

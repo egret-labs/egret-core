@@ -5141,11 +5141,13 @@ var egret;
                     document.body.appendChild(audio);
                 }
                 audio.load();
+                HtmlSound.loadingSoundMap[url] = audio;
                 this.originAudio = audio;
                 if (HtmlSound.clearAudios[this.url]) {
                     delete HtmlSound.clearAudios[this.url];
                 }
                 function onAudioLoaded() {
+                    delete HtmlSound.loadingSoundMap[url];
                     HtmlSound.$recycle(self.url, audio);
                     removeListeners();
                     if (ua.indexOf("firefox") >= 0) {
@@ -5257,6 +5259,7 @@ var egret;
              * @language zh_CN
              */
             HtmlSound.EFFECT = "effect";
+            HtmlSound.loadingSoundMap = {};
             /**
              * @private
              */
