@@ -4009,6 +4009,7 @@ declare namespace egret_native {
         setZIndex(value: number): void;
         sortChildren(): void;
         setSortableChildren(value: boolean): void;
+        setTint(value: number): void;
     }
 }
 /**
