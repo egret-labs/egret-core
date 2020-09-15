@@ -30,9 +30,18 @@ export class TbgamePlugin implements plugins.Command {
                 }
                 if (filename == "libs/modules/eui/eui.js" || filename == 'libs/modules/eui/eui.min.js') {
                     content += ";window.eui = eui;"
-                }
-                if (filename == "libs/particle/bin/particle/particle.js" || filename == 'libs/particle/bin/particle/particle.min.js') {
-                    content += ";window.particle = particle;"
+                    if (filename == "libs/modules/eui/eui.js") {
+                        content = content.replace("this.getRepeatedIds = getRepeatedIds", "this.getRepeatedIds = window.getRepeatedIds");
+                        content = content.replace("function getRepeatedIds", "window.getRepeatedIds=function getRepeatedIds");                        
+                        content = content.replace("this.getIds = getIds", "this.getIds = window.getIds");
+                        content = content.replace("function getIds", "window.getIds=function getIds");                        
+                        content = content.replace("this.checkDeclarations = checkDeclarations", "this.checkDeclarations = window.checkDeclarations");
+                        content = content.replace("function checkDeclarations", "window.checkDeclarations=function checkDeclarations");
+                        content = content.replace(/toXMLString/g, "window.toXMLString");
+                        content = content.replace("function window.toXMLString", "window.toXMLString=function toXMLString");                        
+                        content = content.replace(/getPropertyStr/g, "window.getPropertyStr");
+                        content = content.replace("function window.getPropertyStr", "window.getPropertyStr=function getPropertyStr");
+                    }
                 }
                 if (filename == "libs/modules/game/game.js" || filename == 'libs/modules/game/game.min.js') {
                     addScript += "var navigator = window.navigator;"
@@ -44,15 +53,18 @@ export class TbgamePlugin implements plugins.Command {
                 }
                 if(filename == "resource/default.thm.js"){
                     addScript += `var eui = window.eui;\nvar generateEUI = {};\n`
+                    content = content.replace(/skinName = "/g,'skinName = "window.')
                     content += "\n;window.generateEUI = generateEUI;"
                 }
+                //注意：游戏入口类一定要是 main.js
                 if (filename == 'main.js') {
                     addScript += `
 var eui = window.eui;\n
+var skins = window.skins;\n
 var generateEUI = window.generateEUI\n
 var RES = window.RES;\n
-var particle = window.particle;\n
 var dragonBones = window.dragonBones;\n`
+                    content = content.replace(`{define(["dragonBones"],function(){return dragonBones})}`, `{/*define(["dragonBones"],function(){return dragonBones})*/}`);
                     content += "\n;window.Main = Main;"
                 }
                 content = addScript + content
@@ -62,14 +74,15 @@ var dragonBones = window.dragonBones;\n`
         return file;
     }
     async onFinish(pluginContext: plugins.CommandContext) {
+        let {projectRoot, outputDir, buildConfig } = pluginContext
         //同步 index.html 配置到 game.js
-        const gameJSPath = path.join(pluginContext.outputDir, "pages/index/index.js");
+        const gameJSPath = path.join(outputDir, "pages/index/index.js");
         if (!fs.existsSync(gameJSPath)) {
             console.log(`${gameJSPath}不存在，请先使用 Launcher 发布淘宝小游戏`);
             return;
         }
         let gameJSContent = fs.readFileSync(gameJSPath, { encoding: "utf8" });
-        const projectConfig = pluginContext.buildConfig.projectConfig;
+        const projectConfig = buildConfig.projectConfig;
         const optionStr =
             `entryClassName: ${projectConfig.entryClassName},\n\t\t` +
             `orientation: ${projectConfig.orientation},\n\t\t` +
@@ -85,5 +98,6 @@ var dragonBones = window.dragonBones;\n`
         const replaceStr = '\/\/----auto option start----\n\t\t' + optionStr + '\n\t\t\/\/----auto option end----';
         gameJSContent = gameJSContent.replace(reg, replaceStr);
         fs.writeFileSync(gameJSPath, gameJSContent);
+
     }
 }
