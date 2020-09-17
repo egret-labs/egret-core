@@ -3,18 +3,18 @@
 
 import * as path from 'path';
 import { UglifyPlugin, CompilePlugin, ManifestPlugin, ExmlPlugin, EmitResConfigFilePlugin, TextureMergerPlugin, CleanPlugin } from 'built-in';
-import { TbgamePlugin } from './tbgame/tbgame';
+import { TbgamePlugin } from './tbcreativeapp/tbcreativeapp';
 import { CustomPlugin } from './myplugin';
 import * as defaultConfig from './config';
-import { EuiCompilerPlugin } from './plugins/eui-compiler-plugin';
-import { WebpackBundlePlugin } from './plugins/webpack-plugin';
+// import { EuiCompilerPlugin } from './plugins/eui-compiler-plugin';
+// import { WebpackBundlePlugin } from './plugins/webpack-plugin';
 
 const config: ResourceManagerConfig = {
 
     buildConfig: (params) => {
 
         const { target, command, projectName, version } = params;
-        const outputDir = `../${projectName}_tbgame`;
+        const outputDir = `../${projectName}_tbcreativeapp`;
         if (command == 'build') {
             return {
                 outputDir,
