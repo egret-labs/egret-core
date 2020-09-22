@@ -739,8 +739,9 @@ namespace egret.web {
                 return;
             }
 
-            if (meshVertices && meshIndices) {
-                if (this.vao.reachMaxSize(meshVertices.length / 2, meshIndices.length)) {
+            let meshNum = meshIndices && (meshIndices.length / 3) || 0;
+            if (meshIndices) {
+                if (this.vao.reachMaxSize(meshNum * 4, meshNum * 6)) {
                     this.$drawWebGL();
                 }
             } else {
@@ -753,11 +754,11 @@ namespace egret.web {
                 this.drawCmdManager.pushChangeSmoothing(texture, smoothing);
             }
 
-            if (meshUVs) {
-                this.vao.changeToMeshIndices();
-            }
+            // if (meshUVs) {
+            //     this.vao.changeToMeshIndices();
+            // }
 
-            let count = meshIndices ? meshIndices.length / 3 : 2;
+            let count = meshIndices ? meshNum * 2 : 2;
             // 应用$filter，因为只可能是colorMatrixFilter，最后两个参数可不传
             this.drawCmdManager.pushDrawTexture(texture, count, this.$filter, textureWidth, textureHeight);
             buffer.currentTexture = texture;
