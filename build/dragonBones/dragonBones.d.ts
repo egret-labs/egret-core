@@ -6414,6 +6414,7 @@ declare namespace dragonBones {
          * @inheritDoc
          */
         $measureContentBounds(bounds: egret.Rectangle): void;
+        protected createNativeDisplayObject(): void;
     }
 }
 /**
