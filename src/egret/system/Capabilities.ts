@@ -217,6 +217,19 @@ namespace egret {
          * @language zh_CN
          */
         export const FASTGAME = "fastgame";
+         /**
+         * Running on taobao creative app
+         * @version Egret 5.3.8
+         * @platform All
+         * @language en_US
+         */
+         /**
+         * 运行在淘宝创意互动上
+         * @version Egret 5.3.9
+         * @platform All
+         * @language zh_CN
+         */
+        export const TBCREATIVEAPP = "tbcreativeapp";
 
     }
 
