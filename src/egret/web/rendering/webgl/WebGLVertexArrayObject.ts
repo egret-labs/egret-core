@@ -215,71 +215,111 @@ namespace egret.web {
             }
 
             if (meshVertices) {
-                let vertData = [];
-                // 计算索引位置与赋值
-                const vertices = this.vertices;
-                const verticesUint32View = this._verticesUint32View;
-                let index = this.vertexIndex * this.vertSize;
-                // 缓存顶点数组
-                let i = 0, iD = 0, l = 0;
-                let u = 0, v = 0, x = 0, y = 0;
-                for (i = 0, l = meshUVs.length; i < l; i += 2) {
-                    iD = index + i * 5 / 2;
-                    x = meshVertices[i];
-                    y = meshVertices[i + 1];
-                    u = meshUVs[i];
-                    v = meshUVs[i + 1];
+                if (isIOS14Device()) {
+                    let vertData = [];
+                    // 计算索引位置与赋值
+                    const vertices = this.vertices;
+                    const verticesUint32View = this._verticesUint32View;
+                    let index = this.vertexIndex * this.vertSize;
+                    // 缓存顶点数组
+                    let i = 0, iD = 0, l = 0;
+                    let u = 0, v = 0, x = 0, y = 0;
+                    for (i = 0, l = meshUVs.length; i < l; i += 2) {
+                        iD = index + i * 5 / 2;
+                        x = meshVertices[i];
+                        y = meshVertices[i + 1];
+                        u = meshUVs[i];
+                        v = meshUVs[i + 1];
 
-                    if (rotated) {
-                        vertData.push([
-                            a * x + c * y + tx,
-                            b * x + d * y + ty,
-                            (sourceX + (1.0 - v) * sourceHeight) / textureSourceWidth,
-                            (sourceY + u * sourceWidth) / textureSourceHeight,
-                        ]);
-                    } else {
-                        vertData.push([
-                            a * x + c * y + tx,
-                            b * x + d * y + ty,
-                            (sourceX + u * sourceWidth) / textureSourceWidth,
-                            (sourceY + v * sourceHeight) / textureSourceHeight,
-                        ]);
+                        if (rotated) {
+                            vertData.push([
+                                a * x + c * y + tx,
+                                b * x + d * y + ty,
+                                (sourceX + (1.0 - v) * sourceHeight) / textureSourceWidth,
+                                (sourceY + u * sourceWidth) / textureSourceHeight,
+                            ]);
+                        } else {
+                            vertData.push([
+                                a * x + c * y + tx,
+                                b * x + d * y + ty,
+                                (sourceX + u * sourceWidth) / textureSourceWidth,
+                                (sourceY + v * sourceHeight) / textureSourceHeight,
+                            ]);
+                        }
+                        verticesUint32View[iD + 4] = alpha;
                     }
-                    verticesUint32View[iD + 4] = alpha;
+                    for (let i = 0; i < meshIndices.length; i += 3) {
+                        let data0 = vertData[meshIndices[i]];
+                        vertices[index++] = data0[0];
+                        vertices[index++] = data0[1];
+                        vertices[index++] = data0[2];
+                        vertices[index++] = data0[3];
+                        verticesUint32View[index++] = alpha;
+
+                        let data1 = vertData[meshIndices[i + 1]];
+                        vertices[index++] = data1[0];
+                        vertices[index++] = data1[1];
+                        vertices[index++] = data1[2];
+                        vertices[index++] = data1[3];
+                        verticesUint32View[index++] = alpha;
+
+                        let data2 = vertData[meshIndices[i + 2]];
+                        vertices[index++] = data2[0];
+                        vertices[index++] = data2[1];
+                        vertices[index++] = data2[2];
+                        vertices[index++] = data2[3];
+                        verticesUint32View[index++] = alpha;
+
+                        // 填充数据
+                        vertices[index++] = data2[0];
+                        vertices[index++] = data2[1];
+                        vertices[index++] = data2[2];
+                        vertices[index++] = data2[3];
+                        verticesUint32View[index++] = alpha;
+                    }
+
+                    let meshNum = meshIndices.length / 3;
+                    this.vertexIndex += 4 * meshNum;
+                    this.indexIndex += 6 * meshNum;
                 }
-                for (let i = 0; i < meshIndices.length; i += 3) {
-                    let data0 = vertData[meshIndices[i]];
-                    vertices[index++] = data0[0];
-                    vertices[index++] = data0[1];
-                    vertices[index++] = data0[2];
-                    vertices[index++] = data0[3];
-                    verticesUint32View[index++] = alpha;
-
-                    let data1 = vertData[meshIndices[i + 1]];
-                    vertices[index++] = data1[0];
-                    vertices[index++] = data1[1];
-                    vertices[index++] = data1[2];
-                    vertices[index++] = data1[3];
-                    verticesUint32View[index++] = alpha;
-
-                    let data2 = vertData[meshIndices[i + 2]];
-                    vertices[index++] = data2[0];
-                    vertices[index++] = data2[1];
-                    vertices[index++] = data2[2];
-                    vertices[index++] = data2[3];
-                    verticesUint32View[index++] = alpha;
-
-                    // 填充数据
-                    vertices[index++] = data2[0];
-                    vertices[index++] = data2[1];
-                    vertices[index++] = data2[2];
-                    vertices[index++] = data2[3];
-                    verticesUint32View[index++] = alpha;
+                else {
+                    // 计算索引位置与赋值
+                    const vertices = this.vertices;
+                    const verticesUint32View = this._verticesUint32View;
+                    let index = this.vertexIndex * this.vertSize;
+                    // 缓存顶点数组
+                    let i = 0, iD = 0, l = 0;
+                    let u = 0, v = 0, x = 0, y = 0;
+                    for (i = 0, l = meshUVs.length; i < l; i += 2) {
+                        iD = index + i * 5 / 2;
+                        x = meshVertices[i];
+                        y = meshVertices[i + 1];
+                        u = meshUVs[i];
+                        v = meshUVs[i + 1];
+                        // xy
+                        vertices[iD + 0] = a * x + c * y + tx;
+                        vertices[iD + 1] = b * x + d * y + ty;
+                        // uv
+                        if (rotated) {
+                            vertices[iD + 2] = (sourceX + (1.0 - v) * sourceHeight) / textureSourceWidth;
+                            vertices[iD + 3] = (sourceY + u * sourceWidth) / textureSourceHeight;
+                        }
+                        else {
+                            vertices[iD + 2] = (sourceX + u * sourceWidth) / textureSourceWidth;
+                            vertices[iD + 3] = (sourceY + v * sourceHeight) / textureSourceHeight;
+                        }
+                        // alpha
+                        verticesUint32View[iD + 4] = alpha;
+                    }
+                    // 缓存索引数组
+                    if (this.hasMesh) {
+                        for (let i = 0, l = meshIndices.length; i < l; ++i) {
+                            this.indicesForMesh[this.indexIndex + i] = meshIndices[i] + this.vertexIndex;
+                        }
+                    }
+                    this.vertexIndex += meshUVs.length / 2;
+                    this.indexIndex += meshIndices.length;
                 }
-
-                let meshNum = meshIndices.length / 3;
-                this.vertexIndex += 4 * meshNum;
-                this.indexIndex += 6 * meshNum;
 
             } else {
                 let width = textureSourceWidth;
@@ -386,5 +426,12 @@ namespace egret.web {
             this.indexIndex = 0;
         }
 
+    }
+
+    export function isIOS14Device() {
+        return egret.Capabilities.runtimeType == egret.RuntimeType.WEB
+            && egret.Capabilities.os == "iOS"
+            && egret.Capabilities.isMobile
+            && /iPhone OS 14/.test(window.navigator.userAgent);
     }
 }
