@@ -206,7 +206,7 @@ namespace egret {
         export const TTGAME = "ttgame";
         /**
          * Running on huawei fastgame
-         * @version Egret 5.3.8
+         * @version Egret 5.3.9
          * @platform All
          * @language en_US
          */
@@ -219,13 +219,13 @@ namespace egret {
         export const FASTGAME = "fastgame";
          /**
          * Running on taobao creative app
-         * @version Egret 5.3.8
+         * @version Egret 5.3.10
          * @platform All
          * @language en_US
          */
          /**
          * 运行在淘宝创意互动上
-         * @version Egret 5.3.9
+         * @version Egret 5.3.10
          * @platform All
          * @language zh_CN
          */
@@ -368,7 +368,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static readonly engineVersion: string = "5.3.9";
+        public static readonly engineVersion: string = "5.3.10";
 
         /***
          * current render mode.
