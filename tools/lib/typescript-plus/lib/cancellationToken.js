@@ -1,13 +1,7 @@
 "use strict";
 var fs = require("fs");
 function pipeExists(name) {
-    try {
-        fs.statSync(name);
-        return true;
-    }
-    catch (e) {
-        return false;
-    }
+    return fs.existsSync(name);
 }
 function createCancellationToken(args) {
     var cancellationPipeName;

@@ -26,64 +26,64 @@
         },
         {
           "pos": 725,
-          "end": 2515,
-          "kind": "emitHelpers",
-          "data": "typescript:generator"
-        },
-        {
-          "pos": 2516,
-          "end": 2744,
+          "end": 953,
           "kind": "emitHelpers",
           "data": "typescript:makeTemplateObject"
         },
         {
+          "pos": 954,
+          "end": 2744,
+          "kind": "emitHelpers",
+          "data": "typescript:generator"
+        },
+        {
           "pos": 2745,
-          "end": 3330,
+          "end": 3353,
           "kind": "emitHelpers",
           "data": "typescript:extends"
         },
         {
-          "pos": 3331,
-          "end": 5973586,
+          "pos": 3354,
+          "end": 6579285,
           "kind": "prepend",
           "data": "./compiler.js",
           "texts": [
             {
-              "pos": 3331,
-              "end": 5973586,
+              "pos": 3354,
+              "end": 6579285,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 5973586,
-          "end": 5993006,
+          "pos": 6579285,
+          "end": 6598938,
           "kind": "prepend",
           "data": "./jsTyping.js",
           "texts": [
             {
-              "pos": 5973586,
-              "end": 5993006,
+              "pos": 6579285,
+              "end": 6598938,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 5993006,
-          "end": 6023330,
+          "pos": 6598938,
+          "end": 6629265,
           "kind": "prepend",
           "data": "./typingsInstallerCore.js",
           "texts": [
             {
-              "pos": 5993006,
-              "end": 6023330,
+              "pos": 6598938,
+              "end": 6629265,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 6023330,
-          "end": 6036400,
+          "pos": 6629265,
+          "end": 6642442,
           "kind": "text"
         }
       ],
@@ -112,5 +112,5 @@
       }
     }
   },
-  "version": "3.7.2"
+  "version": "4.0.3"
 }

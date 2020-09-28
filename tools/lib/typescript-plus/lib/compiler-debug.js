@@ -61,8 +61,7 @@ var Debug;
             FlowFlags.SwitchClause |
             FlowFlags.ArrayMutation |
             FlowFlags.Call |
-            FlowFlags.PreFinally |
-            FlowFlags.AfterFinally;
+            FlowFlags.ReduceLabel;
         const hasNodeFlags = FlowFlags.Start |
             FlowFlags.Assignment |
             FlowFlags.Call |
@@ -71,8 +70,9 @@ var Debug;
         const links = Object.create(/*o*/ null); // eslint-disable-line no-null/no-null
         const nodes = [];
         const edges = [];
-        const root = buildGraphNode(flowNode);
+        const root = buildGraphNode(flowNode, new Set());
         for (const node of nodes) {
+            node.text = renderFlowNode(node.flowNode, node.circular);
             computeLevel(node);
         }
         const height = computeHeight(root);
@@ -109,27 +109,42 @@ var Debug;
             }
             return parents;
         }
-        function buildGraphNode(flowNode) {
+        function buildGraphNode(flowNode, seen) {
             const id = getDebugFlowNodeId(flowNode);
             let graphNode = links[id];
-            if (!graphNode) {
-                links[id] = graphNode = { id, flowNode, edges: [], text: renderFlowNode(flowNode), lane: -1, endLane: -1, level: -1 };
+            if (graphNode && seen.has(flowNode)) {
+                graphNode.circular = true;
+                graphNode = {
+                    id: -1,
+                    flowNode,
+                    edges: [],
+                    text: "",
+                    lane: -1,
+                    endLane: -1,
+                    level: -1,
+                    circular: "circularity"
+                };
                 nodes.push(graphNode);
-                if (!(flowNode.flags & FlowFlags.PreFinally)) {
-                    if (hasAntecedents(flowNode)) {
-                        for (const antecedent of flowNode.antecedents) {
-                            buildGraphEdge(graphNode, antecedent);
-                        }
-                    }
-                    else if (hasAntecedent(flowNode)) {
-                        buildGraphEdge(graphNode, flowNode.antecedent);
+                return graphNode;
+            }
+            seen.add(flowNode);
+            if (!graphNode) {
+                links[id] = graphNode = { id, flowNode, edges: [], text: "", lane: -1, endLane: -1, level: -1, circular: false };
+                nodes.push(graphNode);
+                if (hasAntecedents(flowNode)) {
+                    for (const antecedent of flowNode.antecedents) {
+                        buildGraphEdge(graphNode, antecedent, seen);
                     }
                 }
+                else if (hasAntecedent(flowNode)) {
+                    buildGraphEdge(graphNode, flowNode.antecedent, seen);
+                }
             }
+            seen.delete(flowNode);
             return graphNode;
         }
-        function buildGraphEdge(source, antecedent) {
-            const target = buildGraphNode(antecedent);
+        function buildGraphEdge(source, antecedent, seen) {
+            const target = buildGraphNode(antecedent, seen);
             const edge = { source, target };
             edges.push(edge);
             source.edges.push(edge);
@@ -195,10 +210,8 @@ var Debug;
                 return "ArrayMutation";
             if (flags & FlowFlags.Call)
                 return "Call";
-            if (flags & FlowFlags.PreFinally)
-                return "PreFinally";
-            if (flags & FlowFlags.AfterFinally)
-                return "AfterFinally";
+            if (flags & FlowFlags.ReduceLabel)
+                return "ReduceLabel";
             if (flags & FlowFlags.Unreachable)
                 return "Unreachable";
             throw new Error();
@@ -207,8 +220,11 @@ var Debug;
             const sourceFile = getSourceFileOfNode(node);
             return getSourceTextOfNodeFromSourceFile(sourceFile, node, /*includeTrivia*/ false);
         }
-        function renderFlowNode(flowNode) {
+        function renderFlowNode(flowNode, circular) {
             let text = getHeader(flowNode.flags);
+            if (circular) {
+                text = `${text}#${getDebugFlowNodeId(flowNode)}`;
+            }
             if (hasNode(flowNode)) {
                 if (flowNode.node) {
                     text += ` (${getNodeText(flowNode.node)})`;
@@ -227,7 +243,7 @@ var Debug;
                 }
                 text += ` (${clauses.join(", ")})`;
             }
-            return text;
+            return circular === "circularity" ? `Circular(${text})` : text;
         }
         function renderGraph() {
             const columnCount = columnWidths.length;

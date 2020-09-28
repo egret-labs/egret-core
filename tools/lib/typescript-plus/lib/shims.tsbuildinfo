@@ -2,7 +2,7 @@
   "bundle": {
     "commonSourceDirectory": "../../src",
     "sourceFiles": [
-      "../../src/shims/mapShim.ts"
+      "../../src/shims/collectionShims.ts"
     ],
     "js": {
       "sections": [
@@ -14,7 +14,7 @@
         },
         {
           "pos": 14,
-          "end": 6815,
+          "end": 8724,
           "kind": "text"
         }
       ],
@@ -42,11 +42,11 @@
       "sections": [
         {
           "pos": 0,
-          "end": 104,
+          "end": 1902,
           "kind": "internal"
         }
       ]
     }
   },
-  "version": "3.7.2"
+  "version": "4.0.3"
 }

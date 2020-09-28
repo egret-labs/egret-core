@@ -1,16 +1,23 @@
 "use strict";
-/* @internal */
 var ts;
 (function (ts) {
     var server;
     (function (server) {
+        /* @internal */
         server.ActionSet = "action::set";
+        /* @internal */
         server.ActionInvalidate = "action::invalidate";
+        /* @internal */
         server.ActionPackageInstalled = "action::packageInstalled";
+        /* @internal */
         server.EventTypesRegistry = "event::typesRegistry";
+        /* @internal */
         server.EventBeginInstallTypes = "event::beginInstallTypes";
+        /* @internal */
         server.EventEndInstallTypes = "event::endInstallTypes";
+        /* @internal */
         server.EventInitializationFailed = "event::initializationFailed";
+        /* @internal */
         var Arguments;
         (function (Arguments) {
             Arguments.GlobalCacheLocation = "--globalTypingsCacheLocation";
@@ -29,10 +36,12 @@ var ts;
              */
             Arguments.ValidateDefaultNpmLocation = "--validateDefaultNpmLocation";
         })(Arguments = server.Arguments || (server.Arguments = {}));
+        /* @internal */
         function hasArgument(argumentName) {
             return ts.sys.args.indexOf(argumentName) >= 0;
         }
         server.hasArgument = hasArgument;
+        /* @internal */
         function findArgument(argumentName) {
             var index = ts.sys.args.indexOf(argumentName);
             return index >= 0 && index < ts.sys.args.length - 1
@@ -40,6 +49,7 @@ var ts;
                 : undefined;
         }
         server.findArgument = findArgument;
+        /* @internal */
         function nowString() {
             // E.g. "12:34:56.789"
             var d = new Date();
@@ -96,20 +106,20 @@ var ts;
             "vm",
             "zlib"
         ];
-        JsTyping.nodeCoreModules = ts.arrayToSet(JsTyping.nodeCoreModuleList);
+        JsTyping.nodeCoreModules = new ts.Set(JsTyping.nodeCoreModuleList);
         function nonRelativeModuleNameForTypingCache(moduleName) {
             return JsTyping.nodeCoreModules.has(moduleName) ? "node" : moduleName;
         }
         JsTyping.nonRelativeModuleNameForTypingCache = nonRelativeModuleNameForTypingCache;
         function loadSafeList(host, safeListPath) {
             var result = ts.readConfigFile(safeListPath, function (path) { return host.readFile(path); });
-            return ts.createMapFromTemplate(result.config);
+            return new ts.Map(ts.getEntries(result.config));
         }
         JsTyping.loadSafeList = loadSafeList;
         function loadTypesMap(host, typesMapPath) {
             var result = ts.readConfigFile(typesMapPath, function (path) { return host.readFile(path); });
             if (result.config) {
-                return ts.createMapFromTemplate(result.config.simpleMap);
+                return new ts.Map(ts.getEntries(result.config.simpleMap));
             }
             return undefined;
         }
@@ -128,7 +138,7 @@ var ts;
                 return { cachedTypingPaths: [], newTypingNames: [], filesToWatch: [] };
             }
             // A typing name to typing file path mapping
-            var inferredTypings = ts.createMap();
+            var inferredTypings = new ts.Map();
             // Only infer typings for .js and .jsx files
             fileNames = ts.mapDefined(fileNames, function (fileName) {
                 var path = ts.normalizePath(fileName);
@@ -141,9 +151,9 @@ var ts;
                 addInferredTypings(typeAcquisition.include, "Explicitly included types");
             var exclude = typeAcquisition.exclude || [];
             // Directories to search for package.json, bower.json and other typing information
-            var possibleSearchDirs = ts.arrayToSet(fileNames, ts.getDirectoryPath);
-            possibleSearchDirs.set(projectRootPath, true);
-            possibleSearchDirs.forEach(function (_true, searchDir) {
+            var possibleSearchDirs = new ts.Set(fileNames.map(ts.getDirectoryPath));
+            possibleSearchDirs.add(projectRootPath);
+            possibleSearchDirs.forEach(function (searchDir) {
                 var packageJsonPath = ts.combinePaths(searchDir, "package.json");
                 getTypingNamesFromJson(packageJsonPath, filesToWatch);
                 var bowerJsonPath = ts.combinePaths(searchDir, "bower.json");

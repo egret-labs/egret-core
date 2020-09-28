@@ -2,7 +2,7 @@
   "bundle": {
     "commonSourceDirectory": "../../src",
     "sourceFiles": [
-      "../../src/debug/debug.ts"
+      "../../src/debug/dbg.ts"
     ],
     "js": {
       "sections": [
@@ -14,7 +14,7 @@
         },
         {
           "pos": 14,
-          "end": 14428,
+          "end": 15022,
           "kind": "text"
         }
       ],
@@ -39,5 +39,5 @@
       }
     }
   },
-  "version": "3.7.2"
+  "version": "4.0.3"
 }

@@ -72,10 +72,10 @@ var ts;
                     this.typesMapLocation = typesMapLocation;
                     this.throttleLimit = throttleLimit;
                     this.log = log;
-                    this.packageNameToTypingLocation = ts.createMap();
-                    this.missingTypingsSet = ts.createMap();
-                    this.knownCachesSet = ts.createMap();
-                    this.projectWatchers = ts.createMap();
+                    this.packageNameToTypingLocation = new ts.Map();
+                    this.missingTypingsSet = new ts.Set();
+                    this.knownCachesSet = new ts.Set();
+                    this.projectWatchers = new ts.Map();
                     this.pendingRunRequests = [];
                     this.installRunCount = 1;
                     this.inFlightRequestCount = 0;
@@ -127,7 +127,7 @@ var ts;
                         this.log.writeLine("Finished typings discovery: " + JSON.stringify(discoverTypingsResult));
                     }
                     // start watching files
-                    this.watchFiles(req.projectName, discoverTypingsResult.filesToWatch, req.projectRootPath);
+                    this.watchFiles(req.projectName, discoverTypingsResult.filesToWatch, req.projectRootPath, req.watchOptions);
                     // install typings
                     if (discoverTypingsResult.newTypingNames.length) {
                         this.installTypings(req, req.cachePath || this.globalCachePath, discoverTypingsResult.cachedTypingPaths, discoverTypingsResult.newTypingNames);
@@ -187,7 +187,7 @@ var ts;
                                 }
                                 var typingFile = typingToFileName(cacheLocation, packageName, this.installTypingHost, this.log);
                                 if (!typingFile) {
-                                    this.missingTypingsSet.set(packageName, true);
+                                    this.missingTypingsSet.add(packageName);
                                     continue;
                                 }
                                 var existingTypingFile = this.packageNameToTypingLocation.get(packageName);
@@ -215,13 +215,13 @@ var ts;
                     if (this.log.isEnabled()) {
                         this.log.writeLine("Finished processing cache location '" + cacheLocation + "'");
                     }
-                    this.knownCachesSet.set(cacheLocation, true);
+                    this.knownCachesSet.add(cacheLocation);
                 };
                 TypingsInstaller.prototype.filterTypings = function (typingsToInstall) {
                     var _this = this;
                     return ts.mapDefined(typingsToInstall, function (typing) {
                         var typingKey = ts.mangleScopedPackageName(typing);
-                        if (_this.missingTypingsSet.get(typingKey)) {
+                        if (_this.missingTypingsSet.has(typingKey)) {
                             if (_this.log.isEnabled())
                                 _this.log.writeLine("'" + typing + "':: '" + typingKey + "' is in missingTypingsSet - skipping...");
                             return undefined;
@@ -229,7 +229,7 @@ var ts;
                         var validationResult = ts.JsTyping.validatePackageName(typing);
                         if (validationResult !== 0 /* Ok */) {
                             // add typing name to missing set so we won't process it again
-                            _this.missingTypingsSet.set(typingKey, true);
+                            _this.missingTypingsSet.add(typingKey);
                             if (_this.log.isEnabled())
                                 _this.log.writeLine(ts.JsTyping.renderPackageNameValidationFailure(validationResult, typing));
                             return undefined;
@@ -294,7 +294,7 @@ var ts;
                                 }
                                 for (var _i = 0, filteredTypings_1 = filteredTypings; _i < filteredTypings_1.length; _i++) {
                                     var typing = filteredTypings_1[_i];
-                                    _this.missingTypingsSet.set(typing, true);
+                                    _this.missingTypingsSet.add(typing);
                                 }
                                 return;
                             }
@@ -307,7 +307,7 @@ var ts;
                                 var packageName = filteredTypings_2[_a];
                                 var typingFile = typingToFileName(cachePath, packageName, _this.installTypingHost, _this.log);
                                 if (!typingFile) {
-                                    _this.missingTypingsSet.set(packageName, true);
+                                    _this.missingTypingsSet.add(packageName);
                                     continue;
                                 }
                                 // packageName is guaranteed to exist in typesRegistry by filterTypings
@@ -346,7 +346,7 @@ var ts;
                         host.createDirectory(directory);
                     }
                 };
-                TypingsInstaller.prototype.watchFiles = function (projectName, files, projectRootPath) {
+                TypingsInstaller.prototype.watchFiles = function (projectName, files, projectRootPath, options) {
                     var _this = this;
                     if (!files.length) {
                         // shut down existing watchers
@@ -354,9 +354,9 @@ var ts;
                         return;
                     }
                     var watchers = this.projectWatchers.get(projectName);
-                    var toRemove = ts.createMap();
+                    var toRemove = new ts.Map();
                     if (!watchers) {
-                        watchers = ts.createMap();
+                        watchers = new ts.Map();
                         this.projectWatchers.set(projectName, watchers);
                     }
                     else {
@@ -383,7 +383,7 @@ var ts;
                                     watchers.isInvoked = true;
                                     _this.sendResponse({ projectName: projectName, kind: server.ActionInvalidate });
                                 }
-                            }, /*pollingInterval*/ 2000) :
+                            }, /*pollingInterval*/ 2000, options) :
                             _this.installTypingHost.watchDirectory(path, function (f) {
                                 if (isLoggingEnabled) {
                                     _this.log.writeLine("DirectoryWatcher:: Triggered with " + f + " :: WatchInfo: " + path + " recursive :: handler is already invoked '" + watchers.isInvoked + "'");
@@ -396,7 +396,7 @@ var ts;
                                     watchers.isInvoked = true;
                                     _this.sendResponse({ projectName: projectName, kind: server.ActionInvalidate });
                                 }
-                            }, /*recursive*/ true);
+                            }, /*recursive*/ true, options);
                         watchers.set(canonicalPath, isLoggingEnabled ? {
                             close: function () {
                                 _this.log.writeLine(projectWatcherType + ":: Closed:: WatchInfo: " + path);

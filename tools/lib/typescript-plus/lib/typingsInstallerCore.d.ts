@@ -32,7 +32,7 @@ declare namespace ts.server.typingsInstaller {
         private readonly globalCachePackageJsonPath;
         private installRunCount;
         private inFlightRequestCount;
-        abstract readonly typesRegistry: Map<MapLike<string>>;
+        abstract readonly typesRegistry: ESMap<string, MapLike<string>>;
         constructor(installTypingHost: InstallTypingHost, globalCachePath: string, safeListPath: Path, typesMapLocation: Path, throttleLimit: number, log?: Log);
         closeProject(req: CloseProject): void;
         private closeWatchers;

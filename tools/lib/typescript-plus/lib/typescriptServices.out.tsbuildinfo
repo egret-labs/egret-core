@@ -26,70 +26,89 @@
         },
         {
           "pos": 725,
-          "end": 2515,
-          "kind": "emitHelpers",
-          "data": "typescript:generator"
-        },
-        {
-          "pos": 2516,
-          "end": 2744,
+          "end": 953,
           "kind": "emitHelpers",
           "data": "typescript:makeTemplateObject"
         },
         {
+          "pos": 954,
+          "end": 2744,
+          "kind": "emitHelpers",
+          "data": "typescript:generator"
+        },
+        {
           "pos": 2745,
-          "end": 3330,
+          "end": 3235,
+          "kind": "emitHelpers",
+          "data": "typescript:rest"
+        },
+        {
+          "pos": 3236,
+          "end": 3844,
           "kind": "emitHelpers",
           "data": "typescript:extends"
         },
         {
-          "pos": 3331,
-          "end": 10132,
+          "pos": 3845,
+          "end": 12555,
           "kind": "prepend",
           "data": "./shims.js",
           "texts": [
             {
-              "pos": 3331,
-              "end": 10132,
+              "pos": 3845,
+              "end": 12555,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 10132,
-          "end": 5980387,
+          "pos": 12555,
+          "end": 6588486,
           "kind": "prepend",
           "data": "./compiler.js",
           "texts": [
             {
-              "pos": 10132,
-              "end": 5980387,
+              "pos": 12555,
+              "end": 6588486,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 5980387,
-          "end": 5999807,
+          "pos": 6588486,
+          "end": 6608139,
           "kind": "prepend",
           "data": "./jsTyping.js",
           "texts": [
             {
-              "pos": 5980387,
-              "end": 5999807,
+              "pos": 6588486,
+              "end": 6608139,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 5999807,
-          "end": 7844385,
+          "pos": 6608139,
+          "end": 8742617,
           "kind": "prepend",
           "data": "./services.js",
           "texts": [
             {
-              "pos": 5999807,
-              "end": 7844385,
+              "pos": 6608139,
+              "end": 8742617,
+              "kind": "text"
+            }
+          ]
+        },
+        {
+          "pos": 8742617,
+          "end": 8832917,
+          "kind": "prepend",
+          "data": "./compat.js",
+          "texts": [
+            {
+              "pos": 8742617,
+              "end": 8832917,
               "kind": "text"
             }
           ]
@@ -107,39 +126,52 @@
         },
         {
           "pos": 0,
-          "end": 256992,
+          "end": 288414,
           "kind": "prepend",
           "data": "./compiler.d.ts",
           "texts": [
             {
               "pos": 0,
-              "end": 256992,
+              "end": 288414,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 256992,
-          "end": 259968,
+          "pos": 288414,
+          "end": 291501,
           "kind": "prepend",
           "data": "./jsTyping.d.ts",
           "texts": [
             {
-              "pos": 256992,
-              "end": 259968,
+              "pos": 288414,
+              "end": 291501,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 259968,
-          "end": 308003,
+          "pos": 291501,
+          "end": 345317,
           "kind": "prepend",
           "data": "./services.d.ts",
           "texts": [
             {
-              "pos": 259968,
-              "end": 308003,
+              "pos": 291501,
+              "end": 345317,
+              "kind": "text"
+            }
+          ]
+        },
+        {
+          "pos": 345317,
+          "end": 442466,
+          "kind": "prepend",
+          "data": "./compat.d.ts",
+          "texts": [
+            {
+              "pos": 345317,
+              "end": 442466,
               "kind": "text"
             }
           ]
@@ -147,5 +179,5 @@
       ]
     }
   },
-  "version": "3.7.2"
+  "version": "4.0.3"
 }

@@ -2,7 +2,6 @@
   "bundle": {
     "commonSourceDirectory": "../../src",
     "sourceFiles": [
-      "../../src/tsc/executeCommandLine.ts",
       "../../src/tsc/tsc.ts"
     ],
     "js": {
@@ -27,32 +26,45 @@
         },
         {
           "pos": 725,
-          "end": 2515,
-          "kind": "emitHelpers",
-          "data": "typescript:generator"
-        },
-        {
-          "pos": 2516,
-          "end": 2744,
+          "end": 953,
           "kind": "emitHelpers",
           "data": "typescript:makeTemplateObject"
         },
         {
+          "pos": 954,
+          "end": 2744,
+          "kind": "emitHelpers",
+          "data": "typescript:generator"
+        },
+        {
           "pos": 2745,
-          "end": 5973000,
+          "end": 6578676,
           "kind": "prepend",
           "data": "./compiler.js",
           "texts": [
             {
               "pos": 2745,
-              "end": 5973000,
+              "end": 6578676,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 5973000,
-          "end": 6000974,
+          "pos": 6578676,
+          "end": 6606433,
+          "kind": "prepend",
+          "data": "./executeCommandLine.js",
+          "texts": [
+            {
+              "pos": 6578676,
+              "end": 6606433,
+              "kind": "text"
+            }
+          ]
+        },
+        {
+          "pos": 6606433,
+          "end": 6606950,
           "kind": "text"
         }
       ],
@@ -73,12 +85,9 @@
               }
             ]
           }
-        ],
-        "helpers": [
-          "typescript:assign"
         ]
       }
     }
   },
-  "version": "3.7.2"
+  "version": "4.0.3"
 }
