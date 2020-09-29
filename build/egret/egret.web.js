@@ -1981,6 +1981,11 @@ var egret;
                 if (!this.htmlInput.isCurrentStageText(this)) {
                     this.inputElement = this.htmlInput.getInputElement(this);
                     if (!this.$textfield.multiline) {
+                        if (this.inputElement.type == "password" && this.$textfield.inputType != "password") {
+                            //解决安卓手机切换到安全键盘后无法切换回普通键盘的问题
+                            this.htmlInput.initInputElement(false);
+                            this.inputElement = this.htmlInput.getInputElement(this);
+                        }
                         this.inputElement.type = this.$textfield.inputType;
                     }
                     else {
