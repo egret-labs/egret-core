@@ -341,17 +341,18 @@ export function checkPlugin() {
                 }
                 return item.name
             })
-            vivo.plugins = plugins.map(item => {
-                if (modules.indexOf(item) < 0) {//用户没用到的库，也全量放进去
-                    config.egretProperties.modules.push({ "name": item })
-                }
-                return item + extra
-            })
+            // vivo.plugins = plugins.map(item => {
+            //     if (modules.indexOf(item) < 0) {//用户没用到的库，也全量放进去
+            //         config.egretProperties.modules.push({ "name": item })
+            //     }
+            //     return item + extra
+            // })
+            vivo.plugins = userPlugs
 
             vivo.userLibs = userLibs;
             vivo.userPlugs = userPlugs;
 
-            project.manager.copyToLibs();//把新的库拷贝进去
+            // project.manager.copyToLibs();//把新的库拷贝进去
         }
     }
 }

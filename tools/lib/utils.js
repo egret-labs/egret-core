@@ -82,7 +82,6 @@ var UglifyJS = require("./uglify-js/uglifyjs");
 var net = require("net");
 var timers_1 = require("timers");
 var EgretProject = require("../project");
-var project = require("../project");
 var fs = require("fs");
 var crypto = require('crypto');
 //第三方调用时，可能不支持颜色显示，可通过添加 -nocoloroutput 移除颜色信息
@@ -378,7 +377,7 @@ function checkPlugin() {
             var userPlugs_1 = []; //用户用到的插件
             var plugins_1 = ['egret', 'game', 'eui', 'socket', 'tween', 'assetsmanager', 'dragonBones'];
             var extra_1 = egret.args.command === 'publish' ? '.min.js' : '.js';
-            var modules_1 = config.egretProperties.modules.map(function (item) {
+            var modules = config.egretProperties.modules.map(function (item) {
                 if (item.name != 'promise') {
                     if (plugins_1.indexOf(item.name) == -1) {
                         userLibs_1.push(item.name + extra_1);
@@ -389,15 +388,16 @@ function checkPlugin() {
                 }
                 return item.name;
             });
-            vivo.plugins = plugins_1.map(function (item) {
-                if (modules_1.indexOf(item) < 0) { //用户没用到的库，也全量放进去
-                    config.egretProperties.modules.push({ "name": item });
-                }
-                return item + extra_1;
-            });
+            // vivo.plugins = plugins.map(item => {
+            //     if (modules.indexOf(item) < 0) {//用户没用到的库，也全量放进去
+            //         config.egretProperties.modules.push({ "name": item })
+            //     }
+            //     return item + extra
+            // })
+            vivo.plugins = userPlugs_1;
             vivo.userLibs = userLibs_1;
             vivo.userPlugs = userPlugs_1;
-            project.manager.copyToLibs(); //把新的库拷贝进去
+            // project.manager.copyToLibs();//把新的库拷贝进去
         }
     }
 }
