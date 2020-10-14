@@ -126,8 +126,9 @@ declare module egret {
             "native": number,
             "path": string;
         },
-        "egret_version"?: string;
-        "vivo"?:{}
+        "egret_version"?: string,
+        "vivo"?:{},
+        "oppo"?:{},
         "ttgame"?:{}
     }
 

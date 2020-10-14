@@ -82,6 +82,7 @@ var UglifyJS = require("./uglify-js/uglifyjs");
 var net = require("net");
 var timers_1 = require("timers");
 var EgretProject = require("../project");
+var project = require("../project");
 var fs = require("fs");
 var crypto = require('crypto');
 //第三方调用时，可能不支持颜色显示，可通过添加 -nocoloroutput 移除颜色信息
@@ -361,6 +362,7 @@ function checkEgret() {
     }
 }
 exports.checkEgret = checkEgret;
+var enginePlugins = ['egret', 'game', 'eui', 'socket', 'tween', 'assetsmanager', 'dragonBones']; //引擎插件列表
 function checkPlugin() {
     //check if use plugin
     var target = egret.args.target;
@@ -369,17 +371,16 @@ function checkPlugin() {
         if (!config.egretProperties.vivo)
             config.egretProperties.vivo = {};
         var vivo = config.egretProperties.vivo;
-        vivo.plugins = [];
         vivo.userLibs = [];
         vivo.userPlugs = [];
         if (vivo.usePlugin == true) {
             var userLibs_1 = []; //用户的自定义库
             var userPlugs_1 = []; //用户用到的插件
-            var plugins_1 = ['egret', 'game', 'eui', 'socket', 'tween', 'assetsmanager', 'dragonBones'];
+            // const plugins = ['egret', 'game', 'eui', 'socket', 'tween', 'assetsmanager', 'dragonBones']
             var extra_1 = egret.args.command === 'publish' ? '.min.js' : '.js';
-            var modules = config.egretProperties.modules.map(function (item) {
+            var modules_1 = config.egretProperties.modules.map(function (item) {
                 if (item.name != 'promise') {
-                    if (plugins_1.indexOf(item.name) == -1) {
+                    if (enginePlugins.indexOf(item.name) == -1) {
                         userLibs_1.push(item.name + extra_1);
                     }
                     else {
@@ -388,23 +389,22 @@ function checkPlugin() {
                 }
                 return item.name;
             });
-            // vivo.plugins = plugins.map(item => {
-            //     if (modules.indexOf(item) < 0) {//用户没用到的库，也全量放进去
-            //         config.egretProperties.modules.push({ "name": item })
-            //     }
-            //     return item + extra
-            // })
-            vivo.plugins = userPlugs_1;
+            enginePlugins.map(function (item) {
+                if (modules_1.indexOf(item) < 0) { //用户没用到的库，也全量放进去
+                    config.egretProperties.modules.push({ "name": item });
+                }
+                return item + extra_1;
+            });
             vivo.userLibs = userLibs_1;
             vivo.userPlugs = userPlugs_1;
-            // project.manager.copyToLibs();//把新的库拷贝进去
+            project.manager.copyToLibs(); //把新的库拷贝进去
         }
     }
 }
 exports.checkPlugin = checkPlugin;
 function pluginManifest(manifest, outputDir) {
     return __awaiter(this, void 0, void 0, function () {
-        var target, egretProperties, command, contents, vivo_1, jsonPath, configPath, jsonData, plugins, userLibs, userPlugs, game, contents2_1, configArr_1, configContent, reg, replaceConfigStr, extra, ttgame, gameJsonContent, provider, ttPluginPath;
+        var target, egretProperties, command, contents, vivo, jsonPath, configPath, jsonData, userLibs, userPlugs, game, contents2_1, configArr_1, extra_2, configContent, reg, replaceConfigStr, extra_3, ttgame, gameJsonContent, provider, ttPluginPath;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -413,31 +413,34 @@ function pluginManifest(manifest, outputDir) {
                     command = egret.args.command;
                     contents = null;
                     if (!(target == "vivogame")) return [3 /*break*/, 4];
-                    vivo_1 = egretProperties.vivo;
+                    vivo = egretProperties.vivo;
                     jsonPath = path.join(outputDir, 'manifest.json');
                     configPath = path.join(outputDir, '../', "minigame.config.js");
                     jsonData = JSON.parse(file.readFileSync(jsonPath, 'utf-8'));
-                    plugins = vivo_1.plugins, userLibs = vivo_1.userLibs, userPlugs = vivo_1.userPlugs;
+                    userLibs = vivo.userLibs, userPlugs = vivo.userPlugs;
                     game = manifest.game;
                     contents = "if(window.requirePlugin){\n";
                     contents2_1 = "";
                     configArr_1 = [];
-                    plugins.map(function (item) {
-                        if (vivo_1.usePlugin == true) {
+                    extra_2 = egret.args.command === 'publish' ? '.min.js' : '.js';
+                    if (vivo.usePlugin == true) {
+                        enginePlugins.map(function (item) {
                             configArr_1.push(JSON.stringify({
-                                module_name: "egret-library/" + item,
-                                module_path: "egret-library/" + item,
-                                module_from: "egret-library/" + item,
+                                module_name: "egret-library/" + item + extra_2,
+                                module_path: "egret-library/" + item + extra_2,
+                                module_from: "egret-library/" + item + extra_2,
                             }, null, "\t"));
-                        }
-                        else {
+                        });
+                    }
+                    else {
+                        userPlugs.map(function (item) {
                             configArr_1.push(JSON.stringify({
                                 module_name: "./js/" + item,
                                 module_path: "./js/" + item,
                                 module_from: "engine/js/" + item,
                             }, null, "\t"));
-                        }
-                    });
+                        });
+                    }
                     userPlugs.map(function (item) {
                         contents += "  requirePlugin(\"egret-library/" + item + "\");\n";
                         contents2_1 += "  require(\"egret-library/" + item + "\");\n";
@@ -452,7 +455,7 @@ function pluginManifest(manifest, outputDir) {
                             module_from: "engine/js/" + basename,
                         }, null, "\t"));
                     });
-                    if (vivo_1.usePlugin == true) {
+                    if (vivo.usePlugin == true) {
                         jsonData.plugins = {
                             "egret-library": {
                                 "provider": "",
@@ -466,7 +469,7 @@ function pluginManifest(manifest, outputDir) {
                         delete jsonData.plugins;
                     }
                     file.writeFileAsync(jsonPath, JSON.stringify(jsonData, null, "\t"), 'utf-8');
-                    if (!(vivo_1.usePlugin == true && file.existsSync(configPath))) return [3 /*break*/, 3];
+                    if (!(vivo.usePlugin == true && file.existsSync(configPath))) return [3 /*break*/, 3];
                     configContent = fs.readFileSync(configPath, { encoding: "utf8" });
                     reg = /\/\/----auto option start----[\s\S]*\/\/----auto option end----/;
                     replaceConfigStr = '\/\/----auto option start----\n\t\t' + configArr_1.toString() + '\n\t\t\/\/----auto option end----';
@@ -474,9 +477,9 @@ function pluginManifest(manifest, outputDir) {
                     return [4 /*yield*/, file.writeFileAsync(configPath, configContent, 'utf-8')];
                 case 1:
                     _a.sent();
-                    extra = egret.args.command === 'publish' ? '.min.js' : '.js';
+                    extra_3 = egret.args.command === 'publish' ? '.min.js' : '.js';
                     file.createDirectory(path.join(outputDir, "../egret-library"));
-                    return [4 /*yield*/, file.writeJSONAsync(path.join(outputDir, "../egret-library", "plugin.json"), { 'main': "egret" + extra })];
+                    return [4 /*yield*/, file.writeJSONAsync(path.join(outputDir, "../egret-library", "plugin.json"), { 'main': "egret" + extra_3 })];
                 case 2:
                     _a.sent();
                     _a.label = 3;
@@ -520,6 +523,53 @@ function pluginManifest(manifest, outputDir) {
     });
 }
 exports.pluginManifest = pluginManifest;
+function copyEnginePlugin() {
+    //拷贝引擎插件代码到指定目录：vivo oppo
+    var target = egret.args.target;
+    var egretProperties = EgretProject.projectData.egretProperties;
+    var targetData = null;
+    if (target === 'vivogame') {
+        targetData = egretProperties.vivo;
+    }
+    else if (target === 'oppogame') {
+        targetData === egretProperties.oppo;
+    }
+    if (targetData && targetData.usePlugin) {
+        var projectDir_1 = egret.args.projectDir;
+        var projectName = path.basename(projectDir_1);
+        var outputDir_1 = path.join(projectDir_1, '../', projectName + "_" + target, 'egret-library');
+        var userPlugs_2 = targetData.userPlugs;
+        enginePlugins.map(function (item) {
+            var extra = egret.args.command === 'publish' ? '.min.js' : '.js';
+            var jsName = "" + item + extra;
+            if (userPlugs_2.indexOf(jsName) === -1) {
+                var jsPath = path.join(projectDir_1, 'libs/modules', item, jsName);
+                var content = fs.readFileSync(jsPath, { encoding: "utf8" });
+                switch (item) {
+                    case "assetsmanager":
+                        content += ";window.RES = RES;";
+                        break;
+                    case 'eui':
+                        content += ";window.eui = eui;";
+                        if (jsName == "eui.js") {
+                            content = content.replace("function getRepeatedIds", "window.getRepeatedIds=function getRepeatedIds");
+                            content = content.replace("function getIds", "window.getIds=function getIds");
+                            content = content.replace("function toXMLString", "window.toXMLString=function toXMLString");
+                            content = content.replace("function checkDeclarations", "window.checkDeclarations=function checkDeclarations");
+                            content = content.replace("function getPropertyStr", "window.getPropertyStr=function getPropertyStr");
+                        }
+                        break;
+                    case "dragonBones":
+                        content += ';window.dragonBones = dragonBones';
+                        break;
+                }
+                content = "var egret = window.egret;" + content;
+                fs.writeFileSync(path.join(outputDir_1, jsName), content);
+            }
+        });
+    }
+}
+exports.copyEnginePlugin = copyEnginePlugin;
 function isFormatString(text) {
     if (text) {
         if (text.indexOf("\n") != -1) {

@@ -108,7 +108,7 @@ var ManifestPlugin = /** @class */ (function () {
                         vivoData = config.egretProperties.vivo;
                         file.path = path.join(file.base, '../', 'engine', new_file_path);
                         if (vivoData.usePlugin) { //使用插件
-                            if (vivoData.plugins.indexOf(basename) > -1) {
+                            if (vivoData.userPlugs.indexOf(basename) > -1) {
                                 file.path = path.join(file.base, '../', 'egret-library', basename);
                             }
                         }
@@ -185,6 +185,7 @@ var ManifestPlugin = /** @class */ (function () {
                                 console.log("manifest-plugin: " + item.filename + " => " + item.new_file_path);
                             });
                         }
+                        utils.copyEnginePlugin();
                         return [2 /*return*/];
                 }
             });
