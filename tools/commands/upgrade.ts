@@ -62,6 +62,7 @@ class UpgradeCommand implements egret.Command {
             { "v": "5.3.8", command: Upgrade_5_3_8 },
             { "v": "5.3.9", command: Upgrade_5_3_9 },
             { "v": "5.3.10", command: Upgrade_5_3_10 },
+            { "v": "5.3.11", command: Upgrade_5_3_11 }
         ];
 
         try {
@@ -273,6 +274,12 @@ class Upgrade_5_3_10 {
     async execute() {
         file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "tbcreativeapp"), path.join(egret.args.projectDir, "scripts", "tbcreativeapp"));
         file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.tbcreativeapp.ts"), path.join(egret.args.projectDir, "scripts", "config.tbcreativeapp.ts"));
+        return 0;
+    }
+}
+class Upgrade_5_3_11 {
+    async execute() {
+        file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.oppogame.ts"), path.join(egret.args.projectDir, "scripts", "config.oppogame.ts"));
         return 0;
     }
 }

@@ -87,17 +87,25 @@ export class ManifestPlugin {
             }
             file.outputDir = "";
             file.path = path.join(file.base, new_file_path);
-
+            var { egretProperties }  = EgretProject.projectData as any;
+            // var { egretProperties } = config;
             if (target == 'vivogame') {
-                var config: any = EgretProject.projectData;
-                const vivoData = config.egretProperties.vivo
+                const vivoData = egretProperties.vivo
                 file.path = path.join(file.base, '../', 'engine', new_file_path);
                 if (vivoData.usePlugin) {//使用插件
                     if (vivoData.userPlugs.indexOf(basename) > -1) {
                         file.path = path.join(file.base, '../', 'egret-library', basename);
                     }
                 }
-            } else if (target == "ttgame") {
+            } else if (target == "oppogame") {
+                const oppoData = egretProperties.oppo
+                if (oppoData.usePlugin) {//使用插件
+                    if (oppoData.userPlugs.indexOf(basename) > -1) {
+                        file.path = path.join(file.base, 'egret-library', basename);
+                    }
+                }
+
+            }else if (target == "ttgame") {
                 EgretProject.projectData.setMiniGameData('ttgame', 'signature', this.ttSignature)
             }
             const relative = file.relative.split("\\").join('/');
@@ -150,8 +158,8 @@ export class ManifestPlugin {
         }
         let pluginContents: any = await utils.pluginManifest(manifest, outputDir)
         contents = pluginContents === null ? contents : pluginContents;
-        if(target == 'tbcreativeapp'){//淘宝小游戏，需要把 main.js 放在最后
-            contents = contents.replace('require("./js/main.js")\n','')
+        if (target == 'tbcreativeapp') {//淘宝小游戏，需要把 main.js 放在最后
+            contents = contents.replace('require("./js/main.js")\n', '')
             contents += '\nrequire("./js/main.js")'
         }
         pluginContext.createFile(output, new Buffer(contents));

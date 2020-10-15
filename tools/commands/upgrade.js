@@ -84,6 +84,7 @@ var UpgradeCommand = /** @class */ (function () {
                             { "v": "5.3.8", command: Upgrade_5_3_8 },
                             { "v": "5.3.9", command: Upgrade_5_3_9 },
                             { "v": "5.3.10", command: Upgrade_5_3_10 },
+                            { "v": "5.3.11", command: Upgrade_5_3_11 }
                         ];
                         _a.label = 1;
                     case 1:
@@ -403,5 +404,18 @@ var Upgrade_5_3_10 = /** @class */ (function () {
         });
     };
     return Upgrade_5_3_10;
+}());
+var Upgrade_5_3_11 = /** @class */ (function () {
+    function Upgrade_5_3_11() {
+    }
+    Upgrade_5_3_11.prototype.execute = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.oppogame.ts"), path.join(egret.args.projectDir, "scripts", "config.oppogame.ts"));
+                return [2 /*return*/, 0];
+            });
+        });
+    };
+    return Upgrade_5_3_11;
 }());
 module.exports = UpgradeCommand;
