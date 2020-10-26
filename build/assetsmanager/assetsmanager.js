@@ -645,7 +645,7 @@ var RES;
                 delete this.groupErrorDic[groupName];
                 var itemList = this.loadItemErrorDic[groupName];
                 delete this.loadItemErrorDic[groupName];
-                dispatcher.dispatchEventWith("error", false, { itemList: itemList, lastError: lastError });
+                dispatcher.dispatchEventWith("error", false, { itemList: itemList, error: lastError });
             }
         };
         /**

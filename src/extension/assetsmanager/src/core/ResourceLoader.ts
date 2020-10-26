@@ -311,7 +311,7 @@ module RES {
 				delete this.groupErrorDic[groupName];
 				const itemList = this.loadItemErrorDic[groupName];
 				delete this.loadItemErrorDic[groupName];
-				dispatcher.dispatchEventWith("error", false, { itemList, lastError });
+				dispatcher.dispatchEventWith("error", false, { itemList, error: lastError });
 			}
 		}
 		/**
