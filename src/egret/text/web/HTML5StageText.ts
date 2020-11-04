@@ -662,12 +662,20 @@ namespace egret.web {
             //增加1个空的textarea
             let inputElement: HTMLInputElement | HTMLTextAreaElement;
             if (multiline) {
+                inputElement = document.getElementById("egretTextarea") as HTMLTextAreaElement;
+                if (inputElement && inputElement.parentNode) {
+                    inputElement.parentNode.removeChild(inputElement);
+                }
                 inputElement = document.createElement("textarea");
                 inputElement.style["resize"] = "none";
                 self._multiElement = inputElement;
                 inputElement.id = "egretTextarea";
             }
             else {
+                inputElement = document.getElementById("egretInput") as HTMLInputElement;
+                if (inputElement && inputElement.parentNode) {
+                    inputElement.parentNode.removeChild(inputElement);
+                }
                 inputElement = document.createElement("input");
                 self._simpleElement = inputElement;
                 inputElement.id = "egretInput";
