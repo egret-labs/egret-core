@@ -15719,8 +15719,8 @@ var dragonBones;
             return _super.prototype.$measureContentBounds.call(this, bounds); // V5
         };
         EgretArmatureDisplay.prototype.createNativeDisplayObject = function () {
-            if (egret_native.NativeCreateArmatureDisplay) {
-                this.$nativeDisplayObject = egret_native.NativeCreateArmatureDisplay();
+            if (egret_native.nrCreateArmatureDisplay) {
+                this.$nativeDisplayObject = egret_native.nrCreateArmatureDisplay();
             }
             else {
                 _super.prototype.createNativeDisplayObject.call(this);
