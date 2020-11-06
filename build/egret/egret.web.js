@@ -2633,8 +2633,8 @@ var egret;
                 font += "italic ";
             if (bold)
                 font += "bold ";
-            font += (fontSize != undefined ? fontSize : 12) + "px ";
-            font += (fontFamily != undefined ? fontFamily : "Arial");
+            font += (typeof fontSize == "number" ? fontSize : 12) + "px ";
+            font += (typeof fontFamily == "number" ? fontFamily : "Arial");
             context.font = font;
             return egret.sys.measureTextWith(context, text);
         }

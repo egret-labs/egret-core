@@ -21894,7 +21894,7 @@ var egret;
                         var x = lines[i];
                         var y = lines[i + 1];
                         var w = lines[i + 2];
-                        var color = lines[i + 3] != undefined ? lines[i + 3] : textColor;
+                        var color = typeof lines[i + 3] == "number" ? lines[i + 3] : textColor;
                         if (lastColor < 0 || lastColor != color) {
                             lastColor = color;
                             strokePath = graphics.lineStyle(2, color, 1, egret.CapsStyle.NONE);
@@ -22264,7 +22264,7 @@ var egret;
                         lineH = values[0 /* fontSize */];
                     }
                     else {
-                        lineH = Math.max(lineH, element.style.size || values[0 /* fontSize */]);
+                        lineH = Math.max(lineH, typeof (element.style.size) == "number" ? element.style.size : values[0 /* fontSize */]);
                     }
                     var isNextLine = true;
                     if (textArr[j] == "") {
@@ -22492,7 +22492,7 @@ var egret;
                 drawX = Math.round((maxWidth - line.width) * hAlign);
                 for (var j = 0, elementsLength = line.elements.length; j < elementsLength; j++) {
                     var element = line.elements[j];
-                    var size = element.style.size != undefined ? element.style.size : values[0 /* fontSize */];
+                    var size = typeof element.style.size == "number" ? element.style.size : values[0 /* fontSize */];
                     node.drawText(drawX, drawY + (h - size) / 2, element.text, element.style);
                     if (element.style.underline) {
                         underLineData.push(drawX, drawY + (h) / 2, element.width, element.style.textColor);

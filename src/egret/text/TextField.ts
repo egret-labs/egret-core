@@ -1597,7 +1597,7 @@ namespace egret {
                         let x: number = lines[i];
                         let y: number = lines[i + 1];
                         let w: number = lines[i + 2];
-                        let color: number = lines[i + 3] != undefined ? lines[i + 3] : textColor;
+                        let color: number = typeof lines[i + 3] == "number" ? lines[i + 3] : textColor;
                         if (lastColor < 0 || lastColor != color) {
                             lastColor = color;
                             strokePath = graphics.lineStyle(2, color, 1, CapsStyle.NONE);
@@ -2007,7 +2007,7 @@ namespace egret {
                         lineH = values[sys.TextKeys.fontSize];
                     }
                     else {
-                        lineH = Math.max(lineH, element.style.size || values[sys.TextKeys.fontSize]);
+                        lineH = Math.max(lineH, typeof (element.style.size) == "number" ? element.style.size : values[sys.TextKeys.fontSize]);
                     }
 
                     let isNextLine: boolean = true;
@@ -2263,7 +2263,7 @@ namespace egret {
                 drawX = Math.round((maxWidth - line.width) * hAlign);
                 for (let j: number = 0, elementsLength: number = line.elements.length; j < elementsLength; j++) {
                     let element: egret.IWTextElement = line.elements[j];
-                    let size: number = element.style.size != undefined ? element.style.size : values[sys.TextKeys.fontSize];
+                    let size: number = typeof element.style.size == "number" ? element.style.size : values[sys.TextKeys.fontSize];
 
                     node.drawText(drawX, drawY + (h - size) / 2, element.text, element.style);
 
