@@ -152,18 +152,18 @@ namespace egret {
          * @language zh_CN
          */
         export const OPPOGAME = "oppogame";
-         /**
-         * Running on QQ mini game
-         * @version Egret 5.2.25
-         * @platform All
-         * @language en_US
-         */
-         /**
-         * 运行在 QQ 小游戏上
-         * @version Egret 5.2.25
-         * @platform All
-         * @language zh_CN
-         */
+        /**
+        * Running on QQ mini game
+        * @version Egret 5.2.25
+        * @platform All
+        * @language en_US
+        */
+        /**
+        * 运行在 QQ 小游戏上
+        * @version Egret 5.2.25
+        * @platform All
+        * @language zh_CN
+        */
         export const QQGAME = "qqgame";
         /**
          * Running on vivo mini game
@@ -171,12 +171,12 @@ namespace egret {
          * @platform All
          * @language en_US
          */
-         /**
-         * 运行在 vivo 小游戏上
-         * @version Egret 5.2.23
-         * @platform All
-         * @language zh_CN
-         */
+        /**
+        * 运行在 vivo 小游戏上
+        * @version Egret 5.2.23
+        * @platform All
+        * @language zh_CN
+        */
         export const VIVOGAME = "vivogame";
 
     }
@@ -382,6 +382,17 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        static supportedCompressedTexture: SupportedCompressedTexture;
+
+        static _supportedCompressedTexture: SupportedCompressedTexture = {} as SupportedCompressedTexture;
+
+        static get supportedCompressedTexture(): SupportedCompressedTexture {
+            if (this._supportedCompressedTexture && this._supportedCompressedTexture.pvrtc != undefined && this._supportedCompressedTexture != undefined) {
+                return this._supportedCompressedTexture;
+            } else {
+                // 只有 native 环境
+                egret['web'] ? egret['web'].WebGLRenderContext.getInstance().getSupportedCompressedTexture() : null;
+                return this._supportedCompressedTexture;
+            }
+        }
     }
 }

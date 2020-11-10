@@ -5837,7 +5837,7 @@ declare namespace egret {
          */
         readonly compressedTextureData: Array<Array<CompressedTextureData>>;
         debugCompressedTextureURL: string;
-        etcAlphaMask: Nullable<BitmapData>;
+        $etcAlphaMask: Nullable<BitmapData>;
         /**
          * Initializes a BitmapData object to refer to the specified source object.
          * @param source The source object being referenced.
@@ -5864,8 +5864,10 @@ declare namespace egret {
         static $dispose(bitmapData: BitmapData): void;
         private _getCompressedTextureData(level, face);
         getCompressed2dTextureData(): CompressedTextureData;
+        $setCompressed2dTextureData(levelData: egret.CompressedTextureData[]): void;
         hasCompressed2d(): boolean;
         clearCompressedTextureData(): void;
+        etcAlphaMask: any;
     }
 }
 declare namespace egret {
@@ -11284,7 +11286,8 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        static supportedCompressedTexture: SupportedCompressedTexture;
+        static _supportedCompressedTexture: SupportedCompressedTexture;
+        static readonly supportedCompressedTexture: SupportedCompressedTexture;
     }
 }
 declare namespace egret {
