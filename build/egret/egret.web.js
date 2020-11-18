@@ -6933,7 +6933,6 @@ var egret;
                 }
                 var indices = this.vao.getIndices();
                 var vertices = this.vao.getVertices();
-                // 非iOS14，正常把整个vertex buffer一次推送
                 if (!web.isIOS14Device()) {
                     this.uploadVerticesArray(vertices);
                 }
@@ -6946,12 +6945,11 @@ var egret;
                 for (var i = 0; i < length; i++) {
                     var data = this.drawCmdManager.drawData[i];
                     var isDrawCall = data.type == 0 /* TEXTURE */ || data.type == 1 /* RECT */ || data.type == 2 /* PUSH_MASK */ || data.type == 3 /* POP_MASK */;
-                    // 如果是ios14，而且不是mesh，则走新的流程渲染，每个drawcall单独推所需最小的index buffer和vertex buffer
                     if (web.isIOS14Device() && !this.vao.isMesh() && isDrawCall) {
-                        this.uploadIndicesArray(indices.subarray(0, data.count * this.vertexCountPerTriangle)); // data.count是三角形数目，*3 就是index数量
-                        this.uploadVerticesArray(this.vao.vertices.subarray(offset / this.vertexCountPerTriangle * this.triangleCountPerQuad * this.dataCountPerVertex, (offset + data.count * this.vertexCountPerTriangle) / this.vertexCountPerTriangle * this.triangleCountPerQuad * this.dataCountPerVertex)); // data.count是三角形数目，对应 *3*2/3的顶点数，每个顶点5个值
-                        this.drawData(data, 0); //每次只推送本次drawcall所需的最小的indexBuffer和vertexBuffer，就没有offset了
-                        offset += data.count * this.vertexCountPerTriangle; // offset只用于保持egret原有逻辑，索引vao.vertices，取subarray
+                        this.uploadIndicesArray(indices.subarray(0, data.count * this.vertexCountPerTriangle));
+                        this.uploadVerticesArray(this.vao.vertices.subarray(offset / this.vertexCountPerTriangle * this.triangleCountPerQuad * this.dataCountPerVertex, (offset + data.count * this.vertexCountPerTriangle) / this.vertexCountPerTriangle * this.triangleCountPerQuad * this.dataCountPerVertex));
+                        this.drawData(data, 0);
+                        offset += data.count * this.vertexCountPerTriangle;
                     }
                     else {
                         offset = this.drawData(data, offset);
