@@ -5701,8 +5701,8 @@ var egret;
                 this._verticesFloat32View = null;
                 this._verticesUint32View = null;
                 //old
-                var numVerts = this.maxVertexCount * this.vertSize;
-                this.vertices = new Float32Array(numVerts);
+                // const numVerts = this.maxVertexCount * this.vertSize;
+                // this.vertices = new Float32Array(numVerts);
                 ///
                 this._vertices = new ArrayBuffer(this.maxVertexCount * this.vertByteSize);
                 this._verticesFloat32View = new Float32Array(this._vertices);
@@ -6248,6 +6248,9 @@ var egret;
                 //refactor
                 this._supportedCompressedTextureInfo = [];
                 this.$scissorState = false;
+                this.vertexCountPerTriangle = 3;
+                this.triangleCountPerQuad = 2;
+                this.dataCountPerVertex = 5;
                 this.vertSize = 5;
                 //for 3D&2D
                 /**
@@ -6928,7 +6931,12 @@ var egret;
                 if (this.drawCmdManager.drawDataLen == 0 || this.contextLost) {
                     return;
                 }
-                this.uploadVerticesArray(this.vao.getVertices());
+                var indices = this.vao.getIndices();
+                var vertices = this.vao.getVertices();
+                // 非iOS14，正常把整个vertex buffer一次推送
+                if (!web.isIOS14Device()) {
+                    this.uploadVerticesArray(vertices);
+                }
                 // 有mesh，则使用indicesForMesh
                 if (this.vao.isMesh()) {
                     this.uploadIndicesArray(this.vao.getMeshIndices());
@@ -6937,12 +6945,22 @@ var egret;
                 var offset = 0;
                 for (var i = 0; i < length; i++) {
                     var data = this.drawCmdManager.drawData[i];
-                    offset = this.drawData(data, offset);
+                    var isDrawCall = data.type == 0 /* TEXTURE */ || data.type == 1 /* RECT */ || data.type == 2 /* PUSH_MASK */ || data.type == 3 /* POP_MASK */;
+                    // 如果是ios14，而且不是mesh，则走新的流程渲染，每个drawcall单独推所需最小的index buffer和vertex buffer
+                    if (web.isIOS14Device() && !this.vao.isMesh() && isDrawCall) {
+                        this.uploadIndicesArray(indices.subarray(0, data.count * this.vertexCountPerTriangle)); // data.count是三角形数目，*3 就是index数量
+                        this.uploadVerticesArray(this.vao.vertices.subarray(offset / this.vertexCountPerTriangle * this.triangleCountPerQuad * this.dataCountPerVertex, (offset + data.count * this.vertexCountPerTriangle) / this.vertexCountPerTriangle * this.triangleCountPerQuad * this.dataCountPerVertex)); // data.count是三角形数目，对应 *3*2/3的顶点数，每个顶点5个值
+                        this.drawData(data, 0); //每次只推送本次drawcall所需的最小的indexBuffer和vertexBuffer，就没有offset了
+                        offset += data.count * this.vertexCountPerTriangle; // offset只用于保持egret原有逻辑，索引vao.vertices，取subarray
+                    }
+                    else {
+                        offset = this.drawData(data, offset);
+                    }
                     // 计算draw call
                     if (data.type == 7 /* ACT_BUFFER */) {
                         this.activatedBuffer = data.buffer;
                     }
-                    if (data.type == 0 /* TEXTURE */ || data.type == 1 /* RECT */ || data.type == 2 /* PUSH_MASK */ || data.type == 3 /* POP_MASK */) {
+                    if (isDrawCall) {
                         if (this.activatedBuffer && this.activatedBuffer.$computeDrawCall) {
                             this.activatedBuffer.$drawCalls++;
                         }
