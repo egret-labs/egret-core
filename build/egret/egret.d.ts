@@ -8283,6 +8283,7 @@ declare namespace egret.localStorage {
     let clear: () => void;
 }
 declare namespace egret.sys {
+    let usingChannel: Array<SoundChannel>;
     /**
      * @private
      * @param channel

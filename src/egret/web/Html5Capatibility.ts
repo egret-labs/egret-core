@@ -93,6 +93,16 @@ namespace egret.web {
                             }
                         }
                         WebAudioDecode.ctx = new (window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"])();
+
+
+                        let useingChannel = egret.sys.usingChannel;
+                        for (let channel of useingChannel) {
+                            let webSoundChannel: WebAudioSoundChannel = channel as any;
+                            webSoundChannel.context = WebAudioDecode.ctx;
+                            webSoundChannel.initGain();
+                            webSoundChannel.$startTime = webSoundChannel.position;
+                            webSoundChannel.$play();
+                        }
                     }
                     WebAudioDecode.initAudioContext();
                 }
@@ -106,7 +116,7 @@ namespace egret.web {
                 checkAudioType = false;
                 Html5Capatibility.setAudioType(audioType);
             }
-            else if(!isIos && ua.indexOf("safari") >=0 && ua.indexOf("chrome") === -1){
+            else if (!isIos && ua.indexOf("safari") >= 0 && ua.indexOf("chrome") === -1) {
                 // In Safari browser on Mac,use web audio
                 checkAudioType = false;
                 Html5Capatibility.setAudioType(AudioType.WEB_AUDIO);
@@ -162,7 +172,7 @@ namespace egret.web {
          */
         private static getIOSVersion(): number {
             let matches = Html5Capatibility.ua.toLowerCase().match(/cpu [^\d]*\d.*like mac os x/);
-            if(! matches || matches.length == 0) {
+            if (!matches || matches.length == 0) {
                 return 0;
             }
             let value = matches[0];

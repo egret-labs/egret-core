@@ -656,14 +656,18 @@ var egret;
                  * @private
                  */
                 _this._startTime = 0;
-                if (_this.context["createGain"]) {
-                    _this.gain = _this.context["createGain"]();
-                }
-                else {
-                    _this.gain = _this.context["createGainNode"]();
-                }
+                _this.initGain();
                 return _this;
             }
+            WebAudioSoundChannel.prototype.initGain = function () {
+                this.gain = null;
+                if (this.context["createGain"]) {
+                    this.gain = this.context["createGain"]();
+                }
+                else {
+                    this.gain = this.context["createGainNode"]();
+                }
+            };
             WebAudioSoundChannel.prototype.$play = function () {
                 if (this.isStopped) {
                     egret.$error(1036);
@@ -3215,6 +3219,15 @@ var egret;
                                 }
                             }
                             web.WebAudioDecode.ctx = new (window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"])();
+                            var useingChannel = egret.sys.usingChannel;
+                            for (var _i = 0, useingChannel_1 = useingChannel; _i < useingChannel_1.length; _i++) {
+                                var channel = useingChannel_1[_i];
+                                var webSoundChannel = channel;
+                                webSoundChannel.context = web.WebAudioDecode.ctx;
+                                webSoundChannel.initGain();
+                                webSoundChannel.$startTime = webSoundChannel.position;
+                                webSoundChannel.$play();
+                            }
                         };
                         web.WebAudioDecode.initAudioContext();
                     }

@@ -13377,14 +13377,14 @@ var egret;
 (function (egret) {
     var sys;
     (function (sys) {
-        var usingChannel = [];
+        sys.usingChannel = [];
         /**
          * @private
          * @param channel
          */
         function $pushSoundChannel(channel) {
-            if (usingChannel.indexOf(channel) < 0) {
-                usingChannel.push(channel);
+            if (sys.usingChannel.indexOf(channel) < 0) {
+                sys.usingChannel.push(channel);
             }
         }
         sys.$pushSoundChannel = $pushSoundChannel;
@@ -13393,9 +13393,9 @@ var egret;
          * @param channel
          */
         function $popSoundChannel(channel) {
-            var index = usingChannel.indexOf(channel);
+            var index = sys.usingChannel.indexOf(channel);
             if (index >= 0) {
-                usingChannel.splice(index, 1);
+                sys.usingChannel.splice(index, 1);
                 return true;
             }
             return false;
@@ -18501,7 +18501,7 @@ var egret;
          * @platform Web,Native
          * @language zh_CN
          */
-        Capabilities.engineVersion = "5.3.10";
+        Capabilities.engineVersion = "5.3.11";
         /***
          * current render mode.
          * @type {string}
