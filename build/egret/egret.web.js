@@ -3066,7 +3066,7 @@ var egret;
             var resume = function () {
                 context.resume();
                 /** 解决 ios13 页面切到后台再拉起，声音无法播放 */
-                if (web.WebAudioDecode.initAudioContext) {
+                if (web.Html5Capatibility._audioType == web.AudioType.WEB_AUDIO && web.WebAudioDecode.initAudioContext) {
                     web.WebAudioDecode.initAudioContext();
                 }
             };
