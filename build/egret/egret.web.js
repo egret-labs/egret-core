@@ -7561,7 +7561,7 @@ var egret;
                     var useFrameBuffer = this.rootRenderTarget.useFrameBuffer;
                     this.rootRenderTarget.useFrameBuffer = true;
                     this.rootRenderTarget.activate();
-                    this.context.getPixels(x, y, width, height, pixels);
+                    this.context.getPixels(x, this.height - y - height, width, height, pixels);
                     this.rootRenderTarget.useFrameBuffer = useFrameBuffer;
                     this.rootRenderTarget.activate();
                 }
