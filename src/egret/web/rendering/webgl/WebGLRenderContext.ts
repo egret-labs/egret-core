@@ -742,7 +742,7 @@ namespace egret.web {
 
             let count: number;
 
-            if (isIOS14Device()) {
+            if (isIOS14Device) {
 
                 let meshNum = meshIndices && (meshIndices.length / 3) || 0;
                 if (meshIndices) {

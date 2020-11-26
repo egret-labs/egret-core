@@ -215,7 +215,7 @@ namespace egret.web {
             }
 
             if (meshVertices) {
-                if (isIOS14Device()) {
+                if (isIOS14Device) {
                     let vertData = [];
                     // 计算索引位置与赋值
                     const vertices = this.vertices;
@@ -428,10 +428,5 @@ namespace egret.web {
 
     }
 
-    export function isIOS14Device() {
-        return egret.Capabilities.runtimeType == egret.RuntimeType.WEB
-            && egret.Capabilities.os == "iOS"
-            && egret.Capabilities.isMobile
-            && /iPhone OS 14/.test(window.navigator.userAgent);
-    }
+    export var isIOS14Device: boolean = false;
 }
