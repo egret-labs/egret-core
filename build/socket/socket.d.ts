@@ -389,6 +389,7 @@ declare namespace egret {
          * @language zh_CN
          */
         type: string;
+        static URI: "ws://" | "wss://";
     }
 }
 declare namespace egret.web {
@@ -406,7 +407,7 @@ declare namespace egret.web {
         addCallBacks(onConnect: Function, onClose: Function, onSocketData: Function, onError: Function, thisObject: any): void;
         private host;
         private port;
-        connect(host: string, port: number): void;
+        connect(host: string, port?: number): void;
         connectByUrl(url: string): void;
         private _bindEvent();
         send(message: any): void;
