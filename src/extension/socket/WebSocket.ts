@@ -68,7 +68,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static TYPE_STRING:string = "webSocketTypeString";
+        public static TYPE_STRING: string = "webSocketTypeString";
         /**
          * Send and receive data in binary format
          * @version Egret 2.4
@@ -81,30 +81,30 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static TYPE_BINARY:string = "webSocketTypeBinary";
+        public static TYPE_BINARY: string = "webSocketTypeBinary";
 
         /**
          * @private
          */
-        private socket:ISocket;
+        private socket: ISocket;
 
         /**
          * @private
          */
-        private _writeMessage:string = "";
+        private _writeMessage: string = "";
         /**
          * @private
          */
-        private _readMessage:string = "";
+        private _readMessage: string = "";
 
         /**
          * @private
          */
-        private _connected:boolean = false;
+        private _connected: boolean = false;
         /**
          * @private
          */
-        private _connecting:boolean = false;
+        private _connecting: boolean = false;
 
         /**
          * Create an egret.WebSocket object
@@ -120,7 +120,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        constructor(host:string = "", port:number = 0) {
+        constructor(host: string = "", port: number = 0) {
             super();
             this._connected = false;
             this._writeMessage = "";
@@ -129,7 +129,7 @@ namespace egret {
             this.socket = new egret.ISocket();
             this.socket.addCallBacks(this.onConnect, this.onClose, this.onSocketData, this.onError, this);
         }
-        
+
         /**
          * Connect the socket to the specified host and port number
          * @param host Name or IP address of the host to be connected
@@ -146,8 +146,8 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public connect(host:string, port:number):void {
-            if(!this._connecting && !this._connected) {
+        public connect(host: string, port: number): void {
+            if (!this._connecting && !this._connected) {
                 this._connecting = true;
                 this.socket.connect(host, port);
             }
@@ -157,8 +157,8 @@ namespace egret {
          * 根据提供的url连接
          * @param url 全地址。如ws://echo.websocket.org:80
          */
-        public connectByUrl(url:string):void {
-            if(!this._connecting && !this._connected) {
+        public connectByUrl(url: string): void {
+            if (!this._connecting && !this._connected) {
                 this._connecting = true;
                 this.socket.connectByUrl(url);
             }
@@ -176,8 +176,8 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public close():void {
-            if(this._connected) {
+        public close(): void {
+            if (this._connected) {
                 this.socket.close();
             }
         }
@@ -186,7 +186,7 @@ namespace egret {
          * @private
          * 
          */
-        private onConnect():void {
+        private onConnect(): void {
             this._connected = true;
             this._connecting = false;
             this.dispatchEventWith(egret.Event.CONNECT);
@@ -196,7 +196,7 @@ namespace egret {
          * @private
          * 
          */
-        private onClose():void {
+        private onClose(): void {
             this._connected = false;
             this.dispatchEventWith(egret.Event.CLOSE);
         }
@@ -205,8 +205,8 @@ namespace egret {
          * @private
          * 
          */
-        private onError():void {
-            if(this._connecting) {
+        private onError(): void {
+            if (this._connecting) {
                 this._connecting = false;
             }
             this.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
@@ -217,7 +217,7 @@ namespace egret {
          * 
          * @param message 
          */
-        private onSocketData(message:any):void {
+        private onSocketData(message: any): void {
             if (typeof message == "string") {
                 this._readMessage += message;
             }
@@ -239,7 +239,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public flush():void {
+        public flush(): void {
             if (!this._connected) {
                 egret.$warn(3101);
                 return;
@@ -259,7 +259,7 @@ namespace egret {
         /**
          * @private
          */
-        private _isReadySend:boolean = false;
+        private _isReadySend: boolean = false;
 
         /**
          * Write data in character string in the socket
@@ -275,7 +275,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public writeUTF(message:string):void {
+        public writeUTF(message: string): void {
             if (!this._connected) {
                 egret.$warn(3101);
                 return;
@@ -311,8 +311,8 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public readUTF():string {
-            let message:string;
+        public readUTF(): string {
+            let message: string;
             if (this._type == WebSocket.TYPE_BINARY) {
                 this._readByte.position = 0;
                 message = this._readByte.readUTF();
@@ -328,15 +328,15 @@ namespace egret {
         /**
          * @private
          */
-        private _readByte:ByteArray;
+        private _readByte: ByteArray;
         /**
          * @private
          */
-        private _writeByte:ByteArray;
+        private _writeByte: ByteArray;
         /**
          * @private
          */
-        private _bytesWrite:boolean = false;
+        private _bytesWrite: boolean = false;
 
         /**
          * Write a series of bytes from the specified byte array. The writing operation starts from the location expressed by offset.
@@ -360,7 +360,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public writeBytes(bytes:ByteArray, offset:number = 0, length:number = 0):void {
+        public writeBytes(bytes: ByteArray, offset: number = 0, length: number = 0): void {
             if (!this._connected) {
                 egret.$warn(3101);
                 return;
@@ -392,7 +392,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public readBytes(bytes:ByteArray, offset:number = 0, length:number = 0):void {
+        public readBytes(bytes: ByteArray, offset: number = 0, length: number = 0): void {
             if (!this._readByte) {
                 egret.$warn(3102);
                 return;
@@ -414,14 +414,14 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get connected():boolean {
+        public get connected(): boolean {
             return this._connected;
         }
 
         /**
          * @private
          */
-        private _type:string = WebSocket.TYPE_STRING;
+        private _type: string = WebSocket.TYPE_STRING;
 
         /**
          * Format for sending and receiving data. The default setting is the character string format
@@ -435,16 +435,19 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get type():string {
+        public get type(): string {
             return this._type;
         }
 
-        public set type(value:string) {
+        public set type(value: string) {
             this._type = value;
             if (value == WebSocket.TYPE_BINARY && !this._writeByte) {
                 this._readByte = new ByteArray();
                 this._writeByte = new ByteArray();
             }
         }
+
+
+        public static URI: "ws://" | "wss://" = "ws://";
     }
 }
