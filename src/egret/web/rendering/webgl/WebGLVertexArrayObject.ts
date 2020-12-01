@@ -53,7 +53,7 @@ namespace egret.web {
         */
         private readonly maxIndicesCount: number = this.maxQuadsCount * 6;
 
-        private vertices: Float32Array = null;
+        public vertices: Float32Array = null;
         private indices: Uint16Array = null;
         private indicesForMesh: Uint16Array = null;
 
@@ -71,8 +71,8 @@ namespace egret.web {
 
         constructor() {
             //old
-            const numVerts = this.maxVertexCount * this.vertSize;
-            this.vertices = new Float32Array(numVerts);
+            // const numVerts = this.maxVertexCount * this.vertSize;
+            // this.vertices = new Float32Array(numVerts);
             ///
             this._vertices = new ArrayBuffer(this.maxVertexCount * this.vertByteSize);
             this._verticesFloat32View = new Float32Array(this._vertices);
@@ -111,7 +111,7 @@ namespace egret.web {
         /**
          * 获取缓存完成的顶点数组
          */
-        public getVertices(): any {
+        public getVertices(): Float32Array {
             let view = this.vertices.subarray(0, this.vertexIndex * this.vertSize);
             return view;
         }
@@ -119,7 +119,7 @@ namespace egret.web {
         /**
          * 获取缓存完成的索引数组
          */
-        public getIndices(): any {
+        public getIndices(): Uint16Array {
             return this.indices;
         }
 
@@ -428,10 +428,7 @@ namespace egret.web {
 
     }
 
-    export function isIOS14Device() {
-        return egret.Capabilities.runtimeType == egret.RuntimeType.WEB
-            && egret.Capabilities.os == "iOS"
-            && egret.Capabilities.isMobile
-            && /iPhone OS 14/.test(window.navigator.userAgent);
-    }
+    export var isIOS14Device = () => {
+        return false;
+    };
 }

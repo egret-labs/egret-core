@@ -218,7 +218,7 @@ namespace egret.web {
         return size;
     }
     egret.sys.drawTextureElements = drawTextureElements;
-    
+
     /**
      * 测量文本的宽度
      * @param context 
@@ -240,7 +240,7 @@ namespace egret.web {
         return defaultFunc(width, height);
     }
     egret.sys.createCanvasRenderBufferSurface = createCanvasRenderBufferSurface;
-    
+
     /**
      * 改变渲染缓冲的大小并清空缓冲区
      * @param renderContext 
@@ -325,6 +325,14 @@ namespace egret.web {
         }
         document.body.appendChild(styleElement);
     }
+
+
+    isIOS14Device = function () {
+        return egret.Capabilities.runtimeType == egret.RuntimeType.WEB
+            && egret.Capabilities.os == "iOS"
+            && egret.Capabilities.isMobile
+            && /iPhone OS 14/.test(window.navigator.userAgent);
+    };
 }
 
 
