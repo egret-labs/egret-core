@@ -3322,9 +3322,9 @@ var egret;
             else if (frameNum > this.$totalFrames) {
                 frameNum = this.$totalFrames;
             }
-            if (frameNum == this.$nextFrameNum) {
-                return;
-            }
+            // if (frameNum == this.$nextFrameNum) {
+            //     return;
+            // }
             this.$nextFrameNum = frameNum;
             this.advanceFrame();
             this.constructFrame();
