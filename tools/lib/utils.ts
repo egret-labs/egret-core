@@ -428,8 +428,9 @@ export async function pluginManifest(manifest: any, outputDir: string) {
     } else if (target == "ttgame") {//use ttgame plugin
         let ttgame = EgretProject.projectData.getMiniGame('ttgame')
         let gameJsonContent = await file.readJSONAsync(path.join(outputDir, 'game.json'))
-        gameJsonContent.plugins = {}
+        
         if (ttgame && ttgame.usePlugin && command === "publish") {//console.log('使用tt插件')
+            gameJsonContent.plugins = {}
             const provider = ttgame.provider
             let ttPluginPath = path.join(outputDir, "egret-library")
             file.createDirectory(ttPluginPath)
@@ -444,6 +445,8 @@ export async function pluginManifest(manifest: any, outputDir: string) {
                 "version": egretProperties.engineVersion,
                 "path": "egret-library"
             }
+        }else{
+            delete gameJsonContent.plugins
         }
         await file.writeJSONAsync(path.join(outputDir, 'game.json'), gameJsonContent)
     }

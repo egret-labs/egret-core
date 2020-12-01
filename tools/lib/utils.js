@@ -480,15 +480,15 @@ function pluginManifest(manifest, outputDir) {
                 case 2:
                     _a.sent();
                     _a.label = 3;
-                case 3: return [3 /*break*/, 11];
+                case 3: return [3 /*break*/, 12];
                 case 4:
-                    if (!(target == "ttgame")) return [3 /*break*/, 11];
+                    if (!(target == "ttgame")) return [3 /*break*/, 12];
                     ttgame = EgretProject.projectData.getMiniGame('ttgame');
                     return [4 /*yield*/, file.readJSONAsync(path.join(outputDir, 'game.json'))];
                 case 5:
                     gameJsonContent = _a.sent();
-                    gameJsonContent.plugins = {};
                     if (!(ttgame && ttgame.usePlugin && command === "publish")) return [3 /*break*/, 9];
+                    gameJsonContent.plugins = {};
                     provider = ttgame.provider;
                     ttPluginPath = path.join(outputDir, "egret-library");
                     file.createDirectory(ttPluginPath);
@@ -509,12 +509,15 @@ function pluginManifest(manifest, outputDir) {
                         "version": egretProperties.engineVersion,
                         "path": "egret-library"
                     };
-                    _a.label = 9;
-                case 9: return [4 /*yield*/, file.writeJSONAsync(path.join(outputDir, 'game.json'), gameJsonContent)];
-                case 10:
+                    return [3 /*break*/, 10];
+                case 9:
+                    delete gameJsonContent.plugins;
+                    _a.label = 10;
+                case 10: return [4 /*yield*/, file.writeJSONAsync(path.join(outputDir, 'game.json'), gameJsonContent)];
+                case 11:
                     _a.sent();
-                    _a.label = 11;
-                case 11: return [2 /*return*/, contents];
+                    _a.label = 12;
+                case 12: return [2 /*return*/, contents];
             }
         });
     });
