@@ -53,7 +53,7 @@ var ts;
         function nowString() {
             // E.g. "12:34:56.789"
             var d = new Date();
-            return d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + "." + d.getMilliseconds();
+            return ts.padLeft(d.getHours().toString(), 2, "0") + ":" + ts.padLeft(d.getMinutes().toString(), 2, "0") + ":" + ts.padLeft(d.getSeconds().toString(), 2, "0") + "." + ts.padLeft(d.getMilliseconds().toString(), 3, "0");
         }
         server.nowString = nowString;
     })(server = ts.server || (ts.server = {}));
@@ -163,7 +163,9 @@ var ts;
                 var nodeModulesPath = ts.combinePaths(searchDir, "node_modules");
                 getTypingNamesFromPackagesFolder(nodeModulesPath, filesToWatch);
             });
-            getTypingNamesFromSourceFileNames(fileNames);
+            if (!typeAcquisition.disableFilenameBasedTypeAcquisition) {
+                getTypingNamesFromSourceFileNames(fileNames);
+            }
             // add typings for unresolved imports
             if (unresolvedImports) {
                 var module_1 = ts.deduplicate(unresolvedImports.map(nonRelativeModuleNameForTypingCache), ts.equateStringsCaseSensitive, ts.compareStringsCaseSensitive);

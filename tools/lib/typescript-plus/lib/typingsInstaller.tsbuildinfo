@@ -44,46 +44,46 @@
         },
         {
           "pos": 3354,
-          "end": 6579285,
+          "end": 6752391,
           "kind": "prepend",
           "data": "./compiler.js",
           "texts": [
             {
               "pos": 3354,
-              "end": 6579285,
+              "end": 6752391,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 6579285,
-          "end": 6598938,
+          "pos": 6752391,
+          "end": 6772258,
           "kind": "prepend",
           "data": "./jsTyping.js",
           "texts": [
             {
-              "pos": 6579285,
-              "end": 6598938,
+              "pos": 6752391,
+              "end": 6772258,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 6598938,
-          "end": 6629265,
+          "pos": 6772258,
+          "end": 6802585,
           "kind": "prepend",
           "data": "./typingsInstallerCore.js",
           "texts": [
             {
-              "pos": 6598938,
-              "end": 6629265,
+              "pos": 6772258,
+              "end": 6802585,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 6629265,
-          "end": 6642442,
+          "pos": 6802585,
+          "end": 6815762,
           "kind": "text"
         }
       ],
@@ -112,5 +112,5 @@
       }
     }
   },
-  "version": "4.0.3"
+  "version": "4.1.2"
 }

@@ -683,7 +683,7 @@ var ts;
         }
         else {
             type = operatorOrType;
-            operator = 137 /* KeyOfKeyword */;
+            operator = 138 /* KeyOfKeyword */;
         }
         return ts.factory.createTypeOperatorNode(operator, type);
     }, factoryDeprecation);
@@ -861,7 +861,7 @@ var ts;
     ts.createNode = ts.Debug.deprecate(function createNode(kind, pos, end) {
         if (pos === void 0) { pos = 0; }
         if (end === void 0) { end = 0; }
-        return ts.setTextRangePosEnd(kind === 294 /* SourceFile */ ? ts.parseBaseNodeFactory.createBaseSourceFileNode(kind) :
+        return ts.setTextRangePosEnd(kind === 297 /* SourceFile */ ? ts.parseBaseNodeFactory.createBaseSourceFileNode(kind) :
             kind === 78 /* Identifier */ ? ts.parseBaseNodeFactory.createBaseIdentifierNode(kind) :
                 kind === 79 /* PrivateIdentifier */ ? ts.parseBaseNodeFactory.createBasePrivateIdentifierNode(kind) :
                     !ts.isNodeKind(kind) ? ts.parseBaseNodeFactory.createBaseTokenNode(kind) :
@@ -890,7 +890,7 @@ var ts;
     // #region Renamed node Tests
     /** @deprecated Use `isTypeAssertionExpression` instead. */
     ts.isTypeAssertion = ts.Debug.deprecate(function isTypeAssertion(node) {
-        return node.kind === 203 /* TypeAssertionExpression */;
+        return node.kind === 206 /* TypeAssertionExpression */;
     }, {
         since: "4.0",
         warnAfter: "4.1",

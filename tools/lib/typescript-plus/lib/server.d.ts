@@ -636,6 +636,11 @@ declare namespace ts.server.protocol {
          * so this description should make sense by itself if the parent is inlineable=true
          */
         description: string;
+        /**
+         * A message to show to the user if the refactoring cannot be applied in
+         * the current context.
+         */
+        notApplicableReason?: string;
     }
     interface GetEditsForRefactorRequest extends Request {
         command: CommandTypes.GetEditsForRefactor;
@@ -1615,6 +1620,10 @@ declare namespace ts.server.protocol {
         closedFiles?: string[];
     }
     /**
+     * External projects have a typeAcquisition option so they need to be added separately to compiler options for inferred projects.
+     */
+    type InferredProjectCompilerOptions = ExternalProjectCompilerOptions & TypeAcquisition;
+    /**
      * Request to set compiler options for inferred projects.
      * External projects are opened / closed explicitly.
      * Configured projects are opened when user opens loose file that has 'tsconfig.json' or 'jsconfig.json' anywhere in one of containing folders.
@@ -1634,7 +1643,7 @@ declare namespace ts.server.protocol {
         /**
          * Compiler options to be used with inferred projects.
          */
-        options: ExternalProjectCompilerOptions;
+        options: InferredProjectCompilerOptions;
         /**
          * Specifies the project root path used to scope compiler options.
          * It is an error to provide this property if the server has not been started with
@@ -2058,6 +2067,12 @@ declare namespace ts.server.protocol {
         readonly isGlobalCompletion: boolean;
         readonly isMemberCompletion: boolean;
         readonly isNewIdentifierLocation: boolean;
+        /**
+         * In the absence of `CompletionEntry["replacementSpan"]`, the editor may choose whether to use
+         * this span or its default one. If `CompletionEntry["replacementSpan"]` is defined, that span
+         * must be used to commit that completion entry.
+         */
+        readonly optionalReplacementSpan?: TextSpan;
         readonly entries: readonly CompletionEntry[];
     }
     interface CompletionDetailsResponse extends Response {
@@ -2820,6 +2835,7 @@ declare namespace ts.server.protocol {
         insertSpaceAfterConstructor?: boolean;
         insertSpaceAfterKeywordsInControlFlowStatements?: boolean;
         insertSpaceAfterFunctionKeywordForAnonymousFunctions?: boolean;
+        insertSpaceAfterOpeningAndBeforeClosingEmptyBraces?: boolean;
         insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis?: boolean;
         insertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets?: boolean;
         insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces?: boolean;
@@ -2857,6 +2873,7 @@ declare namespace ts.server.protocol {
         readonly allowTextChangesInNewFiles?: boolean;
         readonly lazyConfiguredProjectsFromExternalProject?: boolean;
         readonly providePrefixAndSuffixTextForRename?: boolean;
+        readonly provideRefactorNotApplicableReason?: boolean;
         readonly allowRenameOfImportPath?: boolean;
         readonly includePackageJsonAutoImports?: "auto" | "on" | "off";
     }
@@ -3285,6 +3302,7 @@ declare namespace ts.server {
         private dirtyFilesForSuggestions;
         private symlinks;
         autoImportProviderHost: AutoImportProviderProject | false | undefined;
+        protected typeAcquisition: TypeAcquisition | undefined;
         constructor(projectName: string, projectKind: ProjectKind, projectService: ProjectService, documentRegistry: DocumentRegistry, hasExplicitListOfFiles: boolean, lastFileExceededProgramSize: string | undefined, compilerOptions: CompilerOptions, compileOnSaveEnabled: boolean, watchOptions: WatchOptions | undefined, directoryStructureHost: DirectoryStructureHost, currentDirectory: string | undefined);
         isKnownTypesPackageName(name: string): boolean;
         installPackage(options: InstallPackageOptions): Promise<ApplyCodeActionCommandResult>;
@@ -3352,7 +3370,6 @@ declare namespace ts.server {
         enableLanguageService(): void;
         disableLanguageService(lastFileExceededProgramSize?: string): void;
         getProjectName(): string;
-        abstract getTypeAcquisition(): TypeAcquisition;
         protected removeLocalTypingsFromTypeAcquisition(newTypeAcquisition: TypeAcquisition): TypeAcquisition;
         getExternalFiles(): SortedReadonlyArray<string>;
         getSourceFile(path: Path): SourceFile | undefined;
@@ -3407,6 +3424,8 @@ declare namespace ts.server {
         setCompilerOptions(compilerOptions: CompilerOptions): void;
         setWatchOptions(watchOptions: WatchOptions | undefined): void;
         getWatchOptions(): WatchOptions | undefined;
+        setTypeAcquisition(newTypeAcquisition: TypeAcquisition | undefined): void;
+        getTypeAcquisition(): TypeAcquisition;
         getChangesSinceVersion(lastKnownVersion?: number, includeProjectReferenceRedirectInfo?: boolean): ProjectFilesWithTSDiagnostics;
         protected removeRoot(info: ScriptInfo): void;
         isSourceOfProjectReferenceRedirect(fileName: string): boolean;
@@ -3437,7 +3456,7 @@ declare namespace ts.server {
         readonly projectRootPath: string | undefined;
         /** stored only if their is no projectRootPath and this isnt single inferred project */
         readonly canonicalCurrentDirectory: string | undefined;
-        constructor(projectService: ProjectService, documentRegistry: DocumentRegistry, compilerOptions: CompilerOptions, watchOptions: WatchOptions | undefined, projectRootPath: NormalizedPath | undefined, currentDirectory: string | undefined, pluginConfigOverrides: ESMap<string, any> | undefined);
+        constructor(projectService: ProjectService, documentRegistry: DocumentRegistry, compilerOptions: CompilerOptions, watchOptions: WatchOptions | undefined, projectRootPath: NormalizedPath | undefined, currentDirectory: string | undefined, pluginConfigOverrides: ESMap<string, any> | undefined, typeAcquisition: TypeAcquisition | undefined);
         addRoot(info: ScriptInfo): void;
         removeRoot(info: ScriptInfo): void;
         isOrphan(): boolean;
@@ -3453,6 +3472,7 @@ declare namespace ts.server {
         static create(dependencySelection: PackageJsonAutoImportPreference, hostProject: Project, moduleResolutionHost: ModuleResolutionHost, documentRegistry: DocumentRegistry): AutoImportProviderProject | undefined;
         private rootFileNames;
         constructor(hostProject: Project, initialRootNames: string[], documentRegistry: DocumentRegistry, compilerOptions: CompilerOptions);
+        isEmpty(): boolean;
         isOrphan(): boolean;
         updateGraph(): boolean;
         markAsDirty(): void;
@@ -3472,7 +3492,6 @@ declare namespace ts.server {
      * Otherwise it will create an InferredProject.
      */
     class ConfiguredProject extends Project {
-        private typeAcquisition;
         configFileWatcher: FileWatcher | undefined;
         private directoriesWatchedForWildcards;
         readonly canonicalConfigFilePath: NormalizedPath;
@@ -3508,6 +3527,7 @@ declare namespace ts.server {
         updateReferences(refs: readonly ProjectReference[] | undefined): void;
         setPotentialProjectReference(canonicalConfigPath: NormalizedPath): void;
         getResolvedProjectReferenceToRedirect(fileName: string): ResolvedProjectReference | undefined;
+        forEachResolvedProjectReference<T>(cb: (resolvedProjectReference: ResolvedProjectReference) => T | undefined): T | undefined;
         enablePluginsWithOptions(options: CompilerOptions, pluginConfigOverrides: ESMap<string, any> | undefined): void;
         /**
          * Get the errors that dont have any file name associated
@@ -3518,8 +3538,6 @@ declare namespace ts.server {
          */
         getAllProjectErrors(): readonly Diagnostic[];
         setProjectErrors(projectErrors: Diagnostic[]): void;
-        setTypeAcquisition(newTypeAcquisition: TypeAcquisition): void;
-        getTypeAcquisition(): TypeAcquisition;
         watchWildcards(wildcardDirectories: ESMap<string, WatchDirectoryFlags>): void;
         stopWatchingWildCards(): void;
         close(): void;
@@ -3542,12 +3560,9 @@ declare namespace ts.server {
         externalProjectName: string;
         compileOnSaveEnabled: boolean;
         excludedFiles: readonly NormalizedPath[];
-        private typeAcquisition;
         constructor(externalProjectName: string, projectService: ProjectService, documentRegistry: DocumentRegistry, compilerOptions: CompilerOptions, lastFileExceededProgramSize: string | undefined, compileOnSaveEnabled: boolean, projectFilePath?: string, pluginConfigOverrides?: ESMap<string, any>, watchOptions?: WatchOptions);
         updateGraph(): boolean;
         getExcludedFiles(): readonly NormalizedPath[];
-        getTypeAcquisition(): TypeAcquisition;
-        setTypeAcquisition(newTypeAcquisition: TypeAcquisition): void;
     }
     function isInferredProject(project: Project): project is InferredProject;
     function isConfiguredProject(project: Project): project is ConfiguredProject;
@@ -3686,6 +3701,7 @@ declare namespace ts.server {
     export function convertFormatOptions(protocolOptions: protocol.FormatCodeSettings): FormatCodeSettings;
     export function convertCompilerOptions(protocolOptions: protocol.ExternalProjectCompilerOptions): CompilerOptions & protocol.CompileOnSaveMixin;
     export function convertWatchOptions(protocolOptions: protocol.ExternalProjectCompilerOptions): WatchOptions | undefined;
+    export function convertTypeAcquisition(protocolOptions: protocol.InferredProjectCompilerOptions): TypeAcquisition | undefined;
     export function tryConvertScriptKindName(scriptKindName: protocol.ScriptKindName | ScriptKind): ScriptKind;
     export function convertScriptKindName(scriptKindName: protocol.ScriptKindName): ScriptKind.Unknown | ScriptKind.JS | ScriptKind.JSX | ScriptKind.TS | ScriptKind.TSX;
     export function convertUserPreferences(preferences: protocol.UserPreferences): UserPreferences;
@@ -3751,9 +3767,8 @@ declare namespace ts.server {
         /** Find existing project or create and load it for the project reference */
         FindCreateLoad = 2
     }
-    export function forEachResolvedProjectReferenceProject<T>(project: ConfiguredProject, cb: (child: ConfiguredProject) => T | undefined, projectReferenceProjectLoadKind: ProjectReferenceProjectLoadKind.Find | ProjectReferenceProjectLoadKind.FindCreate): T | undefined;
-    export function forEachResolvedProjectReferenceProject<T>(project: ConfiguredProject, cb: (child: ConfiguredProject) => T | undefined, projectReferenceProjectLoadKind: ProjectReferenceProjectLoadKind, reason: string): T | undefined;
-    export function forEachResolvedProjectReference<T>(project: ConfiguredProject, cb: (resolvedProjectReference: ResolvedProjectReference | undefined, resolvedProjectReferencePath: Path) => T | undefined): T | undefined;
+    export function forEachResolvedProjectReferenceProject<T>(project: ConfiguredProject, fileName: string | undefined, cb: (child: ConfiguredProject) => T | undefined, projectReferenceProjectLoadKind: ProjectReferenceProjectLoadKind.Find | ProjectReferenceProjectLoadKind.FindCreate): T | undefined;
+    export function forEachResolvedProjectReferenceProject<T>(project: ConfiguredProject, fileName: string | undefined, cb: (child: ConfiguredProject) => T | undefined, projectReferenceProjectLoadKind: ProjectReferenceProjectLoadKind, reason: string): T | undefined;
     /** true if script info is part of project and is not in project because it is referenced from project reference source */
     export function projectContainsInfoDirectly(project: Project, info: ScriptInfo): boolean;
     export function updateProjectIfDirty(project: Project): boolean;
@@ -3816,6 +3831,8 @@ declare namespace ts.server {
         private compilerOptionsForInferredProjectsPerProjectRoot;
         private watchOptionsForInferredProjects;
         private watchOptionsForInferredProjectsPerProjectRoot;
+        private typeAcquisitionForInferredProjects;
+        private typeAcquisitionForInferredProjectsPerProjectRoot;
         /**
          * Project size for configured or external projects
          */
@@ -3883,7 +3900,7 @@ declare namespace ts.server {
         sendPerformanceEvent(kind: PerformanceEvent["kind"], durationMs: number): void;
         delayUpdateProjectGraphAndEnsureProjectStructureForOpenFiles(project: Project): void;
         private delayUpdateProjectGraphs;
-        setCompilerOptionsForInferredProjects(projectCompilerOptions: protocol.ExternalProjectCompilerOptions, projectRootPath?: string): void;
+        setCompilerOptionsForInferredProjects(projectCompilerOptions: protocol.InferredProjectCompilerOptions, projectRootPath?: string): void;
         findProject(projectName: string): Project | undefined;
         private forEachProject;
         forEachEnabledProject(cb: (project: Project) => void): void;

@@ -5,6 +5,7 @@
       "../../src/services/types.ts",
       "../../src/services/utilities.ts",
       "../../src/services/classifier.ts",
+      "../../src/services/classifier2020.ts",
       "../../src/services/stringCompletions.ts",
       "../../src/services/completions.ts",
       "../../src/services/documentHighlights.ts",
@@ -53,6 +54,7 @@
       "../../src/services/codefixes/correctQualifiedNameToIndexedAccessType.ts",
       "../../src/services/codefixes/convertToTypeOnlyExport.ts",
       "../../src/services/codefixes/convertToTypeOnlyImport.ts",
+      "../../src/services/codefixes/convertLiteralTypeToMappedType.ts",
       "../../src/services/codefixes/fixClassIncorrectlyImplementsInterface.ts",
       "../../src/services/codefixes/importFixes.ts",
       "../../src/services/codefixes/fixImplicitThis.ts",
@@ -97,6 +99,7 @@
       "../../src/services/codefixes/splitTypeOnlyImport.ts",
       "../../src/services/codefixes/convertConstToLet.ts",
       "../../src/services/codefixes/fixExpectedComma.ts",
+      "../../src/services/codefixes/fixAddVoidToPromise.ts",
       "../../src/services/refactors/convertExport.ts",
       "../../src/services/refactors/convertImport.ts",
       "../../src/services/refactors/convertToOptionalChainExpression.ts",
@@ -150,7 +153,7 @@
         },
         {
           "pos": 1825,
-          "end": 2136303,
+          "end": 2178083,
           "kind": "text"
         }
       ],
@@ -304,226 +307,226 @@
         },
         {
           "pos": 10244,
-          "end": 19496,
+          "end": 20493,
           "kind": "text"
         },
         {
-          "pos": 19496,
-          "end": 19626,
+          "pos": 20493,
+          "end": 20623,
           "kind": "internal"
         },
         {
-          "pos": 19627,
-          "end": 21926,
+          "pos": 20624,
+          "end": 22923,
           "kind": "text"
         },
         {
-          "pos": 21926,
-          "end": 22040,
+          "pos": 22923,
+          "end": 23037,
           "kind": "internal"
         },
         {
-          "pos": 22041,
-          "end": 28660,
+          "pos": 23038,
+          "end": 29762,
           "kind": "text"
         },
         {
-          "pos": 28660,
-          "end": 28770,
+          "pos": 29762,
+          "end": 29872,
           "kind": "internal"
         },
         {
-          "pos": 28771,
-          "end": 36022,
+          "pos": 29873,
+          "end": 37124,
           "kind": "text"
         },
         {
-          "pos": 36022,
-          "end": 36071,
+          "pos": 37124,
+          "end": 37173,
           "kind": "internal"
         },
         {
-          "pos": 36072,
-          "end": 36252,
+          "pos": 37174,
+          "end": 37354,
           "kind": "text"
         },
         {
-          "pos": 36252,
-          "end": 36278,
+          "pos": 37354,
+          "end": 37380,
           "kind": "internal"
         },
         {
-          "pos": 36279,
-          "end": 49795,
+          "pos": 37381,
+          "end": 51228,
           "kind": "text"
         },
         {
-          "pos": 49795,
-          "end": 51278,
+          "pos": 51228,
+          "end": 52711,
           "kind": "internal"
         },
         {
-          "pos": 51279,
-          "end": 51281,
+          "pos": 52712,
+          "end": 52714,
           "kind": "text"
         },
         {
-          "pos": 51281,
-          "end": 75497,
+          "pos": 52714,
+          "end": 77067,
           "kind": "internal"
         },
         {
-          "pos": 75498,
-          "end": 75655,
+          "pos": 77068,
+          "end": 77225,
           "kind": "text"
         },
         {
-          "pos": 75655,
-          "end": 76352,
+          "pos": 77225,
+          "end": 77922,
           "kind": "internal"
         },
         {
-          "pos": 76353,
-          "end": 76355,
+          "pos": 77923,
+          "end": 77925,
           "kind": "text"
         },
         {
-          "pos": 76355,
-          "end": 81916,
+          "pos": 77925,
+          "end": 84517,
           "kind": "internal"
         },
         {
-          "pos": 81917,
-          "end": 82048,
+          "pos": 84518,
+          "end": 84649,
           "kind": "text"
         },
         {
-          "pos": 82048,
-          "end": 82304,
+          "pos": 84649,
+          "end": 84905,
           "kind": "internal"
         },
         {
-          "pos": 82305,
-          "end": 86223,
+          "pos": 84906,
+          "end": 88824,
           "kind": "text"
         },
         {
-          "pos": 86223,
-          "end": 86303,
+          "pos": 88824,
+          "end": 88904,
           "kind": "internal"
         },
         {
-          "pos": 86304,
-          "end": 86341,
+          "pos": 88905,
+          "end": 88942,
           "kind": "text"
         },
         {
-          "pos": 86341,
-          "end": 86568,
+          "pos": 88942,
+          "end": 89169,
           "kind": "internal"
         },
         {
-          "pos": 86569,
-          "end": 86769,
+          "pos": 89170,
+          "end": 89370,
           "kind": "text"
         },
         {
-          "pos": 86769,
-          "end": 86934,
+          "pos": 89370,
+          "end": 89535,
           "kind": "internal"
         },
         {
-          "pos": 86935,
-          "end": 86937,
+          "pos": 89536,
+          "end": 89538,
           "kind": "text"
         },
         {
-          "pos": 86937,
-          "end": 105210,
+          "pos": 89538,
+          "end": 107811,
           "kind": "internal"
         },
         {
-          "pos": 105211,
-          "end": 105369,
+          "pos": 107812,
+          "end": 107970,
           "kind": "text"
         },
         {
-          "pos": 105369,
-          "end": 108811,
+          "pos": 107970,
+          "end": 111412,
           "kind": "internal"
         },
         {
-          "pos": 108812,
-          "end": 109482,
+          "pos": 111413,
+          "end": 112083,
           "kind": "text"
         },
         {
-          "pos": 109482,
-          "end": 109692,
+          "pos": 112083,
+          "end": 112293,
           "kind": "internal"
         },
         {
-          "pos": 109693,
-          "end": 109695,
+          "pos": 112294,
+          "end": 112296,
           "kind": "text"
         },
         {
-          "pos": 109695,
-          "end": 142854,
+          "pos": 112296,
+          "end": 145687,
           "kind": "internal"
         },
         {
-          "pos": 142855,
-          "end": 142964,
+          "pos": 145688,
+          "end": 145797,
           "kind": "text"
         },
         {
-          "pos": 142964,
-          "end": 143178,
+          "pos": 145797,
+          "end": 146011,
           "kind": "internal"
         },
         {
-          "pos": 143179,
-          "end": 143874,
+          "pos": 146012,
+          "end": 146707,
           "kind": "text"
         },
         {
-          "pos": 143874,
-          "end": 144331,
+          "pos": 146707,
+          "end": 147164,
           "kind": "internal"
         },
         {
-          "pos": 144332,
-          "end": 144514,
+          "pos": 147165,
+          "end": 147347,
           "kind": "text"
         },
         {
-          "pos": 144514,
-          "end": 145363,
+          "pos": 147347,
+          "end": 148196,
           "kind": "internal"
         },
         {
-          "pos": 145364,
-          "end": 145665,
+          "pos": 148197,
+          "end": 148498,
           "kind": "text"
         },
         {
-          "pos": 145665,
-          "end": 145880,
+          "pos": 148498,
+          "end": 148713,
           "kind": "internal"
         },
         {
-          "pos": 145881,
-          "end": 146377,
+          "pos": 148714,
+          "end": 149210,
           "kind": "text"
         },
         {
-          "pos": 146377,
-          "end": 161554,
+          "pos": 149210,
+          "end": 164465,
           "kind": "internal"
         }
       ]
     }
   },
-  "version": "4.0.3"
+  "version": "4.1.2"
 }

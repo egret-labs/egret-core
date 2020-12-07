@@ -323,6 +323,7 @@ var ts;
         updateSolutionBuilderHost(sys, cb, buildHost);
         var builder = ts.createSolutionBuilder(buildHost, projects, buildOptions);
         var exitStatus = buildOptions.clean ? builder.clean() : builder.build();
+        ts.tracing.dumpLegend();
         return sys.exit(exitStatus);
     }
     function createReportErrorSummary(sys, options) {
@@ -336,7 +337,7 @@ var ts;
         var currentDirectory = host.getCurrentDirectory();
         var getCanonicalFileName = ts.createGetCanonicalFileName(host.useCaseSensitiveFileNames());
         ts.changeCompilerHostLikeToUseCache(host, function (fileName) { return ts.toPath(fileName, currentDirectory, getCanonicalFileName); });
-        enableStatistics(sys, options);
+        enableStatisticsAndTracing(sys, options, /*isBuildMode*/ false);
         var programOptions = {
             rootNames: fileNames,
             options: options,
@@ -352,7 +353,7 @@ var ts;
     }
     function performIncrementalCompilation(sys, cb, reportDiagnostic, config) {
         var options = config.options, fileNames = config.fileNames, projectReferences = config.projectReferences;
-        enableStatistics(sys, options);
+        enableStatisticsAndTracing(sys, options, /*isBuildMode*/ false);
         var host = ts.createIncrementalCompilerHost(options, sys);
         var exitStatus = ts.performIncrementalCompilation({
             host: host,
@@ -383,7 +384,7 @@ var ts;
         host.createProgram = function (rootNames, options, host, oldProgram, configFileParsingDiagnostics, projectReferences) {
             ts.Debug.assert(rootNames !== undefined || (options === undefined && !!oldProgram));
             if (options !== undefined) {
-                enableStatistics(sys, options);
+                enableStatisticsAndTracing(sys, options, /*isBuildMode*/ true);
             }
             return compileUsingBuilder(rootNames, options, host, oldProgram, configFileParsingDiagnostics, projectReferences);
         };
@@ -428,14 +429,23 @@ var ts;
     function canReportDiagnostics(system, compilerOptions) {
         return system === ts.sys && (compilerOptions.diagnostics || compilerOptions.extendedDiagnostics);
     }
-    function enableStatistics(sys, compilerOptions) {
-        if (canReportDiagnostics(sys, compilerOptions)) {
+    function canTrace(system, compilerOptions) {
+        return system === ts.sys && compilerOptions.generateTrace;
+    }
+    function enableStatisticsAndTracing(system, compilerOptions, isBuildMode) {
+        if (canReportDiagnostics(system, compilerOptions)) {
             ts.performance.enable();
+        }
+        if (canTrace(system, compilerOptions)) {
+            ts.tracing.startTracing(compilerOptions.configFilePath, compilerOptions.generateTrace, isBuildMode);
         }
     }
     function reportStatistics(sys, program) {
-        var statistics;
         var compilerOptions = program.getCompilerOptions();
+        if (canTrace(sys, compilerOptions)) {
+            ts.tracing.stopTracing(program.getTypeCatalog());
+        }
+        var statistics;
         if (canReportDiagnostics(sys, compilerOptions)) {
             statistics = [];
             var memoryUsed = sys.getMemoryUsage ? sys.getMemoryUsage() : -1;
@@ -449,19 +459,22 @@ var ts;
             if (memoryUsed >= 0) {
                 reportStatisticalValue("Memory used", Math.round(memoryUsed / 1000) + "K");
             }
-            var programTime = ts.performance.getDuration("Program");
-            var bindTime = ts.performance.getDuration("Bind");
-            var checkTime = ts.performance.getDuration("Check");
-            var emitTime = ts.performance.getDuration("Emit");
+            var isPerformanceEnabled = ts.performance.isEnabled();
+            var programTime = isPerformanceEnabled ? ts.performance.getDuration("Program") : 0;
+            var bindTime = isPerformanceEnabled ? ts.performance.getDuration("Bind") : 0;
+            var checkTime = isPerformanceEnabled ? ts.performance.getDuration("Check") : 0;
+            var emitTime = isPerformanceEnabled ? ts.performance.getDuration("Emit") : 0;
             if (compilerOptions.extendedDiagnostics) {
                 var caches = program.getRelationCacheSizes();
                 reportCountStatistic("Assignability cache size", caches.assignable);
                 reportCountStatistic("Identity cache size", caches.identity);
                 reportCountStatistic("Subtype cache size", caches.subtype);
                 reportCountStatistic("Strict subtype cache size", caches.strictSubtype);
-                ts.performance.forEachMeasure(function (name, duration) { return reportTimeStatistic(name + " time", duration); });
+                if (isPerformanceEnabled) {
+                    ts.performance.forEachMeasure(function (name, duration) { return reportTimeStatistic(name + " time", duration); });
+                }
             }
-            else {
+            else if (isPerformanceEnabled) {
                 // Individual component times.
                 // Note: To match the behavior of previous versions of the compiler, the reported parse time includes
                 // I/O read time and processing time for triple-slash references and module imports, and the reported
@@ -473,9 +486,16 @@ var ts;
                 reportTimeStatistic("Check time", checkTime);
                 reportTimeStatistic("Emit time", emitTime);
             }
-            reportTimeStatistic("Total time", programTime + bindTime + checkTime + emitTime);
+            if (isPerformanceEnabled) {
+                reportTimeStatistic("Total time", programTime + bindTime + checkTime + emitTime);
+            }
             reportStatistics();
-            ts.performance.disable();
+            if (!isPerformanceEnabled) {
+                sys.write(ts.Diagnostics.Performance_timings_for_diagnostics_or_extendedDiagnostics_are_not_available_in_this_session_A_native_implementation_of_the_Web_Performance_API_could_not_be_found.message + "\n");
+            }
+            else {
+                ts.performance.disable();
+            }
         }
         function reportStatistics() {
             var nameSize = 0;

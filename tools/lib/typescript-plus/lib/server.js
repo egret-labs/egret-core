@@ -1088,7 +1088,7 @@ var ts;
         }
         function compilerOptionsChanged(opt1, opt2) {
             // TODO: add more relevant properties
-            return opt1.allowJs !== opt2.allowJs;
+            return ts.getAllowJSCompilerOption(opt1) !== ts.getAllowJSCompilerOption(opt2);
         }
         function unresolvedImportsChanged(imports1, imports2) {
             if (imports1 === imports2) {
@@ -1289,7 +1289,7 @@ var ts;
                     this.compilerOptions.allowNonTsExtensions = true;
                     this.compilerOptions.allowJs = true;
                 }
-                else if (hasExplicitListOfFiles || this.compilerOptions.allowJs || this.projectService.hasDeferredExtension()) {
+                else if (hasExplicitListOfFiles || ts.getAllowJSCompilerOption(this.compilerOptions) || this.projectService.hasDeferredExtension()) {
                     // If files are listed explicitly or allowJs is specified, allow all extensions
                     this.compilerOptions.allowNonTsExtensions = true;
                 }
@@ -1595,9 +1595,7 @@ var ts;
                 }
                 server.updateProjectIfDirty(this);
                 this.builderState = ts.BuilderState.create(this.program, this.projectService.toCanonicalFileName, this.builderState);
-                return ts.mapDefined(ts.BuilderState.getFilesAffectedBy(this.builderState, this.program, scriptInfo.path, this.cancellationToken, function (data) { return _this.projectService.host.createHash(data); }), // TODO: GH#18217
-                function (// TODO: GH#18217
-                sourceFile) { return _this.shouldEmitFile(_this.projectService.getScriptInfoForPath(sourceFile.path)) ? sourceFile.fileName : undefined; });
+                return ts.mapDefined(ts.BuilderState.getFilesAffectedBy(this.builderState, this.program, scriptInfo.path, this.cancellationToken, ts.maybeBind(this.projectService.host, this.projectService.host.createHash)), function (sourceFile) { return _this.shouldEmitFile(_this.projectService.getScriptInfoForPath(sourceFile.path)) ? sourceFile.fileName : undefined; });
             };
             /**
              * Returns true if emit was conducted
@@ -1618,7 +1616,10 @@ var ts;
                         var dtsFiles = outputFiles.filter(function (f) { return ts.fileExtensionIs(f.name, ".d.ts" /* Dts */); });
                         if (dtsFiles.length === 1) {
                             var sourceFile = this.program.getSourceFile(scriptInfo.fileName);
-                            ts.BuilderState.updateSignatureOfFile(this.builderState, this.projectService.host.createHash(dtsFiles[0].text), sourceFile.resolvedPath);
+                            var signature = this.projectService.host.createHash ?
+                                this.projectService.host.createHash(dtsFiles[0].text) :
+                                ts.generateDjb2Hash(dtsFiles[0].text);
+                            ts.BuilderState.updateSignatureOfFile(this.builderState, signature, sourceFile.resolvedPath);
                         }
                     }
                 }
@@ -1697,9 +1698,7 @@ var ts;
                         this.detachScriptInfoIfNotRoot(f.fileName);
                     }
                     this.program.forEachResolvedProjectReference(function (ref) {
-                        if (ref) {
-                            _this.detachScriptInfoFromProject(ref.sourceFile.fileName);
-                        }
+                        return _this.detachScriptInfoFromProject(ref.sourceFile.fileName);
                     });
                 }
                 // Release external files
@@ -2002,7 +2001,7 @@ var ts;
                 // bump up the version if
                 // - oldProgram is not set - this is a first time updateGraph is called
                 // - newProgram is different from the old program and structure of the old program was not reused.
-                var hasNewProgram = this.program && (!oldProgram || (this.program !== oldProgram && !(oldProgram.structureIsReused & 2 /* Completely */)));
+                var hasNewProgram = this.program && (!oldProgram || (this.program !== oldProgram && !(this.program.structureIsReused & 2 /* Completely */)));
                 if (hasNewProgram) {
                     if (oldProgram) {
                         for (var _i = 0, _a = oldProgram.getSourceFiles(); _i < _a.length; _i++) {
@@ -2014,8 +2013,8 @@ var ts;
                                 this.detachScriptInfoFromProject(f.fileName, !!this.program.getSourceFileByPath(f.path));
                             }
                         }
-                        oldProgram.forEachResolvedProjectReference(function (resolvedProjectReference, resolvedProjectReferencePath) {
-                            if (resolvedProjectReference && !_this.program.getResolvedProjectReferenceByPath(resolvedProjectReferencePath)) {
+                        oldProgram.forEachResolvedProjectReference(function (resolvedProjectReference) {
+                            if (!_this.program.getResolvedProjectReferenceByPath(resolvedProjectReference.sourceFile.path)) {
                                 _this.detachScriptInfoFromProject(resolvedProjectReference.sourceFile.fileName);
                             }
                         });
@@ -2056,7 +2055,7 @@ var ts;
                     }
                 }
                 if (!this.importSuggestionsCache.isEmpty()) {
-                    if (this.hasAddedorRemovedFiles || oldProgram && !oldProgram.structureIsReused) {
+                    if (this.hasAddedorRemovedFiles || oldProgram && !this.program.structureIsReused) {
                         this.importSuggestionsCache.clear();
                     }
                     else if (this.dirtyFilesForSuggestions && oldProgram && this.program) {
@@ -2093,7 +2092,7 @@ var ts;
                     this.print(/*writeProjectFileNames*/ true);
                 }
                 else if (this.program !== oldProgram) {
-                    this.writeLog("Different program with same set of files:: oldProgram.structureIsReused:: " + (oldProgram && oldProgram.structureIsReused));
+                    this.writeLog("Different program with same set of files:: structureIsReused:: " + this.program.structureIsReused);
                 }
                 return hasNewProgram;
             };
@@ -2281,6 +2280,14 @@ var ts;
             /*@internal*/
             Project.prototype.getWatchOptions = function () {
                 return this.watchOptions;
+            };
+            Project.prototype.setTypeAcquisition = function (newTypeAcquisition) {
+                if (newTypeAcquisition) {
+                    this.typeAcquisition = this.removeLocalTypingsFromTypeAcquisition(newTypeAcquisition);
+                }
+            };
+            Project.prototype.getTypeAcquisition = function () {
+                return this.typeAcquisition || {};
             };
             /* @internal */
             Project.prototype.getChangesSinceVersion = function (lastKnownVersion, includeProjectReferenceRedirectInfo) {
@@ -2485,6 +2492,8 @@ var ts;
             };
             /*@internal*/
             Project.prototype.getPackageJsonsVisibleToFile = function (fileName, rootDir) {
+                if (this.projectService.serverMode !== ts.LanguageServiceMode.Semantic)
+                    return server.emptyArray;
                 return this.projectService.getPackageJsonsVisibleToFile(fileName, rootDir);
             };
             /*@internal*/
@@ -2528,9 +2537,13 @@ var ts;
                 if (this.autoImportProviderHost === false) {
                     return undefined;
                 }
+                if (this.projectService.serverMode !== ts.LanguageServiceMode.Semantic) {
+                    this.autoImportProviderHost = false;
+                    return undefined;
+                }
                 if (this.autoImportProviderHost) {
                     server.updateProjectIfDirty(this.autoImportProviderHost);
-                    if (!this.autoImportProviderHost.hasRoots()) {
+                    if (this.autoImportProviderHost.isEmpty()) {
                         this.autoImportProviderHost.close();
                         this.autoImportProviderHost = undefined;
                         return undefined;
@@ -2539,9 +2552,11 @@ var ts;
                 }
                 var dependencySelection = this.includePackageJsonAutoImports();
                 if (dependencySelection) {
+                    var start = ts.timestamp();
                     this.autoImportProviderHost = AutoImportProviderProject.create(dependencySelection, this, this.getModuleResolutionHostForAutoImportProvider(), this.documentRegistry);
                     if (this.autoImportProviderHost) {
                         server.updateProjectIfDirty(this.autoImportProviderHost);
+                        this.sendPerformanceEvent("CreatePackageJsonAutoImportProvider", ts.timestamp() - start);
                         return this.autoImportProviderHost.getCurrentProgram();
                     }
                 }
@@ -2587,13 +2602,14 @@ var ts;
         var InferredProject = /** @class */ (function (_super) {
             __extends(InferredProject, _super);
             /*@internal*/
-            function InferredProject(projectService, documentRegistry, compilerOptions, watchOptions, projectRootPath, currentDirectory, pluginConfigOverrides) {
+            function InferredProject(projectService, documentRegistry, compilerOptions, watchOptions, projectRootPath, currentDirectory, pluginConfigOverrides, typeAcquisition) {
                 var _this = _super.call(this, InferredProject.newName(), ProjectKind.Inferred, projectService, documentRegistry, 
                 // TODO: GH#18217
                 /*files*/ undefined, 
                 /*lastFileExceededProgramSize*/ undefined, compilerOptions, 
                 /*compileOnSaveEnabled*/ false, watchOptions, projectService.host, currentDirectory) || this;
                 _this._isJsInferredProject = false;
+                _this.typeAcquisition = typeAcquisition;
                 _this.projectRootPath = projectRootPath && projectService.toCanonicalFileName(projectRootPath);
                 if (!projectRootPath && !projectService.useSingleInferredProject) {
                     _this.canonicalCurrentDirectory = projectService.toCanonicalFileName(_this.currentDirectory);
@@ -2656,7 +2672,7 @@ var ts;
                 _super.prototype.close.call(this);
             };
             InferredProject.prototype.getTypeAcquisition = function () {
-                return {
+                return this.typeAcquisition || {
                     enable: allRootFilesAreJsOrDts(this),
                     include: ts.emptyArray,
                     exclude: ts.emptyArray
@@ -2728,6 +2744,10 @@ var ts;
                     return undefined;
                 }
                 return new AutoImportProviderProject(hostProject, rootNames, documentRegistry, compilerOptions);
+            };
+            /*@internal*/
+            AutoImportProviderProject.prototype.isEmpty = function () {
+                return !ts.some(this.rootFileNames);
             };
             AutoImportProviderProject.prototype.isOrphan = function () {
                 return true;
@@ -2894,6 +2914,11 @@ var ts;
                 return program && program.getResolvedProjectReferenceToRedirect(fileName);
             };
             /*@internal*/
+            ConfiguredProject.prototype.forEachResolvedProjectReference = function (cb) {
+                var _a;
+                return (_a = this.getCurrentProgram()) === null || _a === void 0 ? void 0 : _a.forEachResolvedProjectReference(cb);
+            };
+            /*@internal*/
             ConfiguredProject.prototype.enablePluginsWithOptions = function (options, pluginConfigOverrides) {
                 var host = this.projectService.host;
                 if (!host.require) {
@@ -2931,12 +2956,6 @@ var ts;
             };
             ConfiguredProject.prototype.setProjectErrors = function (projectErrors) {
                 this.projectErrors = projectErrors;
-            };
-            ConfiguredProject.prototype.setTypeAcquisition = function (newTypeAcquisition) {
-                this.typeAcquisition = this.removeLocalTypingsFromTypeAcquisition(newTypeAcquisition);
-            };
-            ConfiguredProject.prototype.getTypeAcquisition = function () {
-                return this.typeAcquisition || {};
             };
             /*@internal*/
             ConfiguredProject.prototype.watchWildcards = function (wildcardDirectories) {
@@ -2980,7 +2999,7 @@ var ts;
             /* @internal */
             /** Find the configured project from the project references in project which contains the info directly */
             ConfiguredProject.prototype.getDefaultChildProjectFromProjectWithReferences = function (info) {
-                return server.forEachResolvedProjectReferenceProject(this, function (child) { return server.projectContainsInfoDirectly(child, info) ?
+                return server.forEachResolvedProjectReferenceProject(this, info.path, function (child) { return server.projectContainsInfoDirectly(child, info) ?
                     child :
                     undefined; }, server.ProjectReferenceProjectLoadKind.Find);
             };
@@ -3008,7 +3027,7 @@ var ts;
                 return ts.forEachEntry(configFileExistenceInfo.openFilesImpactedByConfigFile, function (_value, infoPath) {
                     var info = _this.projectService.getScriptInfoForPath(infoPath);
                     return _this.containsScriptInfo(info) ||
-                        !!server.forEachResolvedProjectReferenceProject(_this, function (child) { return child.containsScriptInfo(info); }, server.ProjectReferenceProjectLoadKind.Find);
+                        !!server.forEachResolvedProjectReferenceProject(_this, info.path, function (child) { return child.containsScriptInfo(info); }, server.ProjectReferenceProjectLoadKind.Find);
                 }) || false;
             };
             /*@internal*/
@@ -3048,16 +3067,6 @@ var ts;
             };
             ExternalProject.prototype.getExcludedFiles = function () {
                 return this.excludedFiles;
-            };
-            ExternalProject.prototype.getTypeAcquisition = function () {
-                return this.typeAcquisition || {};
-            };
-            ExternalProject.prototype.setTypeAcquisition = function (newTypeAcquisition) {
-                ts.Debug.assert(!!newTypeAcquisition, "newTypeAcquisition may not be null/undefined");
-                ts.Debug.assert(!!newTypeAcquisition.include, "newTypeAcquisition.include may not be null/undefined");
-                ts.Debug.assert(!!newTypeAcquisition.exclude, "newTypeAcquisition.exclude may not be null/undefined");
-                ts.Debug.assert(typeof newTypeAcquisition.enable === "boolean", "newTypeAcquisition.enable may not be null/undefined");
-                this.typeAcquisition = this.removeLocalTypingsFromTypeAcquisition(newTypeAcquisition);
             };
             return ExternalProject;
         }(Project));
@@ -3194,6 +3203,17 @@ var ts;
             return result;
         }
         server.convertWatchOptions = convertWatchOptions;
+        function convertTypeAcquisition(protocolOptions) {
+            var result;
+            ts.typeAcquisitionDeclarations.forEach(function (option) {
+                var propertyValue = protocolOptions[option.name];
+                if (propertyValue === undefined)
+                    return;
+                (result || (result = {}))[option.name] = propertyValue;
+            });
+            return result;
+        }
+        server.convertTypeAcquisition = convertTypeAcquisition;
         function tryConvertScriptKindName(scriptKindName) {
             return ts.isString(scriptKindName) ? convertScriptKindName(scriptKindName) : scriptKindName;
         }
@@ -3279,51 +3299,72 @@ var ts;
             /** Find existing project or create and load it for the project reference */
             ProjectReferenceProjectLoadKind[ProjectReferenceProjectLoadKind["FindCreateLoad"] = 2] = "FindCreateLoad";
         })(ProjectReferenceProjectLoadKind = server.ProjectReferenceProjectLoadKind || (server.ProjectReferenceProjectLoadKind = {}));
-        function forEachResolvedProjectReferenceProject(project, cb, projectReferenceProjectLoadKind, reason) {
+        function forEachResolvedProjectReferenceProject(project, fileName, cb, projectReferenceProjectLoadKind, reason) {
             var _a;
+            var resolvedRefs = (_a = project.getCurrentProgram()) === null || _a === void 0 ? void 0 : _a.getResolvedProjectReferences();
+            if (!resolvedRefs)
+                return undefined;
             var seenResolvedRefs;
-            return worker((_a = project.getCurrentProgram()) === null || _a === void 0 ? void 0 : _a.getResolvedProjectReferences(), project.getCompilerOptions());
-            function worker(resolvedProjectReferences, parentOptions) {
-                var loadKind = parentOptions.disableReferencedProjectLoad ? ProjectReferenceProjectLoadKind.Find : projectReferenceProjectLoadKind;
-                return ts.forEach(resolvedProjectReferences, function (ref) {
-                    if (!ref)
-                        return undefined;
-                    var configFileName = server.toNormalizedPath(ref.sourceFile.fileName);
-                    var canonicalPath = project.projectService.toCanonicalFileName(configFileName);
-                    var seenValue = seenResolvedRefs === null || seenResolvedRefs === void 0 ? void 0 : seenResolvedRefs.get(canonicalPath);
-                    if (seenValue !== undefined && seenValue >= loadKind) {
-                        return undefined;
-                    }
-                    var child = project.projectService.findConfiguredProjectByProjectName(configFileName) || (loadKind === ProjectReferenceProjectLoadKind.Find ?
-                        undefined :
-                        loadKind === ProjectReferenceProjectLoadKind.FindCreate ?
-                            project.projectService.createConfiguredProject(configFileName) :
-                            loadKind === ProjectReferenceProjectLoadKind.FindCreateLoad ?
-                                project.projectService.createAndLoadConfiguredProject(configFileName, reason) :
-                                ts.Debug.assertNever(loadKind));
-                    var result = child && cb(child);
-                    if (result) {
+            var possibleDefaultRef = fileName ? project.getResolvedProjectReferenceToRedirect(fileName) : undefined;
+            if (possibleDefaultRef) {
+                // Try to find the name of the file directly through resolved project references
+                var configFileName = server.toNormalizedPath(possibleDefaultRef.sourceFile.fileName);
+                var child = project.projectService.findConfiguredProjectByProjectName(configFileName);
+                if (child) {
+                    var result = cb(child);
+                    if (result)
                         return result;
-                    }
-                    (seenResolvedRefs || (seenResolvedRefs = new ts.Map())).set(canonicalPath, loadKind);
-                    return worker(ref.references, ref.commandLine.options);
-                });
+                }
+                else if (projectReferenceProjectLoadKind !== ProjectReferenceProjectLoadKind.Find) {
+                    seenResolvedRefs = new ts.Map();
+                    // Try to see if this project can be loaded
+                    var result = forEachResolvedProjectReferenceProjectWorker(resolvedRefs, project.getCompilerOptions(), function (ref, loadKind) { return possibleDefaultRef === ref ? callback(ref, loadKind) : undefined; }, projectReferenceProjectLoadKind, project.projectService, seenResolvedRefs);
+                    if (result)
+                        return result;
+                    // Cleanup seenResolvedRefs
+                    seenResolvedRefs.clear();
+                }
+            }
+            return forEachResolvedProjectReferenceProjectWorker(resolvedRefs, project.getCompilerOptions(), function (ref, loadKind) { return possibleDefaultRef !== ref ? callback(ref, loadKind) : undefined; }, projectReferenceProjectLoadKind, project.projectService, seenResolvedRefs);
+            function callback(ref, loadKind) {
+                var configFileName = server.toNormalizedPath(ref.sourceFile.fileName);
+                var child = project.projectService.findConfiguredProjectByProjectName(configFileName) || (loadKind === ProjectReferenceProjectLoadKind.Find ?
+                    undefined :
+                    loadKind === ProjectReferenceProjectLoadKind.FindCreate ?
+                        project.projectService.createConfiguredProject(configFileName) :
+                        loadKind === ProjectReferenceProjectLoadKind.FindCreateLoad ?
+                            project.projectService.createAndLoadConfiguredProject(configFileName, reason) :
+                            ts.Debug.assertNever(loadKind));
+                return child && cb(child);
             }
         }
         server.forEachResolvedProjectReferenceProject = forEachResolvedProjectReferenceProject;
-        /*@internal*/
-        function forEachResolvedProjectReference(project, cb) {
-            var program = project.getCurrentProgram();
-            return program && program.forEachResolvedProjectReference(cb);
+        function forEachResolvedProjectReferenceProjectWorker(resolvedProjectReferences, parentOptions, cb, projectReferenceProjectLoadKind, projectService, seenResolvedRefs) {
+            var loadKind = parentOptions.disableReferencedProjectLoad ? ProjectReferenceProjectLoadKind.Find : projectReferenceProjectLoadKind;
+            return ts.forEach(resolvedProjectReferences, function (ref) {
+                if (!ref)
+                    return undefined;
+                var configFileName = server.toNormalizedPath(ref.sourceFile.fileName);
+                var canonicalPath = projectService.toCanonicalFileName(configFileName);
+                var seenValue = seenResolvedRefs === null || seenResolvedRefs === void 0 ? void 0 : seenResolvedRefs.get(canonicalPath);
+                if (seenValue !== undefined && seenValue >= loadKind) {
+                    return undefined;
+                }
+                var result = cb(ref, loadKind);
+                if (result) {
+                    return result;
+                }
+                (seenResolvedRefs || (seenResolvedRefs = new ts.Map())).set(canonicalPath, loadKind);
+                return ref.references && forEachResolvedProjectReferenceProjectWorker(ref.references, ref.commandLine.options, cb, loadKind, projectService, seenResolvedRefs);
+            });
         }
-        server.forEachResolvedProjectReference = forEachResolvedProjectReference;
         function forEachPotentialProjectReference(project, cb) {
             return project.potentialProjectReferences &&
                 ts.forEachKey(project.potentialProjectReferences, cb);
         }
         function forEachAnyProjectReferenceKind(project, cb, cbProjectRef, cbPotentialProjectRef) {
             return project.getCurrentProgram() ?
-                forEachResolvedProjectReference(project, cb) :
+                project.forEachResolvedProjectReference(cb) :
                 project.isInitialLoadPending() ?
                     forEachPotentialProjectReference(project, cbPotentialProjectRef) :
                     ts.forEach(project.getProjectReferences(), cbProjectRef);
@@ -3333,7 +3374,7 @@ var ts;
             return refProject && cb(refProject);
         }
         function forEachReferencedProject(project, cb) {
-            return forEachAnyProjectReferenceKind(project, function (resolvedRef) { return callbackRefProject(project, cb, resolvedRef && resolvedRef.sourceFile.path); }, function (projectRef) { return callbackRefProject(project, cb, project.toPath(projectRef.path)); }, function (potentialProjectRef) { return callbackRefProject(project, cb, potentialProjectRef); });
+            return forEachAnyProjectReferenceKind(project, function (resolvedRef) { return callbackRefProject(project, cb, resolvedRef.sourceFile.path); }, function (projectRef) { return callbackRefProject(project, cb, project.toPath(ts.resolveProjectReferencePath(projectRef))); }, function (potentialProjectRef) { return callbackRefProject(project, cb, potentialProjectRef); });
         }
         function getDetailWatchInfo(watchType, project) {
             return "Project: " + (project ? project.getProjectName() : "") + " WatchType: " + watchType;
@@ -3404,6 +3445,7 @@ var ts;
                 this.openFilesWithNonRootedDiskPath = new ts.Map();
                 this.compilerOptionsForInferredProjectsPerProjectRoot = new ts.Map();
                 this.watchOptionsForInferredProjectsPerProjectRoot = new ts.Map();
+                this.typeAcquisitionForInferredProjectsPerProjectRoot = new ts.Map();
                 /**
                  * Project size for configured or external projects
                  */
@@ -3448,7 +3490,6 @@ var ts;
                     this.serverMode = ts.LanguageServiceMode.Semantic;
                     this.syntaxOnly = false;
                 }
-                ts.Debug.assert(!!this.host.createHash, "'ServerHost.createHash' is required for ProjectService");
                 if (this.host.realpath) {
                     this.realpathToScriptInfos = ts.createMultiMap();
                 }
@@ -3678,6 +3719,7 @@ var ts;
                 ts.Debug.assert(projectRootPath === undefined || this.useInferredProjectPerProjectRoot, "Setting compiler options per project root path is only supported when useInferredProjectPerProjectRoot is enabled");
                 var compilerOptions = convertCompilerOptions(projectCompilerOptions);
                 var watchOptions = convertWatchOptions(projectCompilerOptions);
+                var typeAcquisition = convertTypeAcquisition(projectCompilerOptions);
                 // always set 'allowNonTsExtensions' for inferred projects since user cannot configure it from the outside
                 // previously we did not expose a way for user to change these settings and this option was enabled by default
                 compilerOptions.allowNonTsExtensions = true;
@@ -3685,10 +3727,12 @@ var ts;
                 if (canonicalProjectRootPath) {
                     this.compilerOptionsForInferredProjectsPerProjectRoot.set(canonicalProjectRootPath, compilerOptions);
                     this.watchOptionsForInferredProjectsPerProjectRoot.set(canonicalProjectRootPath, watchOptions || false);
+                    this.typeAcquisitionForInferredProjectsPerProjectRoot.set(canonicalProjectRootPath, typeAcquisition);
                 }
                 else {
                     this.compilerOptionsForInferredProjects = compilerOptions;
                     this.watchOptionsForInferredProjects = watchOptions;
+                    this.typeAcquisitionForInferredProjects = typeAcquisition;
                 }
                 for (var _i = 0, _a = this.inferredProjects; _i < _a.length; _i++) {
                     var project = _a[_i];
@@ -3705,6 +3749,7 @@ var ts;
                         !project.projectRootPath || !this.compilerOptionsForInferredProjectsPerProjectRoot.has(project.projectRootPath)) {
                         project.setCompilerOptions(compilerOptions);
                         project.setWatchOptions(watchOptions);
+                        project.setTypeAcquisition(typeAcquisition);
                         project.compileOnSaveEnabled = compilerOptions.compileOnSave;
                         project.markAsDirty();
                         this.delayUpdateProjectGraph(project);
@@ -4813,13 +4858,18 @@ var ts;
             ProjectService.prototype.createInferredProject = function (currentDirectory, isSingleInferredProject, projectRootPath) {
                 var compilerOptions = projectRootPath && this.compilerOptionsForInferredProjectsPerProjectRoot.get(projectRootPath) || this.compilerOptionsForInferredProjects; // TODO: GH#18217
                 var watchOptions;
+                var typeAcquisition;
                 if (projectRootPath) {
                     watchOptions = this.watchOptionsForInferredProjectsPerProjectRoot.get(projectRootPath);
+                    typeAcquisition = this.typeAcquisitionForInferredProjectsPerProjectRoot.get(projectRootPath);
                 }
                 if (watchOptions === undefined) {
                     watchOptions = this.watchOptionsForInferredProjects;
                 }
-                var project = new server.InferredProject(this, this.documentRegistry, compilerOptions, watchOptions || undefined, projectRootPath, currentDirectory, this.currentPluginConfigOverrides);
+                if (typeAcquisition === undefined) {
+                    typeAcquisition = this.typeAcquisitionForInferredProjects;
+                }
+                var project = new server.InferredProject(this, this.documentRegistry, compilerOptions, watchOptions || undefined, projectRootPath, currentDirectory, this.currentPluginConfigOverrides, typeAcquisition);
                 if (isSingleInferredProject) {
                     this.inferredProjects.unshift(project);
                 }
@@ -5308,13 +5358,14 @@ var ts;
                                 _this.reloadConfiguredProject(project, reason, /*isInitialLoad*/ false);
                                 // If this project does not contain this file directly, reload the project till the reloaded project contains the script info directly
                                 if (!projectContainsInfoDirectly(project, info)) {
-                                    var referencedProject = forEachResolvedProjectReferenceProject(project, function (child) {
+                                    var referencedProject = forEachResolvedProjectReferenceProject(project, info.path, function (child) {
                                         reloadChildProject(child);
                                         return projectContainsInfoDirectly(child, info);
                                     }, ProjectReferenceProjectLoadKind.FindCreate);
                                     if (referencedProject) {
                                         // Reload the project's tree that is already present
-                                        forEachResolvedProjectReferenceProject(project, reloadChildProject, ProjectReferenceProjectLoadKind.Find);
+                                        forEachResolvedProjectReferenceProject(project, 
+                                        /*fileName*/ undefined, reloadChildProject, ProjectReferenceProjectLoadKind.Find);
                                     }
                                 }
                             }
@@ -5407,10 +5458,10 @@ var ts;
                 };
                 if (configuredProject.isSolution() || !projectContainsOriginalInfo(configuredProject)) {
                     // Find the project that is referenced from this solution that contains the script info directly
-                    configuredProject = forEachResolvedProjectReferenceProject(configuredProject, function (child) {
+                    configuredProject = forEachResolvedProjectReferenceProject(configuredProject, fileName, function (child) {
                         updateProjectIfDirty(child);
                         return projectContainsOriginalInfo(child) ? child : undefined;
-                    }, configuredProject.getCompilerOptions().disableReferencedProjectLoad ? ProjectReferenceProjectLoadKind.Find : ProjectReferenceProjectLoadKind.FindCreateLoad, "Creating project referenced in solution " + configuredProject.projectName + " to find possible configured project for original file: " + originalFileInfo.fileName + (location !== originalLocation ? " for location: " + location.fileName : ""));
+                    }, ProjectReferenceProjectLoadKind.FindCreateLoad, "Creating project referenced in solution " + configuredProject.projectName + " to find possible configured project for original file: " + originalFileInfo.fileName + (location !== originalLocation ? " for location: " + location.fileName : ""));
                     if (!configuredProject)
                         return undefined;
                     if (configuredProject === project)
@@ -5476,7 +5527,7 @@ var ts;
                         // If this configured project doesnt contain script info but
                         // it is solution with project references, try those project references
                         if (!projectContainsInfoDirectly(project, info)) {
-                            forEachResolvedProjectReferenceProject(project, function (child) {
+                            forEachResolvedProjectReferenceProject(project, info.path, function (child) {
                                 updateProjectIfDirty(child);
                                 // Retain these projects
                                 if (!ts.isArray(retainProjects)) {
@@ -5572,21 +5623,38 @@ var ts;
                 for (var _i = 0, _a = ts.arrayFrom(this.configuredProjects.values()); _i < _a.length; _i++) {
                     var project = _a[_i];
                     // If this project has potential project reference for any of the project we are loading ancestor tree for
-                    // we need to load this project tree
-                    if (forEachPotentialProjectReference(project, function (potentialRefPath) { return forProjects.has(potentialRefPath); }) || forEachResolvedProjectReference(project, function (_ref, resolvedPath) { return forProjects.has(resolvedPath); })) {
-                        // Load children
-                        this.ensureProjectChildren(project, seenProjects);
+                    // load this project first
+                    if (forEachPotentialProjectReference(project, function (potentialRefPath) { return forProjects.has(potentialRefPath); })) {
+                        updateProjectIfDirty(project);
                     }
+                    this.ensureProjectChildren(project, forProjects, seenProjects);
                 }
             };
-            ProjectService.prototype.ensureProjectChildren = function (project, seenProjects) {
-                var _this = this;
+            ProjectService.prototype.ensureProjectChildren = function (project, forProjects, seenProjects) {
+                var _a;
                 if (!ts.tryAddToSet(seenProjects, project.canonicalConfigFilePath))
                     return;
-                // Update the project
-                updateProjectIfDirty(project);
-                // Create tree because project is uptodate we only care of resolved references
-                forEachResolvedProjectReferenceProject(project, function (child) { return _this.ensureProjectChildren(child, seenProjects); }, ProjectReferenceProjectLoadKind.FindCreateLoad, "Creating project for reference of project: " + project.projectName);
+                // If this project disables child load ignore it
+                if (project.getCompilerOptions().disableReferencedProjectLoad)
+                    return;
+                var children = (_a = project.getCurrentProgram()) === null || _a === void 0 ? void 0 : _a.getResolvedProjectReferences();
+                if (!children)
+                    return;
+                for (var _i = 0, children_1 = children; _i < children_1.length; _i++) {
+                    var child = children_1[_i];
+                    if (!child)
+                        continue;
+                    var referencedProject = ts.forEachResolvedProjectReference(child.references, function (ref) { return forProjects.has(ref.sourceFile.path) ? ref : undefined; });
+                    if (!referencedProject)
+                        continue;
+                    // Load this project,
+                    var configFileName = server.toNormalizedPath(child.sourceFile.fileName);
+                    var childProject = project.projectService.findConfiguredProjectByProjectName(configFileName) ||
+                        project.projectService.createAndLoadConfiguredProject(configFileName, "Creating project referenced by : " + project.projectName + " as it references project " + referencedProject.sourceFile.fileName);
+                    updateProjectIfDirty(childProject);
+                    // Ensure children for this project
+                    this.ensureProjectChildren(childProject, forProjects, seenProjects);
+                }
             };
             ProjectService.prototype.cleanupAfterOpeningFile = function (toRetainConfigProjects) {
                 // This was postponed from closeOpenFile to after opening next file,
@@ -5871,8 +5939,7 @@ var ts;
                 var rootFiles = proj.rootFiles;
                 var typeAcquisition = proj.typeAcquisition;
                 ts.Debug.assert(!!typeAcquisition, "proj.typeAcquisition should be set by now");
-                // If type acquisition has been explicitly disabled, do not exclude anything from the project
-                if (typeAcquisition.enable === false) {
+                if (typeAcquisition.enable === false || typeAcquisition.disableFilenameBasedTypeAcquisition) {
                     return [];
                 }
                 var typeAcqInclude = typeAcquisition.include || (typeAcquisition.include = []);
@@ -6131,7 +6198,7 @@ var ts;
                 var processDirectory = function (directory) {
                     switch (packageJsonCache.directoryHasPackageJson(directory)) {
                         // Sync and check same directory again
-                        case 1 /* Maybe */:
+                        case 3 /* Maybe */:
                             packageJsonCache.searchDirectoryAndAncestors(directory);
                             return processDirectory(directory);
                         // Check package.json
@@ -6237,7 +6304,7 @@ var ts;
                 directoryHasPackageJson: directoryHasPackageJson,
                 searchDirectoryAndAncestors: function (directory) {
                     ts.forEachAncestorDirectory(directory, function (ancestor) {
-                        if (directoryHasPackageJson(ancestor) !== 1 /* Maybe */) {
+                        if (directoryHasPackageJson(ancestor) !== 3 /* Maybe */) {
                             return true;
                         }
                         var packageJsonFileName = host.toPath(ts.combinePaths(ancestor, "package.json"));
@@ -6258,7 +6325,7 @@ var ts;
             function directoryHasPackageJson(directory) {
                 return packageJsons.has(ts.combinePaths(directory, "package.json")) ? -1 /* True */ :
                     directoriesWithoutPackageJson.has(directory) ? 0 /* False */ :
-                        1 /* Maybe */;
+                        3 /* Maybe */;
             }
         }
         server.createPackageJsonCache = createPackageJsonCache;
@@ -8064,7 +8131,7 @@ var ts;
                         entries.metadata = completions.metadata;
                     return entries;
                 }
-                var res = __assign(__assign({}, completions), { entries: entries });
+                var res = __assign(__assign({}, completions), { optionalReplacementSpan: completions.optionalReplacementSpan && toProtocolTextSpan(completions.optionalReplacementSpan, scriptInfo), entries: entries });
                 return res;
             };
             Session.prototype.getCompletionEntryDetails = function (args, simplifiedResult) {

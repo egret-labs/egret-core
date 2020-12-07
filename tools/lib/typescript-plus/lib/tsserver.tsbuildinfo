@@ -50,72 +50,72 @@
         },
         {
           "pos": 3845,
-          "end": 6579776,
+          "end": 6752882,
           "kind": "prepend",
           "data": "./compiler.js",
           "texts": [
             {
               "pos": 3845,
-              "end": 6579776,
+              "end": 6752882,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 6579776,
-          "end": 8714254,
+          "pos": 6752882,
+          "end": 8929140,
           "kind": "prepend",
           "data": "./services.js",
           "texts": [
             {
-              "pos": 6579776,
-              "end": 8714254,
+              "pos": 6752882,
+              "end": 8929140,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 8714254,
-          "end": 8733907,
+          "pos": 8929140,
+          "end": 8949007,
           "kind": "prepend",
           "data": "./jsTyping.js",
           "texts": [
             {
-              "pos": 8714254,
-              "end": 8733907,
+              "pos": 8929140,
+              "end": 8949007,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 8733907,
-          "end": 9308514,
+          "pos": 8949007,
+          "end": 9527820,
           "kind": "prepend",
           "data": "./server.js",
           "texts": [
             {
-              "pos": 8733907,
-              "end": 9308514,
+              "pos": 8949007,
+              "end": 9527820,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 9308514,
-          "end": 9398814,
+          "pos": 9527820,
+          "end": 9618120,
           "kind": "prepend",
           "data": "./compat.js",
           "texts": [
             {
-              "pos": 9308514,
-              "end": 9398814,
+              "pos": 9527820,
+              "end": 9618120,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 9398814,
-          "end": 9442331,
+          "pos": 9618120,
+          "end": 9661463,
           "kind": "text"
         }
       ],
@@ -144,5 +144,5 @@
       }
     }
   },
-  "version": "4.0.3"
+  "version": "4.1.2"
 }
