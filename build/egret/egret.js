@@ -5483,6 +5483,9 @@ var egret;
                         maskedObject.$cacheDirtyUp();
                     }
                 }
+                else if (self.$nativeDisplayObject.setSmoothing) {
+                    self.$nativeDisplayObject.setSmoothing(value);
+                }
             },
             enumerable: true,
             configurable: true
@@ -19165,6 +19168,9 @@ var egret;
                         maskedObject.$cacheDirty = true;
                         maskedObject.$cacheDirtyUp();
                     }
+                }
+                else if (self.$nativeDisplayObject.setSmoothing) {
+                    self.$nativeDisplayObject.setSmoothing(value);
                 }
             },
             enumerable: true,

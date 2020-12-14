@@ -103,6 +103,8 @@ namespace egret {
                     maskedObject.$cacheDirty = true;
                     maskedObject.$cacheDirtyUp();
                 }
+            } else if (self.$nativeDisplayObject.setSmoothing) {
+                self.$nativeDisplayObject.setSmoothing(value);
             }
         }
 
@@ -444,7 +446,7 @@ namespace egret {
                         xPos += countWidth - textLinesWidth[i];
                     } else if (align == egret.HorizontalAlign.CENTER) {
                         xPos += Math.floor((countWidth - textLinesWidth[i]) / 2);
-                        
+
                     }
                 }
                 for (let j: number = 0; j < len; j++) {

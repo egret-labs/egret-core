@@ -195,6 +195,7 @@ declare namespace egret_native {
         public sortChildren(): void;
         public setSortableChildren(value: boolean): void;
         public setTint(value: number): void;
+        public setSmoothing(value: boolean): void;
     }
 }
 /**
