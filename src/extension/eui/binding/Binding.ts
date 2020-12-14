@@ -29,7 +29,7 @@
 
 namespace eui {
 
-    function joinValues(templates:any[]):any {
+    function joinValues(templates: any[]): any {
         let first = templates[0];
         let value = first instanceof Watcher ? first.getValue() : first;
         let length = templates.length;
@@ -90,10 +90,10 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static bindProperty(host:any, chain:string[], target:any, prop:string):Watcher {
+        public static bindProperty(host: any, chain: string[], target: any, prop: string): Watcher {
             let watcher = Watcher.watch(host, chain, null, null);
             if (watcher) {
-                let assign = function (value:any):void {
+                let assign = function (value: any): void {
                     target[prop] = value;
                 };
                 watcher.setHandler(assign, null);
@@ -128,7 +128,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public static bindHandler(host:any, chain:string[], handler:(value:any)=>void, thisObject:any):Watcher {
+        public static bindHandler(host: any, chain: string[], handler: (value: any) => void, thisObject: any): Watcher {
             let watcher = Watcher.watch(host, chain, handler, thisObject);
             if (watcher) {
                 handler.call(thisObject, watcher.getValue());
@@ -137,20 +137,26 @@ namespace eui {
         }
 
 
-        static $bindProperties(host:any, templates:any[], chainIndex:number[], target:any, prop:string):Watcher {
+        static $bindProperties(host: any, templates: any[], chainIndex: number[], target: any, prop: string): Watcher {
             if (templates.length == 1 && chainIndex.length == 1) {
                 return Binding.bindProperty(host, templates[0].split("."), target, prop);
             }
 
-            let assign = function ():void {
+            let assign = function (): void {
                 target[prop] = joinValues(templates);
             };
             let length = chainIndex.length;
-            let watcher:Watcher;
+            let watcher: Watcher;
             for (let i = 0; i < length; i++) {
                 let index = chainIndex[i];
-                let chain = templates[index].split(".");
-                watcher = Watcher.watch(host, chain, null, null);
+                let element = templates[index];
+                if (typeof element == "string") {
+                    let chain = element.split(".");
+                    watcher = Watcher.watch(host, chain, null, null);
+                } else if (element instanceof Watcher) {
+                    watcher = element;
+                    watcher.reset(host);
+                }
                 if (watcher) {
                     templates[index] = watcher;
                     watcher.setHandler(assign, null);

@@ -17304,8 +17304,15 @@ var eui;
             var watcher;
             for (var i = 0; i < length; i++) {
                 var index = chainIndex[i];
-                var chain = templates[index].split(".");
-                watcher = eui.Watcher.watch(host, chain, null, null);
+                var element = templates[index];
+                if (typeof element == "string") {
+                    var chain = element.split(".");
+                    watcher = eui.Watcher.watch(host, chain, null, null);
+                }
+                else if (element instanceof eui.Watcher) {
+                    watcher = element;
+                    watcher.reset(host);
+                }
                 if (watcher) {
                     templates[index] = watcher;
                     watcher.setHandler(assign, null);
