@@ -19237,6 +19237,18 @@ var egret;
             this.$textLinesChanged = true;
             //todo lcj
             this.$updateRenderNode();
+            if (!egret.nativeRender) {
+                var p = this.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                var maskedObject = this.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
+            }
         };
         /**
          * @private
