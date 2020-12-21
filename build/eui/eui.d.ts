@@ -2685,6 +2685,7 @@ declare namespace eui {
          * @platform Web,Native
          */
         getPreferredBounds(bounds: egret.Rectangle): void;
+        unwatchAll(): void;
     }
 }
 declare namespace eui {
@@ -9096,6 +9097,8 @@ declare namespace eui {
          * 应用当前的视图状态。子类覆盖此方法在视图状态发生改变时执行相应更新操作。
          */
         private commitCurrentState;
+        $watchers: Watcher[];
+        unwatchAll(): void;
     }
 }
 declare namespace eui {

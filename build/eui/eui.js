@@ -3698,6 +3698,11 @@ var eui;
          */
         Component.prototype.getPreferredBounds = function (bounds) {
         };
+        Component.prototype.unwatchAll = function () {
+            if (this.skin && this.skin.unwatchAll) {
+                this.skin.unwatchAll();
+            }
+        };
         return Component;
     }(egret.DisplayObjectContainer));
     eui.Component = Component;
@@ -15019,6 +15024,7 @@ var eui;
              * @private
              */
             _this.$stateValues = new eui.sys.StateValues();
+            _this.$watchers = [];
             return _this;
         }
         Object.defineProperty(Skin.prototype, "elementsContent", {
@@ -15078,6 +15084,15 @@ var eui;
          */
         Skin.prototype.onAddedToStage = function (event) {
             this.initializeStates(this._hostComponent.$stage);
+        };
+        Skin.prototype.unwatchAll = function () {
+            if (this.$watchers && this.$watchers.length > 0) {
+                for (var _i = 0, _a = this.$watchers; _i < _a.length; _i++) {
+                    var watcher = _a[_i];
+                    watcher.unwatch();
+                }
+                this.$watchers.length = 0;
+            }
         };
         return Skin;
     }(egret.EventDispatcher));
@@ -17257,6 +17272,13 @@ var eui;
                 };
                 watcher.setHandler(assign, null);
                 assign(watcher.getValue());
+                if (egret.is(host, "eui.Skin")) {
+                    var skin = host;
+                    if (!skin.$watchers) {
+                        skin.$watchers = [];
+                    }
+                    skin.$watchers.push(watcher);
+                }
             }
             return watcher;
         };
@@ -17316,6 +17338,13 @@ var eui;
                 if (watcher) {
                     templates[index] = watcher;
                     watcher.setHandler(assign, null);
+                    if (egret.is(host, "eui.Skin")) {
+                        var skin = host;
+                        if (!skin.$watchers) {
+                            skin.$watchers = [];
+                        }
+                        skin.$watchers.push(watcher);
+                    }
                 }
             }
             assign();

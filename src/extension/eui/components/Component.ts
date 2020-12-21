@@ -1011,6 +1011,13 @@ namespace eui {
          */
         public getPreferredBounds(bounds: egret.Rectangle): void {
         }
+
+
+        public unwatchAll() {
+            if (this.skin && this.skin.unwatchAll) {
+                this.skin.unwatchAll();
+            }
+        }
     }
     registerProperty(Component, "skinName", "Class");
     sys.implementUIComponent(Component, egret.DisplayObjectContainer, true);

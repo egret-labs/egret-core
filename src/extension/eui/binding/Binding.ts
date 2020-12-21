@@ -98,6 +98,13 @@ namespace eui {
                 };
                 watcher.setHandler(assign, null);
                 assign(watcher.getValue());
+                if (egret.is(host, "eui.Skin")) {
+                    let skin = (host as Skin);
+                    if (!skin.$watchers) {
+                        skin.$watchers = [];
+                    }
+                    skin.$watchers.push(watcher);
+                }
             }
             return watcher;
         }
@@ -160,6 +167,13 @@ namespace eui {
                 if (watcher) {
                     templates[index] = watcher;
                     watcher.setHandler(assign, null);
+                    if (egret.is(host, "eui.Skin")) {
+                        let skin = (host as Skin);
+                        if (!skin.$watchers) {
+                            skin.$watchers = [];
+                        }
+                        skin.$watchers.push(watcher);
+                    }
                 }
             }
 
