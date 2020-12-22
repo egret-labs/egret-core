@@ -20554,7 +20554,118 @@ var egret;
 //////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
-    var SplitRegex = new RegExp("(?=[\\u00BF-\\u1FFF\\u2C00-\\uD7FF]|\\b|\\s)(?![。，！、》…）)}”】\\.\\,\\!\\?\\]\\:])");
+    var defaultRegex = "(?=[\\u00BF-\\u1FFF\\u2C00-\\uD7FF]|\\b|\\s)(?![0-9])(?![。，！、》…）)}”】\\.\\,\\!\\?\\]\\:])";
+    var SplitRegex;
+    /**
+     * @private
+     */
+    var usingWordWrap = [];
+    /**
+     * @private
+     */
+    var languageWordWrapMap = {
+        "Vietnamese": "(?![ẮẰẲẴẶĂẤẦẨẪẬÂÁÀÃẢẠĐẾỀỂỄỆÊÉÈẺẼẸÍÌỈĨỊỐỒỔỖỘÔỚỜỞỠỢƠÓÒÕỎỌỨỪỬỮỰƯÚÙỦŨỤÝỲỶỸỴ])"
+    };
+    /**
+     * add new language word wrap regex and use it
+     * if languageKey already exists,the existing regex is replaced
+     * if the pattern is not passed,it will be found and enabled int the existing word wrap map
+     * @param languageKey
+     * @param pattern
+     * @version Egret 5.3.11
+     * @platform Web
+     * @language en_US
+     */
+    /**
+     * 添加新的自动换行的语言正则表达式匹配并启用
+     * 如果已经有该语言了，则会替换现有正则表达式
+     * 不传入正则表达式则会在已有的语言自动换行匹配串中寻找并启用
+     * @param languageKey
+     * @param pattern
+     * @version Egret 5.3.11
+     * @platform Web
+     * @language zh_CN
+     */
+    function addLanguageWordWrapRegex(languageKey, pattern) {
+        if (pattern != undefined) {
+            languageWordWrapMap[languageKey] = pattern;
+        }
+        if (usingWordWrap.indexOf(languageKey) < 0 && languageWordWrapMap[languageKey] != undefined) {
+            usingWordWrap.push(languageKey);
+        }
+        updateWordWrapRegex();
+    }
+    egret.addLanguageWordWrapRegex = addLanguageWordWrapRegex;
+    /**
+     * return the existing word wrap keys
+     * @version Egret 5.3.11
+     * @platform Web
+     * @language en_US
+     */
+    /**
+     * 获取当前已有的自动换行映射键值组
+     * @version Egret 5.3.11
+     * @platform Web
+     * @language zh_CN
+     */
+    function getAllSupportLanguageWordWrap() {
+        var result = [];
+        for (var key in languageWordWrapMap) {
+            result.push(key);
+        }
+        return result;
+    }
+    egret.getAllSupportLanguageWordWrap = getAllSupportLanguageWordWrap;
+    /**
+     * return the using word wrap keys
+     * @version Egret 5.3.11
+     * @platform Web
+     * @language en_US
+     */
+    /**
+     * 获取当前正在使用中的自动换行映射键值组
+     * @version Egret 5.3.11
+     * @platform Web
+     * @language zh_CN
+     */
+    function getUsingWordWrap() {
+        return usingWordWrap;
+    }
+    egret.getUsingWordWrap = getUsingWordWrap;
+    /**
+     * cancels the using word wrap regex by the languageKey
+     * @version Egret 5.3.11
+     * @platform Web
+     * @language en_US
+     */
+    /**
+     * 根据languageKey取消正在启用的自动换行正则表达式
+     * @version Egret 5.3.11
+     * @platform Web
+     * @language zh_CN
+     */
+    function cancelLanguageWordWrapRegex(languageKey) {
+        var index = usingWordWrap.indexOf(languageKey);
+        if (index > -1) {
+            usingWordWrap.splice(index, 1);
+        }
+        updateWordWrapRegex();
+    }
+    egret.cancelLanguageWordWrapRegex = cancelLanguageWordWrapRegex;
+    /**
+     * @private
+     */
+    function updateWordWrapRegex() {
+        var extendRegex = defaultRegex;
+        for (var _i = 0, usingWordWrap_1 = usingWordWrap; _i < usingWordWrap_1.length; _i++) {
+            var key = usingWordWrap_1[_i];
+            if (languageWordWrapMap[key]) {
+                extendRegex += languageWordWrapMap[key];
+            }
+        }
+        SplitRegex = new RegExp(extendRegex, "i");
+    }
+    updateWordWrapRegex();
     /**
      * @private
      * 根据样式测量文本宽度
