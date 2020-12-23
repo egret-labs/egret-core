@@ -166,7 +166,7 @@ namespace egret.web {
                     }
                     if (child.tint !== 0xFFFFFF) {
                         tempTintColor = buffer.globalTintColor;
-                        buffer.globalTintColor = child.$tintRGB;
+                        buffer.globalTintColor = this.tintMultiply(buffer.globalTintColor, child.$tintRGB);
                     }
                     let savedMatrix: Matrix;
                     if (child.$useTranslate) {
@@ -1223,6 +1223,22 @@ namespace egret.web {
             const width = renderContext.surface.width;
             const height = renderContext.surface.height;
             gl.viewport(0, 0, width, height)
+        }
+
+        private tintMultiply(color1: number, color2: number) {
+            let r1 = (color1 & 0x0000ff);
+            let g1 = (color1 & 0x00ff00);
+            let b1 = (color1 & 0xff0000);
+
+            let r2 = (color2 & 0x0000ff);
+            let g2 = (color2 & 0x00ff00) >> 8;
+            let b2 = (color2 & 0xff0000) >> 16;
+
+            let r = (r1 * r2 / 255) & 0x0000ff;
+            let g = (g1 * g2 / 255) & 0x00ff00;
+            let b = (b1 * b2 / 255) & 0xff0000;
+            let result = g | b | r;
+            return result;
         }
     }
 }

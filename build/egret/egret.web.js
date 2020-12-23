@@ -7933,7 +7933,7 @@ var egret;
                         }
                         if (child.tint !== 0xFFFFFF) {
                             tempTintColor = buffer.globalTintColor;
-                            buffer.globalTintColor = child.$tintRGB;
+                            buffer.globalTintColor = this.tintMultiply(buffer.globalTintColor, child.$tintRGB);
                         }
                         var savedMatrix = void 0;
                         if (child.$useTranslate) {
@@ -8931,6 +8931,19 @@ var egret;
                 var width = renderContext.surface.width;
                 var height = renderContext.surface.height;
                 gl.viewport(0, 0, width, height);
+            };
+            WebGLRenderer.prototype.tintMultiply = function (color1, color2) {
+                var r1 = (color1 & 0x0000ff);
+                var g1 = (color1 & 0x00ff00);
+                var b1 = (color1 & 0xff0000);
+                var r2 = (color2 & 0x0000ff);
+                var g2 = (color2 & 0x00ff00) >> 8;
+                var b2 = (color2 & 0xff0000) >> 16;
+                var r = (r1 * r2 / 255) & 0x0000ff;
+                var g = (g1 * g2 / 255) & 0x00ff00;
+                var b = (b1 * b2 / 255) & 0xff0000;
+                var result = g | b | r;
+                return result;
             };
             return WebGLRenderer;
         }());
