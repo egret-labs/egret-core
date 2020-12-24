@@ -89,7 +89,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public skinParts:string[];
+        public skinParts: string[];
 
         /**
          * The maximum recommended width of the component to be considered.
@@ -112,7 +112,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public maxWidth:number = 100000;
+        public maxWidth: number = 100000;
         /**
          * The minimum recommended width of the component to be considered.
          * This property can only affect measure result of host component.
@@ -134,7 +134,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public minWidth:number = 0;
+        public minWidth: number = 0;
         /**
          * The maximum recommended height of the component to be considered.
          * This property can only affect measure result of host component.
@@ -156,7 +156,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public maxHeight:number = 100000;
+        public maxHeight: number = 100000;
         /**
          * The minimum recommended height of the component to be considered.
          * This property can only affect measure result of host component.
@@ -178,7 +178,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public minHeight:number = 0;
+        public minHeight: number = 0;
         /**
          * Number that specifies the explicit width of the skin.
          * This property can only affect measure result of host component.
@@ -199,7 +199,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public width:number = NaN;
+        public width: number = NaN;
         /**
          * Number that specifies the explicit height of the skin.
          * This property can only affect measure result of host component.
@@ -221,14 +221,14 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public height:number = NaN;
+        public height: number = NaN;
 
         /**
          * @private
          */
-        $elementsContent:egret.DisplayObject[] = [];
+        $elementsContent: egret.DisplayObject[] = [];
 
-        public set elementsContent(value:egret.DisplayObject[]) {
+        public set elementsContent(value: egret.DisplayObject[]) {
             this.$elementsContent = value;
         }
 
@@ -236,7 +236,7 @@ namespace eui {
         /**
          * @private
          */
-        private _hostComponent:Component = null;
+        private _hostComponent: Component = null;
         /**
          * The host component which the skin will be attached.
          * @version Egret 2.4
@@ -251,15 +251,15 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get hostComponent():Component {
+        public get hostComponent(): Component {
             return this._hostComponent;
         }
 
-        public set hostComponent(value:Component) {
+        public set hostComponent(value: Component) {
             if (this._hostComponent == value)
                 return;
-            if(this._hostComponent){
-                this._hostComponent.removeEventListener(egret.Event.ADDED_TO_STAGE,this.onAddedToStage,this);
+            if (this._hostComponent) {
+                this._hostComponent.removeEventListener(egret.Event.ADDED_TO_STAGE, this.onAddedToStage, this);
             }
             this._hostComponent = value;
             let values = this.$stateValues;
@@ -270,8 +270,8 @@ namespace eui {
                     if (value.$stage) {
                         this.initializeStates(value.$stage);
                     }
-                    else{
-                        value.once(egret.Event.ADDED_TO_STAGE,this.onAddedToStage,this);
+                    else {
+                        value.once(egret.Event.ADDED_TO_STAGE, this.onAddedToStage, this);
                     }
                 }
             }
@@ -283,7 +283,7 @@ namespace eui {
          * 
          * @param event 
          */
-        private onAddedToStage(event?:egret.Event):void{
+        private onAddedToStage(event?: egret.Event): void {
             this.initializeStates(this._hostComponent.$stage);
         }
 
@@ -291,7 +291,7 @@ namespace eui {
         /**
          * @private
          */
-        $stateValues:sys.StateValues = new sys.StateValues();
+        $stateValues: sys.StateValues = new sys.StateValues();
 
         /**
          * The list of state for host component.
@@ -307,7 +307,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public states:State[];
+        public states: State[];
 
         /**
          * The current state of host component.
@@ -324,7 +324,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public currentState:string;
+        public currentState: string;
 
         /**
          * Check if contains the specifies state name.
@@ -342,19 +342,31 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public hasState:(stateName:string)=>boolean;
+        public hasState: (stateName: string) => boolean;
 
         /**
          * @private
          * 初始化所有视图状态
          */
-        private initializeStates:(stage:egret.Stage)=>void;
+        private initializeStates: (stage: egret.Stage) => void;
 
         /**
          * @private
          * 应用当前的视图状态。子类覆盖此方法在视图状态发生改变时执行相应更新操作。
          */
-        private commitCurrentState:()=>void;
+        private commitCurrentState: () => void;
+
+
+        public $watchers: Watcher[] = [];
+
+        public unwatchAll() {
+            if (this.$watchers && this.$watchers.length > 0) {
+                for (let watcher of this.$watchers) {
+                    watcher.unwatch();
+                }
+                this.$watchers.length = 0;
+            }
+        }
     }
 
     sys.mixin(Skin, sys.StateClient);

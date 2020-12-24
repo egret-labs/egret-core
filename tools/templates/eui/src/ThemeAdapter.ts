@@ -63,9 +63,7 @@ class ThemeAdapter implements eui.IThemeAdapter {
         }
         else if (typeof generateJSON !== 'undefined') {
             if (url.indexOf(".exml") > -1) {
-                let dataPath = url.split("/");
-                dataPath.pop();
-                let dirPath = dataPath.join("/") + "_EUI.json";
+                let dirPath = url.replace(".exml", "_EUI.json");
                 if (!generateJSON.paths[url]) {
                     RES.getResByUrl(dirPath, (data) => {
                         window["JSONParseClass"]["setData"](data);
