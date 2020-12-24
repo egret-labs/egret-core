@@ -20564,7 +20564,7 @@ var egret;
      * @private
      */
     var languageWordWrapMap = {
-        "Vietnamese": "(?![ẮẰẲẴẶĂẤẦẨẪẬÂÁÀÃẢẠĐẾỀỂỄỆÊÉÈẺẼẸÍÌỈĨỊỐỒỔỖỘÔỚỜỞỠỢƠÓÒÕỎỌỨỪỬỮỰƯÚÙỦŨỤÝỲỶỸỴ])"
+        "Vietnamese": "?![ẮẰẲẴẶĂẤẦẨẪẬÂÁÀÃẢẠĐẾỀỂỄỆÊÉÈẺẼẸÍÌỈĨỊỐỒỔỖỘÔỚỜỞỠỢƠÓÒÕỎỌỨỪỬỮỰƯÚÙỦŨỤÝỲỶỸỴA-Z]"
     };
     /**
      * add new language word wrap regex and use it
@@ -20660,7 +20660,7 @@ var egret;
         for (var _i = 0, usingWordWrap_1 = usingWordWrap; _i < usingWordWrap_1.length; _i++) {
             var key = usingWordWrap_1[_i];
             if (languageWordWrapMap[key]) {
-                extendRegex += languageWordWrapMap[key];
+                extendRegex += "(" + languageWordWrapMap[key] + ")";
             }
         }
         SplitRegex = new RegExp(extendRegex, "i");

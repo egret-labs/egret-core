@@ -206,7 +206,7 @@ namespace egret {
      * @private
      */
     let languageWordWrapMap = {
-        "Vietnamese": "(?![ẮẰẲẴẶĂẤẦẨẪẬÂÁÀÃẢẠĐẾỀỂỄỆÊÉÈẺẼẸÍÌỈĨỊỐỒỔỖỘÔỚỜỞỠỢƠÓÒÕỎỌỨỪỬỮỰƯÚÙỦŨỤÝỲỶỸỴ])"
+        "Vietnamese": "?![ẮẰẲẴẶĂẤẦẨẪẬÂÁÀÃẢẠĐẾỀỂỄỆÊÉÈẺẼẸÍÌỈĨỊỐỒỔỖỘÔỚỜỞỠỢƠÓÒÕỎỌỨỪỬỮỰƯÚÙỦŨỤÝỲỶỸỴA-Z]"
     }
     /**
      * add new language word wrap regex and use it
@@ -300,7 +300,7 @@ namespace egret {
         let extendRegex = defaultRegex;
         for (let key of usingWordWrap) {
             if (languageWordWrapMap[key]) {
-                extendRegex += languageWordWrapMap[key];
+                extendRegex += "(" + languageWordWrapMap[key] + ")";
             }
         }
         SplitRegex = new RegExp(extendRegex, "i");
