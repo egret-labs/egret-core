@@ -2674,11 +2674,18 @@ var egret;
                 inputElement.style.wordBreak = "break-all";
                 //隐藏输入框
                 inputElement.style.opacity = "0";
+                var inputLock = false;
                 inputElement.oninput = function () {
-                    if (self._stageText) {
+                    if (self._stageText && !inputLock) {
                         self._stageText._onInput();
                     }
                 };
+                inputElement.addEventListener('compositionstart', function () {
+                    inputLock = true;
+                });
+                inputElement.addEventListener('compositionend', function () {
+                    inputLock = false;
+                });
             };
             /**
              * @private

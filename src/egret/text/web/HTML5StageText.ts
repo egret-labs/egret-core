@@ -698,11 +698,22 @@ namespace egret.web {
             //隐藏输入框
             inputElement.style.opacity = "0";
 
+            let inputLock = false;
             inputElement.oninput = function () {
-                if (self._stageText) {
+                if (self._stageText && !inputLock) {
                     self._stageText._onInput();
                 }
             };
+            // 防止win10自带输入法多次触发oninput方法
+            inputElement.addEventListener('compositionstart', function () {
+                inputLock = true;
+            });
+            inputElement.addEventListener('compositionend', function () {
+                inputLock = false;
+                if (self._stageText && !inputLock) {
+                    self._stageText._onInput();
+                }
+            });
         }
 
         /**
