@@ -2676,10 +2676,12 @@ var egret;
                 inputElement.style.opacity = "0";
                 var inputLock = false;
                 inputElement.oninput = function () {
-                    if (self._stageText && !inputLock) {
+                    if (self._stageText && inputLock) {
+                        inputLock = false;
                         self._stageText._onInput();
                     }
                 };
+                // 防止win10自带输入法多次触发oninput方法
                 inputElement.addEventListener('compositionstart', function () {
                     inputLock = true;
                 });
