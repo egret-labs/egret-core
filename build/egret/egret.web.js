@@ -1131,6 +1131,9 @@ var egret;
                 else {
                     video = this.video;
                 }
+                if (url.indexOf("http://") != -1 || url.indexOf("HTTP://") != -1 || url.indexOf("https://") != -1 || url.indexOf("HTTPS://") != -1) {
+                    video.crossOrigin = "anonymous";
+                }
                 video.src = url;
                 video.setAttribute("autoplay", "autoplay");
                 video.setAttribute("webkit-playsinline", "true");

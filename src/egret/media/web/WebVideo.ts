@@ -121,10 +121,13 @@ namespace egret.web {
             } else {
                 video = this.video;
             }
+            if (url.indexOf("http://") != -1 || url.indexOf("HTTP://") != -1 || url.indexOf("https://") != -1 || url.indexOf("HTTPS://") != -1) {
+                video.crossOrigin = "anonymous";
+            }
             video.src = url;
             video.setAttribute("autoplay", "autoplay");
             video.setAttribute("webkit-playsinline", "true");
-            video.setAttribute("playsinline","true");
+            video.setAttribute("playsinline", "true");
             video.setAttribute("x5-video-player-type", "h5-page");
             video.addEventListener("canplay", this.onVideoLoaded);
             video.addEventListener("error", () => this.onVideoError());
@@ -223,7 +226,7 @@ namespace egret.web {
                     video.parentElement.removeChild(video);
                 }
                 video.setAttribute("webkit-playsinline", "true");
-                video.setAttribute("playsinline","true");
+                video.setAttribute("playsinline", "true");
 
                 this.setFullScreenMonitor(false);
 
