@@ -18,14 +18,14 @@ export class TbWidgetgamePlugin implements plugins.Command {
             }
             if (filename == 'libs/modules/egret/egret.js' || filename == 'libs/modules/egret/egret.min.js') {
                 let content = file.contents.toString();
-                content = `var global = $global;var egret_stages = [];` + content;
+                content = `var window = $global.window;var global = window;var egret_stages = [];` + content;
                 content += `;$global.window.egret = egret;`;
                 content = content.replace(/definition = __global/, "definition = window");
                 file.contents = new Buffer(content);
             }
             else {
                 let content = file.contents.toString();
-                let addScript = "var global = $global; var window = $global.window;var egret = window.egret;"
+                let addScript = "var window = $global.window;var global = window;var egret = window.egret;"
                 if (
                     filename == "libs/modules/res/res.js" ||
                     filename == 'libs/modules/res/res.min.js' ||
