@@ -20,8 +20,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
         while (_) try {
-            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [0, t.value];
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
                 case 0: case 1: t = op; break;
                 case 4: _.label++; return { value: op[1], done: false };
@@ -44,41 +44,75 @@ var utils = require("../lib/utils");
 // import fileUtil = require('../lib/FileUtil');
 var watch = require("../lib/watch");
 var path = require("path");
-var Build = require("./build");
 var Server = require("../server/server");
 var FileUtil = require("../lib/FileUtil");
 var service = require("../service/index");
 var os = require("os");
+var tasks = require("../tasks");
+var parseConfig = require("../actions/ParseConfig");
 var Run = /** @class */ (function () {
     function Run() {
         this.initVersion = ""; //初始化的 egret 版本，如果版本变化了，关掉当前的进程
     }
     Run.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var exitCode, target, _a, port;
+            var runExitCode, e_1, target, _a, port;
             return __generator(this, function (_b) {
                 switch (_b.label) {
-                    case 0: return [4 /*yield*/, new Build().execute()];
+                    case 0:
+                        runExitCode = DontExitCode;
+                        _b.label = 1;
                     case 1:
-                        exitCode = _b.sent();
+                        _b.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.runByPlugin()];
+                    case 2:
+                        runExitCode = _b.sent();
+                        return [3 /*break*/, 4];
+                    case 3:
+                        e_1 = _b.sent();
+                        runExitCode = -1;
+                        return [3 /*break*/, 4];
+                    case 4:
+                        if (!(runExitCode !== DontExitCode)) return [3 /*break*/, 11];
+                        console.log("找不到 run 方法");
                         target = egret.args.target;
                         _a = target;
                         switch (_a) {
-                            case "web": return [3 /*break*/, 2];
-                            case "wxgame": return [3 /*break*/, 4];
-                            case 'bricks': return [3 /*break*/, 6];
+                            case "web": return [3 /*break*/, 5];
+                            case "wxgame": return [3 /*break*/, 7];
+                            case 'bricks': return [3 /*break*/, 9];
                         }
-                        return [3 /*break*/, 8];
-                    case 2: return [4 /*yield*/, utils.getAvailablePort(egret.args.port)];
-                    case 3:
+                        return [3 /*break*/, 11];
+                    case 5: return [4 /*yield*/, utils.getAvailablePort(egret.args.port)];
+                    case 6:
                         port = _b.sent();
                         this.initServer(port);
                         return [2 /*return*/, DontExitCode];
-                    case 4: return [4 /*yield*/, runWxIde()];
-                    case 5: return [2 /*return*/, (_b.sent())];
-                    case 6: return [4 /*yield*/, runBricks()];
-                    case 7: return [2 /*return*/, (_b.sent())];
-                    case 8: return [2 /*return*/];
+                    case 7: return [4 /*yield*/, runWxIde()];
+                    case 8: return [2 /*return*/, (_b.sent())];
+                    case 9: return [4 /*yield*/, runBricks()];
+                    case 10: return [2 /*return*/, (_b.sent())];
+                    case 11: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    Run.prototype.runByPlugin = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var res, command, projectRoot, target, projectConfig;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        res = require('../lib/resourcemanager');
+                        command = "run";
+                        projectRoot = egret.args.projectDir;
+                        tasks.run();
+                        target = egret.args.target;
+                        projectConfig = parseConfig.parseConfig();
+                        return [4 /*yield*/, res.build({ projectRoot: projectRoot, debug: true, command: command, target: target, projectConfig: projectConfig })];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/, global.exitCode];
                 }
             });
         });
@@ -187,7 +221,7 @@ var Run = /** @class */ (function () {
 }());
 function runWxIde() {
     return __awaiter(this, void 0, void 0, function () {
-        var wxPaths, _a, result, stdout_1, iconv, encoding, binaryEncoding, result2, stdout, stdoutArr, exePath, wxpath, projectPath, e_1;
+        var wxPaths, _a, result, stdout_1, iconv, encoding, binaryEncoding, result2, stdout, stdoutArr, exePath, wxpath, projectPath, e_2;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
@@ -242,7 +276,7 @@ function runWxIde() {
                     _b.sent();
                     return [3 /*break*/, 10];
                 case 8:
-                    e_1 = _b.sent();
+                    e_2 = _b.sent();
                     return [4 /*yield*/, utils.shell(wxpath, ["-o", projectPath], null, true)];
                 case 9:
                     _b.sent();
