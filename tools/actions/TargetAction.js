@@ -44,7 +44,7 @@ function buildBefore(context) {
             switch (_a.label) {
                 case 0:
                     target = egret.args.target;
-                    if (!(target != 'web' && target != "tbgame" && target != "tbcreativeapp")) return [3 /*break*/, 3];
+                    if (!(target != 'web' && target != "tbgame" && target != "tbcreativeapp" && target != "tbcreativewidget")) return [3 /*break*/, 3];
                     targetRoot = project_1.launcher.getLauncherLibrary().getTarget(target);
                     if (!targetRoot) {
                         throw "\u627E\u4E0D\u5230 target " + target + ",\u8BF7\u5728 Egret Launcher \u4E2D\u5B89\u88C5";

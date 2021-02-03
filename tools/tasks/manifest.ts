@@ -150,8 +150,8 @@ export class ManifestPlugin {
         }
         let pluginContents: any = await utils.pluginManifest(manifest, outputDir)
         contents = pluginContents === null ? contents : pluginContents;
-        if(target == 'tbcreativeapp'){//淘宝小游戏，需要把 main.js 放在最后
-            contents = contents.replace('require("./js/main.js")\n','')
+        if (target == 'tbcreativeapp' || target == 'tbcreativewidget') {//淘宝小游戏，需要把 main.js 放在最后
+            contents = contents.replace('require("./js/main.js")\n', '')
             contents += '\nrequire("./js/main.js")'
         }
         pluginContext.createFile(output, new Buffer(contents));
