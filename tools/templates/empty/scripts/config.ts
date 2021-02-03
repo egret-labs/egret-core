@@ -28,14 +28,13 @@ const config: ResourceManagerConfig = {
                     new ExmlPlugin('debug'), // 非 EUI 项目关闭此设置
                     // new EuiCompilerPlugin(),//新的 eui 编译器
                     // new IncrementCompilePlugin(),
-                    new WebpackDevServerPlugin({ //新的 Webpack 编译器
+                    new WebpackBundlePlugin({ //新的 Webpack 编译器
                         libraryType: "debug",
                         defines: { DEBUG: true, RELEASE: false },
-                        typescript: { mode: 'legacy'},
-                        html:{
-                            templateFilePath:"template/web/index.html"
-                        },
-                        open: true
+                        typescript: { mode: 'legacy' },
+                        html: {
+                            templateFilePath: "template/web/index.html"
+                        }
                     }),
                 ]
             }
@@ -50,9 +49,9 @@ const config: ResourceManagerConfig = {
                     new WebpackBundlePlugin({ //新的 Webpack 编译器
                         libraryType: "release",
                         defines: { DEBUG: false, RELEASE: true },
-                        typescript: { mode: 'legacy'},
-                        html:{
-                            templateFilePath:"template/web/index.html"
+                        typescript: { mode: 'legacy' },
+                        html: {
+                            templateFilePath: "template/web/index.html"
                         },
                     }),
                     new ExmlPlugin('commonjs'), // 非 EUI 项目关闭此设置
@@ -67,6 +66,32 @@ const config: ResourceManagerConfig = {
                         ]
                     }),
                     new ManifestPlugin({ output: "manifest.json" })
+                ]
+            }
+        }
+        else if (command == 'run') {
+            const outputDir = '.';
+            return {
+                outputDir,
+                commands: [
+                    // new EmitResConfigFilePlugin({
+                    //     output: "resource/default.res.json",
+                    //     typeSelector: config.typeSelector,
+                    //     nameSelector: p => path.basename(p).replace(/\./gi, "_"),
+                    //     groupSelector: p => "preload"
+                    // }),
+                    new ExmlPlugin('debug'), // 非 EUI 项目关闭此设置
+                    // new EuiCompilerPlugin(),//新的 eui 编译器
+                    // new IncrementCompilePlugin(),
+                    new WebpackDevServerPlugin({ //新的 Webpack 编译器
+                        libraryType: "debug",
+                        defines: { DEBUG: true, RELEASE: false },
+                        typescript: { mode: 'legacy' },
+                        html: {
+                            templateFilePath: "template/web/index.html"
+                        },
+                        open: true
+                    }),
                 ]
             }
         }

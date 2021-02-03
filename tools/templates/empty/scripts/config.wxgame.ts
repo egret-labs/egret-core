@@ -8,6 +8,7 @@ import { CustomPlugin } from './myplugin';
 import * as defaultConfig from './config';
 import { EuiCompilerPlugin } from './plugins/eui-compiler-plugin';
 import { WebpackBundlePlugin } from './plugins/webpack-plugin';
+import { wxgameIDEPlugin } from './plugins/wxgameIDEPlugin';
 //是否使用微信分离插件
 const useWxPlugin: boolean = false;
 const config: ResourceManagerConfig = {
@@ -52,6 +53,21 @@ const config: ResourceManagerConfig = {
                         }
                     ]),
                     new ManifestPlugin({ output: 'manifest.js', useWxPlugin: useWxPlugin })
+                ]
+            }
+        }
+        else if (command == 'run') {
+            return {
+                outputDir,
+                commands: [
+                    new CleanPlugin({ matchers: ["js", "resource", "egret-library"] }),
+                    // new CompilePlugin({ libraryType: "debug", defines: { DEBUG: true, RELEASE: false } }),
+                    new WebpackBundlePlugin({ libraryType: "debug", defines: { DEBUG: true, RELEASE: false } }),//新的 Webpack 编译器
+                    new ExmlPlugin('commonjs'), // 非 EUI 项目关闭此设置
+                    // new EuiCompilerPlugin(),//新的 eui 编译器
+                    new WxgamePlugin(useWxPlugin),
+                    new ManifestPlugin({ output: 'manifest.js' }),
+                    new wxgameIDEPlugin()
                 ]
             }
         }

@@ -1,102 +1,87 @@
-
-/// <reference path="../lib/types.d.ts" />
-
-import utils = require('../lib/utils');
-// import fileUtil = require('../lib/FileUtil');
+import net = require('net');
+import url = require('url');
+import path = require('path');
+import fs = require('fs');
+import http = require('http');
+import cp = require('child_process');
+import os = require('os');
+import events = require('events');
+import ServiceSocket = require('../service/ServiceSocket');
 import watch = require("../lib/watch");
-import path = require("path");
-import Build = require('./build');
+import FileUtil = require("../lib/FileUtil");
+import utils = require("../lib/utils");
 import Server = require('../server/server');
-import FileUtil = require('../lib/FileUtil');
 import service = require('../service/index');
-import CompileProject = require('../actions/CompileProject');
-import * as os from 'os';
-import * as parseConfig from '../actions/ParseConfig';
-import * as tasks from '../tasks';
-class Run implements egret.Command {
 
-    private initVersion = "";//初始化的 egret 版本，如果版本变化了，关掉当前的进程
-    async execute() {
-        // 通过plugin执行run方法
+export class StartServerPlugin {
 
-        let exitCode = DontExitCode;
-        try {
-            exitCode = await this.runByPlugin();
-        } catch (e) {
-            console.log(e);
-            return global.exitCode;
-        }
-        return DontExitCode;
-        // if (exitCode == -1) {
-        //     console.log("找不到 run 方法");
-        //     try {
-        //         exitCode = await new Build().execute();
-        //     } catch (e) {
-        //         console.log("build error@@@@@@@@");
-        //         console.log(e);
-        //         return exitCode;
-        //     }
-        //     const target = egret.args.target;
-        //     switch (target) {
-        //         case "web":
-        //             const port = await utils.getAvailablePort(egret.args.port);
-        //             this.initServer(port);
-        //             return DontExitCode;
-        //             break;
-        //         case "wxgame":
-        //             return (await runWxIde());
-        //             break;
-        //         case 'bricks':
-        //             return (await runBricks());
-        //             break;
-        //     }
-        // } else {
-        //     return DontExitCode;
-        // }
+    private projectDir: string = "";
+
+    /**
+     * 
+     * @param target 
+     * @param port 
+     * @param serverOnly 
+     */
+    constructor(private target: string, private watch = true, private port: number = 3000, private serverOnly: boolean = false) {
+
     }
 
-    private async runByPlugin() {
-        const res = require('../lib/resourcemanager');
-        const command = "run";
-        const projectRoot = egret.args.projectDir;
-        tasks.run();
-        const target = egret.args.target;
-        const projectConfig = parseConfig.parseConfig();
-        await res.build({ projectRoot, debug: true, command, target, projectConfig });
-        return global.exitCode;
+    async onFile(file) {
+        return file;
+    }
+
+    async onFinish(commandContext) {
+        this.projectDir = commandContext.projectRoot;
+        await this.execute();
+    }
+
+    async execute() {
+        const target = this.target;
+        this._params = this.genParams(this.projectDir);
+
+        switch (target) {
+            case "web":
+                const _port = await utils.getAvailablePort(this.port);
+                this.initServer(_port);
+                return DontExitCode;
+            case "wxgame":
+                return (await runWxIde());
+
+
+        }
+    }
+    private getStartURL(host: string, port: number) {
+        var url = "http://" + host + ':' + port + '/index.html';
+        return url;
     }
 
 
     private initServer(port: number) {
-        egret.args.port = port;
         var addresses = utils.getNetworkAddress();
-        if (addresses.length > 0) {
-            egret.args.host = addresses[0];
-        }
-        let openWithBrowser = !egret.args.serverOnly;
+        let startUrl = this.getStartURL(addresses[0], port);
+        let serverOnly = this.serverOnly;
+        let openWithBrowser = !serverOnly;
         let server = new Server();
-        let projectDir = egret.args.projectDir;
-        server.use(Server.fileReader(projectDir))
-        server.start(projectDir, port, this.wrapByParams(egret.args.startUrl), openWithBrowser);
-        if (egret.args.serverOnly) {
-            console.log("Url:" + this.wrapByParams(egret.args.startUrl));
+        server.use(Server.fileReader(this.projectDir))
+
+        server.start(this.projectDir, port, this.wrapByParams(startUrl), openWithBrowser);
+        if (serverOnly) {
+            console.log("Url:" + this.wrapByParams(startUrl));
         } else {
             console.log('\n');
             console.log("    " + utils.tr(10013, ''));
             console.log('\n');
-            console.log('        ' + this.wrapByParams(egret.args.startUrl));
+            console.log('        ' + this.wrapByParams(startUrl));
             for (var i = 1; i < addresses.length; i++) {
-                console.log('        ' + this.wrapByParams(egret.args.getStartURL(addresses[i])));
+                console.log('        ' + this.wrapByParams(this.getStartURL(addresses[i], port)));
             }
             console.log('\n');
         }
-        if (egret.args.autoCompile) {
+
+        if (this.watch) {
             console.log('    ' + utils.tr(10010));
-            this.watchFiles(egret.args.srcDir);
-            //this.watchFiles(egret.args.templateDir);
-        }
-        else if (!egret.args.serverOnly) {
-            console.log('    ' + utils.tr(10012));
+            this.watchFiles(FileUtil.joinPath(this.projectDir, "src/"));
         }
     }
 
@@ -120,37 +105,43 @@ class Run implements egret.Command {
                 .on("changed", (f) => this.shutDown(f, "modified"));
         });
     }
+
+    private sendBuildCMD(file: string, type: string) {
+        file = FileUtil.escapePath(file);
+        egret.args[type] = [file];
+        service.client.execCommand({
+            command: "build",
+            path: this.projectDir,
+            option: egret.args
+        },
+            (cmd: { exitCode: number; messages: string[]; }) => {
+                if (!cmd.exitCode)
+                    console.log('    ' + "自动编译完成.");
+                else
+                    console.log('    ' + "自动编译失败，请参考下面的错误信息：");
+                if (cmd.messages) {
+                    cmd.messages.forEach(m => console.log(m));
+                }
+            });
+    }
+
     private shutDown(file: string, type: string) {
         globals.log(10022, file);
         service.client.execCommand({
-            path: egret.args.projectDir,
+            path: this.projectDir,
             command: "shutdown",
             option: egret.args
         }, function () { return process.exit(0); }, true);
     }
-    private sendBuildCMD(file: string, type: string) {
-        file = FileUtil.escapePath(file);
-        egret.args[type] = [file];
-        service.client.execCommand({ command: "build", path: egret.args.projectDir, option: egret.args }, (cmd: egret.ServiceCommandResult) => {
-            if (!cmd.exitCode)
-                console.log('    ' + utils.tr(10011));
-            else
-                console.log('    ' + utils.tr(10014), cmd.exitCode);
-            if (cmd.messages) {
-                cmd.messages.forEach(m => console.log(m));
-            }
-        });
-    }
-
 
     private wrapByParams(url: string): string {
-        return url + this.genParams();
+        return url + this._params;
     }
 
-    @utils.cache
-    private genParams() {
+    private _params: string = "";
+    private genParams(projectDir) {
         let result = "";
-        let propertyFilePath = FileUtil.joinPath(egret.args.projectDir, "egretProperties.json");
+        let propertyFilePath = FileUtil.joinPath(projectDir, "egretProperties.json");
         if (FileUtil.exists(propertyFilePath)) {
             let urlParams = JSON.parse(FileUtil.read(propertyFilePath)).urlParams;
             if (urlParams) {
@@ -169,8 +160,6 @@ class Run implements egret.Command {
 
 }
 
-
-export = Run;
 
 
 async function runWxIde() {
@@ -220,19 +209,4 @@ async function runWxIde() {
         throw '请安装最新微信开发者工具'
     }
     return DontExitCode
-}
-
-async function runBricks() {
-    switch (os.platform()) {
-        case "darwin":
-            let projectPath = egret.args.projectDir;
-            projectPath = path.resolve(projectPath, "../", path.basename(projectPath) + "_bricks", "PublicBrickEngineGame.xcodeproj");
-            utils.open(projectPath);
-            return 0;
-            break;
-        case "win32":
-            throw '目前玩一玩仅支持 MacOS 平台开发';
-            break;
-    }
-    return 1;
 }
