@@ -13,6 +13,13 @@ import utils = require("../lib/utils");
 import Server = require('../server/server');
 import service = require('../service/index');
 
+type StartServerPluginOptions = {
+    target?: string;
+    watch?: boolean;
+    port?: number;
+    serverOnly?: boolean;
+}
+
 export class StartServerPlugin {
 
     private projectDir: string = "";
@@ -23,8 +30,22 @@ export class StartServerPlugin {
      * @param port 
      * @param serverOnly 
      */
-    constructor(private target: string, private watch = true, private port: number = 3000, private serverOnly: boolean = false) {
-
+    constructor(private options: StartServerPluginOptions) {
+        if (!this.options) {
+            this.options = {};
+        }
+        if (!this.options.target) {
+            this.options.target = "web"
+        }
+        if (!this.options.watch) {
+            this.options.watch = true;
+        }
+        if (!this.options.port) {
+            this.options.port = 3000;
+        }
+        if (!this.options.serverOnly) {
+            this.options.serverOnly = false;
+        }
     }
 
     async onFile(file) {
@@ -37,12 +58,12 @@ export class StartServerPlugin {
     }
 
     async execute() {
-        const target = this.target;
+        const target = this.options.target;
         this._params = this.genParams(this.projectDir);
 
         switch (target) {
             case "web":
-                const _port = await utils.getAvailablePort(this.port);
+                const _port = await utils.getAvailablePort(this.options.port);
                 this.initServer(_port);
                 return DontExitCode;
             case "wxgame":
@@ -60,7 +81,7 @@ export class StartServerPlugin {
     private initServer(port: number) {
         var addresses = utils.getNetworkAddress();
         let startUrl = this.getStartURL(addresses[0], port);
-        let serverOnly = this.serverOnly;
+        let serverOnly = this.options.serverOnly;
         let openWithBrowser = !serverOnly;
         let server = new Server();
         server.use(Server.fileReader(this.projectDir))
@@ -79,7 +100,7 @@ export class StartServerPlugin {
             console.log('\n');
         }
 
-        if (this.watch) {
+        if (this.options.watch) {
             console.log('    ' + utils.tr(10010));
             this.watchFiles(FileUtil.joinPath(this.projectDir, "src/"));
         }

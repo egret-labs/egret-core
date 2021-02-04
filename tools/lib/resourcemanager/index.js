@@ -2299,7 +2299,7 @@
                                 var plugin = require(pluginsPath);
                                 e.userConfig.commands.push(
                                     new plugin.IncrementCompilePlugin(),
-                                    new plugin.StartServerPlugin(n.target,true));
+                                    new plugin.StartServerPlugin({target:n.target,watch:true}));
                             }
                             return [ 2 ];
                         }

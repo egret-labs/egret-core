@@ -48,16 +48,25 @@ var StartServerPlugin = /** @class */ (function () {
      * @param port
      * @param serverOnly
      */
-    function StartServerPlugin(target, watch, port, serverOnly) {
-        if (watch === void 0) { watch = true; }
-        if (port === void 0) { port = 3000; }
-        if (serverOnly === void 0) { serverOnly = false; }
-        this.target = target;
-        this.watch = watch;
-        this.port = port;
-        this.serverOnly = serverOnly;
+    function StartServerPlugin(options) {
+        this.options = options;
         this.projectDir = "";
         this._params = "";
+        if (!this.options) {
+            this.options = {};
+        }
+        if (!this.options.target) {
+            this.options.target = "web";
+        }
+        if (!this.options.watch) {
+            this.options.watch = true;
+        }
+        if (!this.options.port) {
+            this.options.port = 3000;
+        }
+        if (!this.options.serverOnly) {
+            this.options.serverOnly = false;
+        }
     }
     StartServerPlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
@@ -86,7 +95,7 @@ var StartServerPlugin = /** @class */ (function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        target = this.target;
+                        target = this.options.target;
                         this._params = this.genParams(this.projectDir);
                         _a = target;
                         switch (_a) {
@@ -94,7 +103,7 @@ var StartServerPlugin = /** @class */ (function () {
                             case "wxgame": return [3 /*break*/, 3];
                         }
                         return [3 /*break*/, 5];
-                    case 1: return [4 /*yield*/, utils.getAvailablePort(this.port)];
+                    case 1: return [4 /*yield*/, utils.getAvailablePort(this.options.port)];
                     case 2:
                         _port = _b.sent();
                         this.initServer(_port);
@@ -113,7 +122,7 @@ var StartServerPlugin = /** @class */ (function () {
     StartServerPlugin.prototype.initServer = function (port) {
         var addresses = utils.getNetworkAddress();
         var startUrl = this.getStartURL(addresses[0], port);
-        var serverOnly = this.serverOnly;
+        var serverOnly = this.options.serverOnly;
         var openWithBrowser = !serverOnly;
         var server = new Server();
         server.use(Server.fileReader(this.projectDir));
@@ -131,7 +140,7 @@ var StartServerPlugin = /** @class */ (function () {
             }
             console.log('\n');
         }
-        if (this.watch) {
+        if (this.options.watch) {
             console.log('    ' + utils.tr(10010));
             this.watchFiles(FileUtil.joinPath(this.projectDir, "src/"));
         }

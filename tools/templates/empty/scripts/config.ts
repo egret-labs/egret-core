@@ -2,7 +2,7 @@
 ///<reference path="api.d.ts"/>
 
 import * as path from 'path';
-import { UglifyPlugin, IncrementCompilePlugin, CompilePlugin, ManifestPlugin, ExmlPlugin, EmitResConfigFilePlugin, TextureMergerPlugin, RenamePlugin } from 'built-in';
+import { UglifyPlugin, IncrementCompilePlugin, CompilePlugin, ManifestPlugin, ExmlPlugin, EmitResConfigFilePlugin, TextureMergerPlugin, RenamePlugin, StartServerPlugin } from 'built-in';
 import { CustomPlugin } from './myplugin';
 import { EuiCompilerPlugin } from './plugins/eui-compiler-plugin';
 import { WebpackDevServerPlugin, WebpackBundlePlugin } from './plugins/webpack-plugin';
@@ -15,7 +15,7 @@ const config: ResourceManagerConfig = {
         const { target, command, projectName, version } = params;
 
         if (command == 'build') {
-            const outputDir = '.';
+            const outputDir = 'bin-debug';
             return {
                 outputDir,
                 commands: [
