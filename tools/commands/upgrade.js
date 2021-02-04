@@ -13,8 +13,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
         while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
+            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [0, t.value];
             switch (op[0]) {
                 case 0: case 1: t = op; break;
                 case 4: _.label++; return { value: op[1], done: false };
@@ -39,7 +39,7 @@ var Project = require("../project");
 var path = require("path");
 var utils = require("../lib/utils");
 var Clean = require("./clean");
-var UpgradeCommand = /** @class */ (function () {
+var UpgradeCommand = (function () {
     function UpgradeCommand() {
     }
     UpgradeCommand.prototype.execute = function () {
@@ -166,7 +166,7 @@ function upgrade(info) {
         return Promise.resolve(0);
     }
 }
-var Upgrade_5_1_1 = /** @class */ (function () {
+var Upgrade_5_1_1 = (function () {
     function Upgrade_5_1_1() {
     }
     Upgrade_5_1_1.prototype.execute = function () {
@@ -178,7 +178,7 @@ var Upgrade_5_1_1 = /** @class */ (function () {
     };
     return Upgrade_5_1_1;
 }());
-var Upgrade_5_1_2 = /** @class */ (function () {
+var Upgrade_5_1_2 = (function () {
     function Upgrade_5_1_2() {
     }
     Upgrade_5_1_2.prototype.execute = function () {
@@ -191,7 +191,7 @@ var Upgrade_5_1_2 = /** @class */ (function () {
     };
     return Upgrade_5_1_2;
 }());
-var Upgrade_5_2_13 = /** @class */ (function () {
+var Upgrade_5_2_13 = (function () {
     function Upgrade_5_2_13() {
     }
     Upgrade_5_2_13.prototype.execute = function () {
@@ -205,7 +205,7 @@ var Upgrade_5_2_13 = /** @class */ (function () {
     };
     return Upgrade_5_2_13;
 }());
-var Upgrade_5_2_17 = /** @class */ (function () {
+var Upgrade_5_2_17 = (function () {
     function Upgrade_5_2_17() {
     }
     Upgrade_5_2_17.prototype.execute = function () {
@@ -219,7 +219,7 @@ var Upgrade_5_2_17 = /** @class */ (function () {
     };
     return Upgrade_5_2_17;
 }());
-var Upgrade_5_2_19 = /** @class */ (function () {
+var Upgrade_5_2_19 = (function () {
     function Upgrade_5_2_19() {
     }
     Upgrade_5_2_19.prototype.execute = function () {
@@ -233,7 +233,7 @@ var Upgrade_5_2_19 = /** @class */ (function () {
     };
     return Upgrade_5_2_19;
 }());
-var Upgrade_5_2_22 = /** @class */ (function () {
+var Upgrade_5_2_22 = (function () {
     function Upgrade_5_2_22() {
     }
     Upgrade_5_2_22.prototype.execute = function () {
@@ -248,7 +248,7 @@ var Upgrade_5_2_22 = /** @class */ (function () {
     };
     return Upgrade_5_2_22;
 }());
-var Upgrade_5_2_23 = /** @class */ (function () {
+var Upgrade_5_2_23 = (function () {
     function Upgrade_5_2_23() {
     }
     Upgrade_5_2_23.prototype.execute = function () {
@@ -261,7 +261,7 @@ var Upgrade_5_2_23 = /** @class */ (function () {
     };
     return Upgrade_5_2_23;
 }());
-var Upgrade_5_2_25 = /** @class */ (function () {
+var Upgrade_5_2_25 = (function () {
     function Upgrade_5_2_25() {
     }
     Upgrade_5_2_25.prototype.execute = function () {
@@ -277,7 +277,7 @@ var Upgrade_5_2_25 = /** @class */ (function () {
     };
     return Upgrade_5_2_25;
 }());
-var Upgrade_5_2_28 = /** @class */ (function () {
+var Upgrade_5_2_28 = (function () {
     function Upgrade_5_2_28() {
     }
     Upgrade_5_2_28.prototype.execute = function () {
@@ -291,7 +291,7 @@ var Upgrade_5_2_28 = /** @class */ (function () {
     };
     return Upgrade_5_2_28;
 }());
-var Upgrade_5_2_31 = /** @class */ (function () {
+var Upgrade_5_2_31 = (function () {
     function Upgrade_5_2_31() {
     }
     Upgrade_5_2_31.prototype.execute = function () {
@@ -306,7 +306,7 @@ var Upgrade_5_2_31 = /** @class */ (function () {
     };
     return Upgrade_5_2_31;
 }());
-var Upgrade_5_2_32 = /** @class */ (function () {
+var Upgrade_5_2_32 = (function () {
     function Upgrade_5_2_32() {
     }
     Upgrade_5_2_32.prototype.execute = function () {
@@ -321,7 +321,7 @@ var Upgrade_5_2_32 = /** @class */ (function () {
     };
     return Upgrade_5_2_32;
 }());
-var Upgrade_5_2_33 = /** @class */ (function () {
+var Upgrade_5_2_33 = (function () {
     function Upgrade_5_2_33() {
     }
     Upgrade_5_2_33.prototype.execute = function () {
@@ -335,7 +335,7 @@ var Upgrade_5_2_33 = /** @class */ (function () {
     };
     return Upgrade_5_2_33;
 }());
-var Upgrade_5_3_5 = /** @class */ (function () {
+var Upgrade_5_3_5 = (function () {
     function Upgrade_5_3_5() {
     }
     Upgrade_5_3_5.prototype.execute = function () {
@@ -349,7 +349,7 @@ var Upgrade_5_3_5 = /** @class */ (function () {
     };
     return Upgrade_5_3_5;
 }());
-var Upgrade_5_3_6 = /** @class */ (function () {
+var Upgrade_5_3_6 = (function () {
     function Upgrade_5_3_6() {
     }
     Upgrade_5_3_6.prototype.execute = function () {
@@ -363,7 +363,7 @@ var Upgrade_5_3_6 = /** @class */ (function () {
     };
     return Upgrade_5_3_6;
 }());
-var Upgrade_5_3_8 = /** @class */ (function () {
+var Upgrade_5_3_8 = (function () {
     function Upgrade_5_3_8() {
     }
     Upgrade_5_3_8.prototype.execute = function () {
@@ -377,7 +377,7 @@ var Upgrade_5_3_8 = /** @class */ (function () {
     };
     return Upgrade_5_3_8;
 }());
-var Upgrade_5_3_9 = /** @class */ (function () {
+var Upgrade_5_3_9 = (function () {
     function Upgrade_5_3_9() {
     }
     Upgrade_5_3_9.prototype.execute = function () {
@@ -391,7 +391,7 @@ var Upgrade_5_3_9 = /** @class */ (function () {
     };
     return Upgrade_5_3_9;
 }());
-var Upgrade_5_3_10 = /** @class */ (function () {
+var Upgrade_5_3_10 = (function () {
     function Upgrade_5_3_10() {
     }
     Upgrade_5_3_10.prototype.execute = function () {
@@ -405,7 +405,7 @@ var Upgrade_5_3_10 = /** @class */ (function () {
     };
     return Upgrade_5_3_10;
 }());
-var Upgrade_5_4_0 = /** @class */ (function () {
+var Upgrade_5_4_0 = (function () {
     function Upgrade_5_4_0() {
     }
     Upgrade_5_4_0.prototype.execute = function () {
@@ -413,6 +413,7 @@ var Upgrade_5_4_0 = /** @class */ (function () {
             return __generator(this, function (_a) {
                 file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.ts"), path.join(egret.args.projectDir, "scripts", "config.ts"));
                 file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.wxgame.ts"), path.join(egret.args.projectDir, "scripts", "config.wxgame.ts"));
+                file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "api.d.ts"), path.join(egret.args.projectDir, "scripts", "api.d.ts"));
                 file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "plugins", "iconv-lite"), path.join(egret.args.projectDir, "scripts", "plugins", "iconv-lite"));
                 file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "plugins", "wxgameIDEPlugin.ts"), path.join(egret.args.projectDir, "scripts", "plugins", "wxgameIDEPlugin.ts"));
                 file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.tbcreativewidget"), path.join(egret.args.projectDir, "scripts", "config.tbcreativewidget"));

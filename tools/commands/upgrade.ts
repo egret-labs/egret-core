@@ -281,6 +281,7 @@ class Upgrade_5_4_0 {
     async execute() {
         file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.ts"), path.join(egret.args.projectDir, "scripts", "config.ts"));
         file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.wxgame.ts"), path.join(egret.args.projectDir, "scripts", "config.wxgame.ts"));
+        file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "api.d.ts"), path.join(egret.args.projectDir, "scripts", "api.d.ts"));
         file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "plugins", "iconv-lite"), path.join(egret.args.projectDir, "scripts", "plugins", "iconv-lite"));
         file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "plugins", "wxgameIDEPlugin.ts"), path.join(egret.args.projectDir, "scripts", "plugins", "wxgameIDEPlugin.ts"));
         file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.tbcreativewidget"), path.join(egret.args.projectDir, "scripts", "config.tbcreativewidget"));
