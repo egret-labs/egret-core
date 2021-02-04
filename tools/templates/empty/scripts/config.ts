@@ -36,6 +36,7 @@ const config: ResourceManagerConfig = {
                             templateFilePath: "template/web/index.html"
                         }
                     }),
+                    new ManifestPlugin({ output: "manifest.json" })
                 ]
             }
         }
