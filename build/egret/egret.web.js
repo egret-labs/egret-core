@@ -2679,8 +2679,7 @@ var egret;
                 inputElement.style.opacity = "0";
                 var inputLock = false;
                 inputElement.oninput = function () {
-                    if (self._stageText && inputLock) {
-                        inputLock = false;
+                    if (self._stageText && !inputLock) {
                         self._stageText._onInput();
                     }
                 };
@@ -2690,6 +2689,9 @@ var egret;
                 });
                 inputElement.addEventListener('compositionend', function () {
                     inputLock = false;
+                    if (self._stageText && !inputLock) {
+                        self._stageText._onInput();
+                    }
                 });
             };
             /**

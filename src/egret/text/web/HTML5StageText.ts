@@ -700,8 +700,7 @@ namespace egret.web {
 
             let inputLock = false;
             inputElement.oninput = function () {
-                if (self._stageText && inputLock) {
-                    inputLock = false;
+                if (self._stageText && !inputLock) {
                     self._stageText._onInput();
                 }
             };
@@ -711,6 +710,9 @@ namespace egret.web {
             });
             inputElement.addEventListener('compositionend', function () {
                 inputLock = false;
+                if (self._stageText && !inputLock) {
+                    self._stageText._onInput();
+                }
             });
         }
 
