@@ -31,7 +31,7 @@ class Build implements egret.Command {
         }
         
         utils.checkEgret();
-        utils.checkPlugin();
+        utils.checkPlugin();//vivo 和 opp 的插件要提前处理
         if (!FileUtil.exists(FileUtil.joinPath(options.projectDir, 'libs/modules/egret/'))) {
             project.manager.copyToLibs();
         }

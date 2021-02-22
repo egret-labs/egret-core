@@ -87,17 +87,25 @@ export class ManifestPlugin {
             }
             file.outputDir = "";
             file.path = path.join(file.base, new_file_path);
-
+            var { egretProperties }  = EgretProject.projectData as any;
+            // var { egretProperties } = config;
             if (target == 'vivogame') {
-                var config: any = EgretProject.projectData;
-                const vivoData = config.egretProperties.vivo
+                const vivoData = egretProperties.vivo
                 file.path = path.join(file.base, '../', 'engine', new_file_path);
                 if (vivoData.usePlugin) {//使用插件
-                    if (vivoData.plugins.indexOf(basename) > -1) {
+                    if (vivoData.userPlugs.indexOf(basename) > -1) {
                         file.path = path.join(file.base, '../', 'egret-library', basename);
                     }
                 }
-            } else if (target == "ttgame") {
+            } else if (target == "oppogame") {
+                const oppoData = egretProperties.oppo
+                if (oppoData.usePlugin) {//使用插件
+                    if (oppoData.userPlugs.indexOf(basename) > -1) {
+                        file.path = path.join(file.base, 'egret-library', basename);
+                    }
+                }
+
+            }else if (target == "ttgame") {
                 EgretProject.projectData.setMiniGameData('ttgame', 'signature', this.ttSignature)
             }
             const relative = file.relative.split("\\").join('/');
@@ -160,6 +168,6 @@ export class ManifestPlugin {
                 console.log(`manifest-plugin: ${item.filename} => ${item.new_file_path}`)
             });
         }
+        utils.copyEnginePlugin();
     }
-
 }
