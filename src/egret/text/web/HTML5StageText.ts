@@ -440,7 +440,12 @@ namespace egret.web {
                     tw = textfield.width
                 }
 
-                this.setElementStyle("width", tw * this._gscaleX + "px");
+                let inputWidth = tw * this._gscaleX;
+                let scale = (textfield.scaleX * sys.DisplayList.$canvasScaleX) / (textfield.scaleY * sys.DisplayList.$canvasScaleY);
+                this.setElementStyle("width", inputWidth / scale + "px");
+
+                this.setElementStyle("transform", `scale(${scale},  1)`);
+                this.setElementStyle("left", `${(scale - 1) * inputWidth / scale / 2}px`);
 
                 this.setElementStyle("verticalAlign", textfield.verticalAlign);
                 if (textfield.multiline) {

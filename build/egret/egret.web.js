@@ -2470,7 +2470,11 @@ var egret;
                     else {
                         tw = textfield.width;
                     }
-                    this.setElementStyle("width", tw * this._gscaleX + "px");
+                    var inputWidth = tw * this._gscaleX;
+                    var scale = (textfield.scaleX * egret.sys.DisplayList.$canvasScaleX) / (textfield.scaleY * egret.sys.DisplayList.$canvasScaleY);
+                    this.setElementStyle("width", inputWidth / scale + "px");
+                    this.setElementStyle("transform", "scale(" + scale + ",  1)");
+                    this.setElementStyle("left", (scale - 1) * inputWidth / scale / 2 + "px");
                     this.setElementStyle("verticalAlign", textfield.verticalAlign);
                     if (textfield.multiline) {
                         this.setAreaHeight();

@@ -18501,7 +18501,7 @@ var egret;
          * @platform Web,Native
          * @language zh_CN
          */
-        Capabilities.engineVersion = "5.4.0";
+        Capabilities.engineVersion = "5.4.1";
         /***
          * current render mode.
          * @type {string}
