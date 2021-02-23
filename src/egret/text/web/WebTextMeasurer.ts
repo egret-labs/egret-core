@@ -56,8 +56,8 @@ namespace egret.web {
             font += "italic ";
         if (bold)
             font += "bold ";
-        font += (typeof fontSize == "number" ? fontSize : 12) + "px ";
-        font += (typeof fontFamily == "number" ? fontFamily : "Arial");
+        font += ((typeof fontSize == "number" && fontSize > 0) ? fontSize : 12) + "px ";
+        font += ((typeof fontFamily == "string" && fontFamily != "") ? fontFamily : "Arial");
         context.font = font;
         return egret.sys.measureTextWith(context, text);
     }
