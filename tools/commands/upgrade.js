@@ -13,8 +13,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
         while (_) try {
-            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [0, t.value];
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
                 case 0: case 1: t = op; break;
                 case 4: _.label++; return { value: op[1], done: false };
@@ -39,7 +39,7 @@ var Project = require("../project");
 var path = require("path");
 var utils = require("../lib/utils");
 var Clean = require("./clean");
-var UpgradeCommand = (function () {
+var UpgradeCommand = /** @class */ (function () {
     function UpgradeCommand() {
     }
     UpgradeCommand.prototype.execute = function () {
@@ -85,6 +85,7 @@ var UpgradeCommand = (function () {
                             { "v": "5.3.9", command: Upgrade_5_3_9 },
                             { "v": "5.3.10", command: Upgrade_5_3_10 },
                             { "v": "5.4.0", command: Upgrade_5_4_0 },
+                            { "v": "5.4.1", command: Upgrade_5_4_1 },
                         ];
                         _a.label = 1;
                     case 1:
@@ -166,7 +167,7 @@ function upgrade(info) {
         return Promise.resolve(0);
     }
 }
-var Upgrade_5_1_1 = (function () {
+var Upgrade_5_1_1 = /** @class */ (function () {
     function Upgrade_5_1_1() {
     }
     Upgrade_5_1_1.prototype.execute = function () {
@@ -178,7 +179,7 @@ var Upgrade_5_1_1 = (function () {
     };
     return Upgrade_5_1_1;
 }());
-var Upgrade_5_1_2 = (function () {
+var Upgrade_5_1_2 = /** @class */ (function () {
     function Upgrade_5_1_2() {
     }
     Upgrade_5_1_2.prototype.execute = function () {
@@ -191,7 +192,7 @@ var Upgrade_5_1_2 = (function () {
     };
     return Upgrade_5_1_2;
 }());
-var Upgrade_5_2_13 = (function () {
+var Upgrade_5_2_13 = /** @class */ (function () {
     function Upgrade_5_2_13() {
     }
     Upgrade_5_2_13.prototype.execute = function () {
@@ -205,7 +206,7 @@ var Upgrade_5_2_13 = (function () {
     };
     return Upgrade_5_2_13;
 }());
-var Upgrade_5_2_17 = (function () {
+var Upgrade_5_2_17 = /** @class */ (function () {
     function Upgrade_5_2_17() {
     }
     Upgrade_5_2_17.prototype.execute = function () {
@@ -219,7 +220,7 @@ var Upgrade_5_2_17 = (function () {
     };
     return Upgrade_5_2_17;
 }());
-var Upgrade_5_2_19 = (function () {
+var Upgrade_5_2_19 = /** @class */ (function () {
     function Upgrade_5_2_19() {
     }
     Upgrade_5_2_19.prototype.execute = function () {
@@ -233,7 +234,7 @@ var Upgrade_5_2_19 = (function () {
     };
     return Upgrade_5_2_19;
 }());
-var Upgrade_5_2_22 = (function () {
+var Upgrade_5_2_22 = /** @class */ (function () {
     function Upgrade_5_2_22() {
     }
     Upgrade_5_2_22.prototype.execute = function () {
@@ -248,7 +249,7 @@ var Upgrade_5_2_22 = (function () {
     };
     return Upgrade_5_2_22;
 }());
-var Upgrade_5_2_23 = (function () {
+var Upgrade_5_2_23 = /** @class */ (function () {
     function Upgrade_5_2_23() {
     }
     Upgrade_5_2_23.prototype.execute = function () {
@@ -261,7 +262,7 @@ var Upgrade_5_2_23 = (function () {
     };
     return Upgrade_5_2_23;
 }());
-var Upgrade_5_2_25 = (function () {
+var Upgrade_5_2_25 = /** @class */ (function () {
     function Upgrade_5_2_25() {
     }
     Upgrade_5_2_25.prototype.execute = function () {
@@ -277,7 +278,7 @@ var Upgrade_5_2_25 = (function () {
     };
     return Upgrade_5_2_25;
 }());
-var Upgrade_5_2_28 = (function () {
+var Upgrade_5_2_28 = /** @class */ (function () {
     function Upgrade_5_2_28() {
     }
     Upgrade_5_2_28.prototype.execute = function () {
@@ -291,7 +292,7 @@ var Upgrade_5_2_28 = (function () {
     };
     return Upgrade_5_2_28;
 }());
-var Upgrade_5_2_31 = (function () {
+var Upgrade_5_2_31 = /** @class */ (function () {
     function Upgrade_5_2_31() {
     }
     Upgrade_5_2_31.prototype.execute = function () {
@@ -306,7 +307,7 @@ var Upgrade_5_2_31 = (function () {
     };
     return Upgrade_5_2_31;
 }());
-var Upgrade_5_2_32 = (function () {
+var Upgrade_5_2_32 = /** @class */ (function () {
     function Upgrade_5_2_32() {
     }
     Upgrade_5_2_32.prototype.execute = function () {
@@ -321,7 +322,7 @@ var Upgrade_5_2_32 = (function () {
     };
     return Upgrade_5_2_32;
 }());
-var Upgrade_5_2_33 = (function () {
+var Upgrade_5_2_33 = /** @class */ (function () {
     function Upgrade_5_2_33() {
     }
     Upgrade_5_2_33.prototype.execute = function () {
@@ -335,7 +336,7 @@ var Upgrade_5_2_33 = (function () {
     };
     return Upgrade_5_2_33;
 }());
-var Upgrade_5_3_5 = (function () {
+var Upgrade_5_3_5 = /** @class */ (function () {
     function Upgrade_5_3_5() {
     }
     Upgrade_5_3_5.prototype.execute = function () {
@@ -349,7 +350,7 @@ var Upgrade_5_3_5 = (function () {
     };
     return Upgrade_5_3_5;
 }());
-var Upgrade_5_3_6 = (function () {
+var Upgrade_5_3_6 = /** @class */ (function () {
     function Upgrade_5_3_6() {
     }
     Upgrade_5_3_6.prototype.execute = function () {
@@ -363,7 +364,7 @@ var Upgrade_5_3_6 = (function () {
     };
     return Upgrade_5_3_6;
 }());
-var Upgrade_5_3_8 = (function () {
+var Upgrade_5_3_8 = /** @class */ (function () {
     function Upgrade_5_3_8() {
     }
     Upgrade_5_3_8.prototype.execute = function () {
@@ -377,7 +378,7 @@ var Upgrade_5_3_8 = (function () {
     };
     return Upgrade_5_3_8;
 }());
-var Upgrade_5_3_9 = (function () {
+var Upgrade_5_3_9 = /** @class */ (function () {
     function Upgrade_5_3_9() {
     }
     Upgrade_5_3_9.prototype.execute = function () {
@@ -391,7 +392,7 @@ var Upgrade_5_3_9 = (function () {
     };
     return Upgrade_5_3_9;
 }());
-var Upgrade_5_3_10 = (function () {
+var Upgrade_5_3_10 = /** @class */ (function () {
     function Upgrade_5_3_10() {
     }
     Upgrade_5_3_10.prototype.execute = function () {
@@ -405,7 +406,7 @@ var Upgrade_5_3_10 = (function () {
     };
     return Upgrade_5_3_10;
 }());
-var Upgrade_5_4_0 = (function () {
+var Upgrade_5_4_0 = /** @class */ (function () {
     function Upgrade_5_4_0() {
     }
     Upgrade_5_4_0.prototype.execute = function () {
@@ -423,5 +424,18 @@ var Upgrade_5_4_0 = (function () {
         });
     };
     return Upgrade_5_4_0;
+}());
+var Upgrade_5_4_1 = /** @class */ (function () {
+    function Upgrade_5_4_1() {
+    }
+    Upgrade_5_4_1.prototype.execute = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                file.copyAsync(path.join(egret.root, "tools", "templates", "empty", "scripts", "config.oppogame.ts"), path.join(egret.args.projectDir, "scripts", "config.oppogame.ts"));
+                return [2 /*return*/, 0];
+            });
+        });
+    };
+    return Upgrade_5_4_1;
 }());
 module.exports = UpgradeCommand;
