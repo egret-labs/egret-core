@@ -441,14 +441,14 @@ namespace eui {
          * @private
          */
         $hitTest(stageX:number, stageY:number):egret.DisplayObject {
+            //Bug: 当 group.sacleX or scaleY ==0 的时候，随便点击那里都点击成功
+            //虽然 super.$hitTest里面检测过一次 宽高大小，但是没有直接退出这个函数，所以要再判断一次;
+            if (!this.$visible || !this.touchEnabled || this.scaleX === 0 || this.scaleY === 0) {
+                return null;
+            }
             let target = super.$hitTest(stageX, stageY);
             if (target || this.$Group[Keys.touchThrough]) {
                 return target;
-            }
-            //Bug: 当 group.sacleX or scaleY ==0 的时候，随便点击那里都点击成功
-            //虽然 super.$hitTest里面检测过一次 宽高大小，但是没有直接退出这个函数，所以要再判断一次;（width,height可以不判断）
-            if (!this.$visible || !this.touchEnabled || this.scaleX === 0 || this.scaleY === 0 || this.width === 0 || this.height === 0) {
-                return null;
             }
             let point = this.globalToLocal(stageX, stageY, egret.$TempPoint);
             let values = this.$UIComponent;
