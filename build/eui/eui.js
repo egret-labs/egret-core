@@ -14657,6 +14657,15 @@ var eui;
             stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
             this.removeEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancel, this);
             this.removeEventListener(egret.Event.REMOVED_FROM_STAGE, this.onRemoveListeners, this);
+            var values = this.$Scroller;
+            var viewport = values[10 /* viewport */];
+            var uiValues = viewport.$UIComponent;
+            if (values[8 /* touchScrollH */].isStarted()) {
+                values[8 /* touchScrollH */].finish(viewport.scrollH, viewport.contentWidth - uiValues[10 /* width */]);
+            }
+            if (values[9 /* touchScrollV */].isStarted()) {
+                values[9 /* touchScrollV */].finish(viewport.scrollV, viewport.contentHeight - uiValues[11 /* height */]);
+            }
         };
         /**
          * @private
