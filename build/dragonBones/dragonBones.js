@@ -5974,6 +5974,10 @@ var dragonBones;
                 this._updateDisplay();
                 this._displayDirty = false;
             }
+            if (this._zOrderDirty) {
+                this._updateZOrder();
+                this._zOrderDirty = false;
+            }
             if (this._geometryDirty || this._textureDirty) {
                 if (this._display === null || this._display === this._rawDisplay || this._display === this._meshDisplay) {
                     this._updateFrame();
@@ -5995,10 +5999,6 @@ var dragonBones;
             if (this._colorDirty) {
                 this._updateColor();
                 this._colorDirty = false;
-            }
-            if (this._zOrderDirty) {
-                this._updateZOrder();
-                this._zOrderDirty = false;
             }
             if (this._geometryData !== null && this._display === this._meshDisplay) {
                 var isSkinned = this._geometryData.weight !== null;
@@ -6070,6 +6070,7 @@ var dragonBones;
             this._displayDirty = true;
             //
             this._transformDirty = true;
+            this.update(-1);
         };
         /**
          * @private
@@ -8836,30 +8837,15 @@ var dragonBones;
                                         break;
                                     }
                                     case 22 /* SlotDeform */: {
-                                        var dragonBonesData = this._animationData.parent.parent;
-                                        var timelineArray = dragonBonesData.timelineArray;
-                                        var frameIntOffset = this._animationData.frameIntOffset + timelineArray[timelineData.offset + 3 /* TimelineFrameValueCount */];
-                                        var frameIntArray = dragonBonesData.frameIntArray;
-                                        var geometryOffset = frameIntArray[frameIntOffset + 0 /* DeformVertexOffset */];
-                                        if (geometryOffset < 0) {
-                                            geometryOffset += 65536; // Fixed out of bounds bug. 
+                                        var timeline = dragonBones.BaseObject.borrowObject(dragonBones.DeformTimelineState);
+                                        timeline.target = this._armature.animation.getBlendState(BlendState.SLOT_DEFORM, slot.name, slot);
+                                        timeline.init(this._armature, this, timelineData);
+                                        if (timeline.target !== null) {
+                                            this._slotBlendTimelines.push(timeline);
+                                            ffdFlags.push(timeline.geometryOffset);
                                         }
-                                        for (var i = 0, l = slot.displayFrameCount; i < l; ++i) {
-                                            var displayFrame = slot.getDisplayFrameAt(i);
-                                            var geometryData = displayFrame.getGeometryData();
-                                            if (geometryData === null) {
-                                                continue;
-                                            }
-                                            if (geometryData.offset === geometryOffset) {
-                                                var timeline = dragonBones.BaseObject.borrowObject(dragonBones.DeformTimelineState);
-                                                timeline.target = this._armature.animation.getBlendState(BlendState.SLOT_DEFORM, displayFrame.rawDisplayData.name, slot);
-                                                timeline.displayFrame = displayFrame;
-                                                timeline.init(this._armature, this, timelineData);
-                                                this._slotBlendTimelines.push(timeline);
-                                                displayFrame.updateDeformVertices();
-                                                ffdFlags.push(geometryOffset);
-                                                break;
-                                            }
+                                        else {
+                                            timeline.returnToPool();
                                         }
                                         break;
                                     }
@@ -8898,6 +8884,7 @@ var dragonBones;
                                 var geometryData = displayFrame.getGeometryData();
                                 if (geometryData !== null && ffdFlags.indexOf(geometryData.offset) < 0) {
                                     var timeline = dragonBones.BaseObject.borrowObject(dragonBones.DeformTimelineState);
+                                    timeline.geometryOffset = geometryData.offset; //
                                     timeline.displayFrame = displayFrame; //
                                     timeline.target = this._armature.animation.getBlendState(BlendState.SLOT_DEFORM, slot.name, slot);
                                     timeline.init(this._armature, this, null);
@@ -11114,6 +11101,7 @@ var dragonBones;
         DeformTimelineState.prototype._onClear = function () {
             _super.prototype._onClear.call(this);
             this.displayFrame = null;
+            this.geometryOffset = 0;
             this._deformCount = 0;
             this._deformOffset = 0;
             this._sameValueOffset = 0;
@@ -11124,15 +11112,32 @@ var dragonBones;
                 var frameIntOffset = this._animationData.frameIntOffset + this._timelineArray[this._timelineData.offset + 3 /* TimelineFrameValueCount */];
                 var dragonBonesData = this._animationData.parent.parent;
                 var frameIntArray = dragonBonesData.frameIntArray;
+                var slot = this.target.target;
+                this.geometryOffset = frameIntArray[frameIntOffset + 0 /* DeformVertexOffset */];
+                if (this.geometryOffset < 0) {
+                    this.geometryOffset += 65536; // Fixed out of bounds bug. 
+                }
+                for (var i = 0, l = slot.displayFrameCount; i < l; ++i) {
+                    var displayFrame = slot.getDisplayFrameAt(i);
+                    var geometryData = displayFrame.getGeometryData();
+                    if (geometryData === null) {
+                        continue;
+                    }
+                    if (geometryData.offset === this.geometryOffset) {
+                        this.displayFrame = displayFrame;
+                        this.displayFrame.updateDeformVertices();
+                        break;
+                    }
+                }
+                if (this.displayFrame === null) {
+                    this.returnToPool(); //
+                    return;
+                }
                 this._valueOffset = this._animationData.frameFloatOffset;
                 this._valueCount = frameIntArray[frameIntOffset + 2 /* DeformValueCount */];
                 this._deformCount = frameIntArray[frameIntOffset + 1 /* DeformCount */];
                 this._deformOffset = frameIntArray[frameIntOffset + 3 /* DeformValueOffset */];
-                this._sameValueOffset = frameIntArray[frameIntOffset + 4 /* DeformFloatOffset */];
-                if (this._sameValueOffset < 0) {
-                    this._sameValueOffset += 65536; // Fixed out of bounds bug. 
-                }
-                this._sameValueOffset += this._animationData.frameFloatOffset;
+                this._sameValueOffset = frameIntArray[frameIntOffset + 4 /* DeformFloatOffset */] + this._animationData.frameFloatOffset;
                 this._valueScale = this._armature.armatureData.scale;
                 this._valueArray = dragonBonesData.frameFloatArray;
                 this._rd.length = this._valueCount * 2;
@@ -16319,11 +16324,12 @@ var dragonBones;
             configurable: true
         });
         EgretFactory.prototype._isSupportMesh = function () {
-            if (egret.Capabilities.renderMode === "webgl" || egret.Capabilities.runtimeType === egret.RuntimeType.NATIVE) {
-                return true;
-            }
-            console.warn("Canvas can not support mesh, please change renderMode to webgl.");
-            return false;
+            return true;
+            // if (egret.Capabilities.renderMode === "webgl" || egret.Capabilities.runtimeType === egret.RuntimeType.NATIVE) {
+            //     return true;
+            // }
+            // console.warn("Canvas can not support mesh, please change renderMode to webgl.");
+            // return false;
         };
         EgretFactory.prototype._buildTextureAtlasData = function (textureAtlasData, textureAtlas) {
             if (textureAtlasData !== null) {
