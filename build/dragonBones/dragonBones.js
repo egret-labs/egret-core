@@ -6182,6 +6182,7 @@ var dragonBones;
                 if (index === this._displayIndex) {
                     this._displayDirty = true;
                 }
+                this.invalidUpdate();
             }
         };
         /**
