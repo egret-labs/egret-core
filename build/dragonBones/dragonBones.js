@@ -6182,7 +6182,6 @@ var dragonBones;
                 if (index === this._displayIndex) {
                     this._displayDirty = true;
                 }
-                this.invalidUpdate();
             }
         };
         /**
@@ -15838,6 +15837,9 @@ var dragonBones;
             if (this._armatureDisplay._batchEnabled) {
                 if (this._renderDisplay !== this._rawDisplay && this._renderDisplay !== this._meshDisplay) {
                     this._armatureDisplay.disableBatch();
+                    if (this._renderDisplay !== this._meshDisplay) {
+                        this._meshDisplay = this._renderDisplay;
+                    }
                 }
                 else {
                     var node = this._renderDisplay.$renderNode;

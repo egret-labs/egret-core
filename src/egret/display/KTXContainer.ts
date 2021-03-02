@@ -182,9 +182,7 @@ namespace egret {
         }
 
         private _upload2DCompressedLevels(bitmapData: egret.BitmapData, loadMipmaps: boolean): void {
-
             bitmapData.clearCompressedTextureData();
-            const compressedTextureData = bitmapData.compressedTextureData;
 
             // initialize width & height for level 1
             let dataOffset = KTXContainer.HEADER_LEN + this.bytesOfKeyValueData;
@@ -214,7 +212,7 @@ namespace egret {
                     dataOffset += imageSize; // add size of the image for the next face/mipmap
                     dataOffset += 3 - ((imageSize + 3) % 4); // add padding for odd sized image
                 }
-                compressedTextureData.push(levelData);
+                bitmapData.$setCompressed2dTextureData(levelData);
 
                 width = Math.max(1.0, width * 0.5);
                 height = Math.max(1.0, height * 0.5);
