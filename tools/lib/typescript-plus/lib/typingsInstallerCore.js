@@ -63,8 +63,12 @@ var ts;
                 ProjectWatcherType["FileWatcher"] = "FileWatcher";
                 ProjectWatcherType["DirectoryWatcher"] = "DirectoryWatcher";
             })(ProjectWatcherType || (ProjectWatcherType = {}));
+            function getDetailWatchInfo(projectName, watchers) {
+                return "Project: " + projectName + " watcher already invoked: " + watchers.isInvoked;
+            }
             var TypingsInstaller = /** @class */ (function () {
                 function TypingsInstaller(installTypingHost, globalCachePath, safeListPath, typesMapLocation, throttleLimit, log) {
+                    var _this = this;
                     if (log === void 0) { log = nullLog; }
                     this.installTypingHost = installTypingHost;
                     this.globalCachePath = globalCachePath;
@@ -82,9 +86,11 @@ var ts;
                     this.latestDistTag = "latest";
                     this.toCanonicalFileName = ts.createGetCanonicalFileName(installTypingHost.useCaseSensitiveFileNames);
                     this.globalCachePackageJsonPath = ts.combinePaths(globalCachePath, "package.json");
-                    if (this.log.isEnabled()) {
+                    var isLoggingEnabled = this.log.isEnabled();
+                    if (isLoggingEnabled) {
                         this.log.writeLine("Global cache location '" + globalCachePath + "', safe file path '" + safeListPath + "', types map path " + typesMapLocation);
                     }
+                    this.watchFactory = ts.getWatchFactory(this.installTypingHost, isLoggingEnabled ? ts.WatchLogLevel.Verbose : ts.WatchLogLevel.None, function (s) { return _this.log.writeLine(s); }, getDetailWatchInfo);
                     this.processCacheLocation(this.globalCachePath);
                 }
                 TypingsInstaller.prototype.closeProject = function (req) {
@@ -375,19 +381,13 @@ var ts;
                             _this.log.writeLine(projectWatcherType + ":: Added:: WatchInfo: " + path);
                         }
                         var watcher = projectWatcherType === "FileWatcher" /* FileWatcher */ ?
-                            _this.installTypingHost.watchFile(path, function (f, eventKind) {
-                                if (isLoggingEnabled) {
-                                    _this.log.writeLine("FileWatcher:: Triggered with " + f + " eventKind: " + ts.FileWatcherEventKind[eventKind] + ":: WatchInfo: " + path + ":: handler is already invoked '" + watchers.isInvoked + "'");
-                                }
+                            _this.watchFactory.watchFile(path, function () {
                                 if (!watchers.isInvoked) {
                                     watchers.isInvoked = true;
                                     _this.sendResponse({ projectName: projectName, kind: server.ActionInvalidate });
                                 }
-                            }, /*pollingInterval*/ 2000, options) :
-                            _this.installTypingHost.watchDirectory(path, function (f) {
-                                if (isLoggingEnabled) {
-                                    _this.log.writeLine("DirectoryWatcher:: Triggered with " + f + " :: WatchInfo: " + path + " recursive :: handler is already invoked '" + watchers.isInvoked + "'");
-                                }
+                            }, ts.PollingInterval.High, options, projectName, watchers) :
+                            _this.watchFactory.watchDirectory(path, function (f) {
                                 if (watchers.isInvoked || !ts.fileExtensionIs(f, ".json" /* Json */)) {
                                     return;
                                 }
@@ -396,7 +396,7 @@ var ts;
                                     watchers.isInvoked = true;
                                     _this.sendResponse({ projectName: projectName, kind: server.ActionInvalidate });
                                 }
-                            }, /*recursive*/ true, options);
+                            }, 1 /* Recursive */, options, projectName, watchers);
                         watchers.set(canonicalPath, isLoggingEnabled ? {
                             close: function () {
                                 _this.log.writeLine(projectWatcherType + ":: Closed:: WatchInfo: " + path);

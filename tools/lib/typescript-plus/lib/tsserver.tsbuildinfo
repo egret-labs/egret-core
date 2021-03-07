@@ -2,6 +2,8 @@
   "bundle": {
     "commonSourceDirectory": "../../src",
     "sourceFiles": [
+      "../../src/tsserver/nodeServer.ts",
+      "../../src/tsserver/webServer.ts",
       "../../src/tsserver/server.ts"
     ],
     "js": {
@@ -14,108 +16,121 @@
         },
         {
           "pos": 14,
-          "end": 341,
+          "end": 201,
           "kind": "emitHelpers",
-          "data": "typescript:spreadArrays"
+          "data": "typescript:spreadArray"
         },
         {
-          "pos": 342,
-          "end": 724,
+          "pos": 202,
+          "end": 584,
           "kind": "emitHelpers",
           "data": "typescript:assign"
         },
         {
-          "pos": 725,
-          "end": 953,
+          "pos": 585,
+          "end": 813,
           "kind": "emitHelpers",
           "data": "typescript:makeTemplateObject"
         },
         {
-          "pos": 954,
-          "end": 2744,
+          "pos": 814,
+          "end": 2604,
           "kind": "emitHelpers",
           "data": "typescript:generator"
         },
         {
-          "pos": 2745,
-          "end": 3235,
+          "pos": 2605,
+          "end": 3095,
           "kind": "emitHelpers",
           "data": "typescript:rest"
         },
         {
-          "pos": 3236,
-          "end": 3844,
+          "pos": 3096,
+          "end": 3858,
           "kind": "emitHelpers",
           "data": "typescript:extends"
         },
         {
-          "pos": 3845,
-          "end": 6752882,
+          "pos": 3859,
+          "end": 6886260,
           "kind": "prepend",
           "data": "./compiler.js",
           "texts": [
             {
-              "pos": 3845,
-              "end": 6752882,
+              "pos": 3859,
+              "end": 6886260,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 6752882,
-          "end": 8929140,
+          "pos": 6886260,
+          "end": 9119617,
           "kind": "prepend",
           "data": "./services.js",
           "texts": [
             {
-              "pos": 6752882,
-              "end": 8929140,
+              "pos": 6886260,
+              "end": 9119617,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 8929140,
-          "end": 8949007,
+          "pos": 9119617,
+          "end": 9139484,
           "kind": "prepend",
           "data": "./jsTyping.js",
           "texts": [
             {
-              "pos": 8929140,
-              "end": 8949007,
+              "pos": 9119617,
+              "end": 9139484,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 8949007,
-          "end": 9527820,
+          "pos": 9139484,
+          "end": 9733300,
           "kind": "prepend",
           "data": "./server.js",
           "texts": [
             {
-              "pos": 8949007,
-              "end": 9527820,
+              "pos": 9139484,
+              "end": 9733300,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 9527820,
-          "end": 9618120,
+          "pos": 9733300,
+          "end": 9742035,
           "kind": "prepend",
-          "data": "./compat.js",
+          "data": "./webServer.js",
           "texts": [
             {
-              "pos": 9527820,
-              "end": 9618120,
+              "pos": 9733300,
+              "end": 9742035,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 9618120,
-          "end": 9661463,
+          "pos": 9742035,
+          "end": 9833240,
+          "kind": "prepend",
+          "data": "./deprecatedCompat.js",
+          "texts": [
+            {
+              "pos": 9742035,
+              "end": 9833240,
+              "kind": "text"
+            }
+          ]
+        },
+        {
+          "pos": 9833240,
+          "end": 9884209,
           "kind": "text"
         }
       ],
@@ -144,5 +159,5 @@
       }
     }
   },
-  "version": "4.1.2"
+  "version": "4.2.3"
 }

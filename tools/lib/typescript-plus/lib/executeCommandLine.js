@@ -13,11 +13,52 @@ var __assign = (this && this.__assign) || function () {
 var ts;
 (function (ts) {
     function countLines(program) {
-        var count = 0;
+        var counts = getCountsMap();
         ts.forEach(program.getSourceFiles(), function (file) {
-            count += ts.getLineStarts(file).length;
+            var key = getCountKey(program, file);
+            var lineCount = ts.getLineStarts(file).length;
+            counts.set(key, counts.get(key) + lineCount);
         });
-        return count;
+        return counts;
+    }
+    function countNodes(program) {
+        var counts = getCountsMap();
+        ts.forEach(program.getSourceFiles(), function (file) {
+            var key = getCountKey(program, file);
+            counts.set(key, counts.get(key) + file.nodeCount);
+        });
+        return counts;
+    }
+    function getCountsMap() {
+        var counts = ts.createMap();
+        counts.set("Library", 0);
+        counts.set("Definitions", 0);
+        counts.set("TypeScript", 0);
+        counts.set("JavaScript", 0);
+        counts.set("JSON", 0);
+        counts.set("Other", 0);
+        return counts;
+    }
+    function getCountKey(program, file) {
+        if (program.isSourceFileDefaultLibrary(file)) {
+            return "Library";
+        }
+        else if (file.isDeclarationFile) {
+            return "Definitions";
+        }
+        var path = file.path;
+        if (ts.fileExtensionIsOneOf(path, ts.supportedTSExtensions)) {
+            return "TypeScript";
+        }
+        else if (ts.fileExtensionIsOneOf(path, ts.supportedJSExtensions)) {
+            return "JavaScript";
+        }
+        else if (ts.fileExtensionIs(path, ".json" /* Json */)) {
+            return "JSON";
+        }
+        else {
+            return "Other";
+        }
     }
     function updateReportDiagnostic(sys, existing, options) {
         return shouldBePretty(sys, options) ?
@@ -323,7 +364,7 @@ var ts;
         updateSolutionBuilderHost(sys, cb, buildHost);
         var builder = ts.createSolutionBuilder(buildHost, projects, buildOptions);
         var exitStatus = buildOptions.clean ? builder.clean() : builder.build();
-        ts.tracing.dumpLegend();
+        ts.tracing === null || ts.tracing === void 0 ? void 0 : ts.tracing.dumpLegend();
         return sys.exit(exitStatus);
     }
     function createReportErrorSummary(sys, options) {
@@ -434,24 +475,38 @@ var ts;
     }
     function enableStatisticsAndTracing(system, compilerOptions, isBuildMode) {
         if (canReportDiagnostics(system, compilerOptions)) {
-            ts.performance.enable();
+            ts.performance.enable(system);
         }
         if (canTrace(system, compilerOptions)) {
-            ts.tracing.startTracing(compilerOptions.configFilePath, compilerOptions.generateTrace, isBuildMode);
+            ts.startTracing(isBuildMode ? 1 /* Build */ : 0 /* Project */, compilerOptions.generateTrace, compilerOptions.configFilePath);
         }
     }
     function reportStatistics(sys, program) {
         var compilerOptions = program.getCompilerOptions();
         if (canTrace(sys, compilerOptions)) {
-            ts.tracing.stopTracing(program.getTypeCatalog());
+            ts.tracing === null || ts.tracing === void 0 ? void 0 : ts.tracing.stopTracing(program.getTypeCatalog());
         }
         var statistics;
         if (canReportDiagnostics(sys, compilerOptions)) {
             statistics = [];
             var memoryUsed = sys.getMemoryUsage ? sys.getMemoryUsage() : -1;
             reportCountStatistic("Files", program.getSourceFiles().length);
-            reportCountStatistic("Lines", countLines(program));
-            reportCountStatistic("Nodes", program.getNodeCount());
+            var lineCounts = countLines(program);
+            var nodeCounts = countNodes(program);
+            if (compilerOptions.extendedDiagnostics) {
+                for (var _i = 0, _a = ts.arrayFrom(lineCounts.keys()); _i < _a.length; _i++) {
+                    var key = _a[_i];
+                    reportCountStatistic("Lines of " + key, lineCounts.get(key));
+                }
+                for (var _b = 0, _c = ts.arrayFrom(nodeCounts.keys()); _b < _c.length; _b++) {
+                    var key = _c[_b];
+                    reportCountStatistic("Nodes of " + key, nodeCounts.get(key));
+                }
+            }
+            else {
+                reportCountStatistic("Lines", ts.reduceLeftIterator(lineCounts.values(), function (sum, count) { return sum + count; }, 0));
+                reportCountStatistic("Nodes", ts.reduceLeftIterator(nodeCounts.values(), function (sum, count) { return sum + count; }, 0));
+            }
             reportCountStatistic("Identifiers", program.getIdentifierCount());
             reportCountStatistic("Symbols", program.getSymbolCount());
             reportCountStatistic("Types", program.getTypeCount());

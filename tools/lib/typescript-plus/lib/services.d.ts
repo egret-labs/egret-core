@@ -204,6 +204,7 @@ declare namespace ts {
         getDocumentPositionMapper?(generatedFileName: string, sourceFileName?: string): DocumentPositionMapper | undefined;
         getSourceFileLike?(fileName: string): SourceFileLike | undefined;
         getPackageJsonsVisibleToFile?(fileName: string, rootDir?: string): readonly PackageJsonInfo[];
+        getNearestAncestorDirectoryWithPackageJson?(fileName: string): string | undefined;
         getPackageJsonsForAutoImport?(rootDir?: string): readonly PackageJsonInfo[];
         getImportSuggestionsCache?(): Completions.ImportSuggestionsForFileCache;
         setCompilerHost?(host: CompilerHost): void;
@@ -328,6 +329,7 @@ declare namespace ts {
         getReferencesAtPosition(fileName: string, position: number): ReferenceEntry[] | undefined;
         findReferences(fileName: string, position: number): ReferencedSymbol[] | undefined;
         getDocumentHighlights(fileName: string, position: number, filesToSearch: string[]): DocumentHighlights[] | undefined;
+        getFileReferences(fileName: string): ReferenceEntry[];
         /** @deprecated */
         getOccurrencesAtPosition(fileName: string, position: number): readonly ReferenceEntry[] | undefined;
         getNavigateToItems(searchValue: string, maxResultCount?: number, fileName?: string, excludeDtsFiles?: boolean): NavigateToItem[];
@@ -343,7 +345,7 @@ declare namespace ts {
         getFormattingEditsForRange(fileName: string, start: number, end: number, options: FormatCodeOptions | FormatCodeSettings): TextChange[];
         getFormattingEditsForDocument(fileName: string, options: FormatCodeOptions | FormatCodeSettings): TextChange[];
         getFormattingEditsAfterKeystroke(fileName: string, position: number, key: string, options: FormatCodeOptions | FormatCodeSettings): TextChange[];
-        getDocCommentTemplateAtPosition(fileName: string, position: number): TextInsertion | undefined;
+        getDocCommentTemplateAtPosition(fileName: string, position: number, options?: DocCommentTemplateOptions): TextInsertion | undefined;
         isValidBraceCompletionAtPosition(fileName: string, position: number, openingBrace: number): boolean;
         /**
          * This will return a defined result if the position is after the `>` of the opening tag, or somewhere in the text, of a JSXElement with no closing tag.
@@ -367,7 +369,7 @@ declare namespace ts {
         applyCodeActionCommand(fileName: string, action: CodeActionCommand[]): Promise<ApplyCodeActionCommandResult[]>;
         /** @deprecated `fileName` will be ignored */
         applyCodeActionCommand(fileName: string, action: CodeActionCommand | CodeActionCommand[]): Promise<ApplyCodeActionCommandResult | ApplyCodeActionCommandResult[]>;
-        getApplicableRefactors(fileName: string, positionOrRange: number | TextRange, preferences: UserPreferences | undefined, triggerReason?: RefactorTriggerReason): ApplicableRefactorInfo[];
+        getApplicableRefactors(fileName: string, positionOrRange: number | TextRange, preferences: UserPreferences | undefined, triggerReason?: RefactorTriggerReason, kind?: string): ApplicableRefactorInfo[];
         getEditsForRefactor(fileName: string, formatOptions: FormatCodeSettings, positionOrRange: number | TextRange, refactorName: string, actionName: string, preferences: UserPreferences | undefined): RefactorEditInfo | undefined;
         organizeImports(scope: OrganizeImportsScope, formatOptions: FormatCodeSettings, preferences: UserPreferences | undefined): readonly FileTextChanges[];
         getEditsForFileRename(oldFilePath: string, newFilePath: string, formatOptions: FormatCodeSettings, preferences: UserPreferences | undefined): readonly FileTextChanges[];
@@ -598,6 +600,10 @@ declare namespace ts {
          * the current context.
          */
         notApplicableReason?: string;
+        /**
+         * The hierarchical dotted name of the refactor action.
+         */
+        kind?: string;
     }
     /**
      * A set of edits to make in response to a refactor action, plus an optional
@@ -815,11 +821,15 @@ declare namespace ts {
     interface RenameInfoOptions {
         readonly allowRenameOfImportPath?: boolean;
     }
+    interface DocCommentTemplateOptions {
+        readonly generateReturnInDocTemplate?: boolean;
+    }
     interface SignatureHelpParameter {
         name: string;
         documentation: SymbolDisplayPart[];
         displayParts: SymbolDisplayPart[];
         isOptional: boolean;
+        isRest?: boolean;
     }
     interface SelectionRange {
         textSpan: TextSpan;
@@ -1145,6 +1155,9 @@ declare namespace ts {
     }
     /** @internal */
     interface Refactor {
+        /** List of action kinds a refactor can provide.
+         * Used to skip unnecessary calculation when specific refactors are requested. */
+        kinds?: string[];
         /** Compute the associated code actions */
         getEditsForAction(context: RefactorContext, actionName: string): RefactorEditInfo | undefined;
         /** Compute (quickly) which actions are available here */
@@ -1159,6 +1172,7 @@ declare namespace ts {
         cancellationToken?: CancellationToken;
         preferences: UserPreferences;
         triggerReason?: RefactorTriggerReason;
+        kind?: string;
     }
 }
 interface PromiseConstructor {
@@ -1227,6 +1241,7 @@ declare namespace ts {
     function hasChildOfKind(n: Node, kind: SyntaxKind, sourceFile: SourceFile): boolean;
     function findChildOfKind<T extends Node>(n: Node, kind: T["kind"], sourceFile: SourceFileLike): T | undefined;
     function findContainingList(node: Node): SyntaxList | undefined;
+    function getContextualTypeOrAncestorTypeNodeType(node: Expression, checker: TypeChecker): Type | undefined;
     /**
      * Adjusts the location used for "find references" and "go to definition" when the cursor was not
      * on a property name.
@@ -1271,7 +1286,7 @@ declare namespace ts {
     function isInTemplateString(sourceFile: SourceFile, position: number): boolean;
     function isInJSXText(sourceFile: SourceFile, position: number): boolean;
     function isInsideJsxElement(sourceFile: SourceFile, position: number): boolean;
-    function findPrecedingMatchingToken(token: Node, matchingTokenKind: SyntaxKind, sourceFile: SourceFile): Node | undefined;
+    function findPrecedingMatchingToken(token: Node, matchingTokenKind: SyntaxKind.OpenBraceToken | SyntaxKind.OpenParenToken | SyntaxKind.OpenBracketToken, sourceFile: SourceFile): Node | undefined;
     function removeOptionality(type: Type, isOptionalExpression: boolean, isOptionalChain: boolean): Type;
     function isPossiblyTypeArgumentPosition(token: Node, sourceFile: SourceFile, checker: TypeChecker): boolean;
     function getPossibleGenericSignatures(called: Expression, typeArgumentCount: number, checker: TypeChecker): readonly Signature[];
@@ -1282,7 +1297,7 @@ declare namespace ts {
     interface PossibleProgramFileInfo {
         ProgramFiles?: string[];
     }
-    function getPossibleTypeArgumentsInfo(tokenIn: Node, sourceFile: SourceFile): PossibleTypeArgumentInfo | undefined;
+    function getPossibleTypeArgumentsInfo(tokenIn: Node | undefined, sourceFile: SourceFile): PossibleTypeArgumentInfo | undefined;
     /**
      * Returns true if the cursor at position in sourceFile is within a comment.
      *
@@ -1291,7 +1306,7 @@ declare namespace ts {
      */
     function isInComment(sourceFile: SourceFile, position: number, tokenAtPosition?: Node): CommentRange | undefined;
     function hasDocComment(sourceFile: SourceFile, position: number): boolean;
-    function getNodeModifiers(node: Node): string;
+    function getNodeModifiers(node: Node, excludeFlags?: ModifierFlags): string;
     function getTypeArgumentOrTypeParameterList(node: Node): NodeArray<Node> | undefined;
     function isComment(kind: SyntaxKind): boolean;
     function isStringOrRegularExpressionOrTemplateLiteral(kind: SyntaxKind): boolean;
@@ -1344,16 +1359,6 @@ declare namespace ts {
     };
     function isObjectBindingElementWithoutPropertyName(bindingElement: Node): bindingElement is ObjectBindingElementWithoutPropertyName;
     function getPropertySymbolFromBindingElement(checker: TypeChecker, bindingElement: ObjectBindingElementWithoutPropertyName): Symbol | undefined;
-    /**
-     * Find symbol of the given property-name and add the symbol to the given result array
-     * @param symbol a symbol to start searching for the given propertyName
-     * @param propertyName a name of property to search for
-     * @param result an array of symbol of found property symbols
-     * @param previousIterationSymbolsCache a cache of symbol from previous iterations of calling this function to prevent infinite revisiting of the same symbol.
-     *                                The value of previousIterationSymbol is undefined when the function is first called.
-     */
-    function getPropertySymbolsFromBaseTypes<T>(symbol: Symbol, propertyName: string, checker: TypeChecker, cb: (symbol: Symbol) => T | undefined): T | undefined;
-    function isMemberSymbolInBaseType(memberSymbol: Symbol, checker: TypeChecker): boolean;
     function getParentNodeInSpan(node: Node | undefined, file: SourceFile, span: TextSpan): Node | undefined;
     function findModifier(node: Node, kind: Modifier["kind"]): Modifier | undefined;
     function insertImports(changes: textChanges.ChangeTracker, sourceFile: SourceFile, imports: AnyImportOrRequireStatement | readonly AnyImportOrRequireStatement[], blankLineBetween: boolean): void;
@@ -1478,7 +1483,7 @@ declare namespace ts {
      * If the provided value is an array, the first element of the array is returned; otherwise, the provided value is returned instead.
      */
     function firstOrOnly<T>(valueOrArray: T | readonly T[]): T;
-    function getNameForExportedSymbol(symbol: Symbol, scriptTarget: ScriptTarget): string;
+    function getNameForExportedSymbol(symbol: Symbol, scriptTarget: ScriptTarget | undefined): string;
     /**
      * Useful to check whether a string contains another string at a specific index
      * without allocating another string or traversing the entire contents of the outer string.
@@ -1634,6 +1639,7 @@ declare namespace ts.Completions {
         String = 4,
         None = 5
     }
+    export function getPropertiesForObjectExpression(contextualType: Type, completionsType: Type | undefined, obj: ObjectLiteralExpression | JsxAttributes, checker: TypeChecker): Symbol[];
     export {};
 }
 declare namespace ts {
@@ -1785,7 +1791,8 @@ declare namespace ts.FindAllReferences {
         Label = 1,
         Keyword = 2,
         This = 3,
-        String = 4
+        String = 4,
+        TripleSlashReference = 5
     }
     type Definition = {
         readonly type: DefinitionKind.Symbol;
@@ -1801,7 +1808,11 @@ declare namespace ts.FindAllReferences {
         readonly node: Node;
     } | {
         readonly type: DefinitionKind.String;
-        readonly node: StringLiteral;
+        readonly node: StringLiteralLike;
+    } | {
+        readonly type: DefinitionKind.TripleSlashReference;
+        readonly reference: FileReference;
+        readonly file: SourceFile;
     };
     const enum EntryKind {
         Span = 0,
@@ -1878,11 +1889,12 @@ declare namespace ts.FindAllReferences {
     namespace Core {
         /** Core find-all-references algorithm. Handles special cases before delegating to `getReferencedSymbolsForSymbol`. */
         function getReferencedSymbolsForNode(position: number, node: Node, program: Program, sourceFiles: readonly SourceFile[], cancellationToken: CancellationToken, options?: Options, sourceFilesSet?: ReadonlySet<string>): readonly SymbolAndEntries[] | undefined;
+        function getReferencesForFileName(fileName: string, program: Program, sourceFiles: readonly SourceFile[], sourceFilesSet?: ReadonlySet<string>): readonly Entry[];
         function eachExportReference(sourceFiles: readonly SourceFile[], checker: TypeChecker, cancellationToken: CancellationToken | undefined, exportSymbol: Symbol, exportingModuleSymbol: Symbol, exportName: string, isDefaultExport: boolean, cb: (ref: Identifier) => void): void;
         /** Used as a quick check for whether a symbol is used at all in a file (besides its definition). */
         function isSymbolReferencedInFile(definition: Identifier, checker: TypeChecker, sourceFile: SourceFile, searchContainer?: Node): boolean;
         function eachSymbolReferenceInFile<T>(definition: Identifier, checker: TypeChecker, sourceFile: SourceFile, cb: (token: Identifier) => T, searchContainer?: Node): T | undefined;
-        function eachSignatureCall(signature: SignatureDeclaration, sourceFiles: readonly SourceFile[], checker: TypeChecker, cb: (call: CallExpression) => void): void;
+        function someSignatureUsage(signature: SignatureDeclaration, sourceFiles: readonly SourceFile[], checker: TypeChecker, cb: (name: Identifier, call?: CallExpression) => boolean): boolean;
         /**
          * Given an initial searchMeaning, extracted from a location, widen the search scope based on the declarations
          * of the corresponding symbol. e.g. if we are searching for "Foo" in value position, but "Foo" references a class
@@ -1939,7 +1951,7 @@ declare namespace ts {
 declare namespace ts.GoToDefinition {
     function getDefinitionAtPosition(program: Program, sourceFile: SourceFile, position: number): readonly DefinitionInfo[] | undefined;
     function getReferenceAtPosition(sourceFile: SourceFile, position: number, program: Program): {
-        fileName: string;
+        reference: FileReference;
         file: SourceFile;
     } | undefined;
     function getTypeDefinitionAtPosition(typeChecker: TypeChecker, sourceFile: SourceFile, position: number): readonly DefinitionInfo[] | undefined;
@@ -1978,7 +1990,7 @@ declare namespace ts.JsDoc {
      * @param position The (character-indexed) position in the file where the check should
      * be performed.
      */
-    function getDocCommentTemplateAtPosition(newLine: string, sourceFile: SourceFile, position: number): TextInsertion | undefined;
+    function getDocCommentTemplateAtPosition(newLine: string, sourceFile: SourceFile, position: number, options?: DocCommentTemplateOptions): TextInsertion | undefined;
 }
 declare namespace ts.NavigateTo {
     function getNavigateToItems(sourceFiles: readonly SourceFile[], checker: TypeChecker, cancellationToken: CancellationToken, searchValue: string, maxResultCount: number | undefined, excludeDtsFiles: boolean): NavigateToItem[];
@@ -2079,14 +2091,14 @@ declare namespace ts {
 }
 declare namespace ts {
     function computeSuggestionDiagnostics(sourceFile: SourceFile, program: Program, cancellationToken: CancellationToken): DiagnosticWithLocation[];
-    function isReturnStatementWithFixablePromiseHandler(node: Node): node is ReturnStatement & {
+    function isReturnStatementWithFixablePromiseHandler(node: Node, checker: TypeChecker): node is ReturnStatement & {
         expression: CallExpression;
     };
-    function isFixablePromiseHandler(node: Node): boolean;
+    function isFixablePromiseHandler(node: Node, checker: TypeChecker): boolean;
 }
 declare namespace ts.SymbolDisplay {
     export function getSymbolKind(typeChecker: TypeChecker, symbol: Symbol, location: Node): ScriptElementKind;
-    export function getSymbolModifiers(symbol: Symbol): string;
+    export function getSymbolModifiers(typeChecker: TypeChecker, symbol: Symbol): string;
     interface SymbolDisplayPartsDocumentationAndSymbolKind {
         displayParts: SymbolDisplayPart[];
         documentation: SymbolDisplayPart[];
@@ -2214,7 +2226,7 @@ declare namespace ts.formatting {
     interface TextRangeWithKind<T extends SyntaxKind = SyntaxKind> extends TextRange {
         kind: T;
     }
-    type TextRangeWithTriviaKind = TextRangeWithKind<TriviaKind>;
+    type TextRangeWithTriviaKind = TextRangeWithKind<TriviaSyntaxKind>;
     interface TokenInfo {
         leadingTrivia: TextRangeWithTriviaKind[] | undefined;
         token: TextRangeWithKind;
@@ -2256,6 +2268,7 @@ declare namespace ts.formatting {
         function getBaseIndentation(options: EditorSettings): number;
         function isArgumentAndStartLineOverlapsExpressionBeingCalled(parent: Node, child: Node, childStartLine: number, sourceFile: SourceFileLike): boolean;
         function childStartsOnTheSameLineWithElseInIfStatement(parent: Node, child: TextRangeWithKind, childStartLine: number, sourceFile: SourceFileLike): boolean;
+        function childIsUnindentedBranchOfConditionalExpression(parent: Node, child: TextRangeWithKind, childStartLine: number, sourceFile: SourceFileLike): boolean;
         function argumentStartsOnSameLineAsPreviousArgument(parent: Node, child: TextRangeWithKind, childStartLine: number, sourceFile: SourceFileLike): boolean;
         function getContainingList(node: Node, sourceFile: SourceFile): NodeArray<Node> | undefined;
         /**
@@ -2395,8 +2408,8 @@ declare namespace ts.textChanges {
         private insertAtTopOfFile;
         insertFirstParameter(sourceFile: SourceFile, parameters: NodeArray<ParameterDeclaration>, newParam: ParameterDeclaration): void;
         insertNodeBefore(sourceFile: SourceFile, before: Node, newNode: Node, blankLineBetween?: boolean, options?: ConfigurableStartEnd): void;
+        insertModifierAt(sourceFile: SourceFile, pos: number, modifier: SyntaxKind, options?: InsertNodeOptions): void;
         insertModifierBefore(sourceFile: SourceFile, modifier: SyntaxKind, before: Node): void;
-        insertLastModifierBefore(sourceFile: SourceFile, modifier: SyntaxKind, before: Node): void;
         insertCommentBeforeLine(sourceFile: SourceFile, lineNumber: number, position: number, commentText: string): void;
         insertJsdocCommentBefore(sourceFile: SourceFile, node: HasJSDoc, tag: JSDoc): void;
         replaceRangeWithText(sourceFile: SourceFile, range: TextRange, text: string): void;
@@ -2575,6 +2588,8 @@ declare namespace ts.codefix {
 declare namespace ts.codefix {
 }
 declare namespace ts.codefix {
+}
+declare namespace ts.codefix {
     function addJSDocTags(changes: textChanges.ChangeTracker, sourceFile: SourceFile, parent: HasJSDoc, newTags: readonly JSDocTag[]): void;
 }
 declare namespace ts.codefix {
@@ -2595,8 +2610,9 @@ declare namespace ts.codefix {
         program: Program;
         host: LanguageServiceHost;
     }
-    function createMethodFromCallExpression(context: CodeFixContextBase, importAdder: ImportAdder, call: CallExpression, methodName: string, modifierFlags: ModifierFlags, contextNode: Node, inJs: boolean): MethodDeclaration;
-    function typeToAutoImportableTypeNode(checker: TypeChecker, importAdder: ImportAdder, type: Type, contextNode: Node, scriptTarget: ScriptTarget, flags?: NodeBuilderFlags, tracker?: SymbolTracker): TypeNode | undefined;
+    function createSignatureDeclarationFromCallExpression(kind: SyntaxKind.MethodDeclaration | SyntaxKind.FunctionDeclaration, context: CodeFixContextBase, importAdder: ImportAdder, call: CallExpression, name: Identifier | string, modifierFlags: ModifierFlags, contextNode: Node): FunctionDeclaration | MethodDeclaration;
+    function typeToAutoImportableTypeNode(checker: TypeChecker, importAdder: ImportAdder, type: Type, contextNode: Node | undefined, scriptTarget: ScriptTarget, flags?: NodeBuilderFlags, tracker?: SymbolTracker): TypeNode | undefined;
+    function createStubbedBody(text: string, quotePreference: QuotePreference): Block;
     function setJsonCompilerOptionValues(changeTracker: textChanges.ChangeTracker, configFile: TsConfigSourceFile, options: [string, Expression][]): undefined;
     function setJsonCompilerOptionValue(changeTracker: textChanges.ChangeTracker, configFile: TsConfigSourceFile, optionName: string, optionValue: Expression): void;
     function createJsonPropertyAssignment(name: string, initializer: Expression): PropertyAssignment;
@@ -2616,7 +2632,8 @@ declare namespace ts.codefix {
     type AcceptedDeclaration = ParameterPropertyDeclaration | PropertyDeclaration | PropertyAssignment;
     type AcceptedNameType = Identifier | StringLiteral;
     type ContainerDeclaration = ClassLikeDeclaration | ObjectLiteralExpression;
-    interface Info {
+    type Info = AccessorInfo | refactor.RefactorErrorInfo;
+    interface AccessorInfo {
         readonly container: ContainerDeclaration;
         readonly isStatic: boolean;
         readonly isReadonly: boolean;
@@ -2627,15 +2644,8 @@ declare namespace ts.codefix {
         readonly originalName: string;
         readonly renameAccessor: boolean;
     }
-    type InfoOrError = {
-        info: Info;
-        error?: never;
-    } | {
-        info?: never;
-        error: string;
-    };
     export function generateAccessorFromProperty(file: SourceFile, program: Program, start: number, end: number, context: textChanges.TextChangesContext, _actionName: string): FileTextChanges[] | undefined;
-    export function getAccessorConvertiblePropertyAtPosition(file: SourceFile, program: Program, start: number, end: number, considerEmptySpans?: boolean): InfoOrError | undefined;
+    export function getAccessorConvertiblePropertyAtPosition(file: SourceFile, program: Program, start: number, end: number, considerEmptySpans?: boolean): Info | undefined;
     export function getAllSupers(decl: ClassOrInterface | undefined, checker: TypeChecker): readonly ClassOrInterface[];
     export type ClassOrInterface = ClassLikeDeclaration | InterfaceDeclaration;
     export {};
@@ -2755,6 +2765,23 @@ declare namespace ts.refactor {
 declare namespace ts.refactor.generateGetAccessorAndSetAccessor {
 }
 declare namespace ts.refactor {
+    /**
+     * Returned by refactor funtions when some error message needs to be surfaced to users.
+     */
+    interface RefactorErrorInfo {
+        error: string;
+    }
+    /**
+     * Checks if some refactor info has refactor error info.
+     */
+    function isRefactorErrorInfo(info: unknown): info is RefactorErrorInfo;
+    /**
+     * Checks if string "known" begins with string "requested".
+     * Used to match requested kinds with a known kind.
+     */
+    function refactorKindBeginsWith(known: string, requested: string | undefined): boolean;
+}
+declare namespace ts.refactor {
 }
 declare namespace ts.refactor.addOrRemoveBracesToArrowFunction {
 }
@@ -2763,6 +2790,8 @@ declare namespace ts.refactor.convertParamsToDestructuredObject {
 declare namespace ts.refactor.convertStringOrTemplateLiteral {
 }
 declare namespace ts.refactor.convertArrowFunctionOrFunctionExpression {
+}
+declare namespace ts.refactor.inferFunctionReturnType {
 }
 declare namespace ts {
     /** The version of the language service API */
@@ -2964,6 +2993,11 @@ declare namespace ts {
          */
         findReferences(fileName: string, position: number): string;
         /**
+         * Returns a JSON-encoded value of the type:
+         * { fileName: string; textSpan: { start: number; length: number}; isWriteAccess: boolean, isDefinition?: boolean }[]
+         */
+        getFileReferences(fileName: string): string;
+        /**
          * @deprecated
          * Returns a JSON-encoded value of the type:
          * { fileName: string; textSpan: { start: number; length: number}; isWriteAccess: boolean }[]
@@ -3003,7 +3037,7 @@ declare namespace ts {
         /**
          * Returns JSON-encoded value of the type TextInsertion.
          */
-        getDocCommentTemplateAtPosition(fileName: string, position: number): string;
+        getDocCommentTemplateAtPosition(fileName: string, position: number, options?: DocCommentTemplateOptions): string;
         /**
          * Returns JSON-encoded boolean to indicate whether we should support brace location
          * at the current position.

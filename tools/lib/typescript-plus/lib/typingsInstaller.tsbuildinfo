@@ -14,76 +14,76 @@
         },
         {
           "pos": 14,
-          "end": 341,
+          "end": 201,
           "kind": "emitHelpers",
-          "data": "typescript:spreadArrays"
+          "data": "typescript:spreadArray"
         },
         {
-          "pos": 342,
-          "end": 724,
+          "pos": 202,
+          "end": 584,
           "kind": "emitHelpers",
           "data": "typescript:assign"
         },
         {
-          "pos": 725,
-          "end": 953,
+          "pos": 585,
+          "end": 813,
           "kind": "emitHelpers",
           "data": "typescript:makeTemplateObject"
         },
         {
-          "pos": 954,
-          "end": 2744,
+          "pos": 814,
+          "end": 2604,
           "kind": "emitHelpers",
           "data": "typescript:generator"
         },
         {
-          "pos": 2745,
-          "end": 3353,
+          "pos": 2605,
+          "end": 3367,
           "kind": "emitHelpers",
           "data": "typescript:extends"
         },
         {
-          "pos": 3354,
-          "end": 6752391,
+          "pos": 3368,
+          "end": 6885769,
           "kind": "prepend",
           "data": "./compiler.js",
           "texts": [
             {
-              "pos": 3354,
-              "end": 6752391,
+              "pos": 3368,
+              "end": 6885769,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 6752391,
-          "end": 6772258,
+          "pos": 6885769,
+          "end": 6905636,
           "kind": "prepend",
           "data": "./jsTyping.js",
           "texts": [
             {
-              "pos": 6752391,
-              "end": 6772258,
+              "pos": 6885769,
+              "end": 6905636,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 6772258,
-          "end": 6802585,
+          "pos": 6905636,
+          "end": 6935870,
           "kind": "prepend",
           "data": "./typingsInstallerCore.js",
           "texts": [
             {
-              "pos": 6772258,
-              "end": 6802585,
+              "pos": 6905636,
+              "end": 6935870,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 6802585,
-          "end": 6815762,
+          "pos": 6935870,
+          "end": 6949047,
           "kind": "text"
         }
       ],
@@ -112,5 +112,5 @@
       }
     }
   },
-  "version": "4.1.2"
+  "version": "4.2.3"
 }

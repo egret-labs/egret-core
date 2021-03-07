@@ -14,57 +14,57 @@
         },
         {
           "pos": 14,
-          "end": 341,
+          "end": 201,
           "kind": "emitHelpers",
-          "data": "typescript:spreadArrays"
+          "data": "typescript:spreadArray"
         },
         {
-          "pos": 342,
-          "end": 724,
+          "pos": 202,
+          "end": 584,
           "kind": "emitHelpers",
           "data": "typescript:assign"
         },
         {
-          "pos": 725,
-          "end": 953,
+          "pos": 585,
+          "end": 813,
           "kind": "emitHelpers",
           "data": "typescript:makeTemplateObject"
         },
         {
-          "pos": 954,
-          "end": 2744,
+          "pos": 814,
+          "end": 2604,
           "kind": "emitHelpers",
           "data": "typescript:generator"
         },
         {
-          "pos": 2745,
-          "end": 6751782,
+          "pos": 2605,
+          "end": 6885006,
           "kind": "prepend",
           "data": "./compiler.js",
           "texts": [
             {
-              "pos": 2745,
-              "end": 6751782,
+              "pos": 2605,
+              "end": 6885006,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 6751782,
-          "end": 6780749,
+          "pos": 6885006,
+          "end": 6916309,
           "kind": "prepend",
           "data": "./executeCommandLine.js",
           "texts": [
             {
-              "pos": 6751782,
-              "end": 6780749,
+              "pos": 6885006,
+              "end": 6916309,
               "kind": "text"
             }
           ]
         },
         {
-          "pos": 6780749,
-          "end": 6781266,
+          "pos": 6916309,
+          "end": 6916826,
           "kind": "text"
         }
       ],
@@ -89,5 +89,5 @@
       }
     }
   },
-  "version": "4.1.2"
+  "version": "4.2.3"
 }

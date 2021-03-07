@@ -18,17 +18,17 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __spreadArrays = (this && this.__spreadArrays) || function () {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
+var __spreadArray = (this && this.__spreadArray) || function (to, from) {
+    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
+        to[j] = from[i];
+    return to;
 };
 var __rest = (this && this.__rest) || function (s, e) {
     var t = {};
@@ -302,6 +302,9 @@ var ts;
                 /* @internal */
                 CommandTypes["EmitOutput"] = "emit-output";
                 CommandTypes["Exit"] = "exit";
+                CommandTypes["FileReferences"] = "fileReferences";
+                /* @internal */
+                CommandTypes["FileReferencesFull"] = "fileReferences-full";
                 CommandTypes["Format"] = "format";
                 CommandTypes["Formatonkey"] = "formatonkey";
                 /* @internal */
@@ -489,6 +492,34 @@ var ts;
                 ScriptTarget["ES2020"] = "ES2020";
                 ScriptTarget["ESNext"] = "ESNext";
             })(ScriptTarget = protocol.ScriptTarget || (protocol.ScriptTarget = {}));
+            var ClassificationType;
+            (function (ClassificationType) {
+                ClassificationType[ClassificationType["comment"] = 1] = "comment";
+                ClassificationType[ClassificationType["identifier"] = 2] = "identifier";
+                ClassificationType[ClassificationType["keyword"] = 3] = "keyword";
+                ClassificationType[ClassificationType["numericLiteral"] = 4] = "numericLiteral";
+                ClassificationType[ClassificationType["operator"] = 5] = "operator";
+                ClassificationType[ClassificationType["stringLiteral"] = 6] = "stringLiteral";
+                ClassificationType[ClassificationType["regularExpressionLiteral"] = 7] = "regularExpressionLiteral";
+                ClassificationType[ClassificationType["whiteSpace"] = 8] = "whiteSpace";
+                ClassificationType[ClassificationType["text"] = 9] = "text";
+                ClassificationType[ClassificationType["punctuation"] = 10] = "punctuation";
+                ClassificationType[ClassificationType["className"] = 11] = "className";
+                ClassificationType[ClassificationType["enumName"] = 12] = "enumName";
+                ClassificationType[ClassificationType["interfaceName"] = 13] = "interfaceName";
+                ClassificationType[ClassificationType["moduleName"] = 14] = "moduleName";
+                ClassificationType[ClassificationType["typeParameterName"] = 15] = "typeParameterName";
+                ClassificationType[ClassificationType["typeAliasName"] = 16] = "typeAliasName";
+                ClassificationType[ClassificationType["parameterName"] = 17] = "parameterName";
+                ClassificationType[ClassificationType["docCommentTagName"] = 18] = "docCommentTagName";
+                ClassificationType[ClassificationType["jsxOpenTagName"] = 19] = "jsxOpenTagName";
+                ClassificationType[ClassificationType["jsxCloseTagName"] = 20] = "jsxCloseTagName";
+                ClassificationType[ClassificationType["jsxSelfClosingTagName"] = 21] = "jsxSelfClosingTagName";
+                ClassificationType[ClassificationType["jsxAttribute"] = 22] = "jsxAttribute";
+                ClassificationType[ClassificationType["jsxText"] = 23] = "jsxText";
+                ClassificationType[ClassificationType["jsxAttributeStringLiteralValue"] = 24] = "jsxAttributeStringLiteralValue";
+                ClassificationType[ClassificationType["bigintLiteral"] = 25] = "bigintLiteral";
+            })(ClassificationType = protocol.ClassificationType || (protocol.ClassificationType = {}));
         })(protocol = server.protocol || (server.protocol = {}));
     })(server = ts.server || (ts.server = {}));
 })(ts || (ts = {}));
@@ -1488,7 +1519,7 @@ var ts;
             };
             /*@internal*/
             Project.prototype.watchDirectoryOfFailedLookupLocation = function (directory, cb, flags) {
-                return this.projectService.watchFactory.watchDirectory(this.projectService.host, directory, cb, flags, this.projectService.getWatchOptions(this), ts.WatchType.FailedLookupLocations, this);
+                return this.projectService.watchFactory.watchDirectory(directory, cb, flags, this.projectService.getWatchOptions(this), ts.WatchType.FailedLookupLocations, this);
             };
             /*@internal*/
             Project.prototype.clearInvalidateResolutionOfFailedLookupTimer = function () {
@@ -1517,7 +1548,7 @@ var ts;
             };
             /*@internal*/
             Project.prototype.watchTypeRootsDirectory = function (directory, cb, flags) {
-                return this.projectService.watchFactory.watchDirectory(this.projectService.host, directory, cb, flags, this.projectService.getWatchOptions(this), ts.WatchType.TypeRoots, this);
+                return this.projectService.watchFactory.watchDirectory(directory, cb, flags, this.projectService.getWatchOptions(this), ts.WatchType.TypeRoots, this);
             };
             /*@internal*/
             Project.prototype.hasChangedAutomaticTypeDirectiveNames = function () {
@@ -1554,10 +1585,16 @@ var ts;
              * Get the errors that dont have any file name associated
              */
             Project.prototype.getGlobalProjectErrors = function () {
-                return server.emptyArray;
+                return ts.filter(this.projectErrors, function (diagnostic) { return !diagnostic.file; }) || server.emptyArray;
             };
+            /**
+             * Get all the project errors
+             */
             Project.prototype.getAllProjectErrors = function () {
-                return server.emptyArray;
+                return this.projectErrors || server.emptyArray;
+            };
+            Project.prototype.setProjectErrors = function (projectErrors) {
+                this.projectErrors = projectErrors;
             };
             Project.prototype.getLanguageService = function (ensureSynchronized) {
                 if (ensureSynchronized === void 0) { ensureSynchronized = true; }
@@ -1718,6 +1755,7 @@ var ts;
                 this.resolutionCache = undefined;
                 this.cachedUnresolvedImportsPerFile = undefined;
                 this.directoryStructureHost = undefined;
+                this.projectErrors = undefined;
                 // Clean up file watchers waiting for missing files
                 if (this.missingFilesMap) {
                     ts.clearMap(this.missingFilesMap, ts.closeFileWatcher);
@@ -1972,11 +2010,14 @@ var ts;
             /*@internal*/
             Project.prototype.updateTypingFiles = function (typingFiles) {
                 var _this = this;
-                ts.enumerateInsertsAndDeletes(typingFiles, this.typingFiles, ts.getStringComparer(!this.useCaseSensitiveFileNames()), 
-                /*inserted*/ ts.noop, function (removed) { return _this.detachScriptInfoFromProject(removed); });
-                this.typingFiles = typingFiles;
-                // Invalidate files with unresolved imports
-                this.resolutionCache.setFilesWithInvalidatedNonRelativeUnresolvedImports(this.cachedUnresolvedImportsPerFile);
+                if (ts.enumerateInsertsAndDeletes(typingFiles, this.typingFiles, ts.getStringComparer(!this.useCaseSensitiveFileNames()), 
+                /*inserted*/ ts.noop, function (removed) { return _this.detachScriptInfoFromProject(removed); })) {
+                    // If typing files changed, then only schedule project update
+                    this.typingFiles = typingFiles;
+                    // Invalidate files with unresolved imports
+                    this.resolutionCache.setFilesWithInvalidatedNonRelativeUnresolvedImports(this.cachedUnresolvedImportsPerFile);
+                    this.projectService.delayUpdateProjectGraphAndEnsureProjectStructureForOpenFiles(this);
+                }
             };
             /* @internal */
             Project.prototype.getCurrentProgram = function () {
@@ -2083,7 +2124,7 @@ var ts;
                 // the program doesn't contain external files so this must be done explicitly.
                 function (inserted) {
                     var scriptInfo = _this.projectService.getOrCreateScriptInfoNotOpenedByClient(inserted, _this.currentDirectory, _this.directoryStructureHost);
-                    scriptInfo.attachToProject(_this);
+                    scriptInfo === null || scriptInfo === void 0 ? void 0 : scriptInfo.attachToProject(_this);
                 }, function (removed) { return _this.detachScriptInfoFromProject(removed); });
                 var elapsed = ts.timestamp() - start;
                 this.sendPerformanceEvent("UpdateGraph", elapsed);
@@ -2159,7 +2200,7 @@ var ts;
             };
             Project.prototype.addMissingFileWatcher = function (missingFilePath) {
                 var _this = this;
-                var fileWatcher = this.projectService.watchFactory.watchFile(this.projectService.host, missingFilePath, function (fileName, eventKind) {
+                var fileWatcher = this.projectService.watchFactory.watchFile(missingFilePath, function (fileName, eventKind) {
                     if (isConfiguredProject(_this)) {
                         _this.getCachedDirectoryStructureHost().addOrDeleteFile(fileName, missingFilePath, eventKind);
                     }
@@ -2204,7 +2245,7 @@ var ts;
                 var _this = this;
                 return {
                     generatedFilePath: this.toPath(generatedFile),
-                    watcher: this.projectService.watchFactory.watchFile(this.projectService.host, generatedFile, function () {
+                    watcher: this.projectService.watchFactory.watchFile(generatedFile, function () {
                         _this.clearSourceMapperCache();
                         _this.projectService.delayUpdateProjectGraphAndEnsureProjectStructureForOpenFiles(_this);
                     }, ts.PollingInterval.High, this.projectService.getWatchOptions(this), ts.WatchType.MissingGeneratedFile, this)
@@ -2246,6 +2287,8 @@ var ts;
                         var file = sourceFiles_1[_i];
                         strBuilder += "\t" + file.fileName + "\n";
                     }
+                    strBuilder += "\n\n";
+                    ts.explainFiles(this.program, function (s) { return strBuilder += "\t" + s + "\n"; });
                 }
                 return strBuilder;
             };
@@ -2399,7 +2442,7 @@ var ts;
                     return;
                 }
                 // Search any globally-specified probe paths, then our peer node_modules
-                var searchPaths = __spreadArrays(this.projectService.pluginProbeLocations, [
+                var searchPaths = __spreadArray(__spreadArray([], this.projectService.pluginProbeLocations), [
                     // ../../.. to walk from X/node_modules/typescript/lib/tsserver.js to X/node_modules/
                     ts.combinePaths(this.projectService.getExecutingFilePath(), "../../.."),
                 ]);
@@ -2426,6 +2469,10 @@ var ts;
             Project.prototype.enablePlugin = function (pluginConfigEntry, searchPaths, pluginConfigOverrides) {
                 var _this = this;
                 this.projectService.logger.info("Enabling plugin " + pluginConfigEntry.name + " from candidate paths: " + searchPaths.join(","));
+                if (!pluginConfigEntry.name || ts.parsePackageName(pluginConfigEntry.name).rest) {
+                    this.projectService.logger.info("Skipped loading plugin " + (pluginConfigEntry.name || JSON.stringify(pluginConfigEntry)) + " because only package name is allowed plugin name");
+                    return;
+                }
                 var log = function (message) { return _this.projectService.logger.info(message); };
                 var errorLogs;
                 var logError = function (message) { (errorLogs || (errorLogs = [])).push(message); };
@@ -2495,6 +2542,10 @@ var ts;
                 if (this.projectService.serverMode !== ts.LanguageServiceMode.Semantic)
                     return server.emptyArray;
                 return this.projectService.getPackageJsonsVisibleToFile(fileName, rootDir);
+            };
+            /*@internal*/
+            Project.prototype.getNearestAncestorDirectoryWithPackageJson = function (fileName) {
+                return this.projectService.getNearestAncestorDirectoryWithPackageJson(fileName);
             };
             /*@internal*/
             Project.prototype.getPackageJsonsForAutoImport = function (rootDir) {
@@ -2762,6 +2813,10 @@ var ts;
                 this.hostProject.getImportSuggestionsCache().clear();
                 return _super.prototype.updateGraph.call(this);
             };
+            AutoImportProviderProject.prototype.hasRoots = function () {
+                var _a;
+                return !!((_a = this.rootFileNames) === null || _a === void 0 ? void 0 : _a.length);
+            };
             AutoImportProviderProject.prototype.markAsDirty = function () {
                 this.rootFileNames = undefined;
                 _super.prototype.markAsDirty.call(this);
@@ -2857,7 +2912,7 @@ var ts;
             /* @internal */
             ConfiguredProject.prototype.createConfigFileWatcher = function () {
                 var _this = this;
-                this.configFileWatcher = this.projectService.watchFactory.watchFile(this.projectService.host, this.getConfigFilePath(), function (_fileName, eventKind) { return _this.projectService.onConfigChangedForConfiguredProject(_this, eventKind); }, ts.PollingInterval.High, this.projectService.getWatchOptions(this), ts.WatchType.ConfigFile, this);
+                this.configFileWatcher = this.projectService.watchFactory.watchFile(this.getConfigFilePath(), function (_fileName, eventKind) { return _this.projectService.onConfigChangedForConfiguredProject(_this, eventKind); }, ts.PollingInterval.High, this.projectService.getWatchOptions(this), ts.WatchType.ConfigFile, this);
             };
             /**
              * If the project has reload from disk pending, it reloads (and then updates graph as part of that) instead of just updating the graph
@@ -2878,7 +2933,7 @@ var ts;
                         this.openFileWatchTriggered.clear();
                         var reason = ts.Debug.checkDefined(this.pendingReloadReason);
                         this.pendingReloadReason = undefined;
-                        this.projectService.reloadConfiguredProject(this, reason, isInitialLoad);
+                        this.projectService.reloadConfiguredProject(this, reason, isInitialLoad, /*clearSemanticCache*/ false);
                         result = true;
                         break;
                     default:
@@ -2927,7 +2982,7 @@ var ts;
                 }
                 // Search our peer node_modules, then any globally-specified probe paths
                 // ../../.. to walk from X/node_modules/typescript/lib/tsserver.js to X/node_modules/
-                var searchPaths = __spreadArrays([ts.combinePaths(this.projectService.getExecutingFilePath(), "../../..")], this.projectService.pluginProbeLocations);
+                var searchPaths = __spreadArray([ts.combinePaths(this.projectService.getExecutingFilePath(), "../../..")], this.projectService.pluginProbeLocations);
                 if (this.projectService.allowLocalPluginLoads) {
                     var local = ts.getDirectoryPath(this.canonicalConfigFilePath);
                     this.projectService.logger.info("Local plugin loading enabled; adding " + local + " to search paths");
@@ -2977,8 +3032,8 @@ var ts;
                     this.configFileWatcher = undefined;
                 }
                 this.stopWatchingWildCards();
+                this.projectService.removeProjectFromSharedExtendedConfigFileMap(this);
                 this.projectErrors = undefined;
-                this.configFileSpecs = undefined;
                 this.openFileWatchTriggered.clear();
                 this.compilerHost = undefined;
                 _super.prototype.close.call(this);
@@ -3038,8 +3093,8 @@ var ts;
                 return ts.getEffectiveTypeRoots(this.getCompilationSettings(), this.directoryStructureHost) || [];
             };
             /*@internal*/
-            ConfiguredProject.prototype.updateErrorOnNoInputFiles = function (fileNameResult) {
-                ts.updateErrorForNoInputFiles(fileNameResult, this.getConfigFilePath(), this.configFileSpecs, this.projectErrors, this.canConfigFileJsonReportNoInputFiles);
+            ConfiguredProject.prototype.updateErrorOnNoInputFiles = function (fileNames) {
+                ts.updateErrorForNoInputFiles(fileNames, this.getConfigFilePath(), this.getCompilerOptions().configFile.configFileSpecs, this.projectErrors, this.canConfigFileJsonReportNoInputFiles);
             };
             return ConfiguredProject;
         }(Project));
@@ -3103,6 +3158,7 @@ var ts;
         server.ProjectLanguageServiceStateEvent = "projectLanguageServiceState";
         server.ProjectInfoTelemetryEvent = "projectInfo";
         server.OpenFileInfoTelemetryEvent = "openFileInfo";
+        var ensureProjectForOpenFileSchedule = "*ensureProjectForOpenFiles*";
         function prepareConvertersForEnumLikeCompilerOptions(commandLineOptions) {
             var map = new ts.Map();
             for (var _i = 0, commandLineOptions_1 = commandLineOptions; _i < commandLineOptions_1.length; _i++) {
@@ -3146,7 +3202,7 @@ var ts;
         var defaultTypeSafeList = {
             "jquery": {
                 // jquery files can have names like "jquery-1.10.2.min.js" (or "jquery.intellisense.js")
-                match: /jquery(-(\.?\d+)+)?(\.intellisense)?(\.min)?\.js$/i,
+                match: /jquery(-[\d\.]+)?(\.intellisense)?(\.min)?\.js$/i,
                 types: ["jquery"]
             },
             "WinJS": {
@@ -3190,17 +3246,19 @@ var ts;
             return protocolOptions;
         }
         server.convertCompilerOptions = convertCompilerOptions;
-        function convertWatchOptions(protocolOptions) {
-            var result;
-            watchOptionsConverters.forEach(function (mappedValues, id) {
-                var propertyValue = protocolOptions[id];
+        function convertWatchOptions(protocolOptions, currentDirectory) {
+            var watchOptions;
+            var errors;
+            ts.optionsForWatch.forEach(function (option) {
+                var propertyValue = protocolOptions[option.name];
                 if (propertyValue === undefined)
                     return;
-                (result || (result = {}))[id] = ts.isString(propertyValue) ?
-                    mappedValues.get(propertyValue.toLowerCase()) :
-                    propertyValue;
+                var mappedValues = watchOptionsConverters.get(option.name);
+                (watchOptions || (watchOptions = {}))[option.name] = mappedValues ?
+                    ts.isString(propertyValue) ? mappedValues.get(propertyValue.toLowerCase()) : propertyValue :
+                    ts.convertJsonOption(option, propertyValue, currentDirectory || "", errors || (errors = []));
             });
-            return result;
+            return watchOptions && { watchOptions: watchOptions, errors: errors };
         }
         server.convertWatchOptions = convertWatchOptions;
         function convertTypeAcquisition(protocolOptions) {
@@ -3465,6 +3523,8 @@ var ts;
                 this.pendingEnsureProjectForOpenFiles = false;
                 /** Tracks projects that we have already sent telemetry for. */
                 this.seenProjects = new ts.Map();
+                /*@internal*/
+                this.sharedExtendedConfigFileWatchers = new ts.Map();
                 this.host = opts.host;
                 this.logger = opts.logger;
                 this.cancellationToken = opts.cancellationToken;
@@ -3521,10 +3581,9 @@ var ts;
                 this.watchFactory = this.serverMode !== ts.LanguageServiceMode.Semantic ?
                     {
                         watchFile: ts.returnNoopFileWatcher,
-                        watchFilePath: ts.returnNoopFileWatcher,
                         watchDirectory: ts.returnNoopFileWatcher,
                     } :
-                    ts.getWatchFactory(watchLogLevel, log, getDetailWatchInfo);
+                    ts.getWatchFactory(this.host, watchLogLevel, log, getDetailWatchInfo);
             }
             ProjectService.prototype.toPath = function (fileName) {
                 return ts.toPath(fileName, this.currentDirectory, this.toCanonicalFileName);
@@ -3602,19 +3661,20 @@ var ts;
                     case server.ActionSet:
                         // Update the typing files and update the project
                         project.updateTypingFiles(this.typingsCache.updateTypingsForProject(response.projectName, response.compilerOptions, response.typeAcquisition, response.unresolvedImports, response.typings));
-                        break;
+                        return;
                     case server.ActionInvalidate:
                         // Do not clear resolution cache, there was changes detected in typings, so enque typing request and let it get us correct results
                         this.typingsCache.enqueueInstallTypingsForProject(project, project.lastCachedUnresolvedImportsList, /*forceRefresh*/ true);
                         return;
                 }
-                this.delayUpdateProjectGraphAndEnsureProjectStructureForOpenFiles(project);
             };
             /*@internal*/
             ProjectService.prototype.delayEnsureProjectForOpenFiles = function () {
                 var _this = this;
+                if (!this.openFiles.size)
+                    return;
                 this.pendingEnsureProjectForOpenFiles = true;
-                this.throttledOperations.schedule("*ensureProjectForOpenFiles*", /*delay*/ 2500, function () {
+                this.throttledOperations.schedule(ensureProjectForOpenFileSchedule, /*delay*/ 2500, function () {
                     if (_this.pendingProjectUpdates.size !== 0) {
                         _this.delayEnsureProjectForOpenFiles();
                     }
@@ -3718,7 +3778,7 @@ var ts;
             ProjectService.prototype.setCompilerOptionsForInferredProjects = function (projectCompilerOptions, projectRootPath) {
                 ts.Debug.assert(projectRootPath === undefined || this.useInferredProjectPerProjectRoot, "Setting compiler options per project root path is only supported when useInferredProjectPerProjectRoot is enabled");
                 var compilerOptions = convertCompilerOptions(projectCompilerOptions);
-                var watchOptions = convertWatchOptions(projectCompilerOptions);
+                var watchOptions = convertWatchOptions(projectCompilerOptions, projectRootPath);
                 var typeAcquisition = convertTypeAcquisition(projectCompilerOptions);
                 // always set 'allowNonTsExtensions' for inferred projects since user cannot configure it from the outside
                 // previously we did not expose a way for user to change these settings and this option was enabled by default
@@ -3748,8 +3808,9 @@ var ts;
                         project.projectRootPath === canonicalProjectRootPath :
                         !project.projectRootPath || !this.compilerOptionsForInferredProjectsPerProjectRoot.has(project.projectRootPath)) {
                         project.setCompilerOptions(compilerOptions);
-                        project.setWatchOptions(watchOptions);
                         project.setTypeAcquisition(typeAcquisition);
+                        project.setWatchOptions(watchOptions === null || watchOptions === void 0 ? void 0 : watchOptions.watchOptions);
+                        project.setProjectErrors(watchOptions === null || watchOptions === void 0 ? void 0 : watchOptions.errors);
                         project.compileOnSaveEnabled = compilerOptions.compileOnSave;
                         project.markAsDirty();
                         this.delayUpdateProjectGraph(project);
@@ -3835,26 +3896,20 @@ var ts;
             ProjectService.prototype.getHostPreferences = function () {
                 return this.hostConfiguration.preferences;
             };
-            ProjectService.prototype.onSourceFileChanged = function (fileName, eventKind, path) {
-                var info = this.getScriptInfoForPath(path);
-                if (!info) {
-                    this.logger.msg("Error: got watch notification for unknown file: " + fileName);
+            ProjectService.prototype.onSourceFileChanged = function (info, eventKind) {
+                if (info.containingProjects) {
+                    info.containingProjects.forEach(function (project) { return project.resolutionCache.removeResolutionsFromProjectReferenceRedirects(info.path); });
                 }
-                else {
-                    if (info.containingProjects) {
-                        info.containingProjects.forEach(function (project) { return project.resolutionCache.removeResolutionsFromProjectReferenceRedirects(info.path); });
-                    }
-                    if (eventKind === ts.FileWatcherEventKind.Deleted) {
-                        // File was deleted
-                        this.handleDeletedFile(info);
-                    }
-                    else if (!info.isScriptOpen()) {
-                        // file has been changed which might affect the set of referenced files in projects that include
-                        // this file and set of inferred projects
-                        info.delayReloadNonMixedContentFile();
-                        this.delayUpdateProjectGraphs(info.containingProjects, /*clearSourceMapperCache*/ false);
-                        this.handleSourceMapProjects(info);
-                    }
+                if (eventKind === ts.FileWatcherEventKind.Deleted) {
+                    // File was deleted
+                    this.handleDeletedFile(info);
+                }
+                else if (!info.isScriptOpen()) {
+                    // file has been changed which might affect the set of referenced files in projects that include
+                    // this file and set of inferred projects
+                    info.delayReloadNonMixedContentFile();
+                    this.delayUpdateProjectGraphs(info.containingProjects, /*clearSourceMapperCache*/ false);
+                    this.handleSourceMapProjects(info);
                 }
             };
             ProjectService.prototype.handleSourceMapProjects = function (info) {
@@ -3913,7 +3968,7 @@ var ts;
             ProjectService.prototype.watchWildcardDirectory = function (directory, flags, project) {
                 var _this = this;
                 var watchOptions = this.getWatchOptions(project);
-                return this.watchFactory.watchDirectory(this.host, directory, function (fileOrDirectory) {
+                return this.watchFactory.watchDirectory(directory, function (fileOrDirectory) {
                     var fileOrDirectoryPath = _this.toPath(fileOrDirectory);
                     var fsResult = project.getCachedDirectoryStructureHost().addOrDeleteFileOrDirectory(fileOrDirectory, fileOrDirectoryPath);
                     var configFileName = project.getConfigFilePath();
@@ -3927,7 +3982,6 @@ var ts;
                         fileOrDirectory: fileOrDirectory,
                         fileOrDirectoryPath: fileOrDirectoryPath,
                         configFileName: configFileName,
-                        configFileSpecs: project.configFileSpecs,
                         extraFileExtensions: _this.hostConfiguration.extraFileExtensions,
                         currentDirectory: _this.currentDirectory,
                         options: project.getCompilationSettings(),
@@ -3989,6 +4043,34 @@ var ts;
                     // we would need to schedule the project reload for only the root of inferred projects
                     this.delayReloadConfiguredProjectForFiles(configFileExistenceInfo, /*ignoreIfNotInferredProjectRoot*/ true);
                 }
+            };
+            /*@internal*/
+            ProjectService.prototype.updateSharedExtendedConfigFileMap = function (_a, parsedCommandLine) {
+                var _this = this;
+                var canonicalConfigFilePath = _a.canonicalConfigFilePath;
+                ts.updateSharedExtendedConfigFileWatcher(canonicalConfigFilePath, parsedCommandLine, this.sharedExtendedConfigFileWatchers, function (extendedConfigFileName, extendedConfigFilePath) { return _this.watchFactory.watchFile(extendedConfigFileName, function () {
+                    var _a;
+                    var ensureProjectsForOpenFiles = false;
+                    (_a = _this.sharedExtendedConfigFileWatchers.get(extendedConfigFilePath)) === null || _a === void 0 ? void 0 : _a.projects.forEach(function (canonicalPath) {
+                        var project = _this.configuredProjects.get(canonicalPath);
+                        // Skip refresh if project is not yet loaded
+                        if (!project || project.isInitialLoadPending())
+                            return;
+                        project.pendingReload = ts.ConfigFileProgramReloadLevel.Full;
+                        project.pendingReloadReason = "Change in extended config file " + extendedConfigFileName + " detected";
+                        _this.delayUpdateProjectGraph(project);
+                        ensureProjectsForOpenFiles = true;
+                    });
+                    if (ensureProjectsForOpenFiles)
+                        _this.delayEnsureProjectForOpenFiles();
+                }, ts.PollingInterval.High, _this.hostConfiguration.watchOptions, ts.WatchType.ExtendedConfigFile); }, function (fileName) { return _this.toPath(fileName); });
+            };
+            /*@internal*/
+            ProjectService.prototype.removeProjectFromSharedExtendedConfigFileMap = function (project) {
+                this.sharedExtendedConfigFileWatchers.forEach(function (watcher) {
+                    watcher.projects.delete(project.canonicalConfigFilePath);
+                    watcher.close();
+                });
             };
             /**
              * This is the callback function for the config file add/remove/change at any location
@@ -4275,7 +4357,7 @@ var ts;
                 var _this = this;
                 configFileExistenceInfo.configFileWatcherForRootOfInferredProject =
                     ts.canWatchDirectory(ts.getDirectoryPath(canonicalConfigFilePath)) ?
-                        this.watchFactory.watchFile(this.host, configFileName, function (_filename, eventKind) { return _this.onConfigFileChangeForOpenScriptInfo(configFileName, eventKind); }, ts.PollingInterval.High, this.hostConfiguration.watchOptions, ts.WatchType.ConfigFileForInferredRoot) :
+                        this.watchFactory.watchFile(configFileName, function (_filename, eventKind) { return _this.onConfigFileChangeForOpenScriptInfo(configFileName, eventKind); }, ts.PollingInterval.High, this.hostConfiguration.watchOptions, ts.WatchType.ConfigFileForInferredRoot) :
                         ts.noopFileWatcher;
                 this.logConfigFileWatchUpdate(configFileName, canonicalConfigFilePath, configFileExistenceInfo, "Updated the callback" /* UpdatedCallback */);
             };
@@ -4424,7 +4506,8 @@ var ts;
                 var project = configFileName &&
                     this.findConfiguredProjectByProjectName(configFileName);
                 return project && projectContainsInfoDirectly(project, info) ?
-                    project : project === null || project === void 0 ? void 0 : project.getDefaultChildProjectFromProjectWithReferences(info);
+                    project :
+                    project === null || project === void 0 ? void 0 : project.getDefaultChildProjectFromProjectWithReferences(info);
             };
             /**
              * This function tries to search for a tsconfig.json for the given file.
@@ -4490,6 +4573,7 @@ var ts;
             };
             /** Get a filename if the language service exceeds the maximum allowed program size; otherwise returns undefined. */
             ProjectService.prototype.getFilenameForExceededTotalSizeLimitForNonTsFiles = function (name, options, fileNames, propertyReader) {
+                var _this = this;
                 if (options && options.disableSizeLimit || !this.host.getFileSize) {
                     return;
                 }
@@ -4505,32 +4589,25 @@ var ts;
                     }
                     totalNonTsFileSize += this.host.getFileSize(fileName);
                     if (totalNonTsFileSize > server.maxProgramSizeForNonTsFiles || totalNonTsFileSize > availableSpace) {
-                        this.logger.info(getExceedLimitMessage({ propertyReader: propertyReader, hasTSFileExtension: ts.hasTSFileExtension, host: this.host }, totalNonTsFileSize)); // eslint-disable-line @typescript-eslint/no-unnecessary-qualifier
+                        var top5LargestFiles = fileNames.map(function (f) { return propertyReader.getFileName(f); })
+                            .filter(function (name) { return !ts.hasTSFileExtension(name); })
+                            .map(function (name) { return ({ name: name, size: _this.host.getFileSize(name) }); })
+                            .sort(function (a, b) { return b.size - a.size; })
+                            .slice(0, 5);
+                        this.logger.info("Non TS file size exceeded limit (" + totalNonTsFileSize + "). Largest files: " + top5LargestFiles.map(function (file) { return file.name + ":" + file.size; }).join(", "));
                         // Keep the size as zero since it's disabled
                         return fileName;
                     }
                 }
                 this.projectToSizeMap.set(name, totalNonTsFileSize);
-                return;
-                function getExceedLimitMessage(context, totalNonTsFileSize) {
-                    var files = getTop5LargestFiles(context);
-                    return "Non TS file size exceeded limit (" + totalNonTsFileSize + "). Largest files: " + files.map(function (file) { return file.name + ":" + file.size; }).join(", ");
-                }
-                function getTop5LargestFiles(_a) {
-                    var propertyReader = _a.propertyReader, hasTSFileExtension = _a.hasTSFileExtension, host = _a.host;
-                    return fileNames.map(function (f) { return propertyReader.getFileName(f); })
-                        .filter(function (name) { return hasTSFileExtension(name); })
-                        .map(function (name) { return ({ name: name, size: host.getFileSize(name) }); }) // TODO: GH#18217
-                        .sort(function (a, b) { return b.size - a.size; })
-                        .slice(0, 5);
-                }
             };
             ProjectService.prototype.createExternalProject = function (projectFileName, files, options, typeAcquisition, excludedFiles) {
                 var compilerOptions = convertCompilerOptions(options);
-                var watchOptions = convertWatchOptions(options);
+                var watchOptionsAndErrors = convertWatchOptions(options, ts.getDirectoryPath(ts.normalizeSlashes(projectFileName)));
                 var project = new server.ExternalProject(projectFileName, this, this.documentRegistry, compilerOptions, 
                 /*lastFileExceededProgramSize*/ this.getFilenameForExceededTotalSizeLimitForNonTsFiles(projectFileName, compilerOptions, files, externalFilePropertyReader), options.compileOnSave === undefined ? true : options.compileOnSave, 
-                /*projectFilePath*/ undefined, this.currentPluginConfigOverrides, watchOptions);
+                /*projectFilePath*/ undefined, this.currentPluginConfigOverrides, watchOptionsAndErrors === null || watchOptionsAndErrors === void 0 ? void 0 : watchOptionsAndErrors.watchOptions);
+                project.setProjectErrors(watchOptionsAndErrors === null || watchOptionsAndErrors === void 0 ? void 0 : watchOptionsAndErrors.errors);
                 project.excludedFiles = excludedFiles;
                 this.addFilesToNonInferredProject(project, files, externalFilePropertyReader, typeAcquisition);
                 this.externalProjects.push(project);
@@ -4562,7 +4639,7 @@ var ts;
                     configFileName: configFileName(),
                     projectType: project instanceof server.ExternalProject ? "external" : "configured",
                     languageServiceEnabled: project.languageServiceEnabled,
-                    version: ts.version,
+                    version: ts.version, // eslint-disable-line @typescript-eslint/no-unnecessary-qualifier
                 };
                 this.eventHandler({ eventName: server.ProjectInfoTelemetryEvent, data: data });
                 function configFileName() {
@@ -4589,7 +4666,6 @@ var ts;
                 var cachedDirectoryStructureHost = ts.createCachedDirectoryStructureHost(this.host, this.host.getCurrentDirectory(), this.host.useCaseSensitiveFileNames); // TODO: GH#18217
                 this.logger.info("Opened configuration file " + configFileName);
                 var project = new server.ConfiguredProject(configFileName, this, this.documentRegistry, cachedDirectoryStructureHost);
-                // TODO: We probably should also watch the configFiles that are extended
                 project.createConfigFileWatcher();
                 this.configuredProjects.set(project.canonicalConfigFilePath, project);
                 this.setConfigFileExistenceByNewConfiguredProject(project);
@@ -4651,7 +4727,6 @@ var ts;
                         configHasExcludeProperty: parsedCommandLine.raw.exclude !== undefined
                     };
                 }
-                project.configFileSpecs = parsedCommandLine.configFileSpecs;
                 project.canConfigFileJsonReportNoInputFiles = ts.canJsonReportNoInputFiles(parsedCommandLine.raw);
                 project.setProjectErrors(configFileErrors);
                 project.updateReferences(parsedCommandLine.projectReferences);
@@ -4659,12 +4734,14 @@ var ts;
                 if (lastFileExceededProgramSize) {
                     project.disableLanguageService(lastFileExceededProgramSize);
                     project.stopWatchingWildCards();
+                    this.removeProjectFromSharedExtendedConfigFileMap(project);
                 }
                 else {
                     project.setCompilerOptions(compilerOptions);
                     project.setWatchOptions(parsedCommandLine.watchOptions);
                     project.enableLanguageService();
                     project.watchWildcards(new ts.Map(ts.getEntries(parsedCommandLine.wildcardDirectories))); // TODO: GH#18217
+                    this.updateSharedExtendedConfigFileMap(project, parsedCommandLine);
                 }
                 project.enablePluginsWithOptions(compilerOptions, this.currentPluginConfigOverrides);
                 var filesToAdd = parsedCommandLine.fileNames.concat(project.getExternalFiles());
@@ -4749,11 +4826,11 @@ var ts;
              */
             /*@internal*/
             ProjectService.prototype.reloadFileNamesOfConfiguredProject = function (project) {
-                var configFileSpecs = project.configFileSpecs; // TODO: GH#18217
+                var configFileSpecs = project.getCompilerOptions().configFile.configFileSpecs;
                 var configFileName = project.getConfigFilePath();
-                var fileNamesResult = ts.getFileNamesFromConfigSpecs(configFileSpecs, ts.getDirectoryPath(configFileName), project.getCompilationSettings(), project.getCachedDirectoryStructureHost(), this.hostConfiguration.extraFileExtensions);
-                project.updateErrorOnNoInputFiles(fileNamesResult);
-                this.updateNonInferredProjectFiles(project, fileNamesResult.fileNames.concat(project.getExternalFiles()), fileNamePropertyReader);
+                var fileNames = ts.getFileNamesFromConfigSpecs(configFileSpecs, ts.getDirectoryPath(configFileName), project.getCompilationSettings(), project.getCachedDirectoryStructureHost(), this.hostConfiguration.extraFileExtensions);
+                project.updateErrorOnNoInputFiles(fileNames);
+                this.updateNonInferredProjectFiles(project, fileNames.concat(project.getExternalFiles()), fileNamePropertyReader);
                 return project.updateGraph();
             };
             /*@internal*/
@@ -4764,9 +4841,11 @@ var ts;
              * Read the config file of the project again by clearing the cache and update the project graph
              */
             /* @internal */
-            ProjectService.prototype.reloadConfiguredProject = function (project, reason, isInitialLoad) {
+            ProjectService.prototype.reloadConfiguredProject = function (project, reason, isInitialLoad, clearSemanticCache) {
                 // At this point, there is no reason to not have configFile in the host
                 var host = project.getCachedDirectoryStructureHost();
+                if (clearSemanticCache)
+                    this.clearSemanticCache(project);
                 // Clear the cache since we are reloading the project from disk
                 host.clearCache();
                 var configFileName = project.getConfigFilePath();
@@ -4775,6 +4854,12 @@ var ts;
                 this.loadConfiguredProject(project, reason);
                 project.updateGraph();
                 this.sendConfigFileDiagEvent(project, configFileName);
+            };
+            /* @internal */
+            ProjectService.prototype.clearSemanticCache = function (project) {
+                project.resolutionCache.clear();
+                project.getLanguageService(/*ensureSynchronized*/ false).cleanupSemanticCache();
+                project.markAsDirty();
             };
             ProjectService.prototype.sendConfigFileDiagEvent = function (project, triggerFile) {
                 if (!this.eventHandler || this.suppressDiagnosticEvents) {
@@ -4857,19 +4942,21 @@ var ts;
             };
             ProjectService.prototype.createInferredProject = function (currentDirectory, isSingleInferredProject, projectRootPath) {
                 var compilerOptions = projectRootPath && this.compilerOptionsForInferredProjectsPerProjectRoot.get(projectRootPath) || this.compilerOptionsForInferredProjects; // TODO: GH#18217
-                var watchOptions;
+                var watchOptionsAndErrors;
                 var typeAcquisition;
                 if (projectRootPath) {
-                    watchOptions = this.watchOptionsForInferredProjectsPerProjectRoot.get(projectRootPath);
+                    watchOptionsAndErrors = this.watchOptionsForInferredProjectsPerProjectRoot.get(projectRootPath);
                     typeAcquisition = this.typeAcquisitionForInferredProjectsPerProjectRoot.get(projectRootPath);
                 }
-                if (watchOptions === undefined) {
-                    watchOptions = this.watchOptionsForInferredProjects;
+                if (watchOptionsAndErrors === undefined) {
+                    watchOptionsAndErrors = this.watchOptionsForInferredProjects;
                 }
                 if (typeAcquisition === undefined) {
                     typeAcquisition = this.typeAcquisitionForInferredProjects;
                 }
-                var project = new server.InferredProject(this, this.documentRegistry, compilerOptions, watchOptions || undefined, projectRootPath, currentDirectory, this.currentPluginConfigOverrides, typeAcquisition);
+                watchOptionsAndErrors = watchOptionsAndErrors || undefined;
+                var project = new server.InferredProject(this, this.documentRegistry, compilerOptions, watchOptionsAndErrors === null || watchOptionsAndErrors === void 0 ? void 0 : watchOptionsAndErrors.watchOptions, projectRootPath, currentDirectory, this.currentPluginConfigOverrides, typeAcquisition);
+                project.setProjectErrors(watchOptionsAndErrors === null || watchOptionsAndErrors === void 0 ? void 0 : watchOptionsAndErrors.errors);
                 if (isSingleInferredProject) {
                     this.inferredProjects.unshift(project);
                 }
@@ -4952,7 +5039,7 @@ var ts;
                         !ts.startsWith(info.path, this.globalCacheLocationDirectoryPath))) {
                     var indexOfNodeModules = info.path.indexOf("/node_modules/");
                     if (!this.host.getModifiedTime || indexOfNodeModules === -1) {
-                        info.fileWatcher = this.watchFactory.watchFilePath(this.host, info.fileName, function (fileName, eventKind, path) { return _this.onSourceFileChanged(fileName, eventKind, path); }, ts.PollingInterval.Medium, this.hostConfiguration.watchOptions, info.path, ts.WatchType.ClosedScriptInfo);
+                        info.fileWatcher = this.watchFactory.watchFile(info.fileName, function (_fileName, eventKind) { return _this.onSourceFileChanged(info, eventKind); }, ts.PollingInterval.Medium, this.hostConfiguration.watchOptions, ts.WatchType.ClosedScriptInfo);
                     }
                     else {
                         info.mTime = this.getModifiedTime(info);
@@ -4969,7 +5056,7 @@ var ts;
                     return existing;
                 }
                 var watchDir = dir + "/node_modules";
-                var watcher = this.watchFactory.watchDirectory(this.host, watchDir, function (fileOrDirectory) {
+                var watcher = this.watchFactory.watchDirectory(watchDir, function (fileOrDirectory) {
                     var fileOrDirectoryPath = ts.removeIgnoredPath(_this.toPath(fileOrDirectory));
                     if (!fileOrDirectoryPath)
                         return;
@@ -5014,7 +5101,7 @@ var ts;
                 if (mTime !== info.mTime) {
                     var eventKind = ts.getFileWatcherEventKind(info.mTime, mTime);
                     info.mTime = mTime;
-                    this.onSourceFileChanged(info.fileName, eventKind, info.path);
+                    this.onSourceFileChanged(info, eventKind);
                 }
             };
             ProjectService.prototype.refreshScriptInfosInDirectory = function (dir) {
@@ -5179,7 +5266,7 @@ var ts;
             };
             ProjectService.prototype.addMissingSourceMapFile = function (mapFileName, declarationInfoPath) {
                 var _this = this;
-                var fileWatcher = this.watchFactory.watchFile(this.host, mapFileName, function () {
+                var fileWatcher = this.watchFactory.watchFile(mapFileName, function () {
                     var declarationInfo = _this.getScriptInfoForPath(declarationInfoPath);
                     if (declarationInfo && declarationInfo.sourceMapFilePath && !ts.isString(declarationInfo.sourceMapFilePath)) {
                         // Update declaration and source projects
@@ -5235,6 +5322,7 @@ var ts;
             };
             ProjectService.prototype.setHostConfiguration = function (args) {
                 var _this = this;
+                var _a;
                 if (args.file) {
                     var info = this.getScriptInfoForNormalizedPath(server.toNormalizedPath(args.file));
                     if (info) {
@@ -5252,7 +5340,7 @@ var ts;
                         this.logger.info("Format host information updated");
                     }
                     if (args.preferences) {
-                        var _a = this.hostConfiguration.preferences, lazyConfiguredProjectsFromExternalProject = _a.lazyConfiguredProjectsFromExternalProject, includePackageJsonAutoImports = _a.includePackageJsonAutoImports;
+                        var _b = this.hostConfiguration.preferences, lazyConfiguredProjectsFromExternalProject = _b.lazyConfiguredProjectsFromExternalProject, includePackageJsonAutoImports = _b.includePackageJsonAutoImports;
                         this.hostConfiguration.preferences = __assign(__assign({}, this.hostConfiguration.preferences), args.preferences);
                         if (lazyConfiguredProjectsFromExternalProject && !this.hostConfiguration.preferences.lazyConfiguredProjectsFromExternalProject) {
                             // Load configured projects for external projects that are pending reload
@@ -5276,7 +5364,7 @@ var ts;
                         this.logger.info("Host file extension mappings updated");
                     }
                     if (args.watchOptions) {
-                        this.hostConfiguration.watchOptions = convertWatchOptions(args.watchOptions);
+                        this.hostConfiguration.watchOptions = (_a = convertWatchOptions(args.watchOptions)) === null || _a === void 0 ? void 0 : _a.watchOptions;
                         this.logger.info("Host watch options changed to " + JSON.stringify(this.hostConfiguration.watchOptions) + ", it will be take effect for next watches.");
                     }
                 }
@@ -5295,18 +5383,41 @@ var ts;
              * This does not reload contents of open files from disk. But we could do that if needed
              */
             ProjectService.prototype.reloadProjects = function () {
+                var _this = this;
                 this.logger.info("reload projects.");
                 // If we want this to also reload open files from disk, we could do that,
                 // but then we need to make sure we arent calling this function
                 // (and would separate out below reloading of projects to be called when immediate reload is needed)
                 // as there is no need to load contents of the files from the disk
+                // Reload script infos
+                this.filenameToScriptInfo.forEach(function (info) {
+                    if (_this.openFiles.has(info.path))
+                        return; // Skip open files
+                    if (!info.fileWatcher)
+                        return; // not watched file
+                    // Handle as if file is changed or deleted
+                    _this.onSourceFileChanged(info, _this.host.fileExists(info.fileName) ? ts.FileWatcherEventKind.Changed : ts.FileWatcherEventKind.Deleted);
+                });
+                // Cancel all project updates since we will be updating them now
+                this.pendingProjectUpdates.forEach(function (_project, projectName) {
+                    _this.throttledOperations.cancel(projectName);
+                    _this.pendingProjectUpdates.delete(projectName);
+                });
+                this.throttledOperations.cancel(ensureProjectForOpenFileSchedule);
+                this.pendingEnsureProjectForOpenFiles = false;
                 // Reload Projects
-                this.reloadConfiguredProjectForFiles(this.openFiles, /*delayReload*/ false, ts.returnTrue, "User requested reload projects");
+                this.reloadConfiguredProjectForFiles(this.openFiles, /*clearSemanticCache*/ true, /*delayReload*/ false, ts.returnTrue, "User requested reload projects");
+                this.externalProjects.forEach(function (project) {
+                    _this.clearSemanticCache(project);
+                    project.updateGraph();
+                });
+                this.inferredProjects.forEach(function (project) { return _this.clearSemanticCache(project); });
                 this.ensureProjectForOpenFiles();
             };
             ProjectService.prototype.delayReloadConfiguredProjectForFiles = function (configFileExistenceInfo, ignoreIfNotRootOfInferredProject) {
                 // Get open files to reload projects for
                 this.reloadConfiguredProjectForFiles(configFileExistenceInfo.openFilesImpactedByConfigFile, 
+                /*clearSemanticCache*/ false, 
                 /*delayReload*/ true, ignoreIfNotRootOfInferredProject ?
                     function (isRootOfInferredProject) { return isRootOfInferredProject; } : // Reload open files if they are root of inferred project
                     ts.returnTrue, // Reload all the open files impacted by config file
@@ -5320,13 +5431,13 @@ var ts;
              * If the there is no existing project it just opens the configured project for the config file
              * reloadForInfo provides a way to filter out files to reload configured project for
              */
-            ProjectService.prototype.reloadConfiguredProjectForFiles = function (openFiles, delayReload, shouldReloadProjectFor, reason) {
+            ProjectService.prototype.reloadConfiguredProjectForFiles = function (openFiles, clearSemanticCache, delayReload, shouldReloadProjectFor, reason) {
                 var _this = this;
                 var updatedProjects = new ts.Map();
                 var reloadChildProject = function (child) {
                     if (!updatedProjects.has(child.canonicalConfigFilePath)) {
                         updatedProjects.set(child.canonicalConfigFilePath, true);
-                        _this.reloadConfiguredProject(child, reason, /*isInitialLoad*/ false);
+                        _this.reloadConfiguredProject(child, reason, /*isInitialLoad*/ false, clearSemanticCache);
                     }
                 };
                 // try to reload config file for all open files
@@ -5351,11 +5462,13 @@ var ts;
                             if (delayReload) {
                                 project.pendingReload = ts.ConfigFileProgramReloadLevel.Full;
                                 project.pendingReloadReason = reason;
+                                if (clearSemanticCache)
+                                    _this.clearSemanticCache(project);
                                 _this.delayUpdateProjectGraph(project);
                             }
                             else {
                                 // reload from the disk
-                                _this.reloadConfiguredProject(project, reason, /*isInitialLoad*/ false);
+                                _this.reloadConfiguredProject(project, reason, /*isInitialLoad*/ false, clearSemanticCache);
                                 // If this project does not contain this file directly, reload the project till the reloaded project contains the script info directly
                                 if (!projectContainsInfoDirectly(project, info)) {
                                     var referencedProject = forEachResolvedProjectReferenceProject(project, info.path, function (child) {
@@ -5948,14 +6061,14 @@ var ts;
                 var excludedFiles = [];
                 var _loop_6 = function (name) {
                     var rule = this_2.safelist[name];
-                    for (var _i = 0, normalizedNames_1 = normalizedNames; _i < normalizedNames_1.length; _i++) {
-                        var root = normalizedNames_1[_i];
+                    for (var _b = 0, normalizedNames_1 = normalizedNames; _b < normalizedNames_1.length; _b++) {
+                        var root = normalizedNames_1[_b];
                         if (rule.match.test(root)) {
                             this_2.logger.info("Excluding files based on rule " + name + " matching file '" + root + "'");
                             // If the file matches, collect its types packages and exclude rules
                             if (rule.types) {
-                                for (var _a = 0, _b = rule.types; _a < _b.length; _a++) {
-                                    var type = _b[_a];
+                                for (var _c = 0, _d = rule.types; _c < _d.length; _c++) {
+                                    var type = _d[_c];
                                     // Best-effort de-duping here - doesn't need to be unduplicated but
                                     // we don't want the list to become a 400-element array of just 'kendo'
                                     if (typeAcqInclude.indexOf(type) < 0) {
@@ -5989,8 +6102,8 @@ var ts;
                                         excludeRules.push(processedRule);
                                     }
                                 };
-                                for (var _c = 0, _d = rule.exclude; _c < _d.length; _c++) {
-                                    var exclude = _d[_c];
+                                for (var _e = 0, _f = rule.exclude; _e < _f.length; _e++) {
+                                    var exclude = _f[_e];
                                     _loop_8(exclude);
                                 }
                             }
@@ -6092,7 +6205,7 @@ var ts;
                     externalProject.excludedFiles = excludedFiles;
                     if (!tsConfigFiles) {
                         var compilerOptions = convertCompilerOptions(proj.options);
-                        var watchOptions = convertWatchOptions(proj.options);
+                        var watchOptionsAndErrors = convertWatchOptions(proj.options, externalProject.getCurrentDirectory());
                         var lastFileExceededProgramSize = this.getFilenameForExceededTotalSizeLimitForNonTsFiles(proj.projectFileName, compilerOptions, proj.rootFiles, externalFilePropertyReader);
                         if (lastFileExceededProgramSize) {
                             externalProject.disableLanguageService(lastFileExceededProgramSize);
@@ -6100,9 +6213,10 @@ var ts;
                         else {
                             externalProject.enableLanguageService();
                         }
+                        externalProject.setProjectErrors(watchOptionsAndErrors === null || watchOptionsAndErrors === void 0 ? void 0 : watchOptionsAndErrors.errors);
                         // external project already exists and not config files were added - update the project and return;
                         // The graph update here isnt postponed since any file open operation needs all updated external projects
-                        this.updateRootAndOptionsOfNonInferredProject(externalProject, proj.rootFiles, externalFilePropertyReader, compilerOptions, proj.typeAcquisition, proj.options.compileOnSave, watchOptions);
+                        this.updateRootAndOptionsOfNonInferredProject(externalProject, proj.rootFiles, externalFilePropertyReader, compilerOptions, proj.typeAcquisition, proj.options.compileOnSave, watchOptionsAndErrors === null || watchOptionsAndErrors === void 0 ? void 0 : watchOptionsAndErrors.watchOptions);
                         externalProject.updateGraph();
                         return;
                     }
@@ -6209,7 +6323,7 @@ var ts;
                             if (info)
                                 result.push(info);
                     }
-                    if (rootPath && rootPath === _this.toPath(directory)) {
+                    if (rootPath && rootPath === directory) {
                         return true;
                     }
                 };
@@ -6217,12 +6331,26 @@ var ts;
                 return result;
             };
             /*@internal*/
+            ProjectService.prototype.getNearestAncestorDirectoryWithPackageJson = function (fileName) {
+                var _this = this;
+                return ts.forEachAncestorDirectory(fileName, function (directory) {
+                    switch (_this.packageJsonCache.directoryHasPackageJson(_this.toPath(directory))) {
+                        case -1 /* True */: return directory;
+                        case 0 /* False */: return undefined;
+                        case 3 /* Maybe */:
+                            return _this.host.fileExists(ts.combinePaths(directory, "package.json"))
+                                ? directory
+                                : undefined;
+                    }
+                });
+            };
+            /*@internal*/
             ProjectService.prototype.watchPackageJsonFile = function (path) {
                 var _this = this;
                 var watchers = this.packageJsonFilesMap || (this.packageJsonFilesMap = new ts.Map());
                 if (!watchers.has(path)) {
                     this.invalidateProjectAutoImports(path);
-                    watchers.set(path, this.watchFactory.watchFile(this.host, path, function (fileName, eventKind) {
+                    watchers.set(path, this.watchFactory.watchFile(path, function (fileName, eventKind) {
                         var path = _this.toPath(fileName);
                         switch (eventKind) {
                             case ts.FileWatcherEventKind.Created:
@@ -6482,15 +6610,24 @@ var ts;
                 try {
                     if (this.operationHost.isCancellationRequested()) {
                         stop = true;
+                        ts.tracing === null || ts.tracing === void 0 ? void 0 : ts.tracing.instant("session" /* Session */, "stepCanceled", { seq: this.requestId, early: true });
                     }
                     else {
+                        ts.tracing === null || ts.tracing === void 0 ? void 0 : ts.tracing.push("session" /* Session */, "stepAction", { seq: this.requestId });
                         action(this);
+                        ts.tracing === null || ts.tracing === void 0 ? void 0 : ts.tracing.pop();
                     }
                 }
                 catch (e) {
+                    // Cancellation or an error may have left incomplete events on the tracing stack.
+                    ts.tracing === null || ts.tracing === void 0 ? void 0 : ts.tracing.popAll();
                     stop = true;
                     // ignore cancellation request
-                    if (!(e instanceof ts.OperationCanceledException)) {
+                    if (e instanceof ts.OperationCanceledException) {
+                        ts.tracing === null || ts.tracing === void 0 ? void 0 : ts.tracing.instant("session" /* Session */, "stepCanceled", { seq: this.requestId });
+                    }
+                    else {
+                        ts.tracing === null || ts.tracing === void 0 ? void 0 : ts.tracing.instant("session" /* Session */, "stepError", { seq: this.requestId, message: e.message });
                         this.operationHost.logError(e, "delayed processing of request " + this.requestId);
                     }
                 }
@@ -6601,8 +6738,8 @@ var ts;
                         symbolToAddTo = { definition: definition, references: [] };
                         outputs.push(symbolToAddTo);
                     }
-                    for (var _i = 0, _a = outputReferencedSymbol.references; _i < _a.length; _i++) {
-                        var ref = _a[_i];
+                    for (var _b = 0, _c = outputReferencedSymbol.references; _b < _c.length; _b++) {
+                        var ref = _c[_b];
                         // If it's in a mapped file, that is added to the todo list by `getMappedLocation`.
                         if (!ts.contains(symbolToAddTo.references, ref, ts.documentSpansEqual) && !getMappedLocation(project, documentSpanLocation(ref))) {
                             symbolToAddTo.references.push(ref);
@@ -6615,6 +6752,19 @@ var ts;
                 }
             });
             return outputs.filter(function (o) { return o.references.length !== 0; });
+        }
+        function combineProjectOutputForFileReferences(projects, defaultProject, fileName) {
+            var outputs = [];
+            combineProjectOutputWorker(projects, defaultProject, 
+            /*initialLocation*/ undefined, function (project) {
+                for (var _i = 0, _a = project.getLanguageService().getFileReferences(fileName) || server.emptyArray; _i < _a.length; _i++) {
+                    var referenceEntry = _a[_i];
+                    if (!ts.contains(outputs, referenceEntry, ts.documentSpansEqual)) {
+                        outputs.push(referenceEntry);
+                    }
+                }
+            });
+            return outputs;
         }
         function forEachProjectInProjects(projects, path, cb) {
             for (var _i = 0, _a = ts.isArray(projects) ? projects : projects.projects; _i < _a.length; _i++) {
@@ -6725,7 +6875,7 @@ var ts;
             return toDo;
         }
         function addToTodo(project, location, toDo, seenProjects) {
-            if (addToSeen(seenProjects, project))
+            if (!project.isOrphan() && addToSeen(seenProjects, project))
                 toDo.push({ project: project, location: location });
         }
         function addToSeen(seenProjects, project) {
@@ -6800,7 +6950,7 @@ var ts;
             server.CommandNames.ProvideCallHierarchyIncomingCalls,
             server.CommandNames.ProvideCallHierarchyOutgoingCalls,
         ];
-        var invalidSyntacticModeCommands = __spreadArrays(invalidPartialSemanticModeCommands, [
+        var invalidSyntacticModeCommands = __spreadArray(__spreadArray([], invalidPartialSemanticModeCommands), [
             server.CommandNames.Definition,
             server.CommandNames.DefinitionFull,
             server.CommandNames.DefinitionAndBoundSpan,
@@ -6979,6 +7129,12 @@ var ts;
                     },
                     _a[server.CommandNames.GetSpanOfEnclosingComment] = function (request) {
                         return _this.requiredResponse(_this.getSpanOfEnclosingComment(request.arguments));
+                    },
+                    _a[server.CommandNames.FileReferences] = function (request) {
+                        return _this.requiredResponse(_this.getFileReferences(request.arguments, /*simplifiedResult*/ true));
+                    },
+                    _a[server.CommandNames.FileReferencesFull] = function (request) {
+                        return _this.requiredResponse(_this.getFileReferences(request.arguments, /*simplifiedResult*/ false));
                     },
                     _a[server.CommandNames.Format] = function (request) {
                         return _this.requiredResponse(_this.getFormattingEditsForRange(request.arguments));
@@ -7401,6 +7557,7 @@ var ts;
                 this.host.write(msgText);
             };
             Session.prototype.event = function (body, eventName) {
+                ts.tracing === null || ts.tracing === void 0 ? void 0 : ts.tracing.instant("session" /* Session */, "event", { eventName: eventName });
                 this.send(toEvent(eventName, body));
             };
             // For backwards-compatibility only.
@@ -7551,7 +7708,8 @@ var ts;
             };
             Session.prototype.getEncodedSemanticClassifications = function (args) {
                 var _a = this.getFileAndProject(args), file = _a.file, project = _a.project;
-                return project.getLanguageService().getEncodedSemanticClassifications(file, args);
+                var format = args.format === "2020" ? "2020" /* TwentyTwenty */ : "original" /* Original */;
+                return project.getLanguageService().getEncodedSemanticClassifications(file, args, format);
             };
             Session.prototype.getProject = function (projectFileName) {
                 return projectFileName === undefined ? undefined : this.projectService.findProject(projectFileName);
@@ -7904,18 +8062,21 @@ var ts;
                 var symbolStartOffset = nameSpan ? scriptInfo.positionToLineOffset(nameSpan.start).offset : 0;
                 var symbolName = nameSpan ? scriptInfo.getSnapshot().getText(nameSpan.start, ts.textSpanEnd(nameSpan)) : "";
                 var refs = ts.flatMap(references, function (referencedSymbol) {
-                    return referencedSymbol.references.map(function (_a) {
-                        var fileName = _a.fileName, textSpan = _a.textSpan, contextSpan = _a.contextSpan, isWriteAccess = _a.isWriteAccess, isDefinition = _a.isDefinition;
-                        var scriptInfo = ts.Debug.checkDefined(_this.projectService.getScriptInfo(fileName));
-                        var span = toProtocolTextSpanWithContext(textSpan, contextSpan, scriptInfo);
-                        var lineSpan = scriptInfo.lineToTextSpan(span.start.line - 1);
-                        var lineText = scriptInfo.getSnapshot().getText(lineSpan.start, ts.textSpanEnd(lineSpan)).replace(/\r|\n/g, "");
-                        return __assign(__assign({ file: fileName }, span), { lineText: lineText,
-                            isWriteAccess: isWriteAccess,
-                            isDefinition: isDefinition });
-                    });
+                    return referencedSymbol.references.map(function (entry) { return referenceEntryToReferencesResponseItem(_this.projectService, entry); });
                 });
                 return { refs: refs, symbolName: symbolName, symbolStartOffset: symbolStartOffset, symbolDisplayString: symbolDisplayString };
+            };
+            Session.prototype.getFileReferences = function (args, simplifiedResult) {
+                var _this = this;
+                var projects = this.getProjects(args);
+                var references = combineProjectOutputForFileReferences(projects, this.getDefaultProject(args), args.file);
+                if (!simplifiedResult)
+                    return references;
+                var refs = references.map(function (entry) { return referenceEntryToReferencesResponseItem(_this.projectService, entry); });
+                return {
+                    refs: refs,
+                    symbolName: "\"" + args.file + "\""
+                };
             };
             /**
              * @param fileName is the name of the file to be opened
@@ -7976,7 +8137,7 @@ var ts;
             Session.prototype.getDocCommentTemplate = function (args) {
                 var _a = this.getFileAndLanguageServiceForSyntacticOperation(args), file = _a.file, languageService = _a.languageService;
                 var position = this.getPositionInFile(args, file);
-                return languageService.getDocCommentTemplateAtPosition(file, position);
+                return languageService.getDocCommentTemplateAtPosition(file, position, this.getPreferences(file));
             };
             Session.prototype.getSpanOfEnclosingComment = function (args) {
                 var _a = this.getFileAndLanguageServiceForSyntacticOperation(args), file = _a.file, languageService = _a.languageService;
@@ -8396,7 +8557,7 @@ var ts;
             Session.prototype.getApplicableRefactors = function (args) {
                 var _a = this.getFileAndProject(args), file = _a.file, project = _a.project;
                 var scriptInfo = project.getScriptInfoForNormalizedPath(file);
-                return project.getLanguageService().getApplicableRefactors(file, this.extractPositionOrRange(args, scriptInfo), this.getPreferences(file), args.triggerReason);
+                return project.getLanguageService().getApplicableRefactors(file, this.extractPositionOrRange(args, scriptInfo), this.getPreferences(file), args.triggerReason, args.kind);
             };
             Session.prototype.getEditsForRefactor = function (args, simplifiedResult) {
                 var _a = this.getFileAndProject(args), file = _a.file, project = _a.project;
@@ -8571,7 +8732,7 @@ var ts;
                         }
                     }
                 }
-                var sortedFiles = __spreadArrays(highPriorityFiles, mediumPriorityFiles, lowPriorityFiles, veryLowPriorityFiles);
+                var sortedFiles = __spreadArray(__spreadArray(__spreadArray(__spreadArray([], highPriorityFiles), mediumPriorityFiles), lowPriorityFiles), veryLowPriorityFiles);
                 var checkList = sortedFiles.map(function (fileName) { return ({ fileName: fileName, project: project }); });
                 // Project level error analysis runs on background files too, therefore
                 // doesn't require the file to be opened
@@ -8761,16 +8922,19 @@ var ts;
                 if (this.logger.hasLevel(server.LogLevel.requestTime)) {
                     start = this.hrtime();
                     if (this.logger.hasLevel(server.LogLevel.verbose)) {
-                        this.logger.info("request:" + server.indent(message));
+                        this.logger.info("request:" + server.indent(this.toStringMessage(message)));
                     }
                 }
                 var request;
                 var relevantFile;
                 try {
-                    request = JSON.parse(message);
+                    request = this.parseMessage(message);
                     relevantFile = request.arguments && request.arguments.file ? request.arguments : undefined;
-                    ts.perfLogger.logStartCommand("" + request.command, message.substring(0, 100));
+                    ts.tracing === null || ts.tracing === void 0 ? void 0 : ts.tracing.instant("session" /* Session */, "request", { seq: request.seq, command: request.command });
+                    ts.perfLogger.logStartCommand("" + request.command, this.toStringMessage(message).substring(0, 100));
+                    ts.tracing === null || ts.tracing === void 0 ? void 0 : ts.tracing.push("session" /* Session */, "executeCommand", { seq: request.seq, command: request.command }, /*separateBeginAndEnd*/ true);
                     var _a = this.executeCommand(request), response = _a.response, responseRequired = _a.responseRequired;
+                    ts.tracing === null || ts.tracing === void 0 ? void 0 : ts.tracing.pop();
                     if (this.logger.hasLevel(server.LogLevel.requestTime)) {
                         var elapsedTime = hrTimeToMilliseconds(this.hrtime(start)).toFixed(4);
                         if (responseRequired) {
@@ -8782,6 +8946,7 @@ var ts;
                     }
                     // Note: Log before writing the response, else the editor can complete its activity before the server does
                     ts.perfLogger.logStopCommand("" + request.command, "Success");
+                    ts.tracing === null || ts.tracing === void 0 ? void 0 : ts.tracing.instant("session" /* Session */, "response", { seq: request.seq, command: request.command, success: !!response });
                     if (response) {
                         this.doOutput(response, request.command, request.seq, /*success*/ true);
                     }
@@ -8790,18 +8955,28 @@ var ts;
                     }
                 }
                 catch (err) {
+                    // Cancellation or an error may have left incomplete events on the tracing stack.
+                    ts.tracing === null || ts.tracing === void 0 ? void 0 : ts.tracing.popAll();
                     if (err instanceof ts.OperationCanceledException) {
                         // Handle cancellation exceptions
                         ts.perfLogger.logStopCommand("" + (request && request.command), "Canceled: " + err);
+                        ts.tracing === null || ts.tracing === void 0 ? void 0 : ts.tracing.instant("session" /* Session */, "commandCanceled", { seq: request === null || request === void 0 ? void 0 : request.seq, command: request === null || request === void 0 ? void 0 : request.command });
                         this.doOutput({ canceled: true }, request.command, request.seq, /*success*/ true);
                         return;
                     }
-                    this.logErrorWorker(err, message, relevantFile);
+                    this.logErrorWorker(err, this.toStringMessage(message), relevantFile);
                     ts.perfLogger.logStopCommand("" + (request && request.command), "Error: " + err);
+                    ts.tracing === null || ts.tracing === void 0 ? void 0 : ts.tracing.instant("session" /* Session */, "commandError", { seq: request === null || request === void 0 ? void 0 : request.seq, command: request === null || request === void 0 ? void 0 : request.command, message: err.message });
                     this.doOutput(
                     /*info*/ undefined, request ? request.command : server.CommandNames.Unknown, request ? request.seq : 0, 
                     /*success*/ false, "Error processing request. " + err.message + "\n" + err.stack);
                 }
+            };
+            Session.prototype.parseMessage = function (message) {
+                return JSON.parse(message);
+            };
+            Session.prototype.toStringMessage = function (message) {
+                return message;
             };
             Session.prototype.getFormatOptions = function (file) {
                 return this.projectService.getFormatCodeOptions(file);
@@ -8864,6 +9039,16 @@ var ts;
                 }
             }
             return text;
+        }
+        function referenceEntryToReferencesResponseItem(projectService, _a) {
+            var fileName = _a.fileName, textSpan = _a.textSpan, contextSpan = _a.contextSpan, isWriteAccess = _a.isWriteAccess, isDefinition = _a.isDefinition;
+            var scriptInfo = ts.Debug.checkDefined(projectService.getScriptInfo(fileName));
+            var span = toProtocolTextSpanWithContext(textSpan, contextSpan, scriptInfo);
+            var lineSpan = scriptInfo.lineToTextSpan(span.start.line - 1);
+            var lineText = scriptInfo.getSnapshot().getText(lineSpan.start, ts.textSpanEnd(lineSpan)).replace(/\r|\n/g, "");
+            return __assign(__assign({ file: fileName }, span), { lineText: lineText,
+                isWriteAccess: isWriteAccess,
+                isDefinition: isDefinition });
         }
     })(server = ts.server || (ts.server = {}));
 })(ts || (ts = {}));

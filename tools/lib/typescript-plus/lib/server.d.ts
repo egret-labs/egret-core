@@ -158,6 +158,8 @@ declare namespace ts.server.protocol {
         ImplementationFull = "implementation-full",
         EmitOutput = "emit-output",
         Exit = "exit",
+        FileReferences = "fileReferences",
+        FileReferencesFull = "fileReferences-full",
         Format = "format",
         Formatonkey = "formatonkey",
         FormatFull = "format-full",
@@ -589,6 +591,7 @@ declare namespace ts.server.protocol {
     }
     type GetApplicableRefactorsRequestArgs = FileLocationOrRangeRequestArgs & {
         triggerReason?: RefactorTriggerReason;
+        kind?: string;
     };
     type RefactorTriggerReason = "implicit" | "invoked";
     /**
@@ -641,6 +644,10 @@ declare namespace ts.server.protocol {
          * the current context.
          */
         notApplicableReason?: string;
+        /**
+         * The hierarchical dotted name of the refactor action.
+         */
+        kind?: string;
     }
     interface GetEditsForRefactorRequest extends Request {
         command: CommandTypes.GetEditsForRefactor;
@@ -813,14 +820,12 @@ declare namespace ts.server.protocol {
     /**
      * A request to get encoded semantic classifications for a span in the file
      */
-    /** @internal */
     interface EncodedSemanticClassificationsRequest extends FileRequest {
         arguments: EncodedSemanticClassificationsRequestArgs;
     }
     /**
      * Arguments for EncodedSemanticClassificationsRequest request.
      */
-    /** @internal */
     interface EncodedSemanticClassificationsRequestArgs extends FileRequestArgs {
         /**
          * Start position of the span.
@@ -830,6 +835,22 @@ declare namespace ts.server.protocol {
          * Length of the span.
          */
         length: number;
+        /**
+         * Optional parameter for the semantic highlighting response, if absent it
+         * defaults to "original".
+         */
+        format?: "original" | "2020";
+    }
+    /** The response for a EncodedSemanticClassificationsRequest */
+    interface EncodedSemanticClassificationsResponse extends Response {
+        body?: EncodedSemanticClassificationsResponseBody;
+    }
+    /**
+     * Implementation response message. Gives series of text spans depending on the format ar.
+     */
+    interface EncodedSemanticClassificationsResponseBody {
+        endOfLineState: EndOfLineState;
+        spans: number[];
     }
     /**
      * Arguments in document highlight request; include: filesToSearch, file,
@@ -1087,6 +1108,22 @@ declare namespace ts.server.protocol {
      */
     interface ReferencesResponse extends Response {
         body?: ReferencesResponseBody;
+    }
+    interface FileReferencesRequest extends FileRequest {
+        command: CommandTypes.FileReferences;
+    }
+    interface FileReferencesResponseBody {
+        /**
+         * The file locations referencing the symbol.
+         */
+        refs: readonly ReferencesResponseItem[];
+        /**
+         * The name of the symbol.
+         */
+        symbolName: string;
+    }
+    interface FileReferencesResponse extends Response {
+        body?: FileReferencesResponseBody;
     }
     /**
      * Argument for RenameRequest request.
@@ -1402,6 +1439,8 @@ declare namespace ts.server.protocol {
         watchDirectory?: WatchDirectoryKind | ts.WatchDirectoryKind;
         fallbackPolling?: PollingWatchKind | ts.PollingWatchKind;
         synchronousWatchDirectory?: boolean;
+        excludeDirectories?: string[];
+        excludeFiles?: string[];
         [option: string]: CompilerOptionsValue | undefined;
     }
     /**
@@ -2867,7 +2906,7 @@ declare namespace ts.server.protocol {
          * values, with insertion text to replace preceding `.` tokens with `?.`.
          */
         readonly includeAutomaticOptionalChainCompletions?: boolean;
-        readonly importModuleSpecifierPreference?: "auto" | "relative" | "non-relative";
+        readonly importModuleSpecifierPreference?: "shortest" | "project-relative" | "relative" | "non-relative";
         /** Determines whether we import `foo/index.ts` as "foo", "foo/index", or "foo/index.js" */
         readonly importModuleSpecifierEnding?: "auto" | "minimal" | "index" | "js";
         readonly allowTextChangesInNewFiles?: boolean;
@@ -2876,6 +2915,7 @@ declare namespace ts.server.protocol {
         readonly provideRefactorNotApplicableReason?: boolean;
         readonly allowRenameOfImportPath?: boolean;
         readonly includePackageJsonAutoImports?: "auto" | "on" | "off";
+        readonly generateReturnInDocTemplate?: boolean;
     }
     interface CompilerOptions {
         allowJs?: boolean;
@@ -2984,6 +3024,33 @@ declare namespace ts.server.protocol {
         ES2019 = "ES2019",
         ES2020 = "ES2020",
         ESNext = "ESNext"
+    }
+    const enum ClassificationType {
+        comment = 1,
+        identifier = 2,
+        keyword = 3,
+        numericLiteral = 4,
+        operator = 5,
+        stringLiteral = 6,
+        regularExpressionLiteral = 7,
+        whiteSpace = 8,
+        text = 9,
+        punctuation = 10,
+        className = 11,
+        enumName = 12,
+        interfaceName = 13,
+        moduleName = 14,
+        typeParameterName = 15,
+        typeAliasName = 16,
+        parameterName = 17,
+        docCommentTagName = 18,
+        jsxOpenTagName = 19,
+        jsxCloseTagName = 20,
+        jsxSelfClosingTagName = 21,
+        jsxAttribute = 22,
+        jsxText = 23,
+        jsxAttributeStringLiteralValue = 24,
+        bigintLiteral = 25
     }
 }
 declare namespace ts.server {
@@ -3220,7 +3287,7 @@ declare namespace ts.server {
     }) => PluginModule;
     /**
      * The project root can be script info - if root is present,
-     * or it could be just normalized path if root wasnt present on the host(only for non inferred project)
+     * or it could be just normalized path if root wasn't present on the host(only for non inferred project)
      */
     interface ProjectRootFile {
         fileName: NormalizedPath;
@@ -3253,7 +3320,7 @@ declare namespace ts.server {
         cachedUnresolvedImportsPerFile: ESMap<Path, readonly string[]>;
         lastCachedUnresolvedImportsList: SortedReadonlyArray<string> | undefined;
         private hasAddedorRemovedFiles;
-        private lastFileExceededProgramSize;
+        lastFileExceededProgramSize: string | undefined;
         protected languageService: LanguageService;
         languageServiceEnabled: boolean;
         readonly trace?: (s: string) => void;
@@ -3285,6 +3352,7 @@ declare namespace ts.server {
          * This property is different from projectStructureVersion since in most cases edits don't affect set of files in the project
          */
         private projectStateVersion;
+        protected projectErrors: Diagnostic[] | undefined;
         protected isInitialLoadPending: () => boolean;
         dirty: boolean;
         typingFiles: SortedReadonlyArray<string>;
@@ -3353,7 +3421,11 @@ declare namespace ts.server {
          * Get the errors that dont have any file name associated
          */
         getGlobalProjectErrors(): readonly Diagnostic[];
+        /**
+         * Get all the project errors
+         */
         getAllProjectErrors(): readonly Diagnostic[];
+        setProjectErrors(projectErrors: Diagnostic[] | undefined): void;
         getLanguageService(ensureSynchronized?: boolean): LanguageService;
         /** @internal */
         getSourceMapper(): SourceMapper;
@@ -3436,6 +3508,7 @@ declare namespace ts.server {
         /** Starts a new check for diagnostics. Call this if some file has updated that would cause diagnostics to be changed. */
         refreshDiagnostics(): void;
         getPackageJsonsVisibleToFile(fileName: string, rootDir?: string): readonly PackageJsonInfo[];
+        getNearestAncestorDirectoryWithPackageJson(fileName: string): string | undefined;
         getPackageJsonsForAutoImport(rootDir?: string): readonly PackageJsonInfo[];
         getImportSuggestionsCache(): Completions.ImportSuggestionsForFileCache;
         includePackageJsonAutoImports(): PackageJsonAutoImportPreference;
@@ -3475,6 +3548,7 @@ declare namespace ts.server {
         isEmpty(): boolean;
         isOrphan(): boolean;
         updateGraph(): boolean;
+        hasRoots(): boolean;
         markAsDirty(): void;
         getScriptFileNames(): string[];
         getLanguageService(): never;
@@ -3498,11 +3572,9 @@ declare namespace ts.server {
         pendingReload: ConfigFileProgramReloadLevel | undefined;
         pendingReloadReason: string | undefined;
         openFileWatchTriggered: ESMap<string, true>;
-        configFileSpecs: ConfigFileSpecs | undefined;
         canConfigFileJsonReportNoInputFiles: boolean;
         /** Ref count to the project when opened from external project */
         private externalProjectRefCount;
-        private projectErrors;
         private projectReferences;
         /** Potential project references before the project is actually loaded (read config file) */
         potentialProjectReferences: Set<string> | undefined;
@@ -3550,7 +3622,7 @@ declare namespace ts.server {
         hasOpenRef(): boolean;
         hasExternalProjectRef(): boolean;
         getEffectiveTypeRoots(): string[];
-        updateErrorOnNoInputFiles(fileNameResult: ExpandResult): void;
+        updateErrorOnNoInputFiles(fileNames: string[]): void;
     }
     /**
      * Project whose configuration is handled externally, such as in a '.csproj'.
@@ -3700,7 +3772,7 @@ declare namespace ts.server {
     }
     export function convertFormatOptions(protocolOptions: protocol.FormatCodeSettings): FormatCodeSettings;
     export function convertCompilerOptions(protocolOptions: protocol.ExternalProjectCompilerOptions): CompilerOptions & protocol.CompileOnSaveMixin;
-    export function convertWatchOptions(protocolOptions: protocol.ExternalProjectCompilerOptions): WatchOptions | undefined;
+    export function convertWatchOptions(protocolOptions: protocol.ExternalProjectCompilerOptions, currentDirectory?: string): WatchOptionsAndErrors | undefined;
     export function convertTypeAcquisition(protocolOptions: protocol.InferredProjectCompilerOptions): TypeAcquisition | undefined;
     export function tryConvertScriptKindName(scriptKindName: protocol.ScriptKindName | ScriptKind): ScriptKind;
     export function convertScriptKindName(scriptKindName: protocol.ScriptKindName): ScriptKind.Unknown | ScriptKind.JS | ScriptKind.JSX | ScriptKind.TS | ScriptKind.TSX;
@@ -3782,6 +3854,10 @@ declare namespace ts.server {
     export interface ChangeFileArguments {
         fileName: string;
         changes: Iterator<TextChange>;
+    }
+    export interface WatchOptionsAndErrors {
+        watchOptions: WatchOptions;
+        errors: Diagnostic[] | undefined;
     }
     export class ProjectService {
         readonly typingsCache: TypingsCache;
@@ -3874,6 +3950,7 @@ declare namespace ts.server {
         /** Tracks projects that we have already sent telemetry for. */
         private readonly seenProjects;
         readonly watchFactory: WatchFactory<WatchType, Project>;
+        private readonly sharedExtendedConfigFileWatchers;
         readonly packageJsonCache: PackageJsonCache;
         private packageJsonFilesMap;
         private performanceEventHandler?;
@@ -3933,6 +4010,8 @@ declare namespace ts.server {
         /** Gets the config file existence info for the configured project */
         getConfigFileExistenceInfo(project: ConfiguredProject): ConfigFileExistenceInfo;
         onConfigChangedForConfiguredProject(project: ConfiguredProject, eventKind: FileWatcherEventKind): void;
+        updateSharedExtendedConfigFileMap({ canonicalConfigFilePath }: ConfiguredProject, parsedCommandLine: ParsedCommandLine): void;
+        removeProjectFromSharedExtendedConfigFileMap(project: ConfiguredProject): void;
         /**
          * This is the callback function for the config file add/remove/change at any location
          * that matters to open script info but doesnt have configured project open
@@ -4025,7 +4104,8 @@ declare namespace ts.server {
         /**
          * Read the config file of the project again by clearing the cache and update the project graph
          */
-        reloadConfiguredProject(project: ConfiguredProject, reason: string, isInitialLoad: boolean): void;
+        reloadConfiguredProject(project: ConfiguredProject, reason: string, isInitialLoad: boolean, clearSemanticCache: boolean): void;
+        private clearSemanticCache;
         private sendConfigFileDiagEvent;
         private getOrCreateInferredProjectForProjectRootPathIfEnabled;
         private getOrCreateSingleInferredProjectIfEnabled;
@@ -4133,6 +4213,7 @@ declare namespace ts.server {
         hasDeferredExtension(): boolean;
         configurePlugin(args: protocol.ConfigurePluginRequestArguments): void;
         getPackageJsonsVisibleToFile(fileName: string, rootDir?: string): readonly PackageJsonInfo[];
+        getNearestAncestorDirectoryWithPackageJson(fileName: string): string | undefined;
         private watchPackageJsonFile;
         private onAddPackageJson;
         includePackageJsonAutoImports(): PackageJsonAutoImportPreference;
@@ -4199,7 +4280,7 @@ declare namespace ts.server {
         allowLocalPluginLoads?: boolean;
         typesMapLocation?: string;
     }
-    class Session implements EventSender {
+    class Session<TMessage = string> implements EventSender {
         private readonly gcTimer;
         protected projectService: ProjectService;
         private changeSeq;
@@ -4273,6 +4354,7 @@ declare namespace ts.server {
         private mapRenameInfo;
         private toSpanGroups;
         private getReferences;
+        private getFileReferences;
         /**
          * @param fileName is the name of the file to be opened
          * @param fileContent is a version of the file content that is known to be more up to date than the one on disk
@@ -4357,7 +4439,9 @@ declare namespace ts.server {
         private resetCurrentRequest;
         executeWithRequestId<T>(requestId: number, f: () => T): T;
         executeCommand(request: protocol.Request): HandlerResponse;
-        onMessage(message: string): void;
+        onMessage(message: TMessage): void;
+        protected parseMessage(message: TMessage): protocol.Request;
+        protected toStringMessage(message: TMessage): string;
         private getFormatOptions;
         private getPreferences;
         private getHostFormatOptions;

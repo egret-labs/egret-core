@@ -33,6 +33,7 @@ declare namespace ts.server.typingsInstaller {
         private installRunCount;
         private inFlightRequestCount;
         abstract readonly typesRegistry: ESMap<string, MapLike<string>>;
+        private readonly watchFactory;
         constructor(installTypingHost: InstallTypingHost, globalCachePath: string, safeListPath: Path, typesMapLocation: Path, throttleLimit: number, log?: Log);
         closeProject(req: CloseProject): void;
         private closeWatchers;
