@@ -3971,7 +3971,7 @@ var egret;
                         window['startup']();
                     }
                     else {
-                        console.error("EgretPro.js don't has function:window.startup");
+                        throw Error("Error:Run 3d startUp error.Please make sure you loaded 3d library js before 2d runEgret function.");
                     }
                 }
                 catch (e) {

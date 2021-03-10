@@ -72,7 +72,7 @@ namespace egret.web {
                 if (window['startup']) {
                     window['startup']();
                 } else {
-                    console.error("EgretPro.js don't has function:window.startup");
+                    throw Error("Run 3d startUp error.Please make sure you loaded 3d library js before 2d runEgret function.\ndocs:https://docs.egret.com/engine/docs/pro/add-3d-content\n");
                 }
             } catch (e) {
                 console.error(e);

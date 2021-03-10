@@ -14380,6 +14380,17 @@ var egret;
     var pro;
     (function (pro) {
         pro.egret2dDriveMode = false;
+        var getProUtil = function () {
+            // 没有instance 没有初始化Application没有window.startup
+            var application = window['Application'];
+            if (application == undefined) {
+                throw new Error("Get 3d Application error.Please make sure you loaded 3d library js before 2d runEgret function.\ndocs:https://docs.egret.com/engine/docs/pro/add-3d-content\n");
+            }
+            else if (pro.egret2dDriveMode == false) {
+                throw new Error("Get 3d Application error.If you need 3d support,you should set runEgret option 'pro' to true.\ndocs:https://docs.egret.com/engine/docs/pro/add-3d-content\n");
+            }
+            return application.instance.egretProUtil;
+        };
         /**
          * 根据场景地址获取场景，并将主摄像机Main Camera渲染为2d贴图并返回
          * 只能在场景中只有一个相机（Main Camera）时使用
@@ -14392,7 +14403,7 @@ var egret;
             if (textureWidth === void 0) { textureWidth = 512; }
             if (textureHeight === void 0) { textureHeight = 512; }
             if (scaleFactor === void 0) { scaleFactor = 1; }
-            return Application.instance.egretProUtil.execute("createTextureFrom3dScene", scenePath, textureWidth, textureHeight, scaleFactor);
+            return getProUtil().execute("createTextureFrom3dScene", scenePath, textureWidth, textureHeight, scaleFactor);
         }
         pro.createTextureFrom3dScene = createTextureFrom3dScene;
         /**
@@ -14409,7 +14420,7 @@ var egret;
             if (textureWidth === void 0) { textureWidth = 512; }
             if (textureHeight === void 0) { textureHeight = 512; }
             if (scaleFactor === void 0) { scaleFactor = 1; }
-            return Application.instance.egretProUtil.execute("createTextureForCameras", scenePath, filter, textureWidth, textureHeight, scaleFactor);
+            return getProUtil().execute("createTextureForCameras", scenePath, filter, textureWidth, textureHeight, scaleFactor);
         }
         pro.createTextureForCameras = createTextureForCameras;
         /**
@@ -14426,7 +14437,7 @@ var egret;
             for (var _i = 1; _i < arguments.length; _i++) {
                 args[_i - 1] = arguments[_i];
             }
-            return (_a = Application.instance.egretProUtil).execute.apply(_a, [command].concat(args));
+            return (_a = getProUtil()).execute.apply(_a, [command].concat(args));
             var _a;
         }
         pro.execute = execute;
@@ -14439,7 +14450,7 @@ var egret;
          * @param thisObject
          */
         function register(command, func, thisObject) {
-            return Application.instance.egretProUtil.register(command, func, thisObject);
+            return getProUtil().register(command, func, thisObject);
         }
         pro.register = register;
         /**
@@ -14450,7 +14461,7 @@ var egret;
          * @param thisObject
          */
         function addEventListener(eventType, target, func, thisObject) {
-            return Application.instance.egretProUtil.addEventListener(eventType, target, func, thisObject);
+            return getProUtil().addEventListener(eventType, target, func, thisObject);
         }
         pro.addEventListener = addEventListener;
         /**
@@ -14460,7 +14471,7 @@ var egret;
          * @param func
          */
         function removeEventListener(eventType, target, func) {
-            return Application.instance.egretProUtil.removeEventListener(eventType, target, func);
+            return getProUtil().removeEventListener(eventType, target, func);
         }
         pro.removeEventListener = removeEventListener;
         /**
@@ -14474,7 +14485,7 @@ var egret;
             for (var _i = 2; _i < arguments.length; _i++) {
                 args[_i - 2] = arguments[_i];
             }
-            return (_a = Application.instance.egretProUtil).dispatch.apply(_a, [command, target].concat(args));
+            return (_a = getProUtil()).dispatch.apply(_a, [command, target].concat(args));
             var _a;
         }
         pro.dispatch = dispatch;

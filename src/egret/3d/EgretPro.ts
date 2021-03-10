@@ -2,6 +2,17 @@ namespace egret.pro {
     export let egret2dDriveMode: boolean = false;
     export let mainCanvas: HTMLCanvasElement;
 
+    let getProUtil = () => {
+        // 没有instance 没有初始化Application没有window.startup
+        const application = (window as any)['Application'];
+        if (application == undefined) {
+            throw new Error("Get 3d Application error.Please make sure you loaded 3d library js before 2d runEgret function.\ndocs:https://docs.egret.com/engine/docs/pro/add-3d-content\n");
+        } else if (egret2dDriveMode == false) {
+            throw new Error("Get 3d Application error.If you need 3d support,you should set runEgret option 'pro' to true.\ndocs:https://docs.egret.com/engine/docs/pro/add-3d-content\n");
+        }
+        return application.instance.egretProUtil;
+    };
+
     /**
      * 根据场景地址获取场景，并将主摄像机Main Camera渲染为2d贴图并返回
      * 只能在场景中只有一个相机（Main Camera）时使用
@@ -11,7 +22,7 @@ namespace egret.pro {
      * @param scaleFactor 贴图质量。系数越大，贴图越清晰
      */
     export function createTextureFrom3dScene(scenePath: string, textureWidth: number = 512, textureHeight: number = 512, scaleFactor: number = 1): Promise<egret.Texture> {
-        return Application.instance.egretProUtil.execute("createTextureFrom3dScene", scenePath, textureWidth, textureHeight, scaleFactor);
+        return getProUtil().execute("createTextureFrom3dScene", scenePath, textureWidth, textureHeight, scaleFactor);
     }
 
 
@@ -28,7 +39,7 @@ namespace egret.pro {
     export function createTextureForCameras(scenePath: string, filter: (child: TreeNode) => boolean, textureWidth: number = 512, textureHeight: number = 512, scaleFactor: number = 1): Promise<{
         [key: string]: egret.Texture;
     }> {
-        return Application.instance.egretProUtil.execute("createTextureForCameras", scenePath, filter, textureWidth, textureHeight, scaleFactor);
+        return getProUtil().execute("createTextureForCameras", scenePath, filter, textureWidth, textureHeight, scaleFactor);
     }
 
     /**
@@ -41,7 +52,7 @@ namespace egret.pro {
      * @param args 
      */
     export function execute(command: string, ...args: any[]): any {
-        return Application.instance.egretProUtil.execute(command, ...args);
+        return getProUtil().execute(command, ...args);
     }
 
     /**
@@ -53,7 +64,7 @@ namespace egret.pro {
      * @param thisObject 
      */
     export function register(command: string, func: (...args: any[]) => any, thisObject: any) {
-        return Application.instance.egretProUtil.register(command, func, thisObject);
+        return getProUtil().register(command, func, thisObject);
     }
 
     /**
@@ -64,7 +75,7 @@ namespace egret.pro {
      * @param thisObject 
      */
     export function addEventListener(eventType: string, target: any, func: (...args: any[]) => void, thisObject: any): void {
-        return Application.instance.egretProUtil.addEventListener(eventType, target, func, thisObject);
+        return getProUtil().addEventListener(eventType, target, func, thisObject);
     }
 
     /**
@@ -74,7 +85,7 @@ namespace egret.pro {
      * @param func 
      */
     export function removeEventListener(eventType: string, target: any, func: (...args: any[]) => void): void {
-        return Application.instance.egretProUtil.removeEventListener(eventType, target, func);
+        return getProUtil().removeEventListener(eventType, target, func);
     }
 
     /**
@@ -84,7 +95,7 @@ namespace egret.pro {
      * @param args 
      */
     export function dispatch(command: string, target: any, ...args: any[]): void {
-        return Application.instance.egretProUtil.dispatch(command, target, ...args);
+        return getProUtil().dispatch(command, target, ...args);
     }
 
     /**
