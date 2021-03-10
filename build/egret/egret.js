@@ -2632,11 +2632,11 @@ var egret;
                 this._tint = (typeof value == "number" && value >= 0 && value <= 0xffffff) ? value : 0xffffff;
                 if (egret.nativeRender) {
                     if (this.$nativeDisplayObject.setTint) {
-                        this.$nativeDisplayObject.setTint(value);
+                        this.$nativeDisplayObject.setTint(this._tint);
                     }
                 }
                 else {
-                    this.$tintRGB = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
+                    this.$tintRGB = (this._tint >> 16) + (this._tint & 0xff00) + ((this._tint & 0xff) << 16);
                 }
             },
             enumerable: true,
