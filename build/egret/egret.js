@@ -2629,7 +2629,7 @@ var egret;
                 return this._tint;
             },
             set: function (value) {
-                this._tint = value;
+                this._tint = (typeof value == "number" && value >= 0 && value <= 0xffffff) ? value : 0xffffff;
                 if (egret.nativeRender) {
                     if (this.$nativeDisplayObject.setTint) {
                         this.$nativeDisplayObject.setTint(value);

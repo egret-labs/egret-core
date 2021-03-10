@@ -300,7 +300,7 @@ var egret;
                 * 混入tintcolor => alpha
                 */
                 alpha = Math.min(alpha, 1.0);
-                var globalTintColor = buffer.globalTintColor || 0xFFFFFF;
+                var globalTintColor = buffer.globalTintColor;
                 var currentTexture = buffer.currentTexture;
                 alpha = ((alpha < 1.0 && currentTexture && currentTexture[egret.UNPACK_PREMULTIPLY_ALPHA_WEBGL]) ?
                     egret.WebGLUtils.premultiplyTint(globalTintColor, alpha)
