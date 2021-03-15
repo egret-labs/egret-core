@@ -26440,7 +26440,7 @@ var egret;
      * @language zh_CN
      */
     function toColorString(value) {
-        if (value < 0)
+        if (!value || value < 0)
             value = 0;
         if (value > 16777215)
             value = 16777215;
