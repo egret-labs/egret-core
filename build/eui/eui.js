@@ -2571,7 +2571,7 @@ var eui;
         Group.prototype.$hitTest = function (stageX, stageY) {
             //Bug: 当 group.sacleX or scaleY ==0 的时候，随便点击那里都点击成功
             //虽然 super.$hitTest里面检测过一次 宽高大小，但是没有直接退出这个函数，所以要再判断一次;
-            if (!this.$visible || !this.touchEnabled || this.scaleX === 0 || this.scaleY === 0) {
+            if (!this.$visible || (!this.touchEnabled && !this.touchChildren) || this.scaleX === 0 || this.scaleY === 0) {
                 return null;
             }
             var target = _super.prototype.$hitTest.call(this, stageX, stageY);
