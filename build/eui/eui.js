@@ -21457,7 +21457,7 @@ var eui;
                 if (true) {
                     info.__class__ = prototype.constructor.name;
                 }
-                var keys = Object.keys(prototype).concat(Object.keys(instance));
+                var keys = Object.getOwnPropertyNames(prototype).concat(Object.getOwnPropertyNames(instance));
                 var length = keys.length;
                 var meta = instance.__meta__;
                 for (var i = 0; i < length; i++) {

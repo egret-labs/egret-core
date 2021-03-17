@@ -93,7 +93,7 @@ namespace eui.sys {
             if(DEBUG){
                 info.__class__ = prototype.constructor.name;
             }
-            let keys = Object.keys(prototype).concat(Object.keys(instance));
+            let keys = Object.getOwnPropertyNames(prototype).concat(Object.getOwnPropertyNames(instance));
             let length = keys.length;
             let meta = instance.__meta__;
             for (let i = 0; i < length; i++) {
