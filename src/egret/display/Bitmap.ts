@@ -449,6 +449,8 @@ namespace egret {
                     maskedObject.$cacheDirty = true;
                     maskedObject.$cacheDirtyUp();
                 }
+            } else if (self.$nativeDisplayObject.setSmoothing) {
+                self.$nativeDisplayObject.setSmoothing(value);
             }
         }
 
