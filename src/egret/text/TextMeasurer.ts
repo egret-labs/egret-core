@@ -40,5 +40,8 @@ namespace egret.sys {
      * @param bold 是否粗体
      * @param italic 是否斜体
      */
-    export let measureText:(text:string, fontFamily:string, fontSize:number, bold:boolean, italic:boolean)=>number;
+    export let measureText: (text: string, fontFamily: string, fontSize: number, bold: boolean, italic: boolean) => number;
+
+
+    export let measureFontHeight: (fontFamily: string, fontSize: number, bold: boolean, italic: boolean) => number;
 }

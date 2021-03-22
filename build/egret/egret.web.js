@@ -2923,6 +2923,81 @@ var egret;
             context.textBaseline = "middle";
         }
         egret.sys.measureText = measureText;
+        function measureFontHeight(fontFamily, fontSize, bold, italic) {
+            if (!context) {
+                createContext();
+            }
+            var font = "";
+            if (italic)
+                font += "italic ";
+            if (bold)
+                font += "bold ";
+            font += ((typeof fontSize == "number" && fontSize >= 0) ? fontSize : 12) + "px ";
+            font += ((typeof fontFamily == "string" && fontFamily != "") ? fontFamily : "Arial");
+            context.font = font;
+            var canvas = egret.sys.canvasHitTestBuffer.surface;
+            var metricsString = METRICS_STRING + BASELINE_SYMBOL;
+            var width = Math.ceil(context.measureText(metricsString).width);
+            var baseline = Math.ceil(context.measureText(BASELINE_SYMBOL).width);
+            var height = HEIGHT_MULTIPLIER * baseline;
+            baseline = baseline * BASELINE_MULTIPLIER | 0;
+            canvas.width = width;
+            canvas.height = height;
+            context.fillStyle = '#f00';
+            context.fillRect(0, 0, width, height);
+            context.font = font;
+            context.textBaseline = 'alphabetic';
+            context.fillStyle = '#000';
+            context.fillText(metricsString, 0, baseline);
+            var imagedata = context.getImageData(0, 0, width, height).data;
+            var pixels = imagedata.length;
+            var line = width * 4;
+            var ascent, descent;
+            var i = 0;
+            var idx = 0;
+            var stop = false;
+            // ascent. scan from top to bottom until we find a non red pixel
+            for (i = 0; i < baseline; ++i) {
+                for (var j = 0; j < line; j += 4) {
+                    if (imagedata[idx + j] !== 255) {
+                        stop = true;
+                        break;
+                    }
+                }
+                if (!stop) {
+                    idx += line;
+                }
+                else {
+                    break;
+                }
+            }
+            ascent = baseline - i;
+            idx = pixels - line;
+            stop = false;
+            // descent. scan from bottom to top until we find a non red pixel
+            for (i = height; i > baseline; --i) {
+                for (var j = 0; j < line; j += 4) {
+                    if (imagedata[idx + j] !== 255) {
+                        stop = true;
+                        break;
+                    }
+                }
+                if (!stop) {
+                    idx -= line;
+                }
+                else {
+                    break;
+                }
+            }
+            descent = i - baseline;
+            var fontHeight = ascent + descent;
+            return fontHeight;
+        }
+        egret.sys.measureFontHeight = measureFontHeight;
+        var METRICS_STRING = '|ÉqÅ';
+        var BASELINE_SYMBOL = 'M';
+        var BASELINE_MULTIPLIER = 1.4;
+        var HEIGHT_MULTIPLIER = 2.0;
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////

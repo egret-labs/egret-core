@@ -13715,6 +13715,7 @@ declare namespace egret.sys {
      * @param italic 是否斜体
      */
     let measureText: (text: string, fontFamily: string, fontSize: number, bold: boolean, italic: boolean) => number;
+    let measureFontHeight: (fontFamily: string, fontSize: number, bold: boolean, italic: boolean) => number;
 }
 declare namespace egret {
     /**

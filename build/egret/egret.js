@@ -20703,6 +20703,21 @@ var egret;
         return egret.sys.measureText(text, fontFamily, size, bold, italic);
     }
     /**
+     * @private
+     * 根据样式测量文本宽度
+     */
+    function measureFontHeight(values, style) {
+        if (!egret.sys.measureFontHeight) {
+            return 0;
+        }
+        style = style || {};
+        var italic = style.italic == null ? values[16 /* italic */] : style.italic;
+        var bold = style.bold == null ? values[15 /* bold */] : style.bold;
+        var size = style.size == null ? values[0 /* fontSize */] : style.size;
+        var fontFamily = style.fontFamily || values[8 /* fontFamily */] || TextField.default_fontFamily;
+        return egret.sys.measureFontHeight(fontFamily, size, bold, italic);
+    }
+    /**
      * TextField is the text rendering class of egret. It conducts rendering by using the browser / device API. Due to different ways of font rendering in different browsers / devices, there may be differences in the rendering
      * If developers expect  no differences among all platforms, please use BitmapText
      * @see http://edn.egret.com/cn/docs/page/141 Create Text
@@ -22407,11 +22422,23 @@ var egret;
                         lineH = 0;
                         lineCharNum = 0;
                     }
+                    var fontHeight = void 0;
                     if (values[24 /* type */] == egret.TextFieldType.INPUT) {
-                        lineH = values[0 /* fontSize */];
+                        // lineH = values[sys.TextKeys.fontSize];
+                        fontHeight = measureFontHeight(values, element.style);
+                        lineH = fontHeight == 0 ? values[0 /* fontSize */] : fontHeight;
                     }
                     else {
-                        lineH = Math.max(lineH, typeof (element.style.size) == "number" ? element.style.size : values[0 /* fontSize */]);
+                        // lineH = Math.max(lineH, typeof (element.style.size) == "number" ? element.style.size : values[sys.TextKeys.fontSize]);
+                        var fontSize = typeof (element.style.size) == "number" ? element.style.size : values[0 /* fontSize */];
+                        var fontHeight_1 = measureFontHeight(values, {
+                            size: fontSize,
+                            italic: element.style.italic,
+                            bold: element.style.bold,
+                            fontFamily: element.style.fontFamily
+                        });
+                        fontHeight_1 = fontHeight_1 == 0 ? fontSize : fontHeight_1;
+                        lineH = Math.max(lineH, fontHeight_1);
                     }
                     var isNextLine = true;
                     if (textArr[j] == "") {

@@ -72,4 +72,107 @@ namespace egret.web {
     }
 
     sys.measureText = measureText;
+
+
+
+    function measureFontHeight(fontFamily: string, fontSize: number, bold: boolean, italic: boolean) {
+        if (!context) {
+            createContext();
+        }
+
+        let font = "";
+        if (italic)
+            font += "italic ";
+        if (bold)
+            font += "bold ";
+        font += ((typeof fontSize == "number" && fontSize >= 0) ? fontSize : 12) + "px ";
+        font += ((typeof fontFamily == "string" && fontFamily != "") ? fontFamily : "Arial");
+        context.font = font;
+
+
+        const canvas = sys.canvasHitTestBuffer.surface;
+        const metricsString = METRICS_STRING + BASELINE_SYMBOL;
+        const width = Math.ceil(context.measureText(metricsString).width);
+        let baseline = Math.ceil(context.measureText(BASELINE_SYMBOL).width);
+        const height = HEIGHT_MULTIPLIER * baseline;
+
+        baseline = baseline * BASELINE_MULTIPLIER | 0;
+
+        canvas.width = width;
+        canvas.height = height;
+
+        context.fillStyle = '#f00';
+        context.fillRect(0, 0, width, height);
+
+        context.font = font;
+
+        context.textBaseline = 'alphabetic';
+        context.fillStyle = '#000';
+        context.fillText(metricsString, 0, baseline);
+
+        const imagedata = context.getImageData(0, 0, width, height).data;
+        const pixels = imagedata.length;
+        const line = width * 4;
+
+        let ascent: number, descent: number;
+
+        let i = 0;
+        let idx = 0;
+        let stop = false;
+
+        // ascent. scan from top to bottom until we find a non red pixel
+        for (i = 0; i < baseline; ++i) {
+            for (let j = 0; j < line; j += 4) {
+                if (imagedata[idx + j] !== 255) {
+                    stop = true;
+                    break;
+                }
+            }
+            if (!stop) {
+                idx += line;
+            }
+            else {
+                break;
+            }
+        }
+
+        ascent = baseline - i;
+
+        idx = pixels - line;
+        stop = false;
+
+        // descent. scan from bottom to top until we find a non red pixel
+        for (i = height; i > baseline; --i) {
+            for (let j = 0; j < line; j += 4) {
+                if (imagedata[idx + j] !== 255) {
+                    stop = true;
+                    break;
+                }
+            }
+
+            if (!stop) {
+                idx -= line;
+            }
+            else {
+                break;
+            }
+        }
+
+        descent = i - baseline;
+        let fontHeight = ascent + descent;
+        return fontHeight;
+    }
+
+    sys.measureFontHeight = measureFontHeight;
+
+    const METRICS_STRING = '|ÉqÅ';
+
+    const BASELINE_SYMBOL = 'M';
+
+    const BASELINE_MULTIPLIER = 1.4;
+
+    const HEIGHT_MULTIPLIER = 2.0;
+
+
+
 }

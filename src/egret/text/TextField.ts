@@ -323,6 +323,22 @@ namespace egret {
     }
 
     /**
+     * @private
+     * 根据样式测量文本宽度
+     */
+    function measureFontHeight(values: any, style?: ITextStyle): number {
+        if (!sys.measureFontHeight) {
+            return 0;
+        }
+        style = style || <egret.ITextStyle>{};
+        let italic: boolean = style.italic == null ? values[sys.TextKeys.italic] : style.italic;
+        let bold: boolean = style.bold == null ? values[sys.TextKeys.bold] : style.bold;
+        let size: number = style.size == null ? values[sys.TextKeys.fontSize] : style.size;
+        let fontFamily: string = style.fontFamily || values[sys.TextKeys.fontFamily] || TextField.default_fontFamily;
+        return sys.measureFontHeight(fontFamily, size, bold, italic);
+    }
+
+    /**
      * TextField is the text rendering class of egret. It conducts rendering by using the browser / device API. Due to different ways of font rendering in different browsers / devices, there may be differences in the rendering
      * If developers expect  no differences among all platforms, please use BitmapText
      * @see http://edn.egret.com/cn/docs/page/141 Create Text
@@ -2116,12 +2132,23 @@ namespace egret {
                         lineH = 0;
                         lineCharNum = 0;
                     }
-
+                    let fontHeight: number;
                     if (values[sys.TextKeys.type] == egret.TextFieldType.INPUT) {
-                        lineH = values[sys.TextKeys.fontSize];
+                        // lineH = values[sys.TextKeys.fontSize];
+                        fontHeight = measureFontHeight(values, element.style);
+                        lineH = fontHeight == 0 ? values[sys.TextKeys.fontSize] : fontHeight;
                     }
                     else {
-                        lineH = Math.max(lineH, typeof (element.style.size) == "number" ? element.style.size : values[sys.TextKeys.fontSize]);
+                        // lineH = Math.max(lineH, typeof (element.style.size) == "number" ? element.style.size : values[sys.TextKeys.fontSize]);
+                        let fontSize = typeof (element.style.size) == "number" ? element.style.size : values[sys.TextKeys.fontSize]
+                        let fontHeight = measureFontHeight(values, {
+                            size: fontSize,
+                            italic: element.style.italic,
+                            bold: element.style.bold,
+                            fontFamily: element.style.fontFamily
+                        });
+                        fontHeight = fontHeight == 0 ? fontSize : fontHeight;
+                        lineH = Math.max(lineH, fontHeight);
                     }
 
                     let isNextLine: boolean = true;
@@ -2378,7 +2405,6 @@ namespace egret {
                 for (let j: number = 0, elementsLength: number = line.elements.length; j < elementsLength; j++) {
                     let element: egret.IWTextElement = line.elements[j];
                     let size: number = typeof element.style.size == "number" ? element.style.size : values[sys.TextKeys.fontSize];
-
                     node.drawText(drawX, drawY + (h - size) / 2, element.text, element.style);
 
                     if (element.style.underline) {
