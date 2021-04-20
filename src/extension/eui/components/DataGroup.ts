@@ -753,7 +753,7 @@ namespace eui {
             if (!rendererClass) {
                 rendererClass = ItemRenderer;
             }
-            if (!rendererClass.$hashCode) {
+            if (!rendererClass.hasOwnProperty('$hashCode')) {
                 rendererClass.$hashCode = egret.$hashCount++;
             }
             return rendererClass;
