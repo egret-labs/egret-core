@@ -120,6 +120,12 @@ namespace egret {
             this.stageText.removeEventListener("blur", this.blurHandler, this);
             this.stageText.removeEventListener("focus", this.focusHandler, this);
 
+
+            if (this._isFocus) {
+                this._isFocus = false;
+                this._text.$setIsTyping(false);
+            }
+
             this.stageTextAdded = false;
         }
 
