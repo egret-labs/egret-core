@@ -2117,6 +2117,7 @@ namespace egret {
                         lineCharNum = 0;
                     }
 
+                    let old = lineH;
                     if (values[sys.TextKeys.type] == egret.TextFieldType.INPUT) {
                         lineH = values[sys.TextKeys.fontSize];
                     }
@@ -2195,6 +2196,10 @@ namespace egret {
 
                                     // w = measureTextWidth(words[k], values, element.style);
                                     if (lineW != 0 && lineW + w > textFieldWidth && lineW + k != 0) {
+                                        //如果是首个单词就换行了，那么需要回置lineH
+                                        if (k == 0){
+                                            lineH = old;
+                                        }
                                         break;
                                     }
                                     if (ww + w > textFieldWidth) {//纯英文，一个词就超出宽度的情况
