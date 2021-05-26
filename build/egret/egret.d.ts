@@ -1,4 +1,4 @@
-declare var global: any;
+declare var global: NodeJS.Global;
 declare var __global: any;
 declare let __define: any;
 declare namespace egret {
