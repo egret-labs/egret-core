@@ -33,7 +33,6 @@ namespace egret.web {
     let defaultCompositeOp = "source-over";
     let BLACK_COLOR = "#000000";
     let CAPS_STYLES = { none: 'butt', square: 'square', round: 'round' };
-    let renderBufferPool: WebGLRenderBuffer[] = [];//渲染缓冲区对象池
     /**
      * @private
      * WebGL渲染器

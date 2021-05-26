@@ -7753,7 +7753,7 @@ var egret;
              * 创建一个buffer实例
              */
             WebGLRenderBuffer.create = function (width, height) {
-                var buffer = renderBufferPool.pop();
+                var buffer = web.renderBufferPool.pop();
                 // width = Math.min(width, 1024);
                 // height = Math.min(height, 1024);
                 if (buffer) {
@@ -7779,14 +7779,14 @@ var egret;
              * 回收一个buffer实例
              */
             WebGLRenderBuffer.release = function (buffer) {
-                renderBufferPool.push(buffer);
+                web.renderBufferPool.push(buffer);
             };
             WebGLRenderBuffer.autoClear = true;
             return WebGLRenderBuffer;
         }(egret.HashObject));
         web.WebGLRenderBuffer = WebGLRenderBuffer;
         __reflect(WebGLRenderBuffer.prototype, "egret.web.WebGLRenderBuffer", ["egret.sys.RenderBuffer"]);
-        var renderBufferPool = []; //渲染缓冲区对象池
+        web.renderBufferPool = []; //渲染缓冲区对象池
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -7825,7 +7825,6 @@ var egret;
         var defaultCompositeOp = "source-over";
         var BLACK_COLOR = "#000000";
         var CAPS_STYLES = { none: 'butt', square: 'square', round: 'round' };
-        var renderBufferPool = []; //渲染缓冲区对象池
         /**
          * @private
          * WebGL渲染器
@@ -7867,12 +7866,12 @@ var egret;
                 this.nestLevel--;
                 if (this.nestLevel === 0) {
                     //最大缓存6个渲染缓冲
-                    if (renderBufferPool.length > 6) {
-                        renderBufferPool.length = 6;
+                    if (web.renderBufferPool.length > 6) {
+                        web.renderBufferPool.length = 6;
                     }
-                    var length_7 = renderBufferPool.length;
+                    var length_7 = web.renderBufferPool.length;
                     for (var i = 0; i < length_7; i++) {
-                        renderBufferPool[i].resize(0, 0);
+                        web.renderBufferPool[i].resize(0, 0);
                     }
                 }
                 return drawCall;
@@ -8116,7 +8115,7 @@ var egret;
                         buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
                     }
                 }
-                renderBufferPool.push(displayBuffer);
+                web.renderBufferPool.push(displayBuffer);
                 return drawCalls;
             };
             WebGLRenderer.prototype.getRenderCount = function (displayObject) {
@@ -8219,7 +8218,7 @@ var egret;
                         displayBuffer.setTransform(1, 0, 0, 1, 0, 0);
                         displayBuffer.context.setGlobalCompositeOperation("source-over");
                         maskBuffer.setTransform(1, 0, 0, 1, 0, 0);
-                        renderBufferPool.push(maskBuffer);
+                        web.renderBufferPool.push(maskBuffer);
                     }
                     displayBuffer.context.setGlobalCompositeOperation(defaultCompositeOp);
                     displayBuffer.context.popBuffer();
@@ -8259,7 +8258,7 @@ var egret;
                         matrix.ty = savedMatrix.ty;
                         egret.Matrix.release(savedMatrix);
                     }
-                    renderBufferPool.push(displayBuffer);
+                    web.renderBufferPool.push(displayBuffer);
                     return drawCalls;
                 }
             };
@@ -8931,7 +8930,7 @@ var egret;
              * @private
              */
             WebGLRenderer.prototype.createRenderBuffer = function (width, height) {
-                var buffer = renderBufferPool.pop();
+                var buffer = web.renderBufferPool.pop();
                 if (buffer) {
                     buffer.resize(width, height);
                     buffer.setTransform(1, 0, 0, 1, 0, 0);

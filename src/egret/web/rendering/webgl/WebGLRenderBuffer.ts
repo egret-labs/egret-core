@@ -446,5 +446,5 @@ namespace egret.web {
 
     }
 
-    let renderBufferPool: WebGLRenderBuffer[] = [];//渲染缓冲区对象池
+    export let renderBufferPool: WebGLRenderBuffer[] = [];//渲染缓冲区对象池
 }
