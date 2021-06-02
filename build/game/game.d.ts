@@ -2439,7 +2439,7 @@ declare namespace egret {
      * @includeExample extension/game/utils/setInterval.ts
      * @language zh_CN
      */
-    function setInterval<Z>(listener: (this: Z, ...arg) => void, thisObject: Z, delay: number, ...args: any[]): number;
+    function setInterval<Z>(listener: (this: Z, ...arg: any[]) => void, thisObject: Z, delay: number, ...args: any[]): number;
     /**
      * Clear function to run after a specified delay.
      * @param key {number} Index that egret.setInterval returns
@@ -2483,7 +2483,7 @@ declare namespace egret {
      * @includeExample extension/game/utils/setTimeout.ts
      * @language zh_CN
      */
-    function setTimeout<Z>(listener: (this: Z, ...arg) => void, thisObject: Z, delay: number, ...args: any[]): number;
+    function setTimeout<Z>(listener: (this: Z, ...arg: any[]) => void, thisObject: Z, delay: number, ...args: any[]): number;
     /**
      * Function run after the specified delay is cleared.
      * @param key {number} Index that egret.setTimeout returns
