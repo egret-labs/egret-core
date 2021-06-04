@@ -122,9 +122,12 @@ function parseUsedClass(xml) {
         var className = getClassNameById(xml.localName, xml.namespace);
         if (className)
             classes.push(className);
-        var skinName = xml["$skinName"];
-        if (skinName && skinName.toLowerCase().indexOf(".exml") != skinName.length - 5)
-            classes.push(skinName);
+        var skinAttrs = ["$skinName", "$itemRendererSkinName"];
+        skinAttrs.forEach(function (attr) {
+            var skinName = xml[attr];
+            if (skinName && skinName.toLowerCase().indexOf(".exml") != skinName.length - 5)
+                classes.push(skinName);
+        });
         if (classes.length)
             return classes;
         return null;
@@ -132,14 +135,20 @@ function parseUsedClass(xml) {
 }
 function parseUsedEXML(xml) {
     var files = [];
-    visitNodes(xml, function (node) { return parseEXMLPathInAttributes(node); }, function (path) { return files.push(path); });
+    visitNodes(xml, function (node) { return parseEXMLPathInAttributes(node); }, function (paths) { return paths.forEach(function (path) { return files.push(path); }); });
     return files;
     function parseEXMLPathInAttributes(xml) {
         if (!xml)
             return null;
-        var skinName = xml["$skinName"];
-        if (skinName && skinName.toLowerCase().indexOf(".exml") == skinName.length - 5)
-            return skinName;
+        var skins = [];
+        var skinAttrs = ["$skinName", "$itemRendererSkinName"];
+        skinAttrs.forEach(function (attr) {
+            var skinName = xml[attr];
+            if (skinName && skinName.toLowerCase().indexOf(".exml") == skinName.length - 5)
+                skins.push(skinName);
+        });
+        if (skins.length)
+            return skins;
         return null;
     }
 }

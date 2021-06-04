@@ -163,9 +163,12 @@ function parseUsedClass(xml: egret.XML): string[] {
         var className = getClassNameById(xml.localName, xml.namespace);
         if (className)
             classes.push(className);
-        var skinName: string = xml["$skinName"];
-        if (skinName && skinName.toLowerCase().indexOf(".exml") != skinName.length - 5)
-            classes.push(skinName);
+        var skinAttrs = ["$skinName", "$itemRendererSkinName"];
+        skinAttrs.forEach(attr => {
+            var skinName = xml[attr];
+            if (skinName && skinName.toLowerCase().indexOf(".exml") != skinName.length - 5)
+                classes.push(skinName);
+        });
 
         if (classes.length)
             return classes;
@@ -177,15 +180,21 @@ function parseUsedEXML(xml: egret.XML): string[] {
     var files: string[] = [];
     visitNodes(xml,
         node => parseEXMLPathInAttributes(<egret.XML>node),
-        path => files.push(path));
+        paths => paths.forEach(path => files.push(path)));
     return files;
 
-    function parseEXMLPathInAttributes(xml: egret.XML): string {
+    function parseEXMLPathInAttributes(xml: egret.XML): string[] {
         if (!xml)
             return null;
-        var skinName: string = xml["$skinName"];
-        if (skinName && skinName.toLowerCase().indexOf(".exml") == skinName.length - 5)
-            return skinName;
+        var skins: string[] = [];
+        var skinAttrs = ["$skinName", "$itemRendererSkinName"];
+        skinAttrs.forEach(attr => {
+            var skinName = xml[attr];
+            if (skinName && skinName.toLowerCase().indexOf(".exml") == skinName.length - 5)
+                skins.push(skinName);
+        });
+        if (skins.length)
+            return skins;
         return null;
     }
 }
