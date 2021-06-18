@@ -253,6 +253,27 @@ namespace egret {
             }
         }
 
+        private static _paused: boolean = false;
+
+        /**
+         * 暂停所有缓动
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        public static pauseAllTweens(): void {
+            Tween._paused = true;
+        }
+
+        /**
+         * 恢复所有缓动
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        public static resumeAllTweens(): void {
+            Tween._paused = false;
+            Tween._lastTime = egret.getTimer();
+        }
+
         /**
          * @private
          * 
@@ -260,6 +281,10 @@ namespace egret {
          * @param paused 
          */
         private static tick(timeStamp: number, paused = false): boolean {
+            if (Tween._paused) {
+                return false;
+            }
+
             let delta = timeStamp - Tween._lastTime;
             Tween._lastTime = timeStamp;
 
