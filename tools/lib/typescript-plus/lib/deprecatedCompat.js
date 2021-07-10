@@ -815,7 +815,7 @@ var ts;
     }, factoryDeprecation);
     /** @deprecated Use `factory.createJSDocParameterTag` or the factory supplied by your transformation context instead. */
     ts.createJSDocParamTag = ts.Debug.deprecate(function createJSDocParamTag(name, isBracketed, typeExpression, comment) {
-        return ts.factory.createJSDocParameterTag(/*tagName*/ undefined, name, isBracketed, typeExpression, /*isNameFirst*/ false, comment);
+        return ts.factory.createJSDocParameterTag(/*tagName*/ undefined, name, isBracketed, typeExpression, /*isNameFirst*/ false, comment ? ts.factory.createNodeArray([ts.factory.createJSDocText(comment)]) : undefined);
     }, factoryDeprecation);
     /** @deprecated Use `factory.createComma` or the factory supplied by your transformation context instead. */
     ts.createComma = ts.Debug.deprecate(function createComma(left, right) {
@@ -865,7 +865,7 @@ var ts;
     ts.createNode = ts.Debug.deprecate(function createNode(kind, pos, end) {
         if (pos === void 0) { pos = 0; }
         if (end === void 0) { end = 0; }
-        return ts.setTextRangePosEnd(kind === 297 /* SourceFile */ ? ts.parseBaseNodeFactory.createBaseSourceFileNode(kind) :
+        return ts.setTextRangePosEnd(kind === 298 /* SourceFile */ ? ts.parseBaseNodeFactory.createBaseSourceFileNode(kind) :
             kind === 78 /* Identifier */ ? ts.parseBaseNodeFactory.createBaseIdentifierNode(kind) :
                 kind === 79 /* PrivateIdentifier */ ? ts.parseBaseNodeFactory.createBasePrivateIdentifierNode(kind) :
                     !ts.isNodeKind(kind) ? ts.parseBaseNodeFactory.createBaseTokenNode(kind) :
@@ -894,12 +894,29 @@ var ts;
     // #region Renamed node Tests
     /** @deprecated Use `isTypeAssertionExpression` instead. */
     ts.isTypeAssertion = ts.Debug.deprecate(function isTypeAssertion(node) {
-        return node.kind === 206 /* TypeAssertionExpression */;
+        return node.kind === 207 /* TypeAssertionExpression */;
     }, {
         since: "4.0",
         warnAfter: "4.1",
         message: "Use `isTypeAssertionExpression` instead."
     });
     // #endregion
+    // DEPRECATION: Renamed node tests
+    // DEPRECATION PLAN:
+    //     - soft: 4.2
+    //     - warn: 4.3
+    //     - error: TBD
+    // #region Renamed node Tests
+    /**
+     * @deprecated Use `isMemberName` instead.
+     */
+    ts.isIdentifierOrPrivateIdentifier = ts.Debug.deprecate(function isIdentifierOrPrivateIdentifier(node) {
+        return ts.isMemberName(node);
+    }, {
+        since: "4.2",
+        warnAfter: "4.3",
+        message: "Use `isMemberName` instead."
+    });
+    // #endregion Renamed node Tests
 })(ts || (ts = {}));
 //# sourceMappingURL=deprecatedCompat.js.map

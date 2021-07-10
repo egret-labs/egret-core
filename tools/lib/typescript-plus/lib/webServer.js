@@ -185,10 +185,8 @@ var ts;
         var WorkerSession = /** @class */ (function (_super) {
             __extends(WorkerSession, _super);
             function WorkerSession(host, webHost, options, logger, cancellationToken, hrtime) {
-                var _this = _super.call(this, __assign(__assign({ host: host,
-                    cancellationToken: cancellationToken }, options), { typingsInstaller: server.nullTypingsInstaller, byteLength: ts.notImplemented, // Formats the message text in send of Session which is overriden in this class so not needed
-                    hrtime: hrtime,
-                    logger: logger, canUseEvents: false })) || this;
+                var _this = _super.call(this, __assign(__assign({ host: host, cancellationToken: cancellationToken }, options), { typingsInstaller: server.nullTypingsInstaller, byteLength: ts.notImplemented, // Formats the message text in send of Session which is overriden in this class so not needed
+                    hrtime: hrtime, logger: logger, canUseEvents: false })) || this;
                 _this.webHost = webHost;
                 return _this;
             }

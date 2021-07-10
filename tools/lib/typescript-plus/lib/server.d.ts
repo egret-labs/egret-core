@@ -686,6 +686,7 @@ declare namespace ts.server.protocol {
     type OrganizeImportsScope = GetCombinedCodeFixScope;
     interface OrganizeImportsRequestArgs {
         scope: OrganizeImportsScope;
+        skipDestructiveCodeActions?: boolean;
     }
     interface OrganizeImportsResponse extends Response {
         body: readonly FileCodeEdits[];
@@ -942,21 +943,36 @@ declare namespace ts.server.protocol {
          */
         file: string;
     }
+    interface JSDocTagInfo {
+        /** Name of the JSDoc tag */
+        name: string;
+        /**
+         * Comment text after the JSDoc tag -- the text after the tag name until the next tag or end of comment
+         * Display parts when UserPreferences.displayPartsForJSDoc is true, flattened to string otherwise.
+         */
+        text?: string | SymbolDisplayPart[];
+    }
     interface TextSpanWithContext extends TextSpan {
         contextStart?: Location;
         contextEnd?: Location;
     }
     interface FileSpanWithContext extends FileSpan, TextSpanWithContext {
     }
+    interface DefinitionInfo extends FileSpanWithContext {
+        /**
+         * When true, the file may or may not exist.
+         */
+        unverified?: boolean;
+    }
     interface DefinitionInfoAndBoundSpan {
-        definitions: readonly FileSpanWithContext[];
+        definitions: readonly DefinitionInfo[];
         textSpan: TextSpan;
     }
     /**
      * Definition response message.  Gives text range for definition.
      */
     interface DefinitionResponse extends Response {
-        body?: FileSpanWithContext[];
+        body?: DefinitionInfo[];
     }
     interface DefinitionInfoAndBoundSpanResponse extends Response {
         body?: DefinitionInfoAndBoundSpan;
@@ -1421,18 +1437,21 @@ declare namespace ts.server.protocol {
         FixedPollingInterval = "FixedPollingInterval",
         PriorityPollingInterval = "PriorityPollingInterval",
         DynamicPriorityPolling = "DynamicPriorityPolling",
+        FixedChunkSizePolling = "FixedChunkSizePolling",
         UseFsEvents = "UseFsEvents",
         UseFsEventsOnParentDirectory = "UseFsEventsOnParentDirectory"
     }
     const enum WatchDirectoryKind {
         UseFsEvents = "UseFsEvents",
         FixedPollingInterval = "FixedPollingInterval",
-        DynamicPriorityPolling = "DynamicPriorityPolling"
+        DynamicPriorityPolling = "DynamicPriorityPolling",
+        FixedChunkSizePolling = "FixedChunkSizePolling"
     }
     const enum PollingWatchKind {
         FixedInterval = "FixedInterval",
         PriorityInterval = "PriorityInterval",
-        DynamicPriority = "DynamicPriority"
+        DynamicPriority = "DynamicPriority",
+        FixedChunkSize = "FixedChunkSize"
     }
     interface WatchOptions {
         watchFile?: WatchFileKind | ts.WatchFileKind;
@@ -1777,6 +1796,7 @@ declare namespace ts.server.protocol {
      */
     interface QuickInfoRequest extends FileLocationRequest {
         command: CommandTypes.Quickinfo;
+        arguments: FileLocationRequestArgs;
     }
     /**
      * Body of QuickInfoResponse.
@@ -1804,8 +1824,9 @@ declare namespace ts.server.protocol {
         displayString: string;
         /**
          * Documentation associated with symbol.
+         * Display parts when UserPreferences.displayPartsForJSDoc is true, flattened to string otherwise.
          */
-        documentation: string;
+        documentation: string | SymbolDisplayPart[];
         /**
          * JSDoc tags associated with symbol.
          */
@@ -1930,7 +1951,7 @@ declare namespace ts.server.protocol {
         command: CommandTypes.Formatonkey;
         arguments: FormatOnKeyRequestArgs;
     }
-    type CompletionsTriggerCharacter = "." | '"' | "'" | "`" | "/" | "@" | "<" | "#";
+    type CompletionsTriggerCharacter = "." | '"' | "'" | "`" | "/" | "@" | "<" | "#" | " ";
     /**
      * Arguments for completions messages.
      */
@@ -1975,6 +1996,7 @@ declare namespace ts.server.protocol {
     interface CompletionEntryIdentifier {
         name: string;
         source?: string;
+        data?: unknown;
     }
     /**
      * Completion entry details request; value of command field is
@@ -1998,6 +2020,11 @@ declare namespace ts.server.protocol {
          * The symbol's kind (such as 'className' or 'parameterName' or plain 'text').
          */
         kind: string;
+    }
+    /** A part of a symbol description that links from a jsdoc @link tag to a declaration */
+    interface JSDocLinkDisplayPart extends SymbolDisplayPart {
+        /** The location of the declaration that the @link tag links to. */
+        target: FileSpan;
     }
     /**
      * An item found in a completion response.
@@ -2027,6 +2054,10 @@ declare namespace ts.server.protocol {
          */
         insertText?: string;
         /**
+         * `insertText` should be interpreted as a snippet if true.
+         */
+        isSnippet?: true;
+        /**
          * An optional span that indicates the text to be replaced by this completion item.
          * If present, this span should be used instead of the default one.
          * It will be set if the required span differs from the one generated by the default replacement behavior.
@@ -2042,6 +2073,10 @@ declare namespace ts.server.protocol {
          */
         source?: string;
         /**
+         * Human-readable description of the `source`.
+         */
+        sourceDisplay?: SymbolDisplayPart[];
+        /**
          * If true, this completion should be highlighted as recommended. There will only be one of these.
          * This will be set when we know the user should write an expression with a certain type and that type is an enum or constructable class.
          * Then either that enum/class or a namespace containing it will be the recommended symbol.
@@ -2054,9 +2089,20 @@ declare namespace ts.server.protocol {
         isFromUncheckedFile?: true;
         /**
          * If true, this completion was for an auto-import of a module not yet in the program, but listed
-         * in the project package.json.
+         * in the project package.json. Used for telemetry reporting.
          */
         isPackageJsonImport?: true;
+        /**
+         * If true, this completion was an auto-import-style completion of an import statement (i.e., the
+         * module specifier was inserted along with the imported identifier). Used for telemetry reporting.
+         */
+        isImportStatementCompletion?: true;
+        /**
+         * A property to be sent back to TS Server in the CompletionDetailsRequest, along with `name`,
+         * that allows TS Server to look up the symbol represented by the completion item, disambiguating
+         * items with the same name.
+         */
+        data?: unknown;
     }
     /**
      * Additional completion entry details, available on demand
@@ -2091,9 +2137,13 @@ declare namespace ts.server.protocol {
          */
         codeActions?: CodeAction[];
         /**
-         * Human-readable description of the `source` from the CompletionEntry.
+         * @deprecated Use `sourceDisplay` instead.
          */
         source?: SymbolDisplayPart[];
+        /**
+         * Human-readable description of the `source` from the CompletionEntry.
+         */
+        sourceDisplay?: SymbolDisplayPart[];
     }
     /** @deprecated Prefer CompletionInfoResponse, which supports several top-level fields in addition to the array of entries. */
     interface CompletionsResponse extends Response {
@@ -2112,6 +2162,7 @@ declare namespace ts.server.protocol {
          * must be used to commit that completion entry.
          */
         readonly optionalReplacementSpan?: TextSpan;
+        readonly isIncomplete?: boolean;
         readonly entries: readonly CompletionEntry[];
     }
     interface CompletionDetailsResponse extends Response {
@@ -2896,6 +2947,15 @@ declare namespace ts.server.protocol {
          */
         readonly includeCompletionsForModuleExports?: boolean;
         /**
+         * Enables auto-import-style completions on partially-typed import statements. E.g., allows
+         * `import write|` to be completed to `import { writeFile } from "fs"`.
+         */
+        readonly includeCompletionsForImportStatements?: boolean;
+        /**
+         * Allows completions to be formatted with snippet text, indicated by `CompletionItem["isSnippet"]`.
+         */
+        readonly includeCompletionsWithSnippetText?: boolean;
+        /**
          * If enabled, the completion list will include completions with invalid identifier names.
          * For those entries, The `insertText` and `replacementSpan` properties will be set to change from `.x` property access to `["x"]`.
          */
@@ -2915,6 +2975,7 @@ declare namespace ts.server.protocol {
         readonly provideRefactorNotApplicableReason?: boolean;
         readonly allowRenameOfImportPath?: boolean;
         readonly includePackageJsonAutoImports?: "auto" | "on" | "off";
+        readonly displayPartsForJSDoc?: boolean;
         readonly generateReturnInDocTemplate?: boolean;
     }
     interface CompilerOptions {
@@ -3023,6 +3084,7 @@ declare namespace ts.server.protocol {
         ES2018 = "ES2018",
         ES2019 = "ES2019",
         ES2020 = "ES2020",
+        ES2021 = "ES2021",
         ESNext = "ESNext"
     }
     const enum ClassificationType {
@@ -3190,6 +3252,12 @@ declare namespace ts.server {
         getSnapshot(): IScriptSnapshot;
         private ensureRealPath;
         getRealpathIfDifferent(): Path | undefined;
+        /**
+         * @internal
+         * Does not compute realpath; uses precomputed result. Use `ensureRealPath`
+         * first if a definite result is needed.
+         */
+        isSymlink(): boolean | undefined;
         getFormatCodeSettings(): FormatCodeSettings | undefined;
         getPreferences(): protocol.UserPreferences | undefined;
         attachToProject(project: Project): boolean;
@@ -3320,6 +3388,7 @@ declare namespace ts.server {
         cachedUnresolvedImportsPerFile: ESMap<Path, readonly string[]>;
         lastCachedUnresolvedImportsList: SortedReadonlyArray<string> | undefined;
         private hasAddedorRemovedFiles;
+        private hasAddedOrRemovedSymlinks;
         lastFileExceededProgramSize: string | undefined;
         protected languageService: LanguageService;
         languageServiceEnabled: boolean;
@@ -3357,8 +3426,10 @@ declare namespace ts.server {
         dirty: boolean;
         typingFiles: SortedReadonlyArray<string>;
         originalConfiguredProjects: Set<NormalizedPath> | undefined;
-        packageJsonsForAutoImport: Set<string> | undefined;
+        private packageJsonsForAutoImport;
         getResolvedProjectReferenceToRedirect(_fileName: string): ResolvedProjectReference | undefined;
+        useSourceOfProjectReferenceRedirect?(): boolean;
+        getParsedCommandLine?(fileName: string): ParsedCommandLine | undefined;
         private readonly cancellationToken;
         isNonTsProject(): boolean;
         isJsOnlyProject(): boolean;
@@ -3366,8 +3437,9 @@ declare namespace ts.server {
         readonly currentDirectory: string;
         directoryStructureHost: DirectoryStructureHost;
         readonly getCanonicalFileName: GetCanonicalFileName;
-        private importSuggestionsCache;
-        private dirtyFilesForSuggestions;
+        private exportMapCache;
+        private changedFilesForExportMapCache;
+        private moduleSpecifierCache;
         private symlinks;
         autoImportProviderHost: AutoImportProviderProject | false | undefined;
         protected typeAcquisition: TypeAcquisition | undefined;
@@ -3468,8 +3540,9 @@ declare namespace ts.server {
         registerFileUpdate(fileName: string): void;
         markFileAsDirty(changedFile: Path): void;
         markAsDirty(): void;
-        markAutoImportProviderAsDirty(): void;
-        onFileAddedOrRemoved(): void;
+        onAutoImportProviderSettingsChanged(): void;
+        onPackageJsonChange(packageJsonPath: Path): void;
+        onFileAddedOrRemoved(isSymlink: boolean | undefined): void;
         /**
          * Updates set of files that contribute to this project
          * @returns: true if set of files in the project stays the same and false - otherwise.
@@ -3480,8 +3553,6 @@ declare namespace ts.server {
         protected removeExistingTypings(include: string[]): string[];
         private updateGraphWorker;
         sendPerformanceEvent(kind: PerformanceEvent["kind"], durationMs: number): void;
-        private sourceFileHasChangedOwnImportSuggestions;
-        private ambientModuleDeclarationsAreEqual;
         private detachScriptInfoFromProject;
         private addMissingFileWatcher;
         private isWatchedMissingFile;
@@ -3510,7 +3581,8 @@ declare namespace ts.server {
         getPackageJsonsVisibleToFile(fileName: string, rootDir?: string): readonly PackageJsonInfo[];
         getNearestAncestorDirectoryWithPackageJson(fileName: string): string | undefined;
         getPackageJsonsForAutoImport(rootDir?: string): readonly PackageJsonInfo[];
-        getImportSuggestionsCache(): Completions.ImportSuggestionsForFileCache;
+        getExportMapCache(): ExportMapCache;
+        getModuleSpecifierCache(): ModuleSpecifierCache;
         includePackageJsonAutoImports(): PackageJsonAutoImportPreference;
         getModuleResolutionHostForAutoImportProvider(): ModuleResolutionHost;
         getPackageJsonAutoImportProvider(): Program | undefined;
@@ -3552,10 +3624,10 @@ declare namespace ts.server {
         markAsDirty(): void;
         getScriptFileNames(): string[];
         getLanguageService(): never;
-        markAutoImportProviderAsDirty(): never;
+        onAutoImportProviderSettingsChanged(): never;
+        onPackageJsonChange(): never;
         getModuleResolutionHostForAutoImportProvider(): never;
         getProjectReferences(): readonly ProjectReference[] | undefined;
-        useSourceOfProjectReferenceRedirect(): boolean;
         includePackageJsonAutoImports(): PackageJsonAutoImportPreference;
         getTypeAcquisition(): TypeAcquisition;
         getSymlinkCache(): SymlinkCache;
@@ -3566,12 +3638,10 @@ declare namespace ts.server {
      * Otherwise it will create an InferredProject.
      */
     class ConfiguredProject extends Project {
-        configFileWatcher: FileWatcher | undefined;
-        private directoriesWatchedForWildcards;
         readonly canonicalConfigFilePath: NormalizedPath;
         pendingReload: ConfigFileProgramReloadLevel | undefined;
         pendingReloadReason: string | undefined;
-        openFileWatchTriggered: ESMap<string, true>;
+        openFileWatchTriggered: ESMap<string, ConfigFileProgramReloadLevel>;
         canConfigFileJsonReportNoInputFiles: boolean;
         /** Ref count to the project when opened from external project */
         private externalProjectRefCount;
@@ -3582,12 +3652,13 @@ declare namespace ts.server {
         isInitialLoadPending: () => boolean;
         sendLoadingProjectFinish: boolean;
         private compilerHost?;
-        constructor(configFileName: NormalizedPath, projectService: ProjectService, documentRegistry: DocumentRegistry, cachedDirectoryStructureHost: CachedDirectoryStructureHost);
+        constructor(configFileName: NormalizedPath, canonicalConfigFilePath: NormalizedPath, projectService: ProjectService, documentRegistry: DocumentRegistry, cachedDirectoryStructureHost: CachedDirectoryStructureHost);
         setCompilerHost(host: CompilerHost): void;
         getCompilerHost(): CompilerHost | undefined;
         useSourceOfProjectReferenceRedirect(): boolean;
-        setWatchOptions(watchOptions: WatchOptions | undefined): void;
-        createConfigFileWatcher(): void;
+        getParsedCommandLine(fileName: string): ParsedCommandLine | undefined;
+        onReleaseParsedCommandLine(fileName: string): void;
+        private releaseParsedConfig;
         /**
          * If the project has reload from disk pending, it reloads (and then updates graph as part of that) instead of just updating the graph
          * @returns: true if set of files in the project stays the same and false - otherwise.
@@ -3610,8 +3681,6 @@ declare namespace ts.server {
          */
         getAllProjectErrors(): readonly Diagnostic[];
         setProjectErrors(projectErrors: Diagnostic[]): void;
-        watchWildcards(wildcardDirectories: ESMap<string, WatchDirectoryFlags>): void;
-        stopWatchingWildCards(): void;
         close(): void;
         addExternalProjectReference(): void;
         deleteExternalProjectReference(): void;
@@ -3804,13 +3873,20 @@ declare namespace ts.server {
          * It is false when the open file that would still be impacted by existence of
          *   this config file but it is not the root of inferred project
          */
-        openFilesImpactedByConfigFile: ESMap<Path, boolean>;
+        openFilesImpactedByConfigFile?: ESMap<Path, boolean>;
         /**
          * The file watcher watching the config file because there is open script info that is root of
          * inferred project and will be impacted by change in the status of the config file
-         * The watcher is present only when there is no open configured project for the config file
+         * or
+         * Configured project for this config file is open
+         * or
+         * Configured project references this config file
          */
-        configFileWatcherForRootOfInferredProject?: FileWatcher;
+        watcher?: FileWatcher;
+        /**
+         * Cached parsed command line and other related information like watched directories etc
+         */
+        config?: ParsedConfig;
     }
     export interface ProjectServiceOptions {
         host: ServerHost;
@@ -3858,6 +3934,22 @@ declare namespace ts.server {
     export interface WatchOptionsAndErrors {
         watchOptions: WatchOptions;
         errors: Diagnostic[] | undefined;
+    }
+    export interface ParsedConfig {
+        cachedDirectoryStructureHost: CachedDirectoryStructureHost;
+        /**
+         * The map contains
+         *   - true if project is watching config file as well as wild cards
+         *   - false if just config file is watched
+         */
+        projects: ESMap<NormalizedPath, boolean>;
+        parsedCommandLine?: ParsedCommandLine;
+        watchedDirectories?: Map<WildcardDirectoryWatcher>;
+        /**
+         * true if watchedDirectories need to be updated as per parsedCommandLine's updated watched directories
+         */
+        watchedDirectoriesStale?: boolean;
+        reloadLevel?: ConfigFileProgramReloadLevel.Partial | ConfigFileProgramReloadLevel.Full;
     }
     export class ProjectService {
         readonly typingsCache: TypingsCache;
@@ -3920,7 +4012,7 @@ declare namespace ts.server {
          * - Or it is present if we have configured project open with config file at that location
          *   In this case the exists property is always true
          */
-        private readonly configFileExistenceInfoCache;
+        readonly configFileExistenceInfoCache: ESMap<NormalizedPath, ConfigFileExistenceInfo>;
         readonly throttledOperations: ThrottledOperations;
         private readonly hostConfiguration;
         private safelist;
@@ -3949,8 +4041,9 @@ declare namespace ts.server {
         readonly serverMode: LanguageServiceMode;
         /** Tracks projects that we have already sent telemetry for. */
         private readonly seenProjects;
-        readonly watchFactory: WatchFactory<WatchType, Project>;
+        readonly watchFactory: WatchFactory<WatchType, Project | NormalizedPath>;
         private readonly sharedExtendedConfigFileWatchers;
+        private readonly extendedConfigCache;
         readonly packageJsonCache: PackageJsonCache;
         private packageJsonFilesMap;
         private performanceEventHandler?;
@@ -4006,18 +4099,9 @@ declare namespace ts.server {
         /**
          * This is to watch whenever files are added or removed to the wildcard directories
          */
-        watchWildcardDirectory(directory: Path, flags: WatchDirectoryFlags, project: ConfiguredProject): FileWatcher;
-        /** Gets the config file existence info for the configured project */
-        getConfigFileExistenceInfo(project: ConfiguredProject): ConfigFileExistenceInfo;
-        onConfigChangedForConfiguredProject(project: ConfiguredProject, eventKind: FileWatcherEventKind): void;
-        updateSharedExtendedConfigFileMap({ canonicalConfigFilePath }: ConfiguredProject, parsedCommandLine: ParsedCommandLine): void;
-        removeProjectFromSharedExtendedConfigFileMap(project: ConfiguredProject): void;
-        /**
-         * This is the callback function for the config file add/remove/change at any location
-         * that matters to open script info but doesnt have configured project open
-         * for the config file
-         */
-        private onConfigFileChangeForOpenScriptInfo;
+        private watchWildcardDirectory;
+        private delayUpdateProjectsFromParsedConfigOnConfigFileChange;
+        private onConfigFileChanged;
         private removeProject;
         assignOrphanScriptInfoToInferredProject(info: ScriptInfo, projectRootPath: NormalizedPath | undefined): InferredProject;
         private assignOrphanScriptInfosToInferredProject;
@@ -4028,22 +4112,17 @@ declare namespace ts.server {
         private closeOpenFile;
         private deleteScriptInfo;
         private configFileExists;
-        private setConfigFileExistenceByNewConfiguredProject;
+        private createConfigFileWatcherForParsedConfig;
         /**
          * Returns true if the configFileExistenceInfo is needed/impacted by open files that are root of inferred project
          */
         private configFileExistenceImpactsRootOfInferredProject;
-        private setConfigFileExistenceInfoByClosedConfiguredProject;
-        private logConfigFileWatchUpdate;
-        /**
-         * Create the watcher for the configFileExistenceInfo
-         */
-        private createConfigFileWatcherOfConfigFileExistence;
+        releaseParsedConfig(canonicalConfigFilePath: NormalizedPath, forProject: ConfiguredProject): void;
         /**
          * Close the config file watcher in the cached ConfigFileExistenceInfo
-         *   if there arent any open files that are root of inferred project
+         *   if there arent any open files that are root of inferred project and there is no parsed config held by any project
          */
-        private closeConfigFileWatcherOfConfigFileExistenceInfo;
+        private closeConfigFileWatcherOnReleaseOfOpenFile;
         /**
          * This is called on file close, so that we stop watching the config file for this script info
          */
@@ -4094,12 +4173,16 @@ declare namespace ts.server {
          * Read the config file of the project, and update the project root file names.
          */
         private loadConfiguredProject;
+        ensureParsedConfigUptoDate(configFilename: NormalizedPath, canonicalConfigFilePath: NormalizedPath, configFileExistenceInfo: ConfigFileExistenceInfo, forProject: ConfiguredProject): ConfigFileExistenceInfo;
+        watchWildcards(configFileName: NormalizedPath, { exists, config }: ConfigFileExistenceInfo, forProject: ConfiguredProject): void;
+        stopWatchingWildCards(canonicalConfigFilePath: NormalizedPath, forProject: ConfiguredProject): void;
         private updateNonInferredProjectFiles;
         private updateRootAndOptionsOfNonInferredProject;
         /**
          * Reload the file names from config file specs and update the project graph
          */
         reloadFileNamesOfConfiguredProject(project: ConfiguredProject): boolean;
+        private reloadFileNamesOfParsedConfig;
         setFileNamesOfAutoImportProviderProject(project: AutoImportProviderProject, fileNames: string[]): void;
         /**
          * Read the config file of the project again by clearing the cache and update the project graph
@@ -4144,18 +4227,18 @@ declare namespace ts.server {
         setPerformanceEventHandler(performanceEventHandler: PerformanceEventHandler): void;
         setHostConfiguration(args: protocol.ConfigureRequestArguments): void;
         getWatchOptions(project: Project): WatchOptions | undefined;
+        private getWatchOptionsFromProjectWatchOptions;
         closeLog(): void;
         /**
          * This function rebuilds the project for every file opened by the client
          * This does not reload contents of open files from disk. But we could do that if needed
          */
         reloadProjects(): void;
-        private delayReloadConfiguredProjectForFiles;
         /**
          * This function goes through all the openFiles and tries to file the config file for them.
          * If the config file is found and it refers to existing project, it reloads it either immediately
          * or schedules it for reload depending on delayReload option
-         * If the there is no existing project it just opens the configured project for the config file
+         * If there is no existing project it just opens the configured project for the config file
          * reloadForInfo provides a way to filter out files to reload configured project for
          */
         private reloadConfiguredProjectForFiles;
@@ -4217,7 +4300,7 @@ declare namespace ts.server {
         private watchPackageJsonFile;
         private onAddPackageJson;
         includePackageJsonAutoImports(): PackageJsonAutoImportPreference;
-        private invalidateProjectAutoImports;
+        private invalidateProjectPackageJson;
     }
     export type ScriptInfoOrConfig = ScriptInfo | TsConfigSourceFile;
     export function isConfigFile(config: ScriptInfoOrConfig): config is TsConfigSourceFile;
@@ -4331,6 +4414,9 @@ declare namespace ts.server {
         private mapDefinitionInfoLocations;
         private getDefinitionAndBoundSpan;
         private getEmitOutput;
+        private mapJSDocTagInfo;
+        private mapDisplayParts;
+        private mapSignatureHelpItems;
         private mapDefinitionInfo;
         private static mapToOriginalLocation;
         private toFileSpan;

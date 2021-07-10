@@ -246,7 +246,8 @@ var ts;
         var currentDirectory = sys.getCurrentDirectory();
         var commandLineOptions = ts.convertToOptionsWithAbsolutePaths(commandLine.options, function (fileName) { return ts.getNormalizedAbsolutePath(fileName, currentDirectory); });
         if (configFileName) {
-            var configParseResult = ts.parseConfigFileWithSystem(configFileName, commandLineOptions, commandLine.watchOptions, sys, reportDiagnostic); // TODO: GH#18217
+            var extendedConfigCache = new ts.Map();
+            var configParseResult = ts.parseConfigFileWithSystem(configFileName, commandLineOptions, extendedConfigCache, commandLine.watchOptions, sys, reportDiagnostic); // TODO: GH#18217
             if (commandLineOptions.showConfig) {
                 if (configParseResult.errors.length !== 0) {
                     reportDiagnostic = updateReportDiagnostic(sys, reportDiagnostic, configParseResult.options);
@@ -261,7 +262,7 @@ var ts;
             if (ts.isWatchSet(configParseResult.options)) {
                 if (reportWatchModeWithoutSysSupport(sys, reportDiagnostic))
                     return;
-                return createWatchOfConfigFile(sys, cb, reportDiagnostic, configParseResult, commandLineOptions, commandLine.watchOptions);
+                return createWatchOfConfigFile(sys, cb, reportDiagnostic, configParseResult, commandLineOptions, commandLine.watchOptions, extendedConfigCache);
             }
             else if (ts.isIncrementalCompilation(configParseResult.options)) {
                 performIncrementalCompilation(sys, cb, reportDiagnostic, configParseResult);
@@ -364,7 +365,7 @@ var ts;
         updateSolutionBuilderHost(sys, cb, buildHost);
         var builder = ts.createSolutionBuilder(buildHost, projects, buildOptions);
         var exitStatus = buildOptions.clean ? builder.clean() : builder.build();
-        ts.tracing === null || ts.tracing === void 0 ? void 0 : ts.tracing.dumpLegend();
+        ts.dumpTracingLegend(); // Will no-op if there hasn't been any tracing
         return sys.exit(exitStatus);
     }
     function createReportErrorSummary(sys, options) {
@@ -442,7 +443,7 @@ var ts;
     function createWatchStatusReporter(sys, options) {
         return ts.createWatchStatusReporter(sys, shouldBePretty(sys, options));
     }
-    function createWatchOfConfigFile(system, cb, reportDiagnostic, configParseResult, optionsToExtend, watchOptionsToExtend) {
+    function createWatchOfConfigFile(system, cb, reportDiagnostic, configParseResult, optionsToExtend, watchOptionsToExtend, extendedConfigCache) {
         var watchCompilerHost = ts.createWatchCompilerHostOfConfigFile({
             configFileName: configParseResult.options.configFilePath,
             optionsToExtend: optionsToExtend,
@@ -453,6 +454,7 @@ var ts;
         });
         updateWatchCompilationHost(system, cb, watchCompilerHost);
         watchCompilerHost.configFileParsingResult = configParseResult;
+        watchCompilerHost.extendedConfigCache = extendedConfigCache;
         return ts.createWatchProgram(watchCompilerHost);
     }
     function createWatchOfFilesAndCompilerOptions(system, cb, reportDiagnostic, rootFiles, options, watchOptions) {
@@ -478,13 +480,13 @@ var ts;
             ts.performance.enable(system);
         }
         if (canTrace(system, compilerOptions)) {
-            ts.startTracing(isBuildMode ? 1 /* Build */ : 0 /* Project */, compilerOptions.generateTrace, compilerOptions.configFilePath);
+            ts.startTracing(isBuildMode ? "build" : "project", compilerOptions.generateTrace, compilerOptions.configFilePath);
         }
     }
     function reportStatistics(sys, program) {
         var compilerOptions = program.getCompilerOptions();
         if (canTrace(sys, compilerOptions)) {
-            ts.tracing === null || ts.tracing === void 0 ? void 0 : ts.tracing.stopTracing(program.getTypeCatalog());
+            ts.tracing === null || ts.tracing === void 0 ? void 0 : ts.tracing.stopTracing();
         }
         var statistics;
         if (canReportDiagnostics(sys, compilerOptions)) {

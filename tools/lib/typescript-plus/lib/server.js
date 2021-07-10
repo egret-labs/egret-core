@@ -424,6 +424,7 @@ var ts;
                 WatchFileKind["FixedPollingInterval"] = "FixedPollingInterval";
                 WatchFileKind["PriorityPollingInterval"] = "PriorityPollingInterval";
                 WatchFileKind["DynamicPriorityPolling"] = "DynamicPriorityPolling";
+                WatchFileKind["FixedChunkSizePolling"] = "FixedChunkSizePolling";
                 WatchFileKind["UseFsEvents"] = "UseFsEvents";
                 WatchFileKind["UseFsEventsOnParentDirectory"] = "UseFsEventsOnParentDirectory";
             })(WatchFileKind = protocol.WatchFileKind || (protocol.WatchFileKind = {}));
@@ -432,12 +433,14 @@ var ts;
                 WatchDirectoryKind["UseFsEvents"] = "UseFsEvents";
                 WatchDirectoryKind["FixedPollingInterval"] = "FixedPollingInterval";
                 WatchDirectoryKind["DynamicPriorityPolling"] = "DynamicPriorityPolling";
+                WatchDirectoryKind["FixedChunkSizePolling"] = "FixedChunkSizePolling";
             })(WatchDirectoryKind = protocol.WatchDirectoryKind || (protocol.WatchDirectoryKind = {}));
             var PollingWatchKind;
             (function (PollingWatchKind) {
                 PollingWatchKind["FixedInterval"] = "FixedInterval";
                 PollingWatchKind["PriorityInterval"] = "PriorityInterval";
                 PollingWatchKind["DynamicPriority"] = "DynamicPriority";
+                PollingWatchKind["FixedChunkSize"] = "FixedChunkSize";
             })(PollingWatchKind = protocol.PollingWatchKind || (protocol.PollingWatchKind = {}));
             var IndentStyle;
             (function (IndentStyle) {
@@ -490,6 +493,7 @@ var ts;
                 ScriptTarget["ES2018"] = "ES2018";
                 ScriptTarget["ES2019"] = "ES2019";
                 ScriptTarget["ES2020"] = "ES2020";
+                ScriptTarget["ES2021"] = "ES2021";
                 ScriptTarget["ESNext"] = "ESNext";
             })(ScriptTarget = protocol.ScriptTarget || (protocol.ScriptTarget = {}));
             var ClassificationType;
@@ -715,7 +719,7 @@ var ts;
                 if (this.pendingReloadFromDisk) {
                     this.reloadWithFileText();
                 }
-                // At this point if svc is present its valid
+                // At this point if svc is present it's valid
                 return this.svc;
             };
             TextStorage.prototype.getOrLoadText = function () {
@@ -831,16 +835,24 @@ var ts;
             ScriptInfo.prototype.getRealpathIfDifferent = function () {
                 return this.realpath && this.realpath !== this.path ? this.realpath : undefined;
             };
+            /**
+             * @internal
+             * Does not compute realpath; uses precomputed result. Use `ensureRealPath`
+             * first if a definite result is needed.
+             */
+            ScriptInfo.prototype.isSymlink = function () {
+                return this.realpath && this.realpath !== this.path;
+            };
             ScriptInfo.prototype.getFormatCodeSettings = function () { return this.formatSettings; };
             ScriptInfo.prototype.getPreferences = function () { return this.preferences; };
             ScriptInfo.prototype.attachToProject = function (project) {
                 var isNew = !this.isAttached(project);
                 if (isNew) {
                     this.containingProjects.push(project);
-                    project.onFileAddedOrRemoved();
                     if (!project.getCompilerOptions().preserveSymlinks) {
                         this.ensureRealPath();
                     }
+                    project.onFileAddedOrRemoved(this.isSymlink());
                 }
                 return isNew;
             };
@@ -860,23 +872,23 @@ var ts;
                         return;
                     case 1:
                         if (this.containingProjects[0] === project) {
-                            project.onFileAddedOrRemoved();
+                            project.onFileAddedOrRemoved(this.isSymlink());
                             this.containingProjects.pop();
                         }
                         break;
                     case 2:
                         if (this.containingProjects[0] === project) {
-                            project.onFileAddedOrRemoved();
+                            project.onFileAddedOrRemoved(this.isSymlink());
                             this.containingProjects[0] = this.containingProjects.pop();
                         }
                         else if (this.containingProjects[1] === project) {
-                            project.onFileAddedOrRemoved();
+                            project.onFileAddedOrRemoved(this.isSymlink());
                             this.containingProjects.pop();
                         }
                         break;
                     default:
                         if (ts.unorderedRemoveItem(this.containingProjects, project)) {
-                            project.onFileAddedOrRemoved();
+                            project.onFileAddedOrRemoved(this.isSymlink());
                         }
                         break;
                 }
@@ -890,6 +902,7 @@ var ts;
                     var existingRoot = p.getRootFilesMap().get(this.path);
                     // detach is unnecessary since we'll clean the list of containing projects anyways
                     p.removeFile(this, /*fileExists*/ false, /*detachFromProjects*/ false);
+                    p.onFileAddedOrRemoved(this.isSymlink());
                     // If the info was for the external or configured project's root,
                     // add missing file as the root
                     if (existingRoot && !server.isInferredProject(p)) {
@@ -1286,6 +1299,8 @@ var ts;
                 this.cachedUnresolvedImportsPerFile = new ts.Map();
                 /*@internal*/
                 this.hasAddedorRemovedFiles = false;
+                /*@internal*/
+                this.hasAddedOrRemovedSymlinks = false;
                 /**
                  * Last version that was reported.
                  */
@@ -1308,7 +1323,9 @@ var ts;
                 /*@internal*/
                 this.typingFiles = server.emptyArray;
                 /*@internal*/
-                this.importSuggestionsCache = ts.Completions.createImportSuggestionsForFileCache();
+                this.exportMapCache = ts.createExportMapCache();
+                /*@internal*/
+                this.moduleSpecifierCache = ts.createModuleSpecifierCache();
                 /*@internal*/
                 this.globalCacheResolutionModuleName = ts.JsTyping.nonRelativeModuleNameForTypingCache;
                 this.directoryStructureHost = directoryStructureHost;
@@ -1631,7 +1648,7 @@ var ts;
                     return [];
                 }
                 server.updateProjectIfDirty(this);
-                this.builderState = ts.BuilderState.create(this.program, this.projectService.toCanonicalFileName, this.builderState);
+                this.builderState = ts.BuilderState.create(this.program, this.projectService.toCanonicalFileName, this.builderState, /*disableUseFileVersionAsSignature*/ true);
                 return ts.mapDefined(ts.BuilderState.getFilesAffectedBy(this.builderState, this.program, scriptInfo.path, this.cancellationToken, ts.maybeBind(this.projectService.host, this.projectService.host.createHash)), function (sourceFile) { return _this.shouldEmitFile(_this.projectService.getScriptInfoForPath(sourceFile.path)) ? sourceFile.fileName : undefined; });
             };
             /**
@@ -1934,8 +1951,8 @@ var ts;
             /*@internal*/
             Project.prototype.markFileAsDirty = function (changedFile) {
                 this.markAsDirty();
-                if (!this.importSuggestionsCache.isEmpty()) {
-                    (this.dirtyFilesForSuggestions || (this.dirtyFilesForSuggestions = new ts.Set())).add(changedFile);
+                if (!this.exportMapCache.isEmpty()) {
+                    (this.changedFilesForExportMapCache || (this.changedFilesForExportMapCache = new ts.Set())).add(changedFile);
                 }
             };
             Project.prototype.markAsDirty = function () {
@@ -1945,17 +1962,31 @@ var ts;
                 }
             };
             /*@internal*/
-            Project.prototype.markAutoImportProviderAsDirty = function () {
+            Project.prototype.onAutoImportProviderSettingsChanged = function () {
                 var _a;
                 if (this.autoImportProviderHost === false) {
                     this.autoImportProviderHost = undefined;
                 }
-                (_a = this.autoImportProviderHost) === null || _a === void 0 ? void 0 : _a.markAsDirty();
-                this.importSuggestionsCache.clear();
+                else {
+                    (_a = this.autoImportProviderHost) === null || _a === void 0 ? void 0 : _a.markAsDirty();
+                }
+            };
+            /*@internal*/
+            Project.prototype.onPackageJsonChange = function (packageJsonPath) {
+                var _a;
+                if ((_a = this.packageJsonsForAutoImport) === null || _a === void 0 ? void 0 : _a.has(packageJsonPath)) {
+                    this.moduleSpecifierCache.clear();
+                    if (this.autoImportProviderHost) {
+                        this.autoImportProviderHost.markAsDirty();
+                    }
+                }
             };
             /* @internal */
-            Project.prototype.onFileAddedOrRemoved = function () {
+            Project.prototype.onFileAddedOrRemoved = function (isSymlink) {
                 this.hasAddedorRemovedFiles = true;
+                if (isSymlink) {
+                    this.hasAddedOrRemovedSymlinks = true;
+                }
             };
             /**
              * Updates set of files that contribute to this project
@@ -1968,6 +1999,7 @@ var ts;
                 var hasNewProgram = this.updateGraphWorker();
                 var hasAddedorRemovedFiles = this.hasAddedorRemovedFiles;
                 this.hasAddedorRemovedFiles = false;
+                this.hasAddedOrRemovedSymlinks = false;
                 var changedFiles = this.resolutionCache.finishRecordingFilesWithChangedResolutions() || server.emptyArray;
                 for (var _i = 0, changedFiles_1 = changedFiles; _i < changedFiles_1.length; _i++) {
                     var file = changedFiles_1[_i];
@@ -2029,6 +2061,7 @@ var ts;
             };
             Project.prototype.updateGraphWorker = function () {
                 var _this = this;
+                var _a;
                 var oldProgram = this.program;
                 ts.Debug.assert(!this.isClosed(), "Called update graph worker of closed project");
                 this.writeLog("Starting updateGraphWorker: Project: " + this.getProjectName());
@@ -2042,11 +2075,12 @@ var ts;
                 // bump up the version if
                 // - oldProgram is not set - this is a first time updateGraph is called
                 // - newProgram is different from the old program and structure of the old program was not reused.
-                var hasNewProgram = this.program && (!oldProgram || (this.program !== oldProgram && !(this.program.structureIsReused & 2 /* Completely */)));
-                if (hasNewProgram) {
+                var hasNewProgram = false;
+                if (this.program && (!oldProgram || (this.program !== oldProgram && this.program.structureIsReused !== 2 /* Completely */))) {
+                    hasNewProgram = true;
                     if (oldProgram) {
-                        for (var _i = 0, _a = oldProgram.getSourceFiles(); _i < _a.length; _i++) {
-                            var f = _a[_i];
+                        for (var _i = 0, _b = oldProgram.getSourceFiles(); _i < _b.length; _i++) {
+                            var f = _b[_i];
                             var newFile = this.program.getSourceFileByPath(f.resolvedPath);
                             if (!newFile || (f.resolvedPath === f.path && newFile.resolvedPath !== f.path)) {
                                 // new program does not contain this file - detach it from the project
@@ -2095,26 +2129,29 @@ var ts;
                         this.resolutionCache.updateTypeRootsWatch();
                     }
                 }
-                if (!this.importSuggestionsCache.isEmpty()) {
+                if (!this.exportMapCache.isEmpty()) {
                     if (this.hasAddedorRemovedFiles || oldProgram && !this.program.structureIsReused) {
-                        this.importSuggestionsCache.clear();
+                        this.exportMapCache.clear();
                     }
-                    else if (this.dirtyFilesForSuggestions && oldProgram && this.program) {
-                        ts.forEachKey(this.dirtyFilesForSuggestions, function (fileName) {
-                            var oldSourceFile = oldProgram.getSourceFile(fileName);
-                            var sourceFile = _this.program.getSourceFile(fileName);
-                            if (_this.sourceFileHasChangedOwnImportSuggestions(oldSourceFile, sourceFile)) {
-                                _this.importSuggestionsCache.clear();
+                    else if (this.changedFilesForExportMapCache && oldProgram && this.program) {
+                        ts.forEachKey(this.changedFilesForExportMapCache, function (fileName) {
+                            var oldSourceFile = oldProgram.getSourceFileByPath(fileName);
+                            var sourceFile = _this.program.getSourceFileByPath(fileName);
+                            if (!oldSourceFile || !sourceFile) {
+                                _this.exportMapCache.clear();
                                 return true;
                             }
+                            return _this.exportMapCache.onFileChanged(oldSourceFile, sourceFile, !!_this.getTypeAcquisition().enable);
                         });
                     }
                 }
-                if (this.dirtyFilesForSuggestions) {
-                    this.dirtyFilesForSuggestions.clear();
+                if (this.changedFilesForExportMapCache) {
+                    this.changedFilesForExportMapCache.clear();
                 }
-                if (this.hasAddedorRemovedFiles) {
+                if (this.hasAddedOrRemovedSymlinks || this.program && !this.program.structureIsReused && this.getCompilerOptions().preserveSymlinks) {
+                    // With --preserveSymlinks, we may not determine that a file is a symlink, so we never set `hasAddedOrRemovedSymlinks`
                     this.symlinks = undefined;
+                    this.moduleSpecifierCache.clear();
                 }
                 var oldExternalFiles = this.externalFiles || server.emptyArray;
                 this.externalFiles = this.getExternalFiles();
@@ -2133,61 +2170,13 @@ var ts;
                     this.print(/*writeProjectFileNames*/ true);
                 }
                 else if (this.program !== oldProgram) {
-                    this.writeLog("Different program with same set of files:: structureIsReused:: " + this.program.structureIsReused);
+                    this.writeLog("Different program with same set of files:: structureIsReused:: " + ((_a = this.program) === null || _a === void 0 ? void 0 : _a.structureIsReused));
                 }
                 return hasNewProgram;
             };
             /* @internal */
             Project.prototype.sendPerformanceEvent = function (kind, durationMs) {
                 this.projectService.sendPerformanceEvent(kind, durationMs);
-            };
-            /*@internal*/
-            Project.prototype.sourceFileHasChangedOwnImportSuggestions = function (oldSourceFile, newSourceFile) {
-                if (!oldSourceFile && !newSourceFile) {
-                    return false;
-                }
-                // Probably shouldn’t get this far, but on the off chance the file was added or removed,
-                // we can’t reliably tell anything about it.
-                if (!oldSourceFile || !newSourceFile) {
-                    return true;
-                }
-                ts.Debug.assertEqual(oldSourceFile.fileName, newSourceFile.fileName);
-                // If ATA is enabled, auto-imports uses existing imports to guess whether you want auto-imports from node.
-                // Adding or removing imports from node could change the outcome of that guess, so could change the suggestions list.
-                if (this.getTypeAcquisition().enable && ts.consumesNodeCoreModules(oldSourceFile) !== ts.consumesNodeCoreModules(newSourceFile)) {
-                    return true;
-                }
-                // Module agumentation and ambient module changes can add or remove exports available to be auto-imported.
-                // Changes elsewhere in the file can change the *type* of an export in a module augmentation,
-                // but type info is gathered in getCompletionEntryDetails, which doesn’t use the cache.
-                if (!ts.arrayIsEqualTo(oldSourceFile.moduleAugmentations, newSourceFile.moduleAugmentations) ||
-                    !this.ambientModuleDeclarationsAreEqual(oldSourceFile, newSourceFile)) {
-                    return true;
-                }
-                return false;
-            };
-            /*@internal*/
-            Project.prototype.ambientModuleDeclarationsAreEqual = function (oldSourceFile, newSourceFile) {
-                if (!ts.arrayIsEqualTo(oldSourceFile.ambientModuleNames, newSourceFile.ambientModuleNames)) {
-                    return false;
-                }
-                var oldFileStatementIndex = -1;
-                var newFileStatementIndex = -1;
-                var _loop_1 = function (ambientModuleName) {
-                    var isMatchingModuleDeclaration = function (node) { return ts.isNonGlobalAmbientModule(node) && node.name.text === ambientModuleName; };
-                    oldFileStatementIndex = ts.findIndex(oldSourceFile.statements, isMatchingModuleDeclaration, oldFileStatementIndex + 1);
-                    newFileStatementIndex = ts.findIndex(newSourceFile.statements, isMatchingModuleDeclaration, newFileStatementIndex + 1);
-                    if (oldSourceFile.statements[oldFileStatementIndex] !== newSourceFile.statements[newFileStatementIndex]) {
-                        return { value: false };
-                    }
-                };
-                for (var _i = 0, _a = newSourceFile.ambientModuleNames; _i < _a.length; _i++) {
-                    var ambientModuleName = _a[_i];
-                    var state_1 = _loop_1(ambientModuleName);
-                    if (typeof state_1 === "object")
-                        return state_1.value;
-                }
-                return true;
             };
             Project.prototype.detachScriptInfoFromProject = function (uncheckedFileName, noRemoveResolution) {
                 var scriptInfoToDetach = this.projectService.getScriptInfo(uncheckedFileName);
@@ -2200,6 +2189,13 @@ var ts;
             };
             Project.prototype.addMissingFileWatcher = function (missingFilePath) {
                 var _this = this;
+                var _a;
+                if (isConfiguredProject(this)) {
+                    // If this file is referenced config file, we are already watching it, no need to watch again
+                    var configFileExistenceInfo = this.projectService.configFileExistenceInfoCache.get(missingFilePath);
+                    if ((_a = configFileExistenceInfo === null || configFileExistenceInfo === void 0 ? void 0 : configFileExistenceInfo.config) === null || _a === void 0 ? void 0 : _a.projects.has(this.canonicalConfigFilePath))
+                        return ts.noopFileWatcher;
+                }
                 var fileWatcher = this.projectService.watchFactory.watchFile(missingFilePath, function (fileName, eventKind) {
                     if (isConfiguredProject(_this)) {
                         _this.getCachedDirectoryStructureHost().addOrDeleteFile(fileName, missingFilePath, eventKind);
@@ -2447,7 +2443,7 @@ var ts;
                     ts.combinePaths(this.projectService.getExecutingFilePath(), "../../.."),
                 ]);
                 if (this.projectService.globalPlugins) {
-                    var _loop_2 = function (globalPluginName) {
+                    var _loop_1 = function (globalPluginName) {
                         // Skip empty names from odd commandline parses
                         if (!globalPluginName)
                             return "continue";
@@ -2462,7 +2458,7 @@ var ts;
                     // Enable global plugins with synthetic configuration entries
                     for (var _i = 0, _a = this.projectService.globalPlugins; _i < _a.length; _i++) {
                         var globalPluginName = _a[_i];
-                        _loop_2(globalPluginName);
+                        _loop_1(globalPluginName);
                     }
                 }
             };
@@ -2517,7 +2513,7 @@ var ts;
                             newLS[k] = this.languageService[k];
                         }
                     }
-                    this.projectService.logger.info("Plugin validation succeded");
+                    this.projectService.logger.info("Plugin validation succeeded");
                     this.languageService = newLS;
                     this.plugins.push({ name: configEntry.name, module: pluginModule });
                 }
@@ -2554,8 +2550,12 @@ var ts;
                 return packageJsons;
             };
             /*@internal*/
-            Project.prototype.getImportSuggestionsCache = function () {
-                return this.importSuggestionsCache;
+            Project.prototype.getExportMapCache = function () {
+                return this.exportMapCache;
+            };
+            /*@internal*/
+            Project.prototype.getModuleSpecifierCache = function () {
+                return this.moduleSpecifierCache;
             };
             /*@internal*/
             Project.prototype.includePackageJsonAutoImports = function () {
@@ -2743,11 +2743,13 @@ var ts;
                 /*compileOnSaveEnabled*/ false, hostProject.getWatchOptions(), hostProject.projectService.host, hostProject.currentDirectory) || this;
                 _this.hostProject = hostProject;
                 _this.rootFileNames = initialRootNames;
+                _this.useSourceOfProjectReferenceRedirect = ts.maybeBind(_this.hostProject, _this.hostProject.useSourceOfProjectReferenceRedirect);
+                _this.getParsedCommandLine = ts.maybeBind(_this.hostProject, _this.hostProject.getParsedCommandLine);
                 return _this;
             }
             /*@internal*/
             AutoImportProviderProject.getRootFileNames = function (dependencySelection, hostProject, moduleResolutionHost, compilerOptions) {
-                var _a, _b, _c, _d;
+                var _a, _b, _c;
                 if (!dependencySelection) {
                     return ts.emptyArray;
                 }
@@ -2762,17 +2764,21 @@ var ts;
                 }
                 if (dependencyNames) {
                     var resolutions = ts.map(ts.arrayFrom(dependencyNames.keys()), function (name) { return ts.resolveTypeReferenceDirective(name, rootFileName, compilerOptions, moduleResolutionHost); });
-                    for (var _e = 0, resolutions_1 = resolutions; _e < resolutions_1.length; _e++) {
-                        var resolution = resolutions_1[_e];
+                    var program = hostProject.getCurrentProgram();
+                    var symlinkCache = hostProject.getSymlinkCache();
+                    for (var _d = 0, resolutions_1 = resolutions; _d < resolutions_1.length; _d++) {
+                        var resolution = resolutions_1[_d];
                         if (!((_c = resolution.resolvedTypeReferenceDirective) === null || _c === void 0 ? void 0 : _c.resolvedFileName))
                             continue;
-                        var resolvedFileName = resolution.resolvedTypeReferenceDirective.resolvedFileName;
-                        var fileName = ((_d = moduleResolutionHost.realpath) === null || _d === void 0 ? void 0 : _d.call(moduleResolutionHost, resolvedFileName)) || resolvedFileName;
-                        if (!hostProject.getCurrentProgram().getSourceFile(fileName) && !hostProject.getCurrentProgram().getSourceFile(resolvedFileName)) {
-                            rootNames = ts.append(rootNames, fileName);
+                        var _e = resolution.resolvedTypeReferenceDirective, resolvedFileName = _e.resolvedFileName, originalPath = _e.originalPath;
+                        if (!program.getSourceFile(resolvedFileName) && (!originalPath || !program.getSourceFile(originalPath))) {
+                            rootNames = ts.append(rootNames, resolvedFileName);
                             // Avoid creating a large project that would significantly slow down time to editor interactivity
                             if (dependencySelection === 2 /* Auto */ && rootNames.length > this.maxDependencies) {
                                 return ts.emptyArray;
+                            }
+                            if (originalPath) {
+                                symlinkCache.setSymlinkedDirectoryFromSymlinkedFile(originalPath, resolvedFileName);
                             }
                         }
                     }
@@ -2810,8 +2816,12 @@ var ts;
                 }
                 this.projectService.setFileNamesOfAutoImportProviderProject(this, rootFileNames);
                 this.rootFileNames = rootFileNames;
-                this.hostProject.getImportSuggestionsCache().clear();
-                return _super.prototype.updateGraph.call(this);
+                var oldProgram = this.getCurrentProgram();
+                var hasSameSetOfFiles = _super.prototype.updateGraph.call(this);
+                if (oldProgram && oldProgram !== this.getCurrentProgram()) {
+                    this.hostProject.getExportMapCache().clear();
+                }
+                return hasSameSetOfFiles;
             };
             AutoImportProviderProject.prototype.hasRoots = function () {
                 var _a;
@@ -2827,17 +2837,19 @@ var ts;
             AutoImportProviderProject.prototype.getLanguageService = function () {
                 throw new Error("AutoImportProviderProject language service should never be used. To get the program, use `project.getCurrentProgram()`.");
             };
-            AutoImportProviderProject.prototype.markAutoImportProviderAsDirty = function () {
+            /*@internal*/
+            AutoImportProviderProject.prototype.onAutoImportProviderSettingsChanged = function () {
                 throw new Error("AutoImportProviderProject is an auto import provider; use `markAsDirty()` instead.");
+            };
+            /*@internal*/
+            AutoImportProviderProject.prototype.onPackageJsonChange = function () {
+                throw new Error("package.json changes should be notified on an AutoImportProvider's host project");
             };
             AutoImportProviderProject.prototype.getModuleResolutionHostForAutoImportProvider = function () {
                 throw new Error("AutoImportProviderProject cannot provide its own host; use `hostProject.getModuleResolutionHostForAutomImportProvider()` instead.");
             };
             AutoImportProviderProject.prototype.getProjectReferences = function () {
                 return this.hostProject.getProjectReferences();
-            };
-            AutoImportProviderProject.prototype.useSourceOfProjectReferenceRedirect = function () {
-                return true;
             };
             /*@internal*/
             AutoImportProviderProject.prototype.includePackageJsonAutoImports = function () {
@@ -2864,13 +2876,14 @@ var ts;
         var ConfiguredProject = /** @class */ (function (_super) {
             __extends(ConfiguredProject, _super);
             /*@internal*/
-            function ConfiguredProject(configFileName, projectService, documentRegistry, cachedDirectoryStructureHost) {
+            function ConfiguredProject(configFileName, canonicalConfigFilePath, projectService, documentRegistry, cachedDirectoryStructureHost) {
                 var _this = _super.call(this, configFileName, ProjectKind.Configured, projectService, documentRegistry, 
                 /*hasExplicitListOfFiles*/ false, 
                 /*lastFileExceededProgramSize*/ undefined, 
                 /*compilerOptions*/ {}, 
                 /*compileOnSaveEnabled*/ false, 
                 /*watchOptions*/ undefined, cachedDirectoryStructureHost, ts.getDirectoryPath(configFileName)) || this;
+                _this.canonicalConfigFilePath = canonicalConfigFilePath;
                 /* @internal */
                 _this.openFileWatchTriggered = new ts.Map();
                 /*@internal*/
@@ -2881,7 +2894,6 @@ var ts;
                 _this.isInitialLoadPending = ts.returnTrue;
                 /*@internal*/
                 _this.sendLoadingProjectFinish = false;
-                _this.canonicalConfigFilePath = server.asNormalizedPath(projectService.toCanonicalFileName(configFileName));
                 return _this;
             }
             /* @internal */
@@ -2897,22 +2909,30 @@ var ts;
                 return this.languageServiceEnabled;
             };
             /* @internal */
-            ConfiguredProject.prototype.setWatchOptions = function (watchOptions) {
-                var oldOptions = this.getWatchOptions();
-                _super.prototype.setWatchOptions.call(this, watchOptions);
-                // If watch options different than older options
-                if (this.isInitialLoadPending() &&
-                    !ts.isJsonEqual(oldOptions, this.getWatchOptions())) {
-                    var oldWatcher = this.configFileWatcher;
-                    this.createConfigFileWatcher();
-                    if (oldWatcher)
-                        oldWatcher.close();
+            ConfiguredProject.prototype.getParsedCommandLine = function (fileName) {
+                var configFileName = server.asNormalizedPath(ts.normalizePath(fileName));
+                var canonicalConfigFilePath = server.asNormalizedPath(this.projectService.toCanonicalFileName(configFileName));
+                // Ensure the config file existience info is cached
+                var configFileExistenceInfo = this.projectService.configFileExistenceInfoCache.get(canonicalConfigFilePath);
+                if (!configFileExistenceInfo) {
+                    this.projectService.configFileExistenceInfoCache.set(canonicalConfigFilePath, configFileExistenceInfo = { exists: this.projectService.host.fileExists(configFileName) });
                 }
+                // Ensure we have upto date parsed command line
+                this.projectService.ensureParsedConfigUptoDate(configFileName, canonicalConfigFilePath, configFileExistenceInfo, this);
+                // Watch wild cards if LS is enabled
+                if (this.languageServiceEnabled && this.projectService.serverMode === ts.LanguageServiceMode.Semantic) {
+                    this.projectService.watchWildcards(configFileName, configFileExistenceInfo, this);
+                }
+                return configFileExistenceInfo.exists ? configFileExistenceInfo.config.parsedCommandLine : undefined;
             };
             /* @internal */
-            ConfiguredProject.prototype.createConfigFileWatcher = function () {
-                var _this = this;
-                this.configFileWatcher = this.projectService.watchFactory.watchFile(this.getConfigFilePath(), function (_fileName, eventKind) { return _this.projectService.onConfigChangedForConfiguredProject(_this, eventKind); }, ts.PollingInterval.High, this.projectService.getWatchOptions(this), ts.WatchType.ConfigFile, this);
+            ConfiguredProject.prototype.onReleaseParsedCommandLine = function (fileName) {
+                this.releaseParsedConfig(server.asNormalizedPath(this.projectService.toCanonicalFileName(server.asNormalizedPath(ts.normalizePath(fileName)))));
+            };
+            /* @internal */
+            ConfiguredProject.prototype.releaseParsedConfig = function (canonicalConfigFilePath) {
+                this.projectService.stopWatchingWildCards(canonicalConfigFilePath, this);
+                this.projectService.releaseParsedConfig(canonicalConfigFilePath, this);
             };
             /**
              * If the project has reload from disk pending, it reloads (and then updates graph as part of that) instead of just updating the graph
@@ -3012,27 +3032,11 @@ var ts;
             ConfiguredProject.prototype.setProjectErrors = function (projectErrors) {
                 this.projectErrors = projectErrors;
             };
-            /*@internal*/
-            ConfiguredProject.prototype.watchWildcards = function (wildcardDirectories) {
-                var _this = this;
-                ts.updateWatchingWildcardDirectories(this.directoriesWatchedForWildcards || (this.directoriesWatchedForWildcards = new ts.Map()), wildcardDirectories, 
-                // Create new directory watcher
-                function (directory, flags) { return _this.projectService.watchWildcardDirectory(directory, flags, _this); });
-            };
-            /*@internal*/
-            ConfiguredProject.prototype.stopWatchingWildCards = function () {
-                if (this.directoriesWatchedForWildcards) {
-                    ts.clearMap(this.directoriesWatchedForWildcards, ts.closeFileWatcherOf);
-                    this.directoriesWatchedForWildcards = undefined;
-                }
-            };
             ConfiguredProject.prototype.close = function () {
-                if (this.configFileWatcher) {
-                    this.configFileWatcher.close();
-                    this.configFileWatcher = undefined;
-                }
-                this.stopWatchingWildCards();
-                this.projectService.removeProjectFromSharedExtendedConfigFileMap(this);
+                var _this = this;
+                this.projectService.configFileExistenceInfoCache.forEach(function (_configFileExistenceInfo, canonicalConfigFilePath) {
+                    return _this.releaseParsedConfig(canonicalConfigFilePath);
+                });
                 this.projectErrors = undefined;
                 this.openFileWatchTriggered.clear();
                 this.compilerHost = undefined;
@@ -3062,6 +3066,7 @@ var ts;
             /* @internal */
             ConfiguredProject.prototype.hasOpenRef = function () {
                 var _this = this;
+                var _a;
                 if (!!this.externalProjectRefCount) {
                     return true;
                 }
@@ -3069,17 +3074,17 @@ var ts;
                 if (this.isClosed()) {
                     return false;
                 }
-                var configFileExistenceInfo = this.projectService.getConfigFileExistenceInfo(this);
+                var configFileExistenceInfo = this.projectService.configFileExistenceInfoCache.get(this.canonicalConfigFilePath);
                 if (this.projectService.hasPendingProjectUpdate(this)) {
                     // If there is pending update for this project,
                     // we dont know if this project would be needed by any of the open files impacted by this config file
                     // In that case keep the project alive if there are open files impacted by this project
-                    return !!configFileExistenceInfo.openFilesImpactedByConfigFile.size;
+                    return !!((_a = configFileExistenceInfo.openFilesImpactedByConfigFile) === null || _a === void 0 ? void 0 : _a.size);
                 }
                 // If there is no pending update for this project,
                 // We know exact set of open files that get impacted by this configured project as the files in the project
                 // The project is referenced only if open files impacted by this project are present in this project
-                return ts.forEachEntry(configFileExistenceInfo.openFilesImpactedByConfigFile, function (_value, infoPath) {
+                return !!configFileExistenceInfo.openFilesImpactedByConfigFile && ts.forEachEntry(configFileExistenceInfo.openFilesImpactedByConfigFile, function (_value, infoPath) {
                     var info = _this.projectService.getScriptInfoForPath(infoPath);
                     return _this.containsScriptInfo(info) ||
                         !!server.forEachResolvedProjectReferenceProject(_this, info.path, function (child) { return child.containsScriptInfo(info); }, server.ProjectReferenceProjectLoadKind.Find);
@@ -3330,16 +3335,7 @@ var ts;
                 }
             }
         }
-        var ConfigFileWatcherStatus;
-        (function (ConfigFileWatcherStatus) {
-            ConfigFileWatcherStatus["ReloadingFiles"] = "Reloading configured projects for files";
-            ConfigFileWatcherStatus["ReloadingInferredRootFiles"] = "Reloading configured projects for only inferred root files";
-            ConfigFileWatcherStatus["UpdatedCallback"] = "Updated the callback";
-            ConfigFileWatcherStatus["OpenFilesImpactedByConfigFileAdd"] = "File added to open files impacted by this config file";
-            ConfigFileWatcherStatus["OpenFilesImpactedByConfigFileRemove"] = "File removed from open files impacted by this config file";
-            ConfigFileWatcherStatus["RootOfInferredProjectTrue"] = "Open file was set as Inferred root";
-            ConfigFileWatcherStatus["RootOfInferredProjectFalse"] = "Open file was set as not inferred root";
-        })(ConfigFileWatcherStatus || (ConfigFileWatcherStatus = {}));
+        var noopConfigFileWatcher = { close: ts.noop };
         function isOpenScriptInfo(infoOrFileNameOrConfig) {
             return !!infoOrFileNameOrConfig.containingProjects;
         }
@@ -3435,7 +3431,7 @@ var ts;
             return forEachAnyProjectReferenceKind(project, function (resolvedRef) { return callbackRefProject(project, cb, resolvedRef.sourceFile.path); }, function (projectRef) { return callbackRefProject(project, cb, project.toPath(ts.resolveProjectReferencePath(projectRef))); }, function (potentialProjectRef) { return callbackRefProject(project, cb, potentialProjectRef); });
         }
         function getDetailWatchInfo(watchType, project) {
-            return "Project: " + (project ? project.getProjectName() : "") + " WatchType: " + watchType;
+            return (ts.isString(project) ? "Config: " + project + " " : project ? "Project: " + project.getProjectName() + " " : "") + "WatchType: " + watchType;
         }
         function isScriptInfoWatchedFromNodeModules(info) {
             return !info.isScriptOpen() && info.mTime !== undefined;
@@ -3515,7 +3511,7 @@ var ts;
                  * - Or it is present if we have configured project open with config file at that location
                  *   In this case the exists property is always true
                  */
-                this.configFileExistenceInfoCache = new ts.Map();
+                /*@internal*/ this.configFileExistenceInfoCache = new ts.Map();
                 this.safelist = defaultTypeSafeList;
                 this.legacySafelist = new ts.Map();
                 this.pendingProjectUpdates = new ts.Map();
@@ -3525,6 +3521,8 @@ var ts;
                 this.seenProjects = new ts.Map();
                 /*@internal*/
                 this.sharedExtendedConfigFileWatchers = new ts.Map();
+                /*@internal*/
+                this.extendedConfigCache = new ts.Map();
                 this.host = opts.host;
                 this.logger = opts.logger;
                 this.cancellationToken = opts.cancellationToken;
@@ -3897,9 +3895,6 @@ var ts;
                 return this.hostConfiguration.preferences;
             };
             ProjectService.prototype.onSourceFileChanged = function (info, eventKind) {
-                if (info.containingProjects) {
-                    info.containingProjects.forEach(function (project) { return project.resolutionCache.removeResolutionsFromProjectReferenceRedirects(info.path); });
-                }
                 if (eventKind === ts.FileWatcherEventKind.Deleted) {
                     // File was deleted
                     this.handleDeletedFile(info);
@@ -3965,18 +3960,17 @@ var ts;
              * This is to watch whenever files are added or removed to the wildcard directories
              */
             /*@internal*/
-            ProjectService.prototype.watchWildcardDirectory = function (directory, flags, project) {
+            ProjectService.prototype.watchWildcardDirectory = function (directory, flags, configFileName, config) {
                 var _this = this;
-                var watchOptions = this.getWatchOptions(project);
                 return this.watchFactory.watchDirectory(directory, function (fileOrDirectory) {
                     var fileOrDirectoryPath = _this.toPath(fileOrDirectory);
-                    var fsResult = project.getCachedDirectoryStructureHost().addOrDeleteFileOrDirectory(fileOrDirectory, fileOrDirectoryPath);
-                    var configFileName = project.getConfigFilePath();
+                    var fsResult = config.cachedDirectoryStructureHost.addOrDeleteFileOrDirectory(fileOrDirectory, fileOrDirectoryPath);
                     if (ts.getBaseFileName(fileOrDirectoryPath) === "package.json" && !ts.isInsideNodeModules(fileOrDirectoryPath) &&
                         (fsResult && fsResult.fileExists || !fsResult && _this.host.fileExists(fileOrDirectoryPath))) {
-                        _this.logger.info("Project: " + configFileName + " Detected new package.json: " + fileOrDirectory);
+                        _this.logger.info("Config: " + configFileName + " Detected new package.json: " + fileOrDirectory);
                         _this.onAddPackageJson(fileOrDirectoryPath);
                     }
+                    var configuredProjectForConfig = _this.findConfiguredProjectByProjectName(configFileName);
                     if (ts.isIgnoredFileFromWildCardWatching({
                         watchedDirPath: directory,
                         fileOrDirectory: fileOrDirectory,
@@ -3984,109 +3978,111 @@ var ts;
                         configFileName: configFileName,
                         extraFileExtensions: _this.hostConfiguration.extraFileExtensions,
                         currentDirectory: _this.currentDirectory,
-                        options: project.getCompilationSettings(),
-                        program: project.getCurrentProgram(),
+                        options: config.parsedCommandLine.options,
+                        program: (configuredProjectForConfig === null || configuredProjectForConfig === void 0 ? void 0 : configuredProjectForConfig.getCurrentProgram()) || config.parsedCommandLine.fileNames,
                         useCaseSensitiveFileNames: _this.host.useCaseSensitiveFileNames,
-                        writeLog: function (s) { return _this.logger.info(s); }
+                        writeLog: function (s) { return _this.logger.info(s); },
+                        toPath: function (s) { return _this.toPath(s); }
                     }))
                         return;
-                    // don't trigger callback on open, existing files
-                    if (project.fileIsOpen(fileOrDirectoryPath)) {
-                        if (project.pendingReload !== ts.ConfigFileProgramReloadLevel.Full) {
+                    // Reload is pending, do the reload
+                    if (config.reloadLevel !== ts.ConfigFileProgramReloadLevel.Full)
+                        config.reloadLevel = ts.ConfigFileProgramReloadLevel.Partial;
+                    config.projects.forEach(function (watchWildcardDirectories, projectCanonicalPath) {
+                        if (!watchWildcardDirectories)
+                            return;
+                        var project = _this.getConfiguredProjectByCanonicalConfigFilePath(projectCanonicalPath);
+                        if (!project)
+                            return;
+                        // Load root file names for configured project with the config file name
+                        // But only schedule update if project references this config file
+                        var reloadLevel = configuredProjectForConfig === project ? ts.ConfigFileProgramReloadLevel.Partial : ts.ConfigFileProgramReloadLevel.None;
+                        if (project.pendingReload !== undefined && project.pendingReload > reloadLevel)
+                            return;
+                        // don't trigger callback on open, existing files
+                        if (_this.openFiles.has(fileOrDirectoryPath)) {
                             var info = ts.Debug.checkDefined(_this.getScriptInfoForPath(fileOrDirectoryPath));
                             if (info.isAttached(project)) {
-                                project.openFileWatchTriggered.set(fileOrDirectoryPath, true);
+                                var loadLevelToSet = Math.max(reloadLevel, project.openFileWatchTriggered.get(fileOrDirectoryPath) || ts.ConfigFileProgramReloadLevel.None);
+                                project.openFileWatchTriggered.set(fileOrDirectoryPath, loadLevelToSet);
                             }
                             else {
-                                project.pendingReload = ts.ConfigFileProgramReloadLevel.Partial;
+                                project.pendingReload = reloadLevel;
                                 _this.delayUpdateProjectGraphAndEnsureProjectStructureForOpenFiles(project);
                             }
                         }
+                        else {
+                            project.pendingReload = reloadLevel;
+                            _this.delayUpdateProjectGraphAndEnsureProjectStructureForOpenFiles(project);
+                        }
+                    });
+                }, flags, this.getWatchOptionsFromProjectWatchOptions(config.parsedCommandLine.watchOptions), ts.WatchType.WildcardDirectory, configFileName);
+            };
+            /*@internal*/
+            ProjectService.prototype.delayUpdateProjectsFromParsedConfigOnConfigFileChange = function (canonicalConfigFilePath, reloadReason) {
+                var _this = this;
+                var configFileExistenceInfo = this.configFileExistenceInfoCache.get(canonicalConfigFilePath);
+                if (!(configFileExistenceInfo === null || configFileExistenceInfo === void 0 ? void 0 : configFileExistenceInfo.config))
+                    return false;
+                var scheduledAnyProjectUpdate = false;
+                // Update projects watching cached config
+                configFileExistenceInfo.config.reloadLevel = ts.ConfigFileProgramReloadLevel.Full;
+                configFileExistenceInfo.config.projects.forEach(function (_watchWildcardDirectories, projectCanonicalPath) {
+                    var project = _this.getConfiguredProjectByCanonicalConfigFilePath(projectCanonicalPath);
+                    if (!project)
                         return;
+                    scheduledAnyProjectUpdate = true;
+                    if (projectCanonicalPath === canonicalConfigFilePath) {
+                        // Skip refresh if project is not yet loaded
+                        if (project.isInitialLoadPending())
+                            return;
+                        project.pendingReload = ts.ConfigFileProgramReloadLevel.Full;
+                        project.pendingReloadReason = reloadReason;
+                        _this.delayUpdateProjectGraph(project);
                     }
-                    // Reload is pending, do the reload
-                    if (project.pendingReload !== ts.ConfigFileProgramReloadLevel.Full) {
-                        project.pendingReload = ts.ConfigFileProgramReloadLevel.Partial;
-                        _this.delayUpdateProjectGraphAndEnsureProjectStructureForOpenFiles(project);
+                    else {
+                        // Change in referenced project config file
+                        project.resolutionCache.removeResolutionsFromProjectReferenceRedirects(_this.toPath(canonicalConfigFilePath));
+                        _this.delayUpdateProjectGraph(project);
                     }
-                }, flags, watchOptions, ts.WatchType.WildcardDirectory, project);
-            };
-            /** Gets the config file existence info for the configured project */
-            /*@internal*/
-            ProjectService.prototype.getConfigFileExistenceInfo = function (project) {
-                return this.configFileExistenceInfoCache.get(project.canonicalConfigFilePath);
+                });
+                return scheduledAnyProjectUpdate;
             };
             /*@internal*/
-            ProjectService.prototype.onConfigChangedForConfiguredProject = function (project, eventKind) {
-                var configFileExistenceInfo = this.getConfigFileExistenceInfo(project);
+            ProjectService.prototype.onConfigFileChanged = function (canonicalConfigFilePath, eventKind) {
+                var _a;
+                var configFileExistenceInfo = this.configFileExistenceInfoCache.get(canonicalConfigFilePath);
                 if (eventKind === ts.FileWatcherEventKind.Deleted) {
                     // Update the cached status
                     // We arent updating or removing the cached config file presence info as that will be taken care of by
-                    // setConfigFilePresenceByClosedConfigFile when the project is closed (depending on tracking open files)
+                    // releaseParsedConfig when the project is closed or doesnt need this config any more (depending on tracking open files)
                     configFileExistenceInfo.exists = false;
-                    this.removeProject(project);
-                    // Reload the configured projects for the open files in the map as they are affected by this config file
-                    // Since the configured project was deleted, we want to reload projects for all the open files including files
-                    // that are not root of the inferred project
-                    this.logConfigFileWatchUpdate(project.getConfigFilePath(), project.canonicalConfigFilePath, configFileExistenceInfo, "Reloading configured projects for files" /* ReloadingFiles */);
-                    this.delayReloadConfiguredProjectForFiles(configFileExistenceInfo, /*ignoreIfNotInferredProjectRoot*/ false);
+                    // Remove the configured project for this config file
+                    var project = ((_a = configFileExistenceInfo.config) === null || _a === void 0 ? void 0 : _a.projects.has(canonicalConfigFilePath)) ?
+                        this.getConfiguredProjectByCanonicalConfigFilePath(canonicalConfigFilePath) :
+                        undefined;
+                    if (project)
+                        this.removeProject(project);
                 }
                 else {
-                    this.logConfigFileWatchUpdate(project.getConfigFilePath(), project.canonicalConfigFilePath, configFileExistenceInfo, "Reloading configured projects for only inferred root files" /* ReloadingInferredRootFiles */);
-                    // Skip refresh if project is not yet loaded
-                    if (project.isInitialLoadPending())
-                        return;
-                    project.pendingReload = ts.ConfigFileProgramReloadLevel.Full;
-                    project.pendingReloadReason = "Change in config file detected";
-                    this.delayUpdateProjectGraph(project);
-                    // As we scheduled the update on configured project graph,
-                    // we would need to schedule the project reload for only the root of inferred projects
-                    this.delayReloadConfiguredProjectForFiles(configFileExistenceInfo, /*ignoreIfNotInferredProjectRoot*/ true);
+                    // Update the cached status
+                    configFileExistenceInfo.exists = true;
                 }
-            };
-            /*@internal*/
-            ProjectService.prototype.updateSharedExtendedConfigFileMap = function (_a, parsedCommandLine) {
-                var _this = this;
-                var canonicalConfigFilePath = _a.canonicalConfigFilePath;
-                ts.updateSharedExtendedConfigFileWatcher(canonicalConfigFilePath, parsedCommandLine, this.sharedExtendedConfigFileWatchers, function (extendedConfigFileName, extendedConfigFilePath) { return _this.watchFactory.watchFile(extendedConfigFileName, function () {
-                    var _a;
-                    var ensureProjectsForOpenFiles = false;
-                    (_a = _this.sharedExtendedConfigFileWatchers.get(extendedConfigFilePath)) === null || _a === void 0 ? void 0 : _a.projects.forEach(function (canonicalPath) {
-                        var project = _this.configuredProjects.get(canonicalPath);
-                        // Skip refresh if project is not yet loaded
-                        if (!project || project.isInitialLoadPending())
-                            return;
-                        project.pendingReload = ts.ConfigFileProgramReloadLevel.Full;
-                        project.pendingReloadReason = "Change in extended config file " + extendedConfigFileName + " detected";
-                        _this.delayUpdateProjectGraph(project);
-                        ensureProjectsForOpenFiles = true;
-                    });
-                    if (ensureProjectsForOpenFiles)
-                        _this.delayEnsureProjectForOpenFiles();
-                }, ts.PollingInterval.High, _this.hostConfiguration.watchOptions, ts.WatchType.ExtendedConfigFile); }, function (fileName) { return _this.toPath(fileName); });
-            };
-            /*@internal*/
-            ProjectService.prototype.removeProjectFromSharedExtendedConfigFileMap = function (project) {
-                this.sharedExtendedConfigFileWatchers.forEach(function (watcher) {
-                    watcher.projects.delete(project.canonicalConfigFilePath);
-                    watcher.close();
-                });
-            };
-            /**
-             * This is the callback function for the config file add/remove/change at any location
-             * that matters to open script info but doesnt have configured project open
-             * for the config file
-             */
-            ProjectService.prototype.onConfigFileChangeForOpenScriptInfo = function (configFileName, eventKind) {
-                // This callback is called only if we dont have config file project for this config file
-                var canonicalConfigPath = server.normalizedPathToPath(configFileName, this.currentDirectory, this.toCanonicalFileName);
-                var configFileExistenceInfo = this.configFileExistenceInfoCache.get(canonicalConfigPath);
-                configFileExistenceInfo.exists = (eventKind !== ts.FileWatcherEventKind.Deleted);
-                this.logConfigFileWatchUpdate(configFileName, canonicalConfigPath, configFileExistenceInfo, "Reloading configured projects for files" /* ReloadingFiles */);
-                // Because there is no configured project open for the config file, the tracking open files map
-                // will only have open files that need the re-detection of the project and hence
-                // reload projects for all the tracking open files in the map
-                this.delayReloadConfiguredProjectForFiles(configFileExistenceInfo, /*ignoreIfNotInferredProjectRoot*/ false);
+                // Update projects watching config
+                this.delayUpdateProjectsFromParsedConfigOnConfigFileChange(canonicalConfigFilePath, "Change in config file detected");
+                // Reload the configured projects for the open files in the map as they are affected by this config file
+                // If the configured project was deleted, we want to reload projects for all the open files including files
+                // that are not root of the inferred project
+                // Otherwise, we scheduled the update on configured project graph,
+                // we would need to schedule the project reload for only the root of inferred projects
+                // Get open files to reload projects for
+                this.reloadConfiguredProjectForFiles(configFileExistenceInfo.openFilesImpactedByConfigFile, 
+                /*clearSemanticCache*/ false, 
+                /*delayReload*/ true, eventKind !== ts.FileWatcherEventKind.Deleted ?
+                    ts.identity : // Reload open files if they are root of inferred project
+                    ts.returnTrue, // Reload all the open files impacted by config file
+                "Change in config file detected");
+                this.delayEnsureProjectForOpenFiles();
             };
             ProjectService.prototype.removeProject = function (project) {
                 var _this = this;
@@ -4112,7 +4108,6 @@ var ts;
                     case server.ProjectKind.Configured:
                         this.configuredProjects.delete(project.canonicalConfigFilePath);
                         this.projectToSizeMap.delete(project.canonicalConfigFilePath);
-                        this.setConfigFileExistenceInfoByClosedConfiguredProject(project);
                         break;
                     case server.ProjectKind.Inferred:
                         ts.unorderedRemoveItem(this.inferredProjects, project);
@@ -4139,7 +4134,7 @@ var ts;
                 }
                 project.updateGraph();
                 if (!this.useSingleInferredProject && !project.projectRootPath) {
-                    var _loop_3 = function (inferredProject) {
+                    var _loop_2 = function (inferredProject) {
                         if (inferredProject === project || inferredProject.isOrphan()) {
                             return "continue";
                         }
@@ -4160,7 +4155,7 @@ var ts;
                     // Note that we need to create a copy of the array since the list of project can change
                     for (var _i = 0, _a = this.inferredProjects; _i < _a.length; _i++) {
                         var inferredProject = _a[_i];
-                        _loop_3(inferredProject);
+                        _loop_2(inferredProject);
                     }
                 }
                 return project;
@@ -4203,10 +4198,11 @@ var ts;
                         // if it would need to be re-created with next file open
                         // If project had open file affecting
                         // Reload the root Files from config if its not already scheduled
-                        if (p.openFileWatchTriggered.has(info.path)) {
+                        var reloadLevel = p.openFileWatchTriggered.get(info.path);
+                        if (reloadLevel !== undefined) {
                             p.openFileWatchTriggered.delete(info.path);
-                            if (!p.pendingReload) {
-                                p.pendingReload = ts.ConfigFileProgramReloadLevel.Partial;
+                            if (p.pendingReload !== undefined && p.pendingReload < reloadLevel) {
+                                p.pendingReload = reloadLevel;
                                 p.markFileAsDirty(info.path);
                             }
                         }
@@ -4254,13 +4250,13 @@ var ts;
                 }
             };
             ProjectService.prototype.configFileExists = function (configFileName, canonicalConfigFilePath, info) {
+                var _a;
                 var configFileExistenceInfo = this.configFileExistenceInfoCache.get(canonicalConfigFilePath);
                 if (configFileExistenceInfo) {
                     // By default the info would get impacted by presence of config file since its in the detection path
                     // Only adding the info as a root to inferred project will need the existence to be watched by file watcher
-                    if (isOpenScriptInfo(info) && !configFileExistenceInfo.openFilesImpactedByConfigFile.has(info.path)) {
-                        configFileExistenceInfo.openFilesImpactedByConfigFile.set(info.path, false);
-                        this.logConfigFileWatchUpdate(configFileName, canonicalConfigFilePath, configFileExistenceInfo, "File added to open files impacted by this config file" /* OpenFilesImpactedByConfigFileAdd */);
+                    if (isOpenScriptInfo(info) && !((_a = configFileExistenceInfo.openFilesImpactedByConfigFile) === null || _a === void 0 ? void 0 : _a.has(info.path))) {
+                        (configFileExistenceInfo.openFilesImpactedByConfigFile || (configFileExistenceInfo.openFilesImpactedByConfigFile = new ts.Map())).set(info.path, false);
                     }
                     return configFileExistenceInfo.exists;
                 }
@@ -4273,104 +4269,82 @@ var ts;
                 // Or the whole chain of config files for the roots of the inferred projects
                 // Cache the host value of file exists and add the info to map of open files impacted by this config file
                 var exists = this.host.fileExists(configFileName);
-                var openFilesImpactedByConfigFile = new ts.Map();
+                var openFilesImpactedByConfigFile;
                 if (isOpenScriptInfo(info)) {
-                    openFilesImpactedByConfigFile.set(info.path, false);
+                    (openFilesImpactedByConfigFile || (openFilesImpactedByConfigFile = new ts.Map())).set(info.path, false);
                 }
                 configFileExistenceInfo = { exists: exists, openFilesImpactedByConfigFile: openFilesImpactedByConfigFile };
                 this.configFileExistenceInfoCache.set(canonicalConfigFilePath, configFileExistenceInfo);
-                this.logConfigFileWatchUpdate(configFileName, canonicalConfigFilePath, configFileExistenceInfo, "File added to open files impacted by this config file" /* OpenFilesImpactedByConfigFileAdd */);
                 return exists;
             };
-            ProjectService.prototype.setConfigFileExistenceByNewConfiguredProject = function (project) {
-                var configFileExistenceInfo = this.getConfigFileExistenceInfo(project);
-                if (configFileExistenceInfo) {
-                    // The existence might not be set if the file watcher is not invoked by the time config project is created by external project
-                    configFileExistenceInfo.exists = true;
-                    // close existing watcher
-                    if (configFileExistenceInfo.configFileWatcherForRootOfInferredProject) {
-                        var configFileName = project.getConfigFilePath();
-                        configFileExistenceInfo.configFileWatcherForRootOfInferredProject.close();
-                        configFileExistenceInfo.configFileWatcherForRootOfInferredProject = undefined;
-                        this.logConfigFileWatchUpdate(configFileName, project.canonicalConfigFilePath, configFileExistenceInfo, "Updated the callback" /* UpdatedCallback */);
-                    }
+            /*@internal*/
+            ProjectService.prototype.createConfigFileWatcherForParsedConfig = function (configFileName, canonicalConfigFilePath, forProject) {
+                var _this = this;
+                var _a, _b;
+                var configFileExistenceInfo = this.configFileExistenceInfoCache.get(canonicalConfigFilePath);
+                // When watching config file for parsed config, remove the noopFileWatcher that can be created for open files impacted by config file and watch for real
+                if (!configFileExistenceInfo.watcher || configFileExistenceInfo.watcher === noopConfigFileWatcher) {
+                    configFileExistenceInfo.watcher = this.watchFactory.watchFile(configFileName, function (_fileName, eventKind) { return _this.onConfigFileChanged(canonicalConfigFilePath, eventKind); }, ts.PollingInterval.High, this.getWatchOptionsFromProjectWatchOptions((_b = (_a = configFileExistenceInfo === null || configFileExistenceInfo === void 0 ? void 0 : configFileExistenceInfo.config) === null || _a === void 0 ? void 0 : _a.parsedCommandLine) === null || _b === void 0 ? void 0 : _b.watchOptions), ts.WatchType.ConfigFile, forProject);
                 }
-                else {
-                    // We could be in this scenario if project is the configured project tracked by external project
-                    // Since that route doesnt check if the config file is present or not
-                    this.configFileExistenceInfoCache.set(project.canonicalConfigFilePath, {
-                        exists: true,
-                        openFilesImpactedByConfigFile: new ts.Map()
-                    });
-                }
+                // Watching config file for project, update the map
+                var projects = configFileExistenceInfo.config.projects;
+                projects.set(forProject.canonicalConfigFilePath, projects.get(forProject.canonicalConfigFilePath) || false);
             };
             /**
              * Returns true if the configFileExistenceInfo is needed/impacted by open files that are root of inferred project
              */
             ProjectService.prototype.configFileExistenceImpactsRootOfInferredProject = function (configFileExistenceInfo) {
-                return ts.forEachEntry(configFileExistenceInfo.openFilesImpactedByConfigFile, function (isRootOfInferredProject) { return isRootOfInferredProject; });
+                return configFileExistenceInfo.openFilesImpactedByConfigFile &&
+                    ts.forEachEntry(configFileExistenceInfo.openFilesImpactedByConfigFile, ts.identity);
             };
-            ProjectService.prototype.setConfigFileExistenceInfoByClosedConfiguredProject = function (closedProject) {
-                var configFileExistenceInfo = this.getConfigFileExistenceInfo(closedProject);
-                ts.Debug.assert(!!configFileExistenceInfo);
-                if (configFileExistenceInfo.openFilesImpactedByConfigFile.size) {
-                    var configFileName = closedProject.getConfigFilePath();
+            /* @internal */
+            ProjectService.prototype.releaseParsedConfig = function (canonicalConfigFilePath, forProject) {
+                var _a, _b, _c;
+                var configFileExistenceInfo = this.configFileExistenceInfoCache.get(canonicalConfigFilePath);
+                if (!((_a = configFileExistenceInfo.config) === null || _a === void 0 ? void 0 : _a.projects.delete(forProject.canonicalConfigFilePath)))
+                    return;
+                // If there are still projects watching this config file existence and config, there is nothing to do
+                if ((_b = configFileExistenceInfo.config) === null || _b === void 0 ? void 0 : _b.projects.size)
+                    return;
+                configFileExistenceInfo.config = undefined;
+                ts.clearSharedExtendedConfigFileWatcher(canonicalConfigFilePath, this.sharedExtendedConfigFileWatchers);
+                ts.Debug.checkDefined(configFileExistenceInfo.watcher);
+                if ((_c = configFileExistenceInfo.openFilesImpactedByConfigFile) === null || _c === void 0 ? void 0 : _c.size) {
                     // If there are open files that are impacted by this config file existence
                     // but none of them are root of inferred project, the config file watcher will be
                     // created when any of the script infos are added as root of inferred project
                     if (this.configFileExistenceImpactsRootOfInferredProject(configFileExistenceInfo)) {
-                        ts.Debug.assert(!configFileExistenceInfo.configFileWatcherForRootOfInferredProject);
-                        this.createConfigFileWatcherOfConfigFileExistence(configFileName, closedProject.canonicalConfigFilePath, configFileExistenceInfo);
+                        // If we cannot watch config file existence without configured project, close the configured file watcher
+                        if (!ts.canWatchDirectory(ts.getDirectoryPath(canonicalConfigFilePath))) {
+                            configFileExistenceInfo.watcher.close();
+                            configFileExistenceInfo.watcher = noopConfigFileWatcher;
+                        }
+                    }
+                    else {
+                        // Close existing watcher
+                        configFileExistenceInfo.watcher.close();
+                        configFileExistenceInfo.watcher = undefined;
                     }
                 }
                 else {
                     // There is not a single file open thats tracking the status of this config file. Remove from cache
-                    this.configFileExistenceInfoCache.delete(closedProject.canonicalConfigFilePath);
+                    configFileExistenceInfo.watcher.close();
+                    this.configFileExistenceInfoCache.delete(canonicalConfigFilePath);
                 }
-            };
-            ProjectService.prototype.logConfigFileWatchUpdate = function (configFileName, canonicalConfigFilePath, configFileExistenceInfo, status) {
-                var _this = this;
-                if (!this.logger.hasLevel(server.LogLevel.verbose)) {
-                    return;
-                }
-                var inferredRoots = [];
-                var otherFiles = [];
-                configFileExistenceInfo.openFilesImpactedByConfigFile.forEach(function (isRootOfInferredProject, key) {
-                    var info = _this.getScriptInfoForPath(key);
-                    (isRootOfInferredProject ? inferredRoots : otherFiles).push(info.fileName);
-                });
-                var watches = [];
-                if (configFileExistenceInfo.configFileWatcherForRootOfInferredProject) {
-                    watches.push(configFileExistenceInfo.configFileWatcherForRootOfInferredProject === ts.noopFileWatcher ?
-                        ts.WatchType.NoopConfigFileForInferredRoot :
-                        ts.WatchType.ConfigFileForInferredRoot);
-                }
-                if (this.configuredProjects.has(canonicalConfigFilePath)) {
-                    watches.push(ts.WatchType.ConfigFile);
-                }
-                this.logger.info("ConfigFilePresence:: Current Watches: " + watches + ":: File: " + configFileName + " Currently impacted open files: RootsOfInferredProjects: " + inferredRoots + " OtherOpenFiles: " + otherFiles + " Status: " + status);
-            };
-            /**
-             * Create the watcher for the configFileExistenceInfo
-             */
-            ProjectService.prototype.createConfigFileWatcherOfConfigFileExistence = function (configFileName, canonicalConfigFilePath, configFileExistenceInfo) {
-                var _this = this;
-                configFileExistenceInfo.configFileWatcherForRootOfInferredProject =
-                    ts.canWatchDirectory(ts.getDirectoryPath(canonicalConfigFilePath)) ?
-                        this.watchFactory.watchFile(configFileName, function (_filename, eventKind) { return _this.onConfigFileChangeForOpenScriptInfo(configFileName, eventKind); }, ts.PollingInterval.High, this.hostConfiguration.watchOptions, ts.WatchType.ConfigFileForInferredRoot) :
-                        ts.noopFileWatcher;
-                this.logConfigFileWatchUpdate(configFileName, canonicalConfigFilePath, configFileExistenceInfo, "Updated the callback" /* UpdatedCallback */);
             };
             /**
              * Close the config file watcher in the cached ConfigFileExistenceInfo
-             *   if there arent any open files that are root of inferred project
+             *   if there arent any open files that are root of inferred project and there is no parsed config held by any project
              */
-            ProjectService.prototype.closeConfigFileWatcherOfConfigFileExistenceInfo = function (configFileExistenceInfo) {
+            /*@internal*/
+            ProjectService.prototype.closeConfigFileWatcherOnReleaseOfOpenFile = function (configFileExistenceInfo) {
                 // Close the config file watcher if there are no more open files that are root of inferred project
-                if (configFileExistenceInfo.configFileWatcherForRootOfInferredProject &&
+                // or if there are no projects that need to watch this config file existence info
+                if (configFileExistenceInfo.watcher &&
+                    !configFileExistenceInfo.config &&
                     !this.configFileExistenceImpactsRootOfInferredProject(configFileExistenceInfo)) {
-                    configFileExistenceInfo.configFileWatcherForRootOfInferredProject.close();
-                    configFileExistenceInfo.configFileWatcherForRootOfInferredProject = undefined;
+                    configFileExistenceInfo.watcher.close();
+                    configFileExistenceInfo.watcher = undefined;
                 }
             };
             /**
@@ -4379,25 +4353,26 @@ var ts;
             ProjectService.prototype.stopWatchingConfigFilesForClosedScriptInfo = function (info) {
                 var _this = this;
                 ts.Debug.assert(!info.isScriptOpen());
-                this.forEachConfigFileLocation(info, function (configFileName, canonicalConfigFilePath) {
+                this.forEachConfigFileLocation(info, function (canonicalConfigFilePath) {
+                    var _a, _b, _c;
                     var configFileExistenceInfo = _this.configFileExistenceInfoCache.get(canonicalConfigFilePath);
                     if (configFileExistenceInfo) {
-                        var infoIsRootOfInferredProject = configFileExistenceInfo.openFilesImpactedByConfigFile.get(info.path);
+                        var infoIsRootOfInferredProject = (_a = configFileExistenceInfo.openFilesImpactedByConfigFile) === null || _a === void 0 ? void 0 : _a.get(info.path);
                         // Delete the info from map, since this file is no more open
-                        configFileExistenceInfo.openFilesImpactedByConfigFile.delete(info.path);
-                        _this.logConfigFileWatchUpdate(configFileName, canonicalConfigFilePath, configFileExistenceInfo, "File removed from open files impacted by this config file" /* OpenFilesImpactedByConfigFileRemove */);
+                        (_b = configFileExistenceInfo.openFilesImpactedByConfigFile) === null || _b === void 0 ? void 0 : _b.delete(info.path);
                         // If the script info was not root of inferred project,
                         // there wont be config file watch open because of this script info
                         if (infoIsRootOfInferredProject) {
                             // But if it is a root, it could be the last script info that is root of inferred project
                             // and hence we would need to close the config file watcher
-                            _this.closeConfigFileWatcherOfConfigFileExistenceInfo(configFileExistenceInfo);
+                            _this.closeConfigFileWatcherOnReleaseOfOpenFile(configFileExistenceInfo);
                         }
                         // If there are no open files that are impacted by configFileExistenceInfo after closing this script info
-                        // there is no configured project present, remove the cached existence info
-                        if (!configFileExistenceInfo.openFilesImpactedByConfigFile.size &&
-                            !_this.getConfiguredProjectByCanonicalConfigFilePath(canonicalConfigFilePath)) {
-                            ts.Debug.assert(!configFileExistenceInfo.configFileWatcherForRootOfInferredProject);
+                        // and there is are no projects that need the config file existence or parsed config,
+                        // remove the cached existence info
+                        if (!((_c = configFileExistenceInfo.openFilesImpactedByConfigFile) === null || _c === void 0 ? void 0 : _c.size) &&
+                            !configFileExistenceInfo.config) {
+                            ts.Debug.assert(!configFileExistenceInfo.watcher);
                             _this.configFileExistenceInfoCache.delete(canonicalConfigFilePath);
                         }
                     }
@@ -4410,24 +4385,19 @@ var ts;
             ProjectService.prototype.startWatchingConfigFilesForInferredProjectRoot = function (info) {
                 var _this = this;
                 ts.Debug.assert(info.isScriptOpen());
-                this.forEachConfigFileLocation(info, function (configFileName, canonicalConfigFilePath) {
+                this.forEachConfigFileLocation(info, function (canonicalConfigFilePath, configFileName) {
                     var configFileExistenceInfo = _this.configFileExistenceInfoCache.get(canonicalConfigFilePath);
                     if (!configFileExistenceInfo) {
                         // Create the cache
-                        configFileExistenceInfo = {
-                            exists: _this.host.fileExists(configFileName),
-                            openFilesImpactedByConfigFile: new ts.Map()
-                        };
+                        configFileExistenceInfo = { exists: _this.host.fileExists(configFileName) };
                         _this.configFileExistenceInfoCache.set(canonicalConfigFilePath, configFileExistenceInfo);
                     }
                     // Set this file as the root of inferred project
-                    configFileExistenceInfo.openFilesImpactedByConfigFile.set(info.path, true);
-                    _this.logConfigFileWatchUpdate(configFileName, canonicalConfigFilePath, configFileExistenceInfo, "Open file was set as Inferred root" /* RootOfInferredProjectTrue */);
+                    (configFileExistenceInfo.openFilesImpactedByConfigFile || (configFileExistenceInfo.openFilesImpactedByConfigFile = new ts.Map())).set(info.path, true);
                     // If there is no configured project for this config file, add the file watcher
-                    if (!configFileExistenceInfo.configFileWatcherForRootOfInferredProject &&
-                        !_this.getConfiguredProjectByCanonicalConfigFilePath(canonicalConfigFilePath)) {
-                        _this.createConfigFileWatcherOfConfigFileExistence(configFileName, canonicalConfigFilePath, configFileExistenceInfo);
-                    }
+                    configFileExistenceInfo.watcher || (configFileExistenceInfo.watcher = ts.canWatchDirectory(ts.getDirectoryPath(canonicalConfigFilePath)) ?
+                        _this.watchFactory.watchFile(configFileName, function (_filename, eventKind) { return _this.onConfigFileChanged(canonicalConfigFilePath, eventKind); }, ts.PollingInterval.High, _this.hostConfiguration.watchOptions, ts.WatchType.ConfigFileForInferredRoot) :
+                        noopConfigFileWatcher);
                 });
             };
             /**
@@ -4436,15 +4406,15 @@ var ts;
             /* @internal */
             ProjectService.prototype.stopWatchingConfigFilesForInferredProjectRoot = function (info) {
                 var _this = this;
-                this.forEachConfigFileLocation(info, function (configFileName, canonicalConfigFilePath) {
+                this.forEachConfigFileLocation(info, function (canonicalConfigFilePath) {
+                    var _a;
                     var configFileExistenceInfo = _this.configFileExistenceInfoCache.get(canonicalConfigFilePath);
-                    if (configFileExistenceInfo && configFileExistenceInfo.openFilesImpactedByConfigFile.has(info.path)) {
+                    if ((_a = configFileExistenceInfo === null || configFileExistenceInfo === void 0 ? void 0 : configFileExistenceInfo.openFilesImpactedByConfigFile) === null || _a === void 0 ? void 0 : _a.has(info.path)) {
                         ts.Debug.assert(info.isScriptOpen());
                         // Info is not root of inferred project any more
                         configFileExistenceInfo.openFilesImpactedByConfigFile.set(info.path, false);
-                        _this.logConfigFileWatchUpdate(configFileName, canonicalConfigFilePath, configFileExistenceInfo, "Open file was set as not inferred root" /* RootOfInferredProjectFalse */);
                         // Close the config file watcher
-                        _this.closeConfigFileWatcherOfConfigFileExistenceInfo(configFileExistenceInfo);
+                        _this.closeConfigFileWatcherOnReleaseOfOpenFile(configFileExistenceInfo);
                     }
                 });
             };
@@ -4476,11 +4446,11 @@ var ts;
                     if (searchInDirectory) {
                         var canonicalSearchPath = server.normalizedPathToPath(searchPath, this.currentDirectory, this.toCanonicalFileName);
                         var tsconfigFileName = server.asNormalizedPath(ts.combinePaths(searchPath, "tsconfig.json"));
-                        var result = action(tsconfigFileName, ts.combinePaths(canonicalSearchPath, "tsconfig.json"));
+                        var result = action(ts.combinePaths(canonicalSearchPath, "tsconfig.json"), tsconfigFileName);
                         if (result)
                             return tsconfigFileName;
                         var jsconfigFileName = server.asNormalizedPath(ts.combinePaths(searchPath, "jsconfig.json"));
-                        result = action(jsconfigFileName, ts.combinePaths(canonicalSearchPath, "jsconfig.json"));
+                        result = action(ts.combinePaths(canonicalSearchPath, "jsconfig.json"), jsconfigFileName);
                         if (result)
                             return jsconfigFileName;
                         // If we started within node_modules, don't look outside node_modules.
@@ -4528,7 +4498,7 @@ var ts;
                         return result || undefined;
                 }
                 this.logger.info("Search path: " + ts.getDirectoryPath(info.fileName));
-                var configFileName = this.forEachConfigFileLocation(info, function (configFileName, canonicalConfigFilePath) {
+                var configFileName = this.forEachConfigFileLocation(info, function (canonicalConfigFilePath, configFileName) {
                     return _this.configFileExists(configFileName, canonicalConfigFilePath, info);
                 });
                 if (configFileName) {
@@ -4663,12 +4633,27 @@ var ts;
             };
             /* @internal */
             ProjectService.prototype.createConfiguredProject = function (configFileName) {
-                var cachedDirectoryStructureHost = ts.createCachedDirectoryStructureHost(this.host, this.host.getCurrentDirectory(), this.host.useCaseSensitiveFileNames); // TODO: GH#18217
-                this.logger.info("Opened configuration file " + configFileName);
-                var project = new server.ConfiguredProject(configFileName, this, this.documentRegistry, cachedDirectoryStructureHost);
-                project.createConfigFileWatcher();
-                this.configuredProjects.set(project.canonicalConfigFilePath, project);
-                this.setConfigFileExistenceByNewConfiguredProject(project);
+                this.logger.info("Creating configuration project " + configFileName);
+                var canonicalConfigFilePath = server.asNormalizedPath(this.toCanonicalFileName(configFileName));
+                var configFileExistenceInfo = this.configFileExistenceInfoCache.get(canonicalConfigFilePath);
+                // We could be in this scenario if project is the configured project tracked by external project
+                // Since that route doesnt check if the config file is present or not
+                if (!configFileExistenceInfo) {
+                    this.configFileExistenceInfoCache.set(canonicalConfigFilePath, configFileExistenceInfo = { exists: true });
+                }
+                else {
+                    configFileExistenceInfo.exists = true;
+                }
+                if (!configFileExistenceInfo.config) {
+                    configFileExistenceInfo.config = {
+                        cachedDirectoryStructureHost: ts.createCachedDirectoryStructureHost(this.host, this.host.getCurrentDirectory(), this.host.useCaseSensitiveFileNames),
+                        projects: new ts.Map(),
+                        reloadLevel: ts.ConfigFileProgramReloadLevel.Full
+                    };
+                }
+                var project = new server.ConfiguredProject(configFileName, canonicalConfigFilePath, this, this.documentRegistry, configFileExistenceInfo.config.cachedDirectoryStructureHost);
+                this.configuredProjects.set(canonicalConfigFilePath, project);
+                this.createConfigFileWatcherForParsedConfig(configFileName, canonicalConfigFilePath, project);
                 return project;
             };
             /* @internal */
@@ -4698,24 +4683,9 @@ var ts;
                 var _this = this;
                 this.sendProjectLoadingStartEvent(project, reason);
                 // Read updated contents from disk
-                var configFilename = ts.normalizePath(project.getConfigFilePath());
-                var configFileContent = ts.tryReadFile(configFilename, function (fileName) { return _this.host.readFile(fileName); });
-                var result = ts.parseJsonText(configFilename, ts.isString(configFileContent) ? configFileContent : "");
-                var configFileErrors = result.parseDiagnostics;
-                if (!ts.isString(configFileContent))
-                    configFileErrors.push(configFileContent);
-                var parsedCommandLine = ts.parseJsonSourceFileConfigFileContent(result, project.getCachedDirectoryStructureHost(), ts.getDirectoryPath(configFilename), 
-                /*existingOptions*/ {}, configFilename, 
-                /*resolutionStack*/ [], this.hostConfiguration.extraFileExtensions, 
-                /*extendedConfigCache*/ undefined);
-                if (parsedCommandLine.errors.length) {
-                    configFileErrors.push.apply(configFileErrors, parsedCommandLine.errors);
-                }
-                this.logger.info("Config: " + configFilename + " : " + JSON.stringify({
-                    rootNames: parsedCommandLine.fileNames,
-                    options: parsedCommandLine.options,
-                    projectReferences: parsedCommandLine.projectReferences
-                }, /*replacer*/ undefined, " "));
+                var configFilename = server.asNormalizedPath(ts.normalizePath(project.getConfigFilePath()));
+                var configFileExistenceInfo = this.ensureParsedConfigUptoDate(configFilename, project.canonicalConfigFilePath, this.configFileExistenceInfoCache.get(project.canonicalConfigFilePath), project);
+                var parsedCommandLine = configFileExistenceInfo.config.parsedCommandLine;
                 ts.Debug.assert(!!parsedCommandLine.fileNames);
                 var compilerOptions = parsedCommandLine.options;
                 // Update the project
@@ -4728,24 +4698,130 @@ var ts;
                     };
                 }
                 project.canConfigFileJsonReportNoInputFiles = ts.canJsonReportNoInputFiles(parsedCommandLine.raw);
-                project.setProjectErrors(configFileErrors);
+                project.setProjectErrors(parsedCommandLine.options.configFile.parseDiagnostics);
                 project.updateReferences(parsedCommandLine.projectReferences);
                 var lastFileExceededProgramSize = this.getFilenameForExceededTotalSizeLimitForNonTsFiles(project.canonicalConfigFilePath, compilerOptions, parsedCommandLine.fileNames, fileNamePropertyReader);
                 if (lastFileExceededProgramSize) {
                     project.disableLanguageService(lastFileExceededProgramSize);
-                    project.stopWatchingWildCards();
-                    this.removeProjectFromSharedExtendedConfigFileMap(project);
+                    this.configFileExistenceInfoCache.forEach(function (_configFileExistenceInfo, canonicalConfigFilePath) {
+                        return _this.stopWatchingWildCards(canonicalConfigFilePath, project);
+                    });
                 }
                 else {
                     project.setCompilerOptions(compilerOptions);
                     project.setWatchOptions(parsedCommandLine.watchOptions);
                     project.enableLanguageService();
-                    project.watchWildcards(new ts.Map(ts.getEntries(parsedCommandLine.wildcardDirectories))); // TODO: GH#18217
-                    this.updateSharedExtendedConfigFileMap(project, parsedCommandLine);
+                    this.watchWildcards(configFilename, configFileExistenceInfo, project);
                 }
                 project.enablePluginsWithOptions(compilerOptions, this.currentPluginConfigOverrides);
                 var filesToAdd = parsedCommandLine.fileNames.concat(project.getExternalFiles());
                 this.updateRootAndOptionsOfNonInferredProject(project, filesToAdd, fileNamePropertyReader, compilerOptions, parsedCommandLine.typeAcquisition, parsedCommandLine.compileOnSave, parsedCommandLine.watchOptions);
+            };
+            /*@internal*/
+            ProjectService.prototype.ensureParsedConfigUptoDate = function (configFilename, canonicalConfigFilePath, configFileExistenceInfo, forProject) {
+                var _this = this;
+                var _a, _b, _c;
+                if (configFileExistenceInfo.config) {
+                    if (!configFileExistenceInfo.config.reloadLevel)
+                        return configFileExistenceInfo;
+                    if (configFileExistenceInfo.config.reloadLevel === ts.ConfigFileProgramReloadLevel.Partial) {
+                        this.reloadFileNamesOfParsedConfig(configFilename, configFileExistenceInfo.config);
+                        return configFileExistenceInfo;
+                    }
+                }
+                // Parse the config file and ensure its cached
+                var cachedDirectoryStructureHost = ((_a = configFileExistenceInfo.config) === null || _a === void 0 ? void 0 : _a.cachedDirectoryStructureHost) ||
+                    ts.createCachedDirectoryStructureHost(this.host, this.host.getCurrentDirectory(), this.host.useCaseSensitiveFileNames);
+                // Read updated contents from disk
+                var configFileContent = ts.tryReadFile(configFilename, function (fileName) { return _this.host.readFile(fileName); });
+                var configFile = ts.parseJsonText(configFilename, ts.isString(configFileContent) ? configFileContent : "");
+                var configFileErrors = configFile.parseDiagnostics;
+                if (!ts.isString(configFileContent))
+                    configFileErrors.push(configFileContent);
+                var parsedCommandLine = ts.parseJsonSourceFileConfigFileContent(configFile, cachedDirectoryStructureHost, ts.getDirectoryPath(configFilename), 
+                /*existingOptions*/ {}, configFilename, 
+                /*resolutionStack*/ [], this.hostConfiguration.extraFileExtensions, this.extendedConfigCache);
+                if (parsedCommandLine.errors.length) {
+                    configFileErrors.push.apply(configFileErrors, parsedCommandLine.errors);
+                }
+                this.logger.info("Config: " + configFilename + " : " + JSON.stringify({
+                    rootNames: parsedCommandLine.fileNames,
+                    options: parsedCommandLine.options,
+                    watchOptions: parsedCommandLine.watchOptions,
+                    projectReferences: parsedCommandLine.projectReferences
+                }, /*replacer*/ undefined, " "));
+                var oldCommandLine = (_b = configFileExistenceInfo.config) === null || _b === void 0 ? void 0 : _b.parsedCommandLine;
+                if (!configFileExistenceInfo.config) {
+                    configFileExistenceInfo.config = { parsedCommandLine: parsedCommandLine, cachedDirectoryStructureHost: cachedDirectoryStructureHost, projects: new ts.Map() };
+                }
+                else {
+                    configFileExistenceInfo.config.parsedCommandLine = parsedCommandLine;
+                    configFileExistenceInfo.config.watchedDirectoriesStale = true;
+                    configFileExistenceInfo.config.reloadLevel = undefined;
+                }
+                // If watch options different than older options when setting for the first time, update the config file watcher
+                if (!oldCommandLine && !ts.isJsonEqual(
+                // Old options
+                this.getWatchOptionsFromProjectWatchOptions(/*projectOptions*/ undefined), 
+                // New options
+                this.getWatchOptionsFromProjectWatchOptions(parsedCommandLine.watchOptions))) {
+                    // Reset the config file watcher
+                    (_c = configFileExistenceInfo.watcher) === null || _c === void 0 ? void 0 : _c.close();
+                    configFileExistenceInfo.watcher = undefined;
+                }
+                // Ensure there is watcher for this config file
+                this.createConfigFileWatcherForParsedConfig(configFilename, canonicalConfigFilePath, forProject);
+                // Watch extended config files
+                ts.updateSharedExtendedConfigFileWatcher(canonicalConfigFilePath, parsedCommandLine.options, this.sharedExtendedConfigFileWatchers, function (extendedConfigFileName, extendedConfigFilePath) { return _this.watchFactory.watchFile(extendedConfigFileName, function () {
+                    var _a;
+                    // Update extended config cache
+                    ts.cleanExtendedConfigCache(_this.extendedConfigCache, extendedConfigFilePath, function (fileName) { return _this.toPath(fileName); });
+                    // Update projects
+                    var ensureProjectsForOpenFiles = false;
+                    (_a = _this.sharedExtendedConfigFileWatchers.get(extendedConfigFilePath)) === null || _a === void 0 ? void 0 : _a.projects.forEach(function (canonicalPath) {
+                        ensureProjectsForOpenFiles = _this.delayUpdateProjectsFromParsedConfigOnConfigFileChange(canonicalPath, "Change in extended config file " + extendedConfigFileName + " detected") || ensureProjectsForOpenFiles;
+                    });
+                    if (ensureProjectsForOpenFiles)
+                        _this.delayEnsureProjectForOpenFiles();
+                }, ts.PollingInterval.High, _this.hostConfiguration.watchOptions, ts.WatchType.ExtendedConfigFile, configFilename); }, function (fileName) { return _this.toPath(fileName); });
+                return configFileExistenceInfo;
+            };
+            /*@internal*/
+            ProjectService.prototype.watchWildcards = function (configFileName, _a, forProject) {
+                var _this = this;
+                var _b;
+                var exists = _a.exists, config = _a.config;
+                config.projects.set(forProject.canonicalConfigFilePath, true);
+                if (exists) {
+                    if (config.watchedDirectories && !config.watchedDirectoriesStale)
+                        return;
+                    config.watchedDirectoriesStale = false;
+                    ts.updateWatchingWildcardDirectories((_b = config).watchedDirectories || (_b.watchedDirectories = new ts.Map()), new ts.Map(ts.getEntries(config.parsedCommandLine.wildcardDirectories)), 
+                    // Create new directory watcher
+                    function (directory, flags) { return _this.watchWildcardDirectory(directory, flags, configFileName, config); });
+                }
+                else {
+                    config.watchedDirectoriesStale = false;
+                    if (!config.watchedDirectories)
+                        return;
+                    ts.clearMap(config.watchedDirectories, ts.closeFileWatcherOf);
+                    config.watchedDirectories = undefined;
+                }
+            };
+            /*@internal*/
+            ProjectService.prototype.stopWatchingWildCards = function (canonicalConfigFilePath, forProject) {
+                var configFileExistenceInfo = this.configFileExistenceInfoCache.get(canonicalConfigFilePath);
+                if (!configFileExistenceInfo.config ||
+                    !configFileExistenceInfo.config.projects.get(forProject.canonicalConfigFilePath)) {
+                    return;
+                }
+                configFileExistenceInfo.config.projects.set(forProject.canonicalConfigFilePath, false);
+                // If any of the project is still watching wild cards dont close the watcher
+                if (ts.forEachEntry(configFileExistenceInfo.config.projects, ts.identity))
+                    return;
+                ts.clearMap(configFileExistenceInfo.config.watchedDirectories, ts.closeFileWatcherOf);
+                configFileExistenceInfo.config.watchedDirectories = undefined;
+                configFileExistenceInfo.config.watchedDirectoriesStale = undefined;
             };
             ProjectService.prototype.updateNonInferredProjectFiles = function (project, files, propertyReader) {
                 var projectRootFilesMap = project.getRootFilesMap();
@@ -4826,12 +4902,20 @@ var ts;
              */
             /*@internal*/
             ProjectService.prototype.reloadFileNamesOfConfiguredProject = function (project) {
-                var configFileSpecs = project.getCompilerOptions().configFile.configFileSpecs;
-                var configFileName = project.getConfigFilePath();
-                var fileNames = ts.getFileNamesFromConfigSpecs(configFileSpecs, ts.getDirectoryPath(configFileName), project.getCompilationSettings(), project.getCachedDirectoryStructureHost(), this.hostConfiguration.extraFileExtensions);
+                var fileNames = this.reloadFileNamesOfParsedConfig(project.getConfigFilePath(), this.configFileExistenceInfoCache.get(project.canonicalConfigFilePath).config);
                 project.updateErrorOnNoInputFiles(fileNames);
                 this.updateNonInferredProjectFiles(project, fileNames.concat(project.getExternalFiles()), fileNamePropertyReader);
                 return project.updateGraph();
+            };
+            /*@internal*/
+            ProjectService.prototype.reloadFileNamesOfParsedConfig = function (configFileName, config) {
+                if (config.reloadLevel === undefined)
+                    return config.parsedCommandLine.fileNames;
+                ts.Debug.assert(config.reloadLevel === ts.ConfigFileProgramReloadLevel.Partial);
+                var configFileSpecs = config.parsedCommandLine.options.configFile.configFileSpecs;
+                var fileNames = ts.getFileNamesFromConfigSpecs(configFileSpecs, ts.getDirectoryPath(configFileName), config.parsedCommandLine.options, config.cachedDirectoryStructureHost, this.hostConfiguration.extraFileExtensions);
+                config.parsedCommandLine = __assign(__assign({}, config.parsedCommandLine), { fileNames: fileNames });
+                return fileNames;
             };
             /*@internal*/
             ProjectService.prototype.setFileNamesOfAutoImportProviderProject = function (project, fileNames) {
@@ -5007,7 +5091,7 @@ var ts;
                 return projects;
                 function combineProjects(toAddInfo) {
                     if (toAddInfo !== info) {
-                        var _loop_4 = function (project) {
+                        var _loop_3 = function (project) {
                             // Add the projects only if they can use symLink targets and not already in the list
                             if (project.languageServiceEnabled &&
                                 !project.isOrphan() &&
@@ -5024,7 +5108,7 @@ var ts;
                         };
                         for (var _i = 0, _a = toAddInfo.containingProjects; _i < _a.length; _i++) {
                             var project = _a[_i];
-                            _loop_4(project);
+                            _loop_3(project);
                         }
                     }
                 }
@@ -5232,7 +5316,7 @@ var ts;
                     var snap = mapInfo.getSnapshot();
                     if (mapInfo.documentPositionMapper !== undefined)
                         return mapInfo.documentPositionMapper;
-                    return snap.getText(0, snap.getLength());
+                    return ts.getSnapshotText(snap);
                 };
                 var projectName = project.projectName;
                 var documentPositionMapper = ts.getDocumentPositionMapper({ getCanonicalFileName: this.toCanonicalFileName, log: function (s) { return _this.logger.info(s); }, getSourceFileLike: function (f) { return _this.getSourceFileLike(f, projectName, declarationInfo); } }, declarationInfo.fileName, declarationInfo.getLineInfo(), readMapFile);
@@ -5353,7 +5437,7 @@ var ts;
                             });
                         }
                         if (includePackageJsonAutoImports !== args.preferences.includePackageJsonAutoImports) {
-                            this.invalidateProjectAutoImports(/*packageJsonPath*/ undefined);
+                            this.invalidateProjectPackageJson(/*packageJsonPath*/ undefined);
                         }
                     }
                     if (args.extraFileExtensions) {
@@ -5371,7 +5455,10 @@ var ts;
             };
             /*@internal*/
             ProjectService.prototype.getWatchOptions = function (project) {
-                var projectOptions = project.getWatchOptions();
+                return this.getWatchOptionsFromProjectWatchOptions(project.getWatchOptions());
+            };
+            /*@internal*/
+            ProjectService.prototype.getWatchOptionsFromProjectWatchOptions = function (projectOptions) {
                 return projectOptions && this.hostConfiguration.watchOptions ? __assign(__assign({}, this.hostConfiguration.watchOptions), projectOptions) :
                     projectOptions || this.hostConfiguration.watchOptions;
             };
@@ -5405,6 +5492,11 @@ var ts;
                 });
                 this.throttledOperations.cancel(ensureProjectForOpenFileSchedule);
                 this.pendingEnsureProjectForOpenFiles = false;
+                // Ensure everything is reloaded for cached configs
+                this.configFileExistenceInfoCache.forEach(function (info) {
+                    if (info.config)
+                        info.config.reloadLevel = ts.ConfigFileProgramReloadLevel.Full;
+                });
                 // Reload Projects
                 this.reloadConfiguredProjectForFiles(this.openFiles, /*clearSemanticCache*/ true, /*delayReload*/ false, ts.returnTrue, "User requested reload projects");
                 this.externalProjects.forEach(function (project) {
@@ -5414,21 +5506,11 @@ var ts;
                 this.inferredProjects.forEach(function (project) { return _this.clearSemanticCache(project); });
                 this.ensureProjectForOpenFiles();
             };
-            ProjectService.prototype.delayReloadConfiguredProjectForFiles = function (configFileExistenceInfo, ignoreIfNotRootOfInferredProject) {
-                // Get open files to reload projects for
-                this.reloadConfiguredProjectForFiles(configFileExistenceInfo.openFilesImpactedByConfigFile, 
-                /*clearSemanticCache*/ false, 
-                /*delayReload*/ true, ignoreIfNotRootOfInferredProject ?
-                    function (isRootOfInferredProject) { return isRootOfInferredProject; } : // Reload open files if they are root of inferred project
-                    ts.returnTrue, // Reload all the open files impacted by config file
-                "Change in config file detected");
-                this.delayEnsureProjectForOpenFiles();
-            };
             /**
              * This function goes through all the openFiles and tries to file the config file for them.
              * If the config file is found and it refers to existing project, it reloads it either immediately
              * or schedules it for reload depending on delayReload option
-             * If the there is no existing project it just opens the configured project for the config file
+             * If there is no existing project it just opens the configured project for the config file
              * reloadForInfo provides a way to filter out files to reload configured project for
              */
             ProjectService.prototype.reloadConfiguredProjectForFiles = function (openFiles, clearSemanticCache, delayReload, shouldReloadProjectFor, reason) {
@@ -5441,7 +5523,7 @@ var ts;
                     }
                 };
                 // try to reload config file for all open files
-                openFiles.forEach(function (openFileValue, path) {
+                openFiles === null || openFiles === void 0 ? void 0 : openFiles.forEach(function (openFileValue, path) {
                     // Invalidate default config file name for open file
                     _this.configFileForOpenFiles.delete(path);
                     // Filter out the files that need to be ignored
@@ -5913,13 +5995,13 @@ var ts;
                 return result;
             };
             ProjectService.prototype.collectChanges = function (lastKnownProjectVersions, currentProjects, includeProjectReferenceRedirectInfo, result) {
-                var _loop_5 = function (proj) {
+                var _loop_4 = function (proj) {
                     var knownProject = ts.find(lastKnownProjectVersions, function (p) { return p.projectName === proj.getProjectName(); });
                     result.push(proj.getChangesSinceVersion(knownProject && knownProject.version, includeProjectReferenceRedirectInfo));
                 };
                 for (var _i = 0, currentProjects_1 = currentProjects; _i < currentProjects_1.length; _i++) {
                     var proj = currentProjects_1[_i];
-                    _loop_5(proj);
+                    _loop_4(proj);
                 }
             };
             /* @internal */
@@ -6059,7 +6141,7 @@ var ts;
                 var excludeRules = [];
                 var normalizedNames = rootFiles.map(function (f) { return ts.normalizeSlashes(f.fileName); });
                 var excludedFiles = [];
-                var _loop_6 = function (name) {
+                var _loop_5 = function (name) {
                     var rule = this_2.safelist[name];
                     for (var _b = 0, normalizedNames_1 = normalizedNames; _b < normalizedNames_1.length; _b++) {
                         var root = normalizedNames_1[_b];
@@ -6077,7 +6159,7 @@ var ts;
                                 }
                             }
                             if (rule.exclude) {
-                                var _loop_8 = function (exclude) {
+                                var _loop_7 = function (exclude) {
                                     var processedRule = root.replace(rule.match, function () {
                                         var groups = [];
                                         for (var _i = 0; _i < arguments.length; _i++) {
@@ -6104,7 +6186,7 @@ var ts;
                                 };
                                 for (var _e = 0, _f = rule.exclude; _e < _f.length; _e++) {
                                     var exclude = _f[_e];
-                                    _loop_8(exclude);
+                                    _loop_7(exclude);
                                 }
                             }
                             else {
@@ -6120,11 +6202,11 @@ var ts;
                 var this_2 = this;
                 for (var _i = 0, _a = Object.keys(this.safelist); _i < _a.length; _i++) {
                     var name = _a[_i];
-                    _loop_6(name);
+                    _loop_5(name);
                 }
                 var excludeRegexes = excludeRules.map(function (e) { return new RegExp(e, "i"); });
                 var filesToKeep = [];
-                var _loop_7 = function (i) {
+                var _loop_6 = function (i) {
                     if (excludeRegexes.some(function (re) { return re.test(normalizedNames[i]); })) {
                         excludedFiles.push(normalizedNames[i]);
                     }
@@ -6162,7 +6244,7 @@ var ts;
                 };
                 var this_3 = this;
                 for (var i = 0; i < proj.rootFiles.length; i++) {
-                    _loop_7(i);
+                    _loop_6(i);
                 }
                 proj.rootFiles = filesToKeep;
                 return excludedFiles;
@@ -6349,7 +6431,7 @@ var ts;
                 var _this = this;
                 var watchers = this.packageJsonFilesMap || (this.packageJsonFilesMap = new ts.Map());
                 if (!watchers.has(path)) {
-                    this.invalidateProjectAutoImports(path);
+                    this.invalidateProjectPackageJson(path);
                     watchers.set(path, this.watchFactory.watchFile(path, function (fileName, eventKind) {
                         var path = _this.toPath(fileName);
                         switch (eventKind) {
@@ -6357,11 +6439,11 @@ var ts;
                                 return ts.Debug.fail();
                             case ts.FileWatcherEventKind.Changed:
                                 _this.packageJsonCache.addOrUpdate(path);
-                                _this.invalidateProjectAutoImports(path);
+                                _this.invalidateProjectPackageJson(path);
                                 break;
                             case ts.FileWatcherEventKind.Deleted:
                                 _this.packageJsonCache.delete(path);
-                                _this.invalidateProjectAutoImports(path);
+                                _this.invalidateProjectPackageJson(path);
                                 watchers.get(path).close();
                                 watchers.delete(path);
                         }
@@ -6382,16 +6464,16 @@ var ts;
                 }
             };
             /*@internal*/
-            ProjectService.prototype.invalidateProjectAutoImports = function (packageJsonPath) {
-                if (this.includePackageJsonAutoImports()) {
-                    this.configuredProjects.forEach(invalidate);
-                    this.inferredProjects.forEach(invalidate);
-                    this.externalProjects.forEach(invalidate);
-                }
+            ProjectService.prototype.invalidateProjectPackageJson = function (packageJsonPath) {
+                this.configuredProjects.forEach(invalidate);
+                this.inferredProjects.forEach(invalidate);
+                this.externalProjects.forEach(invalidate);
                 function invalidate(project) {
-                    var _a;
-                    if (!packageJsonPath || ((_a = project.packageJsonsForAutoImport) === null || _a === void 0 ? void 0 : _a.has(packageJsonPath))) {
-                        project.markAutoImportProviderAsDirty();
+                    if (packageJsonPath) {
+                        project.onPackageJsonChange(packageJsonPath);
+                    }
+                    else {
+                        project.onAutoImportProviderSettingsChanged();
                     }
                 }
             };
@@ -6729,7 +6811,7 @@ var ts;
         function combineProjectOutputForReferences(projects, defaultProject, initialLocation) {
             var outputs = [];
             combineProjectOutputWorker(projects, defaultProject, initialLocation, function (project, location, getMappedLocation) {
-                var _loop_9 = function (outputReferencedSymbol) {
+                var _loop_8 = function (outputReferencedSymbol) {
                     var mappedDefinitionFile = getMappedLocation(project, documentSpanLocation(outputReferencedSymbol.definition));
                     var definition = mappedDefinitionFile === undefined ?
                         outputReferencedSymbol.definition : __assign(__assign({}, outputReferencedSymbol.definition), { textSpan: ts.createTextSpan(mappedDefinitionFile.pos, outputReferencedSymbol.definition.textSpan.length), fileName: mappedDefinitionFile.fileName, contextSpan: getMappedContextSpan(outputReferencedSymbol.definition, project) });
@@ -6748,7 +6830,7 @@ var ts;
                 };
                 for (var _i = 0, _a = project.getLanguageService().findReferences(location.fileName, location.pos) || server.emptyArray; _i < _a.length; _i++) {
                     var outputReferencedSymbol = _a[_i];
-                    _loop_9(outputReferencedSymbol);
+                    _loop_8(outputReferencedSymbol);
                 }
             });
             return outputs.filter(function (o) { return o.references.length !== 0; });
@@ -7161,10 +7243,10 @@ var ts;
                         return _this.requiredResponse(_this.getCompletions(request.arguments, server.CommandNames.CompletionsFull));
                     },
                     _a[server.CommandNames.CompletionDetails] = function (request) {
-                        return _this.requiredResponse(_this.getCompletionEntryDetails(request.arguments, /*simplifiedResult*/ true));
+                        return _this.requiredResponse(_this.getCompletionEntryDetails(request.arguments, /*fullResult*/ false));
                     },
                     _a[server.CommandNames.CompletionDetailsFull] = function (request) {
-                        return _this.requiredResponse(_this.getCompletionEntryDetails(request.arguments, /*simplifiedResult*/ false));
+                        return _this.requiredResponse(_this.getCompletionEntryDetails(request.arguments, /*fullResult*/ true));
                     },
                     _a[server.CommandNames.CompileOnSaveAffectedFileList] = function (request) {
                         return _this.requiredResponse(_this.getCompileOnSaveAffectedFileList(request.arguments));
@@ -7790,7 +7872,7 @@ var ts;
             Session.prototype.mapDefinitionInfoLocations = function (definitions, project) {
                 return definitions.map(function (info) {
                     var newDocumentSpan = getMappedDocumentSpan(info, project);
-                    return !newDocumentSpan ? info : __assign(__assign({}, newDocumentSpan), { containerKind: info.containerKind, containerName: info.containerName, kind: info.kind, name: info.name });
+                    return !newDocumentSpan ? info : __assign(__assign(__assign({}, newDocumentSpan), { containerKind: info.containerKind, containerName: info.containerName, kind: info.kind, name: info.name }), info.unverified && { unverified: info.unverified });
                 });
             };
             Session.prototype.getDefinitionAndBoundSpan = function (args, simplifiedResult) {
@@ -7828,9 +7910,27 @@ var ts;
                         result.diagnostics.map(function (d) { return formatDiagnosticToProtocol(d, /*includeFileName*/ true); }) }) :
                     result;
             };
+            Session.prototype.mapJSDocTagInfo = function (tags, project, richResponse) {
+                var _this = this;
+                return tags ? tags.map(function (tag) {
+                    var _a;
+                    return (__assign(__assign({}, tag), { text: richResponse ? _this.mapDisplayParts(tag.text, project) : (_a = tag.text) === null || _a === void 0 ? void 0 : _a.map(function (part) { return part.text; }).join("") }));
+                }) : [];
+            };
+            Session.prototype.mapDisplayParts = function (parts, project) {
+                var _this = this;
+                if (!parts) {
+                    return [];
+                }
+                return parts.map(function (part) { return part.kind !== "linkName" ? part : __assign(__assign({}, part), { target: _this.toFileSpan(part.target.fileName, part.target.textSpan, project) }); });
+            };
+            Session.prototype.mapSignatureHelpItems = function (items, project, richResponse) {
+                var _this = this;
+                return items.map(function (item) { return (__assign(__assign({}, item), { documentation: _this.mapDisplayParts(item.documentation, project), parameters: item.parameters.map(function (p) { return (__assign(__assign({}, p), { documentation: _this.mapDisplayParts(p.documentation, project) })); }), tags: _this.mapJSDocTagInfo(item.tags, project, richResponse) })); });
+            };
             Session.prototype.mapDefinitionInfo = function (definitions, project) {
                 var _this = this;
-                return definitions.map(function (def) { return _this.toFileSpanWithContext(def.fileName, def.textSpan, def.contextSpan, project); });
+                return definitions.map(function (def) { return (__assign(__assign({}, _this.toFileSpanWithContext(def.fileName, def.textSpan, def.contextSpan, project)), def.unverified && { unverified: def.unverified })); });
             };
             /*
              * When we map a .d.ts location to .ts, Visual Studio gets confused because there's no associated Roslyn Document in
@@ -8174,21 +8274,21 @@ var ts;
                 if (!quickInfo) {
                     return undefined;
                 }
+                var useDisplayParts = !!this.getPreferences(file).displayPartsForJSDoc;
                 if (simplifiedResult) {
                     var displayString = ts.displayPartsToString(quickInfo.displayParts);
-                    var docString = ts.displayPartsToString(quickInfo.documentation);
                     return {
                         kind: quickInfo.kind,
                         kindModifiers: quickInfo.kindModifiers,
                         start: scriptInfo.positionToLineOffset(quickInfo.textSpan.start),
                         end: scriptInfo.positionToLineOffset(ts.textSpanEnd(quickInfo.textSpan)),
                         displayString: displayString,
-                        documentation: docString,
-                        tags: quickInfo.tags || []
+                        documentation: useDisplayParts ? this.mapDisplayParts(quickInfo.documentation, project) : ts.displayPartsToString(quickInfo.documentation),
+                        tags: this.mapJSDocTagInfo(quickInfo.tags, project, useDisplayParts),
                     };
                 }
                 else {
-                    return quickInfo;
+                    return useDisplayParts ? quickInfo : __assign(__assign({}, quickInfo), { tags: this.mapJSDocTagInfo(quickInfo.tags, project, /*useDisplayParts*/ false) });
                 }
             };
             Session.prototype.getFormattingEditsForRange = function (args) {
@@ -8279,14 +8379,14 @@ var ts;
                 if (kind === "completions-full" /* CompletionsFull */)
                     return completions;
                 var prefix = args.prefix || "";
-                var entries = ts.mapDefined(completions.entries, function (entry) {
+                var entries = ts.stableSort(ts.mapDefined(completions.entries, function (entry) {
                     if (completions.isMemberCompletion || ts.startsWith(entry.name.toLowerCase(), prefix.toLowerCase())) {
-                        var name = entry.name, kind_1 = entry.kind, kindModifiers = entry.kindModifiers, sortText = entry.sortText, insertText = entry.insertText, replacementSpan = entry.replacementSpan, hasAction = entry.hasAction, source = entry.source, isRecommended = entry.isRecommended, isPackageJsonImport = entry.isPackageJsonImport;
+                        var name = entry.name, kind_1 = entry.kind, kindModifiers = entry.kindModifiers, sortText = entry.sortText, insertText = entry.insertText, replacementSpan = entry.replacementSpan, hasAction = entry.hasAction, source = entry.source, sourceDisplay = entry.sourceDisplay, isSnippet = entry.isSnippet, isRecommended = entry.isRecommended, isPackageJsonImport = entry.isPackageJsonImport, isImportStatementCompletion = entry.isImportStatementCompletion, data = entry.data;
                         var convertedSpan = replacementSpan ? toProtocolTextSpan(replacementSpan, scriptInfo) : undefined;
                         // Use `hasAction || undefined` to avoid serializing `false`.
-                        return { name: name, kind: kind_1, kindModifiers: kindModifiers, sortText: sortText, insertText: insertText, replacementSpan: convertedSpan, hasAction: hasAction || undefined, source: source, isRecommended: isRecommended, isPackageJsonImport: isPackageJsonImport };
+                        return { name: name, kind: kind_1, kindModifiers: kindModifiers, sortText: sortText, insertText: insertText, replacementSpan: convertedSpan, isSnippet: isSnippet, hasAction: hasAction || undefined, source: source, sourceDisplay: sourceDisplay, isRecommended: isRecommended, isPackageJsonImport: isPackageJsonImport, isImportStatementCompletion: isImportStatementCompletion, data: data };
                     }
-                }).sort(function (a, b) { return ts.compareStringsCaseSensitiveUI(a.name, b.name); });
+                }), function (a, b) { return ts.compareStringsCaseSensitiveUI(a.name, b.name); });
                 if (kind === "completions" /* Completions */) {
                     if (completions.metadata)
                         entries.metadata = completions.metadata;
@@ -8295,19 +8395,20 @@ var ts;
                 var res = __assign(__assign({}, completions), { optionalReplacementSpan: completions.optionalReplacementSpan && toProtocolTextSpan(completions.optionalReplacementSpan, scriptInfo), entries: entries });
                 return res;
             };
-            Session.prototype.getCompletionEntryDetails = function (args, simplifiedResult) {
+            Session.prototype.getCompletionEntryDetails = function (args, fullResult) {
                 var _this = this;
                 var _a = this.getFileAndProject(args), file = _a.file, project = _a.project;
                 var scriptInfo = this.projectService.getScriptInfoForNormalizedPath(file);
                 var position = this.getPosition(args, scriptInfo);
                 var formattingOptions = project.projectService.getFormatCodeOptions(file);
+                var useDisplayParts = !!this.getPreferences(file).displayPartsForJSDoc;
                 var result = ts.mapDefined(args.entryNames, function (entryName) {
-                    var _a = typeof entryName === "string" ? { name: entryName, source: undefined } : entryName, name = _a.name, source = _a.source;
-                    return project.getLanguageService().getCompletionEntryDetails(file, position, name, formattingOptions, source, _this.getPreferences(file));
+                    var _a = typeof entryName === "string" ? { name: entryName, source: undefined, data: undefined } : entryName, name = _a.name, source = _a.source, data = _a.data;
+                    return project.getLanguageService().getCompletionEntryDetails(file, position, name, formattingOptions, source, _this.getPreferences(file), data ? ts.cast(data, isCompletionEntryData) : undefined);
                 });
-                return simplifiedResult
-                    ? result.map(function (details) { return (__assign(__assign({}, details), { codeActions: ts.map(details.codeActions, function (action) { return _this.mapCodeAction(action); }) })); })
-                    : result;
+                return fullResult
+                    ? (useDisplayParts ? result : result.map(function (details) { return (__assign(__assign({}, details), { tags: _this.mapJSDocTagInfo(details.tags, project, /*richResponse*/ false) })); }))
+                    : result.map(function (details) { return (__assign(__assign({}, details), { codeActions: ts.map(details.codeActions, function (action) { return _this.mapCodeAction(action); }), documentation: _this.mapDisplayParts(details.documentation, project), tags: _this.mapJSDocTagInfo(details.tags, project, useDisplayParts) })); });
             };
             Session.prototype.getCompileOnSaveAffectedFileList = function (args) {
                 var _this = this;
@@ -8353,28 +8454,24 @@ var ts;
                     !emitSkipped;
             };
             Session.prototype.getSignatureHelpItems = function (args, simplifiedResult) {
+                var _this = this;
                 var _a = this.getFileAndProject(args), file = _a.file, project = _a.project;
                 var scriptInfo = this.projectService.getScriptInfoForNormalizedPath(file);
                 var position = this.getPosition(args, scriptInfo);
                 var helpItems = project.getLanguageService().getSignatureHelpItems(file, position, args);
-                if (!helpItems) {
-                    return undefined;
-                }
-                if (simplifiedResult) {
+                var useDisplayParts = !!this.getPreferences(file).displayPartsForJSDoc;
+                if (helpItems && simplifiedResult) {
                     var span = helpItems.applicableSpan;
-                    return {
-                        items: helpItems.items,
-                        applicableSpan: {
+                    return __assign(__assign({}, helpItems), { applicableSpan: {
                             start: scriptInfo.positionToLineOffset(span.start),
                             end: scriptInfo.positionToLineOffset(span.start + span.length)
-                        },
-                        selectedItemIndex: helpItems.selectedItemIndex,
-                        argumentIndex: helpItems.argumentIndex,
-                        argumentCount: helpItems.argumentCount,
-                    };
+                        }, items: this.mapSignatureHelpItems(helpItems.items, project, useDisplayParts) });
+                }
+                else if (useDisplayParts || !helpItems) {
+                    return helpItems;
                 }
                 else {
-                    return helpItems;
+                    return __assign(__assign({}, helpItems), { items: helpItems.items.map(function (item) { return (__assign(__assign({}, item), { tags: _this.mapJSDocTagInfo(item.tags, project, /*richResponse*/ false) })); }) });
                 }
             };
             Session.prototype.toPendingErrorCheck = function (uncheckedFileName) {
@@ -8581,11 +8678,14 @@ var ts;
                     return result;
                 }
             };
-            Session.prototype.organizeImports = function (_a, simplifiedResult) {
-                var scope = _a.scope;
-                ts.Debug.assert(scope.type === "file");
-                var _b = this.getFileAndProject(scope.args), file = _b.file, project = _b.project;
-                var changes = project.getLanguageService().organizeImports({ type: "file", fileName: file }, this.getFormatOptions(file), this.getPreferences(file));
+            Session.prototype.organizeImports = function (args, simplifiedResult) {
+                ts.Debug.assert(args.scope.type === "file");
+                var _a = this.getFileAndProject(args.scope.args), file = _a.file, project = _a.project;
+                var changes = project.getLanguageService().organizeImports({
+                    fileName: file,
+                    skipDestructiveCodeActions: args.skipDestructiveCodeActions,
+                    type: "file",
+                }, this.getFormatOptions(file), this.getPreferences(file));
                 if (simplifiedResult) {
                     return this.mapTextChangesToCodeEdits(changes);
                 }
@@ -8607,7 +8707,22 @@ var ts;
                 var _a = this.getFileAndProject(args), file = _a.file, project = _a.project;
                 var scriptInfo = project.getScriptInfoForNormalizedPath(file);
                 var _b = this.getStartAndEndPosition(args, scriptInfo), startPosition = _b.startPosition, endPosition = _b.endPosition;
-                var codeActions = project.getLanguageService().getCodeFixesAtPosition(file, startPosition, endPosition, args.errorCodes, this.getFormatOptions(file), this.getPreferences(file));
+                var codeActions;
+                try {
+                    codeActions = project.getLanguageService().getCodeFixesAtPosition(file, startPosition, endPosition, args.errorCodes, this.getFormatOptions(file), this.getPreferences(file));
+                }
+                catch (e) {
+                    var ls = project.getLanguageService();
+                    var existingDiagCodes_1 = __spreadArray(__spreadArray(__spreadArray([], ls.getSyntacticDiagnostics(file)), ls.getSemanticDiagnostics(file)), ls.getSuggestionDiagnostics(file)).map(function (d) {
+                        return ts.decodedTextSpanIntersectsWith(startPosition, endPosition - startPosition, d.start, d.length)
+                            && d.code;
+                    });
+                    var badCode = args.errorCodes.find(function (c) { return !existingDiagCodes_1.includes(c); });
+                    if (badCode !== undefined) {
+                        e.message = "BADCLIENT: Bad error code, " + badCode + " not found in range " + startPosition + ".." + endPosition + " (found: " + existingDiagCodes_1.join(", ") + "); could have caused this error:\n" + e.message;
+                    }
+                    throw e;
+                }
                 return simplifiedResult ? codeActions.map(function (codeAction) { return _this.mapCodeFixAction(codeAction); }) : codeActions;
             };
             Session.prototype.getCombinedCodeFix = function (_a, simplifiedResult) {
@@ -9046,9 +9161,14 @@ var ts;
             var span = toProtocolTextSpanWithContext(textSpan, contextSpan, scriptInfo);
             var lineSpan = scriptInfo.lineToTextSpan(span.start.line - 1);
             var lineText = scriptInfo.getSnapshot().getText(lineSpan.start, ts.textSpanEnd(lineSpan)).replace(/\r|\n/g, "");
-            return __assign(__assign({ file: fileName }, span), { lineText: lineText,
-                isWriteAccess: isWriteAccess,
-                isDefinition: isDefinition });
+            return __assign(__assign({ file: fileName }, span), { lineText: lineText, isWriteAccess: isWriteAccess, isDefinition: isDefinition });
+        }
+        function isCompletionEntryData(data) {
+            return data === undefined || data && typeof data === "object"
+                && typeof data.exportName === "string"
+                && (data.fileName === undefined || typeof data.fileName === "string")
+                && (data.ambientModuleName === undefined || typeof data.ambientModuleName === "string"
+                    && (data.isPackageJsonImport === undefined || typeof data.isPackageJsonImport === "boolean"));
         }
     })(server = ts.server || (ts.server = {}));
 })(ts || (ts = {}));
