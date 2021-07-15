@@ -236,6 +236,9 @@ namespace EXML {
         if (text && text["prototype"]) {
             clazz = text;
         }
+		else if (text && text["paths"]){
+			clazz = text["paths"][url];
+		}
         if (url) {
             if (clazz) {
                 parsedClasses[url] = clazz;
