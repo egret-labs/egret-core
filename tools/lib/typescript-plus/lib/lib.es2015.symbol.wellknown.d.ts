@@ -1,14 +1,14 @@
 /*! *****************************************************************************
-Copyright (c) Microsoft Corporation. All rights reserved. 
+Copyright (c) Microsoft Corporation. All rights reserved.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
 this file except in compliance with the License. You may obtain a copy of the
-License at http://www.apache.org/licenses/LICENSE-2.0  
- 
+License at http://www.apache.org/licenses/LICENSE-2.0
+
 THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, 
-MERCHANTABLITY OR NON-INFRINGEMENT. 
- 
+WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+MERCHANTABLITY OR NON-INFRINGEMENT.
+
 See the Apache Version 2.0 License for specific language governing permissions
 and limitations under the License.
 ***************************************************************************** */
@@ -18,72 +18,77 @@ and limitations under the License.
 /// <reference no-default-lib="true"/>
 
 
-/// <reference path="lib.es2015.symbol.d.ts" />
+/// <reference lib="es2015.symbol" />
 
 interface SymbolConstructor {
     /**
      * A method that determines if a constructor object recognizes an object as one of the
      * constructor’s instances. Called by the semantics of the instanceof operator.
      */
-    readonly hasInstance: symbol;
+    readonly hasInstance: unique symbol;
 
     /**
      * A Boolean value that if true indicates that an object should flatten to its array elements
      * by Array.prototype.concat.
      */
-    readonly isConcatSpreadable: symbol;
+    readonly isConcatSpreadable: unique symbol;
 
     /**
      * A regular expression method that matches the regular expression against a string. Called
      * by the String.prototype.match method.
      */
-    readonly match: symbol;
+    readonly match: unique symbol;
 
     /**
      * A regular expression method that replaces matched substrings of a string. Called by the
      * String.prototype.replace method.
      */
-    readonly replace: symbol;
+    readonly replace: unique symbol;
 
     /**
      * A regular expression method that returns the index within a string that matches the
      * regular expression. Called by the String.prototype.search method.
      */
-    readonly search: symbol;
+    readonly search: unique symbol;
 
     /**
      * A function valued property that is the constructor function that is used to create
      * derived objects.
      */
-    readonly species: symbol;
+    readonly species: unique symbol;
 
     /**
      * A regular expression method that splits a string at the indices that match the regular
      * expression. Called by the String.prototype.split method.
      */
-    readonly split: symbol;
+    readonly split: unique symbol;
 
     /**
      * A method that converts an object to a corresponding primitive value.
      * Called by the ToPrimitive abstract operation.
      */
-    readonly toPrimitive: symbol;
+    readonly toPrimitive: unique symbol;
 
     /**
      * A String value that is used in the creation of the default string description of an object.
      * Called by the built-in method Object.prototype.toString.
      */
-    readonly toStringTag: symbol;
+    readonly toStringTag: unique symbol;
 
     /**
      * An Object whose own property names are property names that are excluded from the 'with'
      * environment bindings of the associated objects.
      */
-    readonly unscopables: symbol;
+    readonly unscopables: unique symbol;
 }
 
 interface Symbol {
-    readonly [Symbol.toStringTag]: "Symbol";
+    /**
+     * Converts a Symbol object to a symbol.
+     */
+    [Symbol.toPrimitive](hint: string): symbol;
+
+    readonly [Symbol.toStringTag]: string;
 }
 
 interface Array<T> {
@@ -127,23 +132,23 @@ interface Date {
 }
 
 interface Map<K, V> {
-    readonly [Symbol.toStringTag]: "Map";
+    readonly [Symbol.toStringTag]: string;
 }
 
-interface WeakMap<K extends object, V>{
-    readonly [Symbol.toStringTag]: "WeakMap";
+interface WeakMap<K extends object, V> {
+    readonly [Symbol.toStringTag]: string;
 }
 
 interface Set<T> {
-    readonly [Symbol.toStringTag]: "Set";
+    readonly [Symbol.toStringTag]: string;
 }
 
-interface WeakSet<T> {
-    readonly [Symbol.toStringTag]: "WeakSet";
+interface WeakSet<T extends object> {
+    readonly [Symbol.toStringTag]: string;
 }
 
 interface JSON {
-    readonly [Symbol.toStringTag]: "JSON";
+    readonly [Symbol.toStringTag]: string;
 }
 
 interface Function {
@@ -158,19 +163,19 @@ interface Function {
 }
 
 interface GeneratorFunction {
-    readonly [Symbol.toStringTag]: "GeneratorFunction";
+    readonly [Symbol.toStringTag]: string;
 }
 
 interface Math {
-    readonly [Symbol.toStringTag]: "Math";
+    readonly [Symbol.toStringTag]: string;
 }
 
 interface Promise<T> {
-    readonly [Symbol.toStringTag]: "Promise";
+    readonly [Symbol.toStringTag]: string;
 }
 
 interface PromiseConstructor {
-    readonly [Symbol.species]: Function;
+    readonly [Symbol.species]: PromiseConstructor;
 }
 
 interface RegExp {
@@ -222,12 +227,13 @@ interface RegExp {
 }
 
 interface RegExpConstructor {
-    [Symbol.species](): RegExpConstructor;
+    readonly [Symbol.species]: RegExpConstructor;
 }
 
 interface String {
     /**
-     * Matches a string an object that supports being matched against, and returns an array containing the results of that search.
+     * Matches a string or an object that supports being matched against, and returns an array
+     * containing the results of that search, or null if no matches are found.
      * @param matcher An object that supports being matched against.
      */
     match(matcher: { [Symbol.match](string: string): RegExpMatchArray | null; }): RegExpMatchArray | null;
@@ -260,88 +266,59 @@ interface String {
     split(splitter: { [Symbol.split](string: string, limit?: number): string[]; }, limit?: number): string[];
 }
 
-/**
- * Represents a raw buffer of binary data, which is used to store data for the
- * different typed arrays. ArrayBuffers cannot be read from or written to directly,
- * but can be passed to a typed array or DataView Object to interpret the raw
- * buffer as needed.
- */
 interface ArrayBuffer {
-    readonly [Symbol.toStringTag]: "ArrayBuffer";
+    readonly [Symbol.toStringTag]: string;
 }
 
 interface DataView {
-    readonly [Symbol.toStringTag]: "DataView";
+    readonly [Symbol.toStringTag]: string;
 }
 
-/**
- * A typed array of 8-bit integer values. The contents are initialized to 0. If the requested
- * number of bytes could not be allocated an exception is raised.
- */
 interface Int8Array {
     readonly [Symbol.toStringTag]: "Int8Array";
 }
 
-/**
- * A typed array of 8-bit unsigned integer values. The contents are initialized to 0. If the
- * requested number of bytes could not be allocated an exception is raised.
- */
 interface Uint8Array {
-    readonly [Symbol.toStringTag]: "UInt8Array";
+    readonly [Symbol.toStringTag]: "Uint8Array";
 }
 
-/**
- * A typed array of 8-bit unsigned integer (clamped) values. The contents are initialized to 0.
- * If the requested number of bytes could not be allocated an exception is raised.
- */
 interface Uint8ClampedArray {
     readonly [Symbol.toStringTag]: "Uint8ClampedArray";
 }
 
-/**
- * A typed array of 16-bit signed integer values. The contents are initialized to 0. If the
- * requested number of bytes could not be allocated an exception is raised.
- */
 interface Int16Array {
     readonly [Symbol.toStringTag]: "Int16Array";
 }
 
-/**
- * A typed array of 16-bit unsigned integer values. The contents are initialized to 0. If the
- * requested number of bytes could not be allocated an exception is raised.
- */
 interface Uint16Array {
     readonly [Symbol.toStringTag]: "Uint16Array";
 }
 
-/**
- * A typed array of 32-bit signed integer values. The contents are initialized to 0. If the
- * requested number of bytes could not be allocated an exception is raised.
- */
 interface Int32Array {
     readonly [Symbol.toStringTag]: "Int32Array";
 }
 
-/**
- * A typed array of 32-bit unsigned integer values. The contents are initialized to 0. If the
- * requested number of bytes could not be allocated an exception is raised.
- */
 interface Uint32Array {
     readonly [Symbol.toStringTag]: "Uint32Array";
 }
 
-/**
- * A typed array of 32-bit float values. The contents are initialized to 0. If the requested number
- * of bytes could not be allocated an exception is raised.
- */
 interface Float32Array {
     readonly [Symbol.toStringTag]: "Float32Array";
 }
 
-/**
- * A typed array of 64-bit float values. The contents are initialized to 0. If the requested
- * number of bytes could not be allocated an exception is raised.
- */
 interface Float64Array {
     readonly [Symbol.toStringTag]: "Float64Array";
+}
+
+interface ArrayConstructor {
+    readonly [Symbol.species]: ArrayConstructor;
+}
+interface MapConstructor {
+    readonly [Symbol.species]: MapConstructor;
+}
+interface SetConstructor {
+    readonly [Symbol.species]: SetConstructor;
+}
+interface ArrayBufferConstructor {
+    readonly [Symbol.species]: ArrayBufferConstructor;
 }

@@ -1,14 +1,14 @@
 /*! *****************************************************************************
-Copyright (c) Microsoft Corporation. All rights reserved. 
+Copyright (c) Microsoft Corporation. All rights reserved.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
 this file except in compliance with the License. You may obtain a copy of the
-License at http://www.apache.org/licenses/LICENSE-2.0  
- 
+License at http://www.apache.org/licenses/LICENSE-2.0
+
 THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, 
-MERCHANTABLITY OR NON-INFRINGEMENT. 
- 
+WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+MERCHANTABLITY OR NON-INFRINGEMENT.
+
 See the Apache Version 2.0 License for specific language governing permissions
 and limitations under the License.
 ***************************************************************************** */
@@ -18,25 +18,33 @@ and limitations under the License.
 /// <reference no-default-lib="true"/>
 
 
-/// <reference path="lib.es2015.symbol.d.ts" />
+/// <reference lib="es2015.symbol" />
 
 interface SymbolConstructor {
     /**
      * A method that returns the default iterator for an object. Called by the semantics of the
      * for-of statement.
      */
-    readonly iterator: symbol;
+    readonly iterator: unique symbol;
 }
 
-interface IteratorResult<T> {
-    done: boolean;
-    value: T;
+interface IteratorYieldResult<TYield> {
+    done?: false;
+    value: TYield;
 }
 
-interface Iterator<T> {
-    next(value?: any): IteratorResult<T>;
-    return?(value?: any): IteratorResult<T>;
-    throw?(e?: any): IteratorResult<T>;
+interface IteratorReturnResult<TReturn> {
+    done: true;
+    value: TReturn;
+}
+
+type IteratorResult<T, TReturn = any> = IteratorYieldResult<T> | IteratorReturnResult<TReturn>;
+
+interface Iterator<T, TReturn = any, TNext = undefined> {
+    // NOTE: 'next' is defined using a tuple to ensure we report the correct assignability errors in all places.
+    next(...args: [] | [TNext]): IteratorResult<T, TReturn>;
+    return?(value?: TReturn): IteratorResult<T, TReturn>;
+    throw?(e?: any): IteratorResult<T, TReturn>;
 }
 
 interface Iterable<T> {
@@ -71,18 +79,16 @@ interface ArrayConstructor {
     /**
      * Creates an array from an iterable object.
      * @param iterable An iterable object to convert to an array.
-     * @param mapfn A mapping function to call on every element of the array.
-     * @param thisArg Value of 'this' used to invoke the mapfn.
      */
-    from<T, U>(iterable: Iterable<T>, mapfn: (this: void, v: T, k: number) => U): Array<U>;
-    from<T, U>(iterable: Iterable<T>, mapfn: (this: void, v: T, k: number) => U, thisArg: undefined): Array<U>;
-    from<Z, T, U>(iterable: Iterable<T>, mapfn: (this: Z, v: T, k: number) => U, thisArg: Z): Array<U>;
+    from<T>(iterable: Iterable<T> | ArrayLike<T>): T[];
 
     /**
      * Creates an array from an iterable object.
      * @param iterable An iterable object to convert to an array.
+     * @param mapfn A mapping function to call on every element of the array.
+     * @param thisArg Value of 'this' used to invoke the mapfn.
      */
-    from<T>(iterable: Iterable<T>): Array<T>;
+    from<T, U>(iterable: Iterable<T> | ArrayLike<T>, mapfn: (v: T, k: number) => U, thisArg?: any): U[];
 }
 
 interface ReadonlyArray<T> {
@@ -151,7 +157,7 @@ interface ReadonlyMap<K, V> {
 }
 
 interface MapConstructor {
-    new <K, V>(iterable: Iterable<[K, V]>): Map<K, V>;
+    new <K, V>(iterable: Iterable<readonly [K, V]>): Map<K, V>;
 }
 
 interface WeakMap<K extends object, V> { }
@@ -168,7 +174,7 @@ interface Set<T> {
      */
     entries(): IterableIterator<[T, T]>;
     /**
-     * Despite its name, returns an iterable of the values in the set,
+     * Despite its name, returns an iterable of the values in the set.
      */
     keys(): IterableIterator<T>;
 
@@ -188,7 +194,7 @@ interface ReadonlySet<T> {
     entries(): IterableIterator<[T, T]>;
 
     /**
-     * Despite its name, returns an iterable of the values in the set,
+     * Despite its name, returns an iterable of the values in the set.
      */
     keys(): IterableIterator<T>;
 
@@ -199,13 +205,13 @@ interface ReadonlySet<T> {
 }
 
 interface SetConstructor {
-    new <T>(iterable: Iterable<T>): Set<T>;
+    new <T>(iterable?: Iterable<T> | null): Set<T>;
 }
 
-interface WeakSet<T> { }
+interface WeakSet<T extends object> { }
 
 interface WeakSetConstructor {
-    new <T extends object>(iterable: Iterable<T>): WeakSet<T>;
+    new <T extends object = object>(iterable: Iterable<T>): WeakSet<T>;
 }
 
 interface Promise<T> { }
@@ -214,22 +220,26 @@ interface PromiseConstructor {
     /**
      * Creates a Promise that is resolved with an array of results when all of the provided Promises
      * resolve, or rejected when any Promise is rejected.
-     * @param values An array of Promises.
+     * @param values An iterable of Promises.
      * @returns A new Promise.
      */
-    all<TAll>(values: Iterable<TAll | PromiseLike<TAll>>): Promise<TAll[]>;
+    all<T>(values: Iterable<T | PromiseLike<T>>): Promise<T[]>;
 
     /**
      * Creates a Promise that is resolved or rejected when any of the provided Promises are resolved
      * or rejected.
-     * @param values An array of Promises.
+     * @param values An iterable of Promises.
+     * @returns A new Promise.
+     */
+    race<T>(values: Iterable<T>): Promise<T extends PromiseLike<infer U> ? U : T>;
+
+    /**
+     * Creates a Promise that is resolved or rejected when any of the provided Promises are resolved
+     * or rejected.
+     * @param values An iterable of Promises.
      * @returns A new Promise.
      */
     race<T>(values: Iterable<T | PromiseLike<T>>): Promise<T>;
-}
-
-declare namespace Reflect {
-    function enumerate(target: object): IterableIterator<any>;
 }
 
 interface String {
@@ -237,10 +247,6 @@ interface String {
     [Symbol.iterator](): IterableIterator<string>;
 }
 
-/**
- * A typed array of 8-bit integer values. The contents are initialized to 0. If the requested
- * number of bytes could not be allocated an exception is raised.
- */
 interface Int8Array {
     [Symbol.iterator](): IterableIterator<number>;
     /**
@@ -266,17 +272,9 @@ interface Int8ArrayConstructor {
      * @param mapfn A mapping function to call on every element of the array.
      * @param thisArg Value of 'this' used to invoke the mapfn.
      */
-    from(arrayLike: Iterable<number>, mapfn: (this: void, v: number, k: number) => number): Int8Array;
-    from(arrayLike: Iterable<number>, mapfn: (this: void, v: number, k: number) => number, thisArg: undefined): Int8Array;
-    from<Z>(arrayLike: Iterable<number>, mapfn: (this: Z, v: number, k: number) => number, thisArg: Z): Int8Array;
-
-    from(arrayLike: Iterable<number>): Int8Array;
+    from(arrayLike: Iterable<number>, mapfn?: (v: number, k: number) => number, thisArg?: any): Int8Array;
 }
 
-/**
- * A typed array of 8-bit unsigned integer values. The contents are initialized to 0. If the
- * requested number of bytes could not be allocated an exception is raised.
- */
 interface Uint8Array {
     [Symbol.iterator](): IterableIterator<number>;
     /**
@@ -302,17 +300,9 @@ interface Uint8ArrayConstructor {
      * @param mapfn A mapping function to call on every element of the array.
      * @param thisArg Value of 'this' used to invoke the mapfn.
      */
-    from(arrayLike: Iterable<number>, mapfn: (this: void, v: number, k: number) => number): Uint8Array;
-    from(arrayLike: Iterable<number>, mapfn: (this: void, v: number, k: number) => number, thisArg: undefined): Uint8Array;
-    from<Z>(arrayLike: Iterable<number>, mapfn: (this: Z, v: number, k: number) => number, thisArg: Z): Uint8Array;
-
-    from(arrayLike: Iterable<number>): Uint8Array;
+    from(arrayLike: Iterable<number>, mapfn?: (v: number, k: number) => number, thisArg?: any): Uint8Array;
 }
 
-/**
- * A typed array of 8-bit unsigned integer (clamped) values. The contents are initialized to 0.
- * If the requested number of bytes could not be allocated an exception is raised.
- */
 interface Uint8ClampedArray {
     [Symbol.iterator](): IterableIterator<number>;
     /**
@@ -341,17 +331,9 @@ interface Uint8ClampedArrayConstructor {
      * @param mapfn A mapping function to call on every element of the array.
      * @param thisArg Value of 'this' used to invoke the mapfn.
      */
-    from(arrayLike: Iterable<number>, mapfn: (this: void, v: number, k: number) => number): Uint8ClampedArray;
-    from(arrayLike: Iterable<number>, mapfn: (this: void, v: number, k: number) => number, thisArg: undefined): Uint8ClampedArray;
-    from<Z>(arrayLike: Iterable<number>, mapfn: (this: Z, v: number, k: number) => number, thisArg: Z): Uint8ClampedArray;
-
-    from(arrayLike: Iterable<number>): Uint8ClampedArray;
+    from(arrayLike: Iterable<number>, mapfn?: (v: number, k: number) => number, thisArg?: any): Uint8ClampedArray;
 }
 
-/**
- * A typed array of 16-bit signed integer values. The contents are initialized to 0. If the
- * requested number of bytes could not be allocated an exception is raised.
- */
 interface Int16Array {
     [Symbol.iterator](): IterableIterator<number>;
     /**
@@ -379,17 +361,9 @@ interface Int16ArrayConstructor {
      * @param mapfn A mapping function to call on every element of the array.
      * @param thisArg Value of 'this' used to invoke the mapfn.
      */
-    from(arrayLike: Iterable<number>, mapfn: (this: void, v: number, k: number) => number): Int16Array;
-    from(arrayLike: Iterable<number>, mapfn: (this: void, v: number, k: number) => number, thisArg: undefined): Int16Array;
-    from<Z>(arrayLike: Iterable<number>, mapfn: (this: Z, v: number, k: number) => number, thisArg: Z): Int16Array;
-
-    from(arrayLike: Iterable<number>): Int16Array;
+    from(arrayLike: Iterable<number>, mapfn?: (v: number, k: number) => number, thisArg?: any): Int16Array;
 }
 
-/**
- * A typed array of 16-bit unsigned integer values. The contents are initialized to 0. If the
- * requested number of bytes could not be allocated an exception is raised.
- */
 interface Uint16Array {
     [Symbol.iterator](): IterableIterator<number>;
     /**
@@ -415,17 +389,9 @@ interface Uint16ArrayConstructor {
      * @param mapfn A mapping function to call on every element of the array.
      * @param thisArg Value of 'this' used to invoke the mapfn.
      */
-    from(arrayLike: Iterable<number>, mapfn: (this: void, v: number, k: number) => number): Uint16Array;
-    from(arrayLike: Iterable<number>, mapfn: (this: void, v: number, k: number) => number, thisArg: undefined): Uint16Array;
-    from<Z>(arrayLike: Iterable<number>, mapfn: (this: Z, v: number, k: number) => number, thisArg: Z): Uint16Array;
-
-    from(arrayLike: Iterable<number>): Uint16Array;
+    from(arrayLike: Iterable<number>, mapfn?: (v: number, k: number) => number, thisArg?: any): Uint16Array;
 }
 
-/**
- * A typed array of 32-bit signed integer values. The contents are initialized to 0. If the
- * requested number of bytes could not be allocated an exception is raised.
- */
 interface Int32Array {
     [Symbol.iterator](): IterableIterator<number>;
     /**
@@ -451,17 +417,9 @@ interface Int32ArrayConstructor {
      * @param mapfn A mapping function to call on every element of the array.
      * @param thisArg Value of 'this' used to invoke the mapfn.
      */
-    from(arrayLike: Iterable<number>, mapfn: (this: void, v: number, k: number) => number): Int32Array;
-    from(arrayLike: Iterable<number>, mapfn: (this: void, v: number, k: number) => number, thisArg: undefined): Int32Array;
-    from<Z>(arrayLike: Iterable<number>, mapfn: (this: Z, v: number, k: number) => number, thisArg: Z): Int32Array;
-
-    from(arrayLike: Iterable<number>): Int32Array;
+    from(arrayLike: Iterable<number>, mapfn?: (v: number, k: number) => number, thisArg?: any): Int32Array;
 }
 
-/**
- * A typed array of 32-bit unsigned integer values. The contents are initialized to 0. If the
- * requested number of bytes could not be allocated an exception is raised.
- */
 interface Uint32Array {
     [Symbol.iterator](): IterableIterator<number>;
     /**
@@ -487,17 +445,9 @@ interface Uint32ArrayConstructor {
      * @param mapfn A mapping function to call on every element of the array.
      * @param thisArg Value of 'this' used to invoke the mapfn.
      */
-    from(arrayLike: Iterable<number>, mapfn: (this: void, v: number, k: number) => number): Uint32Array;
-    from(arrayLike: Iterable<number>, mapfn: (this: void, v: number, k: number) => number, thisArg: undefined): Uint32Array;
-    from<Z>(arrayLike: Iterable<number>, mapfn: (this: Z, v: number, k: number) => number, thisArg: Z): Uint32Array;
-
-    from(arrayLike: Iterable<number>): Uint32Array;
+    from(arrayLike: Iterable<number>, mapfn?: (v: number, k: number) => number, thisArg?: any): Uint32Array;
 }
 
-/**
- * A typed array of 32-bit float values. The contents are initialized to 0. If the requested number
- * of bytes could not be allocated an exception is raised.
- */
 interface Float32Array {
     [Symbol.iterator](): IterableIterator<number>;
     /**
@@ -523,17 +473,9 @@ interface Float32ArrayConstructor {
      * @param mapfn A mapping function to call on every element of the array.
      * @param thisArg Value of 'this' used to invoke the mapfn.
      */
-    from(arrayLike: Iterable<number>, mapfn: (this: void, v: number, k: number) => number): Float32Array;
-    from(arrayLike: Iterable<number>, mapfn: (this: void, v: number, k: number) => number, thisArg: undefined): Float32Array;
-    from<Z>(arrayLike: Iterable<number>, mapfn: (this: Z, v: number, k: number) => number, thisArg: Z): Float32Array;
-
-    from(arrayLike: Iterable<number>): Float32Array;
+    from(arrayLike: Iterable<number>, mapfn?: (v: number, k: number) => number, thisArg?: any): Float32Array;
 }
 
-/**
- * A typed array of 64-bit float values. The contents are initialized to 0. If the requested
- * number of bytes could not be allocated an exception is raised.
- */
 interface Float64Array {
     [Symbol.iterator](): IterableIterator<number>;
     /**
@@ -559,9 +501,5 @@ interface Float64ArrayConstructor {
      * @param mapfn A mapping function to call on every element of the array.
      * @param thisArg Value of 'this' used to invoke the mapfn.
      */
-    from(arrayLike: Iterable<number>, mapfn: (this: void, v: number, k: number) => number): Float64Array;
-    from(arrayLike: Iterable<number>, mapfn: (this: void, v: number, k: number) => number, thisArg: undefined): Float64Array;
-    from<Z>(arrayLike: Iterable<number>, mapfn: (this: Z, v: number, k: number) => number, thisArg: Z): Float64Array;
-
-    from(arrayLike: Iterable<number>): Float64Array;
+    from(arrayLike: Iterable<number>, mapfn?: (v: number, k: number) => number, thisArg?: any): Float64Array;
 }

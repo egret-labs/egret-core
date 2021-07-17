@@ -1,14 +1,14 @@
 /*! *****************************************************************************
-Copyright (c) Microsoft Corporation. All rights reserved. 
+Copyright (c) Microsoft Corporation. All rights reserved.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
 this file except in compliance with the License. You may obtain a copy of the
-License at http://www.apache.org/licenses/LICENSE-2.0  
- 
+License at http://www.apache.org/licenses/LICENSE-2.0
+
 THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, 
-MERCHANTABLITY OR NON-INFRINGEMENT. 
- 
+WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+MERCHANTABLITY OR NON-INFRINGEMENT.
+
 See the Apache Version 2.0 License for specific language governing permissions
 and limitations under the License.
 ***************************************************************************** */
@@ -17,8 +17,6 @@ and limitations under the License.
 
 /// <reference no-default-lib="true"/>
 
-
-declare type PropertyKey = string | number | symbol;
 
 interface Array<T> {
     /**
@@ -30,9 +28,8 @@ interface Array<T> {
      * @param thisArg If provided, it will be used as the this value for each invocation of
      * predicate. If it is not provided, undefined is used instead.
      */
-    find(predicate: (this: void, value: T, index: number, obj: Array<T>) => boolean): T | undefined;
-    find(predicate: (this: void, value: T, index: number, obj: Array<T>) => boolean, thisArg: undefined): T | undefined;
-    find<Z>(predicate: (this: Z, value: T, index: number, obj: Array<T>) => boolean, thisArg: Z): T | undefined;
+    find<S extends T>(predicate: (this: void, value: T, index: number, obj: T[]) => value is S, thisArg?: any): S | undefined;
+    find(predicate: (value: T, index: number, obj: T[]) => unknown, thisArg?: any): T | undefined;
 
     /**
      * Returns the index of the first element in the array where predicate is true, and -1
@@ -43,9 +40,7 @@ interface Array<T> {
      * @param thisArg If provided, it will be used as the this value for each invocation of
      * predicate. If it is not provided, undefined is used instead.
      */
-    findIndex(predicate: (this: void, value: T, index: number, obj: Array<T>) => boolean): number;
-    findIndex(predicate: (this: void, value: T, index: number, obj: Array<T>) => boolean, thisArg: undefined): number;
-    findIndex<Z>(predicate: (this: Z, value: T, index: number, obj: Array<T>) => boolean, thisArg: Z): number;
+    findIndex(predicate: (value: T, index: number, obj: T[]) => unknown, thisArg?: any): number;
 
     /**
      * Returns the this object after filling the section identified by start and end with value
@@ -73,29 +68,26 @@ interface ArrayConstructor {
     /**
      * Creates an array from an array-like object.
      * @param arrayLike An array-like object to convert to an array.
+     */
+    from<T>(arrayLike: ArrayLike<T>): T[];
+
+    /**
+     * Creates an array from an iterable object.
+     * @param arrayLike An array-like object to convert to an array.
      * @param mapfn A mapping function to call on every element of the array.
      * @param thisArg Value of 'this' used to invoke the mapfn.
      */
-    from<T, U>(arrayLike: ArrayLike<T>, mapfn: (this: void, v: T, k: number) => U): Array<U>;
-    from<T, U>(arrayLike: ArrayLike<T>, mapfn: (this: void, v: T, k: number) => U, thisArg: undefined): Array<U>;
-    from<Z, T, U>(arrayLike: ArrayLike<T>, mapfn: (this: Z, v: T, k: number) => U, thisArg: Z): Array<U>;
-
-
-    /**
-     * Creates an array from an array-like object.
-     * @param arrayLike An array-like object to convert to an array.
-     */
-    from<T>(arrayLike: ArrayLike<T>): Array<T>;
+    from<T, U>(arrayLike: ArrayLike<T>, mapfn: (v: T, k: number) => U, thisArg?: any): U[];
 
     /**
      * Returns a new array from a set of elements.
      * @param items A set of elements to include in the new array object.
      */
-    of<T>(...items: T[]): Array<T>;
+    of<T>(...items: T[]): T[];
 }
 
 interface DateConstructor {
-    new (value: Date): Date;
+    new (value: number | string | Date): Date;
 }
 
 interface Function {
@@ -144,8 +136,9 @@ interface Math {
     log1p(x: number): number;
 
     /**
-     * Returns the result of (e^x - 1) of x (e raised to the power of x, where e is the base of
-     * the natural logarithms).
+     * Returns the result of (e^x - 1), which is an implementation-dependent approximation to
+     * subtracting 1 from the exponential function of x (e raised to the power of x, where e
+     * is the base of the natural logarithms).
      * @param x A numeric expression.
      */
     expm1(x: number): number;
@@ -195,7 +188,7 @@ interface Math {
      *     If any argument is NaN, the result is NaN.
      *     If all arguments are either +0 or −0, the result is +0.
      */
-    hypot(...values: number[] ): number;
+    hypot(...values: number[]): number;
 
     /**
      * Returns the integral part of the a numeric expression, x, removing any fractional digits.
@@ -231,13 +224,13 @@ interface NumberConstructor {
      * number. Only finite values of the type number, result in true.
      * @param number A numeric value.
      */
-    isFinite(number: number): boolean;
+    isFinite(number: unknown): boolean;
 
     /**
      * Returns true if the value passed is an integer, false otherwise.
      * @param number A numeric value.
      */
-    isInteger(number: number): boolean;
+    isInteger(number: unknown): boolean;
 
     /**
      * Returns a Boolean value that indicates whether a value is the reserved value NaN (not a
@@ -245,13 +238,13 @@ interface NumberConstructor {
      * to a number. Only values of the type number, that are also NaN, result in true.
      * @param number A numeric value.
      */
-    isNaN(number: number): boolean;
+    isNaN(number: unknown): boolean;
 
     /**
      * Returns true if the value passed is a safe integer.
      * @param number A numeric value.
      */
-    isSafeInteger(number: number): boolean;
+    isSafeInteger(number: unknown): boolean;
 
     /**
      * The value of the largest integer n such that n and n + 1 are both exactly representable as
@@ -275,26 +268,12 @@ interface NumberConstructor {
 
     /**
      * Converts A string to an integer.
-     * @param s A string to convert into a number.
-     * @param radix A value between 2 and 36 that specifies the base of the number in numString.
+     * @param string A string to convert into a number.
+     * @param radix A value between 2 and 36 that specifies the base of the number in `string`.
      * If this argument is not supplied, strings with a prefix of '0x' are considered hexadecimal.
      * All other strings are considered decimal.
      */
     parseInt(string: string, radix?: number): number;
-}
-
-interface Object {
-    /**
-     * Determines whether an object has a property with the specified name.
-     * @param v A property name.
-     */
-    hasOwnProperty(v: PropertyKey): boolean;
-
-    /**
-     * Determines whether a specified property is enumerable.
-     * @param v A property name.
-     */
-    propertyIsEnumerable(v: PropertyKey): boolean;
 }
 
 interface ObjectConstructor {
@@ -340,6 +319,12 @@ interface ObjectConstructor {
     getOwnPropertySymbols(o: any): symbol[];
 
     /**
+     * Returns the names of the enumerable string properties and methods of an object.
+     * @param o Object that contains the properties and methods. This can be an object that you created or an existing Document Object Model (DOM) object.
+     */
+    keys(o: {}): string[];
+
+    /**
      * Returns true if the values are the same value, false otherwise.
      * @param value1 The first value.
      * @param value2 The second value.
@@ -347,30 +332,11 @@ interface ObjectConstructor {
     is(value1: any, value2: any): boolean;
 
     /**
-     * Sets the prototype of a specified object o to  object proto or null. Returns the object o.
+     * Sets the prototype of a specified object o to object proto or null. Returns the object o.
      * @param o The object to change its prototype.
      * @param proto The value of the new prototype or null.
      */
     setPrototypeOf(o: any, proto: object | null): any;
-
-    /**
-     * Gets the own property descriptor of the specified object.
-     * An own property descriptor is one that is defined directly on the object and is not
-     * inherited from the object's prototype.
-     * @param o Object that contains the property.
-     * @param p Name of the property.
-     */
-    getOwnPropertyDescriptor(o: any, propertyKey: PropertyKey): PropertyDescriptor;
-
-    /**
-     * Adds a property to an object, or modifies attributes of an existing property.
-     * @param o Object on which to add or modify the property. This can be a native JavaScript
-     * object (that is, a user-defined object or a built in object) or a DOM object.
-     * @param p The property name.
-     * @param attributes Descriptor for the property. It can be for a data property or an accessor
-     *  property.
-     */
-    defineProperty(o: any, propertyKey: PropertyKey, attributes: PropertyDescriptor): any;
 }
 
 interface ReadonlyArray<T> {
@@ -383,9 +349,8 @@ interface ReadonlyArray<T> {
      * @param thisArg If provided, it will be used as the this value for each invocation of
      * predicate. If it is not provided, undefined is used instead.
      */
-    find(predicate: (this: void, value: T, index: number, obj: ReadonlyArray<T>) => boolean): T | undefined;
-    find(predicate: (this: void, value: T, index: number, obj: ReadonlyArray<T>) => boolean, thisArg: undefined): T | undefined;
-    find<Z>(predicate: (this: Z, value: T, index: number, obj: ReadonlyArray<T>) => boolean, thisArg: Z): T | undefined;
+    find<S extends T>(predicate: (this: void, value: T, index: number, obj: readonly T[]) => value is S, thisArg?: any): S | undefined;
+    find(predicate: (value: T, index: number, obj: readonly T[]) => unknown, thisArg?: any): T | undefined;
 
     /**
      * Returns the index of the first element in the array where predicate is true, and -1
@@ -396,9 +361,7 @@ interface ReadonlyArray<T> {
      * @param thisArg If provided, it will be used as the this value for each invocation of
      * predicate. If it is not provided, undefined is used instead.
      */
-    findIndex(predicate: (this: void, value: T, index: number, obj: Array<T>) => boolean): number;
-    findIndex(predicate: (this: void, value: T, index: number, obj: Array<T>) => boolean, thisArg: undefined): number;
-    findIndex<Z>(predicate: (this: Z, value: T, index: number, obj: Array<T>) => boolean, thisArg: Z): number;
+    findIndex(predicate: (value: T, index: number, obj: readonly T[]) => unknown, thisArg?: any): number;
 }
 
 interface RegExp {
@@ -430,8 +393,8 @@ interface RegExp {
 }
 
 interface RegExpConstructor {
-    new (pattern: RegExp, flags?: string): RegExp;
-    (pattern: RegExp, flags?: string): RegExp;
+    new (pattern: RegExp | string, flags?: string): RegExp;
+    (pattern: RegExp | string, flags?: string): RegExp;
 }
 
 interface String {
@@ -478,7 +441,7 @@ interface String {
 
     /**
      * Returns a String value that is made from count copies appended together. If count is 0,
-     * T is the empty String is returned.
+     * the empty string is returned.
      * @param count number of copies to append
      */
     repeat(count: number): string;
@@ -491,48 +454,48 @@ interface String {
     startsWith(searchString: string, position?: number): boolean;
 
     /**
-     * Returns an <a> HTML anchor element and sets the name attribute to the text value
+     * Returns an `<a>` HTML anchor element and sets the name attribute to the text value
      * @param name
      */
     anchor(name: string): string;
 
-    /** Returns a <big> HTML element */
+    /** Returns a `<big>` HTML element */
     big(): string;
 
-    /** Returns a <blink> HTML element */
+    /** Returns a `<blink>` HTML element */
     blink(): string;
 
-    /** Returns a <b> HTML element */
+    /** Returns a `<b>` HTML element */
     bold(): string;
 
-    /** Returns a <tt> HTML element */
+    /** Returns a `<tt>` HTML element */
     fixed(): string;
 
-    /** Returns a <font> HTML element and sets the color attribute value */
+    /** Returns a `<font>` HTML element and sets the color attribute value */
     fontcolor(color: string): string;
 
-    /** Returns a <font> HTML element and sets the size attribute value */
+    /** Returns a `<font>` HTML element and sets the size attribute value */
     fontsize(size: number): string;
 
-    /** Returns a <font> HTML element and sets the size attribute value */
+    /** Returns a `<font>` HTML element and sets the size attribute value */
     fontsize(size: string): string;
 
-    /** Returns an <i> HTML element */
+    /** Returns an `<i>` HTML element */
     italics(): string;
 
-    /** Returns an <a> HTML element and sets the href attribute value */
+    /** Returns an `<a>` HTML element and sets the href attribute value */
     link(url: string): string;
 
-    /** Returns a <small> HTML element */
+    /** Returns a `<small>` HTML element */
     small(): string;
 
-    /** Returns a <strike> HTML element */
+    /** Returns a `<strike>` HTML element */
     strike(): string;
 
-    /** Returns a <sub> HTML element */
+    /** Returns a `<sub>` HTML element */
     sub(): string;
 
-    /** Returns a <sup> HTML element */
+    /** Returns a `<sup>` HTML element */
     sup(): string;
 }
 
