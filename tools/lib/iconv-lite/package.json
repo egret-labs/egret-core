@@ -42,7 +42,7 @@
   "_requiredBy": [
     "#USER"
   ],
-  "_resolved": "https://registry.npm.taobao.org/iconv-lite/download/iconv-lite-0.4.19.tgz",
+  "_resolved": "https://registry.npmmirror.com/iconv-lite/download/iconv-lite-0.4.19.tgz",
   "_shasum": "f7468f60135f5e5dad3399c0a81be9a1603a082b",
   "_shrinkwrap": null,
   "_spec": "iconv-lite",
@@ -125,7 +125,7 @@
     "shasum": "f7468f60135f5e5dad3399c0a81be9a1603a082b",
     "size": 186571,
     "noattachment": false,
-    "tarball": "http://registry.npm.taobao.org/iconv-lite/download/iconv-lite-0.4.19.tgz"
+    "tarball": "https://registry.npmmirror.com/iconv-lite/download/iconv-lite-0.4.19.tgz"
   },
   "engines": {
     "node": ">=0.10.0"
