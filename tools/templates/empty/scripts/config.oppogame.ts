@@ -7,7 +7,7 @@ import { OppogamePlugin } from './oppogame/oppogame';
 import * as defaultConfig from './config';
 import { EuiCompilerPlugin } from './plugins/eui-compiler-plugin';
 import { WebpackBundlePlugin } from './plugins/webpack-plugin';
-
+//OPPO 小游戏
 const config: ResourceManagerConfig = {
 
     buildConfig: (params) => {
@@ -18,7 +18,7 @@ const config: ResourceManagerConfig = {
             return {
                 outputDir,
                 commands: [
-                    new CleanPlugin({ matchers: ["js", "resource"] }),
+                    new CleanPlugin({ matchers: ["js", "egret-library", "resource"] }),
                     // new CompilePlugin({ libraryType: "debug", defines: { DEBUG: true, RELEASE: false } }),
                     new WebpackBundlePlugin({ libraryType: "debug", defines: { DEBUG: true, RELEASE: false } }),//新的 Webpack 编译器
                     new ExmlPlugin('commonjs'), // 非 EUI 项目关闭此设置
@@ -32,7 +32,7 @@ const config: ResourceManagerConfig = {
             return {
                 outputDir,
                 commands: [
-                    new CleanPlugin({ matchers: ["js", "resource"] }),
+                    new CleanPlugin({ matchers: ["js", "egret-library", "resource"] }),
                     // new CompilePlugin({ libraryType: "release", defines: { DEBUG: false, RELEASE: true } }),
                     new WebpackBundlePlugin({ libraryType: "release", defines: { DEBUG: false, RELEASE: true } }),//新的 Webpack 编译器
                     new ExmlPlugin('commonjs'), // 非 EUI 项目关闭此设置

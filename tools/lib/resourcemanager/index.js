@@ -2276,15 +2276,32 @@
                             return [ 4, c.getConfigViaFile(i, n) ];
 
                           case 2:
-                            return u = a.sent(), e.typeSelector = u.typeSelector, e.nameSelector = u.nameSelector, 
-                            e.mergeSelector = u.mergeSelector, f = {
+                            try {
+                                u = a.sent();
+                            } catch (e) {
+                            }
+                            e.typeSelector = u.typeSelector;
+                            e.nameSelector = u.nameSelector;
+                            e.mergeSelector = u.mergeSelector;
+                            f = {
                                 alias: {},
                                 groups: {},
                                 resources: {}
-                            }, e.userConfig = u.userConfig, e.userConfig || (e.userConfig = {
+                            };
+                            e.userConfig = u.userConfig;
+                            e.userConfig || (e.userConfig = {
                                 outputDir: ".",
                                 commands: []
-                            }), [ 2 ];
+                            });
+                            if (n.command == "run" && e.userConfig.commands.length == 0){
+                                var path = require("path");
+                                var pluginsPath = path.resolve(__dirname, "../../tasks/index");
+                                var plugin = require(pluginsPath);
+                                e.userConfig.commands.push(
+                                    new plugin.IncrementCompilePlugin(),
+                                    new plugin.StartServerPlugin({target:n.target,watch:true}));
+                            }
+                            return [ 2 ];
                         }
                     });
                 });
@@ -2877,12 +2894,24 @@
                         } catch (e) {
                             throw console.log(e), e;
                         }
-                        return s = o.exports, c = "function" == typeof s.resourceRoot ? s.resourceRoot() : s.resourceRoot, 
-                        u = s.typeSelector, l = s.nameSelector ? s.nameSelector : function(e) {
+                        s = o.exports;
+                        c = "function" == typeof s.resourceRoot ? s.resourceRoot() : s.resourceRoot; 
+                        u = s.typeSelector;
+                        l = s.nameSelector ? s.nameSelector : function(e) {
                             return e;
-                        }, _ = s.buildConfig, f = t.projectRoot, d = path.basename(f), p = _(__assign({
-                            projectName: d
-                        }, t)), m = s.mergeSelector, [ 2, {
+                        };
+                        _ = s.buildConfig; 
+                        f = t.projectRoot; 
+                        d = path.basename(f);
+                        try {
+                            p = _(__assign({
+                                projectName: d
+                            }, t));
+                        } catch (e) {
+                            console.log(e);
+                        }
+                        m = s.mergeSelector;
+                        return [ 2, {
                             resourceRoot: c,
                             typeSelector: u,
                             mergeSelector: m,

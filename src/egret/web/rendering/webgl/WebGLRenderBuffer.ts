@@ -69,7 +69,7 @@ namespace egret.web {
             this.context = WebGLRenderContext.getInstance(width, height);
 
             if (egret.nativeRender) {
-                if(root) {
+                if (root) {
                     this.surface = this.context.surface;
                 }
                 else {
@@ -240,7 +240,7 @@ namespace egret.web {
                 this.rootRenderTarget.useFrameBuffer = true;
                 this.rootRenderTarget.activate();
 
-                this.context.getPixels(x, y, width, height, pixels);
+                this.context.getPixels(x, this.height - y - height, width, height, pixels);
 
                 this.rootRenderTarget.useFrameBuffer = useFrameBuffer;
                 this.rootRenderTarget.activate();
@@ -446,5 +446,5 @@ namespace egret.web {
 
     }
 
-    let renderBufferPool: WebGLRenderBuffer[] = [];//渲染缓冲区对象池
+    export let renderBufferPool: WebGLRenderBuffer[] = [];//渲染缓冲区对象池
 }

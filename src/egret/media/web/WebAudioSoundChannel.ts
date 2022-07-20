@@ -39,22 +39,22 @@ namespace egret.web {
         /**
          * @private
          */
-        $url:string;
+        $url: string;
         /**
          * @private
          */
-        $loops:number;
+        $loops: number;
         /**
          * @private
          */
-        $startTime:number = 0;
+        $startTime: number = 0;
 
         /**
          * @private
          * audio音频对象
          * @member {any} egret.Sound#audio
          */
-        $audioBuffer:AudioBuffer;
+        $audioBuffer: AudioBuffer;
         /**
          * @private
          */
@@ -62,22 +62,27 @@ namespace egret.web {
         /**
          * @private
          */
-        private bufferSource:AudioBufferSourceNodeEgret = null;
+        private bufferSource: AudioBufferSourceNodeEgret = null;
 
         /**
          * @private
          */
-        private context = WebAudioDecode.ctx;
+        public context = WebAudioDecode.ctx;
 
         //声音是否已经播放完成
-        private isStopped:boolean = false;
+        private isStopped: boolean = false;
 
         /**
          * @private
          */
         constructor() {
             super();
+            this.initGain();
+        }
 
+
+        public initGain() {
+            this.gain = null;
             if (this.context["createGain"]) {
                 this.gain = this.context["createGain"]();
             }
@@ -89,13 +94,13 @@ namespace egret.web {
         /**
          * @private
          */
-        private _currentTime:number = 0;
+        private _currentTime: number = 0;
         /**
          * @private
          */
-        private _volume:number = 1;
+        private _volume: number = 1;
 
-        $play():void {
+        $play(): void {
             if (this.isStopped) {
                 egret.$error(1036);
                 return;
@@ -120,7 +125,7 @@ namespace egret.web {
             this._currentTime = 0;
         }
 
-        public stop():void {
+        public stop(): void {
             if (this.bufferSource) {
                 let sourceNode = this.bufferSource;
                 if (sourceNode.stop) {
@@ -165,14 +170,14 @@ namespace egret.web {
          * @private
          * @inheritDoc
          */
-        public get volume():number {
+        public get volume(): number {
             return this._volume;
         }
 
         /**
          * @inheritDoc
          */
-        public set volume(value:number) {
+        public set volume(value: number) {
             if (this.isStopped) {
                 egret.$error(1036);
                 return;
@@ -185,12 +190,12 @@ namespace egret.web {
         /**
          * @private
          */
-        private _startTime:number = 0;
+        private _startTime: number = 0;
         /**
          * @private
          * @inheritDoc
          */
-        public get position():number {
+        public get position(): number {
             if (this.bufferSource) {
                 return (Date.now() - this._startTime) / 1000 + this.$startTime;
             }

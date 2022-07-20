@@ -805,6 +805,17 @@ namespace eui {
             stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
             this.removeEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancel, this);
             this.removeEventListener(egret.Event.REMOVED_FROM_STAGE, this.onRemoveListeners, this);
+
+            
+            let values = this.$Scroller;
+            let viewport:IViewport = values[Keys.viewport];
+            let uiValues = viewport.$UIComponent;
+            if (values[Keys.touchScrollH].isStarted()) {
+                values[Keys.touchScrollH].finish(viewport.scrollH, viewport.contentWidth - uiValues[sys.UIKeys.width]);
+            }
+            if (values[Keys.touchScrollV].isStarted()) {
+                values[Keys.touchScrollV].finish(viewport.scrollV, viewport.contentHeight - uiValues[sys.UIKeys.height]);
+            }
         }
 
         /**

@@ -42,6 +42,7 @@ class EgretProjectData {
         modules: [],
         target: { current: "web" },
         vivo: {},
+        oppo: {},
         ttgame: {}
     };
 

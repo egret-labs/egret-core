@@ -10,31 +10,60 @@ import Server = require('../server/server');
 import FileUtil = require('../lib/FileUtil');
 import service = require('../service/index');
 import CompileProject = require('../actions/CompileProject');
-import { launcher, projectData } from '../project';
 import * as os from 'os';
-
+import * as parseConfig from '../actions/ParseConfig';
+import * as tasks from '../tasks';
 class Run implements egret.Command {
 
     private initVersion = "";//初始化的 egret 版本，如果版本变化了，关掉当前的进程
     async execute() {
-        const exitCode = await new Build().execute();
-        const target = egret.args.target;
-        // const toolsList = launcher.getLauncherLibrary().getInstalledTools();
+        // 通过plugin执行run方法
 
-        switch (target) {
-            case "web":
-                const port = await utils.getAvailablePort(egret.args.port);
-                this.initServer(port);
-                return DontExitCode;
-                break;
-            case "wxgame":
-                return (await runWxIde());
-                break;
-            case 'bricks':
-                return (await runBricks());
-                break;
-
+        let exitCode = DontExitCode;
+        try {
+            exitCode = await this.runByPlugin();
+        } catch (e) {
+            console.log(e);
+            return global.exitCode;
         }
+        return DontExitCode;
+        // if (exitCode == -1) {
+        //     console.log("找不到 run 方法");
+        //     try {
+        //         exitCode = await new Build().execute();
+        //     } catch (e) {
+        //         console.log("build error@@@@@@@@");
+        //         console.log(e);
+        //         return exitCode;
+        //     }
+        //     const target = egret.args.target;
+        //     switch (target) {
+        //         case "web":
+        //             const port = await utils.getAvailablePort(egret.args.port);
+        //             this.initServer(port);
+        //             return DontExitCode;
+        //             break;
+        //         case "wxgame":
+        //             return (await runWxIde());
+        //             break;
+        //         case 'bricks':
+        //             return (await runBricks());
+        //             break;
+        //     }
+        // } else {
+        //     return DontExitCode;
+        // }
+    }
+
+    private async runByPlugin() {
+        const res = require('../lib/resourcemanager');
+        const command = "run";
+        const projectRoot = egret.args.projectDir;
+        tasks.run();
+        const target = egret.args.target;
+        const projectConfig = parseConfig.parseConfig();
+        await res.build({ projectRoot, debug: true, command, target, projectConfig });
+        return global.exitCode;
     }
 
 

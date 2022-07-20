@@ -30,13 +30,13 @@
 
 namespace egret.sys {
 
-    let usingChannel:Array<SoundChannel> = [];
+    export let usingChannel: Array<SoundChannel> = [];
 
     /**
      * @private
      * @param channel
      */
-    export function $pushSoundChannel(channel:SoundChannel):void {
+    export function $pushSoundChannel(channel: SoundChannel): void {
         if (usingChannel.indexOf(channel) < 0) {
             usingChannel.push(channel);
         }
@@ -46,8 +46,8 @@ namespace egret.sys {
      * @private
      * @param channel
      */
-    export function $popSoundChannel(channel:SoundChannel):boolean {
-        let index:number = usingChannel.indexOf(channel);
+    export function $popSoundChannel(channel: SoundChannel): boolean {
+        let index: number = usingChannel.indexOf(channel);
         if (index >= 0) {
             usingChannel.splice(index, 1);
             return true;
@@ -98,7 +98,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        load(url:string):void;
+        load(url: string): void;
 
         /**
          * Generates a new SoundChannel object to play back the sound.
@@ -116,7 +116,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        play(startTime?:number, loops?:number):SoundChannel;
+        play(startTime?: number, loops?: number): SoundChannel;
 
         /**
          * Closes the stream, causing any download of data to cease
@@ -130,7 +130,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        close():void;
+        close(): void;
 
         /**
          * Type, default is egret.Sound.EFFECT.
@@ -146,7 +146,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        type:string;
+        type: string;
 
         /**
          * Length of the current sound (in seconds).
@@ -162,14 +162,14 @@ namespace egret {
          * @readOnly
          * @language zh_CN
          */
-        length:number;
+        length: number;
     }
 
 
     /**
      * @copy egret.Sound
      */
-    export let Sound:{
+    export let Sound: {
 
         /**
          * Create Sound object, load an external audio file and play
@@ -185,7 +185,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        new():Sound;
+        new(): Sound;
 
         /**
          * Background music
@@ -201,7 +201,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-         MUSIC:string;
+        MUSIC: string;
 
         /**
          * EFFECT
@@ -217,6 +217,6 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-         EFFECT:string;
+        EFFECT: string;
     };
 }

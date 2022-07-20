@@ -193,7 +193,121 @@ namespace egret.sys {
 
 namespace egret {
 
-    let SplitRegex = new RegExp("(?=[\\u00BF-\\u1FFF\\u2C00-\\uD7FF]|\\b|\\s)(?![。，！、》…）)}”】\\.\\,\\!\\?\\]\\:])");
+    let defaultRegex = "(?=[\\u00BF-\\u1FFF\\u2C00-\\uD7FF]|\\b|\\s)(?![0-9])(?![。，！、》…）)}”】\\.\\,\\!\\?\\]\\:])";
+    let SplitRegex: RegExp;
+
+    /**
+     * @private
+     */
+    let usingWordWrap = [
+    ]
+
+    /**
+     * @private
+     */
+    let languageWordWrapMap = {
+        "Vietnamese": "?![ẮẰẲẴẶĂẤẦẨẪẬÂÁÀÃẢẠĐẾỀỂỄỆÊÉÈẺẼẸÍÌỈĨỊỐỒỔỖỘÔỚỜỞỠỢƠÓÒÕỎỌỨỪỬỮỰƯÚÙỦŨỤÝỲỶỸỴA-Z]"
+    }
+    /**
+     * add new language word wrap regex and use it
+     * if languageKey already exists,the existing regex is replaced
+     * if the pattern is not passed,it will be found and enabled int the existing word wrap map
+     * @param languageKey 
+     * @param pattern 
+     * @version Egret 5.3.11
+     * @platform Web
+     * @language en_US
+     */
+    /**
+     * 添加新的自动换行的语言正则表达式匹配并启用
+     * 如果已经有该语言了，则会替换现有正则表达式
+     * 不传入正则表达式则会在已有的语言自动换行匹配串中寻找并启用
+     * @param languageKey 
+     * @param pattern 
+     * @version Egret 5.3.11
+     * @platform Web
+     * @language zh_CN
+     */
+    export function addLanguageWordWrapRegex(languageKey: string, pattern?: string): void {
+        if (pattern != undefined) {
+            languageWordWrapMap[languageKey] = pattern;
+        }
+        if (usingWordWrap.indexOf(languageKey) < 0 && languageWordWrapMap[languageKey] != undefined) {
+            usingWordWrap.push(languageKey);
+        }
+        updateWordWrapRegex();
+    }
+
+    /**
+     * return the existing word wrap keys
+     * @version Egret 5.3.11
+     * @platform Web
+     * @language en_US
+     */
+    /**
+     * 获取当前已有的自动换行映射键值组
+     * @version Egret 5.3.11
+     * @platform Web
+     * @language zh_CN
+     */
+    export function getAllSupportLanguageWordWrap(): string[] {
+        const result: string[] = [];
+        for (let key in languageWordWrapMap) {
+            result.push(key);
+        }
+        return result;
+    }
+
+    /**
+     * return the using word wrap keys
+     * @version Egret 5.3.11
+     * @platform Web
+     * @language en_US
+     */
+    /**
+     * 获取当前正在使用中的自动换行映射键值组
+     * @version Egret 5.3.11
+     * @platform Web
+     * @language zh_CN
+     */
+    export function getUsingWordWrap(): string[] {
+        return usingWordWrap;
+    }
+    /**
+     * cancels the using word wrap regex by the languageKey
+     * @version Egret 5.3.11
+     * @platform Web
+     * @language en_US
+     */
+    /**
+     * 根据languageKey取消正在启用的自动换行正则表达式
+     * @version Egret 5.3.11
+     * @platform Web
+     * @language zh_CN
+     */
+    export function cancelLanguageWordWrapRegex(languageKey: string): void {
+        const index = usingWordWrap.indexOf(languageKey);
+        if (index > -1) {
+            usingWordWrap.splice(index, 1);
+        }
+        updateWordWrapRegex();
+    }
+
+    /**
+     * @private
+     */
+    function updateWordWrapRegex() {
+        let extendRegex = defaultRegex;
+        for (let key of usingWordWrap) {
+            if (languageWordWrapMap[key]) {
+                extendRegex += "(" + languageWordWrapMap[key] + ")";
+            }
+        }
+        SplitRegex = new RegExp(extendRegex, "i");
+    }
+
+    updateWordWrapRegex();
+
 
     /**
      * @private
@@ -698,7 +812,7 @@ namespace egret {
                 this.$nativeDisplayObject.setWordWrap(value);
             }
         }
-        
+
         protected inputUtils: InputController = null;
 
         /**
@@ -1214,14 +1328,14 @@ namespace egret {
 
         /**
          * Indicates a user can enter into the text field character set. If you restrict property is null, you can enter any character. If you restrict property is an empty string, you can not enter any character. If you restrict property is a string of characters, you can enter only characters in the string in the text field. The string is scanned from left to right. You can use a hyphen (-) to specify a range. Only restricts user interaction; a script may put any text into the text field. <br/>
-                  * If the string of characters caret (^) at the beginning, all characters are initially accepted, then the string are excluded from receiving ^ character. If the string does not begin with a caret (^) to, any characters are initially accepted and then a string of characters included in the set of accepted characters. <br/>
-                  * The following example allows only uppercase characters, spaces, and numbers in the text field: <br/>
-                  * My_txt.restrict = "A-Z 0-9"; <br/>
-                  * The following example includes all characters except lowercase letters: <br/>
-                  * My_txt.restrict = "^ a-z"; <br/>
-                  * If you need to enter characters \ ^, use two backslash "\\ -" "\\ ^": <br/>
-                  * Can be used anywhere in the string ^ to rule out including characters and switch between characters, but can only be used to exclude a ^. The following code includes only uppercase letters except uppercase Q: <br/>
-                  * My_txt.restrict = "A-Z ^ Q"; <br/>
+                  * If the string of characters caret (^) at the beginning, all characters are initially accepted, then the string are excluded from receiving ^ character. If the string does not begin with a caret (^) to, any characters are initially accepted and then a string of characters included in the set of accepted characters. <br/>
+                  * The following example allows only uppercase characters, spaces, and numbers in the text field: <br/>
+                  * My_txt.restrict = "A-Z 0-9"; <br/>
+                  * The following example includes all characters except lowercase letters: <br/>
+                  * My_txt.restrict = "^ a-z"; <br/>
+                  * If you need to enter characters \ ^, use two backslash "\\ -" "\\ ^": <br/>
+                  * Can be used anywhere in the string ^ to rule out including characters and switch between characters, but can only be used to exclude a ^. The following code includes only uppercase letters except uppercase Q: <br/>
+                  * My_txt.restrict = "A-Z ^ Q"; <br/>
          * @version Egret 2.4
          * @platform Web,Native
          * @default null
@@ -1597,7 +1711,7 @@ namespace egret {
                         let x: number = lines[i];
                         let y: number = lines[i + 1];
                         let w: number = lines[i + 2];
-                        let color: number = lines[i + 3] || textColor;
+                        let color: number = typeof lines[i + 3] == "number" ? lines[i + 3] : textColor;
                         if (lastColor < 0 || lastColor != color) {
                             lastColor = color;
                             strokePath = graphics.lineStyle(2, color, 1, CapsStyle.NONE);
@@ -2007,7 +2121,7 @@ namespace egret {
                         lineH = values[sys.TextKeys.fontSize];
                     }
                     else {
-                        lineH = Math.max(lineH, element.style.size || values[sys.TextKeys.fontSize]);
+                        lineH = Math.max(lineH, typeof (element.style.size) == "number" ? element.style.size : values[sys.TextKeys.fontSize]);
                     }
 
                     let isNextLine: boolean = true;
@@ -2263,7 +2377,7 @@ namespace egret {
                 drawX = Math.round((maxWidth - line.width) * hAlign);
                 for (let j: number = 0, elementsLength: number = line.elements.length; j < elementsLength; j++) {
                     let element: egret.IWTextElement = line.elements[j];
-                    let size: number = element.style.size || values[sys.TextKeys.fontSize];
+                    let size: number = typeof element.style.size == "number" ? element.style.size : values[sys.TextKeys.fontSize];
 
                     node.drawText(drawX, drawY + (h - size) / 2, element.text, element.style);
 

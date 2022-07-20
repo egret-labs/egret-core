@@ -45,7 +45,7 @@ namespace egret {
     export const glContext = 'glContext';
     export const UNPACK_PREMULTIPLY_ALPHA_WEBGL = 'UNPACK_PREMULTIPLY_ALPHA_WEBGL';
 
-    
+
 
     /**
      * A BitmapData object contains an array of pixel data. This data can represent either a fully opaque bitmap or a
@@ -167,7 +167,7 @@ namespace egret {
          */
         public readonly compressedTextureData: Array<Array<CompressedTextureData>> = [];
         public debugCompressedTextureURL: string = '';
-        public etcAlphaMask: Nullable<BitmapData> = null;
+        public $etcAlphaMask: Nullable<BitmapData> = null;
 
         /**
          * Initializes a BitmapData object to refer to the specified source object.
@@ -266,7 +266,7 @@ namespace egret {
             this.debugCompressedTextureURL = '';
             this.etcAlphaMask = null;
             ///
-            
+
             if (egret.nativeRender) {
                 egret_native.NativeDisplayObject.disposeNativeBitmapData(this.$nativeBitmapData);
             }
@@ -383,12 +383,31 @@ namespace egret {
             return this._getCompressedTextureData(0, 0);
         }
 
+
+        public $setCompressed2dTextureData(levelData: egret.CompressedTextureData[]): void {
+            if (egret.nativeRender && (this.compressedTextureData.length == 0)) {
+                egret_native.NativeDisplayObject.setSourceToNativeBitmapData(this.$nativeBitmapData, levelData[0]);
+            }
+            this.compressedTextureData.push(levelData);
+        }
+
         public hasCompressed2d(): boolean {
             return !!this.getCompressed2dTextureData();
         }
-        
+
         public clearCompressedTextureData(): void {
             this.compressedTextureData.length = 0;
+        }
+
+        public set etcAlphaMask(value: any) {
+            if (egret.nativeRender) {
+                egret_native.NativeDisplayObject.setSourceToNativeBitmapData(this.$nativeBitmapData, value);
+            }
+            this.$etcAlphaMask = value;
+        }
+
+        public get etcAlphaMask(): any {
+            return this.$etcAlphaMask;
         }
     }
 }

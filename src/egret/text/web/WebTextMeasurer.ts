@@ -33,11 +33,11 @@ namespace egret.web {
     /**
      * @private
      */
-    let context:CanvasRenderingContext2D = null;
+    let context: CanvasRenderingContext2D = null;
     /**
      * @private
      */
-    let fontCache:any = {};
+    let fontCache: any = {};
 
     /**
      * 测量文本在指定样式下的宽度。
@@ -47,8 +47,8 @@ namespace egret.web {
      * @param bold 是否粗体
      * @param italic 是否斜体
      */
-    function measureText(text:string, fontFamily:string, fontSize:number, bold:boolean, italic:boolean):number {
-        if(!context) {
+    function measureText(text: string, fontFamily: string, fontSize: number, bold: boolean, italic: boolean): number {
+        if (!context) {
             createContext();
         }
         let font = "";
@@ -56,8 +56,8 @@ namespace egret.web {
             font += "italic ";
         if (bold)
             font += "bold ";
-        font += (fontSize || 12) + "px ";
-        font += (fontFamily || "Arial");
+        font += ((typeof fontSize == "number" && fontSize >= 0) ? fontSize : 12) + "px ";
+        font += ((typeof fontFamily == "string" && fontFamily != "") ? fontFamily : "Arial");
         context.font = font;
         return egret.sys.measureTextWith(context, text);
     }
@@ -65,7 +65,7 @@ namespace egret.web {
     /**
      * @private
      */
-    function createContext():void {
+    function createContext(): void {
         context = sys.canvasHitTestBuffer.context;
         context.textAlign = "left";
         context.textBaseline = "middle";

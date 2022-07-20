@@ -62,7 +62,7 @@ var ManifestPlugin = /** @class */ (function () {
     }
     ManifestPlugin.prototype.onFile = function (file) {
         return __awaiter(this, void 0, void 0, function () {
-            var filename, extname, new_file_path, basename, target, _a, useWxPlugin, hash, verbose, ttgame, new_basename, isEngineJS, engineJS, i, jsName, engine_path, crc32, crc32_file_path, config, vivoData, relative;
+            var filename, extname, new_file_path, basename, target, _a, useWxPlugin, hash, verbose, ttgame, new_basename, isEngineJS, engineJS, i, jsName, engine_path, crc32, crc32_file_path, egretProperties, vivoData, oppoData, relative;
             return __generator(this, function (_b) {
                 filename = file.relative;
                 extname = path.extname(filename);
@@ -103,13 +103,22 @@ var ManifestPlugin = /** @class */ (function () {
                     }
                     file.outputDir = "";
                     file.path = path.join(file.base, new_file_path);
+                    egretProperties = EgretProject.projectData.egretProperties;
+                    // var { egretProperties } = config;
                     if (target == 'vivogame') {
-                        config = EgretProject.projectData;
-                        vivoData = config.egretProperties.vivo;
+                        vivoData = egretProperties.vivo;
                         file.path = path.join(file.base, '../', 'engine', new_file_path);
                         if (vivoData.usePlugin) { //使用插件
-                            if (vivoData.plugins.indexOf(basename) > -1) {
+                            if (vivoData.userPlugs.indexOf(basename) > -1) {
                                 file.path = path.join(file.base, '../', 'egret-library', basename);
+                            }
+                        }
+                    }
+                    else if (target == "oppogame") {
+                        oppoData = egretProperties.oppo;
+                        if (oppoData.usePlugin) { //使用插件
+                            if (oppoData.userPlugs.indexOf(basename) > -1) {
+                                file.path = path.join(file.base, 'egret-library', basename);
                             }
                         }
                     }
@@ -175,12 +184,17 @@ var ManifestPlugin = /** @class */ (function () {
                     case 1:
                         pluginContents = _b.sent();
                         contents = pluginContents === null ? contents : pluginContents;
+                        if (target == 'tbcreativeapp' || target == 'tbcreativewidget') { //淘宝小游戏，需要把 main.js 放在最后
+                            contents = contents.replace('require("./js/main.js")\n', '');
+                            contents += '\nrequire("./js/main.js")';
+                        }
                         pluginContext.createFile(output, new Buffer(contents));
                         if (this.options.verbose) {
                             this.verboseInfo.forEach(function (item) {
                                 console.log("manifest-plugin: " + item.filename + " => " + item.new_file_path);
                             });
                         }
+                        utils.copyEnginePlugin();
                         return [2 /*return*/];
                 }
             });

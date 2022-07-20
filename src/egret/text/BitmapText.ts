@@ -103,6 +103,8 @@ namespace egret {
                     maskedObject.$cacheDirty = true;
                     maskedObject.$cacheDirtyUp();
                 }
+            } else if (self.$nativeDisplayObject.setSmoothing) {
+                self.$nativeDisplayObject.setSmoothing(value);
             }
         }
 
@@ -180,6 +182,18 @@ namespace egret {
             this.$textLinesChanged = true;
             //todo lcj
             this.$updateRenderNode();
+            if (!egret.nativeRender) {
+                let p = this.$parent;
+                if (p && !p.$cacheDirty) {
+                    p.$cacheDirty = true;
+                    p.$cacheDirtyUp();
+                }
+                let maskedObject = this.$maskedObject;
+                if (maskedObject && !maskedObject.$cacheDirty) {
+                    maskedObject.$cacheDirty = true;
+                    maskedObject.$cacheDirtyUp();
+                }
+            }
         }
 
         protected $textFieldHeight: number = NaN;
@@ -444,7 +458,7 @@ namespace egret {
                         xPos += countWidth - textLinesWidth[i];
                     } else if (align == egret.HorizontalAlign.CENTER) {
                         xPos += Math.floor((countWidth - textLinesWidth[i]) / 2);
-                        
+
                     }
                 }
                 for (let j: number = 0; j < len; j++) {

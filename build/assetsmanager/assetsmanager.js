@@ -645,7 +645,7 @@ var RES;
                 delete this.groupErrorDic[groupName];
                 var itemList = this.loadItemErrorDic[groupName];
                 delete this.loadItemErrorDic[groupName];
-                dispatcher.dispatchEventWith("error", false, { itemList: itemList, lastError: lastError });
+                dispatcher.dispatchEventWith("error", false, { itemList: itemList, error: lastError });
             }
         };
         /**
@@ -2734,7 +2734,8 @@ var RES;
                     var r = host.resourceConfig.getResource(RES.nameSelector(data.file));
                     if (!r) {
                         var imageName = getRelativePath(resource.url, data.file);
-                        r = { name: imageName, url: imageName, type: 'image', root: resource.root };
+                        r = { name: RES.nameSelector(data.file), url: imageName, type: 'image', root: resource.root };
+                        host.resourceConfig.addResourceData(r);
                     }
                     return host.load(r)
                         .then(function (bitmapData) {
@@ -2820,7 +2821,8 @@ var RES;
                     }
                     var r = host.resourceConfig.getResource(RES.nameSelector(imageName));
                     if (!r) {
-                        r = { name: imageName, url: imageName, type: 'image', root: resource.root };
+                        r = { name: RES.nameSelector(imageName), url: imageName, type: 'image', root: resource.root };
+                        host.resourceConfig.addResourceData(r);
                     }
                     // var texture: egret.Texture = await host.load(r);
                     return host.load(r).then(function (texture) {

@@ -350,7 +350,8 @@ module RES.processor {
                 let r = host.resourceConfig.getResource(RES.nameSelector(data.file));
                 if (!r) {
                     let imageName = getRelativePath(resource.url, data.file);
-                    r = { name: imageName, url: imageName, type: 'image', root: resource.root };
+                    r = { name: RES.nameSelector(data.file), url: imageName, type: 'image', root: resource.root };
+                    host.resourceConfig.addResourceData(r);
                 }
                 return host.load(r)
                     .then((bitmapData) => {
@@ -447,7 +448,8 @@ module RES.processor {
                 }
                 let r = host.resourceConfig.getResource(RES.nameSelector(imageName));
                 if (!r) {
-                    r = { name: imageName, url: imageName, type: 'image', root: resource.root };
+                    r = { name: RES.nameSelector(imageName), url: imageName, type: 'image', root: resource.root };
+                    host.resourceConfig.addResourceData(r);
                 }
                 // var texture: egret.Texture = await host.load(r);
                 return host.load(r).then((texture) => {

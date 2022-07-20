@@ -47,13 +47,13 @@ namespace egret {
      * @includeExample egret/utils/toColorString.ts
      * @language zh_CN
      */
-    export function toColorString(value:number):string {
-        if (value < 0)
+    export function toColorString(value: number): string {
+        if (!value || value < 0)
             value = 0;
         if (value > 16777215)
             value = 16777215;
 
-        let color:string = value.toString(16).toUpperCase();
+        let color: string = value.toString(16).toUpperCase();
         while (color.length > 6) {
             color = color.slice(1, color.length);
         }

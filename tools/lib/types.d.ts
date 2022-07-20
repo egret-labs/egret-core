@@ -6,7 +6,7 @@ declare module egret {
 
     export namespace target {
 
-        export type Type = "web" | "native" | "mygame" | "wxgame" | "baidugame" | "qgame" | "oppogame" | "vivogame" | "ttgame" | 'bricks' | 'ios' | 'android' | "any" | "none"
+        export type Type = "web" | "native" | "tbcreativeapp"| "mygame" | "fastgame"| "tbgame" | "wxgame" | "baidugame" | "qgame" | "oppogame" | "vivogame" | "ttgame" | 'bricks' | 'ios' | 'android' | "any" | "none" | "tbcreativewidget";
 
         export interface Info {
             name: Type;
@@ -126,8 +126,9 @@ declare module egret {
             "native": number,
             "path": string;
         },
-        "egret_version"?: string;
-        "vivo"?:{}
+        "egret_version"?: string,
+        "vivo"?:{},
+        "oppo"?:{},
         "ttgame"?:{}
     }
 

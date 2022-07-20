@@ -2569,14 +2569,14 @@ var eui;
          * @private
          */
         Group.prototype.$hitTest = function (stageX, stageY) {
+            //Bug: 当 group.sacleX or scaleY ==0 的时候，随便点击那里都点击成功
+            //虽然 super.$hitTest里面检测过一次 宽高大小，但是没有直接退出这个函数，所以要再判断一次;
+            if (!this.$visible || (!this.touchEnabled && !this.touchChildren) || this.scaleX === 0 || this.scaleY === 0) {
+                return null;
+            }
             var target = _super.prototype.$hitTest.call(this, stageX, stageY);
             if (target || this.$Group[5 /* touchThrough */]) {
                 return target;
-            }
-            //Bug: 当 group.sacleX or scaleY ==0 的时候，随便点击那里都点击成功
-            //虽然 super.$hitTest里面检测过一次 宽高大小，但是没有直接退出这个函数，所以要再判断一次;（width,height可以不判断）
-            if (!this.$visible || !this.touchEnabled || this.scaleX === 0 || this.scaleY === 0 || this.width === 0 || this.height === 0) {
-                return null;
             }
             var point = this.globalToLocal(stageX, stageY, egret.$TempPoint);
             var values = this.$UIComponent;
@@ -3697,6 +3697,11 @@ var eui;
          * @platform Web,Native
          */
         Component.prototype.getPreferredBounds = function (bounds) {
+        };
+        Component.prototype.unwatchAll = function () {
+            if (this.skin && this.skin.unwatchAll) {
+                this.skin.unwatchAll();
+            }
         };
         return Component;
     }(egret.DisplayObjectContainer));
@@ -14652,6 +14657,15 @@ var eui;
             stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
             this.removeEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancel, this);
             this.removeEventListener(egret.Event.REMOVED_FROM_STAGE, this.onRemoveListeners, this);
+            var values = this.$Scroller;
+            var viewport = values[10 /* viewport */];
+            var uiValues = viewport.$UIComponent;
+            if (values[8 /* touchScrollH */].isStarted()) {
+                values[8 /* touchScrollH */].finish(viewport.scrollH, viewport.contentWidth - uiValues[10 /* width */]);
+            }
+            if (values[9 /* touchScrollV */].isStarted()) {
+                values[9 /* touchScrollV */].finish(viewport.scrollV, viewport.contentHeight - uiValues[11 /* height */]);
+            }
         };
         /**
          * @private
@@ -15019,6 +15033,7 @@ var eui;
              * @private
              */
             _this.$stateValues = new eui.sys.StateValues();
+            _this.$watchers = [];
             return _this;
         }
         Object.defineProperty(Skin.prototype, "elementsContent", {
@@ -15078,6 +15093,15 @@ var eui;
          */
         Skin.prototype.onAddedToStage = function (event) {
             this.initializeStates(this._hostComponent.$stage);
+        };
+        Skin.prototype.unwatchAll = function () {
+            if (this.$watchers && this.$watchers.length > 0) {
+                for (var _i = 0, _a = this.$watchers; _i < _a.length; _i++) {
+                    var watcher = _a[_i];
+                    watcher.unwatch();
+                }
+                this.$watchers.length = 0;
+            }
         };
         return Skin;
     }(egret.EventDispatcher));
@@ -17257,6 +17281,13 @@ var eui;
                 };
                 watcher.setHandler(assign, null);
                 assign(watcher.getValue());
+                if (egret.is(host, "eui.Skin")) {
+                    var skin = host;
+                    if (!skin.$watchers) {
+                        skin.$watchers = [];
+                    }
+                    skin.$watchers.push(watcher);
+                }
             }
             return watcher;
         };
@@ -17304,11 +17335,25 @@ var eui;
             var watcher;
             for (var i = 0; i < length; i++) {
                 var index = chainIndex[i];
-                var chain = templates[index].split(".");
-                watcher = eui.Watcher.watch(host, chain, null, null);
+                var element = templates[index];
+                if (typeof element == "string") {
+                    var chain = element.split(".");
+                    watcher = eui.Watcher.watch(host, chain, null, null);
+                }
+                else if (element instanceof eui.Watcher) {
+                    watcher = element;
+                    watcher.reset(host);
+                }
                 if (watcher) {
                     templates[index] = watcher;
                     watcher.setHandler(assign, null);
+                    if (egret.is(host, "eui.Skin")) {
+                        var skin = host;
+                        if (!skin.$watchers) {
+                            skin.$watchers = [];
+                        }
+                        skin.$watchers.push(watcher);
+                    }
                 }
             }
             assign();
@@ -21412,7 +21457,7 @@ var eui;
                 if (true) {
                     info.__class__ = prototype.constructor.name;
                 }
-                var keys = Object.keys(prototype).concat(Object.keys(instance));
+                var keys = Object.getOwnPropertyNames(prototype).concat(Object.getOwnPropertyNames(instance));
                 var length = keys.length;
                 var meta = instance.__meta__;
                 for (var i = 0; i < length; i++) {

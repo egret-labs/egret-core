@@ -468,6 +468,7 @@ var egret;
          * @language zh_CN
          */
         WebSocket.TYPE_BINARY = "webSocketTypeBinary";
+        WebSocket.URI = "ws://";
         return WebSocket;
     }(egret.EventDispatcher));
     egret.WebSocket = WebSocket;
@@ -526,7 +527,7 @@ var egret;
             HTML5WebSocket.prototype.connect = function (host, port) {
                 this.host = host;
                 this.port = port;
-                var socketServerUrl = "ws://" + this.host + ":" + this.port;
+                var socketServerUrl = egret.WebSocket.URI + this.host + (this.port != null ? ":" + this.port : "");
                 this.socket = new window["WebSocket"](socketServerUrl);
                 this.socket.binaryType = "arraybuffer";
                 this._bindEvent();

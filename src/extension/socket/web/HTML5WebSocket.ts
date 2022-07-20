@@ -39,12 +39,12 @@ namespace egret.web {
             }
         }
 
-        private onConnect:Function;
-        private onClose:Function;
-        private onSocketData:Function;
-        private onError:Function;
-        private thisObject:any;
-        public addCallBacks(onConnect:Function, onClose:Function, onSocketData:Function, onError:Function, thisObject:any):void {
+        private onConnect: Function;
+        private onClose: Function;
+        private onSocketData: Function;
+        private onError: Function;
+        private thisObject: any;
+        public addCallBacks(onConnect: Function, onClose: Function, onSocketData: Function, onError: Function, thisObject: any): void {
             this.onConnect = onConnect;
             this.onClose = onClose;
             this.onSocketData = onSocketData;
@@ -52,25 +52,25 @@ namespace egret.web {
             this.thisObject = thisObject;
         }
 
-        private host:string = "";
-        private port:number = 0;
-        public connect(host:string, port:number):void {
+        private host: string = "";
+        private port: number = 0;
+        public connect(host: string, port?: number): void {
             this.host = host;
             this.port = port;
 
-            let socketServerUrl = "ws://" + this.host + ":" + this.port;
+            let socketServerUrl = WebSocket.URI + this.host + (this.port != null ? ":" + this.port : "");
             this.socket = new window["WebSocket"](socketServerUrl);
             this.socket.binaryType = "arraybuffer";
             this._bindEvent();
         }
 
-        public connectByUrl(url:string):void {
+        public connectByUrl(url: string): void {
             this.socket = new window["WebSocket"](url);
             this.socket.binaryType = "arraybuffer";
             this._bindEvent();
         }
 
-        private _bindEvent():void {
+        private _bindEvent(): void {
             let that = this;
             let socket = this.socket;
             socket.onopen = function () {
@@ -90,9 +90,9 @@ namespace egret.web {
             };
             socket.onmessage = function (e) {
                 if (that.onSocketData) {
-                    if(e.data){
+                    if (e.data) {
                         that.onSocketData.call(that.thisObject, e.data);
-                    }else{
+                    } else {
                         //for mygame
                         that.onSocketData.call(that.thisObject, e);
                     }
@@ -100,14 +100,14 @@ namespace egret.web {
             };
         }
 
-        public send(message:any):void {
+        public send(message: any): void {
             this.socket.send(message);
         }
 
-        public close():void {
+        public close(): void {
             this.socket.close();
         }
-        public disconnect():void {
+        public disconnect(): void {
             if (this.socket.disconnect) {
                 this.socket.disconnect();
             }

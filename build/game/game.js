@@ -3037,6 +3037,11 @@ var egret;
                     return;
                 }
                 this.$smoothing = value;
+                if (egret.nativeRender) {
+                    if (this.$nativeDisplayObject.setSmoothing) {
+                        this.$nativeDisplayObject.setSmoothing(value);
+                    }
+                }
             },
             enumerable: true,
             configurable: true
@@ -3322,9 +3327,9 @@ var egret;
             else if (frameNum > this.$totalFrames) {
                 frameNum = this.$totalFrames;
             }
-            if (frameNum == this.$nextFrameNum) {
-                return;
-            }
+            // if (frameNum == this.$nextFrameNum) {
+            //     return;
+            // }
             this.$nextFrameNum = frameNum;
             this.advanceFrame();
             this.constructFrame();

@@ -36,7 +36,7 @@ namespace egret.web {
         const resume = () => {
             context.resume();
             /** 解决 ios13 页面切到后台再拉起，声音无法播放 */
-            if (WebAudioDecode.initAudioContext) {
+            if (Html5Capatibility._audioType == AudioType.WEB_AUDIO && WebAudioDecode.initAudioContext) {
                 WebAudioDecode.initAudioContext();
             }
         }

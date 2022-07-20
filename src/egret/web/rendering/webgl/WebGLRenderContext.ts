@@ -739,25 +739,43 @@ namespace egret.web {
                 return;
             }
 
-            if (meshVertices && meshIndices) {
-                if (this.vao.reachMaxSize(meshVertices.length / 2, meshIndices.length)) {
-                    this.$drawWebGL();
+
+            let count: number;
+
+            if (isIOS14Device()) {
+
+                let meshNum = meshIndices && (meshIndices.length / 3) || 0;
+                if (meshIndices) {
+                    if (this.vao.reachMaxSize(meshNum * 4, meshNum * 6)) {
+                        this.$drawWebGL();
+                    }
+                } else {
+                    if (this.vao.reachMaxSize()) {
+                        this.$drawWebGL();
+                    }
                 }
+                if (smoothing != undefined && texture["smoothing"] != smoothing) {
+                    this.drawCmdManager.pushChangeSmoothing(texture, smoothing);
+                }
+                count = meshIndices ? meshNum * 2 : 2;
             } else {
-                if (this.vao.reachMaxSize()) {
-                    this.$drawWebGL();
+                if (meshVertices && meshIndices) {
+                    if (this.vao.reachMaxSize(meshVertices.length / 2, meshIndices.length)) {
+                        this.$drawWebGL();
+                    }
+                } else {
+                    if (this.vao.reachMaxSize()) {
+                        this.$drawWebGL();
+                    }
                 }
+                if (smoothing != undefined && texture["smoothing"] != smoothing) {
+                    this.drawCmdManager.pushChangeSmoothing(texture, smoothing);
+                }
+                if (meshUVs) {
+                    this.vao.changeToMeshIndices();
+                }
+                count = meshIndices ? meshIndices.length / 3 : 2;
             }
-
-            if (smoothing != undefined && texture["smoothing"] != smoothing) {
-                this.drawCmdManager.pushChangeSmoothing(texture, smoothing);
-            }
-
-            if (meshUVs) {
-                this.vao.changeToMeshIndices();
-            }
-
-            let count = meshIndices ? meshIndices.length / 3 : 2;
             // 应用$filter，因为只可能是colorMatrixFilter，最后两个参数可不传
             this.drawCmdManager.pushDrawTexture(texture, count, this.$filter, textureWidth, textureHeight);
             buffer.currentTexture = texture;
@@ -850,12 +868,25 @@ namespace egret.web {
          * 执行目前缓存在命令列表里的命令并清空
          */
         public activatedBuffer: WebGLRenderBuffer;
+
+
+        private readonly vertexCountPerTriangle: number = 3;
+        private readonly triangleCountPerQuad: number = 2;
+        private readonly dataCountPerVertex: number = 5;
+
+
         public $drawWebGL() {
             if (this.drawCmdManager.drawDataLen == 0 || this.contextLost) {
                 return;
             }
 
-            this.uploadVerticesArray(this.vao.getVertices());
+
+            const indices = this.vao.getIndices();
+            const vertices = this.vao.getVertices();
+
+            if (!isIOS14Device()) {
+                this.uploadVerticesArray(vertices);
+            }
 
             // 有mesh，则使用indicesForMesh
             if (this.vao.isMesh()) {
@@ -866,12 +897,25 @@ namespace egret.web {
             let offset = 0;
             for (let i = 0; i < length; i++) {
                 let data = this.drawCmdManager.drawData[i];
-                offset = this.drawData(data, offset);
+                let isDrawCall = data.type == DRAWABLE_TYPE.TEXTURE || data.type == DRAWABLE_TYPE.RECT || data.type == DRAWABLE_TYPE.PUSH_MASK || data.type == DRAWABLE_TYPE.POP_MASK;
+                if (isIOS14Device() && !this.vao.isMesh() && isDrawCall) {
+                    this.uploadIndicesArray(indices.subarray(0, data.count * this.vertexCountPerTriangle));
+                    this.uploadVerticesArray(
+                        this.vao.vertices.subarray(
+                            offset / this.vertexCountPerTriangle * this.triangleCountPerQuad * this.dataCountPerVertex,
+                            (offset + data.count * this.vertexCountPerTriangle) / this.vertexCountPerTriangle * this.triangleCountPerQuad * this.dataCountPerVertex
+                        )
+                    );
+                    this.drawData(data, 0);
+                    offset += data.count * this.vertexCountPerTriangle;
+                } else {
+                    offset = this.drawData(data, offset);
+                }
                 // 计算draw call
                 if (data.type == DRAWABLE_TYPE.ACT_BUFFER) {
                     this.activatedBuffer = data.buffer;
                 }
-                if (data.type == DRAWABLE_TYPE.TEXTURE || data.type == DRAWABLE_TYPE.RECT || data.type == DRAWABLE_TYPE.PUSH_MASK || data.type == DRAWABLE_TYPE.POP_MASK) {
+                if (isDrawCall) {
                     if (this.activatedBuffer && this.activatedBuffer.$computeDrawCall) {
                         this.activatedBuffer.$drawCalls++;
                     }

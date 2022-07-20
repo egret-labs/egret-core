@@ -14,6 +14,7 @@ var EgretProjectData = /** @class */ (function () {
             modules: [],
             target: { current: "web" },
             vivo: {},
+            oppo: {},
             ttgame: {}
         };
         this.projectRoot = "";

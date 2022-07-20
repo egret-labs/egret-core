@@ -9,6 +9,7 @@ export { CleanPlugin } from './clean';
 export { RenamePlugin } from './rename';
 export { ResSplitPlugin } from './resSplit';
 export { ZipPlugin, MergeEuiJsonPlugin } from './merge';
+export { StartServerPlugin } from './start-server-plugin';
 
 
 export function run() {
